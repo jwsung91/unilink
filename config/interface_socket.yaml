@@ -1,0 +1,12 @@
+mode: server   # server | client
+host: 127.0.0.1
+port: 9000
+
+request_timeout_ms: 1500
+idle_timeout_ms: 0
+reconnect_backoff_initial_ms: 1000
+reconnect_backoff_max_ms: 30000
+accept_backoff_initial_ms: 1000
+
+write_queue_limit: 1024
+max_packet_bytes: 65535
