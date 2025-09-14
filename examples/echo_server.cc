@@ -1,4 +1,3 @@
-
 #include <boost/asio.hpp>
 #include <iostream>
 
@@ -15,10 +14,12 @@ int main(int argc, char** argv) {
   srv->on_state([](LinkState s) {
     std::cout << "[server] state=" << to_cstr(s) << std::endl;
   });
+
   srv->on_bytes([&](const uint8_t* p, size_t n) {
-    std::cout << "[server] recv " << n << " bytes" << std::endl;
-    srv->async_write_copy(p, n);  // echo raw bytes
+    std::string s(reinterpret_cast<const char*>(p), n);
+    std::cout << "[server] recv chunk: " << s;
   });
+
   srv->start();
   ioc.run();
   return 0;

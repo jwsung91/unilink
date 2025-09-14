@@ -1,5 +1,6 @@
-
+#include <atomic>
 #include <boost/asio.hpp>
+#include <chrono>
 #include <iostream>
 #include <string>
 #include <thread>
@@ -17,25 +18,32 @@ int main(int argc, char** argv) {
   boost::asio::io_context ioc;
   auto cli = make_tcp_client(ioc, host, port);
 
+  std::atomic<bool> connected{false};
+
   cli->on_state([&](LinkState s) {
     std::cout << "[client] state=" << to_cstr(s) << std::endl;
-    if (s == LinkState::Connected) {
-      // Send three messages from a non-IO thread
-      std::thread([cli] {
-        for (int i = 0; i < 3; ++i) {
-          std::string msg = "Hello " + std::to_string(i);
-          std::vector<uint8_t> buf(msg.begin(), msg.end());
-          cli->async_write_copy(buf.data(), buf.size());
-          std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-      }).detach();
-    }
+    connected = (s == LinkState::Connected);
   });
 
   cli->on_bytes([&](const uint8_t* p, size_t n) {
     std::string s(reinterpret_cast<const char*>(p), n);
-    std::cout << "[client] recv: " << s << std::endl;
+    std::cout << "[client] recv chunk: " << s;
   });
+
+  std::thread([cli, &connected] {
+    uint64_t seq = 0;
+    const auto interval = std::chrono::milliseconds(1000);
+    while (true) {
+      if (connected.load()) {
+        std::string msg = "HELLO " + std::to_string(seq++) + "\n";
+        std::vector<uint8_t> buf(msg.begin(), msg.end());
+        std::cout << "[client] send (" << buf.size() << "B): " << msg;
+
+        cli->async_write_copy(buf.data(), buf.size());
+      }
+      std::this_thread::sleep_for(interval);
+    }
+  }).detach();
 
   cli->start();
   ioc.run();

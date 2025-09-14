@@ -1,8 +1,12 @@
+// examples/serial_sender.cc (신규)
+#include <atomic>
 #include <boost/asio.hpp>
+#include <chrono>
 #include <iostream>
 #include <thread>
 #include <vector>
 
+#include "common.hpp"
 #include "factory.hpp"
 
 int main(int argc, char** argv) {
@@ -11,26 +15,39 @@ int main(int argc, char** argv) {
   boost::asio::io_context ioc;
   SerialConfig cfg;
   cfg.baud_rate = 115200;
-
+  cfg.retry_interval_ms = 2000;
   auto ser = make_serial_channel(ioc, dev, cfg);
 
-  ser->on_state([](LinkState s) {
+  std::atomic<bool> connected{false};
+
+  ser->on_state([&](LinkState s) {
     std::cout << "[serial] state=" << to_cstr(s) << "\n";
+    connected = (s == LinkState::Connected);
   });
+
   ser->on_bytes([&](const uint8_t* p, size_t n) {
-    std::cout << "[serial] recv " << n << " bytes\n";
-    // 에코
-    ser->async_write_copy(p, n);
+    std::string s(reinterpret_cast<const char*>(p), n);
+    std::cout << "[serial] recv chunk: " << s;
   });
 
-  ser->start();
+  std::thread([ser, &connected] {
+    uint64_t seq = 0;
+    const auto interval = std::chrono::milliseconds(500);
+    while (true) {
+      if (connected.load()) {
+        std::string msg = "SER " + std::to_string(seq++) + "\n";
+        std::vector<uint8_t> buf(msg.begin(), msg.end());
 
-  // 연결 후 테스트 송신
-  std::thread([ser] {
-    std::this_thread::sleep_for(std::chrono::milliseconds(300));
-    const char* msg = "hello-serial";
-    ser->async_write_copy(reinterpret_cast<const uint8_t*>(msg), strlen(msg));
+        // ✅ 보낸 로그 추가 (큐에 넣는 시점)
+        std::cout << "[serial] send (" << buf.size() << "B): " << msg;
+
+        ser->async_write_copy(buf.data(), buf.size());
+      }
+      std::this_thread::sleep_for(interval);
+    }
   }).detach();
 
+  ser->start();
   ioc.run();
+  return 0;
 }
