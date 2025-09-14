@@ -27,4 +27,7 @@ if(BUILD_EXAMPLES)
 
   add_executable(echo_server examples/echo_server.cc)
   target_link_libraries(echo_server PRIVATE interface::${PROJECT_NAME})
-endif()
+
+  add_executable(serial examples/serial.cc)
+  target_link_libraries(serial PRIVATE interface::${PROJECT_NAME})
+  endif()
