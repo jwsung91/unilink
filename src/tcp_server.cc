@@ -1,6 +1,7 @@
 
 #include <boost/asio.hpp>
 #include <deque>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -15,6 +16,7 @@ class TcpServer : public std::enable_shared_from_this<TcpServer> {
  public:
   using OnBytes = IChannel::OnBytes;
   using OnBackpressure = IChannel::OnBackpressure;
+  using OnClose = std::function<void()>;
 
   TcpServer(net::io_context& ioc, tcp::socket sock)
       : ioc_(ioc), socket_(std::move(sock)) {}
@@ -35,6 +37,7 @@ class TcpServer : public std::enable_shared_from_this<TcpServer> {
 
   void on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
   void on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
+  void on_close(OnClose cb) { on_close_ = std::move(cb); }
 
   bool alive() const { return alive_; }
 
@@ -74,10 +77,13 @@ class TcpServer : public std::enable_shared_from_this<TcpServer> {
   }
 
   void do_close() {
+    if (!alive_) return;
     alive_ = false;
+    std::cout << "[server] client disconnected" << std::endl;
     boost::system::error_code ec;
     socket_.shutdown(tcp::socket::shutdown_both, ec);
     socket_.close(ec);
+    if (on_close_) on_close_();
   }
 
  private:
@@ -91,6 +97,7 @@ class TcpServer : public std::enable_shared_from_this<TcpServer> {
 
   OnBytes on_bytes_;
   OnBackpressure on_bp_;
+  OnClose on_close_;
   bool alive_ = false;
 };
 
@@ -154,6 +161,13 @@ class TcpServerSingleTransport
       self->sess_ = std::make_shared<TcpServer>(self->ioc_, std::move(sock));
       if (self->on_bytes_) self->sess_->on_bytes(self->on_bytes_);
       if (self->on_bp_) self->sess_->on_backpressure(self->on_bp_);
+      self->sess_->on_close([self] {
+        // session ended -> return to listening and accept next client
+        self->sess_.reset();
+        self->state_ = LinkState::Listening;
+        self->notify_state();
+        self->do_accept();
+      });
       self->state_ = LinkState::Connected;
       self->notify_state();
       self->sess_->start();
