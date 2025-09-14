@@ -1,4 +1,3 @@
-// src/transport/serial_channel.cc (신규)
 #include <boost/asio.hpp>
 #include <deque>
 #include <iostream>
@@ -9,10 +8,9 @@
 
 namespace net = boost::asio;
 
-class SerialChannel : public IChannel,
-                      public std::enable_shared_from_this<SerialChannel> {
+class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
  public:
-  SerialChannel(net::io_context& ioc, std::string device, SerialConfig cfg)
+  Serial(net::io_context& ioc, std::string device, SerialConfig cfg)
       : ioc_(ioc),
         port_(ioc),
         device_(std::move(device)),
@@ -186,5 +184,5 @@ class SerialChannel : public IChannel,
 std::shared_ptr<IChannel> make_serial_channel(net::io_context& ioc,
                                               const std::string& device,
                                               const SerialConfig& cfg) {
-  return std::make_shared<SerialChannel>(ioc, device, cfg);
+  return std::make_shared<Serial>(ioc, device, cfg);
 }

@@ -12,13 +12,13 @@
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-class TcpServer : public std::enable_shared_from_this<TcpServer> {
+class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
  public:
   using OnBytes = IChannel::OnBytes;
   using OnBackpressure = IChannel::OnBackpressure;
   using OnClose = std::function<void()>;
 
-  TcpServer(net::io_context& ioc, tcp::socket sock)
+  TcpServerSession(net::io_context& ioc, tcp::socket sock)
       : ioc_(ioc), socket_(std::move(sock)) {}
 
   void start() { start_read(); }
@@ -101,11 +101,10 @@ class TcpServer : public std::enable_shared_from_this<TcpServer> {
   bool alive_ = false;
 };
 
-class TcpServerSingleTransport
-    : public IChannel,
-      public std::enable_shared_from_this<TcpServerSingleTransport> {
+class TcpServer : public IChannel,
+                  public std::enable_shared_from_this<TcpServer> {
  public:
-  TcpServerSingleTransport(net::io_context& ioc, uint16_t port)
+  TcpServer(net::io_context& ioc, uint16_t port)
       : ioc_(ioc), acceptor_(ioc, tcp::endpoint(tcp::v4(), port)) {}
 
   void start() override {
@@ -161,7 +160,8 @@ class TcpServerSingleTransport
                   << std::endl;
       }
 
-      self->sess_ = std::make_shared<TcpServer>(self->ioc_, std::move(sock));
+      self->sess_ =
+          std::make_shared<TcpServerSession>(self->ioc_, std::move(sock));
       if (self->on_bytes_) self->sess_->on_bytes(self->on_bytes_);
       if (self->on_bp_) self->sess_->on_backpressure(self->on_bp_);
       self->sess_->on_close([self] {
@@ -184,7 +184,7 @@ class TcpServerSingleTransport
  private:
   net::io_context& ioc_;
   tcp::acceptor acceptor_;
-  std::shared_ptr<TcpServer> sess_;
+  std::shared_ptr<TcpServerSession> sess_;
 
   OnBytes on_bytes_;
   OnState on_state_;
@@ -195,5 +195,5 @@ class TcpServerSingleTransport
 // Factory
 std::shared_ptr<IChannel> make_tcp_server_single(net::io_context& ioc,
                                                  uint16_t port) {
-  return std::make_shared<TcpServerSingleTransport>(ioc, port);
+  return std::make_shared<TcpServer>(ioc, port);
 }
