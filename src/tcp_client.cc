@@ -10,11 +10,10 @@
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-class TcpClientTransport
-    : public IChannel,
-      public std::enable_shared_from_this<TcpClientTransport> {
+class TcpClient : public IChannel,
+                  public std::enable_shared_from_this<TcpClient> {
  public:
-  TcpClientTransport(net::io_context& ioc, std::string host, uint16_t port)
+  TcpClient(net::io_context& ioc, std::string host, uint16_t port)
       : ioc_(ioc),
         resolver_(ioc),
         socket_(ioc),
@@ -176,5 +175,5 @@ class TcpClientTransport
 std::shared_ptr<IChannel> make_tcp_client(net::io_context& ioc,
                                           const std::string& host,
                                           uint16_t port) {
-  return std::make_shared<TcpClientTransport>(ioc, host, port);
+  return std::make_shared<TcpClient>(ioc, host, port);
 }

@@ -11,12 +11,12 @@
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-class ServerSession : public std::enable_shared_from_this<ServerSession> {
+class TcpServer : public std::enable_shared_from_this<TcpServer> {
  public:
   using OnBytes = IChannel::OnBytes;
   using OnBackpressure = IChannel::OnBackpressure;
 
-  ServerSession(net::io_context& ioc, tcp::socket sock)
+  TcpServer(net::io_context& ioc, tcp::socket sock)
       : ioc_(ioc), socket_(std::move(sock)) {}
 
   void start() { start_read(); }
@@ -151,8 +151,7 @@ class TcpServerSingleTransport
         std::cout << "[server] accepted (endpoint unknown)" << std::endl;
       }
 
-      self->sess_ =
-          std::make_shared<ServerSession>(self->ioc_, std::move(sock));
+      self->sess_ = std::make_shared<TcpServer>(self->ioc_, std::move(sock));
       if (self->on_bytes_) self->sess_->on_bytes(self->on_bytes_);
       if (self->on_bp_) self->sess_->on_backpressure(self->on_bp_);
       self->state_ = LinkState::Connected;
@@ -168,7 +167,7 @@ class TcpServerSingleTransport
  private:
   net::io_context& ioc_;
   tcp::acceptor acceptor_;
-  std::shared_ptr<ServerSession> sess_;
+  std::shared_ptr<TcpServer> sess_;
 
   OnBytes on_bytes_;
   OnState on_state_;
