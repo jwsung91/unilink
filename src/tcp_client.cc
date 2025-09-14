@@ -88,13 +88,15 @@ class TcpClient : public IChannel,
     connected_ = false;
     state_ = LinkState::Connecting;
     notify_state();
-    std::cout << "[client] reconnect in " << backoff_sec_ << "s" << std::endl;
+
+    std::cout << "[client] retry in " << (retry_interval_ms_ / 1000.0)
+              << "s (fixed)\n";
+
     auto self = shared_from_this();
-    retry_timer_.expires_after(std::chrono::seconds(backoff_sec_));
-    retry_timer_.async_wait([self](auto ec) {
+    retry_timer_.expires_after(std::chrono::milliseconds(retry_interval_ms_));
+    retry_timer_.async_wait([self](const boost::system::error_code& ec) {
       if (!ec) self->do_resolve_connect();
     });
-    backoff_sec_ = std::min<unsigned>(backoff_sec_ * 2, 30);
   }
 
   void start_read() {
@@ -155,7 +157,7 @@ class TcpClient : public IChannel,
   std::string host_;
   uint16_t port_;
   net::steady_timer retry_timer_;
-  unsigned backoff_sec_ = 1;
+  unsigned retry_interval_ms_ = 2000;
 
   std::array<uint8_t, 4096> rx_{};
 

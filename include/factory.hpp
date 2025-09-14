@@ -13,6 +13,8 @@ struct SerialConfig {
 
   size_t read_chunk = 4096;     // 1회 read 버퍼 크기
   bool reopen_on_error = true;  // 장치 분리/에러 시 재오픈 시도
+
+  unsigned retry_interval_ms = 2000;  // 1s (현장에선 2000~5000ms 추천)
 };
 
 std::shared_ptr<IChannel> make_tcp_client(class boost::asio::io_context& ioc,

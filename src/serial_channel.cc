@@ -140,14 +140,14 @@ class SerialChannel : public IChannel,
   }
 
   void schedule_retry(const char* where, const boost::system::error_code&) {
-    std::cout << "[serial] retry after " << backoff_sec_ << "s (" << where
-              << ")\n";
+    std::cout << "[serial] retry after " << (cfg_.retry_interval_ms / 1000.0)
+              << "s (fixed) at " << where << "\n";
     auto self = shared_from_this();
-    retry_timer_.expires_after(std::chrono::seconds(backoff_sec_));
+    retry_timer_.expires_after(
+        std::chrono::milliseconds(cfg_.retry_interval_ms));
     retry_timer_.async_wait([self](auto e) {
       if (!e) self->open_and_configure();
     });
-    backoff_sec_ = std::min<unsigned>(backoff_sec_ * 2, 30);
   }
 
   void close_port() {
@@ -165,7 +165,6 @@ class SerialChannel : public IChannel,
   std::string device_;
   SerialConfig cfg_;
   net::steady_timer retry_timer_;
-  unsigned backoff_sec_ = 1;
 
   std::vector<uint8_t> rx_;
   std::deque<std::vector<uint8_t>> tx_;
