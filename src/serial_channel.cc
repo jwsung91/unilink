@@ -87,8 +87,8 @@ class SerialChannel : public IChannel,
     opened_ = true;
     state_ = LinkState::Connected;
     notify_state();
-    std::cout << "[serial] opened " << device_ << " @" << cfg_.baud_rate
-              << "\n";
+    std::cout << ts_now() << "[serial] opened " << device_ << " @"
+              << cfg_.baud_rate << "\n";
     start_read();
   }
 
@@ -126,7 +126,8 @@ class SerialChannel : public IChannel,
   }
 
   void handle_error(const char* where, const boost::system::error_code& ec) {
-    std::cout << "[serial] " << where << " error: " << ec.message() << "\n";
+    std::cout << ts_now() << "[serial] " << where << " error: " << ec.message()
+              << "\n";
     opened_ = false;
     close_port();
     state_ = LinkState::Connecting;
@@ -140,8 +141,9 @@ class SerialChannel : public IChannel,
   }
 
   void schedule_retry(const char* where, const boost::system::error_code&) {
-    std::cout << "[serial] retry after " << (cfg_.retry_interval_ms / 1000.0)
-              << "s (fixed) at " << where << "\n";
+    std::cout << ts_now() << "[serial] retry after "
+              << (cfg_.retry_interval_ms / 1000.0) << "s (fixed) at " << where
+              << "\n";
     auto self = shared_from_this();
     retry_timer_.expires_after(
         std::chrono::milliseconds(cfg_.retry_interval_ms));

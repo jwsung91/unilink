@@ -62,25 +62,25 @@ class TcpClient : public IChannel,
             self->schedule_retry();
             return;
           }
-          net::async_connect(self->socket_, results,
-                             [self](auto ec2, const auto&) {
-                               if (ec2) {
-                                 self->schedule_retry();
-                                 return;
-                               }
-                               self->connected_ = true;
-                               self->state_ = LinkState::Connected;
-                               self->notify_state();
-                               // log endpoint
-                               boost::system::error_code ep_ec;
-                               auto rep = self->socket_.remote_endpoint(ep_ec);
-                               if (!ep_ec) {
-                                 std::cout << "[client] connected to "
-                                           << rep.address().to_string() << ":"
-                                           << rep.port() << std::endl;
-                               }
-                               self->start_read();
-                             });
+          net::async_connect(
+              self->socket_, results, [self](auto ec2, const auto&) {
+                if (ec2) {
+                  self->schedule_retry();
+                  return;
+                }
+                self->connected_ = true;
+                self->state_ = LinkState::Connected;
+                self->notify_state();
+                // log endpoint
+                boost::system::error_code ep_ec;
+                auto rep = self->socket_.remote_endpoint(ep_ec);
+                if (!ep_ec) {
+                  std::cout << ts_now() << " [client] connected to "
+                            << rep.address().to_string() << ":" << rep.port()
+                            << std::endl;
+                }
+                self->start_read();
+              });
         });
   }
 
@@ -89,8 +89,8 @@ class TcpClient : public IChannel,
     state_ = LinkState::Connecting;
     notify_state();
 
-    std::cout << "[client] retry in " << (retry_interval_ms_ / 1000.0)
-              << "s (fixed)\n";
+    std::cout << ts_now() << " [client] retry in "
+              << (retry_interval_ms_ / 1000.0) << "s (fixed)" << std::endl;
 
     auto self = shared_from_this();
     retry_timer_.expires_after(std::chrono::milliseconds(retry_interval_ms_));

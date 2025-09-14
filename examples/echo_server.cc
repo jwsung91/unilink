@@ -12,12 +12,12 @@ int main(int argc, char** argv) {
 
   auto srv = make_tcp_server_single(ioc, port);
   srv->on_state([](LinkState s) {
-    std::cout << "[server] state=" << to_cstr(s) << std::endl;
+    std::cout << ts_now() << " [server] state=" << to_cstr(s) << std::endl;
   });
 
   srv->on_bytes([&](const uint8_t* p, size_t n) {
     std::string s(reinterpret_cast<const char*>(p), n);
-    std::cout << "[server] recv chunk: " << s;
+    std::cout << ts_now() << " [server] recv chunk: " << s;
   });
 
   srv->start();

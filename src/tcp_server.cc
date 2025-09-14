@@ -79,7 +79,7 @@ class TcpServer : public std::enable_shared_from_this<TcpServer> {
   void do_close() {
     if (!alive_) return;
     alive_ = false;
-    std::cout << "[server] client disconnected" << std::endl;
+    std::cout << ts_now() << "[server] client disconnected" << std::endl;
     boost::system::error_code ec;
     socket_.shutdown(tcp::socket::shutdown_both, ec);
     socket_.close(ec);
@@ -143,7 +143,8 @@ class TcpServerSingleTransport
     auto self = shared_from_this();
     acceptor_.async_accept([self](auto ec, tcp::socket sock) {
       if (ec) {
-        std::cout << "[server] accept error: " << ec.message() << std::endl;
+        std::cout << ts_now() << "[server] accept error: " << ec.message()
+                  << std::endl;
         self->state_ = LinkState::Error;
         self->notify_state();
         self->do_accept();
@@ -152,10 +153,12 @@ class TcpServerSingleTransport
       boost::system::error_code ep_ec;
       auto rep = sock.remote_endpoint(ep_ec);
       if (!ep_ec) {
-        std::cout << "[server] accepted " << rep.address().to_string() << ":"
-                  << rep.port() << std::endl;
+        std::cout << ts_now() << "[server] accepted "
+                  << rep.address().to_string() << ":" << rep.port()
+                  << std::endl;
       } else {
-        std::cout << "[server] accepted (endpoint unknown)" << std::endl;
+        std::cout << ts_now() << "[server] accepted (endpoint unknown)"
+                  << std::endl;
       }
 
       self->sess_ = std::make_shared<TcpServer>(self->ioc_, std::move(sock));

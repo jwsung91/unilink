@@ -21,13 +21,13 @@ int main(int argc, char** argv) {
   std::atomic<bool> connected{false};
 
   cli->on_state([&](LinkState s) {
-    std::cout << "[client] state=" << to_cstr(s) << std::endl;
+    std::cout << ts_now() << " [client] state=" << to_cstr(s) << std::endl;
     connected = (s == LinkState::Connected);
   });
 
   cli->on_bytes([&](const uint8_t* p, size_t n) {
     std::string s(reinterpret_cast<const char*>(p), n);
-    std::cout << "[client] recv chunk: " << s;
+    std::cout << ts_now() << " [client] recv chunk: " << s;
   });
 
   std::thread([cli, &connected] {
@@ -37,7 +37,8 @@ int main(int argc, char** argv) {
       if (connected.load()) {
         std::string msg = "HELLO " + std::to_string(seq++) + "\n";
         std::vector<uint8_t> buf(msg.begin(), msg.end());
-        std::cout << "[client] send (" << buf.size() << "B): " << msg;
+        std::cout << ts_now() << " [client] send (" << buf.size()
+                  << "B): " << msg;
 
         cli->async_write_copy(buf.data(), buf.size());
       }
