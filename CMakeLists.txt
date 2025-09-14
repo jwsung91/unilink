@@ -22,12 +22,21 @@ if(ENABLE_YAML_CONFIG)
 endif()
 
 if(BUILD_EXAMPLES)
-  add_executable(echo_client examples/echo_client.cc)
-  target_link_libraries(echo_client PRIVATE interface::${PROJECT_NAME})
+  add_executable(echo_tcp_client examples/echo_tcp_client.cc)
+  target_link_libraries(echo_tcp_client PRIVATE interface::${PROJECT_NAME})
 
-  add_executable(echo_server examples/echo_server.cc)
-  target_link_libraries(echo_server PRIVATE interface::${PROJECT_NAME})
+  add_executable(echo_tcp_server examples/echo_tcp_server.cc)
+  target_link_libraries(echo_tcp_server PRIVATE interface::${PROJECT_NAME})
 
-  add_executable(echo_serial examples/serial.cc)
+  add_executable(echo_serial examples/echo_serial.cc)
   target_link_libraries(echo_serial PRIVATE interface::${PROJECT_NAME})
+
+    add_executable(chat_tcp_client examples/chat_tcp_client.cc)
+  target_link_libraries(chat_tcp_client PRIVATE interface::${PROJECT_NAME})
+
+  add_executable(chat_tcp_server examples/chat_tcp_server.cc)
+  target_link_libraries(chat_tcp_server PRIVATE interface::${PROJECT_NAME})
+
+  add_executable(chat_serial examples/chat_serial.cc)
+  target_link_libraries(chat_serial PRIVATE interface::${PROJECT_NAME})
   endif()

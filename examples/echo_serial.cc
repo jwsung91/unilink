@@ -1,4 +1,3 @@
-// examples/serial_sender.cc (신규)
 #include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
