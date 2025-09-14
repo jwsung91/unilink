@@ -1,16 +1,25 @@
-#include <iostream>
+
 #include <boost/asio.hpp>
+#include <iostream>
+
+#include "common.hpp"
 #include "factory.hpp"
+#include "ichannel.hpp"
 
 int main(int argc, char** argv) {
-  unsigned short port = (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
+  unsigned short port =
+      (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
   boost::asio::io_context ioc;
-  auto ch = make_server_single(ioc, port);
-  ch->on_state([](LinkState s){ std::cout << "[server] state=" << (int)s << "\n"; });
-  ch->on_receive([&](const Msg& m){
-    ch->async_send(m); // echo back
+
+  auto srv = make_tcp_server_single(ioc, port);
+  srv->on_state([](LinkState s) {
+    std::cout << "[server] state=" << to_cstr(s) << std::endl;
   });
-  ch->start();
+  srv->on_bytes([&](const uint8_t* p, size_t n) {
+    std::cout << "[server] recv " << n << " bytes" << std::endl;
+    srv->async_write_copy(p, n);  // echo raw bytes
+  });
+  srv->start();
   ioc.run();
   return 0;
 }
