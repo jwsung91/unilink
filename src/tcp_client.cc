@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 
-#include "factory.hpp"
 #include "ichannel.hpp"
 
 namespace net = boost::asio;
@@ -173,8 +172,8 @@ class TcpClient : public IChannel,
   LinkState state_ = LinkState::Idle;
 };
 
-// Factory
-std::shared_ptr<IChannel> ChannelFactory::make_tcp_client(net::io_context& ioc,
+// Free creator for factory
+std::shared_ptr<IChannel> make_tcp_client_impl(net::io_context& ioc,
                                           const std::string& host,
                                           uint16_t port) {
   return std::make_shared<TcpClient>(ioc, host, port);

@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 
-#include "factory.hpp"
 #include "ichannel.hpp"
 #include "serial_config.hpp"
 
@@ -181,8 +180,8 @@ class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
   LinkState state_ = LinkState::Idle;
 };
 
-// Factory
-std::shared_ptr<IChannel> ChannelFactory::make_serial_channel(net::io_context& ioc,
+// Free creator for factory
+std::shared_ptr<IChannel> make_serial_channel_impl(net::io_context& ioc,
                                               const std::string& device,
                                               const SerialConfig& cfg) {
   return std::make_shared<Serial>(ioc, device, cfg);
