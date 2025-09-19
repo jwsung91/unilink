@@ -1,3 +1,5 @@
+project(unilink)
+
 file(GLOB_RECURSE LIB_SOURCES
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cc"
   "${CMAKE_CURRENT_SOURCE_DIR}/*/*.cc"
