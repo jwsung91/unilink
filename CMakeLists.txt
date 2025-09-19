@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_EXAMPLES "Build examples" ON)
 
 # Add the src directory, which contains the library's CMakeLists.txt
-add_subdirectory(interface_socket)
+add_subdirectory(unilink)
 
 if(BUILD_EXAMPLES)
   add_executable(echo_tcp_client examples/echo/echo_tcp_client.cc)
