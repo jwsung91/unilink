@@ -1,14 +1,11 @@
-#include <iostream>
 #include "serial.hpp"
+
+#include <iostream>
 
 namespace net = boost::asio;
 
-Serial::Serial(net::io_context& ioc, std::string device, SerialConfig cfg)
-    : ioc_(ioc),
-      port_(ioc),
-      device_(std::move(device)),
-      cfg_(cfg),
-      retry_timer_(ioc) {
+Serial::Serial(net::io_context& ioc, const SerialConfig& cfg)  // NOLINT
+    : ioc_(ioc), port_(ioc), cfg_(cfg), retry_timer_(ioc) {
   rx_.resize(cfg_.read_chunk);
 }
 
@@ -29,14 +26,13 @@ bool Serial::is_connected() const { return opened_; }
 
 void Serial::async_write_copy(const uint8_t* data, size_t n) {
   std::vector<uint8_t> copy(data, data + n);
-  net::post(ioc_,
-            [self = shared_from_this(), buf = std::move(copy)]() mutable {
-              self->queued_bytes_ += buf.size();
-              self->tx_.emplace_back(std::move(buf));
-              if (self->on_bp_ && self->queued_bytes_ > self->bp_high_)
-                self->on_bp_(self->queued_bytes_);
-              if (!self->writing_) self->do_write();
-            });
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(copy)]() mutable {
+    self->queued_bytes_ += buf.size();
+    self->tx_.emplace_back(std::move(buf));
+    if (self->on_bp_ && self->queued_bytes_ > self->bp_high_)
+      self->on_bp_(self->queued_bytes_);
+    if (!self->writing_) self->do_write();
+  });
 }
 
 void Serial::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
@@ -45,7 +41,7 @@ void Serial::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 
 void Serial::open_and_configure() {
   boost::system::error_code ec;
-  port_.open(device_, ec);
+  port_.open(cfg_.device, ec);
   if (ec) {
     schedule_retry("open", ec);
     return;
@@ -76,7 +72,7 @@ void Serial::open_and_configure() {
   opened_ = true;
   state_ = LinkState::Connected;
   notify_state();
-  std::cout << ts_now() << "[serial] opened " << device_ << " @"
+  std::cout << ts_now() << "[serial] opened " << cfg_.device << " @"
             << cfg_.baud_rate << "\n";
   start_read();
 }
@@ -114,7 +110,8 @@ void Serial::do_write() {
                    });
 }
 
-void Serial::handle_error(const char* where, const boost::system::error_code& ec) {
+void Serial::handle_error(const char* where,
+                          const boost::system::error_code& ec) {
   std::cout << ts_now() << "[serial] " << where << " error: " << ec.message()
             << "\n";
   opened_ = false;
@@ -129,13 +126,13 @@ void Serial::handle_error(const char* where, const boost::system::error_code& ec
   }
 }
 
-void Serial::schedule_retry(const char* where, const boost::system::error_code&) {
+void Serial::schedule_retry(const char* where,
+                            const boost::system::error_code&) {
   std::cout << ts_now() << "[serial] retry after "
             << (cfg_.retry_interval_ms / 1000.0) << "s (fixed) at " << where
             << "\n";
   auto self = shared_from_this();
-  retry_timer_.expires_after(
-      std::chrono::milliseconds(cfg_.retry_interval_ms));
+  retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
   retry_timer_.async_wait([self](auto e) {
     if (!e) self->open_and_configure();
   });

@@ -40,11 +40,11 @@ int main(int argc, char** argv) {
 
   boost::asio::io_context ioc;
   SerialConfig cfg;
+  cfg.device = dev;
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
 
-  ChannelFactory::SerialOptions opt{dev, cfg};
-  auto ch = ChannelFactory::create(ioc, opt);
+  auto ch = ChannelFactory::create(ioc, cfg);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;
