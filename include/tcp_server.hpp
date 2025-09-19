@@ -14,10 +14,14 @@
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
+struct TcpServerConfig {
+  uint16_t port = 9000;
+};
+
 class TcpServer : public IChannel,
-                  public std::enable_shared_from_this<TcpServer> {
+                  public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:
-  TcpServer(net::io_context& ioc, uint16_t port);
+  TcpServer(net::io_context& ioc, const TcpServerConfig& cfg);
 
   void start() override;
   void stop() override;
@@ -34,6 +38,7 @@ class TcpServer : public IChannel,
  private:
   net::io_context& ioc_;
   tcp::acceptor acceptor_;
+  TcpServerConfig cfg_;
   std::shared_ptr<TcpServerSession> sess_;
 
   OnBytes on_bytes_;

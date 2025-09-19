@@ -3,7 +3,6 @@
 #include <boost/asio.hpp>
 #include <iostream>
 #include <string>
-#include <thread>
 #include <vector>
 
 #include "channel_factory.hpp"
@@ -32,8 +31,8 @@ int main(int argc, char** argv) {
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
   boost::asio::io_context ioc;
 
-  ChannelFactory::TcpServerSingleOptions opt{port};
-  auto srv = ChannelFactory::create(ioc, opt);
+  TcpServerConfig cfg{port};
+  auto srv = ChannelFactory::create(ioc, cfg);
 
   std::atomic<bool> connected{false};
 
@@ -48,7 +47,7 @@ int main(int argc, char** argv) {
   });
 
   // ⬇️ 서버에서 키보드 입력 → 클라이언트로 전송
-  std::thread([srv, &connected] {
+  std::thread([&srv, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {

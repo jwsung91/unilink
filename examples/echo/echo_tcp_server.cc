@@ -10,8 +10,8 @@ int main(int argc, char** argv) {
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
   boost::asio::io_context ioc;
 
-  ChannelFactory::TcpServerSingleOptions opt{port};
-  auto srv = ChannelFactory::create(ioc, opt);
+  TcpServerConfig cfg{port};
+  auto srv = ChannelFactory::create(ioc, cfg);
   srv->on_state([](LinkState s) {
     std::cout << ts_now() << " [server] state=" << to_cstr(s) << std::endl;
   });

@@ -1,16 +1,12 @@
- #include "tcp_client.hpp"
- #include <iostream>
+#include "tcp_client.hpp"
+
+#include <iostream>
 
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-TcpClient::TcpClient(net::io_context& ioc, std::string host, uint16_t port)
-    : ioc_(ioc),
-      resolver_(ioc),
-      socket_(ioc),
-      host_(std::move(host)),
-      port_(port),
-      retry_timer_(ioc) {}
+TcpClient::TcpClient(net::io_context& ioc, const TcpClientConfig& cfg)
+    : ioc_(ioc), resolver_(ioc), socket_(ioc), cfg_(cfg), retry_timer_(ioc) {}
 
 void TcpClient::start() {
   state_ = LinkState::Connecting;
@@ -29,14 +25,13 @@ bool TcpClient::is_connected() const { return connected_; }
 
 void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   std::vector<uint8_t> copy(data, data + size);
-  net::post(ioc_,
-            [self = shared_from_this(), buf = std::move(copy)]() mutable {
-              self->queue_bytes_ += buf.size();
-              self->tx_.emplace_back(std::move(buf));
-              if (self->on_bp_ && self->queue_bytes_ > self->bp_high_)
-                self->on_bp_(self->queue_bytes_);
-              if (!self->writing_) self->do_write();
-            });
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(copy)]() mutable {
+    self->queue_bytes_ += buf.size();
+    self->tx_.emplace_back(std::move(buf));
+    if (self->on_bp_ && self->queue_bytes_ > self->bp_high_)
+      self->on_bp_(self->queue_bytes_);
+    if (!self->writing_) self->do_write();
+  });
 }
 
 void TcpClient::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
@@ -46,7 +41,7 @@ void TcpClient::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 void TcpClient::do_resolve_connect() {
   auto self = shared_from_this();
   resolver_.async_resolve(
-      host_, std::to_string(port_),
+      cfg_.host, std::to_string(cfg_.port),
       [self](auto ec, tcp::resolver::results_type results) {
         if (ec) {
           self->schedule_retry();
@@ -79,10 +74,10 @@ void TcpClient::schedule_retry() {
   notify_state();
 
   std::cout << ts_now() << " [client] retry in "
-            << (retry_interval_ms_ / 1000.0) << "s (fixed)" << std::endl;
+            << (cfg_.retry_interval_ms / 1000.0) << "s (fixed)" << std::endl;
 
   auto self = shared_from_this();
-  retry_timer_.expires_after(std::chrono::milliseconds(retry_interval_ms_));
+  retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
   retry_timer_.async_wait([self](const boost::system::error_code& ec) {
     if (!ec) self->do_resolve_connect();
   });

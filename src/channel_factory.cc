@@ -1,6 +1,7 @@
 #include "channel_factory.hpp"
 
 #include <boost/asio.hpp>
+#include <memory>
 #include <string>
 #include <variant>
 
@@ -11,10 +12,10 @@ std::shared_ptr<IChannel> ChannelFactory::create(
   return std::visit(
       [&](const auto& opt) -> std::shared_ptr<IChannel> {
         using T = std::decay_t<decltype(opt)>;
-        if constexpr (std::is_same_v<T, TcpClientOptions>) {
-          return std::make_shared<TcpClient>(ioc, opt.host, opt.port);
-        } else if constexpr (std::is_same_v<T, TcpServerSingleOptions>) {
-          return std::make_shared<TcpServer>(ioc, opt.port);
+        if constexpr (std::is_same_v<T, TcpClientConfig>) {
+          return std::make_shared<TcpClient>(ioc, opt);
+        } else if constexpr (std::is_same_v<T, TcpServerConfig>) {
+          return std::make_shared<TcpServer>(ioc, opt);
         } else if constexpr (std::is_same_v<T, SerialOptions>) {
           return std::make_shared<Serial>(ioc, opt.device, opt.cfg);
         } else {

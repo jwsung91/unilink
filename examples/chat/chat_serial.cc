@@ -43,8 +43,8 @@ int main(int argc, char** argv) {
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
 
-  ChannelFactory::SerialOptions opt{dev, cfg};
-  auto ch = ChannelFactory::create(ioc, opt);
+  SerialOptions opts{dev, cfg};
+  auto ch = ChannelFactory::create(ioc, opts);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;

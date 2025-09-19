@@ -1,5 +1,7 @@
 #include "tcp_server_session.hpp"
 
+#include <iostream>
+
 TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock)
     : ioc_(ioc), socket_(std::move(sock)) {}
 

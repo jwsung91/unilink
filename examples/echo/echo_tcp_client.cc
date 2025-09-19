@@ -9,6 +9,7 @@
 #include "channel_factory.hpp"
 #include "common.hpp"
 #include "ichannel.hpp"
+#include "tcp_client.hpp"
 
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : std::string("127.0.0.1");
@@ -16,8 +17,10 @@ int main(int argc, char** argv) {
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
   boost::asio::io_context ioc;
-  ChannelFactory::TcpClientOptions opt{host, port};
-  auto cli = ChannelFactory::create(ioc, opt);
+  TcpClientConfig cfg{};
+  cfg.host = host;
+  cfg.port = port;
+  auto cli = ChannelFactory::create(ioc, cfg);
 
   std::atomic<bool> connected{false};
 

@@ -15,8 +15,8 @@ int main(int argc, char** argv) {
   SerialConfig cfg;
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
-  ChannelFactory::SerialOptions opt{dev, cfg};
-  auto ser = ChannelFactory::create(ioc, opt);
+  SerialOptions opts{dev, cfg};
+  auto ser = ChannelFactory::create(ioc, opts);
 
   std::atomic<bool> connected{false};
 

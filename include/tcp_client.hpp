@@ -1,9 +1,9 @@
 #pragma once
 
-#include <boost/asio.hpp>
-#include <deque>
 #include <array>
+#include <boost/asio.hpp>
 #include <cstdint>
+#include <deque>
 #include <memory>
 #include <string>
 #include <vector>
@@ -13,9 +13,16 @@
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-class TcpClient : public IChannel, public std::enable_shared_from_this<TcpClient> {
+struct TcpClientConfig {
+  std::string host = "127.0.0.1";
+  uint16_t port = 9000;
+  unsigned retry_interval_ms = 2000;  // 2s
+};
+
+class TcpClient : public IChannel,
+                  public std::enable_shared_from_this<TcpClient> {
  public:
-  TcpClient(net::io_context& ioc, std::string host, uint16_t port);
+  TcpClient(net::io_context& ioc, const TcpClientConfig& cfg);
 
   void start() override;
   void stop() override;
@@ -40,10 +47,8 @@ class TcpClient : public IChannel, public std::enable_shared_from_this<TcpClient
   net::io_context& ioc_;
   tcp::resolver resolver_;
   tcp::socket socket_;
-  std::string host_;
-  uint16_t port_;
+  TcpClientConfig cfg_;
   net::steady_timer retry_timer_;
-  unsigned retry_interval_ms_ = 2000;
 
   std::array<uint8_t, 4096> rx_{};
   std::deque<std::vector<uint8_t>> tx_;
@@ -57,5 +62,3 @@ class TcpClient : public IChannel, public std::enable_shared_from_this<TcpClient
   bool connected_ = false;
   LinkState state_ = LinkState::Idle;
 };
-
-

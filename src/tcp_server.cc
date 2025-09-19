@@ -5,8 +5,10 @@
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-TcpServer::TcpServer(net::io_context& ioc, uint16_t port)
-    : ioc_(ioc), acceptor_(ioc, tcp::endpoint(tcp::v4(), port)) {}
+TcpServer::TcpServer(net::io_context& ioc, const TcpServerConfig& cfg)
+    : ioc_(ioc),
+      acceptor_(ioc, tcp::endpoint(tcp::v4(), cfg.port)),
+      cfg_(cfg) {}
 
 void TcpServer::start() {
   state_ = LinkState::Listening;
