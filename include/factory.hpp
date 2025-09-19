@@ -5,6 +5,9 @@
 
 #include "ichannel.hpp"
 #include "serial_config.hpp"
+#include "serial.hpp"
+#include "tcp_client.hpp"
+#include "tcp_server.hpp"
 
 class ChannelFactory {
  public:
