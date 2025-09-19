@@ -174,7 +174,7 @@ class TcpClient : public IChannel,
 };
 
 // Factory
-std::shared_ptr<IChannel> make_tcp_client(net::io_context& ioc,
+std::shared_ptr<IChannel> ChannelFactory::make_tcp_client(net::io_context& ioc,
                                           const std::string& host,
                                           uint16_t port) {
   return std::make_shared<TcpClient>(ioc, host, port);

@@ -193,7 +193,7 @@ class TcpServer : public IChannel,
 };
 
 // Factory
-std::shared_ptr<IChannel> make_tcp_server_single(net::io_context& ioc,
+std::shared_ptr<IChannel> ChannelFactory::make_tcp_server_single(net::io_context& ioc,
                                                  uint16_t port) {
   return std::make_shared<TcpServer>(ioc, port);
 }

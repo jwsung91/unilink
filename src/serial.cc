@@ -182,7 +182,7 @@ class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
 };
 
 // Factory
-std::shared_ptr<IChannel> make_serial_channel(net::io_context& ioc,
+std::shared_ptr<IChannel> ChannelFactory::make_serial_channel(net::io_context& ioc,
                                               const std::string& device,
                                               const SerialConfig& cfg) {
   return std::make_shared<Serial>(ioc, device, cfg);
