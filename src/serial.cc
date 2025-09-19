@@ -5,6 +5,7 @@
 
 #include "factory.hpp"
 #include "ichannel.hpp"
+#include "serial_config.hpp"
 
 namespace net = boost::asio;
 
