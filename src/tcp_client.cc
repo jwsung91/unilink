@@ -171,10 +171,3 @@ class TcpClient : public IChannel,
   bool connected_ = false;
   LinkState state_ = LinkState::Idle;
 };
-
-// Free creator for factory
-std::shared_ptr<IChannel> make_tcp_client_impl(net::io_context& ioc,
-                                          const std::string& host,
-                                          uint16_t port) {
-  return std::make_shared<TcpClient>(ioc, host, port);
-}

@@ -190,9 +190,3 @@ class TcpServer : public IChannel,
   OnBackpressure on_bp_;
   LinkState state_ = LinkState::Idle;
 };
-
-// Free creator for factory
-std::shared_ptr<IChannel> make_tcp_server_single_impl(net::io_context& ioc,
-                                                 uint16_t port) {
-  return std::make_shared<TcpServer>(ioc, port);
-}
