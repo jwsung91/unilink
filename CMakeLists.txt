@@ -5,21 +5,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_EXAMPLES "Build examples" ON)
 
-find_package(Boost 1.70 REQUIRED COMPONENTS system)
-find_package(Threads REQUIRED)
-
-file(GLOB_RECURSE SOURCES "src/*/*.cc")
-add_library(${PROJECT_NAME} ${SOURCES})
-add_library(interface::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_include_directories(
-  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
-                         $<INSTALL_INTERFACE:include>
-)
-target_link_libraries(${PROJECT_NAME} PUBLIC Boost::system Threads::Threads)
-
-if(ENABLE_YAML_CONFIG)
-  target_link_libraries(${PROJECT_NAME} PRIVATE yaml-cpp)
-endif()
+# Add the src directory, which contains the library's CMakeLists.txt
+add_subdirectory(interface_socket)
 
 if(BUILD_EXAMPLES)
   add_executable(echo_tcp_client examples/echo/echo_tcp_client.cc)
