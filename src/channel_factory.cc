@@ -16,8 +16,8 @@ std::shared_ptr<IChannel> ChannelFactory::create(
           return std::make_shared<TcpClient>(ioc, opt);
         } else if constexpr (std::is_same_v<T, TcpServerConfig>) {
           return std::make_shared<TcpServer>(ioc, opt);
-        } else if constexpr (std::is_same_v<T, SerialOptions>) {
-          return std::make_shared<Serial>(ioc, opt.device, opt.cfg);
+        } else if constexpr (std::is_same_v<T, SerialConfig>) {
+          return std::make_shared<Serial>(ioc, opt);
         } else {
           static_assert(!sizeof(T*),
                         "Non-exhaustive visitor for ChannelOptions");

@@ -13,10 +13,10 @@ int main(int argc, char** argv) {
 
   boost::asio::io_context ioc;
   SerialConfig cfg;
+  cfg.device = dev;
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
-  SerialOptions opts{dev, cfg};
-  auto ser = ChannelFactory::create(ioc, opts);
+  auto ser = ChannelFactory::create(ioc, cfg);
 
   std::atomic<bool> connected{false};
 

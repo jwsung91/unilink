@@ -12,6 +12,7 @@
 namespace net = boost::asio;
 
 struct SerialConfig {
+  std::string device = "/dev/ttyUSB0";
   unsigned baud_rate = 115200;
   unsigned char_size = 8;  // 5,6,7,8
   enum class Parity { None, Even, Odd } parity = Parity::None;
@@ -24,14 +25,9 @@ struct SerialConfig {
   unsigned retry_interval_ms = 2000;  // 2s
 };
 
-struct SerialOptions {
-  std::string device;  // 예: "/dev/ttyUSB0"
-  SerialConfig cfg;
-};
-
 class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
  public:
-  Serial(net::io_context& ioc, std::string device, SerialConfig cfg);
+  Serial(net::io_context& ioc, const SerialConfig& cfg);
 
   void start() override;
   void stop() override;
@@ -55,7 +51,6 @@ class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
  private:
   net::io_context& ioc_;
   net::serial_port port_;
-  std::string device_;
   SerialConfig cfg_;
   net::steady_timer retry_timer_;
 

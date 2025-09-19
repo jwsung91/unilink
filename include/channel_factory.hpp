@@ -11,7 +11,7 @@
 class ChannelFactory {
  public:
   using ChannelOptions =
-      std::variant<TcpClientConfig, TcpServerConfig, SerialOptions>;
+      std::variant<TcpClientConfig, TcpServerConfig, SerialConfig>;
 
   // Unified factory API
   static std::shared_ptr<IChannel> create(class boost::asio::io_context& ioc,
