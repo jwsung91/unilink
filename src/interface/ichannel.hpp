@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 
-#include "common.hpp"
+#include "common/common.hpp"
 
 class IChannel {
  public:
