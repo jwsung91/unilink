@@ -127,9 +127,10 @@ void Serial::handle_error(const char* where,
 }
 
 void Serial::schedule_retry(const char* where,
-                            const boost::system::error_code&) {
+                            const boost::system::error_code& ec) {
   std::cout << ts_now() << "[serial] retry after "
             << (cfg_.retry_interval_ms / 1000.0) << "s (fixed) at " << where
+            << " (" << ec.message() << ")"
             << "\n";
   auto self = shared_from_this();
   retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
