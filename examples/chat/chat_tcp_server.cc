@@ -6,8 +6,8 @@
 #include <thread>
 #include <vector>
 
+#include "channel_factory.hpp"
 #include "common.hpp"
-#include "factory.hpp"
 #include "ichannel.hpp"
 
 // (선택) 간단 로깅 헬퍼

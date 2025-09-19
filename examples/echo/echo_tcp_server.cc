@@ -1,8 +1,8 @@
 #include <boost/asio.hpp>
 #include <iostream>
 
+#include "channel_factory.hpp"
 #include "common.hpp"
-#include "factory.hpp"
 #include "ichannel.hpp"
 
 int main(int argc, char** argv) {

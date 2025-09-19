@@ -1,4 +1,4 @@
-#include "factory.hpp"
+#include "channel_factory.hpp"
 
 #include <boost/asio.hpp>
 #include <string>

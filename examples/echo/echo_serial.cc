@@ -5,8 +5,8 @@
 #include <thread>
 #include <vector>
 
+#include "channel_factory.hpp"
 #include "common.hpp"
-#include "factory.hpp"
 
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
