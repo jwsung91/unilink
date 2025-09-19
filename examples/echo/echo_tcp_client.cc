@@ -11,13 +11,6 @@
 #include "interface/ichannel.hpp"
 #include "module/tcp_client.hpp"
 
-// ts_now() is assumed to be defined elsewhere, returning a timestamp string.
-void log_message(const std::string& tag, const std::string& direction,
-                 const std::string& message) {
-  std::cout << ts_now() << " " << tag << " [" << direction << "] " << message
-            << std::endl;
-}
-
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : std::string("127.0.0.1");
   unsigned short port =

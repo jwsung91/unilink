@@ -9,25 +9,6 @@
 #include "common/common.hpp"
 #include "factory/channel_factory.hpp"
 
-// ts_now() is assumed to be defined elsewhere, returning a timestamp string.
-void log_message(const std::string& tag, const std::string& direction,
-                 const std::string& message) {
-  std::cout << ts_now() << " " << tag << " [" << direction << "] " << message
-            << std::endl;
-}
-
-static void feed_lines(std::string& acc, const uint8_t* p, size_t n,
-                       const std::function<void(std::string)>& on_line) {
-  acc.append(reinterpret_cast<const char*>(p), n);
-  size_t pos;
-  while ((pos = acc.find('\n')) != std::string::npos) {
-    std::string line = acc.substr(0, pos);
-    if (!line.empty() && line.back() == '\r') line.pop_back();
-    on_line(line);
-    acc.erase(0, pos + 1);
-  }
-}
-
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
 

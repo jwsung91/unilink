@@ -5,13 +5,6 @@
 #include "factory/channel_factory.hpp"
 #include "interface/ichannel.hpp"
 
-// ts_now() is assumed to be defined elsewhere, returning a timestamp string.
-void log_message(const std::string& tag, const std::string& direction,
-                 const std::string& message) {
-  std::cout << ts_now() << " " << tag << " [" << direction << "] " << message
-            << std::endl;
-}
-
 int main(int argc, char** argv) {
   unsigned short port =
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
