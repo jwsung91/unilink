@@ -9,20 +9,13 @@
 #include "factory/channel_factory.hpp"
 #include "interface/ichannel.hpp"
 
-#define LOG_TX(TAG, X)                                             \
-  do {                                                             \
-    std::ostringstream __oss;                                      \
-    __oss << X;                                                    \
-    std::cout << ts_now() << " " << TAG << " [TX] " << __oss.str() \
-              << std::endl;                                        \
-  } while (0)
-#define LOG_RX(TAG, X)                                             \
-  do {                                                             \
-    std::ostringstream __oss;                                      \
-    __oss << X;                                                    \
-    std::cout << ts_now() << " " << TAG << " [RX] " << __oss.str() \
-              << std::endl;                                        \
-  } while (0)
+// ts_now() is assumed to be defined elsewhere, returning a timestamp string.
+void log_message(const std::string& tag, const std::string& direction,
+                 const std::string& message) {
+  std::cout << ts_now() << " " << tag << " [" << direction << "] " << message
+            << std::endl;
+}
+
 static void feed_lines(std::string& acc, const uint8_t* p, size_t n,
                        const std::function<void(std::string)>& on_line) {
   acc.append(reinterpret_cast<const char*>(p), n);
@@ -51,13 +44,14 @@ int main(int argc, char** argv) {
   std::string rx_acc;
 
   cli->on_state([&](LinkState s) {
-    std::cout << ts_now() << " [client] state=" << to_cstr(s) << std::endl;
+    std::string state_msg = "state=" + std::string(to_cstr(s));
+    log_message("[client]", "STATE", state_msg);
     connected = (s == LinkState::Connected);
   });
 
   cli->on_bytes([&](const uint8_t* p, size_t n) {
     feed_lines(rx_acc, p, n,
-               [&](std::string line) { LOG_RX("[client]", line); });
+               [&](std::string line) { log_message("[client]", "RX", line); });
   });
 
   // 입력 쓰레드: stdin 한 줄 읽어서 서버로 전송
@@ -65,11 +59,11 @@ int main(int argc, char** argv) {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
-        std::cout << ts_now() << " [client] (not connected)\n";
+        log_message("[client]", "INFO", "(not connected)");
         continue;
       }
       std::string msg = line + "\n";
-      LOG_TX("[client]", line);
+      log_message("[client]", "TX", line);
       std::vector<uint8_t> buf(msg.begin(), msg.end());
       cli->async_write_copy(buf.data(), buf.size());
     }
