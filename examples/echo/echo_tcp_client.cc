@@ -6,10 +6,10 @@
 #include <thread>
 #include <vector>
 
-#include "channel_factory.hpp"
-#include "common.hpp"
-#include "ichannel.hpp"
-#include "tcp_client.hpp"
+#include "common/common.hpp"
+#include "factory/channel_factory.hpp"
+#include "interface/ichannel.hpp"
+#include "module/tcp_client.hpp"
 
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : std::string("127.0.0.1");

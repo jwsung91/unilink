@@ -1,9 +1,9 @@
 #include <boost/asio.hpp>
 #include <iostream>
 
-#include "channel_factory.hpp"
-#include "common.hpp"
-#include "ichannel.hpp"
+#include "common/common.hpp"
+#include "factory/channel_factory.hpp"
+#include "interface/ichannel.hpp"
 
 int main(int argc, char** argv) {
   unsigned short port =

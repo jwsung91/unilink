@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "ichannel.hpp"
+#include "interface/ichannel.hpp"
 
 namespace net = boost::asio;
 

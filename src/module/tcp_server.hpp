@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-#include "ichannel.hpp"
+#include "interface/ichannel.hpp"
 #include "tcp_server_session.hpp"
 
 namespace net = boost::asio;

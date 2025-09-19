@@ -3,10 +3,10 @@
 #include <string>
 #include <variant>
 
-#include "ichannel.hpp"
-#include "serial.hpp"
-#include "tcp_client.hpp"
-#include "tcp_server.hpp"
+#include "interface/ichannel.hpp"
+#include "module/serial.hpp"
+#include "module/tcp_client.hpp"
+#include "module/tcp_server.hpp"
 
 class ChannelFactory {
  public:

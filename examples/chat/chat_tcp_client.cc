@@ -6,8 +6,8 @@
 #include <thread>
 #include <vector>
 
-#include "channel_factory.hpp"
-#include "ichannel.hpp"
+#include "factory/channel_factory.hpp"
+#include "interface/ichannel.hpp"
 
 #define LOG_TX(TAG, X)                                             \
   do {                                                             \

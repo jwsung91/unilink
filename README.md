@@ -29,7 +29,7 @@ cmake --build build -j
 
 ## 타임스탬프 & 로그 매크로 (공통)
 
-`include/common.hpp`에 아래 유틸이 **한 번**만 있으면 됩니다.
+`include/common/common.hpp`에 아래 유틸이 **한 번**만 있으면 됩니다.
 
 ```cpp
 #include <chrono>

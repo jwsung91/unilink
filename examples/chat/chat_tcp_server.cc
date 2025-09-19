@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 
-#include "channel_factory.hpp"
-#include "common.hpp"
-#include "ichannel.hpp"
+#include "common/common.hpp"
+#include "factory/channel_factory.hpp"
+#include "interface/ichannel.hpp"
 
 // (선택) 간단 로깅 헬퍼
 #include <sstream>
