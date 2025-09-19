@@ -32,7 +32,8 @@ int main(int argc, char** argv) {
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
   boost::asio::io_context ioc;
 
-  auto srv = make_tcp_server_single(ioc, port);
+  ChannelFactory::TcpServerSingleOptions opt{port};
+  auto srv = ChannelFactory::create(ioc, opt);
 
   std::atomic<bool> connected{false};
 

@@ -16,7 +16,8 @@ int main(int argc, char** argv) {
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
   boost::asio::io_context ioc;
-  auto cli = make_tcp_client(ioc, host, port);
+  ChannelFactory::TcpClientOptions opt{host, port};
+  auto cli = ChannelFactory::create(ioc, opt);
 
   std::atomic<bool> connected{false};
 
