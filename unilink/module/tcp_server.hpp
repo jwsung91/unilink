@@ -8,15 +8,12 @@
 #include <memory>
 #include <vector>
 
+#include "config/tcp_server_config.hpp"
 #include "interface/ichannel.hpp"
 #include "tcp_server_session.hpp"
 
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
-
-struct TcpServerConfig {
-  uint16_t port = 9000;
-};
 
 class TcpServer : public IChannel,
                   public std::enable_shared_from_this<TcpServer> {  // NOLINT

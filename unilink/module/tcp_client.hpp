@@ -8,16 +8,11 @@
 #include <string>
 #include <vector>
 
+#include "config/tcp_client_config.hpp"
 #include "interface/ichannel.hpp"
 
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
-
-struct TcpClientConfig {
-  std::string host = "127.0.0.1";
-  uint16_t port = 9000;
-  unsigned retry_interval_ms = 2000;  // 2s
-};
 
 class TcpClient : public IChannel,
                   public std::enable_shared_from_this<TcpClient> {
