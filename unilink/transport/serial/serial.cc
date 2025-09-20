@@ -10,20 +10,25 @@ namespace net = boost::asio;
 using namespace common;
 using namespace config;
 
-Serial::Serial(net::io_context& ioc, const SerialConfig& cfg)  // NOLINT
-    : ioc_(ioc), port_(ioc), cfg_(cfg), retry_timer_(ioc) {
+Serial::Serial(const SerialConfig& cfg)  // NOLINT
+    : ioc_(), port_(ioc_), cfg_(cfg), retry_timer_(ioc_) {
   rx_.resize(cfg_.read_chunk);
 }
 
 void Serial::start() {
+  ioc_thread_ = std::thread([this] { ioc_.run(); });
   state_ = LinkState::Connecting;
   notify_state();
   open_and_configure();
 }
 
 void Serial::stop() {
-  retry_timer_.cancel();
-  close_port();
+  net::post(ioc_, [this] {
+    retry_timer_.cancel();
+    close_port();
+  });
+  ioc_.stop();
+  if (ioc_thread_.joinable()) ioc_thread_.join();
   state_ = LinkState::Closed;
   notify_state();
 }

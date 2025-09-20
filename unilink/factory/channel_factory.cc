@@ -12,17 +12,16 @@ using ChannelOptions = ChannelFactory::ChannelOptions;
 using namespace interface;
 using namespace transport;
 
-std::shared_ptr<IChannel> ChannelFactory::create(
-    boost::asio::io_context& ioc, const ChannelOptions& options) {
+std::shared_ptr<IChannel> ChannelFactory::create(const ChannelOptions& options) {
   return std::visit(
       [&](const auto& opt) -> std::shared_ptr<IChannel> {
         using T = std::decay_t<decltype(opt)>;
         if constexpr (std::is_same_v<T, TcpClientConfig>) {
-          return std::make_shared<TcpClient>(ioc, opt);
+          return std::make_shared<TcpClient>(opt);
         } else if constexpr (std::is_same_v<T, TcpServerConfig>) {
-          return std::make_shared<TcpServer>(ioc, opt);
+          return std::make_shared<TcpServer>(opt);
         } else if constexpr (std::is_same_v<T, SerialConfig>) {
-          return std::make_shared<Serial>(ioc, opt);
+          return std::make_shared<Serial>(opt);
         } else {
           static_assert(!sizeof(T*),
                         "Non-exhaustive visitor for ChannelOptions");

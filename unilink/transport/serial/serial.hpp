@@ -5,6 +5,7 @@
 #include <deque>
 #include <memory>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "config/serial_config.hpp"
@@ -20,7 +21,7 @@ namespace net = boost::asio;
 
 class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
  public:
-  Serial(net::io_context& ioc, const SerialConfig& cfg);
+  explicit Serial(const SerialConfig& cfg);
 
   void start() override;
   void stop() override;
@@ -42,7 +43,9 @@ class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
   void notify_state();
 
  private:
-  net::io_context& ioc_;
+  net::io_context ioc_;
+  std::thread ioc_thread_;
+
   net::serial_port port_;
   SerialConfig cfg_;
   net::steady_timer retry_timer_;

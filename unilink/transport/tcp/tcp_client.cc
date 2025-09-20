@@ -12,18 +12,23 @@ using namespace common;
 using namespace config;
 using tcp = net::ip::tcp;
 
-TcpClient::TcpClient(net::io_context& ioc, const TcpClientConfig& cfg)
-    : ioc_(ioc), resolver_(ioc), socket_(ioc), cfg_(cfg), retry_timer_(ioc) {}
+TcpClient::TcpClient(const TcpClientConfig& cfg)
+    : ioc_(), resolver_(ioc_), socket_(ioc_), cfg_(cfg), retry_timer_(ioc_) {}
 
 void TcpClient::start() {
+  ioc_thread_ = std::thread([this] { ioc_.run(); });
   state_ = LinkState::Connecting;
   notify_state();
   do_resolve_connect();
 }
 
 void TcpClient::stop() {
-  retry_timer_.cancel();
-  close_socket();
+  net::post(ioc_, [this] {
+    retry_timer_.cancel();
+    close_socket();
+  });
+  ioc_.stop();
+  if (ioc_thread_.joinable()) ioc_thread_.join();
   state_ = LinkState::Closed;
   notify_state();
 }

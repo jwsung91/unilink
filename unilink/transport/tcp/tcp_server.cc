@@ -12,21 +12,24 @@ using namespace common;
 using namespace config;
 using tcp = net::ip::tcp;
 
-TcpServer::TcpServer(net::io_context& ioc, const TcpServerConfig& cfg)
-    : ioc_(ioc),
-      acceptor_(ioc, tcp::endpoint(tcp::v4(), cfg.port)),
-      cfg_(cfg) {}
+TcpServer::TcpServer(const TcpServerConfig& cfg)
+    : ioc_(), acceptor_(ioc_, tcp::endpoint(tcp::v4(), cfg.port)), cfg_(cfg) {}
 
 void TcpServer::start() {
+  ioc_thread_ = std::thread([this] { ioc_.run(); });
   state_ = LinkState::Listening;
   notify_state();
   do_accept();
 }
 
 void TcpServer::stop() {
-  boost::system::error_code ec;
-  acceptor_.close(ec);
-  if (sess_) sess_.reset();
+  net::post(ioc_, [this] {
+    boost::system::error_code ec;
+    acceptor_.close(ec);
+    if (sess_) sess_.reset();
+  });
+  ioc_.stop();
+  if (ioc_thread_.joinable()) ioc_thread_.join();
   state_ = LinkState::Closed;
   notify_state();
 }

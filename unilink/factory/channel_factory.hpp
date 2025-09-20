@@ -20,8 +20,7 @@ class ChannelFactory {
       std::variant<TcpClientConfig, TcpServerConfig, SerialConfig>;
 
   // Unified factory API
-  static std::shared_ptr<IChannel> create(class boost::asio::io_context& ioc,
-                                          const ChannelOptions& options);
+  static std::shared_ptr<IChannel> create(const ChannelOptions& options);
 };
 }  // namespace factory
 }  // namespace unilink
