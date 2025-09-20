@@ -10,6 +10,7 @@ namespace factory {
 
 using ChannelOptions = ChannelFactory::ChannelOptions;
 using namespace interface;
+using namespace module;
 
 std::shared_ptr<IChannel> ChannelFactory::create(
     boost::asio::io_context& ioc, const ChannelOptions& options) {
