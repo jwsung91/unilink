@@ -1,6 +1,5 @@
 // examples/raw_server.cc (교체)
 #include <atomic>
-#include <boost/asio.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -17,10 +16,8 @@ using namespace unilink::config;
 int main(int argc, char** argv) {
   unsigned short port =
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
-  boost::asio::io_context ioc;
-
   TcpServerConfig cfg{port};
-  auto srv = ChannelFactory::create(ioc, cfg);
+  auto srv = ChannelFactory::create(cfg);
 
   std::atomic<bool> connected{false};
 
@@ -51,6 +48,5 @@ int main(int argc, char** argv) {
   }).detach();
 
   srv->start();
-  ioc.run();
   return 0;
 }

@@ -1,5 +1,4 @@
 #include <atomic>
-#include <boost/asio.hpp>
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -16,12 +15,11 @@ using namespace unilink::config;
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
 
-  boost::asio::io_context ioc;
   SerialConfig cfg;
   cfg.device = dev;
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
-  auto ser = ChannelFactory::create(ioc, cfg);
+  auto ser = ChannelFactory::create(cfg);
 
   std::atomic<bool> connected{false};
 
@@ -53,6 +51,5 @@ int main(int argc, char** argv) {
   }).detach();
 
   ser->start();
-  ioc.run();
   return 0;
 }

@@ -1,5 +1,4 @@
 #include <atomic>
-#include <boost/asio.hpp>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -23,7 +22,7 @@ int main(int argc, char** argv) {
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
 
-  auto ch = ChannelFactory::create(ioc, cfg);
+  auto ch = ChannelFactory::create(cfg);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;
@@ -55,6 +54,5 @@ int main(int argc, char** argv) {
   }).detach();
 
   ch->start();
-  ioc.run();
   return 0;
 }

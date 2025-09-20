@@ -1,5 +1,4 @@
 #include <atomic>
-#include <boost/asio.hpp>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -19,12 +18,11 @@ int main(int argc, char** argv) {
   unsigned short port =
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
-  boost::asio::io_context ioc;
   TcpClientConfig cfg;
   cfg.host = host;
   cfg.port = port;
 
-  auto cli = ChannelFactory::create(ioc, cfg);
+  auto cli = ChannelFactory::create(cfg);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;
@@ -56,6 +54,5 @@ int main(int argc, char** argv) {
   }).detach();
 
   cli->start();
-  ioc.run();
   return 0;
 }
