@@ -1,9 +1,9 @@
-#include "module/serial.hpp"
+#include "transport/serial.hpp"
 
 #include <iostream>
 
 namespace unilink {
-namespace module {
+namespace transport {
 
 namespace net = boost::asio;
 
@@ -153,5 +153,5 @@ void Serial::notify_state() {
   if (on_state_) on_state_(state_);
 }
 
-}  // namespace module
+}  // namespace transport
 }  // namespace unilink

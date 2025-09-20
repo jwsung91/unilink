@@ -1,9 +1,9 @@
-#include "module/tcp_client.hpp"
+#include "transport/tcp_client.hpp"
 
 #include <iostream>
 
 namespace unilink {
-namespace module {
+namespace transport {
 
 namespace net = boost::asio;
 
@@ -140,5 +140,5 @@ void TcpClient::close_socket() {
 void TcpClient::notify_state() {
   if (on_state_) on_state_(state_);
 }
-}  // namespace module
+}  // namespace transport
 }  // namespace unilink

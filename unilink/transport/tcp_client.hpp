@@ -12,7 +12,7 @@
 #include "interface/ichannel.hpp"
 
 namespace unilink {
-namespace module {
+namespace transport {
 
 namespace net = boost::asio;
 
@@ -64,5 +64,5 @@ class TcpClient : public IChannel,
   bool connected_ = false;
   LinkState state_ = LinkState::Idle;
 };
-}  // namespace module
+}  // namespace transport
 }  // namespace unilink

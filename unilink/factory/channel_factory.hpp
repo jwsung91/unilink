@@ -4,9 +4,9 @@
 #include <variant>
 
 #include "interface/ichannel.hpp"
-#include "module/serial.hpp"
-#include "module/tcp_client.hpp"
-#include "module/tcp_server.hpp"
+#include "transport/serial.hpp"
+#include "transport/tcp_client.hpp"
+#include "transport/tcp_server.hpp"
 
 namespace unilink {
 namespace factory {

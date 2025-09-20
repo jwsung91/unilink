@@ -13,7 +13,7 @@
 #include "tcp_server_session.hpp"
 
 namespace unilink {
-namespace module {
+namespace transport {
 
 namespace net = boost::asio;
 
@@ -50,5 +50,5 @@ class TcpServer : public IChannel,
   OnBackpressure on_bp_;
   LinkState state_ = LinkState::Idle;
 };
-}  // namespace module
+}  // namespace transport
 }  // namespace unilink

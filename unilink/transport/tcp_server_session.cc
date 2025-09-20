@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace unilink {
-namespace module {
+namespace transport {
 
 using namespace common;
 
@@ -74,5 +74,5 @@ void TcpServerSession::do_close() {
   if (on_close_) on_close_();
 }
 
-}  // namespace module
+}  // namespace transport
 }  // namespace unilink

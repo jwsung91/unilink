@@ -11,7 +11,7 @@
 #include "interface/ichannel.hpp"
 
 namespace unilink {
-namespace module {
+namespace transport {
 
 using namespace interface;
 using namespace common;
@@ -60,5 +60,5 @@ class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
   bool opened_ = false;
   LinkState state_ = LinkState::Idle;
 };
-}  // namespace module
+}  // namespace transport
 }  // namespace unilink

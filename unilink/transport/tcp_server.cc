@@ -1,9 +1,9 @@
-#include "module/tcp_server.hpp"
+#include "transport/tcp_server.hpp"
 
 #include <iostream>
 
 namespace unilink {
-namespace module {
+namespace transport {
 
 namespace net = boost::asio;
 
@@ -88,5 +88,5 @@ void TcpServer::notify_state() {
   if (on_state_) on_state_(state_);
 }
 
-}  // namespace module
+}  // namespace transport
 }  // namespace unilink

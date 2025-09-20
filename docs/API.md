@@ -1,6 +1,6 @@
 # 📘 API Guide
 
-This section explains how an upper-layer application can use the **TcpClient** module.  
+This section explains how an upper-layer application can use the **TcpClient** transport.  
 TcpClient is a **low-level async communication API**. Upper layers should handle parsing, state machines, and request/response logic on top.
 
 ---
