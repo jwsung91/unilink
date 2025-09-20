@@ -8,6 +8,9 @@
 #include <sstream>
 #include <string>
 
+namespace unilink {
+namespace common {
+
 enum class LinkState { Idle, Connecting, Listening, Connected, Closed, Error };
 
 inline const char* to_cstr(LinkState s) {
@@ -67,3 +70,5 @@ static void feed_lines(std::string& acc, const uint8_t* p, size_t n,
     acc.erase(0, pos + 1);
   }
 }
+}  // namespace common
+}  // namespace unilink

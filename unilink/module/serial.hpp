@@ -10,6 +10,12 @@
 #include "config/serial_config.hpp"
 #include "interface/ichannel.hpp"
 
+namespace unilink {
+namespace module {
+
+using namespace interface;
+using namespace common;
+using namespace config;
 namespace net = boost::asio;
 
 class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
@@ -54,3 +60,5 @@ class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
   bool opened_ = false;
   LinkState state_ = LinkState::Idle;
 };
+}  // namespace module
+}  // namespace unilink

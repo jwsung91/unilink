@@ -12,7 +12,14 @@
 #include "interface/ichannel.hpp"
 #include "tcp_server_session.hpp"
 
+namespace unilink {
+namespace module {
+
 namespace net = boost::asio;
+
+using namespace interface;
+using namespace common;
+using namespace config;
 using tcp = net::ip::tcp;
 
 class TcpServer : public IChannel,
@@ -43,3 +50,5 @@ class TcpServer : public IChannel,
   OnBackpressure on_bp_;
   LinkState state_ = LinkState::Idle;
 };
+}  // namespace module
+}  // namespace unilink

@@ -2,7 +2,14 @@
 
 #include <iostream>
 
+namespace unilink {
+namespace module {
+
 namespace net = boost::asio;
+
+using namespace interface;
+using namespace common;
+using namespace config;
 using tcp = net::ip::tcp;
 
 TcpClient::TcpClient(net::io_context& ioc, const TcpClientConfig& cfg)
@@ -133,3 +140,5 @@ void TcpClient::close_socket() {
 void TcpClient::notify_state() {
   if (on_state_) on_state_(state_);
 }
+}  // namespace module
+}  // namespace unilink
