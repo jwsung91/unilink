@@ -9,7 +9,6 @@
 #include "common/common.hpp"
 #include "factory/channel_factory.hpp"
 #include "interface/ichannel.hpp"
-#include "transport/tcp_client.hpp"
 
 using namespace unilink::interface;
 using namespace unilink::factory;
