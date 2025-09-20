@@ -9,6 +9,11 @@
 #include "factory/channel_factory.hpp"
 #include "interface/ichannel.hpp"
 
+using namespace unilink::interface;
+using namespace unilink::factory;
+using namespace unilink::common;
+using namespace unilink::config;
+
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : "127.0.0.1";
   unsigned short port =

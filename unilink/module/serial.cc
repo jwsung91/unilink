@@ -2,7 +2,13 @@
 
 #include <iostream>
 
+namespace unilink {
+namespace module {
+
 namespace net = boost::asio;
+
+using namespace common;
+using namespace config;
 
 Serial::Serial(net::io_context& ioc, const SerialConfig& cfg)  // NOLINT
     : ioc_(ioc), port_(ioc), cfg_(cfg), retry_timer_(ioc) {
@@ -130,8 +136,7 @@ void Serial::schedule_retry(const char* where,
                             const boost::system::error_code& ec) {
   std::cout << ts_now() << "[serial] retry after "
             << (cfg_.retry_interval_ms / 1000.0) << "s (fixed) at " << where
-            << " (" << ec.message() << ")"
-            << "\n";
+            << " (" << ec.message() << ")" << "\n";
   auto self = shared_from_this();
   retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
   retry_timer_.async_wait([self](auto e) {
@@ -147,3 +152,6 @@ void Serial::close_port() {
 void Serial::notify_state() {
   if (on_state_) on_state_(state_);
 }
+
+}  // namespace module
+}  // namespace unilink

@@ -11,6 +11,12 @@
 #include "interface/ichannel.hpp"
 #include "module/tcp_client.hpp"
 
+using namespace unilink::interface;
+using namespace unilink::factory;
+using namespace unilink::common;
+using namespace unilink::config;
+using namespace unilink::module;
+
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : std::string("127.0.0.1");
   unsigned short port =

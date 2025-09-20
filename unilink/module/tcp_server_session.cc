@@ -2,6 +2,11 @@
 
 #include <iostream>
 
+namespace unilink {
+namespace module {
+
+using namespace common;
+
 TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock)
     : ioc_(ioc), socket_(std::move(sock)) {}
 
@@ -68,3 +73,6 @@ void TcpServerSession::do_close() {
   socket_.close(ec);
   if (on_close_) on_close_();
 }
+
+}  // namespace module
+}  // namespace unilink

@@ -3,10 +3,12 @@
 
 #include "common/common.hpp"
 
+namespace unilink {
+namespace interface {
 class IChannel {
  public:
   using OnBytes = std::function<void(const uint8_t*, size_t)>;
-  using OnState = std::function<void(LinkState)>;
+  using OnState = std::function<void(common::LinkState)>;
   using OnBackpressure = std::function<void(size_t /*queued_bytes*/)>;
 
   virtual ~IChannel() = default;
@@ -23,3 +25,5 @@ class IChannel {
   virtual void on_state(OnState cb) = 0;
   virtual void on_backpressure(OnBackpressure cb) = 0;
 };
+}  // namespace interface
+}  // namespace unilink

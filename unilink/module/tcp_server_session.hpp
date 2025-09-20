@@ -10,7 +10,13 @@
 
 #include "interface/ichannel.hpp"
 
+namespace unilink {
+namespace module {
+
 namespace net = boost::asio;
+
+using namespace common;
+using namespace interface;
 using tcp = net::ip::tcp;
 
 class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
@@ -47,3 +53,5 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
   OnClose on_close_;
   bool alive_ = false;
 };
+}  // namespace module
+}  // namespace unilink

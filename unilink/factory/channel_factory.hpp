@@ -8,6 +8,12 @@
 #include "module/tcp_client.hpp"
 #include "module/tcp_server.hpp"
 
+namespace unilink {
+namespace factory {
+
+using namespace interface;
+using namespace config;
+
 class ChannelFactory {
  public:
   using ChannelOptions =
@@ -17,3 +23,5 @@ class ChannelFactory {
   static std::shared_ptr<IChannel> create(class boost::asio::io_context& ioc,
                                           const ChannelOptions& options);
 };
+}  // namespace factory
+}  // namespace unilink

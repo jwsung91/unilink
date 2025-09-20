@@ -2,6 +2,9 @@
 
 #include <string>
 
+namespace unilink {
+namespace config {
+
 struct SerialConfig {
   std::string device = "/dev/ttyUSB0";
   unsigned baud_rate = 115200;
@@ -15,3 +18,6 @@ struct SerialConfig {
 
   unsigned retry_interval_ms = 2000;  // 2s
 };
+
+}  // namespace config
+}  // namespace unilink
