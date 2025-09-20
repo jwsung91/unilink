@@ -9,6 +9,11 @@
 #include "common/common.hpp"
 #include "factory/channel_factory.hpp"
 
+using namespace unilink::interface;
+using namespace unilink::factory;
+using namespace unilink::common;
+using namespace unilink::config;
+
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
 

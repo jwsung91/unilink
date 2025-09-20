@@ -9,6 +9,11 @@
 #include "factory/channel_factory.hpp"
 #include "interface/ichannel.hpp"
 
+using namespace unilink::interface;
+using namespace unilink::factory;
+using namespace unilink::common;
+using namespace unilink::config;
+
 int main(int argc, char** argv) {
   unsigned short port =
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
