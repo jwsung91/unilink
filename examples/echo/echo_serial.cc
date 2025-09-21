@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     std::cout << "[serial] recv chunk: " << s;
   });
 
-  std::thread([ser, &connected] {
+  std::thread sender_thread([ser, &connected] {
     uint64_t seq = 0;
     const auto interval = std::chrono::milliseconds(500);
     while (true) {
@@ -48,8 +48,12 @@ int main(int argc, char** argv) {
       }
       std::this_thread::sleep_for(interval);
     }
-  }).detach();
+  });
 
   ser->start();
+
+  sender_thread.join();  // sender 스레드는 무한루프이므로, 프로그램은 여기서
+                         // 계속 대기하게 됩니다.
+
   return 0;
 }

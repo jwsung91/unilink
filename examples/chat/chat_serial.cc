@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
   });
 
   // 입력 쓰레드: stdin 한 줄 읽어서 포트로 전송
-  std::thread([ch, &connected] {
+  std::thread input_thread([ch, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
@@ -51,8 +51,12 @@ int main(int argc, char** argv) {
       std::vector<uint8_t> buf(msg.begin(), msg.end());
       ch->async_write_copy(buf.data(), buf.size());
     }
-  }).detach();
+  });
 
   ch->start();
+
+  input_thread.join();  // 입력 스레드가 종료될 때까지 대기 (Ctrl+D)
+  ch->stop();
+
   return 0;
 }
