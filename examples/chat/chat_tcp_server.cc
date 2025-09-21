@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
   });
 
   // ⬇️ 서버에서 키보드 입력 → 클라이언트로 전송
-  std::thread([&srv, &connected] {
+  std::thread input_thread([&srv, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
@@ -45,8 +45,12 @@ int main(int argc, char** argv) {
       std::vector<uint8_t> buf(msg.begin(), msg.end());
       srv->async_write_copy(buf.data(), buf.size());
     }
-  }).detach();
+  });
 
   srv->start();
+
+  input_thread.join();
+  srv->stop();
+
   return 0;
 }

@@ -1,3 +1,4 @@
+#include <future>
 #include <iostream>
 
 #include "common/common.hpp"
@@ -28,5 +29,10 @@ int main(int argc, char** argv) {
   });
 
   srv->start();
+
+  // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
+  std::promise<void>().get_future().wait();
+
+  srv->stop();
   return 0;
 }

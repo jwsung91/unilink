@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
   });
 
   // 입력 쓰레드: stdin 한 줄 읽어서 서버로 전송
-  std::thread([cli, &connected] {
+  std::thread input_thread([cli, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
@@ -51,8 +51,12 @@ int main(int argc, char** argv) {
       std::vector<uint8_t> buf(msg.begin(), msg.end());
       cli->async_write_copy(buf.data(), buf.size());
     }
-  }).detach();
+  });
 
   cli->start();
+
+  input_thread.join();
+  cli->stop();
+
   return 0;
 }

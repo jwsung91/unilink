@@ -1,5 +1,6 @@
 #include <atomic>
 #include <chrono>
+#include <future>
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -24,13 +25,14 @@ int main(int argc, char** argv) {
   std::atomic<bool> connected{false};
 
   ser->on_state([&](LinkState s) {
-    std::cout << "[serial] state=" << to_cstr(s) << "\n";
+    std::string state_msg = "state=" + std::string(to_cstr(s));
+    log_message("[serial]", "STATE", state_msg);
     connected = (s == LinkState::Connected);
   });
 
   ser->on_bytes([&](const uint8_t* p, size_t n) {
     std::string s(reinterpret_cast<const char*>(p), n);
-    std::cout << "[serial] recv chunk: " << s;
+    log_message("[serial]", "RX", s);
   });
 
   std::thread sender_thread([ser, &connected] {
@@ -41,9 +43,7 @@ int main(int argc, char** argv) {
         std::string msg = "SER " + std::to_string(seq++) + "\n";
         std::vector<uint8_t> buf(msg.begin(), msg.end());
 
-        // ✅ 보낸 로그 추가 (큐에 넣는 시점)
-        std::cout << "[serial] send (" << buf.size() << "B): " << msg;
-
+        log_message("[serial]", "TX", msg);
         ser->async_write_copy(buf.data(), buf.size());
       }
       std::this_thread::sleep_for(interval);
@@ -52,8 +52,10 @@ int main(int argc, char** argv) {
 
   ser->start();
 
-  sender_thread.join();  // sender 스레드는 무한루프이므로, 프로그램은 여기서
-                         // 계속 대기하게 됩니다.
+  // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
+  std::promise<void>().get_future().wait();
 
+  ser->stop();
+  sender_thread.join();
   return 0;
 }

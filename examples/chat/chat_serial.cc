@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 
   ch->start();
 
-  input_thread.join();  // 입력 스레드가 종료될 때까지 대기 (Ctrl+D)
+  input_thread.join();
   ch->stop();
 
   return 0;
