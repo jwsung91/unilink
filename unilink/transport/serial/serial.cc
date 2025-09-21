@@ -17,9 +17,11 @@ Serial::Serial(const SerialConfig& cfg)  // NOLINT
 
 void Serial::start() {
   ioc_thread_ = std::thread([this] { ioc_.run(); });
-  state_ = LinkState::Connecting;
-  notify_state();
-  open_and_configure();
+  net::post(ioc_, [this] {
+    state_ = LinkState::Connecting;
+    notify_state();
+    open_and_configure();
+  });
 }
 
 void Serial::stop() {
@@ -123,6 +125,12 @@ void Serial::do_write() {
 
 void Serial::handle_error(const char* where,
                           const boost::system::error_code& ec) {
+  // EOF는 실제 에러가 아니므로, 다시 읽기를 시작합니다.
+  if (ec == boost::asio::error::eof) {
+    start_read();
+    return;
+  }
+
   std::cout << ts_now() << "[serial] " << where << " error: " << ec.message()
             << "\n";
   opened_ = false;
