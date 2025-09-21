@@ -5,8 +5,8 @@
 
 #include "interface/ichannel.hpp"
 #include "transport/serial/serial.hpp"
-#include "transport/tcp/tcp_client.hpp"
-#include "transport/tcp/tcp_server.hpp"
+#include "transport/tcp_client/tcp_client.hpp"
+#include "transport/tcp_server/tcp_server.hpp"
 
 namespace unilink {
 namespace factory {
