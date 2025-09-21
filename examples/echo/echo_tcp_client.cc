@@ -1,6 +1,6 @@
 #include <atomic>
-#include <boost/asio.hpp>
 #include <chrono>
+#include <future>
 #include <iostream>
 #include <string>
 #include <thread>
@@ -21,11 +21,10 @@ int main(int argc, char** argv) {
   unsigned short port =
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
-  boost::asio::io_context ioc;
   TcpClientConfig cfg{};
   cfg.host = host;
   cfg.port = port;
-  auto cli = ChannelFactory::create(ioc, cfg);
+  auto cli = ChannelFactory::create(cfg);
 
   std::atomic<bool> connected{false};
 
@@ -40,7 +39,7 @@ int main(int argc, char** argv) {
     log_message("[client]", "RX", s);
   });
 
-  std::thread([cli, &connected] {
+  std::thread sender_thread([cli, &connected] {
     uint64_t seq = 0;
     const auto interval = std::chrono::milliseconds(1000);
     while (true) {
@@ -52,9 +51,14 @@ int main(int argc, char** argv) {
       }
       std::this_thread::sleep_for(interval);
     }
-  }).detach();
+  });
 
   cli->start();
-  ioc.run();
+
+  // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
+  std::promise<void>().get_future().wait();
+
+  cli->stop();
+  sender_thread.join();
   return 0;
 }

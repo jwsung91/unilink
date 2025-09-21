@@ -10,20 +10,27 @@ namespace net = boost::asio;
 using namespace common;
 using namespace config;
 
-Serial::Serial(net::io_context& ioc, const SerialConfig& cfg)  // NOLINT
-    : ioc_(ioc), port_(ioc), cfg_(cfg), retry_timer_(ioc) {
+Serial::Serial(const SerialConfig& cfg)  // NOLINT
+    : ioc_(), port_(ioc_), cfg_(cfg), retry_timer_(ioc_) {
   rx_.resize(cfg_.read_chunk);
 }
 
 void Serial::start() {
-  state_ = LinkState::Connecting;
-  notify_state();
-  open_and_configure();
+  ioc_thread_ = std::thread([this] { ioc_.run(); });
+  net::post(ioc_, [this] {
+    state_ = LinkState::Connecting;
+    notify_state();
+    open_and_configure();
+  });
 }
 
 void Serial::stop() {
-  retry_timer_.cancel();
-  close_port();
+  net::post(ioc_, [this] {
+    retry_timer_.cancel();
+    close_port();
+  });
+  ioc_.stop();
+  if (ioc_thread_.joinable()) ioc_thread_.join();
   state_ = LinkState::Closed;
   notify_state();
 }
@@ -118,6 +125,12 @@ void Serial::do_write() {
 
 void Serial::handle_error(const char* where,
                           const boost::system::error_code& ec) {
+  // EOF는 실제 에러가 아니므로, 다시 읽기를 시작합니다.
+  if (ec == boost::asio::error::eof) {
+    start_read();
+    return;
+  }
+
   std::cout << ts_now() << "[serial] " << where << " error: " << ec.message()
             << "\n";
   opened_ = false;

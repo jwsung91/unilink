@@ -6,6 +6,7 @@
 #include <deque>
 #include <functional>
 #include <memory>
+#include <thread>
 #include <vector>
 
 #include "config/tcp_server_config.hpp"
@@ -25,7 +26,7 @@ using tcp = net::ip::tcp;
 class TcpServer : public IChannel,
                   public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:
-  TcpServer(net::io_context& ioc, const TcpServerConfig& cfg);
+  explicit TcpServer(const TcpServerConfig& cfg);
 
   void start() override;
   void stop() override;
@@ -40,7 +41,9 @@ class TcpServer : public IChannel,
   void notify_state();
 
  private:
-  net::io_context& ioc_;
+  net::io_context ioc_;
+  std::thread ioc_thread_;
+
   tcp::acceptor acceptor_;
   TcpServerConfig cfg_;
   std::shared_ptr<TcpServerSession> sess_;

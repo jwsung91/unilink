@@ -1,5 +1,4 @@
 #include <atomic>
-#include <boost/asio.hpp>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -19,12 +18,11 @@ int main(int argc, char** argv) {
   unsigned short port =
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
-  boost::asio::io_context ioc;
   TcpClientConfig cfg;
   cfg.host = host;
   cfg.port = port;
 
-  auto cli = ChannelFactory::create(ioc, cfg);
+  auto cli = ChannelFactory::create(cfg);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;
@@ -41,7 +39,7 @@ int main(int argc, char** argv) {
   });
 
   // 입력 쓰레드: stdin 한 줄 읽어서 서버로 전송
-  std::thread([cli, &connected] {
+  std::thread input_thread([cli, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
@@ -53,9 +51,12 @@ int main(int argc, char** argv) {
       std::vector<uint8_t> buf(msg.begin(), msg.end());
       cli->async_write_copy(buf.data(), buf.size());
     }
-  }).detach();
+  });
 
   cli->start();
-  ioc.run();
+
+  input_thread.join();
+  cli->stop();
+
   return 0;
 }

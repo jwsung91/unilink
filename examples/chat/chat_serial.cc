@@ -1,5 +1,4 @@
 #include <atomic>
-#include <boost/asio.hpp>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -23,7 +22,7 @@ int main(int argc, char** argv) {
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
 
-  auto ch = ChannelFactory::create(ioc, cfg);
+  auto ch = ChannelFactory::create(cfg);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;
@@ -40,7 +39,7 @@ int main(int argc, char** argv) {
   });
 
   // 입력 쓰레드: stdin 한 줄 읽어서 포트로 전송
-  std::thread([ch, &connected] {
+  std::thread input_thread([ch, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
@@ -52,9 +51,12 @@ int main(int argc, char** argv) {
       std::vector<uint8_t> buf(msg.begin(), msg.end());
       ch->async_write_copy(buf.data(), buf.size());
     }
-  }).detach();
+  });
 
   ch->start();
-  ioc.run();
+
+  input_thread.join();
+  ch->stop();
+
   return 0;
 }

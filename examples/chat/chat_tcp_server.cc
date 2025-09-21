@@ -1,6 +1,5 @@
 // examples/raw_server.cc (교체)
 #include <atomic>
-#include <boost/asio.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -17,10 +16,8 @@ using namespace unilink::config;
 int main(int argc, char** argv) {
   unsigned short port =
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
-  boost::asio::io_context ioc;
-
   TcpServerConfig cfg{port};
-  auto srv = ChannelFactory::create(ioc, cfg);
+  auto srv = ChannelFactory::create(cfg);
 
   std::atomic<bool> connected{false};
 
@@ -36,7 +33,7 @@ int main(int argc, char** argv) {
   });
 
   // ⬇️ 서버에서 키보드 입력 → 클라이언트로 전송
-  std::thread([&srv, &connected] {
+  std::thread input_thread([&srv, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
@@ -48,9 +45,12 @@ int main(int argc, char** argv) {
       std::vector<uint8_t> buf(msg.begin(), msg.end());
       srv->async_write_copy(buf.data(), buf.size());
     }
-  }).detach();
+  });
 
   srv->start();
-  ioc.run();
+
+  input_thread.join();
+  srv->stop();
+
   return 0;
 }

@@ -6,6 +6,7 @@
 #include <deque>
 #include <memory>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "config/tcp_client_config.hpp"
@@ -24,7 +25,7 @@ using tcp = net::ip::tcp;
 class TcpClient : public IChannel,
                   public std::enable_shared_from_this<TcpClient> {
  public:
-  TcpClient(net::io_context& ioc, const TcpClientConfig& cfg);
+  explicit TcpClient(const TcpClientConfig& cfg);
 
   void start() override;
   void stop() override;
@@ -46,7 +47,9 @@ class TcpClient : public IChannel,
   void notify_state();
 
  private:
-  net::io_context& ioc_;
+  net::io_context ioc_;
+  std::thread ioc_thread_;
+
   tcp::resolver resolver_;
   tcp::socket socket_;
   TcpClientConfig cfg_;
