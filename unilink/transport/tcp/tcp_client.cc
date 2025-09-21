@@ -17,9 +17,11 @@ TcpClient::TcpClient(const TcpClientConfig& cfg)
 
 void TcpClient::start() {
   ioc_thread_ = std::thread([this] { ioc_.run(); });
-  state_ = LinkState::Connecting;
-  notify_state();
-  do_resolve_connect();
+  net::post(ioc_, [this] {
+    state_ = LinkState::Connecting;
+    notify_state();
+    do_resolve_connect();
+  });
 }
 
 void TcpClient::stop() {

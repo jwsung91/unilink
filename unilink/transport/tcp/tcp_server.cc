@@ -17,9 +17,11 @@ TcpServer::TcpServer(const TcpServerConfig& cfg)
 
 void TcpServer::start() {
   ioc_thread_ = std::thread([this] { ioc_.run(); });
-  state_ = LinkState::Listening;
-  notify_state();
-  do_accept();
+  net::post(ioc_, [this] {
+    state_ = LinkState::Listening;
+    notify_state();
+    do_accept();
+  });
 }
 
 void TcpServer::stop() {
