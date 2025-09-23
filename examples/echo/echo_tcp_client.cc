@@ -33,11 +33,12 @@ int main(int argc, char** argv) {
     log_message("[client]", "RX", s);
   });
 
-  std::thread sender_thread([cli, &connected] {
+  std::atomic<bool> stop_sending = false;
+  std::thread sender_thread([cli, &connected, &stop_sending] {
     uint64_t seq = 0;
     const auto interval = std::chrono::milliseconds(1000);
-    while (true) {
-      if (connected.load()) {
+    while (!stop_sending) {
+      if (connected) {
         std::string msg = "HELLO " + std::to_string(seq++) + "\n";
         std::vector<uint8_t> buf(msg.begin(), msg.end());
         log_message("[client]", "TX", msg);
@@ -52,6 +53,7 @@ int main(int argc, char** argv) {
   // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
   std::promise<void>().get_future().wait();
 
+  stop_sending = true;
   cli->stop();
   sender_thread.join();
   return 0;
