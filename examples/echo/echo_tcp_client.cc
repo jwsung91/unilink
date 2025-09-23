@@ -16,23 +16,23 @@ int main(int argc, char** argv) {
   unilink::TcpClientConfig cfg{};
   cfg.host = host;
   cfg.port = port;
-  auto cli = unilink::create(cfg);
+  auto ul = unilink::create(cfg);
 
   std::atomic<bool> connected{false};
 
-  cli->on_state([&](unilink::LinkState s) {
+  ul->on_state([&](unilink::LinkState s) {
     auto state_msg = "state=" + std::string(unilink::to_cstr(s));
     unilink::log_message("[client]", "STATE", state_msg);
     connected = (s == unilink::LinkState::Connected);
   });
 
-  cli->on_bytes([&](const uint8_t* p, size_t n) {
+  ul->on_bytes([&](const uint8_t* p, size_t n) {
     std::string s(reinterpret_cast<const char*>(p), n);
     unilink::log_message("[client]", "RX", s);
   });
 
   std::atomic<bool> stop_sending = false;
-  std::thread sender_thread([cli, &connected, &stop_sending] {
+  std::thread sender_thread([ul, &connected, &stop_sending] {
     uint64_t seq = 0;
     const auto interval = std::chrono::milliseconds(1000);
     while (!stop_sending) {
@@ -40,19 +40,19 @@ int main(int argc, char** argv) {
         auto msg = "HELLO " + std::to_string(seq++) + "\n";
         std::vector<uint8_t> buf(msg.begin(), msg.end());
         unilink::log_message("[client]", "TX", msg);
-        cli->async_write_copy(buf.data(), buf.size());
+        ul->async_write_copy(buf.data(), buf.size());
       }
       std::this_thread::sleep_for(interval);
     }
   });
 
-  cli->start();
+  ul->start();
 
   // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
   std::promise<void>().get_future().wait();
 
   stop_sending = true;
-  cli->stop();
+  ul->stop();
   sender_thread.join();
   return 0;
 }

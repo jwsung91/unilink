@@ -1,21 +1,16 @@
 #include "unilink/factory/channel_factory.hpp"
 
-#include <boost/asio.hpp>
-#include <memory>
-#include <string>
-#include <variant>
-
 namespace unilink {
 namespace factory {
 
 using ChannelOptions = ChannelFactory::ChannelOptions;
 using namespace interface;
 using namespace transport;
+using namespace config;
 
-std::shared_ptr<IChannel> ChannelFactory::create(
-    const ChannelOptions& options) {
+std::shared_ptr<Channel> ChannelFactory::create(const ChannelOptions& options) {
   return std::visit(
-      [&](const auto& opt) -> std::shared_ptr<IChannel> {
+      [&](const auto& opt) -> std::shared_ptr<Channel> {
         using T = std::decay_t<decltype(opt)>;
         if constexpr (std::is_same_v<T, TcpClientConfig>) {
           return std::make_shared<TcpClient>(opt);
@@ -24,7 +19,7 @@ std::shared_ptr<IChannel> ChannelFactory::create(
         } else if constexpr (std::is_same_v<T, SerialConfig>) {
           return std::make_shared<Serial>(opt);
         } else {
-          static_assert(!sizeof(T*),
+          static_assert(std::false_type::value,
                         "Non-exhaustive visitor for ChannelOptions");
         }
       },

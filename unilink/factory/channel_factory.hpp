@@ -4,7 +4,7 @@
 #include <variant>
 
 #include "unilink/export.hpp"
-#include "unilink/interface/ichannel.hpp"
+#include "unilink/interface/channel.hpp"
 #include "unilink/transport/serial/serial.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
@@ -20,7 +20,7 @@ class ChannelFactory {
   using ChannelOptions =
       std::variant<TcpClientConfig, TcpServerConfig, SerialConfig>;
 
-  UNILINK_API static std::shared_ptr<IChannel> create(
+  UNILINK_API static std::shared_ptr<Channel> create(
       const ChannelOptions& options);
 };
 }  // namespace factory

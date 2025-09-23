@@ -4,7 +4,7 @@
 
 namespace unilink {
 
-std::shared_ptr<IChannel> create(const ChannelOptions& options) {
+std::shared_ptr<Channel> create(const ChannelOptions& options) {
   return factory::ChannelFactory::create(options);
 }
 

@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-#include "unilink/interface/ichannel.hpp"
+#include "unilink/interface/channel.hpp"
 
 namespace unilink {
 namespace transport {
@@ -21,8 +21,8 @@ using tcp = net::ip::tcp;
 
 class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
  public:
-  using OnBytes = IChannel::OnBytes;
-  using OnBackpressure = IChannel::OnBackpressure;
+  using OnBytes = interface::Channel::OnBytes;
+  using OnBackpressure = interface::Channel::OnBackpressure;
   using OnClose = std::function<void()>;
 
   TcpServerSession(net::io_context& ioc, tcp::socket sock);

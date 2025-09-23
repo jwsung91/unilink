@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "unilink/config/serial_config.hpp"
-#include "unilink/interface/ichannel.hpp"
+#include "unilink/interface/channel.hpp"
 
 namespace unilink {
 namespace transport {
@@ -19,7 +19,7 @@ using namespace common;
 using namespace config;
 namespace net = boost::asio;
 
-class Serial : public IChannel, public std::enable_shared_from_this<Serial> {
+class Serial : public Channel, public std::enable_shared_from_this<Serial> {
  public:
   explicit Serial(const SerialConfig& cfg);
 

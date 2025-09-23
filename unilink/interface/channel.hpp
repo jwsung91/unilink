@@ -5,13 +5,13 @@
 
 namespace unilink {
 namespace interface {
-class IChannel {
+class Channel {
  public:
   using OnBytes = std::function<void(const uint8_t*, size_t)>;
   using OnState = std::function<void(common::LinkState)>;
   using OnBackpressure = std::function<void(size_t /*queued_bytes*/)>;
 
-  virtual ~IChannel() = default;
+  virtual ~Channel() = default;
 
   virtual void start() = 0;
   virtual void stop() = 0;
