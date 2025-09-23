@@ -1,4 +1,4 @@
-#include "factory/channel_factory.hpp"
+#include "unilink/factory/channel_factory.hpp"
 
 #include <boost/asio.hpp>
 #include <memory>
@@ -12,7 +12,8 @@ using ChannelOptions = ChannelFactory::ChannelOptions;
 using namespace interface;
 using namespace transport;
 
-std::shared_ptr<IChannel> ChannelFactory::create(const ChannelOptions& options) {
+std::shared_ptr<IChannel> ChannelFactory::create(
+    const ChannelOptions& options) {
   return std::visit(
       [&](const auto& opt) -> std::shared_ptr<IChannel> {
         using T = std::decay_t<decltype(opt)>;

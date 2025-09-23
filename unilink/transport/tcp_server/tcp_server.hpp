@@ -9,9 +9,9 @@
 #include <thread>
 #include <vector>
 
-#include "config/tcp_server_config.hpp"
-#include "interface/ichannel.hpp"
-#include "tcp_server_session.hpp"
+#include "unilink/config/tcp_server_config.hpp"
+#include "unilink/interface/ichannel.hpp"
+#include "unilink/transport/tcp_server/tcp_server_session.hpp"
 
 namespace unilink {
 namespace transport {

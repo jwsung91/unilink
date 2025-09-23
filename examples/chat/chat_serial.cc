@@ -5,24 +5,19 @@
 #include <thread>
 #include <vector>
 
-#include "common/common.hpp"
-#include "factory/channel_factory.hpp"
+#include "unilink/unilink.hpp"
 
-using namespace unilink::interface;
-using namespace unilink::factory;
-using namespace unilink::common;
-using namespace unilink::config;
+using namespace unilink;
 
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
 
-  boost::asio::io_context ioc;
   SerialConfig cfg;
   cfg.device = dev;
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
 
-  auto ch = ChannelFactory::create(cfg);
+  auto ch = create(cfg);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;

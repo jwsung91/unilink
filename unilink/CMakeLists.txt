@@ -8,7 +8,8 @@ add_library(interface::unilink ALIAS unilink)
 
 target_include_directories(
   unilink PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    # Consumers (e.g., examples) can use #include "unilink/..."
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}> 
     $<INSTALL_INTERFACE:include>
 )
 

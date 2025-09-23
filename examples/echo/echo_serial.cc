@@ -5,13 +5,9 @@
 #include <thread>
 #include <vector>
 
-#include "common/common.hpp"
-#include "factory/channel_factory.hpp"
+#include "unilink/unilink.hpp"
 
-using namespace unilink::interface;
-using namespace unilink::factory;
-using namespace unilink::common;
-using namespace unilink::config;
+using namespace unilink;
 
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
@@ -20,7 +16,7 @@ int main(int argc, char** argv) {
   cfg.device = dev;
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
-  auto ser = ChannelFactory::create(cfg);
+  auto ser = create(cfg);
 
   std::atomic<bool> connected{false};
 
@@ -35,11 +31,12 @@ int main(int argc, char** argv) {
     log_message("[serial]", "RX", s);
   });
 
-  std::thread sender_thread([ser, &connected] {
+  std::atomic<bool> stop_sending = false;
+  std::thread sender_thread([ser, &connected, &stop_sending] {
     uint64_t seq = 0;
     const auto interval = std::chrono::milliseconds(500);
-    while (true) {
-      if (connected.load()) {
+    while (!stop_sending) {
+      if (connected) {
         std::string msg = "SER " + std::to_string(seq++) + "\n";
         std::vector<uint8_t> buf(msg.begin(), msg.end());
 
@@ -55,6 +52,7 @@ int main(int argc, char** argv) {
   // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
   std::promise<void>().get_future().wait();
 
+  stop_sending = true;
   ser->stop();
   sender_thread.join();
   return 0;
