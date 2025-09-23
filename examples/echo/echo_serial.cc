@@ -7,28 +7,26 @@
 
 #include "unilink/unilink.hpp"
 
-using namespace unilink;
-
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
 
-  SerialConfig cfg;
+  unilink::SerialConfig cfg;
   cfg.device = dev;
   cfg.baud_rate = 115200;
   cfg.retry_interval_ms = 2000;
-  auto ser = create(cfg);
+  auto ser = unilink::create(cfg);
 
   std::atomic<bool> connected{false};
 
-  ser->on_state([&](LinkState s) {
-    std::string state_msg = "state=" + std::string(to_cstr(s));
-    log_message("[serial]", "STATE", state_msg);
-    connected = (s == LinkState::Connected);
+  ser->on_state([&](unilink::LinkState s) {
+    auto state_msg = "state=" + std::string(unilink::to_cstr(s));
+    unilink::log_message("[serial]", "STATE", state_msg);
+    connected = (s == unilink::LinkState::Connected);
   });
 
   ser->on_bytes([&](const uint8_t* p, size_t n) {
     std::string s(reinterpret_cast<const char*>(p), n);
-    log_message("[serial]", "RX", s);
+    unilink::log_message("[serial]", "RX", s);
   });
 
   std::atomic<bool> stop_sending = false;
@@ -40,7 +38,7 @@ int main(int argc, char** argv) {
         std::string msg = "SER " + std::to_string(seq++) + "\n";
         std::vector<uint8_t> buf(msg.begin(), msg.end());
 
-        log_message("[serial]", "TX", msg);
+        unilink::log_message("[serial]", "TX", msg);
         ser->async_write_copy(buf.data(), buf.size());
       }
       std::this_thread::sleep_for(interval);

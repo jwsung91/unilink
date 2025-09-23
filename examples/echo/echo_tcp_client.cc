@@ -8,29 +8,27 @@
 
 #include "unilink/unilink.hpp"
 
-using namespace unilink;
-
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : std::string("127.0.0.1");
   unsigned short port =
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
-  TcpClientConfig cfg{};
+  unilink::TcpClientConfig cfg{};
   cfg.host = host;
   cfg.port = port;
-  auto cli = create(cfg);
+  auto cli = unilink::create(cfg);
 
   std::atomic<bool> connected{false};
 
-  cli->on_state([&](LinkState s) {
-    std::string state_msg = "state=" + std::string(to_cstr(s));
-    log_message("[client]", "STATE", state_msg);
-    connected = (s == LinkState::Connected);
+  cli->on_state([&](unilink::LinkState s) {
+    auto state_msg = "state=" + std::string(unilink::to_cstr(s));
+    unilink::log_message("[client]", "STATE", state_msg);
+    connected = (s == unilink::LinkState::Connected);
   });
 
   cli->on_bytes([&](const uint8_t* p, size_t n) {
     std::string s(reinterpret_cast<const char*>(p), n);
-    log_message("[client]", "RX", s);
+    unilink::log_message("[client]", "RX", s);
   });
 
   std::atomic<bool> stop_sending = false;
@@ -39,9 +37,9 @@ int main(int argc, char** argv) {
     const auto interval = std::chrono::milliseconds(1000);
     while (!stop_sending) {
       if (connected) {
-        std::string msg = "HELLO " + std::to_string(seq++) + "\n";
+        auto msg = "HELLO " + std::to_string(seq++) + "\n";
         std::vector<uint8_t> buf(msg.begin(), msg.end());
-        log_message("[client]", "TX", msg);
+        unilink::log_message("[client]", "TX", msg);
         cli->async_write_copy(buf.data(), buf.size());
       }
       std::this_thread::sleep_for(interval);
