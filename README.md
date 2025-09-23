@@ -1,16 +1,40 @@
-# Interface Socket
+# unilink
 
-TCP/Serial 전송을 **바이트 파이프(IChannel)** 로 통일하고, 예제는 사람이 **직접 입력한 문자열**을 서로 주고받는 “채팅” 형태로 구성했습니다. 모든 로그는 **`YYYY-MM-DD HH:MM:SS.mmm [TAG] [TX/RX] ...`** 형식으로 출력됩니다.
+`unilink` is a C++ library that provides a unified, low-level asynchronous communication interface for TCP (client/server) and Serial ports. It simplifies network and serial programming by abstracting transport-specific details behind a consistent `IChannel` API.
+
+This repository contains the core library and a set of examples to demonstrate its usage.
 
 ---
 
-## 요구 사항 (Ubuntu)
+## Features
+
+*   **Unified Interface**: A single `IChannel` interface for TCP (Client/Server) and Serial communication.
+*   **Asynchronous Operations**: Callback-based, non-blocking I/O for high performance.
+*   **Automatic Reconnection**: Built-in, configurable reconnection logic for clients and serial ports.
+*   **Thread-Safe**: Managed I/O thread and thread-safe write operations.
+*   **Simple Lifecycle**: Easy-to-use `start()` and `stop()` methods for managing the connection lifecycle.
+
+---
+
+## Project Structure
+
+```
+.
+├── unilink/         # Core library source and headers
+├── examples/        # Example applications (see examples/README.md)
+├── docs/            # Detailed API documentation
+├── CMakeLists.txt   # Top-level build script
+└── README.md        # This file
+```
+
+---
+
+## Requirements
 
 ```bash
+# For the core library
 sudo apt update && sudo apt install -y \
-  build-essential cmake libboost-dev libboost-system-dev socat
-# 직렬 포트 접근 권한 (로그아웃/로그인 필요)
-sudo usermod -a -G dialout $USER
+  build-essential cmake libboost-dev libboost-system-dev
 ```
 
 ---
