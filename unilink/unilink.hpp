@@ -5,7 +5,7 @@
 
 #include "unilink/export.hpp"
 #include "unilink/factory/channel_factory.hpp"
-#include "unilink/interface/ichannel.hpp"
+#include "unilink/interface/channel.hpp"
 #include "unilink/transport/serial/serial.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
@@ -13,7 +13,7 @@
 namespace unilink {
 
 // Public Interface
-using IChannel = interface::IChannel;
+using Channel = interface::Channel;
 using LinkState = common::LinkState;
 
 // Configs
@@ -31,6 +31,6 @@ using common::log_message;
 using common::to_cstr;
 using common::ts_now;
 
-UNILINK_API std::shared_ptr<IChannel> create(const ChannelOptions& options);
+UNILINK_API std::shared_ptr<Channel> create(const ChannelOptions& options);
 
 }  // namespace unilink

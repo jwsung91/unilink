@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "unilink/config/tcp_server_config.hpp"
-#include "unilink/interface/ichannel.hpp"
+#include "unilink/interface/channel.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
 
 namespace unilink {
@@ -23,7 +23,7 @@ using namespace common;
 using namespace config;
 using tcp = net::ip::tcp;
 
-class TcpServer : public IChannel,
+class TcpServer : public Channel,
                   public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:
   explicit TcpServer(const TcpServerConfig& cfg);
