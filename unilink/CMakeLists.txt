@@ -6,12 +6,14 @@ file(GLOB_RECURSE LIB_SOURCES
 add_library(unilink ${LIB_SOURCES})
 add_library(interface::unilink ALIAS unilink)
 
-target_include_directories(
-  unilink PUBLIC
-    # Consumers (e.g., examples) can use #include "unilink/..."
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}> 
-    $<INSTALL_INTERFACE:include>
-)
+target_include_directories(unilink
+  PUBLIC
+  # Consumers (e.g., examples) can use #include "unilink/..."
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+  $<INSTALL_INTERFACE:include>
+  PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  )
 
 # Find and link required packages for the library
 find_package(Boost 1.70 REQUIRED COMPONENTS system)

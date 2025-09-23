@@ -31,6 +31,8 @@ using common::log_message;
 using common::to_cstr;
 using common::ts_now;
 
-UNILINK_API std::shared_ptr<Channel> create(const ChannelOptions& options);
+UNILINK_API std::shared_ptr<Channel> create(const ChannelOptions& options) {
+  return factory::ChannelFactory::create(options);
+}
 
 }  // namespace unilink
