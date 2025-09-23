@@ -1,4 +1,6 @@
-# Unilink
+# unilink
+
+<h3 align="center">One interface, reliable connections</h3>
 
 `unilink` is a C++ library that provides a unified, low-level asynchronous communication interface for TCP (client/server) and Serial ports. It simplifies network and serial programming by abstracting transport-specific details behind a consistent `Channel` API.
 
