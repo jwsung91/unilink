@@ -16,25 +16,25 @@ int main(int argc, char** argv) {
   cfg.host = host;
   cfg.port = port;
 
-  auto cli = unilink::create(cfg);
+  auto ch = unilink::create(cfg);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;
 
-  cli->on_state([&](unilink::LinkState s) {
+  ch->on_state([&](unilink::LinkState s) {
     auto state_msg = "state=" + std::string(unilink::to_cstr(s));
     unilink::log_message("[client]", "STATE", state_msg);
     connected = (s == unilink::LinkState::Connected);
   });
 
-  cli->on_bytes([&](const uint8_t* p, size_t n) {
+  ch->on_bytes([&](const uint8_t* p, size_t n) {
     unilink::feed_lines(rx_acc, p, n, [&](std::string line) {
       unilink::log_message("[client]", "RX", line);
     });
   });
 
   // 입력 쓰레드: stdin 한 줄 읽어서 서버로 전송
-  std::thread input_thread([cli, &connected] {
+  std::thread input_thread([ch, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
@@ -44,14 +44,14 @@ int main(int argc, char** argv) {
       auto msg = line + "\n";
       unilink::log_message("[client]", "TX", line);
       std::vector<uint8_t> buf(msg.begin(), msg.end());
-      cli->async_write_copy(buf.data(), buf.size());
+      ch->async_write_copy(buf.data(), buf.size());
     }
   });
 
-  cli->start();
+  ch->start();
 
   input_thread.join();
-  cli->stop();
+  ch->stop();
 
   return 0;
 }
