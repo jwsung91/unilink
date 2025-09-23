@@ -8,7 +8,6 @@
 
 #include "unilink/unilink.hpp"
 
-using namespace unilink::common;
 using namespace unilink;
 
 int main(int argc, char** argv) {

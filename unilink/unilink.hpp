@@ -25,6 +25,12 @@ using SerialConfig = config::SerialConfig;
 using ChannelOptions =
     std::variant<TcpClientConfig, TcpServerConfig, SerialConfig>;
 
+// Common helpers
+using common::feed_lines;
+using common::log_message;
+using common::to_cstr;
+using common::ts_now;
+
 UNILINK_API std::shared_ptr<IChannel> create(const ChannelOptions& options);
 
 }  // namespace unilink
