@@ -1,63 +1,86 @@
-# 📘 API Guide
+# 📘 unilink API Guide
 
-This section explains how an upper-layer application can use the **TcpClient** transport.  
-TcpClient is a **low-level async communication API**. Upper layers should handle parsing, state machines, and request/response logic on top.
+`unilink` is a unified, low-level asynchronous communication library. It provides a simple, consistent interface (`IChannel`) for various transport types, such as TCP (client/server) and Serial ports.
 
----
-
-## 0) Components
-
-- **`TcpClient`** → Manages async TCP I/O (connect, send, receive, reconnect).  
-- **`ICommHandler`** → Interface for receiving events (`on_open`, `on_close`, `on_receive`, `on_write`, `on_error`).
+This guide explains how to use the library in your application.
 
 ---
 
-## 1) Initialization & Lifecycle
+## 1. Core Components
+
+- **`unilink::create()`**: A factory function to create a communication channel. It takes a configuration struct and returns a `std::shared_ptr<IChannel>`.
+- **`unilink::IChannel`**: The main interface for interacting with the channel. Key methods are `start()`, `stop()`, and `async_write_copy()`.
+- **Configuration Structs**: Plain structs (`TcpClientConfig`, `TcpServerConfig`, `SerialConfig`) used to configure channel behavior, such as address, port, and retry logic.
+- **Callbacks**: `std::function` objects (`on_bytes`, `on_state`) set on an `IChannel` instance to receive data and state change events asynchronously.
+
+---
+
+## 2. Initialization & Lifecycle
+
+The library manages its own background thread for I/O, so you don't need to handle `boost::asio::io_context`.
 
 ```cpp
-boost::asio::io_context io;     
-MyHandler handler;              
-auto cli = std::make_shared<TcpClient>(io, handler);
+#include "unilink/unilink.hpp"
+#include <thread>
+#include <chrono>
 
-// Run networking in a dedicated thread (so futures/wait won't freeze I/O)
-std::thread net([&]{ io.run(); });
+using namespace unilink;
+using namespace std::chrono_literals;
 
-// Connect
-cli->reconnect_delay(2s);       
-cli->open("127.0.0.1", "9000");
+int main() {
+    // 1. Configure the channel
+    TcpClientConfig cfg;
+    cfg.host = "127.0.0.1";
+    cfg.port = 9000;
+    cfg.retry_interval_ms = 2000; // Reconnect every 2s on failure
 
-// ... Application logic (can block on futures safely)
+    // 2. Create the channel
+    auto cli = unilink::create(cfg);
 
-// Shutdown
-cli->reconnect_delay(0ms);
-cli->close();
-io.stop();
-net.join();
-````
+    // 3. Set callbacks for events
+    cli->on_state( {
+        log_message("[client]", "STATE", to_cstr(s));
+    });
+    cli->on_bytes( {
+        // Handle received data
+    });
 
-**Rule**: Run `io.run()` in a **separate thread**. This ensures that even if the main thread blocks on `future.wait()`, communication continues independently.
+    // 4. Start the channel (starts background I/O thread)
+    cli->start();
 
----
+    // ... Application logic ...
+    std::this_thread::sleep_for(10s);
 
-## 2) Connection/Disconnection/Reconnection
+    // 5. Stop the channel and clean up
+    cli->stop();
 
-```cpp
-cli->open(host, port);     // Start async connect
-cli->close();              // Safe shutdown
-cli->reconnect_delay(2s);  // Reconnect delay (0 disables)
+    return 0;
+}
 ```
 
-- Results of `open()` are notified via `on_open()` or `on_error("connect")`.
-- On error, the client closes, calls `on_close()`, and retries if reconnect delay > 0.
+---
+
+## 3. Connection State & Reconnection
+
+Connection status is delivered asynchronously via the `on_state` callback.
+
+- **`LinkState`**: An enum class representing the channel's state (`Idle`, `Connecting`, `Listening`, `Connected`, `Closed`, `Error`).
+- **Reconnection**: For client and serial channels, you can enable automatic reconnection by setting `retry_interval_ms` in the config struct. If the connection is lost, the channel will enter the `Connecting` state and attempt to reconnect periodically.
 
 ---
 
-## 3) Send & Receive
+## 4. Sending & Receiving Data
 
 ### Send
 
+The `async_write_copy` method is thread-safe. It copies the data into an internal queue and sends it on the I/O thread.
+
 ```cpp
-cli->write(reinterpret_cast<const uint8_t*>("hello\n"), 6);
+std::string msg = "hello\n";
+cli->async_write_copy(
+    reinterpret_cast<const uint8_t*>(msg.data()),
+    msg.size()
+);
 ```
 
 ### Receive via Callback
