@@ -3,10 +3,11 @@
 #include <string>
 #include <variant>
 
-#include "interface/ichannel.hpp"
-#include "transport/serial/serial.hpp"
-#include "transport/tcp_client/tcp_client.hpp"
-#include "transport/tcp_server/tcp_server.hpp"
+#include "unilink/export.hpp"
+#include "unilink/interface/ichannel.hpp"
+#include "unilink/transport/serial/serial.hpp"
+#include "unilink/transport/tcp_client/tcp_client.hpp"
+#include "unilink/transport/tcp_server/tcp_server.hpp"
 
 namespace unilink {
 namespace factory {
@@ -19,8 +20,8 @@ class ChannelFactory {
   using ChannelOptions =
       std::variant<TcpClientConfig, TcpServerConfig, SerialConfig>;
 
-  // Unified factory API
-  static std::shared_ptr<IChannel> create(const ChannelOptions& options);
+  UNILINK_API static std::shared_ptr<IChannel> create(
+      const ChannelOptions& options);
 };
 }  // namespace factory
 }  // namespace unilink

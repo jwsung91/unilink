@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-#include "interface/ichannel.hpp"
+#include "unilink/interface/ichannel.hpp"
 
 namespace unilink {
 namespace transport {

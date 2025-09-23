@@ -5,13 +5,10 @@
 #include <thread>
 #include <vector>
 
-#include "factory/channel_factory.hpp"
-#include "interface/ichannel.hpp"
+#include "unilink/unilink.hpp"
 
-using namespace unilink::interface;
-using namespace unilink::factory;
 using namespace unilink::common;
-using namespace unilink::config;
+using namespace unilink;
 
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : "127.0.0.1";
@@ -22,7 +19,7 @@ int main(int argc, char** argv) {
   cfg.host = host;
   cfg.port = port;
 
-  auto cli = ChannelFactory::create(cfg);
+  auto cli = create(cfg);
 
   std::atomic<bool> connected{false};
   std::string rx_acc;
