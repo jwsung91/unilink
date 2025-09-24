@@ -23,6 +23,7 @@
 .
 ├── unilink/         # Core library source and headers
 ├── examples/        # Example applications (see examples/README.md)
+├── test/            # Unit tests
 ├── docs/            # Detailed API documentation
 ├── CMakeLists.txt   # Top-level build script
 └── README.md        # This file
@@ -51,6 +52,9 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
 # Or, build the library and examples
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=ON
+
+# Or, build the library and test
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
 
 # 2. Build the targets
 cmake --build build -j
