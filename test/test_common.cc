@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <regex>
@@ -43,10 +44,11 @@ TEST_F(LogMessageTest, BasicLogging) {
   log_message("TAG", "DIR", "Hello World");
   std::string output = oss_.str();
 
+  using ::testing::HasSubstr;
   // Check if the output contains the basic components
-  EXPECT_NE(output.find("[TAG]"), std::string::npos);
-  EXPECT_NE(output.find("[DIR]"), std::string::npos);
-  EXPECT_NE(output.find("Hello World"), std::string::npos);
+  EXPECT_THAT(output, HasSubstr("TAG"));
+  EXPECT_THAT(output, HasSubstr("[DIR]"));
+  EXPECT_THAT(output, HasSubstr("Hello World"));
   // Check for trailing newline
   EXPECT_EQ(output.back(), '\n');
 }

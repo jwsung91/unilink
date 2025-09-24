@@ -11,6 +11,7 @@ target_link_libraries(run_tests
     PRIVATE
     unilink
     GTest::gtest_main
+    GTest::gmock
 )
 
 # Discover and add tests to CTest
