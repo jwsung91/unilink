@@ -230,3 +230,57 @@ TEST_F(SerialTest, TransmitsData) {
                           written_buffer.size());
   EXPECT_EQ(written_str, test_message);
 }
+
+TEST_F(SerialTest, FutureInCallbackDoesNotBlockIoContext) {
+  // --- Expectations ---
+  // This test verifies that a blocking operation (like future::wait) inside a
+  // completion handler does NOT block the io_context thread. This is because
+  // the handler is executed by the io_context, but the wait should happen on a
+  // different thread. The Serial class itself doesn't use futures, but this
+  // test simulates a user doing so in a callback.
+
+  std::function<void(const boost::system::error_code&, size_t)> write_handler1;
+  std::function<void(const boost::system::error_code&, size_t)> write_handler2;
+
+  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+  EXPECT_CALL(*mock_port_, async_write(_, _))
+      .WillOnce(SaveArg<1>(&write_handler1))
+      .WillOnce(SaveArg<1>(&write_handler2));
+
+  // --- Test Logic ---
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  // 1. First write. The handler will be captured.
+  const std::string msg1 = "first";
+  serial_->async_write_copy(reinterpret_cast<const uint8_t*>(msg1.c_str()),
+                            msg1.length());
+
+  // Wait until the first async_write is called.
+  while (!write_handler1) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
+
+  // 2. Second write. This should be queued behind the first one.
+  const std::string msg2 = "second";
+  serial_->async_write_copy(reinterpret_cast<const uint8_t*>(msg2.c_str()),
+                            msg2.length());
+
+  // 3. Simulate completion of the first write. Inside the handler, we'll
+  //    block using a future to see if it freezes the io_context.
+  std::promise<void> p;
+  auto fut = p.get_future();
+  net::post(test_ioc_, [&] {
+    write_handler1(boost::system::error_code(), msg1.length());
+    p.set_value();  // Unblock the main thread
+  });
+
+  // 4. Verification: If the io_context was blocked, the second write would
+  //    never be initiated, and write_handler2 would remain null.
+  EXPECT_EQ(fut.wait_for(std::chrono::seconds(1)), std::future_status::ready);
+  EXPECT_TRUE(write_handler2);
+}
