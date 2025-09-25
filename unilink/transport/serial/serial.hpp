@@ -10,6 +10,7 @@
 
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/interface/iserial_port.hpp"
 
 namespace unilink {
 namespace transport {
@@ -22,6 +23,10 @@ namespace net = boost::asio;
 class Serial : public Channel, public std::enable_shared_from_this<Serial> {
  public:
   explicit Serial(const SerialConfig& cfg);
+  // Constructor for testing with dependency injection
+  Serial(const SerialConfig& cfg, std::unique_ptr<interface::ISerialPort> port,
+         net::io_context& ioc);
+  ~Serial() override;
 
   void start() override;
   void stop() override;
@@ -43,10 +48,13 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   void notify_state();
 
  private:
-  net::io_context ioc_;
+  net::io_context& ioc_;
+  bool owns_ioc_;
+  std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>>
+      work_guard_;
   std::thread ioc_thread_;
 
-  net::serial_port port_;
+  std::unique_ptr<interface::ISerialPort> port_;
   SerialConfig cfg_;
   net::steady_timer retry_timer_;
 
