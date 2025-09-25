@@ -4,8 +4,8 @@
 #include <condition_variable>
 #include <mutex>
 
-#include "pty_helper.hpp"
 #include "unilink/transport/serial/serial.hpp"
+#include "util/pty_helper.hpp"
 
 using namespace unilink::transport;
 using namespace unilink::config;
