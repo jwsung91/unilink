@@ -35,4 +35,8 @@ This approach allows for precise unit testing of:
 - **Data Reception**: Ensuring that when the mock port simulates receiving data, the `on_bytes` callback is correctly invoked with the right payload.
 - **Data Transmission**: Confirming that a call to `async_write_copy` results in the correct data being passed to the mock port's `async_write` method.
 
-By isolating the `Serial` class from its I/O dependencies, these tests provide a fast, stable, and platform-independent way to validate its core logic.
+By isolating the `Serial` class from its I/O dependencies, these tests provide a fast, stable, and platform-independent way to validate its core logic, including advanced scenarios:
+
+- **Error Handling and Retries**: Validating that the class correctly handles connection failures (e.g., `open()` fails) and attempts to reconnect according to the configured retry policy.
+- **Write Error Handling**: Checking that asynchronous write errors are properly managed, leading to the correct state transition (e.g., to an `Error` state when `reopen_on_error` is false).
+- **Write Queuing**: Verifying that multiple consecutive `async_write_copy` calls are queued and executed in the correct order, ensuring data integrity.
