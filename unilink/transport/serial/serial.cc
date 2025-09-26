@@ -34,8 +34,13 @@ Serial::Serial(const SerialConfig& cfg,
 }
 
 Serial::~Serial() {
-  if (state_ != LinkState::Closed) {
-    stop();
+  // stop() might have been called already. Ensure we don't double-stop,
+  // but do clean up resources if we own them.
+  if (state_ != LinkState::Closed) stop();
+
+  if (owns_ioc_) {
+    if (ioc_thread_.joinable()) ioc_thread_.join();
+    delete &ioc_;
   }
 }
 
@@ -64,10 +69,7 @@ void Serial::stop() {
       // runs out of work.
       ioc_.stop();
     });
-    if (owns_ioc_ && ioc_thread_.joinable()) {
-      ioc_thread_.join();
-      delete &ioc_;
-    }
+    if (owns_ioc_ && ioc_thread_.joinable()) ioc_thread_.join();
     state_ = LinkState::Closed;
     notify_state();
   }
@@ -94,7 +96,7 @@ void Serial::open_and_configure() {
   boost::system::error_code ec;
   port_->open(cfg_.device, ec);
   if (ec) {
-    schedule_retry("open", ec);
+    handle_error("open", ec);
     return;
   }
 
@@ -171,13 +173,15 @@ void Serial::handle_error(const char* where,
 
   std::cout << ts_now() << "[serial] " << where << " error: " << ec.message()
             << "\n";
-  opened_ = false;
-  close_port();
-  state_ = LinkState::Connecting;
-  notify_state();
-  if (cfg_.reopen_on_error)
+  if (cfg_.reopen_on_error) {
+    opened_ = false;
+    close_port();
+    state_ = LinkState::Connecting;
+    notify_state();
     schedule_retry(where, ec);
-  else {
+  } else {
+    opened_ = false;
+    close_port();
     state_ = LinkState::Error;
     notify_state();
   }
