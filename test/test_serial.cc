@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <condition_variable>
+#include <future>
 #include <mutex>
 
 #include "unilink/interface/iserial_port.hpp"
@@ -451,4 +452,99 @@ TEST_F(SerialTest, QueuesMultipleWrites) {
 
   std::this_thread::sleep_for(
       std::chrono::milliseconds(100));  // 모든 쓰기가 처리될 시간
+}
+
+TEST_F(SerialTest, FutureWaitSucceedsWithinTimeout) {
+  // --- Setup ---
+  auto mock_port_ptr = std::make_unique<MockSerialPort>();
+  mock_port_ = mock_port_ptr.get();
+  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+
+  const std::string test_message = "data";
+  std::function<void(const boost::system::error_code&, size_t)> read_handler;
+  net::mutable_buffer read_buffer;
+
+  // --- Expectations ---
+  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_, async_read_some(_, _))
+      .WillOnce(DoAll(SaveArg<0>(&read_buffer), SaveArg<1>(&read_handler)))
+      .WillRepeatedly(Return());
+
+  // --- Test Logic ---
+  std::promise<std::vector<uint8_t>> data_promise;
+  auto data_future = data_promise.get_future();
+
+  serial_->on_bytes([&](const uint8_t* data, size_t n) {
+    data_promise.set_value(std::vector<uint8_t>(data, data + n));
+  });
+
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  // read_handler가 캡처될 때까지 대기
+  while (!read_handler) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
+
+  // 2초 후에 데이터 수신을 시뮬레이션하는 별도 스레드
+  std::thread sim_thread([&]() {
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    ASSERT_GE(read_buffer.size(), test_message.length());
+    std::memcpy(read_buffer.data(), test_message.data(), test_message.length());
+    net::post(test_ioc_, [&] {
+      read_handler(boost::system::error_code(), test_message.length());
+    });
+  });
+
+  // 3초 타임아웃으로 future를 기다림
+  auto status = data_future.wait_for(std::chrono::seconds(3));
+
+  // --- Verification ---
+  // 2초 후에 promise가 set_value() 되므로, 3초 타임아웃 내에 future는 ready
+  // 상태가 되어야 함
+  ASSERT_EQ(status, std::future_status::ready);
+  auto received_data = data_future.get();
+  std::string received_str(received_data.begin(), received_data.end());
+  EXPECT_EQ(received_str, test_message);
+
+  if (sim_thread.joinable()) {
+    sim_thread.join();
+  }
+}
+
+TEST_F(SerialTest, FutureWaitTimesOut) {
+  // --- Setup ---
+  auto mock_port_ptr = std::make_unique<MockSerialPort>();
+  mock_port_ = mock_port_ptr.get();
+  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+
+  // --- Expectations ---
+  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  // 데이터 수신 시뮬레이션을 하지 않으므로, read_handler는 호출되지 않음
+  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+
+  // --- Test Logic ---
+  std::promise<void> timeout_promise;
+  auto timeout_future = timeout_promise.get_future();
+
+  // on_bytes 콜백이 호출되면 promise를 fulfill 하지만, 이 테스트에서는 호출되지
+  // 않음
+  serial_->on_bytes(
+      [&](const uint8_t* data, size_t n) { timeout_promise.set_value(); });
+
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  // 3초 타임아웃으로 future를 기다림
+  auto status = timeout_future.wait_for(std::chrono::seconds(3));
+
+  // --- Verification ---
+  // 데이터 수신이 없으므로, 3초 후에 future는 timeout 상태가 되어야 함
+  EXPECT_EQ(status, std::future_status::timeout);
 }

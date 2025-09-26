@@ -18,5 +18,3 @@ target_link_libraries(run_tests
 # Discover and add tests to CTest
 include(GoogleTest)
 gtest_discover_tests(run_tests)
-
-add_test(NAME ${PROJECT_NAME} COMMAND run_tests)
