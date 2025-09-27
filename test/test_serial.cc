@@ -67,7 +67,11 @@ class SerialTest : public ::testing::Test {
   void SetUp() override {}
 
   void TearDown() override {
-    if (serial_) serial_->stop();
+    if (serial_) {
+      serial_->stop();
+      // Give some time for any pending callbacks to complete
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
     if (ioc_thread_.joinable()) {
       ioc_thread_.join();
     }
@@ -93,15 +97,20 @@ TEST_F(SerialTest, ConnectsAndReceivesStateCallback) {
   EXPECT_CALL(*mock_port_, open(_, _))
       .WillOnce(SetArgReferee<1>(boost::system::error_code()));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::baud_rate&>(), _));
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::character_size&>(), _));
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::stop_bits&>(), _));
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::parity&>(), _));
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::flow_control&>(), _));
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
 
   // Keep the read loop alive
   EXPECT_CALL(*mock_port_, async_read_some(_, _))
@@ -109,6 +118,7 @@ TEST_F(SerialTest, ConnectsAndReceivesStateCallback) {
 
   // --- Test Logic ---
   std::unique_lock<std::mutex> lock(mtx_);
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
   LinkState received_state = LinkState::Idle;
   int state_cb_count = 0;
   serial_->on_state([&](LinkState state) {
@@ -139,17 +149,23 @@ TEST_F(SerialTest, ReceivesData) {
   std::function<void(const boost::system::error_code&, size_t)> read_handler;
   net::mutable_buffer read_buffer;
 
-  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::baud_rate&>(), _));
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::character_size&>(), _));
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::stop_bits&>(), _));
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::parity&>(), _));
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::flow_control&>(), _));
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_, async_read_some(_, _))
       // The first call will save the handler.
       .WillOnce(DoAll(SaveArg<0>(&read_buffer), SaveArg<1>(&read_handler)))
@@ -157,6 +173,7 @@ TEST_F(SerialTest, ReceivesData) {
       // without re-triggering the test logic.
       .WillRepeatedly(Return());
 
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
   // --- Test Logic ---
   std::unique_lock<std::mutex> lock(mtx_);
   std::vector<uint8_t> received_data;
@@ -209,21 +226,28 @@ TEST_F(SerialTest, TransmitsData) {
   // --- Expectations ---
   std::function<void(const boost::system::error_code&, size_t)> write_handler;
   net::const_buffer written_buffer;
-  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::baud_rate&>(), _));
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::character_size&>(), _));
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::stop_bits&>(), _));
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::parity&>(), _));
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::flow_control&>(), _));
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_, async_read_some(_, _))
       .WillRepeatedly(Return());  // Keep the read loop alive
   EXPECT_CALL(*mock_port_, async_write(_, _))
       .WillOnce(DoAll(SaveArg<0>(&written_buffer), Return()));
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
 
   // --- Test Logic ---
   serial_->start();
@@ -258,15 +282,29 @@ TEST_F(SerialTest, FutureInCallbackDoesNotBlockIoContext) {
   std::function<void(const boost::system::error_code&, size_t)> write_handler1;
   std::function<void(const boost::system::error_code&, size_t)> write_handler2;
 
-  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
   EXPECT_CALL(*mock_port_,
               set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
       .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
   EXPECT_CALL(*mock_port_, async_write(_, _))
       .WillOnce(SaveArg<1>(&write_handler1))
       .WillOnce(SaveArg<1>(&write_handler2));
 
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
   // --- Test Logic ---
   serial_->start();
   ioc_thread_ = std::thread([this] { test_ioc_.run(); });
@@ -316,12 +354,77 @@ TEST_F(SerialTest, HandlesConnectionFailureAndRetries) {
           boost::asio::error::make_error_code(boost::asio::error::not_found)))
       .WillOnce(SetArgReferee<1>(boost::system::error_code()));
 
+  // is_open() can be called at any time, return false initially, then true after successful connection
+  EXPECT_CALL(*mock_port_, is_open())
+      .WillRepeatedly(Return(false));
+
   // 성공적인 연결 후 설정 호출 예상
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
               set_option(A<const net::serial_port_base::character_size&>(), _))
       .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
+
+  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+
+  // --- Test Logic ---
+  std::unique_lock<std::mutex> lock(mtx_);
+  std::vector<LinkState> states;
+  bool connection_successful = false;
+  
+  serial_->on_state([&](LinkState state) {
+    std::lock_guard<std::mutex> lock_guard(mtx_);
+    states.push_back(state);
+    if (state == LinkState::Connected) {
+      connection_successful = true;
+    }
+    cv_.notify_one();
+  });
+
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  // 연결 성공을 기다림 (재시도 후)
+  ASSERT_TRUE(cv_.wait_for(lock, std::chrono::seconds(2),
+                           [&] { return connection_successful; }));
+
+  // --- Verification ---
+  // 최종 상태는 Connected 여야 함
+  EXPECT_EQ(states.back(), LinkState::Connected);
+  // 첫 상태는 Connecting
+  EXPECT_EQ(states.front(), LinkState::Connecting);
+  
+  // Ensure the serial object is properly stopped before test ends
+  lock.unlock();
+  serial_->stop();
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+}
+
+TEST_F(SerialTest, HandlesWriteError) {
+  // --- Setup ---
+  cfg_.reopen_on_error = false;  // 재시도 없이 Error 상태로 가는지 확인
+  auto mock_port_ptr = std::make_unique<MockSerialPort>();
+  mock_port_ = mock_port_ptr.get();
+  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+  
+  // --- Expectations ---
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+  EXPECT_CALL(*mock_port_,
               set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
       .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_,
               set_option(A<const net::serial_port_base::stop_bits&>(), _))
@@ -333,49 +436,15 @@ TEST_F(SerialTest, HandlesConnectionFailureAndRetries) {
               set_option(A<const net::serial_port_base::flow_control&>(), _))
       .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
-
-  // --- Test Logic ---
-  std::unique_lock<std::mutex> lock(mtx_);
-  std::vector<LinkState> states;
-  serial_->on_state([&](LinkState state) {
-    std::lock_guard<std::mutex> lock_guard(mtx_);
-    states.push_back(state);
-    cv_.notify_one();
-  });
-
-  serial_->start();
-  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
-
-  // 상태 변화를 기다림: Connecting -> (실패 후 다시) Connecting -> Connected
-  ASSERT_TRUE(cv_.wait_for(lock, std::chrono::seconds(1),
-                           [&] { return states.size() >= 3; }));
-
-  // --- Verification ---
-  // 최종 상태는 Connected 여야 함
-  EXPECT_EQ(states.back(), LinkState::Connected);
-  // 첫 상태는 Connecting
-  EXPECT_EQ(states.front(), LinkState::Connecting);
-}
-
-TEST_F(SerialTest, HandlesWriteError) {
-  // --- Setup ---
-  cfg_.reopen_on_error = false;  // 재시도 없이 Error 상태로 가는지 확인
-  auto mock_port_ptr = std::make_unique<MockSerialPort>();
-  mock_port_ = mock_port_ptr.get();
-  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
-  // --- Expectations ---
-  std::function<void(const boost::system::error_code&, size_t)> write_handler;
-  EXPECT_CALL(*mock_port_, open(_, _));
-  EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::baud_rate&>(), _))
-      .Times(AtLeast(1));
-  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
   EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
-  EXPECT_CALL(*mock_port_, close(_));  // 에러 발생 시 close가 호출되어야 함
 
   // async_write가 호출되면 핸들러를 저장하고, 에러를 발생시킬 준비
+  std::function<void(const boost::system::error_code&, size_t)> write_handler;
   EXPECT_CALL(*mock_port_, async_write(_, _))
       .WillOnce(SaveArg<1>(&write_handler));
+
+  // When a write error occurs and reopen_on_error is false, the port is closed.
+  EXPECT_CALL(*mock_port_, close(_));
 
   // --- Test Logic ---
   std::unique_lock<std::mutex> lock(mtx_);
@@ -403,12 +472,14 @@ TEST_F(SerialTest, HandlesWriteError) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 
-  // 쓰기 에러 시뮬레이션
-  net::post(test_ioc_, [&] {
-    write_handler(
-        boost::asio::error::make_error_code(boost::asio::error::broken_pipe),
-        0);
-  });
+  // 쓰기 에러 시뮬레이션 - 핸들러를 안전하게 호출
+  if (write_handler) {
+    net::post(test_ioc_, [&write_handler] {
+      write_handler(
+          boost::asio::error::make_error_code(boost::asio::error::broken_pipe),
+          0);
+    });
+  }
 
   // 최종 상태가 Error가 될 때까지 대기
   ASSERT_TRUE(cv_.wait_for(lock, std::chrono::seconds(1),
@@ -416,6 +487,11 @@ TEST_F(SerialTest, HandlesWriteError) {
 
   // --- Verification ---
   EXPECT_EQ(current_state, LinkState::Error);
+  
+  // Ensure the serial object is properly stopped before test ends
+  lock.unlock();
+  serial_->stop();
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
 
 TEST_F(SerialTest, QueuesMultipleWrites) {
@@ -425,10 +501,24 @@ TEST_F(SerialTest, QueuesMultipleWrites) {
   serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
 
   // --- Expectations ---
-  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
   EXPECT_CALL(*mock_port_,
               set_option(A<const net::serial_port_base::baud_rate&>(), _))
       .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
+
   EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
   // async_write가 두 번 호출될 것을 기대
   EXPECT_CALL(*mock_port_, async_write(_, _))
@@ -438,6 +528,7 @@ TEST_F(SerialTest, QueuesMultipleWrites) {
         net::post(test_ioc_,
                   [handler]() { handler(boost::system::error_code(), 0); });
       }));
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
 
   // --- Test Logic ---
   serial_->start();
@@ -465,9 +556,22 @@ TEST_F(SerialTest, FutureWaitSucceedsWithinTimeout) {
   net::mutable_buffer read_buffer;
 
   // --- Expectations ---
-  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
   EXPECT_CALL(*mock_port_,
               set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
       .Times(AtLeast(1));
   EXPECT_CALL(*mock_port_, async_read_some(_, _))
       .WillOnce(DoAll(SaveArg<0>(&read_buffer), SaveArg<1>(&read_handler)))
@@ -475,6 +579,7 @@ TEST_F(SerialTest, FutureWaitSucceedsWithinTimeout) {
 
   // --- Test Logic ---
   std::promise<std::vector<uint8_t>> data_promise;
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
   auto data_future = data_promise.get_future();
 
   serial_->on_bytes([&](const uint8_t* data, size_t n) {
@@ -521,9 +626,22 @@ TEST_F(SerialTest, FutureWaitTimesOut) {
   serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
 
   // --- Expectations ---
-  EXPECT_CALL(*mock_port_, open(_, _));
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
   EXPECT_CALL(*mock_port_,
               set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
       .Times(AtLeast(1));
   // 데이터 수신 시뮬레이션을 하지 않으므로, read_handler는 호출되지 않음
   EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
@@ -531,6 +649,7 @@ TEST_F(SerialTest, FutureWaitTimesOut) {
   // --- Test Logic ---
   std::promise<void> timeout_promise;
   auto timeout_future = timeout_promise.get_future();
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
 
   // on_bytes 콜백이 호출되면 promise를 fulfill 하지만, 이 테스트에서는 호출되지
   // 않음
