@@ -6,6 +6,7 @@ add_executable(run_tests
     test_common.cc
     test_serial.cc
     test_tcp_server.cc
+    test_tcp_client.cc
 )
 
 # Link the test executable against our library and GoogleTest
