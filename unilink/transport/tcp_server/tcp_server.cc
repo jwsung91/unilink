@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
+
 namespace unilink {
 namespace transport {
 
@@ -13,18 +15,36 @@ using namespace config;
 using tcp = net::ip::tcp;
 
 TcpServer::TcpServer(const TcpServerConfig& cfg)
-    : ioc_(), acceptor_(ioc_), cfg_(cfg) {}
+    : owned_ioc_(std::make_unique<net::io_context>()),
+      ioc_(*owned_ioc_), 
+      owns_ioc_(true),
+      acceptor_(std::make_unique<BoostTcpAcceptor>(*owned_ioc_)), 
+      cfg_(cfg) {}
+
+TcpServer::TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::ITcpAcceptor> acceptor,
+                     net::io_context& ioc)
+    : owned_ioc_(nullptr),
+      ioc_(ioc), 
+      owns_ioc_(false), 
+      acceptor_(std::move(acceptor)), 
+      cfg_(cfg) {}
+
+TcpServer::~TcpServer() {
+  stop();
+}
 
 void TcpServer::start() {
-  ioc_thread_ = std::thread([this] { ioc_.run(); });
+  if (owns_ioc_) {
+    ioc_thread_ = std::thread([this] { ioc_.run(); });
+  }
   net::post(ioc_, [this] {
     boost::system::error_code ec;
-    acceptor_.open(tcp::v4(), ec);
+    acceptor_->open(tcp::v4(), ec);
     if (!ec) {
-      acceptor_.bind(tcp::endpoint(tcp::v4(), cfg_.port), ec);
+      acceptor_->bind(tcp::endpoint(tcp::v4(), cfg_.port), ec);
     }
     if (!ec) {
-      acceptor_.listen(boost::asio::socket_base::max_listen_connections, ec);
+      acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
     }
     if (ec) {
       std::cout << ts_now() << "[server] bind error: " << ec.message() << std::endl;
@@ -39,11 +59,11 @@ void TcpServer::start() {
 }
 
 void TcpServer::stop() {
-  if (ioc_thread_.joinable()) {
+  if (owns_ioc_ && ioc_thread_.joinable()) {
     net::post(ioc_, [this] {
       boost::system::error_code ec;
-      if (acceptor_.is_open()) {
-        acceptor_.close(ec);
+      if (acceptor_->is_open()) {
+        acceptor_->close(ec);
       }
       if (sess_) sess_.reset();
     });
@@ -52,8 +72,8 @@ void TcpServer::stop() {
   } else {
     // If server was never started, just clean up
     boost::system::error_code ec;
-    if (acceptor_.is_open()) {
-      acceptor_.close(ec);
+    if (acceptor_->is_open()) {
+      acceptor_->close(ec);
     }
     if (sess_) sess_.reset();
   }
@@ -81,10 +101,10 @@ void TcpServer::on_backpressure(OnBackpressure cb) {
 }
 
 void TcpServer::do_accept() {
-  if (!acceptor_.is_open()) return;
+  if (!acceptor_->is_open()) return;
   
   auto self = shared_from_this();
-  acceptor_.async_accept([self](auto ec, tcp::socket sock) {
+  acceptor_->async_accept([self](auto ec, tcp::socket sock) {
     if (ec) {
       std::cout << ts_now() << "[server] accept error: " << ec.message()
                 << std::endl;

@@ -2,13 +2,18 @@
 
 #include <iostream>
 
+#include "unilink/transport/tcp_server/boost_tcp_socket.hpp"
+
 namespace unilink {
 namespace transport {
 
 using namespace common;
 
 TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock)
-    : ioc_(ioc), socket_(std::move(sock)) {}
+    : ioc_(ioc), socket_(std::make_unique<BoostTcpSocket>(std::move(sock))) {}
+
+TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::ITcpSocket> socket)
+    : ioc_(ioc), socket_(std::move(socket)) {}
 
 void TcpServerSession::start() { start_read(); }
 
@@ -36,7 +41,7 @@ bool TcpServerSession::alive() const { return alive_; }
 void TcpServerSession::start_read() {
   alive_ = true;
   auto self = shared_from_this();
-  socket_.async_read_some(net::buffer(rx_.data(), rx_.size()),
+  socket_->async_read_some(net::buffer(rx_.data(), rx_.size()),
                           [self](auto ec, std::size_t n) {
                             if (ec) {
                               self->do_close();
@@ -55,7 +60,7 @@ void TcpServerSession::do_write() {
   }
   writing_ = true;
   auto self = shared_from_this();
-  net::async_write(socket_, net::buffer(tx_.front()),
+  socket_->async_write(net::buffer(tx_.front()),
                    [self](auto ec, std::size_t n) {
                      self->queue_bytes_ -= n;
                      if (ec) {
@@ -72,8 +77,8 @@ void TcpServerSession::do_close() {
   alive_ = false;
   std::cout << ts_now() << "[server] client disconnected" << std::endl;
   boost::system::error_code ec;
-  socket_.shutdown(tcp::socket::shutdown_both, ec);
-  socket_.close(ec);
+  socket_->shutdown(tcp::socket::shutdown_both, ec);
+  socket_->close(ec);
   if (on_close_) on_close_();
 }
 

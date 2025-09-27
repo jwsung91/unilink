@@ -9,6 +9,8 @@
 
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
+#include "unilink/interface/itcp_acceptor.hpp"
+#include "unilink/interface/itcp_socket.hpp"
 
 using namespace unilink::transport;
 using namespace unilink::config;
@@ -70,27 +72,31 @@ private:
 };
 
 // Mock interfaces for TCP server testing
-class MockTcpSocket {
+class MockTcpSocket : public ITcpSocket {
  public:
   MOCK_METHOD(void, async_read_some,
               (const net::mutable_buffer&,
                std::function<void(const boost::system::error_code&, size_t)>),
-              ());
+              (override));
   MOCK_METHOD(void, async_write,
               (const net::const_buffer&,
                std::function<void(const boost::system::error_code&, size_t)>),
-              ());
-  MOCK_METHOD(void, shutdown, (tcp::socket::shutdown_type, boost::system::error_code&), ());
-  MOCK_METHOD(void, close, (boost::system::error_code&), ());
-  MOCK_METHOD(tcp::endpoint, remote_endpoint, (boost::system::error_code&), (const));
+              (override));
+  MOCK_METHOD(void, shutdown, (tcp::socket::shutdown_type, boost::system::error_code&), (override));
+  MOCK_METHOD(void, close, (boost::system::error_code&), (override));
+  MOCK_METHOD(tcp::endpoint, remote_endpoint, (boost::system::error_code&), (const, override));
 };
 
-class MockTcpAcceptor {
+class MockTcpAcceptor : public ITcpAcceptor {
  public:
+  MOCK_METHOD(void, open, (const net::ip::tcp&, boost::system::error_code&), (override));
+  MOCK_METHOD(void, bind, (const tcp::endpoint&, boost::system::error_code&), (override));
+  MOCK_METHOD(void, listen, (int, boost::system::error_code&), (override));
+  MOCK_METHOD(bool, is_open, (), (const, override));
+  MOCK_METHOD(void, close, (boost::system::error_code&), (override));
   MOCK_METHOD(void, async_accept,
               (std::function<void(const boost::system::error_code&, tcp::socket)>),
-              ());
-  MOCK_METHOD(void, close, (boost::system::error_code&), ());
+              (override));
 };
 
 // Test fixture for TCP server tests
@@ -103,6 +109,10 @@ class TcpServerTest : public ::testing::Test {
   void TearDown() override {
     if (server_) {
       server_->stop();
+    }
+    if (ioc_thread_.joinable()) {
+      test_ioc_.stop();
+      ioc_thread_.join();
     }
   }
 
@@ -134,8 +144,38 @@ class TcpServerTest : public ::testing::Test {
     state_tracker_.WaitForStateCount(min_count, timeout);
   }
 
+  // Helper methods for mock-based testing
+  void SetupMockServer() {
+    auto mock_acceptor = std::make_unique<MockTcpAcceptor>();
+    mock_acceptor_ = mock_acceptor.get();
+    server_ = std::make_shared<TcpServer>(cfg_, std::move(mock_acceptor), test_ioc_);
+  }
+
+  void SetupSuccessfulAcceptor() {
+    EXPECT_CALL(*mock_acceptor_, open(_, _))
+        .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+    EXPECT_CALL(*mock_acceptor_, bind(_, _))
+        .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+    EXPECT_CALL(*mock_acceptor_, listen(_, _))
+        .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+    EXPECT_CALL(*mock_acceptor_, is_open())
+        .WillRepeatedly(Return(true));
+  }
+
+  void StartServerAndWaitForListening() {
+    server_->start();
+    ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+  }
+
   TcpServerConfig cfg_;
   std::shared_ptr<TcpServer> server_;
+  
+  // Mock objects
+  MockTcpAcceptor* mock_acceptor_ = nullptr;
+  
+  // Test io_context
+  net::io_context test_ioc_;
+  std::thread ioc_thread_;
   
   std::mutex mtx_;
   std::condition_variable cv_;
@@ -181,6 +221,53 @@ TEST_F(TcpServerTest, CreatesServerSuccessfully) {
   // --- Verification ---
   EXPECT_TRUE(server_ != nullptr);
   EXPECT_FALSE(server_->is_connected()); // No client connected yet
+}
+
+TEST_F(TcpServerTest, CreatesServerWithMockSuccessfully) {
+  // --- Setup ---
+  SetupMockServer();
+  
+  // --- Test Logic ---
+  // Server should be created without issues
+  
+  // --- Verification ---
+  EXPECT_TRUE(server_ != nullptr);
+  EXPECT_FALSE(server_->is_connected()); // No client connected yet
+}
+
+TEST_F(TcpServerTest, StartsServerWithMockSuccessfully) {
+  // --- Setup ---
+  SetupMockServer();
+  SetupStateCallback();
+  SetupSuccessfulAcceptor();
+  
+  // --- Test Logic ---
+  StartServerAndWaitForListening();
+  
+  // --- Verification ---
+  WaitForState(LinkState::Listening);
+  EXPECT_TRUE(server_ != nullptr);
+  EXPECT_FALSE(server_->is_connected()); // No client connected yet
+}
+
+TEST_F(TcpServerTest, HandlesAcceptorErrorWithMock) {
+  // --- Setup ---
+  SetupMockServer();
+  SetupStateCallback();
+  
+  // Configure mock to return error on bind
+  EXPECT_CALL(*mock_acceptor_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+  EXPECT_CALL(*mock_acceptor_, bind(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code(boost::system::errc::address_in_use, boost::system::generic_category())));
+  
+  // --- Test Logic ---
+  StartServerAndWaitForListening();
+  
+  // --- Verification ---
+  WaitForState(LinkState::Error);
+  EXPECT_TRUE(server_ != nullptr);
+  EXPECT_FALSE(server_->is_connected());
 }
 
 TEST_F(TcpServerTest, HandlesStopWithoutStart) {

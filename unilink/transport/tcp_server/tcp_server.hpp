@@ -11,6 +11,7 @@
 
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
 
 namespace unilink {
@@ -27,6 +28,10 @@ class TcpServer : public Channel,
                   public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:
   explicit TcpServer(const TcpServerConfig& cfg);
+  // Constructor for testing with dependency injection
+  TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::ITcpAcceptor> acceptor,
+            net::io_context& ioc);
+  ~TcpServer();
 
   void start() override;
   void stop() override;
@@ -41,10 +46,12 @@ class TcpServer : public Channel,
   void notify_state();
 
  private:
-  net::io_context ioc_;
+  std::unique_ptr<net::io_context> owned_ioc_;
+  net::io_context& ioc_;
+  bool owns_ioc_;
   std::thread ioc_thread_;
 
-  tcp::acceptor acceptor_;
+  std::unique_ptr<interface::ITcpAcceptor> acceptor_;
   TcpServerConfig cfg_;
   std::shared_ptr<TcpServerSession> sess_;
 
