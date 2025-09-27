@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "unilink/interface/channel.hpp"
+#include "unilink/interface/itcp_socket.hpp"
 
 namespace unilink {
 namespace transport {
@@ -26,6 +27,8 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
   using OnClose = std::function<void()>;
 
   TcpServerSession(net::io_context& ioc, tcp::socket sock);
+  // Constructor for testing with dependency injection
+  TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::ITcpSocket> socket);
 
   void start();
   void async_write_copy(const uint8_t* data, size_t size);
@@ -41,7 +44,7 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
 
  private:
   net::io_context& ioc_;
-  tcp::socket socket_;
+  std::unique_ptr<interface::ITcpSocket> socket_;
   std::array<uint8_t, 4096> rx_{};
   std::deque<std::vector<uint8_t>> tx_;
   bool writing_ = false;
