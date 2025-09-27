@@ -40,6 +40,50 @@ using ::testing::SetArgReferee;
 #define EXPECT_READ_LOOP_ALIVE(mock_port) \
   EXPECT_CALL(*mock_port, async_read_some(_, _)).WillRepeatedly([](auto, auto) { /* Keep the read loop going */ });
 
+// StateTracker class for managing test state transitions
+class StateTracker {
+public:
+  void OnState(LinkState state) {
+    std::lock_guard<std::mutex> lock(mtx_);
+    states_.push_back(state);
+    last_state_ = state;
+    state_count_++;
+    cv_.notify_one();
+  }
+
+  void WaitForState(LinkState expected, std::chrono::seconds timeout = std::chrono::seconds(1)) {
+    std::unique_lock<std::mutex> lock(mtx_);
+    cv_.wait_for(lock, timeout, [&] { return last_state_ == expected; });
+  }
+
+  void WaitForStateCount(int min_count, std::chrono::seconds timeout = std::chrono::seconds(1)) {
+    std::unique_lock<std::mutex> lock(mtx_);
+    cv_.wait_for(lock, timeout, [&] { return state_count_ >= min_count; });
+  }
+
+  const std::vector<LinkState>& GetStates() const { return states_; }
+  LinkState GetLastState() const { return last_state_; }
+  int GetStateCount() const { return state_count_; }
+  
+  bool HasState(LinkState state) const {
+    return std::find(states_.begin(), states_.end(), state) != states_.end();
+  }
+
+  void Clear() {
+    std::lock_guard<std::mutex> lock(mtx_);
+    states_.clear();
+    last_state_ = LinkState::Idle;
+    state_count_ = 0;
+  }
+
+private:
+  mutable std::mutex mtx_;
+  std::condition_variable cv_;
+  std::vector<LinkState> states_;
+  LinkState last_state_ = LinkState::Idle;
+  int state_count_ = 0;
+};
+
 class MockSerialPort : public ISerialPort {
  public:
   MOCK_METHOD(void, open, (const std::string&, boost::system::error_code&),
@@ -78,6 +122,145 @@ class MockSerialPort : public ISerialPort {
               (override));
 };
 
+// MockPortBuilder for fluent mock configuration
+class MockPortBuilder {
+public:
+  MockPortBuilder(MockSerialPort* mock_port) : mock_port_(mock_port) {}
+
+  // Connection configuration
+  MockPortBuilder& WithSuccessfulOpen() {
+    EXPECT_CALL(*mock_port_, open(_, _))
+        .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+    return *this;
+  }
+
+  MockPortBuilder& WithFailedOpen(boost::system::error_code error) {
+    EXPECT_CALL(*mock_port_, open(_, _))
+        .WillOnce(SetArgReferee<1>(error));
+    return *this;
+  }
+
+  MockPortBuilder& WithRetryableOpen(boost::system::error_code first_error, 
+                                   boost::system::error_code success = boost::system::error_code()) {
+    EXPECT_CALL(*mock_port_, open(_, _))
+        .WillOnce(SetArgReferee<1>(first_error))
+        .WillOnce(SetArgReferee<1>(success));
+    return *this;
+  }
+
+  // Serial options configuration
+  MockPortBuilder& WithSerialOptions() {
+    EXPECT_SERIAL_OPTIONS_SET(mock_port_);
+    return *this;
+  }
+
+  MockPortBuilder& WithSerialOptions(int times) {
+    EXPECT_CALL(*mock_port_, set_option(A<const net::serial_port_base::baud_rate&>(), _))
+        .Times(times);
+    EXPECT_CALL(*mock_port_, set_option(A<const net::serial_port_base::character_size&>(), _))
+        .Times(times);
+    EXPECT_CALL(*mock_port_, set_option(A<const net::serial_port_base::stop_bits&>(), _))
+        .Times(times);
+    EXPECT_CALL(*mock_port_, set_option(A<const net::serial_port_base::parity&>(), _))
+        .Times(times);
+    EXPECT_CALL(*mock_port_, set_option(A<const net::serial_port_base::flow_control&>(), _))
+        .Times(times);
+    return *this;
+  }
+
+  // Port state configuration
+  MockPortBuilder& WithIsOpen(bool is_open) {
+    EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(is_open));
+    return *this;
+  }
+
+  MockPortBuilder& WithIsOpenSequence(std::vector<bool> states) {
+    auto state_it = states.begin();
+    EXPECT_CALL(*mock_port_, is_open())
+        .WillRepeatedly(Invoke([state_it, states]() mutable {
+          if (state_it != states.end()) {
+            return *(state_it++);
+          }
+          return states.back();
+        }));
+    return *this;
+  }
+
+  // Read configuration
+  MockPortBuilder& WithReadLoop() {
+    EXPECT_READ_LOOP_ALIVE(mock_port_);
+    return *this;
+  }
+
+  MockPortBuilder& WithReadHandler(std::function<void(const boost::system::error_code&, size_t)>& handler) {
+    EXPECT_CALL(*mock_port_, async_read_some(_, _))
+        .WillOnce(SaveArg<1>(&handler));
+    return *this;
+  }
+
+  MockPortBuilder& WithReadHandlerAndBuffer(std::function<void(const boost::system::error_code&, size_t)>& handler,
+                                          net::mutable_buffer& buffer) {
+    EXPECT_CALL(*mock_port_, async_read_some(_, _))
+        .WillOnce(DoAll(SaveArg<0>(&buffer), SaveArg<1>(&handler)))
+        .WillRepeatedly(Return());
+    return *this;
+  }
+
+  // Write configuration
+  MockPortBuilder& WithWriteHandler(std::function<void(const boost::system::error_code&, size_t)>& handler) {
+    EXPECT_CALL(*mock_port_, async_write(_, _))
+        .WillOnce(SaveArg<1>(&handler));
+    return *this;
+  }
+
+  MockPortBuilder& WithWriteBuffer(net::const_buffer& buffer) {
+    EXPECT_CALL(*mock_port_, async_write(_, _))
+        .WillOnce(DoAll(SaveArg<0>(&buffer), Return()));
+    return *this;
+  }
+
+  MockPortBuilder& WithWriteHandlerAndBuffer(std::function<void(const boost::system::error_code&, size_t)>& handler,
+                                            net::const_buffer& buffer) {
+    EXPECT_CALL(*mock_port_, async_write(_, _))
+        .WillOnce(DoAll(SaveArg<0>(&buffer), SaveArg<1>(&handler)));
+    return *this;
+  }
+
+  // Close configuration
+  MockPortBuilder& WithClose() {
+    EXPECT_CALL(*mock_port_, close(_));
+    return *this;
+  }
+
+  MockPortBuilder& WithClose(std::function<void(boost::system::error_code&)> close_action) {
+    EXPECT_CALL(*mock_port_, close(_))
+        .WillOnce(Invoke(close_action));
+    return *this;
+  }
+
+  // Convenience methods for common scenarios
+  MockPortBuilder& AsSuccessfulConnection() {
+    return WithSuccessfulOpen()
+           .WithSerialOptions()
+           .WithIsOpen(true)
+           .WithReadLoop();
+  }
+
+  MockPortBuilder& AsFailedConnection(boost::system::error_code error) {
+    return WithFailedOpen(error)
+           .WithIsOpen(false);
+  }
+
+  MockPortBuilder& AsRetryableConnection(boost::system::error_code first_error) {
+    return WithRetryableOpen(first_error)
+           .WithSerialOptions(2)  // Called twice for retry
+           .WithIsOpen(false);  // Initially false, then true after retry
+  }
+
+private:
+  MockSerialPort* mock_port_;
+};
+
 class SerialTest : public ::testing::Test {
  protected:
   void SetUp() override {}
@@ -101,6 +284,10 @@ class SerialTest : public ::testing::Test {
     serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
   }
 
+  MockPortBuilder ConfigureMock() {
+    return MockPortBuilder(mock_port_);
+  }
+
   void SetupSuccessfulConnection() {
     EXPECT_SUCCESSFUL_CONNECTION(mock_port_);
   }
@@ -115,22 +302,16 @@ class SerialTest : public ::testing::Test {
   }
 
   void WaitForState(LinkState expected_state, std::chrono::seconds timeout = std::chrono::seconds(1)) {
-    std::unique_lock<std::mutex> lock(mtx_);
-    cv_.wait_for(lock, timeout, [&] { return last_state_ == expected_state; });
+    state_tracker_.WaitForState(expected_state, timeout);
   }
 
   void WaitForStateCount(int min_count, std::chrono::seconds timeout = std::chrono::seconds(1)) {
-    std::unique_lock<std::mutex> lock(mtx_);
-    cv_.wait_for(lock, timeout, [&] { return state_count_ >= min_count; });
+    state_tracker_.WaitForStateCount(min_count, timeout);
   }
 
   void SetupStateCallback() {
     serial_->on_state([this](LinkState state) {
-      std::lock_guard<std::mutex> lock_guard(mtx_);
-      last_state_ = state;
-      state_count_++;
-      states_.push_back(state);
-      cv_.notify_one();
+      state_tracker_.OnState(state);
     });
   }
 
@@ -170,10 +351,40 @@ class SerialTest : public ::testing::Test {
   std::condition_variable cv_;
   
   // State tracking
-  LinkState last_state_ = LinkState::Idle;
-  int state_count_ = 0;
-  std::vector<LinkState> states_;
+  StateTracker state_tracker_;
   std::vector<uint8_t> received_data_;
+};
+
+// Specialized test fixtures for different test scenarios
+class BasicConnectionTest : public SerialTest {
+protected:
+  void SetUp() override {
+    SerialTest::SetUp();
+    SetupMockPort();
+    SetupSuccessfulConnection();
+    SetupReadLoop();
+  }
+};
+
+class ErrorHandlingTest : public SerialTest {
+protected:
+  void SetUp() override {
+    SerialTest::SetUp();
+    cfg_.reopen_on_error = true;
+    cfg_.retry_interval_ms = 50;
+    SetupMockPort();
+  }
+};
+
+class DataTransferTest : public SerialTest {
+protected:
+  void SetUp() override {
+    SerialTest::SetUp();
+    SetupMockPort();
+    SetupSuccessfulConnection();
+    SetupReadLoop();
+    SetupDataCallback();
+  }
 };
 
 /**
@@ -185,11 +396,8 @@ class SerialTest : public ::testing::Test {
  * - State callbacks are triggered (Connecting -> Connected)
  * - Read loop is established
  */
-TEST_F(SerialTest, ConnectsAndReceivesStateCallback) {
-  // Given: Mock port with successful connection setup
-  SetupMockPort();
-  SetupSuccessfulConnection();
-  SetupReadLoop();
+TEST_F(BasicConnectionTest, ConnectsAndReceivesStateCallback) {
+  // Given: Mock port with successful connection setup (done in SetUp)
   
   // When: Starting serial connection with state callback
   SetupStateCallback();
@@ -197,7 +405,23 @@ TEST_F(SerialTest, ConnectsAndReceivesStateCallback) {
   
   // Then: Should receive connection state callbacks
   WaitForStateCount(2);
-  EXPECT_EQ(last_state_, LinkState::Connected);
+  EXPECT_EQ(state_tracker_.GetLastState(), LinkState::Connected);
+}
+
+// Example of using the builder pattern for a new test
+TEST_F(SerialTest, ConnectsAndReceivesStateCallback_WithBuilder) {
+  // Given: Mock port configured using builder pattern
+  SetupMockPort();
+  ConfigureMock()
+    .AsSuccessfulConnection();
+  
+  // When: Starting serial connection with state callback
+  SetupStateCallback();
+  StartSerialAndWaitForConnection();
+  
+  // Then: Should receive connection state callbacks
+  WaitForStateCount(2);
+  EXPECT_EQ(state_tracker_.GetLastState(), LinkState::Connected);
 }
 
 /**
@@ -208,10 +432,8 @@ TEST_F(SerialTest, ConnectsAndReceivesStateCallback) {
  * - Data is received through the read callback
  * - Received data matches the sent data
  */
-TEST_F(SerialTest, ReceivesData) {
-  // Given: Mock port with successful connection and read handler capture
-  SetupMockPort();
-  SetupSuccessfulConnection();
+TEST_F(DataTransferTest, ReceivesData) {
+  // Given: Mock port with successful connection and read handler capture (done in SetUp)
   
   const std::string test_message = "hello";
   std::function<void(const boost::system::error_code&, size_t)> read_handler;
@@ -220,6 +442,41 @@ TEST_F(SerialTest, ReceivesData) {
   EXPECT_CALL(*mock_port_, async_read_some(_, _))
       .WillOnce(DoAll(SaveArg<0>(&read_buffer), SaveArg<1>(&read_handler)))
       .WillRepeatedly(Return());
+  
+  SetupStateCallback();
+  
+  // When: Starting serial connection and simulating data arrival
+  StartSerialAndWaitForConnection();
+  WaitForState(LinkState::Connected);
+  ASSERT_TRUE(read_handler);
+  
+  // Simulate data arrival
+  ASSERT_GE(read_buffer.size(), test_message.length());
+  std::memcpy(read_buffer.data(), test_message.data(), test_message.length());
+  net::post(test_ioc_, [&] {
+    read_handler(boost::system::error_code(), test_message.length());
+  });
+  
+  // Then: Should receive the data correctly
+  WaitForData();
+  std::string received_str(received_data_.begin(), received_data_.end());
+  EXPECT_EQ(received_str, test_message);
+}
+
+// Example of using the builder pattern for data reception test
+TEST_F(SerialTest, ReceivesData_WithBuilder) {
+  // Given: Mock port configured using builder pattern
+  SetupMockPort();
+  
+  const std::string test_message = "hello";
+  std::function<void(const boost::system::error_code&, size_t)> read_handler;
+  net::mutable_buffer read_buffer;
+  
+  ConfigureMock()
+    .WithSuccessfulOpen()
+    .WithSerialOptions()
+    .WithIsOpen(true)
+    .WithReadHandlerAndBuffer(read_handler, read_buffer);
   
   SetupDataCallback();
   SetupStateCallback();
@@ -250,15 +507,37 @@ TEST_F(SerialTest, ReceivesData) {
  * - Data is transmitted through the write callback
  * - Transmitted data matches the sent data
  */
-TEST_F(SerialTest, TransmitsData) {
-  // Given: Mock port with successful connection and write buffer capture
-  SetupMockPort();
-  SetupSuccessfulConnection();
-  SetupReadLoop();
+TEST_F(BasicConnectionTest, TransmitsData) {
+  // Given: Mock port with successful connection and write buffer capture (done in SetUp)
   
   net::const_buffer written_buffer;
   EXPECT_CALL(*mock_port_, async_write(_, _))
       .WillOnce(DoAll(SaveArg<0>(&written_buffer), Return()));
+  
+  // When: Starting serial connection and sending data
+  StartSerialAndWaitForConnection();
+  const std::string test_message = "world";
+  serial_->async_write_copy(
+      reinterpret_cast<const uint8_t*>(test_message.c_str()),
+      test_message.length());
+  
+  // Then: Should transmit the data correctly
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  ASSERT_EQ(written_buffer.size(), test_message.size());
+  std::string written_str(static_cast<const char*>(written_buffer.data()),
+                          written_buffer.size());
+  EXPECT_EQ(written_str, test_message);
+}
+
+// Example of using the builder pattern for data transmission test
+TEST_F(SerialTest, TransmitsData_WithBuilder) {
+  // Given: Mock port configured using builder pattern
+  SetupMockPort();
+  
+  net::const_buffer written_buffer;
+  ConfigureMock()
+    .AsSuccessfulConnection()
+    .WithWriteBuffer(written_buffer);
   
   // When: Starting serial connection and sending data
   StartSerialAndWaitForConnection();
@@ -352,39 +631,14 @@ TEST_F(SerialTest, HandlesConnectionFailureAndRetries) {
   // --- Setup ---
   cfg_.reopen_on_error = true;
   cfg_.retry_interval_ms = 50;  // 짧은 재시도 간격
-  auto mock_port_ptr = std::make_unique<MockSerialPort>();
-  mock_port_ = mock_port_ptr.get();
-  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+  SetupMockPort();
 
   // --- Expectations ---
-  // 첫 번째 open 시도는 실패, 두 번째는 성공
-  EXPECT_CALL(*mock_port_, open(_, _))
-      .WillOnce(SetArgReferee<1>(
-          boost::asio::error::make_error_code(boost::asio::error::not_found)))
-      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
-
-  // is_open() can be called at any time, return false initially, then true
-  // after successful connection
-  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(false));
-
-  // 성공적인 연결 후 설정 호출 예상
-  EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::baud_rate&>(), _))
-      .Times(AtLeast(1));
-  EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::character_size&>(), _))
-      .Times(AtLeast(1));
-  EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::stop_bits&>(), _))
-      .Times(AtLeast(1));
-  EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::parity&>(), _))
-      .Times(AtLeast(1));
-  EXPECT_CALL(*mock_port_,
-              set_option(A<const net::serial_port_base::flow_control&>(), _))
-      .Times(AtLeast(1));
-
-  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+  ConfigureMock()
+    .WithRetryableOpen(boost::asio::error::make_error_code(boost::asio::error::not_found))
+    .WithIsOpen(false)
+    .WithSerialOptions()  // Called at least once
+    .WithReadLoop();
 
   // --- Test Logic ---
   std::unique_lock<std::mutex> lock(mtx_);
