@@ -13,8 +13,11 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock)
 void TcpServerSession::start() { start_read(); }
 
 void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
+  if (!alive_) return; // Don't queue writes if session is not alive
+  
   std::vector<uint8_t> copy(data, data + size);
   net::post(ioc_, [self = shared_from_this(), buf = std::move(copy)]() mutable {
+    if (!self->alive_) return; // Double-check in case session was closed
     self->queue_bytes_ += buf.size();
     self->tx_.emplace_back(std::move(buf));
     if (self->on_bp_ && self->queue_bytes_ > self->bp_high_)

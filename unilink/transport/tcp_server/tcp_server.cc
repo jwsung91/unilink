@@ -13,11 +13,25 @@ using namespace config;
 using tcp = net::ip::tcp;
 
 TcpServer::TcpServer(const TcpServerConfig& cfg)
-    : ioc_(), acceptor_(ioc_, tcp::endpoint(tcp::v4(), cfg.port)), cfg_(cfg) {}
+    : ioc_(), acceptor_(ioc_), cfg_(cfg) {}
 
 void TcpServer::start() {
   ioc_thread_ = std::thread([this] { ioc_.run(); });
   net::post(ioc_, [this] {
+    boost::system::error_code ec;
+    acceptor_.open(tcp::v4(), ec);
+    if (!ec) {
+      acceptor_.bind(tcp::endpoint(tcp::v4(), cfg_.port), ec);
+    }
+    if (!ec) {
+      acceptor_.listen(boost::asio::socket_base::max_listen_connections, ec);
+    }
+    if (ec) {
+      std::cout << ts_now() << "[server] bind error: " << ec.message() << std::endl;
+      state_ = LinkState::Error;
+      notify_state();
+      return;
+    }
     state_ = LinkState::Listening;
     notify_state();
     do_accept();
@@ -25,13 +39,24 @@ void TcpServer::start() {
 }
 
 void TcpServer::stop() {
-  net::post(ioc_, [this] {
+  if (ioc_thread_.joinable()) {
+    net::post(ioc_, [this] {
+      boost::system::error_code ec;
+      if (acceptor_.is_open()) {
+        acceptor_.close(ec);
+      }
+      if (sess_) sess_.reset();
+    });
+    ioc_.stop();
+    ioc_thread_.join();
+  } else {
+    // If server was never started, just clean up
     boost::system::error_code ec;
-    acceptor_.close(ec);
+    if (acceptor_.is_open()) {
+      acceptor_.close(ec);
+    }
     if (sess_) sess_.reset();
-  });
-  ioc_.stop();
-  if (ioc_thread_.joinable()) ioc_thread_.join();
+  }
   state_ = LinkState::Closed;
   notify_state();
 }
@@ -39,7 +64,10 @@ void TcpServer::stop() {
 bool TcpServer::is_connected() const { return sess_ && sess_->alive(); }
 
 void TcpServer::async_write_copy(const uint8_t* data, size_t size) {
-  if (sess_) sess_->async_write_copy(data, size);
+  if (sess_ && sess_->alive()) {
+    sess_->async_write_copy(data, size);
+  }
+  // If no session or session is not alive, the write is silently dropped
 }
 
 void TcpServer::on_bytes(OnBytes cb) {
@@ -53,6 +81,8 @@ void TcpServer::on_backpressure(OnBackpressure cb) {
 }
 
 void TcpServer::do_accept() {
+  if (!acceptor_.is_open()) return;
+  
   auto self = shared_from_this();
   acceptor_.async_accept([self](auto ec, tcp::socket sock) {
     if (ec) {
@@ -90,7 +120,13 @@ void TcpServer::do_accept() {
 }
 
 void TcpServer::notify_state() {
-  if (on_state_) on_state_(state_);
+  if (on_state_) {
+    try {
+      on_state_(state_);
+    } catch (...) {
+      // Ignore exceptions from callbacks during shutdown
+    }
+  }
 }
 
 }  // namespace transport

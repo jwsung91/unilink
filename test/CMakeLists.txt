@@ -5,6 +5,7 @@ project(unilink-test)
 add_executable(run_tests
     test_common.cc
     test_serial.cc
+    test_tcp_server.cc
 )
 
 # Link the test executable against our library and GoogleTest

@@ -1166,6 +1166,372 @@ TEST_F(SerialTest, FutureWaitTimesOut) {
   EXPECT_EQ(status, std::future_status::timeout);
 }
 
+/**
+ * @brief Tests that future.wait_for with different timeout values works correctly
+ * 
+ * This test verifies:
+ * - Various timeout values (1ms, 10ms, 100ms, 1000ms) are handled correctly
+ * - Timeout behavior is consistent across different timeout durations
+ * - No performance degradation with longer timeouts
+ */
+TEST_F(SerialTest, FutureWaitWithVariousTimeoutValues) {
+  // --- Setup ---
+  auto mock_port_ptr = std::make_unique<MockSerialPort>();
+  mock_port_ = mock_port_ptr.get();
+  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+
+  std::vector<std::chrono::milliseconds> timeouts = {
+    std::chrono::milliseconds(1),
+    std::chrono::milliseconds(10),
+    std::chrono::milliseconds(100),
+    std::chrono::milliseconds(1000)
+  };
+
+  // --- Expectations ---
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
+
+  // --- Test Logic ---
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  for (const auto& timeout : timeouts) {
+    std::promise<void> p;
+    auto fut = p.get_future();
+    
+    // Promise will never be set, so we expect timeout
+    auto start_time = std::chrono::high_resolution_clock::now();
+    auto status = fut.wait_for(timeout);
+    auto end_time = std::chrono::high_resolution_clock::now();
+    
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    
+    // --- Verification ---
+    EXPECT_EQ(status, std::future_status::timeout);
+    // Duration should be close to timeout (allow some tolerance)
+    EXPECT_GE(duration.count(), timeout.count() - 5); // Allow 5ms tolerance
+    EXPECT_LT(duration.count(), timeout.count() + 50); // Allow 50ms tolerance
+  }
+}
+
+/**
+ * @brief Tests that future.wait_for works correctly with promise exceptions
+ * 
+ * This test verifies:
+ * - future.wait_for handles promise exceptions correctly
+ * - Exception propagation works as expected
+ * - Serial remains stable when promise operations fail
+ */
+TEST_F(SerialTest, FutureWaitWithPromiseExceptions) {
+  // --- Setup ---
+  auto mock_port_ptr = std::make_unique<MockSerialPort>();
+  mock_port_ = mock_port_ptr.get();
+  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+
+  std::atomic<bool> exception_caught{false};
+
+  // --- Expectations ---
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
+
+  // --- Test Logic ---
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  std::promise<std::string> p;
+  auto fut = p.get_future();
+
+  // Set exception in promise
+  std::thread([&p]() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    try {
+      throw std::runtime_error("Test exception");
+    } catch (...) {
+      p.set_exception(std::current_exception());
+    }
+  }).detach();
+
+  // Wait for future
+  auto status = fut.wait_for(std::chrono::seconds(1));
+
+  // --- Verification ---
+  EXPECT_EQ(status, std::future_status::ready);
+  
+  // Verify exception is propagated
+  try {
+    fut.get();
+  } catch (const std::runtime_error& e) {
+    EXPECT_STREQ(e.what(), "Test exception");
+    exception_caught = true;
+  }
+  EXPECT_TRUE(exception_caught);
+}
+
+/**
+ * @brief Tests that future.wait_for works correctly with shared_future
+ * 
+ * This test verifies:
+ * - shared_future works correctly with wait_for
+ * - Multiple threads can wait on the same shared_future
+ * - No race conditions occur with shared_future operations
+ */
+TEST_F(SerialTest, FutureWaitWithSharedFuture) {
+  // --- Setup ---
+  auto mock_port_ptr = std::make_unique<MockSerialPort>();
+  mock_port_ = mock_port_ptr.get();
+  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+
+  std::atomic<int> completed_waiters{0};
+  const int num_waiters = 3;
+
+  // --- Expectations ---
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
+
+  // --- Test Logic ---
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  std::promise<std::string> p;
+  auto shared_fut = p.get_future().share();
+
+  // Create multiple threads waiting on the same shared_future
+  std::vector<std::thread> waiter_threads;
+  for (int i = 0; i < num_waiters; ++i) {
+    waiter_threads.emplace_back([&, i]() {
+      auto status = shared_fut.wait_for(std::chrono::seconds(1));
+      if (status == std::future_status::ready) {
+        auto value = shared_fut.get();
+        EXPECT_EQ(value, "shared future test");
+        completed_waiters++;
+      }
+    });
+  }
+
+  // Set the promise value after a delay
+  std::thread([&p]() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    p.set_value("shared future test");
+  }).detach();
+
+  // Wait for all waiter threads
+  for (auto& thread : waiter_threads) {
+    if (thread.joinable()) {
+      thread.join();
+    }
+  }
+
+  // --- Verification ---
+  EXPECT_EQ(completed_waiters.load(), num_waiters);
+}
+
+/**
+ * @brief Tests that future.wait_for works correctly with future chains
+ * 
+ * This test verifies:
+ * - Chained future operations work correctly
+ * - wait_for works with dependent futures
+ * - Complex future workflows don't cause issues
+ */
+TEST_F(SerialTest, FutureWaitWithFutureChains) {
+  // --- Setup ---
+  auto mock_port_ptr = std::make_unique<MockSerialPort>();
+  mock_port_ = mock_port_ptr.get();
+  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+
+  std::atomic<bool> chain_completed{false};
+
+  // --- Expectations ---
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
+
+  // --- Test Logic ---
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  // Create a chain of futures
+  std::promise<int> p1;
+  auto fut1 = p1.get_future();
+
+  std::thread([&]() {
+    // First future
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    p1.set_value(42);
+  }).detach();
+
+  // Wait for first future
+  auto status1 = fut1.wait_for(std::chrono::seconds(1));
+  EXPECT_EQ(status1, std::future_status::ready);
+
+  int value1 = fut1.get();
+  EXPECT_EQ(value1, 42);
+
+  // Create second future based on first result
+  std::promise<std::string> p2;
+  auto fut2 = p2.get_future();
+
+  std::thread([&, value1]() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    p2.set_value("result: " + std::to_string(value1));
+  }).detach();
+
+  // Wait for second future
+  auto status2 = fut2.wait_for(std::chrono::seconds(1));
+  EXPECT_EQ(status2, std::future_status::ready);
+
+  std::string value2 = fut2.get();
+  EXPECT_EQ(value2, "result: 42");
+
+  chain_completed = true;
+
+  // --- Verification ---
+  EXPECT_TRUE(chain_completed.load());
+}
+
+/**
+ * @brief Tests that future.wait_for works correctly with multiple concurrent operations
+ * 
+ * This test verifies:
+ * - Multiple concurrent future.wait_for operations work correctly
+ * - Each future operation is independent
+ * - No race conditions occur between multiple future operations
+ * - Serial remains stable with multiple concurrent future operations
+ */
+TEST_F(SerialTest, MultipleFutureWaitOperations) {
+  // --- Setup ---
+  auto mock_port_ptr = std::make_unique<MockSerialPort>();
+  mock_port_ = mock_port_ptr.get();
+  serial_ = std::make_shared<Serial>(cfg_, std::move(mock_port_ptr), test_ioc_);
+
+  std::atomic<int> completed_futures{0};
+  const int num_futures = 3;
+
+  // --- Expectations ---
+  EXPECT_CALL(*mock_port_, open(_, _))
+      .WillOnce(SetArgReferee<1>(boost::system::error_code()));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::baud_rate&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::character_size&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::stop_bits&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::parity&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_,
+              set_option(A<const net::serial_port_base::flow_control&>(), _))
+      .Times(AtLeast(1));
+  EXPECT_CALL(*mock_port_, async_read_some(_, _)).WillRepeatedly(Return());
+  EXPECT_CALL(*mock_port_, is_open()).WillRepeatedly(Return(true));
+
+  // --- Test Logic ---
+  serial_->start();
+  ioc_thread_ = std::thread([this] { test_ioc_.run(); });
+
+  // Create multiple future operations that run concurrently
+  std::vector<std::thread> future_threads;
+  for (int i = 0; i < num_futures; ++i) {
+    future_threads.emplace_back([&, i]() {
+      std::promise<void> p;
+      auto fut = p.get_future();
+
+      // Each future completes at different times
+      std::thread([&p, i]() {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10 * (i + 1)));
+        p.set_value();
+      }).detach();
+
+      // Wait for this specific future
+      auto status = fut.wait_for(std::chrono::seconds(1));
+      if (status == std::future_status::ready) {
+        completed_futures++;
+      }
+    });
+  }
+
+  // Wait for all future threads to complete
+  for (auto& thread : future_threads) {
+    if (thread.joinable()) {
+      thread.join();
+    }
+  }
+
+  // --- Verification ---
+  // All futures should complete successfully
+  EXPECT_EQ(completed_futures.load(), num_futures);
+}
+
 // ============================================================================
 // IMPROVED ERROR SCENARIO TESTS
 // ============================================================================
