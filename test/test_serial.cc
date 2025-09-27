@@ -491,16 +491,15 @@ TEST_F(SerialTest, FutureWaitSucceedsWithinTimeout) {
 
   // 2초 후에 데이터 수신을 시뮬레이션하는 별도 스레드
   std::thread sim_thread([&]() {
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     ASSERT_GE(read_buffer.size(), test_message.length());
     std::memcpy(read_buffer.data(), test_message.data(), test_message.length());
     net::post(test_ioc_, [&] {
       read_handler(boost::system::error_code(), test_message.length());
     });
   });
-
-  // 3초 타임아웃으로 future를 기다림
-  auto status = data_future.wait_for(std::chrono::seconds(3));
+  // 100ms 타임아웃으로 future를 기다림
+  auto status = data_future.wait_for(std::chrono::milliseconds(100));
 
   // --- Verification ---
   // 2초 후에 promise가 set_value() 되므로, 3초 타임아웃 내에 future는 ready
@@ -541,8 +540,8 @@ TEST_F(SerialTest, FutureWaitTimesOut) {
   serial_->start();
   ioc_thread_ = std::thread([this] { test_ioc_.run(); });
 
-  // 3초 타임아웃으로 future를 기다림
-  auto status = timeout_future.wait_for(std::chrono::seconds(3));
+  // 50ms 타임아웃으로 future를 기다림
+  auto status = timeout_future.wait_for(std::chrono::milliseconds(50));
 
   // --- Verification ---
   // 데이터 수신이 없으므로, 3초 후에 future는 timeout 상태가 되어야 함
