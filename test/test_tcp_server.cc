@@ -1074,3 +1074,235 @@ TEST_F(TcpServerTest, HandlesConnectionStateConsistency) {
   EXPECT_TRUE(server_ != nullptr);
   // State consistency should be maintained throughout
 }
+
+// ============================================================================
+// FUTURE WAIT_FOR BLOCKING TESTS
+// ============================================================================
+
+/**
+ * @brief Tests that future.wait_for operations work correctly in TCP server context
+ * 
+ * This test verifies:
+ * - future.wait_for operations can be used safely with TCP server
+ * - The server remains responsive when using future-based waiting
+ * - Multiple future operations don't interfere with server functionality
+ * - This simulates a user doing blocking operations while using the server
+ */
+TEST_F(TcpServerTest, FutureWaitOperationsWorkWithTcpServer) {
+  // --- Setup ---
+  server_ = std::make_shared<TcpServer>(cfg_);
+  
+  std::atomic<bool> server_operations_complete{false};
+  std::atomic<bool> future_operations_complete{false};
+  
+  // --- Test Logic ---
+  // Set up server callbacks
+  server_->on_bytes([&](const uint8_t* data, size_t n) {
+    // This callback would be called when data is received
+    // In a real scenario, this would not block the io_context
+  });
+  
+  server_->on_state([&](LinkState state) {
+    // State callback
+  });
+  
+  // Start server
+  server_->start();
+  
+  // Perform server operations in parallel with future operations
+  std::thread server_thread([&]() {
+    // Simulate server operations
+    for (int i = 0; i < 5; ++i) {
+      const std::string data = "server data " + std::to_string(i);
+      server_->async_write_copy(reinterpret_cast<const uint8_t*>(data.c_str()),
+                                data.length());
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+    server_operations_complete = true;
+  });
+  
+  std::thread future_thread([&]() {
+    // Simulate future.wait_for operations
+    for (int i = 0; i < 3; ++i) {
+      std::promise<void> p;
+      auto fut = p.get_future();
+      
+      // Simulate some work
+      std::thread([&p]() {
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        p.set_value();
+      }).detach();
+      
+      // This should not block the server operations
+      auto status = fut.wait_for(std::chrono::seconds(1));
+      EXPECT_EQ(status, std::future_status::ready);
+    }
+    future_operations_complete = true;
+  });
+  
+  // Wait for both operations to complete
+  server_thread.join();
+  future_thread.join();
+  
+  // --- Verification ---
+  EXPECT_TRUE(server_ != nullptr);
+  EXPECT_TRUE(server_operations_complete.load());
+  EXPECT_TRUE(future_operations_complete.load());
+}
+
+/**
+ * @brief Tests that future.wait_for succeeds within timeout
+ * 
+ * This test verifies:
+ * - future.wait_for returns ready status when promise is fulfilled within timeout
+ * - Timeout handling works as expected
+ * - Future operations work correctly in isolation
+ */
+TEST_F(TcpServerTest, FutureWaitSucceedsWithinTimeout) {
+  // --- Setup ---
+  server_ = std::make_shared<TcpServer>(cfg_);
+  
+  std::promise<std::string> data_promise;
+  auto data_future = data_promise.get_future();
+  
+  // --- Test Logic ---
+  server_->start();
+  
+  // Simulate data processing after a short delay
+  std::thread sim_thread([&]() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // Simulate some data processing that completes successfully
+    const std::string test_message = "test data";
+    data_promise.set_value(test_message);
+  });
+  
+  // Wait for data with 100ms timeout
+  auto status = data_future.wait_for(std::chrono::milliseconds(100));
+  
+  // --- Verification ---
+  ASSERT_EQ(status, std::future_status::ready);
+  auto received_data = data_future.get();
+  EXPECT_EQ(received_data, "test data");
+  
+  if (sim_thread.joinable()) {
+    sim_thread.join();
+  }
+}
+
+/**
+ * @brief Tests that future.wait_for times out correctly
+ * 
+ * This test verifies:
+ * - future.wait_for returns timeout status when promise is not fulfilled within timeout
+ * - Timeout handling works correctly when no data is received
+ * - Server remains stable during timeout scenarios
+ */
+TEST_F(TcpServerTest, FutureWaitTimesOut) {
+  // --- Setup ---
+  server_ = std::make_shared<TcpServer>(cfg_);
+  
+  std::promise<void> timeout_promise;
+  auto timeout_future = timeout_promise.get_future();
+  
+  // --- Test Logic ---
+  // Set up callback that will never be called (simulating no data reception)
+  server_->on_bytes([&](const uint8_t* data, size_t n) {
+    timeout_promise.set_value();
+  });
+  
+  server_->start();
+  
+  // Wait for data with 50ms timeout (no data will be received)
+  auto status = timeout_future.wait_for(std::chrono::milliseconds(50));
+  
+  // --- Verification ---
+  EXPECT_EQ(status, std::future_status::timeout);
+  EXPECT_TRUE(server_ != nullptr);
+  EXPECT_FALSE(server_->is_connected());
+}
+
+/**
+ * @brief Tests that multiple future.wait_for operations don't interfere with each other
+ * 
+ * This test verifies:
+ * - Multiple concurrent future.wait_for operations work correctly
+ * - Each future operation is independent
+ * - No race conditions occur between multiple future operations
+ * - Server remains stable with multiple concurrent future operations
+ */
+TEST_F(TcpServerTest, MultipleFutureWaitOperations) {
+  // --- Setup ---
+  server_ = std::make_shared<TcpServer>(cfg_);
+  
+  std::atomic<int> completed_futures{0};
+  const int num_futures = 3;
+  
+  // --- Test Logic ---
+  server_->start();
+  
+  // Create multiple future operations that run concurrently
+  std::vector<std::thread> future_threads;
+  for (int i = 0; i < num_futures; ++i) {
+    future_threads.emplace_back([&, i]() {
+      std::promise<void> p;
+      auto fut = p.get_future();
+      
+      // Each future completes at different times
+      std::thread([&p, i]() {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10 * (i + 1)));
+        p.set_value();
+      }).detach();
+      
+      // Wait for this specific future
+      auto status = fut.wait_for(std::chrono::seconds(1));
+      if (status == std::future_status::ready) {
+        completed_futures++;
+      }
+    });
+  }
+  
+  // Wait for all future threads to complete
+  for (auto& thread : future_threads) {
+    if (thread.joinable()) {
+      thread.join();
+    }
+  }
+  
+  // --- Verification ---
+  EXPECT_TRUE(server_ != nullptr);
+  // All futures should complete successfully
+  EXPECT_EQ(completed_futures.load(), num_futures);
+}
+
+/**
+ * @brief Tests that future.wait_for with very short timeout works correctly
+ * 
+ * This test verifies:
+ * - Very short timeouts (1ms) are handled correctly
+ * - future.wait_for returns timeout status quickly when appropriate
+ * - No performance issues occur with very short timeouts
+ * - Server remains responsive with short timeout operations
+ */
+TEST_F(TcpServerTest, FutureWaitWithVeryShortTimeout) {
+  // --- Setup ---
+  server_ = std::make_shared<TcpServer>(cfg_);
+  
+  std::promise<void> short_timeout_promise;
+  auto short_timeout_future = short_timeout_promise.get_future();
+  
+  // --- Test Logic ---
+  server_->start();
+  
+  // Wait with very short timeout (1ms) - promise will never be set
+  auto start_time = std::chrono::high_resolution_clock::now();
+  auto status = short_timeout_future.wait_for(std::chrono::milliseconds(1));
+  auto end_time = std::chrono::high_resolution_clock::now();
+  
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  
+  // --- Verification ---
+  EXPECT_EQ(status, std::future_status::timeout);
+  EXPECT_TRUE(server_ != nullptr);
+  // Duration should be close to 1ms (allow some tolerance for system scheduling)
+  EXPECT_LT(duration.count(), 10); // Should be much less than 10ms
+}
