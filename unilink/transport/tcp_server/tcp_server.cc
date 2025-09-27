@@ -16,24 +16,44 @@ using tcp = net::ip::tcp;
 
 TcpServer::TcpServer(const TcpServerConfig& cfg)
     : owned_ioc_(std::make_unique<net::io_context>()),
-      ioc_(*owned_ioc_), 
       owns_ioc_(true),
-      acceptor_(std::make_unique<BoostTcpAcceptor>(*owned_ioc_)), 
-      cfg_(cfg) {}
+      ioc_(*owned_ioc_), 
+      acceptor_(nullptr), 
+      cfg_(cfg) {
+  // Create acceptor after all members are initialized
+  try {
+    acceptor_ = std::make_unique<BoostTcpAcceptor>(*owned_ioc_);
+  } catch (const std::exception& e) {
+    throw std::runtime_error("Failed to create TCP acceptor: " + std::string(e.what()));
+  }
+}
 
 TcpServer::TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::ITcpAcceptor> acceptor,
                      net::io_context& ioc)
     : owned_ioc_(nullptr),
+      owns_ioc_(false),
       ioc_(ioc), 
-      owns_ioc_(false), 
       acceptor_(std::move(acceptor)), 
-      cfg_(cfg) {}
+      cfg_(cfg) {
+  // Ensure acceptor is properly initialized
+  if (!acceptor_) {
+    throw std::runtime_error("Failed to create TCP acceptor");
+  }
+}
 
 TcpServer::~TcpServer() {
-  stop();
+  // Don't call stop() in destructor as it may cause issues with shared_from_this
+  // The caller should explicitly call stop() before destruction
 }
 
 void TcpServer::start() {
+  if (!acceptor_) {
+    std::cout << ts_now() << "[server] start error: acceptor is null" << std::endl;
+    state_ = LinkState::Error;
+    notify_state();
+    return;
+  }
+  
   if (owns_ioc_) {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
@@ -62,7 +82,7 @@ void TcpServer::stop() {
   if (owns_ioc_ && ioc_thread_.joinable()) {
     net::post(ioc_, [this] {
       boost::system::error_code ec;
-      if (acceptor_->is_open()) {
+      if (acceptor_ && acceptor_->is_open()) {
         acceptor_->close(ec);
       }
       if (sess_) sess_.reset();
@@ -72,13 +92,14 @@ void TcpServer::stop() {
   } else {
     // If server was never started, just clean up
     boost::system::error_code ec;
-    if (acceptor_->is_open()) {
+    if (acceptor_ && acceptor_->is_open()) {
       acceptor_->close(ec);
     }
     if (sess_) sess_.reset();
   }
   state_ = LinkState::Closed;
-  notify_state();
+  // Don't call notify_state() in stop() as it may cause issues with callbacks
+  // during destruction
 }
 
 bool TcpServer::is_connected() const { return sess_ && sess_->alive(); }
@@ -101,7 +122,7 @@ void TcpServer::on_backpressure(OnBackpressure cb) {
 }
 
 void TcpServer::do_accept() {
-  if (!acceptor_->is_open()) return;
+  if (!acceptor_ || !acceptor_->is_open()) return;
   
   auto self = shared_from_this();
   acceptor_->async_accept([self](auto ec, tcp::socket sock) {

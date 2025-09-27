@@ -47,8 +47,8 @@ class TcpServer : public Channel,
 
  private:
   std::unique_ptr<net::io_context> owned_ioc_;
-  net::io_context& ioc_;
   bool owns_ioc_;
+  net::io_context& ioc_;
   std::thread ioc_thread_;
 
   std::unique_ptr<interface::ITcpAcceptor> acceptor_;
