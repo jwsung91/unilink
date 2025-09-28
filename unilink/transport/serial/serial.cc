@@ -40,6 +40,9 @@ Serial::~Serial() {
 
   if (owns_ioc_) {
     if (ioc_thread_.joinable()) ioc_thread_.join();
+    // Ensure io_context is completely stopped before deletion
+    ioc_.stop();
+    ioc_.restart();
     delete &ioc_;
   }
 }
@@ -69,7 +72,17 @@ void Serial::stop() {
       // runs out of work.
       ioc_.stop();
     });
-    if (owns_ioc_ && ioc_thread_.joinable()) ioc_thread_.join();
+    
+    // Wait for all async operations to complete
+    if (owns_ioc_ && ioc_thread_.joinable()) {
+      ioc_thread_.join();
+    }
+    
+    // Reset the io_context to clear any remaining work
+    if (owns_ioc_) {
+      ioc_.restart();
+    }
+    
     state_ = LinkState::Closed;
     notify_state();
   }

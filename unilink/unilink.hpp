@@ -3,6 +3,7 @@
 #include <memory>
 #include <variant>
 
+// 기존 저수준 API includes
 #include "unilink/export.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/interface/channel.hpp"
@@ -10,9 +11,15 @@
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
+// 새로운 고수준 Wrapper API includes
+#include "unilink/wrapper/ichannel.hpp"
+#include "unilink/wrapper/tcp_server/tcp_server.hpp"
+#include "unilink/wrapper/tcp_client/tcp_client.hpp"
+#include "unilink/wrapper/serial/serial.hpp"
+
 namespace unilink {
 
-// Public Interface
+// === 기존 저수준 API (하위 호환성 유지) ===
 using Channel = interface::Channel;
 using LinkState = common::LinkState;
 
@@ -25,14 +32,24 @@ using SerialConfig = config::SerialConfig;
 using ChannelOptions =
     std::variant<TcpClientConfig, TcpServerConfig, SerialConfig>;
 
-// Common helpers
+// 기존 Factory 함수 (저수준 API)
+UNILINK_API std::shared_ptr<Channel> create(const ChannelOptions& options) {
+  return factory::ChannelFactory::create(options);
+}
+
+// === 새로운 고수준 Wrapper API ===
+// 편의 별칭들
+namespace wrapper {
+    using TcpServer = wrapper::TcpServer;
+    using TcpClient = wrapper::TcpClient;
+    using Serial = wrapper::Serial;
+    using IChannel = wrapper::IChannel;
+}
+
+// === 공통 유틸리티 (기존 유지) ===
 using common::feed_lines;
 using common::log_message;
 using common::to_cstr;
 using common::ts_now;
 
-UNILINK_API std::shared_ptr<Channel> create(const ChannelOptions& options) {
-  return factory::ChannelFactory::create(options);
-}
-
-}  // namespace unilink
+} // namespace unilink
