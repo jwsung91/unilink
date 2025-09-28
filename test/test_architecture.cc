@@ -7,7 +7,6 @@
 #include "unilink/unilink.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/builder/resource_manager.hpp"
 
 using namespace unilink;
 using namespace std::chrono_literals;
