@@ -14,7 +14,7 @@ namespace builder {
  * Provides a fluent API for configuring and creating TcpClient instances.
  * Supports method chaining for easy configuration.
  */
-class TcpClientBuilder : public IBuilder<wrapper::TcpClient> {
+class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
 public:
     /**
      * @brief Construct a new TcpClientBuilder
@@ -60,7 +60,7 @@ public:
      */
     template<typename U, typename F>
     TcpClientBuilder& on_data(U* obj, F method) {
-        return static_cast<TcpClientBuilder&>(IBuilder<wrapper::TcpClient>::on_data(obj, method));
+        return static_cast<TcpClientBuilder&>(BuilderInterface<wrapper::TcpClient>::on_data(obj, method));
     }
     
     /**
@@ -80,7 +80,7 @@ public:
      */
     template<typename U, typename F>
     TcpClientBuilder& on_connect(U* obj, F method) {
-        return static_cast<TcpClientBuilder&>(IBuilder<wrapper::TcpClient>::on_connect(obj, method));
+        return static_cast<TcpClientBuilder&>(BuilderInterface<wrapper::TcpClient>::on_connect(obj, method));
     }
     
     /**
@@ -100,7 +100,7 @@ public:
      */
     template<typename U, typename F>
     TcpClientBuilder& on_disconnect(U* obj, F method) {
-        return static_cast<TcpClientBuilder&>(IBuilder<wrapper::TcpClient>::on_disconnect(obj, method));
+        return static_cast<TcpClientBuilder&>(BuilderInterface<wrapper::TcpClient>::on_disconnect(obj, method));
     }
     
     /**
@@ -120,7 +120,7 @@ public:
      */
     template<typename U, typename F>
     TcpClientBuilder& on_error(U* obj, F method) {
-        return static_cast<TcpClientBuilder&>(IBuilder<wrapper::TcpClient>::on_error(obj, method));
+        return static_cast<TcpClientBuilder&>(BuilderInterface<wrapper::TcpClient>::on_error(obj, method));
     }
 
 private:

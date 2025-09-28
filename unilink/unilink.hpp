@@ -31,7 +31,7 @@ namespace wrapper {
     using TcpServer = wrapper::TcpServer;
     using TcpClient = wrapper::TcpClient;
     using Serial = wrapper::Serial;
-    using IChannel = wrapper::IChannel;
+    using IChannel = wrapper::ChannelInterface;
 }
 
 // === 공개 Builder API ===
@@ -108,7 +108,7 @@ inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_ra
 // 편의 별칭들 - Config가 활성화된 경우에만 사용 가능
 #ifdef UNILINK_ENABLE_CONFIG
 namespace config_manager {
-    using IConfigManager = config::IConfigManager;
+    using IConfigManager = config::ConfigManagerInterface;
     using ConfigManager = config::ConfigManager;
     using ConfigFactory = config::ConfigFactory;
     using ConfigPresets = config::ConfigPresets;

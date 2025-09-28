@@ -82,7 +82,7 @@ bool Serial::is_connected() const {
     return channel_ && channel_->is_connected();
 }
 
-IChannel& Serial::on_data(DataHandler handler) {
+ChannelInterface& Serial::on_data(DataHandler handler) {
     data_handler_ = std::move(handler);
     if (channel_) {
         setup_internal_handlers();
@@ -90,22 +90,22 @@ IChannel& Serial::on_data(DataHandler handler) {
     return *this;
 }
 
-IChannel& Serial::on_connect(ConnectHandler handler) {
+ChannelInterface& Serial::on_connect(ConnectHandler handler) {
     connect_handler_ = std::move(handler);
     return *this;
 }
 
-IChannel& Serial::on_disconnect(DisconnectHandler handler) {
+ChannelInterface& Serial::on_disconnect(DisconnectHandler handler) {
     disconnect_handler_ = std::move(handler);
     return *this;
 }
 
-IChannel& Serial::on_error(ErrorHandler handler) {
+ChannelInterface& Serial::on_error(ErrorHandler handler) {
     error_handler_ = std::move(handler);
     return *this;
 }
 
-IChannel& Serial::auto_start(bool start) {
+ChannelInterface& Serial::auto_start(bool start) {
     auto_start_ = start;
     if (start && !started_) {
         this->start();
@@ -113,7 +113,7 @@ IChannel& Serial::auto_start(bool start) {
     return *this;
 }
 
-IChannel& Serial::auto_manage(bool manage) {
+ChannelInterface& Serial::auto_manage(bool manage) {
     auto_manage_ = manage;
     if (manage && !started_) {
         auto_start(true);

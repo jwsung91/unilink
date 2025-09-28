@@ -17,7 +17,7 @@ protected:
         config_.reset();
     }
 
-    std::shared_ptr<IConfigManager> config_;
+    std::shared_ptr<ConfigManagerInterface> config_;
 };
 
 // Basic functionality tests

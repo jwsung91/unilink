@@ -63,9 +63,9 @@ using ConfigChangeCallback = std::function<void(const std::string& key, const st
 /**
  * Abstract interface for configuration management
  */
-class IConfigManager {
+class ConfigManagerInterface {
 public:
-    virtual ~IConfigManager() = default;
+    virtual ~ConfigManagerInterface() = default;
     
     // Configuration access
     virtual std::any get(const std::string& key) const = 0;

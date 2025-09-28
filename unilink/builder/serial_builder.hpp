@@ -14,7 +14,7 @@ namespace builder {
  * Provides a fluent API for configuring and creating Serial instances.
  * Supports method chaining for easy configuration.
  */
-class SerialBuilder : public IBuilder<wrapper::Serial> {
+class SerialBuilder : public BuilderInterface<wrapper::Serial> {
 public:
     /**
      * @brief Construct a new SerialBuilder
@@ -60,7 +60,7 @@ public:
      */
     template<typename U, typename F>
     SerialBuilder& on_data(U* obj, F method) {
-        return static_cast<SerialBuilder&>(IBuilder<wrapper::Serial>::on_data(obj, method));
+        return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_data(obj, method));
     }
     
     /**
@@ -80,7 +80,7 @@ public:
      */
     template<typename U, typename F>
     SerialBuilder& on_connect(U* obj, F method) {
-        return static_cast<SerialBuilder&>(IBuilder<wrapper::Serial>::on_connect(obj, method));
+        return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_connect(obj, method));
     }
     
     /**
@@ -100,7 +100,7 @@ public:
      */
     template<typename U, typename F>
     SerialBuilder& on_disconnect(U* obj, F method) {
-        return static_cast<SerialBuilder&>(IBuilder<wrapper::Serial>::on_disconnect(obj, method));
+        return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_disconnect(obj, method));
     }
     
     /**
@@ -120,7 +120,7 @@ public:
      */
     template<typename U, typename F>
     SerialBuilder& on_error(U* obj, F method) {
-        return static_cast<SerialBuilder&>(IBuilder<wrapper::Serial>::on_error(obj, method));
+        return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_error(obj, method));
     }
 
 private:

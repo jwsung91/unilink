@@ -79,7 +79,7 @@ bool TcpClient::is_connected() const {
     return channel_ && channel_->is_connected();
 }
 
-IChannel& TcpClient::on_data(DataHandler handler) {
+ChannelInterface& TcpClient::on_data(DataHandler handler) {
     data_handler_ = std::move(handler);
     if (channel_) {
         setup_internal_handlers();
@@ -87,22 +87,22 @@ IChannel& TcpClient::on_data(DataHandler handler) {
     return *this;
 }
 
-IChannel& TcpClient::on_connect(ConnectHandler handler) {
+ChannelInterface& TcpClient::on_connect(ConnectHandler handler) {
     connect_handler_ = std::move(handler);
     return *this;
 }
 
-IChannel& TcpClient::on_disconnect(DisconnectHandler handler) {
+ChannelInterface& TcpClient::on_disconnect(DisconnectHandler handler) {
     disconnect_handler_ = std::move(handler);
     return *this;
 }
 
-IChannel& TcpClient::on_error(ErrorHandler handler) {
+ChannelInterface& TcpClient::on_error(ErrorHandler handler) {
     error_handler_ = std::move(handler);
     return *this;
 }
 
-IChannel& TcpClient::auto_start(bool start) {
+ChannelInterface& TcpClient::auto_start(bool start) {
     auto_start_ = start;
     if (start && !started_) {
         this->start();
@@ -110,7 +110,7 @@ IChannel& TcpClient::auto_start(bool start) {
     return *this;
 }
 
-IChannel& TcpClient::auto_manage(bool manage) {
+ChannelInterface& TcpClient::auto_manage(bool manage) {
     auto_manage_ = manage;
     if (manage && !started_) {
         auto_start(true);

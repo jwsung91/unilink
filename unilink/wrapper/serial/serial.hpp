@@ -11,7 +11,7 @@
 namespace unilink {
 namespace wrapper {
 
-class Serial : public IChannel {
+class Serial : public ChannelInterface {
 public:
     Serial(const std::string& device, uint32_t baud_rate);
     explicit Serial(std::shared_ptr<interface::Channel> channel);
@@ -24,13 +24,13 @@ public:
     void send_line(const std::string& line) override;
     bool is_connected() const override;
     
-    IChannel& on_data(DataHandler handler) override;
-    IChannel& on_connect(ConnectHandler handler) override;
-    IChannel& on_disconnect(DisconnectHandler handler) override;
-    IChannel& on_error(ErrorHandler handler) override;
-    
-    IChannel& auto_start(bool start = true) override;
-    IChannel& auto_manage(bool manage = true) override;
+    ChannelInterface& on_data(DataHandler handler) override;
+    ChannelInterface& on_connect(ConnectHandler handler) override;
+    ChannelInterface& on_disconnect(DisconnectHandler handler) override;
+    ChannelInterface& on_error(ErrorHandler handler) override;
+
+    ChannelInterface& auto_start(bool start = true) override;
+    ChannelInterface& auto_manage(bool manage = true) override;
 
     // 시리얼 전용 메서드들
     void set_baud_rate(uint32_t baud_rate);

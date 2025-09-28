@@ -12,7 +12,7 @@ namespace config {
 /**
  * Thread-safe configuration manager implementation
  */
-class ConfigManager : public IConfigManager {
+class ConfigManager : public ConfigManagerInterface {
 public:
     ConfigManager() = default;
     ~ConfigManager() = default;
