@@ -78,7 +78,7 @@ inline builder::SerialBuilder serial_builder(const std::string& device, uint32_t
  * @param port The port number for the server
  * @return builder::TcpServerBuilder A configured builder for TcpServer
  */
-inline builder::TcpServerBuilder server(uint16_t port) {
+inline builder::TcpServerBuilder tcp_server(uint16_t port) {
     return builder::TcpServerBuilder(port);
 }
 
@@ -88,7 +88,7 @@ inline builder::TcpServerBuilder server(uint16_t port) {
  * @param port The port number to connect to
  * @return builder::TcpClientBuilder A configured builder for TcpClient
  */
-inline builder::TcpClientBuilder client(const std::string& host, uint16_t port) {
+inline builder::TcpClientBuilder tcp_client(const std::string& host, uint16_t port) {
     return builder::TcpClientBuilder(host, port);
 }
 
@@ -98,7 +98,7 @@ inline builder::TcpClientBuilder client(const std::string& host, uint16_t port) 
  * @param baud_rate The baud rate for serial communication
  * @return builder::SerialBuilder A configured builder for Serial
  */
-inline builder::SerialBuilder serial_port(const std::string& device, uint32_t baud_rate) {
+inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_rate) {
     return builder::SerialBuilder(device, baud_rate);
 }
 

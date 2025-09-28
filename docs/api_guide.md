@@ -166,12 +166,12 @@ auto server = unilink::builder::UnifiedBuilder::tcp_server(8080)
 
 ```cpp
 // Short form builders
-auto server = unilink::server(8080)
+auto server = unilink::tcp_server(8080)
     .on_connect([]() { std::cout << "Connected!" << std::endl; })
     .auto_start()
     .build();
 
-auto client = unilink::client("127.0.0.1", 8080)
+auto client = unilink::tcp_client("127.0.0.1", 8080)
     .on_data([](const uint8_t* data, size_t len) {
         std::string message(data, data + len);
         std::cout << "Received: " << message << std::endl;
@@ -179,7 +179,7 @@ auto client = unilink::client("127.0.0.1", 8080)
     .auto_start()
     .build();
 
-auto serial = unilink::serial_port("/dev/ttyUSB0", 9600)
+auto serial = unilink::serial("/dev/ttyUSB0", 9600)
     .on_connect([]() { std::cout << "Serial opened!" << std::endl; })
     .auto_start()
     .build();
@@ -210,7 +210,7 @@ auto serial = unilink::serial_port("/dev/ttyUSB0", 9600)
 
 ```cpp
 // Use auto_manage() for automatic cleanup
-auto client = unilink::client("127.0.0.1", 8080)
+auto client = unilink::tcp_client("127.0.0.1", 8080)
     .on_connect([]() { std::cout << "Connected!" << std::endl; })
     .auto_manage()  // Automatic resource management
     .build();
@@ -219,7 +219,7 @@ auto client = unilink::client("127.0.0.1", 8080)
 ### Error Handling
 
 ```cpp
-auto client = unilink::client("127.0.0.1", 8080)
+auto client = unilink::tcp_client("127.0.0.1", 8080)
     .on_error([](const std::string& error) {
         std::cerr << "Connection error: " << error << std::endl;
         // Handle error appropriately
@@ -230,7 +230,7 @@ auto client = unilink::client("127.0.0.1", 8080)
 ### Data Processing
 
 ```cpp
-auto client = unilink::client("127.0.0.1", 8080)
+auto client = unilink::tcp_client("127.0.0.1", 8080)
     .on_data([](const uint8_t* data, size_t len) {
         // Process data immediately or queue for later processing
         std::string message(data, data + len);
@@ -258,7 +258,7 @@ client->start();
 
 ### After (Builder API)
 ```cpp
-auto client = unilink::client("127.0.0.1", 8080)
+auto client = unilink::tcp_client("127.0.0.1", 8080)
     .on_connect([]() { /* connected */ })
     .on_data([](const uint8_t* data, size_t len) { /* ... */ })
     .auto_start()

@@ -348,6 +348,44 @@ TEST_F(BuilderTest, BuilderReuse) {
     server2->stop();
 }
 
+// 편의 함수 테스트
+TEST_F(BuilderTest, ConvenienceFunctions) {
+    uint16_t test_port = getTestPort();
+    
+    // tcp_server 편의 함수 테스트
+    auto server = unilink::tcp_server(test_port)
+        .on_connect([]() {})
+        .on_data([](const std::string& data) {})
+        .build();
+    
+    // tcp_client 편의 함수 테스트
+    auto client = unilink::tcp_client("127.0.0.1", test_port)
+        .on_connect([]() {})
+        .on_data([](const std::string& data) {})
+        .build();
+    
+    // serial 편의 함수 테스트
+    auto serial = unilink::serial("/dev/null", 9600)
+        .on_connect([]() {})
+        .on_data([](const std::string& data) {})
+        .build();
+    
+    // 객체들이 제대로 생성되었는지 확인
+    EXPECT_NE(server, nullptr);
+    EXPECT_NE(client, nullptr);
+    EXPECT_NE(serial, nullptr);
+    
+    // 타입 확인
+    EXPECT_TRUE(dynamic_cast<wrapper::TcpServer*>(server.get()) != nullptr);
+    EXPECT_TRUE(dynamic_cast<wrapper::TcpClient*>(client.get()) != nullptr);
+    EXPECT_TRUE(dynamic_cast<wrapper::Serial*>(serial.get()) != nullptr);
+    
+    // 정리
+    server->stop();
+    client->stop();
+    serial->stop();
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

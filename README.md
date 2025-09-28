@@ -24,7 +24,7 @@
 
 int main() {
     // Create a TCP client with Builder API
-    auto client = unilink::client("127.0.0.1", 8080)
+    auto client = unilink::tcp_client("127.0.0.1", 8080)
         .on_connect([]() {
             std::cout << "Connected to server!" << std::endl;
         })
