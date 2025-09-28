@@ -28,8 +28,8 @@ int main(int argc, char** argv) {
   
   std::atomic<bool> connected{false};
 
-  // Using builder pattern for configuration
-  auto ul = unilink::builder::UnifiedBuilder::tcp_server(port)
+  // Using convenience function for configuration
+  auto ul = unilink::tcp_server(port)
       .auto_start(false)
       .on_connect([&]() {
           unilink::log_message("[server]", "STATE", "Client connected");

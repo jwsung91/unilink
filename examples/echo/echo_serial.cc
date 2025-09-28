@@ -20,8 +20,8 @@ public:
     }
 
     void run() {
-        // Using builder pattern with member function pointers
-        auto ul = unilink::builder::UnifiedBuilder::serial(device_, baud_rate_)
+        // Using convenience function with member function pointers
+        auto ul = unilink::serial(device_, baud_rate_)
             .auto_start(false)
             .on_connect(this, &SerialEchoApp::handle_connect)      // Member function binding
             .on_disconnect(this, &SerialEchoApp::handle_disconnect) // Member function binding

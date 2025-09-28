@@ -16,8 +16,8 @@ public:
     }
 
     void run() {
-        // Using builder pattern with member function pointers
-        auto client = unilink::builder::UnifiedBuilder::tcp_client(host_, port_)
+        // Using convenience function with member function pointers
+        auto client = unilink::tcp_client(host_, port_)
             .auto_start(false)
             .on_connect(this, &TcpEchoClientApp::handle_connect)      // Member function binding
             .on_disconnect(this, &TcpEchoClientApp::handle_disconnect) // Member function binding

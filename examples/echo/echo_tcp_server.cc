@@ -16,8 +16,8 @@ public:
     }
 
     void run() {
-        // Using builder pattern with member function pointers
-        auto server = unilink::builder::UnifiedBuilder::tcp_server(port_)
+        // Using convenience function with member function pointers
+        auto server = unilink::tcp_server(port_)
             .auto_start(false)
             .on_connect(this, &TcpEchoServerApp::handle_connect)      // Member function binding
             .on_disconnect(this, &TcpEchoServerApp::handle_disconnect) // Member function binding
