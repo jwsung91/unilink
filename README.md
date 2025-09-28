@@ -186,3 +186,27 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUNILINK_ENABLE_CONFIG=ON -DBUIL
 # Build everything
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUNILINK_ENABLE_CONFIG=ON -DBUILD_EXAMPLES=ON -DBUILD_TESTING=ON
 ```
+
+---
+
+## Performance Optimization
+
+### Minimal Build Benefits
+
+When building with `UNILINK_ENABLE_CONFIG=OFF`:
+
+- **Faster Compilation**: Excludes configuration management code
+- **Smaller Binary**: Reduced library size
+- **Lower Memory Usage**: No configuration overhead
+- **Simpler Dependencies**: Fewer include files
+
+### When to Use Each Build
+
+| Use Case | Recommended Build | Reason |
+|----------|------------------|---------|
+| Simple TCP/Serial apps | `UNILINK_ENABLE_CONFIG=OFF` | Minimal footprint, faster compilation |
+| Embedded systems | `UNILINK_ENABLE_CONFIG=OFF` | Memory constraints |
+| Configuration-heavy apps | `UNILINK_ENABLE_CONFIG=ON` | Dynamic configuration needed |
+| Testing/Development | `UNILINK_ENABLE_CONFIG=ON` | Full feature set for testing |
+
+---
