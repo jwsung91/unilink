@@ -13,34 +13,33 @@ int main(int argc, char** argv) {
   unsigned short port =
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
-  unilink::TcpClientConfig cfg{};
-  cfg.host = host;
-  cfg.port = port;
-  auto ul = unilink::create(cfg);
-
   std::atomic<bool> connected{false};
 
-  ul->on_state([&](unilink::LinkState s) {
-    auto state_msg = "state=" + std::string(unilink::to_cstr(s));
-    unilink::log_message("[client]", "STATE", state_msg);
-    connected = (s == unilink::LinkState::Connected);
-  });
-
-  ul->on_bytes([&](const uint8_t* p, size_t n) {
-    std::string s(reinterpret_cast<const char*>(p), n);
-    unilink::log_message("[client]", "RX", s);
-  });
+  // Using builder pattern for configuration
+  auto ul = unilink::builder::UnifiedBuilder::tcp_client(host, port)
+      .auto_start(false)
+      .on_connect([&]() {
+          unilink::log_message("[client]", "STATE", "Connected");
+          connected = true;
+      })
+      .on_disconnect([&]() {
+          unilink::log_message("[client]", "STATE", "Disconnected");
+          connected = false;
+      })
+      .on_data([&](const std::string& data) {
+          unilink::log_message("[client]", "RX", data);
+      })
+      .build();
 
   std::atomic<bool> stop_sending = false;
-  std::thread sender_thread([ul, &connected, &stop_sending] {
+  std::thread sender_thread([&ul, &connected, &stop_sending] {
     uint64_t seq = 0;
     const auto interval = std::chrono::milliseconds(1000);
     while (!stop_sending) {
       if (connected) {
-        auto msg = "HELLO " + std::to_string(seq++) + "\n";
-        std::vector<uint8_t> buf(msg.begin(), msg.end());
+        auto msg = "HELLO " + std::to_string(seq++);
         unilink::log_message("[client]", "TX", msg);
-        ul->async_write_copy(buf.data(), buf.size());
+        ul->send_line(msg);
       }
       std::this_thread::sleep_for(interval);
     }

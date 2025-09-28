@@ -15,7 +15,7 @@ using namespace config;
 
 Serial::Serial(const SerialConfig& cfg)
     : ioc_(common::IoContextManager::instance().get_context()),
-      owns_ioc_(false),
+      owns_ioc_(true),  // Set to true to run io_context in our own thread
       cfg_(cfg),
       retry_timer_(ioc_) {
   rx_.resize(cfg_.read_chunk);
@@ -43,6 +43,7 @@ Serial::~Serial() {
 }
 
 void Serial::start() {
+  std::cout << ts_now() << "[serial] start() called for device: " << cfg_.device << "\n";
   work_guard_ = std::make_unique<
       net::executor_work_guard<net::io_context::executor_type>>(
       ioc_.get_executor());
@@ -50,6 +51,7 @@ void Serial::start() {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
   net::post(ioc_, [this] {
+    std::cout << ts_now() << "[serial] posting open_and_configure for device: " << cfg_.device << "\n";
     state_ = LinkState::Connecting;
     notify_state();
     open_and_configure();
@@ -104,15 +106,32 @@ void Serial::open_and_configure() {
   boost::system::error_code ec;
   port_->open(cfg_.device, ec);
   if (ec) {
+    std::cout << ts_now() << "[serial] open error: " << ec.message() << "\n";
     handle_error("open", ec);
     return;
   }
 
   port_->set_option(net::serial_port_base::baud_rate(cfg_.baud_rate), ec);
+  if (ec) {
+    std::cout << ts_now() << "[serial] baud rate error: " << ec.message() << "\n";
+    handle_error("baud_rate", ec);
+    return;
+  }
+  
   port_->set_option(net::serial_port_base::character_size(cfg_.char_size), ec);
+  if (ec) {
+    std::cout << ts_now() << "[serial] character size error: " << ec.message() << "\n";
+    handle_error("char_size", ec);
+    return;
+  }
 
   using sb = net::serial_port_base::stop_bits;
   port_->set_option(sb(cfg_.stop_bits == 2 ? sb::two : sb::one), ec);
+  if (ec) {
+    std::cout << ts_now() << "[serial] stop bits error: " << ec.message() << "\n";
+    handle_error("stop_bits", ec);
+    return;
+  }
 
   using pa = net::serial_port_base::parity;
   pa::type p = pa::none;
@@ -121,6 +140,11 @@ void Serial::open_and_configure() {
   else if (cfg_.parity == SerialConfig::Parity::Odd)
     p = pa::odd;
   port_->set_option(pa(p), ec);
+  if (ec) {
+    std::cout << ts_now() << "[serial] parity error: " << ec.message() << "\n";
+    handle_error("parity", ec);
+    return;
+  }
 
   using fc = net::serial_port_base::flow_control;
   fc::type f = fc::none;
@@ -129,6 +153,11 @@ void Serial::open_and_configure() {
   else if (cfg_.flow == SerialConfig::Flow::Hardware)
     f = fc::hardware;
   port_->set_option(fc(f), ec);
+  if (ec) {
+    std::cout << ts_now() << "[serial] flow control error: " << ec.message() << "\n";
+    handle_error("flow_control", ec);
+    return;
+  }
 
   std::cout << ts_now() << "[serial] opened " << cfg_.device << " @"
             << cfg_.baud_rate << "\n";
@@ -173,14 +202,16 @@ void Serial::do_write() {
 
 void Serial::handle_error(const char* where,
                           const boost::system::error_code& ec) {
+  std::cout << ts_now() << "[serial] " << where << " error: " << ec.message()
+            << " (code: " << ec.value() << ")" << "\n";
+            
   // EOF는 실제 에러가 아니므로, 다시 읽기를 시작합니다.
   if (ec == boost::asio::error::eof) {
+    std::cout << ts_now() << "[serial] EOF detected, restarting read" << "\n";
     start_read();
     return;
   }
 
-  std::cout << ts_now() << "[serial] " << where << " error: " << ec.message()
-            << "\n";
   if (cfg_.reopen_on_error) {
     opened_ = false;
     close_port();
