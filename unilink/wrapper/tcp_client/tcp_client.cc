@@ -1,7 +1,8 @@
-#include "unilink/wrapper/tcp_client.hpp"
+#include "unilink/wrapper/tcp_client/tcp_client.hpp"
 
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/factory/channel_factory.hpp"
@@ -20,8 +21,13 @@ TcpClient::TcpClient(std::shared_ptr<interface::Channel> channel)
 }
 
 TcpClient::~TcpClient() {
-    if (auto_manage_ && started_) {
+    // 강제로 정리 - auto_manage 설정과 관계없이
+    if (started_) {
         stop();
+    }
+    // Channel 리소스 명시적 정리
+    if (channel_) {
+        channel_.reset();
     }
 }
 
@@ -50,6 +56,9 @@ void TcpClient::stop() {
     if (!started_ || !channel_) return;
     
     channel_->stop();
+    // 잠시 대기하여 비동기 작업 완료
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    channel_.reset();
     started_ = false;
 }
 
