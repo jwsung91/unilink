@@ -1,4 +1,5 @@
 #include "unilink/builder/tcp_server_builder.hpp"
+#include "unilink/builder/auto_initializer.hpp"
 
 namespace unilink {
 namespace builder {
@@ -7,6 +8,9 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
     : port_(port), auto_start_(false), auto_manage_(false) {}
 
 std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
+    // 자동으로 IoContextManager 초기화
+    AutoInitializer::ensure_io_context_running();
+    
     auto server = std::make_unique<wrapper::TcpServer>(port_);
     
     // Apply configuration
