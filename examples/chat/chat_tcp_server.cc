@@ -9,32 +9,23 @@
 int main(int argc, char** argv) {
   unsigned short port =
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
+  std::atomic<bool> connected{false};
+
   // Using builder pattern for configuration
   auto ul = unilink::builder::UnifiedBuilder::tcp_server(port)
       .auto_start(false)
       .on_connect([&]() {
-          unilink::log_message("[server]", "INFO", "Client connected");
+          unilink::log_message("[server]", "STATE", "Client connected");
+          connected = true;
       })
       .on_disconnect([&]() {
-          unilink::log_message("[server]", "INFO", "Client disconnected");
+          unilink::log_message("[server]", "STATE", "Client disconnected");
+          connected = false;
+      })
+      .on_data([&](const std::string& data) {
+          unilink::log_message("[server]", "RX", data);
       })
       .build();
-
-  std::atomic<bool> connected{false};
-
-  ul->on_connect([&]() {
-    unilink::log_message("[server]", "STATE", "Client connected");
-    connected = true;
-  });
-
-  ul->on_disconnect([&]() {
-    unilink::log_message("[server]", "STATE", "Client disconnected");
-    connected = false;
-  });
-
-  ul->on_data([&](const std::string& data) {
-    unilink::log_message("[server]", "RX", data);
-  });
 
   // ⬇️ 서버에서 키보드 입력 → 클라이언트로 전송
   std::thread input_thread([&ul, &connected] {

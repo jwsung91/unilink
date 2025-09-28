@@ -12,32 +12,23 @@ int main(int argc, char** argv) {
   unsigned short port =
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
+  std::atomic<bool> connected{false};
+
   // Using builder pattern for configuration
   auto ul = unilink::builder::UnifiedBuilder::tcp_client(host, port)
       .auto_start(false)
       .on_connect([&]() {
-          unilink::log_message("[client]", "INFO", "Connected to server");
+          unilink::log_message("[client]", "STATE", "Connected");
+          connected = true;
       })
       .on_disconnect([&]() {
-          unilink::log_message("[client]", "INFO", "Disconnected from server");
+          unilink::log_message("[client]", "STATE", "Disconnected");
+          connected = false;
+      })
+      .on_data([&](const std::string& data) {
+          unilink::log_message("[client]", "RX", data);
       })
       .build();
-
-  std::atomic<bool> connected{false};
-
-  ul->on_connect([&]() {
-    unilink::log_message("[client]", "STATE", "Connected");
-    connected = true;
-  });
-
-  ul->on_disconnect([&]() {
-    unilink::log_message("[client]", "STATE", "Disconnected");
-    connected = false;
-  });
-
-  ul->on_data([&](const std::string& data) {
-    unilink::log_message("[client]", "RX", data);
-  });
 
   // 입력 쓰레드: stdin 한 줄 읽어서 서버로 전송
   std::thread input_thread([&ul, &connected] {

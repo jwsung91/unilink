@@ -8,28 +8,22 @@ int main(int argc, char** argv) {
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
 
   // Using builder pattern for configuration
-  auto ul = unilink::builder::UnifiedBuilder::tcp_server(port)
+  std::unique_ptr<unilink::wrapper::TcpServer> ul;
+  
+  ul = unilink::builder::UnifiedBuilder::tcp_server(port)
       .auto_start(false)
       .on_connect([&]() {
-          unilink::log_message("[server]", "INFO", "Client connected");
+          unilink::log_message("[server]", "STATE", "Client connected");
       })
       .on_disconnect([&]() {
-          unilink::log_message("[server]", "INFO", "Client disconnected");
+          unilink::log_message("[server]", "STATE", "Client disconnected");
+      })
+      .on_data([&](const std::string& data) {
+          unilink::log_message("[server]", "RX", data);
+          unilink::log_message("[server]", "TX", data);
+          ul->send(data);
       })
       .build();
-  ul->on_connect([&]() {
-    unilink::log_message("[server]", "STATE", "Client connected");
-  });
-
-  ul->on_disconnect([&]() {
-    unilink::log_message("[server]", "STATE", "Client disconnected");
-  });
-
-  ul->on_data([&](const std::string& data) {
-    unilink::log_message("[server]", "RX", data);
-    unilink::log_message("[server]", "TX", data);
-    ul->send(data);
-  });
 
   ul->start();
 
