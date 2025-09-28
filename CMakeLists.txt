@@ -19,6 +19,7 @@ if(BUILD_TESTING)
   FetchContent_Declare(
     GTest
     URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip # release-1.10.0
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
   )
   FetchContent_MakeAvailable(GTest)
   add_subdirectory(test)
