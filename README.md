@@ -1,6 +1,6 @@
 # unilink
 
-<h3 align="center">One interface, reliable connections</h3>
+## One interface, reliable connections
 
 `unilink` is a C++ library that provides a unified, high-level Builder API for TCP (client/server) and Serial ports. It simplifies network and serial programming with a fluent, easy-to-use interface that handles all the complexity behind the scenes.
 
