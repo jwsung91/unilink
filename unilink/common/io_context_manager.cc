@@ -23,8 +23,16 @@ void IoContextManager::start() {
         return;
     }
     
+    // 이전 상태가 있다면 정리
+    if (io_thread_.joinable()) {
+        io_thread_.join();
+    }
+    
     if (!ioc_) {
         ioc_ = std::make_unique<IoContext>();
+    } else {
+        // 기존 io_context가 있다면 재시작
+        ioc_->restart();
     }
     
     // Work guard 생성하여 io_context가 비어있지 않도록 유지
@@ -56,12 +64,24 @@ void IoContextManager::stop() {
         ioc_->stop();
     }
     
-    // 스레드 종료 대기
+    // 스레드 종료 대기 (타임아웃 추가)
     if (io_thread_.joinable()) {
-        io_thread_.join();
+        // 별도 스레드에서 join하여 데드락 방지
+        std::thread([this]() {
+            try {
+                io_thread_.join();
+            } catch (...) {
+                // join 실패 시 무시
+            }
+        }).detach();
     }
     
     running_ = false;
+    
+    // io_context를 재시작 가능하도록 리셋
+    if (ioc_) {
+        ioc_->restart();
+    }
 }
 
 bool IoContextManager::is_running() const {

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "unilink/transport/serial/boost_serial_port.hpp"
+#include "unilink/common/io_context_manager.hpp"
 
 namespace unilink {
 namespace transport {
@@ -13,8 +14,8 @@ using namespace common;
 using namespace config;
 
 Serial::Serial(const SerialConfig& cfg)
-    : ioc_(*new net::io_context()),
-      owns_ioc_(true),
+    : ioc_(common::IoContextManager::instance().get_context()),
+      owns_ioc_(false),
       cfg_(cfg),
       retry_timer_(ioc_) {
   rx_.resize(cfg_.read_chunk);
@@ -38,13 +39,7 @@ Serial::~Serial() {
   // but do clean up resources if we own them.
   if (state_ != LinkState::Closed) stop();
 
-  if (owns_ioc_) {
-    if (ioc_thread_.joinable()) ioc_thread_.join();
-    // Ensure io_context is completely stopped before deletion
-    ioc_.stop();
-    ioc_.restart();
-    delete &ioc_;
-  }
+  // No need to clean up io_context as it's shared and managed by IoContextManager
 }
 
 void Serial::start() {

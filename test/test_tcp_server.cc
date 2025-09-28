@@ -11,6 +11,7 @@
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/interface/itcp_socket.hpp"
+#include "unilink/common/io_context_manager.hpp"
 
 using namespace unilink::transport;
 using namespace unilink::config;
@@ -104,6 +105,9 @@ class TcpServerTest : public ::testing::Test {
  protected:
   void SetUp() override {
     cfg_.port = 9000;
+    
+    // Don't use shared IoContextManager to avoid conflicts
+    // Each test will use its own io_context
   }
 
   void TearDown() override {

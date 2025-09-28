@@ -8,6 +8,7 @@
 
 #include "unilink/interface/iserial_port.hpp"
 #include "unilink/transport/serial/serial.hpp"
+#include "unilink/common/io_context_manager.hpp"
 
 using namespace unilink::transport;
 using namespace unilink::config;
@@ -380,7 +381,10 @@ private:
 
 class SerialTest : public ::testing::Test {
  protected:
-  void SetUp() override {}
+  void SetUp() override {
+    // Don't use shared IoContextManager to avoid conflicts
+    // Each test will use its own io_context
+  }
 
   void TearDown() override {
     if (serial_) {

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
+#include "unilink/common/io_context_manager.hpp"
 
 namespace unilink {
 namespace transport {
@@ -15,14 +16,14 @@ using namespace config;
 using tcp = net::ip::tcp;
 
 TcpServer::TcpServer(const TcpServerConfig& cfg)
-    : owned_ioc_(std::make_unique<net::io_context>()),
-      owns_ioc_(true),
-      ioc_(*owned_ioc_), 
+    : owned_ioc_(nullptr),
+      owns_ioc_(false),
+      ioc_(common::IoContextManager::instance().get_context()), 
       acceptor_(nullptr), 
       cfg_(cfg) {
   // Create acceptor after all members are initialized
   try {
-    acceptor_ = std::make_unique<BoostTcpAcceptor>(*owned_ioc_);
+    acceptor_ = std::make_unique<BoostTcpAcceptor>(ioc_);
   } catch (const std::exception& e) {
     throw std::runtime_error("Failed to create TCP acceptor: " + std::string(e.what()));
   }
@@ -42,8 +43,12 @@ TcpServer::TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::ITcp
 }
 
 TcpServer::~TcpServer() {
-  // Don't call stop() in destructor as it may cause issues with shared_from_this
-  // The caller should explicitly call stop() before destruction
+  // Ensure proper cleanup even if stop() wasn't called explicitly
+  if (state_ != LinkState::Closed) {
+    stop();
+  }
+  
+  // No need to clean up io_context as it's shared and managed by IoContextManager
 }
 
 void TcpServer::start() {
@@ -89,6 +94,8 @@ void TcpServer::stop() {
     });
     ioc_.stop();
     ioc_thread_.join();
+    // Reset io_context to clear any remaining work
+    ioc_.restart();
   } else {
     // If server was never started, just clean up
     boost::system::error_code ec;
