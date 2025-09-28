@@ -49,7 +49,7 @@ class TcpClient : public Channel,
   void notify_state();
 
  private:
-  std::shared_ptr<net::io_context> ioc_;
+  net::io_context* ioc_;
   std::thread ioc_thread_;
   bool owns_ioc_ = true;
 

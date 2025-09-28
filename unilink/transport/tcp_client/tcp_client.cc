@@ -14,7 +14,7 @@ using namespace config;
 using tcp = net::ip::tcp;
 
 TcpClient::TcpClient(const TcpClientConfig& cfg)
-    : ioc_(std::make_shared<net::io_context>()), 
+    : ioc_(new net::io_context()), 
       resolver_(*ioc_), socket_(*ioc_), cfg_(cfg), retry_timer_(*ioc_), owns_ioc_(true) {}
 
 TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
@@ -49,6 +49,11 @@ TcpClient::~TcpClient() {
     } catch (...) {
       // Ignore exceptions during destruction
     }
+  }
+  
+  // Delete io_context if we own it
+  if (owns_ioc_) {
+    delete ioc_;
   }
 }
 
