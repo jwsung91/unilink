@@ -15,6 +15,13 @@ using tcp = net::ip::tcp;
 TcpClient::TcpClient(const TcpClientConfig& cfg)
     : ioc_(), resolver_(ioc_), socket_(ioc_), cfg_(cfg), retry_timer_(ioc_) {}
 
+TcpClient::~TcpClient() {
+  // Ensure proper cleanup even if stop() wasn't called explicitly
+  if (state_ != LinkState::Closed) {
+    stop();
+  }
+}
+
 void TcpClient::start() {
   ioc_thread_ = std::thread([this] { ioc_.run(); });
   net::post(ioc_, [this] {
@@ -31,6 +38,8 @@ void TcpClient::stop() {
   });
   ioc_.stop();
   if (ioc_thread_.joinable()) ioc_thread_.join();
+  // Reset the io_context to clear any remaining work
+  ioc_.restart();
   state_ = LinkState::Closed;
   notify_state();
 }

@@ -26,6 +26,7 @@ class TcpClient : public Channel,
                   public std::enable_shared_from_this<TcpClient> {
  public:
   explicit TcpClient(const TcpClientConfig& cfg);
+  ~TcpClient();
 
   void start() override;
   void stop() override;
