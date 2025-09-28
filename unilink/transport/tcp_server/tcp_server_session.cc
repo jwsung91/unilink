@@ -12,7 +12,7 @@ using namespace common;
 TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock)
     : ioc_(ioc), socket_(std::make_unique<BoostTcpSocket>(std::move(sock))) {}
 
-TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::ITcpSocket> socket)
+TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket)
     : ioc_(ioc), socket_(std::move(socket)) {}
 
 void TcpServerSession::start() { start_read(); }

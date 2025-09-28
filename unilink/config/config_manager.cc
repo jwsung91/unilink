@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 namespace unilink {
-namespace config_manager {
+namespace config {
 
 std::any ConfigManager::get(const std::string& key) const {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -317,5 +317,5 @@ std::any ConfigManager::deserialize_value(const std::string& value_str, ConfigTy
     }
 }
 
-} // namespace config_manager
+} // namespace config
 } // namespace unilink

@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace unilink {
-namespace config_manager {
+namespace config {
 
 /**
  * Configuration value types supported by the system
@@ -63,9 +63,9 @@ using ConfigChangeCallback = std::function<void(const std::string& key, const st
 /**
  * Abstract interface for configuration management
  */
-class IConfigManager {
+class ConfigManagerInterface {
 public:
-    virtual ~IConfigManager() = default;
+    virtual ~ConfigManagerInterface() = default;
     
     // Configuration access
     virtual std::any get(const std::string& key) const = 0;
@@ -101,5 +101,5 @@ public:
     virtual bool is_required(const std::string& key) const = 0;
 };
 
-} // namespace config_manager
+} // namespace config
 } // namespace unilink

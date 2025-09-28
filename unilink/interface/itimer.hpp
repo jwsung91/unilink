@@ -12,9 +12,9 @@ namespace net = boost::asio;
  * @brief An interface abstracting Boost.Asio's steady_timer for testability.
  * This is an internal interface used for dependency injection and mocking.
  */
-class ITimer {
+class TimerInterface {
  public:
-  virtual ~ITimer() = default;
+  virtual ~TimerInterface() = default;
 
   virtual void expires_after(std::chrono::milliseconds expiry_time) = 0;
   virtual void async_wait(std::function<void(const boost::system::error_code&)> handler) = 0;

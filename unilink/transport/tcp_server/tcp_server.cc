@@ -29,7 +29,7 @@ TcpServer::TcpServer(const TcpServerConfig& cfg)
   }
 }
 
-TcpServer::TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::ITcpAcceptor> acceptor,
+TcpServer::TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
                      net::io_context& ioc)
     : owned_ioc_(nullptr),
       owns_ioc_(false),

@@ -7,12 +7,12 @@
 #include <iostream>
 
 namespace unilink {
-namespace config_manager {
+namespace config {
 
 /**
  * Thread-safe configuration manager implementation
  */
-class ConfigManager : public IConfigManager {
+class ConfigManager : public ConfigManagerInterface {
 public:
     ConfigManager() = default;
     ~ConfigManager() = default;
@@ -62,5 +62,5 @@ private:
     std::any deserialize_value(const std::string& value_str, ConfigType type) const;
 };
 
-} // namespace config_manager
+} // namespace config
 } // namespace unilink

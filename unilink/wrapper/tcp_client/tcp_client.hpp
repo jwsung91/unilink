@@ -11,7 +11,7 @@
 namespace unilink {
 namespace wrapper {
 
-class TcpClient : public IChannel {
+class TcpClient : public ChannelInterface {
 public:
     TcpClient(const std::string& host, uint16_t port);
     explicit TcpClient(std::shared_ptr<interface::Channel> channel);
@@ -24,13 +24,13 @@ public:
     void send_line(const std::string& line) override;
     bool is_connected() const override;
     
-    IChannel& on_data(DataHandler handler) override;
-    IChannel& on_connect(ConnectHandler handler) override;
-    IChannel& on_disconnect(DisconnectHandler handler) override;
-    IChannel& on_error(ErrorHandler handler) override;
-    
-    IChannel& auto_start(bool start = true) override;
-    IChannel& auto_manage(bool manage = true) override;
+    ChannelInterface& on_data(DataHandler handler) override;
+    ChannelInterface& on_connect(ConnectHandler handler) override;
+    ChannelInterface& on_disconnect(DisconnectHandler handler) override;
+    ChannelInterface& on_error(ErrorHandler handler) override;
+
+    ChannelInterface& auto_start(bool start = true) override;
+    ChannelInterface& auto_manage(bool manage = true) override;
 
     // TCP 클라이언트 전용 메서드들
     void set_retry_interval(std::chrono::milliseconds interval);

@@ -11,6 +11,11 @@ if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
+option(UNILINK_ENABLE_CONFIG "Enable configuration management API" ON)
+if(UNILINK_ENABLE_CONFIG)
+  target_compile_definitions(unilink PUBLIC UNILINK_ENABLE_CONFIG=1)
+endif()
+
 option(BUILD_TESTING "Build tests" ON)
 if(BUILD_TESTING)
   enable_testing()

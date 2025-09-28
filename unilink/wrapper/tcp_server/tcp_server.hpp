@@ -16,7 +16,7 @@ namespace wrapper {
  * - 메모리 누수 방지
  * - 자동 리소스 관리
  */
-class TcpServer : public IChannel {
+class TcpServer : public ChannelInterface {
 public:
     explicit TcpServer(uint16_t port);
     explicit TcpServer(std::shared_ptr<interface::Channel> channel);
@@ -28,13 +28,13 @@ public:
     void send(const std::string& data) override;
     bool is_connected() const override;
 
-    IChannel& on_data(DataHandler handler) override;
-    IChannel& on_connect(ConnectHandler handler) override;
-    IChannel& on_disconnect(DisconnectHandler handler) override;
-    IChannel& on_error(ErrorHandler handler) override;
+    ChannelInterface& on_data(DataHandler handler) override;
+    ChannelInterface& on_connect(ConnectHandler handler) override;
+    ChannelInterface& on_disconnect(DisconnectHandler handler) override;
+    ChannelInterface& on_error(ErrorHandler handler) override;
 
-    IChannel& auto_start(bool start = true) override;
-    IChannel& auto_manage(bool manage = true) override;
+    ChannelInterface& auto_start(bool start = true) override;
+    ChannelInterface& auto_manage(bool manage = true) override;
 
     void send_line(const std::string& line) override;
     // void send_binary(const std::vector<uint8_t>& data) override;

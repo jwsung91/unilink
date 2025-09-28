@@ -19,9 +19,10 @@ namespace transport {
 
 namespace net = boost::asio;
 
-using namespace interface;
-using namespace common;
-using namespace config;
+using interface::Channel;
+using interface::TcpAcceptorInterface;
+using common::LinkState;
+using config::TcpServerConfig;
 using tcp = net::ip::tcp;
 
 class TcpServer : public Channel,
@@ -29,7 +30,7 @@ class TcpServer : public Channel,
  public:
   explicit TcpServer(const TcpServerConfig& cfg);
   // Constructor for testing with dependency injection
-  TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::ITcpAcceptor> acceptor,
+  TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
             net::io_context& ioc);
   ~TcpServer();
 
@@ -51,7 +52,7 @@ class TcpServer : public Channel,
   net::io_context& ioc_;
   std::thread ioc_thread_;
 
-  std::unique_ptr<interface::ITcpAcceptor> acceptor_;
+  std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
   TcpServerConfig cfg_;
   std::shared_ptr<TcpServerSession> sess_;
 

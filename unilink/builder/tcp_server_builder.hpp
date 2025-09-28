@@ -13,7 +13,7 @@ namespace builder {
  * Provides a fluent API for configuring and creating TcpServer instances.
  * Supports method chaining for easy configuration.
  */
-class TcpServerBuilder : public IBuilder<wrapper::TcpServer> {
+class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
 public:
     /**
      * @brief Construct a new TcpServerBuilder
@@ -58,7 +58,7 @@ public:
      */
     template<typename U, typename F>
     TcpServerBuilder& on_data(U* obj, F method) {
-        return static_cast<TcpServerBuilder&>(IBuilder<wrapper::TcpServer>::on_data(obj, method));
+        return static_cast<TcpServerBuilder&>(BuilderInterface<wrapper::TcpServer>::on_data(obj, method));
     }
     
     /**
@@ -78,7 +78,7 @@ public:
      */
     template<typename U, typename F>
     TcpServerBuilder& on_connect(U* obj, F method) {
-        return static_cast<TcpServerBuilder&>(IBuilder<wrapper::TcpServer>::on_connect(obj, method));
+        return static_cast<TcpServerBuilder&>(BuilderInterface<wrapper::TcpServer>::on_connect(obj, method));
     }
     
     /**
@@ -98,7 +98,7 @@ public:
      */
     template<typename U, typename F>
     TcpServerBuilder& on_disconnect(U* obj, F method) {
-        return static_cast<TcpServerBuilder&>(IBuilder<wrapper::TcpServer>::on_disconnect(obj, method));
+        return static_cast<TcpServerBuilder&>(BuilderInterface<wrapper::TcpServer>::on_disconnect(obj, method));
     }
     
     /**
@@ -118,7 +118,7 @@ public:
      */
     template<typename U, typename F>
     TcpServerBuilder& on_error(U* obj, F method) {
-        return static_cast<TcpServerBuilder&>(IBuilder<wrapper::TcpServer>::on_error(obj, method));
+        return static_cast<TcpServerBuilder&>(BuilderInterface<wrapper::TcpServer>::on_error(obj, method));
     }
 
 private:

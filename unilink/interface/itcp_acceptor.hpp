@@ -12,9 +12,9 @@ namespace net = boost::asio;
  * @brief An interface abstracting Boost.Asio's tcp::acceptor for testability.
  * This is an internal interface used for dependency injection and mocking.
  */
-class ITcpAcceptor {
+class TcpAcceptorInterface {
  public:
-  virtual ~ITcpAcceptor() = default;
+  virtual ~TcpAcceptorInterface() = default;
 
   virtual void open(const net::ip::tcp& protocol, boost::system::error_code& ec) = 0;
   virtual void bind(const net::ip::tcp::endpoint& endpoint, boost::system::error_code& ec) = 0;

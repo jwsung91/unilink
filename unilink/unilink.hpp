@@ -16,10 +16,12 @@
 #include "unilink/builder/serial_builder.hpp"
 #include "unilink/builder/unified_builder.hpp"
 
-// 새로운 Configuration Management API includes
-#include "unilink/config_manager/iconfig_manager.hpp"
-#include "unilink/config_manager/config_manager.hpp"
-#include "unilink/config_manager/config_factory.hpp"
+// Configuration Management API includes (optional)
+#ifdef UNILINK_ENABLE_CONFIG
+#include "unilink/config/iconfig_manager.hpp"
+#include "unilink/config/config_manager.hpp"
+#include "unilink/config/config_factory.hpp"
+#endif
 
 namespace unilink {
 
@@ -29,7 +31,7 @@ namespace wrapper {
     using TcpServer = wrapper::TcpServer;
     using TcpClient = wrapper::TcpClient;
     using Serial = wrapper::Serial;
-    using IChannel = wrapper::IChannel;
+    using IChannel = wrapper::ChannelInterface;
 }
 
 // === 공개 Builder API ===
@@ -102,18 +104,20 @@ inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_ra
     return builder::SerialBuilder(device, baud_rate);
 }
 
-// === 새로운 Configuration Management API ===
-// 편의 별칭들
+// === Configuration Management API (optional) ===
+// 편의 별칭들 - Config가 활성화된 경우에만 사용 가능
+#ifdef UNILINK_ENABLE_CONFIG
 namespace config_manager {
-    using IConfigManager = config_manager::IConfigManager;
-    using ConfigManager = config_manager::ConfigManager;
-    using ConfigFactory = config_manager::ConfigFactory;
-    using ConfigPresets = config_manager::ConfigPresets;
-    using ConfigType = config_manager::ConfigType;
-    using ConfigItem = config_manager::ConfigItem;
-    using ValidationResult = config_manager::ValidationResult;
-    using ConfigChangeCallback = config_manager::ConfigChangeCallback;
+    using IConfigManager = config::ConfigManagerInterface;
+    using ConfigManager = config::ConfigManager;
+    using ConfigFactory = config::ConfigFactory;
+    using ConfigPresets = config::ConfigPresets;
+    using ConfigType = config::ConfigType;
+    using ConfigItem = config::ConfigItem;
+    using ValidationResult = config::ValidationResult;
+    using ConfigChangeCallback = config::ConfigChangeCallback;
 }
+#endif
 
 // === 공통 유틸리티 ===
 // 유용한 유틸리티 함수들

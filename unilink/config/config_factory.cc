@@ -3,22 +3,22 @@
 #include <mutex>
 
 namespace unilink {
-namespace config_manager {
+namespace config {
 
-std::shared_ptr<IConfigManager> ConfigFactory::singleton_instance_ = nullptr;
+std::shared_ptr<ConfigManagerInterface> ConfigFactory::singleton_instance_ = nullptr;
 std::mutex ConfigFactory::singleton_mutex_;
 
-std::shared_ptr<IConfigManager> ConfigFactory::create() {
+std::shared_ptr<ConfigManagerInterface> ConfigFactory::create() {
     return std::make_shared<ConfigManager>();
 }
 
-std::shared_ptr<IConfigManager> ConfigFactory::create_with_defaults() {
+std::shared_ptr<ConfigManagerInterface> ConfigFactory::create_with_defaults() {
     auto config = create();
     ConfigPresets::setup_all_defaults(config);
     return config;
 }
 
-std::shared_ptr<IConfigManager> ConfigFactory::create_from_file(const std::string& filepath) {
+std::shared_ptr<ConfigManagerInterface> ConfigFactory::create_from_file(const std::string& filepath) {
     auto config = create();
     if (!config->load_from_file(filepath)) {
         // If loading fails, fall back to defaults
@@ -27,7 +27,7 @@ std::shared_ptr<IConfigManager> ConfigFactory::create_from_file(const std::strin
     return config;
 }
 
-std::shared_ptr<IConfigManager> ConfigFactory::get_singleton() {
+std::shared_ptr<ConfigManagerInterface> ConfigFactory::get_singleton() {
     std::lock_guard<std::mutex> lock(singleton_mutex_);
     if (!singleton_instance_) {
         singleton_instance_ = create_with_defaults();
@@ -35,7 +35,7 @@ std::shared_ptr<IConfigManager> ConfigFactory::get_singleton() {
     return singleton_instance_;
 }
 
-void ConfigPresets::setup_tcp_client_defaults(std::shared_ptr<IConfigManager> config) {
+void ConfigPresets::setup_tcp_client_defaults(std::shared_ptr<ConfigManagerInterface> config) {
     // TCP Client default configuration
     config->set("tcp.client.host", std::string("localhost"));
     config->set("tcp.client.port", 8080);
@@ -46,7 +46,7 @@ void ConfigPresets::setup_tcp_client_defaults(std::shared_ptr<IConfigManager> co
     config->set("tcp.client.buffer_size", 4096);
 }
 
-void ConfigPresets::setup_tcp_server_defaults(std::shared_ptr<IConfigManager> config) {
+void ConfigPresets::setup_tcp_server_defaults(std::shared_ptr<ConfigManagerInterface> config) {
     // TCP Server default configuration
     config->set("tcp.server.host", std::string("0.0.0.0"));
     config->set("tcp.server.port", 8080);
@@ -57,7 +57,7 @@ void ConfigPresets::setup_tcp_server_defaults(std::shared_ptr<IConfigManager> co
     config->set("tcp.server.backlog", 128);
 }
 
-void ConfigPresets::setup_serial_defaults(std::shared_ptr<IConfigManager> config) {
+void ConfigPresets::setup_serial_defaults(std::shared_ptr<ConfigManagerInterface> config) {
     // Serial communication default configuration
     config->set("serial.port", std::string("/dev/ttyUSB0"));
     config->set("serial.baud_rate", 9600);
@@ -70,7 +70,7 @@ void ConfigPresets::setup_serial_defaults(std::shared_ptr<IConfigManager> config
     config->set("serial.max_retries", 3);
 }
 
-void ConfigPresets::setup_logging_defaults(std::shared_ptr<IConfigManager> config) {
+void ConfigPresets::setup_logging_defaults(std::shared_ptr<ConfigManagerInterface> config) {
     // Logging default configuration
     config->set("logging.level", std::string("info"));
     config->set("logging.enable_console", true);
@@ -81,7 +81,7 @@ void ConfigPresets::setup_logging_defaults(std::shared_ptr<IConfigManager> confi
     config->set("logging.format", std::string("[%Y-%m-%d %H:%M:%S] [%l] %v"));
 }
 
-void ConfigPresets::setup_all_defaults(std::shared_ptr<IConfigManager> config) {
+void ConfigPresets::setup_all_defaults(std::shared_ptr<ConfigManagerInterface> config) {
     setup_tcp_client_defaults(config);
     setup_tcp_server_defaults(config);
     setup_serial_defaults(config);
@@ -94,5 +94,5 @@ void ConfigPresets::setup_all_defaults(std::shared_ptr<IConfigManager> config) {
     config->set("global.config_file", std::string("unilink.conf"));
 }
 
-} // namespace config_manager
+} // namespace config
 } // namespace unilink
