@@ -26,6 +26,7 @@ class TcpClient : public Channel,
                   public std::enable_shared_from_this<TcpClient> {
  public:
   explicit TcpClient(const TcpClientConfig& cfg);
+  explicit TcpClient(const TcpClientConfig& cfg, net::io_context& ioc);
   ~TcpClient();
 
   void start() override;
@@ -48,8 +49,9 @@ class TcpClient : public Channel,
   void notify_state();
 
  private:
-  net::io_context ioc_;
+  std::shared_ptr<net::io_context> ioc_;
   std::thread ioc_thread_;
+  bool owns_ioc_ = true;
 
   tcp::resolver resolver_;
   tcp::socket socket_;

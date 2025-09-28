@@ -11,6 +11,7 @@
 #include "unilink/interface/itcp_socket.hpp"
 #include "unilink/interface/itcp_resolver.hpp"
 #include "unilink/interface/itimer.hpp"
+#include "unilink/common/io_context_manager.hpp"
 
 using namespace unilink::transport;
 using namespace unilink::config;
@@ -109,15 +110,29 @@ class TcpClientTest : public ::testing::Test {
     cfg_.host = "127.0.0.1";
     cfg_.port = 9000;
     cfg_.retry_interval_ms = 100; // Short retry interval for testing
+    
+    // Don't use shared IoContextManager to avoid conflicts
+    // Each test will use its own io_context
   }
 
   void TearDown() override {
     if (client_) {
-      client_->stop();
+      try {
+        client_->stop();
+      } catch (...) {
+        // Ignore exceptions during cleanup
+      }
+      // Give some time for cleanup to complete
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      client_.reset(); // Ensure TcpClient is destroyed and its thread is joined
     }
     if (ioc_thread_.joinable()) {
-      test_ioc_.stop();
-      ioc_thread_.join();
+      try {
+        test_ioc_.stop();
+        ioc_thread_.join();
+      } catch (...) {
+        // Ignore exceptions during cleanup
+      }
     }
   }
 
@@ -168,7 +183,7 @@ class TcpClientTest : public ::testing::Test {
 TEST_F(TcpClientTest, CreatesClientSuccessfully) {
   // --- Setup ---
   // --- Test Logic ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Verification ---
   EXPECT_TRUE(client_ != nullptr);
@@ -177,7 +192,7 @@ TEST_F(TcpClientTest, CreatesClientSuccessfully) {
 
 TEST_F(TcpClientTest, HandlesStopWithoutStart) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Stop without starting should not crash
@@ -189,7 +204,7 @@ TEST_F(TcpClientTest, HandlesStopWithoutStart) {
 
 TEST_F(TcpClientTest, HandlesWriteWhenNotConnected) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   client_->start();
@@ -236,7 +251,7 @@ TEST_F(TcpClientTest, SetsCallbacksCorrectly) {
 
 TEST_F(TcpClientTest, HandlesBackpressureCallback) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   bool backpressure_called = false;
   size_t backpressure_bytes = 0;
 
@@ -265,7 +280,7 @@ TEST_F(TcpClientTest, HandlesBackpressureCallback) {
  */
 TEST_F(TcpClientTest, QueuesMultipleWrites) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   const uint8_t data1[] = {0x01, 0x02, 0x03};
@@ -293,7 +308,7 @@ TEST_F(TcpClientTest, QueuesMultipleWrites) {
  */
 TEST_F(TcpClientTest, HandlesBackpressureCorrectly) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   bool backpressure_called = false;
   size_t backpressure_bytes = 0;
 
@@ -324,7 +339,7 @@ TEST_F(TcpClientTest, HandlesBackpressureCorrectly) {
  */
 TEST_F(TcpClientTest, HandlesConcurrentOperations) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -367,7 +382,7 @@ TEST_F(TcpClientTest, HandlesConcurrentOperations) {
  */
 TEST_F(TcpClientTest, HandlesCallbackReplacement) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   int callback1_count = 0;
   int callback2_count = 0;
 
@@ -403,7 +418,7 @@ TEST_F(TcpClientTest, HandlesCallbackReplacement) {
  */
 TEST_F(TcpClientTest, HandlesEmptyData) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Send empty data
@@ -425,7 +440,7 @@ TEST_F(TcpClientTest, HandlesEmptyData) {
  */
 TEST_F(TcpClientTest, HandlesLargeData) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Send large data (1MB)
@@ -448,7 +463,7 @@ TEST_F(TcpClientTest, HandlesLargeData) {
  */
 TEST_F(TcpClientTest, HandlesRapidStateChanges) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -535,7 +550,7 @@ TEST_F(TcpClientTest, HandlesMemoryManagement) {
  */
 TEST_F(TcpClientTest, HandlesThreadSafety) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   std::atomic<int> callback_count{0};
 
   // --- Test Logic ---
@@ -585,7 +600,7 @@ TEST_F(TcpClientTest, HandlesThreadSafety) {
  */
 TEST_F(TcpClientTest, FutureWaitOperationsWorkWithTcpClient) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   
   std::atomic<bool> client_operations_complete{false};
   std::atomic<bool> future_operations_complete{false};
@@ -655,7 +670,7 @@ TEST_F(TcpClientTest, FutureWaitOperationsWorkWithTcpClient) {
  */
 TEST_F(TcpClientTest, FutureWaitSucceedsWithinTimeout) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   
   std::promise<std::string> data_promise;
   auto data_future = data_promise.get_future();
@@ -694,7 +709,7 @@ TEST_F(TcpClientTest, FutureWaitSucceedsWithinTimeout) {
  */
 TEST_F(TcpClientTest, FutureWaitTimesOut) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   
   std::promise<void> timeout_promise;
   auto timeout_future = timeout_promise.get_future();
@@ -727,7 +742,7 @@ TEST_F(TcpClientTest, FutureWaitTimesOut) {
  */
 TEST_F(TcpClientTest, MultipleFutureWaitOperations) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   
   std::atomic<int> completed_futures{0};
   const int num_futures = 3;
@@ -780,7 +795,7 @@ TEST_F(TcpClientTest, MultipleFutureWaitOperations) {
  */
 TEST_F(TcpClientTest, FutureWaitWithVeryShortTimeout) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   
   std::promise<void> short_timeout_promise;
   auto short_timeout_future = short_timeout_promise.get_future();
@@ -812,7 +827,7 @@ TEST_F(TcpClientTest, FutureWaitWithVeryShortTimeout) {
  */
 TEST_F(TcpClientTest, FutureWaitWithPromiseExceptions) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   
   std::atomic<bool> exception_caught{false};
   
@@ -859,7 +874,7 @@ TEST_F(TcpClientTest, FutureWaitWithPromiseExceptions) {
  */
 TEST_F(TcpClientTest, FutureWaitWithSharedFuture) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   
   std::atomic<int> completed_waiters{0};
   const int num_waiters = 3;
@@ -911,7 +926,7 @@ TEST_F(TcpClientTest, FutureWaitWithSharedFuture) {
  */
 TEST_F(TcpClientTest, FutureWaitWithFutureChains) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   
   std::atomic<bool> chain_completed{false};
   
@@ -973,7 +988,7 @@ TEST_F(TcpClientTest, FutureWaitWithFutureChains) {
  */
 TEST_F(TcpClientTest, HandlesConnectionRetry) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1039,7 +1054,7 @@ TEST_F(TcpClientTest, HandlesDifferentHostConfigurations) {
 TEST_F(TcpClientTest, HandlesConnectionTimeout) {
   // --- Setup ---
   cfg_.retry_interval_ms = 50; // Short retry interval for testing
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1069,7 +1084,7 @@ TEST_F(TcpClientTest, HandlesConnectionTimeout) {
  */
 TEST_F(TcpClientTest, HandlesRapidStartStopCycles) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1098,7 +1113,7 @@ TEST_F(TcpClientTest, HandlesRapidStartStopCycles) {
  */
 TEST_F(TcpClientTest, HandlesWriteDuringConnectionAttempts) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1130,7 +1145,7 @@ TEST_F(TcpClientTest, HandlesWriteDuringConnectionAttempts) {
  */
 TEST_F(TcpClientTest, HandlesCallbackClearing) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Set callbacks first
@@ -1190,7 +1205,7 @@ TEST_F(TcpClientTest, HandlesConfigurationChanges) {
  */
 TEST_F(TcpClientTest, HandlesConnectionStateConsistency) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1231,7 +1246,7 @@ TEST_F(TcpClientTest, HandlesConnectionStateConsistency) {
  */
 TEST_F(TcpClientTest, HandlesBackpressureScenarios) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   bool backpressure_triggered = false;
   size_t backpressure_bytes = 0;
 
@@ -1263,7 +1278,7 @@ TEST_F(TcpClientTest, HandlesBackpressureScenarios) {
  */
 TEST_F(TcpClientTest, HandlesConnectionRecovery) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1305,7 +1320,7 @@ TEST_F(TcpClientTest, HandlesConnectionRecovery) {
  */
 TEST_F(TcpClientTest, HandlesRapidConnectDisconnectCycles) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1341,7 +1356,7 @@ TEST_F(TcpClientTest, HandlesRapidConnectDisconnectCycles) {
  */
 TEST_F(TcpClientTest, HandlesConnectionStateConsistencyDuringOperations) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1487,7 +1502,7 @@ TEST_F(TcpClientTest, HandlesLongHostnames) {
  */
 TEST_F(TcpClientTest, BackpressureThresholdBehavior) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   bool backpressure_triggered = false;
   size_t backpressure_bytes = 0;
   int backpressure_call_count = 0;
@@ -1525,7 +1540,7 @@ TEST_F(TcpClientTest, BackpressureThresholdBehavior) {
  */
 TEST_F(TcpClientTest, QueueManagementBehavior) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Send multiple small messages
@@ -1560,7 +1575,7 @@ TEST_F(TcpClientTest, QueueManagementBehavior) {
  */
 TEST_F(TcpClientTest, StateTransitionOrder) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1593,7 +1608,7 @@ TEST_F(TcpClientTest, StateTransitionOrder) {
  */
 TEST_F(TcpClientTest, HandlesRapidStateTransitions) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1625,7 +1640,7 @@ TEST_F(TcpClientTest, HandlesRapidStateTransitions) {
  */
 TEST_F(TcpClientTest, HandlesCallbackExceptions) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   bool exception_caught = false;
 
   // --- Test Logic ---
@@ -1669,7 +1684,7 @@ TEST_F(TcpClientTest, HandlesCallbackExceptions) {
  */
 TEST_F(TcpClientTest, HandlesMemoryPressure) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Send very large data to test memory handling
@@ -1699,7 +1714,7 @@ TEST_F(TcpClientTest, HandlesMemoryPressure) {
  */
 TEST_F(TcpClientTest, HandlesHighFrequencyMessages) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   std::atomic<int> message_count{0};
 
   client_->on_bytes([&](const uint8_t* data, size_t n) {
@@ -1730,7 +1745,7 @@ TEST_F(TcpClientTest, HandlesHighFrequencyMessages) {
  */
 TEST_F(TcpClientTest, NoMemoryLeaksUnderStress) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Perform many operations to test for memory leaks
@@ -1771,7 +1786,7 @@ TEST_F(TcpClientTest, NoMemoryLeaksUnderStress) {
  */
 TEST_F(TcpClientTest, HandlesMaliciousData) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Test with special characters
@@ -1805,7 +1820,7 @@ TEST_F(TcpClientTest, HandlesMaliciousData) {
  */
 TEST_F(TcpClientTest, ResistsResourceExhaustion) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
 
   // --- Test Logic ---
   // Simulate resource exhaustion attack
@@ -1848,7 +1863,7 @@ TEST_F(TcpClientTest, IntegratesWithRealTcpServer) {
   // --- Setup ---
   // Note: This test requires a real TCP server to be running
   // For unit testing, we simulate the integration scenario
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
   SetupDataCallback();
 
@@ -1883,7 +1898,7 @@ TEST_F(TcpClientTest, IntegratesWithRealTcpServer) {
 TEST_F(TcpClientTest, HandlesNetworkLatency) {
   // --- Setup ---
   cfg_.retry_interval_ms = 100; // Short retry for testing
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -1919,7 +1934,7 @@ TEST_F(TcpClientTest, HandlesNetworkLatency) {
  */
 TEST_F(TcpClientTest, HandlesConnectionDropsAndRecovery) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -2020,7 +2035,7 @@ TEST_F(TcpClientTest, HandlesMultipleConcurrentConnections) {
  */
 TEST_F(TcpClientTest, HandlesNetworkPartition) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   SetupStateCallback();
 
   // --- Test Logic ---
@@ -2060,7 +2075,7 @@ TEST_F(TcpClientTest, HandlesNetworkPartition) {
  */
 TEST_F(TcpClientTest, HandlesServerOverload) {
   // --- Setup ---
-  client_ = std::make_shared<TcpClient>(cfg_);
+  client_ = std::make_shared<TcpClient>(cfg_, test_ioc_);
   bool backpressure_triggered = false;
   size_t max_backpressure_bytes = 0;
 

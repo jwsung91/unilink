@@ -1,6 +1,7 @@
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
 #include <iostream>
+#include "unilink/common/io_context_manager.hpp"
 
 namespace unilink {
 namespace transport {
@@ -13,28 +14,57 @@ using namespace config;
 using tcp = net::ip::tcp;
 
 TcpClient::TcpClient(const TcpClientConfig& cfg)
-    : ioc_(), resolver_(ioc_), socket_(ioc_), cfg_(cfg), retry_timer_(ioc_) {}
+    : ioc_(std::make_shared<net::io_context>()), 
+      resolver_(*ioc_), socket_(*ioc_), cfg_(cfg), retry_timer_(*ioc_), owns_ioc_(true) {}
+
+TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
+    : ioc_(&ioc), 
+      resolver_(ioc), socket_(ioc), cfg_(cfg), retry_timer_(ioc), owns_ioc_(false) {
+  // Initialize state
+  state_ = LinkState::Idle;
+  connected_ = false;
+  writing_ = false;
+  queue_bytes_ = 0;
+}
 
 TcpClient::~TcpClient() {
-  // Ensure proper cleanup even if stop() wasn't called explicitly
-  if (state_ != LinkState::Closed) {
-    stop();
-  }
+  // Set state to closed first
+  state_ = LinkState::Closed;
   
-  // Additional cleanup for io_context
-  if (ioc_thread_.joinable()) {
-    ioc_thread_.join();
+  // Clear callbacks to prevent dangling references
+  on_bytes_ = nullptr;
+  on_state_ = nullptr;
+  on_bp_ = nullptr;
+  
+  // Clear any pending operations
+  tx_.clear();
+  queue_bytes_ = 0;
+  writing_ = false;
+  
+  // Clean up thread if still running and we own the io_context
+  if (owns_ioc_ && ioc_thread_.joinable()) {
+    try {
+      ioc_->stop();
+      ioc_thread_.join();
+    } catch (...) {
+      // Ignore exceptions during destruction
+    }
   }
-  ioc_.stop();
-  ioc_.restart();
-  ioc_.stop();
-  ioc_.restart();
-  ioc_.stop();
 }
 
 void TcpClient::start() {
-  ioc_thread_ = std::thread([this] { ioc_.run(); });
-  net::post(ioc_, [this] {
+  if (owns_ioc_) {
+    // Create our own thread for this io_context
+    ioc_thread_ = std::thread([this]() {
+      try {
+        ioc_->run();
+      } catch (const std::exception& e) {
+        std::cerr << "TcpClient io_context error: " << e.what() << std::endl;
+      }
+    });
+  }
+  
+  net::post(*ioc_, [this] {
     state_ = LinkState::Connecting;
     notify_state();
     do_resolve_connect();
@@ -42,23 +72,55 @@ void TcpClient::start() {
 }
 
 void TcpClient::stop() {
-  net::post(ioc_, [this] {
-    retry_timer_.cancel();
-    close_socket();
-  });
-  ioc_.stop();
-  if (ioc_thread_.joinable()) ioc_thread_.join();
-  // Reset the io_context to clear any remaining work
-  ioc_.restart();
+  // Set state to closed first to prevent new operations
   state_ = LinkState::Closed;
-  notify_state();
+  
+  // Post cleanup work to io_context
+  net::post(*ioc_, [this] {
+    try {
+      retry_timer_.cancel();
+      close_socket();
+      // Clear any pending write operations
+      tx_.clear();
+      queue_bytes_ = 0;
+      writing_ = false;
+    } catch (...) {
+      // Ignore exceptions during cleanup
+    }
+  });
+  
+  // Stop io_context and wait for thread to finish only if we own it
+  if (owns_ioc_ && ioc_thread_.joinable()) {
+    try {
+      ioc_->stop();
+      ioc_thread_.join();
+    } catch (...) {
+      // Ignore exceptions during cleanup
+    }
+  }
+  
+  try {
+    notify_state();
+  } catch (...) {
+    // Ignore exceptions during state notification
+  }
 }
 
 bool TcpClient::is_connected() const { return connected_; }
 
 void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
+  // Don't queue writes if client is stopped or in error state
+  if (state_ == LinkState::Closed || state_ == LinkState::Error) {
+    return;
+  }
+  
   std::vector<uint8_t> copy(data, data + size);
-  net::post(ioc_, [self = shared_from_this(), buf = std::move(copy)]() mutable {
+  net::post(*ioc_, [self = shared_from_this(), buf = std::move(copy)]() mutable {
+    // Double-check state in case client was stopped while in queue
+    if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+      return;
+    }
+    
     self->queue_bytes_ += buf.size();
     self->tx_.emplace_back(std::move(buf));
     if (self->on_bp_ && self->queue_bytes_ > self->bp_high_)
@@ -131,7 +193,7 @@ void TcpClient::start_read() {
 }
 
 void TcpClient::do_write() {
-  if (tx_.empty()) {
+  if (tx_.empty() || state_ == LinkState::Closed || state_ == LinkState::Error) {
     writing_ = false;
     return;
   }
@@ -139,6 +201,12 @@ void TcpClient::do_write() {
   auto self = shared_from_this();
   net::async_write(socket_, net::buffer(tx_.front()),
                    [self](auto ec, std::size_t n) {
+                     // Check if client was stopped during write
+                     if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+                       self->writing_ = false;
+                       return;
+                     }
+                     
                      self->queue_bytes_ -= n;
                      if (ec) {
                        self->handle_close();
