@@ -9,20 +9,31 @@
 int main(int argc, char** argv) {
   unsigned short port =
       (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
-  unilink::TcpServerConfig cfg{port};
-  auto ul = unilink::create(cfg);
+  // Using builder pattern for configuration
+  auto ul = unilink::builder::UnifiedBuilder::tcp_server(port)
+      .auto_start(false)
+      .on_connect([&]() {
+          unilink::log_message("[server]", "INFO", "Client connected");
+      })
+      .on_disconnect([&]() {
+          unilink::log_message("[server]", "INFO", "Client disconnected");
+      })
+      .build();
 
   std::atomic<bool> connected{false};
 
-  ul->on_state([&](unilink::LinkState s) {
-    auto state_msg = "state=" + std::string(unilink::to_cstr(s));
-    unilink::log_message("[server]", "STATE", state_msg);
-    connected = (s == unilink::LinkState::Connected);
+  ul->on_connect([&]() {
+    unilink::log_message("[server]", "STATE", "Client connected");
+    connected = true;
   });
 
-  ul->on_bytes([&](const uint8_t* p, size_t n) {
-    std::string s(reinterpret_cast<const char*>(p), n);
-    unilink::log_message("[server]", "RX", s);
+  ul->on_disconnect([&]() {
+    unilink::log_message("[server]", "STATE", "Client disconnected");
+    connected = false;
+  });
+
+  ul->on_data([&](const std::string& data) {
+    unilink::log_message("[server]", "RX", data);
   });
 
   // ⬇️ 서버에서 키보드 입력 → 클라이언트로 전송
@@ -33,10 +44,8 @@ int main(int argc, char** argv) {
         unilink::log_message("[server]", "INFO", "(not connected)");
         continue;
       }
-      auto msg = line + "\n";
       unilink::log_message("[server]", "TX", line);
-      std::vector<uint8_t> buf(msg.begin(), msg.end());
-      ul->async_write_copy(buf.data(), buf.size());
+      ul->send_line(line);
     }
   });
 

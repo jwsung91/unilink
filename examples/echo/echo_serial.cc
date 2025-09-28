@@ -10,36 +10,42 @@
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
 
-  unilink::SerialConfig cfg;
-  cfg.device = dev;
-  cfg.baud_rate = 115200;
-  cfg.retry_interval_ms = 2000;
-  auto ul = unilink::create(cfg);
+  // Using builder pattern for configuration
+  auto ul = unilink::builder::UnifiedBuilder::serial(dev, 115200)
+      .auto_start(false)
+      .on_connect([&]() {
+          unilink::log_message("[serial]", "INFO", "Serial device connected");
+      })
+      .on_disconnect([&]() {
+          unilink::log_message("[serial]", "INFO", "Serial device disconnected");
+      })
+      .build();
 
   std::atomic<bool> connected{false};
 
-  ul->on_state([&](unilink::LinkState s) {
-    auto state_msg = "state=" + std::string(unilink::to_cstr(s));
-    unilink::log_message("[serial]", "STATE", state_msg);
-    connected = (s == unilink::LinkState::Connected);
+  ul->on_connect([&]() {
+    unilink::log_message("[serial]", "STATE", "Connected");
+    connected = true;
   });
 
-  ul->on_bytes([&](const uint8_t* p, size_t n) {
-    std::string s(reinterpret_cast<const char*>(p), n);
-    unilink::log_message("[serial]", "RX", s);
+  ul->on_disconnect([&]() {
+    unilink::log_message("[serial]", "STATE", "Disconnected");
+    connected = false;
+  });
+
+  ul->on_data([&](const std::string& data) {
+    unilink::log_message("[serial]", "RX", data);
   });
 
   std::atomic<bool> stop_sending = false;
-  std::thread sender_thread([ul, &connected, &stop_sending] {
+  std::thread sender_thread([&ul, &connected, &stop_sending] {
     uint64_t seq = 0;
     const auto interval = std::chrono::milliseconds(500);
     while (!stop_sending) {
       if (connected) {
-        std::string msg = "SER " + std::to_string(seq++) + "\n";
-        std::vector<uint8_t> buf(msg.begin(), msg.end());
-
+        std::string msg = "SER " + std::to_string(seq++);
         unilink::log_message("[serial]", "TX", msg);
-        ul->async_write_copy(buf.data(), buf.size());
+        ul->send_line(msg);
       }
       std::this_thread::sleep_for(interval);
     }

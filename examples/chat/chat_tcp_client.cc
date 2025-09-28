@@ -12,39 +12,43 @@ int main(int argc, char** argv) {
   unsigned short port =
       (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
 
-  unilink::TcpClientConfig cfg;
-  cfg.host = host;
-  cfg.port = port;
-
-  auto ul = unilink::create(cfg);
+  // Using builder pattern for configuration
+  auto ul = unilink::builder::UnifiedBuilder::tcp_client(host, port)
+      .auto_start(false)
+      .on_connect([&]() {
+          unilink::log_message("[client]", "INFO", "Connected to server");
+      })
+      .on_disconnect([&]() {
+          unilink::log_message("[client]", "INFO", "Disconnected from server");
+      })
+      .build();
 
   std::atomic<bool> connected{false};
-  std::string rx_acc;
 
-  ul->on_state([&](unilink::LinkState s) {
-    auto state_msg = "state=" + std::string(unilink::to_cstr(s));
-    unilink::log_message("[client]", "STATE", state_msg);
-    connected = (s == unilink::LinkState::Connected);
+  ul->on_connect([&]() {
+    unilink::log_message("[client]", "STATE", "Connected");
+    connected = true;
   });
 
-  ul->on_bytes([&](const uint8_t* p, size_t n) {
-    unilink::feed_lines(rx_acc, p, n, [&](std::string line) {
-      unilink::log_message("[client]", "RX", line);
-    });
+  ul->on_disconnect([&]() {
+    unilink::log_message("[client]", "STATE", "Disconnected");
+    connected = false;
+  });
+
+  ul->on_data([&](const std::string& data) {
+    unilink::log_message("[client]", "RX", data);
   });
 
   // 입력 쓰레드: stdin 한 줄 읽어서 서버로 전송
-  std::thread input_thread([ul, &connected] {
+  std::thread input_thread([&ul, &connected] {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected.load()) {
         unilink::log_message("[client]", "INFO", "(not connected)");
         continue;
       }
-      auto msg = line + "\n";
       unilink::log_message("[client]", "TX", line);
-      std::vector<uint8_t> buf(msg.begin(), msg.end());
-      ul->async_write_copy(buf.data(), buf.size());
+      ul->send_line(line);
     }
   });
 
