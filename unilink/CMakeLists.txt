@@ -22,6 +22,12 @@ find_package(Threads REQUIRED)
 
 target_link_libraries(unilink PUBLIC Boost::system Threads::Threads)
 
+# Configuration management API (optional)
+option(UNILINK_ENABLE_CONFIG "Enable configuration management API" ON)
+if(UNILINK_ENABLE_CONFIG)
+  target_compile_definitions(unilink PUBLIC UNILINK_ENABLE_CONFIG=1)
+endif()
+
 if(ENABLE_YAML_CONFIG)
   target_link_libraries(unilink PRIVATE yaml-cpp)
 endif()

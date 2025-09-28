@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(unilink-test)
 
+# Enable configuration management API for tests
+target_compile_definitions(unilink PUBLIC UNILINK_ENABLE_CONFIG=1)
+
 # Define the core test executable
 add_executable(run_tests
     test_common.cc

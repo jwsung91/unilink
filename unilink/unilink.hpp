@@ -16,10 +16,12 @@
 #include "unilink/builder/serial_builder.hpp"
 #include "unilink/builder/unified_builder.hpp"
 
-// 새로운 Configuration Management API includes
+// Configuration Management API includes (optional)
+#ifdef UNILINK_ENABLE_CONFIG
 #include "unilink/config/iconfig_manager.hpp"
 #include "unilink/config/config_manager.hpp"
 #include "unilink/config/config_factory.hpp"
+#endif
 
 namespace unilink {
 
@@ -102,8 +104,9 @@ inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_ra
     return builder::SerialBuilder(device, baud_rate);
 }
 
-// === 새로운 Configuration Management API ===
-// 편의 별칭들
+// === Configuration Management API (optional) ===
+// 편의 별칭들 - Config가 활성화된 경우에만 사용 가능
+#ifdef UNILINK_ENABLE_CONFIG
 namespace config_manager {
     using IConfigManager = config::IConfigManager;
     using ConfigManager = config::ConfigManager;
@@ -114,6 +117,7 @@ namespace config_manager {
     using ValidationResult = config::ValidationResult;
     using ConfigChangeCallback = config::ConfigChangeCallback;
 }
+#endif
 
 // === 공통 유틸리티 ===
 // 유용한 유틸리티 함수들
