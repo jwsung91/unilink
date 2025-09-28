@@ -7,51 +7,90 @@
 
 #include "unilink/unilink.hpp"
 
-int main(int argc, char** argv) {
-  std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
-
-  std::atomic<bool> connected{false};
-
-  // Using builder pattern for configuration
-  auto ul = unilink::builder::UnifiedBuilder::serial(dev, 115200)
-      .auto_start(false)
-      .on_connect([&]() {
-          unilink::log_message("[serial]", "STATE", "Serial device connected");
-          connected = true;
-      })
-      .on_disconnect([&]() {
-          unilink::log_message("[serial]", "STATE", "Serial device disconnected");
-          connected = false;
-      })
-      .on_data([&](const std::string& data) {
-          unilink::log_message("[serial]", "RX", data);
-      })
-      .on_error([&](const std::string& error) {
-          unilink::log_message("[serial]", "ERROR", error);
-      })
-      .build();
-
-  std::atomic<bool> stop_sending = false;
-  std::thread sender_thread([&ul, &connected, &stop_sending] {
-    uint64_t seq = 0;
-    const auto interval = std::chrono::milliseconds(500);
-    while (!stop_sending) {
-      if (connected) {
-        std::string msg = "SER " + std::to_string(seq++);
-        unilink::log_message("[serial]", "TX", msg);
-        ul->send_line(msg);
-      }
-      std::this_thread::sleep_for(interval);
+/**
+ * @brief Example application class that demonstrates member function binding
+ * 
+ * This class shows how to use the new member function pointer overloads
+ * in the builder pattern to bind callback methods directly to class methods.
+ */
+class SerialEchoApp {
+public:
+    SerialEchoApp(const std::string& device, uint32_t baud_rate) 
+        : device_(device), baud_rate_(baud_rate), connected_(false), stop_sending_(false) {
     }
-  });
 
-  ul->start();
+    void run() {
+        // Using builder pattern with member function pointers
+        auto ul = unilink::builder::UnifiedBuilder::serial(device_, baud_rate_)
+            .auto_start(false)
+            .on_connect(this, &SerialEchoApp::handle_connect)      // Member function binding
+            .on_disconnect(this, &SerialEchoApp::handle_disconnect) // Member function binding
+            .on_data(this, &SerialEchoApp::handle_data)            // Member function binding
+            .on_error(this, &SerialEchoApp::handle_error)          // Member function binding
+            .build();
 
-  // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
-  std::promise<void>().get_future().wait();
+        // Start sender thread
+        std::thread sender_thread([this, &ul] {
+            this->sender_loop(ul.get());
+        });
 
-  stop_sending = true;
-  ul->stop();
-  sender_thread.join();
-  return 0;
+        // Start the serial connection
+        ul->start();
+
+        // Wait for program termination
+        std::promise<void>().get_future().wait();
+
+        // Cleanup
+        stop_sending_ = true;
+        ul->stop();
+        sender_thread.join();
+    }
+
+private:
+    // Member function callbacks - these can be bound directly to the builder
+    void handle_connect() {
+        unilink::log_message("[serial]", "STATE", "Serial device connected");
+        connected_ = true;
+    }
+
+    void handle_disconnect() {
+        unilink::log_message("[serial]", "STATE", "Serial device disconnected");
+        connected_ = false;
+    }
+
+    void handle_data(const std::string& data) {
+        unilink::log_message("[serial]", "RX", data);
+    }
+
+    void handle_error(const std::string& error) {
+        unilink::log_message("[serial]", "ERROR", error);
+    }
+
+    void sender_loop(unilink::wrapper::Serial* serial) {
+        uint64_t seq = 0;
+        const auto interval = std::chrono::milliseconds(500);
+        
+        while (!stop_sending_) {
+            if (connected_) {
+                std::string msg = "SER " + std::to_string(seq++);
+                unilink::log_message("[serial]", "TX", msg);
+                serial->send_line(msg);
+            }
+            std::this_thread::sleep_for(interval);
+        }
+    }
+
+    std::string device_;
+    uint32_t baud_rate_;
+    std::atomic<bool> connected_;
+    std::atomic<bool> stop_sending_;
+};
+
+int main(int argc, char** argv) {
+    std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
+    
+    SerialEchoApp app(dev, 115200);
+    app.run();
+    
+    return 0;
 }
