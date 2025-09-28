@@ -5,7 +5,7 @@
 #include <mutex>
 
 namespace unilink {
-namespace config_manager {
+namespace config {
 
 /**
  * Factory for creating configuration managers
@@ -68,5 +68,5 @@ public:
     static void setup_all_defaults(std::shared_ptr<IConfigManager> config);
 };
 
-} // namespace config_manager
+} // namespace config
 } // namespace unilink

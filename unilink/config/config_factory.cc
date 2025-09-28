@@ -3,7 +3,7 @@
 #include <mutex>
 
 namespace unilink {
-namespace config_manager {
+namespace config {
 
 std::shared_ptr<IConfigManager> ConfigFactory::singleton_instance_ = nullptr;
 std::mutex ConfigFactory::singleton_mutex_;
@@ -94,5 +94,5 @@ void ConfigPresets::setup_all_defaults(std::shared_ptr<IConfigManager> config) {
     config->set("global.config_file", std::string("unilink.conf"));
 }
 
-} // namespace config_manager
+} // namespace config
 } // namespace unilink

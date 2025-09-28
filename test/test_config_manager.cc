@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 #include <thread>
 #include <vector>
-#include "unilink/config_manager/iconfig_manager.hpp"
-#include "unilink/config_manager/config_manager.hpp"
-#include "unilink/config_manager/config_factory.hpp"
+#include "unilink/config/iconfig_manager.hpp"
+#include "unilink/config/config_manager.hpp"
+#include "unilink/config/config_factory.hpp"
 
-using namespace unilink::config_manager;
+using namespace unilink::config;
 
 class ConfigManagerTest : public ::testing::Test {
 protected:

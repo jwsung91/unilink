@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace unilink {
-namespace config_manager {
+namespace config {
 
 /**
  * Configuration value types supported by the system
@@ -101,5 +101,5 @@ public:
     virtual bool is_required(const std::string& key) const = 0;
 };
 
-} // namespace config_manager
+} // namespace config
 } // namespace unilink
