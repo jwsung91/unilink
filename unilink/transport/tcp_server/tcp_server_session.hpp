@@ -16,8 +16,8 @@ namespace transport {
 
 namespace net = boost::asio;
 
-using namespace common;
-using namespace interface;
+using common::LinkState;
+using interface::ITcpSocket;
 using tcp = net::ip::tcp;
 
 class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {

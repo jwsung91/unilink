@@ -17,9 +17,9 @@ namespace transport {
 
 namespace net = boost::asio;
 
-using namespace interface;
-using namespace common;
-using namespace config;
+using interface::Channel;
+using common::LinkState;
+using config::TcpClientConfig;
 using tcp = net::ip::tcp;
 
 class TcpClient : public Channel,

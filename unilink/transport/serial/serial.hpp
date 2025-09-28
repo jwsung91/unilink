@@ -15,9 +15,10 @@
 namespace unilink {
 namespace transport {
 
-using namespace interface;
-using namespace common;
-using namespace config;
+using interface::Channel;
+using interface::ISerialPort;
+using common::LinkState;
+using config::SerialConfig;
 namespace net = boost::asio;
 
 class Serial : public Channel, public std::enable_shared_from_this<Serial> {
