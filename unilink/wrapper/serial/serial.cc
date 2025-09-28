@@ -60,7 +60,7 @@ void Serial::stop() {
     
     channel_->stop();
     // 잠시 대기하여 비동기 작업 완료
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     channel_.reset();
     started_ = false;
 }

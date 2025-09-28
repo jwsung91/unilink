@@ -43,6 +43,9 @@ Serial::~Serial() {
     // Ensure io_context is completely stopped before deletion
     ioc_.stop();
     ioc_.restart();
+    ioc_.stop();
+    ioc_.restart();
+    ioc_.stop();
     delete &ioc_;
   }
 }

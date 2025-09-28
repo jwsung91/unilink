@@ -2,6 +2,8 @@
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 namespace unilink {
 namespace wrapper {
@@ -35,6 +37,9 @@ void TcpServer::stop() {
     if (!started_ || !channel_) return;
     
     channel_->stop();
+    // Allow async operations to complete
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    channel_.reset();
     started_ = false;
 }
 

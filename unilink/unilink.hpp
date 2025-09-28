@@ -17,6 +17,13 @@
 #include "unilink/wrapper/tcp_client/tcp_client.hpp"
 #include "unilink/wrapper/serial/serial.hpp"
 
+// 새로운 고수준 Builder API includes
+#include "unilink/builder/ibuilder.hpp"
+#include "unilink/builder/tcp_server_builder.hpp"
+#include "unilink/builder/tcp_client_builder.hpp"
+#include "unilink/builder/serial_builder.hpp"
+#include "unilink/builder/unified_builder.hpp"
+
 namespace unilink {
 
 // === 기존 저수준 API (하위 호환성 유지) ===
@@ -44,6 +51,15 @@ namespace wrapper {
     using TcpClient = wrapper::TcpClient;
     using Serial = wrapper::Serial;
     using IChannel = wrapper::IChannel;
+}
+
+// === 새로운 고수준 Builder API ===
+// 편의 별칭들
+namespace builder {
+    using TcpServerBuilder = builder::TcpServerBuilder;
+    using TcpClientBuilder = builder::TcpClientBuilder;
+    using SerialBuilder = builder::SerialBuilder;
+    using UnifiedBuilder = builder::UnifiedBuilder;
 }
 
 // === 공통 유틸리티 (기존 유지) ===

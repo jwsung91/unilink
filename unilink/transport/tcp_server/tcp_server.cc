@@ -42,8 +42,23 @@ TcpServer::TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::ITcp
 }
 
 TcpServer::~TcpServer() {
-  // Don't call stop() in destructor as it may cause issues with shared_from_this
-  // The caller should explicitly call stop() before destruction
+  // Ensure proper cleanup even if stop() wasn't called explicitly
+  if (state_ != LinkState::Closed) {
+    stop();
+  }
+  
+  // Clean up owned io_context more thoroughly
+  if (owns_ioc_ && owned_ioc_) {
+    if (ioc_thread_.joinable()) {
+      ioc_thread_.join();
+    }
+    // Force stop and clear all work multiple times
+    owned_ioc_->stop();
+    owned_ioc_->restart();
+    owned_ioc_->stop();
+    owned_ioc_->restart();
+    owned_ioc_->stop();
+  }
 }
 
 void TcpServer::start() {
@@ -89,6 +104,8 @@ void TcpServer::stop() {
     });
     ioc_.stop();
     ioc_thread_.join();
+    // Reset io_context to clear any remaining work
+    ioc_.restart();
   } else {
     // If server was never started, just clean up
     boost::system::error_code ec;

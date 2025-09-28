@@ -20,6 +20,16 @@ TcpClient::~TcpClient() {
   if (state_ != LinkState::Closed) {
     stop();
   }
+  
+  // Additional cleanup for io_context
+  if (ioc_thread_.joinable()) {
+    ioc_thread_.join();
+  }
+  ioc_.stop();
+  ioc_.restart();
+  ioc_.stop();
+  ioc_.restart();
+  ioc_.stop();
 }
 
 void TcpClient::start() {
