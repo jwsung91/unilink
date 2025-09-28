@@ -9,6 +9,13 @@ add_executable(run_tests
     test_tcp_client.cc
 )
 
+# Define the wrapper test executable
+add_executable(run_wrapper_tests
+    test_wrapper.cc
+)
+
+# Define the improved architecture test executable (removed - integrated into main tests)
+
 # Link the test executable against our library and GoogleTest
 target_link_libraries(run_tests
     PRIVATE
@@ -17,9 +24,21 @@ target_link_libraries(run_tests
     GTest::gmock
 )
 
+# Link the wrapper test executable
+target_link_libraries(run_wrapper_tests
+    PRIVATE
+    unilink
+    GTest::gtest_main
+    GTest::gmock
+)
+
+# Link the improved architecture test executable (removed - integrated into main tests)
+
 # Discover and add tests to CTest
 include(GoogleTest)
 gtest_discover_tests(run_tests)
+gtest_discover_tests(run_wrapper_tests)
+# gtest_discover_tests(run_improved_tests) # removed - integrated into main tests
 
 # Enable sanitizers for debugging memory errors and undefined behavior.
 # This is typically done for Debug or RelWithDebInfo builds.
@@ -30,4 +49,12 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug|RelWithDebInfo")
     # UndefinedBehaviorSanitizer (UBSan) for various forms of undefined behavior.
     target_compile_options(run_tests PRIVATE -fsanitize=undefined)
     target_link_options(run_tests PRIVATE -fsanitize=undefined)
+    
+    # Apply same sanitizers to wrapper tests
+    target_compile_options(run_wrapper_tests PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(run_wrapper_tests PRIVATE -fsanitize=address)
+    target_compile_options(run_wrapper_tests PRIVATE -fsanitize=undefined)
+    target_link_options(run_wrapper_tests PRIVATE -fsanitize=undefined)
+    
+    # Apply same sanitizers to improved architecture tests (removed - integrated into main tests)
 endif()
