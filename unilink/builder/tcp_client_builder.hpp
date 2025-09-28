@@ -51,11 +51,37 @@ public:
     TcpClientBuilder& on_data(std::function<void(const std::string&)> handler) override;
     
     /**
+     * @brief Set data handler callback using member function pointer
+     * @tparam U Class type
+     * @tparam F Member function type
+     * @param obj Object instance
+     * @param method Member function pointer
+     * @return TcpClientBuilder& Reference to this builder for method chaining
+     */
+    template<typename U, typename F>
+    TcpClientBuilder& on_data(U* obj, F method) {
+        return static_cast<TcpClientBuilder&>(IBuilder<wrapper::TcpClient>::on_data(obj, method));
+    }
+    
+    /**
      * @brief Set connection handler callback
      * @param handler Function to handle connection events
      * @return TcpClientBuilder& Reference to this builder for method chaining
      */
     TcpClientBuilder& on_connect(std::function<void()> handler) override;
+    
+    /**
+     * @brief Set connection handler callback using member function pointer
+     * @tparam U Class type
+     * @tparam F Member function type
+     * @param obj Object instance
+     * @param method Member function pointer
+     * @return TcpClientBuilder& Reference to this builder for method chaining
+     */
+    template<typename U, typename F>
+    TcpClientBuilder& on_connect(U* obj, F method) {
+        return static_cast<TcpClientBuilder&>(IBuilder<wrapper::TcpClient>::on_connect(obj, method));
+    }
     
     /**
      * @brief Set disconnection handler callback
@@ -65,11 +91,37 @@ public:
     TcpClientBuilder& on_disconnect(std::function<void()> handler) override;
     
     /**
+     * @brief Set disconnection handler callback using member function pointer
+     * @tparam U Class type
+     * @tparam F Member function type
+     * @param obj Object instance
+     * @param method Member function pointer
+     * @return TcpClientBuilder& Reference to this builder for method chaining
+     */
+    template<typename U, typename F>
+    TcpClientBuilder& on_disconnect(U* obj, F method) {
+        return static_cast<TcpClientBuilder&>(IBuilder<wrapper::TcpClient>::on_disconnect(obj, method));
+    }
+    
+    /**
      * @brief Set error handler callback
      * @param handler Function to handle error events
      * @return TcpClientBuilder& Reference to this builder for method chaining
      */
     TcpClientBuilder& on_error(std::function<void(const std::string&)> handler) override;
+    
+    /**
+     * @brief Set error handler callback using member function pointer
+     * @tparam U Class type
+     * @tparam F Member function type
+     * @param obj Object instance
+     * @param method Member function pointer
+     * @return TcpClientBuilder& Reference to this builder for method chaining
+     */
+    template<typename U, typename F>
+    TcpClientBuilder& on_error(U* obj, F method) {
+        return static_cast<TcpClientBuilder&>(IBuilder<wrapper::TcpClient>::on_error(obj, method));
+    }
 
 private:
     std::string host_;

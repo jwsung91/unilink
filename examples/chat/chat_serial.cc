@@ -12,8 +12,8 @@ int main(int argc, char** argv) {
 
   std::atomic<bool> connected{false};
 
-  // Using builder pattern for configuration
-  auto ul = unilink::builder::UnifiedBuilder::serial(dev, 115200)
+  // Using convenience function for configuration
+  auto ul = unilink::serial(dev, 115200)
       .auto_start(false)
       .on_connect([&]() {
           unilink::log_message("[serial]", "STATE", "Serial device connected");

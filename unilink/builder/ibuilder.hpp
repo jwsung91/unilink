@@ -47,11 +47,41 @@ public:
     virtual IBuilder& on_data(std::function<void(const std::string&)> handler) = 0;
     
     /**
+     * @brief Set data handler callback using member function pointer
+     * @tparam U Class type
+     * @tparam F Member function type
+     * @param obj Object instance
+     * @param method Member function pointer
+     * @return IBuilder& Reference to this builder for method chaining
+     */
+    template<typename U, typename F>
+    IBuilder& on_data(U* obj, F method) {
+        return on_data([obj, method](const std::string& data) {
+            (obj->*method)(data);
+        });
+    }
+    
+    /**
      * @brief Set connection handler callback
      * @param handler Function to handle connection events
      * @return IBuilder& Reference to this builder for method chaining
      */
     virtual IBuilder& on_connect(std::function<void()> handler) = 0;
+    
+    /**
+     * @brief Set connection handler callback using member function pointer
+     * @tparam U Class type
+     * @tparam F Member function type
+     * @param obj Object instance
+     * @param method Member function pointer
+     * @return IBuilder& Reference to this builder for method chaining
+     */
+    template<typename U, typename F>
+    IBuilder& on_connect(U* obj, F method) {
+        return on_connect([obj, method]() {
+            (obj->*method)();
+        });
+    }
     
     /**
      * @brief Set disconnection handler callback
@@ -61,11 +91,41 @@ public:
     virtual IBuilder& on_disconnect(std::function<void()> handler) = 0;
     
     /**
+     * @brief Set disconnection handler callback using member function pointer
+     * @tparam U Class type
+     * @tparam F Member function type
+     * @param obj Object instance
+     * @param method Member function pointer
+     * @return IBuilder& Reference to this builder for method chaining
+     */
+    template<typename U, typename F>
+    IBuilder& on_disconnect(U* obj, F method) {
+        return on_disconnect([obj, method]() {
+            (obj->*method)();
+        });
+    }
+    
+    /**
      * @brief Set error handler callback
      * @param handler Function to handle error events
      * @return IBuilder& Reference to this builder for method chaining
      */
     virtual IBuilder& on_error(std::function<void(const std::string&)> handler) = 0;
+    
+    /**
+     * @brief Set error handler callback using member function pointer
+     * @tparam U Class type
+     * @tparam F Member function type
+     * @param obj Object instance
+     * @param method Member function pointer
+     * @return IBuilder& Reference to this builder for method chaining
+     */
+    template<typename U, typename F>
+    IBuilder& on_error(U* obj, F method) {
+        return on_error([obj, method](const std::string& error) {
+            (obj->*method)(error);
+        });
+    }
 };
 
 } // namespace builder

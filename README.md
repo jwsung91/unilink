@@ -2,18 +2,52 @@
 
 <h3 align="center">One interface, reliable connections</h3>
 
-`unilink` is a C++ library that provides a unified, low-level asynchronous communication interface for TCP (client/server) and Serial ports. It simplifies network and serial programming by abstracting transport-specific details behind a consistent `Channel` API.
-
+`unilink` is a C++ library that provides a unified, high-level Builder API for TCP (client/server) and Serial ports. It simplifies network and serial programming with a fluent, easy-to-use interface that handles all the complexity behind the scenes.
 
 ---
 
 ## Features
 
-- **Unified Interface**: A single `Channel` interface for TCP (Client/Server) and Serial communication.
-- **Asynchronous Operations**: Callback-based, non-blocking I/O for high performance.
-- **Automatic Reconnection**: Built-in, configurable reconnection logic for clients and serial ports.
-- **Thread-Safe**: Managed I/O thread and thread-safe write operations.
-- **Simple Lifecycle**: Easy-to-use `start()` and `stop()` methods for managing the connection lifecycle.
+- **Builder API**: Fluent, chainable interface for creating and configuring communication channels
+- **Unified Interface**: Single API for TCP (Client/Server) and Serial communication
+- **Asynchronous Operations**: Callback-based, non-blocking I/O for high performance
+- **Automatic Reconnection**: Built-in, configurable reconnection logic for clients and serial ports
+- **Thread-Safe**: Managed I/O thread and thread-safe operations
+- **Auto Management**: Optional automatic resource management and lifecycle control
+
+---
+
+## Quick Start
+
+```cpp
+#include "unilink/unilink.hpp"
+
+int main() {
+    // Create a TCP client with Builder API
+    auto client = unilink::tcp_client("127.0.0.1", 8080)
+        .on_connect([]() {
+            std::cout << "Connected to server!" << std::endl;
+        })
+        .on_data([](const uint8_t* data, size_t len) {
+            std::string message(data, data + len);
+            std::cout << "Received: " << message << std::endl;
+        })
+        .on_error([](const std::string& error) {
+            std::cerr << "Error: " << error << std::endl;
+        })
+        .auto_start()  // Automatically start the connection
+        .build();
+
+    // Send data
+    client->send("Hello, Server!");
+
+    // Keep running
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+
+    // Automatic cleanup when client goes out of scope
+    return 0;
+}
+```
 
 ---
 
