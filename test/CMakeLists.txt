@@ -7,6 +7,7 @@ add_executable(run_tests
     test_serial.cc
     test_tcp_server.cc
     test_tcp_client.cc
+    test_config_manager.cc
 )
 
 # Define the wrapper test executable
