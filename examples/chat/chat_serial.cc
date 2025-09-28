@@ -26,6 +26,9 @@ int main(int argc, char** argv) {
       .on_data([&](const std::string& data) {
           unilink::log_message("[serial]", "RX", data);
       })
+      .on_error([&](const std::string& error) {
+          unilink::log_message("[serial]", "ERROR", error);
+      })
       .build();
 
   // 입력 쓰레드: stdin 한 줄 읽어서 포트로 전송

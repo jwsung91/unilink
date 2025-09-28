@@ -160,6 +160,9 @@ void Serial::setup_internal_handlers() {
 
 void Serial::notify_state_change(common::LinkState state) {
     switch (state) {
+        case common::LinkState::Connecting:
+            // Connecting state - no action needed, just log
+            break;
         case common::LinkState::Connected:
             if (connect_handler_) connect_handler_();
             break;
