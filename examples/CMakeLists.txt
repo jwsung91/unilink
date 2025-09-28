@@ -17,3 +17,6 @@ target_link_libraries(chat_tcp_server PRIVATE interface::unilink)
 
 add_executable(chat_serial chat/chat_serial.cc)
 target_link_libraries(chat_serial PRIVATE interface::unilink)
+
+add_executable(config_manager_example config_manager_example.cc)
+target_link_libraries(config_manager_example PRIVATE interface::unilink)
