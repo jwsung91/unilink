@@ -15,9 +15,14 @@ add_executable(run_wrapper_tests
     test_wrapper.cc
 )
 
-# Define the builder test executable
+# Define the builder unit test executable (basic builder functionality + Serial support)
 add_executable(run_builder_tests
     test_builder.cc
+)
+
+# Define the builder integration test executable (TCP integration tests + Serial integration)
+add_executable(run_builder_integration_tests
+    test_builder_integration.cc
 )
 
 # Define the improved architecture test executable (removed - integrated into main tests)
@@ -38,8 +43,16 @@ target_link_libraries(run_wrapper_tests
     GTest::gmock
 )
 
-# Link the builder test executable
+# Link the builder unit test executable (basic builder functionality + Serial support)
 target_link_libraries(run_builder_tests
+    PRIVATE
+    unilink
+    GTest::gtest_main
+    GTest::gmock
+)
+
+# Link the builder integration test executable (TCP integration tests + Serial integration)
+target_link_libraries(run_builder_integration_tests
     PRIVATE
     unilink
     GTest::gtest_main
@@ -53,6 +66,7 @@ include(GoogleTest)
 gtest_discover_tests(run_tests)
 gtest_discover_tests(run_wrapper_tests)
 gtest_discover_tests(run_builder_tests)
+gtest_discover_tests(run_builder_integration_tests)
 # gtest_discover_tests(run_improved_tests) # removed - integrated into main tests
 
 # Enable sanitizers for debugging memory errors and undefined behavior.
@@ -77,6 +91,12 @@ if(false)
     target_link_options(run_builder_tests PRIVATE -fsanitize=address)
     target_compile_options(run_builder_tests PRIVATE -fsanitize=undefined)
     target_link_options(run_builder_tests PRIVATE -fsanitize=undefined)
+    
+    # Apply same sanitizers to builder integration tests
+    target_compile_options(run_builder_integration_tests PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(run_builder_integration_tests PRIVATE -fsanitize=address)
+    target_compile_options(run_builder_integration_tests PRIVATE -fsanitize=undefined)
+    target_link_options(run_builder_integration_tests PRIVATE -fsanitize=undefined)
     
     # Apply same sanitizers to improved architecture tests (removed - integrated into main tests)
 endif()

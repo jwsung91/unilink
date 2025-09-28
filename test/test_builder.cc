@@ -2,6 +2,7 @@
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <atomic>
 
 #include "unilink/unilink.hpp"
 
@@ -11,17 +12,110 @@ class BuilderTest : public ::testing::Test {
 protected:
     void SetUp() override {
         // 테스트 전 초기화
+        data_received_.clear();
+        connection_established_ = false;
+        error_occurred_ = false;
     }
     
     void TearDown() override {
         // 테스트 후 정리
+        if (server_) {
+            server_->stop();
+        }
+        if (client_) {
+            client_->stop();
+        }
+        if (serial_) {
+            serial_->stop();
+        }
+        
+        // 잠시 대기하여 정리 완료 보장
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+
+    // 테스트용 포트 번호 (동적 할당으로 충돌 방지)
+    uint16_t getTestPort() {
+        static std::atomic<uint16_t> port_counter{9000};
+        return port_counter.fetch_add(1);
+    }
+
+    // 테스트용 데이터 핸들러
+    void setupDataHandler() {
+        if (server_) {
+            server_->on_data([this](const std::string& data) {
+                data_received_.push_back(data);
+            });
+        }
+        if (client_) {
+            client_->on_data([this](const std::string& data) {
+                data_received_.push_back(data);
+            });
+        }
+        if (serial_) {
+            serial_->on_data([this](const std::string& data) {
+                data_received_.push_back(data);
+            });
+        }
+    }
+
+    // 테스트용 연결 핸들러
+    void setupConnectionHandler() {
+        if (server_) {
+            server_->on_connect([this]() {
+                connection_established_ = true;
+            });
+        }
+        if (client_) {
+            client_->on_connect([this]() {
+                connection_established_ = true;
+            });
+        }
+        if (serial_) {
+            serial_->on_connect([this]() {
+                connection_established_ = true;
+            });
+        }
+    }
+
+    // 테스트용 에러 핸들러
+    void setupErrorHandler() {
+        if (server_) {
+            server_->on_error([this](const std::string& error) {
+                error_occurred_ = true;
+                last_error_ = error;
+            });
+        }
+        if (client_) {
+            client_->on_error([this](const std::string& error) {
+                error_occurred_ = true;
+                last_error_ = error;
+            });
+        }
+        if (serial_) {
+            serial_->on_error([this](const std::string& error) {
+                error_occurred_ = true;
+                last_error_ = error;
+            });
+        }
+    }
+
+protected:
+    std::shared_ptr<wrapper::TcpServer> server_;
+    std::shared_ptr<wrapper::TcpClient> client_;
+    std::shared_ptr<wrapper::Serial> serial_;
+    
+    std::vector<std::string> data_received_;
+    std::atomic<bool> connection_established_{false};
+    std::atomic<bool> error_occurred_{false};
+    std::string last_error_;
 };
 
 // TcpServerBuilder 기본 테스트
 TEST_F(BuilderTest, TcpServerBuilderBasic) {
-    auto server = builder::UnifiedBuilder::tcp_server(9025)
-        .auto_start(true)
+    uint16_t test_port = getTestPort();
+    
+    server_ = builder::UnifiedBuilder::tcp_server(test_port)
+        .auto_start(false)  // 수동 시작으로 제어
         .on_data([](const std::string& data) {
             // 데이터 처리
         })
@@ -30,17 +124,23 @@ TEST_F(BuilderTest, TcpServerBuilderBasic) {
         })
         .build();
     
-    ASSERT_NE(server, nullptr);
-    EXPECT_FALSE(server->is_connected());
+    ASSERT_NE(server_, nullptr);
+    EXPECT_FALSE(server_->is_connected());
     
-    // 정리
-    server->stop();
+    // 수동으로 시작
+    server_->start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    
+    // 서버가 생성되었는지 확인
+    EXPECT_TRUE(server_ != nullptr);
 }
 
 // TcpClientBuilder 기본 테스트
 TEST_F(BuilderTest, TcpClientBuilderBasic) {
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", 9026)
-        .auto_start(true)
+    uint16_t test_port = getTestPort();
+    
+    client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+        .auto_start(false)  // 수동 시작으로 제어
         .on_data([](const std::string& data) {
             // 데이터 처리
         })
@@ -49,17 +149,21 @@ TEST_F(BuilderTest, TcpClientBuilderBasic) {
         })
         .build();
     
-    ASSERT_NE(client, nullptr);
-    EXPECT_FALSE(client->is_connected());
+    ASSERT_NE(client_, nullptr);
+    EXPECT_FALSE(client_->is_connected());
     
-    // 정리
-    client->stop();
+    // 수동으로 시작
+    client_->start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    
+    // 클라이언트가 생성되었는지 확인
+    EXPECT_TRUE(client_ != nullptr);
 }
 
 // SerialBuilder 기본 테스트
 TEST_F(BuilderTest, SerialBuilderBasic) {
-    auto serial = builder::UnifiedBuilder::serial("/dev/null", 9600)
-        .auto_start(true)
+    serial_ = builder::UnifiedBuilder::serial("/dev/null", 9600)
+        .auto_start(false)  // 수동 시작으로 제어
         .on_data([](const std::string& data) {
             // 데이터 처리
         })
@@ -68,87 +172,109 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
         })
         .build();
     
-    ASSERT_NE(serial, nullptr);
-    EXPECT_FALSE(serial->is_connected());
+    ASSERT_NE(serial_, nullptr);
+    EXPECT_FALSE(serial_->is_connected());
     
-    // 정리
-    serial->stop();
+    // 수동으로 시작
+    serial_->start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    
+    // Serial이 생성되었는지 확인
+    EXPECT_TRUE(serial_ != nullptr);
 }
 
 // Builder 체이닝 테스트
 TEST_F(BuilderTest, BuilderChaining) {
-    bool data_received = false;
-    bool connected = false;
-    bool error_occurred = false;
+    uint16_t test_port = getTestPort();
     
-    auto server = builder::UnifiedBuilder::tcp_server(9027)
-        .auto_start(true)
+    server_ = builder::UnifiedBuilder::tcp_server(test_port)
+        .auto_start(false)
         .auto_manage(true)
-        .on_data([&data_received](const std::string& data) {
-            data_received = true;
+        .on_data([this](const std::string& data) {
+            data_received_.push_back(data);
         })
-        .on_connect([&connected]() {
-            connected = true;
+        .on_connect([this]() {
+            connection_established_ = true;
         })
         .on_disconnect([]() {
             // 연결 해제 처리
         })
-        .on_error([&error_occurred](const std::string& error) {
-            error_occurred = true;
+        .on_error([this](const std::string& error) {
+            error_occurred_ = true;
+            last_error_ = error;
         })
         .build();
     
-    ASSERT_NE(server, nullptr);
+    ASSERT_NE(server_, nullptr);
+    EXPECT_FALSE(server_->is_connected());
     
-    // 정리
-    server->stop();
+    // 수동으로 시작
+    server_->start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    
+    // 서버가 생성되었는지 확인
+    EXPECT_TRUE(server_ != nullptr);
 }
 
 // 여러 Builder 동시 사용 테스트
 TEST_F(BuilderTest, MultipleBuilders) {
-    auto server = builder::UnifiedBuilder::tcp_server(9028)
-        .auto_start(true)
+    uint16_t test_port = getTestPort();
+    
+    server_ = builder::UnifiedBuilder::tcp_server(test_port)
+        .auto_start(false)
         .build();
     
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", 9028)
-        .auto_start(true)
+    client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+        .auto_start(false)
         .build();
     
-    auto serial = builder::UnifiedBuilder::serial("/dev/null", 115200)
-        .auto_start(true)
+    serial_ = builder::UnifiedBuilder::serial("/dev/null", 115200)
+        .auto_start(false)
         .build();
     
-    ASSERT_NE(server, nullptr);
-    ASSERT_NE(client, nullptr);
-    ASSERT_NE(serial, nullptr);
+    ASSERT_NE(server_, nullptr);
+    ASSERT_NE(client_, nullptr);
+    ASSERT_NE(serial_, nullptr);
     
-    // 정리
-    server->stop();
-    client->stop();
-    serial->stop();
+    // 각각 시작
+    server_->start();
+    client_->start();
+    serial_->start();
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    
+    // 모든 객체가 생성되었는지 확인
+    EXPECT_TRUE(server_ != nullptr);
+    EXPECT_TRUE(client_ != nullptr);
+    EXPECT_TRUE(serial_ != nullptr);
 }
 
 // Builder 설정 검증 테스트
 TEST_F(BuilderTest, BuilderConfiguration) {
-    auto server = builder::UnifiedBuilder::tcp_server(9029)
+    uint16_t test_port = getTestPort();
+    
+    server_ = builder::UnifiedBuilder::tcp_server(test_port)
         .auto_start(false)
         .auto_manage(false)
         .build();
     
-    ASSERT_NE(server, nullptr);
-    EXPECT_FALSE(server->is_connected());
+    ASSERT_NE(server_, nullptr);
+    EXPECT_FALSE(server_->is_connected());
     
     // 수동으로 시작
-    server->start();
+    server_->start();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    server->stop();
+    
+    // 서버가 생성되었는지 확인
+    EXPECT_TRUE(server_ != nullptr);
 }
 
 // 콜백 등록 테스트
 TEST_F(BuilderTest, CallbackRegistration) {
-    int callback_count = 0;
+    uint16_t test_port = getTestPort();
+    std::atomic<int> callback_count{0};
     
-    auto server = builder::UnifiedBuilder::tcp_server(9030)
+    server_ = builder::UnifiedBuilder::tcp_server(test_port)
         .on_data([&callback_count](const std::string& data) {
             callback_count++;
         })
@@ -163,19 +289,26 @@ TEST_F(BuilderTest, CallbackRegistration) {
         })
         .build();
     
-    ASSERT_NE(server, nullptr);
+    ASSERT_NE(server_, nullptr);
     
-    // 정리
-    server->stop();
+    // 서버 시작
+    server_->start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    
+    // 서버가 생성되었는지 확인
+    EXPECT_TRUE(server_ != nullptr);
+    // 초기 상태에서는 콜백이 호출되지 않아야 함
+    EXPECT_EQ(callback_count.load(), 0);
 }
 
 // 빌더 재사용 테스트
 TEST_F(BuilderTest, BuilderReuse) {
-    auto builder = builder::UnifiedBuilder::tcp_server(9031);
+    uint16_t test_port = getTestPort();
+    auto builder = builder::UnifiedBuilder::tcp_server(test_port);
     
     // 첫 번째 서버
     auto server1 = builder
-        .auto_start(true)
+        .auto_start(false)
         .on_data([](const std::string& data) {})
         .build();
     
@@ -187,6 +320,15 @@ TEST_F(BuilderTest, BuilderReuse) {
     
     ASSERT_NE(server1, nullptr);
     ASSERT_NE(server2, nullptr);
+    
+    // 각각 시작
+    server1->start();
+    server2->start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    
+    // 각 서버가 생성되었는지 확인
+    EXPECT_TRUE(server1 != nullptr);
+    EXPECT_TRUE(server2 != nullptr);
     
     // 정리
     server1->stop();
