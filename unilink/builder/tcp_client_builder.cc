@@ -1,4 +1,5 @@
 #include "unilink/builder/tcp_client_builder.hpp"
+#include "unilink/builder/auto_initializer.hpp"
 
 namespace unilink {
 namespace builder {
@@ -7,6 +8,9 @@ TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
     : host_(host), port_(port), auto_start_(false), auto_manage_(false) {}
 
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
+    // 자동으로 IoContextManager 초기화
+    AutoInitializer::ensure_io_context_running();
+    
     auto client = std::make_unique<wrapper::TcpClient>(host_, port_);
     
     // Apply configuration
