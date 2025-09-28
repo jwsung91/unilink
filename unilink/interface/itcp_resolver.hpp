@@ -12,9 +12,9 @@ namespace net = boost::asio;
  * @brief An interface abstracting Boost.Asio's tcp::resolver for testability.
  * This is an internal interface used for dependency injection and mocking.
  */
-class ITcpResolver {
+class TcpResolverInterface {
  public:
-  virtual ~ITcpResolver() = default;
+  virtual ~TcpResolverInterface() = default;
 
   virtual void async_resolve(
       const std::string& host,

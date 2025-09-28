@@ -13,9 +13,9 @@ namespace net = boost::asio;
  * @brief An interface abstracting Boost.Asio's serial_port for testability.
  * This is an internal interface used for dependency injection and mocking.
  */
-class ISerialPort {
+class SerialPortInterface {
  public:
-  virtual ~ISerialPort() = default;
+  virtual ~SerialPortInterface() = default;
 
   virtual void open(const std::string& device,
                     boost::system::error_code& ec) = 0;

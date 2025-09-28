@@ -17,7 +17,7 @@ namespace transport {
 namespace net = boost::asio;
 
 using common::LinkState;
-using interface::ITcpSocket;
+using interface::TcpSocketInterface;
 using tcp = net::ip::tcp;
 
 class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
@@ -28,7 +28,7 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
 
   TcpServerSession(net::io_context& ioc, tcp::socket sock);
   // Constructor for testing with dependency injection
-  TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::ITcpSocket> socket);
+  TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket);
 
   void start();
   void async_write_copy(const uint8_t* data, size_t size);
@@ -44,7 +44,7 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
 
  private:
   net::io_context& ioc_;
-  std::unique_ptr<interface::ITcpSocket> socket_;
+  std::unique_ptr<interface::TcpSocketInterface> socket_;
   std::array<uint8_t, 4096> rx_{};
   std::deque<std::vector<uint8_t>> tx_;
   bool writing_ = false;

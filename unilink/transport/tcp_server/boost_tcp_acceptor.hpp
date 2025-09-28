@@ -14,7 +14,7 @@ namespace net = boost::asio;
  * @brief Boost.Asio implementation of ITcpAcceptor interface.
  * This is the real implementation used in production.
  */
-class BoostTcpAcceptor : public interface::ITcpAcceptor {
+class BoostTcpAcceptor : public interface::TcpAcceptorInterface {
  public:
   explicit BoostTcpAcceptor(net::io_context& ioc);
   ~BoostTcpAcceptor() override = default;

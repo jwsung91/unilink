@@ -12,9 +12,9 @@ namespace net = boost::asio;
  * @brief An interface abstracting Boost.Asio's tcp::socket for testability.
  * This is an internal interface used for dependency injection and mocking.
  */
-class ITcpSocket {
+class TcpSocketInterface {
  public:
-  virtual ~ITcpSocket() = default;
+  virtual ~TcpSocketInterface() = default;
 
   virtual void async_read_some(
       const net::mutable_buffer& buffer,

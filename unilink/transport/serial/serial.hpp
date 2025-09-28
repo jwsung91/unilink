@@ -16,7 +16,7 @@ namespace unilink {
 namespace transport {
 
 using interface::Channel;
-using interface::ISerialPort;
+using interface::SerialPortInterface;
 using common::LinkState;
 using config::SerialConfig;
 namespace net = boost::asio;
@@ -25,7 +25,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
  public:
   explicit Serial(const SerialConfig& cfg);
   // Constructor for testing with dependency injection
-  Serial(const SerialConfig& cfg, std::unique_ptr<interface::ISerialPort> port,
+  Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port,
          net::io_context& ioc);
   ~Serial() override;
 
@@ -55,7 +55,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
       work_guard_;
   std::thread ioc_thread_;
 
-  std::unique_ptr<interface::ISerialPort> port_;
+  std::unique_ptr<interface::SerialPortInterface> port_;
   SerialConfig cfg_;
   net::steady_timer retry_timer_;
 

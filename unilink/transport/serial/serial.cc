@@ -24,7 +24,7 @@ Serial::Serial(const SerialConfig& cfg)
 
 // For testing with dependency injection
 Serial::Serial(const SerialConfig& cfg,
-               std::unique_ptr<interface::ISerialPort> port,
+               std::unique_ptr<interface::SerialPortInterface> port,
                net::io_context& ioc)
     : ioc_(ioc),
       owns_ioc_(false),
