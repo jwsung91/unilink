@@ -1,6 +1,6 @@
 # 📘 unilink API Guide
 
-`unilink` is a unified, low-level asynchronous communication library. It provides a simple, consistent interface (`IChannel`) for various transport types, such as TCP (client/server) and Serial ports.
+`unilink` is a unified, high-level asynchronous communication library. It provides a simple, fluent Builder API for various transport types, such as TCP (client/server) and Serial ports.
 
 This guide explains how to use the library in your application.
 
@@ -8,16 +8,18 @@ This guide explains how to use the library in your application.
 
 ## 1. Core Components
 
-- **`unilink::create()`**: A factory function to create a communication channel. It takes a configuration struct and returns a `std::shared_ptr<IChannel>`.
-- **`unilink::IChannel`**: The main interface for interacting with the channel. Key methods are `start()`, `stop()`, and `async_write_copy()`.
-- **Configuration Structs**: Plain structs (`TcpClientConfig`, `TcpServerConfig`, `SerialConfig`) used to configure channel behavior, such as address, port, and retry logic.
-- **Callbacks**: `std::function` objects (`on_bytes`, `on_state`) set on an `IChannel` instance to receive data and state change events asynchronously.
+- **Builder API**: Fluent interface for creating and configuring communication channels
+- **`unilink::builder::UnifiedBuilder`**: Main entry point for creating builders
+- **`unilink::builder::TcpServerBuilder`**: Builder for TCP server channels
+- **`unilink::builder::TcpClientBuilder`**: Builder for TCP client channels  
+- **`unilink::builder::SerialBuilder`**: Builder for Serial port channels
+- **Callbacks**: `std::function` objects for handling data, state changes, and errors
 
 ---
 
-## 2. Initialization & Lifecycle
+## 2. Quick Start with Builder API
 
-The library manages its own background thread for I/O, so you don't need to handle `boost::asio::io_context`.
+The library provides a fluent Builder API that makes it easy to create and configure communication channels.
 
 ```cpp
 #include "unilink/unilink.hpp"
@@ -28,31 +30,30 @@ using namespace unilink;
 using namespace std::chrono_literals;
 
 int main() {
-    // 1. Configure the channel
-    TcpClientConfig cfg;
-    cfg.host = "127.0.0.1";
-    cfg.port = 9000;
-    cfg.retry_interval_ms = 2000; // Reconnect every 2s on failure
+    // 1. Create a TCP client using Builder API
+    auto client = unilink::builder::UnifiedBuilder::tcp_client("127.0.0.1", 9000)
+        .on_connect([]() {
+            std::cout << "Connected to server!" << std::endl;
+        })
+        .on_data([](const uint8_t* data, size_t len) {
+            std::string message(data, data + len);
+            std::cout << "Received: " << message << std::endl;
+        })
+        .on_error([](const std::string& error) {
+            std::cerr << "Error: " << error << std::endl;
+        })
+        .auto_start()  // Automatically start the connection
+        .build();
 
-    // 2. Create the channel
-    auto cli = unilink::create(cfg);
-
-    // 3. Set callbacks for events
-    cli->on_state( {
-        log_message("[client]", "STATE", to_cstr(s));
-    });
-    cli->on_bytes( {
-        // Handle received data
-    });
-
-    // 4. Start the channel (starts background I/O thread)
-    cli->start();
+    // 2. Send data
+    std::string message = "Hello, Server!";
+    client->send(message);
 
     // ... Application logic ...
     std::this_thread::sleep_for(10s);
 
-    // 5. Stop the channel and clean up
-    cli->stop();
+    // 3. Stop the client (automatic cleanup)
+    client->stop();
 
     return 0;
 }
@@ -60,151 +61,216 @@ int main() {
 
 ---
 
-## 3. Connection State & Reconnection
+## 3. Builder API Examples
 
-Connection status is delivered asynchronously via the `on_state` callback.
-
-- **`LinkState`**: An enum class representing the channel's state (`Idle`, `Connecting`, `Listening`, `Connected`, `Closed`, `Error`).
-- **Reconnection**: For client and serial channels, you can enable automatic reconnection by setting `retry_interval_ms` in the config struct. If the connection is lost, the channel will enter the `Connecting` state and attempt to reconnect periodically.
-
----
-
-## 4. Sending & Receiving Data
-
-### Send
-
-The `async_write_copy` method is thread-safe. It copies the data into an internal queue and sends it on the I/O thread.
+### TCP Server
 
 ```cpp
-std::string msg = "hello\n";
-cli->async_write_copy(
-    reinterpret_cast<const uint8_t*>(msg.data()),
-    msg.size()
-);
+// Create a TCP server
+auto server = unilink::builder::UnifiedBuilder::tcp_server(8080)
+    .on_connect([]() {
+        std::cout << "Client connected!" << std::endl;
+    })
+    .on_data([](const uint8_t* data, size_t len) {
+        std::string message(data, data + len);
+        std::cout << "Server received: " << message << std::endl;
+    })
+    .on_disconnect([]() {
+        std::cout << "Client disconnected!" << std::endl;
+    })
+    .auto_start()
+    .build();
+
+// Send data to connected clients
+server->send("Welcome to the server!");
 ```
 
-### Receive via Callback
+### TCP Client
 
 ```cpp
-class MyHandler : public ICommHandler {
-public:
-  void on_open() override        { /* connected */ }
-  void on_close() override       { /* disconnected */ }
-  void on_write(size_t n) override { /* bytes sent */ }
-  void on_error(std::error_code ec, std::string_view where) override { /* logging */ }
+// Create a TCP client
+auto client = unilink::builder::UnifiedBuilder::tcp_client("127.0.0.1", 8080)
+    .on_connect([]() {
+        std::cout << "Connected to server!" << std::endl;
+    })
+    .on_data([](const uint8_t* data, size_t len) {
+        std::string message(data, data + len);
+        std::cout << "Client received: " << message << std::endl;
+    })
+    .on_error([](const std::string& error) {
+        std::cerr << "Connection error: " << error << std::endl;
+    })
+    .auto_start()
+    .build();
 
-  void on_receive(const uint8_t* data, size_t len) override {
-      // Data valid only during callback → copy if needed
-      buffer_.append(reinterpret_cast<const char*>(data), len);
-      parse_frames();
-  }
-private:
-  std::string buffer_;
-  void parse_frames() {
-      size_t pos;
-      while ((pos = buffer_.find('\n')) != std::string::npos) {
-          std::string frame = buffer_.substr(0, pos);
-          buffer_.erase(0, pos + 1);
-          handle_frame(frame);
-      }
-  }
-  void handle_frame(const std::string& f) {
-      std::cout << "[frame] " << f << "\n";
-  }
-};
+// Send data to server
+client->send("Hello from client!");
 ```
 
----
-
-## 4) Threading Model
-
-- All I/O callbacks run **inside a strand**, ensuring **order and no race conditions**.
-- Upper app may block on `std::future::wait()` safely → I/O still runs in the networking thread.
-- If the app needs to consume data in another thread, use a **thread-safe queue** inside `on_receive`.
-
----
-
-## 5) Error Handling
-
-- All errors go to `on_error(ec, where)` where `where ∈ {"resolve","connect","read","write"}`.
-- Then the client invokes `close()` → `on_close()`.
-- If reconnect delay > 0, a timer schedules a reconnect attempt.
-
----
-
-## 6) Request-Response Wrapping (Optional)
-
-Applications can implement request/response patterns using **InflightTable + promise/future**.
-
-### Example
+### Serial Port
 
 ```cpp
-struct Requester {
-  std::mutex m;
-  std::atomic<uint32_t> seq{1};
-  std::unordered_map<uint32_t, std::promise<std::string>> inflight;
+// Create a Serial port connection
+auto serial = unilink::builder::UnifiedBuilder::serial("/dev/ttyUSB0", 9600)
+    .on_connect([]() {
+        std::cout << "Serial port opened!" << std::endl;
+    })
+    .on_data([](const uint8_t* data, size_t len) {
+        std::string message(data, data + len);
+        std::cout << "Serial received: " << message << std::endl;
+    })
+    .on_error([](const std::string& error) {
+        std::cerr << "Serial error: " << error << std::endl;
+    })
+    .auto_start()
+    .build();
 
-  uint32_t send(TcpClient& cli, std::string_view payload) {
-    uint32_t s = seq++;
-    {
-      std::lock_guard<std::mutex> lk(m);
-      inflight.emplace(s, std::promise<std::string>{});
-    }
-    std::string msg = std::to_string(s) + ":" + std::string(payload) + "\n";
-    cli.write((const uint8_t*)msg.data(), msg.size());
-    return s;
-  }
-
-  std::future<std::string> get_future(uint32_t s) {
-    std::lock_guard<std::mutex> lk(m);
-    return inflight.at(s).get_future();
-  }
-
-  void fulfill(uint32_t s, std::string_view resp) {
-    std::lock_guard<std::mutex> lk(m);
-    if (inflight.count(s)) {
-      inflight[s].set_value(std::string(resp));
-      inflight.erase(s);
-    }
-  }
-};
-```
-
-Inside `on_receive`:
-
-```cpp
-// parse frame "SEQ:payload"
-uint32_t s = ...; std::string_view resp = ...;
-rq.fulfill(s, resp);
-```
-
-Usage in app:
-
-```cpp
-uint32_t seq = rq.send(*cli, "PING");
-auto fut = rq.get_future(seq);
-
-if (fut.wait_for(3s) == std::future_status::ready) {
-    std::string resp = fut.get(); // e.g. "PONG"
-}
+// Send data to serial port
+serial->send("AT\r\n");
 ```
 
 ---
 
-## 7) FAQ
+## 4. Advanced Builder Configuration
 
-- **Do I call read()?** → No, data always arrives via `on_receive()`.
-- **How are frames separated?** → App must parse framing (delimiter, length-prefix, etc.).
-- **Is it thread-safe?** → Inside the client, yes (strand). For shared data in your app, use your own sync.
-- **Reconnect policy?** → Simple fixed delay. You can extend to exponential backoff.
+### Manual Control (without auto_start)
+
+```cpp
+auto client = unilink::builder::UnifiedBuilder::tcp_client("127.0.0.1", 8080)
+    .on_connect([]() { std::cout << "Connected!" << std::endl; })
+    .on_data([](const uint8_t* data, size_t len) {
+        // Handle received data
+    })
+    .build();
+
+// Manual start/stop control
+client->start();
+// ... do work ...
+client->stop();
+```
+
+### Configuration Options
+
+```cpp
+auto server = unilink::builder::UnifiedBuilder::tcp_server(8080)
+    .on_connect([]() { std::cout << "Client connected!" << std::endl; })
+    .on_data([](const uint8_t* data, size_t len) {
+        // Handle received data
+    })
+    .retry_interval(2000)  // 2 second retry interval
+    .auto_manage()         // Automatic resource management
+    .build();
+```
+
+### Convenience Functions
+
+```cpp
+// Short form builders
+auto server = unilink::server(8080)
+    .on_connect([]() { std::cout << "Connected!" << std::endl; })
+    .auto_start()
+    .build();
+
+auto client = unilink::client("127.0.0.1", 8080)
+    .on_data([](const uint8_t* data, size_t len) {
+        std::string message(data, data + len);
+        std::cout << "Received: " << message << std::endl;
+    })
+    .auto_start()
+    .build();
+
+auto serial = unilink::serial_port("/dev/ttyUSB0", 9600)
+    .on_connect([]() { std::cout << "Serial opened!" << std::endl; })
+    .auto_start()
+    .build();
+```
 
 ---
 
-## 8) Checklist
+## 5. Threading Model
 
-- [ ] Simple API: `open/close/write/reconnect_delay`
-- [ ] Async callbacks: `on_open/on_close/on_receive/on_write/on_error`
-- [ ] Independent of upper futures/wait (no freezing, runs in background thread)
-- [ ] Request-response support via promise/future wrapper
-- [ ] Race-free I/O (strand)
-- [ ] Reconnect support (timer-based)
+- All I/O callbacks run **inside a strand**, ensuring **order and no race conditions**
+- The library manages its own background thread for I/O operations
+- Your application can safely block on `std::future::wait()` without freezing I/O
+- For multi-threaded data consumption, use thread-safe queues inside callbacks
+
+---
+
+## 6. Error Handling
+
+- All errors are delivered via the `on_error` callback
+- Automatic reconnection is available for client and serial connections
+- Connection state changes are reported through `on_connect` and `on_disconnect` callbacks
+
+---
+
+## 7. Best Practices
+
+### Resource Management
+
+```cpp
+// Use auto_manage() for automatic cleanup
+auto client = unilink::client("127.0.0.1", 8080)
+    .on_connect([]() { std::cout << "Connected!" << std::endl; })
+    .auto_manage()  // Automatic resource management
+    .build();
+```
+
+### Error Handling
+
+```cpp
+auto client = unilink::client("127.0.0.1", 8080)
+    .on_error([](const std::string& error) {
+        std::cerr << "Connection error: " << error << std::endl;
+        // Handle error appropriately
+    })
+    .build();
+```
+
+### Data Processing
+
+```cpp
+auto client = unilink::client("127.0.0.1", 8080)
+    .on_data([](const uint8_t* data, size_t len) {
+        // Process data immediately or queue for later processing
+        std::string message(data, data + len);
+        process_message(message);
+    })
+    .build();
+```
+
+---
+
+## 8. Migration from Low-Level API
+
+If you were using the previous low-level API, here's how to migrate:
+
+### Before (Low-Level API)
+```cpp
+TcpClientConfig cfg;
+cfg.host = "127.0.0.1";
+cfg.port = 8080;
+auto client = unilink::create(cfg);
+client->on_state([](LinkState state) { /* ... */ });
+client->on_bytes([](const uint8_t* data, size_t len) { /* ... */ });
+client->start();
+```
+
+### After (Builder API)
+```cpp
+auto client = unilink::client("127.0.0.1", 8080)
+    .on_connect([]() { /* connected */ })
+    .on_data([](const uint8_t* data, size_t len) { /* ... */ })
+    .auto_start()
+    .build();
+```
+
+---
+
+## 9. FAQ
+
+- **Q: Do I need to call read()?** → No, data arrives via `on_data` callback
+- **Q: How are frames separated?** → You must implement your own framing logic
+- **Q: Is it thread-safe?** → Yes, all I/O operations are thread-safe
+- **Q: What about reconnection?** → Automatic reconnection is built-in for clients and serial ports
+- **Q: Can I use multiple channels?** → Yes, create multiple builder instances
