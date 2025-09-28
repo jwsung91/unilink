@@ -16,15 +16,18 @@ int main(int argc, char** argv) {
   auto ul = unilink::builder::UnifiedBuilder::serial(dev, 115200)
       .auto_start(false)
       .on_connect([&]() {
-          unilink::log_message("[serial]", "STATE", "Connected");
+          unilink::log_message("[serial]", "STATE", "Serial device connected");
           connected = true;
       })
       .on_disconnect([&]() {
-          unilink::log_message("[serial]", "STATE", "Disconnected");
+          unilink::log_message("[serial]", "STATE", "Serial device disconnected");
           connected = false;
       })
       .on_data([&](const std::string& data) {
           unilink::log_message("[serial]", "RX", data);
+      })
+      .on_error([&](const std::string& error) {
+          unilink::log_message("[serial]", "ERROR", error);
       })
       .build();
 
