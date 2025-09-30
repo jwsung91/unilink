@@ -10,6 +10,7 @@
 
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_socket.hpp"
+#include "unilink/common/constants.hpp"
 
 namespace unilink {
 namespace transport {
@@ -45,11 +46,11 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
  private:
   net::io_context& ioc_;
   std::unique_ptr<interface::TcpSocketInterface> socket_;
-  std::array<uint8_t, 4096> rx_{};
+  std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<std::vector<uint8_t>> tx_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
-  const size_t bp_high_ = 1 << 20;  // 1 MiB
+  const size_t bp_high_ = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
 
   OnBytes on_bytes_;
   OnBackpressure on_bp_;

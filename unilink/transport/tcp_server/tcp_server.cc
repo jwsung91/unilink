@@ -171,8 +171,10 @@ void TcpServer::notify_state() {
   if (on_state_) {
     try {
       on_state_(state_);
+    } catch (const std::exception& e) {
+      std::cerr << "TcpServer state callback error: " << e.what() << std::endl;
     } catch (...) {
-      // Ignore exceptions from callbacks during shutdown
+      std::cerr << "TcpServer state callback: Unknown error occurred" << std::endl;
     }
   }
 }

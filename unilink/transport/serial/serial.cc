@@ -248,7 +248,15 @@ void Serial::close_port() {
 }
 
 void Serial::notify_state() {
-  if (on_state_) on_state_(state_);
+  if (on_state_) {
+    try {
+      on_state_(state_);
+    } catch (const std::exception& e) {
+      std::cerr << "Serial state callback error: " << e.what() << std::endl;
+    } catch (...) {
+      std::cerr << "Serial state callback: Unknown error occurred" << std::endl;
+    }
+  }
 }
 
 }  // namespace transport
