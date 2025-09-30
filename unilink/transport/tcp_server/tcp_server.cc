@@ -62,35 +62,37 @@ void TcpServer::start() {
   if (owns_ioc_) {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
-  net::post(ioc_, [this] {
+  auto self = shared_from_this();
+  net::post(ioc_, [self] {
     boost::system::error_code ec;
-    acceptor_->open(tcp::v4(), ec);
+    self->acceptor_->open(tcp::v4(), ec);
     if (!ec) {
-      acceptor_->bind(tcp::endpoint(tcp::v4(), cfg_.port), ec);
+      self->acceptor_->bind(tcp::endpoint(tcp::v4(), self->cfg_.port), ec);
     }
     if (!ec) {
-      acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
+      self->acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
     }
     if (ec) {
       std::cout << ts_now() << "[server] bind error: " << ec.message() << std::endl;
-      state_ = LinkState::Error;
-      notify_state();
+      self->state_ = LinkState::Error;
+      self->notify_state();
       return;
     }
-    state_ = LinkState::Listening;
-    notify_state();
-    do_accept();
+    self->state_ = LinkState::Listening;
+    self->notify_state();
+    self->do_accept();
   });
 }
 
 void TcpServer::stop() {
   if (owns_ioc_ && ioc_thread_.joinable()) {
-    net::post(ioc_, [this] {
+    auto self = shared_from_this();
+    net::post(ioc_, [self] {
       boost::system::error_code ec;
-      if (acceptor_ && acceptor_->is_open()) {
-        acceptor_->close(ec);
+      if (self->acceptor_ && self->acceptor_->is_open()) {
+        self->acceptor_->close(ec);
       }
-      if (sess_) sess_.reset();
+      if (self->sess_) self->sess_.reset();
     });
     ioc_.stop();
     ioc_thread_.join();
@@ -152,7 +154,7 @@ void TcpServer::do_accept() {
     }
 
     self->sess_ =
-        std::make_shared<TcpServerSession>(self->ioc_, std::move(sock));
+        std::make_shared<TcpServerSession>(self->ioc_, std::move(sock), self->cfg_.backpressure_threshold);
     if (self->on_bytes_) self->sess_->on_bytes(self->on_bytes_);
     if (self->on_bp_) self->sess_->on_backpressure(self->on_bp_);
     self->sess_->on_close([self] {
@@ -171,8 +173,10 @@ void TcpServer::notify_state() {
   if (on_state_) {
     try {
       on_state_(state_);
+    } catch (const std::exception& e) {
+      std::cerr << "TcpServer state callback error: " << e.what() << std::endl;
     } catch (...) {
-      // Ignore exceptions from callbacks during shutdown
+      std::cerr << "TcpServer state callback: Unknown error occurred" << std::endl;
     }
   }
 }

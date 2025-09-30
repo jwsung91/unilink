@@ -11,6 +11,7 @@
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/iserial_port.hpp"
+#include "unilink/common/constants.hpp"
 
 namespace unilink {
 namespace transport {
@@ -63,7 +64,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   std::deque<std::vector<uint8_t>> tx_;
   bool writing_ = false;
   size_t queued_bytes_ = 0;
-  const size_t bp_high_ = 1 << 20;
+  size_t bp_high_;  // Configurable backpressure threshold
 
   OnBytes on_bytes_;
   OnState on_state_;

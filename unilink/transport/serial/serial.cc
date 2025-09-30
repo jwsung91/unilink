@@ -17,7 +17,12 @@ Serial::Serial(const SerialConfig& cfg)
     : ioc_(common::IoContextManager::instance().get_context()),
       owns_ioc_(true),  // Set to true to run io_context in our own thread
       cfg_(cfg),
-      retry_timer_(ioc_) {
+      retry_timer_(ioc_),
+      bp_high_(cfg.backpressure_threshold) {
+  // Validate and clamp configuration
+  cfg_.validate_and_clamp();
+  bp_high_ = cfg_.backpressure_threshold;
+  
   rx_.resize(cfg_.read_chunk);
   port_ = std::make_unique<BoostSerialPort>(ioc_);
 }
@@ -30,7 +35,12 @@ Serial::Serial(const SerialConfig& cfg,
       owns_ioc_(false),
       port_(std::move(port)),
       cfg_(cfg),
-      retry_timer_(ioc_) {
+      retry_timer_(ioc_),
+      bp_high_(cfg.backpressure_threshold) {
+  // Validate and clamp configuration
+  cfg_.validate_and_clamp();
+  bp_high_ = cfg_.backpressure_threshold;
+  
   rx_.resize(cfg_.read_chunk);
 }
 
@@ -248,7 +258,15 @@ void Serial::close_port() {
 }
 
 void Serial::notify_state() {
-  if (on_state_) on_state_(state_);
+  if (on_state_) {
+    try {
+      on_state_(state_);
+    } catch (const std::exception& e) {
+      std::cerr << "Serial state callback error: " << e.what() << std::endl;
+    } catch (...) {
+      std::cerr << "Serial state callback: Unknown error occurred" << std::endl;
+    }
+  }
 }
 
 }  // namespace transport

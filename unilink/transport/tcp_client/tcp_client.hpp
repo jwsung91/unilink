@@ -11,6 +11,7 @@
 
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/common/constants.hpp"
 
 namespace unilink {
 namespace transport {
@@ -49,7 +50,7 @@ class TcpClient : public Channel,
   void notify_state();
 
  private:
-  net::io_context* ioc_;
+  std::unique_ptr<net::io_context> ioc_;
   std::thread ioc_thread_;
   bool owns_ioc_ = true;
 
@@ -58,11 +59,11 @@ class TcpClient : public Channel,
   TcpClientConfig cfg_;
   net::steady_timer retry_timer_;
 
-  std::array<uint8_t, 4096> rx_{};
+  std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<std::vector<uint8_t>> tx_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
-  const size_t bp_high_ = 1 << 20;  // 1 MiB
+  size_t bp_high_;  // Configurable backpressure threshold
 
   OnBytes on_bytes_;
   OnState on_state_;

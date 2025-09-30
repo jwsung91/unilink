@@ -9,11 +9,13 @@ namespace transport {
 
 using namespace common;
 
-TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock)
-    : ioc_(ioc), socket_(std::make_unique<BoostTcpSocket>(std::move(sock))) {}
+TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_t backpressure_threshold)
+    : ioc_(ioc), socket_(std::make_unique<BoostTcpSocket>(std::move(sock))), 
+      writing_(false), queue_bytes_(0), bp_high_(backpressure_threshold), alive_(false) {}
 
-TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket)
-    : ioc_(ioc), socket_(std::move(socket)) {}
+TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket, size_t backpressure_threshold)
+    : ioc_(ioc), socket_(std::move(socket)), 
+      writing_(false), queue_bytes_(0), bp_high_(backpressure_threshold), alive_(false) {}
 
 void TcpServerSession::start() { start_read(); }
 

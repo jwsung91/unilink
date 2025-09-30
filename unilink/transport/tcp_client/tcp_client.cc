@@ -14,17 +14,27 @@ using namespace config;
 using tcp = net::ip::tcp;
 
 TcpClient::TcpClient(const TcpClientConfig& cfg)
-    : ioc_(new net::io_context()), 
-      resolver_(*ioc_), socket_(*ioc_), cfg_(cfg), retry_timer_(*ioc_), owns_ioc_(true) {}
+    : ioc_(std::make_unique<net::io_context>()), 
+      resolver_(*ioc_), socket_(*ioc_), cfg_(cfg), retry_timer_(*ioc_), owns_ioc_(true),
+      bp_high_(cfg.backpressure_threshold) {
+  // Validate and clamp configuration
+  cfg_.validate_and_clamp();
+  bp_high_ = cfg_.backpressure_threshold;
+}
 
 TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
-    : ioc_(&ioc), 
-      resolver_(ioc), socket_(ioc), cfg_(cfg), retry_timer_(ioc), owns_ioc_(false) {
+    : ioc_(nullptr), 
+      resolver_(ioc), socket_(ioc), cfg_(cfg), retry_timer_(ioc), owns_ioc_(false),
+      bp_high_(cfg.backpressure_threshold) {
   // Initialize state
   state_ = LinkState::Idle;
   connected_ = false;
   writing_ = false;
   queue_bytes_ = 0;
+  
+  // Validate and clamp configuration
+  cfg_.validate_and_clamp();
+  bp_high_ = cfg_.backpressure_threshold;
 }
 
 TcpClient::~TcpClient() {
@@ -42,23 +52,22 @@ TcpClient::~TcpClient() {
   writing_ = false;
   
   // Clean up thread if still running and we own the io_context
-  if (owns_ioc_ && ioc_thread_.joinable()) {
+  if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
     try {
       ioc_->stop();
       ioc_thread_.join();
+    } catch (const std::exception& e) {
+      std::cerr << "TcpClient destructor error: " << e.what() << std::endl;
     } catch (...) {
-      // Ignore exceptions during destruction
+      std::cerr << "TcpClient destructor: Unknown error occurred" << std::endl;
     }
   }
   
-  // Delete io_context if we own it
-  if (owns_ioc_) {
-    delete ioc_;
-  }
+  // io_context is automatically deleted by unique_ptr
 }
 
 void TcpClient::start() {
-  if (owns_ioc_) {
+  if (owns_ioc_ && ioc_) {
     // Create our own thread for this io_context
     ioc_thread_ = std::thread([this]() {
       try {
@@ -69,11 +78,13 @@ void TcpClient::start() {
     });
   }
   
-  net::post(*ioc_, [this] {
-    state_ = LinkState::Connecting;
-    notify_state();
-    do_resolve_connect();
-  });
+  if (ioc_) {
+    net::post(*ioc_, [this] {
+      state_ = LinkState::Connecting;
+      notify_state();
+      do_resolve_connect();
+    });
+  }
 }
 
 void TcpClient::stop() {
@@ -81,33 +92,39 @@ void TcpClient::stop() {
   state_ = LinkState::Closed;
   
   // Post cleanup work to io_context
-  net::post(*ioc_, [this] {
-    try {
-      retry_timer_.cancel();
-      close_socket();
-      // Clear any pending write operations
-      tx_.clear();
-      queue_bytes_ = 0;
-      writing_ = false;
-    } catch (...) {
-      // Ignore exceptions during cleanup
-    }
-  });
+  if (ioc_) {
+    net::post(*ioc_, [this] {
+      try {
+        retry_timer_.cancel();
+        close_socket();
+        // Clear any pending write operations
+        tx_.clear();
+        queue_bytes_ = 0;
+        writing_ = false;
+      } catch (...) {
+        // Ignore exceptions during cleanup
+      }
+    });
+  }
   
   // Stop io_context and wait for thread to finish only if we own it
-  if (owns_ioc_ && ioc_thread_.joinable()) {
+  if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
     try {
       ioc_->stop();
       ioc_thread_.join();
+    } catch (const std::exception& e) {
+      std::cerr << "TcpClient stop error: " << e.what() << std::endl;
     } catch (...) {
-      // Ignore exceptions during cleanup
+      std::cerr << "TcpClient stop: Unknown error occurred" << std::endl;
     }
   }
   
   try {
     notify_state();
+  } catch (const std::exception& e) {
+    std::cerr << "TcpClient state notification error: " << e.what() << std::endl;
   } catch (...) {
-    // Ignore exceptions during state notification
+    std::cerr << "TcpClient state notification: Unknown error occurred" << std::endl;
   }
 }
 
@@ -115,7 +132,7 @@ bool TcpClient::is_connected() const { return connected_; }
 
 void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   // Don't queue writes if client is stopped or in error state
-  if (state_ == LinkState::Closed || state_ == LinkState::Error) {
+  if (state_ == LinkState::Closed || state_ == LinkState::Error || !ioc_) {
     return;
   }
   
