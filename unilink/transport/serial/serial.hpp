@@ -64,7 +64,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   std::deque<std::vector<uint8_t>> tx_;
   bool writing_ = false;
   size_t queued_bytes_ = 0;
-  const size_t bp_high_ = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  size_t bp_high_;  // Configurable backpressure threshold
 
   OnBytes on_bytes_;
   OnState on_state_;

@@ -15,16 +15,26 @@ using tcp = net::ip::tcp;
 
 TcpClient::TcpClient(const TcpClientConfig& cfg)
     : ioc_(std::make_unique<net::io_context>()), 
-      resolver_(*ioc_), socket_(*ioc_), cfg_(cfg), retry_timer_(*ioc_), owns_ioc_(true) {}
+      resolver_(*ioc_), socket_(*ioc_), cfg_(cfg), retry_timer_(*ioc_), owns_ioc_(true),
+      bp_high_(cfg.backpressure_threshold) {
+  // Validate and clamp configuration
+  cfg_.validate_and_clamp();
+  bp_high_ = cfg_.backpressure_threshold;
+}
 
 TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
     : ioc_(nullptr), 
-      resolver_(ioc), socket_(ioc), cfg_(cfg), retry_timer_(ioc), owns_ioc_(false) {
+      resolver_(ioc), socket_(ioc), cfg_(cfg), retry_timer_(ioc), owns_ioc_(false),
+      bp_high_(cfg.backpressure_threshold) {
   // Initialize state
   state_ = LinkState::Idle;
   connected_ = false;
   writing_ = false;
   queue_bytes_ = 0;
+  
+  // Validate and clamp configuration
+  cfg_.validate_and_clamp();
+  bp_high_ = cfg_.backpressure_threshold;
 }
 
 TcpClient::~TcpClient() {

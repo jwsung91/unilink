@@ -27,9 +27,9 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
   using OnBackpressure = interface::Channel::OnBackpressure;
   using OnClose = std::function<void()>;
 
-  TcpServerSession(net::io_context& ioc, tcp::socket sock);
+  TcpServerSession(net::io_context& ioc, tcp::socket sock, size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
   // Constructor for testing with dependency injection
-  TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket);
+  TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket, size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
 
   void start();
   void async_write_copy(const uint8_t* data, size_t size);
@@ -50,7 +50,7 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
   std::deque<std::vector<uint8_t>> tx_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
-  const size_t bp_high_ = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  size_t bp_high_;  // Configurable backpressure threshold
 
   OnBytes on_bytes_;
   OnBackpressure on_bp_;
