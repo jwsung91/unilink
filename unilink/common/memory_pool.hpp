@@ -32,6 +32,16 @@ public:
         size_t max_pool_size{0};
         std::chrono::milliseconds total_allocation_time{0};
         std::chrono::milliseconds total_deallocation_time{0};
+        
+        // Performance metrics
+        double average_allocation_time_ms{0.0};
+        double average_deallocation_time_ms{0.0};
+        size_t peak_memory_usage{0};
+        size_t current_memory_usage{0};
+        
+        // Hit rate by buffer size
+        std::unordered_map<size_t, size_t> hits_by_size;
+        std::unordered_map<size_t, size_t> misses_by_size;
     };
 
     struct BufferInfo {
@@ -109,6 +119,32 @@ public:
      */
     std::pair<size_t, size_t> get_memory_usage() const;
 
+    /**
+     * @brief Auto-tune pool based on usage patterns
+     * Analyzes hit rates and adjusts pool configuration
+     */
+    void auto_tune();
+
+    /**
+     * @brief Get detailed performance metrics
+     * @return PoolStats with enhanced metrics
+     */
+    PoolStats get_detailed_stats() const;
+
+    /**
+     * @brief Optimize pool for specific buffer size
+     * @param size Buffer size to optimize for
+     * @param target_hit_rate Target hit rate (0.0 to 1.0)
+     */
+    void optimize_for_size(size_t size, double target_hit_rate = 0.8);
+
+    /**
+     * @brief Get hit rate for specific buffer size
+     * @param size Buffer size
+     * @return Hit rate for that size
+     */
+    double get_hit_rate_for_size(size_t size) const;
+
 private:
     struct PoolBucket {
         std::vector<BufferInfo> buffers;
@@ -160,6 +196,17 @@ private:
     std::vector<PoolBucket> buckets_;
     size_t max_pool_size_;
     std::atomic<size_t> current_total_buffers_{0};
+    
+    // Performance optimization
+    std::atomic<size_t> total_memory_allocated_{0};
+    std::atomic<size_t> peak_memory_usage_{0};
+    std::chrono::steady_clock::time_point last_auto_tune_;
+    std::atomic<bool> auto_tune_enabled_{true};
+    
+    // Dynamic sizing
+    std::unordered_map<size_t, size_t> size_usage_count_;
+    std::unordered_map<size_t, double> size_hit_rates_;
+    mutable std::mutex usage_mutex_;
     
     // Predefined bucket sizes
     static constexpr std::array<size_t, 4> BUCKET_SIZES = {

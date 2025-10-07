@@ -45,6 +45,11 @@ add_executable(run_memory_pool_tests
     test_memory_pool.cc
 )
 
+# Define the memory pool performance test executable
+add_executable(run_memory_pool_performance_tests
+    test_memory_pool_performance.cc
+)
+
 # Note: IoContext management tests are now integrated into run_builder_tests
 
 # Link the core test executable against our library and GoogleTest
@@ -111,6 +116,14 @@ target_link_libraries(run_memory_pool_tests
     GTest::gmock
 )
 
+# Link the memory pool performance test executable
+target_link_libraries(run_memory_pool_performance_tests
+    PRIVATE
+    unilink
+    GTest::gtest_main
+    GTest::gmock
+)
+
 # Note: IoContext management tests are now integrated into run_builder_tests
 
 # Discover and add tests to CTest
@@ -123,6 +136,7 @@ gtest_discover_tests(run_simple_server_tests)
 gtest_discover_tests(run_architecture_tests)
 gtest_discover_tests(run_communication_tests)
 gtest_discover_tests(run_memory_pool_tests)
+gtest_discover_tests(run_memory_pool_performance_tests)
 # Note: IoContext management tests are now integrated into run_builder_tests
 
 # Enable sanitizers for debugging memory errors and undefined behavior.

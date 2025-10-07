@@ -27,6 +27,12 @@ MemoryPool::MemoryPool(size_t initial_pool_size, size_t max_pool_size)
 std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
     auto start_time = std::chrono::steady_clock::now();
     
+    // Track usage for auto-tuning
+    {
+        std::lock_guard<std::mutex> usage_lock(usage_mutex_);
+        size_usage_count_[size]++;
+    }
+    
     PoolBucket& bucket = get_bucket(size);
     std::lock_guard<std::mutex> lock(bucket.mutex);
     
@@ -46,7 +52,9 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         {
             std::lock_guard<std::mutex> stats_lock(stats_mutex_);
             stats_.pool_hits++;
+            stats_.total_allocations++;
             stats_.total_allocation_time += duration;
+            stats_.hits_by_size[size]++;
         }
         
         return std::move(it->data);
@@ -60,10 +68,24 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         {
             std::lock_guard<std::mutex> stats_lock(stats_mutex_);
             stats_.pool_misses++;
+            stats_.total_allocations++;
             stats_.total_allocation_time += duration;
+            stats_.misses_by_size[size]++;
         }
         
-        return create_buffer(bucket.size);
+        auto buffer = create_buffer(bucket.size);
+        
+        // Track memory allocation
+        if (buffer) {
+            total_memory_allocated_ += size;
+            size_t current_peak = peak_memory_usage_.load();
+            while (total_memory_allocated_ > current_peak && 
+                   !peak_memory_usage_.compare_exchange_weak(current_peak, total_memory_allocated_)) {
+                // Retry until we successfully update the peak
+            }
+        }
+        
+        return buffer;
     }
 }
 
@@ -89,6 +111,9 @@ void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
         
         bucket.buffers.push_back(std::move(info));
         current_total_buffers_++;
+        
+        // Update memory tracking
+        total_memory_allocated_ -= size;
     }
     // If pool is full, let the buffer be destroyed automatically
     
@@ -116,9 +141,10 @@ MemoryPool::PoolStats MemoryPool::get_stats() const {
         total_misses += bucket.misses.load();
     }
     
-    result.pool_hits = total_hits;
-    result.pool_misses = total_misses;
-    result.total_allocations = total_hits + total_misses;
+    // Use the higher value between stats_ and bucket totals
+    result.pool_hits = std::max(result.pool_hits, total_hits);
+    result.pool_misses = std::max(result.pool_misses, total_misses);
+    result.total_allocations = result.pool_hits + result.pool_misses;
     
     return result;
 }
@@ -156,12 +182,13 @@ std::pair<size_t, size_t> MemoryPool::get_memory_usage() const {
         std::lock_guard<std::mutex> lock(bucket.mutex);
         
         for (const auto& buffer : bucket.buffers) {
-            total_memory += buffer.size;
             if (buffer.in_use) {
                 used_memory += buffer.size;
             }
         }
     }
+    
+    total_memory = total_memory_allocated_.load();
     
     return {used_memory, total_memory};
 }
@@ -260,6 +287,93 @@ PooledBuffer& PooledBuffer::operator=(PooledBuffer&& other) noexcept {
         other.pool_ = nullptr;
     }
     return *this;
+}
+
+// ============================================================================
+// Performance Optimization Methods
+// ============================================================================
+
+void MemoryPool::auto_tune() {
+    if (!auto_tune_enabled_.load()) {
+        return;
+    }
+    
+    std::lock_guard<std::mutex> usage_lock(usage_mutex_);
+    
+    // Analyze usage patterns and adjust pool configuration
+    for (const auto& [size, count] : size_usage_count_) {
+        if (count > 100) { // Only tune for frequently used sizes
+            double hit_rate = get_hit_rate_for_size(size);
+            
+            if (hit_rate < 0.5) { // Low hit rate, increase pool size
+                optimize_for_size(size, 0.8);
+            }
+        }
+    }
+}
+
+MemoryPool::PoolStats MemoryPool::get_detailed_stats() const {
+    std::lock_guard<std::mutex> stats_lock(stats_mutex_);
+    PoolStats detailed_stats = stats_;
+    
+    // Calculate averages
+    if (detailed_stats.total_allocations > 0) {
+        detailed_stats.average_allocation_time_ms = 
+            static_cast<double>(detailed_stats.total_allocation_time.count()) / 
+            detailed_stats.total_allocations;
+    }
+    
+    if (detailed_stats.pool_hits + detailed_stats.pool_misses > 0) {
+        detailed_stats.average_deallocation_time_ms = 
+            static_cast<double>(detailed_stats.total_deallocation_time.count()) / 
+            (detailed_stats.pool_hits + detailed_stats.pool_misses);
+    }
+    
+    // Update memory usage
+    detailed_stats.current_memory_usage = total_memory_allocated_.load();
+    detailed_stats.peak_memory_usage = peak_memory_usage_.load();
+    
+    return detailed_stats;
+}
+
+void MemoryPool::optimize_for_size(size_t size, double target_hit_rate) {
+    PoolBucket& bucket = get_bucket(size);
+    std::lock_guard<std::mutex> lock(bucket.mutex);
+    
+    // Calculate current hit rate for this size
+    double current_hit_rate = get_hit_rate_for_size(size);
+    
+    if (current_hit_rate < target_hit_rate) {
+        // Increase pool size for this bucket
+        size_t current_size = bucket.buffers.size();
+        size_t target_size = static_cast<size_t>(current_size * 1.5); // 50% increase
+        
+        // Add more buffers to the pool
+        for (size_t i = current_size; i < target_size && i < max_pool_size_ / BUCKET_SIZES.size(); ++i) {
+            BufferInfo info;
+            info.data = std::make_unique<uint8_t[]>(size);
+            info.size = size;
+            info.last_used = std::chrono::steady_clock::now();
+            info.in_use = false;
+            bucket.buffers.push_back(std::move(info));
+        }
+    }
+}
+
+double MemoryPool::get_hit_rate_for_size(size_t size) const {
+    std::lock_guard<std::mutex> stats_lock(stats_mutex_);
+    
+    auto hits_it = stats_.hits_by_size.find(size);
+    auto misses_it = stats_.misses_by_size.find(size);
+    
+    size_t hits = (hits_it != stats_.hits_by_size.end()) ? hits_it->second : 0;
+    size_t misses = (misses_it != stats_.misses_by_size.end()) ? misses_it->second : 0;
+    
+    if (hits + misses == 0) {
+        return 0.0;
+    }
+    
+    return static_cast<double>(hits) / (hits + misses);
 }
 
 } // namespace common
