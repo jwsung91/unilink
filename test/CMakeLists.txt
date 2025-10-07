@@ -38,6 +38,12 @@ add_executable(run_error_recovery_tests
     test_utils.hpp
 )
 
+# Stress Tests - High-load scenarios and system limits
+add_executable(run_stress_tests
+    test_stress.cc
+    test_utils.hpp
+)
+
 # ============================================================================
 # LINK LIBRARIES
 # ============================================================================
@@ -74,6 +80,11 @@ target_link_libraries(run_error_recovery_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
+# Link stress tests
+target_link_libraries(run_stress_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # ============================================================================
 # TEST DISCOVERY
 # ============================================================================
@@ -86,6 +97,7 @@ gtest_discover_tests(run_integration_tests)
 gtest_discover_tests(run_performance_tests)
 gtest_discover_tests(run_boundary_tests)
 gtest_discover_tests(run_error_recovery_tests)
+gtest_discover_tests(run_stress_tests)
 
 # ============================================================================
 # SANITIZERS (Optional - for debugging)
