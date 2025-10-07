@@ -34,6 +34,11 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
     // Input validation
     validate_size(size);
     
+    // Use lock-free operations for large pools
+    if (should_use_lock_free_operations(max_pool_size_)) {
+        return acquire_lock_free(size);
+    }
+    
     auto start_time = std::chrono::steady_clock::now();
     
     // Track usage for auto-tuning (local, no lock)
@@ -104,6 +109,12 @@ void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
     validate_size(size);
     
     if (!buffer) return;
+    
+    // Use lock-free operations for large pools
+    if (should_use_lock_free_operations(max_pool_size_)) {
+        release_lock_free(std::move(buffer), size);
+        return;
+    }
     
     auto start_time = std::chrono::steady_clock::now();
     
@@ -453,6 +464,230 @@ bool MemoryPool::should_use_aligned_allocation(size_t size) const {
     // Only use aligned allocation for buffers >= ALIGNMENT_THRESHOLD
     // This avoids excessive memory overhead for small buffers
     return size >= ALIGNMENT_THRESHOLD;
+}
+
+bool MemoryPool::should_use_lock_free_operations(size_t pool_size) const {
+    // Use lock-free operations for large pools where lock contention is high
+    return pool_size >= LOCK_FREE_THRESHOLD;
+}
+
+std::unique_ptr<uint8_t[]> MemoryPool::acquire_lock_free(size_t size) {
+    // Input validation
+    validate_size(size);
+    
+    auto start_time = std::chrono::steady_clock::now();
+    
+    // Track usage for auto-tuning (local, no lock)
+    local_stats_.usage_count[size]++;
+    
+    // Check if we need to flush local stats
+    if (++batch_update_counter_ >= BATCH_UPDATE_THRESHOLD) {
+        flush_local_stats();
+    }
+    
+    PoolBucket& bucket = get_bucket(size);
+    
+    // Initialize lock-free pool if not already done
+    if (bucket.lock_free_buffer_pool.empty()) {
+        initialize_lock_free_pool(bucket);
+    }
+    
+    // Try to get buffer from lock-free pool first
+    auto buffer = acquire_from_lock_free_pool(bucket);
+    
+    if (buffer) {
+        // Successfully got buffer from pool (hit)
+        bucket.hits++;
+        
+        auto end_time = std::chrono::steady_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+        
+        // Update local statistics (no lock)
+        local_stats_.pool_hits++;
+        local_stats_.total_allocations++;
+        local_stats_.total_allocation_time += duration.count();
+        local_stats_.hits_by_size[size]++;
+        
+        return buffer;
+    } else {
+        // Pool miss - create new buffer
+        bucket.misses++;
+        
+        auto end_time = std::chrono::steady_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+        
+        // Update local statistics (no lock)
+        local_stats_.pool_misses++;
+        local_stats_.total_allocations++;
+        local_stats_.total_allocation_time += duration.count();
+        local_stats_.misses_by_size[size]++;
+        
+        auto buffer = create_buffer(bucket.size);
+        
+        // Track memory allocation
+        if (buffer) {
+            total_memory_allocated_ += bucket.size;  // Use actual allocated size, not requested size
+            size_t current_peak = peak_memory_usage_.load();
+            while (total_memory_allocated_ > current_peak && 
+                   !peak_memory_usage_.compare_exchange_weak(current_peak, total_memory_allocated_)) {
+                // Retry until we successfully update the peak
+            }
+        }
+        
+        return buffer;
+    }
+}
+
+void MemoryPool::release_lock_free(std::unique_ptr<uint8_t[]> buffer, size_t size) {
+    // Input validation
+    validate_size(size);
+    
+    if (!buffer) return;
+    
+    auto start_time = std::chrono::steady_clock::now();
+    
+    PoolBucket& bucket = get_bucket(size);
+    
+    // Try to return buffer to lock-free pool for reuse
+    if (is_lock_free_pool_available(bucket)) {
+        return_to_lock_free_pool(bucket, std::move(buffer));
+    }
+    // If pool is full, let the buffer be destroyed automatically
+    
+    auto end_time = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    
+    // Update local deallocation time (no lock)
+    local_stats_.total_deallocation_time += duration.count();
+}
+
+MemoryPool::BufferInfo* MemoryPool::remove_from_lock_free_free_list(PoolBucket& bucket) {
+    // Lock-free removal using compare-and-swap
+    for (size_t retry = 0; retry < MAX_LOCK_FREE_RETRIES; ++retry) {
+        BufferInfo* current_head = bucket.lock_free_free_list_head.load(std::memory_order_acquire);
+        
+        if (current_head == nullptr) {
+            return nullptr;  // No free buffers available
+        }
+        
+        // Try to atomically remove the head
+        BufferInfo* next = current_head->lock_free_next.load(std::memory_order_relaxed);
+        
+        if (bucket.lock_free_free_list_head.compare_exchange_weak(
+                current_head, next, std::memory_order_release, std::memory_order_acquire)) {
+            // Successfully removed the head
+            current_head->lock_free_next.store(nullptr, std::memory_order_relaxed);
+            bucket.lock_free_free_count.fetch_sub(1, std::memory_order_relaxed);
+            return current_head;
+        }
+        
+        // CAS failed, retry
+        // Yield to other threads (simple busy wait)
+        for (volatile int i = 0; i < 100; ++i) {}
+    }
+    
+    return nullptr;  // Failed after max retries
+}
+
+void MemoryPool::add_to_lock_free_free_list(PoolBucket& bucket, MemoryPool::BufferInfo* buffer_info) {
+    if (buffer_info == nullptr) return;
+    
+    // Lock-free addition using compare-and-swap
+    for (size_t retry = 0; retry < MAX_LOCK_FREE_RETRIES; ++retry) {
+        BufferInfo* current_head = bucket.lock_free_free_list_head.load(std::memory_order_acquire);
+        buffer_info->lock_free_next.store(current_head, std::memory_order_relaxed);
+        
+        if (bucket.lock_free_free_list_head.compare_exchange_weak(
+                current_head, buffer_info, std::memory_order_release, std::memory_order_acquire)) {
+            // Successfully added to head
+            bucket.lock_free_free_count.fetch_add(1, std::memory_order_relaxed);
+            return;
+        }
+        
+        // CAS failed, retry
+        // Yield to other threads (simple busy wait)
+        for (volatile int i = 0; i < 100; ++i) {}
+    }
+}
+
+void MemoryPool::rebuild_lock_free_free_list(PoolBucket& bucket) {
+    // Clear existing lock-free free list
+    bucket.lock_free_free_list_head.store(nullptr, std::memory_order_relaxed);
+    bucket.lock_free_free_count.store(0, std::memory_order_relaxed);
+    
+    // Rebuild lock-free free list from unused buffers
+    for (auto& buffer_info : bucket.buffers) {
+        if (!buffer_info.in_use && !buffer_info.lock_free_in_use.load(std::memory_order_relaxed)) {
+            add_to_lock_free_free_list(bucket, &buffer_info);
+        }
+    }
+}
+
+void MemoryPool::initialize_lock_free_pool(PoolBucket& bucket) {
+    // Initialize lock-free buffer pool with pre-allocated buffers
+    bucket.lock_free_buffer_pool.reserve(LOCK_FREE_POOL_SIZE);
+    
+    for (size_t i = 0; i < LOCK_FREE_POOL_SIZE; ++i) {
+        auto buffer = create_buffer(bucket.size);
+        if (buffer) {
+            bucket.lock_free_buffer_pool.push_back(std::move(buffer));
+        }
+    }
+    
+    bucket.lock_free_pool_index.store(0, std::memory_order_relaxed);
+    bucket.lock_free_pool_allocated.store(0, std::memory_order_relaxed);
+}
+
+std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_lock_free_pool(PoolBucket& bucket) {
+    // Lock-free acquisition from pre-allocated pool
+    size_t current_index = bucket.lock_free_pool_index.load(std::memory_order_acquire);
+    size_t allocated_count = bucket.lock_free_pool_allocated.load(std::memory_order_acquire);
+    
+    // Check if pool has available buffers
+    if (allocated_count >= bucket.lock_free_buffer_pool.size() || bucket.lock_free_buffer_pool.empty()) {
+        return nullptr;  // Pool exhausted or not initialized
+    }
+    
+    // Try to atomically allocate a buffer
+    size_t next_index = (current_index + 1) % bucket.lock_free_buffer_pool.size();
+    
+    if (bucket.lock_free_pool_index.compare_exchange_weak(
+            current_index, next_index, std::memory_order_release, std::memory_order_acquire)) {
+        
+        // Successfully allocated buffer
+        bucket.lock_free_pool_allocated.fetch_add(1, std::memory_order_relaxed);
+        
+        // Move buffer out of pool (with bounds checking)
+        if (current_index < bucket.lock_free_buffer_pool.size()) {
+            std::unique_ptr<uint8_t[]> buffer = std::move(bucket.lock_free_buffer_pool[current_index]);
+            bucket.lock_free_buffer_pool[current_index] = nullptr;  // Mark as allocated
+            
+            return buffer;
+        }
+    }
+    
+    return nullptr;  // Failed to allocate
+}
+
+void MemoryPool::return_to_lock_free_pool(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer) {
+    if (!buffer || bucket.lock_free_buffer_pool.empty()) return;
+    
+    // Find an empty slot in the pool
+    for (size_t i = 0; i < bucket.lock_free_buffer_pool.size(); ++i) {
+        if (bucket.lock_free_buffer_pool[i] == nullptr) {
+            // Found empty slot, return buffer
+            bucket.lock_free_buffer_pool[i] = std::move(buffer);
+            bucket.lock_free_pool_allocated.fetch_sub(1, std::memory_order_relaxed);
+            return;
+        }
+    }
+    
+    // No empty slot found, buffer will be destroyed
+}
+
+bool MemoryPool::is_lock_free_pool_available(PoolBucket& bucket) const {
+    size_t allocated_count = bucket.lock_free_pool_allocated.load(std::memory_order_relaxed);
+    return allocated_count < bucket.lock_free_buffer_pool.size();
 }
 
 // ============================================================================

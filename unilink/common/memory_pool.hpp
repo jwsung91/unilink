@@ -55,6 +55,10 @@ public:
         // Free list pointer for O(1) allocation
         BufferInfo* next_free{nullptr};
         
+        // Lock-free operation support
+        std::atomic<bool> lock_free_in_use{false};
+        std::atomic<BufferInfo*> lock_free_next{nullptr};
+        
         // Default constructor
         BufferInfo() = default;
         
@@ -64,8 +68,11 @@ public:
             , size(other.size)
             , last_used(other.last_used)
             , in_use(other.in_use)
-            , next_free(other.next_free) {
+            , next_free(other.next_free)
+            , lock_free_in_use(other.lock_free_in_use.load())
+            , lock_free_next(other.lock_free_next.load()) {
             other.next_free = nullptr;
+            other.lock_free_next.store(nullptr);
         }
         
         // Move assignment
@@ -76,7 +83,10 @@ public:
                 last_used = other.last_used;
                 in_use = other.in_use;
                 next_free = other.next_free;
+                lock_free_in_use.store(other.lock_free_in_use.load());
+                lock_free_next.store(other.lock_free_next.load());
                 other.next_free = nullptr;
+                other.lock_free_next.store(nullptr);
             }
             return *this;
         }
@@ -195,6 +205,15 @@ private:
     BufferInfo* free_list_head{nullptr};
     std::atomic<size_t> free_count{0};
     
+    // Lock-free free list management
+    std::atomic<BufferInfo*> lock_free_free_list_head{nullptr};
+    std::atomic<size_t> lock_free_free_count{0};
+    
+    // Lock-free buffer pool for better memory efficiency
+    std::vector<std::unique_ptr<uint8_t[]>> lock_free_buffer_pool;
+    std::atomic<size_t> lock_free_pool_index{0};
+    std::atomic<size_t> lock_free_pool_allocated{0};
+    
     // Lazy cleanup optimization
     std::vector<size_t> expired_indices;  // Indices of expired buffers to remove
     std::chrono::steady_clock::time_point last_cleanup_time;
@@ -312,6 +331,12 @@ public:
     static constexpr size_t CACHE_LINE_SIZE = 64;
     static constexpr size_t ALIGNMENT_SIZE = 64;
     static constexpr size_t ALIGNMENT_THRESHOLD = 4096;  // Only align buffers >= 4KB
+    
+    // Lock-free operation constants
+    static constexpr size_t LOCK_FREE_THRESHOLD = 1000;  // Use lock-free for pools >= 1000 buffers
+    static constexpr size_t MAX_LOCK_FREE_RETRIES = 10;  // Maximum retries for lock-free operations
+    static constexpr size_t LOCK_FREE_BATCH_SIZE = 8;    // Batch size for lock-free operations
+    static constexpr size_t LOCK_FREE_POOL_SIZE = 100;   // Size of lock-free buffer pool per bucket
 
 private:
     
@@ -341,6 +366,20 @@ private:
     void traditional_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age);
     void select_optimal_cleanup_algorithm(PoolBucket& bucket, double expiration_ratio, std::chrono::microseconds cleanup_time);
     bool should_use_aligned_allocation(size_t size) const;
+    
+    // Lock-free operation functions
+    bool should_use_lock_free_operations(size_t pool_size) const;
+    std::unique_ptr<uint8_t[]> acquire_lock_free(size_t size);
+    void release_lock_free(std::unique_ptr<uint8_t[]> buffer, size_t size);
+    BufferInfo* remove_from_lock_free_free_list(PoolBucket& bucket);
+    void add_to_lock_free_free_list(PoolBucket& bucket, BufferInfo* buffer_info);
+    void rebuild_lock_free_free_list(PoolBucket& bucket);
+    
+    // Improved lock-free memory management
+    void initialize_lock_free_pool(PoolBucket& bucket);
+    std::unique_ptr<uint8_t[]> acquire_from_lock_free_pool(PoolBucket& bucket);
+    void return_to_lock_free_pool(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer);
+    bool is_lock_free_pool_available(PoolBucket& bucket) const;
 };
 
 /**
