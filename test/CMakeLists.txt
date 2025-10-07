@@ -26,6 +26,18 @@ add_executable(run_performance_tests
     test_utils.hpp
 )
 
+# Boundary Tests - Boundary conditions and edge cases
+add_executable(run_boundary_tests
+    test_boundary.cc
+    test_utils.hpp
+)
+
+# Error Recovery Tests - Error scenarios and recovery mechanisms
+add_executable(run_error_recovery_tests
+    test_error_recovery.cc
+    test_utils.hpp
+)
+
 # ============================================================================
 # LINK LIBRARIES
 # ============================================================================
@@ -52,6 +64,16 @@ target_link_libraries(run_performance_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
+# Link boundary tests
+target_link_libraries(run_boundary_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
+# Link error recovery tests
+target_link_libraries(run_error_recovery_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # ============================================================================
 # TEST DISCOVERY
 # ============================================================================
@@ -62,6 +84,8 @@ include(GoogleTest)
 gtest_discover_tests(run_core_tests)
 gtest_discover_tests(run_integration_tests)
 gtest_discover_tests(run_performance_tests)
+gtest_discover_tests(run_boundary_tests)
+gtest_discover_tests(run_error_recovery_tests)
 
 # ============================================================================
 # SANITIZERS (Optional - for debugging)
