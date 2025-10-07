@@ -71,8 +71,9 @@ public:
 
     /**
      * @brief Acquire a buffer of specified size
-     * @param size Required buffer size
+     * @param size Required buffer size (must be > 0 and <= MAX_BUFFER_SIZE)
      * @return std::unique_ptr<uint8_t[]> Buffer or nullptr if allocation fails
+     * @throws std::invalid_argument if size is invalid
      */
     std::unique_ptr<uint8_t[]> acquire(size_t size);
 
@@ -85,8 +86,9 @@ public:
 
     /**
      * @brief Release a buffer back to the pool
-     * @param buffer Buffer to release
-     * @param size Size of the buffer
+     * @param buffer Buffer to release (can be nullptr)
+     * @param size Size of the buffer (must match the buffer's actual size)
+     * @throws std::invalid_argument if size is invalid
      */
     void release(std::unique_ptr<uint8_t[]> buffer, size_t size);
 
@@ -237,8 +239,20 @@ private:
         static_cast<size_t>(BufferSize::XLARGE)
     };
     
+public:
+    // Safety constants
+    static constexpr size_t MAX_BUFFER_SIZE = 1024 * 1024 * 1024; // 1GB
+    static constexpr size_t MIN_BUFFER_SIZE = 1;
+    static constexpr size_t MAX_POOL_SIZE = 10000;
+
+private:
+    
     // Helper function for binary search
     size_t find_bucket_index(size_t size) const;
+    
+    // Input validation functions
+    void validate_size(size_t size) const;
+    void validate_pool_size(size_t size) const;
 };
 
 /**
@@ -258,7 +272,7 @@ public:
 };
 
 /**
- * @brief RAII wrapper for memory pool buffers
+ * @brief RAII wrapper for memory pool buffers with enhanced safety
  */
 class PooledBuffer {
 public:
@@ -272,17 +286,29 @@ public:
     PooledBuffer(PooledBuffer&& other) noexcept;
     PooledBuffer& operator=(PooledBuffer&& other) noexcept;
 
+    // Safe access methods
     uint8_t* data() const { return buffer_.get(); }
     size_t size() const { return size_; }
     bool valid() const { return buffer_ != nullptr; }
-
-    // Implicit conversion to raw pointer for compatibility
-    operator uint8_t*() const { return data(); }
+    
+    // Safe array access with bounds checking
+    uint8_t& operator[](size_t index);
+    const uint8_t& operator[](size_t index) const;
+    
+    // Safe pointer arithmetic
+    uint8_t* at(size_t offset) const;
+    
+    // Explicit conversion methods (no implicit conversion)
+    uint8_t* get() const { return data(); }
+    explicit operator bool() const { return valid(); }
 
 private:
     std::unique_ptr<uint8_t[]> buffer_;
     size_t size_;
     MemoryPool* pool_;
+    
+    // Helper for bounds checking
+    void check_bounds(size_t index) const;
 };
 
 } // namespace common

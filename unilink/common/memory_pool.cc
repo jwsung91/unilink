@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iostream>
 #include <array>
+#include <stdexcept>
+#include <string>
 
 namespace unilink {
 namespace common {
@@ -28,6 +30,9 @@ MemoryPool::MemoryPool(size_t initial_pool_size, size_t max_pool_size)
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
+    // Input validation
+    validate_size(size);
+    
     auto start_time = std::chrono::steady_clock::now();
     
     // Track usage for auto-tuning (local, no lock)
@@ -95,6 +100,9 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(BufferSize buffer_size) {
 }
 
 void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
+    // Input validation
+    validate_size(size);
+    
     if (!buffer) return;
     
     auto start_time = std::chrono::steady_clock::now();
@@ -182,6 +190,9 @@ double MemoryPool::get_hit_rate() const {
 }
 
 void MemoryPool::resize_pool(size_t new_size) {
+    // Input validation
+    validate_pool_size(new_size);
+    
     max_pool_size_ = new_size;
     
     {
@@ -247,12 +258,31 @@ size_t MemoryPool::find_bucket_index(size_t size) const {
     return left;
 }
 
+void MemoryPool::validate_size(size_t size) const {
+    if (size < MIN_BUFFER_SIZE) {
+        throw std::invalid_argument("Buffer size must be at least " + std::to_string(MIN_BUFFER_SIZE) + " bytes");
+    }
+    if (size > MAX_BUFFER_SIZE) {
+        throw std::invalid_argument("Buffer size cannot exceed " + std::to_string(MAX_BUFFER_SIZE) + " bytes");
+    }
+}
+
+void MemoryPool::validate_pool_size(size_t size) const {
+    if (size == 0) {
+        throw std::invalid_argument("Pool size must be greater than 0");
+    }
+    if (size > MAX_POOL_SIZE) {
+        throw std::invalid_argument("Pool size cannot exceed " + std::to_string(MAX_POOL_SIZE));
+    }
+}
+
 std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) {
     try {
         return std::make_unique<uint8_t[]>(size);
     } catch (const std::bad_alloc& e) {
-        // If allocation fails, return nullptr
-        // This will cause the caller to fall back to regular allocation
+        // Log allocation failure for debugging
+        std::cerr << "Memory allocation failed for size " << size 
+                  << ": " << e.what() << std::endl;
         return nullptr;
     }
 }
@@ -317,6 +347,35 @@ PooledBuffer& PooledBuffer::operator=(PooledBuffer&& other) noexcept {
         other.pool_ = nullptr;
     }
     return *this;
+}
+
+// Safe access methods for PooledBuffer
+uint8_t& PooledBuffer::operator[](size_t index) {
+    check_bounds(index);
+    return buffer_.get()[index];
+}
+
+const uint8_t& PooledBuffer::operator[](size_t index) const {
+    check_bounds(index);
+    return buffer_.get()[index];
+}
+
+uint8_t* PooledBuffer::at(size_t offset) const {
+    if (offset > size_) {
+        throw std::out_of_range("Offset " + std::to_string(offset) + 
+                               " exceeds buffer size " + std::to_string(size_));
+    }
+    return buffer_.get() + offset;
+}
+
+void PooledBuffer::check_bounds(size_t index) const {
+    if (!valid()) {
+        throw std::runtime_error("Accessing invalid buffer");
+    }
+    if (index >= size_) {
+        throw std::out_of_range("Index " + std::to_string(index) + 
+                               " exceeds buffer size " + std::to_string(size_));
+    }
 }
 
 // ============================================================================

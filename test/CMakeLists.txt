@@ -56,6 +56,12 @@ add_executable(run_benchmark_tests
     test_utils.hpp
 )
 
+# API Safety Tests - API safety and input validation
+add_executable(run_api_safety_tests
+    test_api_safety.cc
+    test_utils.hpp
+)
+
 # ============================================================================
 # LINK LIBRARIES
 # ============================================================================
@@ -107,6 +113,11 @@ target_link_libraries(run_benchmark_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
+# Link API safety tests
+target_link_libraries(run_api_safety_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # ============================================================================
 # TEST DISCOVERY
 # ============================================================================
@@ -122,6 +133,7 @@ gtest_discover_tests(run_error_recovery_tests)
 gtest_discover_tests(run_stress_tests)
 gtest_discover_tests(run_config_validation_tests)
 gtest_discover_tests(run_benchmark_tests)
+gtest_discover_tests(run_api_safety_tests)
 
 # ============================================================================
 # SANITIZERS (Optional - for debugging)
