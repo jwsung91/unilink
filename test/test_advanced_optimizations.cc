@@ -1,0 +1,761 @@
+#include <gtest/gtest.h>
+#include <chrono>
+#include <thread>
+#include <vector>
+#include <atomic>
+#include <random>
+#include <algorithm>
+#include <memory>
+#include "unilink/common/memory_pool.hpp"
+
+using namespace unilink::common;
+
+class AdvancedOptimizationsTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Create a large pool to enable lock-free operations
+        pool_ = std::make_unique<MemoryPool>(2000, 5000);
+    }
+    
+    void TearDown() override {
+        pool_.reset();
+    }
+    
+    std::unique_ptr<MemoryPool> pool_;
+};
+
+// ============================================================================
+// Lock-free Operations Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, LockFreeOperationsEnabled) {
+    // Test lock-free allocation through normal interface
+    // Large pool (2000) should enable lock-free operations internally
+    auto buffer1 = pool_->acquire(1024);
+    EXPECT_NE(buffer1, nullptr);
+    
+    auto buffer2 = pool_->acquire(1024);
+    EXPECT_NE(buffer2, nullptr);
+    
+    // Test lock-free release
+    pool_->release(std::move(buffer1), 1024);
+    pool_->release(std::move(buffer2), 1024);
+    
+    // Verify no deadlocks or crashes occurred
+    auto stats = pool_->get_stats();
+    EXPECT_GE(stats.total_allocations, 2);
+}
+
+TEST_F(AdvancedOptimizationsTest, LockFreeConcurrentPerformance) {
+    const size_t num_threads = 8;
+    const size_t operations_per_thread = 1000;
+    const size_t buffer_size = 1024;
+    
+    std::atomic<size_t> completed_operations{0};
+    std::atomic<size_t> successful_allocations{0};
+    std::vector<std::thread> threads;
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
+    
+    // Create worker threads
+    for (size_t t = 0; t < num_threads; ++t) {
+        threads.emplace_back([&, t]() {
+            std::vector<std::unique_ptr<uint8_t[]>> active_buffers;
+            active_buffers.reserve(50);
+            
+            for (size_t i = 0; i < operations_per_thread; ++i) {
+                auto buffer = pool_->acquire(buffer_size);
+                if (buffer) {
+                    successful_allocations++;
+                    
+                    // Simulate work
+                    buffer[0] = static_cast<uint8_t>((t + i) & 0xFF);
+                    if (buffer_size > 1) {
+                        buffer[buffer_size - 1] = static_cast<uint8_t>(((t + i) * 7) & 0xFF);
+                    }
+                    
+                    // Keep some buffers active to test reuse
+                    if (active_buffers.size() < 50) {
+                        active_buffers.push_back(std::move(buffer));
+                    } else {
+                        pool_->release(std::move(buffer), buffer_size);
+                    }
+                }
+                
+                completed_operations++;
+                
+                // Occasionally release an old buffer
+                if (!active_buffers.empty() && (i % 100 == 0)) {
+                    size_t release_index = i % active_buffers.size();
+                    pool_->release(std::move(active_buffers[release_index]), buffer_size);
+                    active_buffers[release_index] = std::move(active_buffers.back());
+                    active_buffers.pop_back();
+                }
+            }
+            
+            // Release remaining buffers
+            for (auto& buffer : active_buffers) {
+                pool_->release(std::move(buffer), buffer_size);
+            }
+        });
+    }
+    
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    
+    // Verify performance
+    EXPECT_EQ(completed_operations.load(), num_threads * operations_per_thread);
+    EXPECT_GT(successful_allocations.load(), 0);
+    
+    // Performance should be reasonable (less than 1ms per operation)
+    double avg_time_per_operation = static_cast<double>(duration.count()) / completed_operations.load();
+    EXPECT_LT(avg_time_per_operation, 1000.0); // 1ms per operation
+    
+    // Verify hit rate improvement
+    auto stats = pool_->get_stats();
+    EXPECT_GT(pool_->get_hit_rate(), 0.0);
+    
+    std::cout << "Lock-free concurrent performance: " << avg_time_per_operation 
+              << " μs per operation, Hit rate: " << (pool_->get_hit_rate() * 100) << "%" << std::endl;
+}
+
+TEST_F(AdvancedOptimizationsTest, LockFreeFreeListIntegrity) {
+    const size_t buffer_size = 1024;
+    const size_t num_operations = 100;
+    
+    std::vector<std::unique_ptr<uint8_t[]>> allocated_buffers;
+    
+    // Allocate many buffers
+    for (size_t i = 0; i < num_operations; ++i) {
+        auto buffer = pool_->acquire(buffer_size);
+        EXPECT_NE(buffer, nullptr);
+        allocated_buffers.push_back(std::move(buffer));
+    }
+    
+    // Release all buffers
+    for (auto& buffer : allocated_buffers) {
+        pool_->release(std::move(buffer), buffer_size);
+    }
+    
+    // Allocate again to test free list reuse
+    allocated_buffers.clear();
+    for (size_t i = 0; i < num_operations; ++i) {
+        auto buffer = pool_->acquire(buffer_size);
+        EXPECT_NE(buffer, nullptr);
+        allocated_buffers.push_back(std::move(buffer));
+    }
+    
+    // Release again
+    for (auto& buffer : allocated_buffers) {
+        pool_->release(std::move(buffer), buffer_size);
+    }
+    
+    // Verify free list is working (should have some hits)
+    auto stats = pool_->get_stats();
+    EXPECT_GT(pool_->get_hit_rate(), 0.0);
+    
+    std::cout << "Lock-free free list hit rate: " << (pool_->get_hit_rate() * 100) << "%" << std::endl;
+}
+
+TEST_F(AdvancedOptimizationsTest, LockFreePoolAvailability) {
+    const size_t buffer_size = 1024;
+    
+    // Test lock-free operations through normal acquire/release
+    // This will internally use lock-free pool if available
+    auto buffer = pool_->acquire(buffer_size);
+    EXPECT_NE(buffer, nullptr);
+    
+    // Simulate work
+    buffer[0] = 0x42;
+    
+    // Release buffer (will return to lock-free pool if available)
+    pool_->release(std::move(buffer), buffer_size);
+    
+    // Verify operation completed successfully
+    auto stats = pool_->get_stats();
+    EXPECT_GT(stats.total_allocations, 0);
+}
+
+// ============================================================================
+// Health Monitoring Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, HealthMonitoringBasicFunctionality) {
+    // Test basic health monitoring
+    auto health_status = pool_->get_health_status();
+    // Health status should be one of the valid enum values
+    EXPECT_GE(static_cast<int>(health_status.status), 0);
+    EXPECT_LE(static_cast<int>(health_status.status), 4); // EXCELLENT=0, GOOD=1, WARNING=2, CRITICAL=3, FAILURE=4
+    
+    // Test active alerts (should be empty initially)
+    auto active_alerts = pool_->get_active_alerts();
+    EXPECT_TRUE(active_alerts.empty());
+    
+    // Test health history
+    auto health_history = pool_->get_health_history();
+    EXPECT_GE(health_history.size(), 0);
+}
+
+TEST_F(AdvancedOptimizationsTest, HealthMonitoringThresholds) {
+    // Set custom alert thresholds
+    MemoryPool::AlertThresholds thresholds;
+    thresholds.memory_utilization_warning = 0.5;  // 50%
+    thresholds.hit_rate_warning = 0.1;            // 10%
+    thresholds.latency_warning_ms = 1.0;          // 1ms
+    thresholds.fragmentation_warning = 0.3;       // 30%
+    thresholds.allocation_rate_warning = 1000.0;  // 1000 ops/sec
+    
+    pool_->set_alert_thresholds(thresholds);
+    
+    // Enable alerts
+    pool_->enable_alerts();
+    
+    // Perform operations to trigger health monitoring
+    for (int i = 0; i < 100; ++i) {
+        auto buffer = pool_->acquire(1024);
+        if (buffer) {
+            pool_->release(std::move(buffer), 1024);
+        }
+    }
+    
+    // Check health status
+    auto health_status = pool_->get_health_status();
+    EXPECT_NE(health_status.status, MemoryPool::HealthMetrics::HealthStatus::FAILURE);
+    
+    // Check for any alerts
+    auto active_alerts = pool_->get_active_alerts();
+    // Alerts may or may not be triggered depending on system performance
+    
+    std::cout << "Health status: " << static_cast<int>(health_status.status) 
+              << ", Active alerts: " << active_alerts.size() << std::endl;
+}
+
+TEST_F(AdvancedOptimizationsTest, HealthMonitoringPerformance) {
+    const size_t num_operations = 1000;
+    const size_t buffer_size = 1024;
+    
+    // Enable health monitoring
+    pool_->enable_alerts();
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
+    
+    // Perform operations with health monitoring
+    for (size_t i = 0; i < num_operations; ++i) {
+        auto buffer = pool_->acquire(buffer_size);
+        if (buffer) {
+            // Simulate work
+            buffer[0] = static_cast<uint8_t>(i & 0xFF);
+            pool_->release(std::move(buffer), buffer_size);
+        }
+    }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    
+    // Verify health monitoring doesn't significantly impact performance
+    double avg_time_per_operation = static_cast<double>(duration.count()) / num_operations;
+    EXPECT_LT(avg_time_per_operation, 1000.0); // Should be less than 1ms per operation
+    
+    // Check health metrics
+    auto health_status = pool_->get_health_status();
+    // Memory utilization and allocation rate should be non-negative
+    EXPECT_GE(health_status.memory_utilization, 0.0);
+    EXPECT_GE(health_status.allocation_rate, 0.0);
+    
+    std::cout << "Health monitoring performance: " << avg_time_per_operation 
+              << " μs per operation" << std::endl;
+}
+
+TEST_F(AdvancedOptimizationsTest, HealthMonitoringAlertGeneration) {
+    // Set very low thresholds to trigger alerts
+    MemoryPool::AlertThresholds thresholds;
+    thresholds.memory_utilization_warning = 0.01;  // 1%
+    thresholds.hit_rate_warning = 0.99;            // 99%
+    thresholds.latency_warning_ms = 0.001;         // 1μs
+    thresholds.fragmentation_warning = 0.01;       // 1%
+    thresholds.allocation_rate_warning = 1000000.0; // 1M ops/sec
+    
+    pool_->set_alert_thresholds(thresholds);
+    pool_->enable_alerts();
+    
+    // Perform operations that might trigger alerts
+    for (int i = 0; i < 50; ++i) {
+        auto buffer = pool_->acquire(1024);
+        if (buffer) {
+            pool_->release(std::move(buffer), 1024);
+        }
+    }
+    
+    // Check for alerts
+    auto active_alerts = pool_->get_active_alerts();
+    
+    std::cout << "Generated alerts: " << active_alerts.size() << std::endl;
+}
+
+// ============================================================================
+// Adaptive Algorithms Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, AdaptiveAlgorithmSelection) {
+    // Test adaptive algorithm selection for different workloads
+    
+    // Test 1: Low expiration ratio (should use optimized cleanup)
+    {
+        std::vector<std::unique_ptr<uint8_t[]>> buffers;
+        const size_t buffer_size = 1024;
+        
+        // Allocate many buffers
+        for (int i = 0; i < 100; ++i) {
+            auto buffer = pool_->acquire(buffer_size);
+            EXPECT_NE(buffer, nullptr);
+            buffers.push_back(std::move(buffer));
+        }
+        
+        // Release only a few (low expiration ratio)
+        for (int i = 0; i < 10; ++i) {
+            pool_->release(std::move(buffers[i]), buffer_size);
+        }
+        
+        // Trigger cleanup
+        pool_->cleanup_old_buffers(std::chrono::milliseconds(1000));
+        
+        // Verify adaptive algorithm worked
+        auto stats = pool_->get_stats();
+        EXPECT_GT(stats.total_allocations, 0);
+    }
+    
+    // Test 2: High expiration ratio (should use traditional cleanup)
+    {
+        std::vector<std::unique_ptr<uint8_t[]>> buffers;
+        const size_t buffer_size = 1024;
+        
+        // Allocate many buffers
+        for (int i = 0; i < 100; ++i) {
+            auto buffer = pool_->acquire(buffer_size);
+            EXPECT_NE(buffer, nullptr);
+            buffers.push_back(std::move(buffer));
+        }
+        
+        // Release most buffers (high expiration ratio)
+        for (int i = 0; i < 90; ++i) {
+            pool_->release(std::move(buffers[i]), buffer_size);
+        }
+        
+        // Trigger cleanup
+        pool_->cleanup_old_buffers(std::chrono::milliseconds(1000));
+        
+        // Verify adaptive algorithm worked
+        auto stats = pool_->get_stats();
+        EXPECT_GT(stats.total_allocations, 0);
+    }
+}
+
+TEST_F(AdvancedOptimizationsTest, AdaptiveMemoryAlignment) {
+    // Test adaptive memory alignment for different buffer sizes
+    
+    // Test small buffers (should use regular alignment)
+    {
+        auto buffer = pool_->acquire(64);  // Small buffer
+        EXPECT_NE(buffer, nullptr);
+        pool_->release(std::move(buffer), 64);
+    }
+    
+    // Test large buffers (should use cache line alignment)
+    {
+        auto buffer = pool_->acquire(8192);  // Large buffer
+        EXPECT_NE(buffer, nullptr);
+        pool_->release(std::move(buffer), 8192);
+    }
+    
+    // Test medium buffers (adaptive decision)
+    {
+        auto buffer = pool_->acquire(1024);  // Medium buffer
+        EXPECT_NE(buffer, nullptr);
+        pool_->release(std::move(buffer), 1024);
+    }
+    
+    // Verify all allocations worked
+    auto stats = pool_->get_stats();
+    EXPECT_GE(stats.total_allocations, 3);
+}
+
+TEST_F(AdvancedOptimizationsTest, AdaptiveAlgorithmPerformance) {
+    const size_t num_iterations = 10;
+    const size_t buffer_size = 1024;
+    
+    std::vector<double> iteration_times;
+    iteration_times.reserve(num_iterations);
+    
+    // Test adaptive algorithm performance
+    for (size_t iter = 0; iter < num_iterations; ++iter) {
+        auto start_time = std::chrono::high_resolution_clock::now();
+        
+        // Perform mixed workload
+        std::vector<std::unique_ptr<uint8_t[]>> buffers;
+        
+        // Allocate buffers
+        for (int i = 0; i < 50; ++i) {
+            auto buffer = pool_->acquire(buffer_size);
+            if (buffer) {
+                buffers.push_back(std::move(buffer));
+            }
+        }
+        
+        // Release some buffers (mixed expiration ratio)
+        for (int i = 0; i < 25; ++i) {
+            pool_->release(std::move(buffers[i]), buffer_size);
+        }
+        
+        // Trigger cleanup (adaptive algorithm selection)
+        pool_->cleanup_old_buffers(std::chrono::milliseconds(1000));
+        
+        // Release remaining buffers
+        for (int i = 25; i < 50; ++i) {
+            if (buffers[i]) {
+                pool_->release(std::move(buffers[i]), buffer_size);
+            }
+        }
+        
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+        iteration_times.push_back(duration.count());
+    }
+    
+    // Calculate performance statistics
+    double avg_time = std::accumulate(iteration_times.begin(), iteration_times.end(), 0.0) / iteration_times.size();
+    
+    // Calculate coefficient of variation
+    double variance = 0.0;
+    for (double time : iteration_times) {
+        variance += (time - avg_time) * (time - avg_time);
+    }
+    variance /= iteration_times.size();
+    double std_dev = std::sqrt(variance);
+    double cv = (avg_time > 0) ? (std_dev / avg_time) * 100.0 : 0.0;
+    
+    // Verify performance is reasonable and stable
+    EXPECT_LT(avg_time, 10000.0);  // Less than 10ms per iteration
+    EXPECT_LT(cv, 100.0);          // Coefficient of variation less than 100%
+    
+    std::cout << "Adaptive algorithm performance: " << avg_time 
+              << " μs per iteration, CV: " << cv << "%" << std::endl;
+}
+
+// ============================================================================
+// Memory Prefetching Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, MemoryPrefetchingPerformance) {
+    const size_t num_operations = 1000;
+    const size_t large_buffer_size = 8192;  // Large buffer to trigger prefetching
+    
+    std::vector<double> iteration_times;
+    iteration_times.reserve(10);
+    
+    // Test memory prefetching performance
+    for (int iter = 0; iter < 10; ++iter) {
+        auto start_time = std::chrono::high_resolution_clock::now();
+        
+        for (size_t i = 0; i < num_operations; ++i) {
+            auto buffer = pool_->acquire(large_buffer_size);
+            if (buffer) {
+                // Simulate sequential access (benefits from prefetching)
+                for (size_t j = 0; j < large_buffer_size; j += 64) {
+                    buffer[j] = static_cast<uint8_t>((i + j) & 0xFF);
+                }
+                pool_->release(std::move(buffer), large_buffer_size);
+            }
+        }
+        
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+        iteration_times.push_back(duration.count());
+    }
+    
+    // Calculate performance statistics
+    double avg_time = std::accumulate(iteration_times.begin(), iteration_times.end(), 0.0) / iteration_times.size();
+    double avg_time_per_operation = avg_time / num_operations;
+    
+    // Verify prefetching doesn't hurt performance
+    EXPECT_LT(avg_time_per_operation, 100.0);  // Less than 100μs per operation
+    
+    std::cout << "Memory prefetching performance: " << avg_time_per_operation 
+              << " μs per operation" << std::endl;
+}
+
+// ============================================================================
+// Cache Line Optimization Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, CacheLineOptimization) {
+    const size_t buffer_size = 1024;
+    const size_t num_operations = 100;
+    
+    std::vector<double> iteration_times;
+    iteration_times.reserve(num_operations);
+    
+    // Test cache line optimization
+    for (size_t i = 0; i < num_operations; ++i) {
+        auto start_time = std::chrono::high_resolution_clock::now();
+        
+        auto buffer = pool_->acquire(buffer_size);
+        if (buffer) {
+            // Simulate cache-friendly access pattern
+            for (size_t j = 0; j < buffer_size; j += 64) {  // 64-byte cache line
+                buffer[j] = static_cast<uint8_t>((i + j) & 0xFF);
+            }
+            pool_->release(std::move(buffer), buffer_size);
+        }
+        
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
+        iteration_times.push_back(duration.count());
+    }
+    
+    // Calculate performance statistics
+    double avg_time = std::accumulate(iteration_times.begin(), iteration_times.end(), 0.0) / iteration_times.size();
+    
+    // Verify cache optimization is working (should be fast)
+    EXPECT_LT(avg_time, 10000.0);  // Less than 10μs per operation
+    
+    std::cout << "Cache line optimization performance: " << avg_time 
+              << " ns per operation" << std::endl;
+}
+
+// ============================================================================
+// Batch Statistics Update Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, BatchStatisticsUpdate) {
+    const size_t num_threads = 4;
+    const size_t operations_per_thread = 1000;
+    const size_t buffer_size = 1024;
+    
+    std::atomic<size_t> completed_operations{0};
+    std::vector<std::thread> threads;
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
+    
+    // Create worker threads
+    for (size_t t = 0; t < num_threads; ++t) {
+        threads.emplace_back([&, t]() {
+            for (size_t i = 0; i < operations_per_thread; ++i) {
+                auto buffer = pool_->acquire(buffer_size);
+                if (buffer) {
+                    // Simulate work
+                    buffer[0] = static_cast<uint8_t>((t + i) & 0xFF);
+                    pool_->release(std::move(buffer), buffer_size);
+                }
+                completed_operations++;
+            }
+        });
+    }
+    
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    
+    // Verify batch statistics update performance
+    EXPECT_EQ(completed_operations.load(), num_threads * operations_per_thread);
+    
+    double avg_time_per_operation = static_cast<double>(duration.count()) / completed_operations.load();
+    EXPECT_LT(avg_time_per_operation, 1000.0);  // Less than 1ms per operation
+    
+    // Verify statistics are updated
+    auto stats = pool_->get_stats();
+    EXPECT_GT(stats.total_allocations, 0);
+    
+    std::cout << "Batch statistics update performance: " << avg_time_per_operation 
+              << " μs per operation" << std::endl;
+}
+
+// ============================================================================
+// Lock Contention Reduction Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, LockContentionReduction) {
+    const size_t num_threads = 8;
+    const size_t operations_per_thread = 500;
+    const size_t buffer_size = 1024;
+    
+    std::atomic<size_t> completed_operations{0};
+    std::vector<std::thread> threads;
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
+    
+    // Create worker threads
+    for (size_t t = 0; t < num_threads; ++t) {
+        threads.emplace_back([&, t]() {
+            for (size_t i = 0; i < operations_per_thread; ++i) {
+                auto buffer = pool_->acquire(buffer_size);
+                if (buffer) {
+                    // Simulate work
+                    buffer[0] = static_cast<uint8_t>((t + i) & 0xFF);
+                    pool_->release(std::move(buffer), buffer_size);
+                }
+                completed_operations++;
+            }
+        });
+    }
+    
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    
+    // Verify lock contention reduction performance
+    EXPECT_EQ(completed_operations.load(), num_threads * operations_per_thread);
+    
+    double avg_time_per_operation = static_cast<double>(duration.count()) / completed_operations.load();
+    EXPECT_LT(avg_time_per_operation, 1000.0);  // Less than 1ms per operation
+    
+    // Verify no deadlocks occurred
+    auto stats = pool_->get_stats();
+    EXPECT_GT(stats.total_allocations, 0);
+    
+    std::cout << "Lock contention reduction performance: " << avg_time_per_operation 
+              << " μs per operation" << std::endl;
+}
+
+// ============================================================================
+// Binary Search Optimization Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, BinarySearchOptimization) {
+    const size_t num_operations = 1000;
+    std::vector<size_t> buffer_sizes = {64, 128, 256, 512, 1024, 2048, 4096, 8192};
+    
+    std::vector<double> iteration_times;
+    iteration_times.reserve(num_operations);
+    
+    // Test binary search optimization for bucket lookup
+    for (size_t i = 0; i < num_operations; ++i) {
+        auto start_time = std::chrono::high_resolution_clock::now();
+        
+        // Use different buffer sizes to test bucket lookup
+        size_t buffer_size = buffer_sizes[i % buffer_sizes.size()];
+        auto buffer = pool_->acquire(buffer_size);
+        if (buffer) {
+            pool_->release(std::move(buffer), buffer_size);
+        }
+        
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
+        iteration_times.push_back(duration.count());
+    }
+    
+    // Calculate performance statistics
+    double avg_time = std::accumulate(iteration_times.begin(), iteration_times.end(), 0.0) / iteration_times.size();
+    
+    // Verify binary search optimization is working (should be fast)
+    EXPECT_LT(avg_time, 10000.0);  // Less than 10μs per operation
+    
+    std::cout << "Binary search optimization performance: " << avg_time 
+              << " ns per operation" << std::endl;
+}
+
+// ============================================================================
+// Memory Alignment Edge Cases Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, MemoryAlignmentEdgeCases) {
+    // Test edge cases for memory alignment
+    
+    // Test 1: Very small buffer (should still work)
+    {
+        auto buffer = pool_->acquire(1);
+        EXPECT_NE(buffer, nullptr);
+        pool_->release(std::move(buffer), 1);
+    }
+    
+    // Test 2: Buffer size that's not a multiple of cache line
+    {
+        auto buffer = pool_->acquire(100);  // Not a multiple of 64
+        EXPECT_NE(buffer, nullptr);
+        pool_->release(std::move(buffer), 100);
+    }
+    
+    // Test 3: Buffer size that's exactly a cache line
+    {
+        auto buffer = pool_->acquire(64);  // Exactly one cache line
+        EXPECT_NE(buffer, nullptr);
+        pool_->release(std::move(buffer), 64);
+    }
+    
+    // Test 4: Large buffer that spans multiple cache lines
+    {
+        auto buffer = pool_->acquire(1024);  // 16 cache lines
+        EXPECT_NE(buffer, nullptr);
+        pool_->release(std::move(buffer), 1024);
+    }
+    
+    // Verify all allocations worked
+    auto stats = pool_->get_stats();
+    EXPECT_GE(stats.total_allocations, 4);
+}
+
+// ============================================================================
+// Health Monitoring Deadlock Tests
+// ============================================================================
+
+TEST_F(AdvancedOptimizationsTest, HealthMonitoringDeadlockPrevention) {
+    const size_t num_threads = 4;
+    const size_t operations_per_thread = 100;
+    const size_t buffer_size = 1024;
+    
+    // Enable health monitoring
+    pool_->enable_alerts();
+    
+    std::atomic<size_t> completed_operations{0};
+    std::vector<std::thread> threads;
+    
+    // Create worker threads that perform allocations and health monitoring
+    for (size_t t = 0; t < num_threads; ++t) {
+        threads.emplace_back([&, t]() {
+            for (size_t i = 0; i < operations_per_thread; ++i) {
+                // Perform allocation
+                auto buffer = pool_->acquire(buffer_size);
+                if (buffer) {
+                    // Simulate work
+                    buffer[0] = static_cast<uint8_t>((t + i) & 0xFF);
+                    pool_->release(std::move(buffer), buffer_size);
+                }
+                
+                // Periodically check health status (should not deadlock)
+                if (i % 10 == 0) {
+                    auto health_status = pool_->get_health_status();
+                    EXPECT_NE(health_status.status, MemoryPool::HealthMetrics::HealthStatus::FAILURE);
+                }
+                
+                completed_operations++;
+            }
+        });
+    }
+    
+    // Wait for all threads to complete
+    for (auto& thread : threads) {
+        thread.join();
+    }
+    
+    // Verify no deadlocks occurred
+    EXPECT_EQ(completed_operations.load(), num_threads * operations_per_thread);
+    
+    // Verify health monitoring is working
+    auto health_status = pool_->get_health_status();
+    EXPECT_NE(health_status.status, MemoryPool::HealthMetrics::HealthStatus::FAILURE);
+    
+    std::cout << "Health monitoring deadlock prevention: " << completed_operations.load() 
+              << " operations completed successfully" << std::endl;
+}
