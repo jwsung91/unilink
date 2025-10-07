@@ -50,6 +50,12 @@ add_executable(run_config_validation_tests
     test_utils.hpp
 )
 
+# Performance Benchmark Tests - Comprehensive performance analysis and benchmarking
+add_executable(run_benchmark_tests
+    test_benchmark.cc
+    test_utils.hpp
+)
+
 # ============================================================================
 # LINK LIBRARIES
 # ============================================================================
@@ -96,6 +102,11 @@ target_link_libraries(run_config_validation_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
+# Link benchmark tests
+target_link_libraries(run_benchmark_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # ============================================================================
 # TEST DISCOVERY
 # ============================================================================
@@ -110,6 +121,7 @@ gtest_discover_tests(run_boundary_tests)
 gtest_discover_tests(run_error_recovery_tests)
 gtest_discover_tests(run_stress_tests)
 gtest_discover_tests(run_config_validation_tests)
+gtest_discover_tests(run_benchmark_tests)
 
 # ============================================================================
 # SANITIZERS (Optional - for debugging)
