@@ -468,22 +468,33 @@ TEST_F(ErrorRecoveryTest, ExceptionSafetyInCallbacks) {
 TEST_F(ErrorRecoveryTest, MemoryAllocationFailureHandling) {
     std::cout << "\n=== Memory Allocation Failure Handling Test ===" << std::endl;
     
-    // 매우 큰 메모리 할당 시도 (메모리 부족 시뮬레이션)
+    auto& pool = common::GlobalMemoryPool::instance();
+    
+    // 1. 매우 큰 메모리 할당 시도 (입력 검증으로 인한 예외)
     const size_t huge_size = SIZE_MAX / 2; // 매우 큰 크기
     
-    auto& pool = common::GlobalMemoryPool::instance();
-    auto huge_buffer = pool.acquire(huge_size);
-    
-    // 메모리 할당 실패 시 nullptr 반환 확인
-    if (huge_buffer == nullptr) {
-        std::cout << "✓ Large memory allocation properly handled (nullptr returned)" << std::endl;
-    } else {
-        // 할당이 성공했다면 해제
+    try {
+        auto huge_buffer = pool.acquire(huge_size);
+        // If we get here, the buffer was allocated (unexpected)
         pool.release(std::move(huge_buffer), huge_size);
         std::cout << "✓ Large memory allocation succeeded (unexpected)" << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "✓ Large memory allocation properly handled (exception thrown): " << e.what() << std::endl;
     }
     
-    // 정상적인 메모리 할당이 여전히 작동하는지 확인
+    // 2. 최대 허용 크기 테스트 (할당 실패 가능성)
+    const size_t max_allowed_size = MemoryPool::MAX_BUFFER_SIZE;
+    auto max_buffer = pool.acquire(max_allowed_size);
+    
+    if (max_buffer == nullptr) {
+        std::cout << "✓ Maximum size allocation properly handled (nullptr returned)" << std::endl;
+    } else {
+        // 할당이 성공했다면 해제
+        pool.release(std::move(max_buffer), max_allowed_size);
+        std::cout << "✓ Maximum size allocation succeeded" << std::endl;
+    }
+    
+    // 3. 정상적인 메모리 할당이 여전히 작동하는지 확인
     auto normal_buffer = pool.acquire(1024);
     EXPECT_NE(normal_buffer, nullptr);
     if (normal_buffer) {

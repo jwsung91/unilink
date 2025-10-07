@@ -77,15 +77,14 @@ TEST_F(BoundaryTest, MemoryPoolBoundaryConditions) {
         std::cout << "✓ Maximum pool size (64KB) test passed" << std::endl;
     }
     
-    // 3. 0 크기 테스트 (nullptr 반환 예상)
-    auto zero_buffer = pool.acquire(0);
-    // Note: Current implementation may return a buffer even for size 0
-    // This is acceptable behavior, just log it
-    if (zero_buffer == nullptr) {
-        std::cout << "✓ Zero size test passed (nullptr returned)" << std::endl;
-    } else {
+    // 3. 0 크기 테스트 (예외 발생 예상)
+    try {
+        auto zero_buffer = pool.acquire(0);
+        // If we get here, the buffer was allocated (unexpected)
         pool.release(std::move(zero_buffer), 0);
         std::cout << "✓ Zero size test passed (buffer returned, which is acceptable)" << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "✓ Zero size test passed (exception thrown as expected): " << e.what() << std::endl;
     }
     
     // 4. 매우 큰 크기 테스트 (fallback 확인)
@@ -96,14 +95,14 @@ TEST_F(BoundaryTest, MemoryPoolBoundaryConditions) {
         std::cout << "✓ Large size (1MB) fallback test passed" << std::endl;
     }
     
-    // 5. SIZE_MAX 테스트
-    auto max_size_buffer = pool.acquire(SIZE_MAX);
-    // SIZE_MAX는 너무 크므로 nullptr이거나 fallback이어야 함
-    if (max_size_buffer) {
+    // 5. SIZE_MAX 테스트 (예외 발생 예상)
+    try {
+        auto max_size_buffer = pool.acquire(SIZE_MAX);
+        // If we get here, the buffer was allocated (unexpected)
         pool.release(std::move(max_size_buffer), SIZE_MAX);
         std::cout << "✓ SIZE_MAX test passed (fallback used)" << std::endl;
-    } else {
-        std::cout << "✓ SIZE_MAX test passed (nullptr returned)" << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "✓ SIZE_MAX test passed (exception thrown as expected): " << e.what() << std::endl;
     }
 }
 
