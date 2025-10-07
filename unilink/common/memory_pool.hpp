@@ -45,6 +45,61 @@ public:
         std::unordered_map<size_t, size_t> misses_by_size;
     };
 
+    // Health monitoring structures
+    struct HealthMetrics {
+        // Real-time health indicators
+        double memory_utilization{0.0};        // Current memory usage percentage
+        double allocation_rate{0.0};           // Allocations per second
+        double hit_rate{0.0};                  // Current hit rate
+        double average_latency_ms{0.0};        // Average allocation latency
+        size_t active_buffers{0};              // Currently active buffers
+        size_t free_buffers{0};                // Available buffers
+        double fragmentation_ratio{0.0};       // Memory fragmentation level
+        
+        // Performance trends
+        double hit_rate_trend{0.0};            // Hit rate trend (positive = improving)
+        double latency_trend{0.0};             // Latency trend (negative = improving)
+        double memory_growth_rate{0.0};        // Memory growth rate per second
+        
+        // Health status
+        enum class HealthStatus {
+            EXCELLENT,    // All metrics optimal
+            GOOD,         // Minor issues, still performing well
+            WARNING,      // Some metrics concerning
+            CRITICAL,     // Performance degradation
+            FAILURE       // System failure or severe issues
+        } status{HealthStatus::EXCELLENT};
+        
+        // Timestamp for metrics
+        std::chrono::steady_clock::time_point timestamp;
+        
+        // Alert conditions
+        bool memory_pressure{false};           // High memory usage
+        bool performance_degradation{false};   // Performance issues
+        bool fragmentation_high{false};        // High fragmentation
+        bool hit_rate_low{false};              // Low hit rate
+    };
+
+    struct AlertThresholds {
+        // Memory thresholds
+        double memory_utilization_warning{0.8};    // 80% memory usage
+        double memory_utilization_critical{0.95};  // 95% memory usage
+        
+        // Performance thresholds
+        double hit_rate_warning{0.1};               // 10% hit rate
+        double hit_rate_critical{0.05};             // 5% hit rate
+        double latency_warning_ms{1.0};             // 1ms latency
+        double latency_critical_ms{5.0};            // 5ms latency
+        
+        // Fragmentation thresholds
+        double fragmentation_warning{0.3};          // 30% fragmentation
+        double fragmentation_critical{0.5};         // 50% fragmentation
+        
+        // Rate thresholds
+        double allocation_rate_warning{1000.0};     // 1000 allocs/sec
+        double allocation_rate_critical{5000.0};    // 5000 allocs/sec
+    };
+
     // Cache line aligned structure for optimal memory access
     struct alignas(64) BufferInfo {
         std::unique_ptr<uint8_t[]> data;
@@ -192,6 +247,43 @@ public:
      */
     double get_hit_rate_for_size(size_t size) const;
 
+    // Health monitoring interface
+    /**
+     * @brief Get current health status of the memory pool
+     * @return HealthMetrics with current health indicators
+     */
+    HealthMetrics get_health_status() const;
+    
+    /**
+     * @brief Get active alerts
+     * @return Vector of active alert messages
+     */
+    std::vector<std::string> get_active_alerts() const;
+    
+    /**
+     * @brief Set alert thresholds
+     * @param thresholds New alert thresholds
+     */
+    void set_alert_thresholds(const AlertThresholds& thresholds);
+    
+    /**
+     * @brief Enable or disable alerts
+     * @param enable True to enable alerts, false to disable
+     */
+    void enable_alerts(bool enable = true);
+    
+    /**
+     * @brief Disable alerts
+     */
+    void disable_alerts();
+    
+    /**
+     * @brief Get health metrics history
+     * @param max_entries Maximum number of entries to return
+     * @return Vector of historical health metrics
+     */
+    std::vector<HealthMetrics> get_health_history(size_t max_entries = 10) const;
+
 private:
     // Cache line aligned bucket for optimal performance
     struct alignas(64) PoolBucket {
@@ -304,10 +396,39 @@ private:
         std::unordered_map<size_t, size_t> misses_by_size;
         std::unordered_map<size_t, size_t> usage_count;
     };
+
+    // Health monitoring data
+    struct HealthMonitoringData {
+        // Historical metrics for trend analysis
+        std::vector<HealthMetrics> metrics_history;
+        static constexpr size_t MAX_HISTORY_SIZE = 100;  // Keep last 100 measurements
+        
+        // Alert thresholds
+        AlertThresholds thresholds;
+        
+        // Monitoring state
+        std::chrono::steady_clock::time_point last_health_check;
+        std::chrono::steady_clock::time_point last_metrics_update;
+        static constexpr std::chrono::milliseconds HEALTH_CHECK_INTERVAL{1000};  // 1 second
+        static constexpr std::chrono::milliseconds METRICS_UPDATE_INTERVAL{100}; // 100ms
+        
+        // Performance counters for rate calculations (atomic to avoid locks)
+        std::atomic<size_t> allocations_since_last_check{0};
+        std::atomic<size_t> memory_allocated_since_last_check{0};
+        std::chrono::steady_clock::time_point last_rate_calculation;
+        
+        // Alert state
+        bool alerts_enabled{true};
+        std::vector<std::string> active_alerts;
+    };
     
     thread_local static LocalStats local_stats_;
     std::atomic<size_t> batch_update_counter_{0};
     static constexpr size_t BATCH_UPDATE_THRESHOLD = 100;
+    
+    // Health monitoring
+    mutable HealthMonitoringData health_monitoring_;
+    mutable std::mutex health_mutex_;
     
     // Batch update methods
     void flush_local_stats();
@@ -380,6 +501,20 @@ private:
     std::unique_ptr<uint8_t[]> acquire_from_lock_free_pool(PoolBucket& bucket);
     void return_to_lock_free_pool(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer);
     bool is_lock_free_pool_available(PoolBucket& bucket) const;
+    
+    // Health monitoring functions
+    HealthMetrics get_current_health_metrics() const;
+    void update_health_metrics();
+    void check_health_status();
+    void add_health_metrics_to_history(const HealthMetrics& metrics);
+    double calculate_fragmentation_ratio() const;
+    double calculate_hit_rate_trend() const;
+    double calculate_latency_trend() const;
+    double calculate_memory_growth_rate() const;
+    HealthMetrics::HealthStatus determine_health_status(const HealthMetrics& metrics) const;
+    void generate_alerts(const HealthMetrics& metrics);
+    void clear_resolved_alerts();
+    
 };
 
 /**

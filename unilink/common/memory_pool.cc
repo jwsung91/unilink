@@ -70,6 +70,10 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         local_stats_.total_allocation_time += duration.count();
         local_stats_.hits_by_size[size]++;
         
+        // Update health monitoring counters (atomic, no lock)
+        health_monitoring_.allocations_since_last_check.fetch_add(1);
+        health_monitoring_.memory_allocated_since_last_check.fetch_add(bucket.size);
+        
         return std::move(buffer_info->data);
     } else {
         // Pool miss - create new buffer
@@ -688,6 +692,301 @@ void MemoryPool::return_to_lock_free_pool(PoolBucket& bucket, std::unique_ptr<ui
 bool MemoryPool::is_lock_free_pool_available(PoolBucket& bucket) const {
     size_t allocated_count = bucket.lock_free_pool_allocated.load(std::memory_order_relaxed);
     return allocated_count < bucket.lock_free_buffer_pool.size();
+}
+
+// ============================================================================
+// Health Monitoring Implementation
+// ============================================================================
+
+MemoryPool::HealthMetrics MemoryPool::get_current_health_metrics() const {
+    HealthMetrics metrics;
+    auto now = std::chrono::steady_clock::now();
+    
+    // Get current statistics without acquiring additional locks
+    // Use atomic values directly to avoid deadlock
+    metrics.memory_utilization = (total_memory_allocated_ > 0) ? 
+        static_cast<double>(total_memory_allocated_) / (total_memory_allocated_ + 1) : 0.0;
+    
+    // Calculate hit rate from atomic counters
+    size_t total_ops = stats_.total_allocations;
+    metrics.hit_rate = (total_ops > 0) ? static_cast<double>(stats_.pool_hits) / total_ops : 0.0;
+    
+    // Use atomic values for latency
+    metrics.average_latency_ms = (total_ops > 0) ? 
+        static_cast<double>(stats_.total_allocation_time) / total_ops : 0.0;
+    
+    metrics.active_buffers = current_total_buffers_;
+    metrics.free_buffers = max_pool_size_ - current_total_buffers_;
+    metrics.fragmentation_ratio = calculate_fragmentation_ratio();
+    
+    // Calculate rates
+    auto time_since_last_check = now - health_monitoring_.last_rate_calculation;
+    if (time_since_last_check > std::chrono::milliseconds(100)) {
+        double seconds = std::chrono::duration<double>(time_since_last_check).count();
+        metrics.allocation_rate = health_monitoring_.allocations_since_last_check.load() / seconds;
+        metrics.memory_growth_rate = health_monitoring_.memory_allocated_since_last_check.load() / seconds;
+        
+        // Reset counters
+        health_monitoring_.allocations_since_last_check.store(0);
+        health_monitoring_.memory_allocated_since_last_check.store(0);
+        health_monitoring_.last_rate_calculation = now;
+    }
+    
+    // Calculate trends
+    metrics.hit_rate_trend = calculate_hit_rate_trend();
+    metrics.latency_trend = calculate_latency_trend();
+    
+    // Set timestamp
+    metrics.timestamp = now;
+    
+    // Determine health status
+    metrics.status = determine_health_status(metrics);
+    
+    // Check alert conditions
+    metrics.memory_pressure = metrics.memory_utilization > health_monitoring_.thresholds.memory_utilization_warning;
+    metrics.performance_degradation = metrics.average_latency_ms > health_monitoring_.thresholds.latency_warning_ms;
+    metrics.fragmentation_high = metrics.fragmentation_ratio > health_monitoring_.thresholds.fragmentation_warning;
+    metrics.hit_rate_low = metrics.hit_rate < health_monitoring_.thresholds.hit_rate_warning;
+    
+    return metrics;
+}
+
+void MemoryPool::update_health_metrics() {
+    auto now = std::chrono::steady_clock::now();
+    
+    // Check if it's time to update metrics
+    if (now - health_monitoring_.last_metrics_update < health_monitoring_.METRICS_UPDATE_INTERVAL) {
+        return;
+    }
+    
+    // Try to acquire lock with timeout to avoid deadlock
+    std::unique_lock<std::mutex> lock(health_mutex_, std::try_to_lock);
+    if (!lock.owns_lock()) {
+        return;  // Skip update if lock is not available
+    }
+    
+    // Get current metrics
+    HealthMetrics current_metrics = get_current_health_metrics();
+    
+    // Add to history
+    add_health_metrics_to_history(current_metrics);
+    
+    // Update last update time
+    health_monitoring_.last_metrics_update = now;
+    
+    // Check health status and generate alerts
+    check_health_status();
+}
+
+void MemoryPool::check_health_status() {
+    if (!health_monitoring_.alerts_enabled) {
+        return;
+    }
+    
+    if (health_monitoring_.metrics_history.empty()) {
+        return;
+    }
+    
+    const auto& latest_metrics = health_monitoring_.metrics_history.back();
+    generate_alerts(latest_metrics);
+    clear_resolved_alerts();
+}
+
+void MemoryPool::add_health_metrics_to_history(const HealthMetrics& metrics) {
+    health_monitoring_.metrics_history.push_back(metrics);
+    
+    // Keep only the last MAX_HISTORY_SIZE entries
+    if (health_monitoring_.metrics_history.size() > health_monitoring_.MAX_HISTORY_SIZE) {
+        health_monitoring_.metrics_history.erase(
+            health_monitoring_.metrics_history.begin(),
+            health_monitoring_.metrics_history.begin() + 
+            (health_monitoring_.metrics_history.size() - health_monitoring_.MAX_HISTORY_SIZE)
+        );
+    }
+}
+
+double MemoryPool::calculate_fragmentation_ratio() const {
+    // Simple fragmentation calculation based on free buffer distribution
+    size_t total_free_buffers = 0;
+    size_t fragmented_blocks = 0;
+    
+    for (const auto& bucket : buckets_) {
+        size_t free_count = bucket.free_count.load(std::memory_order_relaxed);
+        total_free_buffers += free_count;
+        
+        // Count non-contiguous free blocks as fragmentation
+        if (free_count > 0 && free_count < bucket.buffers.size()) {
+            fragmented_blocks++;
+        }
+    }
+    
+    if (total_free_buffers == 0) {
+        return 0.0;
+    }
+    
+    return static_cast<double>(fragmented_blocks) / buckets_.size();
+}
+
+double MemoryPool::calculate_hit_rate_trend() const {
+    if (health_monitoring_.metrics_history.size() < 2) {
+        return 0.0;
+    }
+    
+    const auto& recent = health_monitoring_.metrics_history.back();
+    const auto& previous = health_monitoring_.metrics_history[health_monitoring_.metrics_history.size() - 2];
+    
+    return recent.hit_rate - previous.hit_rate;
+}
+
+double MemoryPool::calculate_latency_trend() const {
+    if (health_monitoring_.metrics_history.size() < 2) {
+        return 0.0;
+    }
+    
+    const auto& recent = health_monitoring_.metrics_history.back();
+    const auto& previous = health_monitoring_.metrics_history[health_monitoring_.metrics_history.size() - 2];
+    
+    return recent.average_latency_ms - previous.average_latency_ms;
+}
+
+double MemoryPool::calculate_memory_growth_rate() const {
+    if (health_monitoring_.metrics_history.size() < 2) {
+        return 0.0;
+    }
+    
+    const auto& recent = health_monitoring_.metrics_history.back();
+    const auto& previous = health_monitoring_.metrics_history[health_monitoring_.metrics_history.size() - 2];
+    
+    auto time_diff = std::chrono::duration<double>(recent.timestamp - previous.timestamp).count();
+    if (time_diff <= 0) {
+        return 0.0;
+    }
+    
+    return (recent.memory_utilization - previous.memory_utilization) / time_diff;
+}
+
+MemoryPool::HealthMetrics::HealthStatus MemoryPool::determine_health_status(const HealthMetrics& metrics) const {
+    const auto& thresholds = health_monitoring_.thresholds;
+    
+    // Check for critical conditions
+    if (metrics.memory_utilization >= thresholds.memory_utilization_critical ||
+        metrics.hit_rate <= thresholds.hit_rate_critical ||
+        metrics.average_latency_ms >= thresholds.latency_critical_ms ||
+        metrics.fragmentation_ratio >= thresholds.fragmentation_critical) {
+        return HealthMetrics::HealthStatus::CRITICAL;
+    }
+    
+    // Check for warning conditions
+    if (metrics.memory_utilization >= thresholds.memory_utilization_warning ||
+        metrics.hit_rate <= thresholds.hit_rate_warning ||
+        metrics.average_latency_ms >= thresholds.latency_warning_ms ||
+        metrics.fragmentation_ratio >= thresholds.fragmentation_warning) {
+        return HealthMetrics::HealthStatus::WARNING;
+    }
+    
+    // Check for good performance
+    if (metrics.hit_rate >= 0.5 && metrics.average_latency_ms <= 0.5 && 
+        metrics.memory_utilization <= 0.5 && metrics.fragmentation_ratio <= 0.1) {
+        return HealthMetrics::HealthStatus::EXCELLENT;
+    }
+    
+    return HealthMetrics::HealthStatus::GOOD;
+}
+
+void MemoryPool::generate_alerts(const HealthMetrics& metrics) {
+    const auto& thresholds = health_monitoring_.thresholds;
+    
+    // Clear existing alerts
+    health_monitoring_.active_alerts.clear();
+    
+    // Memory pressure alerts
+    if (metrics.memory_utilization >= thresholds.memory_utilization_critical) {
+        health_monitoring_.active_alerts.push_back(
+            "CRITICAL: Memory utilization at " + std::to_string(metrics.memory_utilization * 100) + "%"
+        );
+    } else if (metrics.memory_utilization >= thresholds.memory_utilization_warning) {
+        health_monitoring_.active_alerts.push_back(
+            "WARNING: Memory utilization at " + std::to_string(metrics.memory_utilization * 100) + "%"
+        );
+    }
+    
+    // Hit rate alerts
+    if (metrics.hit_rate <= thresholds.hit_rate_critical) {
+        health_monitoring_.active_alerts.push_back(
+            "CRITICAL: Hit rate at " + std::to_string(metrics.hit_rate * 100) + "%"
+        );
+    } else if (metrics.hit_rate <= thresholds.hit_rate_warning) {
+        health_monitoring_.active_alerts.push_back(
+            "WARNING: Hit rate at " + std::to_string(metrics.hit_rate * 100) + "%"
+        );
+    }
+    
+    // Latency alerts
+    if (metrics.average_latency_ms >= thresholds.latency_critical_ms) {
+        health_monitoring_.active_alerts.push_back(
+            "CRITICAL: Average latency at " + std::to_string(metrics.average_latency_ms) + "ms"
+        );
+    } else if (metrics.average_latency_ms >= thresholds.latency_warning_ms) {
+        health_monitoring_.active_alerts.push_back(
+            "WARNING: Average latency at " + std::to_string(metrics.average_latency_ms) + "ms"
+        );
+    }
+    
+    // Fragmentation alerts
+    if (metrics.fragmentation_ratio >= thresholds.fragmentation_critical) {
+        health_monitoring_.active_alerts.push_back(
+            "CRITICAL: Fragmentation ratio at " + std::to_string(metrics.fragmentation_ratio * 100) + "%"
+        );
+    } else if (metrics.fragmentation_ratio >= thresholds.fragmentation_warning) {
+        health_monitoring_.active_alerts.push_back(
+            "WARNING: Fragmentation ratio at " + std::to_string(metrics.fragmentation_ratio * 100) + "%"
+        );
+    }
+}
+
+void MemoryPool::clear_resolved_alerts() {
+    // This could be enhanced to track alert history and resolution
+    // For now, we just clear alerts that are no longer active
+}
+
+// Public health monitoring interface
+MemoryPool::HealthMetrics MemoryPool::get_health_status() const {
+    std::lock_guard<std::mutex> lock(health_mutex_);
+    return get_current_health_metrics();
+}
+
+std::vector<std::string> MemoryPool::get_active_alerts() const {
+    std::lock_guard<std::mutex> lock(health_mutex_);
+    return health_monitoring_.active_alerts;
+}
+
+void MemoryPool::set_alert_thresholds(const AlertThresholds& thresholds) {
+    std::lock_guard<std::mutex> lock(health_mutex_);
+    health_monitoring_.thresholds = thresholds;
+}
+
+void MemoryPool::enable_alerts(bool enable) {
+    std::lock_guard<std::mutex> lock(health_mutex_);
+    health_monitoring_.alerts_enabled = enable;
+}
+
+void MemoryPool::disable_alerts() {
+    std::lock_guard<std::mutex> lock(health_mutex_);
+    health_monitoring_.alerts_enabled = false;
+}
+
+std::vector<MemoryPool::HealthMetrics> MemoryPool::get_health_history(size_t max_entries) const {
+    std::lock_guard<std::mutex> lock(health_mutex_);
+    
+    size_t start_index = 0;
+    if (health_monitoring_.metrics_history.size() > max_entries) {
+        start_index = health_monitoring_.metrics_history.size() - max_entries;
+    }
+    
+    return std::vector<HealthMetrics>(
+        health_monitoring_.metrics_history.begin() + start_index,
+        health_monitoring_.metrics_history.end()
+    );
 }
 
 // ============================================================================
