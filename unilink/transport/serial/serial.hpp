@@ -7,11 +7,13 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <variant>
 
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/iserial_port.hpp"
 #include "unilink/common/constants.hpp"
+#include "unilink/common/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {
@@ -61,7 +63,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   net::steady_timer retry_timer_;
 
   std::vector<uint8_t> rx_;
-  std::deque<std::vector<uint8_t>> tx_;
+  std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>>> tx_;
   bool writing_ = false;
   size_t queued_bytes_ = 0;
   size_t bp_high_;  // Configurable backpressure threshold

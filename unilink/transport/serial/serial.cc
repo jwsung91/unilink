@@ -1,9 +1,11 @@
 #include "unilink/transport/serial/serial.hpp"
 
 #include <iostream>
+#include <cstring>
 
 #include "unilink/transport/serial/boost_serial_port.hpp"
 #include "unilink/common/io_context_manager.hpp"
+#include "unilink/common/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {
@@ -98,8 +100,28 @@ void Serial::stop() {
 bool Serial::is_connected() const { return opened_; }
 
 void Serial::async_write_copy(const uint8_t* data, size_t n) {
-  std::vector<uint8_t> copy(data, data + n);
-  net::post(ioc_, [self = shared_from_this(), buf = std::move(copy)]() mutable {
+  // Use memory pool for better performance (only for reasonable sizes)
+  if (n <= 65536) { // Only use pool for buffers <= 64KB
+    common::PooledBuffer pooled_buffer(n);
+    if (pooled_buffer.valid()) {
+      // Copy data to pooled buffer
+      std::memcpy(pooled_buffer.data(), data, n);
+      
+      net::post(ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
+        self->queued_bytes_ += buf.size();
+        self->tx_.emplace_back(std::move(buf));
+        if (self->on_bp_ && self->queued_bytes_ > self->bp_high_)
+          self->on_bp_(self->queued_bytes_);
+        if (!self->writing_) self->do_write();
+      });
+      return;
+    }
+  }
+  
+  // Fallback to regular allocation for large buffers or pool exhaustion
+  std::vector<uint8_t> fallback(data, data + n);
+  
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     self->queued_bytes_ += buf.size();
     self->tx_.emplace_back(std::move(buf));
     if (self->on_bp_ && self->queued_bytes_ > self->bp_high_)
@@ -199,15 +221,33 @@ void Serial::do_write() {
   }
   writing_ = true;
   auto self = shared_from_this();
-  port_->async_write(net::buffer(tx_.front()), [self](auto ec, std::size_t n) {
-    self->queued_bytes_ -= n;
-    if (ec) {
-      self->handle_error("write", ec);
-      return;
-    }
-    self->tx_.pop_front();
-    self->do_write();
-  });
+  
+  // Handle both PooledBuffer and std::vector<uint8_t> (fallback)
+  auto& front_buffer = tx_.front();
+  if (std::holds_alternative<common::PooledBuffer>(front_buffer)) {
+    auto& pooled_buf = std::get<common::PooledBuffer>(front_buffer);
+    port_->async_write(net::buffer(pooled_buf.data(), pooled_buf.size()), 
+                       [self](auto ec, std::size_t n) {
+                         self->queued_bytes_ -= n;
+                         if (ec) {
+                           self->handle_error("write", ec);
+                           return;
+                         }
+                         self->tx_.pop_front();
+                         self->do_write();
+                       });
+  } else {
+    auto& vec_buf = std::get<std::vector<uint8_t>>(front_buffer);
+    port_->async_write(net::buffer(vec_buf), [self](auto ec, std::size_t n) {
+      self->queued_bytes_ -= n;
+      if (ec) {
+        self->handle_error("write", ec);
+        return;
+      }
+      self->tx_.pop_front();
+      self->do_write();
+    });
+  }
 }
 
 void Serial::handle_error(const char* where,

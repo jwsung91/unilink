@@ -7,10 +7,12 @@
 #include <functional>
 #include <memory>
 #include <vector>
+#include <variant>
 
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_socket.hpp"
 #include "unilink/common/constants.hpp"
+#include "unilink/common/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {
@@ -47,7 +49,7 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
   net::io_context& ioc_;
   std::unique_ptr<interface::TcpSocketInterface> socket_;
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
-  std::deque<std::vector<uint8_t>> tx_;
+  std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>>> tx_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
   size_t bp_high_;  // Configurable backpressure threshold
