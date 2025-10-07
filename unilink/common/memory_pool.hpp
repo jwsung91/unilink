@@ -199,6 +199,19 @@ private:
     std::vector<size_t> expired_indices;  // Indices of expired buffers to remove
     std::chrono::steady_clock::time_point last_cleanup_time;
     static constexpr std::chrono::milliseconds CLEANUP_INTERVAL{100};  // 100ms cleanup interval
+    
+    // Adaptive algorithm selection
+    enum class CleanupAlgorithm {
+        LAZY_OPTIMIZED,    // New algorithm for low expiration ratio
+        TRADITIONAL_ERASE  // Traditional algorithm for high expiration ratio
+    };
+    
+    CleanupAlgorithm current_cleanup_algorithm{CleanupAlgorithm::LAZY_OPTIMIZED};
+    double last_expiration_ratio{0.0};
+    size_t cleanup_performance_samples{0};
+    std::chrono::microseconds total_cleanup_time{0};
+    static constexpr double EXPIRATION_RATIO_THRESHOLD{0.3};  // 30% threshold
+    static constexpr size_t ALGORITHM_SWITCH_SAMPLES{10};     // Switch after 10 samples
         
         // Default constructor
         PoolBucket() = default;
@@ -298,6 +311,7 @@ public:
     // Memory alignment constants for optimal cache performance
     static constexpr size_t CACHE_LINE_SIZE = 64;
     static constexpr size_t ALIGNMENT_SIZE = 64;
+    static constexpr size_t ALIGNMENT_THRESHOLD = 4096;  // Only align buffers >= 4KB
 
 private:
     
@@ -321,6 +335,12 @@ private:
     void lazy_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age);
     void perform_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age);
     void remove_expired_buffers_efficiently(PoolBucket& bucket, const std::vector<size_t>& expired_indices);
+    
+    // Adaptive algorithm selection functions
+    void adaptive_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age);
+    void traditional_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age);
+    void select_optimal_cleanup_algorithm(PoolBucket& bucket, double expiration_ratio, std::chrono::microseconds cleanup_time);
+    bool should_use_aligned_allocation(size_t size) const;
 };
 
 /**

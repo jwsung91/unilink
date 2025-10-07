@@ -287,16 +287,18 @@ std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) {
 
 std::unique_ptr<uint8_t[]> MemoryPool::create_aligned_buffer(size_t size) {
     try {
-        // For now, use regular allocation but with aligned size
-        // TODO: Implement proper aligned allocation when needed
-        size_t aligned_size = align_size(size);
-        
-        // Use regular allocation with aligned size for better cache performance
-        return std::make_unique<uint8_t[]>(aligned_size);
+        // Adaptive alignment: only align large buffers to avoid overhead
+        if (should_use_aligned_allocation(size)) {
+            size_t aligned_size = align_size(size);
+            return std::make_unique<uint8_t[]>(aligned_size);
+        } else {
+            // Use regular allocation for small buffers
+            return std::make_unique<uint8_t[]>(size);
+        }
     } catch (const std::bad_alloc& e) {
         // Log allocation failure for debugging
         std::cerr << "Memory allocation failed for size " << size 
-                  << ": " << e.what() << std::endl;
+                << ": " << e.what() << std::endl;
         return nullptr;
     }
 }
@@ -307,7 +309,7 @@ size_t MemoryPool::align_size(size_t size) const {
 }
 
 void MemoryPool::cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age) {
-    lazy_cleanup_bucket(bucket, max_age);
+    adaptive_cleanup_bucket(bucket, max_age);
 }
 
 void MemoryPool::lazy_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age) {
@@ -366,6 +368,91 @@ void MemoryPool::remove_expired_buffers_efficiently(PoolBucket& bucket, const st
             bucket.buffers.pop_back();
         }
     }
+}
+
+void MemoryPool::adaptive_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age) {
+    std::lock_guard<std::mutex> lock(bucket.mutex);
+    
+    auto now = std::chrono::steady_clock::now();
+    
+    // Check if enough time has passed since last cleanup
+    if (now - bucket.last_cleanup_time < bucket.CLEANUP_INTERVAL) {
+        return;  // Skip cleanup if too recent
+    }
+    
+    auto start_time = std::chrono::high_resolution_clock::now();
+    
+    // Calculate expiration ratio
+    auto cutoff_time = now - max_age;
+    size_t expired_count = 0;
+    for (const auto& info : bucket.buffers) {
+        if (!info.in_use && info.last_used < cutoff_time) {
+            expired_count++;
+        }
+    }
+    
+    double expiration_ratio = bucket.buffers.empty() ? 0.0 : 
+                             static_cast<double>(expired_count) / bucket.buffers.size();
+    
+    // Select optimal algorithm based on expiration ratio
+    if (expiration_ratio < bucket.EXPIRATION_RATIO_THRESHOLD) {
+        // Low expiration ratio: use optimized algorithm
+        if (bucket.current_cleanup_algorithm != PoolBucket::CleanupAlgorithm::LAZY_OPTIMIZED) {
+            bucket.current_cleanup_algorithm = PoolBucket::CleanupAlgorithm::LAZY_OPTIMIZED;
+        }
+        perform_cleanup_bucket(bucket, max_age);
+    } else {
+        // High expiration ratio: use traditional algorithm
+        if (bucket.current_cleanup_algorithm != PoolBucket::CleanupAlgorithm::TRADITIONAL_ERASE) {
+            bucket.current_cleanup_algorithm = PoolBucket::CleanupAlgorithm::TRADITIONAL_ERASE;
+        }
+        traditional_cleanup_bucket(bucket, max_age);
+    }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto cleanup_time = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    
+    // Update performance tracking
+    bucket.total_cleanup_time += cleanup_time;
+    bucket.cleanup_performance_samples++;
+    bucket.last_expiration_ratio = expiration_ratio;
+    
+    bucket.last_cleanup_time = now;
+}
+
+void MemoryPool::traditional_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age) {
+    auto now = std::chrono::steady_clock::now();
+    auto cutoff_time = now - max_age;
+    
+    // Use traditional remove_if + erase for high expiration ratios
+    bucket.buffers.erase(
+        std::remove_if(bucket.buffers.begin(), bucket.buffers.end(),
+                      [&cutoff_time](const BufferInfo& info) {
+                          return !info.in_use && info.last_used < cutoff_time;
+                      }),
+        bucket.buffers.end()
+    );
+    
+    // Rebuild free list after cleanup
+    rebuild_free_list(bucket);
+}
+
+void MemoryPool::select_optimal_cleanup_algorithm(PoolBucket& bucket, double expiration_ratio, std::chrono::microseconds cleanup_time) {
+    // This function can be used for future machine learning-based algorithm selection
+    // For now, we use simple threshold-based selection in adaptive_cleanup_bucket
+    
+    // Track performance metrics for future optimization
+    if (bucket.cleanup_performance_samples >= bucket.ALGORITHM_SWITCH_SAMPLES) {
+        // Reset performance tracking
+        bucket.cleanup_performance_samples = 0;
+        bucket.total_cleanup_time = std::chrono::microseconds{0};
+    }
+}
+
+bool MemoryPool::should_use_aligned_allocation(size_t size) const {
+    // Only use aligned allocation for buffers >= ALIGNMENT_THRESHOLD
+    // This avoids excessive memory overhead for small buffers
+    return size >= ALIGNMENT_THRESHOLD;
 }
 
 // ============================================================================
