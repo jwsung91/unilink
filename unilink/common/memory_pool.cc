@@ -49,11 +49,12 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         auto end_time = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
         
+        // Update statistics with lock
         {
             std::lock_guard<std::mutex> stats_lock(stats_mutex_);
             stats_.pool_hits++;
             stats_.total_allocations++;
-            stats_.total_allocation_time += duration;
+            stats_.total_allocation_time += duration.count();
             stats_.hits_by_size[size]++;
         }
         
@@ -65,11 +66,12 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         auto end_time = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
         
+        // Update statistics with lock
         {
             std::lock_guard<std::mutex> stats_lock(stats_mutex_);
             stats_.pool_misses++;
             stats_.total_allocations++;
-            stats_.total_allocation_time += duration;
+            stats_.total_allocation_time += duration.count();
             stats_.misses_by_size[size]++;
         }
         
@@ -77,7 +79,7 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         
         // Track memory allocation
         if (buffer) {
-            total_memory_allocated_ += size;
+            total_memory_allocated_ += bucket.size;  // Use actual allocated size, not requested size
             size_t current_peak = peak_memory_usage_.load();
             while (total_memory_allocated_ > current_peak && 
                    !peak_memory_usage_.compare_exchange_weak(current_peak, total_memory_allocated_)) {
@@ -112,17 +114,18 @@ void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
         bucket.buffers.push_back(std::move(info));
         current_total_buffers_++;
         
-        // Update memory tracking
-        total_memory_allocated_ -= size;
+        // Note: Memory tracking is not updated here because the buffer is being
+        // returned to the pool, not actually deallocated. The memory remains allocated.
     }
     // If pool is full, let the buffer be destroyed automatically
     
     auto end_time = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     
+    // Update deallocation time with lock
     {
         std::lock_guard<std::mutex> stats_lock(stats_mutex_);
-        stats_.total_deallocation_time += duration;
+        stats_.total_deallocation_time += duration.count();
     }
 }
 
@@ -131,20 +134,8 @@ MemoryPool::PoolStats MemoryPool::get_stats() const {
     
     PoolStats result = stats_;
     result.current_pool_size = current_total_buffers_.load();
-    
-    // Add bucket-specific statistics
-    size_t total_hits = 0;
-    size_t total_misses = 0;
-    for (const auto& bucket : buckets_) {
-        std::lock_guard<std::mutex> bucket_lock(bucket.mutex);
-        total_hits += bucket.hits.load();
-        total_misses += bucket.misses.load();
-    }
-    
-    // Use the higher value between stats_ and bucket totals
-    result.pool_hits = std::max(result.pool_hits, total_hits);
-    result.pool_misses = std::max(result.pool_misses, total_misses);
-    result.total_allocations = result.pool_hits + result.pool_misses;
+    result.current_memory_usage = total_memory_allocated_.load();
+    result.peak_memory_usage = peak_memory_usage_.load();
     
     return result;
 }
@@ -319,13 +310,13 @@ MemoryPool::PoolStats MemoryPool::get_detailed_stats() const {
     // Calculate averages
     if (detailed_stats.total_allocations > 0) {
         detailed_stats.average_allocation_time_ms = 
-            static_cast<double>(detailed_stats.total_allocation_time.count()) / 
+            static_cast<double>(detailed_stats.total_allocation_time) / 
             detailed_stats.total_allocations;
     }
     
     if (detailed_stats.pool_hits + detailed_stats.pool_misses > 0) {
         detailed_stats.average_deallocation_time_ms = 
-            static_cast<double>(detailed_stats.total_deallocation_time.count()) / 
+            static_cast<double>(detailed_stats.total_deallocation_time) / 
             (detailed_stats.pool_hits + detailed_stats.pool_misses);
     }
     

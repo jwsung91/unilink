@@ -25,21 +25,22 @@ namespace common {
 class MemoryPool {
 public:
     struct PoolStats {
+        // Core statistics - maintained centrally to avoid double counting
         size_t total_allocations{0};
         size_t pool_hits{0};
         size_t pool_misses{0};
         size_t current_pool_size{0};
         size_t max_pool_size{0};
-        std::chrono::milliseconds total_allocation_time{0};
-        std::chrono::milliseconds total_deallocation_time{0};
         
         // Performance metrics
+        std::chrono::milliseconds::rep total_allocation_time{0};
+        std::chrono::milliseconds::rep total_deallocation_time{0};
         double average_allocation_time_ms{0.0};
         double average_deallocation_time_ms{0.0};
         size_t peak_memory_usage{0};
         size_t current_memory_usage{0};
         
-        // Hit rate by buffer size
+        // Hit rate by buffer size - thread-safe access
         std::unordered_map<size_t, size_t> hits_by_size;
         std::unordered_map<size_t, size_t> misses_by_size;
     };
