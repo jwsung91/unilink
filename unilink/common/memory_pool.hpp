@@ -191,9 +191,14 @@ private:
         std::atomic<size_t> hits{0};
         std::atomic<size_t> misses{0};
         
-        // Free list management for O(1) allocation
-        BufferInfo* free_list_head{nullptr};
-        std::atomic<size_t> free_count{0};
+    // Free list management for O(1) allocation
+    BufferInfo* free_list_head{nullptr};
+    std::atomic<size_t> free_count{0};
+    
+    // Lazy cleanup optimization
+    std::vector<size_t> expired_indices;  // Indices of expired buffers to remove
+    std::chrono::steady_clock::time_point last_cleanup_time;
+    static constexpr std::chrono::milliseconds CLEANUP_INTERVAL{100};  // 100ms cleanup interval
         
         // Default constructor
         PoolBucket() = default;
@@ -311,6 +316,11 @@ private:
     // Memory alignment optimization functions
     size_t align_size(size_t size) const;
     std::unique_ptr<uint8_t[]> create_aligned_buffer(size_t size);
+    
+    // Optimized cleanup functions
+    void lazy_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age);
+    void perform_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age);
+    void remove_expired_buffers_efficiently(PoolBucket& bucket, const std::vector<size_t>& expired_indices);
 };
 
 /**

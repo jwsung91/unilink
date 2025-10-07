@@ -206,8 +206,9 @@ void MemoryPool::resize_pool(size_t new_size) {
 }
 
 void MemoryPool::cleanup_old_buffers(std::chrono::milliseconds max_age) {
+    // Use lazy cleanup for better performance
     for (auto& bucket : buckets_) {
-        cleanup_bucket(bucket, max_age);
+        lazy_cleanup_bucket(bucket, max_age);
     }
 }
 
@@ -306,22 +307,65 @@ size_t MemoryPool::align_size(size_t size) const {
 }
 
 void MemoryPool::cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age) {
+    lazy_cleanup_bucket(bucket, max_age);
+}
+
+void MemoryPool::lazy_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age) {
     std::lock_guard<std::mutex> lock(bucket.mutex);
     
     auto now = std::chrono::steady_clock::now();
+    
+    // Check if enough time has passed since last cleanup
+    if (now - bucket.last_cleanup_time < bucket.CLEANUP_INTERVAL) {
+        return;  // Skip cleanup if too recent
+    }
+    
+    // Perform the actual cleanup
+    perform_cleanup_bucket(bucket, max_age);
+    bucket.last_cleanup_time = now;
+}
+
+void MemoryPool::perform_cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age) {
+    auto now = std::chrono::steady_clock::now();
     auto cutoff_time = now - max_age;
     
-    // Remove expired buffers and rebuild free list
-    bucket.buffers.erase(
-        std::remove_if(bucket.buffers.begin(), bucket.buffers.end(),
-                      [&cutoff_time](const BufferInfo& info) {
-                          return !info.in_use && info.last_used < cutoff_time;
-                      }),
-        bucket.buffers.end()
-    );
+    // Find expired buffer indices (more efficient than remove_if)
+    bucket.expired_indices.clear();
+    bucket.expired_indices.reserve(bucket.buffers.size() / 4);  // Reserve space for potential removals
+    
+    for (size_t i = 0; i < bucket.buffers.size(); ++i) {
+        const auto& info = bucket.buffers[i];
+        if (!info.in_use && info.last_used < cutoff_time) {
+            bucket.expired_indices.push_back(i);
+        }
+    }
+    
+    // Remove expired buffers efficiently
+    if (!bucket.expired_indices.empty()) {
+        remove_expired_buffers_efficiently(bucket, bucket.expired_indices);
+    }
     
     // Rebuild free list after cleanup to maintain consistency
     rebuild_free_list(bucket);
+}
+
+void MemoryPool::remove_expired_buffers_efficiently(PoolBucket& bucket, const std::vector<size_t>& expired_indices) {
+    if (expired_indices.empty()) return;
+    
+    // Sort indices in descending order to remove from end first (avoids index shifting)
+    std::vector<size_t> sorted_indices = expired_indices;
+    std::sort(sorted_indices.begin(), sorted_indices.end(), std::greater<size_t>());
+    
+    // Remove buffers from highest index to lowest (O(k) where k = number of expired buffers)
+    for (size_t index : sorted_indices) {
+        if (index < bucket.buffers.size()) {
+            // Move the last element to the expired position (O(1) operation)
+            if (index != bucket.buffers.size() - 1) {
+                bucket.buffers[index] = std::move(bucket.buffers.back());
+            }
+            bucket.buffers.pop_back();
+        }
+    }
 }
 
 // ============================================================================
