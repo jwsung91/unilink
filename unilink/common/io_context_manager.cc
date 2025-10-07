@@ -106,6 +106,12 @@ bool IoContextManager::is_running() const {
     return running_.load();
 }
 
+std::unique_ptr<boost::asio::io_context> IoContextManager::create_independent_context() {
+    // 독립적인 io_context 생성 (테스트 격리용)
+    // 이 컨텍스트는 전역 관리자와 완전히 분리되어 관리됨
+    return std::make_unique<IoContext>();
+}
+
 IoContextManager::~IoContextManager() {
     try {
         stop();

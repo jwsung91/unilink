@@ -5,6 +5,7 @@
 #include <atomic>
 
 #include "unilink/unilink.hpp"
+#include "unilink/common/io_context_manager.hpp"
 
 using namespace unilink;
 
@@ -384,6 +385,131 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
     server->stop();
     client->stop();
     serial->stop();
+}
+
+// ============================================================================
+// IoContext 관리 기능 테스트
+// ============================================================================
+
+/**
+ * @brief IoContextManager 기본 기능 테스트
+ */
+TEST_F(BuilderTest, IoContextManagerBasicFunctionality) {
+    auto& manager = common::IoContextManager::instance();
+    
+    // 이전 테스트의 영향을 받을 수 있으므로 현재 상태 확인
+    bool was_running = manager.is_running();
+    
+    // 시작
+    manager.start();
+    EXPECT_TRUE(manager.is_running());
+    
+    // 컨텍스트 가져오기
+    auto& context = manager.get_context();
+    EXPECT_NE(&context, nullptr);
+    
+    // 중지
+    manager.stop();
+    EXPECT_FALSE(manager.is_running());
+    
+    // 원래 상태로 복원 (필요한 경우)
+    if (was_running) {
+        manager.start();
+    }
+}
+
+/**
+ * @brief 독립적인 컨텍스트 생성 테스트
+ */
+TEST_F(BuilderTest, IndependentContextCreation) {
+    auto& manager = common::IoContextManager::instance();
+    
+    // 독립적인 컨텍스트 생성
+    auto independent_context = manager.create_independent_context();
+    EXPECT_NE(independent_context, nullptr);
+    
+    // 전역 컨텍스트와 다른 인스턴스인지 확인
+    manager.start();
+    auto& global_context = manager.get_context();
+    EXPECT_NE(independent_context.get(), &global_context);
+    
+    manager.stop();
+}
+
+/**
+ * @brief 빌더에서 독립적인 컨텍스트 사용 테스트
+ */
+TEST_F(BuilderTest, BuilderWithIndependentContext) {
+    uint16_t test_port = getTestPort();
+    
+    // 독립적인 컨텍스트를 사용하는 서버 생성
+    auto server = builder::UnifiedBuilder::tcp_server(test_port)
+        .use_independent_context(true)
+        .auto_start(false)
+        .build();
+    
+    EXPECT_NE(server, nullptr);
+    
+    // 독립적인 컨텍스트를 사용하는 클라이언트 생성
+    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+        .use_independent_context(true)
+        .auto_start(false)
+        .build();
+    
+    EXPECT_NE(client, nullptr);
+    
+    // 공유 컨텍스트를 사용하는 서버 생성
+    auto shared_server = builder::UnifiedBuilder::tcp_server(test_port + 1)
+        .use_independent_context(false)
+        .auto_start(false)
+        .build();
+    
+    EXPECT_NE(shared_server, nullptr);
+}
+
+/**
+ * @brief 테스트 격리 시나리오
+ */
+TEST_F(BuilderTest, TestIsolationScenario) {
+    // 테스트 1: 독립적인 컨텍스트 사용
+    auto client1 = builder::UnifiedBuilder::tcp_client("127.0.0.1", getTestPort())
+        .use_independent_context(true)
+        .auto_start(false)
+        .build();
+    
+    // 테스트 2: 공유 컨텍스트 사용
+    auto client2 = builder::UnifiedBuilder::tcp_client("127.0.0.1", getTestPort())
+        .use_independent_context(false)
+        .auto_start(false)
+        .build();
+    
+    // 테스트 3: 또 다른 독립적인 컨텍스트
+    auto client3 = builder::UnifiedBuilder::tcp_client("127.0.0.1", getTestPort())
+        .use_independent_context(true)
+        .auto_start(false)
+        .build();
+    
+    // 모든 클라이언트가 성공적으로 생성되었는지 확인
+    EXPECT_NE(client1, nullptr);
+    EXPECT_NE(client2, nullptr);
+    EXPECT_NE(client3, nullptr);
+}
+
+/**
+ * @brief 메서드 체이닝과 독립적인 컨텍스트 조합 테스트
+ */
+TEST_F(BuilderTest, MethodChainingWithIndependentContext) {
+    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", getTestPort())
+        .use_independent_context(true)
+        .auto_start(false)
+        .auto_manage(false)
+        .on_connect([]() { std::cout << "Connected!" << std::endl; })
+        .on_disconnect([]() { std::cout << "Disconnected!" << std::endl; })
+        .on_data([](const std::string& data) { std::cout << "Data: " << data << std::endl; })
+        .on_error([](const std::string& error) { std::cout << "Error: " << error << std::endl; })
+        .build();
+    
+    EXPECT_NE(client, nullptr);
 }
 
 int main(int argc, char** argv) {

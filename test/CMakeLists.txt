@@ -40,6 +40,8 @@ add_executable(run_communication_tests
     test_communication.cc
 )
 
+# Note: IoContext management tests are now integrated into run_builder_tests
+
 # Link the core test executable against our library and GoogleTest
 target_link_libraries(run_tests
     PRIVATE
@@ -96,6 +98,8 @@ target_link_libraries(run_communication_tests
     GTest::gmock
 )
 
+# Note: IoContext management tests are now integrated into run_builder_tests
+
 # Discover and add tests to CTest
 include(GoogleTest)
 gtest_discover_tests(run_tests)
@@ -105,6 +109,7 @@ gtest_discover_tests(run_builder_integration_tests)
 gtest_discover_tests(run_simple_server_tests)
 gtest_discover_tests(run_architecture_tests)
 gtest_discover_tests(run_communication_tests)
+# Note: IoContext management tests are now integrated into run_builder_tests
 
 # Enable sanitizers for debugging memory errors and undefined behavior.
 # This is typically done for Debug or RelWithDebInfo builds.

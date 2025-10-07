@@ -122,12 +122,20 @@ public:
     TcpClientBuilder& on_error(U* obj, F method) {
         return static_cast<TcpClientBuilder&>(BuilderInterface<wrapper::TcpClient>::on_error(obj, method));
     }
+    
+    /**
+     * @brief Use independent IoContext for this client (for testing isolation)
+     * @param use_independent true to use independent context, false for shared context
+     * @return TcpClientBuilder& Reference to this builder for method chaining
+     */
+    TcpClientBuilder& use_independent_context(bool use_independent = true);
 
 private:
     std::string host_;
     uint16_t port_;
     bool auto_start_;
     bool auto_manage_;
+    bool use_independent_context_;
     
     std::function<void(const std::string&)> on_data_;
     std::function<void()> on_connect_;
