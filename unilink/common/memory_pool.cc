@@ -185,27 +185,35 @@ std::pair<size_t, size_t> MemoryPool::get_memory_usage() const {
 }
 
 MemoryPool::PoolBucket& MemoryPool::get_bucket(size_t size) {
-    // Find the smallest bucket that can accommodate the requested size
-    for (auto& bucket : buckets_) {
-        if (bucket.size >= size) {
-            return bucket;
-        }
-    }
-    
-    // If no bucket is large enough, return the largest one
-    return buckets_.back();
+    size_t index = find_bucket_index(size);
+    return buckets_[index];
 }
 
 const MemoryPool::PoolBucket& MemoryPool::get_bucket(size_t size) const {
-    // Find the smallest bucket that can accommodate the requested size
-    for (const auto& bucket : buckets_) {
-        if (bucket.size >= size) {
-            return bucket;
+    size_t index = find_bucket_index(size);
+    return buckets_[index];
+}
+
+size_t MemoryPool::find_bucket_index(size_t size) const {
+    // Binary search for the smallest bucket that can accommodate the requested size
+    size_t left = 0;
+    size_t right = BUCKET_SIZES.size();
+    
+    while (left < right) {
+        size_t mid = left + (right - left) / 2;
+        if (BUCKET_SIZES[mid] < size) {
+            left = mid + 1;
+        } else {
+            right = mid;
         }
     }
     
     // If no bucket is large enough, return the largest one
-    return buckets_.back();
+    if (left >= BUCKET_SIZES.size()) {
+        return BUCKET_SIZES.size() - 1;
+    }
+    
+    return left;
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) {

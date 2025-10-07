@@ -209,13 +209,16 @@ private:
     std::unordered_map<size_t, double> size_hit_rates_;
     mutable std::mutex usage_mutex_;
     
-    // Predefined bucket sizes
+    // Predefined bucket sizes - sorted for binary search
     static constexpr std::array<size_t, 4> BUCKET_SIZES = {
         static_cast<size_t>(BufferSize::SMALL),
         static_cast<size_t>(BufferSize::MEDIUM),
         static_cast<size_t>(BufferSize::LARGE),
         static_cast<size_t>(BufferSize::XLARGE)
     };
+    
+    // Helper function for binary search
+    size_t find_bucket_index(size_t size) const;
 };
 
 /**
