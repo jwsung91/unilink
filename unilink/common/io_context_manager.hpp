@@ -12,6 +12,7 @@ namespace common {
 /**
  * 전역 io_context 관리자
  * 모든 Transport가 하나의 io_context를 공유하여 메모리 효율성 향상
+ * 테스트 격리를 위한 독립적인 컨텍스트 생성 기능 추가
  */
 class IoContextManager {
 public:
@@ -21,15 +22,18 @@ public:
     // 싱글톤 인스턴스 접근
     static IoContextManager& instance();
     
-    // io_context 참조 반환
+    // io_context 참조 반환 (기존 기능)
     IoContext& get_context();
     
-    // io_context 시작/중지
+    // io_context 시작/중지 (기존 기능)
     void start();
     void stop();
     
-    // 상태 확인
+    // 상태 확인 (기존 기능)
     bool is_running() const;
+    
+    // 🆕 독립적인 io_context 생성 (테스트 격리용)
+    std::unique_ptr<IoContext> create_independent_context();
     
     // 소멸자에서 자동 정리
     ~IoContextManager();

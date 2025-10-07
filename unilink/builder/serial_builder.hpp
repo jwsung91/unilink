@@ -122,12 +122,20 @@ public:
     SerialBuilder& on_error(U* obj, F method) {
         return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_error(obj, method));
     }
+    
+    /**
+     * @brief Use independent IoContext for this serial (for testing isolation)
+     * @param use_independent true to use independent context, false for shared context
+     * @return SerialBuilder& Reference to this builder for method chaining
+     */
+    SerialBuilder& use_independent_context(bool use_independent = true);
 
 private:
     std::string device_;
     uint32_t baud_rate_;
     bool auto_start_;
     bool auto_manage_;
+    bool use_independent_context_;
     
     std::function<void(const std::string&)> on_data_;
     std::function<void()> on_connect_;
