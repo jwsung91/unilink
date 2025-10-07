@@ -45,7 +45,8 @@ public:
         std::unordered_map<size_t, size_t> misses_by_size;
     };
 
-    struct BufferInfo {
+    // Cache line aligned structure for optimal memory access
+    struct alignas(64) BufferInfo {
         std::unique_ptr<uint8_t[]> data;
         size_t size;
         std::chrono::steady_clock::time_point last_used;
@@ -182,7 +183,8 @@ public:
     double get_hit_rate_for_size(size_t size) const;
 
 private:
-    struct PoolBucket {
+    // Cache line aligned bucket for optimal performance
+    struct alignas(64) PoolBucket {
         std::vector<BufferInfo> buffers;
         mutable std::mutex mutex;
         size_t size;
@@ -287,6 +289,10 @@ public:
     static constexpr size_t MAX_BUFFER_SIZE = 1024 * 1024 * 1024; // 1GB
     static constexpr size_t MIN_BUFFER_SIZE = 1;
     static constexpr size_t MAX_POOL_SIZE = 10000;
+    
+    // Memory alignment constants for optimal cache performance
+    static constexpr size_t CACHE_LINE_SIZE = 64;
+    static constexpr size_t ALIGNMENT_SIZE = 64;
 
 private:
     
@@ -301,6 +307,10 @@ private:
     void add_to_free_list(PoolBucket& bucket, BufferInfo* buffer_info);
     BufferInfo* remove_from_free_list(PoolBucket& bucket);
     void rebuild_free_list(PoolBucket& bucket);
+    
+    // Memory alignment optimization functions
+    size_t align_size(size_t size) const;
+    std::unique_ptr<uint8_t[]> create_aligned_buffer(size_t size);
 };
 
 /**

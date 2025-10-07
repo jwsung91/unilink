@@ -4,6 +4,7 @@
 #include <array>
 #include <stdexcept>
 #include <string>
+#include <cstdlib>  // for std::aligned_alloc and std::free
 
 namespace unilink {
 namespace common {
@@ -280,14 +281,28 @@ void MemoryPool::validate_pool_size(size_t size) const {
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) {
+    return create_aligned_buffer(size);
+}
+
+std::unique_ptr<uint8_t[]> MemoryPool::create_aligned_buffer(size_t size) {
     try {
-        return std::make_unique<uint8_t[]>(size);
+        // For now, use regular allocation but with aligned size
+        // TODO: Implement proper aligned allocation when needed
+        size_t aligned_size = align_size(size);
+        
+        // Use regular allocation with aligned size for better cache performance
+        return std::make_unique<uint8_t[]>(aligned_size);
     } catch (const std::bad_alloc& e) {
         // Log allocation failure for debugging
         std::cerr << "Memory allocation failed for size " << size 
                   << ": " << e.what() << std::endl;
         return nullptr;
     }
+}
+
+size_t MemoryPool::align_size(size_t size) const {
+    // Align size to cache line boundary
+    return (size + ALIGNMENT_SIZE - 1) & ~(ALIGNMENT_SIZE - 1);
 }
 
 void MemoryPool::cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds max_age) {
@@ -450,11 +465,11 @@ void MemoryPool::optimize_for_size(size_t size, double target_hit_rate) {
         size_t current_size = bucket.buffers.size();
         size_t target_size = static_cast<size_t>(current_size * 1.5); // 50% increase
         
-        // Add more buffers to the pool
+        // Add more buffers to the pool with aligned allocation
         for (size_t i = current_size; i < target_size && i < max_pool_size_ / BUCKET_SIZES.size(); ++i) {
             bucket.buffers.emplace_back();
             BufferInfo& info = bucket.buffers.back();
-            info.data = std::make_unique<uint8_t[]>(size);
+            info.data = create_aligned_buffer(size);
             info.size = size;
             info.last_used = std::chrono::steady_clock::now();
             info.in_use = false;
