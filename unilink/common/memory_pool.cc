@@ -46,14 +46,13 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
     PoolBucket& bucket = get_bucket(size);
     std::lock_guard<std::mutex> lock(bucket.mutex);
     
-    // Try to find an available buffer in the pool
-    auto it = std::find_if(bucket.buffers.begin(), bucket.buffers.end(),
-                          [](const BufferInfo& info) { return !info.in_use; });
+    // Try to get a buffer from the free list (O(1) operation)
+    BufferInfo* buffer_info = remove_from_free_list(bucket);
     
-    if (it != bucket.buffers.end()) {
-        // Found an available buffer
-        it->in_use = true;
-        it->last_used = std::chrono::steady_clock::now();
+    if (buffer_info != nullptr) {
+        // Found an available buffer from free list
+        buffer_info->in_use = true;
+        buffer_info->last_used = std::chrono::steady_clock::now();
         bucket.hits++;
         
         auto end_time = std::chrono::steady_clock::now();
@@ -65,7 +64,7 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         local_stats_.total_allocation_time += duration.count();
         local_stats_.hits_by_size[size]++;
         
-        return std::move(it->data);
+        return std::move(buffer_info->data);
     } else {
         // Pool miss - create new buffer
         bucket.misses++;
@@ -112,13 +111,17 @@ void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
     
     // Check if we can add this buffer back to the pool
     if (bucket.buffers.size() < max_pool_size_ / BUCKET_SIZES.size()) {
-        BufferInfo info;
+        // Create new BufferInfo and add to pool
+        bucket.buffers.emplace_back();
+        BufferInfo& info = bucket.buffers.back();
         info.data = std::move(buffer);
         info.size = bucket.size;
         info.last_used = std::chrono::steady_clock::now();
         info.in_use = false;
+        info.next_free = nullptr;
         
-        bucket.buffers.push_back(std::move(info));
+        // Add to free list for O(1) future allocation
+        add_to_free_list(bucket, &info);
         current_total_buffers_++;
         
         // Note: Memory tracking is not updated here because the buffer is being
@@ -293,6 +296,7 @@ void MemoryPool::cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds ma
     auto now = std::chrono::steady_clock::now();
     auto cutoff_time = now - max_age;
     
+    // Remove expired buffers and rebuild free list
     bucket.buffers.erase(
         std::remove_if(bucket.buffers.begin(), bucket.buffers.end(),
                       [&cutoff_time](const BufferInfo& info) {
@@ -300,6 +304,9 @@ void MemoryPool::cleanup_bucket(PoolBucket& bucket, std::chrono::milliseconds ma
                       }),
         bucket.buffers.end()
     );
+    
+    // Rebuild free list after cleanup to maintain consistency
+    rebuild_free_list(bucket);
 }
 
 // ============================================================================
@@ -445,12 +452,16 @@ void MemoryPool::optimize_for_size(size_t size, double target_hit_rate) {
         
         // Add more buffers to the pool
         for (size_t i = current_size; i < target_size && i < max_pool_size_ / BUCKET_SIZES.size(); ++i) {
-            BufferInfo info;
+            bucket.buffers.emplace_back();
+            BufferInfo& info = bucket.buffers.back();
             info.data = std::make_unique<uint8_t[]>(size);
             info.size = size;
             info.last_used = std::chrono::steady_clock::now();
             info.in_use = false;
-            bucket.buffers.push_back(std::move(info));
+            info.next_free = nullptr;
+            
+            // Add to free list for immediate availability
+            add_to_free_list(bucket, &info);
         }
     }
 }
@@ -472,6 +483,46 @@ double MemoryPool::get_hit_rate_for_size(size_t size) const {
     }
     
     return static_cast<double>(hits) / (hits + misses);
+}
+
+// ============================================================================
+// Free List Management Implementation
+// ============================================================================
+
+void MemoryPool::add_to_free_list(PoolBucket& bucket, MemoryPool::BufferInfo* buffer_info) {
+    if (buffer_info == nullptr) return;
+    
+    // Add to head of free list (LIFO for better cache locality)
+    buffer_info->next_free = bucket.free_list_head;
+    bucket.free_list_head = buffer_info;
+    bucket.free_count++;
+}
+
+MemoryPool::BufferInfo* MemoryPool::remove_from_free_list(PoolBucket& bucket) {
+    if (bucket.free_list_head == nullptr) {
+        return nullptr;
+    }
+    
+    // Remove from head of free list
+    BufferInfo* buffer_info = bucket.free_list_head;
+    bucket.free_list_head = buffer_info->next_free;
+    buffer_info->next_free = nullptr;
+    bucket.free_count--;
+    
+    return buffer_info;
+}
+
+void MemoryPool::rebuild_free_list(PoolBucket& bucket) {
+    // Clear existing free list
+    bucket.free_list_head = nullptr;
+    bucket.free_count = 0;
+    
+    // Rebuild free list from unused buffers
+    for (auto& buffer_info : bucket.buffers) {
+        if (!buffer_info.in_use) {
+            add_to_free_list(bucket, &buffer_info);
+        }
+    }
 }
 
 } // namespace common

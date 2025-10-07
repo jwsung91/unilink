@@ -50,6 +50,39 @@ public:
         size_t size;
         std::chrono::steady_clock::time_point last_used;
         bool in_use{false};
+        
+        // Free list pointer for O(1) allocation
+        BufferInfo* next_free{nullptr};
+        
+        // Default constructor
+        BufferInfo() = default;
+        
+        // Move constructor
+        BufferInfo(BufferInfo&& other) noexcept
+            : data(std::move(other.data))
+            , size(other.size)
+            , last_used(other.last_used)
+            , in_use(other.in_use)
+            , next_free(other.next_free) {
+            other.next_free = nullptr;
+        }
+        
+        // Move assignment
+        BufferInfo& operator=(BufferInfo&& other) noexcept {
+            if (this != &other) {
+                data = std::move(other.data);
+                size = other.size;
+                last_used = other.last_used;
+                in_use = other.in_use;
+                next_free = other.next_free;
+                other.next_free = nullptr;
+            }
+            return *this;
+        }
+        
+        // Delete copy operations
+        BufferInfo(const BufferInfo&) = delete;
+        BufferInfo& operator=(const BufferInfo&) = delete;
     };
 
     // Predefined buffer sizes for common use cases
@@ -156,6 +189,10 @@ private:
         std::atomic<size_t> hits{0};
         std::atomic<size_t> misses{0};
         
+        // Free list management for O(1) allocation
+        BufferInfo* free_list_head{nullptr};
+        std::atomic<size_t> free_count{0};
+        
         // Default constructor
         PoolBucket() = default;
         
@@ -164,7 +201,10 @@ private:
             : buffers(std::move(other.buffers))
             , size(other.size)
             , hits(other.hits.load())
-            , misses(other.misses.load()) {
+            , misses(other.misses.load())
+            , free_list_head(other.free_list_head)
+            , free_count(other.free_count.load()) {
+            other.free_list_head = nullptr;
         }
         
         // Move assignment
@@ -174,6 +214,9 @@ private:
                 size = other.size;
                 hits.store(other.hits.load());
                 misses.store(other.misses.load());
+                free_list_head = other.free_list_head;
+                free_count.store(other.free_count.load());
+                other.free_list_head = nullptr;
             }
             return *this;
         }
@@ -253,6 +296,11 @@ private:
     // Input validation functions
     void validate_size(size_t size) const;
     void validate_pool_size(size_t size) const;
+    
+    // Free list management functions
+    void add_to_free_list(PoolBucket& bucket, BufferInfo* buffer_info);
+    BufferInfo* remove_from_free_list(PoolBucket& bucket);
+    void rebuild_free_list(PoolBucket& bucket);
 };
 
 /**
