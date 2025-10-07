@@ -44,6 +44,12 @@ add_executable(run_stress_tests
     test_utils.hpp
 )
 
+# Configuration Validation Tests - Configuration validation and edge cases
+add_executable(run_config_validation_tests
+    test_config_validation.cc
+    test_utils.hpp
+)
+
 # ============================================================================
 # LINK LIBRARIES
 # ============================================================================
@@ -85,6 +91,11 @@ target_link_libraries(run_stress_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
+# Link configuration validation tests
+target_link_libraries(run_config_validation_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # ============================================================================
 # TEST DISCOVERY
 # ============================================================================
@@ -98,6 +109,7 @@ gtest_discover_tests(run_performance_tests)
 gtest_discover_tests(run_boundary_tests)
 gtest_discover_tests(run_error_recovery_tests)
 gtest_discover_tests(run_stress_tests)
+gtest_discover_tests(run_config_validation_tests)
 
 # ============================================================================
 # SANITIZERS (Optional - for debugging)
