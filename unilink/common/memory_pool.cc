@@ -6,6 +6,9 @@
 namespace unilink {
 namespace common {
 
+// Thread-local storage for batch statistics
+thread_local MemoryPool::LocalStats MemoryPool::local_stats_;
+
 // ============================================================================
 // EnhancedMemoryPool Implementation
 // ============================================================================
@@ -27,10 +30,12 @@ MemoryPool::MemoryPool(size_t initial_pool_size, size_t max_pool_size)
 std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
     auto start_time = std::chrono::steady_clock::now();
     
-    // Track usage for auto-tuning
-    {
-        std::lock_guard<std::mutex> usage_lock(usage_mutex_);
-        size_usage_count_[size]++;
+    // Track usage for auto-tuning (local, no lock)
+    local_stats_.usage_count[size]++;
+    
+    // Check if we need to flush local stats
+    if (++batch_update_counter_ >= BATCH_UPDATE_THRESHOLD) {
+        flush_local_stats();
     }
     
     PoolBucket& bucket = get_bucket(size);
@@ -49,14 +54,11 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         auto end_time = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
         
-        // Update statistics with lock
-        {
-            std::lock_guard<std::mutex> stats_lock(stats_mutex_);
-            stats_.pool_hits++;
-            stats_.total_allocations++;
-            stats_.total_allocation_time += duration.count();
-            stats_.hits_by_size[size]++;
-        }
+        // Update local statistics (no lock)
+        local_stats_.pool_hits++;
+        local_stats_.total_allocations++;
+        local_stats_.total_allocation_time += duration.count();
+        local_stats_.hits_by_size[size]++;
         
         return std::move(it->data);
     } else {
@@ -66,14 +68,11 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
         auto end_time = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
         
-        // Update statistics with lock
-        {
-            std::lock_guard<std::mutex> stats_lock(stats_mutex_);
-            stats_.pool_misses++;
-            stats_.total_allocations++;
-            stats_.total_allocation_time += duration.count();
-            stats_.misses_by_size[size]++;
-        }
+        // Update local statistics (no lock)
+        local_stats_.pool_misses++;
+        local_stats_.total_allocations++;
+        local_stats_.total_allocation_time += duration.count();
+        local_stats_.misses_by_size[size]++;
         
         auto buffer = create_buffer(bucket.size);
         
@@ -122,14 +121,46 @@ void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
     auto end_time = std::chrono::steady_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     
-    // Update deallocation time with lock
-    {
-        std::lock_guard<std::mutex> stats_lock(stats_mutex_);
-        stats_.total_deallocation_time += duration.count();
+    // Update local deallocation time (no lock)
+    local_stats_.total_deallocation_time += duration.count();
+}
+
+void MemoryPool::flush_local_stats() {
+    if (local_stats_.total_allocations == 0) return; // Nothing to flush
+    
+    std::lock_guard<std::mutex> stats_lock(stats_mutex_);
+    update_stats_from_local(local_stats_);
+    
+    // Reset local stats
+    local_stats_ = LocalStats{};
+    batch_update_counter_ = 0;
+}
+
+void MemoryPool::update_stats_from_local(const LocalStats& local) {
+    stats_.pool_hits += local.pool_hits;
+    stats_.pool_misses += local.pool_misses;
+    stats_.total_allocations += local.total_allocations;
+    stats_.total_allocation_time += local.total_allocation_time;
+    stats_.total_deallocation_time += local.total_deallocation_time;
+    
+    // Update size-specific statistics
+    for (const auto& [size, count] : local.hits_by_size) {
+        stats_.hits_by_size[size] += count;
+    }
+    for (const auto& [size, count] : local.misses_by_size) {
+        stats_.misses_by_size[size] += count;
+    }
+    
+    // Update usage count for auto-tuning
+    for (const auto& [size, count] : local.usage_count) {
+        size_usage_count_[size] += count;
     }
 }
 
 MemoryPool::PoolStats MemoryPool::get_stats() const {
+    // Flush any pending local stats before reading
+    const_cast<MemoryPool*>(this)->flush_local_stats();
+    
     std::lock_guard<std::mutex> lock(stats_mutex_);
     
     PoolStats result = stats_;
@@ -297,6 +328,9 @@ void MemoryPool::auto_tune() {
         return;
     }
     
+    // Flush any pending local stats before auto-tuning
+    flush_local_stats();
+    
     std::lock_guard<std::mutex> usage_lock(usage_mutex_);
     
     // Analyze usage patterns and adjust pool configuration
@@ -312,6 +346,9 @@ void MemoryPool::auto_tune() {
 }
 
 MemoryPool::PoolStats MemoryPool::get_detailed_stats() const {
+    // Flush any pending local stats before reading
+    const_cast<MemoryPool*>(this)->flush_local_stats();
+    
     std::lock_guard<std::mutex> stats_lock(stats_mutex_);
     PoolStats detailed_stats = stats_;
     
@@ -360,6 +397,9 @@ void MemoryPool::optimize_for_size(size_t size, double target_hit_rate) {
 }
 
 double MemoryPool::get_hit_rate_for_size(size_t size) const {
+    // Flush any pending local stats before reading
+    const_cast<MemoryPool*>(this)->flush_local_stats();
+    
     std::lock_guard<std::mutex> stats_lock(stats_mutex_);
     
     auto hits_it = stats_.hits_by_size.find(size);

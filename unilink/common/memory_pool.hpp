@@ -209,6 +209,26 @@ private:
     std::unordered_map<size_t, double> size_hit_rates_;
     mutable std::mutex usage_mutex_;
     
+    // Batch statistics update for lock contention reduction
+    struct LocalStats {
+        size_t pool_hits{0};
+        size_t pool_misses{0};
+        size_t total_allocations{0};
+        std::chrono::milliseconds::rep total_allocation_time{0};
+        std::chrono::milliseconds::rep total_deallocation_time{0};
+        std::unordered_map<size_t, size_t> hits_by_size;
+        std::unordered_map<size_t, size_t> misses_by_size;
+        std::unordered_map<size_t, size_t> usage_count;
+    };
+    
+    thread_local static LocalStats local_stats_;
+    std::atomic<size_t> batch_update_counter_{0};
+    static constexpr size_t BATCH_UPDATE_THRESHOLD = 100;
+    
+    // Batch update methods
+    void flush_local_stats();
+    void update_stats_from_local(const LocalStats& local);
+    
     // Predefined bucket sizes - sorted for binary search
     static constexpr std::array<size_t, 4> BUCKET_SIZES = {
         static_cast<size_t>(BufferSize::SMALL),
