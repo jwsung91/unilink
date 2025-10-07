@@ -1,7 +1,9 @@
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
 #include <iostream>
+#include <cstring>
 #include "unilink/common/io_context_manager.hpp"
+#include "unilink/common/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {
@@ -136,8 +138,33 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
     return;
   }
   
-  std::vector<uint8_t> copy(data, data + size);
-  net::post(*ioc_, [self = shared_from_this(), buf = std::move(copy)]() mutable {
+  // Use memory pool for better performance (only for reasonable sizes)
+  if (size <= 65536) { // Only use pool for buffers <= 64KB
+    common::PooledBuffer pooled_buffer(size);
+    if (pooled_buffer.valid()) {
+      // Copy data to pooled buffer
+      std::memcpy(pooled_buffer.data(), data, size);
+      
+      net::post(*ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
+        // Double-check state in case client was stopped while in queue
+        if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+          return;
+        }
+        
+        self->queue_bytes_ += buf.size();
+        self->tx_.emplace_back(std::move(buf));
+        if (self->on_bp_ && self->queue_bytes_ > self->bp_high_)
+          self->on_bp_(self->queue_bytes_);
+        self->do_write();
+      });
+      return;
+    }
+  }
+  
+  // Fallback to regular allocation for large buffers or pool exhaustion
+  std::vector<uint8_t> fallback(data, data + size);
+  
+  net::post(*ioc_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     // Double-check state in case client was stopped while in queue
     if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
       return;
@@ -221,22 +248,44 @@ void TcpClient::do_write() {
   }
   writing_ = true;
   auto self = shared_from_this();
-  net::async_write(socket_, net::buffer(tx_.front()),
-                   [self](auto ec, std::size_t n) {
-                     // Check if client was stopped during write
-                     if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
-                       self->writing_ = false;
-                       return;
-                     }
-                     
-                     self->queue_bytes_ -= n;
-                     if (ec) {
-                       self->handle_close();
-                       return;
-                     }
-                     self->tx_.pop_front();
-                     self->do_write();
-                   });
+  
+  // Handle both PooledBuffer and std::vector<uint8_t> (fallback)
+  auto& front_buffer = tx_.front();
+  if (std::holds_alternative<common::PooledBuffer>(front_buffer)) {
+    auto& pooled_buf = std::get<common::PooledBuffer>(front_buffer);
+    net::async_write(socket_, net::buffer(pooled_buf.data(), pooled_buf.size()),
+                     [self](auto ec, std::size_t n) {
+                       if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+                         self->writing_ = false;
+                         return;
+                       }
+                       
+                       self->queue_bytes_ -= n;
+                       if (ec) {
+                         self->handle_close();
+                         return;
+                       }
+                       self->tx_.pop_front();
+                       self->do_write();
+                     });
+  } else {
+    auto& vec_buf = std::get<std::vector<uint8_t>>(front_buffer);
+    net::async_write(socket_, net::buffer(vec_buf),
+                     [self](auto ec, std::size_t n) {
+                       if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+                         self->writing_ = false;
+                         return;
+                       }
+                       
+                       self->queue_bytes_ -= n;
+                       if (ec) {
+                         self->handle_close();
+                         return;
+                       }
+                       self->tx_.pop_front();
+                       self->do_write();
+                     });
+  }
 }
 
 void TcpClient::handle_close() {
