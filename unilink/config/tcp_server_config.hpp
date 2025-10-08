@@ -12,6 +12,11 @@ struct TcpServerConfig {
   bool enable_memory_pool = true;
   int max_connections = 100;  // Maximum concurrent connections
   
+  // Port binding retry configuration
+  bool enable_port_retry = false;  // Enable port binding retry
+  int max_port_retries = 3;        // Maximum number of retry attempts
+  int port_retry_interval_ms = 1000;  // Retry interval in milliseconds
+  
   // Validation methods
   bool is_valid() const {
     return port > 0 && 

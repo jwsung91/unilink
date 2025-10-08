@@ -6,7 +6,7 @@ namespace unilink {
 namespace builder {
 
 TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
-    : host_(host), port_(port), auto_start_(false), auto_manage_(false), use_independent_context_(false) {}
+    : host_(host), port_(port), auto_start_(false), auto_manage_(false), use_independent_context_(false), retry_interval_ms_(2000) {}
 
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
     // IoContext 관리
@@ -48,6 +48,9 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
         client->on_error(on_error_);
     }
     
+    // Set retry interval
+    client->set_retry_interval(std::chrono::milliseconds(retry_interval_ms_));
+    
     return client;
 }
 
@@ -83,6 +86,11 @@ TcpClientBuilder& TcpClientBuilder::on_error(std::function<void(const std::strin
 
 TcpClientBuilder& TcpClientBuilder::use_independent_context(bool use_independent) {
     use_independent_context_ = use_independent;
+    return *this;
+}
+
+TcpClientBuilder& TcpClientBuilder::retry_interval(unsigned interval_ms) {
+    retry_interval_ms_ = interval_ms;
     return *this;
 }
 

@@ -25,3 +25,10 @@ target_link_libraries(logging_example PRIVATE interface::unilink)
 add_executable(error_handling_example error_handling_example.cc)
 target_link_libraries(error_handling_example PRIVATE interface::unilink)
 
+# 멀티 클라이언트 예제
+add_executable(multi_client_chat_server advanced/multi_client_chat_server.cc)
+target_link_libraries(multi_client_chat_server PRIVATE interface::unilink)
+
+add_executable(multi_client_chat_client advanced/multi_client_chat_client.cc)
+target_link_libraries(multi_client_chat_client PRIVATE interface::unilink)
+

@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
   // Using convenience function for configuration
   auto ul = unilink::tcp_server(port)
       .auto_start(false)
+      .enable_port_retry(true, 3, 1000)  // 3회 재시도, 1초 간격
       .on_connect([&]() {
           unilink::log_message("[server]", "STATE", "Client connected");
           connected = true;
@@ -58,6 +59,15 @@ int main(int argc, char** argv) {
   });
 
   ul->start();
+  
+  // Wait for server to start and retry attempts (3 retries * 1s + 0.5s buffer)
+  std::this_thread::sleep_for(std::chrono::milliseconds(500 + (3 * 1000)));
+  
+  // Check if server started successfully
+  if (!ul->is_listening()) {
+    unilink::log_message("[server]", "ERROR", "Failed to start server - port may be in use");
+    return 1;
+  }
 
   // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
   while (running.load()) {

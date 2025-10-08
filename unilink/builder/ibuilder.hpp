@@ -30,7 +30,7 @@ public:
      * @param auto_start Whether to automatically start the wrapper
      * @return BuilderInterface& Reference to this builder for method chaining
      */
-    virtual BuilderInterface& auto_start(bool auto_start = true) = 0;
+    virtual BuilderInterface& auto_start(bool auto_start = false) = 0;
     
     /**
      * @brief Enable auto-manage functionality

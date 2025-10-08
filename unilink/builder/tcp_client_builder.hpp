@@ -34,7 +34,7 @@ public:
      * @param auto_start Whether to automatically start the client
      * @return TcpClientBuilder& Reference to this builder for method chaining
      */
-    TcpClientBuilder& auto_start(bool auto_start = true) override;
+    TcpClientBuilder& auto_start(bool auto_start = false) override;
     
     /**
      * @brief Enable auto-manage functionality
@@ -129,6 +129,13 @@ public:
      * @return TcpClientBuilder& Reference to this builder for method chaining
      */
     TcpClientBuilder& use_independent_context(bool use_independent = true);
+    
+    /**
+     * @brief Set retry interval for automatic reconnection
+     * @param interval_ms Retry interval in milliseconds
+     * @return TcpClientBuilder& Reference to this builder for method chaining
+     */
+    TcpClientBuilder& retry_interval(unsigned interval_ms);
 
 private:
     std::string host_;
@@ -136,6 +143,7 @@ private:
     bool auto_start_;
     bool auto_manage_;
     bool use_independent_context_;
+    unsigned retry_interval_ms_;
     
     std::function<void(const std::string&)> on_data_;
     std::function<void()> on_connect_;

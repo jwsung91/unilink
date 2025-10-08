@@ -230,6 +230,10 @@ void TcpClient::schedule_retry() {
   });
 }
 
+void TcpClient::set_retry_interval(unsigned interval_ms) {
+  cfg_.retry_interval_ms = interval_ms;
+}
+
 void TcpClient::start_read() {
   auto self = shared_from_this();
   socket_.async_read_some(net::buffer(rx_.data(), rx_.size()),

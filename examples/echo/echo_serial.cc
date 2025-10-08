@@ -27,6 +27,7 @@ public:
             .on_disconnect(this, &SerialEchoApp::handle_disconnect) // Member function binding
             .on_data(this, &SerialEchoApp::handle_data)            // Member function binding
             .on_error(this, &SerialEchoApp::handle_error)          // Member function binding
+            .retry_interval(5000)  // 5초 재연결 간격 설정
             .build();
 
         // Start sender thread
