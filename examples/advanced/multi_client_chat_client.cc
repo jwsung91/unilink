@@ -55,6 +55,8 @@ int main(int argc, char** argv) {
             })
             .on_data([](const std::string& data) {
                 std::cout << "[RX] " << data << std::endl;
+                std::cout << "[DEBUG] Received data length: " << data.length() << std::endl;
+                std::cout << "[DEBUG] Received data size: " << data.size() << std::endl;
                 
                 // 서버 종료 알림을 받으면 클라이언트도 종료
                 if (data.find("[Server] Server is shutting down") != std::string::npos) {
@@ -100,8 +102,8 @@ int main(int argc, char** argv) {
         // 사용자 입력 처리 (비블로킹)
         std::string line;
         while (running.load() && client->is_connected()) {
-            // 간단한 입력 처리 (타임아웃 없이)
-            if (std::cin.peek() != EOF) {
+            // 비블로킹 입력 처리
+            if (std::cin.rdbuf()->in_avail() > 0) {
                 if (std::getline(std::cin, line)) {
                     if (line.empty()) continue;
                     

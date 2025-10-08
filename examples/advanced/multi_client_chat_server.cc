@@ -51,9 +51,12 @@ int main(int argc, char** argv) {
     auto server = unilink::tcp_server(port)
         .on_multi_connect([&logger](int client_id, const std::string& client_ip) {
             logger.info("server", "connect", "Client " + std::to_string(client_id) + " connected: " + client_ip);
+            logger.info("server", "debug", "Multi-connect callback triggered for client " + std::to_string(client_id));
         })
         .on_multi_data([&logger](int client_id, const std::string& data) {
             logger.info("server", "data", "Client " + std::to_string(client_id) + " message: " + data);
+            logger.info("server", "debug", "Data length: " + std::to_string(data.length()));
+            logger.info("server", "debug", "Data bytes: " + std::to_string(data.size()));
         })
         .on_multi_disconnect([&logger](int client_id) {
             logger.info("server", "disconnect", "Client " + std::to_string(client_id) + " disconnected");
@@ -66,6 +69,34 @@ int main(int argc, char** argv) {
         logger.error("server", "startup", "Failed to create server");
         return 1;
     }
+    
+    // 브로드캐스트 기능을 위한 콜백 재설정
+    server->on_multi_connect([&logger, &server](int client_id, const std::string& client_ip) {
+        logger.info("server", "connect", "Client " + std::to_string(client_id) + " connected: " + client_ip);
+        logger.info("server", "debug", "Multi-connect callback triggered for client " + std::to_string(client_id));
+        
+        // 클라이언트 연결 시 브로드캐스팅
+        server->broadcast("[Server] Client " + std::to_string(client_id) + " (" + client_ip + ") joined the chat!");
+        logger.info("server", "broadcast", "Broadcasted client join message for client " + std::to_string(client_id));
+    });
+    
+    server->on_multi_data([&logger, &server](int client_id, const std::string& data) {
+        logger.info("server", "data", "Client " + std::to_string(client_id) + " message: " + data);
+        logger.info("server", "debug", "Data length: " + std::to_string(data.length()));
+        logger.info("server", "debug", "Data bytes: " + std::to_string(data.size()));
+        
+        // 클라이언트 메시지를 모든 클라이언트에게 브로드캐스팅
+        server->broadcast("[Client " + std::to_string(client_id) + "] " + data);
+        logger.info("server", "broadcast", "Broadcasted message from client " + std::to_string(client_id) + " to all clients");
+    });
+    
+    server->on_multi_disconnect([&logger, &server](int client_id) {
+        logger.info("server", "disconnect", "Client " + std::to_string(client_id) + " disconnected");
+        
+        // 클라이언트 연결 해제 시 브로드캐스팅
+        server->broadcast("[Server] Client " + std::to_string(client_id) + " left the chat!");
+        logger.info("server", "broadcast", "Broadcasted client leave message for client " + std::to_string(client_id));
+    });
     
     // 서버 시작
     server->start();
@@ -81,6 +112,30 @@ int main(int argc, char** argv) {
     
     logger.info("server", "startup", "Server started. Waiting for client connections...");
     
+    // 브로드캐스트 테스트를 위한 타이머 설정
+    std::thread broadcast_timer([&server, &logger]() {
+        std::this_thread::sleep_for(std::chrono::seconds(5)); // 5초 후 브로드캐스트
+        logger.info("server", "debug", "Broadcast timer triggered");
+        if (server) {
+            int client_count = server->get_client_count();
+            logger.info("server", "debug", "Client count: " + std::to_string(client_count));
+            if (client_count > 0) {
+                server->broadcast("[Server] Welcome to the chat server!");
+                logger.info("server", "broadcast", "Sent welcome message to all clients");
+                
+                // 서버 메시지 브로드캐스트 테스트
+                std::this_thread::sleep_for(std::chrono::seconds(3));
+                server->broadcast("[Server] This is a test message from server!");
+                logger.info("server", "broadcast", "Sent test message to all clients");
+            } else {
+                logger.info("server", "debug", "No clients connected, skipping broadcast");
+            }
+        } else {
+            logger.info("server", "debug", "Server is null, skipping broadcast");
+        }
+    });
+    broadcast_timer.detach();
+    
     // 메인 루프 (입력 처리 포함)
     while (running.load()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -89,6 +144,7 @@ int main(int argc, char** argv) {
         if (std::cin.rdbuf()->in_avail() > 0) {
             std::string line;
             if (std::getline(std::cin, line)) {
+                logger.info("server", "debug", "Received input: '" + line + "'");
                 if (!line.empty()) {
                     if (line == "/quit" || line == "/exit") {
                         logger.info("server", "shutdown", "Shutting down server...");
@@ -104,8 +160,12 @@ int main(int argc, char** argv) {
                             try {
                                 int client_id = std::stoi(line.substr(6, first_space - 6));
                                 std::string message = line.substr(first_space + 1);
+                                
+                                // 개별 클라이언트에게 전송 후 브로드캐스트
                                 server->send_to_client(client_id, message);
+                                server->broadcast("[Server] -> Client " + std::to_string(client_id) + ": " + message);
                                 logger.info("server", "send", "Sent to client " + std::to_string(client_id) + ": " + message);
+                                logger.info("server", "broadcast", "Broadcasted server message to all clients");
                             } catch (const std::exception& e) {
                                 logger.error("server", "send", "Invalid send command format");
                             }
@@ -113,9 +173,10 @@ int main(int argc, char** argv) {
                             logger.error("server", "send", "Invalid send command format");
                         }
                     } else {
-                        // 브로드캐스트
-                        server->broadcast(line);
-                        logger.info("server", "broadcast", "Broadcast to all clients: " + line);
+                        // 서버 메시지 브로드캐스트
+                        logger.info("server", "debug", "Broadcasting server message: " + line);
+                        server->broadcast("[Server] " + line);
+                        logger.info("server", "broadcast", "Broadcast server message to all clients: " + line);
                     }
                 }
             } else {

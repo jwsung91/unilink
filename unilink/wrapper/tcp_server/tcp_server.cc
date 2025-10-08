@@ -116,6 +116,34 @@ void TcpServer::setup_internal_handlers() {
     channel_->on_state([this](common::LinkState state) {
         handle_state(state);
     });
+    
+    // 멀티 클라이언트 콜백들 설정
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+        if (on_multi_connect_) {
+            transport_server->on_multi_connect([this](size_t client_id, const std::string& client_info) {
+                if (on_multi_connect_) {
+                    on_multi_connect_(client_id, client_info);
+                }
+            });
+        }
+        
+        if (on_multi_data_) {
+            transport_server->on_multi_data([this](size_t client_id, const std::string& data) {
+                if (on_multi_data_) {
+                    on_multi_data_(client_id, data);
+                }
+            });
+        }
+        
+        if (on_multi_disconnect_) {
+            transport_server->on_multi_disconnect([this](size_t client_id) {
+                if (on_multi_disconnect_) {
+                    on_multi_disconnect_(client_id);
+                }
+            });
+        }
+    }
 }
 
 void TcpServer::handle_bytes(const uint8_t* data, size_t size) {
