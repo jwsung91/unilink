@@ -15,6 +15,8 @@
 #include "unilink/common/constants.hpp"
 #include "unilink/common/memory_pool.hpp"
 #include "unilink/common/thread_safe_state.hpp"
+#include "unilink/common/error_handler.hpp"
+#include "unilink/common/logger.hpp"
 
 namespace unilink {
 namespace transport {

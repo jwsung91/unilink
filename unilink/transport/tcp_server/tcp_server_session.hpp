@@ -13,6 +13,8 @@
 #include "unilink/interface/itcp_socket.hpp"
 #include "unilink/common/constants.hpp"
 #include "unilink/common/memory_pool.hpp"
+#include "unilink/common/error_handler.hpp"
+#include "unilink/common/logger.hpp"
 
 namespace unilink {
 namespace transport {

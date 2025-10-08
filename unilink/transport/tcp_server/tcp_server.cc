@@ -53,7 +53,8 @@ TcpServer::~TcpServer() {
 
 void TcpServer::start() {
   if (!acceptor_) {
-    std::cout << ts_now() << "[server] start error: acceptor is null" << std::endl;
+    UNILINK_LOG_ERROR("tcp_server", "start", "Acceptor is null");
+    error_reporting::report_system_error("tcp_server", "start", "Acceptor is null");
     state_.set_state(LinkState::Error);
     notify_state();
     return;
@@ -73,7 +74,8 @@ void TcpServer::start() {
       self->acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
     }
     if (ec) {
-      std::cout << ts_now() << "[server] bind error: " << ec.message() << std::endl;
+      UNILINK_LOG_ERROR("tcp_server", "bind", "Failed to bind to port: " + std::to_string(self->cfg_.port) + " - " + ec.message());
+      error_reporting::report_connection_error("tcp_server", "bind", ec, false);
       self->state_.set_state(LinkState::Error);
       self->notify_state();
       return;
@@ -136,8 +138,8 @@ void TcpServer::do_accept() {
   auto self = shared_from_this();
   acceptor_->async_accept([self](auto ec, tcp::socket sock) {
     if (ec) {
-      std::cout << ts_now() << "[server] accept error: " << ec.message()
-                << std::endl;
+      UNILINK_LOG_ERROR("tcp_server", "accept", "Accept error: " + ec.message());
+      error_reporting::report_connection_error("tcp_server", "accept", ec, true);
       self->state_.set_state(LinkState::Error);
       self->notify_state();
       self->do_accept();
@@ -146,11 +148,9 @@ void TcpServer::do_accept() {
     boost::system::error_code ep_ec;
     auto rep = sock.remote_endpoint(ep_ec);
     if (!ep_ec) {
-      std::cout << ts_now() << "[server] accepted " << rep.address().to_string()
-                << ":" << rep.port() << std::endl;
+      UNILINK_LOG_INFO("tcp_server", "accept", "Client connected: " + rep.address().to_string() + ":" + std::to_string(rep.port()));
     } else {
-      std::cout << ts_now() << "[server] accepted (endpoint unknown)"
-                << std::endl;
+      UNILINK_LOG_INFO("tcp_server", "accept", "Client connected (endpoint unknown)");
     }
 
     self->sess_ =
@@ -174,9 +174,11 @@ void TcpServer::notify_state() {
     try {
       on_state_(state_.get_state());
     } catch (const std::exception& e) {
-      std::cerr << "TcpServer state callback error: " << e.what() << std::endl;
+      UNILINK_LOG_ERROR("tcp_server", "callback", "State callback error: " + std::string(e.what()));
+      error_reporting::report_system_error("tcp_server", "state_callback", "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
-      std::cerr << "TcpServer state callback: Unknown error occurred" << std::endl;
+      UNILINK_LOG_ERROR("tcp_server", "callback", "Unknown error in state callback");
+      error_reporting::report_system_error("tcp_server", "state_callback", "Unknown error in state callback");
     }
   }
 }

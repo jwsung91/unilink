@@ -55,7 +55,7 @@ Serial::~Serial() {
 }
 
 void Serial::start() {
-  std::cout << ts_now() << "[serial] start() called for device: " << cfg_.device << "\n";
+  UNILINK_LOG_INFO("serial", "start", "Starting device: " + cfg_.device);
   work_guard_ = std::make_unique<
       net::executor_work_guard<net::io_context::executor_type>>(
       ioc_.get_executor());
@@ -63,7 +63,7 @@ void Serial::start() {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
   net::post(ioc_, [this] {
-    std::cout << ts_now() << "[serial] posting open_and_configure for device: " << cfg_.device << "\n";
+    UNILINK_LOG_DEBUG("serial", "start", "Posting open_and_configure for device: " + cfg_.device);
     state_.set_state(LinkState::Connecting);
     notify_state();
     open_and_configure();
@@ -138,21 +138,21 @@ void Serial::open_and_configure() {
   boost::system::error_code ec;
   port_->open(cfg_.device, ec);
   if (ec) {
-    std::cout << ts_now() << "[serial] open error: " << ec.message() << "\n";
+    UNILINK_LOG_ERROR("serial", "open", "Failed to open device: " + cfg_.device + " - " + ec.message());
     handle_error("open", ec);
     return;
   }
 
   port_->set_option(net::serial_port_base::baud_rate(cfg_.baud_rate), ec);
   if (ec) {
-    std::cout << ts_now() << "[serial] baud rate error: " << ec.message() << "\n";
+    UNILINK_LOG_ERROR("serial", "configure", "Failed to set baud rate: " + std::to_string(cfg_.baud_rate) + " - " + ec.message());
     handle_error("baud_rate", ec);
     return;
   }
   
   port_->set_option(net::serial_port_base::character_size(cfg_.char_size), ec);
   if (ec) {
-    std::cout << ts_now() << "[serial] character size error: " << ec.message() << "\n";
+    UNILINK_LOG_ERROR("serial", "configure", "Failed to set character size: " + std::to_string(cfg_.char_size) + " - " + ec.message());
     handle_error("char_size", ec);
     return;
   }
@@ -160,7 +160,7 @@ void Serial::open_and_configure() {
   using sb = net::serial_port_base::stop_bits;
   port_->set_option(sb(cfg_.stop_bits == 2 ? sb::two : sb::one), ec);
   if (ec) {
-    std::cout << ts_now() << "[serial] stop bits error: " << ec.message() << "\n";
+    UNILINK_LOG_ERROR("serial", "configure", "Failed to set stop bits: " + std::to_string(cfg_.stop_bits) + " - " + ec.message());
     handle_error("stop_bits", ec);
     return;
   }
@@ -173,7 +173,7 @@ void Serial::open_and_configure() {
     p = pa::odd;
   port_->set_option(pa(p), ec);
   if (ec) {
-    std::cout << ts_now() << "[serial] parity error: " << ec.message() << "\n";
+    UNILINK_LOG_ERROR("serial", "configure", "Failed to set parity - " + ec.message());
     handle_error("parity", ec);
     return;
   }
@@ -186,13 +186,12 @@ void Serial::open_and_configure() {
     f = fc::hardware;
   port_->set_option(fc(f), ec);
   if (ec) {
-    std::cout << ts_now() << "[serial] flow control error: " << ec.message() << "\n";
+    UNILINK_LOG_ERROR("serial", "configure", "Failed to set flow control - " + ec.message());
     handle_error("flow_control", ec);
     return;
   }
 
-  std::cout << ts_now() << "[serial] opened " << cfg_.device << " @"
-            << cfg_.baud_rate << "\n";
+  UNILINK_LOG_INFO("serial", "connect", "Device opened: " + cfg_.device + " @ " + std::to_string(cfg_.baud_rate));
   start_read();
 
   opened_ = true;
@@ -252,15 +251,18 @@ void Serial::do_write() {
 
 void Serial::handle_error(const char* where,
                           const boost::system::error_code& ec) {
-  std::cout << ts_now() << "[serial] " << where << " error: " << ec.message()
-            << " (code: " << ec.value() << ")" << "\n";
-            
   // EOF는 실제 에러가 아니므로, 다시 읽기를 시작합니다.
   if (ec == boost::asio::error::eof) {
-    std::cout << ts_now() << "[serial] EOF detected, restarting read" << "\n";
+    UNILINK_LOG_DEBUG("serial", "read", "EOF detected, restarting read");
     start_read();
     return;
   }
+
+  // 구조화된 에러 처리
+  bool retryable = cfg_.reopen_on_error;
+  error_reporting::report_connection_error("serial", where, ec, retryable);
+  
+  UNILINK_LOG_ERROR("serial", where, "Error: " + ec.message() + " (code: " + std::to_string(ec.value()) + ")");
 
   if (cfg_.reopen_on_error) {
     opened_ = false;
@@ -278,9 +280,9 @@ void Serial::handle_error(const char* where,
 
 void Serial::schedule_retry(const char* where,
                             const boost::system::error_code& ec) {
-  std::cout << ts_now() << "[serial] retry after "
-            << (cfg_.retry_interval_ms / 1000.0) << "s (fixed) at " << where
-            << " (" << ec.message() << ")" << "\n";
+  UNILINK_LOG_INFO("serial", "retry", "Scheduling retry after " + 
+                   std::to_string(cfg_.retry_interval_ms / 1000.0) + "s at " + where + 
+                   " (" + ec.message() + ")");
   auto self = shared_from_this();
   retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
   retry_timer_.async_wait([self](auto e) {
@@ -302,9 +304,11 @@ void Serial::notify_state() {
     try {
       on_state_(state_.get_state());
     } catch (const std::exception& e) {
-      std::cerr << "Serial state callback error: " << e.what() << std::endl;
+      UNILINK_LOG_ERROR("serial", "callback", "State callback error: " + std::string(e.what()));
+      error_reporting::report_system_error("serial", "state_callback", "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
-      std::cerr << "Serial state callback: Unknown error occurred" << std::endl;
+      UNILINK_LOG_ERROR("serial", "callback", "Unknown error in state callback");
+      error_reporting::report_system_error("serial", "state_callback", "Unknown error in state callback");
     }
   }
 }

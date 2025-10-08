@@ -23,6 +23,10 @@
 #include "unilink/config/config_factory.hpp"
 #endif
 
+// Error handling and logging system includes
+#include "unilink/common/error_handler.hpp"
+#include "unilink/common/logger.hpp"
+
 namespace unilink {
 
 // === Builder API를 위한 내부 Wrapper API ===
@@ -125,5 +129,14 @@ using common::feed_lines;
 using common::log_message;
 using common::to_cstr;
 using common::ts_now;
+
+// === 에러 처리 및 로깅 시스템 ===
+// 새로운 에러 처리 및 로깅 시스템 사용
+using common::Logger;
+using common::ErrorHandler;
+using common::ErrorInfo;
+using common::ErrorLevel;
+using common::ErrorCategory;
+using common::LogLevel;
 
 } // namespace unilink

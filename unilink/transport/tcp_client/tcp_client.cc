@@ -58,9 +58,11 @@ TcpClient::~TcpClient() {
       ioc_->stop();
       ioc_thread_.join();
     } catch (const std::exception& e) {
-      std::cerr << "TcpClient destructor error: " << e.what() << std::endl;
+      UNILINK_LOG_ERROR("tcp_client", "destructor", "Destructor error: " + std::string(e.what()));
+      error_reporting::report_system_error("tcp_client", "destructor", "Exception in destructor: " + std::string(e.what()));
     } catch (...) {
-      std::cerr << "TcpClient destructor: Unknown error occurred" << std::endl;
+      UNILINK_LOG_ERROR("tcp_client", "destructor", "Unknown error in destructor");
+      error_reporting::report_system_error("tcp_client", "destructor", "Unknown error in destructor");
     }
   }
   
@@ -74,7 +76,8 @@ void TcpClient::start() {
       try {
         ioc_->run();
       } catch (const std::exception& e) {
-        std::cerr << "TcpClient io_context error: " << e.what() << std::endl;
+        UNILINK_LOG_ERROR("tcp_client", "io_context", "IO context error: " + std::string(e.what()));
+        error_reporting::report_system_error("tcp_client", "io_context", "Exception in IO context: " + std::string(e.what()));
       }
     });
   }
@@ -114,18 +117,22 @@ void TcpClient::stop() {
       ioc_->stop();
       ioc_thread_.join();
     } catch (const std::exception& e) {
-      std::cerr << "TcpClient stop error: " << e.what() << std::endl;
+      UNILINK_LOG_ERROR("tcp_client", "stop", "Stop error: " + std::string(e.what()));
+      error_reporting::report_system_error("tcp_client", "stop", "Exception in stop: " + std::string(e.what()));
     } catch (...) {
-      std::cerr << "TcpClient stop: Unknown error occurred" << std::endl;
+      UNILINK_LOG_ERROR("tcp_client", "stop", "Unknown error in stop");
+      error_reporting::report_system_error("tcp_client", "stop", "Unknown error in stop");
     }
   }
   
   try {
     notify_state();
   } catch (const std::exception& e) {
-    std::cerr << "TcpClient state notification error: " << e.what() << std::endl;
+    UNILINK_LOG_ERROR("tcp_client", "notify_state", "State notification error: " + std::string(e.what()));
+    error_reporting::report_system_error("tcp_client", "notify_state", "Exception in state notification: " + std::string(e.what()));
   } catch (...) {
-    std::cerr << "TcpClient state notification: Unknown error occurred" << std::endl;
+    UNILINK_LOG_ERROR("tcp_client", "notify_state", "Unknown error in state notification");
+    error_reporting::report_system_error("tcp_client", "notify_state", "Unknown error in state notification");
   }
 }
 
@@ -202,9 +209,7 @@ void TcpClient::do_resolve_connect() {
               boost::system::error_code ep_ec;
               auto rep = self->socket_.remote_endpoint(ep_ec);
               if (!ep_ec) {
-                std::cout << ts_now() << " [client] connected to "
-                          << rep.address().to_string() << ":" << rep.port()
-                          << std::endl;
+                UNILINK_LOG_INFO("tcp_client", "connect", "Connected to " + rep.address().to_string() + ":" + std::to_string(rep.port()));
               }
               self->start_read();
             });
@@ -216,8 +221,7 @@ void TcpClient::schedule_retry() {
   state_.set_state(LinkState::Connecting);
   notify_state();
 
-  std::cout << ts_now() << " [client] retry in "
-            << (cfg_.retry_interval_ms / 1000.0) << "s (fixed)" << std::endl;
+  UNILINK_LOG_INFO("tcp_client", "retry", "Scheduling retry in " + std::to_string(cfg_.retry_interval_ms / 1000.0) + "s");
 
   auto self = shared_from_this();
   retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));

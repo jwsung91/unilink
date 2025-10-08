@@ -14,6 +14,8 @@
 #include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
 #include "unilink/common/thread_safe_state.hpp"
+#include "unilink/common/error_handler.hpp"
+#include "unilink/common/logger.hpp"
 
 namespace unilink {
 namespace transport {

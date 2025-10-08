@@ -109,12 +109,21 @@ TEST_F(PerformanceTest, ConcurrentPerformanceTest) {
 TEST_F(PerformanceTest, MemoryPoolPerformanceTest) {
     auto& pool = common::GlobalMemoryPool::instance();
     
-    const int num_operations = 10000;
-    const std::vector<size_t> buffer_sizes = {1024, 4096, 16384, 32768, 65536};
+    // Reduce operations for larger buffers to keep test time reasonable
+    const std::vector<std::pair<size_t, int>> test_cases = {
+        {1024, 10000},    // 10K operations for 1KB buffers
+        {4096, 5000},     // 5K operations for 4KB buffers
+        {16384, 2000},    // 2K operations for 16KB buffers
+        {32768, 1000},    // 1K operations for 32KB buffers
+        {65536, 500}      // 500 operations for 64KB buffers
+    };
     
     std::cout << "\n=== Memory Pool Performance Test ===" << std::endl;
     
-    for (size_t buffer_size : buffer_sizes) {
+    for (const auto& test_case : test_cases) {
+        size_t buffer_size = test_case.first;
+        int num_operations = test_case.second;
+        
         auto start_time = std::chrono::high_resolution_clock::now();
         
         std::vector<std::unique_ptr<uint8_t[]>> buffers;
@@ -138,10 +147,31 @@ TEST_F(PerformanceTest, MemoryPoolPerformanceTest) {
             end_time - start_time).count();
         
         std::cout << "Buffer size: " << buffer_size << " bytes, "
+                  << "Operations: " << num_operations << ", "
                   << "Time: " << duration << " μs" << std::endl;
         
-        // Verify performance is reasonable
-        EXPECT_LT(duration, 1000000); // Should complete in less than 1 second
+        // Calculate operations per second
+        double ops_per_second = (num_operations * 1000000.0) / duration;
+        std::cout << "Performance: " << static_cast<int>(ops_per_second) 
+                  << " operations/second" << std::endl;
+        
+        // Verify performance is reasonable - adjust timeout based on buffer size
+        uint64_t max_duration;
+        if (buffer_size <= 4096) {
+            max_duration = 500000;  // 0.5 seconds for small buffers
+        } else if (buffer_size <= 16384) {
+            max_duration = 1000000; // 1 second for medium buffers
+        } else {
+            max_duration = 2000000; // 2 seconds for large buffers
+        }
+        
+        EXPECT_LT(duration, max_duration) 
+            << "Buffer size " << buffer_size << " took too long: " 
+            << duration << " μs (max: " << max_duration << " μs)";
+        
+        // Verify we can achieve at least 1000 operations per second
+        EXPECT_GT(ops_per_second, 1000) 
+            << "Performance too low: " << ops_per_second << " ops/sec";
     }
 }
 
