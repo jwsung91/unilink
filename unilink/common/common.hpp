@@ -12,6 +12,9 @@
 #include <cstring>
 #include <stdexcept>
 
+// Include logger for log_message function
+#include "logger.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -59,8 +62,9 @@ inline void log_message(const std::string& tag, const std::string& direction,
   if (!clean_message.empty() && clean_message.back() == '\n') {
     clean_message.pop_back();
   }
-  std::cout << ts_now() << " " << tag << " [" << direction << "] "
-            << clean_message << std::endl;
+  
+  // Use new logging system
+  Logger::instance().info(tag, direction, clean_message);
 }
 
 // Safe memory operations

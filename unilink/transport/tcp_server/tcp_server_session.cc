@@ -118,7 +118,7 @@ void TcpServerSession::do_write() {
 void TcpServerSession::do_close() {
   if (!alive_) return;
   alive_ = false;
-  std::cout << ts_now() << "[server] client disconnected" << std::endl;
+  UNILINK_LOG_INFO("tcp_server_session", "disconnect", "Client disconnected");
   boost::system::error_code ec;
   socket_->shutdown(tcp::socket::shutdown_both, ec);
   socket_->close(ec);
