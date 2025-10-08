@@ -10,6 +10,9 @@
 #include <atomic>
 #include <vector>
 #include <functional>
+#include <thread>
+#include <queue>
+#include <condition_variable>
 #include "log_rotation.hpp"
 
 namespace unilink {
@@ -36,10 +39,83 @@ enum class LogOutput {
 };
 
 /**
- * @brief Centralized logging system
+ * @brief Log entry structure for async processing
+ */
+struct LogEntry {
+    std::chrono::system_clock::time_point timestamp;
+    LogLevel level;
+    std::string component;
+    std::string operation;
+    std::string message;
+    std::string formatted_message;
+    
+    LogEntry() = default;
+    
+    LogEntry(LogLevel lvl, const std::string& comp, const std::string& op, const std::string& msg)
+        : timestamp(std::chrono::system_clock::now())
+        , level(lvl)
+        , component(comp)
+        , operation(op)
+        , message(msg) {}
+};
+
+/**
+ * @brief Async logging configuration
+ */
+struct AsyncLogConfig {
+    size_t max_queue_size = 10000;           // Maximum queue size
+    size_t batch_size = 100;                 // Batch processing size
+    std::chrono::milliseconds flush_interval{100}; // Flush interval
+    std::chrono::milliseconds shutdown_timeout{5000}; // Shutdown timeout
+    bool enable_backpressure = true;         // Enable backpressure handling
+    bool enable_batch_processing = true;     // Enable batch processing
+    
+    AsyncLogConfig() = default;
+    
+    AsyncLogConfig(size_t max_q, size_t batch, std::chrono::milliseconds interval)
+        : max_queue_size(max_q), batch_size(batch), flush_interval(interval) {}
+};
+
+/**
+ * @brief Async logging statistics
+ */
+struct AsyncLogStats {
+    uint64_t total_logs{0};
+    uint64_t dropped_logs{0};
+    uint64_t queue_size{0};
+    uint64_t max_queue_size_reached{0};
+    uint64_t batch_count{0};
+    uint64_t flush_count{0};
+    std::chrono::system_clock::time_point start_time;
+    
+    AsyncLogStats() : start_time(std::chrono::system_clock::now()) {}
+    
+    void reset() {
+        total_logs = 0;
+        dropped_logs = 0;
+        queue_size = 0;
+        max_queue_size_reached = 0;
+        batch_count = 0;
+        flush_count = 0;
+        start_time = std::chrono::system_clock::now();
+    }
+    
+    double get_drop_rate() const {
+        if (total_logs == 0) return 0.0;
+        return static_cast<double>(dropped_logs) / total_logs;
+    }
+    
+    std::chrono::milliseconds get_uptime() const {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - start_time);
+    }
+};
+
+/**
+ * @brief Centralized logging system with async support
  * 
- * Provides thread-safe, configurable logging with multiple output destinations
- * and performance optimizations for production use.
+ * Provides thread-safe, configurable logging with multiple output destinations,
+ * async processing, batch operations, and performance optimizations for production use.
  */
 class Logger {
 public:
@@ -80,6 +156,23 @@ public:
      */
     void set_file_output_with_rotation(const std::string& filename, 
                                       const LogRotationConfig& config = LogRotationConfig{});
+    
+    /**
+     * @brief Enable/disable async logging
+     * @param enable True to enable async logging
+     * @param config Async logging configuration
+     */
+    void set_async_logging(bool enable, const AsyncLogConfig& config = AsyncLogConfig{});
+    
+    /**
+     * @brief Check if async logging is enabled
+     */
+    bool is_async_logging_enabled() const;
+    
+    /**
+     * @brief Get async logging statistics
+     */
+    AsyncLogStats get_async_stats() const;
     
     /**
      * @brief Set log callback
@@ -153,6 +246,22 @@ private:
     std::unique_ptr<LogRotation> log_rotation_;
     std::string current_log_file_;
     
+    // Async logging support
+    std::atomic<bool> async_enabled_{false};
+    AsyncLogConfig async_config_;
+    AsyncLogStats async_stats_;
+    
+    // Threading for async logging
+    std::unique_ptr<std::thread> worker_thread_;
+    std::atomic<bool> running_{false};
+    std::atomic<bool> shutdown_requested_{false};
+    
+    // Queue management
+    std::queue<LogEntry> log_queue_;
+    mutable std::mutex queue_mutex_;
+    std::condition_variable queue_cv_;
+    mutable std::mutex stats_mutex_;
+    
     std::string format_message(LogLevel level, const std::string& component,
                               const std::string& operation, const std::string& message);
     std::string level_to_string(LogLevel level);
@@ -164,6 +273,21 @@ private:
     // Log rotation helper methods
     void check_and_rotate_log();
     void open_log_file(const std::string& filename);
+    
+    // Async logging helper methods
+    void setup_async_logging(const AsyncLogConfig& config);
+    void teardown_async_logging();
+    void worker_loop();
+    void process_batch(const std::vector<LogEntry>& batch);
+    bool should_drop_log() const;
+    size_t get_queue_size() const;
+    void clear_queue();
+    
+    // Statistics helpers
+    void update_stats_on_enqueue();
+    void update_stats_on_drop();
+    void update_stats_on_batch(size_t batch_size);
+    void update_stats_on_flush();
 };
 
 /**

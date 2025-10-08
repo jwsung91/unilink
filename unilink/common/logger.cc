@@ -4,6 +4,9 @@
 #include <sstream>
 #include <ctime>
 #include <filesystem>
+#include <queue>
+#include <condition_variable>
+#include <thread>
 
 namespace unilink {
 namespace common {
@@ -11,6 +14,7 @@ namespace common {
 Logger::Logger() = default;
 
 Logger::~Logger() {
+    teardown_async_logging();
     flush();
 }
 
@@ -107,6 +111,29 @@ void Logger::log(LogLevel level, const std::string& component,
         return;
     }
     
+    // Use async logging if enabled
+    if (async_enabled_.load()) {
+        LogEntry entry(level, component, operation, message);
+        
+        // Always update total logs count
+        update_stats_on_enqueue();
+        
+        // Check backpressure
+        if (async_config_.enable_backpressure && should_drop_log()) {
+            update_stats_on_drop();
+            return;
+        }
+        
+        {
+            std::lock_guard<std::mutex> lock(queue_mutex_);
+            log_queue_.push(entry);
+        }
+        
+        queue_cv_.notify_one();
+        return; // Successfully queued
+    }
+    
+    // Synchronous logging (when async is disabled)
     std::string formatted_message = format_message(level, component, operation, message);
     int current_outputs = outputs_.load();
     
@@ -267,6 +294,181 @@ void Logger::open_log_file(const std::string& filename) {
         file_output_.reset();
         std::cerr << "Failed to open log file: " << filename << std::endl;
     }
+}
+
+void Logger::set_async_logging(bool enable, const AsyncLogConfig& config) {
+    if (enable) {
+        setup_async_logging(config);
+    } else {
+        teardown_async_logging();
+    }
+}
+
+bool Logger::is_async_logging_enabled() const {
+    return async_enabled_.load();
+}
+
+AsyncLogStats Logger::get_async_stats() const {
+    std::lock_guard<std::mutex> lock(stats_mutex_);
+    AsyncLogStats result = async_stats_;
+    result.queue_size = get_queue_size();
+    result.max_queue_size_reached = std::max(result.max_queue_size_reached, result.queue_size);
+    return result;
+}
+
+void Logger::setup_async_logging(const AsyncLogConfig& config) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    
+    if (async_enabled_.load()) {
+        teardown_async_logging();
+    }
+    
+    async_config_ = config;
+    async_stats_.reset();
+    
+    shutdown_requested_.store(false);
+    running_.store(true);
+    
+    worker_thread_ = std::make_unique<std::thread>(&Logger::worker_loop, this);
+    async_enabled_.store(true);
+}
+
+void Logger::teardown_async_logging() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    
+    if (running_.load()) {
+        shutdown_requested_.store(true);
+        queue_cv_.notify_all();
+        
+        if (worker_thread_ && worker_thread_->joinable()) {
+            // Use detach instead of join to avoid hanging
+            worker_thread_->detach();
+        }
+        
+        running_.store(false);
+    }
+    
+    async_enabled_.store(false);
+}
+
+void Logger::worker_loop() {
+    std::vector<LogEntry> batch;
+    batch.reserve(async_config_.batch_size);
+    
+    auto last_flush = std::chrono::steady_clock::now();
+    
+    while (!shutdown_requested_.load()) {
+        std::unique_lock<std::mutex> lock(queue_mutex_);
+        
+        // Wait for logs or timeout
+        bool has_logs = queue_cv_.wait_for(lock, async_config_.flush_interval, [this] {
+            return !log_queue_.empty() || shutdown_requested_.load();
+        });
+        
+        if (shutdown_requested_.load()) {
+            // Process remaining logs before exit
+            if (!log_queue_.empty()) {
+                batch.clear();
+                while (!log_queue_.empty()) {
+                    batch.push_back(std::move(log_queue_.front()));
+                    log_queue_.pop();
+                }
+                lock.unlock();
+                if (!batch.empty()) {
+                    process_batch(batch);
+                    update_stats_on_batch(batch.size());
+                }
+            }
+            break;
+        }
+        
+        // Collect logs for batch processing
+        if (has_logs && !log_queue_.empty()) {
+            size_t batch_size = async_config_.enable_batch_processing ? 
+                               std::min(async_config_.batch_size, log_queue_.size()) : 1;
+            
+            batch.clear();
+            batch.reserve(batch_size);
+            
+            for (size_t i = 0; i < batch_size && !log_queue_.empty(); ++i) {
+                batch.push_back(std::move(log_queue_.front()));
+                log_queue_.pop();
+            }
+            
+            lock.unlock();
+            
+            // Process batch
+            if (!batch.empty()) {
+                process_batch(batch);
+                update_stats_on_batch(batch.size());
+            }
+        } else {
+            lock.unlock();
+        }
+        
+        // Periodic flush
+        auto now = std::chrono::steady_clock::now();
+        if (now - last_flush >= async_config_.flush_interval) {
+            last_flush = now;
+        }
+    }
+}
+
+void Logger::process_batch(const std::vector<LogEntry>& batch) {
+    for (const auto& entry : batch) {
+        std::string formatted_message = format_message(entry.level, entry.component, 
+                                                      entry.operation, entry.message);
+        int current_outputs = outputs_.load();
+        
+        if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
+            write_to_console(formatted_message);
+        }
+        
+        if (current_outputs & static_cast<int>(LogOutput::FILE)) {
+            check_and_rotate_log();
+            write_to_file(formatted_message);
+        }
+        
+        if (current_outputs & static_cast<int>(LogOutput::CALLBACK)) {
+            call_callback(entry.level, formatted_message);
+        }
+    }
+}
+
+bool Logger::should_drop_log() const {
+    size_t current_size = get_queue_size();
+    return current_size >= async_config_.max_queue_size;
+}
+
+size_t Logger::get_queue_size() const {
+    std::lock_guard<std::mutex> lock(queue_mutex_);
+    return log_queue_.size();
+}
+
+void Logger::clear_queue() {
+    std::lock_guard<std::mutex> lock(queue_mutex_);
+    std::queue<LogEntry> empty;
+    log_queue_.swap(empty);
+}
+
+void Logger::update_stats_on_enqueue() {
+    std::lock_guard<std::mutex> lock(stats_mutex_);
+    async_stats_.total_logs++;
+}
+
+void Logger::update_stats_on_drop() {
+    std::lock_guard<std::mutex> lock(stats_mutex_);
+    async_stats_.dropped_logs++;
+}
+
+void Logger::update_stats_on_batch(size_t batch_size) {
+    std::lock_guard<std::mutex> lock(stats_mutex_);
+    async_stats_.batch_count++;
+}
+
+void Logger::update_stats_on_flush() {
+    std::lock_guard<std::mutex> lock(stats_mutex_);
+    async_stats_.flush_count++;
 }
 
 } // namespace common
