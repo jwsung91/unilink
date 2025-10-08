@@ -18,3 +18,10 @@ target_link_libraries(chat_tcp_server PRIVATE interface::unilink)
 add_executable(chat_serial chat/chat_serial.cc)
 target_link_libraries(chat_serial PRIVATE interface::unilink)
 
+# 새로운 로깅 및 에러 처리 예제
+add_executable(logging_example logging_example.cc)
+target_link_libraries(logging_example PRIVATE interface::unilink)
+
+add_executable(error_handling_example error_handling_example.cc)
+target_link_libraries(error_handling_example PRIVATE interface::unilink)
+
