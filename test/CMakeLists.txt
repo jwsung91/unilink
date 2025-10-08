@@ -95,6 +95,12 @@ add_executable(run_core_integrated_tests
     test_utils.hpp
 )
 
+# Transport Performance Tests - Transport layer detailed tests
+add_executable(run_transport_performance_tests
+    test_transport_performance.cc
+    test_utils.hpp
+)
+
 # Integrated Performance Tests - Combined performance and stress tests
 # Note: test_performance_integrated.cc has been integrated into test_performance.cc
 
@@ -192,6 +198,11 @@ target_link_libraries(run_benchmark_tests
 # Link API safety tests
 # Link API safety tests - REMOVED (integrated)
 
+# Link transport performance tests
+target_link_libraries(run_transport_performance_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # Link advanced optimizations tests
 target_link_libraries(run_advanced_optimizations_tests
     PRIVATE ${COMMON_TEST_LIBS}
@@ -274,6 +285,7 @@ include(GoogleTest)
 gtest_discover_tests(run_core_tests)
 gtest_discover_tests(run_integration_tests)
 gtest_discover_tests(run_performance_tests)
+gtest_discover_tests(run_transport_performance_tests)
 gtest_discover_tests(run_boundary_tests)
 gtest_discover_tests(run_error_recovery_tests)
 gtest_discover_tests(run_stress_tests)
