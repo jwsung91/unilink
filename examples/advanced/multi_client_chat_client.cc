@@ -102,9 +102,10 @@ int main(int argc, char** argv) {
         // 사용자 입력 처리 (비블로킹)
         std::string line;
         while (running.load() && client->is_connected()) {
-            // 비블로킹 입력 처리
-            if (std::cin.rdbuf()->in_avail() > 0) {
+            // 비블로킹 입력 처리 - 더 강력한 방법
+            if (std::cin.rdbuf()->in_avail() > 0 || std::cin.peek() != EOF) {
                 if (std::getline(std::cin, line)) {
+                    std::cout << "[DEBUG] Client received input: '" << line << "'" << std::endl;
                     if (line.empty()) continue;
                     
                     if (line == "/quit" || line == "/exit") {
@@ -118,6 +119,7 @@ int main(int argc, char** argv) {
                         std::cout << "[client] Connection status: " << (client->is_connected() ? "Connected" : "Disconnected") << std::endl;
                     } else {
                         // Send message to server
+                        std::cout << "[DEBUG] Sending message to server: '" << line << "'" << std::endl;
                         client->send(line);
                         std::cout << "[TX] " << line << std::endl;
                     }
