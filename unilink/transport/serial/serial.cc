@@ -104,8 +104,8 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
   if (n <= 65536) { // Only use pool for buffers <= 64KB
     common::PooledBuffer pooled_buffer(n);
     if (pooled_buffer.valid()) {
-      // Copy data to pooled buffer
-      std::memcpy(pooled_buffer.data(), data, n);
+      // Copy data to pooled buffer safely
+      common::safe_memory::safe_memcpy(pooled_buffer.data(), data, n);
       
       net::post(ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         self->queued_bytes_ += buf.size();

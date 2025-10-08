@@ -142,8 +142,8 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   if (size <= 65536) { // Only use pool for buffers <= 64KB
     common::PooledBuffer pooled_buffer(size);
     if (pooled_buffer.valid()) {
-      // Copy data to pooled buffer
-      std::memcpy(pooled_buffer.data(), data, size);
+      // Copy data to pooled buffer safely
+      common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);
       
       net::post(*ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         // Double-check state in case client was stopped while in queue

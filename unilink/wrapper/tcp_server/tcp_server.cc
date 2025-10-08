@@ -45,10 +45,8 @@ void TcpServer::stop() {
 
 void TcpServer::send(const std::string& data) {
     if (is_connected() && channel_) {
-        channel_->async_write_copy(
-            reinterpret_cast<const uint8_t*>(data.c_str()), 
-            data.size()
-        );
+        auto binary_data = common::safe_convert::string_to_uint8(data);
+        channel_->async_write_copy(binary_data.data(), binary_data.size());
     }
 }
 
@@ -113,7 +111,7 @@ void TcpServer::setup_internal_handlers() {
 
 void TcpServer::handle_bytes(const uint8_t* data, size_t size) {
     if (on_data_) {
-        std::string str_data(reinterpret_cast<const char*>(data), size);
+        std::string str_data = common::safe_convert::uint8_to_string(data, size);
         on_data_(str_data);
     }
 }

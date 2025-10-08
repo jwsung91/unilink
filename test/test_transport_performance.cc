@@ -346,10 +346,8 @@ TEST_F(TransportPerformanceTest, TcpClientConcurrentAccess) {
         threads.emplace_back([this, t, messages_per_thread]() {
             for (int i = 0; i < messages_per_thread; ++i) {
                 std::string data = "thread_" + std::to_string(t) + "_msg_" + std::to_string(i);
-                client_->async_write_copy(
-                    reinterpret_cast<const uint8_t*>(data.c_str()),
-                    data.length()
-                );
+                auto binary_data = common::safe_convert::string_to_uint8(data);
+                client_->async_write_copy(binary_data.data(), binary_data.size());
             }
         });
     }
@@ -386,10 +384,8 @@ TEST_F(TransportPerformanceTest, TcpServerConcurrentAccess) {
         threads.emplace_back([this, t, messages_per_thread]() {
             for (int i = 0; i < messages_per_thread; ++i) {
                 std::string data = "thread_" + std::to_string(t) + "_msg_" + std::to_string(i);
-                server_->async_write_copy(
-                    reinterpret_cast<const uint8_t*>(data.c_str()),
-                    data.length()
-                );
+                auto binary_data = common::safe_convert::string_to_uint8(data);
+                server_->async_write_copy(binary_data.data(), binary_data.size());
             }
         });
     }
@@ -505,10 +501,8 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
         
         // 데이터 전송
         std::string data = "memory_test_" + std::to_string(cycle);
-        client->async_write_copy(
-            reinterpret_cast<const uint8_t*>(data.c_str()),
-            data.length()
-        );
+        auto binary_data = common::safe_convert::string_to_uint8(data);
+        client->async_write_copy(binary_data.data(), binary_data.size());
         
         client->stop();
         // client가 스코프를 벗어나면 자동으로 소멸
@@ -536,10 +530,8 @@ TEST_F(TransportPerformanceTest, TcpServerMemoryLeak) {
         
         // 데이터 전송
         std::string data = "memory_test_" + std::to_string(cycle);
-        server->async_write_copy(
-            reinterpret_cast<const uint8_t*>(data.c_str()),
-            data.length()
-        );
+        auto binary_data = common::safe_convert::string_to_uint8(data);
+        server->async_write_copy(binary_data.data(), binary_data.size());
         
         server->stop();
         // server가 스코프를 벗어나면 자동으로 소멸

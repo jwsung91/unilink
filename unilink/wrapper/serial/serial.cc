@@ -67,10 +67,8 @@ void Serial::stop() {
 
 void Serial::send(const std::string& data) {
     if (is_connected() && channel_) {
-        channel_->async_write_copy(
-            reinterpret_cast<const uint8_t*>(data.c_str()), 
-            data.size()
-        );
+        auto binary_data = common::safe_convert::string_to_uint8(data);
+        channel_->async_write_copy(binary_data.data(), binary_data.size());
     }
 }
 
@@ -147,7 +145,7 @@ void Serial::setup_internal_handlers() {
     // 바이트 데이터를 문자열로 변환하여 전달
     channel_->on_bytes([this](const uint8_t* p, size_t n) {
         if (data_handler_) {
-            std::string data(reinterpret_cast<const char*>(p), n);
+            std::string data = common::safe_convert::uint8_to_string(p, n);
             data_handler_(data);
         }
     });
