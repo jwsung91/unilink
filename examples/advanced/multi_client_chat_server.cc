@@ -4,39 +4,232 @@
 #include <chrono>
 #include <atomic>
 #include <csignal>
+#include <memory>
 
 #include "unilink/unilink.hpp"
 #include "unilink/common/logger.hpp"
 
-// 전역 변수로 running 선언 (스레드 안전)
-std::atomic<bool> running{true};
+class ChatServer {
+private:
+    std::shared_ptr<unilink::wrapper::TcpServer> server_;
+    unilink::common::Logger& logger_;
+    std::atomic<bool> running_;
+    unsigned short port_;
 
-void signal_handler(int signal) {
-    if (signal == SIGINT || signal == SIGTERM) {
-        if (running.load()) {
-            auto& logger = unilink::common::Logger::instance();
-            logger.info("server", "signal", "Received shutdown signal");
-            running.store(false);
-        } else {
-            // 이미 종료 중이면 강제 종료
-            auto& logger = unilink::common::Logger::instance();
-            logger.warning("server", "signal", "Force exit...");
-            std::exit(1);
+public:
+    ChatServer(unsigned short port) 
+        : logger_(unilink::common::Logger::instance())
+        , running_(true)
+        , port_(port) {
+        
+        // Initialize logger
+        logger_.set_level(unilink::common::LogLevel::INFO);
+        logger_.set_console_output(true);
+    }
+
+    void signal_handler(int signal) {
+        if (signal == SIGINT || signal == SIGTERM) {
+            if (running_.load()) {
+                logger_.info("server", "signal", "Received shutdown signal");
+                running_.store(false);
+            } else {
+                // Force exit if already shutting down
+                logger_.warning("server", "signal", "Force exit...");
+                std::exit(1);
+            }
         }
+    }
+
+    void on_connect(size_t client_id, const std::string& client_ip) {
+        logger_.info("server", "connect", "Client " + std::to_string(client_id) + " connected: " + client_ip);
+        logger_.info("server", "debug", "Multi-connect callback triggered for client " + std::to_string(client_id));
+        
+        // Broadcast when client connects
+        server_->broadcast("[Server] Client " + std::to_string(client_id) + " (" + client_ip + ") joined the chat!");
+        logger_.info("server", "broadcast", "Broadcasted client join message for client " + std::to_string(client_id));
+    }
+
+    void on_data(size_t client_id, const std::string& data) {
+        logger_.info("server", "data", "Client " + std::to_string(client_id) + " message: " + data);
+        logger_.info("server", "debug", "Data length: " + std::to_string(data.length()));
+        logger_.info("server", "debug", "Data bytes: " + std::to_string(data.size()));
+        
+        // Broadcast client message to all clients
+        server_->broadcast("[Client " + std::to_string(client_id) + "] " + data);
+        logger_.info("server", "broadcast", "Broadcasted message from client " + std::to_string(client_id) + " to all clients");
+    }
+
+    void on_disconnect(size_t client_id) {
+        logger_.info("server", "disconnect", "Client " + std::to_string(client_id) + " disconnected");
+        
+        // Broadcast when client disconnects
+        server_->broadcast("[Server] Client " + std::to_string(client_id) + " left the chat!");
+        logger_.info("server", "broadcast", "Broadcasted client leave message for client " + std::to_string(client_id));
+    }
+
+    bool start() {
+        // Create TCP server
+        server_ = unilink::tcp_server(port_)
+            .auto_start(false)
+            .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
+            .on_multi_connect([this](size_t client_id, const std::string& client_ip) {
+                on_connect(client_id, client_ip);
+            })
+            .on_multi_data([this](size_t client_id, const std::string& data) {
+                on_data(client_id, data);
+            })
+            .on_multi_disconnect([this](size_t client_id) {
+                on_disconnect(client_id);
+            })
+            .build();
+        
+        if (!server_) {
+            logger_.error("server", "startup", "Failed to create server");
+            return false;
+        }
+
+        // Start server
+        server_->start();
+        
+        // Check if server started successfully (considering retry time: 3 retries * 1 second + 0.5 second buffer)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 + (3 * 1000)));
+        
+        // Check if server started successfully
+        if (!server_->is_listening()) {
+            logger_.error("server", "startup", "Failed to start server - port may be in use");
+            return false;
+        }
+        
+        logger_.info("server", "startup", "Server started. Waiting for client connections...");
+        return true;
+    }
+
+    void setup_broadcast_timer() {
+        // Set up timer for broadcast test
+        std::thread broadcast_timer([this]() {
+            std::this_thread::sleep_for(std::chrono::seconds(5)); // Broadcast after 5 seconds
+            logger_.info("server", "debug", "Broadcast timer triggered");
+            if (server_) {
+                int client_count = server_->get_client_count();
+                logger_.info("server", "debug", "Client count: " + std::to_string(client_count));
+                if (client_count > 0) {
+                    server_->broadcast("[Server] Welcome to the chat server!");
+                    logger_.info("server", "broadcast", "Sent welcome message to all clients");
+                    
+                    // Test server message broadcast
+                    std::this_thread::sleep_for(std::chrono::seconds(3));
+                    server_->broadcast("[Server] This is a test message from server!");
+                    logger_.info("server", "broadcast", "Sent test message to all clients");
+                } else {
+                    logger_.info("server", "debug", "No clients connected, skipping broadcast");
+                }
+            } else {
+                logger_.info("server", "debug", "Server is null, skipping broadcast");
+            }
+        });
+        broadcast_timer.detach();
+    }
+
+    void process_input() {
+        // Non-blocking input processing - more robust method
+        if (std::cin.rdbuf()->in_avail() > 0 || std::cin.peek() != EOF) {
+            std::string line;
+            if (std::getline(std::cin, line)) {
+                logger_.info("server", "debug", "Received input: '" + line + "'");
+                if (!line.empty()) {
+                    if (line == "/quit" || line == "/exit") {
+                        logger_.info("server", "shutdown", "Shutting down server...");
+                        running_.store(false);
+                    } else if (line == "/clients") {
+                        int count = server_->get_client_count();
+                        logger_.info("server", "status", std::to_string(count) + " clients connected");
+                    } else if (line.substr(0, 5) == "/send") {
+                        // Process /send <id> <message> format
+                        size_t first_space = line.find(' ', 6);
+                        if (first_space != std::string::npos) {
+                            try {
+                                size_t client_id = std::stoul(line.substr(6, first_space - 6));
+                                std::string message = line.substr(first_space + 1);
+                                
+                                // Send to individual client then broadcast
+                                server_->send_to_client(client_id, message);
+                                server_->broadcast("[Server] -> Client " + std::to_string(client_id) + ": " + message);
+                                logger_.info("server", "send", "Sent to client " + std::to_string(client_id) + ": " + message);
+                                logger_.info("server", "broadcast", "Broadcasted server message to all clients");
+                            } catch (const std::exception& e) {
+                                logger_.error("server", "send", "Invalid send command format");
+                            }
+                        } else {
+                            logger_.error("server", "send", "Invalid send command format");
+                        }
+                    } else {
+                        // Broadcast server message
+                        logger_.info("server", "debug", "Broadcasting server message: " + line);
+                        server_->broadcast("[Server] " + line);
+                        logger_.info("server", "broadcast", "Broadcast server message to all clients: " + line);
+                    }
+                }
+            } else {
+                // EOF or error on stdin, break the loop
+                running_.store(false);
+            }
+        }
+    }
+
+    void run() {
+        // Main loop (including input processing)
+        while (running_.load()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            process_input();
+        }
+    }
+
+    void shutdown() {
+        // Cleanup
+        logger_.info("server", "shutdown", "Shutting down server...");
+        
+        if (server_) {
+            // Send shutdown notification to clients
+            server_->broadcast("[Server] Server is shutting down. Please disconnect.");
+            logger_.info("server", "shutdown", "Notified all clients about shutdown");
+            
+            // Give clients time to receive messages
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            
+            // Stop server
+            server_->stop();
+            logger_.info("server", "shutdown", "Server stopped");
+            
+            // Wait for server cleanup
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        }  
+        logger_.info("server", "shutdown", "Server shutdown complete");
+    }
+
+    bool is_running() const {
+        return running_.load();
+    }
+};
+
+// Global pointer for signal handling
+ChatServer* g_chat_server = nullptr;
+
+void signal_handler_wrapper(int signal) {
+    if (g_chat_server) {
+        g_chat_server->signal_handler(signal);
     }
 }
 
 int main(int argc, char** argv) {
     unsigned short port = (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 8080;
     
-    // 시그널 핸들러 설정
-    std::signal(SIGINT, signal_handler);
-    std::signal(SIGTERM, signal_handler);
+    // Create ChatServer instance
+    ChatServer chat_server(port);
+    g_chat_server = &chat_server;
     
-    // Logger 초기화
-    auto& logger = unilink::common::Logger::instance();
-    logger.set_level(unilink::common::LogLevel::INFO);
-    logger.set_console_output(true);
+    // Set up signal handlers
+    std::signal(SIGINT, signal_handler_wrapper);
+    std::signal(SIGTERM, signal_handler_wrapper);
     
     std::cout << "=== Multi-Client TCP Chat Server ===" << std::endl;
     std::cout << "Port: " << port << std::endl;
@@ -47,168 +240,19 @@ int main(int argc, char** argv) {
     std::cout << "  <message> - Broadcast to all clients" << std::endl;
     std::cout << "====================================" << std::endl;
     
-    // TCP 서버 생성
-    auto server = unilink::tcp_server(port)
-        .on_multi_connect([&logger](int client_id, const std::string& client_ip) {
-            logger.info("server", "connect", "Client " + std::to_string(client_id) + " connected: " + client_ip);
-            logger.info("server", "debug", "Multi-connect callback triggered for client " + std::to_string(client_id));
-        })
-        .on_multi_data([&logger](int client_id, const std::string& data) {
-            logger.info("server", "data", "Client " + std::to_string(client_id) + " message: " + data);
-            logger.info("server", "debug", "Data length: " + std::to_string(data.length()));
-            logger.info("server", "debug", "Data bytes: " + std::to_string(data.size()));
-        })
-        .on_multi_disconnect([&logger](int client_id) {
-            logger.info("server", "disconnect", "Client " + std::to_string(client_id) + " disconnected");
-        })
-        .enable_port_retry(true, 3, 1000)  // 3회 재시도, 1초 간격
-        .auto_start(false)
-        .build();
-    
-    if (!server) {
-        logger.error("server", "startup", "Failed to create server");
+    // Start the server
+    if (!chat_server.start()) {
         return 1;
     }
     
-    // 브로드캐스트 기능을 위한 콜백 재설정
-    server->on_multi_connect([&logger, &server](int client_id, const std::string& client_ip) {
-        logger.info("server", "connect", "Client " + std::to_string(client_id) + " connected: " + client_ip);
-        logger.info("server", "debug", "Multi-connect callback triggered for client " + std::to_string(client_id));
-        
-        // 클라이언트 연결 시 브로드캐스팅
-        server->broadcast("[Server] Client " + std::to_string(client_id) + " (" + client_ip + ") joined the chat!");
-        logger.info("server", "broadcast", "Broadcasted client join message for client " + std::to_string(client_id));
-    });
+    // Set up broadcast timer
+    chat_server.setup_broadcast_timer();
     
-    server->on_multi_data([&logger, &server](int client_id, const std::string& data) {
-        logger.info("server", "data", "Client " + std::to_string(client_id) + " message: " + data);
-        logger.info("server", "debug", "Data length: " + std::to_string(data.length()));
-        logger.info("server", "debug", "Data bytes: " + std::to_string(data.size()));
-        
-        // 클라이언트 메시지를 모든 클라이언트에게 브로드캐스팅
-        server->broadcast("[Client " + std::to_string(client_id) + "] " + data);
-        logger.info("server", "broadcast", "Broadcasted message from client " + std::to_string(client_id) + " to all clients");
-    });
+    // Run the main loop
+    chat_server.run();
     
-    server->on_multi_disconnect([&logger, &server](int client_id) {
-        logger.info("server", "disconnect", "Client " + std::to_string(client_id) + " disconnected");
-        
-        // 클라이언트 연결 해제 시 브로드캐스팅
-        server->broadcast("[Server] Client " + std::to_string(client_id) + " left the chat!");
-        logger.info("server", "broadcast", "Broadcasted client leave message for client " + std::to_string(client_id));
-    });
+    // Shutdown the server
+    chat_server.shutdown();
     
-    // 서버 시작
-    server->start();
-    
-    // 서버 시작 확인 (재시도 시간 고려: 3회 재시도 * 1초 + 0.5초 버퍼)
-    std::this_thread::sleep_for(std::chrono::milliseconds(500 + (3 * 1000)));
-    
-    // Check if server started successfully
-    if (!server->is_listening()) {
-        logger.error("server", "startup", "Failed to start server - port may be in use");
-        return 1;
-    }
-    
-    logger.info("server", "startup", "Server started. Waiting for client connections...");
-    
-    // 브로드캐스트 테스트를 위한 타이머 설정
-    std::thread broadcast_timer([&server, &logger]() {
-        std::this_thread::sleep_for(std::chrono::seconds(5)); // 5초 후 브로드캐스트
-        logger.info("server", "debug", "Broadcast timer triggered");
-        if (server) {
-            int client_count = server->get_client_count();
-            logger.info("server", "debug", "Client count: " + std::to_string(client_count));
-            if (client_count > 0) {
-                server->broadcast("[Server] Welcome to the chat server!");
-                logger.info("server", "broadcast", "Sent welcome message to all clients");
-                
-                // 서버 메시지 브로드캐스트 테스트
-                std::this_thread::sleep_for(std::chrono::seconds(3));
-                server->broadcast("[Server] This is a test message from server!");
-                logger.info("server", "broadcast", "Sent test message to all clients");
-            } else {
-                logger.info("server", "debug", "No clients connected, skipping broadcast");
-            }
-        } else {
-            logger.info("server", "debug", "Server is null, skipping broadcast");
-        }
-    });
-    broadcast_timer.detach();
-    
-    // 메인 루프 (입력 처리 포함)
-    while (running.load()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        
-        // 비블로킹 입력 처리 - 더 강력한 방법
-        if (std::cin.rdbuf()->in_avail() > 0 || std::cin.peek() != EOF) {
-            std::string line;
-            if (std::getline(std::cin, line)) {
-                logger.info("server", "debug", "Received input: '" + line + "'");
-                if (!line.empty()) {
-                    if (line == "/quit" || line == "/exit") {
-                        logger.info("server", "shutdown", "Shutting down server...");
-                        running.store(false);
-                        break;
-                    } else if (line == "/clients") {
-                        int count = server->get_client_count();
-                        logger.info("server", "status", std::to_string(count) + " clients connected");
-                    } else if (line.substr(0, 5) == "/send") {
-                        // /send <id> <message> 형식 처리
-                        size_t first_space = line.find(' ', 6);
-                        if (first_space != std::string::npos) {
-                            try {
-                                int client_id = std::stoi(line.substr(6, first_space - 6));
-                                std::string message = line.substr(first_space + 1);
-                                
-                                // 개별 클라이언트에게 전송 후 브로드캐스트
-                                server->send_to_client(client_id, message);
-                                server->broadcast("[Server] -> Client " + std::to_string(client_id) + ": " + message);
-                                logger.info("server", "send", "Sent to client " + std::to_string(client_id) + ": " + message);
-                                logger.info("server", "broadcast", "Broadcasted server message to all clients");
-                            } catch (const std::exception& e) {
-                                logger.error("server", "send", "Invalid send command format");
-                            }
-                        } else {
-                            logger.error("server", "send", "Invalid send command format");
-                        }
-                    } else {
-                        // 서버 메시지 브로드캐스트
-                        logger.info("server", "debug", "Broadcasting server message: " + line);
-                        server->broadcast("[Server] " + line);
-                        logger.info("server", "broadcast", "Broadcast server message to all clients: " + line);
-                    }
-                }
-            } else {
-                // EOF or error on stdin, break the loop
-                break;
-            }
-        }
-    }
-    
-    // Cleanup
-    logger.info("server", "shutdown", "Shutting down server...");
-    
-    if (server) {
-        // 클라이언트에게 종료 알림 전송
-        server->broadcast("[Server] Server is shutting down. Please disconnect.");
-        logger.info("server", "shutdown", "Notified all clients about shutdown");
-        
-        // 클라이언트가 메시지를 받을 시간 제공
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        
-        // 서버 중지
-        server->stop();
-        logger.info("server", "shutdown", "Server stopped");
-        
-        // 서버 정리 대기
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    }
-    
-    // No input thread to wait for
-    
-    logger.info("server", "shutdown", "Server shutdown complete");
-    
-    // 정상 종료
     return 0;
 }
