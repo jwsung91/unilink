@@ -8,6 +8,8 @@
 #include <memory>
 #include <thread>
 #include <vector>
+#include <mutex>
+#include <algorithm>
 
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/interface/channel.hpp"
@@ -46,6 +48,21 @@ class TcpServer : public Channel,
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
 
+  // 멀티 클라이언트 지원 메서드
+  void broadcast(const std::string& message);
+  void send_to_client(size_t client_id, const std::string& message);
+  size_t get_client_count() const;
+  std::vector<size_t> get_connected_clients() const;
+  
+  // 멀티 클라이언트 콜백 타입 정의
+  using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
+  using MultiClientDataHandler = std::function<void(size_t client_id, const std::string& data)>;
+  using MultiClientDisconnectHandler = std::function<void(size_t client_id)>;
+  
+  void on_multi_connect(MultiClientConnectHandler handler);
+  void on_multi_data(MultiClientDataHandler handler);
+  void on_multi_disconnect(MultiClientDisconnectHandler handler);
+
  private:
   void do_accept();
   void notify_state();
@@ -58,8 +75,20 @@ class TcpServer : public Channel,
 
   std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
   TcpServerConfig cfg_;
-  std::shared_ptr<TcpServerSession> sess_;
+  
+  // 멀티 클라이언트 지원
+  std::vector<std::shared_ptr<TcpServerSession>> sessions_;
+  mutable std::mutex sessions_mutex_;
+  
+  // 기존 API 호환성을 위한 현재 활성 세션
+  std::shared_ptr<TcpServerSession> current_session_;
 
+  // 멀티 클라이언트 콜백들
+  MultiClientConnectHandler on_multi_connect_;
+  MultiClientDataHandler on_multi_data_;
+  MultiClientDisconnectHandler on_multi_disconnect_;
+
+  // 기존 멤버들 (호환성 유지)
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;

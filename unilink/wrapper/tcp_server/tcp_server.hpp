@@ -39,6 +39,21 @@ public:
     void send_line(const std::string& line) override;
     // void send_binary(const std::vector<uint8_t>& data) override;
 
+    // 멀티 클라이언트 지원 메서드
+    void broadcast(const std::string& message);
+    void send_to_client(size_t client_id, const std::string& message);
+    size_t get_client_count() const;
+    std::vector<size_t> get_connected_clients() const;
+    
+    // 멀티 클라이언트 콜백 타입 정의
+    using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
+    using MultiClientDataHandler = std::function<void(size_t client_id, const std::string& data)>;
+    using MultiClientDisconnectHandler = std::function<void(size_t client_id)>;
+    
+    TcpServer& on_multi_connect(MultiClientConnectHandler handler);
+    TcpServer& on_multi_data(MultiClientDataHandler handler);
+    TcpServer& on_multi_disconnect(MultiClientDisconnectHandler handler);
+
 private:
     void setup_internal_handlers();
     void handle_bytes(const uint8_t* data, size_t size);
@@ -55,6 +70,11 @@ private:
     ConnectHandler on_connect_;
     DisconnectHandler on_disconnect_;
     ErrorHandler on_error_;
+    
+    // 멀티 클라이언트 콜백들
+    MultiClientConnectHandler on_multi_connect_;
+    MultiClientDataHandler on_multi_data_;
+    MultiClientDisconnectHandler on_multi_disconnect_;
 };
 
 } // namespace wrapper

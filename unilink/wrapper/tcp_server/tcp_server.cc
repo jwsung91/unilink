@@ -1,6 +1,7 @@
 #include "unilink/wrapper/tcp_server/tcp_server.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/factory/channel_factory.hpp"
+#include "unilink/transport/tcp_server/tcp_server.hpp"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -136,6 +137,90 @@ void TcpServer::handle_state(common::LinkState state) {
         default:
             break;
     }
+}
+
+// 멀티 클라이언트 지원 메서드 구현
+void TcpServer::broadcast(const std::string& message) {
+  if (channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+      transport_server->broadcast(message);
+    }
+  }
+}
+
+void TcpServer::send_to_client(size_t client_id, const std::string& message) {
+  if (channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+      transport_server->send_to_client(client_id, message);
+    }
+  }
+}
+
+size_t TcpServer::get_client_count() const {
+  if (channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+      return transport_server->get_client_count();
+    }
+  }
+  return 0;
+}
+
+std::vector<size_t> TcpServer::get_connected_clients() const {
+  if (channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+      return transport_server->get_connected_clients();
+    }
+  }
+  return {};
+}
+
+TcpServer& TcpServer::on_multi_connect(MultiClientConnectHandler handler) {
+  on_multi_connect_ = std::move(handler);
+  if (channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+      transport_server->on_multi_connect([this](size_t client_id, const std::string& client_info) {
+        if (on_multi_connect_) {
+          on_multi_connect_(client_id, client_info);
+        }
+      });
+    }
+  }
+  return *this;
+}
+
+TcpServer& TcpServer::on_multi_data(MultiClientDataHandler handler) {
+  on_multi_data_ = std::move(handler);
+  if (channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+      transport_server->on_multi_data([this](size_t client_id, const std::string& data) {
+        if (on_multi_data_) {
+          on_multi_data_(client_id, data);
+        }
+      });
+    }
+  }
+  return *this;
+}
+
+TcpServer& TcpServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
+  on_multi_disconnect_ = std::move(handler);
+  if (channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+      transport_server->on_multi_disconnect([this](size_t client_id) {
+        if (on_multi_disconnect_) {
+          on_multi_disconnect_(client_id);
+        }
+      });
+    }
+  }
+  return *this;
 }
 
 } // namespace wrapper

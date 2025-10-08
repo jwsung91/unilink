@@ -128,6 +128,28 @@ public:
      */
     TcpServerBuilder& use_independent_context(bool use_independent = true);
 
+    // 멀티 클라이언트 지원 메서드
+    /**
+     * @brief Set multi-client connection handler callback
+     * @param handler Function to handle multi-client connection events
+     * @return TcpServerBuilder& Reference to this builder for method chaining
+     */
+    TcpServerBuilder& on_multi_connect(std::function<void(size_t, const std::string&)> handler);
+    
+    /**
+     * @brief Set multi-client data handler callback
+     * @param handler Function to handle multi-client data events
+     * @return TcpServerBuilder& Reference to this builder for method chaining
+     */
+    TcpServerBuilder& on_multi_data(std::function<void(size_t, const std::string&)> handler);
+    
+    /**
+     * @brief Set multi-client disconnection handler callback
+     * @param handler Function to handle multi-client disconnection events
+     * @return TcpServerBuilder& Reference to this builder for method chaining
+     */
+    TcpServerBuilder& on_multi_disconnect(std::function<void(size_t)> handler);
+
 private:
     uint16_t port_;
     bool auto_start_;
@@ -138,6 +160,11 @@ private:
     std::function<void()> on_connect_;
     std::function<void()> on_disconnect_;
     std::function<void(const std::string&)> on_error_;
+    
+    // 멀티 클라이언트 콜백들
+    std::function<void(size_t, const std::string&)> on_multi_connect_;
+    std::function<void(size_t, const std::string&)> on_multi_data_;
+    std::function<void(size_t)> on_multi_disconnect_;
 };
 
 } // namespace builder

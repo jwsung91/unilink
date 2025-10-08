@@ -48,6 +48,19 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
         server->on_error(on_error_);
     }
     
+    // 멀티 클라이언트 콜백 설정
+    if (on_multi_connect_) {
+        server->on_multi_connect(on_multi_connect_);
+    }
+    
+    if (on_multi_data_) {
+        server->on_multi_data(on_multi_data_);
+    }
+    
+    if (on_multi_disconnect_) {
+        server->on_multi_disconnect(on_multi_disconnect_);
+    }
+    
     return server;
 }
 
@@ -83,6 +96,22 @@ TcpServerBuilder& TcpServerBuilder::on_error(std::function<void(const std::strin
 
 TcpServerBuilder& TcpServerBuilder::use_independent_context(bool use_independent) {
     use_independent_context_ = use_independent;
+    return *this;
+}
+
+// 멀티 클라이언트 지원 메서드 구현
+TcpServerBuilder& TcpServerBuilder::on_multi_connect(std::function<void(size_t, const std::string&)> handler) {
+    on_multi_connect_ = std::move(handler);
+    return *this;
+}
+
+TcpServerBuilder& TcpServerBuilder::on_multi_data(std::function<void(size_t, const std::string&)> handler) {
+    on_multi_data_ = std::move(handler);
+    return *this;
+}
+
+TcpServerBuilder& TcpServerBuilder::on_multi_disconnect(std::function<void(size_t)> handler) {
+    on_multi_disconnect_ = std::move(handler);
     return *this;
 }
 
