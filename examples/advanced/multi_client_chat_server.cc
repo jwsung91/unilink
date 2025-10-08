@@ -23,31 +23,31 @@ int main(int argc, char** argv) {
     std::signal(SIGINT, signal_handler);
     std::signal(SIGTERM, signal_handler);
     
-    std::cout << "=== 멀티 클라이언트 TCP 채팅 서버 ===" << std::endl;
-    std::cout << "포트: " << port << std::endl;
-    std::cout << "종료: Ctrl+C" << std::endl;
-    std::cout << "=====================================" << std::endl;
+    std::cout << "=== Multi-Client TCP Chat Server ===" << std::endl;
+    std::cout << "Port: " << port << std::endl;
+    std::cout << "Exit: Ctrl+C" << std::endl;
+    std::cout << "====================================" << std::endl;
     
     // 멀티 클라이언트 TCP 서버 생성
     auto server = unilink::tcp_server(port)
         .on_multi_connect([](size_t client_id, const std::string& client_info) {
-            std::cout << "[server] 클라이언트 " << client_id << " 연결됨: " << client_info << std::endl;
+            std::cout << "[server] Client " << client_id << " connected: " << client_info << std::endl;
         })
         .on_multi_data([](size_t client_id, const std::string& data) {
-            std::cout << "[server] 클라이언트 " << client_id << " 메시지: " << data << std::endl;
+            std::cout << "[server] Client " << client_id << " message: " << data << std::endl;
         })
         .on_multi_disconnect([](size_t client_id) {
-            std::cout << "[server] 클라이언트 " << client_id << " 연결 해제됨" << std::endl;
+            std::cout << "[server] Client " << client_id << " disconnected" << std::endl;
         })
         .auto_start(true)
         .build();
     
     if (!server) {
-        std::cerr << "[server] 서버 생성 실패" << std::endl;
+        std::cerr << "[server] Failed to create server" << std::endl;
         return 1;
     }
     
-    std::cout << "[server] 서버 시작됨. 클라이언트 연결 대기 중..." << std::endl;
+    std::cout << "[server] Server started. Waiting for client connections..." << std::endl;
     
     // 서버 상태 모니터링 스레드
     std::thread monitor_thread([&server, &running]() {
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
                 size_t client_count = server->get_client_count();
                 auto connected_clients = server->get_connected_clients();
                 
-                std::cout << "[server] 상태: " << client_count << "개 클라이언트 연결됨";
+                std::cout << "[server] Status: " << client_count << " clients connected";
                 if (!connected_clients.empty()) {
                     std::cout << " (ID: ";
                     for (size_t i = 0; i < connected_clients.size(); ++i) {
@@ -79,20 +79,20 @@ int main(int argc, char** argv) {
             if (line.empty()) continue;
             
             if (line == "/quit" || line == "/exit") {
-                std::cout << "[server] 서버 종료 중..." << std::endl;
+                std::cout << "[server] Shutting down server..." << std::endl;
                 running = false;
                 break;
             } else if (line == "/clients") {
                 if (server) {
                     size_t client_count = server->get_client_count();
                     auto connected_clients = server->get_connected_clients();
-                    std::cout << "[server] 연결된 클라이언트: " << client_count << "개" << std::endl;
+                    std::cout << "[server] Connected clients: " << client_count << std::endl;
                     for (auto client_id : connected_clients) {
-                        std::cout << "  - 클라이언트 " << client_id << std::endl;
+                        std::cout << "  - Client " << client_id << std::endl;
                     }
                 }
             } else if (line.substr(0, 6) == "/send ") {
-                // 특정 클라이언트에게 메시지 전송: /send <client_id> <message>
+                // Send message to specific client: /send <client_id> <message>
                 size_t space_pos = line.find(' ', 6);
                 if (space_pos != std::string::npos) {
                     try {
@@ -100,20 +100,20 @@ int main(int argc, char** argv) {
                         std::string message = line.substr(space_pos + 1);
                         
                         if (server) {
-                            server->send_to_client(client_id, "[서버] " + message);
-                            std::cout << "[server] 클라이언트 " << client_id << "에게 전송: " << message << std::endl;
+                            server->send_to_client(client_id, "[Server] " + message);
+                            std::cout << "[server] Sent to client " << client_id << ": " << message << std::endl;
                         }
                     } catch (const std::exception& e) {
-                        std::cout << "[server] 잘못된 명령어 형식: " << e.what() << std::endl;
+                        std::cout << "[server] Invalid command format: " << e.what() << std::endl;
                     }
                 } else {
-                    std::cout << "[server] 사용법: /send <client_id> <message>" << std::endl;
+                    std::cout << "[server] Usage: /send <client_id> <message>" << std::endl;
                 }
             } else {
-                // 모든 클라이언트에게 브로드캐스트
+                // Broadcast to all clients
                 if (server) {
-                    server->broadcast("[서버] " + line);
-                    std::cout << "[server] 모든 클라이언트에게 브로드캐스트: " << line << std::endl;
+                    server->broadcast("[Server] " + line);
+                    std::cout << "[server] Broadcast to all clients: " << line << std::endl;
                 }
             }
         }
@@ -124,15 +124,15 @@ int main(int argc, char** argv) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     
-    // 정리
-    std::cout << "[server] 서버 종료 중..." << std::endl;
+    // Cleanup
+    std::cout << "[server] Shutting down server..." << std::endl;
     
     if (server) {
-        server->broadcast("[서버] 서버가 종료됩니다.");
+        server->broadcast("[Server] Server is shutting down.");
         server->stop();
     }
     
-    // 스레드 종료 대기
+    // Wait for threads to finish
     if (input_thread.joinable()) {
         input_thread.join();
     }
@@ -140,6 +140,6 @@ int main(int argc, char** argv) {
         monitor_thread.join();
     }
     
-    std::cout << "[server] 서버 종료 완료" << std::endl;
+    std::cout << "[server] Server shutdown complete" << std::endl;
     return 0;
 }
