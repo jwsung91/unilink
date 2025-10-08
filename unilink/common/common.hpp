@@ -7,6 +7,10 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
+#include <cstdint>
+#include <cstring>
+#include <stdexcept>
 
 namespace unilink {
 namespace common {
@@ -59,9 +63,89 @@ inline void log_message(const std::string& tag, const std::string& direction,
             << clean_message << std::endl;
 }
 
+// Safe memory operations
+namespace safe_memory {
+  /**
+   * @brief Safely copy memory with bounds checking
+   * @param dest Destination buffer
+   * @param src Source buffer
+   * @param size Number of bytes to copy
+   * @throws std::invalid_argument if parameters are invalid
+   */
+  inline void safe_memcpy(uint8_t* dest, const uint8_t* src, size_t size) {
+    if (!dest) {
+      throw std::invalid_argument("Destination pointer is null");
+    }
+    if (!src) {
+      throw std::invalid_argument("Source pointer is null");
+    }
+    if (size == 0) {
+      return; // Nothing to copy
+    }
+    if (size > 1024 * 1024) { // 1MB limit
+      throw std::invalid_argument("Copy size too large (max 1MB)");
+    }
+    
+    std::memcpy(dest, src, size);
+  }
+  
+  /**
+   * @brief Safely copy memory with bounds checking (overloaded for char*)
+   * @param dest Destination buffer
+   * @param src Source buffer
+   * @param size Number of bytes to copy
+   * @throws std::invalid_argument if parameters are invalid
+   */
+  inline void safe_memcpy(char* dest, const char* src, size_t size) {
+    safe_memcpy(reinterpret_cast<uint8_t*>(dest), 
+                reinterpret_cast<const uint8_t*>(src), size);
+  }
+}
+
+// Safe type conversion utilities
+namespace safe_convert {
+  /**
+   * @brief Safely convert uint8_t* to const char* for string operations
+   * @param data Pointer to uint8_t data
+   * @param size Size of the data
+   * @return std::string constructed from the data
+   */
+  inline std::string uint8_to_string(const uint8_t* data, size_t size) {
+    if (!data || size == 0) {
+      return std::string{};
+    }
+    return std::string(data, data + size);
+  }
+  
+  /**
+   * @brief Safely convert const char* to const uint8_t* for binary operations
+   * @param data Pointer to char data
+   * @param size Size of the data
+   * @return std::vector<uint8_t> containing the data
+   */
+  inline std::vector<uint8_t> string_to_uint8(const char* data, size_t size) {
+    if (!data || size == 0) {
+      return std::vector<uint8_t>{};
+    }
+    return std::vector<uint8_t>(data, data + size);
+  }
+  
+  /**
+   * @brief Safely convert std::string to std::vector<uint8_t>
+   * @param str The string to convert
+   * @return std::vector<uint8_t> containing the string data
+   */
+  inline std::vector<uint8_t> string_to_uint8(const std::string& str) {
+    return std::vector<uint8_t>(str.begin(), str.end());
+  }
+}
+
 static void feed_lines(std::string& acc, const uint8_t* p, size_t n,
                        const std::function<void(std::string)>& on_line) {
-  acc.append(reinterpret_cast<const char*>(p), n);
+  // Use safe conversion instead of reinterpret_cast
+  if (p && n > 0) {
+    acc.append(safe_convert::uint8_to_string(p, n));
+  }
   size_t pos;
   while ((pos = acc.find('\n')) != std::string::npos) {
     std::string line = acc.substr(0, pos);

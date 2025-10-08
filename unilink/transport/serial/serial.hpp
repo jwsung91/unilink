@@ -14,6 +14,7 @@
 #include "unilink/interface/iserial_port.hpp"
 #include "unilink/common/constants.hpp"
 #include "unilink/common/memory_pool.hpp"
+#include "unilink/common/thread_safe_state.hpp"
 
 namespace unilink {
 namespace transport {
@@ -21,6 +22,7 @@ namespace transport {
 using interface::Channel;
 using interface::SerialPortInterface;
 using common::LinkState;
+using common::ThreadSafeLinkState;
 using config::SerialConfig;
 namespace net = boost::asio;
 
@@ -73,7 +75,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   OnBackpressure on_bp_;
 
   bool opened_ = false;
-  LinkState state_ = LinkState::Idle;
+  ThreadSafeLinkState state_{LinkState::Idle};
 };
 }  // namespace transport
 }  // namespace unilink

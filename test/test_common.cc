@@ -71,8 +71,8 @@ TEST(CommonTest, FeedLines) {
 
   // 1. Single complete line
   const char* data1 = "hello\n";
-  feed_lines(acc, reinterpret_cast<const uint8_t*>(data1), strlen(data1),
-             on_line);
+  auto binary_data1 = common::safe_convert::string_to_uint8(data1, strlen(data1));
+  feed_lines(acc, binary_data1.data(), binary_data1.size(), on_line);
   ASSERT_EQ(lines.size(), 1);
   EXPECT_EQ(lines[0], "hello");
   EXPECT_TRUE(acc.empty());
@@ -80,8 +80,8 @@ TEST(CommonTest, FeedLines) {
 
   // 2. Multiple lines
   const char* data2 = "line1\nline2\n";
-  feed_lines(acc, reinterpret_cast<const uint8_t*>(data2), strlen(data2),
-             on_line);
+  auto binary_data2 = common::safe_convert::string_to_uint8(data2, strlen(data2));
+  feed_lines(acc, binary_data2.data(), binary_data2.size(), on_line);
   ASSERT_EQ(lines.size(), 2);
   EXPECT_EQ(lines[0], "line1");
   EXPECT_EQ(lines[1], "line2");
@@ -90,15 +90,15 @@ TEST(CommonTest, FeedLines) {
 
   // 3. Partial line
   const char* data3 = "partial";
-  feed_lines(acc, reinterpret_cast<const uint8_t*>(data3), strlen(data3),
-             on_line);
+  auto binary_data3 = common::safe_convert::string_to_uint8(data3, strlen(data3));
+  feed_lines(acc, binary_data3.data(), binary_data3.size(), on_line);
   EXPECT_TRUE(lines.empty());
   EXPECT_EQ(acc, "partial");
 
   // 4. Complete the partial line
   const char* data4 = "_line\n";
-  feed_lines(acc, reinterpret_cast<const uint8_t*>(data4), strlen(data4),
-             on_line);
+  auto binary_data4 = common::safe_convert::string_to_uint8(data4, strlen(data4));
+  feed_lines(acc, binary_data4.data(), binary_data4.size(), on_line);
   ASSERT_EQ(lines.size(), 1);
   EXPECT_EQ(lines[0], "partial_line");
   EXPECT_TRUE(acc.empty());
@@ -106,8 +106,8 @@ TEST(CommonTest, FeedLines) {
 
   // 5. Line with CR LF
   const char* data5 = "crlf\r\n";
-  feed_lines(acc, reinterpret_cast<const uint8_t*>(data5), strlen(data5),
-             on_line);
+  auto binary_data5 = common::safe_convert::string_to_uint8(data5, strlen(data5));
+  feed_lines(acc, binary_data5.data(), binary_data5.size(), on_line);
   ASSERT_EQ(lines.size(), 1);
   EXPECT_EQ(lines[0], "crlf");
   EXPECT_TRUE(acc.empty());
@@ -115,8 +115,8 @@ TEST(CommonTest, FeedLines) {
 
   // 6. Multiple lines with a partial line at the end
   const char* data6 = "lineA\nlineB\nlineC_part";
-  feed_lines(acc, reinterpret_cast<const uint8_t*>(data6), strlen(data6),
-             on_line);
+  auto binary_data6 = common::safe_convert::string_to_uint8(data6, strlen(data6));
+  feed_lines(acc, binary_data6.data(), binary_data6.size(), on_line);
   ASSERT_EQ(lines.size(), 2);
   EXPECT_EQ(lines[0], "lineA");
   EXPECT_EQ(lines[1], "lineB");
@@ -126,8 +126,8 @@ TEST(CommonTest, FeedLines) {
   // 7. Empty lines
   const char* data7 = "\n\nfinal\n";
   acc.clear();
-  feed_lines(acc, reinterpret_cast<const uint8_t*>(data7), strlen(data7),
-             on_line);
+  auto binary_data7 = common::safe_convert::string_to_uint8(data7, strlen(data7));
+  feed_lines(acc, binary_data7.data(), binary_data7.size(), on_line);
   ASSERT_EQ(lines.size(), 3);
   EXPECT_EQ(lines[0], "");
   EXPECT_EQ(lines[1], "");

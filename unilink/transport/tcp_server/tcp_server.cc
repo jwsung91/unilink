@@ -44,7 +44,7 @@ TcpServer::TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpA
 
 TcpServer::~TcpServer() {
   // Ensure proper cleanup even if stop() wasn't called explicitly
-  if (state_ != LinkState::Closed) {
+  if (!state_.is_state(LinkState::Closed)) {
     stop();
   }
   
@@ -54,7 +54,7 @@ TcpServer::~TcpServer() {
 void TcpServer::start() {
   if (!acceptor_) {
     std::cout << ts_now() << "[server] start error: acceptor is null" << std::endl;
-    state_ = LinkState::Error;
+    state_.set_state(LinkState::Error);
     notify_state();
     return;
   }
@@ -74,11 +74,11 @@ void TcpServer::start() {
     }
     if (ec) {
       std::cout << ts_now() << "[server] bind error: " << ec.message() << std::endl;
-      self->state_ = LinkState::Error;
+      self->state_.set_state(LinkState::Error);
       self->notify_state();
       return;
     }
-    self->state_ = LinkState::Listening;
+    self->state_.set_state(LinkState::Listening);
     self->notify_state();
     self->do_accept();
   });
@@ -106,7 +106,7 @@ void TcpServer::stop() {
     }
     if (sess_) sess_.reset();
   }
-  state_ = LinkState::Closed;
+  state_.set_state(LinkState::Closed);
   // Don't call notify_state() in stop() as it may cause issues with callbacks
   // during destruction
 }
@@ -138,7 +138,7 @@ void TcpServer::do_accept() {
     if (ec) {
       std::cout << ts_now() << "[server] accept error: " << ec.message()
                 << std::endl;
-      self->state_ = LinkState::Error;
+      self->state_.set_state(LinkState::Error);
       self->notify_state();
       self->do_accept();
       return;
@@ -159,11 +159,11 @@ void TcpServer::do_accept() {
     if (self->on_bp_) self->sess_->on_backpressure(self->on_bp_);
     self->sess_->on_close([self] {
       self->sess_.reset();
-      self->state_ = LinkState::Listening;
+      self->state_.set_state(LinkState::Listening);
       self->notify_state();
       self->do_accept();
     });
-    self->state_ = LinkState::Connected;
+    self->state_.set_state(LinkState::Connected);
     self->notify_state();
     self->sess_->start();
   });
@@ -172,7 +172,7 @@ void TcpServer::do_accept() {
 void TcpServer::notify_state() {
   if (on_state_) {
     try {
-      on_state_(state_);
+      on_state_(state_.get_state());
     } catch (const std::exception& e) {
       std::cerr << "TcpServer state callback error: " << e.what() << std::endl;
     } catch (...) {
