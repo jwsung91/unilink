@@ -80,6 +80,12 @@ add_executable(run_concurrency_safety_tests
     test_utils.hpp
 )
 
+# Memory Safety Tests - Memory tracking, validation, and leak detection
+add_executable(run_memory_safety_tests
+    test_memory_safety.cc
+    test_utils.hpp
+)
+
 # ============================================================================
 # LINK LIBRARIES
 # ============================================================================
@@ -151,6 +157,11 @@ target_link_libraries(run_concurrency_safety_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
+# Link memory safety tests
+target_link_libraries(run_memory_safety_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # ============================================================================
 # TEST DISCOVERY
 # ============================================================================
@@ -170,6 +181,7 @@ gtest_discover_tests(run_api_safety_tests)
 gtest_discover_tests(run_advanced_optimizations_tests)
 gtest_discover_tests(run_safe_data_buffer_tests)
 gtest_discover_tests(run_concurrency_safety_tests)
+gtest_discover_tests(run_memory_safety_tests)
 
 # ============================================================================
 # SANITIZERS (Optional - for debugging)
