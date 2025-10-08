@@ -9,6 +9,11 @@
 #include <vector>
 #include <mutex>
 #include <condition_variable>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <random>
 #include "unilink/common/memory_pool.hpp"
 
 namespace unilink {
@@ -24,9 +29,72 @@ public:
      * @return uint16_t Unique port number
      */
     static uint16_t getTestPort() {
-        static std::atomic<uint16_t> port_counter{20000};
-        return port_counter.fetch_add(1);
+        static std::atomic<uint16_t> port_counter{30000}; // Start from higher port range
+        uint16_t port = port_counter.fetch_add(1);
+        
+        // Ensure port is in valid range and avoid system ports
+        if (port < 30000 || port > 65535) {
+            port_counter.store(30000);
+            port = 30000;
+        }
+        
+        return port;
     }
+    
+    /**
+     * @brief Get a guaranteed available test port
+     * @return uint16_t Available port number
+     */
+    static uint16_t getAvailableTestPort() {
+        const int max_attempts = 100;
+        for (int i = 0; i < max_attempts; ++i) {
+            uint16_t port = getTestPort();
+            if (isPortAvailable(port)) {
+                return port;
+            }
+            // Add small delay to avoid rapid port conflicts
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        
+        // Fallback: try random ports in the range
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(30000, 65535);
+        
+        for (int i = 0; i < max_attempts; ++i) {
+            uint16_t port = static_cast<uint16_t>(dis(gen));
+            if (isPortAvailable(port)) {
+                return port;
+            }
+        }
+        
+        // Last resort: return a high port number
+        return 65535;
+    }
+    
+    /**
+     * @brief Check if a port is available for binding
+     * @param port Port number to check
+     * @return true if port is available, false otherwise
+     */
+    static bool isPortAvailable(uint16_t port) {
+        int sock = socket(AF_INET, SOCK_STREAM, 0);
+        if (sock < 0) return false;
+        
+        // Set SO_REUSEADDR to allow binding to recently used ports
+        int reuse = 1;
+        setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+        
+        sockaddr_in addr{};
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(port);
+        addr.sin_addr.s_addr = INADDR_ANY;
+        
+        bool available = bind(sock, (sockaddr*)&addr, sizeof(addr)) == 0;
+        close(sock);
+        return available;
+    }
+    
     
     /**
      * @brief Wait for a condition with timeout
@@ -39,11 +107,35 @@ public:
         auto start = std::chrono::steady_clock::now();
         auto timeout = std::chrono::milliseconds(timeout_ms);
         
+        // Use shorter polling interval for better responsiveness
         while (std::chrono::steady_clock::now() - start < timeout) {
             if (condition()) {
                 return true;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+        return false;
+    }
+    
+    /**
+     * @brief Wait for a condition with retry logic
+     * @param condition Function that returns true when condition is met
+     * @param timeout_ms Timeout in milliseconds per attempt
+     * @param retry_count Number of retry attempts
+     * @return true if condition was met, false if all retries failed
+     */
+    template<typename Condition>
+    static bool waitForConditionWithRetry(Condition&& condition, 
+                                         int timeout_ms = 2000, 
+                                         int retry_count = 3) {
+        for (int i = 0; i < retry_count; ++i) {
+            if (waitForCondition(condition, timeout_ms)) {
+                return true;
+            }
+            // Brief pause between retries
+            if (i < retry_count - 1) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
         }
         return false;
     }
