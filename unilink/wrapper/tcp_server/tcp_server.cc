@@ -26,6 +26,14 @@ void TcpServer::start() {
         // 개선된 Factory 사용
         config::TcpServerConfig config;
         config.port = port_;
+        config.enable_port_retry = port_retry_enabled_;
+        config.max_port_retries = max_port_retries_;
+        config.port_retry_interval_ms = port_retry_interval_ms_;
+        
+        std::cout << "DEBUG: Creating channel with config - enable_port_retry=" << config.enable_port_retry 
+                  << ", max_port_retries=" << config.max_port_retries 
+                  << ", port_retry_interval_ms=" << config.port_retry_interval_ms << std::endl;
+        
         channel_ = factory::ChannelFactory::create(config);
         setup_internal_handlers();
     }
@@ -118,6 +126,13 @@ void TcpServer::handle_bytes(const uint8_t* data, size_t size) {
 }
 
 void TcpServer::handle_state(common::LinkState state) {
+    // Update listening state based on server state
+    if (state == common::LinkState::Listening) {
+        is_listening_ = true;
+    } else if (state == common::LinkState::Error || state == common::LinkState::Closed) {
+        is_listening_ = false;
+    }
+    
     switch (state) {
         case common::LinkState::Connected:
             if (on_connect_) {
@@ -221,6 +236,33 @@ TcpServer& TcpServer::on_multi_disconnect(MultiClientDisconnectHandler handler) 
     }
   }
   return *this;
+}
+
+TcpServer& TcpServer::enable_port_retry(bool enable, int max_retries, int retry_interval_ms) {
+  // Store retry configuration for use when creating the channel
+  port_retry_enabled_ = enable;
+  max_port_retries_ = max_retries;
+  port_retry_interval_ms_ = retry_interval_ms;
+  
+  std::cout << "DEBUG: TcpServer::enable_port_retry called - enable=" << enable 
+            << ", max_retries=" << max_retries << ", interval=" << retry_interval_ms << std::endl;
+  std::cout << "DEBUG: Stored values - port_retry_enabled_=" << port_retry_enabled_ 
+            << ", max_port_retries_=" << max_port_retries_ 
+            << ", port_retry_interval_ms_=" << port_retry_interval_ms_ << std::endl;
+  
+  if (channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+    if (transport_server) {
+      // If channel already exists, we need to recreate it with new config
+      // This is a limitation - retry settings should be set before start()
+      // For now, we'll just store the settings
+    }
+  }
+  return *this;
+}
+
+bool TcpServer::is_listening() const {
+  return is_listening_;
 }
 
 } // namespace wrapper

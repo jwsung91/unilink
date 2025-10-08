@@ -68,24 +68,7 @@ void TcpServer::start() {
   }
   auto self = shared_from_this();
   net::post(ioc_, [self] {
-    boost::system::error_code ec;
-    self->acceptor_->open(tcp::v4(), ec);
-    if (!ec) {
-      self->acceptor_->bind(tcp::endpoint(tcp::v4(), self->cfg_.port), ec);
-    }
-    if (!ec) {
-      self->acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
-    }
-    if (ec) {
-      UNILINK_LOG_ERROR("tcp_server", "bind", "Failed to bind to port: " + std::to_string(self->cfg_.port) + " - " + ec.message());
-      error_reporting::report_connection_error("tcp_server", "bind", ec, false);
-      self->state_.set_state(LinkState::Error);
-      self->notify_state();
-      return;
-    }
-    self->state_.set_state(LinkState::Listening);
-    self->notify_state();
-    self->do_accept();
+    self->attempt_port_binding(0);
   });
 }
 
@@ -153,6 +136,86 @@ void TcpServer::on_state(OnState cb) { on_state_ = std::move(cb); }
 void TcpServer::on_backpressure(OnBackpressure cb) {
   on_bp_ = std::move(cb);
   if (current_session_) current_session_->on_backpressure(on_bp_);
+}
+
+void TcpServer::attempt_port_binding(int retry_count) {
+  boost::system::error_code ec;
+  
+  // Log retry configuration for debugging
+  if (retry_count > 0) {
+    UNILINK_LOG_DEBUG("tcp_server", "bind", "Attempting port binding - retry enabled: " + 
+                     std::to_string(cfg_.enable_port_retry) + 
+                     ", max retries: " + std::to_string(cfg_.max_port_retries) + 
+                     ", retry count: " + std::to_string(retry_count));
+  }
+  
+  // Open acceptor (only if not already open)
+  if (!acceptor_->is_open()) {
+    acceptor_->open(tcp::v4(), ec);
+    if (ec) {
+      UNILINK_LOG_ERROR("tcp_server", "open", "Failed to open acceptor: " + ec.message());
+      error_reporting::report_connection_error("tcp_server", "open", ec, false);
+      state_.set_state(LinkState::Error);
+      notify_state();
+      return;
+    }
+  }
+  
+  // Bind to port
+  acceptor_->bind(tcp::endpoint(tcp::v4(), cfg_.port), ec);
+  if (ec) {
+    // Check if retry is enabled and we haven't exceeded max retries
+    if (cfg_.enable_port_retry && retry_count < cfg_.max_port_retries) {
+      UNILINK_LOG_WARNING("tcp_server", "bind", "Failed to bind to port " + 
+                         std::to_string(cfg_.port) + " (attempt " + std::to_string(retry_count + 1) + 
+                         "/" + std::to_string(cfg_.max_port_retries) + "): " + ec.message() + 
+                         ". Retrying in " + std::to_string(cfg_.port_retry_interval_ms) + "ms...");
+      
+      // Schedule retry
+      auto self = shared_from_this();
+      auto timer = std::make_shared<net::steady_timer>(ioc_);
+      timer->expires_after(std::chrono::milliseconds(cfg_.port_retry_interval_ms));
+      timer->async_wait([self, retry_count, timer](const boost::system::error_code& timer_ec) {
+        if (!timer_ec) {
+          self->attempt_port_binding(retry_count + 1);
+        }
+      });
+      return;
+    } else {
+      // No retry enabled or max retries exceeded
+      std::string error_msg = "Failed to bind to port: " + std::to_string(cfg_.port) + " - " + ec.message();
+      if (cfg_.enable_port_retry) {
+        error_msg += " (after " + std::to_string(retry_count) + " retries)";
+      }
+      UNILINK_LOG_ERROR("tcp_server", "bind", error_msg);
+      error_reporting::report_connection_error("tcp_server", "bind", ec, false);
+      state_.set_state(LinkState::Error);
+      notify_state();
+      return;
+    }
+  }
+  
+  // Listen for connections
+  acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
+  if (ec) {
+    UNILINK_LOG_ERROR("tcp_server", "listen", "Failed to listen on port: " + std::to_string(cfg_.port) + " - " + ec.message());
+    error_reporting::report_connection_error("tcp_server", "listen", ec, false);
+    state_.set_state(LinkState::Error);
+    notify_state();
+    return;
+  }
+  
+  // Success
+  if (retry_count > 0) {
+    UNILINK_LOG_INFO("tcp_server", "bind", "Successfully bound to port " + std::to_string(cfg_.port) + 
+                     " after " + std::to_string(retry_count) + " retries");
+  } else {
+    UNILINK_LOG_INFO("tcp_server", "bind", "Successfully bound to port " + std::to_string(cfg_.port));
+  }
+  
+  state_.set_state(LinkState::Listening);
+  notify_state();
+  do_accept();
 }
 
 void TcpServer::do_accept() {

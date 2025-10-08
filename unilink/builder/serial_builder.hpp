@@ -34,7 +34,7 @@ public:
      * @param auto_start Whether to automatically start the serial
      * @return SerialBuilder& Reference to this builder for method chaining
      */
-    SerialBuilder& auto_start(bool auto_start = true) override;
+    SerialBuilder& auto_start(bool auto_start = false) override;
     
     /**
      * @brief Enable auto-manage functionality

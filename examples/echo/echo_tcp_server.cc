@@ -19,6 +19,7 @@ public:
         // Using convenience function with member function pointers
         auto server = unilink::tcp_server(port_)
             .auto_start(false)
+            .enable_port_retry(true, 3, 1000)  // 3회 재시도, 1초 간격
             .on_connect(this, &TcpEchoServerApp::handle_connect)      // Member function binding
             .on_disconnect(this, &TcpEchoServerApp::handle_disconnect) // Member function binding
             .on_data(this, &TcpEchoServerApp::handle_data)            // Member function binding
@@ -27,6 +28,16 @@ public:
 
         // Start the TCP server
         server->start();
+        
+        // Wait for server to start and retry attempts (3 retries * 1s + 0.5s buffer)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 + (3 * 1000)));
+        
+        // Check if server started successfully
+        if (!server->is_listening()) {
+            unilink::log_message("[tcp_server]", "ERROR", "Failed to start server - port may be in use");
+            return;
+        }
+        
         running_ = true;
         unilink::log_message("[tcp_server]", "STATE", "Server started on port " + std::to_string(port_));
 

@@ -53,6 +53,12 @@ public:
     TcpServer& on_multi_connect(MultiClientConnectHandler handler);
     TcpServer& on_multi_data(MultiClientDataHandler handler);
     TcpServer& on_multi_disconnect(MultiClientDisconnectHandler handler);
+    
+    // Port retry configuration
+    TcpServer& enable_port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
+    
+    // Server state checking
+    bool is_listening() const;
 
 private:
     void setup_internal_handlers();
@@ -64,6 +70,14 @@ private:
     bool started_{false};
     bool auto_start_{false};
     bool auto_manage_{false};
+    
+    // Port retry configuration
+    bool port_retry_enabled_{false};
+    int max_port_retries_{3};
+    int port_retry_interval_ms_{1000};
+    
+    // Server state tracking
+    bool is_listening_{false};
 
     // 사용자 콜백들
     DataHandler on_data_;

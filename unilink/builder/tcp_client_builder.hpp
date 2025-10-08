@@ -34,7 +34,7 @@ public:
      * @param auto_start Whether to automatically start the client
      * @return TcpClientBuilder& Reference to this builder for method chaining
      */
-    TcpClientBuilder& auto_start(bool auto_start = true) override;
+    TcpClientBuilder& auto_start(bool auto_start = false) override;
     
     /**
      * @brief Enable auto-manage functionality

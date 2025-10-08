@@ -66,6 +66,7 @@ class TcpServer : public Channel,
  private:
   void do_accept();
   void notify_state();
+  void attempt_port_binding(int retry_count);
 
  private:
   std::unique_ptr<net::io_context> owned_ioc_;

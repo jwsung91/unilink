@@ -32,7 +32,7 @@ public:
      * @param auto_start Whether to automatically start the server
      * @return TcpServerBuilder& Reference to this builder for method chaining
      */
-    TcpServerBuilder& auto_start(bool auto_start = true) override;
+    TcpServerBuilder& auto_start(bool auto_start = false) override;
     
     /**
      * @brief Enable auto-manage functionality
@@ -149,12 +149,26 @@ public:
      * @return TcpServerBuilder& Reference to this builder for method chaining
      */
     TcpServerBuilder& on_multi_disconnect(std::function<void(size_t)> handler);
+    
+    /**
+     * @brief Enable port binding retry on failure
+     * @param enable Whether to enable retry on port binding failure
+     * @param max_retries Maximum number of retry attempts (default: 3)
+     * @param retry_interval_ms Retry interval in milliseconds (default: 1000)
+     * @return TcpServerBuilder& Reference to this builder for method chaining
+     */
+    TcpServerBuilder& enable_port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
 
 private:
     uint16_t port_;
     bool auto_start_;
     bool auto_manage_;
     bool use_independent_context_;
+    
+    // Port retry configuration
+    bool enable_port_retry_;
+    int max_port_retries_;
+    int port_retry_interval_ms_;
     
     std::function<void(const std::string&)> on_data_;
     std::function<void()> on_connect_;

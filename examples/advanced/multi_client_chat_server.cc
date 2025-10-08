@@ -58,7 +58,8 @@ int main(int argc, char** argv) {
         .on_multi_disconnect([&logger](int client_id) {
             logger.info("server", "disconnect", "Client " + std::to_string(client_id) + " disconnected");
         })
-        .auto_start(true)
+        .enable_port_retry(true, 3, 1000)  // 3회 재시도, 1초 간격
+        .auto_start(false)
         .build();
     
     if (!server) {
@@ -66,9 +67,17 @@ int main(int argc, char** argv) {
         return 1;
     }
     
-    // 서버 시작 확인
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    // 서버 시작 확인을 제거하고 바로 진행
+    // 서버 시작
+    server->start();
+    
+    // 서버 시작 확인 (재시도 시간 고려: 3회 재시도 * 1초 + 0.5초 버퍼)
+    std::this_thread::sleep_for(std::chrono::milliseconds(500 + (3 * 1000)));
+    
+    // Check if server started successfully
+    if (!server->is_listening()) {
+        logger.error("server", "startup", "Failed to start server - port may be in use");
+        return 1;
+    }
     
     logger.info("server", "startup", "Server started. Waiting for client connections...");
     

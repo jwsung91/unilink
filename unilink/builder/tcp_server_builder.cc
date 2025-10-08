@@ -6,7 +6,8 @@ namespace unilink {
 namespace builder {
 
 TcpServerBuilder::TcpServerBuilder(uint16_t port)
-    : port_(port), auto_start_(false), auto_manage_(false), use_independent_context_(false) {}
+    : port_(port), auto_start_(false), auto_manage_(false), use_independent_context_(false),
+      enable_port_retry_(false), max_port_retries_(3), port_retry_interval_ms_(1000) {}
 
 std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     // IoContext 관리
@@ -61,6 +62,13 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
         server->on_multi_disconnect(on_multi_disconnect_);
     }
     
+    // Port retry configuration
+    std::cout << "DEBUG: enable_port_retry_ = " << enable_port_retry_ << std::endl;
+    if (enable_port_retry_) {
+        std::cout << "DEBUG: Setting port retry: max=" << max_port_retries_ << ", interval=" << port_retry_interval_ms_ << std::endl;
+        server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
+    }
+    
     return server;
 }
 
@@ -112,6 +120,13 @@ TcpServerBuilder& TcpServerBuilder::on_multi_data(std::function<void(size_t, con
 
 TcpServerBuilder& TcpServerBuilder::on_multi_disconnect(std::function<void(size_t)> handler) {
     on_multi_disconnect_ = std::move(handler);
+    return *this;
+}
+
+TcpServerBuilder& TcpServerBuilder::enable_port_retry(bool enable, int max_retries, int retry_interval_ms) {
+    enable_port_retry_ = enable;
+    max_port_retries_ = max_retries;
+    port_retry_interval_ms_ = retry_interval_ms;
     return *this;
 }
 
