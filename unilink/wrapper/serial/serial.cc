@@ -6,6 +6,7 @@
 
 #include "unilink/config/serial_config.hpp"
 #include "unilink/factory/channel_factory.hpp"
+#include "unilink/transport/serial/serial.hpp"
 
 namespace unilink {
 namespace wrapper {
@@ -41,6 +42,7 @@ void Serial::start() {
         config.baud_rate = baud_rate_;
         config.char_size = data_bits_;
         config.stop_bits = stop_bits_;
+        config.retry_interval_ms = retry_interval_.count();
         // parity와 flow는 enum으로 변환 필요
         config.flow = unilink::config::SerialConfig::Flow::None;
         channel_ = factory::ChannelFactory::create(config);
@@ -172,6 +174,19 @@ void Serial::notify_state_change(common::LinkState state) {
             break;
         default:
             break;
+    }
+}
+
+void Serial::set_retry_interval(std::chrono::milliseconds interval) {
+    retry_interval_ = interval;
+    
+    // If channel is already created, update its retry interval
+    if (channel_) {
+        // Cast to transport::Serial and set retry interval
+        auto transport_serial = std::dynamic_pointer_cast<transport::Serial>(channel_);
+        if (transport_serial) {
+            transport_serial->set_retry_interval(interval.count());
+        }
     }
 }
 

@@ -6,6 +6,7 @@
 
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/factory/channel_factory.hpp"
+#include "unilink/transport/tcp_client/tcp_client.hpp"
 
 namespace unilink {
 namespace wrapper {
@@ -118,6 +119,15 @@ ChannelInterface& TcpClient::auto_manage(bool manage) {
 
 void TcpClient::set_retry_interval(std::chrono::milliseconds interval) {
     retry_interval_ = interval;
+    
+    // If channel is already created, update its retry interval
+    if (channel_) {
+        // Cast to transport::TcpClient and set retry interval
+        auto transport_client = std::dynamic_pointer_cast<transport::TcpClient>(channel_);
+        if (transport_client) {
+            transport_client->set_retry_interval(interval.count());
+        }
+    }
 }
 
 void TcpClient::set_max_retries(int max_retries) {

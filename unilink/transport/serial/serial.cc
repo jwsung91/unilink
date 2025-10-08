@@ -290,6 +290,10 @@ void Serial::schedule_retry(const char* where,
   });
 }
 
+void Serial::set_retry_interval(unsigned interval_ms) {
+  cfg_.retry_interval_ms = interval_ms;
+}
+
 void Serial::close_port() {
   boost::system::error_code ec;
   if (port_ && port_->is_open()) {

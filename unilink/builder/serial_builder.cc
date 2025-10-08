@@ -5,7 +5,7 @@ namespace unilink {
 namespace builder {
 
 SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
-    : device_(device), baud_rate_(baud_rate), auto_start_(false), auto_manage_(false), use_independent_context_(false) {}
+    : device_(device), baud_rate_(baud_rate), auto_start_(false), auto_manage_(false), use_independent_context_(false), retry_interval_ms_(2000) {}
 
 std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
     // IoContext 관리
@@ -46,6 +46,9 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
         serial->on_error(on_error_);
     }
     
+    // Set retry interval
+    serial->set_retry_interval(std::chrono::milliseconds(retry_interval_ms_));
+    
     return serial;
 }
 
@@ -81,6 +84,11 @@ SerialBuilder& SerialBuilder::on_error(std::function<void(const std::string&)> h
 
 SerialBuilder& SerialBuilder::use_independent_context(bool use_independent) {
     use_independent_context_ = use_independent;
+    return *this;
+}
+
+SerialBuilder& SerialBuilder::retry_interval(unsigned interval_ms) {
+    retry_interval_ms_ = interval_ms;
     return *this;
 }
 

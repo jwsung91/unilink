@@ -38,6 +38,7 @@ public:
     void set_stop_bits(int stop_bits);
     void set_parity(const std::string& parity);
     void set_flow_control(const std::string& flow_control);
+    void set_retry_interval(std::chrono::milliseconds interval);
 
 private:
     void setup_internal_handlers();
@@ -64,6 +65,7 @@ private:
     int stop_bits_ = 1;
     std::string parity_ = "none";
     std::string flow_control_ = "none";
+    std::chrono::milliseconds retry_interval_{2000};
 };
 
 } // namespace wrapper

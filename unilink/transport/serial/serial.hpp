@@ -45,6 +45,9 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
+  
+  // Dynamic configuration methods
+  void set_retry_interval(unsigned interval_ms);
 
  private:
   void open_and_configure();
