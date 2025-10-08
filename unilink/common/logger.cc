@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <sstream>
 #include <ctime>
+#include <filesystem>
 
 namespace unilink {
 namespace common {
@@ -40,15 +41,27 @@ void Logger::set_file_output(const std::string& filename) {
     
     if (filename.empty()) {
         file_output_.reset();
+        log_rotation_.reset();
+        current_log_file_.clear();
         outputs_.fetch_and(~static_cast<int>(LogOutput::FILE));
     } else {
-        file_output_ = std::make_unique<std::ofstream>(filename, std::ios::app);
-        if (file_output_->is_open()) {
-            outputs_.fetch_or(static_cast<int>(LogOutput::FILE));
-        } else {
-            file_output_.reset();
-            std::cerr << "Failed to open log file: " << filename << std::endl;
-        }
+        open_log_file(filename);
+    }
+}
+
+void Logger::set_file_output_with_rotation(const std::string& filename, 
+                                          const LogRotationConfig& config) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    
+    if (filename.empty()) {
+        file_output_.reset();
+        log_rotation_.reset();
+        current_log_file_.clear();
+        outputs_.fetch_and(~static_cast<int>(LogOutput::FILE));
+    } else {
+        log_rotation_ = std::make_unique<LogRotation>(config);
+        current_log_file_ = filename;
+        open_log_file(filename);
     }
 }
 
@@ -102,6 +115,7 @@ void Logger::log(LogLevel level, const std::string& component,
     }
     
     if (current_outputs & static_cast<int>(LogOutput::FILE)) {
+        check_and_rotate_log();
         write_to_file(formatted_message);
     }
     
@@ -228,6 +242,30 @@ void Logger::call_callback(LogLevel level, const std::string& message) {
         } catch (...) {
             std::cerr << "Unknown error in log callback" << std::endl;
         }
+    }
+}
+
+void Logger::check_and_rotate_log() {
+    if (!log_rotation_ || current_log_file_.empty()) {
+        return;
+    }
+    
+    if (log_rotation_->should_rotate(current_log_file_)) {
+        std::string new_filepath = log_rotation_->rotate(current_log_file_);
+        if (new_filepath != current_log_file_) {
+            // File was rotated, reopen the original file
+            open_log_file(current_log_file_);
+        }
+    }
+}
+
+void Logger::open_log_file(const std::string& filename) {
+    file_output_ = std::make_unique<std::ofstream>(filename, std::ios::app);
+    if (file_output_->is_open()) {
+        outputs_.fetch_or(static_cast<int>(LogOutput::FILE));
+    } else {
+        file_output_.reset();
+        std::cerr << "Failed to open log file: " << filename << std::endl;
     }
 }
 

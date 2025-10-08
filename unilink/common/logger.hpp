@@ -10,6 +10,7 @@
 #include <atomic>
 #include <vector>
 #include <functional>
+#include "log_rotation.hpp"
 
 namespace unilink {
 namespace common {
@@ -71,6 +72,14 @@ public:
      * @param filename Log file path (empty string to disable file output)
      */
     void set_file_output(const std::string& filename);
+    
+    /**
+     * @brief Set file output with rotation
+     * @param filename Log file path
+     * @param config Rotation configuration
+     */
+    void set_file_output_with_rotation(const std::string& filename, 
+                                      const LogRotationConfig& config = LogRotationConfig{});
     
     /**
      * @brief Set log callback
@@ -140,6 +149,10 @@ private:
     std::unique_ptr<std::ofstream> file_output_;
     LogCallback callback_;
     
+    // Log rotation support
+    std::unique_ptr<LogRotation> log_rotation_;
+    std::string current_log_file_;
+    
     std::string format_message(LogLevel level, const std::string& component,
                               const std::string& operation, const std::string& message);
     std::string level_to_string(LogLevel level);
@@ -147,6 +160,10 @@ private:
     void write_to_console(const std::string& message);
     void write_to_file(const std::string& message);
     void call_callback(LogLevel level, const std::string& message);
+    
+    // Log rotation helper methods
+    void check_and_rotate_log();
+    void open_log_file(const std::string& filename);
 };
 
 /**
