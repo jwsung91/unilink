@@ -13,6 +13,7 @@
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
+#include "unilink/common/thread_safe_state.hpp"
 
 namespace unilink {
 namespace transport {
@@ -22,6 +23,7 @@ namespace net = boost::asio;
 using interface::Channel;
 using interface::TcpAcceptorInterface;
 using common::LinkState;
+using common::ThreadSafeLinkState;
 using config::TcpServerConfig;
 using tcp = net::ip::tcp;
 
@@ -59,7 +61,7 @@ class TcpServer : public Channel,
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;
-  LinkState state_ = LinkState::Idle;
+  ThreadSafeLinkState state_{LinkState::Idle};
 };
 }  // namespace transport
 }  // namespace unilink

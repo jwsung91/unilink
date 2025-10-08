@@ -49,7 +49,7 @@ Serial::Serial(const SerialConfig& cfg,
 Serial::~Serial() {
   // stop() might have been called already. Ensure we don't double-stop,
   // but do clean up resources if we own them.
-  if (state_ != LinkState::Closed) stop();
+  if (!state_.is_state(LinkState::Closed)) stop();
 
   // No need to clean up io_context as it's shared and managed by IoContextManager
 }
@@ -64,14 +64,14 @@ void Serial::start() {
   }
   net::post(ioc_, [this] {
     std::cout << ts_now() << "[serial] posting open_and_configure for device: " << cfg_.device << "\n";
-    state_ = LinkState::Connecting;
+    state_.set_state(LinkState::Connecting);
     notify_state();
     open_and_configure();
   });
 }
 
 void Serial::stop() {
-  if (state_ != LinkState::Closed) {
+  if (!state_.is_state(LinkState::Closed)) {
     work_guard_->reset();  // Allow the io_context to run out of work.
     net::post(ioc_, [this] {
       // Cancel all pending async operations to unblock the io_context
@@ -92,7 +92,7 @@ void Serial::stop() {
       ioc_.restart();
     }
     
-    state_ = LinkState::Closed;
+    state_.set_state(LinkState::Closed);
     notify_state();
   }
 }
@@ -196,7 +196,7 @@ void Serial::open_and_configure() {
   start_read();
 
   opened_ = true;
-  state_ = LinkState::Connected;
+  state_.set_state(LinkState::Connected);
   notify_state();
 }
 
@@ -265,13 +265,13 @@ void Serial::handle_error(const char* where,
   if (cfg_.reopen_on_error) {
     opened_ = false;
     close_port();
-    state_ = LinkState::Connecting;
+    state_.set_state(LinkState::Connecting);
     notify_state();
     schedule_retry(where, ec);
   } else {
     opened_ = false;
     close_port();
-    state_ = LinkState::Error;
+    state_.set_state(LinkState::Error);
     notify_state();
   }
 }
@@ -300,7 +300,7 @@ void Serial::close_port() {
 void Serial::notify_state() {
   if (on_state_) {
     try {
-      on_state_(state_);
+      on_state_(state_.get_state());
     } catch (const std::exception& e) {
       std::cerr << "Serial state callback error: " << e.what() << std::endl;
     } catch (...) {

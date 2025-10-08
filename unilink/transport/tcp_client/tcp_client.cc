@@ -28,8 +28,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
     : ioc_(nullptr), 
       resolver_(ioc), socket_(ioc), cfg_(cfg), retry_timer_(ioc), owns_ioc_(false),
       bp_high_(cfg.backpressure_threshold) {
-  // Initialize state
-  state_ = LinkState::Idle;
+  // Initialize state (ThreadSafeLinkState is already initialized in header)
   connected_ = false;
   writing_ = false;
   queue_bytes_ = 0;
@@ -41,7 +40,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
 
 TcpClient::~TcpClient() {
   // Set state to closed first
-  state_ = LinkState::Closed;
+  state_.set_state(LinkState::Closed);
   
   // Clear callbacks to prevent dangling references
   on_bytes_ = nullptr;
@@ -82,7 +81,7 @@ void TcpClient::start() {
   
   if (ioc_) {
     net::post(*ioc_, [this] {
-      state_ = LinkState::Connecting;
+      state_.set_state(LinkState::Connecting);
       notify_state();
       do_resolve_connect();
     });
@@ -91,7 +90,7 @@ void TcpClient::start() {
 
 void TcpClient::stop() {
   // Set state to closed first to prevent new operations
-  state_ = LinkState::Closed;
+  state_.set_state(LinkState::Closed);
   
   // Post cleanup work to io_context
   if (ioc_) {
@@ -134,7 +133,7 @@ bool TcpClient::is_connected() const { return connected_; }
 
 void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   // Don't queue writes if client is stopped or in error state
-  if (state_ == LinkState::Closed || state_ == LinkState::Error || !ioc_) {
+  if (state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
     return;
   }
   
@@ -147,7 +146,7 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
       
       net::post(*ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         // Double-check state in case client was stopped while in queue
-        if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+        if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
           return;
         }
         
@@ -166,7 +165,7 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   
   net::post(*ioc_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     // Double-check state in case client was stopped while in queue
-    if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+    if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
       return;
     }
     
@@ -198,7 +197,7 @@ void TcpClient::do_resolve_connect() {
                 return;
               }
               self->connected_ = true;
-              self->state_ = LinkState::Connected;
+              self->state_.set_state(LinkState::Connected);
               self->notify_state();
               boost::system::error_code ep_ec;
               auto rep = self->socket_.remote_endpoint(ep_ec);
@@ -214,7 +213,7 @@ void TcpClient::do_resolve_connect() {
 
 void TcpClient::schedule_retry() {
   connected_ = false;
-  state_ = LinkState::Connecting;
+  state_.set_state(LinkState::Connecting);
   notify_state();
 
   std::cout << ts_now() << " [client] retry in "
@@ -242,7 +241,7 @@ void TcpClient::start_read() {
 }
 
 void TcpClient::do_write() {
-  if (tx_.empty() || state_ == LinkState::Closed || state_ == LinkState::Error) {
+  if (tx_.empty() || state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error)) {
     writing_ = false;
     return;
   }
@@ -255,7 +254,7 @@ void TcpClient::do_write() {
     auto& pooled_buf = std::get<common::PooledBuffer>(front_buffer);
     net::async_write(socket_, net::buffer(pooled_buf.data(), pooled_buf.size()),
                      [self](auto ec, std::size_t n) {
-                       if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+                       if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
                          self->writing_ = false;
                          return;
                        }
@@ -272,7 +271,7 @@ void TcpClient::do_write() {
     auto& vec_buf = std::get<std::vector<uint8_t>>(front_buffer);
     net::async_write(socket_, net::buffer(vec_buf),
                      [self](auto ec, std::size_t n) {
-                       if (self->state_ == LinkState::Closed || self->state_ == LinkState::Error) {
+                       if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
                          self->writing_ = false;
                          return;
                        }
@@ -291,7 +290,7 @@ void TcpClient::do_write() {
 void TcpClient::handle_close() {
   connected_ = false;
   close_socket();
-  state_ = LinkState::Connecting;
+  state_.set_state(LinkState::Connecting);
   notify_state();
   schedule_retry();
 }
@@ -303,7 +302,7 @@ void TcpClient::close_socket() {
 }
 
 void TcpClient::notify_state() {
-  if (on_state_) on_state_(state_);
+  if (on_state_) on_state_(state_.get_state());
 }
 }  // namespace transport
 }  // namespace unilink

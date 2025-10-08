@@ -14,6 +14,7 @@
 #include "unilink/interface/channel.hpp"
 #include "unilink/common/constants.hpp"
 #include "unilink/common/memory_pool.hpp"
+#include "unilink/common/thread_safe_state.hpp"
 
 namespace unilink {
 namespace transport {
@@ -22,6 +23,7 @@ namespace net = boost::asio;
 
 using interface::Channel;
 using common::LinkState;
+using common::ThreadSafeLinkState;
 using config::TcpClientConfig;
 using tcp = net::ip::tcp;
 
@@ -71,7 +73,7 @@ class TcpClient : public Channel,
   OnState on_state_;
   OnBackpressure on_bp_;
   bool connected_ = false;
-  LinkState state_ = LinkState::Idle;
+  ThreadSafeLinkState state_{LinkState::Idle};
 };
 }  // namespace transport
 }  // namespace unilink
