@@ -98,7 +98,7 @@ TEST_F(IntegrationTest, IndependentContext) {
  */
 TEST_F(IntegrationTest, BasicCommunication) {
     // Use a different port to avoid conflicts
-    uint16_t comm_port = TestUtils::getTestPort();
+    uint16_t comm_port = TestUtils::getAvailableTestPort();
     
     std::atomic<bool> server_connected{false};
     std::atomic<bool> client_connected{false};
@@ -228,7 +228,7 @@ TEST_F(IntegrationTest, StateManagement) {
  */
 TEST_F(IntegrationTest, AdvancedCommunicationWithSynchronization) {
     // Use a unique port to avoid conflicts
-    uint16_t comm_port = TestUtils::getTestPort();
+    uint16_t comm_port = TestUtils::getAvailableTestPort();
     
     // Create server
     auto server = builder::UnifiedBuilder::tcp_server(comm_port)
@@ -261,7 +261,7 @@ TEST_F(IntegrationTest, AdvancedCommunicationWithSynchronization) {
  * @brief Multiple client connection test
  */
 TEST_F(IntegrationTest, MultipleClientConnections) {
-    uint16_t comm_port = TestUtils::getTestPort();
+    uint16_t comm_port = TestUtils::getAvailableTestPort();
     
     std::atomic<int> connection_count{0};
     std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
