@@ -1,6 +1,7 @@
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
 #include <iostream>
+#include <future>
 
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
 #include "unilink/common/io_context_manager.hpp"
@@ -91,13 +92,26 @@ void TcpServer::start() {
 void TcpServer::stop() {
   if (owns_ioc_ && ioc_thread_.joinable()) {
     auto self = shared_from_this();
-    net::post(ioc_, [self] {
+    std::promise<void> cleanup_promise;
+    auto cleanup_future = cleanup_promise.get_future();
+    
+    net::post(ioc_, [self, &cleanup_promise] {
       boost::system::error_code ec;
       if (self->acceptor_ && self->acceptor_->is_open()) {
         self->acceptor_->close(ec);
       }
+      // 모든 세션 정리
+      {
+        std::lock_guard<std::mutex> lock(self->sessions_mutex_);
+        self->sessions_.clear();
+      }
       if (self->current_session_) self->current_session_.reset();
+      cleanup_promise.set_value();
     });
+    
+    // 정리 작업 완료 대기
+    cleanup_future.wait();
+    
     ioc_.stop();
     ioc_thread_.join();
     // Reset io_context to clear any remaining work
@@ -107,6 +121,11 @@ void TcpServer::stop() {
     boost::system::error_code ec;
     if (acceptor_ && acceptor_->is_open()) {
       acceptor_->close(ec);
+    }
+    // 모든 세션 정리
+    {
+      std::lock_guard<std::mutex> lock(sessions_mutex_);
+      sessions_.clear();
     }
     if (current_session_) current_session_.reset();
   }
@@ -142,11 +161,19 @@ void TcpServer::do_accept() {
   auto self = shared_from_this();
   acceptor_->async_accept([self](auto ec, tcp::socket sock) {
     if (ec) {
-      UNILINK_LOG_ERROR("tcp_server", "accept", "Accept error: " + ec.message());
-      error_reporting::report_connection_error("tcp_server", "accept", ec, true);
-      self->state_.set_state(LinkState::Error);
-      self->notify_state();
-      self->do_accept();  // 에러 후에도 계속 수락
+      // "Operation canceled"는 정상적인 종료 과정에서 발생하는 에러이므로 로그 레벨을 낮춤
+      if (ec == boost::asio::error::operation_aborted) {
+        UNILINK_LOG_DEBUG("tcp_server", "accept", "Accept canceled (server shutting down)");
+      } else {
+        UNILINK_LOG_ERROR("tcp_server", "accept", "Accept error: " + ec.message());
+        error_reporting::report_connection_error("tcp_server", "accept", ec, true);
+        self->state_.set_state(LinkState::Error);
+        self->notify_state();
+      }
+      // 서버가 종료 중이 아닌 경우에만 계속 수락
+      if (!self->state_.is_state(LinkState::Closed)) {
+        self->do_accept();
+      }
       return;
     }
     

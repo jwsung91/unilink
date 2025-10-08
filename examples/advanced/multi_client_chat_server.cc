@@ -21,7 +21,7 @@ void signal_handler(int signal) {
             // 이미 종료 중이면 강제 종료
             auto& logger = unilink::common::Logger::instance();
             logger.warning("server", "signal", "Force exit...");
-            std::_Exit(1);
+            std::exit(1);
         }
     }
 }
@@ -72,50 +72,48 @@ int main(int argc, char** argv) {
     
     logger.info("server", "startup", "Server started. Waiting for client connections...");
     
-    // 입력 스레드
-    std::thread input_thread([&server, &logger]() {
-        std::string line;
-        while (running.load()) {
+    // 메인 루프 (입력 처리 포함)
+    while (running.load()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        
+        // 비블로킹 입력 처리
+        if (std::cin.rdbuf()->in_avail() > 0) {
+            std::string line;
             if (std::getline(std::cin, line)) {
-                if (line.empty()) continue;
-                
-                if (line == "/quit" || line == "/exit") {
-                    logger.info("server", "shutdown", "Shutting down server...");
-                    running.store(false);
-                    break;
-                } else if (line == "/clients") {
-                    int count = server->get_client_count();
-                    logger.info("server", "status", std::to_string(count) + " clients connected");
-                } else if (line.substr(0, 5) == "/send") {
-                    // /send <id> <message> 형식 처리
-                    size_t first_space = line.find(' ', 6);
-                    if (first_space != std::string::npos) {
-                        try {
-                            int client_id = std::stoi(line.substr(6, first_space - 6));
-                            std::string message = line.substr(first_space + 1);
-                            server->send_to_client(client_id, message);
-                            logger.info("server", "send", "Sent to client " + std::to_string(client_id) + ": " + message);
-                        } catch (const std::exception& e) {
+                if (!line.empty()) {
+                    if (line == "/quit" || line == "/exit") {
+                        logger.info("server", "shutdown", "Shutting down server...");
+                        running.store(false);
+                        break;
+                    } else if (line == "/clients") {
+                        int count = server->get_client_count();
+                        logger.info("server", "status", std::to_string(count) + " clients connected");
+                    } else if (line.substr(0, 5) == "/send") {
+                        // /send <id> <message> 형식 처리
+                        size_t first_space = line.find(' ', 6);
+                        if (first_space != std::string::npos) {
+                            try {
+                                int client_id = std::stoi(line.substr(6, first_space - 6));
+                                std::string message = line.substr(first_space + 1);
+                                server->send_to_client(client_id, message);
+                                logger.info("server", "send", "Sent to client " + std::to_string(client_id) + ": " + message);
+                            } catch (const std::exception& e) {
+                                logger.error("server", "send", "Invalid send command format");
+                            }
+                        } else {
                             logger.error("server", "send", "Invalid send command format");
                         }
                     } else {
-                        logger.error("server", "send", "Invalid send command format");
+                        // 브로드캐스트
+                        server->broadcast(line);
+                        logger.info("server", "broadcast", "Broadcast to all clients: " + line);
                     }
-                } else {
-                    // 브로드캐스트
-                    server->broadcast(line);
-                    logger.info("server", "broadcast", "Broadcast to all clients: " + line);
                 }
             } else {
                 // EOF or error on stdin, break the loop
                 break;
             }
         }
-    });
-    
-    // 메인 루프
-    while (running.load()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     
     // Cleanup
@@ -134,16 +132,13 @@ int main(int argc, char** argv) {
         logger.info("server", "shutdown", "Server stopped");
         
         // 서버 정리 대기
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
     
-    // Wait for threads to finish with timeout
-    if (input_thread.joinable()) {
-        input_thread.join();
-    }
+    // No input thread to wait for
     
     logger.info("server", "shutdown", "Server shutdown complete");
     
-    // 확실한 종료를 위해 _Exit 호출
-    std::_Exit(0);
+    // 정상 종료
+    return 0;
 }
