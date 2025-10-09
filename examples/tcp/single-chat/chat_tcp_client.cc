@@ -7,6 +7,9 @@
 
 #include "unilink/unilink.hpp"
 
+// Example namespace usage - using namespace for simplicity in examples
+using namespace unilink;
+
 /**
  * @brief Chat application class for TCP client
  *
@@ -39,25 +42,25 @@ class TcpClientChatApp {
  private:
   // Member function callbacks - these can be bound directly to the builder
   void handle_connect() {
-    unilink::log_message("client", "STATE", "Connected");
+    common::log_message("client", "STATE", "Connected");
     connected_ = true;
   }
 
   void handle_disconnect() {
-    unilink::log_message("client", "STATE", "Disconnected");
+    common::log_message("client", "STATE", "Disconnected");
     connected_ = false;
   }
 
-  void handle_data(const std::string& data) { unilink::log_message("client", "RX", data); }
+  void handle_data(const std::string& data) { common::log_message("client", "RX", data); }
 
   void input_loop(unilink::wrapper::TcpClient* client) {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected_.load()) {
-        unilink::log_message("client", "INFO", "(not connected)");
+        common::log_message("client", "INFO", "(not connected)");
         continue;
       }
-      unilink::log_message("client", "TX", line);
+      common::log_message("client", "TX", line);
       client->send_line(line);
     }
   }

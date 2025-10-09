@@ -19,6 +19,7 @@ using common::ThreadSafeLinkState;
 using config::TcpServerConfig;
 using interface::Channel;
 using interface::TcpAcceptorInterface;
+using namespace common;  // For error_reporting namespace
 
 TcpServer::TcpServer(const TcpServerConfig& cfg)
     : owned_ioc_(nullptr),

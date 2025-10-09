@@ -17,6 +17,7 @@ using common::IoContextManager;
 using common::LinkState;
 using common::ThreadSafeLinkState;
 using config::SerialConfig;
+using namespace common;  // For error_reporting namespace
 
 Serial::Serial(const SerialConfig& cfg)
     : ioc_(common::IoContextManager::instance().get_context()),

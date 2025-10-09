@@ -18,6 +18,7 @@ using common::LinkState;
 using common::ThreadSafeLinkState;
 using config::TcpClientConfig;
 using interface::Channel;
+using namespace common;  // For error_reporting namespace
 
 TcpClient::TcpClient(const TcpClientConfig& cfg)
     : ioc_(std::make_unique<net::io_context>()),

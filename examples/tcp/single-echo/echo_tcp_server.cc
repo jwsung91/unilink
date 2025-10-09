@@ -9,10 +9,13 @@
 #include "unilink/common/logger.hpp"
 #include "unilink/unilink.hpp"
 
+// Example namespace usage - using namespace for simplicity in examples
+using namespace unilink;
+
 class EchoServer {
  private:
-  std::shared_ptr<unilink::wrapper::TcpServer> server_;
-  unilink::common::Logger& logger_;
+  std::shared_ptr<wrapper::TcpServer> server_;
+  common::Logger& logger_;
   std::atomic<bool> running_;
   unsigned short port_;
   std::atomic<bool> client_connected_;
