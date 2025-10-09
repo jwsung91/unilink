@@ -25,6 +25,7 @@ using namespace std::chrono_literals;
 TEST_F(IntegrationTest, BuilderPatternIntegration) {
     // Test TCP server builder
     auto server = builder::UnifiedBuilder::tcp_server(test_port_)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)
         .build();
     
@@ -82,6 +83,7 @@ TEST_F(IntegrationTest, IndependentContext) {
     
     // Test shared context
     auto server = builder::UnifiedBuilder::tcp_server(test_port_)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .use_independent_context(false)
         .auto_start(false)
         .build();
@@ -107,6 +109,7 @@ TEST_F(IntegrationTest, BasicCommunication) {
     
     // Create server
     auto server = builder::UnifiedBuilder::tcp_server(comm_port)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(true)
         .on_connect([&server_connected]() {
             server_connected = true;
@@ -158,6 +161,7 @@ TEST_F(IntegrationTest, BasicCommunication) {
 TEST_F(IntegrationTest, ErrorHandling) {
     // Test invalid port
     auto server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)
         .build();
     
@@ -232,6 +236,7 @@ TEST_F(IntegrationTest, AdvancedCommunicationWithSynchronization) {
     
     // Create server
     auto server = builder::UnifiedBuilder::tcp_server(comm_port)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)  // Don't auto-start to avoid conflicts
         .build();
     
@@ -268,6 +273,7 @@ TEST_F(IntegrationTest, MultipleClientConnections) {
     
     // Create server
     auto server = builder::UnifiedBuilder::tcp_server(comm_port)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(true)
         .on_connect([&connection_count]() {
             connection_count++;
@@ -306,6 +312,7 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
     
     // Test invalid port
     auto server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)
         .on_error([&error_occurred, &error_message](const std::string& error) {
             error_occurred = true;
@@ -352,6 +359,7 @@ TEST_F(IntegrationTest, ComprehensiveBuilderMethodChaining) {
     EXPECT_NE(client, nullptr);
     
     auto server = builder::UnifiedBuilder::tcp_server(test_port_)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)
         .auto_manage(false)
         .use_independent_context(false)

@@ -284,6 +284,7 @@ TEST_F(CoreIntegratedTest, UnifiedBuilderMethodChaining) {
 TEST_F(CoreIntegratedTest, BasicCommunicationIntegration) {
     // Create server
     auto server = UnifiedBuilder::tcp_server(test_port_)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(true)
         .on_connect([]() {})
         .on_data([](const std::string& data) {})

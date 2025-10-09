@@ -164,6 +164,7 @@ TEST_F(ConfigTest, ConfigValidationBoundaryValues) {
     
     // Test TCP server configuration validation
     auto server = UnifiedBuilder::tcp_server(test_port_)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)
         .build();
     

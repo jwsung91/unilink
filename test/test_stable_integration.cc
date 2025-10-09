@@ -79,6 +79,7 @@ protected:
 TEST_F(StableIntegrationTest, StableServerCreation) {
     // Given: Server configuration
     server_ = builder::UnifiedBuilder::tcp_server(test_port_)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)  // Don't auto-start to avoid timing issues
         .on_connect([this]() {
             std::lock_guard<std::mutex> lock(mtx_);
@@ -155,6 +156,7 @@ TEST_F(StableIntegrationTest, StableClientCreation) {
 TEST_F(StableIntegrationTest, StableServerClientCommunication) {
     // Given: Server setup
     server_ = builder::UnifiedBuilder::tcp_server(test_port_)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(true)
         .on_connect([this]() {
             std::lock_guard<std::mutex> lock(mtx_);

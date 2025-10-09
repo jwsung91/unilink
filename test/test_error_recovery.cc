@@ -194,6 +194,7 @@ TEST_F(ErrorRecoveryTest, NetworkRecoveryAfterFailure) {
     
     // 1. 서버 생성 (시작하지 않음)
     auto server = builder::UnifiedBuilder::tcp_server(server_port)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)
         .build();
     
@@ -411,6 +412,7 @@ TEST_F(ErrorRecoveryTest, ExceptionSafetyInCallbacks) {
     
     // 서버 생성
     auto server = builder::UnifiedBuilder::tcp_server(server_port)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(true)
         .on_connect([]() {
             // 콜백에서 예외 발생
@@ -514,6 +516,7 @@ TEST_F(ErrorRecoveryTest, ResourceCleanupOnDestruction) {
     // 스코프 내에서 객체 생성
     {
         auto server = builder::UnifiedBuilder::tcp_server(server_port)
+            .unlimited_clients()  // 클라이언트 제한 없음
             .auto_start(true)
             .build();
         
@@ -532,6 +535,7 @@ TEST_F(ErrorRecoveryTest, ResourceCleanupOnDestruction) {
     
     // 새로운 객체 생성 (이전 리소스가 정리되었는지 확인)
     auto new_server = builder::UnifiedBuilder::tcp_server(server_port)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)
         .build();
     

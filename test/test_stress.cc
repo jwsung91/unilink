@@ -250,6 +250,7 @@ TEST_F(StressTest, ConcurrentConnections) {
     
     // Create server
     auto server = UnifiedBuilder::tcp_server(server_port)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false) // Don't auto-start to avoid conflicts
         .build();
     

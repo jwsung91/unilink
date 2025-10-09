@@ -56,6 +56,7 @@ TEST_F(SafetyIntegratedTest, ApiSafetyNullPointers) {
     
     // Test TCP server creation with null checks
     auto server = UnifiedBuilder::tcp_server(test_port_)
+        .unlimited_clients()  // 클라이언트 제한 없음
         .auto_start(false)
         .build();
     
@@ -145,6 +146,7 @@ TEST_F(SafetyIntegratedTest, ConcurrencySafetyServerCreation) {
         threads.emplace_back([&, t]() {
             for (int i = 0; i < servers_per_thread; ++i) {
                 auto server = UnifiedBuilder::tcp_server(test_port_ + t * 10 + i)
+                    .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(false)
                     .build();
                 
