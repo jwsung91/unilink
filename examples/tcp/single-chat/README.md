@@ -127,7 +127,7 @@ TCP chat server and client for network-based chat communication. The server disp
 ## Advanced Usage
 
 ### Multiple Clients
-The server can handle multiple clients, but only one at a time in this implementation. For true multi-client support, see the multi-chat example.
+The server can handle multiple clients, but only one at a time in this implementation. For true multi-client support, see the multi-chat example in the examples/tcp/multi-chat directory.
 
 ### Custom Messages
 - Server can send custom messages to clients

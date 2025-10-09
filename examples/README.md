@@ -34,19 +34,19 @@ socat - /tmp/ttyB
 ### TCP Communication
 ```bash
 # TCP echo server
-cd tcp/echo
+cd tcp/single-echo
 ./echo_tcp_server 9000
 
 # TCP echo client
-cd tcp/echo
+cd tcp/single-echo
 ./echo_tcp_client 127.0.0.1 9000
 
 # TCP chat server
-cd tcp/chat
+cd tcp/single-chat
 ./chat_tcp_server 9000
 
 # TCP chat client
-cd tcp/chat
+cd tcp/single-chat
 ./chat_tcp_client 127.0.0.1 9000
 ```
 
@@ -81,9 +81,8 @@ make chat_tcp_server
 - **chat/**: Serial chat application for interactive communication
 
 ### TCP Communication
-- **echo/**: TCP echo server and client for network echo testing
-- **chat/**: TCP chat server and client for network chat
-- **multi-chat/**: Multi-client TCP chat server and client
+- **single-echo/**: TCP echo server and client for network echo testing
+- **single-chat/**: TCP chat server and client for network chat
 
 ### Common Functionality
 - **logging_example**: Demonstrates logging system usage

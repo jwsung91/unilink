@@ -80,15 +80,16 @@ class ChatServer {
   }
 
   bool start() {
-    // Create TCP server
-    server_ = unilink::tcp_server(port_)
-                  .auto_start(false)
-                  .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
-                  .on_multi_connect(
-                      [this](size_t client_id, const std::string& client_ip) { on_connect(client_id, client_ip); })
-                  .on_multi_data([this](size_t client_id, const std::string& data) { on_data(client_id, data); })
-                  .on_multi_disconnect([this](size_t client_id) { on_disconnect(client_id); })
-                  .build();
+    // Create TCP server with 10 client limit
+    server_ =
+        unilink::tcp_server(port_)
+            .multi_client(4)  // Limit to 4 clients
+            .auto_start(false)
+            .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
+            .on_connect([this](size_t client_id, const std::string& client_ip) { on_connect(client_id, client_ip); })
+            .on_data([this](size_t client_id, const std::string& data) { on_data(client_id, data); })
+            .on_disconnect([this](size_t client_id) { on_disconnect(client_id); })
+            .build();
 
     if (!server_) {
       logger_.error("server", "startup", "Failed to create server");

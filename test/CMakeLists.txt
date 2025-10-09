@@ -146,6 +146,18 @@ add_executable(run_platform_tests
     test_utils.hpp
 )
 
+# Simple Server Tests - Basic server functionality and client limit tests
+add_executable(run_simple_server_tests
+    test_simple_server.cc
+    test_utils.hpp
+)
+
+# Client Limit Integration Tests - Comprehensive client limit functionality testing
+add_executable(run_client_limit_integration_tests
+    test_client_limit_integration.cc
+    test_utils.hpp
+)
+
 # ============================================================================
 # LINK LIBRARIES
 # ============================================================================
@@ -275,6 +287,16 @@ target_link_libraries(run_platform_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
+# Link simple server tests
+target_link_libraries(run_simple_server_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
+# Link client limit integration tests
+target_link_libraries(run_client_limit_integration_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # ============================================================================
 # TEST DISCOVERY
 # ============================================================================
@@ -309,6 +331,8 @@ gtest_discover_tests(run_config_tests)
 gtest_discover_tests(run_serial_tests)
 # gtest_discover_tests(run_advanced_performance_tests) - integrated into run_performance_tests
 gtest_discover_tests(run_platform_tests)
+gtest_discover_tests(run_simple_server_tests)
+gtest_discover_tests(run_client_limit_integration_tests)
 
 # ============================================================================
 # SANITIZERS (Optional - for debugging)

@@ -4,9 +4,8 @@ Examples demonstrating TCP network communication using the unilink library.
 
 ## Examples
 
-- **echo/**: TCP echo server and client for network echo testing
-- **chat/**: TCP chat server and client for network chat
-- **multi-chat/**: Multi-client TCP chat server and client
+- **single-echo/**: TCP echo server and client for network echo testing
+- **single-chat/**: TCP chat server and client for network chat
 
 ## Common Usage
 
@@ -73,19 +72,14 @@ sudo ufw status
 
 ## Example Workflows
 
-### Echo Server/Client
+### Single Echo Server/Client
 1. Start server: `./echo_tcp_server 9000`
 2. Start client: `./echo_tcp_client 127.0.0.1 9000`
 3. Type messages in client
 4. Server echoes messages back
 
-### Chat Server/Client
+### Single Chat Server/Client
 1. Start server: `./chat_tcp_server 9000`
 2. Start client: `./chat_tcp_client 127.0.0.1 9000`
 3. Type messages in client
 4. Server displays received messages
-
-### Multi-Chat
-1. Start server: `./multi_chat_tcp_server 9000`
-2. Start multiple clients: `./multi_chat_tcp_client 127.0.0.1 9000`
-3. Messages are broadcast to all connected clients

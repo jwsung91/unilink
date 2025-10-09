@@ -42,8 +42,9 @@ class EchoServer {
       if (running_.load()) {
         logger_.info("server", "signal", "Received shutdown signal");
         running_.store(false);
-        // Force immediate shutdown
+        // Call shutdown immediately to notify clients
         shutdown();
+        // Exit immediately after shutdown to prevent double shutdown
         std::exit(0);
       } else {
         // Force exit if already shutting down
@@ -96,15 +97,16 @@ class EchoServer {
   void on_error(const std::string& error) { logger_.error("server", "error", "Error: " + error); }
 
   bool start() {
-    // Create TCP server with multi-client callbacks for better control
+    // Create TCP server with new API
     server_ = unilink::tcp_server(port_)
+                  .single_client()  // Use new API
                   .auto_start(false)
                   .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
-                  .on_multi_connect([this](size_t client_id, const std::string& client_ip) {
+                  .on_connect([this](size_t client_id, const std::string& client_ip) {
                     on_multi_connect(client_id, client_ip);
                   })
-                  .on_multi_disconnect([this](size_t client_id) { on_multi_disconnect(client_id); })
-                  .on_multi_data([this](size_t client_id, const std::string& data) { on_multi_data(client_id, data); })
+                  .on_disconnect([this](size_t client_id) { on_multi_disconnect(client_id); })
+                  .on_data([this](size_t client_id, const std::string& data) { on_multi_data(client_id, data); })
                   .on_error([this](const std::string& error) { on_error(error); })
                   .build();
 
@@ -175,6 +177,15 @@ class EchoServer {
 
       // Give client time to receive message
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+      // Force disconnect all clients first
+      try {
+        // Send final disconnect message to all clients
+        server_->send("[Server] Server is shutting down. Please disconnect.");
+        logger_.info("server", "shutdown", "Sent final disconnect message to client");
+      } catch (...) {
+        logger_.warning("server", "shutdown", "Error sending disconnect message");
+      }
 
       // Stop server
       try {
