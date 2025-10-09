@@ -82,9 +82,6 @@ class TcpServerChatApp {
       return;
     }
 
-    // Start input thread
-    std::thread input_thread([this] { this->input_loop(); });
-
     // Start the server
     server_->start();
 
@@ -103,13 +100,8 @@ class TcpServerChatApp {
     // 프로그램이 Ctrl+C로 종료될 때까지 무한정 대기합니다.
     while (running_.load()) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      process_input();
     }
-
-    // Join input thread
-    input_thread.join();
-
-    // Shutdown the server
-    shutdown();
   }
 
   void stop() { running_ = false; }
@@ -176,23 +168,31 @@ class TcpServerChatApp {
 
   void handle_data(const std::string& data) { logger_.info("server", "data", "Received: " + data); }
 
-  void input_loop() {
-    std::string line;
-    while (running_.load() && std::getline(std::cin, line)) {
-      if (!connected_.load()) {
-        logger_.info("server", "send", "(not connected)");
-        continue;
-      }
-      if (!line.empty()) {
-        if (line == "/quit" || line == "/exit") {
-          logger_.info("server", "shutdown", "Shutting down server...");
-          running_.store(false);
-          break;
+  void process_input() {
+    // Non-blocking input processing - more robust method
+    if (std::cin.rdbuf()->in_avail() > 0 || std::cin.peek() != EOF) {
+      std::string line;
+      if (std::getline(std::cin, line)) {
+        logger_.info("server", "debug", "Received input: '" + line + "'");
+        if (!line.empty()) {
+          if (line == "/quit" || line == "/exit") {
+            logger_.info("server", "shutdown", "Shutting down server...");
+            running_.store(false);
+          } else {
+            // Send message to client
+            if (!connected_.load()) {
+              logger_.info("server", "send", "(not connected)");
+            } else {
+              logger_.info("server", "send", "Sending: " + line);
+              if (server_) {
+                server_->send_line(line);
+              }
+            }
+          }
         }
-        logger_.info("server", "send", "Sending: " + line);
-        if (server_) {
-          server_->send_line(line);
-        }
+      } else {
+        // EOF or error on stdin, break the loop
+        running_.store(false);
       }
     }
   }
