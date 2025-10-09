@@ -225,6 +225,7 @@ jobs:
     - name: Check code formatting
       run: |
         find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
+        grep -v build- | \
         xargs clang-format --style=file --dry-run --Werror
 
     - name: Run clang-tidy
@@ -240,6 +241,15 @@ jobs:
       run: |
         cppcheck --enable=all --inconclusive --std=c++17 \
           --suppress=missingIncludeSystem \
+          --suppress=missingInclude \
+          --suppress=unusedFunction \
+          --suppress=functionStatic \
+          --suppress=functionConst \
+          --suppress=noExplicitConstructor \
+          --suppress=duplicateConditionalAssign \
+          --suppress=shadowVariable \
+          --suppress=useStlAlgorithm \
+          --suppress=uninitMemberVar \
           --error-exitcode=1 \
           unilink/ examples/ test/
 

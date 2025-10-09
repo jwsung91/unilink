@@ -5,6 +5,8 @@
 namespace unilink {
 namespace transport {
 
+namespace net = boost::asio;
+
 class BoostSerialPort : public interface::SerialPortInterface {
  public:
   explicit BoostSerialPort(net::io_context& ioc) : port_(ioc) {}
