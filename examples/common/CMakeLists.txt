@@ -1,0 +1,5 @@
+add_executable(logging_example logging_example.cc)
+target_link_libraries(logging_example PRIVATE interface::unilink)
+
+add_executable(error_handling_example error_handling_example.cc)
+target_link_libraries(error_handling_example PRIVATE interface::unilink)
