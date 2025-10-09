@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 #include "unilink/common/constants.hpp"
 
 namespace unilink {
@@ -21,39 +22,38 @@ struct SerialConfig {
 
   unsigned retry_interval_ms = common::constants::DEFAULT_RETRY_INTERVAL_MS;
   int max_retries = common::constants::DEFAULT_MAX_RETRIES;
-  
+
   // Validation methods
   bool is_valid() const {
-    return !device.empty() && 
-           baud_rate > 0 && 
-           char_size >= 5 && char_size <= 8 &&
-           (stop_bits == 1 || stop_bits == 2) &&
+    return !device.empty() && baud_rate > 0 && char_size >= 5 && char_size <= 8 && (stop_bits == 1 || stop_bits == 2) &&
            retry_interval_ms >= common::constants::MIN_RETRY_INTERVAL_MS &&
            retry_interval_ms <= common::constants::MAX_RETRY_INTERVAL_MS &&
            backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD &&
            (max_retries == -1 || (max_retries >= 0 && max_retries <= common::constants::MAX_RETRIES_LIMIT));
   }
-  
+
   // Apply validation and clamp values to valid ranges
   void validate_and_clamp() {
-    if (char_size < 5) char_size = 5;
-    else if (char_size > 8) char_size = 8;
-    
+    if (char_size < 5)
+      char_size = 5;
+    else if (char_size > 8)
+      char_size = 8;
+
     if (stop_bits != 1 && stop_bits != 2) stop_bits = 1;
-    
+
     if (retry_interval_ms < common::constants::MIN_RETRY_INTERVAL_MS) {
       retry_interval_ms = common::constants::MIN_RETRY_INTERVAL_MS;
     } else if (retry_interval_ms > common::constants::MAX_RETRY_INTERVAL_MS) {
       retry_interval_ms = common::constants::MAX_RETRY_INTERVAL_MS;
     }
-    
+
     if (backpressure_threshold < common::constants::MIN_BACKPRESSURE_THRESHOLD) {
       backpressure_threshold = common::constants::MIN_BACKPRESSURE_THRESHOLD;
     } else if (backpressure_threshold > common::constants::MAX_BACKPRESSURE_THRESHOLD) {
       backpressure_threshold = common::constants::MAX_BACKPRESSURE_THRESHOLD;
     }
-    
+
     if (max_retries != -1 && max_retries > common::constants::MAX_RETRIES_LIMIT) {
       max_retries = common::constants::MAX_RETRIES_LIMIT;
     }

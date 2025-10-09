@@ -22,8 +22,7 @@ class TcpAcceptorInterface {
   virtual bool is_open() const = 0;
   virtual void close(boost::system::error_code& ec) = 0;
 
-  virtual void async_accept(
-      std::function<void(const boost::system::error_code&, net::ip::tcp::socket)> handler) = 0;
+  virtual void async_accept(std::function<void(const boost::system::error_code&, net::ip::tcp::socket)> handler) = 0;
 };
 
 }  // namespace interface

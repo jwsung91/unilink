@@ -6,34 +6,33 @@
 #include <memory>
 #include <string>
 #include <thread>
-#include <vector>
 #include <variant>
+#include <vector>
 
+#include "unilink/common/constants.hpp"
+#include "unilink/common/error_handler.hpp"
+#include "unilink/common/logger.hpp"
+#include "unilink/common/memory_pool.hpp"
+#include "unilink/common/thread_safe_state.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/iserial_port.hpp"
-#include "unilink/common/constants.hpp"
-#include "unilink/common/memory_pool.hpp"
-#include "unilink/common/thread_safe_state.hpp"
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
 
 namespace unilink {
 namespace transport {
 
-using interface::Channel;
-using interface::SerialPortInterface;
 using common::LinkState;
 using common::ThreadSafeLinkState;
 using config::SerialConfig;
+using interface::Channel;
+using interface::SerialPortInterface;
 namespace net = boost::asio;
 
 class Serial : public Channel, public std::enable_shared_from_this<Serial> {
  public:
   explicit Serial(const SerialConfig& cfg);
   // Constructor for testing with dependency injection
-  Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port,
-         net::io_context& ioc);
+  Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port, net::io_context& ioc);
   ~Serial() override;
 
   void start() override;
@@ -45,7 +44,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
-  
+
   // Dynamic configuration methods
   void set_retry_interval(unsigned interval_ms);
 
@@ -61,8 +60,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
  private:
   net::io_context& ioc_;
   bool owns_ioc_;
-  std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>>
-      work_guard_;
+  std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
   std::thread ioc_thread_;
 
   std::unique_ptr<interface::SerialPortInterface> port_;

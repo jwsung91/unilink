@@ -221,8 +221,8 @@ jobs:
 
     - name: Check code formatting
       run: |
-        find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | \
-        xargs clang-format --dry-run --Werror
+        find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
+        xargs clang-format --style=file --dry-run --Werror
 
     - name: Run clang-tidy
       run: |

@@ -6,5 +6,5 @@ namespace builder {
 std::mutex AutoInitializer::init_mutex_;
 std::atomic<bool> AutoInitializer::initialized_{false};
 
-} // namespace builder
-} // namespace unilink
+}  // namespace builder
+}  // namespace unilink
