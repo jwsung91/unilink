@@ -13,7 +13,6 @@ if ! command -v doxygen &> /dev/null; then
     echo "Please install Doxygen first:"
     echo "  Ubuntu/Debian: sudo apt install doxygen"
     echo "  CentOS/RHEL: sudo yum install doxygen"
-    echo "  macOS: brew install doxygen"
     echo "  Windows: Download from https://www.doxygen.nl/download.html"
     exit 1
 fi

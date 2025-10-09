@@ -14,14 +14,14 @@ SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
       retry_interval_ms_(2000) {}
 
 std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
-  // IoContext 관리
+  // IoContext management
   if (use_independent_context_) {
-    // 독립적인 IoContext 사용 (테스트 격리용)
-    // IoContextManager를 통해 독립적인 컨텍스트 생성
+    // Use independent IoContext (for test isolation)
+    // Create independent context through IoContextManager
     auto independent_context = common::IoContextManager::instance().create_independent_context();
-    // 현재는 기본 구현 유지, 향후 wrapper가 독립적인 컨텍스트를 받을 수 있도록 확장 가능
+    // Currently maintaining default implementation, can be extended in future for wrapper to accept independent context
   } else {
-    // 기본 동작 (Serial은 자체적으로 IoContext를 관리)
+    // Default behavior (Serial manages IoContext independently)
   }
 
   auto serial = std::make_unique<wrapper::Serial>(device_, baud_rate_);

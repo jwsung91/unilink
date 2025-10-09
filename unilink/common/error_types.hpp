@@ -15,38 +15,38 @@ namespace common {
  * @brief Error severity levels
  */
 enum class ErrorLevel {
-  INFO = 0,     // 정보성 메시지 (정상 동작 정보)
-  WARNING = 1,  // 경고 (복구 가능한 문제)
-  ERROR = 2,    // 에러 (복구 시도 필요)
-  CRITICAL = 3  // 치명적 에러 (복구 불가)
+  INFO = 0,     // Informational message (normal operation info)
+  WARNING = 1,  // Warning (recoverable issue)
+  ERROR = 2,    // Error (retry required)
+  CRITICAL = 3  // Critical error (unrecoverable)
 };
 
 /**
  * @brief Error categories for classification
  */
 enum class ErrorCategory {
-  CONNECTION = 0,     // 연결 관련 (TCP, Serial 연결/해제)
-  COMMUNICATION = 1,  // 통신 관련 (데이터 송수신)
-  CONFIGURATION = 2,  // 설정 관련 (잘못된 설정값)
-  MEMORY = 3,         // 메모리 관련 (할당/해제 오류)
-  SYSTEM = 4,         // 시스템 관련 (OS 레벨 오류)
-  UNKNOWN = 5         // 알 수 없는 오류
+  CONNECTION = 0,     // Connection related (TCP, Serial connect/disconnect)
+  COMMUNICATION = 1,  // Communication related (data send/receive)
+  CONFIGURATION = 2,  // Configuration related (invalid config values)
+  MEMORY = 3,         // Memory related (allocation/deallocation errors)
+  SYSTEM = 4,         // System related (OS level errors)
+  UNKNOWN = 5         // Unknown error
 };
 
 /**
  * @brief Comprehensive error information structure
  */
 struct ErrorInfo {
-  ErrorLevel level;                                 // 에러 심각도
-  ErrorCategory category;                           // 에러 카테고리
-  std::string component;                            // 컴포넌트 이름 (serial, tcp_server, tcp_client)
-  std::string operation;                            // 수행 중이던 작업 (read, write, connect, bind)
-  std::string message;                              // 에러 메시지
-  boost::system::error_code boost_error;            // Boost 에러 코드
-  std::chrono::system_clock::time_point timestamp;  // 에러 발생 시간
-  bool retryable;                                   // 재시도 가능 여부
-  uint32_t retry_count;                             // 현재 재시도 횟수
-  std::string context;                              // 추가 컨텍스트 정보
+  ErrorLevel level;                                 // Error severity
+  ErrorCategory category;                           // Error category
+  std::string component;                            // Component name (serial, tcp_server, tcp_client)
+  std::string operation;                            // Operation being performed (read, write, connect, bind)
+  std::string message;                              // Error message
+  boost::system::error_code boost_error;            // Boost error code
+  std::chrono::system_clock::time_point timestamp;  // Error occurrence time
+  bool retryable;                                   // Retry possibility
+  uint32_t retry_count;                             // Current retry count
+  std::string context;                              // Additional context information
 
   /**
    * @brief Constructor for basic error info

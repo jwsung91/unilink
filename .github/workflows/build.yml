@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04, macos-12, macos-13]
+        os: [ubuntu-22.04, ubuntu-20.04]
         compiler: [gcc, clang]
         include:
           - os: ubuntu-22.04
@@ -38,29 +38,12 @@ jobs:
             compiler: clang
             cc: clang-12
             cxx: clang++-12
-          - os: macos-12
-            compiler: gcc
-            cc: gcc-11
-            cxx: g++-11
-          - os: macos-12
-            compiler: clang
-            cc: clang
-            cxx: clang++
-          - os: macos-13
-            compiler: gcc
-            cc: gcc-11
-            cxx: g++-11
-          - os: macos-13
-            compiler: clang
-            cc: clang
-            cxx: clang++
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install dependencies (Ubuntu)
-      if: runner.os == 'Linux'
+    - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -70,11 +53,6 @@ jobs:
           libboost-system-dev \
           doxygen \
           graphviz
-
-    - name: Install dependencies (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        brew install cmake boost doxygen graphviz
 
     - name: Set up compiler
       run: |

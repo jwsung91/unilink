@@ -15,14 +15,14 @@ TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
       retry_interval_ms_(2000) {}
 
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
-  // IoContext 관리
+  // IoContext management
   if (use_independent_context_) {
-    // 독립적인 IoContext 사용 (테스트 격리용)
-    // IoContextManager를 통해 독립적인 컨텍스트 생성
+    // Use independent IoContext (for test isolation)
+    // Create independent context through IoContextManager
     auto independent_context = common::IoContextManager::instance().create_independent_context();
-    // 현재는 기본 구현 유지, 향후 wrapper가 독립적인 컨텍스트를 받을 수 있도록 확장 가능
+    // Currently maintaining default implementation, can be extended in future for wrapper to accept independent context
   } else {
-    // 자동으로 IoContextManager 초기화 (기본 동작)
+    // Automatically initialize IoContextManager (default behavior)
     AutoInitializer::ensure_io_context_running();
   }
 

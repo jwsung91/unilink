@@ -85,10 +85,6 @@ sudo yum install socat
 sudo dnf install socat
 ```
 
-#### macOS
-```bash
-brew install socat
-```
 
 #### Windows
 ```bash
@@ -130,6 +126,3 @@ sudo usermod -a -G dialout $USER
 - Use COM ports: `COM3`, `COM4`, etc.
 - Check Device Manager for available ports
 
-### macOS
-- Use `/dev/tty.usbserial-*` or `/dev/tty.usbmodem*`
-- May need to install drivers for some devices

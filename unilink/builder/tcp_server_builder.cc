@@ -25,14 +25,14 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
         "unlimited_clients()");
   }
 
-  // IoContext 관리
+  // IoContext management
   if (use_independent_context_) {
-    // 독립적인 IoContext 사용 (테스트 격리용)
-    // IoContextManager를 통해 독립적인 컨텍스트 생성
+    // Use independent IoContext (for test isolation)
+    // Create independent context through IoContextManager
     auto independent_context = common::IoContextManager::instance().create_independent_context();
-    // 현재는 기본 구현 유지, 향후 wrapper가 독립적인 컨텍스트를 받을 수 있도록 확장 가능
+    // Currently maintaining default implementation, can be extended in future for wrapper to accept independent context
   } else {
-    // 자동으로 IoContextManager 초기화 (기본 동작)
+    // Automatically initialize IoContextManager (default behavior)
     AutoInitializer::ensure_io_context_running();
   }
 
@@ -81,7 +81,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     server->on_error(on_error_);
   }
 
-  // 멀티 클라이언트 콜백 설정
+  // Multi-client callback configuration
   if (on_multi_connect_) {
     server->on_multi_connect(on_multi_connect_);
   }
@@ -155,7 +155,7 @@ TcpServerBuilder& TcpServerBuilder::use_independent_context(bool use_independent
   return *this;
 }
 
-// 멀티 클라이언트 지원 메서드 구현
+// Multi-client support method implementation
 TcpServerBuilder& TcpServerBuilder::on_multi_connect(std::function<void(size_t, const std::string&)> handler) {
   on_multi_connect_ = std::move(handler);
   return *this;

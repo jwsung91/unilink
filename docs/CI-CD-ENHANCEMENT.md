@@ -1,260 +1,260 @@
-# CI/CD 향상방안 가이드
+# CI/CD Enhancement Guide
 
-## 개요
+## Overview
 
-이 문서는 `unilink` 프로젝트의 CI/CD 파이프라인 향상방안을 설명합니다. 현재 프로젝트에는 CI/CD 설정이 없었으므로, 종합적인 자동화 파이프라인을 구축했습니다.
+This document describes the CI/CD pipeline enhancement for the `unilink` project. Since the project previously had no CI/CD configuration, we have built a comprehensive automation pipeline.
 
-## 구현된 CI/CD 구성요소
+## Implemented CI/CD Components
 
-### 1. GitHub Actions 워크플로우
+### 1. GitHub Actions Workflows
 
-#### 1.1 메인 CI 파이프라인 (`.github/workflows/ci.yml`)
+#### 1.1 Main CI Pipeline (`.github/workflows/ci.yml`)
 
-**주요 기능:**
-- **멀티 플랫폼 빌드**: Ubuntu 20.04/22.04, macOS 12/13
-- **멀티 컴파일러 지원**: GCC, Clang
-- **빌드 구성**: Minimal Build, Full Build
-- **자동 테스트**: 132개 테스트 케이스 자동 실행
-- **문서 생성**: Doxygen을 통한 API 문서 자동 생성
-- **아티팩트 관리**: 빌드 결과물 자동 저장
+**Key Features:**
+- **Multi-platform Build**: Ubuntu 20.04/22.04
+- **Multi-compiler Support**: GCC, Clang
+- **Build Configurations**: Minimal Build, Full Build
+- **Automated Testing**: 242 test cases automatically executed
+- **Documentation Generation**: API documentation auto-generated with Doxygen
+- **Artifact Management**: Build artifacts automatically stored
 
-**워크플로우 단계:**
-1. **빌드 및 테스트 매트릭스**: 다양한 OS/컴파일러 조합
-2. **메모리 안전성 테스트**: AddressSanitizer, LeakSanitizer
-3. **성능 테스트**: 벤치마크 및 성능 검증
-4. **코드 품질 검사**: clang-format, clang-tidy, cppcheck
-5. **Docker 빌드 및 테스트**: 컨테이너 환경 검증
-6. **보안 스캔**: Trivy를 통한 취약점 검사
-7. **릴리즈 자동화**: 태그 기반 자동 릴리즈
+**Workflow Steps:**
+1. **Build and Test Matrix**: Various OS/compiler combinations
+2. **Memory Safety Tests**: AddressSanitizer, LeakSanitizer
+3. **Performance Tests**: Benchmark and performance validation
+4. **Code Quality Checks**: clang-format, cppcheck
+5. **Docker Build and Test**: Container environment validation
+6. **Security Scanning**: Vulnerability scanning with Trivy
+7. **Release Automation**: Tag-based automatic releases
 
-#### 1.2 Docker 워크플로우 (`.github/workflows/docker.yml`)
+#### 1.2 Docker Workflow (`.github/workflows/docker.yml`)
 
-**주요 기능:**
-- **멀티 아키텍처 빌드**: linux/amd64, linux/arm64
-- **자동 푸시**: GitHub Container Registry
-- **캐시 최적화**: GitHub Actions 캐시 활용
-- **보안 스캔**: Trivy 취약점 검사
+**Key Features:**
+- **Multi-architecture Build**: linux/amd64, linux/arm64
+- **Automatic Push**: GitHub Container Registry
+- **Cache Optimization**: GitHub Actions cache utilization
+- **Security Scanning**: Trivy vulnerability scanning
 
-#### 1.3 CodeQL 보안 분석 (`.github/workflows/codeql.yml`)
+#### 1.3 CodeQL Security Analysis (`.github/workflows/codeql.yml`)
 
-**주요 기능:**
-- **정적 분석**: C++ 코드 보안 취약점 검사
-- **정기 스캔**: 주간 자동 스캔
-- **PR 기반 스캔**: 모든 PR에 대한 보안 검사
+**Key Features:**
+- **Static Analysis**: C++ code security vulnerability scanning
+- **Regular Scanning**: Weekly automatic scans
+- **PR-based Scanning**: Security checks for all PRs
 
-### 2. Docker 최적화
+### 2. Docker Optimization
 
-#### 2.1 멀티스테이지 빌드
+#### 2.1 Multi-stage Build
 
 **Builder Stage:**
-- 모든 빌드 도구 포함
-- 테스트 실행
-- 문서 생성
+- Includes all build tools
+- Test execution
+- Documentation generation
 
 **Production Stage:**
-- 최소한의 런타임 의존성만 포함
-- 보안을 위한 non-root 사용자
-- 최적화된 이미지 크기
+- Minimal runtime dependencies only
+- Non-root user for security
+- Optimized image size
 
-#### 2.2 Docker Compose 설정
+#### 2.2 Docker Compose Configuration
 
-**개발 환경:**
-- 실시간 코드 변경 반영
-- 디버그 빌드 설정
-- 테스트 환경 분리
+**Development Environment:**
+- Real-time code change reflection
+- Debug build configuration
+- Test environment separation
 
-**운영 환경:**
-- 프로덕션 최적화
-- 자동 재시작 설정
-- 네트워크 격리
+**Production Environment:**
+- Production optimization
+- Automatic restart configuration
+- Network isolation
 
-### 3. 의존성 관리
+### 3. Dependency Management
 
-#### 3.1 Dependabot 설정
+#### 3.1 Dependabot Configuration
 
-**자동 업데이트:**
-- GitHub Actions 업데이트
-- Docker 이미지 업데이트
-- 주간 자동 PR 생성
+**Automatic Updates:**
+- GitHub Actions updates
+- Docker image updates
+- Weekly automatic PR generation
 
-## CI/CD 파이프라인 흐름
+## CI/CD Pipeline Flow
 
 ```mermaid
 graph TD
-    A[코드 푸시/PR] --> B[빌드 매트릭스]
-    B --> C[테스트 실행]
-    C --> D[코드 품질 검사]
-    D --> E[보안 스캔]
-    E --> F[Docker 빌드]
-    F --> G[아티팩트 저장]
-    G --> H{릴리즈 태그?}
-    H -->|Yes| I[자동 릴리즈]
-    H -->|No| J[완료]
-    I --> K[컨테이너 레지스트리 푸시]
+    A[Code Push/PR] --> B[Build Matrix]
+    B --> C[Test Execution]
+    C --> D[Code Quality Checks]
+    D --> E[Security Scanning]
+    E --> F[Docker Build]
+    F --> G[Artifact Storage]
+    G --> H{Release Tag?}
+    H -->|Yes| I[Automatic Release]
+    H -->|No| J[Complete]
+    I --> K[Container Registry Push]
     K --> J
 ```
 
-## 주요 향상사항
+## Key Improvements
 
-### 1. 자동화 수준 향상
+### 1. Enhanced Automation Level
 
 **Before:**
-- 수동 빌드 및 테스트
-- CI/CD 파이프라인 없음
-- 릴리즈 프로세스 수동
+- Manual build and testing
+- No CI/CD pipeline
+- Manual release process
 
 **After:**
-- 완전 자동화된 CI/CD 파이프라인
-- 멀티 플랫폼 자동 테스트
-- 자동 릴리즈 및 배포
+- Fully automated CI/CD pipeline
+- Multi-platform automatic testing
+- Automatic release and deployment
 
-### 2. 품질 보증 강화
+### 2. Strengthened Quality Assurance
 
-**테스트 커버리지:**
-- 132개 테스트 케이스 자동 실행
-- 메모리 안전성 테스트
-- 성능 벤치마크
-- 멀티 플랫폼 검증
+**Test Coverage:**
+- 242 test cases automatically executed
+- Memory safety tests
+- Performance benchmarks
+- Multi-platform validation
 
-**코드 품질:**
-- 자동 포맷팅 검사
-- 정적 분석 도구
-- 보안 취약점 스캔
+**Code Quality:**
+- Automatic formatting checks
+- Static analysis tools
+- Security vulnerability scanning
 
-### 3. 개발 효율성 향상
+### 3. Enhanced Development Efficiency
 
-**빠른 피드백:**
-- PR당 평균 5-10분 내 결과
-- 병렬 테스트 실행
-- 캐시를 통한 빌드 최적화
+**Fast Feedback:**
+- Results within 5-10 minutes per PR on average
+- Parallel test execution
+- Build optimization through caching
 
-**개발 환경:**
-- Docker Compose를 통한 일관된 환경
-- 실시간 코드 변경 반영
-- 디버그 및 프로덕션 환경 분리
+**Development Environment:**
+- Consistent environment through Docker Compose
+- Real-time code change reflection
+- Debug and production environment separation
 
-### 4. 보안 강화
+### 4. Security Enhancement
 
-**취약점 관리:**
-- Trivy를 통한 컨테이너 보안 스캔
-- CodeQL을 통한 코드 보안 분석
-- 의존성 자동 업데이트
+**Vulnerability Management:**
+- Container security scanning with Trivy
+- Code security analysis with CodeQL
+- Automatic dependency updates
 
-**컨테이너 보안:**
-- Non-root 사용자 실행
-- 최소 권한 원칙
-- 멀티스테이지 빌드로 공격 표면 최소화
+**Container Security:**
+- Non-root user execution
+- Principle of least privilege
+- Attack surface minimization through multi-stage builds
 
-## 사용 방법
+## Usage
 
-### 1. 로컬 개발 환경 설정
+### 1. Local Development Environment Setup
 
 ```bash
-# Docker Compose를 사용한 개발 환경
+# Development environment using Docker Compose
 docker-compose up dev
 
-# 테스트 실행
+# Run tests
 docker-compose up test
 
-# 성능 테스트
+# Performance tests
 docker-compose up perf
 
-# 문서 서버 실행
+# Documentation server
 docker-compose up docs
 ```
 
-### 2. CI/CD 파이프라인 모니터링
+### 2. CI/CD Pipeline Monitoring
 
-1. **GitHub Actions 탭**에서 워크플로우 상태 확인
-2. **Pull Request**에서 자동 검사 결과 확인
-3. **Security 탭**에서 보안 스캔 결과 확인
+1. Check workflow status in **GitHub Actions tab**
+2. Review automatic check results in **Pull Request**
+3. Check security scan results in **Security tab**
 
-### 3. 릴리즈 프로세스
+### 3. Release Process
 
 ```bash
-# 태그 생성으로 자동 릴리즈 트리거
+# Trigger automatic release with tag creation
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-## 모니터링 및 알림
+## Monitoring and Notifications
 
-### 1. 워크플로우 상태 알림
+### 1. Workflow Status Notifications
 
-- **실패 시**: 자동 이메일 알림
-- **성공 시**: Slack/Teams 통합 가능
-- **보안 이슈**: 즉시 알림
+- **On Failure**: Automatic email notifications
+- **On Success**: Slack/Teams integration available
+- **Security Issues**: Immediate notifications
 
-### 2. 메트릭 수집
+### 2. Metrics Collection
 
-- **빌드 시간**: 평균 빌드 시간 추적
-- **테스트 성공률**: 테스트 통과율 모니터링
-- **보안 스캔 결과**: 취약점 추이 분석
+- **Build Time**: Average build time tracking
+- **Test Success Rate**: Test pass rate monitoring
+- **Security Scan Results**: Vulnerability trend analysis
 
-## 향후 개선 계획
+## Future Improvement Plans
 
-### 1. 단기 개선사항 (1-2개월)
+### 1. Short-term Improvements (1-2 months)
 
-- **성능 모니터링**: 빌드 시간 최적화
-- **테스트 병렬화**: 더 빠른 테스트 실행
-- **캐시 전략**: 더 효율적인 캐시 활용
+- **Performance Monitoring**: Build time optimization
+- **Test Parallelization**: Faster test execution
+- **Cache Strategy**: More efficient cache utilization
 
-### 2. 중기 개선사항 (3-6개월)
+### 2. Medium-term Improvements (3-6 months)
 
-- **Kubernetes 배포**: 컨테이너 오케스트레이션
-- **모니터링 대시보드**: Grafana/Prometheus 통합
-- **자동 롤백**: 문제 발생 시 자동 복구
+- **Kubernetes Deployment**: Container orchestration
+- **Monitoring Dashboard**: Grafana/Prometheus integration
+- **Automatic Rollback**: Automatic recovery on issues
 
-### 3. 장기 개선사항 (6개월+)
+### 3. Long-term Improvements (6+ months)
 
-- **AI 기반 코드 리뷰**: 자동 코드 품질 개선
-- **성능 예측**: 머신러닝 기반 성능 예측
-- **자동 스케일링**: 트래픽 기반 자동 확장
+- **AI-based Code Review**: Automatic code quality improvement
+- **Performance Prediction**: Machine learning-based performance prediction
+- **Automatic Scaling**: Traffic-based automatic scaling
 
-## 문제 해결
+## Troubleshooting
 
-### 1. 일반적인 문제
+### 1. Common Issues
 
-**빌드 실패:**
+**Build Failure:**
 ```bash
-# 로컬에서 재현
+# Reproduce locally
 docker-compose up dev
 cd build && cmake .. && make
 ```
 
-**테스트 실패:**
+**Test Failure:**
 ```bash
-# 특정 테스트 실행
+# Run specific test
 cd build && ctest -R "MemorySafetyTest"
 ```
 
-**Docker 빌드 실패:**
+**Docker Build Failure:**
 ```bash
-# Docker 캐시 클리어
+# Clear Docker cache
 docker system prune -a
 docker-compose build --no-cache
 ```
 
-### 2. 성능 최적화
+### 2. Performance Optimization
 
-**빌드 시간 단축:**
-- 병렬 빌드 활용: `-j $(nproc)`
-- 캐시 전략 최적화
-- 불필요한 의존성 제거
+**Build Time Reduction:**
+- Utilize parallel builds: `-j $(nproc)`
+- Optimize cache strategy
+- Remove unnecessary dependencies
 
-**테스트 시간 단축:**
-- 테스트 병렬 실행
-- 빠른 테스트 우선 실행
-- 느린 테스트 분리
+**Test Time Reduction:**
+- Parallel test execution
+- Prioritize fast tests
+- Separate slow tests
 
-## 결론
+## Conclusion
 
-구현된 CI/CD 파이프라인은 다음과 같은 이점을 제공합니다:
+The implemented CI/CD pipeline provides the following benefits:
 
-1. **완전 자동화**: 수동 개입 없이 전체 개발 생명주기 관리
-2. **높은 품질**: 다양한 테스트와 검사를 통한 코드 품질 보장
-3. **보안 강화**: 다층 보안 검사를 통한 취약점 사전 차단
-4. **개발 효율성**: 빠른 피드백과 일관된 개발 환경 제공
-5. **운영 안정성**: 자동화된 배포와 모니터링
+1. **Complete Automation**: Manage entire development lifecycle without manual intervention
+2. **High Quality**: Ensure code quality through various tests and checks
+3. **Security Enhancement**: Prevent vulnerabilities through multi-layer security checks
+4. **Development Efficiency**: Provide fast feedback and consistent development environment
+5. **Operational Stability**: Automated deployment and monitoring
 
-이러한 CI/CD 향상방안을 통해 개발팀의 생산성과 코드 품질을 크게 향상시킬 수 있습니다.
+These CI/CD enhancements can significantly improve the development team's productivity and code quality.
