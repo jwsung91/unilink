@@ -71,7 +71,6 @@ class ErrorRecoveryTest : public BaseTest {
   std::atomic<int> error_count_{0};
   std::atomic<int> connection_attempts_{0};
   std::atomic<bool> recovery_success_{false};
-  std::string last_error_message_;
 };
 
 // ============================================================================

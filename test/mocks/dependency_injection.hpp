@@ -130,7 +130,9 @@ class MockTestScope {
  */
 class MockScenarioBuilder {
  public:
-  MockScenarioBuilder() = default;
+  MockScenarioBuilder()
+      : failure_result_(MockTestScenario::ConnectionResult::Success),
+        transfer_result_(MockTestScenario::DataTransferResult::Success) {}
 
   /**
    * @brief Build successful connection scenario

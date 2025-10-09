@@ -22,7 +22,7 @@ struct ValidationResult {
   bool is_valid;
   std::string error_message;
 
-  ValidationResult(bool valid = true, const std::string& error = "") : is_valid(valid), error_message(error) {}
+  explicit ValidationResult(bool valid = true, const std::string& error = "") : is_valid(valid), error_message(error) {}
 
   static ValidationResult success() { return ValidationResult(true); }
   static ValidationResult error(const std::string& msg) { return ValidationResult(false, msg); }

@@ -408,15 +408,11 @@ void MemoryPool::adaptive_cleanup_bucket(PoolBucket& bucket, std::chrono::millis
   // Select optimal algorithm based on expiration ratio
   if (expiration_ratio < bucket.EXPIRATION_RATIO_THRESHOLD) {
     // Low expiration ratio: use optimized algorithm
-    if (bucket.current_cleanup_algorithm != PoolBucket::CleanupAlgorithm::LAZY_OPTIMIZED) {
-      bucket.current_cleanup_algorithm = PoolBucket::CleanupAlgorithm::LAZY_OPTIMIZED;
-    }
+    bucket.current_cleanup_algorithm = PoolBucket::CleanupAlgorithm::LAZY_OPTIMIZED;
     perform_cleanup_bucket(bucket, max_age);
   } else {
     // High expiration ratio: use traditional algorithm
-    if (bucket.current_cleanup_algorithm != PoolBucket::CleanupAlgorithm::TRADITIONAL_ERASE) {
-      bucket.current_cleanup_algorithm = PoolBucket::CleanupAlgorithm::TRADITIONAL_ERASE;
-    }
+    bucket.current_cleanup_algorithm = PoolBucket::CleanupAlgorithm::TRADITIONAL_ERASE;
     traditional_cleanup_bucket(bucket, max_age);
   }
 

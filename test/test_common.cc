@@ -85,8 +85,10 @@ TEST(CommonTest, FeedLines) {
   auto binary_data2 = common::safe_convert::string_to_uint8(data2, strlen(data2));
   feed_lines(acc, binary_data2.data(), binary_data2.size(), on_line);
   ASSERT_EQ(lines.size(), 2);
-  EXPECT_EQ(lines[0], "line1");
-  EXPECT_EQ(lines[1], "line2");
+  if (lines.size() >= 2) {
+    EXPECT_EQ(lines[0], "line1");
+    EXPECT_EQ(lines[1], "line2");
+  }
   EXPECT_TRUE(acc.empty());
   lines.clear();
 
@@ -102,7 +104,9 @@ TEST(CommonTest, FeedLines) {
   auto binary_data4 = common::safe_convert::string_to_uint8(data4, strlen(data4));
   feed_lines(acc, binary_data4.data(), binary_data4.size(), on_line);
   ASSERT_EQ(lines.size(), 1);
-  EXPECT_EQ(lines[0], "partial_line");
+  if (!lines.empty()) {
+    EXPECT_EQ(lines[0], "partial_line");
+  }
   EXPECT_TRUE(acc.empty());
   lines.clear();
 
@@ -111,7 +115,9 @@ TEST(CommonTest, FeedLines) {
   auto binary_data5 = common::safe_convert::string_to_uint8(data5, strlen(data5));
   feed_lines(acc, binary_data5.data(), binary_data5.size(), on_line);
   ASSERT_EQ(lines.size(), 1);
-  EXPECT_EQ(lines[0], "crlf");
+  if (!lines.empty()) {
+    EXPECT_EQ(lines[0], "crlf");
+  }
   EXPECT_TRUE(acc.empty());
   lines.clear();
 
@@ -120,8 +126,10 @@ TEST(CommonTest, FeedLines) {
   auto binary_data6 = common::safe_convert::string_to_uint8(data6, strlen(data6));
   feed_lines(acc, binary_data6.data(), binary_data6.size(), on_line);
   ASSERT_EQ(lines.size(), 2);
-  EXPECT_EQ(lines[0], "lineA");
-  EXPECT_EQ(lines[1], "lineB");
+  if (lines.size() >= 2) {
+    EXPECT_EQ(lines[0], "lineA");
+    EXPECT_EQ(lines[1], "lineB");
+  }
   EXPECT_EQ(acc, "lineC_part");
   lines.clear();
 
@@ -131,9 +139,11 @@ TEST(CommonTest, FeedLines) {
   auto binary_data7 = common::safe_convert::string_to_uint8(data7, strlen(data7));
   feed_lines(acc, binary_data7.data(), binary_data7.size(), on_line);
   ASSERT_EQ(lines.size(), 3);
-  EXPECT_EQ(lines[0], "");
-  EXPECT_EQ(lines[1], "");
-  EXPECT_EQ(lines[2], "final");
+  if (lines.size() >= 3) {
+    EXPECT_EQ(lines[0], "");
+    EXPECT_EQ(lines[1], "");
+    EXPECT_EQ(lines[2], "final");
+  }
   EXPECT_TRUE(acc.empty());
   lines.clear();
 }
@@ -142,7 +152,7 @@ TEST(CommonTest, FeedLines) {
 // LOG ROTATION TESTS
 // ============================================================================
 
-class LogRotationTest : public ::testing::Test {
+class LogRotationCommonTest : public ::testing::Test {
  protected:
   void SetUp() override {
     // Clean up any existing test files
@@ -196,7 +206,7 @@ class LogRotationTest : public ::testing::Test {
   }
 };
 
-TEST_F(LogRotationTest, BasicRotationSetup) {
+TEST_F(LogRotationCommonTest, BasicRotationSetup) {
   // Test basic rotation configuration
   LogRotationConfig config;
   config.max_file_size_bytes = 1024;  // 1KB for testing
@@ -206,7 +216,7 @@ TEST_F(LogRotationTest, BasicRotationSetup) {
   EXPECT_EQ(config.max_files, 3);
 }
 
-TEST_F(LogRotationTest, FileSizeBasedRotation) {
+TEST_F(LogRotationCommonTest, FileSizeBasedRotation) {
   // Setup rotation with very small file size for testing
   LogRotationConfig config;
   config.max_file_size_bytes = 512;  // 512 bytes
@@ -235,7 +245,7 @@ TEST_F(LogRotationTest, FileSizeBasedRotation) {
   }
 }
 
-TEST_F(LogRotationTest, FileCountLimit) {
+TEST_F(LogRotationCommonTest, FileCountLimit) {
   // Setup rotation with small file size and low file count
   LogRotationConfig config;
   config.max_file_size_bytes = 256;  // 256 bytes
@@ -257,7 +267,7 @@ TEST_F(LogRotationTest, FileCountLimit) {
   EXPECT_LE(file_count, config.max_files + 1) << "File count should not exceed limit (current + rotated files)";
 }
 
-TEST_F(LogRotationTest, LogRotationManagerDirectTest) {
+TEST_F(LogRotationCommonTest, LogRotationManagerDirectTest) {
   // Test LogRotation class directly
   LogRotationConfig config;
   config.max_file_size_bytes = 100;  // Very small for testing
@@ -288,7 +298,7 @@ TEST_F(LogRotationTest, LogRotationManagerDirectTest) {
   std::filesystem::remove("test_rotation.0.log");
 }
 
-TEST_F(LogRotationTest, LogRotationWithoutRotation) {
+TEST_F(LogRotationCommonTest, LogRotationWithoutRotation) {
   // Test that rotation doesn't occur when file is small
   LogRotationConfig config;
   config.max_file_size_bytes = 1024 * 1024;  // 1MB - very large

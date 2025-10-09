@@ -40,7 +40,7 @@ struct LogEntry {
   std::string message;
   std::string formatted_message;
 
-  LogEntry() = default;
+  LogEntry() : level(LogLevel::INFO) {}
 
   LogEntry(LogLevel lvl, const std::string& comp, const std::string& op, const std::string& msg)
       : timestamp(std::chrono::system_clock::now()), level(lvl), component(comp), operation(op), message(msg) {}

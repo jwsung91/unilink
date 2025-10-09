@@ -280,7 +280,6 @@ TEST_F(MockIntegrationTest, SimulatedServerClientAcceptance) {
 TEST_F(MockIntegrationTest, SimulatedErrorScenarios) {
   struct ErrorTestCase {
     MockTestScenario::ConnectionResult result;
-    std::string expected_error_type;
   };
 
   std::vector<ErrorTestCase> test_cases = {

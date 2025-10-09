@@ -59,7 +59,6 @@ class DebugCommunicationTest : public ::testing::Test {
   std::atomic<bool> connection_established_{false};
   std::atomic<bool> error_occurred_{false};
   std::atomic<bool> server_ready_{false};
-  std::string last_error_;
 };
 
 /**
@@ -274,7 +273,6 @@ class DetailedDebugTest : public ::testing::Test {
   std::atomic<bool> error_occurred_{false};
   std::atomic<bool> server_ready_{false};
   std::atomic<bool> client_connected_{false};
-  std::string last_error_;
 };
 
 /**
@@ -453,7 +451,6 @@ class FixedCommunicationTest : public ::testing::Test {
   std::atomic<bool> error_occurred_{false};
   std::atomic<bool> server_ready_{false};
   std::atomic<bool> client_connected_{false};
-  std::string last_error_;
 };
 
 /**
@@ -659,7 +656,6 @@ class RealCommunicationTest : public ::testing::Test {
   std::atomic<bool> connection_established_{false};
   std::atomic<bool> error_occurred_{false};
   std::atomic<bool> server_ready_{false};
-  std::string last_error_;
 };
 
 /**
