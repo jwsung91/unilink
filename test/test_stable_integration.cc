@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
-#include <memory>
-#include <thread>
-#include <chrono>
+
 #include <atomic>
-#include <string>
+#include <chrono>
 #include <condition_variable>
+#include <memory>
 #include <mutex>
+#include <string>
+#include <thread>
 
 #include "test_utils.hpp"
-#include "unilink/unilink.hpp"
 #include "unilink/builder/auto_initializer.hpp"
+#include "unilink/unilink.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
@@ -17,56 +18,56 @@ using namespace std::chrono_literals;
 
 /**
  * @brief Stable integration tests with improved timing and error handling
- * 
+ *
  * These tests focus on stability and reliability rather than comprehensive
  * network simulation. They use improved timing mechanisms and better
  * error handling to reduce flakiness.
  */
 class StableIntegrationTest : public ::testing::Test {
-protected:
-    void SetUp() override {
-        // Initialize test state
-        data_received_.clear();
-        connection_established_ = false;
-        error_occurred_ = false;
-        error_message_.clear();
-        
-        // Get guaranteed available test port
-        test_port_ = TestUtils::getAvailableTestPort();
-        
-        // Ensure clean state
-        TestUtils::waitFor(100);
+ protected:
+  void SetUp() override {
+    // Initialize test state
+    data_received_.clear();
+    connection_established_ = false;
+    error_occurred_ = false;
+    error_message_.clear();
+
+    // Get guaranteed available test port
+    test_port_ = TestUtils::getAvailableTestPort();
+
+    // Ensure clean state
+    TestUtils::waitFor(100);
+  }
+
+  void TearDown() override {
+    // Clean up any created objects
+    if (client_) {
+      client_->stop();
+      client_.reset();
     }
-    
-    void TearDown() override {
-        // Clean up any created objects
-        if (client_) {
-            client_->stop();
-            client_.reset();
-        }
-        if (server_) {
-            server_->stop();
-            server_.reset();
-        }
-        
-        // Wait for cleanup to complete
-        TestUtils::waitFor(200);
+    if (server_) {
+      server_->stop();
+      server_.reset();
     }
-    
-    // Test objects
-    std::shared_ptr<wrapper::TcpClient> client_;
-    std::shared_ptr<wrapper::TcpServer> server_;
-    
-    // Test state
-    std::vector<std::string> data_received_;
-    std::atomic<bool> connection_established_{false};
-    std::atomic<bool> error_occurred_{false};
-    std::string error_message_;
-    uint16_t test_port_;
-    
-    // Synchronization
-    std::mutex mtx_;
-    std::condition_variable cv_;
+
+    // Wait for cleanup to complete
+    TestUtils::waitFor(200);
+  }
+
+  // Test objects
+  std::shared_ptr<wrapper::TcpClient> client_;
+  std::shared_ptr<wrapper::TcpServer> server_;
+
+  // Test state
+  std::vector<std::string> data_received_;
+  std::atomic<bool> connection_established_{false};
+  std::atomic<bool> error_occurred_{false};
+  std::string error_message_;
+  uint16_t test_port_;
+
+  // Synchronization
+  std::mutex mtx_;
+  std::condition_variable cv_;
 };
 
 // ============================================================================
@@ -77,73 +78,73 @@ protected:
  * @brief Test stable server creation and basic functionality
  */
 TEST_F(StableIntegrationTest, StableServerCreation) {
-    // Given: Server configuration
-    server_ = builder::UnifiedBuilder::tcp_server(test_port_)
-        .unlimited_clients()  // 클라이언트 제한 없음
-        .auto_start(false)  // Don't auto-start to avoid timing issues
-        .on_connect([this]() {
-            std::lock_guard<std::mutex> lock(mtx_);
-            connection_established_ = true;
-            cv_.notify_one();
-        })
-        .on_error([this](const std::string& error) {
-            std::lock_guard<std::mutex> lock(mtx_);
-            error_occurred_ = true;
-            error_message_ = error;
-            cv_.notify_one();
-        })
-        .build();
-    
-    // Then: Verify server creation
-    ASSERT_NE(server_, nullptr);
-    
-    // Test basic server operations without starting
-    EXPECT_FALSE(server_->is_connected());
-    
-    // Start server
-    server_->start();
-    
-    // Wait for server to be ready
-    TestUtils::waitFor(500);
-    
-    // Verify server is running (basic check)
-    EXPECT_NE(server_, nullptr);
+  // Given: Server configuration
+  server_ = builder::UnifiedBuilder::tcp_server(test_port_)
+                .unlimited_clients()  // 클라이언트 제한 없음
+                .auto_start(false)    // Don't auto-start to avoid timing issues
+                .on_connect([this]() {
+                  std::lock_guard<std::mutex> lock(mtx_);
+                  connection_established_ = true;
+                  cv_.notify_one();
+                })
+                .on_error([this](const std::string& error) {
+                  std::lock_guard<std::mutex> lock(mtx_);
+                  error_occurred_ = true;
+                  error_message_ = error;
+                  cv_.notify_one();
+                })
+                .build();
+
+  // Then: Verify server creation
+  ASSERT_NE(server_, nullptr);
+
+  // Test basic server operations without starting
+  EXPECT_FALSE(server_->is_connected());
+
+  // Start server
+  server_->start();
+
+  // Wait for server to be ready
+  TestUtils::waitFor(500);
+
+  // Verify server is running (basic check)
+  EXPECT_NE(server_, nullptr);
 }
 
 /**
  * @brief Test stable client creation and basic functionality
  */
 TEST_F(StableIntegrationTest, StableClientCreation) {
-    // Given: Client configuration
-    client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
-        .auto_start(false)  // Don't auto-start to avoid connection attempts
-        .on_connect([this]() {
-            std::lock_guard<std::mutex> lock(mtx_);
-            connection_established_ = true;
-            cv_.notify_one();
-        })
-        .on_error([this](const std::string& error) {
-            std::lock_guard<std::mutex> lock(mtx_);
-            error_occurred_ = true;
-            error_message_ = error;
-            cv_.notify_one();
-        })
-        .build();
-    
-    // Then: Verify client creation
-    ASSERT_NE(client_, nullptr);
-    
-    // Test basic client operations without starting
-    EXPECT_FALSE(client_->is_connected());
-    
-    // Start client (will fail to connect, but that's expected)
-    client_->start();
-    
-    // Wait for connection attempt to complete
-    TestUtils::waitFor(1000);
-    
-    // Verify client was created successfully
-    EXPECT_NE(client_, nullptr);
+  // Given: Client configuration
+  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+                .auto_start(false)  // Don't auto-start to avoid connection attempts
+                .on_connect([this]() {
+                  std::lock_guard<std::mutex> lock(mtx_);
+                  connection_established_ = true;
+                  cv_.notify_one();
+                })
+                .on_error([this](const std::string& error) {
+                  std::lock_guard<std::mutex> lock(mtx_);
+                  error_occurred_ = true;
+                  error_message_ = error;
+                  cv_.notify_one();
+                })
+                .build();
+
+  // Then: Verify client creation
+  ASSERT_NE(client_, nullptr);
+
+  // Test basic client operations without starting
+  EXPECT_FALSE(client_->is_connected());
+
+  // Start client (will fail to connect, but that's expected)
+  client_->start();
+
+  // Wait for connection attempt to complete
+  TestUtils::waitFor(1000);
+
+  // Verify client was created successfully
+  EXPECT_NE(client_, nullptr);
 }
 
 // ============================================================================
@@ -154,74 +155,70 @@ TEST_F(StableIntegrationTest, StableClientCreation) {
  * @brief Test stable server-client communication with proper synchronization
  */
 TEST_F(StableIntegrationTest, StableServerClientCommunication) {
-    // Given: Server setup
-    server_ = builder::UnifiedBuilder::tcp_server(test_port_)
-        .unlimited_clients()  // 클라이언트 제한 없음
-        .auto_start(true)
-        .on_connect([this]() {
-            std::lock_guard<std::mutex> lock(mtx_);
-            connection_established_ = true;
-            cv_.notify_one();
-        })
-        .on_data([this](const std::string& data) {
-            std::lock_guard<std::mutex> lock(mtx_);
-            data_received_.push_back(data);
-            cv_.notify_one();
-        })
-        .build();
-    
-    ASSERT_NE(server_, nullptr);
-    
-    // Wait for server to be ready
-    TestUtils::waitFor(500);
-    
-    // Given: Client setup
-    client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
-        .auto_start(true)
-        .on_connect([this]() {
-            std::lock_guard<std::mutex> lock(mtx_);
-            connection_established_ = true;
-            cv_.notify_one();
-        })
-        .on_error([this](const std::string& error) {
-            std::lock_guard<std::mutex> lock(mtx_);
-            error_occurred_ = true;
-            error_message_ = error;
-            cv_.notify_one();
-        })
-        .build();
-    
-    ASSERT_NE(client_, nullptr);
-    
-    // Wait for connection with retry logic
-    bool connected = TestUtils::waitForConditionWithRetry([this]() {
-        return connection_established_.load();
-    }, 2000, 3);
-    
-    if (connected) {
-        // Test data transmission
-        std::string test_message = "stable test message";
-        client_->send(test_message);
-        
-        // Wait for data reception with retry
-        bool data_received = TestUtils::waitForConditionWithRetry([this]() {
-            return !data_received_.empty();
-        }, 1000, 3);
-        
-        if (data_received) {
-            EXPECT_EQ(data_received_[0], test_message);
-        } else {
-            // Data reception timeout - this is acceptable for stability tests
-            std::cout << "Data reception timeout (acceptable for stability test)" << std::endl;
-        }
+  // Given: Server setup
+  server_ = builder::UnifiedBuilder::tcp_server(test_port_)
+                .unlimited_clients()  // 클라이언트 제한 없음
+                .auto_start(true)
+                .on_connect([this]() {
+                  std::lock_guard<std::mutex> lock(mtx_);
+                  connection_established_ = true;
+                  cv_.notify_one();
+                })
+                .on_data([this](const std::string& data) {
+                  std::lock_guard<std::mutex> lock(mtx_);
+                  data_received_.push_back(data);
+                  cv_.notify_one();
+                })
+                .build();
+
+  ASSERT_NE(server_, nullptr);
+
+  // Wait for server to be ready
+  TestUtils::waitFor(500);
+
+  // Given: Client setup
+  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+                .auto_start(true)
+                .on_connect([this]() {
+                  std::lock_guard<std::mutex> lock(mtx_);
+                  connection_established_ = true;
+                  cv_.notify_one();
+                })
+                .on_error([this](const std::string& error) {
+                  std::lock_guard<std::mutex> lock(mtx_);
+                  error_occurred_ = true;
+                  error_message_ = error;
+                  cv_.notify_one();
+                })
+                .build();
+
+  ASSERT_NE(client_, nullptr);
+
+  // Wait for connection with retry logic
+  bool connected = TestUtils::waitForConditionWithRetry([this]() { return connection_established_.load(); }, 2000, 3);
+
+  if (connected) {
+    // Test data transmission
+    std::string test_message = "stable test message";
+    client_->send(test_message);
+
+    // Wait for data reception with retry
+    bool data_received = TestUtils::waitForConditionWithRetry([this]() { return !data_received_.empty(); }, 1000, 3);
+
+    if (data_received) {
+      EXPECT_EQ(data_received_[0], test_message);
     } else {
-        // Connection timeout - this is acceptable for stability tests
-        std::cout << "Connection timeout (acceptable for stability test)" << std::endl;
+      // Data reception timeout - this is acceptable for stability tests
+      std::cout << "Data reception timeout (acceptable for stability test)" << std::endl;
     }
-    
-    // Verify objects were created successfully regardless of connection outcome
-    EXPECT_NE(server_, nullptr);
-    EXPECT_NE(client_, nullptr);
+  } else {
+    // Connection timeout - this is acceptable for stability tests
+    std::cout << "Connection timeout (acceptable for stability test)" << std::endl;
+  }
+
+  // Verify objects were created successfully regardless of connection outcome
+  EXPECT_NE(server_, nullptr);
+  EXPECT_NE(client_, nullptr);
 }
 
 // ============================================================================
@@ -232,35 +229,36 @@ TEST_F(StableIntegrationTest, StableServerClientCommunication) {
  * @brief Test stable error handling scenarios
  */
 TEST_F(StableIntegrationTest, StableErrorHandling) {
-    // Test invalid port handling
-    auto invalid_server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
-        .auto_start(false)
-        .on_error([this](const std::string& error) {
-            std::lock_guard<std::mutex> lock(mtx_);
-            error_occurred_ = true;
-            error_message_ = error;
-            cv_.notify_one();
-        })
-        .build();
-    
-    EXPECT_NE(invalid_server, nullptr);
-    
-    // Test invalid host handling
-    auto invalid_client = builder::UnifiedBuilder::tcp_client("invalid.host", 12345)
-        .auto_start(false)
-        .on_error([this](const std::string& error) {
-            std::lock_guard<std::mutex> lock(mtx_);
-            error_occurred_ = true;
-            error_message_ = error;
-            cv_.notify_one();
-        })
-        .build();
-    
-    EXPECT_NE(invalid_client, nullptr);
-    
-    // Verify error handling objects were created successfully
-    EXPECT_NE(invalid_server, nullptr);
-    EXPECT_NE(invalid_client, nullptr);
+  // Test invalid port handling
+  auto invalid_server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
+                            .unlimited_clients()                // 클라이언트 제한 없음
+                            .auto_start(false)
+                            .on_error([this](const std::string& error) {
+                              std::lock_guard<std::mutex> lock(mtx_);
+                              error_occurred_ = true;
+                              error_message_ = error;
+                              cv_.notify_one();
+                            })
+                            .build();
+
+  EXPECT_NE(invalid_server, nullptr);
+
+  // Test invalid host handling
+  auto invalid_client = builder::UnifiedBuilder::tcp_client("invalid.host", 12345)
+                            .auto_start(false)
+                            .on_error([this](const std::string& error) {
+                              std::lock_guard<std::mutex> lock(mtx_);
+                              error_occurred_ = true;
+                              error_message_ = error;
+                              cv_.notify_one();
+                            })
+                            .build();
+
+  EXPECT_NE(invalid_client, nullptr);
+
+  // Verify error handling objects were created successfully
+  EXPECT_NE(invalid_server, nullptr);
+  EXPECT_NE(invalid_client, nullptr);
 }
 
 // ============================================================================
@@ -271,32 +269,31 @@ TEST_F(StableIntegrationTest, StableErrorHandling) {
  * @brief Test stable performance characteristics
  */
 TEST_F(StableIntegrationTest, StablePerformanceTest) {
-    auto start_time = std::chrono::high_resolution_clock::now();
-    
-    // Create multiple clients rapidly
-    std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
-    const int client_count = 50;  // Reduced count for stability
-    
-    for (int i = 0; i < client_count; ++i) {
-        auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_ + i)
-            .auto_start(false)  // Don't start to avoid connection attempts
-            .build();
-        
-        ASSERT_NE(client, nullptr);
-        clients.push_back(std::move(client));
-    }
-    
-    auto end_time = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-    
-    // Verify performance
-    EXPECT_EQ(clients.size(), client_count);
-    
-    // Object creation should be fast (less than 1ms per client)
-    EXPECT_LT(duration.count(), client_count * 1000);
-    
-    std::cout << "Created " << client_count << " clients in " 
-              << duration.count() << " microseconds" << std::endl;
+  auto start_time = std::chrono::high_resolution_clock::now();
+
+  // Create multiple clients rapidly
+  std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
+  const int client_count = 50;  // Reduced count for stability
+
+  for (int i = 0; i < client_count; ++i) {
+    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_ + i)
+                      .auto_start(false)  // Don't start to avoid connection attempts
+                      .build();
+
+    ASSERT_NE(client, nullptr);
+    clients.push_back(std::move(client));
+  }
+
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+
+  // Verify performance
+  EXPECT_EQ(clients.size(), client_count);
+
+  // Object creation should be fast (less than 1ms per client)
+  EXPECT_LT(duration.count(), client_count * 1000);
+
+  std::cout << "Created " << client_count << " clients in " << duration.count() << " microseconds" << std::endl;
 }
 
 // ============================================================================
@@ -307,50 +304,51 @@ TEST_F(StableIntegrationTest, StablePerformanceTest) {
  * @brief Test stable builder pattern functionality
  */
 TEST_F(StableIntegrationTest, StableBuilderPattern) {
-    // Test method chaining
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
-        .auto_start(false)
-        .auto_manage(false)
-        .use_independent_context(true)
-        .on_connect([]() { 
-            // Empty callback for testing
-        })
-        .on_disconnect([]() { 
-            // Empty callback for testing
-        })
-        .on_data([](const std::string& data) { 
-            // Empty callback for testing
-        })
-        .on_error([](const std::string& error) { 
-            // Empty callback for testing
-        })
-        .build();
-    
-    EXPECT_NE(client, nullptr);
-    
-    // Test server builder
-    auto server = builder::UnifiedBuilder::tcp_server(test_port_)
-        .auto_start(false)
-        .auto_manage(false)
-        .use_independent_context(false)
-        .on_connect([]() { 
-            // Empty callback for testing
-        })
-        .on_disconnect([]() { 
-            // Empty callback for testing
-        })
-        .on_data([](const std::string& data) { 
-            // Empty callback for testing
-        })
-        .on_error([](const std::string& error) { 
-            // Empty callback for testing
-        })
-        .build();
-    
-    EXPECT_NE(server, nullptr);
+  // Test method chaining
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+                    .auto_start(false)
+                    .auto_manage(false)
+                    .use_independent_context(true)
+                    .on_connect([]() {
+                      // Empty callback for testing
+                    })
+                    .on_disconnect([]() {
+                      // Empty callback for testing
+                    })
+                    .on_data([](const std::string& data) {
+                      // Empty callback for testing
+                    })
+                    .on_error([](const std::string& error) {
+                      // Empty callback for testing
+                    })
+                    .build();
+
+  EXPECT_NE(client, nullptr);
+
+  // Test server builder
+  auto server = builder::UnifiedBuilder::tcp_server(test_port_)
+                    .unlimited_clients()  // 클라이언트 제한 없음
+                    .auto_start(false)
+                    .auto_manage(false)
+                    .use_independent_context(false)
+                    .on_connect([]() {
+                      // Empty callback for testing
+                    })
+                    .on_disconnect([]() {
+                      // Empty callback for testing
+                    })
+                    .on_data([](const std::string& data) {
+                      // Empty callback for testing
+                    })
+                    .on_error([](const std::string& error) {
+                      // Empty callback for testing
+                    })
+                    .build();
+
+  EXPECT_NE(server, nullptr);
 }
 
 int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

@@ -30,10 +30,6 @@ void TcpServer::start() {
     config.max_port_retries = max_port_retries_;
     config.port_retry_interval_ms = port_retry_interval_ms_;
 
-    std::cout << "DEBUG: Creating channel with config - enable_port_retry=" << config.enable_port_retry
-              << ", max_port_retries=" << config.max_port_retries
-              << ", port_retry_interval_ms=" << config.port_retry_interval_ms << std::endl;
-
     channel_ = factory::ChannelFactory::create(config);
     setup_internal_handlers();
 
@@ -275,12 +271,6 @@ TcpServer& TcpServer::enable_port_retry(bool enable, int max_retries, int retry_
   port_retry_enabled_ = enable;
   max_port_retries_ = max_retries;
   port_retry_interval_ms_ = retry_interval_ms;
-
-  std::cout << "DEBUG: TcpServer::enable_port_retry called - enable=" << enable << ", max_retries=" << max_retries
-            << ", interval=" << retry_interval_ms << std::endl;
-  std::cout << "DEBUG: Stored values - port_retry_enabled_=" << port_retry_enabled_
-            << ", max_port_retries_=" << max_port_retries_ << ", port_retry_interval_ms_=" << port_retry_interval_ms_
-            << std::endl;
 
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
