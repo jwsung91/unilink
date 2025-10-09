@@ -150,7 +150,7 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
    */
   TcpServerBuilder& use_independent_context(bool use_independent = true);
 
-  // 멀티 클라이언트 지원 메서드
+  // Multi-client support methods
   /**
    * @brief Set multi-client connection handler callback
    * @param handler Function to handle multi-client connection events
@@ -229,7 +229,7 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
   std::function<void()> on_disconnect_;
   std::function<void(const std::string&)> on_error_;
 
-  // 멀티 클라이언트 콜백들
+  // Multi-client callbacks
   std::function<void(size_t, const std::string&)> on_multi_connect_;
   std::function<void(size_t, const std::string&)> on_multi_data_;
   std::function<void(size_t)> on_multi_disconnect_;
