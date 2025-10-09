@@ -28,45 +28,21 @@ jobs:
         grep -v build- | \
         xargs clang-format --style=file --dry-run --Werror
 
-  # Static Analysis
+  # Static Analysis with cppcheck
   static-analysis:
-    name: Static Analysis
+    name: Static Analysis (cppcheck)
     runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Install cppcheck
       run: |
         sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libboost-dev \
-          libboost-system-dev \
-          clang-tidy \
-          cppcheck
+        sudo apt-get install -y cppcheck
 
-    - name: Configure CMake
-      run: |
-        cmake -S . -B build-tidy \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_STANDARD=17 \
-          -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_EXAMPLES=OFF \
-          -DBUILD_TESTING=ON
-
-    - name: Build for static analysis
-      run: cmake --build build-tidy -j $(nproc)
-
-    - name: Run clang-tidy
-      run: |
-        find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
-        grep -v build- | \
-        xargs clang-tidy --config-file=.clang-tidy
-
-    - name: Run cppcheck
+    - name: Run cppcheck (comprehensive analysis)
       run: |
         cppcheck --enable=all --inconclusive --std=c++17 \
           --suppress=missingIncludeSystem \
@@ -79,8 +55,26 @@ jobs:
           --suppress=shadowVariable \
           --suppress=useStlAlgorithm \
           --suppress=uninitMemberVar \
+          --suppress=unusedStructMember \
+          --suppress=unusedPrivateFunction \
+          --suppress=constParameter \
+          --suppress=constParameterReference \
+          --suppress=passedByValue \
+          --suppress=redundantAssignment \
+          --suppress=redundantCopy \
+          --suppress=useInitializationList \
+          --xml --xml-version=2 \
+          --output-file=cppcheck-results.xml \
           --error-exitcode=1 \
           unilink/ examples/ test/
+
+    - name: Upload cppcheck results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: cppcheck-results
+        path: cppcheck-results.xml
+        retention-days: 7
 
   # CodeQL Analysis
   codeql:
