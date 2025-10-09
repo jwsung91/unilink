@@ -162,14 +162,19 @@ class ChatClient {
 
       logger_.info("client", "connect", "Connection successful! Enter messages:");
 
-      // User input processing loop
-      while (running_.load() && client_ && client_->is_connected()) {
+      // User input processing loop - don't check is_connected() as it may be unreliable
+      while (running_.load()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         process_input();
+
+        // Check if we should exit due to server shutdown
+        if (!running_.load()) {
+          break;
+        }
       }
 
-      // If connection lost, attempt to reconnect
-      if (running_.load() && (!client_ || !client_->is_connected())) {
+      // If we get here and still running, connection was lost
+      if (running_.load()) {
         logger_.info("client", "connect", "Connection lost. Attempting to reconnect...");
         std::this_thread::sleep_for(std::chrono::seconds(3));
       }
