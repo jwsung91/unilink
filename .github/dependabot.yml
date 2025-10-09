@@ -9,10 +9,9 @@ updates:
       time: "09:00"
     open-pull-requests-limit: 10
     reviewers:
-      - "maintainer1"
-      - "maintainer2"
+      - "rain"
     assignees:
-      - "maintainer1"
+      - "rain"
 
   # Enable version updates for Docker
   - package-ecosystem: "docker"
@@ -23,10 +22,9 @@ updates:
       time: "09:00"
     open-pull-requests-limit: 5
     reviewers:
-      - "maintainer1"
-      - "maintainer2"
+      - "rain"
     assignees:
-      - "maintainer1"
+      - "rain"
 
   # Enable version updates for CMake
   - package-ecosystem: "github-actions"
@@ -37,7 +35,6 @@ updates:
       time: "09:00"
     open-pull-requests-limit: 5
     reviewers:
-      - "maintainer1"
-      - "maintainer2"
+      - "rain"
     assignees:
-      - "maintainer1"
+      - "rain"

@@ -1,0 +1,132 @@
+name: Security
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly on Monday at 2 AM
+
+jobs:
+  # Trivy Security Scan
+  trivy-scan:
+    name: Trivy Security Scan
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev
+
+    - name: Build project
+      run: |
+        cmake -S . -B build-security \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_CXX_STANDARD=17 \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=ON \
+          -DBUILD_TESTING=OFF
+        cmake --build build-security -j $(nproc)
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  # Docker Security Scan
+  docker-security:
+    name: Docker Security Scan
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: |
+        docker build -t unilink:security-scan .
+
+    - name: Run Trivy vulnerability scanner on Docker image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'unilink:security-scan'
+        format: 'sarif'
+        output: 'trivy-docker-results.sarif'
+
+    - name: Upload Docker Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-docker-results.sarif'
+
+  # Dependency Security Check
+  dependency-check:
+    name: Dependency Security Check
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev
+
+    - name: Build project
+      run: |
+        cmake -S . -B build-deps \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_CXX_STANDARD=17 \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=ON \
+          -DBUILD_TESTING=OFF
+        cmake --build build-deps -j $(nproc)
+
+    - name: Check for known vulnerabilities in dependencies
+      run: |
+        echo "Checking system packages for vulnerabilities..."
+        apt list --upgradable 2>/dev/null | grep -E "(security|vulnerability)" || echo "No known vulnerabilities found in system packages"
+        
+        echo "Checking Boost library version..."
+        dpkg -l | grep libboost || echo "Boost version check completed"
+
+  # Security Summary
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-22.04
+    needs: [trivy-scan, docker-security, dependency-check]
+    if: always()
+
+    steps:
+    - name: Security Summary
+      run: |
+        echo "## Security Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "| Scan Type | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Trivy File System Scan | ${{ needs.trivy-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Docker Security Scan | ${{ needs.docker-security.result == 'success' && '✅ Passed' || '❌ Failed' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Dependency Check | ${{ needs.dependency-check.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

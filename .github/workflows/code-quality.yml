@@ -1,0 +1,146 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Code Formatting Check
+  formatting:
+    name: Code Formatting
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install clang-format
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format
+
+    - name: Check code formatting
+      run: |
+        find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
+        grep -v build- | \
+        xargs clang-format --style=file --dry-run --Werror
+
+  # Static Analysis
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev \
+          clang-tidy \
+          cppcheck
+
+    - name: Configure CMake
+      run: |
+        cmake -S . -B build-tidy \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_STANDARD=17 \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=OFF \
+          -DBUILD_TESTING=ON
+
+    - name: Build for static analysis
+      run: cmake --build build-tidy -j $(nproc)
+
+    - name: Run clang-tidy
+      run: |
+        find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
+        grep -v build- | \
+        xargs clang-tidy --config-file=.clang-tidy
+
+    - name: Run cppcheck
+      run: |
+        cppcheck --enable=all --inconclusive --std=c++17 \
+          --suppress=missingIncludeSystem \
+          --suppress=missingInclude \
+          --suppress=unusedFunction \
+          --suppress=functionStatic \
+          --suppress=functionConst \
+          --suppress=noExplicitConstructor \
+          --suppress=duplicateConditionalAssign \
+          --suppress=shadowVariable \
+          --suppress=useStlAlgorithm \
+          --suppress=uninitMemberVar \
+          --error-exitcode=1 \
+          unilink/ examples/ test/
+
+  # CodeQL Analysis
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev
+
+    - name: Build for CodeQL
+      run: |
+        cmake -S . -B build-codeql \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_STANDARD=17 \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=OFF \
+          -DBUILD_TESTING=ON
+        cmake --build build-codeql -j $(nproc)
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
+
+  # Quality Summary
+  quality-summary:
+    name: Quality Summary
+    runs-on: ubuntu-22.04
+    needs: [formatting, static-analysis, codeql]
+    if: always()
+
+    steps:
+    - name: Quality Summary
+      run: |
+        echo "## Code Quality Results" >> $GITHUB_STEP_SUMMARY
+        echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Code Formatting | ${{ needs.formatting.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Static Analysis | ${{ needs.static-analysis.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| CodeQL Analysis | ${{ needs.codeql.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
