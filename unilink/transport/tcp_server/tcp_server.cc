@@ -10,11 +10,16 @@ namespace unilink {
 namespace transport {
 
 namespace net = boost::asio;
-
-using namespace interface;
-using namespace common;
-using namespace config;
 using tcp = net::ip::tcp;
+
+// Specific namespace aliases instead of using namespace
+using common::IoContextManager;
+using common::LinkState;
+using common::ThreadSafeLinkState;
+using config::TcpServerConfig;
+using interface::Channel;
+using interface::TcpAcceptorInterface;
+using namespace common;  // For error_reporting namespace
 
 TcpServer::TcpServer(const TcpServerConfig& cfg)
     : owned_ioc_(nullptr),

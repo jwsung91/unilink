@@ -7,6 +7,9 @@
 
 #include "unilink/unilink.hpp"
 
+// Example namespace usage - using namespace for simplicity in examples
+using namespace unilink;
+
 /**
  * @brief Example application class that demonstrates member function binding
  *
@@ -47,18 +50,18 @@ class SerialEchoApp {
  private:
   // Member function callbacks - these can be bound directly to the builder
   void handle_connect() {
-    unilink::log_message("serial", "STATE", "Serial device connected");
+    common::log_message("serial", "STATE", "Serial device connected");
     connected_ = true;
   }
 
   void handle_disconnect() {
-    unilink::log_message("serial", "STATE", "Serial device disconnected");
+    common::log_message("serial", "STATE", "Serial device disconnected");
     connected_ = false;
   }
 
-  void handle_data(const std::string& data) { unilink::log_message("serial", "RX", data); }
+  void handle_data(const std::string& data) { common::log_message("serial", "RX", data); }
 
-  void handle_error(const std::string& error) { unilink::log_message("serial", "ERROR", error); }
+  void handle_error(const std::string& error) { common::log_message("serial", "ERROR", error); }
 
   void sender_loop(unilink::wrapper::Serial* serial) {
     uint64_t seq = 0;
@@ -67,7 +70,7 @@ class SerialEchoApp {
     while (!stop_sending_) {
       if (connected_) {
         std::string msg = "SER " + std::to_string(seq++);
-        unilink::log_message("serial", "TX", msg);
+        common::log_message("serial", "TX", msg);
         serial->send_line(msg);
       }
       std::this_thread::sleep_for(interval);

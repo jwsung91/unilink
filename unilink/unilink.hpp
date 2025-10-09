@@ -29,110 +29,86 @@
 
 namespace unilink {
 
-// === Internal Wrapper API for Builder API ===
-// Convenience aliases (for internal use only)
-namespace wrapper {
-using TcpServer = wrapper::TcpServer;
-using TcpClient = wrapper::TcpClient;
-using Serial = wrapper::Serial;
-using IChannel = wrapper::ChannelInterface;
-}  // namespace wrapper
+// === Public API Namespaces ===
+// Clean namespace structure without redundant aliases
 
-// === Public Builder API ===
-// Builder APIs available to users
+// Builder API namespace
 namespace builder {
-using TcpServerBuilder = builder::TcpServerBuilder;
-using TcpClientBuilder = builder::TcpClientBuilder;
-using SerialBuilder = builder::SerialBuilder;
-using UnifiedBuilder = builder::UnifiedBuilder;
+// Forward declarations for cleaner includes
+class TcpServerBuilder;
+class TcpClientBuilder;
+class SerialBuilder;
+class UnifiedBuilder;
 }  // namespace builder
+
+// Wrapper API namespace
+namespace wrapper {
+// Forward declarations for cleaner includes
+class TcpServer;
+class TcpClient;
+class Serial;
+class ChannelInterface;
+}  // namespace wrapper
 
 // === Public Builder API Convenience Functions ===
 // Convenience functions to make Builder pattern easier to use
 
+// === Convenience Functions ===
+// Simplified API for common use cases
+
 /**
- * @brief Create a TcpServer builder with simple configuration
+ * @brief Create a TCP server builder
  * @param port The port number for the server
- * @return builder::TcpServerBuilder A configured builder for TcpServer
- */
-inline builder::TcpServerBuilder tcp_server_builder(uint16_t port) { return builder::TcpServerBuilder(port); }
-
-/**
- * @brief Create a TcpClient builder with simple configuration
- * @param host The host address to connect to
- * @param port The port number to connect to
- * @return builder::TcpClientBuilder A configured builder for TcpClient
- */
-inline builder::TcpClientBuilder tcp_client_builder(const std::string& host, uint16_t port) {
-  return builder::TcpClientBuilder(host, port);
-}
-
-/**
- * @brief Create a Serial builder with simple configuration
- * @param device The serial device path (e.g., "/dev/ttyUSB0")
- * @param baud_rate The baud rate for serial communication
- * @return builder::SerialBuilder A configured builder for Serial
- */
-inline builder::SerialBuilder serial_builder(const std::string& device, uint32_t baud_rate) {
-  return builder::SerialBuilder(device, baud_rate);
-}
-
-/**
- * @brief Create a TcpServer builder (shortest form)
- * @param port The port number for the server
- * @return builder::TcpServerBuilder A configured builder for TcpServer
+ * @return TcpServerBuilder A configured builder for TcpServer
  */
 inline builder::TcpServerBuilder tcp_server(uint16_t port) { return builder::TcpServerBuilder(port); }
 
 /**
- * @brief Create a TcpClient builder (shortest form)
+ * @brief Create a TCP client builder
  * @param host The host address to connect to
  * @param port The port number to connect to
- * @return builder::TcpClientBuilder A configured builder for TcpClient
+ * @return TcpClientBuilder A configured builder for TcpClient
  */
 inline builder::TcpClientBuilder tcp_client(const std::string& host, uint16_t port) {
   return builder::TcpClientBuilder(host, port);
 }
 
 /**
- * @brief Create a Serial builder (shortest form)
+ * @brief Create a Serial port builder
  * @param device The serial device path (e.g., "/dev/ttyUSB0")
  * @param baud_rate The baud rate for serial communication
- * @return builder::SerialBuilder A configured builder for Serial
+ * @return SerialBuilder A configured builder for Serial
  */
 inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_rate) {
   return builder::SerialBuilder(device, baud_rate);
 }
 
 // === Configuration Management API (optional) ===
-// Convenience aliases - only available when Config is enabled
 #ifdef UNILINK_ENABLE_CONFIG
-namespace config_manager {
-using IConfigManager = config::ConfigManagerInterface;
-using ConfigManager = config::ConfigManager;
-using ConfigFactory = config::ConfigFactory;
-using ConfigPresets = config::ConfigPresets;
-using ConfigType = config::ConfigType;
-using ConfigItem = config::ConfigItem;
-using ValidationResult = config::ValidationResult;
-using ConfigChangeCallback = config::ConfigChangeCallback;
-}  // namespace config_manager
+namespace config {
+// Forward declarations for configuration management
+class ConfigManager;
+class ConfigFactory;
+class ConfigManagerInterface;
+}  // namespace config
 #endif
 
 // === Common Utilities ===
-// Useful utility functions
+// Utility functions and error handling
+namespace common {
+// Utility functions
 using common::feed_lines;
 using common::log_message;
 using common::to_cstr;
 using common::ts_now;
 
-// === Error Handling and Logging System ===
-// Using new error handling and logging system
+// Error handling and logging
 using common::ErrorCategory;
 using common::ErrorHandler;
 using common::ErrorInfo;
 using common::ErrorLevel;
 using common::Logger;
 using common::LogLevel;
+}  // namespace common
 
 }  // namespace unilink

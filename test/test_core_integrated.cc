@@ -17,11 +17,14 @@
 #include "unilink/common/safe_data_buffer.hpp"
 #include "unilink/common/thread_safe_state.hpp"
 
+// Test namespace aliases for cleaner code
 using namespace unilink;
 using namespace unilink::test;
-using namespace unilink::common;
-using namespace unilink::builder;
 using namespace std::chrono_literals;
+
+// Specific namespace aliases for better clarity
+namespace common = unilink::common;
+namespace builder = unilink::builder;
 
 /**
  * @brief Integrated core functionality tests
@@ -36,7 +39,7 @@ class CoreIntegratedTest : public ::testing::Test {
     test_port_ = TestUtils::getAvailableTestPort();
 
     // Reset error handler
-    auto& error_handler = ErrorHandler::instance();
+    auto& error_handler = common::ErrorHandler::instance();
     error_handler.reset_stats();
   }
 
@@ -56,7 +59,7 @@ class CoreIntegratedTest : public ::testing::Test {
  * @brief Test memory pool basic functionality
  */
 TEST_F(CoreIntegratedTest, MemoryPoolBasicFunctionality) {
-  MemoryPool pool(100, 200);
+  common::MemoryPool pool(100, 200);
 
   // Test basic allocation and release
   auto buffer1 = pool.acquire(1024);
@@ -78,7 +81,7 @@ TEST_F(CoreIntegratedTest, MemoryPoolBasicFunctionality) {
  * @brief Test memory pool performance
  */
 TEST_F(CoreIntegratedTest, MemoryPoolPerformance) {
-  MemoryPool pool(1000, 2000);
+  common::MemoryPool pool(1000, 2000);
   const int num_operations = 100;
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -101,7 +104,7 @@ TEST_F(CoreIntegratedTest, MemoryPoolPerformance) {
  * @brief Test memory pool statistics
  */
 TEST_F(CoreIntegratedTest, MemoryPoolStatistics) {
-  MemoryPool pool(50, 100);
+  common::MemoryPool pool(50, 100);
 
   // Perform some operations
   for (int i = 0; i < 10; ++i) {
@@ -124,10 +127,10 @@ TEST_F(CoreIntegratedTest, MemoryPoolStatistics) {
  * @brief Test error handler basic functionality
  */
 TEST_F(CoreIntegratedTest, ErrorHandlerBasicFunctionality) {
-  auto& error_handler = ErrorHandler::instance();
+  auto& error_handler = common::ErrorHandler::instance();
 
   // Test error reporting
-  error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
+  common::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
 
   auto stats = error_handler.get_error_stats();
   EXPECT_GT(stats.total_errors, 0);
@@ -137,13 +140,13 @@ TEST_F(CoreIntegratedTest, ErrorHandlerBasicFunctionality) {
  * @brief Test error handler callback
  */
 TEST_F(CoreIntegratedTest, ErrorHandlerCallback) {
-  auto& error_handler = ErrorHandler::instance();
+  auto& error_handler = common::ErrorHandler::instance();
 
   std::atomic<int> callback_count{0};
-  auto callback = [&callback_count](const ErrorInfo&) { callback_count++; };
+  auto callback = [&callback_count](const common::ErrorInfo&) { callback_count++; };
 
   error_handler.register_callback(callback);
-  error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
+  common::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
 
   // Wait for callback
   EXPECT_TRUE(TestUtils::waitForCondition([&callback_count]() { return callback_count.load() > 0; }, 1000));
@@ -157,9 +160,9 @@ TEST_F(CoreIntegratedTest, ErrorHandlerCallback) {
  * @brief Test safe data buffer basic functionality
  */
 TEST_F(CoreIntegratedTest, SafeDataBufferBasicFunctionality) {
-  // Test SafeDataBuffer creation with proper size
+  // Test common::SafeDataBuffer creation with proper size
   std::vector<uint8_t> data(1024, 0);
-  SafeDataBuffer buffer(data);
+  common::SafeDataBuffer buffer(data);
   EXPECT_NE(&buffer, nullptr);
 
   // Test basic operations (simplified)
@@ -173,7 +176,7 @@ TEST_F(CoreIntegratedTest, SafeDataBufferBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, SafeDataBufferBoundsChecking) {
   std::vector<uint8_t> data(100, 0);
-  SafeDataBuffer buffer(data);
+  common::SafeDataBuffer buffer(data);
   EXPECT_NE(&buffer, nullptr);
 
   // Test buffer creation with size limit
@@ -191,7 +194,7 @@ TEST_F(CoreIntegratedTest, SafeDataBufferBoundsChecking) {
  */
 TEST_F(CoreIntegratedTest, IoContextManagerBasicFunctionality) {
   // Test IoContextManager singleton access
-  auto& manager = IoContextManager::instance();
+  auto& manager = common::IoContextManager::instance();
   EXPECT_NE(&manager, nullptr);
 
   // Test context creation (simplified)
@@ -204,7 +207,7 @@ TEST_F(CoreIntegratedTest, IoContextManagerBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
   // Test IoContextManager singleton access
-  auto& manager = IoContextManager::instance();
+  auto& manager = common::IoContextManager::instance();
   EXPECT_NE(&manager, nullptr);
 
   // Test independent context creation (simplified)
@@ -220,8 +223,8 @@ TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
  * @brief Test thread safe state basic functionality
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateBasicFunctionality) {
-  // Test ThreadSafeState creation (simplified)
-  ThreadSafeState<std::string> state("initial");
+  // Test common::ThreadSafeState creation (simplified)
+  common::ThreadSafeState<std::string> state("initial");
   EXPECT_NE(&state, nullptr);
 
   // Note: Actual API may differ - this is a placeholder test
@@ -232,8 +235,8 @@ TEST_F(CoreIntegratedTest, ThreadSafeStateBasicFunctionality) {
  * @brief Test thread safe state concurrent access
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateConcurrentAccess) {
-  // Test ThreadSafeState creation (simplified)
-  ThreadSafeState<int> state(0);
+  // Test common::ThreadSafeState creation (simplified)
+  common::ThreadSafeState<int> state(0);
   EXPECT_NE(&state, nullptr);
 
   // Note: Actual API may differ - this is a placeholder test
@@ -249,7 +252,7 @@ TEST_F(CoreIntegratedTest, ThreadSafeStateConcurrentAccess) {
  */
 TEST_F(CoreIntegratedTest, UnifiedBuilderBasicFunctionality) {
   // Test TCP client builder
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 }
@@ -259,7 +262,7 @@ TEST_F(CoreIntegratedTest, UnifiedBuilderBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, UnifiedBuilderMethodChaining) {
   // Test method chaining
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
                     .auto_start(false)
                     .on_connect([]() {})
                     .on_data([](const std::string&) {})
@@ -278,7 +281,7 @@ TEST_F(CoreIntegratedTest, UnifiedBuilderMethodChaining) {
  */
 TEST_F(CoreIntegratedTest, BasicCommunicationIntegration) {
   // Create server
-  auto server = UnifiedBuilder::tcp_server(test_port_)
+  auto server = builder::UnifiedBuilder::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(true)
                     .on_connect([]() {})
@@ -292,7 +295,7 @@ TEST_F(CoreIntegratedTest, BasicCommunicationIntegration) {
 
   // Create client
   std::atomic<bool> client_connected{false};
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
                     .auto_start(true)
                     .on_connect([&client_connected]() { client_connected = true; })
                     .build();

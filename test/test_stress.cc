@@ -17,11 +17,14 @@
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/common/memory_pool.hpp"
 
+// Test namespace aliases for cleaner code
 using namespace unilink;
 using namespace unilink::test;
-using namespace unilink::builder;
-using namespace unilink::common;
 using namespace std::chrono_literals;
+
+// Specific namespace aliases for better clarity
+namespace builder = unilink::builder;
+namespace common = unilink::common;
 
 // ============================================================================
 // STRESS TESTS
@@ -250,7 +253,7 @@ TEST_F(StressTest, ConcurrentConnections) {
   const uint16_t server_port = TestUtils::getTestPort();
 
   // Create server
-  auto server = UnifiedBuilder::tcp_server(server_port)
+  auto server = builder::UnifiedBuilder::tcp_server(server_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(false)    // Don't auto-start to avoid conflicts
                     .build();
@@ -264,7 +267,7 @@ TEST_F(StressTest, ConcurrentConnections) {
 
   // Create multiple clients (without starting them to avoid network issues)
   for (int i = 0; i < num_clients; ++i) {
-    auto client = UnifiedBuilder::tcp_client("127.0.0.1", server_port)
+    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", server_port)
                       .auto_start(false)  // Don't auto-start to avoid conflicts
                       .build();
 

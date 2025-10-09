@@ -7,6 +7,9 @@
 
 #include "unilink/unilink.hpp"
 
+// Example namespace usage - using namespace for simplicity in examples
+using namespace unilink;
+
 /**
  * @brief Chat application class for serial communication
  *
@@ -41,27 +44,27 @@ class SerialChatApp {
  private:
   // Member function callbacks - these can be bound directly to the builder
   void handle_connect() {
-    unilink::log_message("serial", "STATE", "Serial device connected");
+    common::log_message("serial", "STATE", "Serial device connected");
     connected_ = true;
   }
 
   void handle_disconnect() {
-    unilink::log_message("serial", "STATE", "Serial device disconnected");
+    common::log_message("serial", "STATE", "Serial device disconnected");
     connected_ = false;
   }
 
-  void handle_data(const std::string& data) { unilink::log_message("serial", "RX", data); }
+  void handle_data(const std::string& data) { common::log_message("serial", "RX", data); }
 
-  void handle_error(const std::string& error) { unilink::log_message("serial", "ERROR", error); }
+  void handle_error(const std::string& error) { common::log_message("serial", "ERROR", error); }
 
   void input_loop(unilink::wrapper::Serial* serial) {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (!connected_.load()) {
-        unilink::log_message("serial", "INFO", "(not connected)");
+        common::log_message("serial", "INFO", "(not connected)");
         continue;
       }
-      unilink::log_message("serial", "TX", line);
+      common::log_message("serial", "TX", line);
       serial->send_line(line);
     }
   }
