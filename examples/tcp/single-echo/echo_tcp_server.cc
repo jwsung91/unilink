@@ -44,6 +44,8 @@ class EchoServer {
         running_.store(false);
         // Call shutdown immediately to notify clients
         shutdown();
+        // Exit immediately after shutdown to prevent double shutdown
+        std::exit(0);
       } else {
         // Force exit if already shutting down
         logger_.warning("server", "signal", "Force exit...");
