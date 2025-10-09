@@ -1,108 +1,95 @@
 # Unilink Examples
 
-This directory contains examples for the `unilink` library. The examples demonstrate a simple chat application where users can exchange text messages over TCP or Serial connections.
+This directory contains various examples demonstrating how to use the unilink library for different communication protocols and common functionality.
 
-All log messages are timestamped in the format `YYYY-MM-DD HH:MM:SS.mmm [TAG] [TX/RX] ...`.
+## Structure
 
----
+- **serial/**: Serial communication examples
+- **tcp/**: TCP communication examples  
+- **common/**: Common functionality examples
 
-## Requirements (Ubuntu)
+## Quick Start
 
-In addition to the main library requirements, `socat` is needed for the serial chat example.
-
+### Serial Communication
 ```bash
-sudo apt update && sudo apt install -y socat
+# Serial echo server
+cd serial/echo
+./echo_serial /dev/ttyUSB0 115200
 
-# Grant serial port access (requires logout/login to take effect)
-sudo usermod -a -G dialout $USER
+# Serial chat
+cd serial/chat
+./chat_serial /dev/ttyUSB0 115200
 ```
 
----
-
-## How to Run
-
-First, build the project with examples enabled from the root directory:
-
+### TCP Communication
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=ON
-cmake --build build -j
+# TCP echo server
+cd tcp/echo
+./echo_tcp_server 9000
+
+# TCP echo client
+cd tcp/echo
+./echo_tcp_client 127.0.0.1 9000
+
+# TCP chat server
+cd tcp/chat
+./chat_tcp_server 9000
+
+# TCP chat client
+cd tcp/chat
+./chat_tcp_client 127.0.0.1 9000
 ```
 
-All executables will be in the `build/examples/` directory.
-
----
-
-## Example 1: TCP Chat
-
-This example demonstrates a client-server chat over TCP.
-
-### Run the Server
-
+### Common Functionality
 ```bash
-./build/examples/chat_tcp_server 9000
+# Logging example
+cd common
+./logging_example
+
+# Error handling example
+cd common
+./error_handling_example
 ```
 
-### Run the Client (in a new terminal)
+## Building Examples
 
 ```bash
-./build/examples/chat_tcp_client 127.0.0.1 9000
+# Build all examples
+mkdir build && cd build
+cmake ..
+make
+
+# Build specific example
+make echo_serial
+make chat_tcp_server
 ```
 
-### How to Use
+## Example Categories
 
-- Type a line of text in either console and press Enter to send it.
-- Received messages will be displayed with an `[RX]` tag.
-- Connection status changes are logged as `[server] state=...` or `[client] state=...`.
+### Serial Communication
+- **echo/**: Serial echo server that echoes received data
+- **chat/**: Serial chat application for interactive communication
 
-> **Note:** TCP is a stream-based protocol. The examples parse messages line by line, using `\n` as a delimiter.
+### TCP Communication
+- **echo/**: TCP echo server and client for network echo testing
+- **chat/**: TCP chat server and client for network chat
+- **multi-chat/**: Multi-client TCP chat server and client
 
----
+### Common Functionality
+- **logging_example**: Demonstrates logging system usage
+- **error_handling_example**: Shows error handling system usage
 
-## Example 2: Serial Chat (using virtual TTYs)
+## Prerequisites
 
-This example shows how to communicate between two serial ports. We use `socat` to create a virtual serial port pair for testing.
+- C++17 or later
+- CMake 3.10 or later
+- Boost libraries (for TCP functionality)
+- Serial port access (for serial examples)
 
-### 1. Create Virtual Serial Ports
+## Platform Notes
 
-Open a terminal and run `socat`. Keep this process running to act as a bridge.
+- **Linux**: Use `/dev/ttyUSB0`, `/dev/ttyACM0` for serial ports
+- **Windows**: Use `COM3`, `COM4` for serial ports
+- **macOS**: Use `/dev/tty.usbserial-*` for serial ports
 
-```bash
-socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
-```
-
-### 2. Run Two Chat Instances
-
-Open two new terminals and run the chat program on each, pointing to one of the virtual ports.
-
-```bash
-# In Terminal 2
-./build/examples/chat_serial /tmp/ttyA
-
-# In Terminal 3
-./build/examples/chat_serial /tmp/ttyB
-```
-
-### 3. How to Use
-
-- Type a message in one terminal and press Enter. It will appear in the other terminal.
-- Connection status is logged as `[serial] state=...`.
-
----
-
-## Troubleshooting
-
-- **No data received on serial chat:**
-
-  - Ensure the `socat` process is still running.
-  - Double-check that you are using the correct device paths (`/tmp/ttyA`, `/tmp/ttyB`).
-
-- **Permission denied for serial port:**
-
-  - Make sure you have logged out and back in after adding your user to the `dialout` group.
-
-- **Serial device path changes (e.g., `/dev/ttyUSB0` to `/dev/ttyUSB1`):**
-  - To avoid issues with changing device paths, it is recommended to use a stable symlink, such as those found in `/dev/serial/by-id/`.
-
----
-
-All example applications can be terminated with **Ctrl+C**.
+For detailed information about each example, see the README.md files in each subdirectory.
