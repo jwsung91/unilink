@@ -38,6 +38,23 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
 
   auto server = std::make_unique<wrapper::TcpServer>(port_);
 
+  // Apply client limit configuration
+  std::cout << "DEBUG: Builder - client_limit_set_=" << client_limit_set_ << ", max_clients_=" << max_clients_
+            << std::endl;
+  if (client_limit_set_) {
+    if (max_clients_ == 0) {
+      // Unlimited clients
+      std::cout << "DEBUG: Setting unlimited clients" << std::endl;
+      server->set_unlimited_clients();
+    } else {
+      // Limited clients
+      std::cout << "DEBUG: Setting client limit to " << max_clients_ << std::endl;
+      server->set_client_limit(max_clients_);
+    }
+  } else {
+    std::cout << "DEBUG: No client limit set!" << std::endl;
+  }
+
   // Apply configuration
   if (auto_start_) {
     server->auto_start(true);

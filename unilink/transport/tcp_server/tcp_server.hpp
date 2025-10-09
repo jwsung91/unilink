@@ -1,34 +1,34 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <thread>
 #include <vector>
-#include <mutex>
-#include <algorithm>
 
+#include "unilink/common/error_handler.hpp"
+#include "unilink/common/logger.hpp"
+#include "unilink/common/thread_safe_state.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
-#include "unilink/common/thread_safe_state.hpp"
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
 
 namespace unilink {
 namespace transport {
 
 namespace net = boost::asio;
 
-using interface::Channel;
-using interface::TcpAcceptorInterface;
 using common::LinkState;
 using common::ThreadSafeLinkState;
 using config::TcpServerConfig;
+using interface::Channel;
+using interface::TcpAcceptorInterface;
 using tcp = net::ip::tcp;
 
 class TcpServer : public Channel,
@@ -53,15 +53,19 @@ class TcpServer : public Channel,
   void send_to_client(size_t client_id, const std::string& message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
-  
+
   // 멀티 클라이언트 콜백 타입 정의
   using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
   using MultiClientDataHandler = std::function<void(size_t client_id, const std::string& data)>;
   using MultiClientDisconnectHandler = std::function<void(size_t client_id)>;
-  
+
   void on_multi_connect(MultiClientConnectHandler handler);
   void on_multi_data(MultiClientDataHandler handler);
   void on_multi_disconnect(MultiClientDisconnectHandler handler);
+
+  // 클라이언트 제한 설정
+  void set_client_limit(size_t max_clients);
+  void set_unlimited_clients();
 
  private:
   void do_accept();
@@ -76,11 +80,15 @@ class TcpServer : public Channel,
 
   std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
   TcpServerConfig cfg_;
-  
+
   // 멀티 클라이언트 지원
   std::vector<std::shared_ptr<TcpServerSession>> sessions_;
   mutable std::mutex sessions_mutex_;
-  
+
+  // 클라이언트 제한 설정
+  size_t max_clients_;
+  bool client_limit_enabled_;
+
   // 기존 API 호환성을 위한 현재 활성 세션
   std::shared_ptr<TcpServerSession> current_session_;
 
