@@ -23,11 +23,26 @@ class ChatServer {
     logger_.set_console_output(true);
   }
 
+  ~ChatServer() {
+    // Ensure cleanup in destructor
+    if (server_) {
+      try {
+        server_->stop();
+        server_.reset();
+      } catch (...) {
+        // Ignore errors during destruction
+      }
+    }
+  }
+
   void signal_handler(int signal) {
     if (signal == SIGINT || signal == SIGTERM) {
       if (running_.load()) {
         logger_.info("server", "signal", "Received shutdown signal");
         running_.store(false);
+        // Force immediate shutdown
+        shutdown();
+        std::exit(0);
       } else {
         // Force exit if already shutting down
         logger_.warning("server", "signal", "Force exit...");
@@ -182,14 +197,31 @@ class ChatServer {
       logger_.info("server", "shutdown", "Notified all clients about shutdown");
 
       // Give clients time to receive messages
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+      // Force disconnect all clients first
+      try {
+        // Send final disconnect message to all clients
+        server_->broadcast("[Server] Server is shutting down. Please disconnect.");
+        logger_.info("server", "shutdown", "Sent final disconnect message to all clients");
+      } catch (...) {
+        logger_.warning("server", "shutdown", "Error sending disconnect message");
+      }
 
       // Stop server
-      server_->stop();
-      logger_.info("server", "shutdown", "Server stopped");
+      try {
+        server_->stop();
+        logger_.info("server", "shutdown", "Server stopped");
+      } catch (...) {
+        logger_.warning("server", "shutdown", "Error stopping server");
+      }
+
+      // Clear server pointer to ensure cleanup
+      server_.reset();
+      logger_.info("server", "shutdown", "Server pointer cleared");
 
       // Wait for server cleanup
-      std::this_thread::sleep_for(std::chrono::milliseconds(200));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     logger_.info("server", "shutdown", "Server shutdown complete");
   }
@@ -244,5 +276,7 @@ int main(int argc, char** argv) {
   // Shutdown the server
   chat_server.shutdown();
 
+  // Force cleanup and exit
+  std::cout << "Server process exiting..." << std::endl;
   return 0;
 }

@@ -25,11 +25,26 @@ class ChatClient {
     logger_.set_console_output(true);
   }
 
+  ~ChatClient() {
+    // Ensure cleanup in destructor
+    if (client_) {
+      try {
+        client_->stop();
+        client_.reset();
+      } catch (...) {
+        // Ignore errors during destruction
+      }
+    }
+  }
+
   void signal_handler(int signal) {
     if (signal == SIGINT || signal == SIGTERM) {
       if (running_.load()) {
         logger_.info("client", "signal", "Received shutdown signal");
         running_.store(false);
+        // Force immediate shutdown
+        shutdown();
+        std::exit(0);
       } else {
         // Force exit if already shutting down
         logger_.warning("client", "signal", "Force exit...");
@@ -166,11 +181,19 @@ class ChatClient {
     logger_.info("client", "shutdown", "Shutting down client...");
 
     if (client_) {
-      client_->stop();
-      logger_.info("client", "shutdown", "Client stopped");
+      try {
+        client_->stop();
+        logger_.info("client", "shutdown", "Client stopped");
+      } catch (...) {
+        logger_.warning("client", "shutdown", "Error stopping client");
+      }
+
+      // Clear client pointer to ensure cleanup
+      client_.reset();
+      logger_.info("client", "shutdown", "Client pointer cleared");
     }
 
-    logger_.info("client", "shu tdown", "Client shutdown complete");
+    logger_.info("client", "shutdown", "Client shutdown complete");
   }
 
   void print_info() const {
@@ -221,5 +244,7 @@ int main(int argc, char** argv) {
   // Shutdown the client
   chat_client.shutdown();
 
+  // Force cleanup and exit
+  std::cout << "Client process exiting..." << std::endl;
   return 0;
 }
