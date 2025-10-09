@@ -72,9 +72,17 @@ class SerialChatApp {
 };
 
 int main(int argc, char** argv) {
-  std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
+  if (argc < 3) {
+    std::cout << "Usage: " << argv[0] << " <device> <baud_rate>" << std::endl;
+    std::cout << "Example: " << argv[0] << " /dev/ttyUSB0 115200" << std::endl;
+    std::cout << "Example: " << argv[0] << " COM3 9600" << std::endl;
+    return 1;
+  }
 
-  SerialChatApp app(dev, 115200);
+  std::string dev = argv[1];
+  uint32_t baud_rate = static_cast<uint32_t>(std::stoi(argv[2]));
+
+  SerialChatApp app(dev, baud_rate);
   app.run();
 
   return 0;
