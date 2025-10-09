@@ -7,47 +7,75 @@
 
 #include "unilink/unilink.hpp"
 
+/**
+ * @brief Chat application class for serial communication
+ *
+ * This class demonstrates member function binding for serial chat functionality.
+ */
+class SerialChatApp {
+ public:
+  SerialChatApp(const std::string& device, uint32_t baud_rate)
+      : device_(device), baud_rate_(baud_rate), connected_(false) {}
+
+  void run() {
+    // Using convenience function with member function pointers
+    auto ul = unilink::serial(device_, baud_rate_)
+                  .auto_start(false)
+                  .on_connect(this, &SerialChatApp::handle_connect)
+                  .on_disconnect(this, &SerialChatApp::handle_disconnect)
+                  .on_data(this, &SerialChatApp::handle_data)
+                  .on_error(this, &SerialChatApp::handle_error)
+                  .build();
+
+    // Start input thread
+    std::thread input_thread([this, &ul] { this->input_loop(ul.get()); });
+
+    // Start the serial connection
+    ul->start();
+
+    // Wait for input thread to finish
+    input_thread.join();
+    ul->stop();
+  }
+
+ private:
+  // Member function callbacks - these can be bound directly to the builder
+  void handle_connect() {
+    unilink::log_message("serial", "STATE", "Serial device connected");
+    connected_ = true;
+  }
+
+  void handle_disconnect() {
+    unilink::log_message("serial", "STATE", "Serial device disconnected");
+    connected_ = false;
+  }
+
+  void handle_data(const std::string& data) { unilink::log_message("serial", "RX", data); }
+
+  void handle_error(const std::string& error) { unilink::log_message("serial", "ERROR", error); }
+
+  void input_loop(unilink::wrapper::Serial* serial) {
+    std::string line;
+    while (std::getline(std::cin, line)) {
+      if (!connected_.load()) {
+        unilink::log_message("serial", "INFO", "(not connected)");
+        continue;
+      }
+      unilink::log_message("serial", "TX", line);
+      serial->send_line(line);
+    }
+  }
+
+  std::string device_;
+  uint32_t baud_rate_;
+  std::atomic<bool> connected_;
+};
+
 int main(int argc, char** argv) {
   std::string dev = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
 
-  std::atomic<bool> connected{false};
-
-  // Using convenience function for configuration
-  auto ul = unilink::serial(dev, 115200)
-      .auto_start(false)
-      .on_connect([&]() {
-          unilink::log_message("[serial]", "STATE", "Serial device connected");
-          connected = true;
-      })
-      .on_disconnect([&]() {
-          unilink::log_message("[serial]", "STATE", "Serial device disconnected");
-          connected = false;
-      })
-      .on_data([&](const std::string& data) {
-          unilink::log_message("[serial]", "RX", data);
-      })
-      .on_error([&](const std::string& error) {
-          unilink::log_message("[serial]", "ERROR", error);
-      })
-      .build();
-
-  // 입력 쓰레드: stdin 한 줄 읽어서 포트로 전송
-  std::thread input_thread([&ul, &connected] {
-    std::string line;
-    while (std::getline(std::cin, line)) {
-      if (!connected.load()) {
-        unilink::log_message("[serial]", "INFO", "(not connected)");
-        continue;
-      }
-      unilink::log_message("[serial]", "TX", line);
-      ul->send_line(line);
-    }
-  });
-
-  ul->start();
-
-  input_thread.join();
-  ul->stop();
+  SerialChatApp app(dev, 115200);
+  app.run();
 
   return 0;
 }

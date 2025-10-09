@@ -7,46 +7,72 @@
 
 #include "unilink/unilink.hpp"
 
-int main(int argc, char** argv) {
-  std::string host = (argc > 1) ? argv[1] : "127.0.0.1";
-  unsigned short port =
-      (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
+/**
+ * @brief Chat application class for TCP client
+ *
+ * This class demonstrates member function binding for TCP client chat functionality.
+ */
+class TcpClientChatApp {
+ public:
+  TcpClientChatApp(const std::string& host, unsigned short port) : host_(host), port_(port), connected_(false) {}
 
-  std::atomic<bool> connected{false};
+  void run() {
+    // Using convenience function with member function pointers
+    auto ul = unilink::tcp_client(host_, port_)
+                  .auto_start(false)
+                  .on_connect(this, &TcpClientChatApp::handle_connect)
+                  .on_disconnect(this, &TcpClientChatApp::handle_disconnect)
+                  .on_data(this, &TcpClientChatApp::handle_data)
+                  .build();
 
-  // Using convenience function for configuration
-  auto ul = unilink::tcp_client(host, port)
-      .auto_start(false)
-      .on_connect([&]() {
-          unilink::log_message("[client]", "STATE", "Connected");
-          connected = true;
-      })
-      .on_disconnect([&]() {
-          unilink::log_message("[client]", "STATE", "Disconnected");
-          connected = false;
-      })
-      .on_data([&](const std::string& data) {
-          unilink::log_message("[client]", "RX", data);
-      })
-      .build();
+    // Start input thread
+    std::thread input_thread([this, &ul] { this->input_loop(ul.get()); });
 
-  // 입력 쓰레드: stdin 한 줄 읽어서 서버로 전송
-  std::thread input_thread([&ul, &connected] {
+    // Start the client connection
+    ul->start();
+
+    // Wait for input thread to finish
+    input_thread.join();
+    ul->stop();
+  }
+
+ private:
+  // Member function callbacks - these can be bound directly to the builder
+  void handle_connect() {
+    unilink::log_message("client", "STATE", "Connected");
+    connected_ = true;
+  }
+
+  void handle_disconnect() {
+    unilink::log_message("client", "STATE", "Disconnected");
+    connected_ = false;
+  }
+
+  void handle_data(const std::string& data) { unilink::log_message("client", "RX", data); }
+
+  void input_loop(unilink::wrapper::TcpClient* client) {
     std::string line;
     while (std::getline(std::cin, line)) {
-      if (!connected.load()) {
-        unilink::log_message("[client]", "INFO", "(not connected)");
+      if (!connected_.load()) {
+        unilink::log_message("client", "INFO", "(not connected)");
         continue;
       }
-      unilink::log_message("[client]", "TX", line);
-      ul->send_line(line);
+      unilink::log_message("client", "TX", line);
+      client->send_line(line);
     }
-  });
+  }
 
-  ul->start();
+  std::string host_;
+  unsigned short port_;
+  std::atomic<bool> connected_;
+};
 
-  input_thread.join();
-  ul->stop();
+int main(int argc, char** argv) {
+  std::string host = (argc > 1) ? argv[1] : "127.0.0.1";
+  unsigned short port = (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
+
+  TcpClientChatApp app(host, port);
+  app.run();
 
   return 0;
 }
