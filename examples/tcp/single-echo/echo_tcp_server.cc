@@ -42,9 +42,8 @@ class EchoServer {
       if (running_.load()) {
         logger_.info("server", "signal", "Received shutdown signal");
         running_.store(false);
-        // Force immediate shutdown
+        // Call shutdown immediately to notify clients
         shutdown();
-        std::exit(0);
       } else {
         // Force exit if already shutting down
         logger_.warning("server", "signal", "Force exit...");
@@ -176,6 +175,15 @@ class EchoServer {
 
       // Give client time to receive message
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+      // Force disconnect all clients first
+      try {
+        // Send final disconnect message to all clients
+        server_->send("[Server] Server is shutting down. Please disconnect.");
+        logger_.info("server", "shutdown", "Sent final disconnect message to client");
+      } catch (...) {
+        logger_.warning("server", "shutdown", "Error sending disconnect message");
+      }
 
       // Stop server
       try {
