@@ -282,11 +282,10 @@ TEST_F(MockIntegrationTest, SimulatedErrorScenarios) {
     MockTestScenario::ConnectionResult result;
   };
 
-  std::vector<ErrorTestCase> test_cases = {
-      {MockTestScenario::ConnectionResult::ConnectionRefused, "connection_refused"},
-      {MockTestScenario::ConnectionResult::Timeout, "timed_out"},
-      {MockTestScenario::ConnectionResult::NetworkUnreachable, "network_unreachable"},
-      {MockTestScenario::ConnectionResult::PermissionDenied, "permission_denied"}};
+  std::vector<ErrorTestCase> test_cases = {{MockTestScenario::ConnectionResult::ConnectionRefused},
+                                           {MockTestScenario::ConnectionResult::Timeout},
+                                           {MockTestScenario::ConnectionResult::NetworkUnreachable},
+                                           {MockTestScenario::ConnectionResult::PermissionDenied}};
 
   for (const auto& test_case : test_cases) {
     // Reset state for each test case

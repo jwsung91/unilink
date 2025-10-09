@@ -177,6 +177,11 @@ TEST_F(MemoryTest, MemoryPoolStatistics) {
 class LogRotationTest : public ::testing::Test {
  protected:
   void SetUp() override {
+    // Generate unique test file prefix to avoid conflicts in parallel execution
+    auto now = std::chrono::high_resolution_clock::now();
+    auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+    test_file_prefix_ = "test_rotation_" + std::to_string(timestamp);
+
     // Clean up any existing test files
     cleanup_test_files();
 
@@ -195,10 +200,11 @@ class LogRotationTest : public ::testing::Test {
   }
 
   void cleanup_test_files() {
-    // Remove test log files
-    std::vector<std::string> test_files = {"test_rotation.log",   "test_rotation.0.log", "test_rotation.1.log",
-                                           "test_rotation.2.log", "test_rotation.3.log", "test_rotation.4.log",
-                                           "test_rotation.5.log"};
+    // Remove test log files with unique prefix
+    std::vector<std::string> test_files = {test_file_prefix_ + ".log",   test_file_prefix_ + ".0.log",
+                                           test_file_prefix_ + ".1.log", test_file_prefix_ + ".2.log",
+                                           test_file_prefix_ + ".3.log", test_file_prefix_ + ".4.log",
+                                           test_file_prefix_ + ".5.log"};
 
     for (const auto& file : test_files) {
       if (std::filesystem::exists(file)) {
@@ -206,6 +212,8 @@ class LogRotationTest : public ::testing::Test {
       }
     }
   }
+
+  std::string test_file_prefix_;
 
   size_t count_log_files(const std::string& base_name) {
     size_t count = 0;
@@ -244,7 +252,7 @@ TEST_F(LogRotationTest, FileSizeBasedRotation) {
   config.max_file_size_bytes = 512;  // 512 bytes
   config.max_files = 5;
 
-  common::Logger::instance().set_file_output_with_rotation("test_rotation.log", config);
+  common::Logger::instance().set_file_output_with_rotation(test_file_prefix_ + ".log", config);
 
   // Generate enough log data to trigger rotation
   for (int i = 0; i < 20; ++i) {
@@ -261,8 +269,8 @@ TEST_F(LogRotationTest, FileSizeBasedRotation) {
   EXPECT_GE(file_count, 1) << "At least one log file should exist";
 
   // Check if files are within size limits
-  if (std::filesystem::exists("test_rotation.log")) {
-    size_t current_size = get_file_size("test_rotation.log");
+  if (std::filesystem::exists(test_file_prefix_ + ".log")) {
+    size_t current_size = get_file_size(test_file_prefix_ + ".log");
     EXPECT_LE(current_size, config.max_file_size_bytes * 2) << "Current log file should be reasonable size";
   }
 }
@@ -273,7 +281,7 @@ TEST_F(LogRotationTest, FileCountLimit) {
   config.max_file_size_bytes = 256;  // 256 bytes
   config.max_files = 2;              // Only keep 2 files
 
-  common::Logger::instance().set_file_output_with_rotation("test_rotation.log", config);
+  common::Logger::instance().set_file_output_with_rotation(test_file_prefix_ + ".log", config);
 
   // Generate lots of log data to trigger multiple rotations
   for (int i = 0; i < 50; ++i) {
@@ -298,7 +306,7 @@ TEST_F(LogRotationTest, LogRotationManagerDirectTest) {
   common::LogRotation rotation(config);
 
   // Create a test file
-  std::string test_file = "test_rotation.log";
+  std::string test_file = test_file_prefix_ + ".log";
   std::ofstream file(test_file);
   file << "Test data to make file larger than 100 bytes. ";
   file << "This should be enough to trigger rotation when we check.";
@@ -313,11 +321,11 @@ TEST_F(LogRotationTest, LogRotationManagerDirectTest) {
   EXPECT_EQ(new_path, test_file) << "Should return original path for new log file";
 
   // Check that rotated file exists
-  EXPECT_TRUE(std::filesystem::exists("test_rotation.0.log")) << "Rotated file should exist";
+  EXPECT_TRUE(std::filesystem::exists(test_file_prefix_ + ".0.log")) << "Rotated file should exist";
 
   // Clean up
   std::filesystem::remove(test_file);
-  std::filesystem::remove("test_rotation.0.log");
+  std::filesystem::remove(test_file_prefix_ + ".0.log");
 }
 
 TEST_F(LogRotationTest, LogRotationWithoutRotation) {
@@ -326,7 +334,7 @@ TEST_F(LogRotationTest, LogRotationWithoutRotation) {
   config.max_file_size_bytes = 1024 * 1024;  // 1MB - very large
   config.max_files = 5;
 
-  common::Logger::instance().set_file_output_with_rotation("test_rotation.log", config);
+  common::Logger::instance().set_file_output_with_rotation(test_file_prefix_ + ".log", config);
 
   // Generate small amount of log data
   for (int i = 0; i < 5; ++i) {
@@ -340,8 +348,8 @@ TEST_F(LogRotationTest, LogRotationWithoutRotation) {
   EXPECT_EQ(file_count, 1) << "Should only have one file when size limit not reached";
 
   // File should exist and be small
-  EXPECT_TRUE(std::filesystem::exists("test_rotation.log"));
-  size_t file_size = get_file_size("test_rotation.log");
+  EXPECT_TRUE(std::filesystem::exists(test_file_prefix_ + ".log"));
+  size_t file_size = get_file_size(test_file_prefix_ + ".log");
   EXPECT_LT(file_size, config.max_file_size_bytes) << "File should be smaller than rotation threshold";
 }
 
@@ -352,6 +360,11 @@ TEST_F(LogRotationTest, LogRotationWithoutRotation) {
 class AsyncLoggingTest : public ::testing::Test {
  protected:
   void SetUp() override {
+    // Generate unique test file prefix to avoid conflicts in parallel execution
+    auto now = std::chrono::high_resolution_clock::now();
+    auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+    test_file_prefix_ = "async_test_" + std::to_string(timestamp);
+
     // Clean up any existing test files
     cleanup_test_files();
 
@@ -371,9 +384,9 @@ class AsyncLoggingTest : public ::testing::Test {
   }
 
   void cleanup_test_files() {
-    // Remove test log files
-    std::vector<std::string> test_files = {"async_test.log", "async_test.0.log", "async_test.1.log",
-                                           "async_test.2.log"};
+    // Remove test log files with unique prefix
+    std::vector<std::string> test_files = {test_file_prefix_ + ".log", test_file_prefix_ + ".0.log",
+                                           test_file_prefix_ + ".1.log", test_file_prefix_ + ".2.log"};
 
     for (const auto& file : test_files) {
       if (std::filesystem::exists(file)) {
@@ -381,6 +394,8 @@ class AsyncLoggingTest : public ::testing::Test {
       }
     }
   }
+
+  std::string test_file_prefix_;
 
   size_t get_file_size(const std::string& filename) {
     if (std::filesystem::exists(filename)) {
@@ -431,13 +446,15 @@ TEST_F(AsyncLoggingTest, AsyncLoggingEnabled) {
 }
 
 TEST_F(AsyncLoggingTest, AsyncLoggingWithFileOutput) {
+  std::string log_filename = test_file_prefix_ + ".log";
+
   // Setup async logging with file output
   common::AsyncLogConfig config;
   config.max_queue_size = 1000;
   config.batch_size = 20;
   config.flush_interval = std::chrono::milliseconds(100);
 
-  common::Logger::instance().set_file_output("async_test.log");
+  common::Logger::instance().set_file_output(log_filename);
   common::Logger::instance().set_async_logging(true, config);
 
   // Generate log messages
@@ -449,8 +466,8 @@ TEST_F(AsyncLoggingTest, AsyncLoggingWithFileOutput) {
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
   // Check that file was created and has content
-  EXPECT_TRUE(std::filesystem::exists("async_test.log"));
-  size_t file_size = get_file_size("async_test.log");
+  EXPECT_TRUE(std::filesystem::exists(log_filename));
+  size_t file_size = get_file_size(log_filename);
   EXPECT_GT(file_size, 0) << "Log file should have content";
 
   // Check statistics
