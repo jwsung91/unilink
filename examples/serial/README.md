@@ -35,7 +35,9 @@ cd serial/echo
 ./echo_serial /tmp/ttyA 115200
 
 # Terminal 3: Connect to second port
-socat - /tmp/ttyB
+cd serial/echo
+./echo_serial /tmp/ttyB 115200
+
 # Type messages and see them echoed back
 ```
 
@@ -46,7 +48,9 @@ cd serial/chat
 ./chat_serial /tmp/ttyA 115200
 
 # Terminal 3: Connect to second port
-socat - /tmp/ttyB
+cd serial/chat
+./chat_serial /tmp/ttyB 115200
+
 # Start chatting between terminals
 ```
 

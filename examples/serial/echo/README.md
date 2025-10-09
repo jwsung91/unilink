@@ -51,7 +51,8 @@ socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
 ./echo_serial /tmp/ttyA 115200
 
 # Terminal 3: Connect to second port
-socat - /tmp/ttyB
+./echo_serial /tmp/ttyB 115200
+
 # Type messages and see them echoed back
 ```
 

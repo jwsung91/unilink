@@ -66,7 +66,8 @@ socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
 ./chat_serial /tmp/ttyA 115200
 
 # Terminal 3: Connect to second port
-socat - /tmp/ttyB
+./chat_serial /tmp/ttyB 115200
+
 # Start chatting between terminals
 ```
 
