@@ -18,17 +18,16 @@ target_link_libraries(chat_tcp_server PRIVATE interface::unilink)
 add_executable(chat_serial chat/chat_serial.cc)
 target_link_libraries(chat_serial PRIVATE interface::unilink)
 
-# 새로운 로깅 및 에러 처리 예제
 add_executable(logging_example logging_example.cc)
 target_link_libraries(logging_example PRIVATE interface::unilink)
 
 add_executable(error_handling_example error_handling_example.cc)
 target_link_libraries(error_handling_example PRIVATE interface::unilink)
 
-# 멀티 클라이언트 예제
-add_executable(multi_client_chat_server advanced/multi_client_chat_server.cc)
-target_link_libraries(multi_client_chat_server PRIVATE interface::unilink)
+add_executable(multi_chat_tcp_server multi_chat/multi_chat_tcp_server.cc)
+target_link_libraries(multi_chat_tcp_server PRIVATE interface::unilink)
 
-add_executable(multi_client_chat_client advanced/multi_client_chat_client.cc)
-target_link_libraries(multi_client_chat_client PRIVATE interface::unilink)
+add_executable(multi_chat_tcp_client multi_chat/multi_chat_tcp_client.cc)
+target_link_libraries(multi_chat_tcp_client PRIVATE interface::unilink)
+
 
