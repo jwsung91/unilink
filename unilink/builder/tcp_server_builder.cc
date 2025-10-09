@@ -103,13 +103,28 @@ TcpServerBuilder& TcpServerBuilder::on_data(std::function<void(const std::string
   return *this;
 }
 
+TcpServerBuilder& TcpServerBuilder::on_data(std::function<void(size_t, const std::string&)> handler) {
+  on_multi_data_ = std::move(handler);
+  return *this;
+}
+
 TcpServerBuilder& TcpServerBuilder::on_connect(std::function<void()> handler) {
   on_connect_ = std::move(handler);
   return *this;
 }
 
+TcpServerBuilder& TcpServerBuilder::on_connect(std::function<void(size_t, const std::string&)> handler) {
+  on_multi_connect_ = std::move(handler);
+  return *this;
+}
+
 TcpServerBuilder& TcpServerBuilder::on_disconnect(std::function<void()> handler) {
   on_disconnect_ = std::move(handler);
+  return *this;
+}
+
+TcpServerBuilder& TcpServerBuilder::on_disconnect(std::function<void(size_t)> handler) {
+  on_multi_disconnect_ = std::move(handler);
   return *this;
 }
 

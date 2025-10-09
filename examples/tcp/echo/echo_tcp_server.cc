@@ -101,11 +101,11 @@ class EchoServer {
                   .single_client()  // Use new API
                   .auto_start(false)
                   .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
-                  .on_multi_connect([this](size_t client_id, const std::string& client_ip) {
+                  .on_connect([this](size_t client_id, const std::string& client_ip) {
                     on_multi_connect(client_id, client_ip);
                   })
-                  .on_multi_disconnect([this](size_t client_id) { on_multi_disconnect(client_id); })
-                  .on_multi_data([this](size_t client_id, const std::string& data) { on_multi_data(client_id, data); })
+                  .on_disconnect([this](size_t client_id) { on_multi_disconnect(client_id); })
+                  .on_data([this](size_t client_id, const std::string& data) { on_multi_data(client_id, data); })
                   .on_error([this](const std::string& error) { on_error(error); })
                   .build();
 

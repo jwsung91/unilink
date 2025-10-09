@@ -43,11 +43,18 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
   TcpServerBuilder& auto_manage(bool auto_manage = true) override;
 
   /**
-   * @brief Set data handler callback
+   * @brief Set data handler callback (simple version)
    * @param handler Function to handle incoming data
    * @return TcpServerBuilder& Reference to this builder for method chaining
    */
   TcpServerBuilder& on_data(std::function<void(const std::string&)> handler) override;
+
+  /**
+   * @brief Set data handler callback (with client info)
+   * @param handler Function to handle incoming data with client ID
+   * @return TcpServerBuilder& Reference to this builder for method chaining
+   */
+  TcpServerBuilder& on_data(std::function<void(size_t, const std::string&)> handler);
 
   /**
    * @brief Set data handler callback using member function pointer
@@ -63,11 +70,18 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
   }
 
   /**
-   * @brief Set connection handler callback
+   * @brief Set connection handler callback (simple version)
    * @param handler Function to handle connection events
    * @return TcpServerBuilder& Reference to this builder for method chaining
    */
   TcpServerBuilder& on_connect(std::function<void()> handler) override;
+
+  /**
+   * @brief Set connection handler callback (with client info)
+   * @param handler Function to handle connection events with client ID and IP
+   * @return TcpServerBuilder& Reference to this builder for method chaining
+   */
+  TcpServerBuilder& on_connect(std::function<void(size_t, const std::string&)> handler);
 
   /**
    * @brief Set connection handler callback using member function pointer
@@ -83,11 +97,18 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
   }
 
   /**
-   * @brief Set disconnection handler callback
+   * @brief Set disconnection handler callback (simple version)
    * @param handler Function to handle disconnection events
    * @return TcpServerBuilder& Reference to this builder for method chaining
    */
   TcpServerBuilder& on_disconnect(std::function<void()> handler) override;
+
+  /**
+   * @brief Set disconnection handler callback (with client info)
+   * @param handler Function to handle disconnection events with client ID
+   * @return TcpServerBuilder& Reference to this builder for method chaining
+   */
+  TcpServerBuilder& on_disconnect(std::function<void(size_t)> handler);
 
   /**
    * @brief Set disconnection handler callback using member function pointer

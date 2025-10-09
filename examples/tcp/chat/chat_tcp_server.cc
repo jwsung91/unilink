@@ -29,9 +29,9 @@ class TcpServerChatApp {
                   .single_client()  // Single client chat
                   .auto_start(false)
                   .enable_port_retry(true, 3, 1000)  // 3회 재시도, 1초 간격
-                  .on_connect(this, &TcpServerChatApp::handle_connect)
-                  .on_disconnect(this, &TcpServerChatApp::handle_disconnect)
-                  .on_data(this, &TcpServerChatApp::handle_data)
+                  .on_connect([this]() { handle_connect(); })
+                  .on_disconnect([this]() { handle_disconnect(); })
+                  .on_data([this](const std::string& data) { handle_data(data); })
                   .build();
 
     // Start input thread
