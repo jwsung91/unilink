@@ -80,8 +80,9 @@ class ChatServer {
   }
 
   bool start() {
-    // Create TCP server
+    // Create TCP server with 10 client limit
     server_ = unilink::tcp_server(port_)
+                  .multi_client(10)  // Limit to 10 clients
                   .auto_start(false)
                   .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
                   .on_multi_connect(
