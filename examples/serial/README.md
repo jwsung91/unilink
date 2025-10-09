@@ -17,11 +17,85 @@ sudo chmod 666 /dev/ttyUSB0
 # COM3, COM4, etc.
 ```
 
+## Testing with socat (Virtual Serial Ports)
+
+For testing without physical serial devices, you can use socat to create virtual serial port pairs:
+
+### Setup Virtual Serial Ports
+```bash
+# Terminal 1: Create virtual serial pair
+socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
+# Creates: /tmp/ttyA <-> /tmp/ttyB
+```
+
+### Test Echo Server
+```bash
+# Terminal 2: Run echo server on first port
+cd serial/echo
+./echo_serial /tmp/ttyA 115200
+
+# Terminal 3: Connect to second port
+socat - /tmp/ttyB
+# Type messages and see them echoed back
+```
+
+### Test Chat Application
+```bash
+# Terminal 2: Run chat server on first port
+cd serial/chat
+./chat_serial /tmp/ttyA 115200
+
+# Terminal 3: Connect to second port
+socat - /tmp/ttyB
+# Start chatting between terminals
+```
+
+### Advanced socat Testing
+```bash
+# Create multiple virtual ports with fixed paths
+socat -d -d pty,raw,echo=0,link=/tmp/ttyA1 pty,raw,echo=0,link=/tmp/ttyB1 &
+socat -d -d pty,raw,echo=0,link=/tmp/ttyA2 pty,raw,echo=0,link=/tmp/ttyB2 &
+
+# Test with different baud rates
+socat -d -d pty,raw,echo=0,link=/tmp/ttyA,ispeed=9600,ospeed=9600 pty,raw,echo=0,link=/tmp/ttyB,ispeed=9600,ospeed=9600
+```
+
 ## Prerequisites
 
-- Serial port device connected
+- Serial port device connected (or socat for virtual testing)
 - Appropriate permissions to access serial port
 - Matching baud rate between device and application
+
+### Installing socat for Virtual Testing
+
+#### Ubuntu/Debian
+```bash
+sudo apt update
+sudo apt install socat
+```
+
+#### CentOS/RHEL/Fedora
+```bash
+sudo yum install socat
+# or
+sudo dnf install socat
+```
+
+#### macOS
+```bash
+brew install socat
+```
+
+#### Windows
+```bash
+# Via WSL (Windows Subsystem for Linux)
+wsl --install
+# Then in WSL:
+sudo apt install socat
+
+# Or via Cygwin
+# Download and install Cygwin, then install socat package
+```
 
 ## Troubleshooting
 

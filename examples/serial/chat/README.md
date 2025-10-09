@@ -54,6 +54,22 @@ Hello, this is a test message
    - Received messages will be displayed automatically
    - Type `Ctrl+C` to exit
 
+## Testing with socat (Virtual Serial Ports)
+
+### Setup Virtual Serial Ports
+```bash
+# Terminal 1: Create virtual serial pair
+socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
+# Creates: /tmp/ttyA <-> /tmp/ttyB
+
+# Terminal 2: Run chat application on first port
+./chat_serial /tmp/ttyA 115200
+
+# Terminal 3: Connect to second port
+socat - /tmp/ttyB
+# Start chatting between terminals
+```
+
 ## Testing with Two Devices
 
 ### Setup

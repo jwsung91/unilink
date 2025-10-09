@@ -19,6 +19,16 @@ cd serial/echo
 # Serial chat
 cd serial/chat
 ./chat_serial /dev/ttyUSB0 115200
+
+# Testing with socat (virtual serial ports)
+# Terminal 1: Create virtual serial pair
+socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
+
+# Terminal 2: Run echo server on first port
+./echo_serial /tmp/ttyA 115200
+
+# Terminal 3: Connect to second port
+socat - /tmp/ttyB
 ```
 
 ### TCP Communication
@@ -85,6 +95,73 @@ make chat_tcp_server
 - CMake 3.10 or later
 - Boost libraries (for TCP functionality)
 - Serial port access (for serial examples)
+
+### Required Tools Installation
+
+#### Ubuntu/Debian
+```bash
+# Install build tools
+sudo apt update
+sudo apt install build-essential cmake
+
+# Install Boost libraries
+sudo apt install libboost-all-dev
+
+# Install socat for serial testing
+sudo apt install socat
+
+# Install serial port tools
+sudo apt install minicom screen
+```
+
+#### CentOS/RHEL/Fedora
+```bash
+# Install build tools
+sudo yum groupinstall "Development Tools"
+sudo yum install cmake
+
+# Install Boost libraries
+sudo yum install boost-devel
+
+# Install socat for serial testing
+sudo yum install socat
+
+# Install serial port tools
+sudo yum install minicom screen
+```
+
+#### macOS
+```bash
+# Install Homebrew (if not already installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install build tools
+brew install cmake
+
+# Install Boost libraries
+brew install boost
+
+# Install socat for serial testing
+brew install socat
+
+# Install serial port tools
+brew install minicom
+```
+
+#### Windows
+```bash
+# Install vcpkg (package manager)
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.bat
+./vcpkg integrate install
+
+# Install Boost libraries
+./vcpkg install boost
+
+# Install socat (via WSL or Cygwin)
+# Or use PuTTY for serial communication
+```
 
 ## Platform Notes
 

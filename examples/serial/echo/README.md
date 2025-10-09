@@ -41,6 +41,20 @@ A serial echo server that receives data from a serial port and echoes it back to
 
 ## Testing
 
+### Using socat (Virtual Serial Ports)
+```bash
+# Terminal 1: Create virtual serial pair
+socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
+# Creates: /tmp/ttyA <-> /tmp/ttyB
+
+# Terminal 2: Run echo server
+./echo_serial /tmp/ttyA 115200
+
+# Terminal 3: Connect to second port
+socat - /tmp/ttyB
+# Type messages and see them echoed back
+```
+
 ### Using a Serial Terminal
 1. Connect a serial device (Arduino, USB-to-Serial adapter, etc.)
 2. Run the echo server: `./echo_serial /dev/ttyUSB0 115200`
