@@ -19,14 +19,14 @@ WORKDIR /app
 # Copy source code
 COPY . .
 
-# Configure and build
-RUN rm -rf build && mkdir build && cd build && \
-    cmake .. \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DUNILINK_ENABLE_CONFIG=ON \
-        -DBUILD_EXAMPLES=ON \
-        -DBUILD_TESTING=OFF && \
-    cmake --build . -j $(nproc)
+        # Configure and build
+        RUN rm -rf build && mkdir build && cd build && \
+            cmake .. \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DUNILINK_ENABLE_CONFIG=ON \
+                -DBUILD_EXAMPLES=ON \
+                -DBUILD_TESTING=ON && \
+            cmake --build . -j $(nproc)
 
 # Generate documentation
 RUN cd build && make docs || true
