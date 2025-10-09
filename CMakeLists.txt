@@ -24,6 +24,7 @@ endif()
 
 option(BUILD_TESTING "Build tests" ON)
 option(UNILINK_ENABLE_SANITIZERS "Enable AddressSanitizer and other sanitizers" OFF)
+option(BUILD_DOCUMENTATION "Build documentation with Doxygen" ON)
 
 if(BUILD_TESTING)
   enable_testing()
@@ -51,5 +52,41 @@ if(UNILINK_ENABLE_SANITIZERS)
     message(STATUS "AddressSanitizer, UndefinedBehaviorSanitizer, and LeakSanitizer enabled")
   else()
     message(WARNING "Sanitizers are only supported with GCC and Clang")
+  endif()
+endif()
+
+# Documentation generation with Doxygen
+if(BUILD_DOCUMENTATION)
+  find_package(Doxygen)
+  if(DOXYGEN_FOUND)
+    # Create docs directory
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs)
+    
+    # Configure Doxygen
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/config/Doxyfile)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_SOURCE_DIR}/docs/config/Doxyfile)
+    
+    # Add custom target for documentation
+    add_custom_target(docs
+      COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/docs/config/Doxyfile
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMENT "Generating API documentation with Doxygen"
+      VERBATIM
+    )
+    
+    # Add install target for documentation
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/html/
+      DESTINATION share/doc/unilink/html
+      OPTIONAL
+    )
+    
+    message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}")
+    message(STATUS "Documentation target 'docs' available")
+  else()
+    message(WARNING "Doxygen not found. Documentation will not be generated.")
+    message(STATUS "Install Doxygen to enable documentation generation:")
+    message(STATUS "  Ubuntu/Debian: sudo apt install doxygen")
+    message(STATUS "  CentOS/RHEL: sudo yum install doxygen")
+    message(STATUS "  macOS: brew install doxygen")
   endif()
 endif()
