@@ -35,7 +35,7 @@ class TestUtils {
     uint16_t port = port_counter.fetch_add(1);
 
     // Ensure port is in valid range and avoid system ports
-    if (port < 30000 || port > 65535) {
+    if (port < 30000) {
       port_counter.store(30000);
       port = 30000;
     }
