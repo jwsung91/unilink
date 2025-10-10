@@ -51,8 +51,8 @@ jobs:
         # Capture coverage data
         lcov --directory . --capture --output-file coverage.info
         
-        # Remove unwanted files
-        lcov --remove coverage.info '/usr/*' '*/test/*' '*/googletest/*' '*/examples/*' \
+        # Extract only unilink source code (more accurate than --remove)
+        lcov --extract coverage.info '*/unilink/*' \
           --output-file coverage_filtered.info
         
         # Generate summary

@@ -51,7 +51,7 @@ jobs:
       run: |
         cd build-coverage
         lcov --directory . --capture --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' '*/test/*' '*/googletest/*' '*/examples/*' \
+        lcov --extract coverage.info '*/unilink/*' \
           --output-file coverage_filtered.info
         
         # Generate HTML with custom title
