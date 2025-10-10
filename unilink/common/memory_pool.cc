@@ -134,18 +134,16 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
 void MemoryPool::release_to_bucket(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer) {
   std::lock_guard<std::mutex> lock(bucket.mutex_);
 
-  // 빈 슬롯 찾기
-  for (size_t i = 0; i < bucket.buffers_.size(); ++i) {
-    if (bucket.buffers_[i] == nullptr) {
-      bucket.buffers_[i] = std::move(buffer);
-      bucket.free_indices_.push(i);
-      return;
-    }
+  // 버퍼를 다시 풀에 추가하고 free_indices에 인덱스 추가
+  if (bucket.buffers_.size() < bucket.buffers_.capacity()) {
+    // 기존 벡터 크기 내에서 추가
+    size_t index = bucket.buffers_.size();
+    bucket.buffers_.push_back(std::move(buffer));
+    bucket.free_indices_.push(index);
+  } else {
+    // 풀이 가득 찼으면 버퍼를 버림 (자동 해제)
+    // buffer는 unique_ptr이므로 스코프를 벗어나면 자동 삭제됨
   }
-
-  // 새 슬롯 추가
-  bucket.buffers_.push_back(std::move(buffer));
-  bucket.free_indices_.push(bucket.buffers_.size() - 1);
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) { return std::make_unique<uint8_t[]>(size); }
