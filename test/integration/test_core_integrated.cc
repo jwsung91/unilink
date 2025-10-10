@@ -46,7 +46,7 @@ class CoreIntegratedTest : public ::testing::Test {
   void TearDown() override {
     // Clean up any test state
     // Increased wait time to ensure complete cleanup and avoid port conflicts
-    TestUtils::waitFor(500);
+    TestUtils::waitFor(1000);
   }
 
   uint16_t test_port_;

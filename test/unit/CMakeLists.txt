@@ -18,11 +18,21 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
       ${CMAKE_SOURCE_DIR}/test/utils
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
-  gtest_discover_tests(run_unit_${test_name}
-    PROPERTIES
-      LABELS "unit;common;fast"
-      TIMEOUT 30
-  )
+  # Mark test_core tests to use resource lock to avoid file I/O conflicts
+  if(test_name STREQUAL "test_core")
+    gtest_discover_tests(run_unit_${test_name}
+      PROPERTIES
+        LABELS "unit;common;fast"
+        TIMEOUT 30
+        RESOURCE_LOCK "log_file_io"
+    )
+  else()
+    gtest_discover_tests(run_unit_${test_name}
+      PROPERTIES
+        LABELS "unit;common;fast"
+        TIMEOUT 30
+    )
+  endif()
 endforeach()
 
 # Builder tests (separate executables)

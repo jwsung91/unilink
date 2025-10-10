@@ -40,8 +40,8 @@ class BuilderIntegrationTest : public ::testing::Test {
     }
 
     // 충분한 시간을 두고 정리 완료 보장
-    // TIME_WAIT 상태에서도 포트 충돌 방지를 위해 500ms 대기
-    std::this_thread::sleep_for(500ms);
+    // TIME_WAIT 상태에서도 포트 충돌 방지를 위해 1000ms 대기
+    std::this_thread::sleep_for(1000ms);
   }
 
   // 테스트용 포트 번호 - TestUtils의 통합 포트 할당 사용

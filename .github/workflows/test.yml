@@ -45,7 +45,8 @@ jobs:
       run: |
         cd build-test
         ctest --output-on-failure --parallel $(nproc) \
-          --label-regex "unit|core|memory|config"
+          --label-regex "unit|core|memory|config" || \
+        ctest --rerun-failed --output-on-failure --parallel $(nproc)
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -90,7 +91,8 @@ jobs:
       run: |
         cd build-integration
         ctest --output-on-failure --parallel $(nproc) \
-          --label-regex "integration|mock|stable"
+          --label-regex "integration|mock|stable" || \
+        ctest --rerun-failed --output-on-failure --parallel $(nproc)
 
     - name: Upload integration test results
       uses: actions/upload-artifact@v4

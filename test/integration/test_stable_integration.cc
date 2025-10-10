@@ -53,7 +53,7 @@ class StableIntegrationTest : public ::testing::Test {
 
     // Wait for cleanup to complete
     // Increased wait time to ensure complete cleanup and avoid port conflicts
-    TestUtils::waitFor(500);
+    TestUtils::waitFor(1000);
   }
 
   // Test objects

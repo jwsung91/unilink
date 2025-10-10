@@ -18,11 +18,21 @@ foreach(test_file test_integration.cc test_simple_server.cc test_client_limit_in
       ${CMAKE_SOURCE_DIR}/test/utils
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
-  gtest_discover_tests(run_integration_${test_name}
-    PROPERTIES
-      LABELS "integration;tcp;medium"
-      TIMEOUT 60
-  )
+  # Mark test_integration to use resource lock to avoid port conflicts
+  if(test_name STREQUAL "test_integration")
+    gtest_discover_tests(run_integration_${test_name}
+      PROPERTIES
+        LABELS "integration;tcp;medium"
+        TIMEOUT 60
+        RESOURCE_LOCK "tcp_port_allocation"
+    )
+  else()
+    gtest_discover_tests(run_integration_${test_name}
+      PROPERTIES
+        LABELS "integration;tcp;medium"
+        TIMEOUT 60
+    )
+  endif()
 endforeach()
 
 # Serial integration tests
@@ -91,9 +101,20 @@ foreach(test_file test_builder_integration.cc test_stable_integration.cc test_co
       ${CMAKE_SOURCE_DIR}/test/utils
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
-  gtest_discover_tests(run_integration_${test_name}
-    PROPERTIES
-      LABELS "integration;general;medium"
-      TIMEOUT 60
-  )
+  # Mark test_builder_integration and test_stable_integration to use resource lock
+  # to avoid port timing conflicts when running in parallel
+  if(test_name STREQUAL "test_builder_integration" OR test_name STREQUAL "test_stable_integration")
+    gtest_discover_tests(run_integration_${test_name}
+      PROPERTIES
+        LABELS "integration;general;medium"
+        TIMEOUT 60
+        RESOURCE_LOCK "tcp_port_allocation"
+    )
+  else()
+    gtest_discover_tests(run_integration_${test_name}
+      PROPERTIES
+        LABELS "integration;general;medium"
+        TIMEOUT 60
+    )
+  endif()
 endforeach()
