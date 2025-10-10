@@ -24,7 +24,7 @@ jobs:
       run: |
         find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
         grep -v -E "(build|cmake|CMake)" | \
-        xargs clang-format --style=file --dry-run || echo "clang-format check completed with warnings"
+        xargs clang-format --style=file --dry-run --Werror
 
   # Static Analysis with cppcheck
   static-analysis:
@@ -64,7 +64,7 @@ jobs:
           --suppress=unusedStructMember \
           --xml --xml-version=2 \
           --output-file=cppcheck-results.xml \
-          --error-exitcode=0 \
+          --error-exitcode=1 \
           unilink/ examples/ test/
 
     - name: Upload cppcheck results
