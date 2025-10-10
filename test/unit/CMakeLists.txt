@@ -48,22 +48,25 @@ foreach(test_file test_builder.cc test_builder_coverage.cc)
   )
 endforeach()
 
-# Config tests (separate executable)
-add_executable(run_unit_test_config config/test_config.cc)
-target_link_libraries(run_unit_test_config
-  PRIVATE
-    unilink
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-target_include_directories(run_unit_test_config
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-gtest_discover_tests(run_unit_test_config
-  PROPERTIES
-    LABELS "unit;config;fast"
-    TIMEOUT 30
-)
+# Config tests (separate executables)
+foreach(test_file test_config.cc test_config_coverage.cc)
+  get_filename_component(test_name ${test_file} NAME_WE)
+  add_executable(run_unit_${test_name} config/${test_file})
+  target_link_libraries(run_unit_${test_name}
+    PRIVATE
+      unilink
+      GTest::gtest
+      GTest::gtest_main
+      GTest::gmock
+  )
+  target_include_directories(run_unit_${test_name}
+    PRIVATE
+      ${CMAKE_SOURCE_DIR}/test/utils
+      ${CMAKE_SOURCE_DIR}/test/fixtures
+  )
+  gtest_discover_tests(run_unit_${test_name}
+    PROPERTIES
+      LABELS "unit;config;fast"
+      TIMEOUT 30
+  )
+endforeach()
