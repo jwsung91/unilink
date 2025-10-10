@@ -4,6 +4,7 @@
 #include "unilink/common/exceptions.hpp"
 #include "unilink/common/input_validator.hpp"
 #include "unilink/common/io_context_manager.hpp"
+#include "unilink/common/logger.hpp"
 
 namespace unilink {
 namespace builder {
@@ -49,20 +50,21 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   auto server = std::make_unique<wrapper::TcpServer>(port_);
 
   // Apply client limit configuration
-  std::cout << "DEBUG: Builder - client_limit_set_=" << client_limit_set_ << ", max_clients_=" << max_clients_
-            << std::endl;
+  UNILINK_LOG_DEBUG(
+      "tcp_server_builder", "build",
+      "client_limit_set=" + std::to_string(client_limit_set_) + ", max_clients=" + std::to_string(max_clients_));
   if (client_limit_set_) {
     if (max_clients_ == 0) {
       // Unlimited clients
-      std::cout << "DEBUG: Setting unlimited clients" << std::endl;
+      UNILINK_LOG_DEBUG("tcp_server_builder", "build", "Setting unlimited clients");
       server->set_unlimited_clients();
     } else {
       // Limited clients
-      std::cout << "DEBUG: Setting client limit to " << max_clients_ << std::endl;
+      UNILINK_LOG_DEBUG("tcp_server_builder", "build", "Setting client limit to " + std::to_string(max_clients_));
       server->set_client_limit(max_clients_);
     }
   } else {
-    std::cout << "DEBUG: No client limit set!" << std::endl;
+    UNILINK_LOG_DEBUG("tcp_server_builder", "build", "No client limit set");
   }
 
   // Apply configuration
@@ -105,10 +107,11 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   }
 
   // Port retry configuration
-  std::cout << "DEBUG: enable_port_retry_ = " << enable_port_retry_ << std::endl;
+  UNILINK_LOG_DEBUG("tcp_server_builder", "build", "enable_port_retry=" + std::to_string(enable_port_retry_));
   if (enable_port_retry_) {
-    std::cout << "DEBUG: Setting port retry: max=" << max_port_retries_ << ", interval=" << port_retry_interval_ms_
-              << std::endl;
+    UNILINK_LOG_DEBUG("tcp_server_builder", "build",
+                      "Setting port retry: max=" + std::to_string(max_port_retries_) +
+                          ", interval=" + std::to_string(port_retry_interval_ms_) + "ms");
     server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
   }
 

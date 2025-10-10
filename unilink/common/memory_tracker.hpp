@@ -63,6 +63,10 @@ class MemoryTracker {
   void print_memory_report() const;
   void print_leak_report() const;
 
+  // Logger-based reporting (recommended for production)
+  void log_memory_report() const;
+  void log_leak_report() const;
+
  private:
   MemoryTracker() = default;
   ~MemoryTracker() = default;

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "unilink/common/logger.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -147,6 +149,58 @@ void MemoryTracker::print_leak_report() const {
   }
 
   std::cout << "Total leaked bytes: " << total_leaked_bytes << std::endl;
+}
+
+void MemoryTracker::log_memory_report() const {
+  auto stats = get_stats();
+  auto current_allocations = get_current_allocations();
+
+  std::ostringstream oss;
+  oss << "\n=== Memory Tracker Report ===\n";
+  oss << "Total allocations: " << stats.total_allocations << "\n";
+  oss << "Total deallocations: " << stats.total_deallocations << "\n";
+  oss << "Current allocations: " << stats.current_allocations << "\n";
+  oss << "Peak allocations: " << stats.peak_allocations << "\n";
+  oss << "Total bytes allocated: " << stats.total_bytes_allocated << "\n";
+  oss << "Total bytes deallocated: " << stats.total_bytes_deallocated << "\n";
+  oss << "Current bytes allocated: " << stats.current_bytes_allocated << "\n";
+  oss << "Peak bytes allocated: " << stats.peak_bytes_allocated << "\n";
+  oss << "Current active allocations: " << current_allocations.size();
+
+  UNILINK_LOG_INFO("memory_tracker", "report", oss.str());
+
+  if (!current_allocations.empty()) {
+    std::ostringstream alloc_oss;
+    alloc_oss << "\n=== Current Allocations ===\n";
+    for (const auto& alloc : current_allocations) {
+      alloc_oss << "Ptr: " << alloc.ptr << ", Size: " << alloc.size << ", File: " << alloc.file << ":" << alloc.line
+                << ", Function: " << alloc.function << "\n";
+    }
+    UNILINK_LOG_INFO("memory_tracker", "allocations", alloc_oss.str());
+  }
+}
+
+void MemoryTracker::log_leak_report() const {
+  auto leaked_allocations = get_leaked_allocations();
+
+  if (leaked_allocations.empty()) {
+    UNILINK_LOG_INFO("memory_tracker", "leak_check", "No Memory Leaks Detected");
+    return;
+  }
+
+  std::ostringstream oss;
+  oss << "\n=== Memory Leak Report ===\n";
+  oss << "Found " << leaked_allocations.size() << " potential memory leaks:\n";
+
+  size_t total_leaked_bytes = 0;
+  for (const auto& alloc : leaked_allocations) {
+    oss << "Leaked: " << alloc.size << " bytes at " << alloc.ptr << " allocated in " << alloc.file << ":" << alloc.line
+        << " (" << alloc.function << ")\n";
+    total_leaked_bytes += alloc.size;
+  }
+
+  oss << "Total leaked bytes: " << total_leaked_bytes;
+  UNILINK_LOG_ERROR("memory_tracker", "leak_check", oss.str());
 }
 
 // ScopedMemoryTracker implementation

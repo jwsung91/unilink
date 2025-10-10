@@ -4,6 +4,8 @@
 #include <future>
 #include <iostream>
 
+#include "unilink/common/logger.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -46,7 +48,7 @@ void IoContextManager::start() {
     try {
       ioc_->run();
     } catch (const std::exception& e) {
-      std::cerr << "IoContextManager thread error: " << e.what() << std::endl;
+      UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
     }
   });
 
