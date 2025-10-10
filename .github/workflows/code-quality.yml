@@ -15,24 +15,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install clang-format
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y clang-format
-
-    - name: Check code formatting
-      run: |
-        echo "=== clang-format version ==="
-        clang-format --version
-        echo "=== .clang-format file ==="
-        cat .clang-format
-        echo "=== Files to check ==="
-        find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
-        grep -v -E "(build|cmake|CMake)" | head -10
-        echo "=== Running clang-format check ==="
-        find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
-        grep -v -E "(build|cmake|CMake)" | \
-        xargs clang-format --style=file --dry-run --Werror
+    - name: Run clang-format style check
+      uses: jidicula/clang-format-action@v4.13.0
+      with:
+        clang-format-version: '18'  # Use latest clang-format version
+        check-path: '.'             # Check current directory
+        fallback-style: 'Google'    # Fallback style if .clang-format not found
+        exclude: 'build*'           # Exclude build directories
 
   # Static Analysis with cppcheck
   static-analysis:
