@@ -120,14 +120,8 @@ TEST_F(AdvancedOptimizationsTest, HealthMonitoringBasicFunctionality) {
   auto health_metrics = pool_->get_health_metrics();
 
   // Health metrics should have valid values
-  EXPECT_GE(health_metrics.pool_utilization, 0.0);
-  EXPECT_LE(health_metrics.pool_utilization, 1.0);
   EXPECT_GE(health_metrics.hit_rate, 0.0);
   EXPECT_LE(health_metrics.hit_rate, 1.0);
-  EXPECT_GE(health_metrics.memory_efficiency, 0.0);
-  EXPECT_LE(health_metrics.memory_efficiency, 1.0);
-  EXPECT_GE(health_metrics.performance_score, 0.0);
-  EXPECT_LE(health_metrics.performance_score, 1.0);
 }
 
 TEST_F(AdvancedOptimizationsTest, HealthMonitoringThresholds) {
@@ -143,13 +137,10 @@ TEST_F(AdvancedOptimizationsTest, HealthMonitoringThresholds) {
 
   // Check health metrics
   auto health_metrics = pool_->get_health_metrics();
-  EXPECT_GE(health_metrics.pool_utilization, 0.0);
-  EXPECT_LE(health_metrics.pool_utilization, 1.0);
   EXPECT_GE(health_metrics.hit_rate, 0.0);
   EXPECT_LE(health_metrics.hit_rate, 1.0);
 
-  std::cout << "Pool utilization: " << health_metrics.pool_utilization << ", Hit rate: " << health_metrics.hit_rate
-            << std::endl;
+  std::cout << "Hit rate: " << health_metrics.hit_rate << std::endl;
 }
 
 TEST_F(AdvancedOptimizationsTest, HealthMonitoringPerformance) {
@@ -177,8 +168,8 @@ TEST_F(AdvancedOptimizationsTest, HealthMonitoringPerformance) {
 
   // Check health metrics
   auto health_metrics = pool_->get_health_metrics();
-  EXPECT_GE(health_metrics.pool_utilization, 0.0);
-  EXPECT_LE(health_metrics.pool_utilization, 1.0);
+  EXPECT_GE(health_metrics.hit_rate, 0.0);
+  EXPECT_LE(health_metrics.hit_rate, 1.0);
 
   std::cout << "Performance: " << avg_time_per_operation << " μs per operation" << std::endl;
 }
@@ -196,13 +187,10 @@ TEST_F(AdvancedOptimizationsTest, HealthMonitoringAlertGeneration) {
 
   // Check health metrics
   auto health_metrics = pool_->get_health_metrics();
-  EXPECT_GE(health_metrics.pool_utilization, 0.0);
-  EXPECT_LE(health_metrics.pool_utilization, 1.0);
   EXPECT_GE(health_metrics.hit_rate, 0.0);
   EXPECT_LE(health_metrics.hit_rate, 1.0);
 
-  std::cout << "Health metrics after operations - Utilization: " << health_metrics.pool_utilization
-            << ", Hit rate: " << health_metrics.hit_rate << std::endl;
+  std::cout << "Health metrics after operations - Hit rate: " << health_metrics.hit_rate << std::endl;
 }
 
 // ============================================================================

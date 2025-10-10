@@ -1,0 +1,13 @@
+# cppcheck 설정 파일
+# 헤더와 구현 파일을 함께 분석하도록 설정
+
+# 사용되는 멤버들에 대한 경고 억제
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:82
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:83
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:30
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:31
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:36
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:70
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:71
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:159
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:160

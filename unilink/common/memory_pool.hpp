@@ -25,36 +25,15 @@ namespace common {
  */
 class MemoryPool {
  public:
+  // Basic statistics
   struct PoolStats {
-    // Simplified core statistics only
     size_t total_allocations{0};
     size_t pool_hits{0};
-    size_t pool_misses{0};
-    size_t current_pool_size{0};
-    size_t max_pool_size{0};
   };
 
-  // Simplified health monitoring
+  // Basic health metrics
   struct HealthMetrics {
-    double pool_utilization{0.0};
     double hit_rate{0.0};
-    double memory_efficiency{0.0};
-    double performance_score{0.0};
-  };
-
-  // Simplified buffer info structure
-  struct BufferInfo {
-    std::unique_ptr<uint8_t[]> data;
-    size_t size{0};
-    std::chrono::steady_clock::time_point last_used{};
-    bool in_use{false};
-    BufferInfo* next_free{nullptr};
-
-    BufferInfo() = default;
-    BufferInfo(BufferInfo&& other) noexcept;
-    BufferInfo& operator=(BufferInfo&& other) noexcept;
-    BufferInfo(const BufferInfo&) = delete;
-    BufferInfo& operator=(const BufferInfo&) = delete;
   };
 
   // Predefined buffer sizes for common use cases
@@ -86,23 +65,14 @@ class MemoryPool {
   HealthMetrics get_health_metrics() const;
 
  private:
-  // Simplified pool bucket structure
-  struct alignas(64) PoolBucket {
-    std::vector<BufferInfo> buffers_;
+  // Simple pool bucket
+  struct PoolBucket {
+    std::vector<std::unique_ptr<uint8_t[]>> buffers_;
     std::queue<size_t> free_indices_;
     mutable std::mutex mutex_;
     size_t size_;
 
-    // Lock-free support for large pools
-    std::vector<std::unique_ptr<uint8_t[]>> lock_free_pool_;
-    std::atomic<size_t> lock_free_index_{0};
-    std::atomic<size_t> lock_free_allocated_{0};
-    bool use_lock_free_{false};
-
-    // Usage time tracking for cleanup
-    std::vector<std::chrono::steady_clock::time_point> last_used_times_;
-
-    PoolBucket() : size_{0}, use_lock_free_{false} {}
+    PoolBucket() : size_{0} {}
     PoolBucket(PoolBucket&& other) noexcept;
     PoolBucket& operator=(PoolBucket&& other) noexcept;
     PoolBucket(const PoolBucket&) = delete;
@@ -110,32 +80,20 @@ class MemoryPool {
   };
 
   std::array<PoolBucket, 4> buckets_;  // For SMALL, MEDIUM, LARGE, XLARGE
-  size_t max_pool_size_;               // Total max buffers across all buckets
-  PoolStats stats_;                    // Centralized simplified statistics
-
-  // Constants
-  static constexpr size_t ALIGNMENT_SIZE = 64;
-  static constexpr size_t ALIGNMENT_THRESHOLD = 4096;         // Only align buffers >= 4KB
-  static constexpr size_t LOCK_FREE_THRESHOLD = 1000;         // Use lock-free for pools >= 1000 buffers
-  static constexpr size_t LOCK_FREE_POOL_INITIAL_SIZE = 100;  // Initial size for lock-free pool
+  PoolStats stats_;                    // Basic statistics
 
   // Helper functions
   PoolBucket& get_bucket(size_t size);
   size_t get_bucket_index(size_t size) const;
 
   // Allocation functions
-  std::unique_ptr<uint8_t[]> acquire_with_lock(PoolBucket& bucket);
-  std::unique_ptr<uint8_t[]> acquire_lock_free(PoolBucket& bucket);
+  std::unique_ptr<uint8_t[]> acquire_from_bucket(PoolBucket& bucket);
   std::unique_ptr<uint8_t[]> create_buffer(size_t size);
-  std::unique_ptr<uint8_t[]> create_aligned_buffer(size_t size);
 
   // Release functions
-  void release_with_lock(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer);
-  void release_lock_free(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer);
+  void release_to_bucket(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer);
 
   // Utility functions
-  bool should_use_lock_free(size_t pool_size) const;
-  bool should_use_aligned_allocation(size_t size) const;
   void validate_size(size_t size) const;
 };
 

@@ -217,7 +217,6 @@ TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
   // Get initial stats
   auto initial_stats = pool.get_stats();
   std::cout << "Initial pool hits: " << initial_stats.pool_hits << std::endl;
-  std::cout << "Initial pool misses: " << initial_stats.pool_misses << std::endl;
 
   auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -246,8 +245,7 @@ TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
   // Get final stats
   auto final_stats = pool.get_stats();
   size_t total_hits = final_stats.pool_hits - initial_stats.pool_hits;
-  size_t total_misses = final_stats.pool_misses - initial_stats.pool_misses;
-  size_t total_allocations = total_hits + total_misses;
+  size_t total_allocations = final_stats.total_allocations - initial_stats.total_allocations;
   double hit_rate = total_allocations > 0 ? (100.0 * total_hits) / total_allocations : 0.0;
 
   double throughput = calculateThroughput(num_cycles * buffers_per_cycle * 2, duration);
@@ -256,7 +254,7 @@ TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
   std::cout << "Buffers per cycle: " << formatNumber(buffers_per_cycle) << std::endl;
   std::cout << "Total allocations: " << formatNumber(total_allocations) << std::endl;
   std::cout << "Pool hits: " << formatNumber(total_hits) << std::endl;
-  std::cout << "Pool misses: " << formatNumber(total_misses) << std::endl;
+  std::cout << "Pool misses: " << formatNumber(total_allocations - total_hits) << std::endl;
   std::cout << "Hit rate: " << std::fixed << std::setprecision(2) << hit_rate << "%" << std::endl;
   std::cout << "Duration: " << formatDuration(duration) << std::endl;
   std::cout << "Throughput: " << std::fixed << std::setprecision(2) << throughput << " ops/sec" << std::endl;
