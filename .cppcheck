@@ -1,0 +1,18 @@
+# cppcheck 설정 파일
+# 메모리풀 관련 false positive 경고 억제
+
+# MemoryPool 클래스 멤버들 (실제로 사용됨)
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:82
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:83
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:30
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:31
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:36
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:70
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:71
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:159
+suppress=unusedStructMember:unilink/common/memory_pool.hpp:160
+
+# GoogleTest 관련 false positive 억제
+suppress=missingInclude:test/
+suppress=unusedFunction:test/
+suppress=unusedStructMember:test/

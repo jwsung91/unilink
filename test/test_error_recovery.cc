@@ -484,7 +484,7 @@ TEST_F(ErrorRecoveryTest, MemoryAllocationFailureHandling) {
   }
 
   // 2. 최대 허용 크기 테스트 (할당 실패 가능성)
-  const size_t max_allowed_size = MemoryPool::MAX_BUFFER_SIZE;
+  const size_t max_allowed_size = 64 * 1024 * 1024;  // 64MB
   auto max_buffer = pool.acquire(max_allowed_size);
 
   if (max_buffer == nullptr) {

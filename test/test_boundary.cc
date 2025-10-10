@@ -117,10 +117,10 @@ TEST_F(BoundaryTest, MemoryPoolPredefinedSizes) {
 
   // 모든 predefined buffer sizes 테스트
   std::vector<size_t> predefined_sizes = {
-      static_cast<size_t>(MemoryPool::BufferSize::SMALL),   // 1KB
-      static_cast<size_t>(MemoryPool::BufferSize::MEDIUM),  // 4KB
-      static_cast<size_t>(MemoryPool::BufferSize::LARGE),   // 16KB
-      static_cast<size_t>(MemoryPool::BufferSize::XLARGE)   // 64KB
+      1024,   // 1KB
+      4096,   // 4KB
+      16384,  // 16KB
+      65536   // 64KB
   };
 
   for (size_t size : predefined_sizes) {
@@ -144,7 +144,7 @@ TEST_F(BoundaryTest, MemoryPoolStatisticsBoundary) {
   // 초기 통계
   auto initial_stats = pool.get_stats();
   std::cout << "Initial stats - Allocations: " << initial_stats.total_allocations
-            << ", Hits: " << initial_stats.pool_hits << ", Misses: " << initial_stats.pool_misses << std::endl;
+            << ", Hits: " << initial_stats.pool_hits << std::endl;
 
   // 대량 할당으로 통계 업데이트
   const int num_allocations = 1000;
@@ -162,7 +162,7 @@ TEST_F(BoundaryTest, MemoryPoolStatisticsBoundary) {
   auto mid_stats = pool.get_stats();
   EXPECT_GT(mid_stats.total_allocations, initial_stats.total_allocations);
   std::cout << "Mid stats - Allocations: " << mid_stats.total_allocations << ", Hits: " << mid_stats.pool_hits
-            << ", Misses: " << mid_stats.pool_misses << std::endl;
+            << std::endl;
 
   // 모든 버퍼 해제
   for (auto& buffer : buffers) {
@@ -173,7 +173,7 @@ TEST_F(BoundaryTest, MemoryPoolStatisticsBoundary) {
   auto final_stats = pool.get_stats();
   EXPECT_GT(final_stats.total_allocations, initial_stats.total_allocations);
   std::cout << "Final stats - Allocations: " << final_stats.total_allocations << ", Hits: " << final_stats.pool_hits
-            << ", Misses: " << final_stats.pool_misses << std::endl;
+            << std::endl;
 
   // Hit rate 계산
   double hit_rate = pool.get_hit_rate();
