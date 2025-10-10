@@ -35,7 +35,7 @@ class TestUtils {
     // Each test gets ports with 100-port gaps (30000, 30100, 30200, ...)
     // This ensures that even in heavy parallel execution, ports don't conflict
     static std::atomic<uint16_t> port_counter{30000};  // Start from higher port range
-    uint16_t port = port_counter.fetch_add(100);  // Skip 100 ports for each test
+    uint16_t port = port_counter.fetch_add(100);       // Skip 100 ports for each test
 
     // Ensure port is in valid range and avoid system ports
     if (port < 30000 || port > 60000) {
