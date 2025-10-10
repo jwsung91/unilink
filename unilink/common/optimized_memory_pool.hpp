@@ -53,15 +53,7 @@ class OptimizedMemoryPool {
    * @brief Get statistics for all pools
    * @return Combined statistics
    */
-  struct PoolStats {
-    size_t total_allocations = 0;
-    size_t pool_hits = 0;
-    size_t pool_misses = 0;
-    size_t current_pool_size = 0;
-    size_t max_pool_size = 0;
-  };
-
-  PoolStats get_stats() const;
+  MemoryPool::PoolStats get_stats() const;
 
   /**
    * @brief Get hit rate for all pools
@@ -80,7 +72,7 @@ class OptimizedMemoryPool {
    * @param category Size category
    * @return Statistics for the category
    */
-  PoolStats get_stats(SizeCategory category) const;
+  MemoryPool::PoolStats get_stats(SizeCategory category) const;
 
   /**
    * @brief Get hit rate for a specific size category
@@ -110,14 +102,7 @@ class OptimizedMemoryPool {
    * @brief Get health metrics for all pools
    * @return Combined health metrics
    */
-  struct HealthMetrics {
-    double pool_utilization = 0.0;
-    double hit_rate = 0.0;
-    double memory_efficiency = 0.0;
-    double performance_score = 0.0;
-  };
-
-  HealthMetrics get_health_metrics() const;
+  MemoryPool::HealthMetrics get_health_metrics() const;
 
  public:
   // Determine size category for a given buffer size (public for testing)

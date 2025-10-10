@@ -23,8 +23,8 @@ void OptimizedMemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size
   get_pool(category).release(std::move(buffer), size);
 }
 
-PoolStats OptimizedMemoryPool::get_stats() const {
-  PoolStats combined_stats{};
+MemoryPool::PoolStats OptimizedMemoryPool::get_stats() const {
+  MemoryPool::PoolStats combined_stats{};
 
   auto small_stats = small_pool_->get_stats();
   auto medium_stats = medium_pool_->get_stats();
@@ -56,7 +56,9 @@ std::pair<size_t, size_t> OptimizedMemoryPool::get_memory_usage() const {
           small_usage.second + medium_usage.second + large_usage.second};
 }
 
-PoolStats OptimizedMemoryPool::get_stats(SizeCategory category) const { return get_pool(category).get_stats(); }
+MemoryPool::PoolStats OptimizedMemoryPool::get_stats(SizeCategory category) const {
+  return get_pool(category).get_stats();
+}
 
 double OptimizedMemoryPool::get_hit_rate(SizeCategory category) const { return get_pool(category).get_hit_rate(); }
 
@@ -78,8 +80,8 @@ void OptimizedMemoryPool::auto_tune() {
   large_pool_->auto_tune();
 }
 
-HealthMetrics OptimizedMemoryPool::get_health_metrics() const {
-  HealthMetrics combined_metrics{};
+MemoryPool::HealthMetrics OptimizedMemoryPool::get_health_metrics() const {
+  MemoryPool::HealthMetrics combined_metrics{};
 
   auto small_health = small_pool_->get_health_metrics();
   auto medium_health = medium_pool_->get_health_metrics();
@@ -184,7 +186,7 @@ OptimizedPooledBuffer& OptimizedPooledBuffer::operator=(OptimizedPooledBuffer&& 
 
     buffer_ = std::move(other.buffer_);
     size_ = other.size_;
-    pool_ = other.pool_;
+    // pool_ is a reference, cannot be reassigned
 
     other.buffer_ = nullptr;
     other.size_ = 0;
