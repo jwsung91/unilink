@@ -13,6 +13,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/builder/unified_builder.hpp"
+#include "unilink/common/exceptions.hpp"
 #include "unilink/config/config_factory.hpp"
 #include "unilink/config/config_manager.hpp"
 
@@ -186,15 +187,13 @@ TEST_F(ConfigTest, ConfigValidationBoundaryValues) {
 TEST_F(ConfigTest, ConfigValidationInvalidValuesNetwork) {
   std::cout << "\n=== Configuration Validation Invalid Values Network Test ===" << std::endl;
 
-  // Test with invalid port (should still create object)
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).auto_start(false).build();
+  // Test with invalid port (should throw exception due to input validation)
+  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).auto_start(false).build(),
+               common::BuilderException);
 
-  EXPECT_NE(client, nullptr);
-
-  // Test with invalid host (should still create object)
-  auto client2 = UnifiedBuilder::tcp_client("", test_port_).auto_start(false).build();
-
-  EXPECT_NE(client2, nullptr);
+  // Test with invalid host (should throw exception due to input validation)
+  EXPECT_THROW(auto client2 = UnifiedBuilder::tcp_client("", test_port_).auto_start(false).build(),
+               common::BuilderException);
 }
 
 // ============================================================================

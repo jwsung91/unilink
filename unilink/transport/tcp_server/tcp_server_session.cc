@@ -34,7 +34,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
   if (!alive_) return;  // Don't queue writes if session is not alive
 
   // Use memory pool for better performance (only for reasonable sizes)
-  if (size <= 65536) {  // Only use pool for buffers <= 64KB
+  if (size <= common::constants::LARGE_BUFFER_THRESHOLD) {  // Only use pool for buffers <= 64KB
     common::PooledBuffer pooled_buffer(size);
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely

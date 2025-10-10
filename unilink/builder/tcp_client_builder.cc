@@ -1,6 +1,9 @@
 #include "unilink/builder/tcp_client_builder.hpp"
 
 #include "unilink/builder/auto_initializer.hpp"
+#include "unilink/common/constants.hpp"
+#include "unilink/common/exceptions.hpp"
+#include "unilink/common/input_validator.hpp"
 #include "unilink/common/io_context_manager.hpp"
 
 namespace unilink {
@@ -12,52 +15,87 @@ TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
       auto_start_(false),
       auto_manage_(false),
       use_independent_context_(false),
-      retry_interval_ms_(2000) {}
+      retry_interval_ms_(common::constants::DEFAULT_RETRY_INTERVAL_MS) {
+  // Validate input parameters
+  try {
+    common::InputValidator::validate_host(host_);
+    common::InputValidator::validate_port(port_);
+  } catch (const common::ValidationException& e) {
+    throw common::BuilderException("Invalid TCP client parameters: " + e.get_full_message(), "TcpClientBuilder",
+                                   "constructor");
+  }
+}
 
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
-  // IoContext management
-  if (use_independent_context_) {
-    // Use independent IoContext (for test isolation)
-    // Create independent context through IoContextManager
-    auto independent_context = common::IoContextManager::instance().create_independent_context();
-    // Currently maintaining default implementation, can be extended in future for wrapper to accept independent context
-  } else {
-    // Automatically initialize IoContextManager (default behavior)
-    AutoInitializer::ensure_io_context_running();
+  try {
+    // Final validation before building
+    common::InputValidator::validate_host(host_);
+    common::InputValidator::validate_port(port_);
+    common::InputValidator::validate_retry_interval(retry_interval_ms_);
+
+    // IoContext management
+    if (use_independent_context_) {
+      // Use independent IoContext (for test isolation)
+      // Create independent context through IoContextManager
+      auto independent_context = common::IoContextManager::instance().create_independent_context();
+      // Currently maintaining default implementation, can be extended in future for wrapper to accept independent
+      // context
+    } else {
+      // Automatically initialize IoContextManager (default behavior)
+      AutoInitializer::ensure_io_context_running();
+    }
+
+    auto client = std::make_unique<wrapper::TcpClient>(host_, port_);
+
+    // Apply configuration with exception safety
+    try {
+      if (auto_start_) {
+        client->auto_start(true);
+      }
+
+      if (auto_manage_) {
+        client->auto_manage(true);
+      }
+
+      // Set callbacks with exception safety
+      if (on_data_) {
+        client->on_data(on_data_);
+      }
+
+      if (on_connect_) {
+        client->on_connect(on_connect_);
+      }
+
+      if (on_disconnect_) {
+        client->on_disconnect(on_disconnect_);
+      }
+
+      if (on_error_) {
+        client->on_error(on_error_);
+      }
+
+      // Set retry interval
+      client->set_retry_interval(std::chrono::milliseconds(retry_interval_ms_));
+
+    } catch (const std::exception& e) {
+      // If configuration fails, ensure client is properly cleaned up
+      client.reset();
+      throw common::BuilderException("Failed to configure TCP client: " + std::string(e.what()), "TcpClientBuilder",
+                                     "build");
+    }
+
+    return client;
+
+  } catch (const common::ValidationException& e) {
+    throw common::BuilderException("Validation failed during TCP client build: " + e.get_full_message(),
+                                   "TcpClientBuilder", "build");
+  } catch (const std::bad_alloc& e) {
+    throw common::BuilderException("Memory allocation failed during TCP client build: " + std::string(e.what()),
+                                   "TcpClientBuilder", "build");
+  } catch (const std::exception& e) {
+    throw common::BuilderException("Unexpected error during TCP client build: " + std::string(e.what()),
+                                   "TcpClientBuilder", "build");
   }
-
-  auto client = std::make_unique<wrapper::TcpClient>(host_, port_);
-
-  // Apply configuration
-  if (auto_start_) {
-    client->auto_start(true);
-  }
-
-  if (auto_manage_) {
-    client->auto_manage(true);
-  }
-
-  // Set callbacks
-  if (on_data_) {
-    client->on_data(on_data_);
-  }
-
-  if (on_connect_) {
-    client->on_connect(on_connect_);
-  }
-
-  if (on_disconnect_) {
-    client->on_disconnect(on_disconnect_);
-  }
-
-  if (on_error_) {
-    client->on_error(on_error_);
-  }
-
-  // Set retry interval
-  client->set_retry_interval(std::chrono::milliseconds(retry_interval_ms_));
-
-  return client;
 }
 
 TcpClientBuilder& TcpClientBuilder::auto_start(bool auto_start) {
@@ -96,7 +134,13 @@ TcpClientBuilder& TcpClientBuilder::use_independent_context(bool use_independent
 }
 
 TcpClientBuilder& TcpClientBuilder::retry_interval(unsigned interval_ms) {
-  retry_interval_ms_ = interval_ms;
+  try {
+    common::InputValidator::validate_retry_interval(interval_ms);
+    retry_interval_ms_ = interval_ms;
+  } catch (const common::ValidationException& e) {
+    throw common::BuilderException("Invalid retry interval: " + e.get_full_message(), "TcpClientBuilder",
+                                   "retry_interval");
+  }
   return *this;
 }
 

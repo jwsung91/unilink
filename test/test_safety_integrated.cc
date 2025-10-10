@@ -11,6 +11,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/builder/unified_builder.hpp"
+#include "unilink/common/exceptions.hpp"
 #include "unilink/common/safe_data_buffer.hpp"
 
 using namespace unilink;
@@ -66,10 +67,9 @@ TEST_F(SafetyIntegratedTest, ApiSafetyNullPointers) {
  * @brief Test API safety with invalid parameters
  */
 TEST_F(SafetyIntegratedTest, ApiSafetyInvalidParameters) {
-  // Test with invalid port (should still create object)
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).auto_start(false).build();
-
-  EXPECT_NE(client, nullptr);
+  // Test with invalid port (should throw exception due to input validation)
+  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).auto_start(false).build(),
+               common::BuilderException);
 
   // Test with invalid host (should still create object)
   auto client2 = UnifiedBuilder::tcp_client("invalid.host", test_port_).auto_start(false).build();

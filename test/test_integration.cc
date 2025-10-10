@@ -10,6 +10,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/builder/auto_initializer.hpp"
+#include "unilink/common/exceptions.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -150,13 +151,12 @@ TEST_F(IntegrationTest, BasicCommunication) {
  * @brief Error handling tests
  */
 TEST_F(IntegrationTest, ErrorHandling) {
-  // Test invalid port
-  auto server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
-                    .unlimited_clients()                // 클라이언트 제한 없음
-                    .auto_start(false)
-                    .build();
-
-  EXPECT_NE(server, nullptr);
+  // Test invalid port (should throw exception due to input validation)
+  EXPECT_THROW(auto server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
+                                 .unlimited_clients()                // 클라이언트 제한 없음
+                                 .auto_start(false)
+                                 .build(),
+               common::BuilderException);
 
   // Test error callback
   std::atomic<bool> error_occurred{false};
@@ -293,17 +293,16 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
   std::atomic<bool> error_occurred{false};
   std::string error_message;
 
-  // Test invalid port
-  auto server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
-                    .unlimited_clients()                // 클라이언트 제한 없음
-                    .auto_start(false)
-                    .on_error([&error_occurred, &error_message](const std::string& error) {
-                      error_occurred = true;
-                      error_message = error;
-                    })
-                    .build();
-
-  EXPECT_NE(server, nullptr);
+  // Test invalid port (should throw exception due to input validation)
+  EXPECT_THROW(auto server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
+                                 .unlimited_clients()                // 클라이언트 제한 없음
+                                 .auto_start(false)
+                                 .on_error([&error_occurred, &error_message](const std::string& error) {
+                                   error_occurred = true;
+                                   error_message = error;
+                                 })
+                                 .build(),
+               common::BuilderException);
 
   // Test client with invalid host
   auto client = builder::UnifiedBuilder::tcp_client("invalid.host", 12345)

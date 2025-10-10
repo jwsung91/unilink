@@ -191,9 +191,9 @@ TEST_F(PlatformTest, SerialBaudRatesPlatformSpecific) {
   std::vector<uint32_t> baud_rates;
 
   if (is_linux()) {
-    // Linux systems support more baud rates
-    baud_rates = {50,   75,    110,   134,   150,    200,    300,    600,    1200,    1800,    2400,    4800,
-                  9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600, 1000000, 2000000, 4000000, 8000000};
+    // Linux systems support more baud rates (within validation limits)
+    baud_rates = {50,   75,    110,   134,   150,    200,    300,    600,    1200,    1800,    2400,   4800,
+                  9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600, 1000000, 2000000, 4000000};
   } else if (is_windows()) {
     // Windows has more limited baud rate support
     baud_rates = {9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600};

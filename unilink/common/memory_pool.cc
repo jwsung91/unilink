@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "unilink/common/constants.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -577,7 +579,7 @@ MemoryPool::BufferInfo* MemoryPool::remove_from_lock_free_free_list(PoolBucket& 
 
     // CAS failed, retry
     // Yield to other threads (simple busy wait)
-    for (volatile int i = 0; i < 100; ++i) {
+    for (volatile int i = 0; i < common::constants::DEFAULT_MEMORY_POOL_SIZE; ++i) {
     }
   }
 
@@ -601,7 +603,7 @@ void MemoryPool::add_to_lock_free_free_list(PoolBucket& bucket, MemoryPool::Buff
 
     // CAS failed, retry
     // Yield to other threads (simple busy wait)
-    for (volatile int i = 0; i < 100; ++i) {
+    for (volatile int i = 0; i < common::constants::DEFAULT_MEMORY_POOL_SIZE; ++i) {
     }
   }
 }
@@ -712,7 +714,7 @@ MemoryPool::HealthMetrics MemoryPool::get_current_health_metrics() const {
 
   // Calculate rates
   auto time_since_last_check = now - health_monitoring_.last_rate_calculation;
-  if (time_since_last_check > std::chrono::milliseconds(100)) {
+  if (time_since_last_check > std::chrono::milliseconds(common::constants::DEFAULT_CLEANUP_INTERVAL_MS)) {
     double seconds = std::chrono::duration<double>(time_since_last_check).count();
     metrics.allocation_rate = health_monitoring_.allocations_since_last_check.load() / seconds;
     metrics.memory_growth_rate = health_monitoring_.memory_allocated_since_last_check.load() / seconds;
@@ -1055,7 +1057,7 @@ void MemoryPool::auto_tune() {
 
   // Analyze usage patterns and adjust pool configuration
   for (const auto& [size, count] : size_usage_count_) {
-    if (count > 100) {  // Only tune for frequently used sizes
+    if (count > common::constants::DEFAULT_MEMORY_POOL_SIZE) {  // Only tune for frequently used sizes
       double hit_rate = get_hit_rate_for_size(size);
 
       if (hit_rate < 0.5) {  // Low hit rate, increase pool size

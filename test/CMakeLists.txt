@@ -44,6 +44,13 @@ add_executable(run_stress_tests
     test_utils.hpp
 )
 
+
+# Serial Builder Improvements Tests - SerialBuilder specific improvements
+add_executable(run_serial_builder_improvements_tests
+    test_serial_builder_improvements.cc
+    test_utils.hpp
+)
+
 # Configuration Validation Tests - REMOVED (integrated into test_config_integrated.cc)
 
 # Performance Benchmark Tests - Comprehensive performance analysis and benchmarking
@@ -294,6 +301,12 @@ target_link_libraries(run_simple_server_tests
 
 # Link client limit integration tests
 target_link_libraries(run_client_limit_integration_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
+
+# Link serial builder improvements tests
+target_link_libraries(run_serial_builder_improvements_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
