@@ -1,5 +1,5 @@
 # Multi-stage build for optimized production image
-FROM ubuntu:22.04 AS builder
+FROM ubuntu:24.04 AS builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -32,7 +32,7 @@ COPY . .
 RUN cd build && make docs || true
 
 # Production stage
-FROM ubuntu:22.04 AS production
+FROM ubuntu:24.04 AS production
 
 # Install only runtime dependencies
 RUN apt-get update && apt-get install -y \
