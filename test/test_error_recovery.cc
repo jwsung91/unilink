@@ -71,7 +71,6 @@ class ErrorRecoveryTest : public BaseTest {
   std::atomic<int> error_count_{0};
   std::atomic<int> connection_attempts_{0};
   std::atomic<bool> recovery_success_{false};
-  std::string last_error_message_;
 };
 
 // ============================================================================
@@ -90,7 +89,6 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
                      .auto_start(false)
                      .on_error([this](const std::string& error) {
                        error_count_++;
-                       last_error_message_ = error;
                        std::cout << "Error received: " << error << std::endl;
                      })
                      .build();
@@ -118,7 +116,6 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
                      .auto_start(false)
                      .on_error([this](const std::string& error) {
                        error_count_++;
-                       last_error_message_ = error;
                        std::cout << "Timeout error received: " << error << std::endl;
                      })
                      .build();
@@ -138,7 +135,6 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
                      .auto_start(false)
                      .on_error([this](const std::string& error) {
                        error_count_++;
-                       last_error_message_ = error;
                        std::cout << "DNS error received: " << error << std::endl;
                      })
                      .build();
@@ -275,7 +271,6 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
                      .auto_start(false)
                      .on_error([this](const std::string& error) {
                        error_count_++;
-                       last_error_message_ = error;
                        std::cout << "Serial error: " << error << std::endl;
                      })
                      .build();
@@ -295,7 +290,6 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
                      .auto_start(false)
                      .on_error([this](const std::string& error) {
                        error_count_++;
-                       last_error_message_ = error;
                        std::cout << "Permission error: " << error << std::endl;
                      })
                      .build();
@@ -315,7 +309,6 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
                      .auto_start(false)
                      .on_error([this](const std::string& error) {
                        error_count_++;
-                       last_error_message_ = error;
                        std::cout << "Baud rate error: " << error << std::endl;
                      })
                      .build();

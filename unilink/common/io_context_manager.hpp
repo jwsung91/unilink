@@ -1,10 +1,10 @@
 #pragma once
 
+#include <atomic>
 #include <boost/asio.hpp>
 #include <memory>
-#include <thread>
-#include <atomic>
 #include <mutex>
+#include <thread>
 
 namespace unilink {
 namespace common {
@@ -15,40 +15,40 @@ namespace common {
  * 테스트 격리를 위한 독립적인 컨텍스트 생성 기능 추가
  */
 class IoContextManager {
-public:
-    using IoContext = boost::asio::io_context;
-    using WorkGuard = boost::asio::executor_work_guard<IoContext::executor_type>;
+ public:
+  using IoContext = boost::asio::io_context;
+  using WorkGuard = boost::asio::executor_work_guard<IoContext::executor_type>;
 
-    // 싱글톤 인스턴스 접근
-    static IoContextManager& instance();
-    
-    // io_context 참조 반환 (기존 기능)
-    IoContext& get_context();
-    
-    // io_context 시작/중지 (기존 기능)
-    void start();
-    void stop();
-    
-    // 상태 확인 (기존 기능)
-    bool is_running() const;
-    
-    // 🆕 독립적인 io_context 생성 (테스트 격리용)
-    std::unique_ptr<IoContext> create_independent_context();
-    
-    // 소멸자에서 자동 정리
-    ~IoContextManager();
+  // 싱글톤 인스턴스 접근
+  static IoContextManager& instance();
 
-private:
-    IoContextManager() = default;
-    IoContextManager(const IoContextManager&) = delete;
-    IoContextManager& operator=(const IoContextManager&) = delete;
+  // io_context 참조 반환 (기존 기능)
+  IoContext& get_context();
 
-    std::unique_ptr<IoContext> ioc_;
-    std::unique_ptr<WorkGuard> work_guard_;
-    std::thread io_thread_;
-    std::atomic<bool> running_{false};
-    mutable std::mutex mutex_;
+  // io_context 시작/중지 (기존 기능)
+  void start();
+  void stop();
+
+  // 상태 확인 (기존 기능)
+  bool is_running() const;
+
+  // 🆕 독립적인 io_context 생성 (테스트 격리용)
+  std::unique_ptr<IoContext> create_independent_context();
+
+  // 소멸자에서 자동 정리
+  ~IoContextManager();
+
+ private:
+  IoContextManager() = default;
+  IoContextManager(const IoContextManager&) = delete;
+  IoContextManager& operator=(const IoContextManager&) = delete;
+
+  std::unique_ptr<IoContext> ioc_;
+  std::unique_ptr<WorkGuard> work_guard_;
+  std::thread io_thread_;
+  std::atomic<bool> running_{false};
+  mutable std::mutex mutex_;
 };
 
-} // namespace common
-} // namespace unilink
+}  // namespace common
+}  // namespace unilink

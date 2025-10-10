@@ -30,9 +30,6 @@ sudo apt install doxygen graphviz
 # CentOS/RHEL/Fedora
 sudo yum install doxygen graphviz
 
-# macOS
-brew install doxygen graphviz
-
 # Windows
 # Download from https://www.doxygen.nl/download.html
 ```
@@ -75,7 +72,6 @@ After generation, you can view the documentation in several ways:
 ```bash
 # Open in browser
 xdg-open docs/html/index.html  # Linux
-open docs/html/index.html      # macOS
 start docs/html/index.html     # Windows
 ```
 

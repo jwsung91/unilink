@@ -2,9 +2,9 @@
 
 #include <cstdint>
 #include <cstring>
+#include <memory>
 #include <stdexcept>
 #include <vector>
-#include <memory>
 
 namespace unilink {
 namespace common {
@@ -97,50 +97,50 @@ bool is_double_free(void* ptr);
  */
 bool is_use_after_free(const void* ptr);
 
-} // namespace memory_validator
+}  // namespace memory_validator
 
 /**
  * @brief RAII wrapper for memory validation
  */
 class MemoryValidator {
-public:
-    explicit MemoryValidator(void* ptr, size_t size, size_t canary_size = 8);
-    ~MemoryValidator();
-    
-    // Non-copyable, non-movable
-    MemoryValidator(const MemoryValidator&) = delete;
-    MemoryValidator& operator=(const MemoryValidator&) = delete;
-    MemoryValidator(MemoryValidator&&) = delete;
-    MemoryValidator& operator=(MemoryValidator&&) = delete;
-    
-    // Validation methods
-    bool validate() const;
-    void check_bounds() const;
-    
-    // Access methods
-    void* data() const { return ptr_; }
-    size_t size() const { return size_; }
+ public:
+  explicit MemoryValidator(void* ptr, size_t size, size_t canary_size = 8);
+  ~MemoryValidator();
 
-private:
-    void* ptr_;
-    size_t size_;
-    size_t canary_size_;
-    std::vector<uint8_t> original_canaries_;
-    bool canaries_initialized_;
-    
-    void initialize_canaries();
-    bool validate_canaries() const;
+  // Non-copyable, non-movable
+  MemoryValidator(const MemoryValidator&) = delete;
+  MemoryValidator& operator=(const MemoryValidator&) = delete;
+  MemoryValidator(MemoryValidator&&) = delete;
+  MemoryValidator& operator=(MemoryValidator&&) = delete;
+
+  // Validation methods
+  bool validate() const;
+  void check_bounds() const;
+
+  // Access methods
+  void* data() const { return ptr_; }
+  size_t size() const { return size_; }
+
+ private:
+  void* ptr_;
+  size_t size_;
+  size_t canary_size_;
+  std::vector<uint8_t> original_canaries_;
+  bool canaries_initialized_;
+
+  void initialize_canaries();
+  bool validate_canaries() const;
 };
 
 /**
  * @brief Memory pattern generator for testing
  */
 class MemoryPatternGenerator {
-public:
-    static std::vector<uint8_t> generate_pattern(size_t size, uint8_t seed = 0xAA);
-    static std::vector<uint8_t> generate_random_pattern(size_t size);
-    static bool validate_pattern(const void* ptr, size_t size, uint8_t expected_seed = 0xAA);
+ public:
+  static std::vector<uint8_t> generate_pattern(size_t size, uint8_t seed = 0xAA);
+  static std::vector<uint8_t> generate_random_pattern(size_t size);
+  static bool validate_pattern(const void* ptr, size_t size, uint8_t expected_seed = 0xAA);
 };
 
-} // namespace common
-} // namespace unilink
+}  // namespace common
+}  // namespace unilink

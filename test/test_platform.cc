@@ -63,8 +63,7 @@ class PlatformTest : public ::testing::Test {
   // Helper function to check if running on specific platform
   bool is_linux() const { return platform_name_ == "Linux"; }
   bool is_windows() const { return platform_name_ == "Windows"; }
-  bool is_macos() const { return platform_name_ == "Darwin"; }
-  bool is_unix_like() const { return is_linux() || is_macos(); }
+  bool is_unix_like() const { return is_linux(); }
 
   // Helper function to check architecture
   bool is_x86_64() const { return architecture_ == "x86_64"; }
@@ -96,8 +95,6 @@ TEST_F(PlatformTest, PlatformDetection) {
     std::cout << "Running on Linux" << std::endl;
   } else if (is_windows()) {
     std::cout << "Running on Windows" << std::endl;
-  } else if (is_macos()) {
-    std::cout << "Running on macOS" << std::endl;
   } else {
     std::cout << "Running on unknown platform" << std::endl;
   }
@@ -121,8 +118,8 @@ TEST_F(PlatformTest, PlatformSpecificFilePaths) {
 
   std::vector<std::string> test_paths;
 
-  if (is_linux() || is_macos()) {
-    // Unix-like systems
+  if (is_linux()) {
+    // Linux systems
     test_paths = {"/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyACM0",   "/dev/ttyACM1",
                   "/dev/ttyS0",   "/dev/ttyS1",   "/tmp/test_file", "/var/tmp/test_file"};
   } else if (is_windows()) {
@@ -160,8 +157,6 @@ TEST_F(PlatformTest, SerialCommunicationPlatformSpecific) {
 
   if (is_linux()) {
     device_paths = {"/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyS0", "/dev/ttyS1"};
-  } else if (is_macos()) {
-    device_paths = {"/dev/tty.usbserial-*", "/dev/tty.usbmodem*", "/dev/tty.SLAB_USBtoUART"};
   } else if (is_windows()) {
     device_paths = {"COM1", "COM2", "COM3", "COM4", "COM5", "COM6"};
   } else {
@@ -195,8 +190,8 @@ TEST_F(PlatformTest, SerialBaudRatesPlatformSpecific) {
 
   std::vector<uint32_t> baud_rates;
 
-  if (is_linux() || is_macos()) {
-    // Unix-like systems support more baud rates
+  if (is_linux()) {
+    // Linux systems support more baud rates
     baud_rates = {50,   75,    110,   134,   150,    200,    300,    600,    1200,    1800,    2400,    4800,
                   9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600, 1000000, 2000000, 4000000, 8000000};
   } else if (is_windows()) {
@@ -246,8 +241,6 @@ TEST_F(PlatformTest, NetworkFunctionalityPlatformSpecific) {
     std::cout << "Linux network behavior: SO_REUSEADDR enabled" << std::endl;
   } else if (is_windows()) {
     std::cout << "Windows network behavior: SO_EXCLUSIVEADDRUSE enabled" << std::endl;
-  } else if (is_macos()) {
-    std::cout << "macOS network behavior: SO_REUSEADDR enabled" << std::endl;
   }
 
   std::cout << "Platform-specific network functionality test completed" << std::endl;
@@ -261,8 +254,8 @@ TEST_F(PlatformTest, NetworkPortHandlingPlatformSpecific) {
 
   std::vector<uint16_t> test_ports;
 
-  if (is_linux() || is_macos()) {
-    // Unix-like systems can use any port above 1024
+  if (is_linux()) {
+    // Linux systems can use any port above 1024
     test_ports = {8080, 9090, 30000, 40000, 50000, 60000};
   } else if (is_windows()) {
     // Windows has similar port restrictions
@@ -491,7 +484,7 @@ TEST_F(PlatformTest, PlatformSpecificErrorHandling) {
   // Test error handling on different platforms
   std::vector<std::string> invalid_paths;
 
-  if (is_linux() || is_macos()) {
+  if (is_linux()) {
     invalid_paths = {"/dev/nonexistent", "/dev/ttyINVALID", "/tmp/nonexistent/file"};
   } else if (is_windows()) {
     invalid_paths = {"COM999", "LPT999", "C:\\nonexistent\\file"};

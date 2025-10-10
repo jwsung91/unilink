@@ -17,8 +17,7 @@ class TcpResolverInterface {
   virtual ~TcpResolverInterface() = default;
 
   virtual void async_resolve(
-      const std::string& host,
-      const std::string& service,
+      const std::string& host, const std::string& service,
       std::function<void(const boost::system::error_code&, net::ip::tcp::resolver::results_type)> handler) = 0;
 };
 

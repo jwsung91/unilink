@@ -15,9 +15,6 @@ An interactive serial chat application that allows real-time communication throu
 
 # Windows
 ./chat_serial COM3 9600
-
-# macOS
-./chat_serial /dev/tty.usbserial-* 115200
 ```
 
 ## What it does

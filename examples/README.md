@@ -129,23 +129,6 @@ sudo yum install socat
 sudo yum install minicom screen
 ```
 
-#### macOS
-```bash
-# Install Homebrew (if not already installed)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install build tools
-brew install cmake
-
-# Install Boost libraries
-brew install boost
-
-# Install socat for serial testing
-brew install socat
-
-# Install serial port tools
-brew install minicom
-```
 
 #### Windows
 ```bash
@@ -166,6 +149,5 @@ cd vcpkg
 
 - **Linux**: Use `/dev/ttyUSB0`, `/dev/ttyACM0` for serial ports
 - **Windows**: Use `COM3`, `COM4` for serial ports
-- **macOS**: Use `/dev/tty.usbserial-*` for serial ports
 
 For detailed information about each example, see the README.md files in each subdirectory.

@@ -1,0 +1,119 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_call:
+
+env:
+  BUILD_TYPE: Release
+  CXX_STANDARD: 17
+
+jobs:
+  # Multi-platform Build Matrix
+  build:
+    name: Build (${{ matrix.os }}, ${{ matrix.compiler }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04]
+        compiler: [gcc, clang]
+        include:
+          - os: ubuntu-22.04
+            compiler: gcc
+            cc: gcc-11
+            cxx: g++-11
+          - os: ubuntu-22.04
+            compiler: clang
+            cc: clang-14
+            cxx: clang++-14
+          # Ubuntu 20.04 support temporarily removed due to CI performance issues
+          # To restore: uncomment the following lines and add ubuntu-20.04 to the os matrix above
+          # - os: ubuntu-20.04
+          #   compiler: gcc
+          #   cc: gcc-9
+          #   cxx: g++-9
+          # - os: ubuntu-20.04
+          #   compiler: clang
+          #   cc: clang-12
+          #   cxx: clang++-12
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev \
+          doxygen \
+          graphviz
+
+    - name: Set up compiler
+      run: |
+        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
+        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+
+    - name: Configure CMake (Minimal Build)
+      run: |
+        cmake -S . -B build-minimal \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=OFF \
+          -DBUILD_EXAMPLES=ON \
+          -DBUILD_TESTING=ON
+
+    - name: Configure CMake (Full Build)
+      run: |
+        cmake -S . -B build-full \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=ON \
+          -DBUILD_TESTING=ON
+
+    - name: Build (Minimal)
+      run: cmake --build build-minimal -j $(nproc)
+
+    - name: Build (Full)
+      run: cmake --build build-full -j $(nproc)
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts-${{ matrix.os }}-${{ matrix.compiler }}
+        path: |
+          build-minimal/
+          build-full/
+        retention-days: 7
+
+  # Docker Build
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: false
+        tags: unilink:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Test Docker image
+      run: |
+        docker run --rm unilink:latest --version || echo "Version check not available"

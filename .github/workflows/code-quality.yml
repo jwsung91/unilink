@@ -1,0 +1,141 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_call:
+
+jobs:
+  # Code Formatting Check
+  formatting:
+    name: Code Formatting
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run clang-format style check
+      uses: jidicula/clang-format-action@v4.13.0
+      with:
+        clang-format-version: '18'  # Use latest clang-format version
+        check-path: '.'             # Check current directory
+        fallback-style: 'Google'    # Fallback style if .clang-format not found
+        exclude: 'build*'           # Exclude build directories
+
+  # Static Analysis with cppcheck
+  static-analysis:
+    name: Static Analysis (cppcheck)
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install latest cppcheck
+      run: |
+        # Install latest cppcheck from source to match local version
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential
+        git clone https://github.com/danmar/cppcheck.git
+        cd cppcheck
+        git checkout 2.13.0
+        mkdir build && cd build
+        cmake ..
+        make -j$(nproc)
+        sudo make install
+        cppcheck --version
+
+    - name: Run cppcheck (comprehensive analysis)
+      run: |
+        cppcheck --enable=all --inconclusive --std=c++17 \
+          --suppress=missingIncludeSystem \
+          --suppress=missingInclude \
+          --suppress=unusedFunction \
+          --suppress=functionConst \
+          --suppress=functionStatic \
+          --suppress=useStlAlgorithm \
+          --suppress=shadowVariable \
+          --suppress=unreadVariable \
+          --suppress=variableScope \
+          --suppress=noExplicitConstructor \
+          --suppress=knownConditionTrueFalse \
+          --suppress=constVariableReference \
+          --suppress=uselessOverride \
+          --suppress=cstyleCast \
+          --xml --xml-version=2 \
+          --output-file=cppcheck-results.xml \
+          --error-exitcode=1 \
+          unilink/ examples/ test/
+
+    - name: Upload cppcheck results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: cppcheck-results
+        path: cppcheck-results.xml
+        retention-days: 7
+
+  # CodeQL Analysis
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev
+
+    - name: Build for CodeQL
+      run: |
+        cmake -S . -B build-codeql \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_STANDARD=17 \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=OFF \
+          -DBUILD_TESTING=ON
+        cmake --build build-codeql -j $(nproc)
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
+
+  # Quality Summary
+  quality-summary:
+    name: Quality Summary
+    runs-on: ubuntu-22.04
+    needs: [formatting, static-analysis, codeql]
+    if: always()
+
+    steps:
+    - name: Quality Summary
+      run: |
+        echo "## Code Quality Results" >> $GITHUB_STEP_SUMMARY
+        echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Code Formatting | ${{ needs.formatting.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Static Analysis | ${{ needs.static-analysis.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| CodeQL Analysis | ${{ needs.codeql.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

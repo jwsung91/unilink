@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # Development environment
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    volumes:
+      - .:/app
+      - build-cache:/app/build
+    working_dir: /app
+    command: /bin/bash
+    environment:
+      - CMAKE_BUILD_TYPE=Debug
+      - UNILINK_ENABLE_CONFIG=ON
+      - BUILD_TESTING=ON
+    networks:
+      - unilink-network
+
+  # Production environment
+  prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - unilink-network
+    restart: unless-stopped
+
+  # Testing environment
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: |
+      bash -c "
+        cd build &&
+        ctest --output-on-failure --parallel \$(nproc)
+      "
+    environment:
+      - CMAKE_BUILD_TYPE=Debug
+      - UNILINK_ENABLE_SANITIZERS=ON
+      - UNILINK_ENABLE_MEMORY_TRACKING=ON
+      - BUILD_TESTING=ON
+
+  # Performance testing
+  perf:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: |
+      bash -c "
+        cd build &&
+        ./test/run_performance_tests
+      "
+    environment:
+      - CMAKE_BUILD_TYPE=Release
+      - UNILINK_ENABLE_CONFIG=ON
+      - BUILD_TESTING=ON
+
+  # Documentation server
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: |
+      bash -c "
+        cd build &&
+        make docs &&
+        python3 -m http.server 8000 -d docs/html
+      "
+    ports:
+      - "8000:8000"
+    networks:
+      - unilink-network
+
+volumes:
+  build-cache:
+
+networks:
+  unilink-network:
+    driver: bridge

@@ -25,8 +25,7 @@ class BoostTcpAcceptor : public interface::TcpAcceptorInterface {
   bool is_open() const override;
   void close(boost::system::error_code& ec) override;
 
-  void async_accept(
-      std::function<void(const boost::system::error_code&, net::ip::tcp::socket)> handler) override;
+  void async_accept(std::function<void(const boost::system::error_code&, net::ip::tcp::socket)> handler) override;
 
  private:
   net::ip::tcp::acceptor acceptor_;

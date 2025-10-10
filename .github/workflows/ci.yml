@@ -1,0 +1,88 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+# This is now a coordination workflow that triggers other specialized workflows
+jobs:
+  # Trigger all other workflows
+  trigger-workflows:
+    name: Trigger CI Workflows
+    runs-on: ubuntu-22.04
+    outputs:
+      should-run-build: ${{ steps.check.outputs.should-run-build }}
+      should-run-test: ${{ steps.check.outputs.should-run-test }}
+      should-run-quality: ${{ steps.check.outputs.should-run-quality }}
+      should-run-security: ${{ steps.check.outputs.should-run-security }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Determine which workflows to run
+      id: check
+      run: |
+        # Always run build and test for PRs and pushes
+        echo "should-run-build=true" >> $GITHUB_OUTPUT
+        echo "should-run-test=true" >> $GITHUB_OUTPUT
+        echo "should-run-quality=true" >> $GITHUB_OUTPUT
+        
+        # Run security scan for main branch or scheduled runs
+        if [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.event_name }}" == "schedule" ]]; then
+          echo "should-run-security=true" >> $GITHUB_OUTPUT
+        else
+          echo "should-run-security=false" >> $GITHUB_OUTPUT
+        fi
+
+  # Build workflow
+  build:
+    name: Build
+    needs: trigger-workflows
+    if: needs.trigger-workflows.outputs.should-run-build == 'true'
+    uses: ./.github/workflows/build.yml
+
+  # Test workflow
+  test:
+    name: Test
+    needs: trigger-workflows
+    if: needs.trigger-workflows.outputs.should-run-test == 'true'
+    uses: ./.github/workflows/test.yml
+
+  # Code Quality workflow
+  code-quality:
+    name: Code Quality
+    needs: trigger-workflows
+    if: needs.trigger-workflows.outputs.should-run-quality == 'true'
+    uses: ./.github/workflows/code-quality.yml
+
+  # Security workflow
+  security:
+    name: Security
+    needs: trigger-workflows
+    if: needs.trigger-workflows.outputs.should-run-security == 'true'
+    uses: ./.github/workflows/security.yml
+
+  # Overall CI Summary
+  ci-summary:
+    name: CI Summary
+    runs-on: ubuntu-22.04
+    needs: [trigger-workflows, build, test, code-quality, security]
+    if: always()
+
+    steps:
+    - name: CI Summary
+      run: |
+        echo "## CI/CD Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+        echo "| Workflow | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Build | ${{ needs.build.result == 'success' && '✅ Passed' || needs.build.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Test | ${{ needs.test.result == 'success' && '✅ Passed' || needs.test.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Code Quality | ${{ needs.code-quality.result == 'success' && '✅ Passed' || needs.code-quality.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Security | ${{ needs.security.result == 'success' && '✅ Passed' || needs.security.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

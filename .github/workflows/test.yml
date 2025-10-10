@@ -1,0 +1,217 @@
+name: Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_call:
+
+env:
+  BUILD_TYPE: Debug
+  CXX_STANDARD: 17
+
+jobs:
+  # Unit and Integration Tests
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-22.04
+    needs: []
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev
+
+    - name: Configure CMake
+      run: |
+        cmake -S . -B build-test \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=OFF \
+          -DBUILD_TESTING=ON
+
+    - name: Build tests
+      run: cmake --build build-test -j $(nproc)
+
+    - name: Run unit tests
+      run: |
+        cd build-test
+        ctest --output-on-failure --parallel $(nproc) \
+          --label-regex "unit|core|memory|config"
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: unit-test-results
+        path: build-test/Testing/
+        retention-days: 7
+
+  # Integration Tests
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-22.04
+    needs: []
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev
+
+    - name: Configure CMake
+      run: |
+        cmake -S . -B build-integration \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=OFF \
+          -DBUILD_TESTING=ON
+
+    - name: Build integration tests
+      run: cmake --build build-integration -j $(nproc)
+
+    - name: Run integration tests
+      run: |
+        cd build-integration
+        ctest --output-on-failure --parallel $(nproc) \
+          --label-regex "integration|mock|stable"
+
+    - name: Upload integration test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: integration-test-results
+        path: build-integration/Testing/
+        retention-days: 7
+
+  # Performance Tests
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-22.04
+    needs: []
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev
+
+    - name: Configure CMake
+      run: |
+        cmake -S . -B build-perf \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=OFF \
+          -DBUILD_TESTING=ON
+
+    - name: Build performance tests
+      run: cmake --build build-perf -j $(nproc)
+
+    - name: Run performance tests
+      run: |
+        cd build-perf
+        ctest --output-on-failure --parallel $(nproc) \
+          --label-regex "performance|benchmark|stress"
+
+    - name: Upload performance test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: performance-test-results
+        path: build-perf/Testing/
+        retention-days: 7
+
+  # Memory Safety Tests
+  memory-safety-tests:
+    name: Memory Safety Tests
+    runs-on: ubuntu-22.04
+    needs: []
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev \
+          clang \
+          libc++-dev \
+          libc++abi-dev
+
+    - name: Configure CMake with Sanitizers
+      run: |
+        cmake -S . -B build-sanitizer \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_C_COMPILER=clang \
+          -DUNILINK_ENABLE_SANITIZERS=ON \
+          -DUNILINK_ENABLE_MEMORY_TRACKING=ON \
+          -DBUILD_TESTING=ON \
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer -g" \
+          -DCMAKE_C_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer -g" \
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined,leak" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address,undefined,leak"
+
+    - name: Build with sanitizers
+      run: cmake --build build-sanitizer -j $(nproc)
+
+    - name: Run memory safety tests
+      run: |
+        cd build-sanitizer
+        ctest --output-on-failure --parallel $(nproc) \
+          --label-regex "memory|safety"
+
+    - name: Upload memory safety test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: memory-safety-test-results
+        path: build-sanitizer/Testing/
+        retention-days: 7
+
+  # Test Summary
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-22.04
+    needs: [unit-tests, integration-tests, performance-tests, memory-safety-tests]
+    if: always()
+
+    steps:
+    - name: Test Summary
+      run: |
+        echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+        echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Unit Tests | ${{ needs.unit-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Integration Tests | ${{ needs.integration-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Performance Tests | ${{ needs.performance-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Memory Safety Tests | ${{ needs.memory-safety-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

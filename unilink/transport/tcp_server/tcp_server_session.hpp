@@ -6,15 +6,15 @@
 #include <deque>
 #include <functional>
 #include <memory>
-#include <vector>
 #include <variant>
+#include <vector>
 
-#include "unilink/interface/channel.hpp"
-#include "unilink/interface/itcp_socket.hpp"
 #include "unilink/common/constants.hpp"
-#include "unilink/common/memory_pool.hpp"
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/logger.hpp"
+#include "unilink/common/memory_pool.hpp"
+#include "unilink/interface/channel.hpp"
+#include "unilink/interface/itcp_socket.hpp"
 
 namespace unilink {
 namespace transport {
@@ -31,9 +31,11 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
   using OnBackpressure = interface::Channel::OnBackpressure;
   using OnClose = std::function<void()>;
 
-  TcpServerSession(net::io_context& ioc, tcp::socket sock, size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
+  TcpServerSession(net::io_context& ioc, tcp::socket sock,
+                   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
   // Constructor for testing with dependency injection
-  TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket, size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
+  TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket,
+                   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
 
   void start();
   void async_write_copy(const uint8_t* data, size_t size);

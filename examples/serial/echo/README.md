@@ -15,9 +15,6 @@ A serial echo server that receives data from a serial port and echoes it back to
 
 # Windows
 ./echo_serial COM3 9600
-
-# macOS
-./echo_serial /dev/tty.usbserial-* 115200
 ```
 
 ## What it does

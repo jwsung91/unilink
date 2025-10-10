@@ -15,17 +15,11 @@ void BoostTcpAcceptor::bind(const net::ip::tcp::endpoint& endpoint, boost::syste
   acceptor_.bind(endpoint, ec);
 }
 
-void BoostTcpAcceptor::listen(int backlog, boost::system::error_code& ec) {
-  acceptor_.listen(backlog, ec);
-}
+void BoostTcpAcceptor::listen(int backlog, boost::system::error_code& ec) { acceptor_.listen(backlog, ec); }
 
-bool BoostTcpAcceptor::is_open() const {
-  return acceptor_.is_open();
-}
+bool BoostTcpAcceptor::is_open() const { return acceptor_.is_open(); }
 
-void BoostTcpAcceptor::close(boost::system::error_code& ec) {
-  acceptor_.close(ec);
-}
+void BoostTcpAcceptor::close(boost::system::error_code& ec) { acceptor_.close(ec); }
 
 void BoostTcpAcceptor::async_accept(
     std::function<void(const boost::system::error_code&, net::ip::tcp::socket)> handler) {
