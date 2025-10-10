@@ -165,6 +165,12 @@ add_executable(run_client_limit_integration_tests
     test_utils.hpp
 )
 
+# Builder Coverage Tests - Comprehensive builder pattern coverage
+add_executable(run_builder_coverage_tests
+    test_builder_coverage.cc
+    test_utils.hpp
+)
+
 # ============================================================================
 # LINK LIBRARIES
 # ============================================================================
@@ -310,6 +316,11 @@ target_link_libraries(run_serial_builder_improvements_tests
     PRIVATE ${COMMON_TEST_LIBS}
 )
 
+# Link builder coverage tests
+target_link_libraries(run_builder_coverage_tests
+    PRIVATE ${COMMON_TEST_LIBS}
+)
+
 # ============================================================================
 # TEST DISCOVERY
 # ============================================================================
@@ -346,6 +357,7 @@ gtest_discover_tests(run_serial_tests)
 gtest_discover_tests(run_platform_tests)
 gtest_discover_tests(run_simple_server_tests)
 gtest_discover_tests(run_client_limit_integration_tests)
+gtest_discover_tests(run_builder_coverage_tests)
 
 # ============================================================================
 # SANITIZERS (Optional - for debugging)
