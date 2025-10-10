@@ -24,6 +24,7 @@ endif()
 
 option(BUILD_TESTING "Build tests" ON)
 option(UNILINK_ENABLE_SANITIZERS "Enable AddressSanitizer and other sanitizers" OFF)
+option(UNILINK_ENABLE_PERFORMANCE_TESTS "Enable performance/benchmark tests (slower)" OFF)
 option(BUILD_DOCUMENTATION "Build documentation with Doxygen" ON)
 
 if(BUILD_TESTING)

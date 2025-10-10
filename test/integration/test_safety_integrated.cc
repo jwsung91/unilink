@@ -170,9 +170,8 @@ TEST_F(SafetyIntegratedTest, ConcurrencySafetyStateAccess) {
   for (int t = 0; t < num_threads; ++t) {
     threads.emplace_back([&, t]() {
       for (int i = 0; i < operations_per_thread; ++i) {
-        // Simulate concurrent state access
-        int current = counter.load();
-        counter.store(current + 1);
+        // Simulate concurrent state access with atomic operation
+        counter.fetch_add(1, std::memory_order_relaxed);
       }
     });
   }

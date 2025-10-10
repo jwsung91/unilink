@@ -3,6 +3,7 @@
 #include <chrono>
 #include <fstream>
 #include <memory>
+#include <random>
 #include <string>
 #include <thread>
 
@@ -17,7 +18,16 @@ using namespace std::chrono_literals;
 class LoggerCoverageTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    test_log_file_ = "/tmp/unilink_logger_test.log";
+    // Create unique log file for each test to avoid parallel execution conflicts
+    const ::testing::TestInfo* test_info =
+        ::testing::UnitTest::GetInstance()->current_test_info();
+    std::string test_name = test_info->name();
+    
+    // Generate unique filename with timestamp and random suffix
+    auto now = std::chrono::system_clock::now().time_since_epoch().count();
+    std::random_device rd;
+    test_log_file_ = "/tmp/unilink_logger_test_" + test_name + "_" +
+                     std::to_string(now) + "_" + std::to_string(rd()) + ".log";
     std::remove(test_log_file_.c_str());
   }
 

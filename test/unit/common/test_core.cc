@@ -500,7 +500,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
 
   // Wait for async processing to complete
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   // Check performance (should be very fast since it's just queuing)
   double messages_per_second = (num_messages * 1000000.0) / duration;
@@ -530,7 +530,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingBackpressure) {
   }
 
   // Wait for processing
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   // Check statistics - should have some dropped messages
   auto stats = common::Logger::instance().get_async_stats();

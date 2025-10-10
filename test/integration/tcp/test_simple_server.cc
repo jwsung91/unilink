@@ -21,7 +21,7 @@ class SimpleServerTest : public ::testing::Test {
       std::cout << "Stopping server..." << std::endl;
       server_->stop();
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 
   uint16_t getTestPort() {
@@ -54,7 +54,7 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
   server_->start();
 
   // 잠시 대기
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "Server state: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
 
@@ -79,7 +79,7 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   std::cout << "Server created with auto-start" << std::endl;
 
   // 잠시 대기
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
   std::cout << "Server state after 2s: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
 
@@ -161,7 +161,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
 
   // 시작 후 상태 확인 (여러 번)
   for (int i = 0; i < 5; ++i) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::cout << "After " << (i + 1) << "s - is_connected(): " << (server_->is_connected() ? "true" : "false")
               << std::endl;
   }
@@ -188,7 +188,7 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
 
   // 서버 시작
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "Single client server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);
@@ -212,7 +212,7 @@ TEST_F(SimpleServerTest, ClientLimitMultiClient) {
 
   // 서버 시작
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "Multi client server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);
@@ -236,7 +236,7 @@ TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
 
   // 서버 시작
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "Unlimited clients server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);

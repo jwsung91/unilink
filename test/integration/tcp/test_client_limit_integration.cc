@@ -28,7 +28,7 @@ class ClientLimitIntegrationTest : public ::testing::Test {
       std::cout << "Stopping server..." << std::endl;
       server_->stop();
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait longer for cleanup
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Wait longer for cleanup
   }
 
   uint16_t getTestPort() {
@@ -67,7 +67,7 @@ class ClientLimitIntegrationTest : public ::testing::Test {
           boost::asio::connect(socket, endpoints);
 
           // 연결 성공 - 더 오래 유지
-          std::this_thread::sleep_for(std::chrono::milliseconds(500));
+          std::this_thread::sleep_for(std::chrono::milliseconds(50));
           socket.close();
           return true;
         } catch (const std::exception& e) {
