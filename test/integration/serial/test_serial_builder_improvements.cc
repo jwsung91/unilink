@@ -35,24 +35,24 @@ class SerialBuilderImprovementsTest : public ::testing::Test {
  */
 TEST_F(SerialBuilderImprovementsTest, SerialBuilderExceptionSafety) {
   // Test invalid device path
-  EXPECT_THROW(auto serial = UnifiedBuilder::serial("", 115200).build(), BuilderException);
+  EXPECT_THROW(auto serial = unilink::serial("", 115200).build(), BuilderException);
 
   // Test invalid baud rate
-  EXPECT_THROW(auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 0).build(), BuilderException);
-  EXPECT_THROW(auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", constants::MAX_BAUD_RATE + 1).build(),
+  EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 0).build(), BuilderException);
+  EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", constants::MAX_BAUD_RATE + 1).build(),
                BuilderException);
 
   // Test invalid retry interval
-  EXPECT_THROW(auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 115200).retry_interval(0).build(),
+  EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 115200).retry_interval(0).build(),
                BuilderException);
   EXPECT_THROW(
       auto serial =
-          UnifiedBuilder::serial("/dev/ttyUSB0", 115200).retry_interval(constants::MAX_RETRY_INTERVAL_MS + 1).build(),
+          unilink::serial("/dev/ttyUSB0", 115200).retry_interval(constants::MAX_RETRY_INTERVAL_MS + 1).build(),
       BuilderException);
 
   // Test valid configuration
   EXPECT_NO_THROW(auto serial =
-                      UnifiedBuilder::serial("/dev/ttyUSB0", 115200).retry_interval(1000).auto_start(false).build());
+                      unilink::serial("/dev/ttyUSB0", 115200).retry_interval(1000).auto_start(false).build());
 }
 
 /**
@@ -91,7 +91,7 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderInputValidation) {
 TEST_F(SerialBuilderImprovementsTest, SerialBuilderMethodChaining) {
   // Test valid method chaining
   EXPECT_NO_THROW({
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 115200)
+    auto serial = unilink::serial("/dev/ttyUSB0", 115200)
                       .auto_start(false)
                       .auto_manage(false)
                       .retry_interval(1000)
@@ -106,7 +106,7 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderMethodChaining) {
   // Test invalid retry interval in method chaining
   EXPECT_THROW(
       {
-        auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 115200)
+        auto serial = unilink::serial("/dev/ttyUSB0", 115200)
                           .retry_interval(0)  // Invalid
                           .build();
       },
@@ -131,7 +131,7 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderConstantsUsage) {
  */
 TEST_F(SerialBuilderImprovementsTest, SerialBuilderErrorMessages) {
   try {
-    auto serial = UnifiedBuilder::serial("", 115200).build();
+    auto serial = unilink::serial("", 115200).build();
     FAIL() << "Expected BuilderException to be thrown";
   } catch (const BuilderException& e) {
     EXPECT_THAT(e.what(), ::testing::HasSubstr("Invalid Serial parameters"));
@@ -140,7 +140,7 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderErrorMessages) {
   }
 
   try {
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 115200).retry_interval(0).build();
+    auto serial = unilink::serial("/dev/ttyUSB0", 115200).retry_interval(0).build();
     FAIL() << "Expected BuilderException to be thrown";
   } catch (const BuilderException& e) {
     EXPECT_THAT(e.what(), ::testing::HasSubstr("Invalid retry interval"));
@@ -154,11 +154,11 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderErrorMessages) {
 TEST_F(SerialBuilderImprovementsTest, SerialBuilderEndToEnd) {
   // Test that valid configurations work
   EXPECT_NO_THROW({
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 115200).auto_start(false).retry_interval(1000).build();
+    auto serial = unilink::serial("/dev/ttyUSB0", 115200).auto_start(false).retry_interval(1000).build();
     EXPECT_NE(serial, nullptr);
   });
 
   // Test that invalid configurations throw appropriate exceptions
-  EXPECT_THROW(auto serial = UnifiedBuilder::serial("", 115200).build(), BuilderException);
-  EXPECT_THROW(auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 0).build(), BuilderException);
+  EXPECT_THROW(auto serial = unilink::serial("", 115200).build(), BuilderException);
+  EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 0).build(), BuilderException);
 }

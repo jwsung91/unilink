@@ -108,7 +108,8 @@ class BuilderTest : public ::testing::Test {
 TEST_F(BuilderTest, TcpServerBuilderBasic) {
   uint16_t test_port = getTestPort();
 
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
+                .unlimited_clients()
                 .auto_start(false)  // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 처리
@@ -133,7 +134,7 @@ TEST_F(BuilderTest, TcpServerBuilderBasic) {
 TEST_F(BuilderTest, TcpClientBuilderBasic) {
   uint16_t test_port = getTestPort();
 
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(false)  // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 처리
@@ -156,7 +157,7 @@ TEST_F(BuilderTest, TcpClientBuilderBasic) {
 
 // SerialBuilder 기본 테스트
 TEST_F(BuilderTest, SerialBuilderBasic) {
-  serial_ = builder::UnifiedBuilder::serial("/dev/null", 9600)
+  serial_ = unilink::serial("/dev/null", 9600)
                 .auto_start(false)  // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 처리
@@ -181,7 +182,8 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
 TEST_F(BuilderTest, BuilderChaining) {
   uint16_t test_port = getTestPort();
 
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
+                .unlimited_clients()
                 .auto_start(false)
                 .auto_manage(true)
                 .on_data([this](const std::string& data) { data_received_.push_back(data); })
@@ -210,11 +212,11 @@ TEST_F(BuilderTest, BuilderChaining) {
 TEST_F(BuilderTest, MultipleBuilders) {
   uint16_t test_port = getTestPort();
 
-  server_ = builder::UnifiedBuilder::tcp_server(test_port).auto_start(false).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(false).build();
 
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port).auto_start(false).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port).auto_start(false).build();
 
-  serial_ = builder::UnifiedBuilder::serial("/dev/null", 115200).auto_start(false).build();
+  serial_ = unilink::serial("/dev/null", 115200).auto_start(false).build();
 
   ASSERT_NE(server_, nullptr);
   ASSERT_NE(client_, nullptr);
@@ -237,7 +239,7 @@ TEST_F(BuilderTest, MultipleBuilders) {
 TEST_F(BuilderTest, BuilderConfiguration) {
   uint16_t test_port = getTestPort();
 
-  server_ = builder::UnifiedBuilder::tcp_server(test_port).auto_start(false).auto_manage(false).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(false).auto_manage(false).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_FALSE(server_->is_connected());
@@ -256,7 +258,8 @@ TEST_F(BuilderTest, CallbackRegistration) {
   std::atomic<int> callback_count{0};
   std::atomic<int> error_callback_count{0};
 
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
+                .unlimited_clients()
                 .on_data([&callback_count](const std::string& data) { callback_count++; })
                 .on_connect([&callback_count]() { callback_count++; })
                 .on_disconnect([&callback_count]() { callback_count++; })
@@ -287,10 +290,10 @@ TEST_F(BuilderTest, CallbackRegistration) {
 // 빌더 재사용 테스트
 TEST_F(BuilderTest, BuilderReuse) {
   uint16_t test_port = getTestPort();
-  auto builder = builder::UnifiedBuilder::tcp_server(test_port);
+  auto builder = unilink::tcp_server(test_port);
 
   // 첫 번째 서버
-  auto server1 = builder.auto_start(false).on_data([](const std::string& data) {}).build();
+  auto server1 = builder.unlimited_clients().auto_start(false).on_data([](const std::string& data) {}).build();
 
   // 두 번째 서버 (같은 빌더 재사용)
   auto server2 = builder.auto_start(false).on_connect([]() {}).build();
@@ -317,7 +320,7 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
   uint16_t test_port = getTestPort();
 
   // tcp_server 편의 함수 테스트
-  auto server = unilink::tcp_server(test_port).on_connect([]() {}).on_data([](const std::string& data) {}).build();
+  auto server = unilink::tcp_server(test_port).unlimited_clients().on_connect([]() {}).on_data([](const std::string& data) {}).build();
 
   // tcp_client 편의 함수 테스트
   auto client =
@@ -398,12 +401,12 @@ TEST_F(BuilderTest, BuilderWithIndependentContext) {
   uint16_t test_port = getTestPort();
 
   // 독립적인 컨텍스트를 사용하는 서버 생성
-  auto server = builder::UnifiedBuilder::tcp_server(test_port).use_independent_context(true).auto_start(false).build();
+  auto server = unilink::tcp_server(test_port).unlimited_clients().use_independent_context(true).auto_start(false).build();
 
   EXPECT_NE(server, nullptr);
 
   // 독립적인 컨텍스트를 사용하는 클라이언트 생성
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  auto client = unilink::tcp_client("127.0.0.1", test_port)
                     .use_independent_context(true)
                     .auto_start(false)
                     .build();
@@ -412,7 +415,7 @@ TEST_F(BuilderTest, BuilderWithIndependentContext) {
 
   // 공유 컨텍스트를 사용하는 서버 생성
   auto shared_server =
-      builder::UnifiedBuilder::tcp_server(test_port + 1).use_independent_context(false).auto_start(false).build();
+      unilink::tcp_server(test_port + 1).unlimited_clients().use_independent_context(false).auto_start(false).build();
 
   EXPECT_NE(shared_server, nullptr);
 }
@@ -422,19 +425,19 @@ TEST_F(BuilderTest, BuilderWithIndependentContext) {
  */
 TEST_F(BuilderTest, TestIsolationScenario) {
   // 테스트 1: 독립적인 컨텍스트 사용
-  auto client1 = builder::UnifiedBuilder::tcp_client("127.0.0.1", getTestPort())
+  auto client1 = unilink::tcp_client("127.0.0.1", getTestPort())
                      .use_independent_context(true)
                      .auto_start(false)
                      .build();
 
   // 테스트 2: 공유 컨텍스트 사용
-  auto client2 = builder::UnifiedBuilder::tcp_client("127.0.0.1", getTestPort())
+  auto client2 = unilink::tcp_client("127.0.0.1", getTestPort())
                      .use_independent_context(false)
                      .auto_start(false)
                      .build();
 
   // 테스트 3: 또 다른 독립적인 컨텍스트
-  auto client3 = builder::UnifiedBuilder::tcp_client("127.0.0.1", getTestPort())
+  auto client3 = unilink::tcp_client("127.0.0.1", getTestPort())
                      .use_independent_context(true)
                      .auto_start(false)
                      .build();
@@ -449,7 +452,7 @@ TEST_F(BuilderTest, TestIsolationScenario) {
  * @brief 메서드 체이닝과 독립적인 컨텍스트 조합 테스트
  */
 TEST_F(BuilderTest, MethodChainingWithIndependentContext) {
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", getTestPort())
+  auto client = unilink::tcp_client("127.0.0.1", getTestPort())
                     .use_independent_context(true)
                     .auto_start(false)
                     .auto_manage(false)
@@ -472,19 +475,19 @@ TEST_F(BuilderTest, MethodChainingWithIndependentContext) {
  */
 TEST_F(BuilderTest, DISABLED_TcpClientBuilderExceptionSafety) {
   // Test invalid host
-  // EXPECT_THROW({ auto client = builder::UnifiedBuilder::tcp_client("", 8080).build(); }, common::BuilderException);
+  // EXPECT_THROW({ auto client = unilink::tcp_client("", 8080).build(); }, common::BuilderException);
 
   // Test invalid port
-  // EXPECT_THROW({ auto client = builder::UnifiedBuilder::tcp_client("localhost", 0).build(); }, common::BuilderException);
+  // EXPECT_THROW({ auto client = unilink::tcp_client("localhost", 0).build(); }, common::BuilderException);
 
   // Test invalid retry interval
   // EXPECT_THROW(
-  //     { auto client = builder::UnifiedBuilder::tcp_client("localhost", 8080).retry_interval(0).build(); },
+  //     { auto client = unilink::tcp_client("localhost", 8080).retry_interval(0).build(); },
   //     common::BuilderException);
 
   // Test valid configuration
   // EXPECT_NO_THROW({
-  //   auto client = builder::UnifiedBuilder::tcp_client("localhost", 8080).build();
+  //   auto client = unilink::tcp_client("localhost", 8080).build();
   //   EXPECT_NE(client, nullptr);
   // });
 }
@@ -495,14 +498,14 @@ TEST_F(BuilderTest, DISABLED_TcpClientBuilderExceptionSafety) {
  */
 TEST_F(BuilderTest, DISABLED_EndToEndExceptionSafety) {
   // Test that invalid configurations throw appropriate exceptions
-  // EXPECT_THROW(auto server = builder::UnifiedBuilder::tcp_server(0).unlimited_clients().build(), common::BuilderException);
+  // EXPECT_THROW(auto server = unilink::tcp_server(0).unlimited_clients().build(), common::BuilderException);
 
-  // EXPECT_THROW(auto client = builder::UnifiedBuilder::tcp_client("invalid..hostname", 8080).build(), common::BuilderException);
+  // EXPECT_THROW(auto client = unilink::tcp_client("invalid..hostname", 8080).build(), common::BuilderException);
 
   // Test that valid configurations work
-  // EXPECT_NO_THROW(auto server = builder::UnifiedBuilder::tcp_server(8080).unlimited_clients().build());
+  // EXPECT_NO_THROW(auto server = unilink::tcp_server(8080).unlimited_clients().build());
 
-  // EXPECT_NO_THROW(auto client = builder::UnifiedBuilder::tcp_client("localhost", 8080).build());
+  // EXPECT_NO_THROW(auto client = unilink::tcp_client("localhost", 8080).build());
 }
 
 int main(int argc, char** argv) {

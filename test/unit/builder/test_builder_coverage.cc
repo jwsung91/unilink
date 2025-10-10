@@ -139,8 +139,8 @@ TEST_F(BuilderCoverageTest, TcpServerBuilderInvalidClientLimit) {
 }
 
 TEST_F(BuilderCoverageTest, TcpServerBuilderZeroClientLimit) {
-  // Client limit of 0 means unlimited
-  auto server = tcp_server(test_port_).max_clients(0).auto_start(false).build();
+  // Test unlimited_clients (equivalent to max_clients(0))
+  auto server = tcp_server(test_port_).unlimited_clients().auto_start(false).build();
 
   EXPECT_NE(server, nullptr);
 }

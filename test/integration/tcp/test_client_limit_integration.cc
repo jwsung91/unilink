@@ -92,7 +92,7 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
   std::cout << "Testing single client limit integration, port: " << test_port << std::endl;
 
   // Single client 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .single_client()
                 .auto_start(false)
                 .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
@@ -145,7 +145,7 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   std::cout << "Testing multi client limit integration (limit 3), port: " << test_port << std::endl;
 
   // Multi client 서버 생성 (3개 제한)
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .multi_client(3)
                 .auto_start(false)
                 .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
@@ -190,7 +190,7 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
   std::cout << "Testing unlimited clients integration, port: " << test_port << std::endl;
 
   // Unlimited clients 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()
                 .auto_start(false)
                 .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
@@ -235,7 +235,7 @@ TEST_F(ClientLimitIntegrationTest, DynamicClientLimitChangeTest) {
   std::cout << "Testing dynamic client limit change, port: " << test_port << std::endl;
 
   // 초기에는 2개 클라이언트 제한
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .multi_client(2)
                 .auto_start(false)
                 .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
@@ -275,7 +275,7 @@ TEST_F(ClientLimitIntegrationTest, ClientLimitErrorHandlingTest) {
   // 잘못된 클라이언트 제한 설정 시도
   EXPECT_THROW(
       {
-        server_ = builder::UnifiedBuilder::tcp_server(test_port)
+        server_ = unilink::tcp_server(test_port)
                       .multi_client(0)  // 0은 유효하지 않음
                       .auto_start(false)
                       .build();

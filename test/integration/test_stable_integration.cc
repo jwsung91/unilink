@@ -80,7 +80,7 @@ class StableIntegrationTest : public ::testing::Test {
  */
 TEST_F(StableIntegrationTest, StableServerCreation) {
   // Given: Server configuration
-  server_ = builder::UnifiedBuilder::tcp_server(test_port_)
+  server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()  // 클라이언트 제한 없음
                 .auto_start(false)    // Don't auto-start to avoid timing issues
                 .on_connect([this]() {
@@ -117,7 +117,7 @@ TEST_F(StableIntegrationTest, StableServerCreation) {
  */
 TEST_F(StableIntegrationTest, StableClientCreation) {
   // Given: Client configuration
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 .auto_start(false)  // Don't auto-start to avoid connection attempts
                 .on_connect([this]() {
                   std::lock_guard<std::mutex> lock(mtx_);
@@ -157,7 +157,7 @@ TEST_F(StableIntegrationTest, StableClientCreation) {
  */
 TEST_F(StableIntegrationTest, StableServerClientCommunication) {
   // Given: Server setup
-  server_ = builder::UnifiedBuilder::tcp_server(test_port_)
+  server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()  // 클라이언트 제한 없음
                 .auto_start(true)
                 .on_connect([this]() {
@@ -178,7 +178,7 @@ TEST_F(StableIntegrationTest, StableServerClientCommunication) {
   TestUtils::waitFor(500);
 
   // Given: Client setup
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::lock_guard<std::mutex> lock(mtx_);
@@ -231,7 +231,7 @@ TEST_F(StableIntegrationTest, StableServerClientCommunication) {
  */
 TEST_F(StableIntegrationTest, StableErrorHandling) {
   // Test invalid port handling (should throw exception due to input validation)
-  EXPECT_THROW(auto invalid_server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
+  EXPECT_THROW(auto invalid_server = unilink::tcp_server(0)  // Invalid port
                                          .unlimited_clients()                // 클라이언트 제한 없음
                                          .auto_start(false)
                                          .on_error([this](const std::string& error) {
@@ -244,7 +244,7 @@ TEST_F(StableIntegrationTest, StableErrorHandling) {
                common::BuilderException);
 
   // Test invalid host handling
-  auto invalid_client = builder::UnifiedBuilder::tcp_client("invalid.host", 12345)
+  auto invalid_client = unilink::tcp_client("invalid.host", 12345)
                             .auto_start(false)
                             .on_error([this](const std::string& error) {
                               std::lock_guard<std::mutex> lock(mtx_);
@@ -273,7 +273,7 @@ TEST_F(StableIntegrationTest, StablePerformanceTest) {
   const int client_count = 50;  // Reduced count for stability
 
   for (int i = 0; i < client_count; ++i) {
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_ + i)
+    auto client = unilink::tcp_client("127.0.0.1", test_port_ + i)
                       .auto_start(false)  // Don't start to avoid connection attempts
                       .build();
 
@@ -308,7 +308,7 @@ TEST_F(StableIntegrationTest, StablePerformanceTest) {
  */
 TEST_F(StableIntegrationTest, StableBuilderPattern) {
   // Test method chaining
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
                     .auto_start(false)
                     .auto_manage(false)
                     .use_independent_context(true)
@@ -329,7 +329,7 @@ TEST_F(StableIntegrationTest, StableBuilderPattern) {
   EXPECT_NE(client, nullptr);
 
   // Test server builder
-  auto server = builder::UnifiedBuilder::tcp_server(test_port_)
+  auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(false)
                     .auto_manage(false)

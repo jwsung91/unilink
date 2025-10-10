@@ -70,7 +70,7 @@ TEST_F(DebugCommunicationTest, ServerCreationAndStatus) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -103,7 +103,7 @@ TEST_F(DebugCommunicationTest, ClientCreationAndConnection) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -118,7 +118,7 @@ TEST_F(DebugCommunicationTest, ClientCreationAndConnection) {
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
@@ -157,7 +157,7 @@ TEST_F(DebugCommunicationTest, SimpleCommunication) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -177,7 +177,7 @@ TEST_F(DebugCommunicationTest, SimpleCommunication) {
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
@@ -287,7 +287,7 @@ TEST_F(DetailedDebugTest, PortBindingStatus) {
   EXPECT_FALSE(isPortInUse(test_port)) << "Port " << test_port << " is already in use";
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -321,7 +321,7 @@ TEST_F(DetailedDebugTest, RawTcpConnection) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -368,7 +368,7 @@ TEST_F(DetailedDebugTest, ServerErrorLogging) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_error([this](const std::string& error) {
                   std::cout << "Server error logged: " << error << std::endl;
@@ -462,7 +462,7 @@ TEST_F(FixedCommunicationTest, ServerStartAndListen) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -496,7 +496,7 @@ TEST_F(FixedCommunicationTest, ClientConnection) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -511,7 +511,7 @@ TEST_F(FixedCommunicationTest, ClientConnection) {
   waitForServerReady();
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
@@ -548,7 +548,7 @@ TEST_F(FixedCommunicationTest, RealDataCommunication) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -568,7 +568,7 @@ TEST_F(FixedCommunicationTest, RealDataCommunication) {
   waitForServerReady();
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
@@ -667,7 +667,7 @@ TEST_F(RealCommunicationTest, ServerClientCommunication) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -687,7 +687,7 @@ TEST_F(RealCommunicationTest, ServerClientCommunication) {
   waitForServerReady();
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
@@ -718,7 +718,7 @@ TEST_F(RealCommunicationTest, EchoServerTest) {
   uint16_t test_port = getTestPort();
 
   // Echo 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Echo server: Client connected" << std::endl;
@@ -742,7 +742,7 @@ TEST_F(RealCommunicationTest, EchoServerTest) {
   waitForServerReady();
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Client: Connected to echo server" << std::endl;
@@ -793,7 +793,7 @@ TEST_F(RealCommunicationTest, MultipleMessageCommunication) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
@@ -813,7 +813,7 @@ TEST_F(RealCommunicationTest, MultipleMessageCommunication) {
   waitForServerReady();
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(true)
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;

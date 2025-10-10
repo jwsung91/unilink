@@ -77,7 +77,7 @@ class SerialTest : public ::testing::Test {
 TEST_F(SerialTest, SerialBasicFunctionality) {
   std::cout << "\n=== Serial Basic Functionality Test ===" << std::endl;
 
-  auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+  auto serial = unilink::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
 
   EXPECT_NE(serial, nullptr);
 
@@ -106,7 +106,7 @@ TEST_F(SerialTest, SerialDifferentBaudRates) {
   std::cout << "\n=== Serial Different Baud Rates Test ===" << std::endl;
 
   for (auto baud_rate : test_baud_rates_) {
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
+    auto serial = unilink::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
 
     EXPECT_NE(serial, nullptr);
     std::cout << "Serial created with baud rate: " << baud_rate << std::endl;
@@ -128,7 +128,7 @@ TEST_F(SerialTest, SerialNonExistentDevice) {
   // Test with non-existent device
   std::string non_existent_device = "/dev/ttyNONEXISTENT";
 
-  auto serial = UnifiedBuilder::serial(non_existent_device, 9600).auto_start(false).build();
+  auto serial = unilink::serial(non_existent_device, 9600).auto_start(false).build();
 
   EXPECT_NE(serial, nullptr);
 
@@ -158,7 +158,7 @@ TEST_F(SerialTest, SerialInvalidBaudRates) {
   // Test that truly invalid baud rates throw exceptions
   for (auto baud_rate : invalid_baud_rates) {
     EXPECT_THROW(
-        { auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); },
+        { auto serial = unilink::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); },
         common::BuilderException);
     std::cout << "Correctly rejected invalid baud rate: " << baud_rate << std::endl;
   }
@@ -166,7 +166,7 @@ TEST_F(SerialTest, SerialInvalidBaudRates) {
   // Test that valid baud rates do not throw exceptions
   for (auto baud_rate : valid_baud_rates) {
     EXPECT_NO_THROW({
-      auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
+      auto serial = unilink::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
       EXPECT_NE(serial, nullptr);
     });
     std::cout << "Correctly accepted valid baud rate: " << baud_rate << std::endl;
@@ -192,7 +192,7 @@ TEST_F(SerialTest, SerialExtremeBaudRates) {
   // Test valid extreme baud rates
   for (auto baud_rate : valid_extreme_baud_rates) {
     EXPECT_NO_THROW({
-      auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
+      auto serial = unilink::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
       EXPECT_NE(serial, nullptr);
     });
     std::cout << "Serial created with valid extreme baud rate: " << baud_rate << std::endl;
@@ -201,7 +201,7 @@ TEST_F(SerialTest, SerialExtremeBaudRates) {
   // Test invalid extreme baud rates
   for (auto baud_rate : invalid_extreme_baud_rates) {
     EXPECT_THROW(
-        { auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); },
+        { auto serial = unilink::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); },
         common::BuilderException);
     std::cout << "Correctly rejected invalid extreme baud rate: " << baud_rate << std::endl;
   }
@@ -219,7 +219,7 @@ TEST_F(SerialTest, SerialExtremeBaudRates) {
 TEST_F(SerialTest, SerialEmptyData) {
   std::cout << "\n=== Serial Empty Data Test ===" << std::endl;
 
-  auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+  auto serial = unilink::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
 
   EXPECT_NE(serial, nullptr);
 
@@ -248,7 +248,7 @@ TEST_F(SerialTest, SerialEmptyData) {
 TEST_F(SerialTest, SerialLargeData) {
   std::cout << "\n=== Serial Large Data Test ===" << std::endl;
 
-  auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+  auto serial = unilink::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
 
   EXPECT_NE(serial, nullptr);
 
@@ -275,7 +275,7 @@ TEST_F(SerialTest, SerialLargeData) {
 TEST_F(SerialTest, SerialBinaryData) {
   std::cout << "\n=== Serial Binary Data Test ===" << std::endl;
 
-  auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+  auto serial = unilink::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
 
   EXPECT_NE(serial, nullptr);
 
@@ -327,14 +327,14 @@ TEST_F(SerialTest, SerialInvalidDevicePaths) {
   // Test paths that should be rejected by input validation
   for (const auto& path : invalid_paths) {
     EXPECT_THROW(
-        { auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
+        { auto serial = unilink::serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
     std::cout << "Correctly rejected invalid path: '" << path << "'" << std::endl;
   }
 
   // Test paths that should pass input validation (even if device doesn't exist)
   for (const auto& path : valid_paths) {
     EXPECT_NO_THROW({
-      auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build();
+      auto serial = unilink::serial(path, 9600).auto_start(false).build();
       EXPECT_NE(serial, nullptr);
     });
     std::cout << "Serial created with valid path: '" << path << "'" << std::endl;
@@ -366,14 +366,14 @@ TEST_F(SerialTest, SerialSpecialCharactersInDevicePath) {
   // Test that special character paths are rejected (security improvement)
   for (const auto& path : invalid_special_paths) {
     EXPECT_THROW(
-        { auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
+        { auto serial = unilink::serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
     std::cout << "Correctly rejected path with special characters: '" << path << "'" << std::endl;
   }
 
   // Test that valid paths are accepted
   for (const auto& path : valid_paths) {
     EXPECT_NO_THROW({
-      auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build();
+      auto serial = unilink::serial(path, 9600).auto_start(false).build();
       EXPECT_NE(serial, nullptr);
     });
     std::cout << "Serial created with valid path: '" << path << "'" << std::endl;
@@ -393,7 +393,7 @@ TEST_F(SerialTest, SerialErrorHandling) {
   std::cout << "\n=== Serial Error Handling Test ===" << std::endl;
 
   auto serial =
-      UnifiedBuilder::serial("/dev/ttyUSB0", 9600)
+      unilink::serial("/dev/ttyUSB0", 9600)
           .auto_start(false)
           .on_error([](const std::string& error) { std::cout << "Error callback triggered: " << error << std::endl; })
           .build();
@@ -427,7 +427,7 @@ TEST_F(SerialTest, SerialMultipleErrorScenarios) {
 
   std::atomic<int> error_count{0};
 
-  auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600)
+  auto serial = unilink::serial("/dev/ttyUSB0", 9600)
                     .auto_start(false)
                     .on_error([&](const std::string& error) {
                       error_count++;
@@ -465,7 +465,7 @@ TEST_F(SerialTest, SerialMultipleErrorScenarios) {
 TEST_F(SerialTest, SerialHighFrequencyOperations) {
   std::cout << "\n=== Serial High Frequency Operations Test ===" << std::endl;
 
-  auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+  auto serial = unilink::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
 
   EXPECT_NE(serial, nullptr);
 
@@ -508,7 +508,7 @@ TEST_F(SerialTest, SerialConcurrentOperations) {
 
   for (int t = 0; t < num_threads; ++t) {
     threads.emplace_back([&, t]() {
-      auto serial = UnifiedBuilder::serial("/dev/ttyUSB" + std::to_string(t), 9600).auto_start(false).build();
+      auto serial = unilink::serial("/dev/ttyUSB" + std::to_string(t), 9600).auto_start(false).build();
 
       for (int i = 0; i < operations_per_thread; ++i) {
         try {
@@ -543,7 +543,7 @@ TEST_F(SerialTest, SerialDataBitsConfigurations) {
   std::vector<int> data_bits_options = {5, 6, 7, 8, 9};
 
   for (auto data_bits : data_bits_options) {
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+    auto serial = unilink::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
 
     EXPECT_NE(serial, nullptr);
 
@@ -563,7 +563,7 @@ TEST_F(SerialTest, SerialStopBitsConfigurations) {
   std::vector<int> stop_bits_options = {1, 2};
 
   for (auto stop_bits : stop_bits_options) {
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+    auto serial = unilink::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
 
     EXPECT_NE(serial, nullptr);
 
@@ -583,7 +583,7 @@ TEST_F(SerialTest, SerialParityConfigurations) {
   std::vector<std::string> parity_options = {"none", "even", "odd", "mark", "space"};
 
   for (const auto& parity : parity_options) {
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+    auto serial = unilink::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
 
     EXPECT_NE(serial, nullptr);
 
