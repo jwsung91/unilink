@@ -12,6 +12,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/builder/unified_builder.hpp"
+#include "unilink/common/exceptions.hpp"
 #include "unilink/wrapper/serial/serial.hpp"
 
 using namespace unilink;
@@ -148,13 +149,27 @@ TEST_F(SerialTest, SerialNonExistentDevice) {
 TEST_F(SerialTest, SerialInvalidBaudRates) {
   std::cout << "\n=== Serial Invalid Baud Rates Test ===" << std::endl;
 
-  std::vector<uint32_t> invalid_baud_rates = {0, 1, 2, 3, 4, 5, 10, 100, 1000, 999999};
+  // Truly invalid baud rates (below minimum or above maximum)
+  std::vector<uint32_t> invalid_baud_rates = {0, 1, 2, 3, 4, 5, 10, 49, 4000001, 5000000};
 
+  // Valid baud rates that should not throw exceptions
+  std::vector<uint32_t> valid_baud_rates = {100, 1000, 999999};
+
+  // Test that truly invalid baud rates throw exceptions
   for (auto baud_rate : invalid_baud_rates) {
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
+    EXPECT_THROW(
+        { auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); },
+        common::BuilderException);
+    std::cout << "Correctly rejected invalid baud rate: " << baud_rate << std::endl;
+  }
 
-    EXPECT_NE(serial, nullptr);
-    std::cout << "Serial created with baud rate: " << baud_rate << std::endl;
+  // Test that valid baud rates do not throw exceptions
+  for (auto baud_rate : valid_baud_rates) {
+    EXPECT_NO_THROW({
+      auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
+      EXPECT_NE(serial, nullptr);
+    });
+    std::cout << "Correctly accepted valid baud rate: " << baud_rate << std::endl;
   }
 
   std::cout << "Invalid baud rates test completed" << std::endl;
@@ -166,15 +181,29 @@ TEST_F(SerialTest, SerialInvalidBaudRates) {
 TEST_F(SerialTest, SerialExtremeBaudRates) {
   std::cout << "\n=== Serial Extreme Baud Rates Test ===" << std::endl;
 
-  std::vector<uint32_t> extreme_baud_rates = {50,     75,     110,    134,    150,     200,     300,     600,
-                                              1200,   1800,   2400,   4800,   14400,   28800,   38400,   57600,
-                                              115200, 230400, 460800, 921600, 1000000, 2000000, 4000000, 8000000};
+  // Valid extreme baud rates (within range)
+  std::vector<uint32_t> valid_extreme_baud_rates = {50,     75,     110,    134,    150,     200,     300,    600,
+                                                    1200,   1800,   2400,   4800,   14400,   28800,   38400,  57600,
+                                                    115200, 230400, 460800, 921600, 1000000, 2000000, 4000000};
 
-  for (auto baud_rate : extreme_baud_rates) {
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
+  // Invalid extreme baud rates (out of range)
+  std::vector<uint32_t> invalid_extreme_baud_rates = {8000000};
 
-    EXPECT_NE(serial, nullptr);
-    std::cout << "Serial created with extreme baud rate: " << baud_rate << std::endl;
+  // Test valid extreme baud rates
+  for (auto baud_rate : valid_extreme_baud_rates) {
+    EXPECT_NO_THROW({
+      auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
+      EXPECT_NE(serial, nullptr);
+    });
+    std::cout << "Serial created with valid extreme baud rate: " << baud_rate << std::endl;
+  }
+
+  // Test invalid extreme baud rates
+  for (auto baud_rate : invalid_extreme_baud_rates) {
+    EXPECT_THROW(
+        { auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); },
+        common::BuilderException);
+    std::cout << "Correctly rejected invalid extreme baud rate: " << baud_rate << std::endl;
   }
 
   std::cout << "Extreme baud rates test completed" << std::endl;
@@ -287,15 +316,28 @@ TEST_F(SerialTest, SerialBinaryData) {
 TEST_F(SerialTest, SerialInvalidDevicePaths) {
   std::cout << "\n=== Serial Invalid Device Paths Test ===" << std::endl;
 
-  std::vector<std::string> invalid_paths = {"",    "invalid",   "/dev/invalid", "/dev/tty",    "/dev/ttyX",
-                                            "COM", "COMX",      "LPT1",         "PRN",         "AUX",
-                                            "NUL", "/dev/null", "/dev/zero",    "/dev/random", "/dev/urandom"};
+  // Paths that should be rejected by input validation (truly invalid format)
+  std::vector<std::string> invalid_paths = {"", "invalid", "COM", "COMX"};
 
+  // Paths that should be allowed by input validation (valid device path format, even if device doesn't exist)
+  std::vector<std::string> valid_paths = {"/dev/invalid", "/dev/tty",    "/dev/ttyX",    "NUL",          "/dev/null",
+                                          "/dev/zero",    "/dev/random", "/dev/urandom", "/dev/ttyUSB0", "/dev/ttyACM0",
+                                          "COM1",         "COM2",        "PRN",          "AUX",          "LPT1"};
+
+  // Test paths that should be rejected by input validation
   for (const auto& path : invalid_paths) {
-    auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build();
+    EXPECT_THROW(
+        { auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
+    std::cout << "Correctly rejected invalid path: '" << path << "'" << std::endl;
+  }
 
-    EXPECT_NE(serial, nullptr);
-    std::cout << "Serial created with invalid path: '" << path << "'" << std::endl;
+  // Test paths that should pass input validation (even if device doesn't exist)
+  for (const auto& path : valid_paths) {
+    EXPECT_NO_THROW({
+      auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build();
+      EXPECT_NE(serial, nullptr);
+    });
+    std::cout << "Serial created with valid path: '" << path << "'" << std::endl;
   }
 
   std::cout << "Invalid device paths test completed" << std::endl;
@@ -307,21 +349,34 @@ TEST_F(SerialTest, SerialInvalidDevicePaths) {
 TEST_F(SerialTest, SerialSpecialCharactersInDevicePath) {
   std::cout << "\n=== Serial Special Characters In Device Path Test ===" << std::endl;
 
-  std::vector<std::string> special_paths = {
-      "/dev/ttyUSB0@special",    "/dev/ttyUSB0#test",   "/dev/ttyUSB0$value",    "/dev/ttyUSB0%percent",
-      "/dev/ttyUSB0^caret",      "/dev/ttyUSB0&and",    "/dev/ttyUSB0*star",     "/dev/ttyUSB0(open",
-      "/dev/ttyUSB0)close",      "/dev/ttyUSB0+plus",   "/dev/ttyUSB0=equals",   "/dev/ttyUSB0[open",
-      "/dev/ttyUSB0]close",      "/dev/ttyUSB0{open",   "/dev/ttyUSB0}close",    "/dev/ttyUSB0|pipe",
-      "/dev/ttyUSB0\\backslash", "/dev/ttyUSB0:colon",  "/dev/ttyUSB0;semcolon", "/dev/ttyUSB0\"quote",
-      "/dev/ttyUSB0'apostrophe", "/dev/ttyUSB0<less",   "/dev/ttyUSB0>greater",  "/dev/ttyUSB0,comma",
-      "/dev/ttyUSB0.question",   "/dev/ttyUSB0/slash",  "/dev/ttyUSB0 space",    "/dev/ttyUSB0\ttab",
-      "/dev/ttyUSB0\nnewline",   "/dev/ttyUSB0\rreturn"};
+  // Paths with special characters that should be rejected by input validation (security improvement)
+  std::vector<std::string> invalid_special_paths = {
+      "/dev/ttyUSB0@special",    "/dev/ttyUSB0#test",  "/dev/ttyUSB0$value",    "/dev/ttyUSB0%percent",
+      "/dev/ttyUSB0^caret",      "/dev/ttyUSB0&and",   "/dev/ttyUSB0*star",     "/dev/ttyUSB0(open",
+      "/dev/ttyUSB0)close",      "/dev/ttyUSB0+plus",  "/dev/ttyUSB0=equals",   "/dev/ttyUSB0[open",
+      "/dev/ttyUSB0]close",      "/dev/ttyUSB0{open",  "/dev/ttyUSB0}close",    "/dev/ttyUSB0|pipe",
+      "/dev/ttyUSB0\\backslash", "/dev/ttyUSB0:colon", "/dev/ttyUSB0;semcolon", "/dev/ttyUSB0\"quote",
+      "/dev/ttyUSB0'apostrophe", "/dev/ttyUSB0<less",  "/dev/ttyUSB0>greater",  "/dev/ttyUSB0,comma",
+      "/dev/ttyUSB0.question",   "/dev/ttyUSB0 space", "/dev/ttyUSB0\ttab",     "/dev/ttyUSB0\nnewline",
+      "/dev/ttyUSB0\rreturn"};
 
-  for (const auto& path : special_paths) {
-    auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build();
+  // Valid paths (should pass input validation)
+  std::vector<std::string> valid_paths = {"/dev/ttyUSB0", "/dev/ttyACM0", "COM1", "COM2"};
 
-    EXPECT_NE(serial, nullptr);
-    std::cout << "Serial created with special path: '" << path << "'" << std::endl;
+  // Test that special character paths are rejected (security improvement)
+  for (const auto& path : invalid_special_paths) {
+    EXPECT_THROW(
+        { auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
+    std::cout << "Correctly rejected path with special characters: '" << path << "'" << std::endl;
+  }
+
+  // Test that valid paths are accepted
+  for (const auto& path : valid_paths) {
+    EXPECT_NO_THROW({
+      auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build();
+      EXPECT_NE(serial, nullptr);
+    });
+    std::cout << "Serial created with valid path: '" << path << "'" << std::endl;
   }
 
   std::cout << "Special characters in device path test completed" << std::endl;

@@ -1,6 +1,8 @@
 #include "unilink/builder/tcp_server_builder.hpp"
 
 #include "unilink/builder/auto_initializer.hpp"
+#include "unilink/common/exceptions.hpp"
+#include "unilink/common/input_validator.hpp"
 #include "unilink/common/io_context_manager.hpp"
 
 namespace unilink {
@@ -13,9 +15,17 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
       use_independent_context_(false),
       enable_port_retry_(false),
       max_port_retries_(3),
-      port_retry_interval_ms_(1000),
+      port_retry_interval_ms_(common::constants::DEFAULT_RETRY_INTERVAL_MS / 2),
       max_clients_(SIZE_MAX),
-      client_limit_set_(false) {}
+      client_limit_set_(false) {
+  // Validate input parameters
+  try {
+    common::InputValidator::validate_port(port_);
+  } catch (const common::ValidationException& e) {
+    throw common::BuilderException("Invalid TCP server parameters: " + e.get_full_message(), "TcpServerBuilder",
+                                   "constructor");
+  }
+}
 
 std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   // Client limit validation

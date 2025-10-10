@@ -6,6 +6,8 @@
 #include <regex>
 
 #include "unilink/common/common.hpp"
+#include "unilink/common/exceptions.hpp"
+#include "unilink/common/input_validator.hpp"
 
 using namespace unilink::common;
 
@@ -321,4 +323,171 @@ TEST_F(LogRotationCommonTest, LogRotationWithoutRotation) {
   EXPECT_TRUE(std::filesystem::exists("test_rotation.log"));
   size_t file_size = get_file_size("test_rotation.log");
   EXPECT_LT(file_size, config.max_file_size_bytes) << "File should be smaller than rotation threshold";
+}
+
+// ============================================================================
+// INPUT VALIDATION TESTS
+// ============================================================================
+
+/**
+ * @brief Test host validation
+ */
+TEST(CommonTest, HostValidation) {
+  EXPECT_NO_THROW(InputValidator::validate_host("localhost"));
+  EXPECT_NO_THROW(InputValidator::validate_host("127.0.0.1"));
+  EXPECT_NO_THROW(InputValidator::validate_host("example.com"));
+  EXPECT_NO_THROW(InputValidator::validate_host("192.168.1.1"));
+
+  // Invalid hosts
+  EXPECT_THROW(InputValidator::validate_host(""), ValidationException);
+  EXPECT_THROW(InputValidator::validate_host("invalid..hostname"), ValidationException);
+
+  // Test specific invalid IPv4 addresses - using direct IPv4 validation
+  EXPECT_THROW(InputValidator::validate_ipv4_address("256.256.256.256"), ValidationException);
+  EXPECT_THROW(InputValidator::validate_ipv4_address("192.168.01.1"), ValidationException);   // Leading zero
+  EXPECT_THROW(InputValidator::validate_ipv4_address("192.168.1"), ValidationException);      // Too few octets
+  EXPECT_THROW(InputValidator::validate_ipv4_address("192.168.1.1.1"), ValidationException);  // Too many octets
+
+  EXPECT_THROW(InputValidator::validate_host("-invalid-hostname"), ValidationException);
+  EXPECT_THROW(InputValidator::validate_host("hostname-"), ValidationException);
+}
+
+/**
+ * @brief Test port validation
+ */
+TEST(CommonTest, PortValidation) {
+  EXPECT_NO_THROW(InputValidator::validate_port(1));
+  EXPECT_NO_THROW(InputValidator::validate_port(8080));
+  EXPECT_NO_THROW(InputValidator::validate_port(65535));
+
+  EXPECT_THROW(InputValidator::validate_port(0), ValidationException);
+  EXPECT_THROW(InputValidator::validate_port(65536), ValidationException);
+}
+
+/**
+ * @brief Test device path validation
+ */
+TEST(CommonTest, DevicePathValidation) {
+  EXPECT_NO_THROW(InputValidator::validate_device_path("/dev/ttyUSB0"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("/dev/ttyACM0"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("COM1"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("COM2"));
+
+  EXPECT_THROW(InputValidator::validate_device_path(""), ValidationException);
+  EXPECT_THROW(InputValidator::validate_device_path("invalid"), ValidationException);
+}
+
+/**
+ * @brief Test baud rate validation
+ */
+TEST(CommonTest, BaudRateValidation) {
+  EXPECT_NO_THROW(InputValidator::validate_baud_rate(9600));
+  EXPECT_NO_THROW(InputValidator::validate_baud_rate(115200));
+  EXPECT_NO_THROW(InputValidator::validate_baud_rate(4000000));
+
+  EXPECT_THROW(InputValidator::validate_baud_rate(0), ValidationException);
+  EXPECT_THROW(InputValidator::validate_baud_rate(49), ValidationException);
+  EXPECT_THROW(InputValidator::validate_baud_rate(4000001), ValidationException);
+}
+
+/**
+ * @brief Test buffer size validation
+ */
+TEST(CommonTest, BufferSizeValidation) {
+  EXPECT_NO_THROW(InputValidator::validate_buffer_size(1024));
+  EXPECT_NO_THROW(InputValidator::validate_buffer_size(4096));
+  EXPECT_NO_THROW(InputValidator::validate_buffer_size(65536));
+
+  EXPECT_THROW(InputValidator::validate_buffer_size(0), ValidationException);
+  EXPECT_THROW(InputValidator::validate_buffer_size(65 * 1024 * 1024), ValidationException);
+}
+
+/**
+ * @brief Test timeout validation
+ */
+TEST(CommonTest, TimeoutValidation) {
+  // Valid timeouts
+  EXPECT_NO_THROW(InputValidator::validate_timeout(100));  // Minimum valid timeout
+  EXPECT_NO_THROW(InputValidator::validate_timeout(5000));
+  EXPECT_NO_THROW(InputValidator::validate_timeout(300000));
+
+  // Invalid timeouts
+  EXPECT_THROW(InputValidator::validate_timeout(0), ValidationException);
+  EXPECT_THROW(InputValidator::validate_timeout(99), ValidationException);  // Below minimum
+  EXPECT_THROW(InputValidator::validate_timeout(300001), ValidationException);
+}
+
+/**
+ * @brief Test retry interval validation
+ */
+TEST(CommonTest, RetryIntervalValidation) {
+  // Valid retry intervals
+  EXPECT_NO_THROW(InputValidator::validate_retry_interval(100));  // Minimum valid retry interval
+  EXPECT_NO_THROW(InputValidator::validate_retry_interval(1000));
+  EXPECT_NO_THROW(InputValidator::validate_retry_interval(300000));
+
+  // Invalid retry intervals
+  EXPECT_THROW(InputValidator::validate_retry_interval(0), ValidationException);
+  EXPECT_THROW(InputValidator::validate_retry_interval(99), ValidationException);  // Below minimum
+  EXPECT_THROW(InputValidator::validate_retry_interval(300001), ValidationException);
+}
+
+// ============================================================================
+// CONSTANTS TESTS
+// ============================================================================
+
+/**
+ * @brief Test constants are properly defined
+ */
+TEST(CommonTest, ConstantsDefinition) {
+  // Buffer size constants
+  EXPECT_GT(constants::MAX_BUFFER_SIZE, 0);
+  EXPECT_GT(constants::MIN_BUFFER_SIZE, 0);
+  EXPECT_GT(constants::DEFAULT_BUFFER_SIZE, 0);
+  EXPECT_GT(constants::LARGE_BUFFER_THRESHOLD, 0);
+
+  // Retry and timeout constants
+  EXPECT_GT(constants::DEFAULT_RETRY_INTERVAL_MS, 0);
+  EXPECT_GT(constants::MIN_RETRY_INTERVAL_MS, 0);
+  EXPECT_GT(constants::MAX_RETRY_INTERVAL_MS, 0);
+  EXPECT_GT(constants::DEFAULT_CONNECTION_TIMEOUT_MS, 0);
+  EXPECT_GT(constants::MIN_CONNECTION_TIMEOUT_MS, 0);
+  EXPECT_GT(constants::MAX_CONNECTION_TIMEOUT_MS, 0);
+
+  // Validation constants
+  EXPECT_GT(constants::MAX_HOSTNAME_LENGTH, 0);
+  EXPECT_GT(constants::MAX_DEVICE_PATH_LENGTH, 0);
+  EXPECT_GT(constants::MIN_BAUD_RATE, 0);
+  EXPECT_GT(constants::MAX_BAUD_RATE, 0);
+  EXPECT_GT(constants::MIN_DATA_BITS, 0);
+  EXPECT_GT(constants::MAX_DATA_BITS, 0);
+  EXPECT_GT(constants::MIN_STOP_BITS, 0);
+  EXPECT_GT(constants::MAX_STOP_BITS, 0);
+}
+
+/**
+ * @brief Test constants consistency
+ */
+TEST(CommonTest, ConstantsConsistency) {
+  // Buffer size consistency
+  EXPECT_LE(constants::MIN_BUFFER_SIZE, constants::DEFAULT_BUFFER_SIZE);
+  EXPECT_LE(constants::DEFAULT_BUFFER_SIZE, constants::LARGE_BUFFER_THRESHOLD);
+  EXPECT_LE(constants::LARGE_BUFFER_THRESHOLD, constants::MAX_BUFFER_SIZE);
+
+  // Retry interval consistency
+  EXPECT_LE(constants::MIN_RETRY_INTERVAL_MS, constants::DEFAULT_RETRY_INTERVAL_MS);
+  EXPECT_LE(constants::DEFAULT_RETRY_INTERVAL_MS, constants::MAX_RETRY_INTERVAL_MS);
+
+  // Timeout consistency
+  EXPECT_LE(constants::MIN_CONNECTION_TIMEOUT_MS, constants::DEFAULT_CONNECTION_TIMEOUT_MS);
+  EXPECT_LE(constants::DEFAULT_CONNECTION_TIMEOUT_MS, constants::MAX_CONNECTION_TIMEOUT_MS);
+
+  // Baud rate consistency
+  EXPECT_LE(constants::MIN_BAUD_RATE, constants::MAX_BAUD_RATE);
+
+  // Data bits consistency
+  EXPECT_LE(constants::MIN_DATA_BITS, constants::MAX_DATA_BITS);
+
+  // Stop bits consistency
+  EXPECT_LE(constants::MIN_STOP_BITS, constants::MAX_STOP_BITS);
 }
