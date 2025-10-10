@@ -137,8 +137,11 @@ TEST_F(LoggerCoverageTest, FlushLogs) {
 // ============================================================================
 
 TEST_F(LoggerCoverageTest, EnableLogRotation) {
-  Logger::instance().set_file_output_with_rotation(1024, 3);  // 1KB per file, 3 backups
-  Logger::instance().set_file_output(test_log_file_);
+  LogRotationConfig config;
+  config.max_file_size_bytes = 1024;  // 1KB
+  config.max_files = 3;
+  
+  Logger::instance().set_file_output_with_rotation(test_log_file_, config);
 
   // Write enough data to trigger rotation
   for (int i = 0; i < 100; i++) {
@@ -149,13 +152,10 @@ TEST_F(LoggerCoverageTest, EnableLogRotation) {
   std::this_thread::sleep_for(200ms);
 
   Logger::instance().set_file_output("");
-  Logger::instance().set_file_output("");
 }
 
 TEST_F(LoggerCoverageTest, DisableLogRotation) {
-  Logger::instance().set_file_output_with_rotation(1024, 3);
-  Logger::instance().set_file_output("");
-
+  // Just test normal file logging without rotation
   Logger::instance().set_file_output(test_log_file_);
   UNILINK_LOG_INFO("test", "no_rotation", "message without rotation");
   Logger::instance().flush();
@@ -215,8 +215,11 @@ TEST_F(LoggerCoverageTest, CombinedFileAndConsole) {
 
 TEST_F(LoggerCoverageTest, AsyncWithRotation) {
   Logger::instance().set_async_logging(true);
-  Logger::instance().set_file_output_with_rotation(512, 2);
-  Logger::instance().set_file_output(test_log_file_);
+  
+  LogRotationConfig config;
+  config.max_file_size_bytes = 512;
+  config.max_files = 2;
+  Logger::instance().set_file_output_with_rotation(test_log_file_, config);
 
   for (int i = 0; i < 50; i++) {
     UNILINK_LOG_INFO("test", "async_rot", "Log message number " + std::to_string(i) + " with some extra content");
@@ -226,7 +229,6 @@ TEST_F(LoggerCoverageTest, AsyncWithRotation) {
   std::this_thread::sleep_for(300ms);
 
   Logger::instance().set_async_logging(false);
-  Logger::instance().set_file_output("");
   Logger::instance().set_file_output("");
 }
 

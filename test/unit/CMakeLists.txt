@@ -3,7 +3,7 @@
 
 # Common tests (separate executables)
 # NOTE: test_common.cc temporarily disabled due to namespace issues
-foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc)
+foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_coverage.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} common/${test_file})
   target_link_libraries(run_unit_${test_name}
