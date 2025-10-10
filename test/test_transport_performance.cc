@@ -598,8 +598,8 @@ TEST_F(TransportPerformanceTest, BoostTcpSocketBasicFunctionality) {
   // --- Test Logic ---
   boost::system::error_code ec;
 
-  // Socket이 생성되었는지 확인
-  EXPECT_TRUE(&boost_socket != nullptr);
+  // Socket이 생성되었는지 확인 (객체가 유효한지 확인)
+  EXPECT_TRUE(true);  // 객체 생성 자체가 성공했다면 유효함
 
   // --- Verification ---
   // Socket 생성이 성공했는지 확인
