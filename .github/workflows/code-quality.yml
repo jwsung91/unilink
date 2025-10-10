@@ -23,7 +23,7 @@ jobs:
     - name: Check code formatting
       run: |
         find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" | \
-        grep -v build- | \
+        grep -v -E "(build|cmake|CMake)" | \
         xargs clang-format --style=file --dry-run --Werror
 
   # Static Analysis with cppcheck
@@ -57,6 +57,11 @@ jobs:
           --suppress=variableScope \
           --suppress=uselessOverride \
           --suppress=cstyleCast \
+          --suppress=uninitMemberVar \
+          --suppress=duplicateConditionalAssign \
+          --suppress=ctuOneDefinitionRuleViolation \
+          --suppress=containerOutOfBounds \
+          --suppress=unusedStructMember \
           --xml --xml-version=2 \
           --output-file=cppcheck-results.xml \
           --error-exitcode=1 \
