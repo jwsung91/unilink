@@ -71,13 +71,13 @@ TEST_F(ImprovedArchitectureTest, CurrentResourceSharingIssue) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port).auto_start(true).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(true).build();
 
   ASSERT_NE(server_, nullptr);
   std::cout << "Server created successfully" << std::endl;
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port).auto_start(true).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port).auto_start(true).build();
 
   ASSERT_NE(client_, nullptr);
   std::cout << "Client created successfully" << std::endl;
@@ -121,7 +121,7 @@ TEST_F(ImprovedArchitectureTest, UpperAPIAutoInitialization) {
   }
 
   // 빌더 사용 시 자동으로 IoContextManager가 시작됨
-  server_ = builder::UnifiedBuilder::tcp_server(test_port).auto_start(true).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(true).build();
 
   ASSERT_NE(server_, nullptr);
 

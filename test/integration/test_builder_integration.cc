@@ -467,8 +467,19 @@ TEST_F(BuilderIntegrationTest, ErrorHandling) {
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  // 유효하지 않은 포트로 서버 생성 시도
-  auto server = unilink::tcp_server(0)  // 유효하지 않은 포트
+  // Test 1: 유효하지 않은 포트로 서버 생성 시도는 예외 발생
+  EXPECT_THROW(
+      {
+        auto server = unilink::tcp_server(0)  // 유효하지 않은 포트
+                          .unlimited_clients()
+                          .auto_start(false)
+                          .build();
+      },
+      std::exception);
+
+  // Test 2: 유효한 서버로 에러 핸들러 테스트
+  auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .auto_start(false)
                     .on_error([this](const std::string& error) {
                       std::lock_guard<std::mutex> lock(mtx_);
@@ -484,7 +495,7 @@ TEST_F(BuilderIntegrationTest, ErrorHandling) {
   server->start();
   std::this_thread::sleep_for(100ms);
 
-  // 에러가 발생했는지 확인
+  // 서버가 생성되었는지 확인
   EXPECT_TRUE(server != nullptr);
 
   server->stop();

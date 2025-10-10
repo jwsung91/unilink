@@ -118,12 +118,12 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderMethodChaining) {
  */
 TEST_F(SerialBuilderImprovementsTest, SerialBuilderConstantsUsage) {
   // Test that constants are properly defined
-  EXPECT_EQ(constants::DEFAULT_RETRY_INTERVAL_MS, 2000);
-  EXPECT_EQ(constants::MIN_BAUD_RATE, 50);
-  EXPECT_EQ(constants::MAX_BAUD_RATE, 4000000);
-  EXPECT_EQ(constants::MIN_RETRY_INTERVAL_MS, 100);
-  EXPECT_EQ(constants::MAX_RETRY_INTERVAL_MS, 60000);
-  EXPECT_EQ(constants::MAX_DEVICE_PATH_LENGTH, 256);
+  EXPECT_EQ(common::constants::DEFAULT_RETRY_INTERVAL_MS, 2000);
+  EXPECT_EQ(common::constants::MIN_BAUD_RATE, 50);
+  EXPECT_EQ(common::constants::MAX_BAUD_RATE, 4000000);
+  EXPECT_EQ(common::constants::MIN_RETRY_INTERVAL_MS, 100);
+  EXPECT_EQ(common::constants::MAX_RETRY_INTERVAL_MS, 300000);  // Fixed: 5 minutes = 300000ms
+  EXPECT_EQ(common::constants::MAX_DEVICE_PATH_LENGTH, 256);
 }
 
 /**
