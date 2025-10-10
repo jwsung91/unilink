@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include "unilink/common/logger.hpp"
+
 namespace unilink {
 namespace config {
 
@@ -141,7 +143,7 @@ bool ConfigManager::save_to_file(const std::string& filepath) const {
 
     return true;
   } catch (const std::exception& e) {
-    std::cerr << "Error saving configuration: " << e.what() << std::endl;
+    UNILINK_LOG_ERROR("config_manager", "save", "Error saving configuration: " + std::string(e.what()));
     return false;
   }
 }
@@ -195,7 +197,7 @@ bool ConfigManager::load_from_file(const std::string& filepath) {
 
     return true;
   } catch (const std::exception& e) {
-    std::cerr << "Error loading configuration: " << e.what() << std::endl;
+    UNILINK_LOG_ERROR("config_manager", "load", "Error loading configuration: " + std::string(e.what()));
     return false;
   }
 }
@@ -275,7 +277,8 @@ void ConfigManager::notify_change(const std::string& key, const std::any& old_va
     try {
       it->second(key, old_value, new_value);
     } catch (const std::exception& e) {
-      std::cerr << "Error in change callback for key '" << key << "': " << e.what() << std::endl;
+      UNILINK_LOG_ERROR("config_manager", "callback",
+                        "Error in change callback for key '" + key + "': " + std::string(e.what()));
     }
   }
 }

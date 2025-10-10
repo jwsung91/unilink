@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "logger.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -118,10 +120,10 @@ void ErrorHandler::notify_callbacks(const ErrorInfo& error) {
     try {
       callback(error);
     } catch (const std::exception& e) {
-      // Avoid infinite recursion - log to stderr instead of using error handler
-      std::cerr << "Error in error callback: " << e.what() << std::endl;
+      // Avoid infinite recursion - use Logger directly instead of ErrorHandler
+      UNILINK_LOG_ERROR("error_handler", "callback", "Error in error callback: " + std::string(e.what()));
     } catch (...) {
-      std::cerr << "Unknown error in error callback" << std::endl;
+      UNILINK_LOG_ERROR("error_handler", "callback", "Unknown error in error callback");
     }
   }
 }
