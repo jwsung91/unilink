@@ -53,21 +53,10 @@ jobs:
         cd build-coverage
         lcov --directory . --capture --output-file coverage.info
         
-        # Extract only unilink source code (include wrapper, exclude test)
-        lcov --extract coverage.info '*/unilink/*' \
-          --output-file coverage_temp.info \
-          --ignore-errors mismatch,negative
-        
-        # Remove test files from coverage (try multiple patterns)
-        lcov --remove coverage_temp.info \
-          '*/test/*' \
-          '*/test_*.cc' \
-          '*/test_*.cpp' \
-          '*/test_*.hpp' \
-          '*_test.cc' \
-          '*_test.cpp' \
+        # Extract only unilink source code (exclude test in one step)
+        lcov --extract coverage.info '*/unilink/*.cc' '*/unilink/*.hpp' '*/unilink/*.cpp' \
           --output-file coverage_filtered.info \
-          --ignore-errors mismatch,negative
+          --ignore-errors mismatch,negative,unused
         
         # Generate HTML with custom title
         genhtml coverage_filtered.info --output-directory coverage_html \
