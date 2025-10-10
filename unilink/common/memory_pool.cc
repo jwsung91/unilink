@@ -390,7 +390,11 @@ PooledBuffer::PooledBuffer(PooledBuffer&& other) noexcept
 PooledBuffer& PooledBuffer::operator=(PooledBuffer&& other) noexcept {
   if (this != &other) {
     if (buffer_ && pool_) {
-      pool_->release(std::move(buffer_), size_);
+      try {
+        pool_->release(std::move(buffer_), size_);
+      } catch (...) {
+        // 예외를 무시하고 계속 진행 (noexcept 함수이므로)
+      }
     }
 
     buffer_ = std::move(other.buffer_);
@@ -428,7 +432,7 @@ uint8_t* PooledBuffer::at(size_t offset) const {
   if (!buffer_ || offset >= size_) {
     throw std::out_of_range("Buffer offset out of range");
   }
-  return buffer_.get() + offset;
+  return static_cast<uint8_t*>(buffer_.get()) + offset;
 }
 
 void PooledBuffer::check_bounds(size_t index) const {

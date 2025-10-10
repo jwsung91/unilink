@@ -45,8 +45,8 @@ class MemoryPool {
   // Simplified buffer info structure
   struct BufferInfo {
     std::unique_ptr<uint8_t[]> data;
-    size_t size;
-    std::chrono::steady_clock::time_point last_used;
+    size_t size{0};
+    std::chrono::steady_clock::time_point last_used{};
     bool in_use{false};
     BufferInfo* next_free{nullptr};
 
@@ -102,7 +102,7 @@ class MemoryPool {
     // Usage time tracking for cleanup
     std::vector<std::chrono::steady_clock::time_point> last_used_times_;
 
-    PoolBucket() = default;
+    PoolBucket() : size_{0}, use_lock_free_{false} {}
     PoolBucket(PoolBucket&& other) noexcept;
     PoolBucket& operator=(PoolBucket&& other) noexcept;
     PoolBucket(const PoolBucket&) = delete;
