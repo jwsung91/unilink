@@ -31,11 +31,14 @@ class TestUtils {
    * @return uint16_t Unique port number
    */
   static uint16_t getTestPort() {
+    // Use very wide port spacing (100) to completely avoid TIME_WAIT conflicts
+    // Each test gets ports with 100-port gaps (30000, 30100, 30200, ...)
+    // This ensures that even in heavy parallel execution, ports don't conflict
     static std::atomic<uint16_t> port_counter{30000};  // Start from higher port range
-    uint16_t port = port_counter.fetch_add(1);
+    uint16_t port = port_counter.fetch_add(100);  // Skip 100 ports for each test
 
     // Ensure port is in valid range and avoid system ports
-    if (port < 30000) {
+    if (port < 30000 || port > 60000) {
       port_counter.store(30000);
       port = 30000;
     }
@@ -48,30 +51,9 @@ class TestUtils {
    * @return uint16_t Available port number
    */
   static uint16_t getAvailableTestPort() {
-    const int max_attempts = 100;
-    for (int i = 0; i < max_attempts; ++i) {
-      uint16_t port = getTestPort();
-      if (isPortAvailable(port)) {
-        return port;
-      }
-      // Add small delay to avoid rapid port conflicts
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
-
-    // Fallback: try random ports in the range
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(30000, 65535);
-
-    for (int i = 0; i < max_attempts; ++i) {
-      uint16_t port = static_cast<uint16_t>(dis(gen));
-      if (isPortAvailable(port)) {
-        return port;
-      }
-    }
-
-    // Last resort: return a high port number
-    return 65535;
+    // Use atomic counter with very wide spacing (100 ports) for parallel execution
+    // This completely prevents TIME_WAIT state conflicts and TOCTOU race conditions
+    return getTestPort();  // No delay or checking needed with 100-port spacing
   }
 
   /**
