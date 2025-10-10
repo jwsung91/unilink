@@ -117,10 +117,10 @@ TEST_F(BoundaryTest, MemoryPoolPredefinedSizes) {
 
   // 모든 predefined buffer sizes 테스트
   std::vector<size_t> predefined_sizes = {
-      static_cast<size_t>(MemoryPool::BufferSize::SMALL),   // 1KB
-      static_cast<size_t>(MemoryPool::BufferSize::MEDIUM),  // 4KB
-      static_cast<size_t>(MemoryPool::BufferSize::LARGE),   // 16KB
-      static_cast<size_t>(MemoryPool::BufferSize::XLARGE)   // 64KB
+      1024,   // 1KB
+      4096,   // 4KB
+      16384,  // 16KB
+      65536   // 64KB
   };
 
   for (size_t size : predefined_sizes) {
