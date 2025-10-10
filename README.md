@@ -93,11 +93,22 @@ Choose the build configuration that fits your needs:
 
 ## Requirements
 
+### System Requirements
+- **Ubuntu 22.04 LTS or later** (recommended)
+- **C++17 compatible compiler** (GCC 11+ or Clang 14+)
+- **CMake 3.10 or later**
+
+### Dependencies
+
 ```bash
 # For the core library
 sudo apt update && sudo apt install -y \
   build-essential cmake libboost-dev libboost-system-dev
 ```
+
+### Ubuntu 20.04 Support
+Ubuntu 20.04 support has been temporarily removed from CI/CD due to performance issues. 
+If you need to build on Ubuntu 20.04, see the [Manual Build Guide](#ubuntu-2004-manual-build) below.
 
 ---
 
@@ -347,5 +358,54 @@ All tests pass with 100% success rate across different build configurations:
 - Release builds with optimizations
 - Sanitizer builds with AddressSanitizer
 - Different compiler versions (GCC, Clang)
+
+---
+
+## Ubuntu 20.04 Manual Build
+
+If you need to build on Ubuntu 20.04, follow these steps:
+
+### Prerequisites
+
+```bash
+# Install dependencies
+sudo apt update && sudo apt install -y \
+  build-essential \
+  cmake \
+  libboost-dev \
+  libboost-system-dev \
+  doxygen \
+  graphviz
+
+# Install specific compiler versions
+sudo apt install -y gcc-9 g++-9 clang-12
+```
+
+### Build Steps
+
+```bash
+# 1. Set compiler environment
+export CC=gcc-9
+export CXX=g++-9
+
+# 2. Configure CMake
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_CXX_STANDARD=17 \
+  -DUNILINK_ENABLE_CONFIG=ON \
+  -DBUILD_EXAMPLES=ON \
+  -DBUILD_TESTING=ON
+
+# 3. Build
+cmake --build build -j $(nproc)
+
+# 4. Run tests (optional)
+cd build && ctest --output-on-failure
+```
+
+### Notes
+- Ubuntu 20.04 LTS reaches end-of-life in April 2025
+- Consider upgrading to Ubuntu 22.04 LTS for better long-term support
+- If you encounter issues, please report them in the GitHub issues
 
 ---

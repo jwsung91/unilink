@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04]
+        os: [ubuntu-22.04]
         compiler: [gcc, clang]
         include:
           - os: ubuntu-22.04
@@ -28,14 +28,16 @@ jobs:
             compiler: clang
             cc: clang-14
             cxx: clang++-14
-          - os: ubuntu-20.04
-            compiler: gcc
-            cc: gcc-9
-            cxx: g++-9
-          - os: ubuntu-20.04
-            compiler: clang
-            cc: clang-12
-            cxx: clang++-12
+          # Ubuntu 20.04 support temporarily removed due to CI performance issues
+          # To restore: uncomment the following lines and add ubuntu-20.04 to the os matrix above
+          # - os: ubuntu-20.04
+          #   compiler: gcc
+          #   cc: gcc-9
+          #   cxx: g++-9
+          # - os: ubuntu-20.04
+          #   compiler: clang
+          #   cc: clang-12
+          #   cxx: clang++-12
 
     steps:
     - name: Checkout code
