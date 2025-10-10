@@ -57,8 +57,14 @@ jobs:
           --output-file coverage_temp.info \
           --ignore-errors mismatch,negative
         
-        # Remove test files from coverage
-        lcov --remove coverage_temp.info '*/test/*' \
+        # Remove test files from coverage (try multiple patterns)
+        lcov --remove coverage_temp.info \
+          '*/test/*' \
+          '*/test_*.cc' \
+          '*/test_*.cpp' \
+          '*/test_*.hpp' \
+          '*_test.cc' \
+          '*_test.cpp' \
           --output-file coverage_filtered.info \
           --ignore-errors mismatch,negative
         
