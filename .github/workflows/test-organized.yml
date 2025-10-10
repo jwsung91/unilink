@@ -1,0 +1,133 @@
+name: Organized Tests
+
+on:
+  push:
+    branches: [ main, develop, feat/*, fix/* ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Fast feedback: Unit tests only (for all PRs)
+  unit-tests:
+    name: Unit Tests (Fast)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libboost-dev libboost-system-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DUNILINK_ENABLE_CONFIG=ON \
+            -DBUILD_TESTING=ON \
+            -DBUILD_EXAMPLES=OFF
+
+      - name: Build
+        run: cmake --build build -j $(nproc)
+
+      - name: Run Unit Tests
+        run: |
+          cd build
+          ctest -L unit --output-on-failure --parallel $(nproc)
+
+  # Medium tests: Integration tests
+  integration-tests:
+    name: Integration Tests (Medium)
+    runs-on: ubuntu-22.04
+    needs: unit-tests
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libboost-dev libboost-system-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DUNILINK_ENABLE_CONFIG=ON \
+            -DBUILD_TESTING=ON \
+            -DBUILD_EXAMPLES=OFF
+
+      - name: Build
+        run: cmake --build build -j $(nproc)
+
+      - name: Run Integration Tests
+        run: |
+          cd build
+          ctest -L integration --output-on-failure --parallel $(nproc)
+
+  # Slow tests: E2E tests (only for main/develop)
+  e2e-tests:
+    name: E2E Tests (Slow)
+    runs-on: ubuntu-22.04
+    needs: integration-tests
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libboost-dev libboost-system-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DUNILINK_ENABLE_CONFIG=ON \
+            -DBUILD_TESTING=ON \
+            -DBUILD_EXAMPLES=OFF
+
+      - name: Build
+        run: cmake --build build -j $(nproc)
+
+      - name: Run E2E Tests
+        run: |
+          cd build
+          ctest -L e2e --output-on-failure --parallel 2
+
+  # Performance tests (nightly or on-demand)
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'schedule' || contains(github.event.head_commit.message, '[perf]')
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libboost-dev libboost-system-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUNILINK_ENABLE_CONFIG=ON \
+            -DBUILD_TESTING=ON \
+            -DBUILD_EXAMPLES=OFF
+
+      - name: Build
+        run: cmake --build build -j $(nproc)
+
+      - name: Run Performance Tests
+        run: |
+          cd build
+          ctest -L performance --output-on-failure
+
+      - name: Upload Performance Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-results
+          path: build/performance_*
+          retention-days: 30
+

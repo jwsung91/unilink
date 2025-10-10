@@ -8,11 +8,11 @@ using namespace unilink::test;
 
 /**
  * @brief Builder coverage tests to improve code coverage
- * 
+ *
  * These tests exercise all builder methods to ensure they are tested
  */
 class BuilderCoverageTest : public BaseTest {
-protected:
+ protected:
   void SetUp() override {
     BaseTest::SetUp();
     test_port_ = TestUtils::getAvailableTestPort();
@@ -42,10 +42,7 @@ TEST_F(BuilderCoverageTest, TcpServerBuilderAllMethods) {
 }
 
 TEST_F(BuilderCoverageTest, TcpServerBuilderSingleClient) {
-  auto server = tcp_server(test_port_)
-                    .single_client()
-                    .auto_start(false)
-                    .build();
+  auto server = tcp_server(test_port_).single_client().auto_start(false).build();
 
   EXPECT_NE(server, nullptr);
 }
@@ -80,10 +77,7 @@ TEST_F(BuilderCoverageTest, TcpClientBuilderAllMethods) {
 }
 
 TEST_F(BuilderCoverageTest, TcpClientBuilderWithAutoManage) {
-  auto client = tcp_client("127.0.0.1", test_port_)
-                    .auto_manage(true)
-                    .auto_start(false)
-                    .build();
+  auto client = tcp_client("127.0.0.1", test_port_).auto_manage(true).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 }
@@ -108,10 +102,7 @@ TEST_F(BuilderCoverageTest, SerialBuilderAllMethods) {
 }
 
 TEST_F(BuilderCoverageTest, SerialBuilderWithAutoManage) {
-  auto serial_port = serial("/dev/ttyUSB0", 9600)
-                         .auto_manage(true)
-                         .auto_start(false)
-                         .build();
+  auto serial_port = serial("/dev/ttyUSB0", 9600).auto_manage(true).auto_start(false).build();
 
   EXPECT_NE(serial_port, nullptr);
 }
@@ -121,26 +112,19 @@ TEST_F(BuilderCoverageTest, SerialBuilderWithAutoManage) {
 // ============================================================================
 
 TEST_F(BuilderCoverageTest, UnifiedBuilderTcpServer) {
-  auto server = builder::UnifiedBuilder::tcp_server(test_port_)
-                    .unlimited_clients()
-                    .auto_start(false)
-                    .build();
+  auto server = builder::UnifiedBuilder::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
 
   EXPECT_NE(server, nullptr);
 }
 
 TEST_F(BuilderCoverageTest, UnifiedBuilderTcpClient) {
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
-                    .auto_start(false)
-                    .build();
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 }
 
 TEST_F(BuilderCoverageTest, UnifiedBuilderSerial) {
-  auto serial_port = builder::UnifiedBuilder::serial("/dev/ttyUSB0", 115200)
-                         .auto_start(false)
-                         .build();
+  auto serial_port = builder::UnifiedBuilder::serial("/dev/ttyUSB0", 115200).auto_start(false).build();
 
   EXPECT_NE(serial_port, nullptr);
 }
@@ -151,17 +135,12 @@ TEST_F(BuilderCoverageTest, UnifiedBuilderSerial) {
 
 TEST_F(BuilderCoverageTest, TcpServerBuilderInvalidClientLimit) {
   // Client limit of 1 should throw
-  EXPECT_THROW(tcp_server(test_port_).max_clients(1).build(), 
-               std::invalid_argument);
+  EXPECT_THROW(tcp_server(test_port_).max_clients(1).build(), std::invalid_argument);
 }
 
 TEST_F(BuilderCoverageTest, TcpServerBuilderZeroClientLimit) {
   // Client limit of 0 means unlimited
-  auto server = tcp_server(test_port_)
-                    .max_clients(0)
-                    .auto_start(false)
-                    .build();
+  auto server = tcp_server(test_port_).max_clients(0).auto_start(false).build();
 
   EXPECT_NE(server, nullptr);
 }
-
