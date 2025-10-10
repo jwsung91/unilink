@@ -163,16 +163,23 @@ jobs:
           cmake \
           libboost-dev \
           libboost-system-dev \
-          clang-14
+          clang \
+          libc++-dev \
+          libc++abi-dev
 
     - name: Configure CMake with Sanitizers
       run: |
         cmake -S . -B build-sanitizer \
           -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_COMPILER=clang++-14 \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_C_COMPILER=clang \
           -DUNILINK_ENABLE_SANITIZERS=ON \
           -DUNILINK_ENABLE_MEMORY_TRACKING=ON \
-          -DBUILD_TESTING=ON
+          -DBUILD_TESTING=ON \
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer -g" \
+          -DCMAKE_C_FLAGS="-fsanitize=address,undefined,leak -fno-omit-frame-pointer -g" \
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined,leak" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address,undefined,leak"
 
     - name: Build with sanitizers
       run: cmake --build build-sanitizer -j $(nproc)
