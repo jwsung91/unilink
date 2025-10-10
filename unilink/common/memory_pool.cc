@@ -233,6 +233,7 @@ void MemoryPool::release_with_lock(PoolBucket& bucket, std::unique_ptr<uint8_t[]
       if (bucket.buffers_[i].data == nullptr) {
         bucket.buffers_[i].data = std::move(buffer);
         bucket.last_used_times_[i] = std::chrono::steady_clock::now();
+        bucket.free_indices_.push(i);  // free_indices_에 인덱스 추가
         return;
       }
     }
@@ -241,6 +242,7 @@ void MemoryPool::release_with_lock(PoolBucket& bucket, std::unique_ptr<uint8_t[]
     bucket.buffers_.push_back(BufferInfo{});
     bucket.buffers_.back().data = std::move(buffer);
     bucket.last_used_times_.push_back(std::chrono::steady_clock::now());
+    bucket.free_indices_.push(bucket.buffers_.size() - 1);  // free_indices_에 인덱스 추가
   }
 }
 
