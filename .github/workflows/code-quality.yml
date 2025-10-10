@@ -48,12 +48,7 @@ jobs:
           --suppress=useStlAlgorithm \
           --suppress=shadowVariable \
           --suppress=unreadVariable \
-          --suppress=knownConditionTrueFalse \
-          --suppress=constVariableReference \
-          --suppress=noExplicitConstructor \
-          --suppress=variableScope \
-          --suppress=uselessOverride \
-          --suppress=cstyleCast \
+          --suppress=unassignedVariable \
           --suppress=uninitMemberVar \
           --suppress=duplicateConditionalAssign \
           --suppress=ctuOneDefinitionRuleViolation \
