@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/builder/unified_builder.hpp"
+#include "unilink/unilink.hpp"
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/common/logger.hpp"

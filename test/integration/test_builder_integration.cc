@@ -163,6 +163,7 @@ TEST_F(BuilderIntegrationTest, TcpServerBuilderCreatesServer) {
 
   // --- Test Logic ---
   auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .auto_start(false)  // 수동 시작으로 제어
                     .on_data([](const std::string& data) {
                       // 데이터 핸들러
@@ -297,6 +298,7 @@ TEST_F(BuilderIntegrationTest, CallbackRegistration) {
 
   // --- Test Logic ---
   auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .on_data([&](const std::string& data) { data_callback_count++; })
                     .on_connect([&]() { connect_callback_count++; })
                     .on_error([&](const std::string& error) { error_callback_count++; })
@@ -339,6 +341,7 @@ TEST_F(BuilderIntegrationTest, BuilderMethodChaining) {
 
   // --- Test Logic ---
   auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .auto_start(false)
                     .auto_manage(true)
                     .on_data([](const std::string& data) {})
@@ -426,7 +429,7 @@ TEST_F(BuilderIntegrationTest, BuilderReuse) {
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  auto builder = unilink::tcp_server(test_port);
+  auto builder = unilink::tcp_server(test_port).unlimited_clients();
 
   // 첫 번째 서버 생성
   auto server1 = builder.auto_start(false).on_data([](const std::string& data) {}).build();
@@ -560,6 +563,7 @@ TEST_F(BuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
   // --- Test Logic ---
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
+                .unlimited_clients()
                 .auto_start(true)
                 .on_data([this](const std::string& data) {
                   std::lock_guard<std::mutex> lock(mtx_);
@@ -628,6 +632,7 @@ TEST_F(BuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
   // --- Test Logic ---
   // 서버 생성 (에코 서버로 설정)
   auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .auto_start(true)
                     .on_data([&](const std::string& data) {
                       server_data_count++;
