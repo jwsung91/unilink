@@ -54,7 +54,7 @@ jobs:
         # Extract only unilink source code and exclude wrapper directory
         lcov --extract coverage.info '*/unilink/*' \
           --output-file coverage_temp.info
-        lcov --remove coverage_temp.info '*/wrapper/*' \
+        lcov --remove coverage_temp.info '*/unilink/wrapper/*' \
           --output-file coverage_filtered.info
         
         # Generate summary
