@@ -19,15 +19,14 @@ class LoggerCoverageTest : public ::testing::Test {
  protected:
   void SetUp() override {
     // Create unique log file for each test to avoid parallel execution conflicts
-    const ::testing::TestInfo* test_info =
-        ::testing::UnitTest::GetInstance()->current_test_info();
+    const ::testing::TestInfo* test_info = ::testing::UnitTest::GetInstance()->current_test_info();
     std::string test_name = test_info->name();
-    
+
     // Generate unique filename with timestamp and random suffix
     auto now = std::chrono::system_clock::now().time_since_epoch().count();
     std::random_device rd;
-    test_log_file_ = "/tmp/unilink_logger_test_" + test_name + "_" +
-                     std::to_string(now) + "_" + std::to_string(rd()) + ".log";
+    test_log_file_ =
+        "/tmp/unilink_logger_test_" + test_name + "_" + std::to_string(now) + "_" + std::to_string(rd()) + ".log";
     std::remove(test_log_file_.c_str());
   }
 
@@ -150,7 +149,7 @@ TEST_F(LoggerCoverageTest, EnableLogRotation) {
   LogRotationConfig config;
   config.max_file_size_bytes = 1024;  // 1KB
   config.max_files = 3;
-  
+
   Logger::instance().set_file_output_with_rotation(test_log_file_, config);
 
   // Write enough data to trigger rotation
@@ -225,7 +224,7 @@ TEST_F(LoggerCoverageTest, CombinedFileAndConsole) {
 
 TEST_F(LoggerCoverageTest, AsyncWithRotation) {
   Logger::instance().set_async_logging(true);
-  
+
   LogRotationConfig config;
   config.max_file_size_bytes = 512;
   config.max_files = 2;

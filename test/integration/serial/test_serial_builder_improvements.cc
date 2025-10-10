@@ -39,20 +39,16 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderExceptionSafety) {
 
   // Test invalid baud rate
   EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 0).build(), BuilderException);
-  EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", constants::MAX_BAUD_RATE + 1).build(),
-               BuilderException);
+  EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", constants::MAX_BAUD_RATE + 1).build(), BuilderException);
 
   // Test invalid retry interval
-  EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 115200).retry_interval(0).build(),
+  EXPECT_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 115200).retry_interval(0).build(), BuilderException);
+  EXPECT_THROW(auto serial =
+                   unilink::serial("/dev/ttyUSB0", 115200).retry_interval(constants::MAX_RETRY_INTERVAL_MS + 1).build(),
                BuilderException);
-  EXPECT_THROW(
-      auto serial =
-          unilink::serial("/dev/ttyUSB0", 115200).retry_interval(constants::MAX_RETRY_INTERVAL_MS + 1).build(),
-      BuilderException);
 
   // Test valid configuration
-  EXPECT_NO_THROW(auto serial =
-                      unilink::serial("/dev/ttyUSB0", 115200).retry_interval(1000).auto_start(false).build());
+  EXPECT_NO_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 115200).retry_interval(1000).auto_start(false).build());
 }
 
 /**

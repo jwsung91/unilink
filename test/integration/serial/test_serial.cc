@@ -11,8 +11,8 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/unilink.hpp"
 #include "unilink/common/exceptions.hpp"
+#include "unilink/unilink.hpp"
 #include "unilink/wrapper/serial/serial.hpp"
 
 using namespace unilink;
@@ -43,7 +43,8 @@ class SerialTest : public ::testing::Test {
 
   void TearDown() override {
     // Clean up any test state
-    TestUtils::waitFor(100);
+    // Increased wait time to ensure complete cleanup and avoid port conflicts
+    TestUtils::waitFor(500);
   }
 
   uint16_t test_port_;
@@ -158,8 +159,7 @@ TEST_F(SerialTest, SerialInvalidBaudRates) {
   // Test that truly invalid baud rates throw exceptions
   for (auto baud_rate : invalid_baud_rates) {
     EXPECT_THROW(
-        { auto serial_port = serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); },
-        common::BuilderException);
+        { auto serial_port = serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); }, common::BuilderException);
     std::cout << "Correctly rejected invalid baud rate: " << baud_rate << std::endl;
   }
 
@@ -201,8 +201,7 @@ TEST_F(SerialTest, SerialExtremeBaudRates) {
   // Test invalid extreme baud rates
   for (auto baud_rate : invalid_extreme_baud_rates) {
     EXPECT_THROW(
-        { auto serial_port = serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); },
-        common::BuilderException);
+        { auto serial_port = serial("/dev/ttyUSB0", baud_rate).auto_start(false).build(); }, common::BuilderException);
     std::cout << "Correctly rejected invalid extreme baud rate: " << baud_rate << std::endl;
   }
 
@@ -326,8 +325,7 @@ TEST_F(SerialTest, SerialInvalidDevicePaths) {
 
   // Test paths that should be rejected by input validation
   for (const auto& path : invalid_paths) {
-    EXPECT_THROW(
-        { auto serial_port = serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
+    EXPECT_THROW({ auto serial_port = serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
     std::cout << "Correctly rejected invalid path: '" << path << "'" << std::endl;
   }
 
@@ -365,8 +363,7 @@ TEST_F(SerialTest, SerialSpecialCharactersInDevicePath) {
 
   // Test that special character paths are rejected (security improvement)
   for (const auto& path : invalid_special_paths) {
-    EXPECT_THROW(
-        { auto serial_port = serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
+    EXPECT_THROW({ auto serial_port = serial(path, 9600).auto_start(false).build(); }, common::BuilderException);
     std::cout << "Correctly rejected path with special characters: '" << path << "'" << std::endl;
   }
 
@@ -428,12 +425,12 @@ TEST_F(SerialTest, SerialMultipleErrorScenarios) {
   std::atomic<int> error_count{0};
 
   auto serial_port = serial("/dev/ttyUSB0", 9600)
-                    .auto_start(false)
-                    .on_error([&](const std::string& error) {
-                      error_count++;
-                      std::cout << "Error " << error_count.load() << ": " << error << std::endl;
-                    })
-                    .build();
+                         .auto_start(false)
+                         .on_error([&](const std::string& error) {
+                           error_count++;
+                           std::cout << "Error " << error_count.load() << ": " << error << std::endl;
+                         })
+                         .build();
 
   EXPECT_NE(serial_port, nullptr);
 

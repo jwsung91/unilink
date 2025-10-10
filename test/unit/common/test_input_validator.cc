@@ -25,9 +25,7 @@ TEST_F(InputValidatorTest, ValidatePortValid) {
   EXPECT_NO_THROW(InputValidator::validate_port(65535));
 }
 
-TEST_F(InputValidatorTest, ValidatePortInvalid) {
-  EXPECT_THROW(InputValidator::validate_port(0), ValidationException);
-}
+TEST_F(InputValidatorTest, ValidatePortInvalid) { EXPECT_THROW(InputValidator::validate_port(0), ValidationException); }
 
 TEST_F(InputValidatorTest, ValidateHostValid) {
   EXPECT_NO_THROW(InputValidator::validate_host("localhost"));
@@ -269,4 +267,3 @@ TEST_F(InputValidatorTest, ValidateRangeSizeTValid) {
 TEST_F(InputValidatorTest, ValidateRangeSizeTInvalid) {
   EXPECT_THROW(InputValidator::validate_range(static_cast<size_t>(101), 0, 100, "field"), ValidationException);
 }
-

@@ -9,13 +9,13 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/unilink.hpp"
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/common/logger.hpp"
 #include "unilink/common/memory_pool.hpp"
 #include "unilink/common/safe_data_buffer.hpp"
 #include "unilink/common/thread_safe_state.hpp"
+#include "unilink/unilink.hpp"
 
 // Test namespace aliases for cleaner code
 using namespace unilink;
@@ -45,7 +45,8 @@ class CoreIntegratedTest : public ::testing::Test {
 
   void TearDown() override {
     // Clean up any test state
-    TestUtils::waitFor(100);
+    // Increased wait time to ensure complete cleanup and avoid port conflicts
+    TestUtils::waitFor(500);
   }
 
   uint16_t test_port_;

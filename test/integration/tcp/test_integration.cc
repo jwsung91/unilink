@@ -74,10 +74,7 @@ TEST_F(IntegrationTest, MethodChaining) {
  */
 TEST_F(IntegrationTest, IndependentContext) {
   // Test independent context creation
-  auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .use_independent_context(true)
-                    .auto_start(false)
-                    .build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).use_independent_context(true).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 
@@ -152,8 +149,8 @@ TEST_F(IntegrationTest, BasicCommunication) {
  */
 TEST_F(IntegrationTest, ErrorHandling) {
   // Test invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto server = unilink::tcp_server(0)  // Invalid port
-                                 .unlimited_clients()                // 클라이언트 제한 없음
+  EXPECT_THROW(auto server = unilink::tcp_server(0)    // Invalid port
+                                 .unlimited_clients()  // 클라이언트 제한 없음
                                  .auto_start(false)
                                  .build(),
                common::BuilderException);
@@ -294,8 +291,8 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
   std::string error_message;
 
   // Test invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto server = unilink::tcp_server(0)  // Invalid port
-                                 .unlimited_clients()                // 클라이언트 제한 없음
+  EXPECT_THROW(auto server = unilink::tcp_server(0)    // Invalid port
+                                 .unlimited_clients()  // 클라이언트 제한 없음
                                  .auto_start(false)
                                  .on_error([&error_occurred, &error_message](const std::string& error) {
                                    error_occurred = true;

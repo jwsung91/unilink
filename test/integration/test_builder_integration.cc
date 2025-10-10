@@ -8,9 +8,11 @@
 #include <mutex>
 #include <thread>
 
+#include "test_utils.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace unilink::test;
 using namespace std::chrono_literals;
 
 class BuilderIntegrationTest : public ::testing::Test {
@@ -38,14 +40,13 @@ class BuilderIntegrationTest : public ::testing::Test {
     }
 
     // 충분한 시간을 두고 정리 완료 보장
-    std::this_thread::sleep_for(200ms);
+    // TIME_WAIT 상태에서도 포트 충돌 방지를 위해 500ms 대기
+    std::this_thread::sleep_for(500ms);
   }
 
-  // 테스트용 포트 번호 (동적 할당으로 충돌 방지)
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{10000};
-    return port_counter.fetch_add(1);
-  }
+  // 테스트용 포트 번호 - TestUtils의 통합 포트 할당 사용
+  // SO_REUSEADDR와 100-port spacing이 적용됨
+  uint16_t getTestPort() { return TestUtils::getAvailableTestPort(); }
 
   // 데이터 수신 대기
   void waitForData(std::chrono::milliseconds timeout = 1000ms) {

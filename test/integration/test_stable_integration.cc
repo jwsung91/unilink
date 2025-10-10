@@ -52,7 +52,8 @@ class StableIntegrationTest : public ::testing::Test {
     }
 
     // Wait for cleanup to complete
-    TestUtils::waitFor(200);
+    // Increased wait time to ensure complete cleanup and avoid port conflicts
+    TestUtils::waitFor(500);
   }
 
   // Test objects
@@ -231,8 +232,8 @@ TEST_F(StableIntegrationTest, StableServerClientCommunication) {
  */
 TEST_F(StableIntegrationTest, StableErrorHandling) {
   // Test invalid port handling (should throw exception due to input validation)
-  EXPECT_THROW(auto invalid_server = unilink::tcp_server(0)  // Invalid port
-                                         .unlimited_clients()                // 클라이언트 제한 없음
+  EXPECT_THROW(auto invalid_server = unilink::tcp_server(0)    // Invalid port
+                                         .unlimited_clients()  // 클라이언트 제한 없음
                                          .auto_start(false)
                                          .on_error([this](const std::string& error) {
                                            std::lock_guard<std::mutex> lock(mtx_);

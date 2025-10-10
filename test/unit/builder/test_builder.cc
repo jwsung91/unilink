@@ -320,7 +320,11 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
   uint16_t test_port = getTestPort();
 
   // tcp_server 편의 함수 테스트
-  auto server = unilink::tcp_server(test_port).unlimited_clients().on_connect([]() {}).on_data([](const std::string& data) {}).build();
+  auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
+                    .on_connect([]() {})
+                    .on_data([](const std::string& data) {})
+                    .build();
 
   // tcp_client 편의 함수 테스트
   auto client =
@@ -401,15 +405,13 @@ TEST_F(BuilderTest, BuilderWithIndependentContext) {
   uint16_t test_port = getTestPort();
 
   // 독립적인 컨텍스트를 사용하는 서버 생성
-  auto server = unilink::tcp_server(test_port).unlimited_clients().use_independent_context(true).auto_start(false).build();
+  auto server =
+      unilink::tcp_server(test_port).unlimited_clients().use_independent_context(true).auto_start(false).build();
 
   EXPECT_NE(server, nullptr);
 
   // 독립적인 컨텍스트를 사용하는 클라이언트 생성
-  auto client = unilink::tcp_client("127.0.0.1", test_port)
-                    .use_independent_context(true)
-                    .auto_start(false)
-                    .build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port).use_independent_context(true).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 
@@ -425,22 +427,16 @@ TEST_F(BuilderTest, BuilderWithIndependentContext) {
  */
 TEST_F(BuilderTest, TestIsolationScenario) {
   // 테스트 1: 독립적인 컨텍스트 사용
-  auto client1 = unilink::tcp_client("127.0.0.1", getTestPort())
-                     .use_independent_context(true)
-                     .auto_start(false)
-                     .build();
+  auto client1 =
+      unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(true).auto_start(false).build();
 
   // 테스트 2: 공유 컨텍스트 사용
-  auto client2 = unilink::tcp_client("127.0.0.1", getTestPort())
-                     .use_independent_context(false)
-                     .auto_start(false)
-                     .build();
+  auto client2 =
+      unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(false).auto_start(false).build();
 
   // 테스트 3: 또 다른 독립적인 컨텍스트
-  auto client3 = unilink::tcp_client("127.0.0.1", getTestPort())
-                     .use_independent_context(true)
-                     .auto_start(false)
-                     .build();
+  auto client3 =
+      unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(true).auto_start(false).build();
 
   // 모든 클라이언트가 성공적으로 생성되었는지 확인
   EXPECT_NE(client1, nullptr);

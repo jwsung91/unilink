@@ -10,9 +10,9 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/unilink.hpp"
 #include "unilink/common/exceptions.hpp"
 #include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/unilink.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
@@ -35,7 +35,8 @@ class SafetyIntegratedTest : public ::testing::Test {
 
   void TearDown() override {
     // Clean up any test state
-    TestUtils::waitFor(100);
+    // Increased wait time to ensure complete cleanup and avoid port conflicts
+    TestUtils::waitFor(500);
   }
 
   uint16_t test_port_;
@@ -68,8 +69,7 @@ TEST_F(SafetyIntegratedTest, ApiSafetyNullPointers) {
  */
 TEST_F(SafetyIntegratedTest, ApiSafetyInvalidParameters) {
   // Test with invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto client = unilink::tcp_client("127.0.0.1", 0).auto_start(false).build(),
-               common::BuilderException);
+  EXPECT_THROW(auto client = unilink::tcp_client("127.0.0.1", 0).auto_start(false).build(), common::BuilderException);
 
   // Test with invalid host (should still create object)
   auto client2 = unilink::tcp_client("invalid.host", test_port_).auto_start(false).build();
