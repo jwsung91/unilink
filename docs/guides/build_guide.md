@@ -2,6 +2,8 @@
 
 Complete guide for building `unilink` with different configurations and platforms.
 
+> **Note**: For installation instructions, see [Installation Guide](installation.md).
+
 ---
 
 ## Table of Contents
@@ -11,6 +13,7 @@ Complete guide for building `unilink` with different configurations and platform
 3. [Build Options Reference](#build-options-reference)
 4. [Platform-Specific Builds](#platform-specific-builds)
 5. [Advanced Build Examples](#advanced-build-examples)
+6. [CMake Package Integration](#cmake-package-integration)
 
 ---
 
@@ -26,8 +29,11 @@ sudo apt update && sudo apt install -y build-essential cmake libboost-dev libboo
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 
-# 3. (Optional) Install
+# 3. (Optional) Install for system-wide use
 sudo cmake --install build
+
+# 4. (Optional) Install to custom prefix
+cmake --install build --prefix /opt/unilink
 ```
 
 ---
@@ -509,8 +515,64 @@ cmake --install build
 
 ---
 
+## CMake Package Integration
+
+After building and installing unilink, you can use it in your projects through CMake's package system.
+
+### Using the Installed Package
+
+```cmake
+# CMakeLists.txt
+cmake_minimum_required(VERSION 3.12)
+project(my_app CXX)
+
+# Find the unilink package
+find_package(unilink CONFIG REQUIRED)
+
+# Create your executable
+add_executable(my_app main.cpp)
+
+# Link against unilink
+target_link_libraries(my_app PRIVATE unilink::unilink)
+```
+
+### Custom Installation Prefix
+
+If you installed to a custom prefix:
+
+```cmake
+# Set the prefix path
+set(CMAKE_PREFIX_PATH "/opt/unilink")
+
+# Or use find_package with PATHS
+find_package(unilink CONFIG REQUIRED PATHS "/opt/unilink")
+```
+
+### Package Components
+
+The unilink package provides:
+
+- **unilink::unilink**: Main library target
+- **Headers**: Automatically included via target
+- **Dependencies**: Boost::system and Threads::Threads
+
+### Verification
+
+Verify the package is properly installed:
+
+```bash
+# Check if CMake can find the package
+cmake --find-package -DNAME=unilink -DCOMPILER_ID=GNU -DLANGUAGE=CXX
+
+# Check pkg-config (if enabled)
+pkg-config --cflags --libs unilink
+```
+
+---
+
 ## Next Steps
 
+- [Installation Guide](installation.md) - Complete installation instructions
 - [Requirements](requirements.md) - System requirements and dependencies
 - [Performance Optimization](performance.md) - Optimize build configuration
 - [Testing Guide](testing.md) - Run tests and CI/CD integration

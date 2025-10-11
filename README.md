@@ -52,20 +52,50 @@ int main() {
 
 ### Installation
 
+#### Option 1: CMake Package (Recommended)
+```cmake
+# In your CMakeLists.txt
+cmake_minimum_required(VERSION 3.12)
+project(my_app CXX)
+
+find_package(unilink CONFIG REQUIRED)
+add_executable(my_app main.cpp)
+target_link_libraries(my_app PRIVATE unilink::unilink)
+```
+
+```cpp
+#include <unilink/unilink.hpp>
+
+int main() {
+    auto client = unilink::tcp_client("127.0.0.1", 8080).build();
+    // ...
+}
+```
+
+#### Option 2: Build from Source
 ```bash
 # Install dependencies (Ubuntu/Debian)
 sudo apt update && sudo apt install -y build-essential cmake libboost-dev libboost-system-dev
 
-# Build the library
+# Build and install
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
+sudo cmake --install build
 
-# Compile your application
-g++ -std=c++17 my_app.cc -lunilink -lboost_system -pthread -o my_app
-./my_app
+# Use in your project
+find_package(unilink CONFIG REQUIRED)
+target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
-**For detailed installation instructions, see [Build Guide](docs/guides/build_guide.md).**
+#### Option 3: Download Release Package
+```bash
+# Download and extract release package
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.0-linux-x64.tar.gz
+tar -xzf unilink-0.1.0-linux-x64.tar.gz
+# Follow installation instructions in the package
+```
+
+**For detailed installation instructions, see [Installation Guide](docs/guides/installation.md).**
 
 ---
 
@@ -73,7 +103,8 @@ g++ -std=c++17 my_app.cc -lunilink -lboost_system -pthread -o my_app
 
 ### 🚦 Getting Started
 - [Quick Start Guide](docs/guides/QUICKSTART.md) - Get up and running in 5 minutes
-- [Installation & Build](docs/guides/build_guide.md) - Detailed build instructions and options
+- [Installation Guide](docs/guides/installation.md) - CMake package, source build, and release packages
+- [Build Guide](docs/guides/build_guide.md) - Detailed build instructions and options
 - [Requirements](docs/guides/requirements.md) - System requirements and dependencies
 
 ### 🏗️ Architecture & Design  
@@ -87,6 +118,7 @@ g++ -std=c++17 my_app.cc -lunilink -lboost_system -pthread -o my_app
 - [Testing Guide](docs/guides/testing.md) - Running tests and CI/CD integration
 - [Best Practices](docs/guides/best_practices.md) - Recommended patterns and usage
 - [Troubleshooting](docs/guides/troubleshooting.md) - Common issues and solutions
+- [Release Notes](docs/releases/) - Version history and migration guides
 
 ### 💡 Examples & Tutorials
 - [TCP Examples](examples/tcp/) - Client/Server examples
