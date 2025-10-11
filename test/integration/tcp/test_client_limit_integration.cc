@@ -53,16 +53,18 @@ class ClientLimitIntegrationTest : public ::testing::Test {
     auto time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
 
     // Base port + time offset + random component
-    uint16_t base_port = 50000;                    // Use a smaller base port
+    uint16_t base_port = 50000;                                           // Use a smaller base port
     uint16_t time_offset = static_cast<uint16_t>((time_ms % 1000) * 10);  // 0-9990 range
-    uint16_t random_offset = static_cast<uint16_t>(std::rand() % 100);  // 0-99 range
+    uint16_t random_offset = static_cast<uint16_t>(std::rand() % 100);    // 0-99 range
 
-    uint16_t port = static_cast<uint16_t>(base_port + time_offset + random_offset);
-
+    uint32_t port_calc = base_port + time_offset + random_offset;
+    
     // Ensure port is within valid range
-    if (port > 65535) {
-      port = 50000 + (port % 1000);
+    if (port_calc > 65535) {
+      port_calc = 50000 + (port_calc % 1000);
     }
+    
+    uint16_t port = static_cast<uint16_t>(port_calc);
 
     return port;
   }
@@ -144,7 +146,7 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
   }
 
   // 첫 번째 클라이언트는 성공, 나머지는 실패해야 함
-  int success_count = std::count(results.begin(), results.end(), true);
+  int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
   std::cout << "Successful connections: " << success_count << "/3" << std::endl;
 
   // Single client 제한으로 인해 1개만 성공해야 함
@@ -191,7 +193,7 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   }
 
   // 처음 3개 클라이언트는 성공, 나머지는 실패해야 함
-  int success_count = std::count(results.begin(), results.end(), true);
+  int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
   std::cout << "Successful connections: " << success_count << "/5" << std::endl;
 
   // Multi client 제한으로 인해 최소 3개는 성공해야 함
@@ -236,7 +238,7 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
   }
 
   // 모든 클라이언트가 성공해야 함
-  int success_count = std::count(results.begin(), results.end(), true);
+  int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
   std::cout << "Successful connections: " << success_count << "/5" << std::endl;
 
   // Unlimited clients이므로 모든 클라이언트가 성공해야 함
@@ -275,7 +277,7 @@ TEST_F(ClientLimitIntegrationTest, DynamicClientLimitChangeTest) {
   }
 
   // 처음 2개 클라이언트만 성공해야 함
-  int success_count = std::count(results.begin(), results.end(), true);
+  int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
   std::cout << "Successful connections with limit 2: " << success_count << "/4" << std::endl;
 
   EXPECT_GE(success_count, 2) << "At least 2 clients should connect with limit of 2";
