@@ -40,18 +40,17 @@ class SerialBuilder : public BuilderInterface<wrapper::Serial> {
    */
   SerialBuilder(const std::string& device, uint32_t baud_rate);
 
+  // Delete copy, allow move
+  SerialBuilder(const SerialBuilder&) = delete;
+  SerialBuilder& operator=(const SerialBuilder&) = delete;
+  SerialBuilder(SerialBuilder&&) = default;
+  SerialBuilder& operator=(SerialBuilder&&) = default;
+
   /**
    * @brief Build and return the configured Serial
    * @return std::unique_ptr<wrapper::Serial> The configured serial instance
    */
   std::unique_ptr<wrapper::Serial> build() override;
-
-  /**
-   * @brief Implicit conversion to unique_ptr (automatically calls build())
-   * This allows omitting the .build() call for simpler syntax.
-   * @return std::unique_ptr<wrapper::Serial> The configured serial instance
-   */
-  operator std::unique_ptr<wrapper::Serial>() { return build(); }
 
   /**
    * @brief Enable auto-manage functionality

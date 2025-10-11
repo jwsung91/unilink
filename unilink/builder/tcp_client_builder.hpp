@@ -40,18 +40,17 @@ class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
    */
   TcpClientBuilder(const std::string& host, uint16_t port);
 
+  // Delete copy, allow move
+  TcpClientBuilder(const TcpClientBuilder&) = delete;
+  TcpClientBuilder& operator=(const TcpClientBuilder&) = delete;
+  TcpClientBuilder(TcpClientBuilder&&) = default;
+  TcpClientBuilder& operator=(TcpClientBuilder&&) = default;
+
   /**
    * @brief Build and return the configured TcpClient
    * @return std::unique_ptr<wrapper::TcpClient> The configured client instance
    */
   std::unique_ptr<wrapper::TcpClient> build() override;
-
-  /**
-   * @brief Implicit conversion to unique_ptr (automatically calls build())
-   * This allows omitting the .build() call for simpler syntax.
-   * @return std::unique_ptr<wrapper::TcpClient> The configured client instance
-   */
-  operator std::unique_ptr<wrapper::TcpClient>() { return build(); }
 
   /**
    * @brief Enable auto-manage functionality

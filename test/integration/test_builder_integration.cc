@@ -181,7 +181,7 @@ TEST_F(BuilderIntegrationTest, TcpServerBuilderCreatesServer) {
   // --- Test Logic ---
   auto server = unilink::tcp_server(test_port)
                     .unlimited_clients()
-                      // 수동 시작으로 제어
+                    // 수동 시작으로 제어
                     .on_data([](const std::string& data) {
                       // 데이터 핸들러
                     })
@@ -217,7 +217,7 @@ TEST_F(BuilderIntegrationTest, TcpClientBuilderCreatesClient) {
 
   // --- Test Logic ---
   auto client = unilink::tcp_client("127.0.0.1", test_port)
-                      // 수동 시작으로 제어
+                    // 수동 시작으로 제어
                     .on_data([](const std::string& data) {
                       // 데이터 핸들러
                     })
@@ -440,13 +440,15 @@ TEST_F(BuilderIntegrationTest, MultipleBuilderInstances) {
 
 /**
  * @brief 빌더 재사용이 올바르게 작동하는지 테스트
+ * NOTE: Builder reuse is not supported in the new design.
+ * Builders should be used once and then discarded.
  */
-TEST_F(BuilderIntegrationTest, BuilderReuse) {
+TEST_F(BuilderIntegrationTest, DISABLED_BuilderReuse) {
   // --- Setup ---
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  auto builder = unilink::tcp_server(test_port).unlimited_clients();
+  auto&& builder = unilink::tcp_server(test_port).unlimited_clients();
 
   // 첫 번째 서버 생성
   auto server1 = builder.on_data([](const std::string& data) {}).build();
@@ -721,7 +723,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCreatesSerial) {
 
   // --- Test Logic ---
   serial_ = unilink::serial(test_device, test_baud_rate)
-                  // 수동 시작으로 제어
+                // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 핸들러
                 })

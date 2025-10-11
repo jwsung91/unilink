@@ -38,18 +38,17 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
    */
   explicit TcpServerBuilder(uint16_t port);
 
+  // Delete copy, allow move
+  TcpServerBuilder(const TcpServerBuilder&) = delete;
+  TcpServerBuilder& operator=(const TcpServerBuilder&) = delete;
+  TcpServerBuilder(TcpServerBuilder&&) = default;
+  TcpServerBuilder& operator=(TcpServerBuilder&&) = default;
+
   /**
    * @brief Build and return the configured TcpServer
    * @return std::unique_ptr<wrapper::TcpServer> The configured server instance
    */
   std::unique_ptr<wrapper::TcpServer> build() override;
-
-  /**
-   * @brief Implicit conversion to unique_ptr (automatically calls build())
-   * This allows omitting the .build() call for simpler syntax.
-   * @return std::unique_ptr<wrapper::TcpServer> The configured server instance
-   */
-  operator std::unique_ptr<wrapper::TcpServer>() { return build(); }
 
   /**
    * @brief Enable auto-manage functionality
