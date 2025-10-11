@@ -28,28 +28,57 @@
 
 ## Quick Start
 
-`unilink` provides a simple Builder API for creating communication channels. The library handles all the complexity of network and serial communication behind the scenes, providing a clean and intuitive interface for developers.
+Get started with unilink in 5 minutes! 🚀
 
-### Basic Usage
+### 📚 Documentation
 
-- **TCP Client**: Connect to remote servers with automatic reconnection
-- **TCP Server**: Accept multiple client connections with thread-safe operations  
-- **Serial Communication**: Interface with serial devices and embedded systems
-- **Automatic Management**: Optional automatic resource management and lifecycle control
+- **[Documentation Index](docs/INDEX.md)** - Complete documentation overview
+- **[Quick Start Guide](docs/guides/QUICKSTART.md)** - Get up and running in 5 minutes
+- **[API Guide](docs/reference/API_GUIDE.md)** - Comprehensive API reference
+- **[Tutorials](docs/tutorials/)** - Step-by-step learning guides
+- **[Best Practices](docs/guides/best_practices.md)** - Recommended patterns
+- **[Troubleshooting](docs/guides/troubleshooting.md)** - Common issues & solutions
+- **[Examples](examples/)** - Working examples for TCP, Serial, and more
+
+### 30-Second Example
+
+```cpp
+#include "unilink/unilink.hpp"
+
+int main() {
+    // Create a TCP client - it's that simple!
+    auto client = unilink::tcp_client("127.0.0.1", 8080)
+        .on_connect([]() { std::cout << "Connected!" << std::endl; })
+        .on_data([](const std::string& data) { std::cout << "Received: " << data << std::endl; })
+        .auto_start(true)
+        .build();
+    
+    client->send("Hello, Server!");
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+}
+```
+
+Compile and run:
+```bash
+g++ -std=c++17 my_app.cc -lunilink -lboost_system -pthread -o my_app
+./my_app
+```
 
 ---
 
-## Usage
+## Features Overview
 
 ### Basic Usage (Builder API)
 
 Most users will only need the Builder API for simple communication:
 
-- **TCP Client**: Create client connections with automatic reconnection
-- **TCP Server**: Set up servers to accept multiple client connections
+- **TCP Client**: Connect to remote servers with automatic reconnection
+- **TCP Server**: Accept multiple client connections with thread-safe operations  
 - **Serial Communication**: Interface with serial devices and embedded systems
 - **Event Handlers**: Set up callbacks for connection, data, and error events
-- **Auto Management**: Enable automatic resource management and lifecycle control
+- **Auto Management**: Optional automatic resource management and lifecycle control
+
+**See [Quick Start Guide](docs/guides/QUICKSTART.md) and [Tutorials](docs/tutorials/) for more examples.**
 
 ### Advanced Usage (Configuration Management API)
 
@@ -60,12 +89,16 @@ For advanced users who need dynamic configuration:
 - **Flexible Parameters**: Configure connection settings, retry intervals, and device parameters
 - **Environment Adaptation**: Adjust settings based on deployment environment
 
+**See [API Guide](docs/reference/API_GUIDE.md) and [Architecture](docs/architecture/) for advanced features.**
+
 ### Build Configuration
 
 Choose the build configuration that fits your needs:
 
 - **Minimal Build** (`UNILINK_ENABLE_CONFIG=OFF`): Only Builder API, smaller footprint
 - **Full Build** (`UNILINK_ENABLE_CONFIG=ON`): Includes configuration management API
+
+**See [Quick Start Guide](docs/guides/QUICKSTART.md) for build instructions.**
 
 ---
 
