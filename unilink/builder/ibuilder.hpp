@@ -16,6 +16,12 @@
 
 #pragma once
 
+#if __has_include(<unilink_export.hpp>)
+#include <unilink_export.hpp>
+#else
+#define UNILINK_EXPORT
+#endif
+
 #include <functional>
 #include <memory>
 

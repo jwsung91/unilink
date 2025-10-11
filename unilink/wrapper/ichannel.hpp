@@ -16,6 +16,12 @@
 
 #pragma once
 
+#if __has_include(<unilink_export.hpp>)
+#include <unilink_export.hpp>
+#else
+#define UNILINK_EXPORT
+#endif
+
 #include <functional>
 #include <memory>
 #include <string>
@@ -24,7 +30,7 @@ namespace unilink {
 namespace wrapper {
 
 // Common interface for all Wrapper communication classes
-class ChannelInterface {
+class UNILINK_EXPORT ChannelInterface {
  public:
   using DataHandler = std::function<void(const std::string&)>;
   using ConnectHandler = std::function<void()>;

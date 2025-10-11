@@ -1,165 +1,56 @@
 name: Release
 
 on:
-  release:
-    types: [ published ]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version (e.g., v1.0.0)'
-        required: true
-        type: string
-  workflow_call:
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  # Build Release
-  build-release:
-    name: Build Release
+  create-release:
     runs-on: ubuntu-22.04
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v5
+      - uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libboost-dev \
-          libboost-system-dev \
-          doxygen
+      - name: Set up C++ toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build libboost-all-dev
 
-    - name: Build Release
-      run: |
-        cmake -S . -B build-release \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_EXAMPLES=ON \
-          -DBUILD_TESTING=ON
-        cmake --build build-release -j $(nproc)
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUNILINK_ENABLE_INSTALL=ON \
+            -DUNILINK_ENABLE_PKGCONFIG=ON \
+            -DUNILINK_ENABLE_EXPORT_HEADER=ON
 
-    - name: Run tests
-      run: |
-        cd build-release
-        ctest --output-on-failure --parallel $(nproc)
+      - name: Build
+        run: cmake --build build --config Release -- -v
 
-    - name: Generate Documentation
-      run: |
-        cd build-release
-        make docs
+      - name: Test
+        run: cmake --build build --target test
 
-    - name: Upload release artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-artifacts
-        path: |
-          build-release/
-        retention-days: 30
+      - name: Package
+        run: |
+          cpack -B build/package -G TGZ
+          ls -la build/package/
 
-  # Docker Release
-  docker-release:
-    name: Docker Release
-    runs-on: ubuntu-22.04
-    needs: build-release
-    permissions:
-      contents: read
-      packages: write
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v5
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Log in to Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Extract metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=ref,event=branch
-          type=ref,event=pr
-          type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
-          type=raw,value=latest,enable={{is_default_branch}}
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-
-  # Create GitHub Release
-  github-release:
-    name: Create GitHub Release
-    runs-on: ubuntu-22.04
-    needs: [build-release, docker-release]
-    permissions:
-      contents: write
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v5
-
-    - name: Download release artifacts
-      uses: actions/download-artifact@v5
-      with:
-        name: release-artifacts
-        path: ./release-artifacts
-
-    - name: Create release archive
-      run: |
-        cd release-artifacts/build-release
-        tar -czf ../../unilink-${{ github.event.release.tag_name }}-linux-x64.tar.gz \
-          --exclude='CMakeFiles' \
-          --exclude='*.cmake' \
-          --exclude='Makefile' \
-          .
-
-    - name: Upload release assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./unilink-${{ github.event.release.tag_name }}-linux-x64.tar.gz
-        asset_name: unilink-${{ github.event.release.tag_name }}-linux-x64.tar.gz
-        asset_content_type: application/gzip
-
-  # Release Summary
-  release-summary:
-    name: Release Summary
-    runs-on: ubuntu-22.04
-    needs: [build-release, docker-release, github-release]
-    if: always()
-
-    steps:
-    - name: Release Summary
-      run: |
-        echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
-        echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
-        echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
-        echo "| Build Release | ${{ needs.build-release.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Docker Release | ${{ needs.docker-release.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| GitHub Release | ${{ needs.github-release.result == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Release Version:** ${{ github.event.release.tag_name || github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Docker Image:** \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.release.tag_name || 'latest' }}\`" >> $GITHUB_STEP_SUMMARY
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/package/unilink-*.tar.gz
+          asset_name: unilink-${{ github.ref_name }}-linux-x64.tar.gz
+          asset_content_type: application/gzip

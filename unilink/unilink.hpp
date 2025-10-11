@@ -16,6 +16,13 @@
 
 #pragma once
 
+#if __has_include(<unilink_export.hpp>)
+#include <unilink_export.hpp>
+#else
+// 빌드 디렉터리 경로 미포함 시에도 컴파일 되도록 안전 장치
+#define UNILINK_EXPORT
+#endif
+
 #include <memory>
 #include <variant>
 

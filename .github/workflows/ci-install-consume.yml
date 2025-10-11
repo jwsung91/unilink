@@ -1,0 +1,62 @@
+name: CI - install & consume
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-install-consume:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up C++ toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build clang libboost-all-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DUNILINK_ENABLE_INSTALL=ON \
+            -DUNILINK_ENABLE_PKGCONFIG=ON \
+            -DUNILINK_ENABLE_EXPORT_HEADER=ON
+
+      - name: Build
+        run: cmake --build build --config Release -- -v
+
+      - name: Install
+        run: sudo cmake --install build
+
+      - name: Consume as package (find_package)
+        run: |
+          mkdir -p /tmp/consumer && cd /tmp/consumer
+          cat > CMakeLists.txt <<'EOF'
+          cmake_minimum_required(VERSION 3.20)
+          project(consumer CXX)
+          set(CMAKE_CXX_STANDARD 17)
+          find_package(unilink CONFIG REQUIRED)
+          add_executable(consumer main.cpp)
+          target_link_libraries(consumer PRIVATE unilink::unilink)
+          EOF
+          cat > main.cpp <<'EOF'
+          #include <unilink/unilink.hpp>
+          #include <iostream>
+          int main(){ 
+            std::cout << "unilink package consumed successfully!\n"; 
+            return 0; 
+          }
+          EOF
+          cmake -S . -B build -G Ninja
+          cmake --build build --config Release
+          ./build/consumer
+
+      - name: Test pkg-config
+        run: |
+          pkg-config --cflags --libs unilink

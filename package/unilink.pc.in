@@ -1,0 +1,12 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: unilink
+Description: Unified async communication library
+URL: https://github.com/jwsung91/unilink
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lunilink
+Cflags: -I${includedir}
+Requires: boost-system
