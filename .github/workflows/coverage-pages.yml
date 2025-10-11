@@ -57,8 +57,20 @@ jobs:
         echo "=== Before filtering ==="
         lcov --summary coverage.info 2>&1 | grep lines
         
-        # Extract only unilink source code (exclude test in one step)
-        lcov --extract coverage.info '*/unilink/*.cc' '*/unilink/*.hpp' '*/unilink/*.cpp' \
+        # Step 1: Extract unilink directory using absolute path
+        echo "=== Step 1: Extract unilink directory ==="
+        lcov --extract coverage.info \
+          "${GITHUB_WORKSPACE}/unilink/*" \
+          --output-file coverage_temp.info \
+          --ignore-errors mismatch,negative,unused
+        lcov --summary coverage_temp.info 2>&1 | grep lines
+        
+        # Step 2: Remove unwanted files (test, _deps, build)
+        echo "=== Step 2: Remove test and dependency files ==="
+        lcov --remove coverage_temp.info \
+          "*/test/*" \
+          "*/_deps/*" \
+          "*/build-coverage/*" \
           --output-file coverage_filtered.info \
           --ignore-errors mismatch,negative,unused
         
