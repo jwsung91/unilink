@@ -58,12 +58,12 @@ class ClientLimitIntegrationTest : public ::testing::Test {
     uint16_t random_offset = static_cast<uint16_t>(std::rand() % 100);    // 0-99 range
 
     uint32_t port_calc = base_port + time_offset + random_offset;
-    
+
     // Ensure port is within valid range
     if (port_calc > 65535) {
       port_calc = 50000 + (port_calc % 1000);
     }
-    
+
     uint16_t port = static_cast<uint16_t>(port_calc);
 
     return port;
