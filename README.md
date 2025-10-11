@@ -2,7 +2,13 @@
 
 [![CI/CD Pipeline](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml)
 [![Test Coverage](https://img.shields.io/endpoint?url=https://grade-e.github.io/interface-socket/badges/coverage.json)](https://grade-e.github.io/interface-socket/)
+
+
+![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
+![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)
+
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
+
 
 ## One interface, reliable connections
 
