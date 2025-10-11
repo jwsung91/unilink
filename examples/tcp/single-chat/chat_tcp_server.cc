@@ -85,8 +85,7 @@ class TcpServerChatApp {
   void run() {
     // Using convenience function with member function pointers
     server_ = unilink::tcp_server(port_)
-                  .single_client()  // Single client chat
-                  .auto_start(false)
+                  .single_client()                   // Single client chat
                   .enable_port_retry(true, 3, 1000)  // 3회 재시도, 1초 간격
                   .on_connect([this]() { handle_connect(); })
                   .on_disconnect([this]() { handle_disconnect(); })

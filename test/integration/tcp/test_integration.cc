@@ -44,13 +44,13 @@ TEST_F(IntegrationTest, BuilderPatternIntegration) {
   // Test TCP server builder
   auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(false)
+
                     .build();
 
   EXPECT_NE(server, nullptr);
 
   // Test TCP client builder
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
 
   EXPECT_NE(client, nullptr);
 }
@@ -74,7 +74,7 @@ TEST_F(IntegrationTest, AutoInitialization) {
  */
 TEST_F(IntegrationTest, MethodChaining) {
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .auto_start(false)
+
                     .auto_manage(false)
                     .on_connect([]() { std::cout << "Connected!" << std::endl; })
                     .on_disconnect([]() { std::cout << "Disconnected!" << std::endl; })
@@ -90,7 +90,7 @@ TEST_F(IntegrationTest, MethodChaining) {
  */
 TEST_F(IntegrationTest, IndependentContext) {
   // Test independent context creation
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).use_independent_context(true).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).use_independent_context(true).build();
 
   EXPECT_NE(client, nullptr);
 
@@ -98,7 +98,7 @@ TEST_F(IntegrationTest, IndependentContext) {
   auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .use_independent_context(false)
-                    .auto_start(false)
+
                     .build();
 
   EXPECT_NE(server, nullptr);
@@ -123,7 +123,7 @@ TEST_F(IntegrationTest, BasicCommunication) {
   // Create server
   auto server = unilink::tcp_server(comm_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(true)
+
                     .on_connect([&server_connected]() { server_connected = true; })
                     .on_data([&data_received, &received_data](const std::string& data) {
                       received_data = data;
@@ -132,17 +132,19 @@ TEST_F(IntegrationTest, BasicCommunication) {
                     .build();
 
   ASSERT_NE(server, nullptr);
+  server->start();
 
   // Wait a bit for server to start
   TestUtils::waitFor(100);
 
   // Create client
   auto client = unilink::tcp_client("127.0.0.1", comm_port)
-                    .auto_start(true)
+
                     .on_connect([&client_connected]() { client_connected = true; })
                     .build();
 
   ASSERT_NE(client, nullptr);
+  client->start();
 
   // Wait for connection
   EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 5000));
@@ -167,7 +169,7 @@ TEST_F(IntegrationTest, ErrorHandling) {
   // Test invalid port (should throw exception due to input validation)
   EXPECT_THROW(auto server = unilink::tcp_server(0)    // Invalid port
                                  .unlimited_clients()  // 클라이언트 제한 없음
-                                 .auto_start(false)
+
                                  .build(),
                common::BuilderException);
 
@@ -176,7 +178,7 @@ TEST_F(IntegrationTest, ErrorHandling) {
   std::string error_message;
 
   auto client = unilink::tcp_client("127.0.0.1", 1)  // Invalid port
-                    .auto_start(false)
+
                     .on_error([&error_occurred, &error_message](const std::string& error) {
                       error_occurred = true;
                       error_message = error;
@@ -198,7 +200,7 @@ TEST_F(IntegrationTest, ResourceSharing) {
   std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
 
   for (int i = 0; i < 3; ++i) {
-    auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+    auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
 
     EXPECT_NE(client, nullptr);
     clients.push_back(std::move(client));
@@ -214,7 +216,7 @@ TEST_F(IntegrationTest, ResourceSharing) {
 TEST_F(IntegrationTest, StateManagement) {
   std::atomic<common::LinkState> client_state{common::LinkState::Idle};
 
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
 
   EXPECT_NE(client, nullptr);
   EXPECT_EQ(client_state.load(), common::LinkState::Idle);
@@ -237,14 +239,14 @@ TEST_F(IntegrationTest, AdvancedCommunicationWithSynchronization) {
   // Create server
   auto server = unilink::tcp_server(comm_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(false)    // Don't auto-start to avoid conflicts
+                                          // Don't auto-start to avoid conflicts
                     .build();
 
   ASSERT_NE(server, nullptr);
 
   // Create client
   auto client = unilink::tcp_client("127.0.0.1", comm_port)
-                    .auto_start(false)  // Don't auto-start to avoid conflicts
+                    // Don't auto-start to avoid conflicts
                     .build();
 
   ASSERT_NE(client, nullptr);
@@ -274,7 +276,7 @@ TEST_F(IntegrationTest, MultipleClientConnections) {
   // Create server
   auto server = unilink::tcp_server(comm_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(true)
+
                     .on_connect([&connection_count]() { connection_count++; })
                     .build();
 
@@ -283,7 +285,7 @@ TEST_F(IntegrationTest, MultipleClientConnections) {
 
   // Create multiple clients
   for (int i = 0; i < 3; ++i) {
-    auto client = unilink::tcp_client("127.0.0.1", comm_port).auto_start(true).build();
+    auto client = unilink::tcp_client("127.0.0.1", comm_port).build();
 
     ASSERT_NE(client, nullptr);
     clients.push_back(std::move(client));
@@ -309,7 +311,7 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
   // Test invalid port (should throw exception due to input validation)
   EXPECT_THROW(auto server = unilink::tcp_server(0)    // Invalid port
                                  .unlimited_clients()  // 클라이언트 제한 없음
-                                 .auto_start(false)
+
                                  .on_error([&error_occurred, &error_message](const std::string& error) {
                                    error_occurred = true;
                                    error_message = error;
@@ -319,7 +321,7 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
 
   // Test client with invalid host
   auto client = unilink::tcp_client("invalid.host", 12345)
-                    .auto_start(false)
+
                     .on_error([&error_occurred, &error_message](const std::string& error) {
                       error_occurred = true;
                       error_message = error;
@@ -334,7 +336,7 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
  */
 TEST_F(IntegrationTest, ComprehensiveBuilderMethodChaining) {
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .auto_start(false)
+
                     .auto_manage(false)
                     .use_independent_context(true)
                     .on_connect([]() { std::cout << "Connected!" << std::endl; })
@@ -348,7 +350,7 @@ TEST_F(IntegrationTest, ComprehensiveBuilderMethodChaining) {
   auto server =
       unilink::tcp_server(test_port_)
           .unlimited_clients()  // 클라이언트 제한 없음
-          .auto_start(false)
+
           .auto_manage(false)
           .use_independent_context(false)
           .on_connect([]() { std::cout << "Server: Client connected!" << std::endl; })

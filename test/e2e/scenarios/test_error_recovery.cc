@@ -104,7 +104,7 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
   // 1. 연결 거부 에러 (잘못된 포트) - 재시도 동작 확인
   std::cout << "Testing connection refused error..." << std::endl;
   auto client1 = builder::UnifiedBuilder::tcp_client("127.0.0.1", 1)  // 잘못된 포트
-                     .auto_start(false)
+
                      .on_error([this](const std::string& error) {
                        error_count_++;
                        std::cout << "Error received: " << error << std::endl;
@@ -131,7 +131,7 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
 
   // Use wrapper instead of transport layer for error callbacks
   auto client2 = builder::UnifiedBuilder::tcp_client("192.168.255.255", 8080)
-                     .auto_start(false)
+
                      .on_error([this](const std::string& error) {
                        error_count_++;
                        std::cout << "Timeout error received: " << error << std::endl;
@@ -150,7 +150,7 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
   error_count_ = 0;
 
   auto client3 = builder::UnifiedBuilder::tcp_client("nonexistent.domain.invalid", 8080)
-                     .auto_start(false)
+
                      .on_error([this](const std::string& error) {
                        error_count_++;
                        std::cout << "DNS error received: " << error << std::endl;
@@ -179,7 +179,7 @@ TEST_F(ErrorRecoveryTest, NetworkRetryMechanism) {
   retry_cfg.max_retries = 3;          // 3회 재시도
 
   auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", 1)
-                    .auto_start(false)
+
                     .on_error([this](const std::string& error) {
                       error_count_++;
                       std::cout << "Retry attempt " << error_count_.load() << ": " << error << std::endl;
@@ -208,7 +208,7 @@ TEST_F(ErrorRecoveryTest, NetworkRecoveryAfterFailure) {
   // 1. 서버 생성 (시작하지 않음)
   auto server = builder::UnifiedBuilder::tcp_server(server_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(false)
+
                     .build();
 
   ASSERT_NE(server, nullptr);
@@ -218,7 +218,7 @@ TEST_F(ErrorRecoveryTest, NetworkRecoveryAfterFailure) {
   std::atomic<bool> disconnected{false};
 
   auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", server_port)
-                    .auto_start(false)
+
                     .on_connect([&connected]() {
                       connected = true;
                       std::cout << "Client connected!" << std::endl;
@@ -291,7 +291,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   nonexistent_cfg.max_retries = 2;
 
   auto serial1 = builder::UnifiedBuilder::serial("/dev/nonexistent", 115200)
-                     .auto_start(false)
+
                      .on_error([this](const std::string& error) {
                        error_count_++;
                        std::cout << "Serial error: " << error << std::endl;
@@ -310,7 +310,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   error_count_ = 0;
 
   auto serial2 = builder::UnifiedBuilder::serial("/dev/ttyS0", 115200)
-                     .auto_start(false)
+
                      .on_error([this](const std::string& error) {
                        error_count_++;
                        std::cout << "Permission error: " << error << std::endl;
@@ -329,7 +329,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   error_count_ = 0;
 
   auto serial3 = builder::UnifiedBuilder::serial("/dev/ttyUSB0", 999999)  // 잘못된 baud rate
-                     .auto_start(false)
+
                      .on_error([this](const std::string& error) {
                        error_count_++;
                        std::cout << "Baud rate error: " << error << std::endl;
@@ -358,7 +358,7 @@ TEST_F(ErrorRecoveryTest, SerialRetryMechanism) {
   retry_cfg.max_retries = 3;          // 3회 재시도
 
   auto serial = builder::UnifiedBuilder::serial("/dev/nonexistent", 115200)
-                    .auto_start(false)
+
                     .on_error([this](const std::string& error) {
                       error_count_++;
                       std::cout << "Serial retry attempt " << error_count_.load() << ": " << error << std::endl;
@@ -428,7 +428,7 @@ TEST_F(ErrorRecoveryTest, ExceptionSafetyInCallbacks) {
   // 서버 생성
   auto server = builder::UnifiedBuilder::tcp_server(server_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(true)
+
                     .on_connect([]() {
                       // 콜백에서 예외 발생
                       throw std::runtime_error("Test exception in connect callback");
@@ -448,7 +448,7 @@ TEST_F(ErrorRecoveryTest, ExceptionSafetyInCallbacks) {
 
   // 클라이언트 생성
   auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", server_port)
-                    .auto_start(true)
+
                     .on_connect([]() {
                       // 콜백에서 예외 발생
                       throw std::logic_error("Test exception in client connect callback");
@@ -532,10 +532,10 @@ TEST_F(ErrorRecoveryTest, ResourceCleanupOnDestruction) {
   {
     auto server = builder::UnifiedBuilder::tcp_server(server_port)
                       .unlimited_clients()  // 클라이언트 제한 없음
-                      .auto_start(true)
+
                       .build();
 
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", server_port).auto_start(true).build();
+    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", server_port).build();
 
     // 연결 대기
     TestUtils::waitFor(2000);
@@ -549,7 +549,7 @@ TEST_F(ErrorRecoveryTest, ResourceCleanupOnDestruction) {
   // 새로운 객체 생성 (이전 리소스가 정리되었는지 확인)
   auto new_server = builder::UnifiedBuilder::tcp_server(server_port)
                         .unlimited_clients()  // 클라이언트 제한 없음
-                        .auto_start(false)
+
                         .build();
 
   EXPECT_NE(new_server, nullptr);

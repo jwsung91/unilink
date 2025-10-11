@@ -79,7 +79,7 @@ TEST_F(BuilderCoverageTest, TcpServerMultiClientCallbacks) {
   // Create server with multi-client callbacks
   server_ = unilink::tcp_server(port)
                 .multi_client(3)
-                .auto_start(false)
+
                 .on_multi_connect([this](size_t client_id, const std::string& ip) {
                   multi_connect_count_++;
                   EXPECT_GT(client_id, 0u);
@@ -106,7 +106,7 @@ TEST_F(BuilderCoverageTest, TcpServerPortRetry) {
   // Create server with port retry enabled
   server_ = unilink::tcp_server(port)
                 .unlimited_clients()
-                .auto_start(false)
+
                 .enable_port_retry(true, 5, 500)  // 5 retries, 500ms interval
                 .build();
 
@@ -120,15 +120,15 @@ TEST_F(BuilderCoverageTest, TcpServerMaxClients) {
   uint16_t port = getTestPort();
 
   // Test max_clients(2)
-  auto server1 = unilink::tcp_server(port).max_clients(2).auto_start(false).build();
+  auto server1 = unilink::tcp_server(port).max_clients(2).build();
   EXPECT_NE(server1, nullptr);
 
   // Test max_clients(5)
-  auto server2 = unilink::tcp_server(port + 1).max_clients(5).auto_start(false).build();
+  auto server2 = unilink::tcp_server(port + 1).max_clients(5).build();
   EXPECT_NE(server2, nullptr);
 
   // Test max_clients(100)
-  auto server3 = unilink::tcp_server(port + 2).max_clients(100).auto_start(false).build();
+  auto server3 = unilink::tcp_server(port + 2).max_clients(100).build();
   EXPECT_NE(server3, nullptr);
 
   server1->stop();
@@ -143,10 +143,10 @@ TEST_F(BuilderCoverageTest, TcpServerMaxClientsInvalid) {
   uint16_t port = getTestPort();
 
   // Test max_clients(0) - should throw
-  EXPECT_THROW({ unilink::tcp_server(port).max_clients(0).auto_start(false).build(); }, std::invalid_argument);
+  EXPECT_THROW({ unilink::tcp_server(port).max_clients(0).build(); }, std::invalid_argument);
 
   // Test max_clients(1) - should throw
-  EXPECT_THROW({ unilink::tcp_server(port).max_clients(1).auto_start(false).build(); }, std::invalid_argument);
+  EXPECT_THROW({ unilink::tcp_server(port).max_clients(1).build(); }, std::invalid_argument);
 }
 
 /**
@@ -155,7 +155,7 @@ TEST_F(BuilderCoverageTest, TcpServerMaxClientsInvalid) {
 TEST_F(BuilderCoverageTest, TcpServerSingleClient) {
   uint16_t port = getTestPort();
 
-  server_ = unilink::tcp_server(port).single_client().auto_start(false).build();
+  server_ = unilink::tcp_server(port).single_client().build();
 
   EXPECT_NE(server_, nullptr);
 }
@@ -167,10 +167,10 @@ TEST_F(BuilderCoverageTest, TcpServerMultiClientLimit) {
   uint16_t port = getTestPort();
 
   // Valid multi_client values
-  auto server1 = unilink::tcp_server(port).multi_client(2).auto_start(false).build();
+  auto server1 = unilink::tcp_server(port).multi_client(2).build();
   EXPECT_NE(server1, nullptr);
 
-  auto server2 = unilink::tcp_server(port + 1).multi_client(10).auto_start(false).build();
+  auto server2 = unilink::tcp_server(port + 1).multi_client(10).build();
   EXPECT_NE(server2, nullptr);
 
   server1->stop();
@@ -184,10 +184,10 @@ TEST_F(BuilderCoverageTest, TcpServerMultiClientInvalid) {
   uint16_t port = getTestPort();
 
   // multi_client(0) - should throw
-  EXPECT_THROW({ unilink::tcp_server(port).multi_client(0).auto_start(false).build(); }, std::invalid_argument);
+  EXPECT_THROW({ unilink::tcp_server(port).multi_client(0).build(); }, std::invalid_argument);
 
   // multi_client(1) - should throw
-  EXPECT_THROW({ unilink::tcp_server(port).multi_client(1).auto_start(false).build(); }, std::invalid_argument);
+  EXPECT_THROW({ unilink::tcp_server(port).multi_client(1).build(); }, std::invalid_argument);
 }
 
 /**
@@ -196,7 +196,7 @@ TEST_F(BuilderCoverageTest, TcpServerMultiClientInvalid) {
 TEST_F(BuilderCoverageTest, TcpServerIndependentContext) {
   uint16_t port = getTestPort();
 
-  server_ = unilink::tcp_server(port).unlimited_clients().auto_start(false).use_independent_context(true).build();
+  server_ = unilink::tcp_server(port).unlimited_clients().use_independent_context(true).build();
 
   EXPECT_NE(server_, nullptr);
 }
@@ -211,7 +211,7 @@ TEST_F(BuilderCoverageTest, TcpServerOnDataWithClientId) {
 
   server_ = unilink::tcp_server(port)
                 .unlimited_clients()
-                .auto_start(false)
+
                 .on_data([&data_received](size_t client_id, const std::string& data) {
                   data_received = true;
                   EXPECT_GT(client_id, 0u);
@@ -232,7 +232,7 @@ TEST_F(BuilderCoverageTest, TcpServerOnConnectWithClientInfo) {
 
   server_ = unilink::tcp_server(port)
                 .unlimited_clients()
-                .auto_start(false)
+
                 .on_connect([&connected](size_t client_id, const std::string& ip) {
                   connected = true;
                   EXPECT_GT(client_id, 0u);
@@ -253,7 +253,7 @@ TEST_F(BuilderCoverageTest, TcpServerOnDisconnectWithClientId) {
 
   server_ = unilink::tcp_server(port)
                 .unlimited_clients()
-                .auto_start(false)
+
                 .on_disconnect([&disconnected](size_t client_id) {
                   disconnected = true;
                   EXPECT_GT(client_id, 0u);
@@ -270,11 +270,11 @@ TEST_F(BuilderCoverageTest, TcpServerAutoManage) {
   uint16_t port = getTestPort();
 
   // auto_manage(true)
-  auto server1 = unilink::tcp_server(port).unlimited_clients().auto_start(false).auto_manage(true).build();
+  auto server1 = unilink::tcp_server(port).unlimited_clients().auto_manage(true).build();
   EXPECT_NE(server1, nullptr);
 
   // auto_manage(false)
-  auto server2 = unilink::tcp_server(port + 1).unlimited_clients().auto_start(false).auto_manage(false).build();
+  auto server2 = unilink::tcp_server(port + 1).unlimited_clients().auto_manage(false).build();
   EXPECT_NE(server2, nullptr);
 
   server1->stop();
@@ -292,11 +292,11 @@ TEST_F(BuilderCoverageTest, TcpClientAutoManage) {
   uint16_t port = getTestPort();
 
   // auto_manage(true)
-  auto client1 = unilink::tcp_client("127.0.0.1", port).auto_start(false).auto_manage(true).build();
+  auto client1 = unilink::tcp_client("127.0.0.1", port).auto_manage(true).build();
   EXPECT_NE(client1, nullptr);
 
   // auto_manage(false)
-  auto client2 = unilink::tcp_client("127.0.0.1", port + 1).auto_start(false).auto_manage(false).build();
+  auto client2 = unilink::tcp_client("127.0.0.1", port + 1).auto_manage(false).build();
   EXPECT_NE(client2, nullptr);
 
   client1->stop();
@@ -315,7 +315,7 @@ TEST_F(BuilderCoverageTest, TcpClientCallbacks) {
   std::atomic<bool> error_occurred{false};
 
   client_ = unilink::tcp_client("127.0.0.1", port)
-                .auto_start(false)
+
                 .on_data([&data_received](const std::string& data) { data_received = true; })
                 .on_connect([&connected]() { connected = true; })
                 .on_disconnect([&disconnected]() { disconnected = true; })
@@ -331,7 +331,7 @@ TEST_F(BuilderCoverageTest, TcpClientCallbacks) {
 TEST_F(BuilderCoverageTest, TcpClientIndependentContext) {
   uint16_t port = getTestPort();
 
-  client_ = unilink::tcp_client("127.0.0.1", port).auto_start(false).use_independent_context(true).build();
+  client_ = unilink::tcp_client("127.0.0.1", port).use_independent_context(true).build();
 
   EXPECT_NE(client_, nullptr);
 }
@@ -345,11 +345,11 @@ TEST_F(BuilderCoverageTest, TcpClientIndependentContext) {
  */
 TEST_F(BuilderCoverageTest, SerialAutoManage) {
   // auto_manage(true)
-  auto serial1 = unilink::serial("/dev/null", 9600).auto_start(false).auto_manage(true).build();
+  auto serial1 = unilink::serial("/dev/null", 9600).auto_manage(true).build();
   EXPECT_NE(serial1, nullptr);
 
   // auto_manage(false)
-  auto serial2 = unilink::serial("/dev/null", 9600).auto_start(false).auto_manage(false).build();
+  auto serial2 = unilink::serial("/dev/null", 9600).auto_manage(false).build();
   EXPECT_NE(serial2, nullptr);
 
   serial1->stop();
@@ -366,7 +366,7 @@ TEST_F(BuilderCoverageTest, SerialCallbacks) {
   std::atomic<bool> error_occurred{false};
 
   auto serial = unilink::serial("/dev/null", 9600)
-                    .auto_start(false)
+
                     .on_data([&data_received](const std::string& data) { data_received = true; })
                     .on_connect([&connected]() { connected = true; })
                     .on_disconnect([&disconnected]() { disconnected = true; })
@@ -381,7 +381,7 @@ TEST_F(BuilderCoverageTest, SerialCallbacks) {
  * @brief Test Serial use_independent_context
  */
 TEST_F(BuilderCoverageTest, SerialIndependentContext) {
-  auto serial = unilink::serial("/dev/null", 9600).auto_start(false).use_independent_context(true).build();
+  auto serial = unilink::serial("/dev/null", 9600).use_independent_context(true).build();
 
   EXPECT_NE(serial, nullptr);
   serial->stop();
@@ -400,7 +400,7 @@ TEST_F(BuilderCoverageTest, AllBuildersWithVariousConfigurations) {
   // TCP Server with all options
   auto server = unilink::tcp_server(port)
                     .multi_client(10)
-                    .auto_start(false)
+
                     .auto_manage(true)
                     .use_independent_context(false)
                     .enable_port_retry(true, 3, 1000)
@@ -413,7 +413,7 @@ TEST_F(BuilderCoverageTest, AllBuildersWithVariousConfigurations) {
 
   // TCP Client with all options
   auto client = unilink::tcp_client("127.0.0.1", port + 1)
-                    .auto_start(false)
+
                     .auto_manage(true)
                     .use_independent_context(false)
                     .on_data([](const std::string& data) {})
@@ -425,7 +425,7 @@ TEST_F(BuilderCoverageTest, AllBuildersWithVariousConfigurations) {
 
   // Serial with all options
   auto serial = unilink::serial("/dev/null", 115200)
-                    .auto_start(false)
+
                     .auto_manage(true)
                     .use_independent_context(false)
                     .on_data([](const std::string& data) {})

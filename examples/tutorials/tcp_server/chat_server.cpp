@@ -92,8 +92,9 @@ class ChatServer {
                       nicknames_.erase(id);
                     }
                   })
-                  .auto_start(true)
                   .build();
+    
+    server_->start();
 
     std::cout << "Chat server started on port " << port << std::endl;
     std::cout << "Press Ctrl+C to stop" << std::endl;

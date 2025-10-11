@@ -47,13 +47,6 @@ class SerialBuilder : public BuilderInterface<wrapper::Serial> {
   std::unique_ptr<wrapper::Serial> build() override;
 
   /**
-   * @brief Enable auto-start functionality
-   * @param auto_start Whether to automatically start the serial
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
-  SerialBuilder& auto_start(bool auto_start = false) override;
-
-  /**
    * @brief Enable auto-manage functionality
    * @param auto_manage Whether to automatically manage the serial lifecycle
    * @return SerialBuilder& Reference to this builder for method chaining
@@ -157,7 +150,6 @@ class SerialBuilder : public BuilderInterface<wrapper::Serial> {
  private:
   std::string device_;
   uint32_t baud_rate_;
-  bool auto_start_;
   bool auto_manage_;
   bool use_independent_context_;
   unsigned retry_interval_ms_;

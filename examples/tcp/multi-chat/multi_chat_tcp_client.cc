@@ -96,7 +96,6 @@ class ChatClient {
                   .on_disconnect([this]() { on_disconnect(); })
                   .on_data([this](const std::string& data) { on_data(data); })
                   .on_error([this](const std::string& error) { on_error(error); })
-                  .auto_start(true)
                   .retry_interval(3000)  // 3 second retry interval
                   .build();
 
@@ -104,6 +103,8 @@ class ChatClient {
       logger_.error("client", "startup", "Failed to create client");
       return false;
     }
+    
+    client_->start();
 
     // Wait for connection (max 5 seconds)
     bool connected = false;

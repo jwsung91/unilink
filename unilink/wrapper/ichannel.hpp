@@ -47,7 +47,6 @@ class ChannelInterface {
   virtual ChannelInterface& on_error(ErrorHandler handler) = 0;
 
   // Convenience methods
-  virtual ChannelInterface& auto_start(bool start = true) = 0;
   virtual ChannelInterface& auto_manage(bool manage = true) = 0;
 };
 

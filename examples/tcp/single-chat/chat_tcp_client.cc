@@ -38,7 +38,6 @@ class TcpClientChatApp {
   void run() {
     // Using convenience function with member function pointers
     auto ul = unilink::tcp_client(host_, port_)
-                  .auto_start(false)
                   .on_connect(this, &TcpClientChatApp::handle_connect)
                   .on_disconnect(this, &TcpClientChatApp::handle_disconnect)
                   .on_data(this, &TcpClientChatApp::handle_data)

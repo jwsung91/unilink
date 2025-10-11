@@ -64,7 +64,7 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderExceptionSafety) {
                BuilderException);
 
   // Test valid configuration
-  EXPECT_NO_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 115200).retry_interval(1000).auto_start(false).build());
+  EXPECT_NO_THROW(auto serial = unilink::serial("/dev/ttyUSB0", 115200).retry_interval(1000).build());
 }
 
 /**
@@ -104,7 +104,7 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderMethodChaining) {
   // Test valid method chaining
   EXPECT_NO_THROW({
     auto serial = unilink::serial("/dev/ttyUSB0", 115200)
-                      .auto_start(false)
+
                       .auto_manage(false)
                       .retry_interval(1000)
                       .on_data([](const std::string&) {})
@@ -166,7 +166,7 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderErrorMessages) {
 TEST_F(SerialBuilderImprovementsTest, SerialBuilderEndToEnd) {
   // Test that valid configurations work
   EXPECT_NO_THROW({
-    auto serial = unilink::serial("/dev/ttyUSB0", 115200).auto_start(false).retry_interval(1000).build();
+    auto serial = unilink::serial("/dev/ttyUSB0", 115200).retry_interval(1000).build();
     EXPECT_NE(serial, nullptr);
   });
 

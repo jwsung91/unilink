@@ -105,14 +105,6 @@ ChannelInterface& TcpServer::on_error(ErrorHandler handler) {
   return *this;
 }
 
-ChannelInterface& TcpServer::auto_start(bool start) {
-  auto_start_ = start;
-  if (start && !started_) {
-    this->start();
-  }
-  return *this;
-}
-
 ChannelInterface& TcpServer::auto_manage(bool manage) {
   auto_manage_ = manage;
   return *this;

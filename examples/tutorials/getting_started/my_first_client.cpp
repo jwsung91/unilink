@@ -68,11 +68,11 @@ int main(int argc, char** argv) {
                     // Step 6: Configure auto-reconnection
                     .retry_interval(3000)  // Retry every 3 seconds
 
-                    // Step 7: Start automatically
-                    .auto_start(true)
-
                     // Build the client
                     .build();
+
+  // Step 7: Start the client
+  client->start();
 
   // Wait for connection (up to 5 seconds)
   std::cout << "Waiting for connection..." << std::endl;

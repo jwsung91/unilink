@@ -49,7 +49,6 @@ class TcpServer : public ChannelInterface {
   ChannelInterface& on_disconnect(DisconnectHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
-  ChannelInterface& auto_start(bool start = true) override;
   ChannelInterface& auto_manage(bool manage = true) override;
 
   void send_line(const std::string& line) override;
@@ -88,7 +87,6 @@ class TcpServer : public ChannelInterface {
   std::shared_ptr<interface::Channel> channel_;
   uint16_t port_;
   bool started_{false};
-  bool auto_start_{false};
   bool auto_manage_{false};
 
   // Port retry configuration

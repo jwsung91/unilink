@@ -61,7 +61,7 @@ class AdvancedTcpServerCoverageTest : public ::testing::Test {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -80,7 +80,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerStartWhenAlreadyStarted) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -92,7 +92,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStartWhenAlreadyStarted) {
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerStopWhenNotStarted) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -105,21 +105,21 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStopWhenNotStarted) {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, UnlimitedClientsConfiguration) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
   // Server not started yet
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, SingleClientConfiguration) {
-  server_ = unilink::tcp_server(test_port_).single_client().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).single_client().build();
 
   ASSERT_NE(server_, nullptr);
   // Server not started yet
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, MultiClientConfiguration) {
-  server_ = unilink::tcp_server(test_port_).multi_client(5).auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).multi_client(5).build();
 
   ASSERT_NE(server_, nullptr);
   // Server not started yet
@@ -130,7 +130,7 @@ TEST_F(AdvancedTcpServerCoverageTest, MultiClientConfiguration) {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
   // Server not started yet
@@ -141,7 +141,7 @@ TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, SetMessageHandler) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -161,7 +161,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SetMessageHandler) {
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, SetConnectionHandler) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -190,7 +190,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SetConnectionHandler) {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, BroadcastToAllClients) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -202,7 +202,7 @@ TEST_F(AdvancedTcpServerCoverageTest, BroadcastToAllClients) {
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, BroadcastToSpecificClient) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -218,7 +218,7 @@ TEST_F(AdvancedTcpServerCoverageTest, BroadcastToSpecificClient) {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, GetServerInfo) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -234,7 +234,7 @@ TEST_F(AdvancedTcpServerCoverageTest, GetServerInfo) {
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, GetConnectedClientsCount) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -252,7 +252,7 @@ TEST_F(AdvancedTcpServerCoverageTest, GetConnectedClientsCount) {
 TEST_F(AdvancedTcpServerCoverageTest, ServerWithInvalidPort) {
   // Try to create server with port 0 (invalid)
   try {
-    server_ = unilink::tcp_server(0).unlimited_clients().auto_start(false).build();
+    server_ = unilink::tcp_server(0).unlimited_clients().build();
 
     // If creation succeeds, try to start
     if (server_) {
@@ -265,7 +265,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerWithInvalidPort) {
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerWithHighPort) {
   // Try to create server with very high port
-  server_ = unilink::tcp_server(65535).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(65535).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -282,7 +282,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerWithHighPort) {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -316,7 +316,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, RapidStartStop) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
@@ -330,7 +330,7 @@ TEST_F(AdvancedTcpServerCoverageTest, RapidStartStop) {
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
-  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 

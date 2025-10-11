@@ -47,13 +47,6 @@ class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
   std::unique_ptr<wrapper::TcpClient> build() override;
 
   /**
-   * @brief Enable auto-start functionality
-   * @param auto_start Whether to automatically start the client
-   * @return TcpClientBuilder& Reference to this builder for method chaining
-   */
-  TcpClientBuilder& auto_start(bool auto_start = false) override;
-
-  /**
    * @brief Enable auto-manage functionality
    * @param auto_manage Whether to automatically manage the client lifecycle
    * @return TcpClientBuilder& Reference to this builder for method chaining
@@ -157,7 +150,6 @@ class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
  private:
   std::string host_;
   uint16_t port_;
-  bool auto_start_;
   bool auto_manage_;
   bool use_independent_context_;
   unsigned retry_interval_ms_;

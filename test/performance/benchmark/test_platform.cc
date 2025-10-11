@@ -182,7 +182,7 @@ TEST_F(PlatformTest, SerialCommunicationPlatformSpecific) {
   for (const auto& device : device_paths) {
     std::cout << "Testing device: " << device << std::endl;
 
-    auto serial = UnifiedBuilder::serial(device, 9600).auto_start(false).build();
+    auto serial = UnifiedBuilder::serial(device, 9600).build();
 
     EXPECT_NE(serial, nullptr);
 
@@ -221,7 +221,7 @@ TEST_F(PlatformTest, SerialBaudRatesPlatformSpecific) {
   for (auto baud_rate : baud_rates) {
     std::cout << "Testing baud rate: " << baud_rate << std::endl;
 
-    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).auto_start(false).build();
+    auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", baud_rate).build();
 
     EXPECT_NE(serial, nullptr);
   }
@@ -242,13 +242,13 @@ TEST_F(PlatformTest, NetworkFunctionalityPlatformSpecific) {
   // Test TCP server creation
   auto server = UnifiedBuilder::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(false)
+
                     .build();
 
   EXPECT_NE(server, nullptr);
 
   // Test TCP client creation
-  auto client = UnifiedBuilder::tcp_client("localhost", test_port_).auto_start(false).build();
+  auto client = UnifiedBuilder::tcp_client("localhost", test_port_).build();
 
   EXPECT_NE(client, nullptr);
 
@@ -286,12 +286,12 @@ TEST_F(PlatformTest, NetworkPortHandlingPlatformSpecific) {
 
     auto server = UnifiedBuilder::tcp_server(port)
                       .unlimited_clients()  // 클라이언트 제한 없음
-                      .auto_start(false)
+
                       .build();
 
     EXPECT_NE(server, nullptr);
 
-    auto client = UnifiedBuilder::tcp_client("localhost", port).auto_start(false).build();
+    auto client = UnifiedBuilder::tcp_client("localhost", port).build();
 
     EXPECT_NE(client, nullptr);
   }
@@ -472,16 +472,16 @@ TEST_F(PlatformTest, CrossPlatformCompatibility) {
   // Test that basic functionality works across platforms
   auto server = UnifiedBuilder::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(false)
+
                     .build();
 
   EXPECT_NE(server, nullptr);
 
-  auto client = UnifiedBuilder::tcp_client("localhost", test_port_).auto_start(false).build();
+  auto client = UnifiedBuilder::tcp_client("localhost", test_port_).build();
 
   EXPECT_NE(client, nullptr);
 
-  auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).auto_start(false).build();
+  auto serial = UnifiedBuilder::serial("/dev/ttyUSB0", 9600).build();
 
   EXPECT_NE(serial, nullptr);
 
@@ -511,7 +511,7 @@ TEST_F(PlatformTest, PlatformSpecificErrorHandling) {
   for (const auto& path : invalid_paths) {
     std::cout << "Testing invalid path: " << path << std::endl;
 
-    auto serial = UnifiedBuilder::serial(path, 9600).auto_start(false).build();
+    auto serial = UnifiedBuilder::serial(path, 9600).build();
 
     EXPECT_NE(serial, nullptr);
 

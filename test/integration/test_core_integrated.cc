@@ -269,7 +269,7 @@ TEST_F(CoreIntegratedTest, ThreadSafeStateConcurrentAccess) {
  */
 TEST_F(CoreIntegratedTest, UnifiedBuilderBasicFunctionality) {
   // Test TCP client builder
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
 
   EXPECT_NE(client, nullptr);
 }
@@ -280,7 +280,7 @@ TEST_F(CoreIntegratedTest, UnifiedBuilderBasicFunctionality) {
 TEST_F(CoreIntegratedTest, UnifiedBuilderMethodChaining) {
   // Test method chaining
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .auto_start(false)
+
                     .on_connect([]() {})
                     .on_data([](const std::string&) {})
                     .on_error([](const std::string&) {})
@@ -300,12 +300,13 @@ TEST_F(CoreIntegratedTest, BasicCommunicationIntegration) {
   // Create server
   auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(true)
+
                     .on_connect([]() {})
                     .on_data([](const std::string& data) {})
                     .build();
 
   EXPECT_NE(server, nullptr);
+  server->start();
 
   // Wait for server to start
   TestUtils::waitFor(100);
@@ -313,11 +314,12 @@ TEST_F(CoreIntegratedTest, BasicCommunicationIntegration) {
   // Create client
   std::atomic<bool> client_connected{false};
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .auto_start(true)
+
                     .on_connect([&client_connected]() { client_connected = true; })
                     .build();
 
   EXPECT_NE(client, nullptr);
+  client->start();
 
   // Wait for connection
   EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 5000));

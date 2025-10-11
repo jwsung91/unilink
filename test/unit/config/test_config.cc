@@ -174,25 +174,25 @@ TEST_F(ConfigTest, ConfigValidationBoundaryValues) {
   std::cout << "\n=== Configuration Validation Boundary Values Test ===" << std::endl;
 
   // Test TCP client configuration validation
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_).build();
 
   EXPECT_NE(client, nullptr);
 
   // Test TCP server configuration validation
   auto server = UnifiedBuilder::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(false)
+
                     .build();
 
   EXPECT_NE(server, nullptr);
 
   // Test with minimum valid port
-  auto client1 = UnifiedBuilder::tcp_client("127.0.0.1", 1).auto_start(false).build();
+  auto client1 = UnifiedBuilder::tcp_client("127.0.0.1", 1).build();
 
   EXPECT_NE(client1, nullptr);
 
   // Test with maximum valid port
-  auto client2 = UnifiedBuilder::tcp_client("127.0.0.1", 65535).auto_start(false).build();
+  auto client2 = UnifiedBuilder::tcp_client("127.0.0.1", 65535).build();
 
   EXPECT_NE(client2, nullptr);
 }
@@ -204,11 +204,11 @@ TEST_F(ConfigTest, ConfigValidationInvalidValuesNetwork) {
   std::cout << "\n=== Configuration Validation Invalid Values Network Test ===" << std::endl;
 
   // Test with invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).auto_start(false).build(),
+  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).build(),
                common::BuilderException);
 
   // Test with invalid host (should throw exception due to input validation)
-  EXPECT_THROW(auto client2 = UnifiedBuilder::tcp_client("", test_port_).auto_start(false).build(),
+  EXPECT_THROW(auto client2 = UnifiedBuilder::tcp_client("", test_port_).build(),
                common::BuilderException);
 }
 

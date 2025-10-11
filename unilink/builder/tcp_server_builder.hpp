@@ -45,13 +45,6 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
   std::unique_ptr<wrapper::TcpServer> build() override;
 
   /**
-   * @brief Enable auto-start functionality
-   * @param auto_start Whether to automatically start the server
-   * @return TcpServerBuilder& Reference to this builder for method chaining
-   */
-  TcpServerBuilder& auto_start(bool auto_start = false) override;
-
-  /**
    * @brief Enable auto-manage functionality
    * @param auto_manage Whether to automatically manage the server lifecycle
    * @return TcpServerBuilder& Reference to this builder for method chaining
@@ -227,7 +220,6 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
 
  private:
   uint16_t port_;
-  bool auto_start_;
   bool auto_manage_;
   bool use_independent_context_;
 

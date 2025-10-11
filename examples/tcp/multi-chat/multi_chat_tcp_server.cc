@@ -99,8 +99,7 @@ class ChatServer {
     // Create TCP server with 10 client limit
     server_ =
         unilink::tcp_server(port_)
-            .multi_client(4)  // Limit to 4 clients
-            .auto_start(false)
+            .multi_client(4)                   // Limit to 4 clients
             .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
             .on_connect([this](size_t client_id, const std::string& client_ip) { on_connect(client_id, client_ip); })
             .on_data([this](size_t client_id, const std::string& data) { on_data(client_id, data); })
