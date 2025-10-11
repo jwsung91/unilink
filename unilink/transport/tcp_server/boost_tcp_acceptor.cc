@@ -9,6 +9,11 @@ BoostTcpAcceptor::BoostTcpAcceptor(net::io_context& ioc) : acceptor_(ioc) {}
 
 void BoostTcpAcceptor::open(const net::ip::tcp& protocol, boost::system::error_code& ec) {
   acceptor_.open(protocol, ec);
+  if (!ec) {
+    // Set SO_REUSEADDR to allow immediate port reuse after server shutdown
+    // This prevents "Address already in use" errors in tests and quick restarts
+    acceptor_.set_option(net::socket_base::reuse_address(true), ec);
+  }
 }
 
 void BoostTcpAcceptor::bind(const net::ip::tcp::endpoint& endpoint, boost::system::error_code& ec) {

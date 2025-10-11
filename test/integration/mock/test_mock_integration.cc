@@ -99,7 +99,7 @@ TEST_F(MockIntegrationTest, SimulatedSuccessfulConnection) {
   MockTestScenario::setupSuccessfulConnection(*mock_socket_);
 
   // When: Create client with mock
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 .auto_start(false)
                 .on_connect([this]() {
                   connection_established_ = true;
@@ -132,7 +132,7 @@ TEST_F(MockIntegrationTest, SimulatedConnectionFailure) {
   MockTestScenario::setupConnectionFailure(*mock_socket_, MockTestScenario::ConnectionResult::ConnectionRefused);
 
   // When: Create client with mock
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 .auto_start(false)
                 .on_connect([this]() {
                   connection_established_ = true;
@@ -172,7 +172,7 @@ TEST_F(MockIntegrationTest, SimulatedDataReception) {
   MockTestScenario::setupDataReception(*mock_socket_, test_message);
 
   // When: Create client with data handler
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 .auto_start(false)
                 .on_connect([this]() {
                   connection_established_ = true;
@@ -206,7 +206,7 @@ TEST_F(MockIntegrationTest, SimulatedDataTransmission) {
   MockTestScenario::setupDataTransmission(*mock_socket_, MockTestScenario::DataTransferResult::Success);
 
   // When: Create client and send data
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 .auto_start(false)
                 .on_connect([this]() {
                   connection_established_ = true;
@@ -253,7 +253,7 @@ TEST_F(MockIntegrationTest, SimulatedServerClientAcceptance) {
   EXPECT_CALL(*mock_acceptor_, is_open()).WillRepeatedly(::testing::Return(true));
 
   // When: Create server
-  server_ = builder::UnifiedBuilder::tcp_server(test_port_)
+  server_ = unilink::tcp_server(test_port_)
                 .auto_start(false)
                 .on_connect([this]() {
                   connection_established_ = true;
@@ -297,7 +297,7 @@ TEST_F(MockIntegrationTest, SimulatedErrorScenarios) {
     MockTestScenario::setupConnectionFailure(*mock_socket_, test_case.result);
 
     // When: Create client
-    client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+    client_ = unilink::tcp_client("127.0.0.1", test_port_)
                   .auto_start(false)
                   .on_error([this](const std::string& error) {
                     error_occurred_ = true;
@@ -340,7 +340,7 @@ TEST_F(MockIntegrationTest, MockPerformanceTest) {
   const int client_count = 100;
 
   for (int i = 0; i < client_count; ++i) {
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_ + i).auto_start(false).build();
+    auto client = unilink::tcp_client("127.0.0.1", test_port_ + i).auto_start(false).build();
 
     ASSERT_NE(client, nullptr);
     clients.push_back(std::move(client));

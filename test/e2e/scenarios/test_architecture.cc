@@ -41,7 +41,7 @@ class ImprovedArchitectureTest : public ::testing::Test {
       }
 
       // 충분한 시간을 두고 정리
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
       // IoContextManager는 각 테스트에서 개별적으로 관리하지 않음
       // 전역 상태이므로 다른 테스트에 영향을 줄 수 있음
@@ -71,19 +71,19 @@ TEST_F(ImprovedArchitectureTest, CurrentResourceSharingIssue) {
   uint16_t test_port = getTestPort();
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port).auto_start(true).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(true).build();
 
   ASSERT_NE(server_, nullptr);
   std::cout << "Server created successfully" << std::endl;
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port).auto_start(true).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port).auto_start(true).build();
 
   ASSERT_NE(client_, nullptr);
   std::cout << "Client created successfully" << std::endl;
 
   // 잠시 대기
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
   std::cout << "Test completed - resource sharing issue demonstrated" << std::endl;
 }
@@ -121,7 +121,7 @@ TEST_F(ImprovedArchitectureTest, UpperAPIAutoInitialization) {
   }
 
   // 빌더 사용 시 자동으로 IoContextManager가 시작됨
-  server_ = builder::UnifiedBuilder::tcp_server(test_port).auto_start(true).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(true).build();
 
   ASSERT_NE(server_, nullptr);
 

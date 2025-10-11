@@ -1,0 +1,159 @@
+name: Coverage Pages
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  coverage-pages:
+    name: Deploy Coverage to GitHub Pages
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-dev \
+          libboost-system-dev \
+          lcov
+
+    - name: Configure with coverage
+      run: |
+        cmake -S . -B build-coverage \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_FLAGS="--coverage -fprofile-arcs -ftest-coverage" \
+          -DCMAKE_C_FLAGS="--coverage -fprofile-arcs -ftest-coverage" \
+          -DCMAKE_EXE_LINKER_FLAGS="--coverage" \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
+          -DBUILD_TESTING=ON \
+          -DBUILD_EXAMPLES=OFF
+
+    - name: Build with coverage
+      run: cmake --build build-coverage -j $(nproc)
+
+    - name: Run tests
+      run: |
+        cd build-coverage
+        ctest --output-on-failure --parallel $(nproc)
+
+    - name: Generate coverage report
+      run: |
+        cd build-coverage
+        lcov --directory . --capture --output-file coverage.info
+        
+        # Debug: Show total coverage before filtering
+        echo "=== Before filtering ==="
+        lcov --summary coverage.info 2>&1 | grep lines
+        
+        # Step 1: Extract unilink directory using absolute path
+        echo "=== Step 1: Extract unilink directory ==="
+        lcov --extract coverage.info \
+          "${GITHUB_WORKSPACE}/unilink/*" \
+          --output-file coverage_temp.info \
+          --ignore-errors mismatch,negative,unused
+        lcov --summary coverage_temp.info 2>&1 | grep lines
+        
+        # Step 2: Remove unwanted files (test, _deps, build)
+        echo "=== Step 2: Remove test and dependency files ==="
+        lcov --remove coverage_temp.info \
+          "*/test/*" \
+          "*/_deps/*" \
+          "*/build-coverage/*" \
+          --output-file coverage_filtered.info \
+          --ignore-errors mismatch,negative,unused
+        
+        # Debug: Show coverage after filtering
+        echo "=== After filtering ==="
+        lcov --summary coverage_filtered.info 2>&1 | grep lines
+        
+        # Debug: Show filtered files
+        echo "=== Filtered files (first 30) ==="
+        lcov --list coverage_filtered.info 2>&1 | head -30
+        
+        # Generate HTML with custom title
+        genhtml coverage_filtered.info --output-directory coverage_html \
+          --title "unilink Coverage Report - $(date '+%Y-%m-%d %H:%M')" \
+          --legend --show-details --num-spaces 2
+
+    - name: Create index page
+      run: |
+        cd build-coverage/coverage_html
+        
+        # Get coverage percentage
+        COVERAGE=$(lcov --summary ../coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}')
+        
+        # Create beautiful index
+        cat > index.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>unilink Coverage Report</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background: #f5f5f5;
+            }
+            .container {
+              max-width: 1200px;
+              margin: 0 auto;
+              background: white;
+              padding: 40px;
+              border-radius: 8px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            h1 { color: #333; margin-bottom: 10px; }
+            .coverage { font-size: 48px; font-weight: bold; color: #4CAF50; margin: 20px 0; }
+            .links { margin-top: 30px; }
+            .link { 
+              display: inline-block;
+              padding: 12px 24px;
+              background: #2196F3;
+              color: white;
+              text-decoration: none;
+              border-radius: 4px;
+              margin-right: 10px;
+            }
+            .link:hover { background: #1976D2; }
+            .timestamp { color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>🎯 unilink Code Coverage</h1>
+            <p class="timestamp">Generated: $(date '+%Y-%m-%d %H:%M:%S UTC')</p>
+            <div class="coverage">Coverage: $COVERAGE</div>
+            <div class="links">
+              <a href="index-original.html" class="link">📊 Detailed Report</a>
+              <a href="https://github.com/grade-e/interface-socket" class="link">📦 Repository</a>
+            </div>
+          </div>
+        </body>
+        </html>
+        EOF
+        
+        # Rename original lcov index
+        mv index.html index-original.html || true
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build-coverage/coverage_html
+        publish_branch: gh-pages
+        force_orphan: true
+

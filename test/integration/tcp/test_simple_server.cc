@@ -21,7 +21,7 @@ class SimpleServerTest : public ::testing::Test {
       std::cout << "Stopping server..." << std::endl;
       server_->stop();
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 
   uint16_t getTestPort() {
@@ -41,7 +41,7 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
   std::cout << "Testing basic server creation with port: " << test_port << std::endl;
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
                 .auto_start(false)
                 .build();
@@ -54,7 +54,7 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
   server_->start();
 
   // 잠시 대기
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "Server state: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
 
@@ -70,7 +70,7 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   std::cout << "Testing auto-start server with port: " << test_port << std::endl;
 
   // 서버 생성 (자동 시작)
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
                 .auto_start(true)
                 .build();
@@ -79,7 +79,7 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   std::cout << "Server created with auto-start" << std::endl;
 
   // 잠시 대기
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
   std::cout << "Server state after 2s: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
 
@@ -100,7 +100,7 @@ TEST_F(SimpleServerTest, ServerWithCallbacks) {
   auto last_error = std::make_shared<std::string>();
 
   // 서버 생성 (콜백 포함)
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
                 .auto_start(true)
                 .on_connect([connect_called]() {
@@ -144,7 +144,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
   std::cout << "Testing server state check, port: " << test_port << std::endl;
 
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
                 .auto_start(false)
                 .build();
@@ -161,7 +161,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
 
   // 시작 후 상태 확인 (여러 번)
   for (int i = 0; i < 5; ++i) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::cout << "After " << (i + 1) << "s - is_connected(): " << (server_->is_connected() ? "true" : "false")
               << std::endl;
   }
@@ -178,7 +178,7 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
   std::cout << "Testing single client limit, port: " << test_port << std::endl;
 
   // Single client 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .single_client()  // 1개 클라이언트만 허용
                 .auto_start(false)
                 .build();
@@ -188,7 +188,7 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
 
   // 서버 시작
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "Single client server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);
@@ -202,7 +202,7 @@ TEST_F(SimpleServerTest, ClientLimitMultiClient) {
   std::cout << "Testing multi client limit (3 clients), port: " << test_port << std::endl;
 
   // Multi client 서버 생성 (3개 클라이언트 제한)
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .multi_client(3)  // 3개 클라이언트만 허용
                 .auto_start(false)
                 .build();
@@ -212,7 +212,7 @@ TEST_F(SimpleServerTest, ClientLimitMultiClient) {
 
   // 서버 시작
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "Multi client server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);
@@ -226,7 +226,7 @@ TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
   std::cout << "Testing unlimited clients, port: " << test_port << std::endl;
 
   // Unlimited clients 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
                 .auto_start(false)
                 .build();
@@ -236,7 +236,7 @@ TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
 
   // 서버 시작
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "Unlimited clients server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);
@@ -252,7 +252,7 @@ TEST_F(SimpleServerTest, ClientLimitBuilderValidation) {
   // 잘못된 설정으로 서버 생성 시도 (0개 클라이언트)
   EXPECT_THROW(
       {
-        server_ = builder::UnifiedBuilder::tcp_server(test_port)
+        server_ = unilink::tcp_server(test_port)
                       .multi_client(0)  // 0개는 유효하지 않음
                       .auto_start(false)
                       .build();

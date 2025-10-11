@@ -39,7 +39,8 @@ class MockIntegratedTest : public ::testing::Test {
     mock_scope_.reset();
 
     // Clean up any test state
-    TestUtils::waitFor(100);
+    // Increased wait time to ensure complete cleanup and avoid port conflicts
+    TestUtils::waitFor(1000);
   }
 
   uint16_t test_port_;

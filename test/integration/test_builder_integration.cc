@@ -8,9 +8,11 @@
 #include <mutex>
 #include <thread>
 
+#include "test_utils.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace unilink::test;
 using namespace std::chrono_literals;
 
 class BuilderIntegrationTest : public ::testing::Test {
@@ -38,14 +40,13 @@ class BuilderIntegrationTest : public ::testing::Test {
     }
 
     // 충분한 시간을 두고 정리 완료 보장
-    std::this_thread::sleep_for(200ms);
+    // TIME_WAIT 상태에서도 포트 충돌 방지를 위해 1000ms 대기
+    std::this_thread::sleep_for(1000ms);
   }
 
-  // 테스트용 포트 번호 (동적 할당으로 충돌 방지)
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{10000};
-    return port_counter.fetch_add(1);
-  }
+  // 테스트용 포트 번호 - TestUtils의 통합 포트 할당 사용
+  // SO_REUSEADDR와 100-port spacing이 적용됨
+  uint16_t getTestPort() { return TestUtils::getAvailableTestPort(); }
 
   // 데이터 수신 대기
   void waitForData(std::chrono::milliseconds timeout = 1000ms) {
@@ -162,7 +163,8 @@ TEST_F(BuilderIntegrationTest, TcpServerBuilderCreatesServer) {
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  auto server = builder::UnifiedBuilder::tcp_server(test_port)
+  auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .auto_start(false)  // 수동 시작으로 제어
                     .on_data([](const std::string& data) {
                       // 데이터 핸들러
@@ -198,7 +200,7 @@ TEST_F(BuilderIntegrationTest, TcpClientBuilderCreatesClient) {
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  auto client = unilink::tcp_client("127.0.0.1", test_port)
                     .auto_start(false)  // 수동 시작으로 제어
                     .on_data([](const std::string& data) {
                       // 데이터 핸들러
@@ -238,7 +240,7 @@ TEST_F(BuilderIntegrationTest, AutoStartConfiguration) {
 
   // --- Test Logic ---
   // auto_start = false인 경우
-  auto server_manual = builder::UnifiedBuilder::tcp_server(test_port).auto_start(false).build();
+  auto server_manual = unilink::tcp_server(test_port).unlimited_clients().auto_start(false).build();
 
   EXPECT_FALSE(server_manual->is_connected());
 
@@ -250,7 +252,7 @@ TEST_F(BuilderIntegrationTest, AutoStartConfiguration) {
   server_manual->stop();
 
   // auto_start = true인 경우 (실제로는 build() 시점에 시작됨)
-  auto server_auto = builder::UnifiedBuilder::tcp_server(test_port + 1).auto_start(true).build();
+  auto server_auto = unilink::tcp_server(test_port + 1).unlimited_clients().auto_start(true).build();
 
   std::this_thread::sleep_for(100ms);
   // auto_start가 적용되었는지 확인
@@ -267,7 +269,7 @@ TEST_F(BuilderIntegrationTest, AutoManageConfiguration) {
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  auto server = builder::UnifiedBuilder::tcp_server(test_port).auto_manage(true).auto_start(false).build();
+  auto server = unilink::tcp_server(test_port).unlimited_clients().auto_manage(true).auto_start(false).build();
 
   // auto_manage 설정이 적용되었는지 확인
   EXPECT_TRUE(server != nullptr);
@@ -296,7 +298,8 @@ TEST_F(BuilderIntegrationTest, CallbackRegistration) {
   std::atomic<int> error_callback_count{0};
 
   // --- Test Logic ---
-  auto server = builder::UnifiedBuilder::tcp_server(test_port)
+  auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .on_data([&](const std::string& data) { data_callback_count++; })
                     .on_connect([&]() { connect_callback_count++; })
                     .on_error([&](const std::string& error) { error_callback_count++; })
@@ -338,7 +341,8 @@ TEST_F(BuilderIntegrationTest, BuilderMethodChaining) {
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  auto server = builder::UnifiedBuilder::tcp_server(test_port)
+  auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .auto_start(false)
                     .auto_manage(true)
                     .on_data([](const std::string& data) {})
@@ -373,13 +377,13 @@ TEST_F(BuilderIntegrationTest, MultipleBuilderInstances) {
   uint16_t port2 = getTestPort();
 
   // --- Test Logic ---
-  auto server1 = builder::UnifiedBuilder::tcp_server(port1).auto_start(false).build();
+  auto server1 = unilink::tcp_server(port1).unlimited_clients().auto_start(false).build();
 
-  auto server2 = builder::UnifiedBuilder::tcp_server(port2).auto_start(false).build();
+  auto server2 = unilink::tcp_server(port2).unlimited_clients().auto_start(false).build();
 
-  auto client1 = builder::UnifiedBuilder::tcp_client("127.0.0.1", port1).auto_start(false).build();
+  auto client1 = unilink::tcp_client("127.0.0.1", port1).auto_start(false).build();
 
-  auto client2 = builder::UnifiedBuilder::tcp_client("127.0.0.1", port2).auto_start(false).build();
+  auto client2 = unilink::tcp_client("127.0.0.1", port2).auto_start(false).build();
 
   // --- Verification ---
   ASSERT_NE(server1, nullptr);
@@ -426,7 +430,7 @@ TEST_F(BuilderIntegrationTest, BuilderReuse) {
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  auto builder = builder::UnifiedBuilder::tcp_server(test_port);
+  auto builder = unilink::tcp_server(test_port).unlimited_clients();
 
   // 첫 번째 서버 생성
   auto server1 = builder.auto_start(false).on_data([](const std::string& data) {}).build();
@@ -464,8 +468,19 @@ TEST_F(BuilderIntegrationTest, ErrorHandling) {
   uint16_t test_port = getTestPort();
 
   // --- Test Logic ---
-  // 유효하지 않은 포트로 서버 생성 시도
-  auto server = builder::UnifiedBuilder::tcp_server(0)  // 유효하지 않은 포트
+  // Test 1: 유효하지 않은 포트로 서버 생성 시도는 예외 발생
+  EXPECT_THROW(
+      {
+        auto server = unilink::tcp_server(0)  // 유효하지 않은 포트
+                          .unlimited_clients()
+                          .auto_start(false)
+                          .build();
+      },
+      std::exception);
+
+  // Test 2: 유효한 서버로 에러 핸들러 테스트
+  auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .auto_start(false)
                     .on_error([this](const std::string& error) {
                       std::lock_guard<std::mutex> lock(mtx_);
@@ -481,7 +496,7 @@ TEST_F(BuilderIntegrationTest, ErrorHandling) {
   server->start();
   std::this_thread::sleep_for(100ms);
 
-  // 에러가 발생했는지 확인
+  // 서버가 생성되었는지 확인
   EXPECT_TRUE(server != nullptr);
 
   server->stop();
@@ -506,9 +521,9 @@ TEST_F(BuilderIntegrationTest, FastObjectCreation) {
   for (int i = 0; i < num_objects; ++i) {
     uint16_t port = getTestPort();
 
-    auto server = builder::UnifiedBuilder::tcp_server(port).auto_start(false).build();
+    auto server = unilink::tcp_server(port).unlimited_clients().auto_start(false).build();
 
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port).auto_start(false).build();
+    auto client = unilink::tcp_client("127.0.0.1", port).auto_start(false).build();
 
     servers.push_back(std::shared_ptr<wrapper::TcpServer>(server.release()));
     clients.push_back(std::shared_ptr<wrapper::TcpClient>(client.release()));
@@ -559,7 +574,8 @@ TEST_F(BuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
 
   // --- Test Logic ---
   // 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port)
+  server_ = unilink::tcp_server(test_port)
+                .unlimited_clients()
                 .auto_start(true)
                 .on_data([this](const std::string& data) {
                   std::lock_guard<std::mutex> lock(mtx_);
@@ -579,7 +595,7 @@ TEST_F(BuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
   std::this_thread::sleep_for(200ms);
 
   // 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  client_ = unilink::tcp_client("127.0.0.1", test_port)
                 .auto_start(true)
                 .on_data([this](const std::string& data) {
                   std::lock_guard<std::mutex> lock(mtx_);
@@ -627,7 +643,8 @@ TEST_F(BuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
 
   // --- Test Logic ---
   // 서버 생성 (에코 서버로 설정)
-  auto server = builder::UnifiedBuilder::tcp_server(test_port)
+  auto server = unilink::tcp_server(test_port)
+                    .unlimited_clients()
                     .auto_start(true)
                     .on_data([&](const std::string& data) {
                       server_data_count++;
@@ -642,7 +659,7 @@ TEST_F(BuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
   std::this_thread::sleep_for(200ms);
 
   // 클라이언트 생성
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port)
+  auto client = unilink::tcp_client("127.0.0.1", test_port)
                     .auto_start(true)
                     .on_data([&](const std::string& data) { client_data_count++; })
                     .build();
@@ -687,7 +704,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCreatesSerial) {
   uint32_t test_baud_rate = 9600;
 
   // --- Test Logic ---
-  serial_ = builder::UnifiedBuilder::serial(test_device, test_baud_rate)
+  serial_ = unilink::serial(test_device, test_baud_rate)
                 .auto_start(false)  // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 핸들러
@@ -722,7 +739,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
 
   // --- Test Logic ---
   // auto_start = false인 경우
-  auto serial_manual = builder::UnifiedBuilder::serial(test_device, test_baud_rate).auto_start(false).build();
+  auto serial_manual = unilink::serial(test_device, test_baud_rate).auto_start(false).build();
 
   EXPECT_FALSE(serial_manual->is_connected());
 
@@ -735,7 +752,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
   serial_manual->stop();
 
   // auto_start = true인 경우
-  auto serial_auto = builder::UnifiedBuilder::serial(test_device, test_baud_rate + 1).auto_start(true).build();
+  auto serial_auto = unilink::serial(test_device, test_baud_rate + 1).auto_start(true).build();
 
   std::this_thread::sleep_for(100ms);
 
@@ -757,7 +774,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCallbackRegistration) {
   std::atomic<int> error_callback_count{0};
 
   // --- Test Logic ---
-  auto serial = builder::UnifiedBuilder::serial(test_device, test_baud_rate)
+  auto serial = unilink::serial(test_device, test_baud_rate)
                     .on_data([&](const std::string& data) { data_callback_count++; })
                     .on_connect([&]() { connect_callback_count++; })
                     .on_error([&](const std::string& error) { error_callback_count++; })
@@ -789,7 +806,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderMethodChaining) {
   uint32_t test_baud_rate = 19200;
 
   // --- Test Logic ---
-  auto serial = builder::UnifiedBuilder::serial(test_device, test_baud_rate)
+  auto serial = unilink::serial(test_device, test_baud_rate)
                     .auto_start(false)
                     .auto_manage(true)
                     .on_data([](const std::string& data) {})
@@ -820,7 +837,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderErrorHandling) {
   uint32_t test_baud_rate = 9600;
 
   // --- Test Logic ---
-  auto serial = builder::UnifiedBuilder::serial(invalid_device, test_baud_rate)
+  auto serial = unilink::serial(invalid_device, test_baud_rate)
                     .auto_start(false)
                     .on_error([this](const std::string& error) {
                       std::lock_guard<std::mutex> lock(mtx_);
@@ -857,7 +874,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderPerformance) {
     std::string device = "/dev/null";
     uint32_t baud_rate = 9600 + i;
 
-    auto serial = builder::UnifiedBuilder::serial(device, baud_rate).auto_start(false).build();
+    auto serial = unilink::serial(device, baud_rate).auto_start(false).build();
 
     serials.push_back(std::shared_ptr<wrapper::Serial>(serial.release()));
   }
@@ -893,13 +910,13 @@ TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
 
   // --- Test Logic ---
   // TCP 서버 생성
-  server_ = builder::UnifiedBuilder::tcp_server(test_port).auto_start(false).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(false).build();
 
   // TCP 클라이언트 생성
-  client_ = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port).auto_start(false).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port).auto_start(false).build();
 
   // Serial 생성
-  serial_ = builder::UnifiedBuilder::serial(test_device, test_baud_rate).auto_start(false).build();
+  serial_ = unilink::serial(test_device, test_baud_rate).auto_start(false).build();
 
   // --- Verification ---
   ASSERT_NE(server_, nullptr);

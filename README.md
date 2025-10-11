@@ -1,5 +1,9 @@
 # unilink
 
+[![CI/CD Pipeline](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml)
+[![Code Coverage](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## One interface, reliable connections
 
 `unilink` is a C++ library that provides a unified, high-level Builder API for TCP (client/server) and Serial ports. It simplifies network and serial programming with a fluent, easy-to-use interface that handles all the complexity behind the scenes.

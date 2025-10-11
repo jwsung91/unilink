@@ -10,9 +10,9 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/builder/unified_builder.hpp"
 #include "unilink/common/exceptions.hpp"
 #include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/unilink.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
@@ -35,7 +35,8 @@ class SafetyIntegratedTest : public ::testing::Test {
 
   void TearDown() override {
     // Clean up any test state
-    TestUtils::waitFor(100);
+    // Increased wait time to ensure complete cleanup and avoid port conflicts
+    TestUtils::waitFor(1000);
   }
 
   uint16_t test_port_;
@@ -50,12 +51,12 @@ class SafetyIntegratedTest : public ::testing::Test {
  */
 TEST_F(SafetyIntegratedTest, ApiSafetyNullPointers) {
   // Test TCP client creation with null checks
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 
   // Test TCP server creation with null checks
-  auto server = UnifiedBuilder::tcp_server(test_port_)
+  auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(false)
                     .build();
@@ -68,11 +69,10 @@ TEST_F(SafetyIntegratedTest, ApiSafetyNullPointers) {
  */
 TEST_F(SafetyIntegratedTest, ApiSafetyInvalidParameters) {
   // Test with invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).auto_start(false).build(),
-               common::BuilderException);
+  EXPECT_THROW(auto client = unilink::tcp_client("127.0.0.1", 0).auto_start(false).build(), common::BuilderException);
 
   // Test with invalid host (should still create object)
-  auto client2 = UnifiedBuilder::tcp_client("invalid.host", test_port_).auto_start(false).build();
+  auto client2 = unilink::tcp_client("invalid.host", test_port_).auto_start(false).build();
 
   EXPECT_NE(client2, nullptr);
 }
@@ -82,7 +82,7 @@ TEST_F(SafetyIntegratedTest, ApiSafetyInvalidParameters) {
  */
 TEST_F(SafetyIntegratedTest, ApiSafetyMethodChaining) {
   // Test method chaining safety
-  auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
                     .auto_start(false)
                     .on_connect([]() {})
                     .on_data([](const std::string&) {})
@@ -109,7 +109,7 @@ TEST_F(SafetyIntegratedTest, ConcurrencySafetyClientCreation) {
   for (int t = 0; t < num_threads; ++t) {
     threads.emplace_back([&, t]() {
       for (int i = 0; i < clients_per_thread; ++i) {
-        auto client = UnifiedBuilder::tcp_client("127.0.0.1", test_port_ + i).auto_start(false).build();
+        auto client = unilink::tcp_client("127.0.0.1", test_port_ + i).auto_start(false).build();
 
         if (client) {
           success_count++;
@@ -138,7 +138,7 @@ TEST_F(SafetyIntegratedTest, ConcurrencySafetyServerCreation) {
   for (int t = 0; t < num_threads; ++t) {
     threads.emplace_back([&, t]() {
       for (int i = 0; i < servers_per_thread; ++i) {
-        auto server = UnifiedBuilder::tcp_server(test_port_ + t * 10 + i)
+        auto server = unilink::tcp_server(test_port_ + t * 10 + i)
                           .unlimited_clients()  // 클라이언트 제한 없음
                           .auto_start(false)
                           .build();
@@ -170,9 +170,8 @@ TEST_F(SafetyIntegratedTest, ConcurrencySafetyStateAccess) {
   for (int t = 0; t < num_threads; ++t) {
     threads.emplace_back([&, t]() {
       for (int i = 0; i < operations_per_thread; ++i) {
-        // Simulate concurrent state access
-        int current = counter.load();
-        counter.store(current + 1);
+        // Simulate concurrent state access with atomic operation
+        counter.fetch_add(1, std::memory_order_relaxed);
       }
     });
   }

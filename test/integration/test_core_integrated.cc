@@ -9,13 +9,13 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/builder/unified_builder.hpp"
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/common/logger.hpp"
 #include "unilink/common/memory_pool.hpp"
 #include "unilink/common/safe_data_buffer.hpp"
 #include "unilink/common/thread_safe_state.hpp"
+#include "unilink/unilink.hpp"
 
 // Test namespace aliases for cleaner code
 using namespace unilink;
@@ -45,7 +45,8 @@ class CoreIntegratedTest : public ::testing::Test {
 
   void TearDown() override {
     // Clean up any test state
-    TestUtils::waitFor(100);
+    // Increased wait time to ensure complete cleanup and avoid port conflicts
+    TestUtils::waitFor(1000);
   }
 
   uint16_t test_port_;
@@ -252,7 +253,7 @@ TEST_F(CoreIntegratedTest, ThreadSafeStateConcurrentAccess) {
  */
 TEST_F(CoreIntegratedTest, UnifiedBuilderBasicFunctionality) {
   // Test TCP client builder
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 }
@@ -262,7 +263,7 @@ TEST_F(CoreIntegratedTest, UnifiedBuilderBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, UnifiedBuilderMethodChaining) {
   // Test method chaining
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
                     .auto_start(false)
                     .on_connect([]() {})
                     .on_data([](const std::string&) {})
@@ -281,7 +282,7 @@ TEST_F(CoreIntegratedTest, UnifiedBuilderMethodChaining) {
  */
 TEST_F(CoreIntegratedTest, BasicCommunicationIntegration) {
   // Create server
-  auto server = builder::UnifiedBuilder::tcp_server(test_port_)
+  auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(true)
                     .on_connect([]() {})
@@ -295,7 +296,7 @@ TEST_F(CoreIntegratedTest, BasicCommunicationIntegration) {
 
   // Create client
   std::atomic<bool> client_connected{false};
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
                     .auto_start(true)
                     .on_connect([&client_connected]() { client_connected = true; })
                     .build();

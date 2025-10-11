@@ -26,7 +26,7 @@ using namespace std::chrono_literals;
  */
 TEST_F(IntegrationTest, BuilderPatternIntegration) {
   // Test TCP server builder
-  auto server = builder::UnifiedBuilder::tcp_server(test_port_)
+  auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(false)
                     .build();
@@ -34,7 +34,7 @@ TEST_F(IntegrationTest, BuilderPatternIntegration) {
   EXPECT_NE(server, nullptr);
 
   // Test TCP client builder
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 }
@@ -57,7 +57,7 @@ TEST_F(IntegrationTest, AutoInitialization) {
  * @brief Method chaining tests
  */
 TEST_F(IntegrationTest, MethodChaining) {
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
                     .auto_start(false)
                     .auto_manage(false)
                     .on_connect([]() { std::cout << "Connected!" << std::endl; })
@@ -74,15 +74,12 @@ TEST_F(IntegrationTest, MethodChaining) {
  */
 TEST_F(IntegrationTest, IndependentContext) {
   // Test independent context creation
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
-                    .use_independent_context(true)
-                    .auto_start(false)
-                    .build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).use_independent_context(true).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
 
   // Test shared context
-  auto server = builder::UnifiedBuilder::tcp_server(test_port_)
+  auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .use_independent_context(false)
                     .auto_start(false)
@@ -108,7 +105,7 @@ TEST_F(IntegrationTest, BasicCommunication) {
   std::string received_data;
 
   // Create server
-  auto server = builder::UnifiedBuilder::tcp_server(comm_port)
+  auto server = unilink::tcp_server(comm_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(true)
                     .on_connect([&server_connected]() { server_connected = true; })
@@ -124,7 +121,7 @@ TEST_F(IntegrationTest, BasicCommunication) {
   TestUtils::waitFor(100);
 
   // Create client
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", comm_port)
+  auto client = unilink::tcp_client("127.0.0.1", comm_port)
                     .auto_start(true)
                     .on_connect([&client_connected]() { client_connected = true; })
                     .build();
@@ -152,8 +149,8 @@ TEST_F(IntegrationTest, BasicCommunication) {
  */
 TEST_F(IntegrationTest, ErrorHandling) {
   // Test invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
-                                 .unlimited_clients()                // 클라이언트 제한 없음
+  EXPECT_THROW(auto server = unilink::tcp_server(0)    // Invalid port
+                                 .unlimited_clients()  // 클라이언트 제한 없음
                                  .auto_start(false)
                                  .build(),
                common::BuilderException);
@@ -162,7 +159,7 @@ TEST_F(IntegrationTest, ErrorHandling) {
   std::atomic<bool> error_occurred{false};
   std::string error_message;
 
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", 1)  // Invalid port
+  auto client = unilink::tcp_client("127.0.0.1", 1)  // Invalid port
                     .auto_start(false)
                     .on_error([&error_occurred, &error_message](const std::string& error) {
                       error_occurred = true;
@@ -185,7 +182,7 @@ TEST_F(IntegrationTest, ResourceSharing) {
   std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
 
   for (int i = 0; i < 3; ++i) {
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+    auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
 
     EXPECT_NE(client, nullptr);
     clients.push_back(std::move(client));
@@ -201,7 +198,7 @@ TEST_F(IntegrationTest, ResourceSharing) {
 TEST_F(IntegrationTest, StateManagement) {
   std::atomic<common::LinkState> client_state{common::LinkState::Idle};
 
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
 
   EXPECT_NE(client, nullptr);
   EXPECT_EQ(client_state.load(), common::LinkState::Idle);
@@ -222,7 +219,7 @@ TEST_F(IntegrationTest, AdvancedCommunicationWithSynchronization) {
   uint16_t comm_port = TestUtils::getAvailableTestPort();
 
   // Create server
-  auto server = builder::UnifiedBuilder::tcp_server(comm_port)
+  auto server = unilink::tcp_server(comm_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(false)    // Don't auto-start to avoid conflicts
                     .build();
@@ -230,7 +227,7 @@ TEST_F(IntegrationTest, AdvancedCommunicationWithSynchronization) {
   ASSERT_NE(server, nullptr);
 
   // Create client
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", comm_port)
+  auto client = unilink::tcp_client("127.0.0.1", comm_port)
                     .auto_start(false)  // Don't auto-start to avoid conflicts
                     .build();
 
@@ -259,7 +256,7 @@ TEST_F(IntegrationTest, MultipleClientConnections) {
   std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
 
   // Create server
-  auto server = builder::UnifiedBuilder::tcp_server(comm_port)
+  auto server = unilink::tcp_server(comm_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
                     .auto_start(true)
                     .on_connect([&connection_count]() { connection_count++; })
@@ -270,7 +267,7 @@ TEST_F(IntegrationTest, MultipleClientConnections) {
 
   // Create multiple clients
   for (int i = 0; i < 3; ++i) {
-    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", comm_port).auto_start(true).build();
+    auto client = unilink::tcp_client("127.0.0.1", comm_port).auto_start(true).build();
 
     ASSERT_NE(client, nullptr);
     clients.push_back(std::move(client));
@@ -294,8 +291,8 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
   std::string error_message;
 
   // Test invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto server = builder::UnifiedBuilder::tcp_server(0)  // Invalid port
-                                 .unlimited_clients()                // 클라이언트 제한 없음
+  EXPECT_THROW(auto server = unilink::tcp_server(0)    // Invalid port
+                                 .unlimited_clients()  // 클라이언트 제한 없음
                                  .auto_start(false)
                                  .on_error([&error_occurred, &error_message](const std::string& error) {
                                    error_occurred = true;
@@ -305,7 +302,7 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
                common::BuilderException);
 
   // Test client with invalid host
-  auto client = builder::UnifiedBuilder::tcp_client("invalid.host", 12345)
+  auto client = unilink::tcp_client("invalid.host", 12345)
                     .auto_start(false)
                     .on_error([&error_occurred, &error_message](const std::string& error) {
                       error_occurred = true;
@@ -320,7 +317,7 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
  * @brief Builder method chaining comprehensive test
  */
 TEST_F(IntegrationTest, ComprehensiveBuilderMethodChaining) {
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", test_port_)
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
                     .auto_start(false)
                     .auto_manage(false)
                     .use_independent_context(true)
@@ -333,7 +330,7 @@ TEST_F(IntegrationTest, ComprehensiveBuilderMethodChaining) {
   EXPECT_NE(client, nullptr);
 
   auto server =
-      builder::UnifiedBuilder::tcp_server(test_port_)
+      unilink::tcp_server(test_port_)
           .unlimited_clients()  // 클라이언트 제한 없음
           .auto_start(false)
           .auto_manage(false)
