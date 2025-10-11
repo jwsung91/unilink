@@ -96,39 +96,45 @@ jobs:
         COVERAGE_PERCENT=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}' | sed 's/%//')
         echo "Coverage: ${COVERAGE_PERCENT}%"
         
-        # Determine badge color based on coverage
+        # Determine badge color and grade based on 4-tier system
         if (( $(echo "$COVERAGE_PERCENT >= 80" | bc -l) )); then
           COLOR="brightgreen"
+          GRADE="excellent"
         elif (( $(echo "$COVERAGE_PERCENT >= 60" | bc -l) )); then
           COLOR="green"
+          GRADE="good"
         elif (( $(echo "$COVERAGE_PERCENT >= 40" | bc -l) )); then
           COLOR="yellow"
+          GRADE="fair"
         else
           COLOR="red"
+          GRADE="poor"
         fi
         
         # Create badges directory in coverage_html
         mkdir -p coverage_html/badges
         
-        # Generate shields.io endpoint JSON
+        # Generate shields.io endpoint JSON (number only display)
         cat > coverage_html/badges/coverage.json << EOF
         {
           "schemaVersion": 1,
-          "label": "coverage",
+          "label": "test coverage",
           "message": "${COVERAGE_PERCENT}%",
           "color": "${COLOR}"
         }
         EOF
         
-        echo "✅ Coverage badge JSON created: ${COVERAGE_PERCENT}% (${COLOR})"
+        echo "✅ Coverage badge JSON created: ${COVERAGE_PERCENT}% (${GRADE}, ${COLOR})"
         echo "coverage_percent=${COVERAGE_PERCENT}" >> $GITHUB_OUTPUT
+        echo "coverage_grade=${GRADE}" >> $GITHUB_OUTPUT
 
     - name: Create index page
       run: |
         cd build-coverage/coverage_html
         
-        # Get coverage percentage from previous step
+        # Get coverage data from previous step
         COVERAGE="${{ steps.coverage_badge.outputs.coverage_percent }}%"
+        GRADE="${{ steps.coverage_badge.outputs.coverage_grade }}"
         
         # Rename original lcov index first
         if [ -f index.html ]; then
@@ -159,6 +165,7 @@ jobs:
             }
             h1 { color: #333; margin-bottom: 10px; }
             .coverage { font-size: 48px; font-weight: bold; color: #4CAF50; margin: 20px 0; }
+            .grade { font-size: 24px; color: #666; margin: 10px 0; text-transform: uppercase; }
             .badge { margin: 20px 0; }
             .links { margin-top: 30px; }
             .link { 
@@ -179,6 +186,7 @@ jobs:
             <h1>🎯 unilink Code Coverage</h1>
             <p class="timestamp">Generated: $(date '+%Y-%m-%d %H:%M:%S UTC')</p>
             <div class="coverage">Coverage: ${COVERAGE}</div>
+            <div class="grade">Grade: ${GRADE}</div>
             <div class="badge">
               <img src="https://img.shields.io/endpoint?url=https://grade-e.github.io/interface-socket/badges/coverage.json" alt="Coverage Badge">
             </div>

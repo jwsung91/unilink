@@ -1,7 +1,7 @@
 # unilink
 
 [![CI/CD Pipeline](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/endpoint?url=https://grade-e.github.io/interface-socket/badges/coverage.json)](https://grade-e.github.io/interface-socket/)
+[![Test Coverage](https://img.shields.io/endpoint?url=https://grade-e.github.io/interface-socket/badges/coverage.json)](https://grade-e.github.io/interface-socket/)
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 ## One interface, reliable connections
