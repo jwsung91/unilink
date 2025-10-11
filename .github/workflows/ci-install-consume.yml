@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir -p /tmp/consumer && cd /tmp/consumer
           cat > CMakeLists.txt <<'EOF'
-          cmake_minimum_required(VERSION 3.20)
+          cmake_minimum_required(VERSION 3.12)
           project(consumer CXX)
           set(CMAKE_CXX_STANDARD 17)
           find_package(unilink CONFIG REQUIRED)
