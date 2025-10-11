@@ -99,6 +99,8 @@ int main(int argc, char** argv) {
   std::cout << "Running for 10 seconds..." << std::endl;
   std::this_thread::sleep_for(std::chrono::seconds(10));
 
+  // Step 10: Clean shutdown
   std::cout << "Shutting down..." << std::endl;
+  client->stop();
   return 0;
 }
