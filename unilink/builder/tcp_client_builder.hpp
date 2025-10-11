@@ -47,6 +47,13 @@ class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
   std::unique_ptr<wrapper::TcpClient> build() override;
 
   /**
+   * @brief Implicit conversion to unique_ptr (automatically calls build())
+   * This allows omitting the .build() call for simpler syntax.
+   * @return std::unique_ptr<wrapper::TcpClient> The configured client instance
+   */
+  operator std::unique_ptr<wrapper::TcpClient>() { return build(); }
+
+  /**
    * @brief Enable auto-manage functionality
    * @param auto_manage Whether to automatically manage the client lifecycle
    * @return TcpClientBuilder& Reference to this builder for method chaining

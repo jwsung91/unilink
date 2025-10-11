@@ -45,6 +45,13 @@ class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
   std::unique_ptr<wrapper::TcpServer> build() override;
 
   /**
+   * @brief Implicit conversion to unique_ptr (automatically calls build())
+   * This allows omitting the .build() call for simpler syntax.
+   * @return std::unique_ptr<wrapper::TcpServer> The configured server instance
+   */
+  operator std::unique_ptr<wrapper::TcpServer>() { return build(); }
+
+  /**
    * @brief Enable auto-manage functionality
    * @param auto_manage Whether to automatically manage the server lifecycle
    * @return TcpServerBuilder& Reference to this builder for method chaining

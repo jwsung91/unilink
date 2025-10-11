@@ -33,11 +33,12 @@
 
 int main() {
   // Create a TCP client - it's that simple!
-  auto client = unilink::tcp_client("127.0.0.1", 8080)
-                    .on_connect([]() { std::cout << "Connected!" << std::endl; })
-                    .on_data([](const std::string& data) { std::cout << "Received: " << data << std::endl; })
-                    .build();
-  
+  // Note: .build() is now optional - implicit conversion automatically builds
+  std::unique_ptr<unilink::wrapper::TcpClient> client =
+      unilink::tcp_client("127.0.0.1", 8080)
+          .on_connect([]() { std::cout << "Connected!" << std::endl; })
+          .on_data([](const std::string& data) { std::cout << "Received: " << data << std::endl; });
+
   client->start();
 
   // Wait for connection

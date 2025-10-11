@@ -47,6 +47,13 @@ class SerialBuilder : public BuilderInterface<wrapper::Serial> {
   std::unique_ptr<wrapper::Serial> build() override;
 
   /**
+   * @brief Implicit conversion to unique_ptr (automatically calls build())
+   * This allows omitting the .build() call for simpler syntax.
+   * @return std::unique_ptr<wrapper::Serial> The configured serial instance
+   */
+  operator std::unique_ptr<wrapper::Serial>() { return build(); }
+
+  /**
    * @brief Enable auto-manage functionality
    * @param auto_manage Whether to automatically manage the serial lifecycle
    * @return SerialBuilder& Reference to this builder for method chaining
