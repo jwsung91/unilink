@@ -79,7 +79,7 @@ class Serial : public ChannelInterface {
   int stop_bits_ = 1;
   std::string parity_ = "none";
   std::string flow_control_ = "none";
-  std::chrono::milliseconds retry_interval_{2000};
+  std::chrono::milliseconds retry_interval_{3000};  // 3 seconds default
 };
 
 }  // namespace wrapper

@@ -72,8 +72,8 @@ class TcpClient : public ChannelInterface {
   bool started_ = false;
 
   // TCP client specific configuration
-  std::chrono::milliseconds retry_interval_{2000};
-  int max_retries_ = -1;  // -1 means unlimited
+  std::chrono::milliseconds retry_interval_{3000};  // 3 seconds default
+  int max_retries_ = -1;                            // -1 means unlimited
   std::chrono::milliseconds connection_timeout_{5000};
 };
 

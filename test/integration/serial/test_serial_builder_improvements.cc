@@ -130,7 +130,7 @@ TEST_F(SerialBuilderImprovementsTest, SerialBuilderMethodChaining) {
  */
 TEST_F(SerialBuilderImprovementsTest, SerialBuilderConstantsUsage) {
   // Test that constants are properly defined
-  EXPECT_EQ(common::constants::DEFAULT_RETRY_INTERVAL_MS, 2000);
+  EXPECT_EQ(common::constants::DEFAULT_RETRY_INTERVAL_MS, 3000);  // Updated to 3 seconds
   EXPECT_EQ(common::constants::MIN_BAUD_RATE, 50);
   EXPECT_EQ(common::constants::MAX_BAUD_RATE, 4000000);
   EXPECT_EQ(common::constants::MIN_RETRY_INTERVAL_MS, 100);
