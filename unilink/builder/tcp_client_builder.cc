@@ -26,11 +26,7 @@ namespace unilink {
 namespace builder {
 
 TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
-    : host_(host),
-      port_(port),
-      auto_manage_(false),
-      use_independent_context_(false),
-      retry_interval_ms_(3000) {
+    : host_(host), port_(port), auto_manage_(false), use_independent_context_(false), retry_interval_ms_(3000) {
   // Validate input parameters
   try {
     common::InputValidator::validate_host(host_);

@@ -71,7 +71,7 @@ class EchoServer {
                   .on_disconnect([this](size_t client_id) { handle_disconnect(client_id); })
                   .on_error([this](const std::string& error) { handle_error(error); })
                   .build();
-    
+
     server_->start();
 
     std::cout << "Server started! Waiting for connections..." << std::endl;

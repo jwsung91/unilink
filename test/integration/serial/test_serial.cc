@@ -174,8 +174,7 @@ TEST_F(SerialTest, SerialInvalidBaudRates) {
 
   // Test that truly invalid baud rates throw exceptions
   for (auto baud_rate : invalid_baud_rates) {
-    EXPECT_THROW(
-        { auto serial_port = serial("/dev/ttyUSB0", baud_rate).build(); }, common::BuilderException);
+    EXPECT_THROW({ auto serial_port = serial("/dev/ttyUSB0", baud_rate).build(); }, common::BuilderException);
     std::cout << "Correctly rejected invalid baud rate: " << baud_rate << std::endl;
   }
 
@@ -216,8 +215,7 @@ TEST_F(SerialTest, SerialExtremeBaudRates) {
 
   // Test invalid extreme baud rates
   for (auto baud_rate : invalid_extreme_baud_rates) {
-    EXPECT_THROW(
-        { auto serial_port = serial("/dev/ttyUSB0", baud_rate).build(); }, common::BuilderException);
+    EXPECT_THROW({ auto serial_port = serial("/dev/ttyUSB0", baud_rate).build(); }, common::BuilderException);
     std::cout << "Correctly rejected invalid extreme baud rate: " << baud_rate << std::endl;
   }
 

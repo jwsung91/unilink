@@ -93,7 +93,7 @@ class ChatServer {
                     }
                   })
                   .build();
-    
+
     server_->start();
 
     std::cout << "Chat server started on port " << port << std::endl;

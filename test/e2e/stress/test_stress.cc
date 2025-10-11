@@ -271,7 +271,7 @@ TEST_F(StressTest, ConcurrentConnections) {
   // Create server
   auto server = builder::UnifiedBuilder::tcp_server(server_port)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                        // Don't auto-start to avoid conflicts
+                                          // Don't auto-start to avoid conflicts
                     .build();
 
   ASSERT_NE(server, nullptr);
@@ -284,7 +284,7 @@ TEST_F(StressTest, ConcurrentConnections) {
   // Create multiple clients (without starting them to avoid network issues)
   for (int i = 0; i < num_clients; ++i) {
     auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", server_port)
-                        // Don't auto-start to avoid conflicts
+                      // Don't auto-start to avoid conflicts
                       .build();
 
     if (client) {

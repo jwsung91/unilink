@@ -103,7 +103,7 @@ class ChatClient {
       logger_.error("client", "startup", "Failed to create client");
       return false;
     }
-    
+
     client_->start();
 
     // Wait for connection (max 5 seconds)

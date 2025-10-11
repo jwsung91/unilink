@@ -99,7 +99,7 @@ TEST_F(StableIntegrationTest, StableServerCreation) {
   // Given: Server configuration
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()  // 클라이언트 제한 없음
-                    // Don't auto-start to avoid timing issues
+                                      // Don't auto-start to avoid timing issues
                 .on_connect([this]() {
                   std::lock_guard<std::mutex> lock(mtx_);
                   connection_established_ = true;
@@ -135,7 +135,7 @@ TEST_F(StableIntegrationTest, StableServerCreation) {
 TEST_F(StableIntegrationTest, StableClientCreation) {
   // Given: Client configuration
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                  // Don't auto-start to avoid connection attempts
+                // Don't auto-start to avoid connection attempts
                 .on_connect([this]() {
                   std::lock_guard<std::mutex> lock(mtx_);
                   connection_established_ = true;
@@ -291,7 +291,7 @@ TEST_F(StableIntegrationTest, StablePerformanceTest) {
 
   for (int i = 0; i < client_count; ++i) {
     auto client = unilink::tcp_client("127.0.0.1", test_port_ + i)
-                        // Don't start to avoid connection attempts
+                      // Don't start to avoid connection attempts
                       .build();
 
     ASSERT_NE(client, nullptr);
