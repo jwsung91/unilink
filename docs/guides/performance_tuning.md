@@ -470,8 +470,9 @@ void increment() {
 
 void benchmark_throughput() {
     auto client = unilink::tcp_client("127.0.0.1", 8080)
-        .auto_start(true)
         .build();
+    
+    client->start();
     
     // Wait for connection
     while (!client->is_connected()) {
@@ -519,8 +520,9 @@ void benchmark_latency() {
             std::cout << "Latency: " << latency.count() << " μs" << std::endl;
             received = true;
         })
-        .auto_start(true)
         .build();
+    
+    client->start();
     
     // Wait for connection
     while (!client->is_connected()) {
@@ -549,8 +551,9 @@ void benchmark_connection() {
         auto start = std::chrono::high_resolution_clock::now();
         
         auto client = unilink::tcp_client("127.0.0.1", 8080)
-            .auto_start(true)
             .build();
+        
+        client->start();
         
         // Wait for connection
         while (!client->is_connected()) {

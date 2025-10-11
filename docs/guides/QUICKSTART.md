@@ -26,27 +26,27 @@ sudo cmake --install build
 
 ```cpp
 #include <iostream>
+#include <thread>
 #include "unilink/unilink.hpp"
 
 int main() {
     // Create a TCP client - it's that simple!
     auto client = unilink::tcp_client("127.0.0.1", 8080)
-        .on_connect([]() {
-            std::cout << "Connected!" << std::endl;
-        })
         .on_data([](const std::string& data) {
             std::cout << "Received: " << data << std::endl;
         })
-        .auto_start(true)
         .build();
     
-    // Send a message
-    if (client->is_connected()) {
-        client->send("Hello, Server!");
-    }
+    // Start the connection
+    client->start();
+    
+    // Wait a bit, then send a message
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    client->send("Hello, Server!");
     
     // Keep running
     std::this_thread::sleep_for(std::chrono::seconds(5));
+    client->stop();
     return 0;
 }
 ```
@@ -63,26 +63,27 @@ g++ -std=c++17 my_client.cc -lunilink -lboost_system -pthread -o my_client
 
 ```cpp
 #include <iostream>
+#include <thread>
 #include "unilink/unilink.hpp"
 
 int main() {
     // Create a TCP server
     auto server = unilink::tcp_server(8080)
-        .on_connect([](size_t client_id, const std::string& ip) {
-            std::cout << "Client " << client_id << " connected from " << ip << std::endl;
-        })
+        .unlimited_clients()  // Required: set client limit
         .on_data([](size_t client_id, const std::string& data) {
             std::cout << "Client " << client_id << ": " << data << std::endl;
         })
-        .auto_start(true)
         .build();
     
+    // Start the server
+    server->start();
     std::cout << "Server listening on port 8080..." << std::endl;
     
-    // Keep running
-    while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
+    // Keep running for 60 seconds
+    std::this_thread::sleep_for(std::chrono::seconds(60));
+    
+    // Clean shutdown
+    server->stop();
     return 0;
 }
 ```
@@ -104,10 +105,12 @@ int main() {
         .on_data([](const std::string& data) {
             std::cout << "Received: " << data << std::endl;
         })
-        .auto_start(true)
         .build();
     
+    serial->start();
+    
     // Send data
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     serial->send("AT\r\n");
     
     // Keep running
@@ -123,9 +126,10 @@ int main() {
 ### Pattern 1: Auto-Reconnection
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
-    .retry_interval(3000)  // Retry every 3 seconds
-    .auto_start(true)
+    .retry_interval(3000)  // Retry every 3 seconds (default)
     .build();
+
+client->start();  // Will automatically reconnect on disconnect
 ```
 
 ### Pattern 2: Error Handling

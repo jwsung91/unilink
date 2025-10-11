@@ -53,9 +53,9 @@ public:
             .on_error([this](const std::string& error) {
                 handle_error(error);
             })
-            .auto_start(true)
             .build();
         
+        server_->start();
         std::cout << "Server started! Waiting for connections..." << std::endl;
     }
     
@@ -208,9 +208,9 @@ public:
                 clients_.erase(id);
                 std::cout << "[Client " << id << "] Disconnected" << std::endl;
             })
-            .auto_start(true)
             .build();
         
+        server_->start();
         std::cout << "Advanced Echo Server started on port " << port_ << std::endl;
     }
     
@@ -273,8 +273,11 @@ auto server = unilink::tcp_server(8080)
     .on_data([](size_t id, const std::string& data) {
         std::cout << "Received: " << data << std::endl;
     })
-    .auto_start(true)
     .build();
+
+server->start();
+// ... do work ...
+server->stop();  // Clean shutdown when done
 ```
 
 ---
@@ -293,8 +296,9 @@ auto server = unilink::tcp_server(8080)
     .on_error([](const std::string& error) {
         std::cerr << "Server error: " << error << std::endl;
     })
-    .auto_start(true)
     .build();
+
+server->start();
 
 // Check if server started successfully
 std::this_thread::sleep_for(std::chrono::seconds(6)); // Wait for retries
@@ -302,6 +306,9 @@ if (!server->is_listening()) {
     std::cerr << "Failed to start server after retries" << std::endl;
     return 1;
 }
+
+// ... do work ...
+server->stop();  // Clean shutdown
 ```
 
 ---
@@ -325,8 +332,9 @@ public:
                 
                 std::cout << "Broadcasted: " << msg << std::endl;
             })
-            .auto_start(true)
             .build();
+        
+        server_->start();
     }
 };
 ```
@@ -371,9 +379,9 @@ public:
                 server_->send(msg);
                 std::cout << msg;
             })
-            .auto_start(true)
             .build();
         
+        server_->start();
         std::cout << "Chat server started on port " << port << std::endl;
     }
     

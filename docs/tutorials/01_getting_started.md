@@ -94,14 +94,14 @@ int main() {
             std::cerr << "✗ Error: " << error << std::endl;
         })
         
-        // Step 6: Configure auto-reconnection
-        .retry_interval(3000)  // Retry every 3 seconds
-        
-        // Step 7: Start automatically
-        .auto_start(true)
+        // Step 6: Configure auto-reconnection (default is 3000ms)
+        // .retry_interval(3000)  // This is the default, so we can omit it
         
         // Build the client
         .build();
+    
+    // Step 7: Start the connection explicitly
+    client->start();
     
     // Wait for connection (up to 5 seconds)
     std::cout << "Waiting for connection..." << std::endl;
@@ -232,10 +232,9 @@ Callbacks are invoked automatically by the library.
 
 ### 3. Automatic Reconnection
 ```cpp
-.retry_interval(3000)  // Retry every 3 seconds
-.auto_start(true)      // Start connecting immediately
+.retry_interval(3000)  // Retry every 3 seconds (default)
 ```
-The client will automatically attempt to reconnect if disconnected.
+After calling `client->start()`, the client will automatically attempt to reconnect if disconnected.
 
 ### 4. Thread Safety
 All callbacks are executed in a thread-safe manner. You can safely access shared data from callbacks using proper synchronization.

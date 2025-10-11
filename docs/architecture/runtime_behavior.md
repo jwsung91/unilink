@@ -207,7 +207,6 @@ stateDiagram-v2
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
     .retry_interval(5000)    // Retry every 5 seconds
-    .auto_start(true)         // Start immediately
     .on_connect([]() { 
         std::cout << "Connected!" << std::endl;
     })
@@ -215,6 +214,8 @@ auto client = unilink::tcp_client("server.com", 8080)
         std::cout << "Disconnected - will auto-reconnect" << std::endl;
     })
     .build();
+
+client->start();  // Start the connection explicitly
 ```
 
 ---

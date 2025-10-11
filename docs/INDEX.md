@@ -194,18 +194,23 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
     .on_data([](const std::string& data) {
         std::cout << "Received: " << data << std::endl;
     })
-    .auto_start(true)
     .build();
+
+client->start();
 ```
 
 **Quick TCP Server:**
 ```cpp
 auto server = unilink::tcp_server(8080)
+    .unlimited_clients()
     .on_data([](size_t id, const std::string& data) {
         std::cout << "Client " << id << ": " << data << std::endl;
     })
-    .auto_start(true)
     .build();
+
+server->start();
+// ... do work ...
+server->stop();  // Clean shutdown
 ```
 
 ---

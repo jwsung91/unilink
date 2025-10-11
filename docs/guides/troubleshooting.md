@@ -363,21 +363,15 @@ auto client = tcp_client("server.com", 8080)
 
 #### 2. Client Not Started
 ```cpp
-// BAD
+// BAD - Forgot to start
 auto client = tcp_client("server.com", 8080)
-    .auto_start(false)  // Not started!
     .build();
+// ... client never starts!
 
-// GOOD - Explicitly start
+// GOOD - Always call start explicitly
 auto client = tcp_client("server.com", 8080)
-    .auto_start(false)
     .build();
-client->start();  // Start manually
-
-// Or use auto_start
-auto client = tcp_client("server.com", 8080)
-    .auto_start(true)
-    .build();
+client->start();  // Start the connection
 ```
 
 #### 3. Application Exits Too Quickly
@@ -386,18 +380,18 @@ auto client = tcp_client("server.com", 8080)
 int main() {
     auto client = tcp_client("server.com", 8080)
         .on_connect([]() { std::cout << "Connected!\n"; })
-        .auto_start(true)
         .build();
+    client->start();
     
-    return 0;  // Exits immediately!
+    return 0;  // Exits immediately before connection!
 }
 
 // GOOD
 int main() {
     auto client = tcp_client("server.com", 8080)
         .on_connect([]() { std::cout << "Connected!\n"; })
-        .auto_start(true)
         .build();
+    client->start();
     
     std::this_thread::sleep_for(std::chrono::seconds(10));  // Wait
     return 0;
