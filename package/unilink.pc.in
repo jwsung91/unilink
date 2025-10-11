@@ -7,6 +7,5 @@ Name: unilink
 Description: Unified async communication library
 URL: https://github.com/jwsung91/unilink
 Version: @PROJECT_VERSION@
-Libs: -L${libdir} -lunilink
+Libs: -L${libdir} -lunilink -lboost_system -lpthread
 Cflags: -I${includedir}
-Requires: boost-system
