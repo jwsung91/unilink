@@ -292,8 +292,23 @@ Congratulations! You've created your first unilink application.
 
 ## Full Example Code
 
-The complete working example is available at:
-`examples/tutorials/getting_started/my_first_client.cpp`
+✅ **Ready-to-compile examples are available!**
+
+**Location**: `examples/tutorials/getting_started/`
+
+| File | Description |
+|------|-------------|
+| `simple_client.cpp` | Minimal 30-second example |
+| `my_first_client.cpp` | Complete walkthrough from this tutorial |
+
+**Build and run**:
+```bash
+# From project root
+cmake --build build --target tutorial_my_first_client
+./build/examples/tutorials/tutorial_my_first_client
+```
+
+See [examples/tutorials/README.md](../../examples/tutorials/README.md) for detailed build instructions.
 
 ---
 

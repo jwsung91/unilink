@@ -549,6 +549,32 @@ struct RateLimiter {
 
 ---
 
+## Full Example Code
+
+✅ **Ready-to-compile examples are available!**
+
+**Location**: `examples/tutorials/tcp_server/`
+
+| File | Description |
+|------|-------------|
+| `echo_server.cpp` | Basic echo server from this tutorial |
+| `chat_server.cpp` | Complete chat server with commands |
+
+**Build and run**:
+```bash
+# Build echo server
+cmake --build build --target tutorial_echo_server
+./build/examples/tutorials/tutorial_echo_server 8080
+
+# Build chat server
+cmake --build build --target tutorial_chat_server
+./build/examples/tutorials/tutorial_chat_server 8080
+```
+
+See [examples/tutorials/README.md](../../examples/tutorials/README.md) for detailed build instructions.
+
+---
+
 **Previous**: [← Getting Started](01_getting_started.md)  
 **Next**: [Serial Communication →](03_serial_communication.md)
 
