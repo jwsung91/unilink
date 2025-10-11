@@ -336,8 +336,8 @@ All tests are automatically run on every commit and pull request through GitHub 
 
 **CI/CD Badges:**
 
-[![CI/CD Pipeline](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml)
-[![Code Coverage](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml)
+[![CI/CD Pipeline](https://github.com/jwsung91/unilink/actions/workflows/ci.yml/badge.svg)](https://github.com/jwsung91/unilink/actions/workflows/ci.yml)
+[![Code Coverage](https://github.com/jwsung91/unilink/actions/workflows/coverage.yml/badge.svg)](https://github.com/jwsung91/unilink/actions/workflows/coverage.yml)
 
 ---
 
@@ -362,8 +362,8 @@ Tests run across multiple configurations:
 ### View CI/CD Results
 
 **CI/CD Dashboard:**
-- [GitHub Actions Workflows](https://github.com/grade-e/interface-socket/actions)
-- [Coverage Reports](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml)
+- [GitHub Actions Workflows](https://github.com/jwsung91/unilink/actions)
+- [Coverage Reports](https://github.com/jwsung91/unilink/actions/workflows/coverage.yml)
 
 **What CI/CD validates:**
 - ✅ All unit tests pass

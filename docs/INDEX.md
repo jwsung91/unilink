@@ -250,7 +250,7 @@ auto server = unilink::tcp_server(8080)
 - **Common Issues**: [Troubleshooting Guide](guides/troubleshooting.md)
 - **FAQ**: [Troubleshooting §Getting Help](guides/troubleshooting.md#getting-help)
 - **Examples**: [Examples Directory](../examples/)
-- **GitHub Issues**: [Report a Bug](https://github.com/grade-e/interface-socket/issues)
+- **GitHub Issues**: [Report a Bug](https://github.com/jwsung91/unilink/issues)
 
 ### Learning Path
 
@@ -287,7 +287,7 @@ auto server = unilink::tcp_server(8080)
 
 Found an issue or want to improve documentation?
 
-1. **Report Issues**: [GitHub Issues](https://github.com/grade-e/interface-socket/issues)
+1. **Report Issues**: [GitHub Issues](https://github.com/jwsung91/unilink/issues)
 2. **Suggest Improvements**: Create a pull request
 3. **Ask Questions**: Create an issue with "question" label
 
