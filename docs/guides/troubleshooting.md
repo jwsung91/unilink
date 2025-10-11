@@ -707,7 +707,7 @@ If you're still experiencing issues:
 
 1. **Check Examples**: Look at `examples/` directory
 2. **Read API Guide**: See `docs/reference/API_GUIDE.md`
-3. **Search Issues**: https://github.com/grade-e/interface-socket/issues
+3. **Search Issues**: https://github.com/jwsung91/unilink/issues
 4. **Ask Community**: Create a new issue with:
    - Minimal reproducible example
    - Error messages / logs

@@ -1,7 +1,7 @@
 # unilink
 
-[![CI/CD Pipeline](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml)
-[![Test Coverage](https://img.shields.io/endpoint?url=https://grade-e.github.io/unilink/badges/coverage.json)](https://grade-e.github.io/unilink/)
+[![CI/CD Pipeline](https://github.com/jwsung91/unilink/actions/workflows/ci.yml/badge.svg)](https://github.com/jwsung91/unilink/actions/workflows/ci.yml)
+[![Test Coverage](https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/badges/coverage.json)](https://github.com/jwsung91/unilink)
 
 
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
@@ -24,6 +24,7 @@
 - 🛡️ **Memory Safety** - Comprehensive bounds checking, leak detection, and safe data handling
 - ⚡ **High Performance** - Asynchronous I/O with callback-based non-blocking operations
 - 🎯 **Modern C++17** - Clean, fluent Builder API with optional configuration management
+- ✅ **Well-Tested** - 72.2% test coverage with comprehensive unit, integration, and E2E tests
 
 ---
 

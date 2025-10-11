@@ -652,7 +652,7 @@ cmake -DUNILINK_ENABLE_CONFIG=OFF -DUNILINK_ENABLE_MEMORY_TRACKING=OFF
 - **Examples**: `examples/` directory
 - **Tests**: `test/` directory
 - **Full Documentation**: Run `make docs` and open `docs/html/index.html`
-- **GitHub**: https://github.com/grade-e/interface-socket
+- **GitHub**: https://github.com/jwsung91/unilink
 
 ---
 

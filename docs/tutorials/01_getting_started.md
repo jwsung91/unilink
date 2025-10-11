@@ -42,8 +42,8 @@ vcpkg install boost
 
 ### Option A: From Source
 ```bash
-git clone https://github.com/grade-e/interface-socket.git
-cd interface-socket
+git clone https://github.com/jwsung91/unilink.git
+cd unilink
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 sudo cmake --install build

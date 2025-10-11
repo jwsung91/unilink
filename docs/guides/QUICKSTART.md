@@ -13,8 +13,8 @@ sudo apt update && sudo apt install -y \
 
 ### Build & Install
 ```bash
-git clone https://github.com/grade-e/interface-socket.git
-cd interface-socket
+git clone https://github.com/jwsung91/unilink.git
+cd unilink
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 sudo cmake --install build
@@ -205,7 +205,7 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
 
 ## Support
 
-- **GitHub Issues**: https://github.com/grade-e/interface-socket/issues
+- **GitHub Issues**: https://github.com/jwsung91/unilink/issues
 - **Documentation**: `docs/` directory
 - **Examples**: `examples/` directory
 
