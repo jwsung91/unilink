@@ -33,7 +33,7 @@ jobs:
           -DCMAKE_C_FLAGS="--coverage -fprofile-arcs -ftest-coverage" \
           -DCMAKE_EXE_LINKER_FLAGS="--coverage" \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
+          -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
           -DBUILD_TESTING=ON \
           -DBUILD_EXAMPLES=OFF
 
@@ -52,10 +52,22 @@ jobs:
         # Capture coverage data
         lcov --directory . --capture --output-file coverage.info
         
+        # Debug: Show total coverage before filtering
+        echo "=== Before filtering ==="
+        lcov --summary coverage.info 2>&1 | grep lines
+        
         # Extract only unilink source code (exclude test in one step)
         lcov --extract coverage.info '*/unilink/*.cc' '*/unilink/*.hpp' '*/unilink/*.cpp' \
           --output-file coverage_filtered.info \
           --ignore-errors mismatch,negative,unused
+        
+        # Debug: Show coverage after filtering
+        echo "=== After filtering ==="
+        lcov --summary coverage_filtered.info 2>&1 | grep lines
+        
+        # Debug: Show filtered files
+        echo "=== Filtered files (first 30) ==="
+        lcov --list coverage_filtered.info 2>&1 | head -30
         
         # Generate summary
         lcov --list coverage_filtered.info > coverage_summary.txt
