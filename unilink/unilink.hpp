@@ -120,7 +120,6 @@ class ConfigManagerInterface;
 // Utility functions and error handling
 namespace common {
 // Utility functions
-using common::feed_lines;
 using common::log_message;
 using common::to_cstr;
 using common::ts_now;
