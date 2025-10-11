@@ -76,12 +76,11 @@ class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient>
  private:
   std::unique_ptr<net::io_context> ioc_;
   std::thread ioc_thread_;
-  bool owns_ioc_ = true;
-
   tcp::resolver resolver_;
   tcp::socket socket_;
   TcpClientConfig cfg_;
   net::steady_timer retry_timer_;
+  bool owns_ioc_ = true;
 
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>>> tx_;

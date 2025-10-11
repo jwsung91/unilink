@@ -84,8 +84,8 @@ class TcpServer : public ChannelInterface {
   void handle_bytes(const uint8_t* data, size_t size);
   void handle_state(common::LinkState state);
 
-  std::shared_ptr<interface::Channel> channel_;
   uint16_t port_;
+  std::shared_ptr<interface::Channel> channel_;
   bool started_{false};
   bool auto_manage_{false};
 

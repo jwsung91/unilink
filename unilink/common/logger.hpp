@@ -105,7 +105,7 @@ struct AsyncLogStats {
 
   double get_drop_rate() const {
     if (total_logs == 0) return 0.0;
-    return static_cast<double>(dropped_logs) / total_logs;
+    return static_cast<double>(dropped_logs) / static_cast<double>(total_logs);
   }
 
   std::chrono::milliseconds get_uptime() const {

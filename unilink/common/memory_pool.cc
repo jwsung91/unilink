@@ -27,7 +27,7 @@ namespace common {
 // SelectiveMemoryPool Implementation
 // ============================================================================
 
-MemoryPool::MemoryPool(size_t initial_pool_size, size_t max_pool_size) {
+MemoryPool::MemoryPool(size_t initial_pool_size, size_t /* max_pool_size */) {
   // 4개 고정 크기 풀 초기화
   static constexpr std::array<size_t, 4> BUCKET_SIZES = {
       static_cast<size_t>(BufferSize::SMALL),   // 1KB
@@ -69,7 +69,7 @@ double MemoryPool::get_hit_rate() const {
   if (total == 0) return 0.0;
 
   size_t hits = stats_.pool_hits;
-  return static_cast<double>(hits) / total;
+  return static_cast<double>(hits) / static_cast<double>(total);
 }
 
 void MemoryPool::cleanup_old_buffers(std::chrono::milliseconds max_age) {
