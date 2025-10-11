@@ -108,20 +108,12 @@ Choose the build configuration that fits your needs:
 .
 ├── unilink/                    # Core library source and headers
 │   ├── common/                 # Common utilities and safety features
-│   │   ├── safe_data_buffer.*  # Type-safe data buffer implementation
-│   │   ├── safe_span.hpp       # C++17 compatible span-like class
-│   │   ├── thread_safe_state.* # Thread-safe state management
-│   │   ├── memory_tracker.*    # Memory tracking and leak detection
-│   │   └── memory_pool.*       # Advanced memory pool implementation
 │   ├── transport/              # Transport layer implementations
 │   ├── wrapper/                # High-level wrapper APIs
 │   ├── builder/                # Builder pattern implementations
 │   └── config/                 # Configuration management
 ├── examples/                   # Example applications
-├── test/                       # Comprehensive test suite (132 tests)
-│   ├── test_memory_safety.cc   # Memory safety tests
-│   ├── test_concurrency_safety.cc # Thread safety tests
-│   └── test_safe_data_buffer.cc # Type safety tests
+├── test/                       # Comprehensive test suite
 ├── CMakeLists.txt              # Top-level build script
 └── README.md                   # This file
 ```
@@ -131,6 +123,7 @@ Choose the build configuration that fits your needs:
 ## Requirements
 
 ### System Requirements
+
 - **Ubuntu 22.04 LTS or later** (recommended)
 - **C++17 compatible compiler** (GCC 11+ or Clang 14+)
 - **CMake 3.10 or later**
@@ -304,7 +297,10 @@ When building with `UNILINK_ENABLE_CONFIG=OFF`:
 
 ## Testing
 
-`unilink` includes comprehensive test coverage with 132 test cases covering all functionality:
+[![CI/CD Pipeline](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml)
+[![Code Coverage](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml)
+
+All test results and performance benchmarks are automatically validated through GitHub Actions CI/CD pipeline. See the [CI/CD workflow results](https://github.com/grade-e/interface-socket/actions) for current test status and coverage reports.
 
 ### Running Tests
 
@@ -320,63 +316,13 @@ ctest --test-dir build --output-on-failure
 ```
 
 **Run specific test categories:**
+
 - `./build/test/run_core_tests` - Basic functionality tests
 - `./build/test/run_integration_tests` - Integration tests  
 - `./build/test/run_memory_safety_tests` - Memory safety tests
 - `./build/test/run_concurrency_safety_tests` - Thread safety tests
 - `./build/test/run_performance_tests` - Performance benchmarks
 - `./build/test/run_stress_tests` - Stress and stability tests
-
-### Test Results
-
-**Expected output for successful test run:**
-```
-Test project /path/to/unilink/build
-        Start   1: BaseTest.CommonFunctionality
-  1/132 Test   #1: BaseTest.CommonFunctionality ...................................   Passed    0.00 sec
-        Start   2: BaseTest.ConfigManager
-  2/132 Test   #2: BaseTest.ConfigManager .........................................   Passed    0.00 sec
-        ...
-        Start 132: MemorySafetyTest.MemoryStressTest
-132/132 Test #132: MemorySafetyTest.MemoryStressTest ..............................   Passed    0.00 sec
-
-100% tests passed, 0 tests failed out of 132
-
-Total Test time (real) =  53.48 sec
-```
-
-**Memory Safety Test Results:**
-```
-[==========] Running 10 tests from 1 test suite.
-[----------] Global test environment set-up.
-[----------] 10 tests from MemorySafetyTest
-[ RUN      ] MemorySafetyTest.MemoryTrackingBasicFunctionality
-[       OK ] MemorySafetyTest.MemoryTrackingBasicFunctionality (0 ms)
-[ RUN      ] MemorySafetyTest.MemoryLeakDetection
-[       OK ] MemorySafetyTest.MemoryLeakDetection (0 ms)
-...
-[----------] 10 tests from MemorySafetyTest (1 ms total)
-[----------] Global test environment tear-down
-[==========] 10 tests from 1 test suite ran. (1 ms total)
-[  PASSED  ] 10 tests.
-```
-
-### Test Coverage
-
-| Category | Tests | Description |
-|----------|-------|-------------|
-| **Core Tests** | 22 | Basic functionality and API tests |
-| **Integration Tests** | 19 | End-to-end communication tests |
-| **Memory Safety Tests** | 10 | Memory tracking, leak detection, bounds checking |
-| **Concurrency Safety Tests** | 9 | Thread safety and concurrent access tests |
-| **Performance Tests** | 8 | Performance benchmarks and optimization tests |
-| **Boundary Tests** | 8 | Edge cases and boundary condition tests |
-| **Error Recovery Tests** | 9 | Error handling and recovery mechanism tests |
-| **Stress Tests** | 6 | High-load and stability tests |
-| **Configuration Tests** | 16 | Configuration validation and management tests |
-| **API Safety Tests** | 10 | Input validation and safety tests |
-| **Advanced Optimization Tests** | 18 | Advanced performance and optimization tests |
-| **SafeDataBuffer Tests** | 11 | Type-safe data handling tests |
 
 ### Memory Safety Validation
 
@@ -390,11 +336,14 @@ The library includes extensive memory safety validation:
 
 ### Continuous Integration
 
-All tests pass with 100% success rate across different build configurations:
+All tests are automatically validated across different build configurations through our [CI/CD pipeline](https://github.com/grade-e/interface-socket/actions):
+
 - Debug builds with memory tracking
 - Release builds with optimizations
 - Sanitizer builds with AddressSanitizer
 - Different compiler versions (GCC, Clang)
+
+For detailed test results and coverage reports, see our [GitHub Actions workflows](https://github.com/grade-e/interface-socket/actions).
 
 ---
 
