@@ -519,7 +519,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   // Check performance (should be very fast since it's just queuing)
-  double messages_per_second = (num_messages * 1000000.0) / duration;
+  double messages_per_second = (num_messages * 1000000.0) / static_cast<double>(duration);
   EXPECT_GT(messages_per_second, 100000) << "Should process at least 100k messages per second";
 
   // Check statistics

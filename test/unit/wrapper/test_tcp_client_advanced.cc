@@ -317,7 +317,7 @@ TEST_F(AdvancedTcpClientCoverageTest, MultipleClients) {
 
   // Create multiple clients
   for (int i = 0; i < num_clients; ++i) {
-    auto client = unilink::tcp_client("localhost", test_port_ + i).build();
+    auto client = unilink::tcp_client("localhost", static_cast<uint16_t>(test_port_ + i)).build();
     clients.push_back(std::move(client));
   }
 

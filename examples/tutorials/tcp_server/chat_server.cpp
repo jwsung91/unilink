@@ -61,7 +61,7 @@ class ChatServer {
  public:
   void start(uint16_t port) {
     server_ = unilink::tcp_server(port)
-                  .on_connect([this](size_t id, const std::string& ip) {
+                  .on_connect([this](size_t id, const std::string& /* ip */) {
                     std::lock_guard<std::mutex> lock(mutex_);
                     nicknames_[id] = "User" + std::to_string(id);
 
@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
   std::signal(SIGTERM, signal_handler);
 
   // Parse port
-  uint16_t port = (argc > 1) ? std::stoi(argv[1]) : 8080;
+  uint16_t port = (argc > 1) ? static_cast<uint16_t>(std::stoi(argv[1])) : 8080;
 
   // Create and start server
   ChatServer server;

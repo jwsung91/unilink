@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
   std::signal(SIGTERM, signal_handler);
 
   // Parse port
-  uint16_t port = (argc > 1) ? std::stoi(argv[1]) : 8080;
+  uint16_t port = (argc > 1) ? static_cast<uint16_t>(std::stoi(argv[1])) : 8080;
 
   // Create and start server
   EchoServer server(port);

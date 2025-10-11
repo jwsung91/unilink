@@ -54,10 +54,10 @@ class ClientLimitIntegrationTest : public ::testing::Test {
 
     // Base port + time offset + random component
     uint16_t base_port = 50000;                    // Use a smaller base port
-    uint16_t time_offset = (time_ms % 1000) * 10;  // 0-9990 range
-    uint16_t random_offset = (std::rand() % 100);  // 0-99 range
+    uint16_t time_offset = static_cast<uint16_t>((time_ms % 1000) * 10);  // 0-9990 range
+    uint16_t random_offset = static_cast<uint16_t>(std::rand() % 100);  // 0-99 range
 
-    uint16_t port = base_port + time_offset + random_offset;
+    uint16_t port = static_cast<uint16_t>(base_port + time_offset + random_offset);
 
     // Ensure port is within valid range
     if (port > 65535) {
