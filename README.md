@@ -2,7 +2,7 @@
 
 [![CI/CD Pipeline](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml)
 [![Code Coverage](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/coverage.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 ## One interface, reliable connections
 
@@ -446,3 +446,12 @@ cd build && ctest --output-on-failure
 - If you encounter issues, please report them in the GitHub issues
 
 ---
+
+## License
+
+Licensed under the [Apache License, Version 2.0](./LICENSE).
+
+© 2025 Jinwoo Sung  
+This project was independently developed by Jinwoo Sung and is **not affiliated with any employer**.  
+Commercial and internal use are permitted under the terms of the Apache 2.0 License.  
+For attribution, please retain the accompanying [NOTICE](./NOTICE) file.
