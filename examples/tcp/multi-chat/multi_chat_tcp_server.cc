@@ -134,7 +134,7 @@ class ChatServer {
       std::this_thread::sleep_for(std::chrono::seconds(5));  // Broadcast after 5 seconds
       logger_.info("server", "debug", "Broadcast timer triggered");
       if (server_) {
-        int client_count = server_->get_client_count();
+        int client_count = static_cast<int>(server_->get_client_count());
         logger_.info("server", "debug", "Client count: " + std::to_string(client_count));
         if (client_count > 0) {
           server_->broadcast("[Server] Welcome to the chat server!");
@@ -160,7 +160,7 @@ class ChatServer {
             logger_.info("server", "shutdown", "Shutting down server...");
             running_.store(false);
           } else if (line == "/clients") {
-            int count = server_->get_client_count();
+            int count = static_cast<int>(server_->get_client_count());
             logger_.info("server", "status", std::to_string(count) + " clients connected");
           } else if (line.substr(0, 5) == "/send") {
             // Process /send <id> <message> format

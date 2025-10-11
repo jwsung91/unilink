@@ -19,17 +19,21 @@ WORKDIR /app
 # Copy source code
 COPY . .
 
-        # Configure and build
-        RUN rm -rf build && mkdir build && cd build && \
-            cmake .. \
-                -DCMAKE_BUILD_TYPE=Release \
-                -DUNILINK_ENABLE_CONFIG=ON \
-                -DBUILD_EXAMPLES=ON \
-                -DBUILD_TESTING=ON && \
-            cmake --build . -j $(nproc)
+# Configure and build
+RUN rm -rf build && mkdir build && cd build && \
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DUNILINK_ENABLE_CONFIG=ON \
+        -DUNILINK_ENABLE_INSTALL=ON \
+        -DUNILINK_ENABLE_PKGCONFIG=ON \
+        -DUNILINK_ENABLE_EXPORT_HEADER=ON \
+        -DBUILD_EXAMPLES=ON \
+        -DBUILD_TESTING=ON \
+        -DBUILD_DOCUMENTATION=OFF && \
+    cmake --build . -j $(nproc)
 
-# Generate documentation
-RUN cd build && make docs || true
+# Generate documentation (optional, skip if fails)
+RUN cd build && (make docs || echo "Documentation generation skipped")
 
 # Production stage
 FROM ubuntu:22.04 AS production
@@ -46,7 +50,7 @@ RUN useradd -m -u 1000 appuser
 WORKDIR /app
 
 # Copy built artifacts from builder stage
-COPY --from=builder /app/build/unilink/libunilink.a /app/lib/
+COPY --from=builder /app/build/libunilink.a /app/lib/
 COPY --from=builder /app/build/examples /app/examples
 # Create docs directory (documentation is optional)
 RUN mkdir -p /app/docs

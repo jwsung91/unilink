@@ -16,6 +16,12 @@
 
 #pragma once
 
+#if __has_include(<unilink_export.hpp>)
+#include <unilink_export.hpp>
+#else
+#define UNILINK_EXPORT
+#endif
+
 #include <cstdint>
 #include <string>
 
@@ -31,7 +37,7 @@ namespace builder {
  * Provides a fluent API for configuring and creating Serial instances.
  * Supports method chaining for easy configuration.
  */
-class SerialBuilder : public BuilderInterface<wrapper::Serial> {
+class UNILINK_EXPORT SerialBuilder : public BuilderInterface<wrapper::Serial> {
  public:
   /**
    * @brief Construct a new SerialBuilder

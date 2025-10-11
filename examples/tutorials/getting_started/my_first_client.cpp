@@ -44,7 +44,7 @@
 int main(int argc, char** argv) {
   // Parse command line arguments
   std::string server_host = (argc > 1) ? argv[1] : "127.0.0.1";
-  uint16_t server_port = (argc > 2) ? std::stoi(argv[2]) : 8080;
+  uint16_t server_port = (argc > 2) ? static_cast<uint16_t>(std::stoi(argv[2])) : 8080;
 
   std::cout << "=== My First Unilink Client ===" << std::endl;
   std::cout << "Connecting to " << server_host << ":" << server_port << std::endl;

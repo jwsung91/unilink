@@ -157,18 +157,6 @@ inline std::vector<uint8_t> string_to_uint8(const std::string& str) {
 }
 }  // namespace safe_convert
 
-static void feed_lines(std::string& acc, const uint8_t* p, size_t n, const std::function<void(std::string)>& on_line) {
-  // Use safe conversion instead of reinterpret_cast
-  if (p && n > 0) {
-    acc.append(safe_convert::uint8_to_string(p, n));
-  }
-  size_t pos;
-  while ((pos = acc.find('\n')) != std::string::npos) {
-    std::string line = acc.substr(0, pos);
-    if (!line.empty() && line.back() == '\r') line.pop_back();
-    on_line(line);
-    acc.erase(0, pos + 1);
-  }
-}
+// Removed unused feed_lines function to eliminate -Wunused-function warning
 }  // namespace common
 }  // namespace unilink

@@ -57,7 +57,7 @@ void Serial::start() {
     config.baud_rate = baud_rate_;
     config.char_size = data_bits_;
     config.stop_bits = stop_bits_;
-    config.retry_interval_ms = retry_interval_.count();
+    config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
     // parity와 flow는 enum으로 변환 필요
     config.flow = unilink::config::SerialConfig::Flow::None;
     channel_ = factory::ChannelFactory::create(config);
@@ -169,7 +169,7 @@ void Serial::set_retry_interval(std::chrono::milliseconds interval) {
     // Cast to transport::Serial and set retry interval
     auto transport_serial = std::dynamic_pointer_cast<transport::Serial>(channel_);
     if (transport_serial) {
-      transport_serial->set_retry_interval(interval.count());
+      transport_serial->set_retry_interval(static_cast<unsigned int>(interval.count()));
     }
   }
 }

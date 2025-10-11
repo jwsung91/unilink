@@ -197,7 +197,7 @@ struct ErrorStats {
     if (total_errors == 0) return 0.0;
 
     auto duration = std::chrono::duration_cast<std::chrono::minutes>(last_error - first_error).count();
-    return duration > 0 ? static_cast<double>(total_errors) / duration : 0.0;
+    return duration > 0 ? static_cast<double>(total_errors) / static_cast<double>(duration) : 0.0;
   }
 };
 

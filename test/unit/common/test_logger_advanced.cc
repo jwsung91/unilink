@@ -242,7 +242,7 @@ TEST_F(AdvancedLoggerCoverageTest, LogCallback) {
 
   // Set up callback
   Logger::instance().set_callback(
-      [&captured_logs](LogLevel level, const std::string& message) { captured_logs.push_back(message); });
+      [&captured_logs](LogLevel /* level */, const std::string& message) { captured_logs.push_back(message); });
 
   Logger::instance().set_level(LogLevel::DEBUG);
 

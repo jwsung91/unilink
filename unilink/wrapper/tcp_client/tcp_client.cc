@@ -54,7 +54,7 @@ void TcpClient::start() {
     config::TcpClientConfig config;
     config.host = host_;
     config.port = port_;
-    config.retry_interval_ms = retry_interval_.count();
+    config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
     channel_ = factory::ChannelFactory::create(config);
     setup_internal_handlers();
   }
@@ -120,7 +120,7 @@ void TcpClient::set_retry_interval(std::chrono::milliseconds interval) {
     // Cast to transport::TcpClient and set retry interval
     auto transport_client = std::dynamic_pointer_cast<transport::TcpClient>(channel_);
     if (transport_client) {
-      transport_client->set_retry_interval(interval.count());
+      transport_client->set_retry_interval(static_cast<unsigned int>(interval.count()));
     }
   }
 }

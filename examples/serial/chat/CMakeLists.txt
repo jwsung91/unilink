@@ -13,4 +13,4 @@
 # limitations under the License.
 
 add_executable(chat_serial chat_serial.cc)
-target_link_libraries(chat_serial PRIVATE interface::unilink)
+target_link_libraries(chat_serial PRIVATE unilink::unilink)

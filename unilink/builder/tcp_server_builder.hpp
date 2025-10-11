@@ -16,6 +16,12 @@
 
 #pragma once
 
+#if __has_include(<unilink_export.hpp>)
+#include <unilink_export.hpp>
+#else
+#define UNILINK_EXPORT
+#endif
+
 #include <cstdint>
 
 #include "unilink/builder/ibuilder.hpp"
@@ -30,7 +36,7 @@ namespace builder {
  * Provides a fluent API for configuring and creating TcpServer instances.
  * Supports method chaining for easy configuration.
  */
-class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
+class UNILINK_EXPORT TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
  public:
   /**
    * @brief Construct a new TcpServerBuilder

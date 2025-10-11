@@ -461,7 +461,7 @@ void Logger::update_stats_on_drop() {
   async_stats_.dropped_logs++;
 }
 
-void Logger::update_stats_on_batch(size_t batch_size) {
+void Logger::update_stats_on_batch(size_t /* batch_size */) {
   std::lock_guard<std::mutex> lock(stats_mutex_);
   async_stats_.batch_count++;
 }
