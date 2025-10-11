@@ -102,6 +102,165 @@ Choose the build configuration that fits your needs:
 
 ---
 
+## Runtime Behavior Model
+
+Understanding how `unilink` operates internally helps you write more efficient and robust applications. This section describes the threading model, reconnection policies, and backpressure handling.
+
+### Threading Model & Callback Execution
+
+All I/O operations run in a dedicated I/O thread (Boost.Asio), while user code runs in separate application threads. Callbacks are always executed in the I/O thread context.
+
+```mermaid
+sequenceDiagram
+    participant App as Application Thread
+    participant Queue as Thread-Safe Queue
+    participant IO as I/O Thread (Boost.Asio)
+    participant Net as Network/Serial Device
+    
+    Note over App,Net: Sending Data
+    App->>Queue: client->send("data")
+    Queue->>IO: Post to io_context
+    IO->>Net: async_write()
+    Net-->>IO: write complete
+    
+    Note over App,Net: Receiving Data
+    Net-->>IO: async_read() complete
+    IO->>IO: Execute on_data callback
+    Note over IO: ⚠️ Callbacks run in I/O thread<br/>Don't block here!
+    
+    Note over App,Net: Thread-Safe API Calls
+    App->>Queue: Multiple threads can call
+    App->>Queue: send(), stop(), etc.
+    Queue->>IO: Serialized execution
+```
+
+**Key Points:**
+- ✅ All public API methods (`send()`, `stop()`, etc.) are thread-safe
+- ✅ Callbacks (`on_data`, `on_connect`, etc.) execute in the I/O thread
+- ⚠️ **Never block in callbacks** - offload heavy work to application threads
+- ✅ Use `net::post()` to dispatch work to the I/O thread safely
+
+---
+
+### Reconnection Policy & State Machine
+
+TCP clients and Serial connections automatically handle connection failures with configurable retry logic.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Closed
+    Closed --> Connecting: start()
+    
+    Connecting --> Connected: Connection Success
+    Connecting --> Connecting: Connection Failed<br/>(retry after interval)
+    
+    Connected --> Closed: stop()
+    Connected --> Connecting: Connection Lost<br/>(auto-reconnect)
+    
+    Connecting --> Error: Max Retries Exceeded<br/>(if configured)
+    Error --> Closed: stop()
+    
+    note right of Connecting
+        Retry Interval:
+        - Default: 2000ms (2s)
+        - Min: 100ms
+        - Max: 300000ms (5min)
+        - Configurable via retry_interval()
+    end note
+    
+    note right of Connected
+        Connection Timeout:
+        - Default: 5000ms (5s)
+        - Min: 100ms
+        - Max: 300000ms (5min)
+    end note
+```
+
+**Configuration Example:**
+```cpp
+auto client = unilink::tcp_client("server.com", 8080)
+    .retry_interval(5000)    // Retry every 5 seconds
+    .auto_start(true)         // Start immediately
+    .on_connect([]() { /* Connected */ })
+    .on_disconnect([]() { /* Will auto-reconnect */ })
+    .build();
+```
+
+**Retry Behavior:**
+- **Default**: Unlimited retries with 2-second intervals
+- **Exponential backoff**: Not implemented (constant interval)
+- **State callbacks**: `on_connect()` and `on_disconnect()` notify state changes
+- **Thread-safe**: Safe to call `stop()` from any thread to halt reconnection
+
+---
+
+### Backpressure Handling
+
+When the send queue grows too large (network slower than application), `unilink` notifies your application via backpressure callbacks.
+
+```mermaid
+flowchart TD
+    Start([Application calls send]) --> Queue[Add to Send Queue]
+    Queue --> Check{Queue Size ><br/>Threshold?}
+    
+    Check -->|No| Write[Continue Normal Write]
+    Write --> Complete([Data Sent])
+    
+    Check -->|Yes: queue_bytes > 1MB| Callback[Trigger on_backpressure callback]
+    Callback --> AppDecision{Application Decision}
+    
+    AppDecision -->|Pause Sending| Wait[Wait for queue to drain]
+    AppDecision -->|Rate Limit| Throttle[Reduce send rate]
+    AppDecision -->|Drop Data| Drop[Skip non-critical data]
+    AppDecision -->|Continue| Force[Force send anyway<br/>⚠️ May cause memory growth]
+    
+    Wait --> Monitor{Queue Size ><br/>Threshold?}
+    Monitor -->|Still high| Wait
+    Monitor -->|Normal| Resume[Resume normal operation]
+    
+    Throttle --> Resume
+    Drop --> Resume
+    Force --> Write
+    Resume --> Complete
+    
+    style Callback fill:#f9f,stroke:#333,stroke-width:2px
+    style AppDecision fill:#ff9,stroke:#333,stroke-width:2px
+    style Force fill:#f66,stroke:#333,stroke-width:2px
+```
+
+**Backpressure Configuration:**
+
+```cpp
+auto client = unilink::tcp_client("server.com", 8080)
+    .on_backpressure([](size_t queue_bytes) {
+        std::cout << "⚠️ Queue size: " << queue_bytes << " bytes" << std::endl;
+        // Option 1: Pause sending
+        // Option 2: Rate limit
+        // Option 3: Drop non-critical data
+    })
+    .build();
+
+// Default threshold: 1 MB (1048576 bytes)
+// Threshold range: 1 KB - 100 MB
+```
+
+**Backpressure Strategies:**
+
+| Strategy | When to Use | Implementation |
+|----------|-------------|----------------|
+| **Pause Sending** | Real-time data, can tolerate delays | Stop calling `send()` until callback stops firing |
+| **Rate Limiting** | Continuous data streams | Add delays between `send()` calls |
+| **Drop Data** | Non-critical telemetry | Skip sending some data points |
+| **Buffer Expansion** | Short bursts, ample memory | Continue sending (default behavior) |
+
+**Memory Safety:**
+- Queue size is monitored continuously
+- Backpressure callback fires when `queue_bytes > threshold`
+- **No automatic flow control** - application must handle backpressure
+- Memory pools reduce allocation overhead for small buffers (<64KB)
+
+---
+
 ## Project Structure
 
 ```bash
