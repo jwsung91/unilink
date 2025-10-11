@@ -118,8 +118,7 @@ class EchoServer {
   bool start() {
     // Create TCP server with new API
     server_ = unilink::tcp_server(port_)
-                  .single_client()  // Use new API
-                  .auto_start(false)
+                  .single_client()                   // Use new API
                   .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
                   .on_connect([this](size_t client_id, const std::string& client_ip) {
                     on_multi_connect(client_id, client_ip);

@@ -59,7 +59,7 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
-                .auto_start(false)
+
                 .build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
@@ -88,7 +88,7 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   // 서버 생성 (자동 시작)
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
-                .auto_start(true)
+
                 .build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
@@ -118,7 +118,7 @@ TEST_F(SimpleServerTest, ServerWithCallbacks) {
   // 서버 생성 (콜백 포함)
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
-                .auto_start(true)
+
                 .on_connect([connect_called]() {
                   std::cout << "Connect callback called!" << std::endl;
                   connect_called->store(true);
@@ -162,7 +162,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
-                .auto_start(false)
+
                 .build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
@@ -196,7 +196,7 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
   // Single client 서버 생성
   server_ = unilink::tcp_server(test_port)
                 .single_client()  // 1개 클라이언트만 허용
-                .auto_start(false)
+
                 .build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
@@ -220,7 +220,7 @@ TEST_F(SimpleServerTest, ClientLimitMultiClient) {
   // Multi client 서버 생성 (3개 클라이언트 제한)
   server_ = unilink::tcp_server(test_port)
                 .multi_client(3)  // 3개 클라이언트만 허용
-                .auto_start(false)
+
                 .build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
@@ -244,7 +244,7 @@ TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
   // Unlimited clients 서버 생성
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // 클라이언트 제한 없음
-                .auto_start(false)
+
                 .build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
@@ -270,7 +270,7 @@ TEST_F(SimpleServerTest, ClientLimitBuilderValidation) {
       {
         server_ = unilink::tcp_server(test_port)
                       .multi_client(0)  // 0개는 유효하지 않음
-                      .auto_start(false)
+
                       .build();
       },
       std::invalid_argument)

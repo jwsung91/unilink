@@ -110,7 +110,7 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
   // Single client 서버 생성
   server_ = unilink::tcp_server(test_port)
                 .single_client()
-                .auto_start(false)
+
                 .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
                 .build();
 
@@ -163,7 +163,7 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   // Multi client 서버 생성 (3개 제한)
   server_ = unilink::tcp_server(test_port)
                 .multi_client(3)
-                .auto_start(false)
+
                 .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
                 .build();
 
@@ -208,7 +208,7 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
   // Unlimited clients 서버 생성
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()
-                .auto_start(false)
+
                 .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
                 .build();
 
@@ -253,7 +253,7 @@ TEST_F(ClientLimitIntegrationTest, DynamicClientLimitChangeTest) {
   // 초기에는 2개 클라이언트 제한
   server_ = unilink::tcp_server(test_port)
                 .multi_client(2)
-                .auto_start(false)
+
                 .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
                 .build();
 
@@ -293,7 +293,7 @@ TEST_F(ClientLimitIntegrationTest, ClientLimitErrorHandlingTest) {
       {
         server_ = unilink::tcp_server(test_port)
                       .multi_client(0)  // 0은 유효하지 않음
-                      .auto_start(false)
+
                       .build();
       },
       std::invalid_argument)

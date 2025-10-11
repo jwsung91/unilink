@@ -87,7 +87,7 @@ TEST_F(DebugCommunicationTest, ServerCreationAndStatus) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -120,7 +120,7 @@ TEST_F(DebugCommunicationTest, ClientCreationAndConnection) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -135,7 +135,7 @@ TEST_F(DebugCommunicationTest, ClientCreationAndConnection) {
 
   // 클라이언트 생성
   client_ = unilink::tcp_client("127.0.0.1", test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
                   connection_established_ = true;
@@ -174,7 +174,7 @@ TEST_F(DebugCommunicationTest, SimpleCommunication) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -194,7 +194,7 @@ TEST_F(DebugCommunicationTest, SimpleCommunication) {
 
   // 클라이언트 생성
   client_ = unilink::tcp_client("127.0.0.1", test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
                   connection_established_ = true;
@@ -304,7 +304,7 @@ TEST_F(DetailedDebugTest, PortBindingStatus) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -338,7 +338,7 @@ TEST_F(DetailedDebugTest, RawTcpConnection) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -385,7 +385,7 @@ TEST_F(DetailedDebugTest, ServerErrorLogging) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_error([this](const std::string& error) {
                   std::cout << "Server error logged: " << error << std::endl;
                   error_occurred_ = true;
@@ -479,7 +479,7 @@ TEST_F(FixedCommunicationTest, ServerStartAndListen) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -513,7 +513,7 @@ TEST_F(FixedCommunicationTest, ClientConnection) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -528,7 +528,7 @@ TEST_F(FixedCommunicationTest, ClientConnection) {
 
   // 클라이언트 생성
   client_ = unilink::tcp_client("127.0.0.1", test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
                   client_connected_ = true;
@@ -565,7 +565,7 @@ TEST_F(FixedCommunicationTest, RealDataCommunication) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -585,7 +585,7 @@ TEST_F(FixedCommunicationTest, RealDataCommunication) {
 
   // 클라이언트 생성
   client_ = unilink::tcp_client("127.0.0.1", test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
                   client_connected_ = true;
@@ -684,7 +684,7 @@ TEST_F(RealCommunicationTest, ServerClientCommunication) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -704,7 +704,7 @@ TEST_F(RealCommunicationTest, ServerClientCommunication) {
 
   // 클라이언트 생성
   client_ = unilink::tcp_client("127.0.0.1", test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
                   connection_established_ = true;
@@ -735,7 +735,7 @@ TEST_F(RealCommunicationTest, EchoServerTest) {
 
   // Echo 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Echo server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -759,7 +759,7 @@ TEST_F(RealCommunicationTest, EchoServerTest) {
 
   // 클라이언트 생성
   client_ = unilink::tcp_client("127.0.0.1", test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Client: Connected to echo server" << std::endl;
                   connection_established_ = true;
@@ -810,7 +810,7 @@ TEST_F(RealCommunicationTest, MultipleMessageCommunication) {
 
   // 서버 생성
   server_ = unilink::tcp_server(test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Server: Client connected" << std::endl;
                   connection_established_ = true;
@@ -830,7 +830,7 @@ TEST_F(RealCommunicationTest, MultipleMessageCommunication) {
 
   // 클라이언트 생성
   client_ = unilink::tcp_client("127.0.0.1", test_port)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::cout << "Client: Connected to server" << std::endl;
                   connection_established_ = true;

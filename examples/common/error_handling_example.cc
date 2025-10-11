@@ -106,9 +106,12 @@ int main() {
   // Try connecting to invalid port (will cause error)
   auto bad_client =
       tcp_client("127.0.0.1", 1)  // Invalid port
-          .auto_start(true)
           .on_error([](const std::string& error) { std::cout << "Client error callback: " << error << std::endl; })
           .build();
+
+  if (bad_client) {
+    bad_client->start();
+  }
 
   if (bad_client) {
     UNILINK_LOG_INFO("example", "test", "Attempting connection to invalid port...");

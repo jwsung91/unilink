@@ -35,13 +35,21 @@ auto channel = unilink::{type}(params)
 
 | Method | Description | Default |
 |--------|-------------|---------|
-| `.auto_start(bool)` | Start automatically on build | `false` |
-| `.auto_manage(bool)` | Auto resource management | `true` |
 | `.on_data(callback)` | Handle incoming data | None |
 | `.on_connect(callback)` | Handle connection events | None |
 | `.on_disconnect(callback)` | Handle disconnection | None |
 | `.on_error(callback)` | Handle errors | None |
-| `.retry_interval(ms)` | Reconnection interval | `5000` |
+| `.retry_interval(ms)` | Reconnection interval | `3000` |
+| `.auto_manage(bool)` | Auto resource management | `false` |
+| `.build()` | **Required**: Build the client | - |
+
+**Lifecycle Methods:**
+| Method | Description |
+|--------|-------------|
+| `->start()` | **Required**: Start the connection |
+| `->stop()` | Stop the connection |
+| `->send(data)` | Send data to server |
+| `->is_connected()` | Check connection status |
 | `.use_independent_context(bool)` | Use separate IO thread | `false` |
 
 ---
@@ -68,14 +76,19 @@ auto client = unilink::tcp_client("192.168.1.100", 8080)
     .on_error([](const std::string& error) {
         std::cerr << "Error: " << error << std::endl;
     })
-    .retry_interval(3000)  // Retry every 3 seconds
-    .auto_start(true)
+    .retry_interval(3000)  // Optional: Retry every 3 seconds (default)
     .build();
+
+// Start connection
+client->start();
 
 // Send data
 if (client->is_connected()) {
     client->send("Hello, Server!");
 }
+
+// Stop when done
+client->stop();
 
 // Stop client
 client->stop();
@@ -154,8 +167,10 @@ auto server = unilink::tcp_server(8080)
     .on_disconnect([](size_t client_id) {
         std::cout << "Client " << client_id << " disconnected" << std::endl;
     })
-    .auto_start(true)
     .build();
+
+// Start server
+server->start();
 
 // Send to specific client
 server->send_to_client(1, "Hello, Client 1!");
@@ -167,6 +182,9 @@ server->send("Broadcast message");
 if (server->is_listening()) {
     std::cout << "Server is listening" << std::endl;
 }
+
+// Clean shutdown
+server->stop();
 ```
 
 ### API Reference
@@ -242,9 +260,10 @@ auto serial = unilink::serial("/dev/ttyUSB0", 115200)
     .on_data([](const std::string& data) {
         std::cout << "Received: " << data << std::endl;
     })
-    .retry_interval(3000)
-    .auto_start(true)
     .build();
+
+// Start serial communication
+serial->start();
 
 // Send AT command
 serial->send("AT\r\n");
@@ -574,12 +593,16 @@ auto client = unilink::tcp_client("server.com", 8080)
     .build();
 ```
 
-### 2. Use Auto-Start for Simple Cases
+### 2. Use Explicit Lifecycle Control
 ```cpp
-// Starts automatically after build()
+// Always use explicit start/stop for clarity
 auto client = unilink::tcp_client("127.0.0.1", 8080)
-    .auto_start(true)
+    .on_data(handler)
     .build();
+
+client->start();  // Start when ready
+// ... use the client ...
+client->stop();   // Stop when done
 ```
 
 ### 3. Set Appropriate Retry Intervals

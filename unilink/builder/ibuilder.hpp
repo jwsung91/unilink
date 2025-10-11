@@ -42,13 +42,6 @@ class BuilderInterface {
   virtual std::unique_ptr<T> build() = 0;
 
   /**
-   * @brief Enable auto-start functionality
-   * @param auto_start Whether to automatically start the wrapper
-   * @return BuilderInterface& Reference to this builder for method chaining
-   */
-  virtual BuilderInterface& auto_start(bool auto_start = false) = 0;
-
-  /**
    * @brief Enable auto-manage functionality
    * @param auto_manage Whether to automatically manage the wrapper lifecycle
    * @return BuilderInterface& Reference to this builder for method chaining

@@ -179,8 +179,8 @@ auto client = unilink::tcp_client("server.com", 8080)
 // ❌ BAD: Creating new connection for each request
 for (int i = 0; i < 1000; i++) {
     auto client = unilink::tcp_client("server.com", 8080)
-        .auto_start(true)
         .build();
+    client->start();
     client->send("request");
     client->stop();
 }
@@ -190,8 +190,9 @@ for (int i = 0; i < 1000; i++) {
 ```cpp
 // ✅ GOOD: Reuse single connection
 auto client = unilink::tcp_client("server.com", 8080)
-    .auto_start(true)
     .build();
+
+client->start();
 
 for (int i = 0; i < 1000; i++) {
     client->send("request");

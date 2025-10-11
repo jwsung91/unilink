@@ -116,7 +116,7 @@ TEST_F(MockIntegrationTest, SimulatedSuccessfulConnection) {
 
   // When: Create client with mock
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                .auto_start(false)
+
                 .on_connect([this]() {
                   connection_established_ = true;
                   state_tracker_->setState(MockStateTracker::State::Connected);
@@ -149,7 +149,7 @@ TEST_F(MockIntegrationTest, SimulatedConnectionFailure) {
 
   // When: Create client with mock
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                .auto_start(false)
+
                 .on_connect([this]() {
                   connection_established_ = true;
                   state_tracker_->setState(MockStateTracker::State::Connected);
@@ -189,7 +189,7 @@ TEST_F(MockIntegrationTest, SimulatedDataReception) {
 
   // When: Create client with data handler
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                .auto_start(false)
+
                 .on_connect([this]() {
                   connection_established_ = true;
                   state_tracker_->setState(MockStateTracker::State::Connected);
@@ -223,7 +223,7 @@ TEST_F(MockIntegrationTest, SimulatedDataTransmission) {
 
   // When: Create client and send data
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                .auto_start(false)
+
                 .on_connect([this]() {
                   connection_established_ = true;
                   state_tracker_->setState(MockStateTracker::State::Connected);
@@ -270,7 +270,7 @@ TEST_F(MockIntegrationTest, SimulatedServerClientAcceptance) {
 
   // When: Create server
   server_ = unilink::tcp_server(test_port_)
-                .auto_start(false)
+
                 .on_connect([this]() {
                   connection_established_ = true;
                   state_tracker_->setState(MockStateTracker::State::Connected);
@@ -314,7 +314,7 @@ TEST_F(MockIntegrationTest, SimulatedErrorScenarios) {
 
     // When: Create client
     client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                  .auto_start(false)
+
                   .on_error([this](const std::string& error) {
                     error_occurred_ = true;
                     error_message_ = error;
@@ -356,7 +356,7 @@ TEST_F(MockIntegrationTest, MockPerformanceTest) {
   const int client_count = 100;
 
   for (int i = 0; i < client_count; ++i) {
-    auto client = unilink::tcp_client("127.0.0.1", test_port_ + i).auto_start(false).build();
+    auto client = unilink::tcp_client("127.0.0.1", test_port_ + i).build();
 
     ASSERT_NE(client, nullptr);
     clients.push_back(std::move(client));

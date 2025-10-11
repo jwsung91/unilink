@@ -40,7 +40,6 @@ class SerialEchoApp {
   void run() {
     // Using convenience function with member function pointers
     auto ul = unilink::serial(device_, baud_rate_)
-                  .auto_start(false)
                   .on_connect(this, &SerialEchoApp::handle_connect)
                   .on_disconnect(this, &SerialEchoApp::handle_disconnect)
                   .on_data(this, &SerialEchoApp::handle_data)

@@ -65,16 +65,16 @@ int main(int argc, char** argv) {
                     // Step 5: Handle errors
                     .on_error([](const std::string& error) { std::cerr << "✗ Error: " << error << std::endl; })
 
-                    // Step 6: Configure auto-reconnection
-                    .retry_interval(3000)  // Retry every 3 seconds
+                    // Step 6: Configure auto-reconnection (default: 3 seconds)
+                    // .retry_interval(3000)  // Optional: change reconnection interval
 
-                    // Step 7: Start automatically
-                    .auto_start(true)
-
-                    // Build the client
+                    // Step 7: Build the client
                     .build();
 
-  // Wait for connection (up to 5 seconds)
+  // Step 8: Start the connection
+  client->start();
+
+  // Step 9: Wait for connection (up to 5 seconds)
   std::cout << "Waiting for connection..." << std::endl;
   bool connected = false;
   for (int i = 0; i < 50; ++i) {
@@ -99,6 +99,8 @@ int main(int argc, char** argv) {
   std::cout << "Running for 10 seconds..." << std::endl;
   std::this_thread::sleep_for(std::chrono::seconds(10));
 
+  // Step 10: Clean shutdown
   std::cout << "Shutting down..." << std::endl;
+  client->stop();
   return 0;
 }

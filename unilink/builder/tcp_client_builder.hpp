@@ -40,18 +40,17 @@ class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
    */
   TcpClientBuilder(const std::string& host, uint16_t port);
 
+  // Delete copy, allow move
+  TcpClientBuilder(const TcpClientBuilder&) = delete;
+  TcpClientBuilder& operator=(const TcpClientBuilder&) = delete;
+  TcpClientBuilder(TcpClientBuilder&&) = default;
+  TcpClientBuilder& operator=(TcpClientBuilder&&) = default;
+
   /**
    * @brief Build and return the configured TcpClient
    * @return std::unique_ptr<wrapper::TcpClient> The configured client instance
    */
   std::unique_ptr<wrapper::TcpClient> build() override;
-
-  /**
-   * @brief Enable auto-start functionality
-   * @param auto_start Whether to automatically start the client
-   * @return TcpClientBuilder& Reference to this builder for method chaining
-   */
-  TcpClientBuilder& auto_start(bool auto_start = false) override;
 
   /**
    * @brief Enable auto-manage functionality
@@ -157,7 +156,6 @@ class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
  private:
   std::string host_;
   uint16_t port_;
-  bool auto_start_;
   bool auto_manage_;
   bool use_independent_context_;
   unsigned retry_interval_ms_;

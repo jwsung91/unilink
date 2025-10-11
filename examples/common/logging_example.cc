@@ -50,7 +50,6 @@ int main() {
 
   auto server =
       tcp_server(8080)
-          .auto_start(true)
           .on_connect([]() { UNILINK_LOG_INFO("tcp_server", "connect", "Client connected"); })
           .on_data([](const std::string& data) { UNILINK_LOG_DEBUG("tcp_server", "data", "Data received: " + data); })
           .on_error(
@@ -58,6 +57,7 @@ int main() {
           .build();
 
   if (server) {
+    server->start();
     UNILINK_LOG_INFO("example", "server", "TCP server started on port 8080");
   }
 
@@ -66,7 +66,6 @@ int main() {
 
   auto client =
       tcp_client("127.0.0.1", 8080)
-          .auto_start(true)
           .on_connect([]() { UNILINK_LOG_INFO("tcp_client", "connect", "Connected to server"); })
           .on_data([](const std::string& data) { UNILINK_LOG_DEBUG("tcp_client", "data", "Data received: " + data); })
           .on_error(
@@ -74,6 +73,7 @@ int main() {
           .build();
 
   if (client) {
+    client->start();
     UNILINK_LOG_INFO("example", "client", "TCP client created");
   }
 
@@ -82,7 +82,6 @@ int main() {
 
   auto serial_device =
       serial("/dev/ttyUSB0", 115200)
-          .auto_start(false)  // Don't start since no real device
           .on_connect([]() { UNILINK_LOG_INFO("serial", "connect", "Serial device connected"); })
           .on_data(
               [](const std::string& data) { UNILINK_LOG_DEBUG("serial", "data", "Serial data received: " + data); })

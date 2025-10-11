@@ -192,14 +192,15 @@ namespace unilink::common {
 
 ```cpp
 // Instead of this:
-TcpClient(host, port, retry_interval, auto_start, callbacks...);
+TcpClient(host, port, retry_interval, callbacks...);
 
 // We use this:
-tcp_client(host, port)
-    .retry_interval(3000)
-    .auto_start(true)
+auto client = tcp_client(host, port)
+    .retry_interval(3000)  // Optional, 3000ms is default
     .on_data(callback)
     .build();
+
+client->start();  // Explicit lifecycle control
 ```
 
 **Benefits:**
@@ -565,8 +566,7 @@ class MemoryTracker { ... };
 struct TcpClientConfig {
     std::string host;
     uint16_t port;
-    unsigned retry_interval_ms{5000};
-    bool auto_start{false};
+    unsigned retry_interval_ms{3000};  // Default is 3 seconds
 };
 
 // Load from file

@@ -422,22 +422,24 @@ TEST(CustomTest, ClientServerCommunication) {
     
     // Create server
     auto server = unilink::tcp_server(8080)
+        .unlimited_clients()
         .on_accept([](const std::string& client_id) {
             std::cout << "Client connected: " << client_id << std::endl;
         })
         .on_data([&received_data](const std::string& data) {
             received_data = data;
         })
-        .auto_start(true)
         .build();
     
+    server->start();
     server_ready = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     
     // Create client
     auto client = unilink::tcp_client("127.0.0.1", 8080)
-        .auto_start(true)
         .build();
+    
+    client->start();
     
     // Wait for connection
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -451,6 +453,10 @@ TEST(CustomTest, ClientServerCommunication) {
     
     // Verify
     EXPECT_EQ(received_data, test_data);
+    
+    // Cleanup
+    client->stop();
+    server->stop();
 }
 ```
 

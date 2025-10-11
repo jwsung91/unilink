@@ -70,7 +70,7 @@ class AdvancedTcpClientCoverageTest : public ::testing::Test {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientStartStopMultipleTimes) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -89,7 +89,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStartStopMultipleTimes) {
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientStartWhenAlreadyStarted) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -101,7 +101,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStartWhenAlreadyStarted) {
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientStopWhenNotStarted) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -114,21 +114,21 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStopWhenNotStarted) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithHostAndPort) {
-  client_ = unilink::tcp_client("127.0.0.1", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
   // Client not started yet
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithLocalhost) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
   // Client not started yet
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithIPv6Address) {
-  client_ = unilink::tcp_client("::1", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("::1", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
   // Client not started yet
@@ -139,14 +139,14 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientWithIPv6Address) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithRetryConfiguration) {
-  client_ = unilink::tcp_client("localhost", test_port_).retry_interval(100).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).retry_interval(100).build();
 
   ASSERT_NE(client_, nullptr);
   // Client not started yet
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithConnectionTimeout) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
   // Client not started yet
@@ -157,7 +157,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientWithConnectionTimeout) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, SendMessage) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -169,7 +169,7 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMessage) {
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, SendLine) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -185,7 +185,7 @@ TEST_F(AdvancedTcpClientCoverageTest, SendLine) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, IsConnectedWhenNotStarted) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -194,7 +194,7 @@ TEST_F(AdvancedTcpClientCoverageTest, IsConnectedWhenNotStarted) {
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, IsConnectedWhenStarted) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -212,7 +212,7 @@ TEST_F(AdvancedTcpClientCoverageTest, IsConnectedWhenStarted) {
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithInvalidHost) {
   // Try to create client with invalid host
   try {
-    client_ = unilink::tcp_client("invalid_host_that_does_not_exist", test_port_).auto_start(false).build();
+    client_ = unilink::tcp_client("invalid_host_that_does_not_exist", test_port_).build();
 
     // If creation succeeds, try to start
     if (client_) {
@@ -226,7 +226,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientWithInvalidHost) {
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithInvalidPort) {
   // Try to create client with port 0 (invalid)
   try {
-    client_ = unilink::tcp_client("localhost", 0).auto_start(false).build();
+    client_ = unilink::tcp_client("localhost", 0).build();
 
     // If creation succeeds, try to start
     if (client_) {
@@ -239,7 +239,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientWithInvalidPort) {
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithHighPort) {
   // Try to create client with very high port
-  client_ = unilink::tcp_client("localhost", 65535).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", 65535).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -256,7 +256,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientWithHighPort) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, ConcurrentStartStop) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -298,7 +298,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ConcurrentStartStop) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, RapidStartStop) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -317,7 +317,7 @@ TEST_F(AdvancedTcpClientCoverageTest, MultipleClients) {
 
   // Create multiple clients
   for (int i = 0; i < num_clients; ++i) {
-    auto client = unilink::tcp_client("localhost", test_port_ + i).auto_start(false).build();
+    auto client = unilink::tcp_client("localhost", test_port_ + i).build();
     clients.push_back(std::move(client));
   }
 
@@ -338,7 +338,7 @@ TEST_F(AdvancedTcpClientCoverageTest, MultipleClients) {
 
 TEST_F(AdvancedTcpClientCoverageTest, DestructorWithStartedClient) {
   // Create client and start it
-  auto client = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client, nullptr);
   client->start();
@@ -349,7 +349,7 @@ TEST_F(AdvancedTcpClientCoverageTest, DestructorWithStartedClient) {
 
 TEST_F(AdvancedTcpClientCoverageTest, DestructorWithStoppedClient) {
   // Create client but don't start it
-  auto client = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  auto client = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client, nullptr);
 
@@ -362,14 +362,14 @@ TEST_F(AdvancedTcpClientCoverageTest, DestructorWithStoppedClient) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, AutoStartEnabled) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(true).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
   // Client should be started automatically
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, AutoStartDisabled) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
   // Client should not be started automatically
@@ -380,7 +380,7 @@ TEST_F(AdvancedTcpClientCoverageTest, AutoStartDisabled) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, ConnectionRetry) {
-  client_ = unilink::tcp_client("localhost", test_port_).retry_interval(100).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).retry_interval(100).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -397,7 +397,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ConnectionRetry) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -411,7 +411,7 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, SendEmptyMessage) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 
@@ -423,7 +423,7 @@ TEST_F(AdvancedTcpClientCoverageTest, SendEmptyMessage) {
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, SendLongMessage) {
-  client_ = unilink::tcp_client("localhost", test_port_).auto_start(false).build();
+  client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
 

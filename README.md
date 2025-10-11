@@ -40,11 +40,13 @@ int main() {
     auto client = unilink::tcp_client("127.0.0.1", 8080)
         .on_connect([]() { std::cout << "Connected!" << std::endl; })
         .on_data([](const std::string& data) { std::cout << "Received: " << data << std::endl; })
-        .auto_start(true)
         .build();
     
+    client->start();
     client->send("Hello, Server!");
+    
     std::this_thread::sleep_for(std::chrono::seconds(5));
+    client->stop();
 }
 ```
 

@@ -27,10 +27,9 @@ namespace builder {
 SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
     : device_(device),
       baud_rate_(baud_rate),
-      auto_start_(false),
       auto_manage_(false),
       use_independent_context_(false),
-      retry_interval_ms_(common::constants::DEFAULT_RETRY_INTERVAL_MS) {
+      retry_interval_ms_(3000) {
   // Validate input parameters
   try {
     common::InputValidator::validate_device_path(device_);
@@ -63,10 +62,6 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
 
     // Apply configuration with exception safety
     try {
-      if (auto_start_) {
-        serial->auto_start(true);
-      }
-
       if (auto_manage_) {
         serial->auto_manage(true);
       }
@@ -109,11 +104,6 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
     throw common::BuilderException("Unexpected error during Serial build: " + std::string(e.what()), "SerialBuilder",
                                    "build");
   }
-}
-
-SerialBuilder& SerialBuilder::auto_start(bool auto_start) {
-  auto_start_ = auto_start;
-  return *this;
 }
 
 SerialBuilder& SerialBuilder::auto_manage(bool auto_manage) {

@@ -40,18 +40,17 @@ class SerialBuilder : public BuilderInterface<wrapper::Serial> {
    */
   SerialBuilder(const std::string& device, uint32_t baud_rate);
 
+  // Delete copy, allow move
+  SerialBuilder(const SerialBuilder&) = delete;
+  SerialBuilder& operator=(const SerialBuilder&) = delete;
+  SerialBuilder(SerialBuilder&&) = default;
+  SerialBuilder& operator=(SerialBuilder&&) = default;
+
   /**
    * @brief Build and return the configured Serial
    * @return std::unique_ptr<wrapper::Serial> The configured serial instance
    */
   std::unique_ptr<wrapper::Serial> build() override;
-
-  /**
-   * @brief Enable auto-start functionality
-   * @param auto_start Whether to automatically start the serial
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
-  SerialBuilder& auto_start(bool auto_start = false) override;
 
   /**
    * @brief Enable auto-manage functionality
@@ -157,7 +156,6 @@ class SerialBuilder : public BuilderInterface<wrapper::Serial> {
  private:
   std::string device_;
   uint32_t baud_rate_;
-  bool auto_start_;
   bool auto_manage_;
   bool use_independent_context_;
   unsigned retry_interval_ms_;

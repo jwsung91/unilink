@@ -61,10 +61,6 @@ void TcpClient::start() {
 
   channel_->start();
   started_ = true;
-
-  if (auto_start_) {
-    // 이미 시작됨
-  }
 }
 
 void TcpClient::stop() {
@@ -111,19 +107,8 @@ ChannelInterface& TcpClient::on_error(ErrorHandler handler) {
   return *this;
 }
 
-ChannelInterface& TcpClient::auto_start(bool start) {
-  auto_start_ = start;
-  if (start && !started_) {
-    this->start();
-  }
-  return *this;
-}
-
 ChannelInterface& TcpClient::auto_manage(bool manage) {
   auto_manage_ = manage;
-  if (manage && !started_) {
-    auto_start(true);
-  }
   return *this;
 }
 

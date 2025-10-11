@@ -99,7 +99,7 @@ TEST_F(StableIntegrationTest, StableServerCreation) {
   // Given: Server configuration
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()  // 클라이언트 제한 없음
-                .auto_start(false)    // Don't auto-start to avoid timing issues
+                                      // Don't auto-start to avoid timing issues
                 .on_connect([this]() {
                   std::lock_guard<std::mutex> lock(mtx_);
                   connection_established_ = true;
@@ -135,7 +135,7 @@ TEST_F(StableIntegrationTest, StableServerCreation) {
 TEST_F(StableIntegrationTest, StableClientCreation) {
   // Given: Client configuration
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                .auto_start(false)  // Don't auto-start to avoid connection attempts
+                // Don't auto-start to avoid connection attempts
                 .on_connect([this]() {
                   std::lock_guard<std::mutex> lock(mtx_);
                   connection_established_ = true;
@@ -176,7 +176,7 @@ TEST_F(StableIntegrationTest, StableServerClientCommunication) {
   // Given: Server setup
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()  // 클라이언트 제한 없음
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::lock_guard<std::mutex> lock(mtx_);
                   connection_established_ = true;
@@ -196,7 +196,7 @@ TEST_F(StableIntegrationTest, StableServerClientCommunication) {
 
   // Given: Client setup
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                .auto_start(true)
+
                 .on_connect([this]() {
                   std::lock_guard<std::mutex> lock(mtx_);
                   connection_established_ = true;
@@ -250,7 +250,7 @@ TEST_F(StableIntegrationTest, StableErrorHandling) {
   // Test invalid port handling (should throw exception due to input validation)
   EXPECT_THROW(auto invalid_server = unilink::tcp_server(0)    // Invalid port
                                          .unlimited_clients()  // 클라이언트 제한 없음
-                                         .auto_start(false)
+
                                          .on_error([this](const std::string& error) {
                                            std::lock_guard<std::mutex> lock(mtx_);
                                            error_occurred_ = true;
@@ -262,7 +262,7 @@ TEST_F(StableIntegrationTest, StableErrorHandling) {
 
   // Test invalid host handling
   auto invalid_client = unilink::tcp_client("invalid.host", 12345)
-                            .auto_start(false)
+
                             .on_error([this](const std::string& error) {
                               std::lock_guard<std::mutex> lock(mtx_);
                               error_occurred_ = true;
@@ -291,7 +291,7 @@ TEST_F(StableIntegrationTest, StablePerformanceTest) {
 
   for (int i = 0; i < client_count; ++i) {
     auto client = unilink::tcp_client("127.0.0.1", test_port_ + i)
-                      .auto_start(false)  // Don't start to avoid connection attempts
+                      // Don't start to avoid connection attempts
                       .build();
 
     ASSERT_NE(client, nullptr);
@@ -326,7 +326,7 @@ TEST_F(StableIntegrationTest, StablePerformanceTest) {
 TEST_F(StableIntegrationTest, StableBuilderPattern) {
   // Test method chaining
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .auto_start(false)
+
                     .auto_manage(false)
                     .use_independent_context(true)
                     .on_connect([]() {
@@ -348,7 +348,7 @@ TEST_F(StableIntegrationTest, StableBuilderPattern) {
   // Test server builder
   auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()  // 클라이언트 제한 없음
-                    .auto_start(false)
+
                     .auto_manage(false)
                     .use_independent_context(false)
                     .on_connect([]() {

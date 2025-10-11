@@ -126,7 +126,7 @@ TEST_F(BuilderTest, TcpServerBuilderBasic) {
 
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()
-                .auto_start(false)  // 수동 시작으로 제어
+                // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 처리
                 })
@@ -151,7 +151,7 @@ TEST_F(BuilderTest, TcpClientBuilderBasic) {
   uint16_t test_port = getTestPort();
 
   client_ = unilink::tcp_client("127.0.0.1", test_port)
-                .auto_start(false)  // 수동 시작으로 제어
+                // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 처리
                 })
@@ -174,7 +174,7 @@ TEST_F(BuilderTest, TcpClientBuilderBasic) {
 // SerialBuilder 기본 테스트
 TEST_F(BuilderTest, SerialBuilderBasic) {
   serial_ = unilink::serial("/dev/null", 9600)
-                .auto_start(false)  // 수동 시작으로 제어
+                // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 처리
                 })
@@ -200,7 +200,7 @@ TEST_F(BuilderTest, BuilderChaining) {
 
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()
-                .auto_start(false)
+
                 .auto_manage(true)
                 .on_data([this](const std::string& data) { data_received_.push_back(data); })
                 .on_connect([this]() { connection_established_ = true; })
@@ -228,11 +228,11 @@ TEST_F(BuilderTest, BuilderChaining) {
 TEST_F(BuilderTest, MultipleBuilders) {
   uint16_t test_port = getTestPort();
 
-  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(false).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().build();
 
-  client_ = unilink::tcp_client("127.0.0.1", test_port).auto_start(false).build();
+  client_ = unilink::tcp_client("127.0.0.1", test_port).build();
 
-  serial_ = unilink::serial("/dev/null", 115200).auto_start(false).build();
+  serial_ = unilink::serial("/dev/null", 115200).build();
 
   ASSERT_NE(server_, nullptr);
   ASSERT_NE(client_, nullptr);
@@ -255,7 +255,7 @@ TEST_F(BuilderTest, MultipleBuilders) {
 TEST_F(BuilderTest, BuilderConfiguration) {
   uint16_t test_port = getTestPort();
 
-  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(false).auto_manage(false).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_manage(false).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_FALSE(server_->is_connected());
@@ -309,10 +309,10 @@ TEST_F(BuilderTest, BuilderReuse) {
   auto builder = unilink::tcp_server(test_port);
 
   // 첫 번째 서버
-  auto server1 = builder.unlimited_clients().auto_start(false).on_data([](const std::string& data) {}).build();
+  auto server1 = builder.unlimited_clients().on_data([](const std::string& data) {}).build();
 
   // 두 번째 서버 (같은 빌더 재사용)
-  auto server2 = builder.auto_start(false).on_connect([]() {}).build();
+  auto server2 = builder.on_connect([]() {}).build();
 
   ASSERT_NE(server1, nullptr);
   ASSERT_NE(server2, nullptr);
@@ -421,19 +421,17 @@ TEST_F(BuilderTest, BuilderWithIndependentContext) {
   uint16_t test_port = getTestPort();
 
   // 독립적인 컨텍스트를 사용하는 서버 생성
-  auto server =
-      unilink::tcp_server(test_port).unlimited_clients().use_independent_context(true).auto_start(false).build();
+  auto server = unilink::tcp_server(test_port).unlimited_clients().use_independent_context(true).build();
 
   EXPECT_NE(server, nullptr);
 
   // 독립적인 컨텍스트를 사용하는 클라이언트 생성
-  auto client = unilink::tcp_client("127.0.0.1", test_port).use_independent_context(true).auto_start(false).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port).use_independent_context(true).build();
 
   EXPECT_NE(client, nullptr);
 
   // 공유 컨텍스트를 사용하는 서버 생성
-  auto shared_server =
-      unilink::tcp_server(test_port + 1).unlimited_clients().use_independent_context(false).auto_start(false).build();
+  auto shared_server = unilink::tcp_server(test_port + 1).unlimited_clients().use_independent_context(false).build();
 
   EXPECT_NE(shared_server, nullptr);
 }
@@ -443,16 +441,13 @@ TEST_F(BuilderTest, BuilderWithIndependentContext) {
  */
 TEST_F(BuilderTest, TestIsolationScenario) {
   // 테스트 1: 독립적인 컨텍스트 사용
-  auto client1 =
-      unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(true).auto_start(false).build();
+  auto client1 = unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(true).build();
 
   // 테스트 2: 공유 컨텍스트 사용
-  auto client2 =
-      unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(false).auto_start(false).build();
+  auto client2 = unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(false).build();
 
   // 테스트 3: 또 다른 독립적인 컨텍스트
-  auto client3 =
-      unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(true).auto_start(false).build();
+  auto client3 = unilink::tcp_client("127.0.0.1", getTestPort()).use_independent_context(true).build();
 
   // 모든 클라이언트가 성공적으로 생성되었는지 확인
   EXPECT_NE(client1, nullptr);
@@ -466,7 +461,7 @@ TEST_F(BuilderTest, TestIsolationScenario) {
 TEST_F(BuilderTest, MethodChainingWithIndependentContext) {
   auto client = unilink::tcp_client("127.0.0.1", getTestPort())
                     .use_independent_context(true)
-                    .auto_start(false)
+
                     .auto_manage(false)
                     .on_connect([]() { std::cout << "Connected!" << std::endl; })
                     .on_disconnect([]() { std::cout << "Disconnected!" << std::endl; })

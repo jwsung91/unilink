@@ -26,12 +26,7 @@ namespace unilink {
 namespace builder {
 
 TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
-    : host_(host),
-      port_(port),
-      auto_start_(false),
-      auto_manage_(false),
-      use_independent_context_(false),
-      retry_interval_ms_(common::constants::DEFAULT_RETRY_INTERVAL_MS) {
+    : host_(host), port_(port), auto_manage_(false), use_independent_context_(false), retry_interval_ms_(3000) {
   // Validate input parameters
   try {
     common::InputValidator::validate_host(host_);
@@ -65,10 +60,6 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
 
     // Apply configuration with exception safety
     try {
-      if (auto_start_) {
-        client->auto_start(true);
-      }
-
       if (auto_manage_) {
         client->auto_manage(true);
       }
@@ -112,11 +103,6 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
     throw common::BuilderException("Unexpected error during TCP client build: " + std::string(e.what()),
                                    "TcpClientBuilder", "build");
   }
-}
-
-TcpClientBuilder& TcpClientBuilder::auto_start(bool auto_start) {
-  auto_start_ = auto_start;
-  return *this;
 }
 
 TcpClientBuilder& TcpClientBuilder::auto_manage(bool auto_manage) {

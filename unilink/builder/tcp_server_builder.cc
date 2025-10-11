@@ -27,7 +27,6 @@ namespace builder {
 
 TcpServerBuilder::TcpServerBuilder(uint16_t port)
     : port_(port),
-      auto_start_(false),
       auto_manage_(false),
       use_independent_context_(false),
       enable_port_retry_(false),
@@ -84,10 +83,6 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   }
 
   // Apply configuration
-  if (auto_start_) {
-    server->auto_start(true);
-  }
-
   if (auto_manage_) {
     server->auto_manage(true);
   }
@@ -132,11 +127,6 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   }
 
   return server;
-}
-
-TcpServerBuilder& TcpServerBuilder::auto_start(bool auto_start) {
-  auto_start_ = auto_start;
-  return *this;
 }
 
 TcpServerBuilder& TcpServerBuilder::auto_manage(bool auto_manage) {

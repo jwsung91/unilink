@@ -45,7 +45,6 @@ class Serial : public ChannelInterface {
   ChannelInterface& on_disconnect(DisconnectHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
-  ChannelInterface& auto_start(bool start = true) override;
   ChannelInterface& auto_manage(bool manage = true) override;
 
   // 시리얼 전용 메서드들
@@ -72,7 +71,6 @@ class Serial : public ChannelInterface {
   ErrorHandler error_handler_;
 
   // 설정
-  bool auto_start_ = false;
   bool auto_manage_ = false;
   bool started_ = false;
 
@@ -81,7 +79,7 @@ class Serial : public ChannelInterface {
   int stop_bits_ = 1;
   std::string parity_ = "none";
   std::string flow_control_ = "none";
-  std::chrono::milliseconds retry_interval_{2000};
+  std::chrono::milliseconds retry_interval_{3000};  // 3 seconds default
 };
 
 }  // namespace wrapper

@@ -70,8 +70,9 @@ class EchoServer {
                   .on_data([this](size_t client_id, const std::string& data) { handle_data(client_id, data); })
                   .on_disconnect([this](size_t client_id) { handle_disconnect(client_id); })
                   .on_error([this](const std::string& error) { handle_error(error); })
-                  .auto_start(true)
                   .build();
+
+    server_->start();
 
     std::cout << "Server started! Waiting for connections..." << std::endl;
     std::cout << "Press Ctrl+C to stop" << std::endl;

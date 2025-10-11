@@ -39,7 +39,6 @@ class SerialChatApp {
   void run() {
     // Using convenience function with member function pointers
     auto ul = unilink::serial(device_, baud_rate_)
-                  .auto_start(false)
                   .on_connect(this, &SerialChatApp::handle_connect)
                   .on_disconnect(this, &SerialChatApp::handle_disconnect)
                   .on_data(this, &SerialChatApp::handle_data)
