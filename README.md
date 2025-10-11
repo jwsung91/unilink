@@ -1,7 +1,7 @@
 # unilink
 
 [![CI/CD Pipeline](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml/badge.svg)](https://github.com/grade-e/interface-socket/actions/workflows/ci.yml)
-[![Test Coverage](https://img.shields.io/endpoint?url=https://grade-e.github.io/interface-socket/badges/coverage.json)](https://grade-e.github.io/interface-socket/)
+[![Test Coverage](https://img.shields.io/endpoint?url=https://grade-e.github.io/unilink/badges/coverage.json)](https://grade-e.github.io/unilink/)
 
 
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
