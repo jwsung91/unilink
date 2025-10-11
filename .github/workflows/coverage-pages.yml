@@ -87,15 +87,56 @@ jobs:
           --title "unilink Coverage Report - $(date '+%Y-%m-%d %H:%M')" \
           --legend --show-details --num-spaces 2
 
+    - name: Generate coverage badge JSON
+      id: coverage_badge
+      run: |
+        cd build-coverage
+        
+        # Extract coverage percentage (without % sign)
+        COVERAGE_PERCENT=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}' | sed 's/%//')
+        echo "Coverage: ${COVERAGE_PERCENT}%"
+        
+        # Determine badge color based on coverage
+        if (( $(echo "$COVERAGE_PERCENT >= 80" | bc -l) )); then
+          COLOR="brightgreen"
+        elif (( $(echo "$COVERAGE_PERCENT >= 60" | bc -l) )); then
+          COLOR="green"
+        elif (( $(echo "$COVERAGE_PERCENT >= 40" | bc -l) )); then
+          COLOR="yellow"
+        else
+          COLOR="red"
+        fi
+        
+        # Create badges directory in coverage_html
+        mkdir -p coverage_html/badges
+        
+        # Generate shields.io endpoint JSON
+        cat > coverage_html/badges/coverage.json << EOF
+        {
+          "schemaVersion": 1,
+          "label": "coverage",
+          "message": "${COVERAGE_PERCENT}%",
+          "color": "${COLOR}"
+        }
+        EOF
+        
+        echo "✅ Coverage badge JSON created: ${COVERAGE_PERCENT}% (${COLOR})"
+        echo "coverage_percent=${COVERAGE_PERCENT}" >> $GITHUB_OUTPUT
+
     - name: Create index page
       run: |
         cd build-coverage/coverage_html
         
-        # Get coverage percentage
-        COVERAGE=$(lcov --summary ../coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}')
+        # Get coverage percentage from previous step
+        COVERAGE="${{ steps.coverage_badge.outputs.coverage_percent }}%"
         
-        # Create beautiful index
-        cat > index.html << 'EOF'
+        # Rename original lcov index first
+        if [ -f index.html ]; then
+          mv index.html index-original.html
+        fi
+        
+        # Create beautiful custom index
+        cat > index.html << EOF
         <!DOCTYPE html>
         <html>
         <head>
@@ -118,6 +159,7 @@ jobs:
             }
             h1 { color: #333; margin-bottom: 10px; }
             .coverage { font-size: 48px; font-weight: bold; color: #4CAF50; margin: 20px 0; }
+            .badge { margin: 20px 0; }
             .links { margin-top: 30px; }
             .link { 
               display: inline-block;
@@ -136,7 +178,10 @@ jobs:
           <div class="container">
             <h1>🎯 unilink Code Coverage</h1>
             <p class="timestamp">Generated: $(date '+%Y-%m-%d %H:%M:%S UTC')</p>
-            <div class="coverage">Coverage: $COVERAGE</div>
+            <div class="coverage">Coverage: ${COVERAGE}</div>
+            <div class="badge">
+              <img src="https://img.shields.io/endpoint?url=https://grade-e.github.io/interface-socket/badges/coverage.json" alt="Coverage Badge">
+            </div>
             <div class="links">
               <a href="index-original.html" class="link">📊 Detailed Report</a>
               <a href="https://github.com/grade-e/interface-socket" class="link">📦 Repository</a>
@@ -146,8 +191,7 @@ jobs:
         </html>
         EOF
         
-        # Rename original lcov index
-        mv index.html index-original.html || true
+        echo "✅ Custom index page created with coverage: ${COVERAGE}"
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
