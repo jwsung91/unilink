@@ -128,7 +128,7 @@ void TcpServer::stop() {
     if (acceptor_ && acceptor_->is_open()) {
       acceptor_->close(ec);
     }
-    // 모든 세션 정리
+    // Clean up all sessions
     {
       std::lock_guard<std::mutex> lock(sessions_mutex_);
       sessions_.clear();
@@ -332,9 +332,9 @@ void TcpServer::do_accept() {
 
     if (self->on_bp_) new_session->on_backpressure(self->on_bp_);
 
-    // 세션 종료 처리
+    // Handle session termination
     new_session->on_close([self, client_id, new_session] {
-      // 멀티 클라이언트 콜백 호출
+      // Call multi-client callback
       if (self->on_multi_disconnect_) {
         self->on_multi_disconnect_(client_id);
       }
