@@ -198,7 +198,7 @@ endif()
 if(UNILINK_ENABLE_INSTALL AND UNILINK_ENABLE_PKGCONFIG)
   # Set pkg-config variables
   set(PKGCONFIG_REQUIRES "")
-  set(PKGCONFIG_REQUIRES_PRIVATE "boost-system")
+  set(PKGCONFIG_REQUIRES_PRIVATE "")
   set(PKGCONFIG_LIBS_PRIVATE "-lboost_system -lpthread")
   set(PKGCONFIG_CFLAGS "")
   
