@@ -7,6 +7,10 @@ on:
         description: 'Test name'
         required: true
         default: 'test-release'
+      branch:
+        description: 'Branch to run on'
+        required: true
+        default: 'fix/release'
 
 jobs:
   test-release:
