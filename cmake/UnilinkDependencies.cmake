@@ -2,7 +2,23 @@
 # This file handles all external dependencies
 
 # Find required packages
-find_package(Boost 1.70 REQUIRED COMPONENTS system)
+# Ubuntu version-specific Boost requirements
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  # Detect Ubuntu version and set appropriate Boost version
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
+    # Ubuntu 20.04: GCC 9-10, Boost 1.65+
+    find_package(Boost 1.65 REQUIRED COMPONENTS system)
+    message(STATUS "Using Boost 1.65+ for Ubuntu 20.04 compatibility")
+  else()
+    # Ubuntu 22.04+: GCC 11+, Boost 1.70+
+    find_package(Boost 1.70 REQUIRED COMPONENTS system)
+    message(STATUS "Using Boost 1.70+ for Ubuntu 22.04+ compatibility")
+  endif()
+else()
+  # Non-Linux platforms: use latest Boost
+  find_package(Boost 1.70 REQUIRED COMPONENTS system)
+endif()
+
 find_package(Threads REQUIRED)
 
 # Optional dependencies
