@@ -112,7 +112,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: unit-test-results
+        name: unit-test-results-${{ github.run_number }}
         path: build-test/Testing/
         retention-days: 7
 
@@ -186,7 +186,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: integration-test-results
+        name: integration-test-results-${{ github.run_number }}
         path: build-integration/Testing/
         retention-days: 7
 
@@ -259,7 +259,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: performance-test-results
+        name: performance-test-results-${{ github.run_number }}
         path: build-perf/Testing/
         retention-days: 7
 
@@ -314,7 +314,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: memory-safety-test-results
+        name: memory-safety-test-results-${{ github.run_number }}
         path: build-sanitizer/Testing/
         retention-days: 7
 
