@@ -320,7 +320,8 @@ cd build && ctest --output-on-failure
 #### Notes
 - Ubuntu 20.04 LTS reaches end-of-life in April 2025
 - Consider upgrading to Ubuntu 22.04 LTS for better long-term support
-- CI/CD support for Ubuntu 20.04 has been temporarily removed due to performance issues
+- **CI/CD Policy**: Not supported in automated CI/CD due to runner availability issues
+- You can still build and test locally on Ubuntu 20.04 for development
 
 ---
 

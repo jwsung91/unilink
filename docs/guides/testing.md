@@ -345,17 +345,49 @@ All tests are automatically run on every commit and pull request through GitHub 
 
 Tests run across multiple configurations:
 
-| Platform | Compiler | Build Type | Sanitizers |
-|----------|----------|------------|------------|
-| Ubuntu 22.04 | GCC 11 | Debug | ✅ |
-| Ubuntu 22.04 | GCC 11 | Release | ❌ |
-| Ubuntu 22.04 | Clang 14 | Debug | ✅ |
-| Ubuntu 22.04 | Clang 14 | Release | ❌ |
+| Platform | Compiler | Build Type | Sanitizers | Test Status |
+|----------|----------|------------|------------|-------------|
+| Ubuntu 22.04 | GCC 11 | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 22.04 | GCC 11 | Release | ❌ | ✅ Full Testing |
+| Ubuntu 22.04 | Clang 14 | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 22.04 | Clang 14 | Release | ❌ | ✅ Full Testing |
+| Ubuntu 24.04 | GCC 13 | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 24.04 | GCC 13 | Release | ❌ | ✅ Full Testing |
+| Ubuntu 24.04 | Clang 15 | Debug | ✅ | ✅ Full Testing |
+| Ubuntu 24.04 | Clang 15 | Release | ❌ | ✅ Full Testing |
 
 **Additional checks:**
 - Memory tracking enabled
 - Code coverage analysis
 - Performance regression tests
+
+---
+
+### Ubuntu 20.04 Support
+
+**Local Development Only:**
+- Ubuntu 20.04 is **not** supported in CI/CD due to runner availability issues
+- Ubuntu 20.04 reaches end-of-life in April 2025
+- Full testing is performed on Ubuntu 22.04 and 24.04
+- You can still build and test locally on Ubuntu 20.04
+
+**Why No CI/CD Support?**
+- GitHub Actions Ubuntu 20.04 runners are being phased out
+- Frequent pending/queued states cause CI/CD delays
+- Ubuntu 20.04 reaches end-of-life in April 2025
+- Focus resources on supported platforms
+
+**Local Testing on Ubuntu 20.04:**
+```bash
+# Build and test locally on Ubuntu 20.04
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+cmake --build build -j
+cd build && ctest --output-on-failure
+```
+
+**Recommendation:**
+- Consider upgrading to Ubuntu 22.04+ for full CI/CD support
+- Ubuntu 22.04 is the recommended platform for production use
 
 ---
 

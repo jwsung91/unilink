@@ -13,11 +13,26 @@ on:
 
 jobs:
   create-release:
-    runs-on: ubuntu-22.04
+    name: Build and Release (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up C++ toolchain
+      - name: Set up C++ toolchain (Ubuntu 22.04)
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
+          sudo apt-get update --allow-releaseinfo-change
+          sudo apt-get install -y build-essential cmake ninja-build libboost-all-dev
+
+      - name: Set up C++ toolchain (Ubuntu 24.04)
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
@@ -48,7 +63,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: build/package/unilink-*.tar.gz
-          name: Release ${{ github.ref_name || inputs.tag_name }}
+          name: Release ${{ github.ref_name || inputs.tag_name }} (${{ matrix.os }})
           tag_name: ${{ github.ref_name || inputs.tag_name }}
           draft: true
           prerelease: true
