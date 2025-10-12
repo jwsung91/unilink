@@ -32,7 +32,7 @@ struct SerialConfig {
   enum class Flow { None, Software, Hardware } flow = Flow::None;
 
   size_t read_chunk = common::constants::DEFAULT_READ_BUFFER_SIZE;
-  bool reopen_on_error = true;  // 장치 분리/에러 시 재오픈 시도
+  bool reopen_on_error = true;  // Attempt to reopen on device disconnection/error
   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_memory_pool = true;
 

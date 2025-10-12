@@ -29,7 +29,7 @@ namespace wrapper {
 
 Serial::Serial(const std::string& device, uint32_t baud_rate)
     : device_(device), baud_rate_(baud_rate), channel_(nullptr) {
-  // Channel은 나중에 start() 시점에 생성
+  // Channel will be created later at start() time
 }
 
 Serial::Serial(std::shared_ptr<interface::Channel> channel) : device_(""), baud_rate_(9600), channel_(channel) {
@@ -37,11 +37,11 @@ Serial::Serial(std::shared_ptr<interface::Channel> channel) : device_(""), baud_
 }
 
 Serial::~Serial() {
-  // 강제로 정리 - auto_manage 설정과 관계없이
+  // Force cleanup - regardless of auto_manage setting
   if (started_) {
     stop();
   }
-  // Channel 리소스 명시적 정리
+  // Explicit cleanup of Channel resources
   if (channel_) {
     channel_.reset();
   }
@@ -51,14 +51,14 @@ void Serial::start() {
   if (started_) return;
 
   if (!channel_) {
-    // Channel 생성
+    // Create Channel
     config::SerialConfig config;
     config.device = device_;
     config.baud_rate = baud_rate_;
     config.char_size = data_bits_;
     config.stop_bits = stop_bits_;
     config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
-    // parity와 flow는 enum으로 변환 필요
+    // parity and flow need to be converted to enum
     config.flow = unilink::config::SerialConfig::Flow::None;
     channel_ = factory::ChannelFactory::create(config);
     setup_internal_handlers();
@@ -72,7 +72,7 @@ void Serial::stop() {
   if (!started_ || !channel_) return;
 
   channel_->stop();
-  // 잠시 대기하여 비동기 작업 완료
+  // Brief wait for async operations to complete
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
   channel_.reset();
   started_ = false;
@@ -130,7 +130,7 @@ void Serial::set_flow_control(const std::string& flow_control) { flow_control_ =
 void Serial::setup_internal_handlers() {
   if (!channel_) return;
 
-  // 바이트 데이터를 문자열로 변환하여 전달
+  // Convert byte data to string and pass it
   channel_->on_bytes([this](const uint8_t* p, size_t n) {
     if (data_handler_) {
       std::string data = common::safe_convert::uint8_to_string(p, n);
@@ -138,7 +138,7 @@ void Serial::setup_internal_handlers() {
     }
   });
 
-  // 상태 변화 처리
+  // Handle state changes
   channel_->on_state([this](common::LinkState state) { notify_state_change(state); });
 }
 

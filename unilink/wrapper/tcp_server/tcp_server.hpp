@@ -27,10 +27,10 @@ namespace unilink {
 namespace wrapper {
 
 /**
- * 개선된 TCP Server Wrapper
- * - 공유 io_context 사용
- * - 메모리 누수 방지
- * - 자동 리소스 관리
+ * Improved TCP Server Wrapper
+ * - Uses shared io_context
+ * - Prevents memory leaks
+ * - Automatic resource management
  */
 class TcpServer : public ChannelInterface {
  public:
@@ -38,7 +38,7 @@ class TcpServer : public ChannelInterface {
   explicit TcpServer(std::shared_ptr<interface::Channel> channel);
   ~TcpServer() = default;
 
-  // IChannel 인터페이스 구현
+  // IChannel interface implementation
   void start() override;
   void stop() override;
   void send(const std::string& data) override;
@@ -54,13 +54,13 @@ class TcpServer : public ChannelInterface {
   void send_line(const std::string& line) override;
   // void send_binary(const std::vector<uint8_t>& data) override;
 
-  // 멀티 클라이언트 지원 메서드
+  // Multi-client support methods
   void broadcast(const std::string& message);
   void send_to_client(size_t client_id, const std::string& message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 
-  // 멀티 클라이언트 콜백 타입 정의
+  // Multi-client callback type definitions
   using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
   using MultiClientDataHandler = std::function<void(size_t client_id, const std::string& data)>;
   using MultiClientDisconnectHandler = std::function<void(size_t client_id)>;
@@ -69,7 +69,7 @@ class TcpServer : public ChannelInterface {
   TcpServer& on_multi_data(MultiClientDataHandler handler);
   TcpServer& on_multi_disconnect(MultiClientDisconnectHandler handler);
 
-  // 클라이언트 제한 설정
+  // Client limit configuration
   void set_client_limit(size_t max_clients);
   void set_unlimited_clients();
 
@@ -101,13 +101,13 @@ class TcpServer : public ChannelInterface {
   // Server state tracking
   bool is_listening_{false};
 
-  // 사용자 콜백들
+  // User callbacks
   DataHandler on_data_;
   ConnectHandler on_connect_;
   DisconnectHandler on_disconnect_;
   ErrorHandler on_error_;
 
-  // 멀티 클라이언트 콜백들
+  // Multi-client callbacks
   MultiClientConnectHandler on_multi_connect_;
   MultiClientDataHandler on_multi_data_;
   MultiClientDisconnectHandler on_multi_disconnect_;
