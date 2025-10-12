@@ -29,7 +29,7 @@ RUN rm -rf build && mkdir build && cd build && \
         -DUNILINK_ENABLE_EXPORT_HEADER=ON \
         -DBUILD_EXAMPLES=ON \
         -DBUILD_TESTING=ON \
-        -DBUILD_DOCUMENTATION=OFF && \
+        -DBUILD_DOCUMENTATION=ON && \
     cmake --build . -j $(nproc)
 
 # Generate documentation (optional, skip if fails)
@@ -50,7 +50,8 @@ RUN useradd -m -u 1000 appuser
 WORKDIR /app
 
 # Copy built artifacts from builder stage
-COPY --from=builder /app/build/libunilink.a /app/lib/
+COPY --from=builder /app/build/libunilink_static.a /app/lib/libunilink.a
+COPY --from=builder /app/build/libunilink.so* /app/lib/
 COPY --from=builder /app/build/examples /app/examples
 # Create docs directory (documentation is optional)
 RUN mkdir -p /app/docs
