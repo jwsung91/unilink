@@ -62,8 +62,9 @@ if(UNILINK_BUILD_SHARED AND UNILINK_BUILD_STATIC)
   # Create unified target
   add_library(unilink INTERFACE)
   target_link_libraries(unilink INTERFACE
-    $<$<TARGET_EXISTS:unilink_shared>:unilink_shared>
-    $<$<NOT:$<TARGET_EXISTS:unilink_shared>>:unilink_static>)
+    $<$<TARGET_EXISTS:unilink_shared>:unilink::unilink_shared>
+    $<$<NOT:$<TARGET_EXISTS:unilink_shared>>:unilink::unilink_static>
+    unilink::unilink_dependencies)
     
 elseif(UNILINK_BUILD_SHARED)
   # Build only shared library
