@@ -14,8 +14,19 @@ on:
 
 jobs:
   test-release:
-    name: Test Release Process
-    runs-on: ubuntu-22.04
+    name: Test Release Process (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
+        include:
+          - os: ubuntu-20.04
+            boost_version: "1.65"
+          - os: ubuntu-22.04
+            boost_version: "1.74"
+          - os: ubuntu-24.04
+            boost_version: "1.82"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,7 +36,16 @@ jobs:
           # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
-          sudo apt-get install -y build-essential cmake ninja-build libboost-all-dev
+          sudo apt-get install -y build-essential cmake ninja-build
+          
+          # Install Ubuntu version-specific Boost
+          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+            sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
+          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
+          else
+            sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
+          fi
 
       - name: Configure
         run: |
@@ -61,9 +81,10 @@ jobs:
 
       - name: Summary
         run: |
-          echo "## Test Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Release Summary - ${{ matrix.os }}" >> $GITHUB_STEP_SUMMARY
           echo "✅ Build: Success" >> $GITHUB_STEP_SUMMARY
           echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
           echo "✅ Package: Created" >> $GITHUB_STEP_SUMMARY
+          echo "🔧 Boost Version: ${{ matrix.boost_version }}" >> $GITHUB_STEP_SUMMARY
           echo "📦 Package files:" >> $GITHUB_STEP_SUMMARY
           ls -la build/package/ >> $GITHUB_STEP_SUMMARY
