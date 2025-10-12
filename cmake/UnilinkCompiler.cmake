@@ -41,7 +41,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_definitions(-DUNILINK_UBUNTU_22_04=1)
     message(STATUS "Detected Ubuntu 22.04 compatibility mode")
   else()
-    # Ubuntu 24.04+: GCC 13+, Clang 16+
+    # Ubuntu 24.04+: GCC 13+, Clang 15+
     set(UNILINK_UBUNTU_24_04 ON)
     add_definitions(-DUNILINK_UBUNTU_24_04=1)
     message(STATUS "Detected Ubuntu 24.04+ compatibility mode")

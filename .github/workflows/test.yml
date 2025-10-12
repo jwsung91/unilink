@@ -36,7 +36,7 @@ jobs:
             cc: clang-14
             cxx: clang++-14
             boost_version: "1.74"
-          # Ubuntu 24.04: GCC 13 and Clang 16
+          # Ubuntu 24.04: GCC 13 and Clang 15
           - os: ubuntu-24.04
             compiler: gcc
             cc: gcc-13
@@ -44,8 +44,8 @@ jobs:
             boost_version: "1.83"
           - os: ubuntu-24.04
             compiler: clang
-            cc: clang-16
-            cxx: clang++-16
+            cc: clang-15
+            cxx: clang++-15
             boost_version: "1.83"
 
     steps:
@@ -72,7 +72,7 @@ jobs:
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
           else
-            sudo apt-get install -y clang-16
+            sudo apt-get install -y clang-15
           fi
         fi
         
@@ -142,7 +142,7 @@ jobs:
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
           else
-            sudo apt-get install -y clang-16
+            sudo apt-get install -y clang-15
           fi
         fi
         
@@ -212,7 +212,7 @@ jobs:
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
           else
-            sudo apt-get install -y clang-16
+            sudo apt-get install -y clang-15
           fi
         fi
         
@@ -281,7 +281,7 @@ jobs:
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
           else
-            sudo apt-get install -y clang-16
+            sudo apt-get install -y clang-15
           fi
         fi
         
