@@ -65,13 +65,13 @@ jobs:
             sudo apt-get install -y gcc-9 g++-9
           elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y gcc-11 g++-11
-          else
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y gcc-13 g++-13
           fi
         else
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
-          else
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y clang-15
           fi
         fi
@@ -139,13 +139,13 @@ jobs:
             sudo apt-get install -y gcc-9 g++-9
           elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y gcc-11 g++-11
-          else
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y gcc-13 g++-13
           fi
         else
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
-          else
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y clang-15
           fi
         fi
@@ -213,13 +213,13 @@ jobs:
             sudo apt-get install -y gcc-9 g++-9
           elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y gcc-11 g++-11
-          else
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y gcc-13 g++-13
           fi
         else
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
-          else
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y clang-15
           fi
         fi
@@ -286,13 +286,13 @@ jobs:
             sudo apt-get install -y gcc-9 g++-9
           elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y gcc-11 g++-11
-          else
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y gcc-13 g++-13
           fi
         else
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
-          else
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y clang-15
           fi
         fi
