@@ -18,8 +18,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
-        compiler: [gcc, clang]
         include:
           # Ubuntu 20.04: GCC 9 only
           - os: ubuntu-20.04
@@ -38,7 +36,7 @@ jobs:
             cc: clang-14
             cxx: clang++-14
             boost_version: "1.74"
-          # Ubuntu 24.04: GCC 13 and Clang 17 (18 not available by default)
+          # Ubuntu 24.04: GCC 13 and Clang 17
           - os: ubuntu-24.04
             compiler: gcc
             cc: gcc-13
@@ -61,6 +59,23 @@ jobs:
           build-essential \
           cmake
         
+        # Install specific compiler versions
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+            sudo apt-get install -y gcc-9 g++-9
+          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y gcc-11 g++-11
+          else
+            sudo apt-get install -y gcc-13 g++-13
+          fi
+        else
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y clang-14
+          else
+            sudo apt-get install -y clang-17
+          fi
+        fi
+        
         # Ubuntu version-specific Boost installation
         if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
           sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
@@ -68,13 +83,6 @@ jobs:
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
-        fi
-        
-        # Install specific compiler versions for Ubuntu 24.04
-        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-          if [ "${{ matrix.compiler }}" = "clang" ]; then
-            sudo apt-get install -y clang-17
-          fi
         fi
 
     - name: Configure CMake
@@ -121,6 +129,23 @@ jobs:
           build-essential \
           cmake
         
+        # Install specific compiler versions
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+            sudo apt-get install -y gcc-9 g++-9
+          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y gcc-11 g++-11
+          else
+            sudo apt-get install -y gcc-13 g++-13
+          fi
+        else
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y clang-14
+          else
+            sudo apt-get install -y clang-17
+          fi
+        fi
+        
         # Ubuntu version-specific Boost installation
         if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
           sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
@@ -128,13 +153,6 @@ jobs:
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
-        fi
-        
-        # Install specific compiler versions for Ubuntu 24.04
-        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-          if [ "${{ matrix.compiler }}" = "clang" ]; then
-            sudo apt-get install -y clang-17
-          fi
         fi
 
     - name: Configure CMake
@@ -181,6 +199,23 @@ jobs:
           build-essential \
           cmake
         
+        # Install specific compiler versions
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+            sudo apt-get install -y gcc-9 g++-9
+          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y gcc-11 g++-11
+          else
+            sudo apt-get install -y gcc-13 g++-13
+          fi
+        else
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y clang-14
+          else
+            sudo apt-get install -y clang-17
+          fi
+        fi
+        
         # Ubuntu version-specific Boost installation
         if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
           sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
@@ -188,13 +223,6 @@ jobs:
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
-        fi
-        
-        # Install specific compiler versions for Ubuntu 24.04
-        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-          if [ "${{ matrix.compiler }}" = "clang" ]; then
-            sudo apt-get install -y clang-17
-          fi
         fi
 
     - name: Configure CMake
@@ -240,6 +268,23 @@ jobs:
           build-essential \
           cmake
         
+        # Install specific compiler versions
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+            sudo apt-get install -y gcc-9 g++-9
+          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y gcc-11 g++-11
+          else
+            sudo apt-get install -y gcc-13 g++-13
+          fi
+        else
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y clang-14
+          else
+            sudo apt-get install -y clang-17
+          fi
+        fi
+        
         # Ubuntu version-specific Boost installation
         if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
           sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
@@ -247,13 +292,6 @@ jobs:
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
-        fi
-        
-        # Install specific compiler versions for Ubuntu 24.04
-        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-          if [ "${{ matrix.compiler }}" = "clang" ]; then
-            sudo apt-get install -y clang-17
-          fi
         fi \
           clang \
           libc++-dev \

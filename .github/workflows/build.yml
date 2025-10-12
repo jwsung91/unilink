@@ -17,8 +17,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
-        compiler: [gcc, clang]
         include:
           # Ubuntu 20.04: GCC 9 only (Clang 10 has limited C++17 support)
           - os: ubuntu-20.04
@@ -37,7 +35,7 @@ jobs:
             cc: clang-14
             cxx: clang++-14
             boost_version: "1.74"
-          # Ubuntu 24.04: GCC 13 and Clang 17 (18 not available by default)
+          # Ubuntu 24.04: GCC 13 and Clang 17
           - os: ubuntu-24.04
             compiler: gcc
             cc: gcc-13
@@ -55,6 +53,9 @@ jobs:
 
     - name: Install dependencies
       run: |
+        set -e  # Exit on any error
+        
+        echo "Installing basic dependencies..."
         sudo apt-get update
         sudo apt-get install -y \
           build-essential \
@@ -62,6 +63,25 @@ jobs:
           doxygen \
           graphviz
         
+        echo "Installing compiler: ${{ matrix.compiler }} for ${{ matrix.os }}"
+        # Install specific compiler versions
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+            sudo apt-get install -y gcc-9 g++-9
+          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y gcc-11 g++-11
+          else
+            sudo apt-get install -y gcc-13 g++-13
+          fi
+        else
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y clang-14
+          else
+            sudo apt-get install -y clang-17
+          fi
+        fi
+        
+        echo "Installing Boost libraries for ${{ matrix.os }}"
         # Ubuntu version-specific Boost installation
         if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
           sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
@@ -71,12 +91,9 @@ jobs:
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
         fi
         
-        # Install specific compiler versions for Ubuntu 24.04
-        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-          if [ "${{ matrix.compiler }}" = "clang" ]; then
-            sudo apt-get install -y clang-17
-          fi
-        fi
+        echo "Verifying compiler installation..."
+        ${{ matrix.cc }} --version
+        ${{ matrix.cxx }} --version
 
     - name: Set up compiler
       run: |
@@ -85,6 +102,8 @@ jobs:
 
     - name: Configure CMake (Minimal Build)
       run: |
+        set -e
+        echo "Configuring minimal build..."
         cmake -S . -B build-minimal \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
@@ -94,6 +113,8 @@ jobs:
 
     - name: Configure CMake (Full Build)
       run: |
+        set -e
+        echo "Configuring full build..."
         cmake -S . -B build-full \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
@@ -102,10 +123,16 @@ jobs:
           -DBUILD_TESTING=ON
 
     - name: Build (Minimal)
-      run: cmake --build build-minimal -j $(nproc)
+      run: |
+        set -e
+        echo "Building minimal version..."
+        cmake --build build-minimal -j $(nproc)
 
     - name: Build (Full)
-      run: cmake --build build-full -j $(nproc)
+      run: |
+        set -e
+        echo "Building full version..."
+        cmake --build build-full -j $(nproc)
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
