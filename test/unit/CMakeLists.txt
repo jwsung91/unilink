@@ -118,3 +118,5 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
       RESOURCE_LOCK "tcp_port_allocation"
   )
 endforeach()
+
+# Transport layer tests removed - they require actual network/serial devices

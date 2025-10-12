@@ -43,7 +43,7 @@ jobs:
           set(CMAKE_CXX_STANDARD 17)
           find_package(unilink CONFIG REQUIRED)
           add_executable(consumer main.cpp)
-          target_link_libraries(consumer PRIVATE unilink_shared)
+          target_link_libraries(consumer PRIVATE unilink::unilink_shared)
           EOF
           cat > main.cpp <<'EOF'
           #include <unilink/unilink.hpp>
