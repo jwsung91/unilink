@@ -104,14 +104,14 @@ jobs:
     - name: Upload HTML Coverage Report
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-report
+        name: coverage-report-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
         path: build-coverage/coverage_html
         retention-days: 30
 
     - name: Upload Coverage Data
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-data
+        name: coverage-data-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
         path: |
           build-coverage/coverage_filtered.info
           build-coverage/coverage_summary.txt
