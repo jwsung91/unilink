@@ -35,17 +35,17 @@ jobs:
             cc: clang-14
             cxx: clang++-14
             boost_version: "1.74"
-          # Ubuntu 24.04: GCC 13 and Clang 17
+          # Ubuntu 24.04: GCC 13 and Clang 16
           - os: ubuntu-24.04
             compiler: gcc
             cc: gcc-13
             cxx: g++-13
-            boost_version: "1.82"
+            boost_version: "1.83"
           - os: ubuntu-24.04
             compiler: clang
-            cc: clang-17
-            cxx: clang++-17
-            boost_version: "1.82"
+            cc: clang-16
+            cxx: clang++-16
+            boost_version: "1.83"
 
     steps:
     - name: Checkout code
@@ -77,7 +77,7 @@ jobs:
           if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y clang-14
           else
-            sudo apt-get install -y clang-17
+            sudo apt-get install -y clang-16
           fi
         fi
         
@@ -88,7 +88,7 @@ jobs:
         elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
-          sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
+          sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev
         fi
         
         echo "Verifying compiler installation..."
@@ -137,7 +137,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts-${{ matrix.os }}-${{ matrix.compiler }}
+        name: build-artifacts-${{ matrix.os }}-${{ matrix.compiler }}-${{ github.run_number }}
         path: |
           build-minimal/
           build-full/

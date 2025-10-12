@@ -3,21 +3,25 @@
 
 # Find required packages
 # Ubuntu version-specific Boost requirements
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  # Detect Ubuntu version and set appropriate Boost version
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
-    # Ubuntu 20.04: GCC 9-10, Boost 1.65+
-    find_package(Boost 1.65 REQUIRED COMPONENTS system)
-    message(STATUS "Using Boost 1.65+ for Ubuntu 20.04 compatibility")
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # Detect Ubuntu version and set appropriate Boost version
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
+      # Ubuntu 20.04: GCC 9-10, Boost 1.65+
+      find_package(Boost 1.65 REQUIRED COMPONENTS system)
+      message(STATUS "Using Boost 1.65+ for Ubuntu 20.04 compatibility")
+    elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "13.0")
+      # Ubuntu 22.04: GCC 11-12, Boost 1.74+
+      find_package(Boost 1.74 REQUIRED COMPONENTS system)
+      message(STATUS "Using Boost 1.74+ for Ubuntu 22.04 compatibility")
+    else()
+      # Ubuntu 24.04+: GCC 13+, Boost 1.83+
+      find_package(Boost 1.83 REQUIRED COMPONENTS system)
+      message(STATUS "Using Boost 1.83+ for Ubuntu 24.04+ compatibility")
+    endif()
   else()
-    # Ubuntu 22.04+: GCC 11+, Boost 1.70+
+    # Non-Linux platforms: use latest Boost
     find_package(Boost 1.70 REQUIRED COMPONENTS system)
-    message(STATUS "Using Boost 1.70+ for Ubuntu 22.04+ compatibility")
   endif()
-else()
-  # Non-Linux platforms: use latest Boost
-  find_package(Boost 1.70 REQUIRED COMPONENTS system)
-endif()
 
 find_package(Threads REQUIRED)
 
