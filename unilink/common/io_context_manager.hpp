@@ -26,32 +26,32 @@ namespace unilink {
 namespace common {
 
 /**
- * 전역 io_context 관리자
- * 모든 Transport가 하나의 io_context를 공유하여 메모리 효율성 향상
- * 테스트 격리를 위한 독립적인 컨텍스트 생성 기능 추가
+ * Global io_context manager
+ * All Transports share one io_context for improved memory efficiency
+ * Added independent context creation functionality for test isolation
  */
 class IoContextManager {
  public:
   using IoContext = boost::asio::io_context;
   using WorkGuard = boost::asio::executor_work_guard<IoContext::executor_type>;
 
-  // 싱글톤 인스턴스 접근
+  // Singleton instance access
   static IoContextManager& instance();
 
-  // io_context 참조 반환 (기존 기능)
+  // Return io_context reference (existing functionality)
   IoContext& get_context();
 
-  // io_context 시작/중지 (기존 기능)
+  // Start/stop io_context (existing functionality)
   void start();
   void stop();
 
-  // 상태 확인 (기존 기능)
+  // Check status (existing functionality)
   bool is_running() const;
 
-  // 🆕 독립적인 io_context 생성 (테스트 격리용)
+  // 🆕 Create independent io_context (for test isolation)
   std::unique_ptr<IoContext> create_independent_context();
 
-  // 소멸자에서 자동 정리
+  // Automatic cleanup in destructor
   ~IoContextManager();
 
  private:

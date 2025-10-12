@@ -264,7 +264,7 @@ void Serial::do_write() {
 }
 
 void Serial::handle_error(const char* where, const boost::system::error_code& ec) {
-  // EOF는 실제 에러가 아니므로, 다시 읽기를 시작합니다.
+  // EOF is not a real error, so restart reading
   if (ec == boost::asio::error::eof) {
     UNILINK_LOG_DEBUG("serial", "read", "EOF detected, restarting read");
     start_read();

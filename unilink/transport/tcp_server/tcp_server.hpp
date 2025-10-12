@@ -64,13 +64,13 @@ class TcpServer : public Channel,
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
 
-  // 멀티 클라이언트 지원 메서드
+  // Multi-client support methods
   void broadcast(const std::string& message);
   void send_to_client(size_t client_id, const std::string& message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 
-  // 멀티 클라이언트 콜백 타입 정의
+  // Multi-client callback type definitions
   using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
   using MultiClientDataHandler = std::function<void(size_t client_id, const std::string& data)>;
   using MultiClientDisconnectHandler = std::function<void(size_t client_id)>;
@@ -79,7 +79,7 @@ class TcpServer : public Channel,
   void on_multi_data(MultiClientDataHandler handler);
   void on_multi_disconnect(MultiClientDisconnectHandler handler);
 
-  // 클라이언트 제한 설정
+  // Client limit configuration
   void set_client_limit(size_t max_clients);
   void set_unlimited_clients();
 
@@ -97,23 +97,23 @@ class TcpServer : public Channel,
   std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
   TcpServerConfig cfg_;
 
-  // 멀티 클라이언트 지원
+  // Multi-client support
   std::vector<std::shared_ptr<TcpServerSession>> sessions_;
   mutable std::mutex sessions_mutex_;
 
-  // 클라이언트 제한 설정
+  // Client limit configuration
   size_t max_clients_;
   bool client_limit_enabled_;
 
-  // 기존 API 호환성을 위한 현재 활성 세션
+  // Current active session for existing API compatibility
   std::shared_ptr<TcpServerSession> current_session_;
 
-  // 멀티 클라이언트 콜백들
+  // Multi-client callbacks
   MultiClientConnectHandler on_multi_connect_;
   MultiClientDataHandler on_multi_data_;
   MultiClientDisconnectHandler on_multi_disconnect_;
 
-  // 기존 멤버들 (호환성 유지)
+  // Existing members (compatibility maintained)
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;

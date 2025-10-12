@@ -106,7 +106,7 @@ void TcpServer::stop() {
       if (self->acceptor_ && self->acceptor_->is_open()) {
         self->acceptor_->close(ec);
       }
-      // 모든 세션 정리
+      // Clean up all sessions
       {
         std::lock_guard<std::mutex> lock(self->sessions_mutex_);
         self->sessions_.clear();
@@ -115,7 +115,7 @@ void TcpServer::stop() {
       cleanup_promise.set_value();
     });
 
-    // 정리 작업 완료 대기
+    // Wait for cleanup completion
     cleanup_future.wait();
 
     ioc_.stop();
@@ -256,7 +256,7 @@ void TcpServer::do_accept() {
         self->state_.set_state(LinkState::Error);
         self->notify_state();
       }
-      // 서버가 종료 중이 아닌 경우에만 계속 수락
+      // Continue accepting only if server is not shutting down
       if (!self->state_.is_state(LinkState::Closed)) {
         self->do_accept();
       }
@@ -270,7 +270,7 @@ void TcpServer::do_accept() {
       client_info = rep.address().to_string() + ":" + std::to_string(rep.port());
     }
 
-    // 클라이언트 제한 검사 (연결 수락 후, 세션 생성 전)
+    // Client limit check (after connection acceptance, before session creation)
     if (self->client_limit_enabled_) {
       std::lock_guard<std::mutex> lock(self->sessions_mutex_);
       if (self->sessions_.size() >= self->max_clients_) {
@@ -298,11 +298,11 @@ void TcpServer::do_accept() {
       UNILINK_LOG_INFO("tcp_server", "accept", "Client connected (endpoint unknown)");
     }
 
-    // 새 세션 생성
+    // Create new session
     auto new_session =
         std::make_shared<TcpServerSession>(self->ioc_, std::move(sock), self->cfg_.backpressure_threshold);
 
-    // 세션을 리스트에 추가
+    // Add session to list
     size_t client_id;
     {
       std::lock_guard<std::mutex> lock(self->sessions_mutex_);
@@ -311,18 +311,18 @@ void TcpServer::do_accept() {
       client_id = self->sessions_.size() - 1;
     }
 
-    // 현재 활성 세션 업데이트 (기존 API 호환성)
+    // Update current active session (existing API compatibility)
     self->current_session_ = new_session;
 
-    // 세션 콜백 설정
+    // Set session callbacks
     if (self->on_bytes_) {
       new_session->on_bytes([self, client_id](const uint8_t* data, size_t size) {
-        // 기존 콜백 호출 (호환성)
+        // Call existing callback (compatibility)
         if (self->on_bytes_) {
           self->on_bytes_(data, size);
         }
 
-        // 멀티 클라이언트 콜백 호출
+        // Call multi-client callback
         if (self->on_multi_data_) {
           std::string str_data = common::safe_convert::uint8_to_string(data, size);
           self->on_multi_data_(client_id, str_data);
@@ -339,7 +339,7 @@ void TcpServer::do_accept() {
         self->on_multi_disconnect_(client_id);
       }
 
-      // 세션 리스트에서 제거
+      // Remove from session list
       {
         std::lock_guard<std::mutex> lock(self->sessions_mutex_);
         auto it = std::find(self->sessions_.begin(), self->sessions_.end(), new_session);
@@ -348,7 +348,7 @@ void TcpServer::do_accept() {
         }
       }
 
-      // 현재 세션이 종료된 세션이면 정리
+      // Clean up if current session is the terminated session
       if (self->current_session_ == new_session) {
         self->current_session_.reset();
         self->state_.set_state(LinkState::Listening);
@@ -356,18 +356,18 @@ void TcpServer::do_accept() {
       }
     });
 
-    // 멀티 클라이언트 연결 콜백 호출
+    // Call multi-client connection callback
     if (self->on_multi_connect_) {
       self->on_multi_connect_(client_id, client_info);
     }
 
-    // 기존 API 호환성을 위한 상태 업데이트
+    // Update state for existing API compatibility
     self->state_.set_state(LinkState::Connected);
     self->notify_state();
 
     new_session->start();
 
-    // 즉시 다음 연결 수락 (멀티 클라이언트 지원)
+    // Immediately accept next connection (multi-client support)
     self->do_accept();
   });
 }
@@ -387,7 +387,7 @@ void TcpServer::notify_state() {
   }
 }
 
-// 멀티 클라이언트 지원 메서드 구현
+// Multi-client support method implementations
 void TcpServer::broadcast(const std::string& message) {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
   auto data = common::safe_convert::string_to_uint8(message);
