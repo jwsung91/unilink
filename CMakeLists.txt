@@ -184,6 +184,12 @@ endif()
 
 # pkg-config support
 if(UNILINK_ENABLE_INSTALL AND UNILINK_ENABLE_PKGCONFIG)
+  # Set pkg-config variables
+  set(PKGCONFIG_REQUIRES "")
+  set(PKGCONFIG_REQUIRES_PRIVATE "boost-system")
+  set(PKGCONFIG_LIBS_PRIVATE "-lboost_system -lpthread")
+  set(PKGCONFIG_CFLAGS "")
+  
   configure_file(
       ${CMAKE_CURRENT_SOURCE_DIR}/package/unilink.pc.in
       ${CMAKE_CURRENT_BINARY_DIR}/unilink.pc
@@ -230,20 +236,5 @@ if(UNILINK_BUILD_DOCS AND UNILINK_DOXYGEN_AVAILABLE)
   message(STATUS "Documentation target 'docs' available")
 endif()
 
-# CPack configuration for release packages
-set(CPACK_PACKAGE_NAME "unilink")
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Unified async communication library")
-set(CPACK_PACKAGE_VENDOR "Jinwoo Sung")
-set(CPACK_PACKAGE_CONTACT "jwsung91@example.com")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-
-# Set package generators
-set(CPACK_GENERATOR "TGZ")
-set(CPACK_SOURCE_GENERATOR "TGZ")
-
-# Set package file name
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-linux-x64")
-
-include(CPack)
+# Include packaging configuration
+include(cmake/UnilinkPackaging.cmake)
