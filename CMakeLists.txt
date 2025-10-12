@@ -98,29 +98,27 @@ elseif(TARGET unilink)
   add_library(unilink::unilink ALIAS unilink)
 endif()
 
-# Ensure unilink::unilink is available for export
-if(NOT TARGET unilink::unilink)
-  if(TARGET unilink_shared)
-    add_library(unilink::unilink ALIAS unilink_shared)
-  elseif(TARGET unilink_static)
-    add_library(unilink::unilink ALIAS unilink_static)
-  elseif(TARGET unilink)
-    add_library(unilink::unilink ALIAS unilink)
-  endif()
-endif()
-
-# Link dependencies
+# Link dependencies and set include directories
 if(TARGET unilink_shared)
   target_link_libraries(unilink_shared PUBLIC unilink_dependencies)
   target_compile_features(unilink_shared PUBLIC cxx_std_17)
+  target_include_directories(unilink_shared PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>)
 endif()
 if(TARGET unilink_static)
   target_link_libraries(unilink_static PUBLIC unilink_dependencies)
   target_compile_features(unilink_static PUBLIC cxx_std_17)
+  target_include_directories(unilink_static PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>)
 endif()
 if(TARGET unilink AND NOT unilink_shared AND NOT unilink_static)
   target_link_libraries(unilink INTERFACE unilink_dependencies)
   target_compile_features(unilink INTERFACE cxx_std_17)
+  target_include_directories(unilink INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>)
 endif()
 
 # Export header generation
