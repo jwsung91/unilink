@@ -38,7 +38,7 @@ jobs:
             cc: clang-14
             cxx: clang++-14
             boost_version: "1.74"
-          # Ubuntu 24.04: GCC 13 and Clang 18
+          # Ubuntu 24.04: GCC 13 and Clang 17 (18 not available by default)
           - os: ubuntu-24.04
             compiler: gcc
             cc: gcc-13
@@ -46,8 +46,8 @@ jobs:
             boost_version: "1.82"
           - os: ubuntu-24.04
             compiler: clang
-            cc: clang-18
-            cxx: clang++-18
+            cc: clang-17
+            cxx: clang++-17
             boost_version: "1.82"
 
     steps:
@@ -68,6 +68,13 @@ jobs:
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
+        fi
+        
+        # Install specific compiler versions for Ubuntu 24.04
+        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            sudo apt-get install -y clang-17
+          fi
         fi
 
     - name: Configure CMake
@@ -122,6 +129,13 @@ jobs:
         else
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
         fi
+        
+        # Install specific compiler versions for Ubuntu 24.04
+        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            sudo apt-get install -y clang-17
+          fi
+        fi
 
     - name: Configure CMake
       run: |
@@ -175,6 +189,13 @@ jobs:
         else
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
         fi
+        
+        # Install specific compiler versions for Ubuntu 24.04
+        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            sudo apt-get install -y clang-17
+          fi
+        fi
 
     - name: Configure CMake
       run: |
@@ -226,6 +247,13 @@ jobs:
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           sudo apt-get install -y libboost1.82-dev libboost-system1.82-dev
+        fi
+        
+        # Install specific compiler versions for Ubuntu 24.04
+        if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            sudo apt-get install -y clang-17
+          fi
         fi \
           clang \
           libc++-dev \
