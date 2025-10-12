@@ -55,7 +55,7 @@ if(UNILINK_BUILD_SHARED AND UNILINK_BUILD_STATIC)
   
   # Set target properties for static library
   set_target_properties(unilink_static PROPERTIES
-    OUTPUT_NAME "unilink"
+    OUTPUT_NAME "unilink_static"
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN YES)
   
@@ -89,12 +89,14 @@ else()
   message(FATAL_ERROR "At least one library type (shared or static) must be enabled")
 endif()
 
-# Create alias - use shared library by default
+# Create aliases for both shared and static libraries
 if(TARGET unilink_shared)
-  add_library(unilink::unilink ALIAS unilink_shared)
-elseif(TARGET unilink_static)
-  add_library(unilink::unilink ALIAS unilink_static)
-elseif(TARGET unilink)
+  add_library(unilink::unilink_shared ALIAS unilink_shared)
+endif()
+if(TARGET unilink_static)
+  add_library(unilink::unilink_static ALIAS unilink_static)
+endif()
+if(TARGET unilink AND NOT unilink_shared AND NOT unilink_static)
   add_library(unilink::unilink ALIAS unilink)
 endif()
 
