@@ -355,7 +355,6 @@ Tests run across multiple configurations:
 | Ubuntu 24.04 | GCC 13 | Release | ❌ | ✅ Full Testing |
 | Ubuntu 24.04 | Clang 15 | Debug | ✅ | ✅ Full Testing |
 | Ubuntu 24.04 | Clang 15 | Release | ❌ | ✅ Full Testing |
-| Ubuntu 20.04 | GCC 9 | Debug | ❌ | ⚠️ Build-Only |
 
 **Additional checks:**
 - Memory tracking enabled
@@ -364,19 +363,19 @@ Tests run across multiple configurations:
 
 ---
 
-### Ubuntu 20.04 Testing Policy
+### Ubuntu 20.04 Support
 
-**Build-Only Support:**
-- Ubuntu 20.04 builds are verified for compatibility
-- Tests are **not** run on Ubuntu 20.04 due to GitHub Actions runner availability issues
+**Local Development Only:**
+- Ubuntu 20.04 is **not** supported in CI/CD due to runner availability issues
 - Ubuntu 20.04 reaches end-of-life in April 2025
 - Full testing is performed on Ubuntu 22.04 and 24.04
+- You can still build and test locally on Ubuntu 20.04
 
-**Why Build-Only?**
+**Why No CI/CD Support?**
 - GitHub Actions Ubuntu 20.04 runners are being phased out
 - Frequent pending/queued states cause CI/CD delays
-- Build verification ensures compatibility without test overhead
-- Users can still run tests locally on Ubuntu 20.04
+- Ubuntu 20.04 reaches end-of-life in April 2025
+- Focus resources on supported platforms
 
 **Local Testing on Ubuntu 20.04:**
 ```bash
@@ -385,6 +384,10 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
 cmake --build build -j
 cd build && ctest --output-on-failure
 ```
+
+**Recommendation:**
+- Consider upgrading to Ubuntu 22.04+ for full CI/CD support
+- Ubuntu 22.04 is the recommended platform for production use
 
 ---
 

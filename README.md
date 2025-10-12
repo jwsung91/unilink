@@ -104,7 +104,6 @@ tar -xzf unilink-0.1.0-linux-x64.tar.gz
 
 ### Automated Testing
 - **Ubuntu 22.04 & 24.04**: Full test suite with GCC 11/13 and Clang 14/15
-- **Ubuntu 20.04**: Build compatibility verification (tests run locally)
 - **Memory Safety**: AddressSanitizer, ThreadSanitizer, and Valgrind integration
 - **Performance**: Automated regression testing and benchmarking
 
@@ -113,12 +112,12 @@ tar -xzf unilink-0.1.0-linux-x64.tar.gz
 |----------|----------|--------|
 | Ubuntu 22.04 | GCC 11, Clang 14 | ✅ Full Testing |
 | Ubuntu 24.04 | GCC 13, Clang 15 | ✅ Full Testing |
-| Ubuntu 20.04 | GCC 9 | ⚠️ Build-Only |
 
-**Why Build-Only for Ubuntu 20.04?**
-- GitHub Actions Ubuntu 20.04 runners are being phased out (EOL April 2025)
-- Frequent pending states cause CI/CD delays
-- Build verification ensures compatibility without test overhead
+**Ubuntu 20.04 Support:**
+- Ubuntu 20.04 reaches end-of-life in April 2025
+- GitHub Actions Ubuntu 20.04 runners are being phased out
+- You can still build and test locally on Ubuntu 20.04
+- Consider upgrading to Ubuntu 22.04+ for full CI/CD support
 
 ---
 
