@@ -4,8 +4,11 @@ libdir=@CMAKE_INSTALL_FULL_LIBDIR@
 includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
 
 Name: unilink
-Description: Unified async communication library
+Description: Unified async communication library for TCP, Serial, and other protocols
 URL: https://github.com/jwsung91/unilink
 Version: @PROJECT_VERSION@
-Libs: -L${libdir} -lunilink -lboost_system -lpthread
-Cflags: -I${includedir}
+Requires: @PKGCONFIG_REQUIRES@
+Requires.private: @PKGCONFIG_REQUIRES_PRIVATE@
+Libs: -L${libdir} -lunilink
+Libs.private: @PKGCONFIG_LIBS_PRIVATE@
+Cflags: -I${includedir} @PKGCONFIG_CFLAGS@

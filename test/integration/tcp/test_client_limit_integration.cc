@@ -34,7 +34,7 @@ using namespace std::chrono_literals;
 class ClientLimitIntegrationTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    // 테스트 전 초기화
+    // Initialize before test
     // Add small delay to ensure previous test cleanup is complete
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
@@ -69,14 +69,14 @@ class ClientLimitIntegrationTest : public ::testing::Test {
     return port;
   }
 
-  // 클라이언트 연결을 시뮬레이션하는 헬퍼 함수
+  // Helper function to simulate client connections
   std::vector<std::future<bool>> simulateClients(const std::string& host, uint16_t port, int count) {
     std::vector<std::future<bool>> futures;
 
     for (int i = 0; i < count; ++i) {
       futures.push_back(std::async(std::launch::async, [host, port, i]() {
         try {
-          // 간단한 TCP 클라이언트 연결 시뮬레이션
+          // Simple TCP client connection simulation
           boost::asio::io_context ioc;
           boost::asio::ip::tcp::socket socket(ioc);
           boost::asio::ip::tcp::resolver resolver(ioc);
@@ -84,12 +84,12 @@ class ClientLimitIntegrationTest : public ::testing::Test {
           auto endpoints = resolver.resolve(host, std::to_string(port));
           boost::asio::connect(socket, endpoints);
 
-          // 연결 성공 - 더 오래 유지
+          // Connection successful - keep it longer
           std::this_thread::sleep_for(std::chrono::milliseconds(50));
           socket.close();
           return true;
         } catch (const std::exception& e) {
-          // 연결 실패 (예상된 경우)
+          // Connection failed (expected case)
           return false;
         }
       }));
@@ -103,13 +103,13 @@ class ClientLimitIntegrationTest : public ::testing::Test {
 };
 
 /**
- * @brief Single Client 제한 테스트 - 1개 클라이언트만 허용
+ * @brief Single Client Limit Test - Allow only 1 client
  */
 TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing single client limit integration, port: " << test_port << std::endl;
 
-  // Single client 서버 생성
+  // Create single client server
   server_ = unilink::tcp_server(test_port)
                 .single_client()
 
@@ -118,7 +118,7 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
 
-  // 서버 시작
+  // Start server
   server_->start();
   std::this_thread::sleep_for(std::chrono::milliseconds(5000));  // Wait longer for port retry
 
@@ -136,33 +136,33 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
 
   std::cout << "Server started, testing client connections..." << std::endl;
 
-  // 3개 클라이언트 연결 시도
+  // Attempt to connect 3 clients
   auto client_futures = simulateClients("127.0.0.1", test_port, 3);
 
-  // 결과 수집
+  // Collect results
   std::vector<bool> results;
   for (auto& future : client_futures) {
     results.push_back(future.get());
   }
 
-  // 첫 번째 클라이언트는 성공, 나머지는 실패해야 함
+  // First client should succeed, others should fail
   int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
   std::cout << "Successful connections: " << success_count << "/3" << std::endl;
 
-  // Single client 제한으로 인해 1개만 성공해야 함
-  // 실제로는 클라이언트가 연결된 후 즉시 연결을 끊어서 제한 검사가 제대로 작동하지 않을 수 있음
-  // 따라서 최소 1개는 성공해야 함
+  // Due to single client limit, only 1 should succeed
+  // In reality, clients disconnect immediately after connection, so limit check may not work properly
+  // Therefore, at least 1 should succeed
   EXPECT_GE(success_count, 1) << "At least 1 client should connect with single client limit";
 }
 
 /**
- * @brief Multi Client 제한 테스트 - 3개 클라이언트 제한
+ * @brief Multi Client Limit Test - Limit to 3 clients
  */
 TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing multi client limit integration (limit 3), port: " << test_port << std::endl;
 
-  // Multi client 서버 생성 (3개 제한)
+  // Create multi client server (limit 3)
   server_ = unilink::tcp_server(test_port)
                 .multi_client(3)
 
@@ -171,7 +171,7 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
 
-  // 서버 시작
+  // Start server
   server_->start();
   std::this_thread::sleep_for(std::chrono::milliseconds(5000));  // Wait longer for port retry
 
@@ -183,31 +183,31 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
 
   std::cout << "Server started, testing client connections..." << std::endl;
 
-  // 5개 클라이언트 연결 시도
+  // Attempt to connect 5 clients
   auto client_futures = simulateClients("127.0.0.1", test_port, 5);
 
-  // 결과 수집
+  // Collect results
   std::vector<bool> results;
   for (auto& future : client_futures) {
     results.push_back(future.get());
   }
 
-  // 처음 3개 클라이언트는 성공, 나머지는 실패해야 함
+  // First 3 clients should succeed, others should fail
   int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
   std::cout << "Successful connections: " << success_count << "/5" << std::endl;
 
-  // Multi client 제한으로 인해 최소 3개는 성공해야 함
+  // Due to multi client limit, at least 3 should succeed
   EXPECT_GE(success_count, 3) << "At least 3 clients should connect with multi client limit of 3";
 }
 
 /**
- * @brief Unlimited Clients 테스트 - 제한 없음
+ * @brief Unlimited Clients Test - No limit
  */
 TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing unlimited clients integration, port: " << test_port << std::endl;
 
-  // Unlimited clients 서버 생성
+  // Create unlimited clients server
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()
 
@@ -216,7 +216,7 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
 
-  // 서버 시작
+  // Start server
   server_->start();
   std::this_thread::sleep_for(std::chrono::milliseconds(5000));  // Wait longer for port retry
 
@@ -228,31 +228,31 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
 
   std::cout << "Server started, testing client connections..." << std::endl;
 
-  // 5개 클라이언트 연결 시도
+  // Attempt to connect 5 clients
   auto client_futures = simulateClients("127.0.0.1", test_port, 5);
 
-  // 결과 수집
+  // Collect results
   std::vector<bool> results;
   for (auto& future : client_futures) {
     results.push_back(future.get());
   }
 
-  // 모든 클라이언트가 성공해야 함
+  // All clients should succeed
   int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
   std::cout << "Successful connections: " << success_count << "/5" << std::endl;
 
-  // Unlimited clients이므로 모든 클라이언트가 성공해야 함
+  // All clients should succeed due to unlimited clients
   EXPECT_EQ(success_count, 5) << "All clients should connect with unlimited clients";
 }
 
 /**
- * @brief 클라이언트 제한 동적 변경 테스트
+ * @brief Dynamic Client Limit Change Test
  */
 TEST_F(ClientLimitIntegrationTest, DynamicClientLimitChangeTest) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing dynamic client limit change, port: " << test_port << std::endl;
 
-  // 초기에는 2개 클라이언트 제한
+  // Initially limit to 2 clients
   server_ = unilink::tcp_server(test_port)
                 .multi_client(2)
 
@@ -261,22 +261,22 @@ TEST_F(ClientLimitIntegrationTest, DynamicClientLimitChangeTest) {
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
 
-  // 서버 시작
+  // Start server
   server_->start();
   std::this_thread::sleep_for(std::chrono::milliseconds(5000));  // Wait longer for port retry
 
   std::cout << "Server started with limit 2, testing connections..." << std::endl;
 
-  // 4개 클라이언트 연결 시도
+  // Attempt to connect 4 clients
   auto client_futures = simulateClients("127.0.0.1", test_port, 4);
 
-  // 결과 수집
+  // Collect results
   std::vector<bool> results;
   for (auto& future : client_futures) {
     results.push_back(future.get());
   }
 
-  // 처음 2개 클라이언트만 성공해야 함
+  // Only first 2 clients should succeed
   int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
   std::cout << "Successful connections with limit 2: " << success_count << "/4" << std::endl;
 
@@ -284,17 +284,17 @@ TEST_F(ClientLimitIntegrationTest, DynamicClientLimitChangeTest) {
 }
 
 /**
- * @brief 클라이언트 제한 에러 처리 테스트
+ * @brief Client Limit Error Handling Test
  */
 TEST_F(ClientLimitIntegrationTest, ClientLimitErrorHandlingTest) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing client limit error handling, port: " << test_port << std::endl;
 
-  // 잘못된 클라이언트 제한 설정 시도
+  // Attempt invalid client limit configuration
   EXPECT_THROW(
       {
         server_ = unilink::tcp_server(test_port)
-                      .multi_client(0)  // 0은 유효하지 않음
+                      .multi_client(0)  // 0 is invalid
 
                       .build();
       },

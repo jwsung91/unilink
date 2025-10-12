@@ -28,14 +28,10 @@ namespace transport {
 
 namespace net = boost::asio;
 
-// Specific namespace aliases instead of using namespace
-using common::IoContextManager;
-using common::LinkState;
-using common::ThreadSafeLinkState;
-using config::SerialConfig;
+// Use fully qualified names for clarity
 using namespace common;  // For error_reporting namespace
 
-Serial::Serial(const SerialConfig& cfg)
+Serial::Serial(const config::SerialConfig& cfg)
     : ioc_(common::IoContextManager::instance().get_context()),
       owns_ioc_(true),  // Set to true to run io_context in our own thread
       cfg_(cfg),
@@ -67,7 +63,7 @@ Serial::Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInt
 Serial::~Serial() {
   // stop() might have been called already. Ensure we don't double-stop,
   // but do clean up resources if we own them.
-  if (!state_.is_state(LinkState::Closed)) stop();
+  if (!state_.is_state(common::LinkState::Closed)) stop();
 
   // No need to clean up io_context as it's shared and managed by IoContextManager
 }
@@ -80,14 +76,14 @@ void Serial::start() {
   }
   net::post(ioc_, [this] {
     UNILINK_LOG_DEBUG("serial", "start", "Posting open_and_configure for device: " + cfg_.device);
-    state_.set_state(LinkState::Connecting);
+    state_.set_state(common::LinkState::Connecting);
     notify_state();
     open_and_configure();
   });
 }
 
 void Serial::stop() {
-  if (!state_.is_state(LinkState::Closed)) {
+  if (!state_.is_state(common::LinkState::Closed)) {
     work_guard_->reset();  // Allow the io_context to run out of work.
     net::post(ioc_, [this] {
       // Cancel all pending async operations to unblock the io_context
@@ -108,7 +104,7 @@ void Serial::stop() {
       ioc_.restart();
     }
 
-    state_.set_state(LinkState::Closed);
+    state_.set_state(common::LinkState::Closed);
     notify_state();
   }
 }
@@ -212,7 +208,7 @@ void Serial::open_and_configure() {
   start_read();
 
   opened_ = true;
-  state_.set_state(LinkState::Connected);
+  state_.set_state(common::LinkState::Connected);
   notify_state();
 }
 
@@ -264,7 +260,7 @@ void Serial::do_write() {
 }
 
 void Serial::handle_error(const char* where, const boost::system::error_code& ec) {
-  // EOF는 실제 에러가 아니므로, 다시 읽기를 시작합니다.
+  // EOF is not a real error, so restart reading
   if (ec == boost::asio::error::eof) {
     UNILINK_LOG_DEBUG("serial", "read", "EOF detected, restarting read");
     start_read();
@@ -273,20 +269,20 @@ void Serial::handle_error(const char* where, const boost::system::error_code& ec
 
   // 구조화된 에러 처리
   bool retryable = cfg_.reopen_on_error;
-  error_reporting::report_connection_error("serial", where, ec, retryable);
+  common::error_reporting::report_connection_error("serial", where, ec, retryable);
 
   UNILINK_LOG_ERROR("serial", where, "Error: " + ec.message() + " (code: " + std::to_string(ec.value()) + ")");
 
   if (cfg_.reopen_on_error) {
     opened_ = false;
     close_port();
-    state_.set_state(LinkState::Connecting);
+    state_.set_state(common::LinkState::Connecting);
     notify_state();
     schedule_retry(where, ec);
   } else {
     opened_ = false;
     close_port();
-    state_.set_state(LinkState::Error);
+    state_.set_state(common::LinkState::Error);
     notify_state();
   }
 }
@@ -319,11 +315,11 @@ void Serial::notify_state() {
       on_state_(state_.get_state());
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("serial", "callback", "State callback error: " + std::string(e.what()));
-      error_reporting::report_system_error("serial", "state_callback",
-                                           "Exception in state callback: " + std::string(e.what()));
+      common::error_reporting::report_system_error("serial", "state_callback",
+                                                   "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("serial", "callback", "Unknown error in state callback");
-      error_reporting::report_system_error("serial", "state_callback", "Unknown error in state callback");
+      common::error_reporting::report_system_error("serial", "state_callback", "Unknown error in state callback");
     }
   }
 }

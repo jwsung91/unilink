@@ -33,7 +33,7 @@ class Serial : public ChannelInterface {
   explicit Serial(std::shared_ptr<interface::Channel> channel);
   ~Serial() override;
 
-  // IChannel 구현
+  // IChannel implementation
   void start() override;
   void stop() override;
   void send(const std::string& data) override;
@@ -47,7 +47,7 @@ class Serial : public ChannelInterface {
 
   ChannelInterface& auto_manage(bool manage = true) override;
 
-  // 시리얼 전용 메서드들
+  // Serial-specific methods
   void set_baud_rate(uint32_t baud_rate);
   void set_data_bits(int data_bits);
   void set_stop_bits(int stop_bits);
@@ -64,17 +64,17 @@ class Serial : public ChannelInterface {
   uint32_t baud_rate_;
   std::shared_ptr<interface::Channel> channel_;
 
-  // 이벤트 핸들러들
+  // Event handlers
   DataHandler data_handler_;
   ConnectHandler connect_handler_;
   DisconnectHandler disconnect_handler_;
   ErrorHandler error_handler_;
 
-  // 설정
+  // Configuration
   bool auto_manage_ = false;
   bool started_ = false;
 
-  // 시리얼 전용 설정
+  // Serial-specific configuration
   int data_bits_ = 8;
   int stop_bits_ = 1;
   std::string parity_ = "none";

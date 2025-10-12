@@ -29,18 +29,18 @@ namespace factory {
 
 /**
  * Channel Factory
- * - 기존 Transport 클래스들 사용
- * - 하위 호환성 유지
+ * - Uses existing Transport classes
+ * - Maintains backward compatibility
  */
 class ChannelFactory {
  public:
   using ChannelOptions = std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig>;
 
-  // Channel 생성
+  // Channel creation
   static std::shared_ptr<interface::Channel> create(const ChannelOptions& options);
 
  private:
-  // 각 Transport 타입별 생성 함수들
+  // Creation functions for each Transport type
   static std::shared_ptr<interface::Channel> create_tcp_server(const config::TcpServerConfig& cfg);
   static std::shared_ptr<interface::Channel> create_tcp_client(const config::TcpClientConfig& cfg);
   static std::shared_ptr<interface::Channel> create_serial(const config::SerialConfig& cfg);

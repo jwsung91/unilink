@@ -28,7 +28,7 @@ namespace common {
 // ============================================================================
 
 MemoryPool::MemoryPool(size_t initial_pool_size, size_t /* max_pool_size */) {
-  // 4개 고정 크기 풀 초기화
+  // Initialize 4 fixed-size pools
   static constexpr std::array<size_t, 4> BUCKET_SIZES = {
       static_cast<size_t>(BufferSize::SMALL),   // 1KB
       static_cast<size_t>(BufferSize::MEDIUM),  // 4KB
@@ -73,23 +73,23 @@ double MemoryPool::get_hit_rate() const {
 }
 
 void MemoryPool::cleanup_old_buffers(std::chrono::milliseconds max_age) {
-  // 단순화: cleanup 기능 비활성화
-  (void)max_age;  // unused parameter warning 방지
+  // Simplified: cleanup functionality disabled
+  (void)max_age;  // prevent unused parameter warning
 }
 
 std::pair<size_t, size_t> MemoryPool::get_memory_usage() const {
-  // 단순화: 기본 메모리 사용량 반환
-  size_t current_usage = stats_.total_allocations * 4096;  // 평균 버퍼 크기 추정
+  // Simplified: return basic memory usage
+  size_t current_usage = stats_.total_allocations * 4096;  // estimate average buffer size
   return std::make_pair(current_usage, current_usage);
 }
 
 void MemoryPool::resize_pool(size_t new_size) {
-  // 단순화: resize 기능 비활성화
-  (void)new_size;  // unused parameter warning 방지
+  // Simplified: resize functionality disabled
+  (void)new_size;  // prevent unused parameter warning
 }
 
 void MemoryPool::auto_tune() {
-  // 단순화: auto_tune 기능 비활성화
+  // Simplified: auto_tune functionality disabled
 }
 
 MemoryPool::HealthMetrics MemoryPool::get_health_metrics() const {
@@ -117,13 +117,13 @@ size_t MemoryPool::get_bucket_index(size_t size) const {
       return i;
     }
   }
-  return BUCKET_SIZES.size() - 1;  // 가장 큰 크기 사용
+  return BUCKET_SIZES.size() - 1;  // use largest size
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
   std::lock_guard<std::mutex> lock(bucket.mutex_);
 
-  // Free list에서 가져오기
+  // Get from free list
   if (!bucket.free_indices_.empty()) {
     size_t index = bucket.free_indices_.front();
     bucket.free_indices_.pop();
@@ -137,7 +137,7 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
     return buffer;
   }
 
-  // 새 버퍼 생성
+  // Create new buffer
   auto buffer = create_buffer(bucket.size_);
   if (buffer) {
     bucket.buffers_.push_back(nullptr);
@@ -150,28 +150,28 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
 void MemoryPool::release_to_bucket(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer) {
   std::lock_guard<std::mutex> lock(bucket.mutex_);
 
-  // 버퍼를 다시 풀에 추가하고 free_indices에 인덱스 추가
+  // Add buffer back to pool and add index to free_indices
   if (bucket.buffers_.size() < bucket.buffers_.capacity()) {
-    // 기존 벡터 크기 내에서 추가
+    // Add within existing vector size
     size_t index = bucket.buffers_.size();
     bucket.buffers_.push_back(std::move(buffer));
     bucket.free_indices_.push(index);
   } else {
-    // 풀이 가득 찼으면 버퍼를 버림 (자동 해제)
-    // buffer는 unique_ptr이므로 스코프를 벗어나면 자동 삭제됨
+    // If pool is full, discard buffer (auto-release)
+    // buffer is unique_ptr so it will be automatically deleted when out of scope
   }
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) { return std::make_unique<uint8_t[]>(size); }
 
 void MemoryPool::validate_size(size_t size) const {
-  if (size == 0 || size > 64 * 1024 * 1024) {  // 64MB 최대
+  if (size == 0 || size > 64 * 1024 * 1024) {  // 64MB maximum
     throw std::invalid_argument("Invalid buffer size");
   }
 }
 
 // ============================================================================
-// PoolBucket 이동 생성자/할당 연산자
+// PoolBucket Move Constructor/Assignment Operator
 // ============================================================================
 
 MemoryPool::PoolBucket::PoolBucket(PoolBucket&& other) noexcept
@@ -191,7 +191,7 @@ MemoryPool::PoolBucket& MemoryPool::PoolBucket::operator=(PoolBucket&& other) no
 }
 
 // ============================================================================
-// PooledBuffer 구현
+// PooledBuffer Implementation
 // ============================================================================
 
 PooledBuffer::PooledBuffer(size_t size) : size_(size), pool_(&GlobalMemoryPool::instance()) {
@@ -222,7 +222,7 @@ PooledBuffer& PooledBuffer::operator=(PooledBuffer&& other) noexcept {
       try {
         pool_->release(std::move(buffer_), size_);
       } catch (...) {
-        // 예외를 무시하고 계속 진행 (noexcept 함수이므로)
+        // Ignore exception and continue (noexcept function)
       }
     }
 

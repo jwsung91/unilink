@@ -21,7 +21,7 @@ foreach(test_file test_architecture.cc test_error_recovery.cc)
   add_executable(run_e2e_${test_name} scenarios/${test_file})
   target_link_libraries(run_e2e_${test_name}
     PRIVATE
-      unilink
+      unilink_shared
       GTest::gtest
       GTest::gmock
   )

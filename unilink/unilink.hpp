@@ -19,7 +19,7 @@
 #if __has_include(<unilink_export.hpp>)
 #include <unilink_export.hpp>
 #else
-// 빌드 디렉터리 경로 미포함 시에도 컴파일 되도록 안전 장치
+// Fallback for when build directory is not included in include path
 #define UNILINK_EXPORT
 #endif
 
@@ -119,18 +119,18 @@ class ConfigManagerInterface;
 // === Common Utilities ===
 // Utility functions and error handling
 namespace common {
-// Utility functions
-using common::log_message;
-using common::to_cstr;
-using common::ts_now;
+// Forward declarations for utility functions
+std::string log_message(const std::string& message);
+const char* to_cstr(const std::string& str);
+std::string ts_now();
 
-// Error handling and logging
-using common::ErrorCategory;
-using common::ErrorHandler;
-using common::ErrorInfo;
-using common::ErrorLevel;
-using common::Logger;
-using common::LogLevel;
+// Forward declarations for error handling and logging
+enum class ErrorCategory;
+class ErrorHandler;
+struct ErrorInfo;
+enum class ErrorLevel;
+class Logger;
+enum class LogLevel;
 }  // namespace common
 
 }  // namespace unilink

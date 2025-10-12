@@ -28,7 +28,7 @@ namespace unilink {
 namespace wrapper {
 
 TcpServer::TcpServer(uint16_t port) : port_(port), channel_(nullptr) {
-  // Channel은 나중에 start() 시점에 생성
+  // Channel will be created later at start() time
 }
 
 TcpServer::TcpServer(std::shared_ptr<interface::Channel> channel) : port_(0), channel_(channel) {
@@ -39,7 +39,7 @@ void TcpServer::start() {
   if (started_) return;
 
   if (!channel_) {
-    // 개선된 Factory 사용
+    // Use improved Factory
     config::TcpServerConfig config;
     config.port = port_;
     config.enable_port_retry = port_retry_enabled_;
@@ -125,7 +125,7 @@ void TcpServer::setup_internal_handlers() {
 
   channel_->on_state([this](common::LinkState state) { handle_state(state); });
 
-  // 멀티 클라이언트 콜백들 설정
+  // Set multi-client callbacks
   auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
   if (transport_server) {
     if (on_multi_connect_) {
@@ -190,7 +190,7 @@ void TcpServer::handle_state(common::LinkState state) {
   }
 }
 
-// 멀티 클라이언트 지원 메서드 구현
+// Multi-client support method implementations
 void TcpServer::broadcast(const std::string& message) {
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
