@@ -241,7 +241,7 @@ TEST_F(PlatformTest, NetworkFunctionalityPlatformSpecific) {
 
   // Test TCP server creation
   auto server = UnifiedBuilder::tcp_server(test_port_)
-                    .unlimited_clients()  // 클라이언트 제한 없음
+                    .unlimited_clients()  // No client limit
 
                     .build();
 
@@ -285,7 +285,7 @@ TEST_F(PlatformTest, NetworkPortHandlingPlatformSpecific) {
     std::cout << "Testing port: " << port << std::endl;
 
     auto server = UnifiedBuilder::tcp_server(port)
-                      .unlimited_clients()  // 클라이언트 제한 없음
+                      .unlimited_clients()  // No client limit
 
                       .build();
 
@@ -471,7 +471,7 @@ TEST_F(PlatformTest, CrossPlatformCompatibility) {
 
   // Test that basic functionality works across platforms
   auto server = UnifiedBuilder::tcp_server(test_port_)
-                    .unlimited_clients()  // 클라이언트 제한 없음
+                    .unlimited_clients()  // No client limit
 
                     .build();
 

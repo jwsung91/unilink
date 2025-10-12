@@ -39,27 +39,27 @@ using namespace unilink::common;
 using namespace std::chrono_literals;
 
 /**
- * @brief Transport 레벨의 핵심 성능 요소 단위 테스트
+ * @brief Unit tests for core performance elements at Transport level
  *
- * Builder/Integration 테스트와 겹치지 않는 영역:
- * - 백프레셔 관리 (1MB 임계값)
- * - 재연결 로직 (retry mechanism)
- * - 큐 관리 (메모리 사용량)
- * - 스레드 안전성 (동시 접근)
- * - 성능 특성 (처리량, 지연시간)
- * - 메모리 누수 (리소스 관리)
+ * Areas not overlapping with Builder/Integration tests:
+ * - Backpressure management (1MB threshold)
+ * - Reconnection logic (retry mechanism)
+ * - Queue management (memory usage)
+ * - Thread safety (concurrent access)
+ * - Performance characteristics (throughput, latency)
+ * - Memory leaks (resource management)
  */
 class TransportPerformanceTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    // 테스트 전 초기화
+    // Initialize before test
     backpressure_triggered_ = false;
     backpressure_bytes_ = 0;
     retry_count_ = 0;
   }
 
   void TearDown() override {
-    // 테스트 후 정리
+    // Clean up after test
     if (client_) {
       client_->stop();
       client_.reset();
@@ -73,11 +73,11 @@ class TransportPerformanceTest : public ::testing::Test {
       serial_.reset();
     }
 
-    // 충분한 시간을 두고 정리 완료 보장
+    // Ensure cleanup completion with sufficient time
     std::this_thread::sleep_for(100ms);
   }
 
-  // 테스트용 포트 번호 (동적 할당으로 충돌 방지)
+  // Test port number (dynamic allocation to prevent conflicts)
   uint16_t getTestPort() {
     static std::atomic<uint16_t> port_counter{20000};
     return port_counter.fetch_add(1);
@@ -88,23 +88,23 @@ class TransportPerformanceTest : public ::testing::Test {
   std::shared_ptr<TcpServer> server_;
   std::shared_ptr<Serial> serial_;
 
-  // 백프레셔 테스트용
+  // For backpressure testing
   std::atomic<bool> backpressure_triggered_{false};
   std::atomic<size_t> backpressure_bytes_{0};
 
-  // 재연결 테스트용
+  // For reconnection testing
   std::atomic<int> retry_count_{0};
 };
 
 // ============================================================================
-// 백프레셔 관리 테스트
+// Backpressure Management Tests
 // ============================================================================
 
 /**
- * @brief TCP Client 백프레셔 임계값 테스트
+ * @brief TCP Client Backpressure Threshold Test
  *
- * 1MB 임계값에서 백프레셔 콜백이 정확히 트리거되는지 검증
- * Note: 연결이 없어도 큐에 쌓인 데이터로 백프레셔를 테스트할 수 있습니다.
+ * Verifies that backpressure callback is triggered correctly at 1MB threshold
+ * Note: Backpressure can be tested with queued data even without connection.
  */
 TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
   // --- Setup ---
@@ -115,7 +115,7 @@ TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
 
   client_ = std::make_shared<TcpClient>(cfg);
 
-  // 백프레셔 콜백 설정
+  // Set backpressure callback
   client_->on_backpressure([this](size_t bytes) {
     backpressure_triggered_ = true;
     backpressure_bytes_ = bytes;
@@ -124,24 +124,24 @@ TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
   // --- Test Logic ---
   client_->start();
 
-  // 1MB를 넘는 대량의 데이터 전송 (연결이 없어도 큐에 쌓임)
+  // Send large amount of data exceeding 1MB (queued even without connection)
   const size_t large_data_size = 2 * (1 << 20);  // 2MB
   std::vector<uint8_t> large_data(large_data_size, 0xAA);
   client_->async_write_copy(large_data.data(), large_data.size());
 
   // --- Verification ---
-  // 백프레셔가 트리거되었는지 확인
+  // Check if backpressure was triggered
   std::this_thread::sleep_for(200ms);
   EXPECT_TRUE(backpressure_triggered_);
   EXPECT_GT(backpressure_bytes_.load(), 1 << 20);
 }
 
 /**
- * @brief TCP Server 백프레셔 임계값 테스트
+ * @brief TCP Server Backpressure Threshold Test
  *
- * Note: 서버는 클라이언트 연결이 없으면 데이터를 전송할 수 없으므로
- * 백프레셔 테스트는 연결된 상태에서만 의미가 있습니다.
- * 이 테스트는 큐 관리 로직이 정상 작동하는지만 확인합니다.
+ * Note: Server cannot send data without client connection, so
+ * backpressure test is meaningful only when connected.
+ * This test only verifies that queue management logic works correctly.
  */
 TEST_F(TransportPerformanceTest, TcpServerBackpressureThreshold) {
   // --- Setup ---
@@ -150,7 +150,7 @@ TEST_F(TransportPerformanceTest, TcpServerBackpressureThreshold) {
 
   server_ = std::make_shared<TcpServer>(cfg);
 
-  // 백프레셔 콜백 설정
+  // Set backpressure callback
   server_->on_backpressure([this](size_t bytes) {
     backpressure_triggered_ = true;
     backpressure_bytes_ = bytes;
@@ -159,24 +159,24 @@ TEST_F(TransportPerformanceTest, TcpServerBackpressureThreshold) {
   // --- Test Logic ---
   server_->start();
 
-  // 대량의 데이터 전송 (연결이 없어도 큐에 쌓임)
+  // Send large amount of data (queued even without connection)
   const size_t large_data_size = 2 * (1 << 20);  // 2MB
   std::vector<uint8_t> large_data(large_data_size, 0xCC);
   server_->async_write_copy(large_data.data(), large_data.size());
 
   // --- Verification ---
   std::this_thread::sleep_for(100ms);
-  // 서버는 연결이 없어도 데이터를 큐에 쌓을 수 있어야 함
+  // Server should be able to queue data even without connection
   EXPECT_TRUE(server_ != nullptr);
-  // 백프레셔는 연결된 상태에서만 트리거되므로, 여기서는 큐 관리만 확인
+  // Backpressure is triggered only when connected, so only verify queue management here
 }
 
 /**
- * @brief Serial 백프레셔 임계값 테스트
+ * @brief Serial Backpressure Threshold Test
  *
- * Note: Serial은 실제 장치가 없으면 연결할 수 없으므로
- * 백프레셔 테스트는 연결된 상태에서만 의미가 있습니다.
- * 이 테스트는 큐 관리 로직이 정상 작동하는지만 확인합니다.
+ * Note: Serial cannot connect without actual device, so
+ * backpressure test is meaningful only when connected.
+ * This test only verifies that queue management logic works correctly.
  */
 TEST_F(TransportPerformanceTest, SerialBackpressureThreshold) {
   // --- Setup ---
@@ -187,7 +187,7 @@ TEST_F(TransportPerformanceTest, SerialBackpressureThreshold) {
 
   serial_ = std::make_shared<Serial>(cfg);
 
-  // 백프레셔 콜백 설정
+  // Set backpressure callback
   serial_->on_backpressure([this](size_t bytes) {
     backpressure_triggered_ = true;
     backpressure_bytes_ = bytes;
@@ -196,37 +196,37 @@ TEST_F(TransportPerformanceTest, SerialBackpressureThreshold) {
   // --- Test Logic ---
   serial_->start();
 
-  // 대량의 데이터 전송 (연결이 없어도 큐에 쌓임)
+  // Send large amount of data (queued even without connection)
   const size_t large_data_size = 2 * (1 << 20);  // 2MB
   std::vector<uint8_t> large_data(large_data_size, 0xEE);
   serial_->async_write_copy(large_data.data(), large_data.size());
 
   // --- Verification ---
   std::this_thread::sleep_for(100ms);
-  // Serial은 연결이 없어도 데이터를 큐에 쌓을 수 있어야 함
+  // Serial should be able to queue data even without connection
   EXPECT_TRUE(serial_ != nullptr);
-  // 백프레셔는 연결된 상태에서만 트리거되므로, 여기서는 큐 관리만 확인
+  // Backpressure is triggered only when connected, so only verify queue management here
 }
 
 // ============================================================================
-// 재연결 로직 테스트
+// Reconnection Logic Tests
 // ============================================================================
 
 /**
- * @brief TCP Client 재연결 로직 테스트
+ * @brief TCP Client Reconnection Logic Test
  *
- * 연결 실패 시 설정된 간격으로 재연결을 시도하는지 검증
+ * Verifies that reconnection is attempted at configured intervals when connection fails
  */
 TEST_F(TransportPerformanceTest, TcpClientRetryMechanism) {
   // --- Setup ---
   TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
-  cfg.port = 1;                 // 존재하지 않는 포트로 연결 실패 유도
-  cfg.retry_interval_ms = 100;  // 짧은 재연결 간격으로 테스트
+  cfg.port = 1;                 // Induce connection failure with non-existent port
+  cfg.retry_interval_ms = 100;  // Test with short reconnection interval
 
   client_ = std::make_shared<TcpClient>(cfg);
 
-  // 상태 콜백으로 재연결 시도 횟수 카운트
+  // Count reconnection attempts with state callback
   client_->on_state([this](LinkState state) {
     if (state == LinkState::Connecting) {
       retry_count_++;
@@ -236,26 +236,26 @@ TEST_F(TransportPerformanceTest, TcpClientRetryMechanism) {
   // --- Test Logic ---
   client_->start();
 
-  // 재연결 시도가 여러 번 발생하는지 확인
-  std::this_thread::sleep_for(500ms);  // 5번의 재연결 시도 예상
+  // Check if multiple reconnection attempts occurred
+  std::this_thread::sleep_for(500ms);  // Expect 5 reconnection attempts
 
   // --- Verification ---
-  EXPECT_GT(retry_count_.load(), 3);  // 최소 3번 이상 재연결 시도
+  EXPECT_GT(retry_count_.load(), 3);  // At least 3 reconnection attempts
 }
 
 /**
- * @brief Serial 재연결 로직 테스트
+ * @brief Serial Reconnection Logic Test
  */
 TEST_F(TransportPerformanceTest, SerialRetryMechanism) {
   // --- Setup ---
   SerialConfig cfg;
-  cfg.device = "/dev/nonexistent";  // 존재하지 않는 장치로 연결 실패 유도
+  cfg.device = "/dev/nonexistent";  // Induce connection failure with non-existent device
   cfg.baud_rate = 9600;
-  cfg.retry_interval_ms = 100;  // 짧은 재연결 간격으로 테스트
+  cfg.retry_interval_ms = 100;  // Test with short reconnection interval
 
   serial_ = std::make_shared<Serial>(cfg);
 
-  // 상태 콜백으로 재연결 시도 횟수 카운트
+  // Count reconnection attempts with state callback
   serial_->on_state([this](LinkState state) {
     if (state == LinkState::Connecting) {
       retry_count_++;
@@ -265,11 +265,11 @@ TEST_F(TransportPerformanceTest, SerialRetryMechanism) {
   // --- Test Logic ---
   serial_->start();
 
-  // 재연결 시도가 여러 번 발생하는지 확인
-  std::this_thread::sleep_for(500ms);  // 5번의 재연결 시도 예상
+  // Check if multiple reconnection attempts occurred
+  std::this_thread::sleep_for(500ms);  // Expect 5 reconnection attempts
 
   // --- Verification ---
-  EXPECT_GT(retry_count_.load(), 3);  // 최소 3번 이상 재연결 시도
+  EXPECT_GT(retry_count_.load(), 3);  // At least 3 reconnection attempts
 }
 
 // ============================================================================
@@ -690,7 +690,7 @@ TEST_F(TransportPerformanceTest, TcpServerSessionBackpressure) {
   bool backpressure_triggered = false;
   size_t backpressure_bytes = 0;
 
-  // 백프레셔 콜백 설정
+  // Set backpressure callback
   session->on_backpressure([&backpressure_triggered, &backpressure_bytes](size_t bytes) {
     backpressure_triggered = true;
     backpressure_bytes = bytes;
@@ -706,7 +706,7 @@ TEST_F(TransportPerformanceTest, TcpServerSessionBackpressure) {
 
   // --- Verification ---
   std::this_thread::sleep_for(100ms);
-  // 백프레셔가 트리거되었는지 확인 (실제로는 연결이 없어서 큐에만 쌓임)
+  // Check if backpressure was triggered (실제로는 연결이 없어서 큐에만 쌓임)
   EXPECT_TRUE(session->alive());
 }
 

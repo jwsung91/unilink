@@ -55,11 +55,11 @@ class DebugCommunicationTest : public ::testing::Test {
       server_->stop();
     }
 
-    // 충분한 시간을 두고 정리
+    // Clean up with sufficient time
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 
-  // 테스트용 포트 번호
+  // Test port number
   uint16_t getTestPort() {
     static std::atomic<uint16_t> port_counter{20000};
     return port_counter.fetch_add(1);
@@ -78,14 +78,14 @@ class DebugCommunicationTest : public ::testing::Test {
 };
 
 /**
- * @brief 서버 생성 및 상태 확인 테스트
+ * @brief Server Creation and Status Verification Test
  */
 TEST_F(DebugCommunicationTest, ServerCreationAndStatus) {
   std::cout << "Testing server creation and status..." << std::endl;
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -118,7 +118,7 @@ TEST_F(DebugCommunicationTest, ClientCreationAndConnection) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -172,7 +172,7 @@ TEST_F(DebugCommunicationTest, SimpleCommunication) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -252,11 +252,11 @@ class DetailedDebugTest : public ::testing::Test {
       server_->stop();
     }
 
-    // 충분한 시간을 두고 정리
+    // Clean up with sufficient time
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 
-  // 테스트용 포트 번호
+  // Test port number
   uint16_t getTestPort() {
     static std::atomic<uint16_t> port_counter{40000};
     return port_counter.fetch_add(1);
@@ -302,7 +302,7 @@ TEST_F(DetailedDebugTest, PortBindingStatus) {
   // 포트가 사용 중이지 않은지 확인
   EXPECT_FALSE(isPortInUse(test_port)) << "Port " << test_port << " is already in use";
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -336,7 +336,7 @@ TEST_F(DetailedDebugTest, RawTcpConnection) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -383,7 +383,7 @@ TEST_F(DetailedDebugTest, ServerErrorLogging) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_error([this](const std::string& error) {
@@ -429,11 +429,11 @@ class FixedCommunicationTest : public ::testing::Test {
       server_->stop();
     }
 
-    // 충분한 시간을 두고 정리
+    // Clean up with sufficient time
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 
-  // 테스트용 포트 번호
+  // Test port number
   uint16_t getTestPort() {
     static std::atomic<uint16_t> port_counter{30000};
     return port_counter.fetch_add(1);
@@ -477,7 +477,7 @@ TEST_F(FixedCommunicationTest, ServerStartAndListen) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -511,7 +511,7 @@ TEST_F(FixedCommunicationTest, ClientConnection) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -563,7 +563,7 @@ TEST_F(FixedCommunicationTest, RealDataCommunication) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -640,11 +640,11 @@ class RealCommunicationTest : public ::testing::Test {
       server_->stop();
     }
 
-    // 충분한 시간을 두고 정리
+    // Clean up with sufficient time
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 
-  // 테스트용 포트 번호
+  // Test port number
   uint16_t getTestPort() {
     static std::atomic<uint16_t> port_counter{10000};
     return port_counter.fetch_add(1);
@@ -682,7 +682,7 @@ TEST_F(RealCommunicationTest, ServerClientCommunication) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {
@@ -808,7 +808,7 @@ TEST_F(RealCommunicationTest, MultipleMessageCommunication) {
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port)
 
                 .on_connect([this]() {

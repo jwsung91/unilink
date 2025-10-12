@@ -101,9 +101,9 @@ class ErrorRecoveryTest : public BaseTest {
 TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
   std::cout << "\n=== Network Connection Error Tests ===" << std::endl;
 
-  // 1. 연결 거부 에러 (잘못된 포트) - 재시도 동작 확인
+  // 1. Connection refused error (wrong port) - Check retry behavior
   std::cout << "Testing connection refused error..." << std::endl;
-  auto client1 = builder::UnifiedBuilder::tcp_client("127.0.0.1", 1)  // 잘못된 포트
+  auto client1 = builder::UnifiedBuilder::tcp_client("127.0.0.1", 1)  // Wrong port
 
                      .on_error([this](const std::string& error) {
                        error_count_++;
@@ -114,20 +114,20 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
   ASSERT_NE(client1, nullptr);
   client1->start();
 
-  // TCP Client는 연결 실패 시 Error 상태가 아닌 Connecting 상태로 재시도합니다
-  // 따라서 on_error 콜백이 호출되지 않습니다
+  // TCP Client retries in Connecting state, not Error state, when connection fails
+  // Therefore, on_error callback is not called
   TestUtils::waitFor(3000);
   std::cout << "✓ Connection refused error handled (retry mechanism working)" << std::endl;
 
-  // 2. 타임아웃 에러 (존재하지 않는 IP)
+  // 2. Timeout error (non-existent IP)
   std::cout << "Testing timeout error..." << std::endl;
   error_count_ = 0;
 
   TcpClientConfig timeout_cfg;
-  timeout_cfg.host = "192.168.255.255";  // 존재하지 않는 IP
+  timeout_cfg.host = "192.168.255.255";  // Non-existent IP
   timeout_cfg.port = 8080;
-  timeout_cfg.connection_timeout_ms = 1000;  // 짧은 타임아웃
-  timeout_cfg.max_retries = 1;               // 1회만 재시도
+  timeout_cfg.connection_timeout_ms = 1000;  // Short timeout
+  timeout_cfg.max_retries = 1;               // Retry only once
 
   // Use wrapper instead of transport layer for error callbacks
   auto client2 = builder::UnifiedBuilder::tcp_client("192.168.255.255", 8080)
@@ -141,11 +141,11 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
   ASSERT_NE(client2, nullptr);
   client2->start();
 
-  // TCP Client는 연결 실패 시 재시도하므로 on_error 콜백이 호출되지 않습니다
+  // TCP Client retries on connection failure, so on_error callback is not called
   TestUtils::waitFor(5000);
   std::cout << "✓ Timeout error handled (retry mechanism working)" << std::endl;
 
-  // 3. DNS 해석 실패
+  // 3. DNS resolution failure
   std::cout << "Testing DNS resolution failure..." << std::endl;
   error_count_ = 0;
 
@@ -160,7 +160,7 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
   ASSERT_NE(client3, nullptr);
   client3->start();
 
-  // TCP Client는 DNS 실패 시에도 재시도하므로 on_error 콜백이 호출되지 않습니다
+  // TCP Client retries even on DNS failure, so on_error callback is not called
   TestUtils::waitFor(5000);
   std::cout << "✓ DNS resolution failure handled (retry mechanism working)" << std::endl;
 }

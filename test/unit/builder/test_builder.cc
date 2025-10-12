@@ -30,14 +30,14 @@ using namespace unilink;
 class BuilderTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    // 테스트 전 초기화
+    // Initialize before test
     data_received_.clear();
     connection_established_ = false;
     error_occurred_ = false;
   }
 
   void TearDown() override {
-    // 테스트 후 정리
+    // Clean up after test
     if (server_) {
       server_->stop();
       server_.reset();
@@ -51,11 +51,11 @@ class BuilderTest : public ::testing::Test {
       serial_.reset();
     }
 
-    // 충분한 시간을 두고 정리 완료 보장
+    // Ensure cleanup completion with sufficient time
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 
-  // 테스트용 포트 번호 (동적 할당으로 충돌 방지)
+  // Test port number (dynamic allocation to prevent conflicts)
   uint16_t getTestPort() {
     static std::atomic<uint16_t> port_counter{9000};
     return port_counter.fetch_add(1);

@@ -30,7 +30,7 @@ using namespace unilink;
 using namespace std::chrono_literals;
 
 /**
- * @brief Builder Coverage Test - 테스트되지 않은 Builder 메서드들 커버리지 확보
+ * @brief Builder Coverage Test - Ensure coverage for untested Builder methods
  */
 class BuilderCoverageTest : public ::testing::Test {
  protected:

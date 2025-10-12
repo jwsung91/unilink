@@ -35,7 +35,7 @@ using namespace std::chrono_literals;
 class ImprovedArchitectureTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    // 자동 초기화 테스트를 위해 IoContextManager를 중지
+    // Stop IoContextManager for auto-init test
     if (common::IoContextManager::instance().is_running()) {
       std::cout << "Stopping IoContextManager for auto-init test..." << std::endl;
       common::IoContextManager::instance().stop();
@@ -56,11 +56,11 @@ class ImprovedArchitectureTest : public ::testing::Test {
         server_.reset();
       }
 
-      // 충분한 시간을 두고 정리
+      // Clean up with sufficient time
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-      // IoContextManager는 각 테스트에서 개별적으로 관리하지 않음
-      // 전역 상태이므로 다른 테스트에 영향을 줄 수 있음
+      // IoContextManager is not managed individually in each test
+      // It's a global state so it can affect other tests
     } catch (const std::exception& e) {
       std::cout << "Exception in TearDown: " << e.what() << std::endl;
     } catch (...) {
@@ -79,41 +79,41 @@ class ImprovedArchitectureTest : public ::testing::Test {
 };
 
 /**
- * @brief 현재 리소스 공유 문제 확인 테스트
+ * @brief Current Resource Sharing Issue Verification Test
  */
 TEST_F(ImprovedArchitectureTest, CurrentResourceSharingIssue) {
   std::cout << "Testing current resource sharing issue..." << std::endl;
 
   uint16_t test_port = getTestPort();
 
-  // 서버 생성
+  // Create server
   server_ = unilink::tcp_server(test_port).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
   std::cout << "Server created successfully" << std::endl;
 
-  // 클라이언트 생성
+  // Create client
   client_ = unilink::tcp_client("127.0.0.1", test_port).build();
 
   ASSERT_NE(client_, nullptr);
   std::cout << "Client created successfully" << std::endl;
 
-  // 잠시 대기
+  // Brief wait
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
   std::cout << "Test completed - resource sharing issue demonstrated" << std::endl;
 }
 
 /**
- * @brief 제안된 독립적 리소스 관리 테스트
+ * @brief Proposed Independent Resource Management Test
  */
 TEST_F(ImprovedArchitectureTest, ProposedIndependentResourceManagement) {
   std::cout << "Testing proposed independent resource management..." << std::endl;
 
-  // AutoInitializer를 사용한 자동 초기화 테스트
+  // Auto-initialization test using AutoInitializer
   EXPECT_FALSE(builder::AutoInitializer::is_io_context_running());
 
-  // 자동 초기화
+  // Auto-initialization
   builder::AutoInitializer::ensure_io_context_running();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -123,37 +123,37 @@ TEST_F(ImprovedArchitectureTest, ProposedIndependentResourceManagement) {
 }
 
 /**
- * @brief 상위 API 자동 초기화 테스트
+ * @brief Upper API Auto-initialization Test
  */
 TEST_F(ImprovedArchitectureTest, UpperAPIAutoInitialization) {
   std::cout << "Testing upper API auto-initialization..." << std::endl;
 
   uint16_t test_port = getTestPort();
 
-  // IoContextManager가 실행 중이 아니어도 빌더가 자동으로 초기화
+  // Builder auto-initializes even if IoContextManager is not running
   if (common::IoContextManager::instance().is_running()) {
     common::IoContextManager::instance().stop();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
-  // 빌더 사용 시 자동으로 IoContextManager가 시작됨
+  // IoContextManager starts automatically when using builder
   server_ = unilink::tcp_server(test_port).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
-  // IoContextManager가 자동으로 시작되었는지 확인
+  // Check if IoContextManager started automatically
   EXPECT_TRUE(common::IoContextManager::instance().is_running());
 
   std::cout << "Upper API auto-initialization test completed" << std::endl;
 }
 
 /**
- * @brief 리소스 공유 분석 테스트
+ * @brief Resource Sharing Analysis Test
  */
 TEST_F(ImprovedArchitectureTest, ResourceSharingAnalysis) {
   std::cout << "Analyzing resource sharing..." << std::endl;
 
-  // IoContextManager를 통한 리소스 관리 테스트
+  // Resource management test through IoContextManager
   auto& context = common::IoContextManager::instance().get_context();
   EXPECT_TRUE(&context != nullptr);
 
