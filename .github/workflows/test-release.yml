@@ -1,21 +1,20 @@
-name: Release
+name: Test Release
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
     inputs:
-      tag_name:
-        description: 'Tag name for release'
+      test_name:
+        description: 'Test name'
         required: true
-        default: 'v0.1.0-test'
+        default: 'test-release'
 
 jobs:
-  create-release:
+  test-release:
+    name: Test Release Process
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up C++ toolchain
         run: |
@@ -44,13 +43,23 @@ jobs:
           cpack -B package -G TGZ
           ls -la package/
 
-      - name: Upload Release Asset
-        uses: softprops/action-gh-release@v2
-        with:
-          files: build/package/unilink-*.tar.gz
-          name: Release ${{ github.ref_name || inputs.tag_name }}
-          tag_name: ${{ github.ref_name || inputs.tag_name }}
-          draft: true
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Show package contents
+        run: |
+          cd build/package
+          tar -tzf unilink-*.tar.gz | head -20
+
+      - name: Test package extraction
+        run: |
+          cd build/package
+          mkdir -p test_extract
+          tar -xzf unilink-*.tar.gz -C test_extract
+          ls -la test_extract/
+
+      - name: Summary
+        run: |
+          echo "## Test Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build: Success" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Package: Created" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Package files:" >> $GITHUB_STEP_SUMMARY
+          ls -la build/package/ >> $GITHUB_STEP_SUMMARY
