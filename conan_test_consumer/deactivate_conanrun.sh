@@ -1,1 +1,0 @@
-. "/home/adam/workspace/jwsung91/unilink/conan_test_consumer/deactivate_conanrunenv-release-x86_64.sh"
