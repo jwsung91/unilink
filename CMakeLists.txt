@@ -62,9 +62,9 @@ if(UNILINK_BUILD_SHARED AND UNILINK_BUILD_STATIC)
   # Create unified target
   add_library(unilink INTERFACE)
   target_link_libraries(unilink INTERFACE
-    $<$<TARGET_EXISTS:unilink_shared>:unilink::unilink_shared>
-    $<$<NOT:$<TARGET_EXISTS:unilink_shared>>:unilink::unilink_static>
-    unilink::unilink_dependencies)
+    $<$<TARGET_EXISTS:unilink_shared>:unilink_shared>
+    $<$<NOT:$<TARGET_EXISTS:unilink_shared>>:unilink_static>
+    unilink_dependencies)
     
 elseif(UNILINK_BUILD_SHARED)
   # Build only shared library
@@ -89,8 +89,25 @@ else()
   message(FATAL_ERROR "At least one library type (shared or static) must be enabled")
 endif()
 
-# Create alias
-add_library(unilink::unilink ALIAS unilink)
+# Create alias - use shared library by default
+if(TARGET unilink_shared)
+  add_library(unilink::unilink ALIAS unilink_shared)
+elseif(TARGET unilink_static)
+  add_library(unilink::unilink ALIAS unilink_static)
+elseif(TARGET unilink)
+  add_library(unilink::unilink ALIAS unilink)
+endif()
+
+# Ensure unilink::unilink is available for export
+if(NOT TARGET unilink::unilink)
+  if(TARGET unilink_shared)
+    add_library(unilink::unilink ALIAS unilink_shared)
+  elseif(TARGET unilink_static)
+    add_library(unilink::unilink ALIAS unilink_static)
+  elseif(TARGET unilink)
+    add_library(unilink::unilink ALIAS unilink)
+  endif()
+endif()
 
 # Link dependencies
 if(TARGET unilink_shared)
@@ -145,14 +162,8 @@ if(UNILINK_ENABLE_INSTALL)
       INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
   endif()
   
-  if(TARGET unilink AND NOT unilink_shared AND NOT unilink_static)
-    install(TARGETS unilink
-      EXPORT unilinkTargets
-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-      INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-  endif()
+  # unilink::unilink is an alias, so it doesn't need to be exported
+  # Consumers should use unilink_shared or unilink_static directly
 
   install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/unilink/
           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/unilink
