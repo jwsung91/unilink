@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for release'
+        required: true
+        default: 'v0.1.0-test'
 
 jobs:
   create-release:
@@ -13,7 +19,9 @@ jobs:
 
       - name: Set up C++ toolchain
         run: |
-          sudo apt-get update
+          # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
+          sudo apt-get update --allow-releaseinfo-change
           sudo apt-get install -y build-essential cmake ninja-build libboost-all-dev
 
       - name: Configure
@@ -40,9 +48,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: build/package/unilink-*.tar.gz
-          name: Release ${{ github.ref_name }}
-          tag_name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
+          name: Release ${{ github.ref_name || inputs.tag_name }}
+          tag_name: ${{ github.ref_name || inputs.tag_name }}
+          draft: true
+          prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
