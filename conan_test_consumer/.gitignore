@@ -1,0 +1,25 @@
+# Build directory
+build/
+
+# Conan generated files
+CMakePresets.json
+conan_toolchain.cmake
+conanbuild.sh
+conanrun.sh
+unilink-*.cmake
+conandeps_legacy.cmake
+cmakedeps_macros.cmake
+deactivate_*.sh
+conanrunenv-*.sh
+conanbuildenv-*.sh
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Executables
+conan_test_consumer
