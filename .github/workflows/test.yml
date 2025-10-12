@@ -19,12 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Ubuntu 20.04: GCC 9 only
-          - os: ubuntu-20.04
-            compiler: gcc
-            cc: gcc-9
-            cxx: g++-9
-            boost_version: "1.65"
           # Ubuntu 22.04: GCC 11 and Clang 14
           - os: ubuntu-22.04
             compiler: gcc
@@ -61,9 +55,7 @@ jobs:
         
         # Install specific compiler versions
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-            sudo apt-get install -y gcc-9 g++-9
-          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y gcc-11 g++-11
           elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y gcc-13 g++-13
@@ -77,9 +69,7 @@ jobs:
         fi
         
         # Ubuntu version-specific Boost installation
-        if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-          sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
-        elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           # Ubuntu 24.04: try 1.83 first, fallback to 1.74
@@ -136,9 +126,7 @@ jobs:
         
         # Install specific compiler versions
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-            sudo apt-get install -y gcc-9 g++-9
-          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y gcc-11 g++-11
           elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y gcc-13 g++-13
@@ -152,9 +140,7 @@ jobs:
         fi
         
         # Ubuntu version-specific Boost installation
-        if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-          sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
-        elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           # Ubuntu 24.04: try 1.83 first, fallback to 1.74
@@ -211,9 +197,7 @@ jobs:
         
         # Install specific compiler versions
         if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-            sudo apt-get install -y gcc-9 g++-9
-          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y gcc-11 g++-11
           elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
             sudo apt-get install -y gcc-13 g++-13
@@ -227,9 +211,7 @@ jobs:
         fi
         
         # Ubuntu version-specific Boost installation
-        if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
-          sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
-        elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
           sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
           # Ubuntu 24.04: try 1.83 first, fallback to 1.74
