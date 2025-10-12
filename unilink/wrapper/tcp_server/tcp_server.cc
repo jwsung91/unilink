@@ -171,6 +171,8 @@ void TcpServer::handle_state(common::LinkState state) {
 
   switch (state) {
     case common::LinkState::Connected:
+      // For TCP server, Connected state means a client connected
+      // This should only be called when a client actually connects, not when server starts listening
       if (on_connect_) {
         on_connect_();
       }
@@ -184,6 +186,10 @@ void TcpServer::handle_state(common::LinkState state) {
       if (on_error_) {
         on_error_("Connection error");
       }
+      break;
+    case common::LinkState::Listening:
+      // Server is now listening - this is not a connection event
+      // Do not call on_connect_ here
       break;
     default:
       break;
