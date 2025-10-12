@@ -10,20 +10,93 @@ env:
   CXX_STANDARD: 17
 
 jobs:
-  # Multi-platform Build Matrix
+  # Ubuntu 20.04 Build (Priority)
+  build-ubuntu-20-04:
+    name: Build (Ubuntu 20.04, GCC 9)
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Install dependencies
+      run: |
+        set -e  # Exit on any error
+        
+        echo "Installing basic dependencies..."
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          doxygen \
+          graphviz
+        
+        echo "Installing compiler: gcc for ubuntu-20.04"
+        sudo apt-get install -y gcc-9 g++-9
+        
+        echo "Installing Boost libraries for ubuntu-20.04"
+        sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
+        
+        echo "Verifying compiler installation..."
+        gcc-9 --version
+        g++-9 --version
+
+    - name: Set up compiler
+      run: |
+        echo "CC=gcc-9" >> $GITHUB_ENV
+        echo "CXX=g++-9" >> $GITHUB_ENV
+
+    - name: Configure CMake (Minimal Build)
+      run: |
+        set -e
+        echo "Configuring minimal build..."
+        cmake -S . -B build-minimal \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=OFF \
+          -DBUILD_EXAMPLES=ON \
+          -DBUILD_TESTING=ON
+
+    - name: Configure CMake (Full Build)
+      run: |
+        set -e
+        echo "Configuring full build..."
+        cmake -S . -B build-full \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=ON \
+          -DBUILD_TESTING=ON
+
+    - name: Build (Minimal)
+      run: |
+        set -e
+        echo "Building minimal version..."
+        cmake --build build-minimal -j $(nproc)
+
+    - name: Build (Full)
+      run: |
+        set -e
+        echo "Building full version..."
+        cmake --build build-full -j $(nproc)
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts-ubuntu-20.04-gcc-${{ github.run_number }}-${{ github.run_attempt }}
+        path: |
+          build-minimal/
+          build-full/
+        retention-days: 7
+
+  # Multi-platform Build Matrix (Ubuntu 22.04, 24.04)
   build:
     name: Build (${{ matrix.os }}, ${{ matrix.compiler }})
     runs-on: ${{ matrix.os }}
+    needs: build-ubuntu-20-04
     strategy:
       fail-fast: false
       matrix:
         include:
-          # Ubuntu 20.04: GCC 9 only (Clang 10 has limited C++17 support)
-          - os: ubuntu-20.04
-            compiler: gcc
-            cc: gcc-9
-            cxx: g++-9
-            boost_version: "1.65"
           # Ubuntu 22.04: GCC 11 and Clang 14
           - os: ubuntu-22.04
             compiler: gcc
