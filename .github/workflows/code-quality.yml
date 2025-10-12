@@ -64,7 +64,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: cppcheck-results-${{ github.run_number }}-${{ github.run_attempt }}
+        name: cppcheck-results-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
         path: cppcheck-results.xml
         retention-days: 7
 
