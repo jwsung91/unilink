@@ -16,7 +16,7 @@ cmake_minimum_required(VERSION 3.10)
 project(unilink-test)
 
 # Enable configuration management API for tests
-target_compile_definitions(unilink PUBLIC UNILINK_ENABLE_CONFIG=1)
+# Note: This is handled by the main CMakeLists.txt now
 
 # ============================================================================
 # NEW ORGANIZED TEST STRUCTURE

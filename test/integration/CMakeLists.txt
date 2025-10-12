@@ -22,7 +22,7 @@ foreach(test_file test_integration.cc test_simple_server.cc test_client_limit_in
   add_executable(run_integration_${test_name} tcp/${test_file})
   target_link_libraries(run_integration_${test_name}
     PRIVATE
-      unilink
+      unilink_shared
       GTest::gtest
       GTest::gtest_main
       GTest::gmock
@@ -56,7 +56,7 @@ foreach(test_file test_serial_builder_improvements.cc)
   add_executable(run_integration_${test_name} serial/${test_file})
   target_link_libraries(run_integration_${test_name}
     PRIVATE
-      unilink
+      unilink_shared
       GTest::gtest
       GTest::gtest_main
       GTest::gmock
@@ -81,7 +81,7 @@ endforeach()
 #   add_executable(run_integration_${test_name} mock/${test_file})
 #   target_link_libraries(run_integration_${test_name}
 #     PRIVATE
-#       unilink
+#       unilink_shared
 #       GTest::gtest
 #       GTest::gtest_main
 #       GTest::gmock
@@ -105,7 +105,7 @@ foreach(test_file test_builder_integration.cc test_stable_integration.cc test_co
   add_executable(run_integration_${test_name} ${test_file})
   target_link_libraries(run_integration_${test_name}
     PRIVATE
-      unilink
+      unilink_shared
       GTest::gtest
       GTest::gtest_main
       GTest::gmock

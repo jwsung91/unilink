@@ -26,7 +26,7 @@ if(BUILD_PERFORMANCE_TESTS)
     add_executable(run_performance_${test_name} benchmark/${test_file})
     target_link_libraries(run_performance_${test_name}
       PRIVATE
-        unilink
+        unilink_shared
         GTest::gtest
         GTest::gtest_main
         GTest::gmock

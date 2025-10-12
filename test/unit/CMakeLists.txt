@@ -22,7 +22,7 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
   add_executable(run_unit_${test_name} common/${test_file})
   target_link_libraries(run_unit_${test_name}
     PRIVATE
-      unilink
+      unilink_shared
       GTest::gtest
       GTest::gtest_main
       GTest::gmock
@@ -55,7 +55,7 @@ foreach(test_file test_builder.cc test_builder_coverage.cc)
   add_executable(run_unit_${test_name} builder/${test_file})
   target_link_libraries(run_unit_${test_name}
     PRIVATE
-      unilink
+      unilink_shared
       GTest::gtest
       GTest::gtest_main
       GTest::gmock
@@ -78,7 +78,7 @@ foreach(test_file test_config.cc test_config_coverage.cc)
   add_executable(run_unit_${test_name} config/${test_file})
   target_link_libraries(run_unit_${test_name}
     PRIVATE
-      unilink
+      unilink_shared
       GTest::gtest
       GTest::gtest_main
       GTest::gmock
@@ -101,7 +101,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
   add_executable(run_unit_${test_name} wrapper/${test_file})
   target_link_libraries(run_unit_${test_name}
     PRIVATE
-      unilink
+      unilink_shared
       GTest::gtest
       GTest::gtest_main
       GTest::gmock

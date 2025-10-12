@@ -1,0 +1,102 @@
+# Unilink dependencies management
+# This file handles all external dependencies
+
+# Find required packages
+find_package(Boost 1.70 REQUIRED COMPONENTS system)
+find_package(Threads REQUIRED)
+
+# Optional dependencies
+find_package(PkgConfig QUIET)
+
+# Google Test for testing
+if(UNILINK_BUILD_TESTS)
+  include(FetchContent)
+  
+  FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.14.0
+    GIT_SHALLOW TRUE
+  )
+  
+  # Prevent GoogleTest from overriding our compiler/linker options
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+  set(BUILD_GMOCK ON CACHE BOOL "" FORCE)
+  set(gtest_build_tests OFF CACHE BOOL "" FORCE)
+  set(gtest_build_samples OFF CACHE BOOL "" FORCE)
+  set(gtest_build_benchmarks OFF CACHE BOOL "" FORCE)
+  
+  FetchContent_MakeAvailable(googletest)
+  
+  # Create alias for easier usage
+  add_library(GTest::gtest ALIAS gtest)
+  add_library(GTest::gtest_main ALIAS gtest_main)
+  add_library(GTest::gmock ALIAS gmock)
+  add_library(GTest::gmock_main ALIAS gmock_main)
+endif()
+
+# Doxygen for documentation
+if(UNILINK_BUILD_DOCS)
+  find_package(Doxygen QUIET)
+  if(DOXYGEN_FOUND)
+    set(UNILINK_DOXYGEN_AVAILABLE ON)
+    message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}")
+  else()
+    message(WARNING "Doxygen not found. Documentation will not be generated.")
+    message(STATUS "Install Doxygen to enable documentation generation:")
+    message(STATUS "  Ubuntu/Debian: sudo apt install doxygen")
+    message(STATUS "  CentOS/RHEL: sudo yum install doxygen")
+    message(STATUS "  macOS: brew install doxygen")
+    message(STATUS "  Windows: choco install doxygen")
+  endif()
+endif()
+
+# Create interface library for dependencies
+add_library(unilink_dependencies INTERFACE)
+
+# Link common dependencies
+target_link_libraries(unilink_dependencies INTERFACE
+  Boost::system
+  Threads::Threads
+)
+
+# Add include directories
+target_include_directories(unilink_dependencies INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:include>
+)
+
+# Add compile definitions
+target_compile_definitions(unilink_dependencies INTERFACE
+  $<$<CONFIG:Debug>:UNILINK_DEBUG=1>
+  $<$<CONFIG:Release>:UNILINK_RELEASE=1>
+)
+
+# Platform-specific definitions
+if(WIN32)
+  target_compile_definitions(unilink_dependencies INTERFACE
+    WIN32_LEAN_AND_MEAN
+    NOMINMAX
+  )
+elseif(UNIX)
+  target_compile_definitions(unilink_dependencies INTERFACE
+    _POSIX_C_SOURCE=200809L
+  )
+endif()
+
+# Feature flags
+if(UNILINK_ENABLE_CONFIG)
+  target_compile_definitions(unilink_dependencies INTERFACE UNILINK_ENABLE_CONFIG=1)
+endif()
+
+if(UNILINK_ENABLE_MEMORY_TRACKING)
+  target_compile_definitions(unilink_dependencies INTERFACE UNILINK_ENABLE_MEMORY_TRACKING=1)
+endif()
+
+# Export dependencies for downstream projects
+set(UNILINK_DEPENDENCIES
+  Boost::system
+  Threads::Threads
+  CACHE INTERNAL "Unilink dependencies"
+)
