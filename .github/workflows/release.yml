@@ -32,8 +32,9 @@ jobs:
 
       - name: Package
         run: |
-          cpack -B build/package -G TGZ
-          ls -la build/package/
+          cd build
+          cpack -B package -G TGZ
+          ls -la package/
 
       - name: Create Release
         uses: actions/create-release@v1
