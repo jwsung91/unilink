@@ -16,7 +16,8 @@ This guide describes the system requirements and dependencies needed to build an
 | Platform | Status | Notes |
 |----------|--------|-------|
 | Ubuntu 22.04 LTS | ✅ Fully Supported | Recommended for production |
-| Ubuntu 20.04 LTS | ⚠️ Limited Support | See [Ubuntu 20.04 Build Guide](build_guide.md#ubuntu-2004-build) |
+| Ubuntu 24.04 LTS | ✅ Fully Supported | Latest features and optimizations |
+| Ubuntu 20.04 LTS | ⚠️ Build-Only Support | Build compatibility verified, tests not run in CI/CD |
 | Other Linux | 🔄 Should Work | Not officially tested |
 
 ---
@@ -135,6 +136,7 @@ sudo apt install -y libboost-system1.74.0
 - Must install GCC 11+ or Clang 14+ manually
 - See [Ubuntu 20.04 Build Guide](build_guide.md#ubuntu-2004-build)
 - **Note**: Ubuntu 20.04 reaches end-of-life in April 2025
+- **CI/CD Policy**: Build compatibility verified, but tests not run due to runner availability issues
 
 ### Other Linux Distributions
 - Debian 11+: Supported with default packages

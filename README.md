@@ -25,6 +25,7 @@
 - ⚡ **High Performance** - Asynchronous I/O with callback-based non-blocking operations
 - 🎯 **Modern C++17** - Clean, fluent Builder API with optional configuration management
 - ✅ **Well-Tested** - 72.2% test coverage with comprehensive unit, integration, and E2E tests
+- 🚀 **CI/CD Ready** - Automated testing on Ubuntu 22.04 and 24.04 with build verification for Ubuntu 20.04
 
 ---
 
@@ -96,6 +97,28 @@ tar -xzf unilink-0.1.0-linux-x64.tar.gz
 ```
 
 **For detailed installation instructions, see [Installation Guide](docs/guides/installation.md).**
+
+---
+
+## 🚀 CI/CD & Testing
+
+### Automated Testing
+- **Ubuntu 22.04 & 24.04**: Full test suite with GCC 11/13 and Clang 14/15
+- **Ubuntu 20.04**: Build compatibility verification (tests run locally)
+- **Memory Safety**: AddressSanitizer, ThreadSanitizer, and Valgrind integration
+- **Performance**: Automated regression testing and benchmarking
+
+### Build Matrix
+| Platform | Compiler | Status |
+|----------|----------|--------|
+| Ubuntu 22.04 | GCC 11, Clang 14 | ✅ Full Testing |
+| Ubuntu 24.04 | GCC 13, Clang 15 | ✅ Full Testing |
+| Ubuntu 20.04 | GCC 9 | ⚠️ Build-Only |
+
+**Why Build-Only for Ubuntu 20.04?**
+- GitHub Actions Ubuntu 20.04 runners are being phased out (EOL April 2025)
+- Frequent pending states cause CI/CD delays
+- Build verification ensures compatibility without test overhead
 
 ---
 
