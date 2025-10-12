@@ -41,8 +41,8 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     endif()
   endif()
   
-  # Visibility settings
-  add_compile_options(-fvisibility=hidden -fvisibility-inlines-hidden)
+  # Visibility settings (disabled for now to avoid linking issues)
+  # add_compile_options(-fvisibility=hidden -fvisibility-inlines-hidden)
   
   # Optimization flags
   if(CMAKE_BUILD_TYPE STREQUAL "Release")
