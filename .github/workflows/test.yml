@@ -112,9 +112,10 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: unit-test-results-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
+        name: unit-test-results-${{ matrix.os }}-${{ matrix.compiler }}
         path: build-test/Testing/
         retention-days: 7
+        overwrite: true
 
   # Integration Tests
   integration-tests:
@@ -186,9 +187,10 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: integration-test-results-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
+        name: integration-test-results
         path: build-integration/Testing/
         retention-days: 7
+        overwrite: true
 
   # Performance Tests
   performance-tests:
@@ -259,9 +261,10 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: performance-test-results-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
+        name: performance-test-results
         path: build-perf/Testing/
         retention-days: 7
+        overwrite: true
 
   # Memory Safety Tests
   memory-safety-tests:
@@ -314,9 +317,10 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: memory-safety-test-results-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
+        name: memory-safety-test-results
         path: build-sanitizer/Testing/
         retention-days: 7
+        overwrite: true
 
   # Test Summary
   test-summary:

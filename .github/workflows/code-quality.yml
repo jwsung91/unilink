@@ -64,9 +64,10 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: cppcheck-results-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
+        name: cppcheck-results
         path: cppcheck-results.xml
         retention-days: 7
+        overwrite: true
 
   # CodeQL Analysis
   codeql:

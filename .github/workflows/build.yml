@@ -82,11 +82,12 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts-ubuntu-20.04-gcc-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
+        name: build-artifacts-ubuntu-20.04-gcc
         path: |
           build-minimal/
           build-full/
         retention-days: 7
+        overwrite: true
 
   # Multi-platform Build Matrix (Ubuntu 22.04, 24.04)
   build:
@@ -214,11 +215,12 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts-${{ matrix.os }}-${{ matrix.compiler }}-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.run_id }}
+        name: build-artifacts-${{ matrix.os }}-${{ matrix.compiler }}
         path: |
           build-minimal/
           build-full/
         retention-days: 7
+        overwrite: true
 
   # Docker Build
   docker-build:
