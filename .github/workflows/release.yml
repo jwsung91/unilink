@@ -36,22 +36,13 @@ jobs:
           cpack -B package -G TGZ
           ls -la package/
 
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          files: build/package/unilink-*.tar.gz
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/package/unilink-*.tar.gz
-          asset_name: unilink-${{ github.ref_name }}-linux-x64.tar.gz
-          asset_content_type: application/gzip
