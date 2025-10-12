@@ -67,6 +67,7 @@ jobs:
         name: cppcheck-results
         path: cppcheck-results.xml
         retention-days: 7
+        overwrite: true
 
   # CodeQL Analysis
   codeql:

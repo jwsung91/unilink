@@ -10,57 +10,45 @@ env:
   CXX_STANDARD: 17
 
 jobs:
-  # Multi-platform Build Matrix
-  build:
-    name: Build (${{ matrix.os }}, ${{ matrix.compiler }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-22.04]
-        compiler: [gcc, clang]
-        include:
-          - os: ubuntu-22.04
-            compiler: gcc
-            cc: gcc-11
-            cxx: g++-11
-          - os: ubuntu-22.04
-            compiler: clang
-            cc: clang-14
-            cxx: clang++-14
-          # Ubuntu 20.04 support temporarily removed due to CI performance issues
-          # To restore: uncomment the following lines and add ubuntu-20.04 to the os matrix above
-          # - os: ubuntu-20.04
-          #   compiler: gcc
-          #   cc: gcc-9
-          #   cxx: g++-9
-          # - os: ubuntu-20.04
-          #   compiler: clang
-          #   cc: clang-12
-          #   cxx: clang++-12
-
+  # Ubuntu 20.04 Build (Priority)
+  build-ubuntu-20-04:
+    name: Build (Ubuntu 20.04, GCC 9)
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
 
     - name: Install dependencies
       run: |
+        set -e  # Exit on any error
+        
+        echo "Installing basic dependencies..."
         sudo apt-get update
         sudo apt-get install -y \
           build-essential \
           cmake \
-          libboost-dev \
-          libboost-system-dev \
           doxygen \
           graphviz
+        
+        echo "Installing compiler: gcc for ubuntu-20.04"
+        sudo apt-get install -y gcc-9 g++-9
+        
+        echo "Installing Boost libraries for ubuntu-20.04"
+        sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
+        
+        echo "Verifying compiler installation..."
+        gcc-9 --version
+        g++-9 --version
 
     - name: Set up compiler
       run: |
-        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
-        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+        echo "CC=gcc-9" >> $GITHUB_ENV
+        echo "CXX=g++-9" >> $GITHUB_ENV
 
     - name: Configure CMake (Minimal Build)
       run: |
+        set -e
+        echo "Configuring minimal build..."
         cmake -S . -B build-minimal \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
@@ -70,6 +58,8 @@ jobs:
 
     - name: Configure CMake (Full Build)
       run: |
+        set -e
+        echo "Configuring full build..."
         cmake -S . -B build-full \
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
@@ -78,10 +68,149 @@ jobs:
           -DBUILD_TESTING=ON
 
     - name: Build (Minimal)
-      run: cmake --build build-minimal -j $(nproc)
+      run: |
+        set -e
+        echo "Building minimal version..."
+        cmake --build build-minimal -j $(nproc)
 
     - name: Build (Full)
-      run: cmake --build build-full -j $(nproc)
+      run: |
+        set -e
+        echo "Building full version..."
+        cmake --build build-full -j $(nproc)
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts-ubuntu-20.04-gcc
+        path: |
+          build-minimal/
+          build-full/
+        retention-days: 7
+        overwrite: true
+
+  # Multi-platform Build Matrix (Ubuntu 22.04, 24.04)
+  build:
+    name: Build (${{ matrix.os }}, ${{ matrix.compiler }})
+    runs-on: ${{ matrix.os }}
+    needs: build-ubuntu-20-04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Ubuntu 22.04: GCC 11 and Clang 14
+          - os: ubuntu-22.04
+            compiler: gcc
+            cc: gcc-11
+            cxx: g++-11
+            boost_version: "1.74"
+          - os: ubuntu-22.04
+            compiler: clang
+            cc: clang-14
+            cxx: clang++-14
+            boost_version: "1.74"
+          # Ubuntu 24.04: GCC 13 and Clang 15
+          - os: ubuntu-24.04
+            compiler: gcc
+            cc: gcc-13
+            cxx: g++-13
+            boost_version: "1.83"
+          - os: ubuntu-24.04
+            compiler: clang
+            cc: clang-15
+            cxx: clang++-15
+            boost_version: "1.83"
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Install dependencies
+      run: |
+        set -e  # Exit on any error
+        
+        echo "Installing basic dependencies..."
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          doxygen \
+          graphviz
+        
+        echo "Installing compiler: ${{ matrix.compiler }} for ${{ matrix.os }}"
+        # Install specific compiler versions
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+            sudo apt-get install -y gcc-9 g++-9
+          elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y gcc-11 g++-11
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
+            sudo apt-get install -y gcc-13 g++-13
+          fi
+        else
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+            sudo apt-get install -y clang-14
+          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
+            sudo apt-get install -y clang-15
+          fi
+        fi
+        
+        echo "Installing Boost libraries for ${{ matrix.os }}"
+        # Ubuntu version-specific Boost installation
+        if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+          sudo apt-get install -y libboost1.65-dev libboost-system1.65-dev
+        elif [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
+        else
+          # Ubuntu 24.04: try 1.83 first, fallback to 1.74
+          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
+            echo "Boost 1.83 not available, installing 1.74..."
+            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
+          fi
+        fi
+        
+        echo "Verifying compiler installation..."
+        ${{ matrix.cc }} --version
+        ${{ matrix.cxx }} --version
+
+    - name: Set up compiler
+      run: |
+        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
+        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+
+    - name: Configure CMake (Minimal Build)
+      run: |
+        set -e
+        echo "Configuring minimal build..."
+        cmake -S . -B build-minimal \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=OFF \
+          -DBUILD_EXAMPLES=ON \
+          -DBUILD_TESTING=ON
+
+    - name: Configure CMake (Full Build)
+      run: |
+        set -e
+        echo "Configuring full build..."
+        cmake -S . -B build-full \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DBUILD_EXAMPLES=ON \
+          -DBUILD_TESTING=ON
+
+    - name: Build (Minimal)
+      run: |
+        set -e
+        echo "Building minimal version..."
+        cmake --build build-minimal -j $(nproc)
+
+    - name: Build (Full)
+      run: |
+        set -e
+        echo "Building full version..."
+        cmake --build build-full -j $(nproc)
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -91,6 +220,7 @@ jobs:
           build-minimal/
           build-full/
         retention-days: 7
+        overwrite: true
 
   # Docker Build
   docker-build:

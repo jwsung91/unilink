@@ -107,6 +107,7 @@ jobs:
         name: coverage-report
         path: build-coverage/coverage_html
         retention-days: 30
+        overwrite: true
 
     - name: Upload Coverage Data
       uses: actions/upload-artifact@v4
@@ -116,6 +117,7 @@ jobs:
           build-coverage/coverage_filtered.info
           build-coverage/coverage_summary.txt
         retention-days: 30
+        overwrite: true
 
     - name: Comment PR with Coverage
       if: github.event_name == 'pull_request'

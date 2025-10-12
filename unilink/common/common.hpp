@@ -30,6 +30,7 @@
 
 // Include logger for log_message function
 #include "logger.hpp"
+#include "platform.hpp"
 
 namespace unilink {
 namespace common {
@@ -80,6 +81,17 @@ inline void log_message(const std::string& tag, const std::string& direction, co
   // Use new logging system
   Logger::instance().info(tag, direction, clean_message);
 }
+
+// Platform-specific feature availability
+inline bool is_advanced_logging_available() { return PlatformInfo::is_advanced_logging_available(); }
+
+inline bool is_performance_monitoring_available() { return PlatformInfo::is_performance_monitoring_available(); }
+
+inline bool is_latest_optimizations_available() { return PlatformInfo::is_latest_optimizations_available(); }
+
+inline bool is_experimental_features_available() { return PlatformInfo::is_experimental_features_available(); }
+
+inline std::string get_platform_warning() { return PlatformInfo::get_support_warning(); }
 
 // Safe memory operations
 namespace safe_memory {

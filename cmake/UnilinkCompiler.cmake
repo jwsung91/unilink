@@ -27,9 +27,36 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(UNILINK_COMPILER_CLANG ON)
   endif()
   
+  # Ubuntu version detection for compiler-specific settings
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+    message(FATAL_ERROR "GCC 9.0+ or Clang 10.0+ required for C++17 support")
+  elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
+    # Ubuntu 20.04: GCC 9-10, Clang 10
+    set(UNILINK_UBUNTU_20_04 ON)
+    add_definitions(-DUNILINK_UBUNTU_20_04=1)
+    message(STATUS "Detected Ubuntu 20.04 compatibility mode")
+  elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "13.0")
+    # Ubuntu 22.04: GCC 11-12, Clang 14-17
+    set(UNILINK_UBUNTU_22_04 ON)
+    add_definitions(-DUNILINK_UBUNTU_22_04=1)
+    message(STATUS "Detected Ubuntu 22.04 compatibility mode")
+  else()
+    # Ubuntu 24.04+: GCC 13+, Clang 15+
+    set(UNILINK_UBUNTU_24_04 ON)
+    add_definitions(-DUNILINK_UBUNTU_24_04=1)
+    message(STATUS "Detected Ubuntu 24.04+ compatibility mode")
+  endif()
+  
   # Common flags for GCC and Clang
   if(UNILINK_ENABLE_WARNINGS)
     add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion)
+    
+    # Ubuntu 20.04 specific warning suppressions
+    if(UNILINK_UBUNTU_20_04)
+      add_compile_options(-Wno-deprecated-declarations)
+      add_compile_options(-Wno-unused-variable)
+      message(STATUS "Applied Ubuntu 20.04 warning suppressions")
+    endif()
     
     # Additional warnings for Clang
     if(UNILINK_COMPILER_CLANG)
