@@ -310,6 +310,22 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 ```cpp
 "COM3"
 "COM4"
+"\\\\.\\COM10"  // COM10 이상은 \\.\ 접두사 필요
+```
+
+### Windows 전용 사용 팁
+
+- 기본값: Windows에서는 기본 시리얼 장치가 `COM3`로 설정됩니다.
+- 경로 정규화: 내부적으로 `COM10` 이상의 포트는 자동으로 `"\\\\.\\COM10"` 형태로 정규화되어 열립니다.
+- 예제:
+```cpp
+// Windows 환경에서 COM 포트 사용
+auto serial = unilink::serial("COM3", 115200)
+    .on_connect([](){ std::cout << "Opened COM3" << std::endl; })
+    .build();
+
+// COM10 이상도 그대로 입력 가능 (내부에서 \\.\COM10 으로 보정)
+auto serial2 = unilink::serial("COM10", 115200).build();
 ```
 
 ### Advanced Examples

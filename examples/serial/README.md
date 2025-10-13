@@ -15,6 +15,17 @@ sudo chmod 666 /dev/ttyUSB0
 
 # Windows uses COM ports
 # COM3, COM4, etc.
+# For COM10 or higher, use \\.\COM10 form (handled internally as well)
+```
+
+### Windows Examples
+
+```cpp
+// Basic
+auto serial = unilink::serial("COM3", 115200).build();
+
+// COM10 or higher
+auto serial_hi = unilink::serial("COM10", 115200).build();  // Internally normalized to "\\.\\COM10"
 ```
 
 ## Testing with socat (Virtual Serial Ports)
