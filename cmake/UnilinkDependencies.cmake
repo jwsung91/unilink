@@ -90,6 +90,11 @@ target_link_libraries(unilink_dependencies INTERFACE
   Boost::system
   Threads::Threads
 )
+ 
+ # Link Windows socket library when building on Windows
+ if(WIN32)
+   target_link_libraries(unilink_dependencies INTERFACE ws2_32)
+ endif()
 
 # Add include directories
 target_include_directories(unilink_dependencies INTERFACE

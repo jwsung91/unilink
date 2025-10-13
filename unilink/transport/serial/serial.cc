@@ -31,6 +31,17 @@ namespace net = boost::asio;
 // Use fully qualified names for clarity
 using namespace common;  // For error_reporting namespace
 
+// Normalize serial device path for platform specifics
+static std::string normalizeSerialDevice(const std::string& dev) {
+#if defined(_WIN32)
+  // If already prefixed, return as is
+  if (dev.rfind("\\\\.\\", 0) == 0) return dev;
+  return std::string("\\\\.\\") + dev;
+#else
+  return dev;
+#endif
+}
+
 Serial::Serial(const config::SerialConfig& cfg)
     : ioc_(common::IoContextManager::instance().get_context()),
       owns_ioc_(true),  // Set to true to run io_context in our own thread
@@ -146,7 +157,8 @@ void Serial::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 
 void Serial::open_and_configure() {
   boost::system::error_code ec;
-  port_->open(cfg_.device, ec);
+  const auto devicePath = normalizeSerialDevice(cfg_.device);
+  port_->open(devicePath, ec);
   if (ec) {
     UNILINK_LOG_ERROR("serial", "open", "Failed to open device: " + cfg_.device + " - " + ec.message());
     handle_error("open", ec);

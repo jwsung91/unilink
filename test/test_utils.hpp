@@ -16,6 +16,8 @@
 
 #pragma once
 
+#if !defined(_WIN32)
+
 #include <arpa/inet.h>
 #include <gtest/gtest.h>
 #include <netinet/in.h>
@@ -259,3 +261,9 @@ class IntegrationTest : public NetworkTest {
 
 }  // namespace test
 }  // namespace unilink
+
+#else  // _WIN32
+
+// Disabled on Windows due to POSIX-only dependencies in raw socket helpers
+
+#endif  // !_WIN32

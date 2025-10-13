@@ -16,8 +16,11 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+
+#if !defined(_WIN32)
 #include <sys/utsname.h>
 #include <unistd.h>
+#endif
 
 #include <atomic>
 #include <chrono>
@@ -64,6 +67,7 @@ class PlatformTest : public ::testing::Test {
   std::string architecture_;
 
   void get_platform_info() {
+#if !defined(_WIN32)
     struct utsname info;
     if (uname(&info) == 0) {
       platform_name_ = info.sysname;
@@ -74,6 +78,11 @@ class PlatformTest : public ::testing::Test {
       platform_version_ = "unknown";
       architecture_ = "unknown";
     }
+#else
+    platform_name_ = "Windows";
+    platform_version_ = "unknown";
+    architecture_ = sizeof(void*) == 8 ? "x86_64" : "x86";
+#endif
   }
 
   // Helper function to check if running on specific platform
