@@ -46,6 +46,23 @@ Write-Host "unilink Windows Build Script (PowerShell)" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
+# Find project root directory
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent $ScriptDir
+
+# Check if CMakeLists.txt exists in project root
+if (-not (Test-Path "$ProjectRoot\CMakeLists.txt")) {
+    Write-Host "ERROR: CMakeLists.txt not found in project root: $ProjectRoot" -ForegroundColor Red
+    Write-Host "Please run this script from the unilink repository" -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "Project Root: $ProjectRoot" -ForegroundColor Green
+Write-Host ""
+
+# Change to project root directory
+Push-Location $ProjectRoot
+
 # Determine build type
 $BuildType = if ($Debug) { "Debug" } else { "Release" }
 $BuildTests = if ($NoTests) { "OFF" } else { "ON" }
@@ -191,5 +208,9 @@ if ($BuildTests -eq "ON") {
 }
 
 Write-Host ""
+
+# Return to original directory
+Pop-Location
+
 exit 0
 

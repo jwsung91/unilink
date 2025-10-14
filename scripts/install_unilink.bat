@@ -9,6 +9,21 @@ echo unilink Windows Build Script
 echo ========================================
 echo.
 
+REM Find project root directory
+set SCRIPT_DIR=%~dp0
+cd /d "%SCRIPT_DIR%.."
+set PROJECT_ROOT=%CD%
+
+REM Check if CMakeLists.txt exists in project root
+if not exist "%PROJECT_ROOT%\CMakeLists.txt" (
+    echo ERROR: CMakeLists.txt not found in project root: %PROJECT_ROOT%
+    echo Please run this script from the unilink repository
+    exit /b 1
+)
+
+echo Project Root: %PROJECT_ROOT%
+echo.
+
 REM Default build type
 set BUILD_TYPE=Release
 set BUILD_TESTS=ON
