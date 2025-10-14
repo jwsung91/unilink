@@ -16,6 +16,21 @@
 
 #pragma once
 
+#if defined(_WIN32)
+#ifdef ERROR
+#undef ERROR
+#endif
+#ifdef WARNING
+#undef WARNING
+#endif
+#ifdef INFO
+#undef INFO
+#endif
+#ifdef CRITICAL
+#undef CRITICAL
+#endif
+#endif
+
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
