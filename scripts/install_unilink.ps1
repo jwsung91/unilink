@@ -10,6 +10,7 @@ param(
     [string]$Generator = "",
     [switch]$UseVcpkg,
     [string]$VcpkgRoot = "",
+    [switch]$SetupVcpkg,
     [switch]$Help
 )
 
@@ -29,13 +30,15 @@ Options:
   -Generator NAME     Specify CMake generator (e.g., "Visual Studio 17 2022")
   -UseVcpkg           Use vcpkg for dependencies
   -VcpkgRoot PATH     Path to vcpkg installation
+  -SetupVcpkg         Automatically setup vcpkg and install Boost
   -Help               Show this help message
 
 Examples:
-  .\build_windows.ps1
-  .\build_windows.ps1 -Debug -NoTests
-  .\build_windows.ps1 -Release -InstallPrefix "C:\unilink"
-  .\build_windows.ps1 -UseVcpkg -VcpkgRoot "C:\vcpkg"
+  .\install_unilink.ps1
+  .\install_unilink.ps1 -Debug -NoTests
+  .\install_unilink.ps1 -Release -InstallPrefix "C:\unilink"
+  .\install_unilink.ps1 -UseVcpkg -VcpkgRoot "C:\vcpkg"
+  .\install_unilink.ps1 -SetupVcpkg
 
 "@
     exit 0
@@ -62,6 +65,63 @@ Write-Host ""
 
 # Change to project root directory
 Push-Location $ProjectRoot
+
+# Setup vcpkg if requested
+if ($SetupVcpkg) {
+    Write-Host "Setting up vcpkg and installing Boost..." -ForegroundColor Cyan
+    Write-Host ""
+    
+    # Default vcpkg location
+    $defaultVcpkgRoot = "C:\vcpkg"
+    
+    if (-not (Test-Path $defaultVcpkgRoot)) {
+        Write-Host "Installing vcpkg to $defaultVcpkgRoot..." -ForegroundColor Yellow
+        
+        # Clone vcpkg
+        Push-Location C:\
+        git clone https://github.com/Microsoft/vcpkg.git
+        Pop-Location
+        
+        if (-not (Test-Path $defaultVcpkgRoot)) {
+            Write-Host "ERROR: Failed to clone vcpkg" -ForegroundColor Red
+            Pop-Location
+            exit 1
+        }
+        
+        # Bootstrap vcpkg
+        Push-Location $defaultVcpkgRoot
+        .\bootstrap-vcpkg.bat
+        Pop-Location
+        
+        Write-Host "vcpkg installed successfully!" -ForegroundColor Green
+    } else {
+        Write-Host "vcpkg already exists at $defaultVcpkgRoot" -ForegroundColor Green
+    }
+    
+    # Install Boost
+    Write-Host ""
+    Write-Host "Installing Boost via vcpkg (this may take several minutes)..." -ForegroundColor Yellow
+    Push-Location $defaultVcpkgRoot
+    .\vcpkg install boost-system:x64-windows boost-asio:x64-windows
+    
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: Failed to install Boost" -ForegroundColor Red
+        Pop-Location
+        Pop-Location
+        exit 1
+    }
+    
+    .\vcpkg integrate install
+    Pop-Location
+    
+    Write-Host ""
+    Write-Host "Boost installed successfully!" -ForegroundColor Green
+    Write-Host ""
+    
+    # Enable vcpkg usage
+    $UseVcpkg = $true
+    $VcpkgRoot = $defaultVcpkgRoot
+}
 
 # Determine build type
 $BuildType = if ($Debug) { "Debug" } else { "Release" }
@@ -174,7 +234,39 @@ Write-Host "[1/3] Configuring..." -ForegroundColor Cyan
 & $cmakePath @cmakeArgs
 
 if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
     Write-Host "ERROR: Configuration failed" -ForegroundColor Red
+    Write-Host ""
+    
+    # Check if it's a Boost-related error
+    if ((Get-Content "$BuildDir\CMakeCache.txt" -ErrorAction SilentlyContinue) -match "Boost") {
+        Write-Host "It appears Boost is not installed. Here are your options:" -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "Option 1: Use vcpkg (Recommended - Easiest)" -ForegroundColor Cyan
+        Write-Host "  # Install vcpkg if not already installed:" -ForegroundColor Gray
+        Write-Host "  cd C:\" -ForegroundColor Gray
+        Write-Host "  git clone https://github.com/Microsoft/vcpkg.git" -ForegroundColor Gray
+        Write-Host "  cd vcpkg" -ForegroundColor Gray
+        Write-Host "  .\bootstrap-vcpkg.bat" -ForegroundColor Gray
+        Write-Host "  .\vcpkg integrate install" -ForegroundColor Gray
+        Write-Host "" 
+        Write-Host "  # Install Boost:" -ForegroundColor Gray
+        Write-Host "  .\vcpkg install boost-system:x64-windows" -ForegroundColor Gray
+        Write-Host ""
+        Write-Host "  # Then run this script with vcpkg:" -ForegroundColor Gray
+        Write-Host "  .\scripts\install_unilink.ps1 -UseVcpkg -VcpkgRoot `"C:\vcpkg`"" -ForegroundColor Green
+        Write-Host ""
+        Write-Host "Option 2: Download pre-built Boost" -ForegroundColor Cyan
+        Write-Host "  Download from: https://sourceforge.net/projects/boost/files/boost-binaries/" -ForegroundColor Gray
+        Write-Host "  Install and set BOOST_ROOT environment variable" -ForegroundColor Gray
+        Write-Host ""
+        Write-Host "Option 3: Use Conan package manager" -ForegroundColor Cyan
+        Write-Host "  pip install conan" -ForegroundColor Gray
+        Write-Host "  conan profile detect --force" -ForegroundColor Gray
+        Write-Host "  conan install . --output-folder=build --build=missing" -ForegroundColor Gray
+        Write-Host ""
+    }
+    
     exit 1
 }
 
