@@ -77,10 +77,45 @@ Write-Host "  Build Directory: $BuildDir"
 Write-Host ""
 
 # Check for CMake
-if (-not (Get-Command cmake -ErrorAction SilentlyContinue)) {
-    Write-Host "ERROR: CMake not found in PATH" -ForegroundColor Red
-    Write-Host "Please install CMake or add it to PATH"
-    exit 1
+$cmakePath = $null
+if (Get-Command cmake -ErrorAction SilentlyContinue) {
+    $cmakePath = "cmake"
+} else {
+    # Try to find CMake in Visual Studio installation
+    Write-Host "CMake not found in PATH, searching in Visual Studio installation..." -ForegroundColor Yellow
+    
+    $vsCmakePaths = @(
+        "${env:ProgramFiles}\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+        "${env:ProgramFiles}\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+        "${env:ProgramFiles}\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+        "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+        "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+        "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe"
+    )
+    
+    foreach ($path in $vsCmakePaths) {
+        if (Test-Path $path) {
+            $cmakePath = $path
+            Write-Host "Found CMake at: $cmakePath" -ForegroundColor Green
+            break
+        }
+    }
+    
+    if (-not $cmakePath) {
+        Write-Host ""
+        Write-Host "ERROR: CMake not found" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "Please choose one of the following options:" -ForegroundColor Yellow
+        Write-Host "  1. Use 'Developer PowerShell for VS 2022' instead of regular PowerShell"
+        Write-Host "  2. Install CMake from Visual Studio Installer:"
+        Write-Host "     - Open Visual Studio Installer"
+        Write-Host "     - Modify your installation"
+        Write-Host "     - Under 'Individual Components', search for 'CMake'"
+        Write-Host "     - Install 'C++ CMake tools for Windows'"
+        Write-Host "  3. Install standalone CMake from: https://cmake.org/download/"
+        Write-Host ""
+        exit 1
+    }
 }
 
 # Check for Visual Studio
@@ -136,7 +171,7 @@ if ($UseVcpkg) {
 # Configure
 Write-Host ""
 Write-Host "[1/3] Configuring..." -ForegroundColor Cyan
-& cmake @cmakeArgs
+& $cmakePath @cmakeArgs
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Configuration failed" -ForegroundColor Red
@@ -146,7 +181,7 @@ if ($LASTEXITCODE -ne 0) {
 # Build
 Write-Host ""
 Write-Host "[2/3] Building..." -ForegroundColor Cyan
-& cmake --build $BuildDir --config $BuildType -j
+& $cmakePath --build $BuildDir --config $BuildType -j
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Build failed" -ForegroundColor Red
@@ -175,7 +210,7 @@ if ($BuildTests -eq "ON") {
 if ($InstallPrefix) {
     Write-Host ""
     Write-Host "Installing to: $InstallPrefix" -ForegroundColor Cyan
-    & cmake --install $BuildDir --config $BuildType --prefix $InstallPrefix
+    & $cmakePath --install $BuildDir --config $BuildType --prefix $InstallPrefix
     
     if ($LASTEXITCODE -ne 0) {
         Write-Host "ERROR: Installation failed" -ForegroundColor Red
