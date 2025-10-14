@@ -5,6 +5,7 @@
 if(MSVC)
   # Microsoft Visual C++
   set(UNILINK_COMPILER_MSVC ON)
+  add_definitions(-DUNILINK_PLATFORM_WINDOWS=1)
   
   if(UNILINK_ENABLE_WARNINGS)
     add_compile_options(/W4 /permissive- /utf-8)
@@ -27,24 +28,31 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(UNILINK_COMPILER_CLANG ON)
   endif()
   
-  # Ubuntu version detection for compiler-specific settings
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
     message(FATAL_ERROR "GCC 9.0+ or Clang 10.0+ required for C++17 support")
-  elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
-    # Ubuntu 20.04: GCC 9-10, Clang 10
-    set(UNILINK_UBUNTU_20_04 ON)
-    add_definitions(-DUNILINK_UBUNTU_20_04=1)
-    message(STATUS "Detected Ubuntu 20.04 compatibility mode")
-  elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "13.0")
-    # Ubuntu 22.04: GCC 11-12, Clang 14-17
-    set(UNILINK_UBUNTU_22_04 ON)
-    add_definitions(-DUNILINK_UBUNTU_22_04=1)
-    message(STATUS "Detected Ubuntu 22.04 compatibility mode")
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # Ubuntu version detection for compiler-specific settings
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
+      set(UNILINK_UBUNTU_20_04 ON)
+      add_definitions(-DUNILINK_UBUNTU_20_04=1)
+      message(STATUS "Detected Ubuntu 20.04 compatibility mode")
+    elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "13.0")
+      set(UNILINK_UBUNTU_22_04 ON)
+      add_definitions(-DUNILINK_UBUNTU_22_04=1)
+      message(STATUS "Detected Ubuntu 22.04 compatibility mode")
+    else()
+      set(UNILINK_UBUNTU_24_04 ON)
+      add_definitions(-DUNILINK_UBUNTU_24_04=1)
+      message(STATUS "Detected Ubuntu 24.04+ compatibility mode")
+    endif()
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    add_definitions(-DUNILINK_PLATFORM_MACOS=1)
+    message(STATUS "Detected macOS compatibility mode")
   else()
-    # Ubuntu 24.04+: GCC 13+, Clang 15+
-    set(UNILINK_UBUNTU_24_04 ON)
-    add_definitions(-DUNILINK_UBUNTU_24_04=1)
-    message(STATUS "Detected Ubuntu 24.04+ compatibility mode")
+    add_definitions(-DUNILINK_PLATFORM_POSIX=1)
+    message(STATUS "Detected generic POSIX compatibility mode")
   endif()
   
   # Common flags for GCC and Clang

@@ -16,11 +16,17 @@
 
 #pragma once
 
-#include <arpa/inet.h>
 #include <gtest/gtest.h>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#endif
 
 #include <atomic>
 #include <chrono>
@@ -28,6 +34,7 @@
 #include <memory>
 #include <mutex>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <vector>
@@ -78,6 +85,23 @@ class TestUtils {
    * @return true if port is available, false otherwise
    */
   static bool isPortAvailable(uint16_t port) {
+#ifdef _WIN32
+    ensure_winsock_initialized();
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (sock == INVALID_SOCKET) return false;
+
+    BOOL reuse = 1;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&reuse), sizeof(reuse));
+
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    bool available = bind(sock, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == 0;
+    closesocket(sock);
+    return available;
+#else
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) return false;
 
@@ -93,6 +117,7 @@ class TestUtils {
     bool available = bind(sock, (sockaddr*)&addr, sizeof(addr)) == 0;
     close(sock);
     return available;
+#endif
   }
 
   /**
@@ -156,7 +181,25 @@ class TestUtils {
     }
     return data;
   }
+
+#ifdef _WIN32
+ private:
+  static void ensure_winsock_initialized();
+#endif
 };
+
+#ifdef _WIN32
+inline void TestUtils::ensure_winsock_initialized() {
+  static std::once_flag winsock_once;
+  static WSADATA wsa_data;
+  std::call_once(winsock_once, []() {
+    int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+    if (result != 0) {
+      throw std::runtime_error("WSAStartup failed: " + std::to_string(result));
+    }
+  });
+}
+#endif
 
 /**
  * @brief Base test class with common setup/teardown

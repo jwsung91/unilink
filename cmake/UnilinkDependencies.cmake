@@ -7,8 +7,11 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31")
 endif()
 
 # Find required packages
-# Ubuntu version-specific Boost requirements
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  # Windows builds: rely on recent Boost releases available via Conan/vcpkg
+  find_package(Boost 1.70 REQUIRED COMPONENTS system)
+  message(STATUS "Using Boost 1.70+ for Windows compatibility")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   # Detect Ubuntu version and set appropriate Boost version
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
     # Ubuntu 20.04: GCC 9-10, Boost 1.65+
@@ -28,8 +31,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       message(STATUS "Using Boost 1.74+ for Ubuntu 24.04+ compatibility (1.83 not available)")
     endif()
   endif()
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  find_package(Boost 1.74 REQUIRED COMPONENTS system)
+  message(STATUS "Using Boost 1.74+ for macOS compatibility")
 else()
-  # Non-Linux platforms: use latest Boost
+  # Other platforms: use a recent Boost version
   find_package(Boost 1.70 REQUIRED COMPONENTS system)
 endif()
 
@@ -90,6 +96,13 @@ target_link_libraries(unilink_dependencies INTERFACE
   Boost::system
   Threads::Threads
 )
+if(WIN32)
+  target_link_libraries(unilink_dependencies INTERFACE
+    ws2_32
+    mswsock
+    iphlpapi
+  )
+endif()
 
 # Add include directories
 target_include_directories(unilink_dependencies INTERFACE

@@ -199,7 +199,11 @@ if(UNILINK_ENABLE_INSTALL AND UNILINK_ENABLE_PKGCONFIG)
   # Set pkg-config variables
   set(PKGCONFIG_REQUIRES "")
   set(PKGCONFIG_REQUIRES_PRIVATE "")
-  set(PKGCONFIG_LIBS_PRIVATE "-lboost_system -lpthread")
+  if(WIN32)
+    set(PKGCONFIG_LIBS_PRIVATE "-lboost_system")
+  else()
+    set(PKGCONFIG_LIBS_PRIVATE "-lboost_system -lpthread")
+  endif()
   set(PKGCONFIG_CFLAGS "")
   
   configure_file(

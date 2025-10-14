@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+
+#ifdef _WIN32
+
+TEST(PlatformTest, DISABLED_WindowsPlatformBenchmark) {
+  GTEST_SKIP() << "Platform-specific benchmark tests are not supported on Windows yet.";
+}
+
+#else
+#include <gmock/gmock.h>
 #include <sys/utsname.h>
 #include <unistd.h>
 
@@ -526,6 +534,8 @@ TEST_F(PlatformTest, PlatformSpecificErrorHandling) {
 
   std::cout << "Platform-specific error handling test completed" << std::endl;
 }
+
+#endif  // _WIN32
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
