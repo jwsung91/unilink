@@ -16,6 +16,22 @@
 
 #pragma once
 
+#if defined(_WIN32)
+// Undefine common Windows macros that can collide with enum/identifiers
+#ifdef ERROR
+#undef ERROR
+#endif
+#ifdef WARNING
+#undef WARNING
+#endif
+#ifdef INFO
+#undef INFO
+#endif
+#ifdef CRITICAL
+#undef CRITICAL
+#endif
+#endif
+
 #include <chrono>
 #include <cstdint>
 #include <cstring>

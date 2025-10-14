@@ -16,6 +16,7 @@
 
 #include "unilink/common/input_validator.hpp"
 
+#include <sstream>
 #include <regex>
 #include <string>
 
