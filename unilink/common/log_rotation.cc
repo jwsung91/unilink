@@ -103,7 +103,8 @@ std::string LogRotation::get_next_file_path(const std::string& base_filepath) co
   int next_index = max_index + 1;
   std::string next_filename = generate_filename(base_name, next_index);
 
-  return directory + "/" + next_filename;
+  std::filesystem::path result_path = std::filesystem::path(directory) / next_filename;
+  return result_path.string();
 }
 
 void LogRotation::update_config(const LogRotationConfig& config) {
