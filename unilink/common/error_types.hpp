@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <boost/system/error_code.hpp>
 #include <chrono>
 #include <cstdint>
@@ -26,6 +27,13 @@
 
 namespace unilink {
 namespace common {
+
+#ifdef ERROR
+#undef ERROR
+#endif
+#ifdef WARNING
+#undef WARNING
+#endif
 
 /**
  * @brief Error severity levels

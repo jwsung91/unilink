@@ -120,7 +120,7 @@ endif()
 
 # Platform-specific settings
 if(WIN32)
-  add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
+  add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX -D_WIN32_WINNT=0x0A00)
   if(UNILINK_BUILD_SHARED)
     add_definitions(-DUNILINK_EXPORTS)
   endif()

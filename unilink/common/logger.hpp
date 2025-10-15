@@ -32,6 +32,22 @@
 
 #include "log_rotation.hpp"
 
+#ifdef DEBUG
+#undef DEBUG
+#endif
+#ifdef INFO
+#undef INFO
+#endif
+#ifdef WARNING
+#undef WARNING
+#endif
+#ifdef ERROR
+#undef ERROR
+#endif
+#ifdef CRITICAL
+#undef CRITICAL
+#endif
+
 namespace unilink {
 namespace common {
 
