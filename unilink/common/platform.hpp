@@ -38,11 +38,12 @@
 #ifndef CALLBACK
 #define CALLBACK __stdcall
 #endif
-#ifndef _WINNT_
+#ifdef BOOST_ASIO_HAS_WINDOWS_OBJECT_HANDLE
+#undef BOOST_ASIO_HAS_WINDOWS_OBJECT_HANDLE
+#endif
 typedef void VOID;
 typedef void* PVOID;
 typedef unsigned char BOOLEAN;
-#endif
 #endif  // defined(_WIN32)
 
 namespace unilink {
