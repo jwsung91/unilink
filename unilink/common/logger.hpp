@@ -47,6 +47,9 @@
 #ifdef CRITICAL
 #undef CRITICAL
 #endif
+#ifdef CALLBACK
+#undef CALLBACK
+#endif
 
 namespace unilink {
 namespace common {
