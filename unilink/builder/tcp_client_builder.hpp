@@ -37,6 +37,10 @@ namespace builder {
  * Provides a fluent API for configuring and creating TcpClient instances.
  * Supports method chaining for easy configuration.
  */
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
 class UNILINK_EXPORT TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
  public:
   /**
@@ -171,6 +175,10 @@ class UNILINK_EXPORT TcpClientBuilder : public BuilderInterface<wrapper::TcpClie
   std::function<void()> on_disconnect_;
   std::function<void(const std::string&)> on_error_;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 }  // namespace builder
 }  // namespace unilink

@@ -19,8 +19,10 @@
 namespace unilink {
 namespace builder {
 
-std::mutex AutoInitializer::init_mutex_;
-std::atomic<bool> AutoInitializer::initialized_{false};
+std::mutex& AutoInitializer::init_mutex() {
+  static std::mutex mutex;
+  return mutex;
+}
 
 }  // namespace builder
 }  // namespace unilink
