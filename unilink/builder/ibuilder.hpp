@@ -19,15 +19,7 @@
 #if __has_include(<unilink_export.hpp>)
 #include <unilink_export.hpp>
 #else
-#if defined(_WIN32) || defined(__CYGWIN__)
-#  ifdef UNILINK_EXPORTS
-#    define UNILINK_EXPORT __declspec(dllexport)
-#  else
-#    define UNILINK_EXPORT __declspec(dllimport)
-#  endif
-#else
-#  define UNILINK_EXPORT
-#endif
+#define UNILINK_EXPORT
 #endif
 
 #include <functional>
