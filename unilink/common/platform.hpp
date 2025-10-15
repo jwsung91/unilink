@@ -41,9 +41,15 @@
 #ifdef BOOST_ASIO_HAS_WINDOWS_OBJECT_HANDLE
 #undef BOOST_ASIO_HAS_WINDOWS_OBJECT_HANDLE
 #endif
+#ifndef VOID
 typedef void VOID;
+#endif
+#ifndef PVOID
 typedef void* PVOID;
+#endif
+#ifndef BOOLEAN
 typedef unsigned char BOOLEAN;
+#endif
 #endif  // defined(_WIN32)
 
 namespace unilink {
