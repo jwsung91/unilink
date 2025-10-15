@@ -16,8 +16,11 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
 #include <memory>
+
+#include "unilink/common/platform.hpp"
+
+#include <boost/asio.hpp>
 
 #include "unilink/interface/itcp_acceptor.hpp"
 

@@ -18,6 +18,8 @@
 
 #include <gmock/gmock.h>
 
+#include "unilink/common/platform.hpp"
+
 #include <boost/asio.hpp>
 #include <functional>
 #include <memory>

@@ -6,6 +6,7 @@ if(MSVC)
   # Microsoft Visual C++
   set(UNILINK_COMPILER_MSVC ON)
   add_definitions(-DUNILINK_PLATFORM_WINDOWS=1)
+  add_definitions(-DBOOST_USE_WINDOWS_H=1)
   
   if(UNILINK_ENABLE_WARNINGS)
     add_compile_options(/W4 /permissive- /utf-8)

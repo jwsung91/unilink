@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
 #include <cstddef>
 #include <deque>
 #include <memory>
@@ -24,6 +23,10 @@
 #include <thread>
 #include <variant>
 #include <vector>
+
+#include "unilink/common/platform.hpp"
+
+#include <boost/asio.hpp>
 
 #include "unilink/common/constants.hpp"
 #include "unilink/common/error_handler.hpp"

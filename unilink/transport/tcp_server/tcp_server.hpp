@@ -18,7 +18,6 @@
 
 #include <algorithm>
 #include <array>
-#include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
 #include <functional>
@@ -26,6 +25,10 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+
+#include "unilink/common/platform.hpp"
+
+#include <boost/asio.hpp>
 
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/logger.hpp"

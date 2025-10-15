@@ -17,6 +17,8 @@
 #include <gtest/gtest.h>
 
 #include <atomic>
+#include "unilink/common/platform.hpp"
+
 #include <boost/asio.hpp>
 #include <chrono>
 #include <future>

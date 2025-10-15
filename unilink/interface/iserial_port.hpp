@@ -16,9 +16,12 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
 #include <functional>
 #include <string>
+
+#include "unilink/common/platform.hpp"
+
+#include <boost/asio.hpp>
 
 namespace unilink {
 namespace interface {

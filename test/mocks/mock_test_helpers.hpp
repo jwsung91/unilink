@@ -19,6 +19,8 @@
 #include <gmock/gmock.h>
 
 #include <atomic>
+#include "unilink/common/platform.hpp"
+
 #include <boost/asio.hpp>
 #include <chrono>
 #include <condition_variable>

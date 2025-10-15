@@ -23,6 +23,8 @@
 #define UNILINK_EXPORT
 #endif
 
+#include "unilink/common/platform.hpp"
+
 #include <memory>
 #include <variant>
 

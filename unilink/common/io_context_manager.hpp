@@ -17,10 +17,13 @@
 #pragma once
 
 #include <atomic>
-#include <boost/asio.hpp>
 #include <memory>
 #include <mutex>
 #include <thread>
+
+#include "unilink/common/platform.hpp"
+
+#include <boost/asio.hpp>
 
 namespace unilink {
 namespace common {
