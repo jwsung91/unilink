@@ -207,12 +207,13 @@ class LogRotationTest : public ::testing::Test {
   }
 
   void TearDown() override {
-    // Clean up test files
-    cleanup_test_files();
+    auto& logger = common::Logger::instance();
+    logger.flush();
+    logger.set_file_output("");  // Disable file output (closes file handle on Windows)
+    logger.set_console_output(true);
 
-    // Reset logger
-    common::Logger::instance().set_file_output("");  // Disable file output
-    common::Logger::instance().set_console_output(true);
+    // Clean up test files after the logger releases file handles
+    cleanup_test_files();
   }
 
   void cleanup_test_files() {
@@ -390,13 +391,16 @@ class AsyncLoggingTest : public ::testing::Test {
   }
 
   void TearDown() override {
-    // Clean up test files
-    cleanup_test_files();
+    auto& logger = common::Logger::instance();
 
-    // Reset logger
-    common::Logger::instance().set_async_logging(false);
-    common::Logger::instance().set_file_output("");  // Disable file output
-    common::Logger::instance().set_console_output(true);
+    // Stop async logging before flushing to ensure background threads exit
+    logger.set_async_logging(false);
+    logger.flush();
+    logger.set_file_output("");  // Disable file output
+    logger.set_console_output(true);
+
+    // Remove files only after handles are released
+    cleanup_test_files();
   }
 
   void cleanup_test_files() {

@@ -17,16 +17,19 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <memory>
 #include <random>
 #include <string>
 #include <thread>
 
+#include "test_utils.hpp"
 #include "unilink/common/logger.hpp"
 
 using namespace unilink::common;
 using namespace std::chrono_literals;
+using unilink::test::TestUtils;
 
 /**
  * @brief Logger Coverage Test
@@ -41,14 +44,15 @@ class LoggerCoverageTest : public ::testing::Test {
     // Generate unique filename with timestamp and random suffix
     auto now = std::chrono::system_clock::now().time_since_epoch().count();
     std::random_device rd;
-    test_log_file_ =
-        "/tmp/unilink_logger_test_" + test_name + "_" + std::to_string(now) + "_" + std::to_string(rd()) + ".log";
-    std::remove(test_log_file_.c_str());
+    std::string file_name = "unilink_logger_test_" + test_name + "_" + std::to_string(now) + "_" +
+                            std::to_string(rd()) + ".log";
+    test_log_file_ = TestUtils::makeTempFilePath(file_name);
+    TestUtils::removeFileIfExists(test_log_file_);
   }
 
-  void TearDown() override { std::remove(test_log_file_.c_str()); }
+  void TearDown() override { TestUtils::removeFileIfExists(test_log_file_); }
 
-  std::string test_log_file_;
+  std::filesystem::path test_log_file_;
 };
 
 // ============================================================================
@@ -86,7 +90,7 @@ TEST_F(LoggerCoverageTest, LogLevelFiltering) {
 // ============================================================================
 
 TEST_F(LoggerCoverageTest, EnableFileLogging) {
-  Logger::instance().set_file_output(test_log_file_);
+  Logger::instance().set_file_output(test_log_file_.string());
   UNILINK_LOG_INFO("test", "file_log", "test message");
   Logger::instance().flush();
 
@@ -100,7 +104,7 @@ TEST_F(LoggerCoverageTest, EnableFileLogging) {
 }
 
 TEST_F(LoggerCoverageTest, DisableFileLogging) {
-  Logger::instance().set_file_output(test_log_file_);
+  Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_file_output("");
 
   UNILINK_LOG_INFO("test", "disabled", "should not be in file");
@@ -141,7 +145,7 @@ TEST_F(LoggerCoverageTest, EnableDisableAsyncLogging) {
 }
 
 TEST_F(LoggerCoverageTest, FlushLogs) {
-  Logger::instance().set_file_output(test_log_file_);
+  Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_async_logging(true);
 
   UNILINK_LOG_INFO("test", "flush", "message before flush");
@@ -166,7 +170,7 @@ TEST_F(LoggerCoverageTest, EnableLogRotation) {
   config.max_file_size_bytes = 1024;  // 1KB
   config.max_files = 3;
 
-  Logger::instance().set_file_output_with_rotation(test_log_file_, config);
+  Logger::instance().set_file_output_with_rotation(test_log_file_.string(), config);
 
   // Write enough data to trigger rotation
   for (int i = 0; i < 100; i++) {
@@ -181,7 +185,7 @@ TEST_F(LoggerCoverageTest, EnableLogRotation) {
 
 TEST_F(LoggerCoverageTest, DisableLogRotation) {
   // Just test normal file logging without rotation
-  Logger::instance().set_file_output(test_log_file_);
+  Logger::instance().set_file_output(test_log_file_.string());
   UNILINK_LOG_INFO("test", "no_rotation", "message without rotation");
   Logger::instance().flush();
   Logger::instance().set_file_output("");
@@ -219,7 +223,7 @@ TEST_F(LoggerCoverageTest, LogWithDifferentComponents) {
 // ============================================================================
 
 TEST_F(LoggerCoverageTest, CombinedFileAndConsole) {
-  Logger::instance().set_file_output(test_log_file_);
+  Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_console_output(true);
   Logger::instance().set_level(LogLevel::DEBUG);
 
@@ -244,7 +248,7 @@ TEST_F(LoggerCoverageTest, AsyncWithRotation) {
   LogRotationConfig config;
   config.max_file_size_bytes = 512;
   config.max_files = 2;
-  Logger::instance().set_file_output_with_rotation(test_log_file_, config);
+  Logger::instance().set_file_output_with_rotation(test_log_file_.string(), config);
 
   for (int i = 0; i < 50; i++) {
     UNILINK_LOG_INFO("test", "async_rot", "Log message number " + std::to_string(i) + " with some extra content");
@@ -259,7 +263,7 @@ TEST_F(LoggerCoverageTest, AsyncWithRotation) {
 
 TEST_F(LoggerCoverageTest, MultipleEnableDisableCycles) {
   for (int i = 0; i < 3; i++) {
-    Logger::instance().set_file_output(test_log_file_);
+    Logger::instance().set_file_output(test_log_file_.string());
     UNILINK_LOG_INFO("test", "cycle", "cycle " + std::to_string(i));
     Logger::instance().flush();
     Logger::instance().set_file_output("");

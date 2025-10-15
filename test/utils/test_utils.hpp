@@ -32,6 +32,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <filesystem>
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -182,6 +183,35 @@ class TestUtils {
       data += static_cast<char>('A' + (i % 26));
     }
     return data;
+  }
+
+  /**
+   * @brief Returns a writable temporary directory for tests
+   * @return std::filesystem::path Temporary directory path
+   */
+  static std::filesystem::path getTempDirectory() {
+    auto base = std::filesystem::temp_directory_path() / "unilink_tests";
+    std::error_code ec;
+    std::filesystem::create_directories(base, ec);
+    return base;
+  }
+
+  /**
+   * @brief Builds a temp file path under the shared test temp directory
+   * @param filename File name (without directory)
+   * @return std::filesystem::path Absolute path to temp file
+   */
+  static std::filesystem::path makeTempFilePath(const std::string& filename) {
+    return getTempDirectory() / filename;
+  }
+
+  /**
+   * @brief Removes a file if it exists, ignoring errors
+   * @param path File path to remove
+   */
+  static void removeFileIfExists(const std::filesystem::path& path) {
+    std::error_code ec;
+    std::filesystem::remove(path, ec);
   }
 
 #ifdef _WIN32

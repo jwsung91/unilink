@@ -17,13 +17,16 @@
 #include <gtest/gtest.h>
 
 #include <any>
+#include <filesystem>
 #include <fstream>
 #include <memory>
 #include <string>
 
+#include "test_utils.hpp"
 #include "unilink/config/config_manager.hpp"
 
 using namespace unilink::config;
+using unilink::test::TestUtils;
 
 /**
  * @brief Config Coverage Test - ConfigManager 커버리지 확보
@@ -32,14 +35,14 @@ class ConfigCoverageTest : public ::testing::Test {
  protected:
   void SetUp() override {
     config_manager_ = std::make_shared<ConfigManager>();
-    test_file_ = "/tmp/unilink_coverage_test.json";
-    std::remove(test_file_.c_str());
+    test_file_ = TestUtils::makeTempFilePath("unilink_coverage_test.json");
+    TestUtils::removeFileIfExists(test_file_);
   }
 
-  void TearDown() override { std::remove(test_file_.c_str()); }
+  void TearDown() override { TestUtils::removeFileIfExists(test_file_); }
 
   std::shared_ptr<ConfigManager> config_manager_;
-  std::string test_file_;
+  std::filesystem::path test_file_;
 };
 
 // ============================================================================
@@ -331,7 +334,7 @@ TEST_F(ConfigCoverageTest, SaveToFile) {
   config_manager_->set("test.save1", std::string("saved_value"));
   config_manager_->set("test.save2", 123);
 
-  bool saved = config_manager_->save_to_file(test_file_);
+  bool saved = config_manager_->save_to_file(test_file_.string());
   EXPECT_TRUE(saved);
 
   // Check file exists
@@ -357,14 +360,14 @@ TEST_F(ConfigCoverageTest, LoadFromFile) {
   config_manager_->set("test.load1", std::string("loaded_value"));
   config_manager_->set("test.load2", 456);
 
-  config_manager_->save_to_file(test_file_);
+  config_manager_->save_to_file(test_file_.string());
 
   // Create new config manager and load
   auto new_config = std::make_shared<ConfigManager>();
   new_config->register_item(item1);
   new_config->register_item(item2);
 
-  bool loaded = new_config->load_from_file(test_file_);
+  bool loaded = new_config->load_from_file(test_file_.string());
   EXPECT_TRUE(loaded);
 
   auto value1 = new_config->get("test.load1");
