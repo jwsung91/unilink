@@ -19,6 +19,9 @@
 #include <string>
 
 #if defined(_WIN32)
+#ifndef BOOST_ASIO_DISABLE_WINDOWS_OBJECT_HANDLE
+#define BOOST_ASIO_DISABLE_WINDOWS_OBJECT_HANDLE
+#endif
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -29,6 +32,17 @@
 #include <ws2tcpip.h>
 #include <windows.h>
 #include <threadpoolapiset.h>
+
+// Ensure fundamental Windows callback aliases exist even when lean headers are
+// used. Some SDK combinations omit these when WIN32_LEAN_AND_MEAN is defined.
+#ifndef CALLBACK
+#define CALLBACK __stdcall
+#endif
+#ifndef _WINNT_
+typedef void VOID;
+typedef void* PVOID;
+typedef unsigned char BOOLEAN;
+#endif
 #endif  // defined(_WIN32)
 
 namespace unilink {
