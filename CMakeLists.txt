@@ -100,6 +100,23 @@ if(TARGET unilink AND NOT unilink_shared AND NOT unilink_static)
   add_library(unilink::unilink ALIAS unilink)
 endif()
 
+# Helper to stage runtime dependencies (primarily for Windows shared builds)
+if(TARGET unilink_shared)
+  set(UNILINK_SHARED_LIBRARY_TARGET unilink_shared)
+elseif(UNILINK_BUILD_SHARED AND TARGET unilink)
+  set(UNILINK_SHARED_LIBRARY_TARGET unilink)
+endif()
+
+function(unilink_configure_executable target)
+  if(WIN32 AND UNILINK_BUILD_SHARED AND UNILINK_SHARED_LIBRARY_TARGET)
+    add_custom_command(TARGET ${target} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:${UNILINK_SHARED_LIBRARY_TARGET}>
+        $<TARGET_FILE_DIR:${target}>
+      COMMENT "Copying ${UNILINK_SHARED_LIBRARY_TARGET} runtime to ${target} output directory")
+  endif()
+endfunction()
+
 # Link dependencies and set include directories
 if(TARGET unilink_shared)
   target_link_libraries(unilink_shared PUBLIC unilink_dependencies)

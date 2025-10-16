@@ -14,6 +14,8 @@
 
 add_executable(echo_tcp_client echo_tcp_client.cc)
 target_link_libraries(echo_tcp_client PRIVATE unilink::unilink)
+unilink_configure_executable(echo_tcp_client)
 
 add_executable(echo_tcp_server echo_tcp_server.cc)
 target_link_libraries(echo_tcp_server PRIVATE unilink::unilink)
+unilink_configure_executable(echo_tcp_server)

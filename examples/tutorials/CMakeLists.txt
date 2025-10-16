@@ -31,6 +31,7 @@ target_link_libraries(tutorial_simple_client
         ${Boost_LIBRARIES}
         Threads::Threads
 )
+unilink_configure_executable(tutorial_simple_client)
 
 add_executable(tutorial_my_first_client
     getting_started/my_first_client.cpp
@@ -41,6 +42,7 @@ target_link_libraries(tutorial_my_first_client
         ${Boost_LIBRARIES}
         Threads::Threads
 )
+unilink_configure_executable(tutorial_my_first_client)
 
 # Tutorial 2: TCP Server Examples
 add_executable(tutorial_echo_server
@@ -52,6 +54,7 @@ target_link_libraries(tutorial_echo_server
         ${Boost_LIBRARIES}
         Threads::Threads
 )
+unilink_configure_executable(tutorial_echo_server)
 
 add_executable(tutorial_chat_server
     tcp_server/chat_server.cpp
@@ -62,6 +65,7 @@ target_link_libraries(tutorial_chat_server
         ${Boost_LIBRARIES}
         Threads::Threads
 )
+unilink_configure_executable(tutorial_chat_server)
 
 # Installation
 install(TARGETS
@@ -71,4 +75,3 @@ install(TARGETS
     tutorial_chat_server
     RUNTIME DESTINATION bin/examples/tutorials
 )
-

@@ -14,6 +14,8 @@
 
 add_executable(logging_example logging_example.cc)
 target_link_libraries(logging_example PRIVATE unilink::unilink)
+unilink_configure_executable(logging_example)
 
 add_executable(error_handling_example error_handling_example.cc)
 target_link_libraries(error_handling_example PRIVATE unilink::unilink)
+unilink_configure_executable(error_handling_example)
