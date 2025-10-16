@@ -34,6 +34,41 @@ ctest --output-on-failure
 
 ---
 
+### Windows Build & Test Workflow
+
+```powershell
+# 1. Configure with Visual Studio generator
+cmake -S . -B build-windows `
+  -G "Visual Studio 17 2022" -A x64 `
+  -DBUILD_TESTING=ON
+
+# 2. Build the desired configuration (Debug shown here)
+cmake --build build-windows --config Debug --target ALL_BUILD
+
+# 3. Execute the test suite
+ctest --test-dir build-windows -C Debug --output-on-failure
+```
+
+Or, using Ninja with a vcpkg toolchain:
+
+```powershell
+Remove-Item build-windows -Recurse -Force
+cmake -S . -B build-windows -G "Ninja" `
+  -DCMAKE_TOOLCHAIN_FILE="F:/lib/vcpkg/scripts/buildsystems/vcpkg.cmake" `
+  -DVCPKG_TARGET_TRIPLET=x64-windows `
+  -DUNILINK_BUILD_SHARED=ON `
+  -DBUILD_TESTING=ON
+cmake --build build-windows
+ctest --test-dir build-windows --output-on-failure
+```
+
+**Windows-specific notes**
+- Re-run CMake (or create a fresh `build-windows` directory) after updating the repository so that example binaries inherit the post-build step that copies `unilink.dll` beside each executable.
+- Serial error recovery scenarios rely on Unix-style device paths and are automatically skipped when running on Windows.
+- The async logging performance benchmark expects ≥50k messages/sec on Windows (versus 100k+ on Linux) because of OS timer granularity and scheduling differences.
+
+---
+
 ## Running Tests
 
 ### Run All Tests
@@ -663,4 +698,3 @@ xdg-open coverage_html/index.html
 - [Best Practices](best_practices.md) - Testing best practices
 - [Build Guide](build_guide.md) - Build options for testing
 - [Troubleshooting](troubleshooting.md) - Common test issues
-

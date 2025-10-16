@@ -22,6 +22,41 @@ project(unilink-test)
 # NEW ORGANIZED TEST STRUCTURE
 # ============================================================================
 
+# Determine which unilink library to link against for tests
+if(TARGET unilink_static)
+  set(_unilink_test_lib unilink_static)
+  set(_unilink_test_lib_is_shared OFF)
+elseif(TARGET unilink_shared)
+  set(_unilink_test_lib unilink_shared)
+  set(_unilink_test_lib_is_shared ON)
+elseif(TARGET unilink)
+  set(_unilink_test_lib unilink)
+  get_target_property(_unilink_target_type unilink TYPE)
+  if(_unilink_target_type STREQUAL "SHARED_LIBRARY")
+    set(_unilink_test_lib_is_shared ON)
+  else()
+    set(_unilink_test_lib_is_shared OFF)
+  endif()
+else()
+  message(FATAL_ERROR "No unilink library target found for tests")
+endif()
+
+# Expose chosen library to subdirectories and helper functions
+set_property(GLOBAL PROPERTY UNILINK_TEST_LIB ${_unilink_test_lib})
+set_property(GLOBAL PROPERTY UNILINK_TEST_LIB_IS_SHARED ${_unilink_test_lib_is_shared})
+
+# Helper to copy the shared library next to a test executable on Windows
+function(unilink_copy_runtime_dependency target)
+  get_property(_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
+  get_property(_is_shared GLOBAL PROPERTY UNILINK_TEST_LIB_IS_SHARED)
+  if(WIN32 AND _is_shared)
+    add_custom_command(TARGET ${target} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:${_test_lib}>
+        $<TARGET_FILE_DIR:${target}>)
+  endif()
+endfunction()
+
 # Include GoogleTest for test discovery
 include(GoogleTest)
 
@@ -66,11 +101,12 @@ if(REMAINING_TESTS)
       test_utils.hpp
     )
     target_link_libraries(run_architecture_tests
-      PRIVATE unilink GTest::gtest_main GTest::gmock
+      PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
     )
     gtest_discover_tests(run_architecture_tests
       PROPERTIES LABELS "legacy;e2e"
     )
+    unilink_copy_runtime_dependency(run_architecture_tests)
   endif()
   
   # Builder Tests
@@ -80,11 +116,12 @@ if(REMAINING_TESTS)
       test_utils.hpp
     )
     target_link_libraries(run_builder_tests
-      PRIVATE unilink GTest::gtest_main GTest::gmock
+      PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
     )
     gtest_discover_tests(run_builder_tests
       PROPERTIES LABELS "legacy;unit"
     )
+    unilink_copy_runtime_dependency(run_builder_tests)
   endif()
   
   # Common Tests
@@ -94,11 +131,12 @@ if(REMAINING_TESTS)
       test_utils.hpp
     )
     target_link_libraries(run_common_tests
-      PRIVATE unilink GTest::gtest_main GTest::gmock
+      PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
     )
     gtest_discover_tests(run_common_tests
       PROPERTIES LABELS "legacy;unit"
     )
+    unilink_copy_runtime_dependency(run_common_tests)
   endif()
   
   # Communication Tests
@@ -108,13 +146,14 @@ if(REMAINING_TESTS)
       test_utils.hpp
     )
     target_link_libraries(run_communication_tests
-      PRIVATE unilink GTest::gtest_main GTest::gmock
+      PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
     )
     gtest_discover_tests(run_communication_tests
       PROPERTIES LABELS "legacy;integration"
     )
+    unilink_copy_runtime_dependency(run_communication_tests)
   endif()
-  
+
 endif()
 
 # ============================================================================

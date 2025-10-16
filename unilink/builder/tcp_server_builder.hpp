@@ -36,6 +36,10 @@ namespace builder {
  * Provides a fluent API for configuring and creating TcpServer instances.
  * Supports method chaining for easy configuration.
  */
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
 class UNILINK_EXPORT TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
  public:
   /**
@@ -254,6 +258,10 @@ class UNILINK_EXPORT TcpServerBuilder : public BuilderInterface<wrapper::TcpServ
   std::function<void(size_t, const std::string&)> on_multi_data_;
   std::function<void(size_t)> on_multi_disconnect_;
 };
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 }  // namespace builder
 }  // namespace unilink

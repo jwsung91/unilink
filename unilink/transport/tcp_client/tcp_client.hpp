@@ -30,6 +30,7 @@
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/logger.hpp"
 #include "unilink/common/memory_pool.hpp"
+#include "unilink/common/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/interface/channel.hpp"

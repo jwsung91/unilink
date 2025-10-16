@@ -17,12 +17,14 @@
 
 # TCP integration tests
 # NOTE: test_communication.cc temporarily disabled due to last_error_ issues
+get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
+
 foreach(test_file test_integration.cc test_simple_server.cc test_client_limit_integration.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_integration_${test_name} tcp/${test_file})
   target_link_libraries(run_integration_${test_name}
     PRIVATE
-      unilink_shared
+      ${_unilink_test_lib}
       GTest::gtest
       GTest::gtest_main
       GTest::gmock
@@ -47,6 +49,7 @@ foreach(test_file test_integration.cc test_simple_server.cc test_client_limit_in
         TIMEOUT 60
     )
   endif()
+  unilink_copy_runtime_dependency(run_integration_${test_name})
 endforeach()
 
 # Serial integration tests
@@ -56,7 +59,7 @@ foreach(test_file test_serial_builder_improvements.cc)
   add_executable(run_integration_${test_name} serial/${test_file})
   target_link_libraries(run_integration_${test_name}
     PRIVATE
-      unilink_shared
+      ${_unilink_test_lib}
       GTest::gtest
       GTest::gtest_main
       GTest::gmock
@@ -71,6 +74,7 @@ foreach(test_file test_serial_builder_improvements.cc)
       LABELS "integration;serial;medium"
       TIMEOUT 60
   )
+  unilink_copy_runtime_dependency(run_integration_${test_name})
 endforeach()
 
 # Mock integration tests - DISABLED due to dependency injection issues
@@ -105,7 +109,7 @@ foreach(test_file test_builder_integration.cc test_stable_integration.cc test_co
   add_executable(run_integration_${test_name} ${test_file})
   target_link_libraries(run_integration_${test_name}
     PRIVATE
-      unilink_shared
+      ${_unilink_test_lib}
       GTest::gtest
       GTest::gtest_main
       GTest::gmock
@@ -131,4 +135,5 @@ foreach(test_file test_builder_integration.cc test_stable_integration.cc test_co
         TIMEOUT 60
     )
   endif()
+  unilink_copy_runtime_dependency(run_integration_${test_name})
 endforeach()

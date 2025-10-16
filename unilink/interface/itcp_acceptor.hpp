@@ -19,6 +19,8 @@
 #include <boost/asio.hpp>
 #include <functional>
 
+#include "unilink/common/platform.hpp"
+
 namespace unilink {
 namespace interface {
 

@@ -19,6 +19,7 @@
 #include <boost/asio.hpp>
 #include <memory>
 
+#include "unilink/common/platform.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
 
 namespace unilink {

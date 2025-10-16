@@ -24,7 +24,11 @@ namespace unilink {
 namespace config {
 
 struct SerialConfig {
+#ifdef _WIN32
+  std::string device = "COM1";
+#else
   std::string device = "/dev/ttyUSB0";
+#endif
   unsigned baud_rate = 115200;
   unsigned char_size = 8;  // 5,6,7,8
   enum class Parity { None, Even, Odd } parity = Parity::None;

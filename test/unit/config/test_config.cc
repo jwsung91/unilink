@@ -20,6 +20,7 @@
 #include <any>
 #include <atomic>
 #include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <memory>
 #include <sstream>
@@ -56,15 +57,15 @@ class ConfigTest : public ::testing::Test {
     config_manager_ = std::make_shared<ConfigManager>();
 
     // Set up test file path
-    test_file_path_ = "/tmp/unilink_test_config.json";
+    test_file_path_ = TestUtils::makeTempFilePath("unilink_test_config.json");
 
     // Clean up any existing test file
-    std::remove(test_file_path_.c_str());
+    TestUtils::removeFileIfExists(test_file_path_);
   }
 
   void TearDown() override {
     // Clean up test file
-    std::remove(test_file_path_.c_str());
+    TestUtils::removeFileIfExists(test_file_path_);
 
     // Clean up any test state
     TestUtils::waitFor(100);
@@ -72,7 +73,7 @@ class ConfigTest : public ::testing::Test {
 
   uint16_t test_port_;
   std::shared_ptr<ConfigManager> config_manager_;
-  std::string test_file_path_;
+  std::filesystem::path test_file_path_;
 };
 
 // ============================================================================
@@ -227,7 +228,7 @@ TEST_F(ConfigTest, ConfigSaveToFile) {
   config_manager_->set("server.timeout", 30.5);
 
   // Save to file
-  bool save_result = config_manager_->save_to_file(test_file_path_);
+  bool save_result = config_manager_->save_to_file(test_file_path_.string());
   EXPECT_TRUE(save_result);
 
   // Verify file was created
@@ -256,7 +257,7 @@ TEST_F(ConfigTest, ConfigLoadFromFile) {
   file.close();
 
   // Load from file
-  bool load_result = config_manager_->load_from_file(test_file_path_);
+  bool load_result = config_manager_->load_from_file(test_file_path_.string());
   // Note: Load result depends on file format support
   std::cout << "Configuration load result: " << (load_result ? "success" : "failed") << std::endl;
 
@@ -286,12 +287,12 @@ TEST_F(ConfigTest, ConfigPersistenceComplexData) {
   config_manager_->set("database.timeout_ms", 5000);
 
   // Save to file
-  bool save_result = config_manager_->save_to_file(test_file_path_);
+  bool save_result = config_manager_->save_to_file(test_file_path_.string());
   EXPECT_TRUE(save_result);
 
   // Create new config manager and load from file
   auto new_config_manager = std::make_shared<ConfigManager>();
-  bool load_result = new_config_manager->load_from_file(test_file_path_);
+  bool load_result = new_config_manager->load_from_file(test_file_path_.string());
 
   if (load_result) {
     // Verify all values were loaded

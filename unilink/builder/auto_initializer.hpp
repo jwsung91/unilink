@@ -16,7 +16,12 @@
 
 #pragma once
 
-#include <atomic>
+#if __has_include(<unilink_export.hpp>)
+#include <unilink_export.hpp>
+#else
+#define UNILINK_EXPORT
+#endif
+
 #include <mutex>
 
 #include "unilink/common/io_context_manager.hpp"
@@ -30,7 +35,7 @@ namespace builder {
  * This class automatically starts IoContextManager when using Builder pattern,
  * eliminating the need for manual initialization by users.
  */
-class AutoInitializer {
+class UNILINK_EXPORT AutoInitializer {
  public:
   /**
    * @brief Automatically start IoContextManager if not running
@@ -40,7 +45,7 @@ class AutoInitializer {
    */
   static void ensure_io_context_running() {
     if (!common::IoContextManager::instance().is_running()) {
-      std::lock_guard<std::mutex> lock(init_mutex_);
+      std::lock_guard<std::mutex> lock(init_mutex());
       // Double-check locking
       if (!common::IoContextManager::instance().is_running()) {
         common::IoContextManager::instance().start();
@@ -54,8 +59,7 @@ class AutoInitializer {
   static bool is_io_context_running() { return common::IoContextManager::instance().is_running(); }
 
  private:
-  static std::mutex init_mutex_;
-  static std::atomic<bool> initialized_;
+  static std::mutex& init_mutex();
 };
 
 }  // namespace builder

@@ -149,7 +149,7 @@ class UnilinkConan(ConanFile):
         if self.settings.os == "Linux":
             self.cpp_info.system_libs = ["pthread"]
         elif self.settings.os == "Windows":
-            self.cpp_info.system_libs = ["ws2_32", "wsock32"]
+            self.cpp_info.system_libs = ["ws2_32", "wsock32", "mswsock", "iphlpapi"]
         
         # Set compile definitions
         if self.options.enable_config:
@@ -158,7 +158,9 @@ class UnilinkConan(ConanFile):
             self.cpp_info.defines.append("UNILINK_ENABLE_MEMORY_TRACKING=1")
         
         # Set C++ standard
-        self.cpp_info.cxxflags = ["-std=c++17"]
+        self.cpp_info.cxxflags = []
+        if str(self.settings.compiler) != "msvc":
+            self.cpp_info.cxxflags.append("-std=c++17")
         
         # Set pkg-config name
         if self.options.enable_pkgconfig:

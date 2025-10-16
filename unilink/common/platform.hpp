@@ -18,6 +18,40 @@
 
 #include <string>
 
+#if defined(_WIN32)
+#ifndef BOOST_ASIO_DISABLE_WINDOWS_OBJECT_HANDLE
+#define BOOST_ASIO_DISABLE_WINDOWS_OBJECT_HANDLE
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <threadpoolapiset.h>
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
+// Ensure fundamental Windows callback aliases exist even when lean headers are
+// used. Some SDK combinations omit these when WIN32_LEAN_AND_MEAN is defined.
+#ifndef CALLBACK
+#define CALLBACK __stdcall
+#endif
+#ifdef BOOST_ASIO_HAS_WINDOWS_OBJECT_HANDLE
+#undef BOOST_ASIO_HAS_WINDOWS_OBJECT_HANDLE
+#endif
+#ifndef VOID
+typedef void VOID;
+#endif
+#ifndef PVOID
+typedef void* PVOID;
+#endif
+#ifndef BOOLEAN
+typedef unsigned char BOOLEAN;
+#endif
+#endif  // defined(_WIN32)
+
 namespace unilink {
 namespace common {
 
@@ -28,8 +62,8 @@ namespace common {
  * functions for different Ubuntu versions and compilers.
  */
 
-// Platform detection macros (set by CMake)
-#ifdef UNILINK_UBUNTU_20_04
+// Platform detection macros (set by CMake or inferred from compiler)
+#if defined(UNILINK_UBUNTU_20_04)
 #define UNILINK_UBUNTU_VERSION 20
 #define UNILINK_FEATURE_LEVEL 1  // Basic features only
 #elif defined(UNILINK_UBUNTU_22_04)
@@ -38,6 +72,17 @@ namespace common {
 #elif defined(UNILINK_UBUNTU_24_04)
 #define UNILINK_UBUNTU_VERSION 24
 #define UNILINK_FEATURE_LEVEL 3  // All features
+#elif defined(UNILINK_PLATFORM_WINDOWS) || defined(_WIN32)
+#define UNILINK_PLATFORM_WINDOWS 1
+#define UNILINK_UBUNTU_VERSION 0
+#define UNILINK_FEATURE_LEVEL 2  // Windows matches standard feature set
+#elif defined(UNILINK_PLATFORM_MACOS) || defined(__APPLE__)
+#define UNILINK_PLATFORM_MACOS 1
+#define UNILINK_UBUNTU_VERSION 0
+#define UNILINK_FEATURE_LEVEL 2  // macOS matches standard feature set
+#elif defined(UNILINK_PLATFORM_POSIX)
+#define UNILINK_UBUNTU_VERSION 0
+#define UNILINK_FEATURE_LEVEL 2
 #else
 #define UNILINK_UBUNTU_VERSION 0
 #define UNILINK_FEATURE_LEVEL 2  // Default to standard
@@ -71,14 +116,20 @@ class PlatformInfo {
    * @return Platform description string
    */
   static std::string get_platform_description() {
-#ifdef UNILINK_UBUNTU_20_04
+#if defined(UNILINK_UBUNTU_20_04)
     return "Ubuntu 20.04 (Limited Features)";
 #elif defined(UNILINK_UBUNTU_22_04)
     return "Ubuntu 22.04 (Full Features)";
 #elif defined(UNILINK_UBUNTU_24_04)
     return "Ubuntu 24.04 (All Features)";
+#elif defined(UNILINK_PLATFORM_WINDOWS)
+    return "Windows (Full Features)";
+#elif defined(UNILINK_PLATFORM_MACOS)
+    return "macOS (Full Features)";
+#elif defined(UNILINK_PLATFORM_POSIX)
+    return "POSIX Platform (Standard Features)";
 #else
-    return "Unknown Ubuntu Version";
+    return "Unknown Platform";
 #endif
   }
 
@@ -111,9 +162,13 @@ class PlatformInfo {
    * @return Warning message or empty string
    */
   static std::string get_support_warning() {
-#ifdef UNILINK_UBUNTU_20_04
+#if defined(UNILINK_UBUNTU_20_04)
     return "WARNING: Running on Ubuntu 20.04 with limited support. "
            "Consider upgrading to Ubuntu 22.04+ for full features.";
+#elif defined(UNILINK_PLATFORM_WINDOWS)
+    return "";
+#elif defined(UNILINK_PLATFORM_MACOS)
+    return "";
 #else
     return "";
 #endif

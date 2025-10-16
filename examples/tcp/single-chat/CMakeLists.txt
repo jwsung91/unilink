@@ -14,6 +14,8 @@
 
 add_executable(chat_tcp_client chat_tcp_client.cc)
 target_link_libraries(chat_tcp_client PRIVATE unilink::unilink)
+unilink_configure_executable(chat_tcp_client)
 
 add_executable(chat_tcp_server chat_tcp_server.cc)
 target_link_libraries(chat_tcp_server PRIVATE unilink::unilink)
+unilink_configure_executable(chat_tcp_server)

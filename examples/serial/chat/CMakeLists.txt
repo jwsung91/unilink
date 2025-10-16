@@ -14,3 +14,4 @@
 
 add_executable(chat_serial chat_serial.cc)
 target_link_libraries(chat_serial PRIVATE unilink::unilink)
+unilink_configure_executable(chat_serial)

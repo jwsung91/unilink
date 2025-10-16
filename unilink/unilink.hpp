@@ -26,6 +26,8 @@
 #include <memory>
 #include <variant>
 
+#include "unilink/common/platform.hpp"
+
 // Internal includes for Builder API (not exposed to users)
 #include "unilink/wrapper/ichannel.hpp"
 #include "unilink/wrapper/serial/serial.hpp"

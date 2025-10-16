@@ -22,6 +22,8 @@
 #include <mutex>
 #include <thread>
 
+#include "unilink/common/platform.hpp"
+
 namespace unilink {
 namespace common {
 

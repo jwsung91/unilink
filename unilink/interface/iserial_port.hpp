@@ -20,6 +20,8 @@
 #include <functional>
 #include <string>
 
+#include "unilink/common/platform.hpp"
+
 namespace unilink {
 namespace interface {
 

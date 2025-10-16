@@ -24,6 +24,7 @@
 
 #include <functional>
 #include <memory>
+#include <string>
 
 namespace unilink {
 namespace builder {

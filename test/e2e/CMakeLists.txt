@@ -16,12 +16,14 @@
 # Each test file is built as a separate executable
 
 # Scenario tests
+get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
+
 foreach(test_file test_architecture.cc test_error_recovery.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_e2e_${test_name} scenarios/${test_file})
   target_link_libraries(run_e2e_${test_name}
     PRIVATE
-      unilink_shared
+      ${_unilink_test_lib}
       GTest::gtest
       GTest::gmock
   )
@@ -35,13 +37,14 @@ foreach(test_file test_architecture.cc test_error_recovery.cc)
       LABELS "e2e;scenario;slow"
       TIMEOUT 90
   )
+  unilink_copy_runtime_dependency(run_e2e_${test_name})
 endforeach()
 
 # Stress tests
 add_executable(run_e2e_test_stress stress/test_stress.cc)
 target_link_libraries(run_e2e_test_stress
   PRIVATE
-    unilink
+    ${_unilink_test_lib}
     GTest::gtest
     GTest::gtest_main
     GTest::gmock
@@ -56,3 +59,4 @@ gtest_discover_tests(run_e2e_test_stress
     LABELS "e2e;stress;slow"
     TIMEOUT 120
 )
+unilink_copy_runtime_dependency(run_e2e_test_stress)

@@ -22,6 +22,8 @@
 #include <functional>
 #include <memory>
 
+#include "unilink/common/platform.hpp"
+
 namespace unilink {
 namespace test {
 namespace mocks {

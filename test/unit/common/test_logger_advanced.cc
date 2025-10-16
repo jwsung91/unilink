@@ -17,16 +17,19 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <memory>
 #include <random>
 #include <string>
 #include <thread>
 
+#include "test_utils.hpp"
 #include "unilink/common/logger.hpp"
 
 using namespace unilink::common;
 using namespace std::chrono_literals;
+using unilink::test::TestUtils;
 
 /**
  * @brief Advanced Logger Coverage Test
@@ -41,13 +44,14 @@ class AdvancedLoggerCoverageTest : public ::testing::Test {
 
     auto now = std::chrono::system_clock::now().time_since_epoch().count();
     std::random_device rd;
-    test_log_file_ = "/tmp/unilink_advanced_logger_test_" + test_name + "_" + std::to_string(now) + "_" +
-                     std::to_string(rd()) + ".log";
-    std::remove(test_log_file_.c_str());
+    std::string file_name =
+        "unilink_advanced_logger_test_" + test_name + "_" + std::to_string(now) + "_" + std::to_string(rd()) + ".log";
+    test_log_file_ = TestUtils::makeTempFilePath(file_name);
+    TestUtils::removeFileIfExists(test_log_file_);
   }
 
   void TearDown() override {
-    std::remove(test_log_file_.c_str());
+    TestUtils::removeFileIfExists(test_log_file_);
     // Reset logger state
     Logger::instance().set_enabled(true);
     Logger::instance().set_level(LogLevel::DEBUG);
@@ -55,7 +59,7 @@ class AdvancedLoggerCoverageTest : public ::testing::Test {
     Logger::instance().set_file_output("");
   }
 
-  std::string test_log_file_;
+  std::filesystem::path test_log_file_;
 };
 
 // ============================================================================
@@ -63,7 +67,7 @@ class AdvancedLoggerCoverageTest : public ::testing::Test {
 // ============================================================================
 
 TEST_F(AdvancedLoggerCoverageTest, FlushWithFileOutput) {
-  Logger::instance().set_file_output(test_log_file_);
+  Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_level(LogLevel::DEBUG);
 
   // Log some messages
@@ -121,7 +125,7 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithRotation) {
   config.max_file_size_bytes = 1000;  // Small size for testing
   config.max_files = 3;
 
-  Logger::instance().set_file_output_with_rotation(test_log_file_, config);
+  Logger::instance().set_file_output_with_rotation(test_log_file_.string(), config);
   Logger::instance().set_level(LogLevel::DEBUG);
 
   // Generate enough logs to trigger rotation
@@ -148,7 +152,7 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithRotation) {
 
   // Check rotated files
   for (int i = 1; i <= 3; ++i) {
-    std::string rotated_file = test_log_file_ + "." + std::to_string(i);
+    std::string rotated_file = test_log_file_.string() + "." + std::to_string(i);
     std::ifstream rotated(rotated_file);
     if (rotated.is_open()) {
       file_exists = true;
@@ -181,7 +185,7 @@ TEST_F(AdvancedLoggerCoverageTest, CheckAndRotateLog) {
   config.max_file_size_bytes = 500;  // Very small for testing
   config.max_files = 2;
 
-  Logger::instance().set_file_output_with_rotation(test_log_file_, config);
+  Logger::instance().set_file_output_with_rotation(test_log_file_.string(), config);
   Logger::instance().set_level(LogLevel::DEBUG);
 
   // Generate logs to trigger rotation
@@ -327,7 +331,7 @@ TEST_F(AdvancedLoggerCoverageTest, LogLevelFiltering) {
 // ============================================================================
 
 TEST_F(AdvancedLoggerCoverageTest, ConcurrentLogging) {
-  Logger::instance().set_file_output(test_log_file_);
+  Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_level(LogLevel::DEBUG);
 
   const int num_threads = 4;
@@ -361,7 +365,7 @@ TEST_F(AdvancedLoggerCoverageTest, ConcurrentLogging) {
 // ============================================================================
 
 TEST_F(AdvancedLoggerCoverageTest, HighVolumeLogging) {
-  Logger::instance().set_file_output(test_log_file_);
+  Logger::instance().set_file_output(test_log_file_.string());
   Logger::instance().set_level(LogLevel::DEBUG);
 
   const int num_messages = 1000;

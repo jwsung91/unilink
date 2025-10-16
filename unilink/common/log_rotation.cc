@@ -55,7 +55,7 @@ std::string LogRotation::rotate(const std::string& filepath) {
     cleanup_old_files(filepath);
 
     return filepath;  // Return original path for new log file
-  } catch (const std::filesystem::filesystem_error& e) {
+  } catch (const std::filesystem::filesystem_error&) {
     // If rename fails, return original path
     return filepath;
   }
@@ -73,12 +73,12 @@ void LogRotation::cleanup_old_files(const std::string& base_filepath) {
       for (size_t i = config_.max_files; i < log_files.size(); ++i) {
         try {
           std::filesystem::remove(log_files[i]);
-        } catch (const std::filesystem::filesystem_error& e) {
+        } catch (const std::filesystem::filesystem_error&) {
           // Ignore removal errors
         }
       }
     }
-  } catch (const std::exception& e) {
+  } catch (const std::exception&) {
     // Ignore cleanup errors
   }
 }
@@ -116,7 +116,7 @@ size_t LogRotation::get_file_size(const std::string& filepath) {
     if (std::filesystem::exists(filepath)) {
       return std::filesystem::file_size(filepath);
     }
-  } catch (const std::filesystem::filesystem_error& e) {
+  } catch (const std::filesystem::filesystem_error&) {
     // Return 0 if file doesn't exist or can't be accessed
   }
   return 0;
@@ -144,7 +144,7 @@ std::vector<std::string> LogRotation::get_log_files(const std::string& base_file
         }
       }
     }
-  } catch (const std::filesystem::filesystem_error& e) {
+  } catch (const std::filesystem::filesystem_error&) {
     // Return empty vector if directory access fails
   }
 
@@ -186,7 +186,7 @@ void LogRotation::sort_files_by_time(std::vector<std::string>& files) const {
       auto time_a = std::filesystem::last_write_time(a);
       auto time_b = std::filesystem::last_write_time(b);
       return time_a > time_b;  // Newest first
-    } catch (const std::filesystem::filesystem_error& e) {
+    } catch (const std::filesystem::filesystem_error&) {
       return false;
     }
   });

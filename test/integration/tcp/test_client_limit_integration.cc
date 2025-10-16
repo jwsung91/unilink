@@ -26,6 +26,7 @@
 #include <thread>
 #include <vector>
 
+#include "unilink/common/platform.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;

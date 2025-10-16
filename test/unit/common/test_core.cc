@@ -20,6 +20,8 @@
 #include <filesystem>
 #include <fstream>
 #include <memory>
+#include <random>
+#include <system_error>
 #include <thread>
 
 #include "test_utils.hpp"
@@ -196,7 +198,13 @@ class LogRotationTest : public ::testing::Test {
     // Generate unique test file prefix to avoid conflicts in parallel execution
     auto now = std::chrono::high_resolution_clock::now();
     auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
-    test_file_prefix_ = "test_rotation_" + std::to_string(timestamp);
+    std::random_device rd;
+    auto unique_dir = "log_rotation_" + std::to_string(timestamp) + "_" + std::to_string(rd());
+    test_dir_ = TestUtils::getTempDirectory() / unique_dir;
+    std::filesystem::create_directories(test_dir_);
+
+    base_name_ = "test_rotation";
+    base_log_path_ = test_dir_ / (base_name_ + ".log");
 
     // Clean up any existing test files
     cleanup_test_files();
@@ -207,36 +215,41 @@ class LogRotationTest : public ::testing::Test {
   }
 
   void TearDown() override {
-    // Clean up test files
-    cleanup_test_files();
+    auto& logger = common::Logger::instance();
+    logger.flush();
+    logger.set_file_output("");  // Disable file output (closes file handle on Windows)
+    logger.set_console_output(true);
 
-    // Reset logger
-    common::Logger::instance().set_file_output("");  // Disable file output
-    common::Logger::instance().set_console_output(true);
+    // Clean up test files after the logger releases file handles
+    cleanup_test_files();
+    std::error_code ec;
+    std::filesystem::remove_all(test_dir_, ec);
   }
 
   void cleanup_test_files() {
-    // Remove test log files with unique prefix
-    std::vector<std::string> test_files = {test_file_prefix_ + ".log",   test_file_prefix_ + ".0.log",
-                                           test_file_prefix_ + ".1.log", test_file_prefix_ + ".2.log",
-                                           test_file_prefix_ + ".3.log", test_file_prefix_ + ".4.log",
-                                           test_file_prefix_ + ".5.log"};
+    if (!std::filesystem::exists(test_dir_)) {
+      return;
+    }
 
-    for (const auto& file : test_files) {
-      if (std::filesystem::exists(file)) {
-        std::filesystem::remove(file);
-      }
+    for (const auto& entry : std::filesystem::directory_iterator(test_dir_)) {
+      std::error_code ec;
+      std::filesystem::remove_all(entry.path(), ec);
     }
   }
 
-  std::string test_file_prefix_;
+  std::filesystem::path test_dir_;
+  std::filesystem::path base_log_path_;
+  std::string base_name_;
 
-  size_t count_log_files(const std::string& base_name) {
+  size_t count_log_files() const {
+    if (!std::filesystem::exists(test_dir_)) {
+      return 0;
+    }
     size_t count = 0;
-    for (const auto& entry : std::filesystem::directory_iterator(".")) {
+    for (const auto& entry : std::filesystem::directory_iterator(test_dir_)) {
       if (entry.is_regular_file()) {
         std::string filename = entry.path().filename().string();
-        if (filename.find(base_name) == 0 && filename.find(".log") != std::string::npos) {
+        if (filename.rfind(base_name_, 0) == 0 && filename.find(".log") != std::string::npos) {
           count++;
         }
       }
@@ -244,7 +257,7 @@ class LogRotationTest : public ::testing::Test {
     return count;
   }
 
-  size_t get_file_size(const std::string& filename) {
+  size_t get_file_size(const std::filesystem::path& filename) {
     if (std::filesystem::exists(filename)) {
       return std::filesystem::file_size(filename);
     }
@@ -268,7 +281,7 @@ TEST_F(LogRotationTest, FileSizeBasedRotation) {
   config.max_file_size_bytes = 512;  // 512 bytes
   config.max_files = 5;
 
-  common::Logger::instance().set_file_output_with_rotation(test_file_prefix_ + ".log", config);
+  common::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
 
   // Generate enough log data to trigger rotation
   for (int i = 0; i < 20; ++i) {
@@ -281,12 +294,12 @@ TEST_F(LogRotationTest, FileSizeBasedRotation) {
   common::Logger::instance().flush();
 
   // Check if rotation occurred (should have multiple files)
-  size_t file_count = count_log_files("test_rotation");
+  size_t file_count = count_log_files();
   EXPECT_GE(file_count, 1) << "At least one log file should exist";
 
   // Check if files are within size limits
-  if (std::filesystem::exists(test_file_prefix_ + ".log")) {
-    size_t current_size = get_file_size(test_file_prefix_ + ".log");
+  if (std::filesystem::exists(base_log_path_)) {
+    size_t current_size = get_file_size(base_log_path_);
     EXPECT_LE(current_size, config.max_file_size_bytes * 2) << "Current log file should be reasonable size";
   }
 }
@@ -297,7 +310,7 @@ TEST_F(LogRotationTest, FileCountLimit) {
   config.max_file_size_bytes = 256;  // 256 bytes
   config.max_files = 2;              // Only keep 2 files
 
-  common::Logger::instance().set_file_output_with_rotation(test_file_prefix_ + ".log", config);
+  common::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
 
   // Generate lots of log data to trigger multiple rotations
   for (int i = 0; i < 50; ++i) {
@@ -309,7 +322,7 @@ TEST_F(LogRotationTest, FileCountLimit) {
   common::Logger::instance().flush();
 
   // Check that file count doesn't exceed limit
-  size_t file_count = count_log_files("test_rotation");
+  size_t file_count = count_log_files();
   EXPECT_LE(file_count, config.max_files + 1) << "File count should not exceed limit (current + rotated files)";
 }
 
@@ -322,7 +335,7 @@ TEST_F(LogRotationTest, LogRotationManagerDirectTest) {
   common::LogRotation rotation(config);
 
   // Create a test file
-  std::string test_file = test_file_prefix_ + ".log";
+  std::string test_file = base_log_path_.string();
   std::ofstream file(test_file);
   file << "Test data to make file larger than 100 bytes. ";
   file << "This should be enough to trigger rotation when we check.";
@@ -337,11 +350,11 @@ TEST_F(LogRotationTest, LogRotationManagerDirectTest) {
   EXPECT_EQ(new_path, test_file) << "Should return original path for new log file";
 
   // Check that rotated file exists
-  EXPECT_TRUE(std::filesystem::exists(test_file_prefix_ + ".0.log")) << "Rotated file should exist";
+  EXPECT_TRUE(std::filesystem::exists(test_dir_ / (base_name_ + ".0.log"))) << "Rotated file should exist";
 
   // Clean up
   std::filesystem::remove(test_file);
-  std::filesystem::remove(test_file_prefix_ + ".0.log");
+  std::filesystem::remove(test_dir_ / (base_name_ + ".0.log"));
 }
 
 TEST_F(LogRotationTest, LogRotationWithoutRotation) {
@@ -350,7 +363,7 @@ TEST_F(LogRotationTest, LogRotationWithoutRotation) {
   config.max_file_size_bytes = 1024 * 1024;  // 1MB - very large
   config.max_files = 5;
 
-  common::Logger::instance().set_file_output_with_rotation(test_file_prefix_ + ".log", config);
+  common::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
 
   // Generate small amount of log data
   for (int i = 0; i < 5; ++i) {
@@ -360,12 +373,12 @@ TEST_F(LogRotationTest, LogRotationWithoutRotation) {
   common::Logger::instance().flush();
 
   // Should only have one file
-  size_t file_count = count_log_files("test_rotation");
+  size_t file_count = count_log_files();
   EXPECT_EQ(file_count, 1) << "Should only have one file when size limit not reached";
 
   // File should exist and be small
-  EXPECT_TRUE(std::filesystem::exists(test_file_prefix_ + ".log"));
-  size_t file_size = get_file_size(test_file_prefix_ + ".log");
+  EXPECT_TRUE(std::filesystem::exists(base_log_path_));
+  size_t file_size = get_file_size(base_log_path_);
   EXPECT_LT(file_size, config.max_file_size_bytes) << "File should be smaller than rotation threshold";
 }
 
@@ -390,23 +403,27 @@ class AsyncLoggingTest : public ::testing::Test {
   }
 
   void TearDown() override {
-    // Clean up test files
-    cleanup_test_files();
+    auto& logger = common::Logger::instance();
 
-    // Reset logger
-    common::Logger::instance().set_async_logging(false);
-    common::Logger::instance().set_file_output("");  // Disable file output
-    common::Logger::instance().set_console_output(true);
+    // Stop async logging before flushing to ensure background threads exit
+    logger.set_async_logging(false);
+    logger.flush();
+    logger.set_file_output("");  // Disable file output
+    logger.set_console_output(true);
+
+    // Remove files only after handles are released
+    cleanup_test_files();
   }
 
   void cleanup_test_files() {
-    // Remove test log files with unique prefix
-    std::vector<std::string> test_files = {test_file_prefix_ + ".log", test_file_prefix_ + ".0.log",
-                                           test_file_prefix_ + ".1.log", test_file_prefix_ + ".2.log"};
-
-    for (const auto& file : test_files) {
-      if (std::filesystem::exists(file)) {
-        std::filesystem::remove(file);
+    for (const auto& entry : std::filesystem::directory_iterator(".")) {
+      if (!entry.is_regular_file()) {
+        continue;
+      }
+      const auto filename = entry.path().filename().string();
+      if (filename.rfind(test_file_prefix_, 0) == 0 && filename.find(".log") != std::string::npos) {
+        std::error_code ec;
+        std::filesystem::remove(entry.path(), ec);
       }
     }
   }
@@ -520,7 +537,14 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
 
   // Check performance (should be very fast since it's just queuing)
   double messages_per_second = (num_messages * 1000000.0) / static_cast<double>(duration);
-  EXPECT_GT(messages_per_second, 100000) << "Should process at least 100k messages per second";
+#ifdef _WIN32
+  const double expected_threshold =
+      50000.0;  // Windows std::chrono-resolution + thread scheduling yields lower throughput
+#else
+  const double expected_threshold = 100000.0;
+#endif
+  EXPECT_GT(messages_per_second, expected_threshold)
+      << "Should process at least " << expected_threshold << " messages per second";
 
   // Check statistics
   auto stats = common::Logger::instance().get_async_stats();
@@ -528,6 +552,8 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
   EXPECT_EQ(stats.dropped_logs, 0) << "Should not have dropped any messages";
 
   std::cout << "Async logging performance: " << messages_per_second << " messages/second" << std::endl;
+
+  common::Logger::instance().set_async_logging(false);
 }
 
 TEST_F(AsyncLoggingTest, AsyncLoggingBackpressure) {

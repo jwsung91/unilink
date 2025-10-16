@@ -281,13 +281,26 @@ void Logger::check_and_rotate_log() {
     return;
   }
 
-  if (log_rotation_->should_rotate(current_log_file_)) {
-    std::string new_filepath = log_rotation_->rotate(current_log_file_);
-    if (new_filepath != current_log_file_) {
-      // File was rotated, reopen the original file
-      open_log_file(current_log_file_);
-    }
+  // Ensure single-threaded access to file handle while rotating
+  std::lock_guard<std::mutex> lock(mutex_);
+
+  if (!log_rotation_->should_rotate(current_log_file_)) {
+    return;
   }
+
+  // Flush and close the current file handle so Windows can rename it
+  if (file_output_) {
+    file_output_->flush();
+    file_output_->close();
+    file_output_.reset();
+  }
+
+  std::string new_filepath = log_rotation_->rotate(current_log_file_);
+
+  // Always attempt to reopen the active log file, even if rotation failed
+  open_log_file(current_log_file_);
+
+  // If rotation succeeded, new_filepath will differ, but no additional action needed
 }
 
 void Logger::open_log_file(const std::string& filename) {

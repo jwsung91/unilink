@@ -313,7 +313,7 @@ std::string ConfigManager::serialize_value(const std::any& value, ConfigType typ
       default:
         return "unknown";
     }
-  } catch (const std::bad_any_cast& e) {
+  } catch (const std::bad_any_cast&) {
     // Fallback to string representation
     return "unknown";
   }
@@ -333,7 +333,7 @@ std::any ConfigManager::deserialize_value(const std::string& value_str, ConfigTy
       default:
         return std::any(value_str);
     }
-  } catch (const std::exception& e) {
+  } catch (const std::exception&) {
     // Fallback to string if parsing fails
     return std::any(value_str);
   }

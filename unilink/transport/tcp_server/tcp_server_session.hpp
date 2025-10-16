@@ -29,6 +29,7 @@
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/logger.hpp"
 #include "unilink/common/memory_pool.hpp"
+#include "unilink/common/platform.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_socket.hpp"
 
