@@ -5,7 +5,7 @@
 
 
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
-![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey)
 
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
@@ -97,6 +97,36 @@ tar -xzf unilink-0.1.0-linux-x64.tar.gz
 ```
 
 **For detailed installation instructions, see [Installation Guide](docs/guides/installation.md).**
+
+---
+
+### Windows Quick Start
+
+```powershell
+# Option A: Visual Studio generator (x64)
+cmake -S . -B build-windows `
+  -G "Visual Studio 17 2022" -A x64 `
+  -DBUILD_TESTING=ON
+cmake --build build-windows --config Release
+ctest --test-dir build-windows -C Release --output-on-failure
+
+# Option B: Ninja + vcpkg toolchain (example)
+Remove-Item build-windows -Recurse -Force
+cmake -S . -B build-windows -G "Ninja" `
+  -DCMAKE_TOOLCHAIN_FILE="F:/lib/vcpkg/scripts/buildsystems/vcpkg.cmake" `
+  -DVCPKG_TARGET_TRIPLET=x64-windows `
+  -DUNILINK_BUILD_SHARED=ON
+cmake --build build-windows --config Debug
+ctest --test-dir build-windows --output-on-failure
+
+# Run an example (DLL is copied automatically after re-configure)
+.\build-windows\Release\echo_tcp_server.exe 8080
+```
+
+**Windows notes**
+- Re-run CMake (or start from a clean build directory) after pulling the latest branch so that example targets pick up the new post-build copy step for `unilink.dll`.
+- Serial port recovery scenarios are Unix-only and are skipped automatically on Windows test runs.
+- Async logging performance expectations are slightly lower on Windows (≥50k messages/sec) to account for timer granularity and scheduler differences.
 
 ---
 
