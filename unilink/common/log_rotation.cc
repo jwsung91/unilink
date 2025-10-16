@@ -144,7 +144,7 @@ std::vector<std::string> LogRotation::get_log_files(const std::string& base_file
         }
       }
     }
-  } catch (const std::filesystem::filesystem_error& e) {
+  } catch (const std::filesystem::filesystem_error&) {
     // Return empty vector if directory access fails
   }
 
@@ -186,7 +186,7 @@ void LogRotation::sort_files_by_time(std::vector<std::string>& files) const {
       auto time_a = std::filesystem::last_write_time(a);
       auto time_b = std::filesystem::last_write_time(b);
       return time_a > time_b;  // Newest first
-    } catch (const std::filesystem::filesystem_error& e) {
+    } catch (const std::filesystem::filesystem_error&) {
       return false;
     }
   });

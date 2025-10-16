@@ -175,7 +175,7 @@ class ChatServer {
                 server_->broadcast("[Server] -> Client " + std::to_string(client_id) + ": " + message);
                 logger_.info("server", "send", "Sent to client " + std::to_string(client_id) + ": " + message);
                 logger_.info("server", "broadcast", "Broadcasted server message to all clients");
-              } catch (const std::exception& e) {
+              } catch (const std::exception&) {
                 logger_.error("server", "send", "Invalid send command format");
               }
             } else {
