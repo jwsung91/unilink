@@ -23,8 +23,8 @@
 #endif
 
 #include <functional>
-#include <string>
 #include <memory>
+#include <string>
 
 namespace unilink {
 namespace builder {

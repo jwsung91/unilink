@@ -32,8 +32,8 @@
 
 #include <atomic>
 #include <chrono>
-#include <filesystem>
 #include <condition_variable>
+#include <filesystem>
 #include <memory>
 #include <mutex>
 #include <random>
@@ -201,9 +201,7 @@ class TestUtils {
    * @param filename File name (without directory)
    * @return std::filesystem::path Absolute path to temp file
    */
-  static std::filesystem::path makeTempFilePath(const std::string& filename) {
-    return getTempDirectory() / filename;
-  }
+  static std::filesystem::path makeTempFilePath(const std::string& filename) { return getTempDirectory() / filename; }
 
   /**
    * @brief Removes a file if it exists, ignoring errors

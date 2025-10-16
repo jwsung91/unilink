@@ -19,8 +19,6 @@
 #include <gmock/gmock.h>
 
 #include <atomic>
-#include "unilink/common/platform.hpp"
-
 #include <boost/asio.hpp>
 #include <chrono>
 #include <condition_variable>
@@ -29,6 +27,7 @@
 #include <thread>
 
 #include "mock_tcp_socket.hpp"
+#include "unilink/common/platform.hpp"
 
 namespace unilink {
 namespace test {

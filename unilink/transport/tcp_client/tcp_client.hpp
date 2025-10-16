@@ -17,6 +17,7 @@
 #pragma once
 
 #include <array>
+#include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
 #include <memory>
@@ -25,14 +26,11 @@
 #include <variant>
 #include <vector>
 
-#include "unilink/common/platform.hpp"
-
-#include <boost/asio.hpp>
-
 #include "unilink/common/constants.hpp"
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/logger.hpp"
 #include "unilink/common/memory_pool.hpp"
+#include "unilink/common/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/interface/channel.hpp"

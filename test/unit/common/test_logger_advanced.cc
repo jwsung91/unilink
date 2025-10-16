@@ -44,8 +44,8 @@ class AdvancedLoggerCoverageTest : public ::testing::Test {
 
     auto now = std::chrono::system_clock::now().time_since_epoch().count();
     std::random_device rd;
-    std::string file_name = "unilink_advanced_logger_test_" + test_name + "_" + std::to_string(now) + "_" +
-                            std::to_string(rd()) + ".log";
+    std::string file_name =
+        "unilink_advanced_logger_test_" + test_name + "_" + std::to_string(now) + "_" + std::to_string(rd()) + ".log";
     test_log_file_ = TestUtils::makeTempFilePath(file_name);
     TestUtils::removeFileIfExists(test_log_file_);
   }

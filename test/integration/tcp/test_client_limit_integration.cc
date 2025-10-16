@@ -17,8 +17,6 @@
 #include <gtest/gtest.h>
 
 #include <atomic>
-#include "unilink/common/platform.hpp"
-
 #include <boost/asio.hpp>
 #include <chrono>
 #include <future>
@@ -28,6 +26,7 @@
 #include <thread>
 #include <vector>
 
+#include "unilink/common/platform.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;

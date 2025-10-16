@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <array>
+#include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
 #include <functional>
@@ -26,12 +27,9 @@
 #include <thread>
 #include <vector>
 
-#include "unilink/common/platform.hpp"
-
-#include <boost/asio.hpp>
-
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/logger.hpp"
+#include "unilink/common/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/interface/channel.hpp"

@@ -42,7 +42,7 @@ class UNILINK_EXPORT AutoInitializer {
    *
    * This method is thread-safe and can be called multiple times safely.
    * If already running, it does nothing.
-  */
+   */
   static void ensure_io_context_running() {
     if (!common::IoContextManager::instance().is_running()) {
       std::lock_guard<std::mutex> lock(init_mutex());
@@ -55,7 +55,7 @@ class UNILINK_EXPORT AutoInitializer {
 
   /**
    * @brief Check if IoContextManager is running
-  */
+   */
   static bool is_io_context_running() { return common::IoContextManager::instance().is_running(); }
 
  private:

@@ -28,10 +28,10 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
+#include <threadpoolapiset.h>
+#include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <windows.h>
-#include <threadpoolapiset.h>
 
 // Ensure fundamental Windows callback aliases exist even when lean headers are
 // used. Some SDK combinations omit these when WIN32_LEAN_AND_MEAN is defined.

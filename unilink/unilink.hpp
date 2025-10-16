@@ -23,10 +23,10 @@
 #define UNILINK_EXPORT
 #endif
 
-#include "unilink/common/platform.hpp"
-
 #include <memory>
 #include <variant>
+
+#include "unilink/common/platform.hpp"
 
 // Internal includes for Builder API (not exposed to users)
 #include "unilink/wrapper/ichannel.hpp"
