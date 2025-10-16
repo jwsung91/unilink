@@ -7,6 +7,32 @@ if(MSVC)
   set(UNILINK_COMPILER_MSVC ON)
   add_definitions(-DUNILINK_PLATFORM_WINDOWS=1)
   
+  # Remove any existing /W[0-4] flags the generator might have added so we control warning level explicitly.
+  foreach(flag_var
+          CMAKE_C_FLAGS
+          CMAKE_CXX_FLAGS
+          CMAKE_C_FLAGS_DEBUG
+          CMAKE_CXX_FLAGS_DEBUG
+          CMAKE_C_FLAGS_RELEASE
+          CMAKE_CXX_FLAGS_RELEASE
+          CMAKE_C_FLAGS_RELWITHDEBINFO
+          CMAKE_CXX_FLAGS_RELWITHDEBINFO
+          CMAKE_C_FLAGS_MINSIZEREL
+          CMAKE_CXX_FLAGS_MINSIZEREL)
+    if(DEFINED ${flag_var})
+      string(REGEX REPLACE "(/W[0-4])" "" _cleaned_flags "${${flag_var}}")
+      string(REGEX REPLACE "  +" " " _cleaned_flags "${_cleaned_flags}")
+      string(STRIP "${_cleaned_flags}" _cleaned_flags)
+      set(${flag_var} "${_cleaned_flags}" CACHE STRING "" FORCE)
+    endif()
+  endforeach()
+  # Ensure Windows headers detect a target architecture even if the toolchain omits it.
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    add_compile_definitions(_WIN64=1 _AMD64_=1 _M_AMD64=1 _M_X64=1)
+  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    add_compile_definitions(_WIN32=1 _X86_=1 _M_IX86=1)
+  endif()
+
   if(UNILINK_ENABLE_WARNINGS)
     add_compile_options(/W4 /permissive- /utf-8)
     if(UNILINK_ENABLE_WERROR)
