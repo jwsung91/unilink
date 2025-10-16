@@ -280,6 +280,9 @@ TEST_F(ErrorRecoveryTest, NetworkRecoveryAfterFailure) {
  * @brief Serial port error scenarios
  */
 TEST_F(ErrorRecoveryTest, SerialPortErrors) {
+#ifdef _WIN32
+  GTEST_SKIP() << "Serial port error scenarios require Unix-like device paths not available on Windows.";
+#endif
   std::cout << "\n=== Serial Port Error Tests ===" << std::endl;
 
   // 1. 존재하지 않는 디바이스
@@ -348,6 +351,9 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
  * @brief Serial port retry mechanism test
  */
 TEST_F(ErrorRecoveryTest, SerialRetryMechanism) {
+#ifdef _WIN32
+  GTEST_SKIP() << "Serial retry scenario depends on Unix-style serial devices unavailable on Windows.";
+#endif
   std::cout << "\n=== Serial Retry Mechanism Test ===" << std::endl;
 
   // 재시도 메커니즘 테스트
@@ -380,6 +386,9 @@ TEST_F(ErrorRecoveryTest, SerialRetryMechanism) {
  * @brief Actual error state test using transport layer directly
  */
 TEST_F(ErrorRecoveryTest, ActualErrorStateTest) {
+#ifdef _WIN32
+  GTEST_SKIP() << "Serial transport error-state scenario requires Unix-like device paths.";
+#endif
   std::cout << "\n=== Actual Error State Test ===" << std::endl;
 
   // Transport layer를 직접 사용하여 reopen_on_error=false로 설정
