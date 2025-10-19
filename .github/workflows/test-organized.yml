@@ -12,7 +12,7 @@ jobs:
     name: Unit Tests (Fast)
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       
       - name: Install dependencies
         run: |
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: unit-tests
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       
       - name: Install dependencies
         run: |
@@ -73,7 +73,7 @@ jobs:
     needs: integration-tests
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       
       - name: Install dependencies
         run: |
@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.event_name == 'schedule' || contains(github.event.head_commit.message, '[perf]')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       
       - name: Install dependencies
         run: |
