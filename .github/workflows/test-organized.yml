@@ -127,7 +127,7 @@ jobs:
           ctest -L performance --output-on-failure
 
       - name: Upload Performance Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: performance-results
