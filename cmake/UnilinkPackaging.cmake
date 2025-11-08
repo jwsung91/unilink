@@ -147,6 +147,15 @@ if(TARGET unilink_static)
   )
 endif()
 
+if(TARGET unilink AND NOT TARGET unilink_shared AND NOT TARGET unilink_static)
+  install(TARGETS unilink
+    COMPONENT libraries
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+  )
+endif()
+
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/unilink/
   COMPONENT headers
   DESTINATION include/unilink
