@@ -96,7 +96,7 @@ endif()
 if(TARGET unilink_static)
   add_library(unilink::unilink_static ALIAS unilink_static)
 endif()
-if(TARGET unilink AND NOT unilink_shared AND NOT unilink_static)
+if(TARGET unilink)
   add_library(unilink::unilink ALIAS unilink)
 endif()
 
@@ -132,7 +132,7 @@ if(TARGET unilink_static)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>)
 endif()
-if(TARGET unilink AND NOT unilink_shared AND NOT unilink_static)
+if(TARGET unilink AND NOT TARGET unilink_shared AND NOT TARGET unilink_static)
   target_link_libraries(unilink PUBLIC unilink_dependencies)
   target_compile_features(unilink PUBLIC cxx_std_17)
   target_include_directories(unilink PUBLIC
