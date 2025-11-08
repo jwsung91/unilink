@@ -133,9 +133,9 @@ if(TARGET unilink_static)
     $<INSTALL_INTERFACE:include>)
 endif()
 if(TARGET unilink AND NOT unilink_shared AND NOT unilink_static)
-  target_link_libraries(unilink INTERFACE unilink_dependencies)
-  target_compile_features(unilink INTERFACE cxx_std_17)
-  target_include_directories(unilink INTERFACE
+  target_link_libraries(unilink PUBLIC unilink_dependencies)
+  target_compile_features(unilink PUBLIC cxx_std_17)
+  target_include_directories(unilink PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>)
 endif()
