@@ -99,7 +99,7 @@ jobs:
         ctest --rerun-failed --output-on-failure --parallel $(nproc)
 
     - name: Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: unit-test-results-${{ matrix.os }}-${{ matrix.compiler }}
@@ -170,7 +170,7 @@ jobs:
         ctest --rerun-failed --output-on-failure --parallel $(nproc)
 
     - name: Upload integration test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: integration-test-results
@@ -240,7 +240,7 @@ jobs:
           --label-regex "performance|benchmark|stress"
 
     - name: Upload performance test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: performance-test-results
@@ -296,7 +296,7 @@ jobs:
           --label-regex "memory|safety"
 
     - name: Upload memory safety test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: memory-safety-test-results
