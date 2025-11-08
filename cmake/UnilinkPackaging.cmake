@@ -131,12 +131,21 @@ set(CPACK_COMPONENT_EXAMPLES_DESCRIPTION "Example programs and tutorials")
 set(CPACK_COMPONENT_EXAMPLES_DEPENDS libraries headers)
 
 # Install rules for components
-install(TARGETS unilink_shared unilink_static
-  COMPONENT libraries
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-)
+if(TARGET unilink_shared)
+  install(TARGETS unilink_shared
+    COMPONENT libraries
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+  )
+endif()
+
+if(TARGET unilink_static)
+  install(TARGETS unilink_static
+    COMPONENT libraries
+    ARCHIVE DESTINATION lib
+  )
+endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/unilink/
   COMPONENT headers
