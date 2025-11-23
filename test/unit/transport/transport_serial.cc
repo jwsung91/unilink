@@ -56,9 +56,7 @@ class FakeSerialPort : public interface::SerialPortInterface {
   void set_option(const boost::asio::serial_port_base::stop_bits&, boost::system::error_code& ec) override {
     ec.clear();
   }
-  void set_option(const boost::asio::serial_port_base::parity&, boost::system::error_code& ec) override {
-    ec.clear();
-  }
+  void set_option(const boost::asio::serial_port_base::parity&, boost::system::error_code& ec) override { ec.clear(); }
   void set_option(const boost::asio::serial_port_base::flow_control&, boost::system::error_code& ec) override {
     ec.clear();
   }
@@ -77,9 +75,7 @@ class FakeSerialPort : public interface::SerialPortInterface {
   void emit_operation_aborted() {
     if (!read_handler_) return;
     auto handler = std::move(read_handler_);
-    boost::asio::post(ioc_, [handler]() {
-      handler(make_error_code(boost::asio::error::operation_aborted), 0);
-    });
+    boost::asio::post(ioc_, [handler]() { handler(make_error_code(boost::asio::error::operation_aborted), 0); });
   }
 
  private:

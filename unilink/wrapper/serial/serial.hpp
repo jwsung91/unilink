@@ -21,9 +21,9 @@
 #include <memory>
 #include <string>
 
+#include "unilink/config/serial_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
-#include "unilink/config/serial_config.hpp"
 
 namespace unilink {
 namespace wrapper {

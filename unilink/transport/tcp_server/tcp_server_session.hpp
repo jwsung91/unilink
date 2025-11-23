@@ -17,8 +17,8 @@
 #pragma once
 
 #include <array>
-#include <boost/asio.hpp>
 #include <atomic>
+#include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
 #include <functional>

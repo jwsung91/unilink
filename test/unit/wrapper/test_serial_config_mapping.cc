@@ -45,8 +45,8 @@ TEST(SerialConfigMappingTest, MapsParityFlowBitsAndBaud) {
 
 TEST(SerialConfigMappingTest, InvalidStringsFallbackToNoneAndClampBits) {
   Serial wrapper("/dev/ttyS11", 9600);
-  wrapper.set_data_bits(3);    // below minimum, should clamp to 5
-  wrapper.set_stop_bits(5);    // above maximum, should clamp to 2
+  wrapper.set_data_bits(3);  // below minimum, should clamp to 5
+  wrapper.set_stop_bits(5);  // above maximum, should clamp to 2
   wrapper.set_parity("invalid");
   wrapper.set_flow_control("???");
 
