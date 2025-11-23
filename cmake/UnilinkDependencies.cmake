@@ -43,11 +43,10 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     endif()
   endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  # Use the module mode explicitly to bypass Homebrew's BoostConfig (missing boost_system)
-  # Provide Homebrew hints so FindBoost can locate the install without touching BoostConfig.cmake.
-  find_package(Boost 1.74 MODULE REQUIRED COMPONENTS system
-    HINTS /opt/homebrew/opt/boost /opt/homebrew
-    PATHS /usr/local/opt/boost)
+  # Steer FindBoost to the Homebrew installation without invoking BoostConfig.cmake
+  list(APPEND CMAKE_PREFIX_PATH /opt/homebrew/opt/boost /opt/homebrew /usr/local/opt/boost)
+  set(BOOST_ROOT "/opt/homebrew/opt/boost" CACHE PATH "Homebrew Boost root" FORCE)
+  find_package(Boost 1.74 REQUIRED COMPONENTS system)
   message(STATUS "Using Boost 1.74+ for macOS compatibility")
 else()
   # Other platforms: use a recent Boost version
