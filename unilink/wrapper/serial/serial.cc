@@ -51,6 +51,7 @@ Serial::~Serial() {
 void Serial::start() {
   if (started_) return;
 
+  // Ensure flow/parity mapping is applied on subsequent starts if channel was recreated
   if (!channel_) {
     // Create Channel
     config::SerialConfig config;

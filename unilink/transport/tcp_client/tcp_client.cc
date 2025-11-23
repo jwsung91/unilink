@@ -101,6 +101,12 @@ TcpClient::~TcpClient() {
 }
 
 void TcpClient::start() {
+  auto current_state = state_.get_state();
+  if (current_state == LinkState::Connecting || current_state == LinkState::Connected) {
+    UNILINK_LOG_DEBUG("tcp_client", "start", "Start called while already active, ignoring");
+    return;
+  }
+
   if (!ioc_) {
     UNILINK_LOG_ERROR("tcp_client", "start", "io_context is null");
     state_.set_state(LinkState::Error);
