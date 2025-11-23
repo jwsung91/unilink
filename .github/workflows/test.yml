@@ -52,33 +52,7 @@ jobs:
         sudo apt-get install -y \
           build-essential \
           cmake
-        
-        # Install specific compiler versions
-        if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y gcc-11 g++-11
-          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-            sudo apt-get install -y gcc-13 g++-13
-          fi
-        else
-          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y clang-14
-          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-            sudo apt-get install -y clang-15
-          fi
-        fi
-        
-        # Ubuntu version-specific Boost installation
-        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-        else
-          # Ubuntu 24.04: try 1.83 first, fallback to 1.74
-          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
-            echo "Boost 1.83 not available, installing 1.74..."
-            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-          fi
-        fi
-
+       
     - name: Configure CMake
       run: |
         cmake -S . -B build-test \
@@ -109,7 +83,7 @@ jobs:
 
   # Integration Tests
   integration-tests:
-    name: Integration Tests
+    name: Integration Tests (ubuntu-22.04, gcc)
     runs-on: ubuntu-22.04
     needs: []
 
@@ -122,33 +96,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y \
           build-essential \
-          cmake
-        
-        # Install specific compiler versions
-        if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y gcc-11 g++-11
-          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-            sudo apt-get install -y gcc-13 g++-13
-          fi
-        else
-          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y clang-14
-          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-            sudo apt-get install -y clang-15
-          fi
-        fi
-        
-        # Ubuntu version-specific Boost installation
-        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-        else
-          # Ubuntu 24.04: try 1.83 first, fallback to 1.74
-          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
-            echo "Boost 1.83 not available, installing 1.74..."
-            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-          fi
-        fi
+          cmake \
+          gcc-11 g++-11 \
+          libboost1.74-dev libboost-system1.74-dev
 
     - name: Configure CMake
       run: |
@@ -156,8 +106,10 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_EXAMPLES=OFF \
-          -DBUILD_TESTING=ON
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=ON \
+          -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF
 
     - name: Build integration tests
       run: cmake --build build-integration -j $(nproc)
@@ -165,9 +117,12 @@ jobs:
     - name: Run integration tests
       run: |
         cd build-integration
-        ctest --output-on-failure --parallel $(nproc) \
-          --label-regex "integration|mock|stable" || \
-        ctest --rerun-failed --output-on-failure --parallel $(nproc)
+        ctest --output-on-failure --parallel 2 \
+          --label-regex "integration|mock|stable" \
+          --label-exclude "slow" || \
+        ctest --rerun-failed --output-on-failure --parallel 2 \
+          --label-regex "integration|mock|stable" \
+          --label-exclude "slow"
 
     - name: Upload integration test results
       uses: actions/upload-artifact@v5
@@ -180,7 +135,7 @@ jobs:
 
   # Performance Tests
   performance-tests:
-    name: Performance Tests
+    name: Performance Tests (ubuntu-22.04, gcc)
     runs-on: ubuntu-22.04
     needs: []
 
@@ -193,33 +148,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y \
           build-essential \
-          cmake
-        
-        # Install specific compiler versions
-        if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y gcc-11 g++-11
-          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-            sudo apt-get install -y gcc-13 g++-13
-          fi
-        else
-          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y clang-14
-          elif [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
-            sudo apt-get install -y clang-15
-          fi
-        fi
-        
-        # Ubuntu version-specific Boost installation
-        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-        else
-          # Ubuntu 24.04: try 1.83 first, fallback to 1.74
-          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
-            echo "Boost 1.83 not available, installing 1.74..."
-            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-          fi
-        fi
+          cmake \
+          gcc-11 g++-11 \
+          libboost1.74-dev libboost-system1.74-dev
 
     - name: Configure CMake
       run: |
@@ -227,8 +158,10 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_EXAMPLES=OFF \
-          -DBUILD_TESTING=ON
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=ON \
+          -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON
 
     - name: Build performance tests
       run: cmake --build build-perf -j $(nproc)
@@ -236,7 +169,7 @@ jobs:
     - name: Run performance tests
       run: |
         cd build-perf
-        ctest --output-on-failure --parallel $(nproc) \
+        ctest --output-on-failure --parallel 2 \
           --label-regex "performance|benchmark|stress"
 
     - name: Upload performance test results

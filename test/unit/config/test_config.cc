@@ -589,38 +589,31 @@ TEST_F(ConfigTest, ConfigPerformanceLargeDataset) {
 // ============================================================================
 
 TEST_F(ConfigTest, SetWithWrongTypeFails) {
-  ConfigItem item("wrong.type", std::any(1), ConfigType::Integer, false, "int");
+  ConfigItem item{"wrong.type", ConfigType::Integer, 1, "int", false};
   config_manager_->register_item(item);
   auto result = config_manager_->set("wrong.type", std::string("not an int"));
   EXPECT_FALSE(result.is_valid);
 }
 
 TEST_F(ConfigTest, ValidateFailsOnMissingRequired) {
-  ConfigItem required_item("required.key", std::string(""), ConfigType::String, true, "required");
+  ConfigItem required_item{"required.key", ConfigType::String, std::string(""), "required", true};
   config_manager_->register_item(required_item);
-  config_manager_->register_validator("required.key", [](const std::any& value) {
-    const auto* str = std::any_cast<std::string>(&value);
-    if (str && str->empty()) {
-      return ValidationResult::error("required.key is missing");
-    }
-    return ValidationResult::success();
-  });
   auto validation = config_manager_->validate();
   EXPECT_FALSE(validation.is_valid);
 }
 
 TEST_F(ConfigTest, SaveAndLoadRoundTrip) {
-  ConfigItem item("persist.key", std::string("value"), ConfigType::String, false, "persist");
+  ConfigItem item{"persist.key", ConfigType::String, std::string("value"), "persist", false};
   config_manager_->register_item(item);
   config_manager_->set("persist.key", std::string("hello"));
 
   // Save to file
-  EXPECT_TRUE(config_manager_->save_to_file(test_file_path_.string()));
+  config_manager_->save(test_file_path_.string());
   EXPECT_TRUE(std::filesystem::exists(test_file_path_));
 
   // Load into new manager
   auto loaded_manager = std::make_shared<ConfigManager>();
-  EXPECT_TRUE(loaded_manager->load_from_file(test_file_path_.string()));
+  loaded_manager->load(test_file_path_.string());
 
   auto loaded_value = loaded_manager->get("persist.key");
   EXPECT_EQ(std::any_cast<std::string>(loaded_value), "hello");
