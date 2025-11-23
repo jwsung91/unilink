@@ -92,7 +92,7 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 ```bash
 # Download and extract release package
 wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.0-linux-x64.tar.gz
-tar -xzf unilink-0.1.3-linux-x64.tar.gz
+tar -xzf unilink-0.1.4-linux-x64.tar.gz
 # Follow installation instructions in the package
 ```
 
@@ -179,12 +179,12 @@ ctest --test-dir build-windows --output-on-failure
 - [Documentation Index](docs/INDEX.md) - Complete documentation overview
 
 ### 📦 Packaging (Conan / vcpkg)
-- Conan recipe lives in `packaging/conan` (run `conan create packaging/conan unilink/0.1.3@`; update `conandata.yml` SHA before tagging).
+- Conan recipe lives in `packaging/conan` (run `conan create packaging/conan unilink/0.1.4@`; update `conandata.yml` SHA before tagging).
 - vcpkg overlay port lives in `packaging/vcpkg/ports/unilink` (use `vcpkg install unilink --overlay-ports=packaging/vcpkg/ports` for local tests).
 - Local test commands (run from repo root):
   ```bash
   # Conan (v2): build & test the recipe
-  conan create packaging/conan --name=unilink --version=0.1.3
+  conan create packaging/conan --name=unilink --version=0.1.4
 
   # vcpkg: install using the local overlay port
   vcpkg install unilink --overlay-ports=packaging/vcpkg/ports
