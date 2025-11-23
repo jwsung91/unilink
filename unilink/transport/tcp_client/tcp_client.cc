@@ -138,11 +138,12 @@ void TcpClient::start() {
     });
   }
 
-  net::post(*ioc_, [this] {
-    connected_.store(false);
-    state_.set_state(LinkState::Connecting);
-    notify_state();
-    do_resolve_connect();
+  auto self = shared_from_this();
+  net::post(*ioc_, [self] {
+    self->connected_.store(false);
+    self->state_.set_state(LinkState::Connecting);
+    self->notify_state();
+    self->do_resolve_connect();
   });
 }
 
@@ -152,18 +153,19 @@ void TcpClient::stop() {
   state_.set_state(LinkState::Closed);
 
   // Cleanup work; if we own the context, post; otherwise do best-effort sync if context is stopped
-  auto cleanup = [this] {
+  auto self = shared_from_this();
+  auto cleanup = [self] {
     try {
-      retry_timer_.cancel();
-      resolver_.cancel();
+      self->retry_timer_.cancel();
+      self->resolver_.cancel();
       boost::system::error_code ec_cancel;
-      socket_.cancel(ec_cancel);
-      close_socket();
+      self->socket_.cancel(ec_cancel);
+      self->close_socket();
       // Clear any pending write operations
-      tx_.clear();
-      queue_bytes_ = 0;
-      writing_ = false;
-      connected_.store(false);
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+      self->writing_ = false;
+      self->connected_.store(false);
     } catch (...) {
       // Ignore exceptions during cleanup
     }
