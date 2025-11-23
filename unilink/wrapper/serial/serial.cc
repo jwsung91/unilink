@@ -16,6 +16,7 @@
 
 #include "unilink/wrapper/serial/serial.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -55,8 +56,8 @@ void Serial::start() {
     config::SerialConfig config;
     config.device = device_;
     config.baud_rate = baud_rate_;
-    config.char_size = data_bits_;
-    config.stop_bits = stop_bits_;
+    config.char_size = static_cast<unsigned>(std::clamp(data_bits_, 5, 8));
+    config.stop_bits = static_cast<unsigned>(std::clamp(stop_bits_, 1, 2));
     config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
     // parity and flow need to be converted to enum
     config.flow = unilink::config::SerialConfig::Flow::None;
