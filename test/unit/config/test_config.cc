@@ -502,6 +502,10 @@ TEST_F(ConfigTest, ConfigIntrospection) {
   auto int_type = config_manager_->get_type("int_key");
   auto bool_type = config_manager_->get_type("bool_key");
   auto double_type = config_manager_->get_type("double_key");
+  (void)string_type;
+  (void)int_type;
+  (void)bool_type;
+  (void)double_type;
 
   std::cout << "Configuration introspection completed successfully" << std::endl;
   std::cout << "Keys found: " << keys.size() << std::endl;
@@ -578,6 +582,54 @@ TEST_F(ConfigTest, ConfigPerformanceLargeDataset) {
 
   // Performance should be reasonable (less than 100μs per item)
   EXPECT_LT(total_duration.count() / num_items, 100);
+}
+
+// ============================================================================
+// Coverage additions (merged from coverage suite)
+// ============================================================================
+
+class ConfigCoverageTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
+    config_manager_ = std::make_shared<ConfigManager>();
+    test_file_ = TestUtils::makeTempFilePath("unilink_coverage_test.json");
+    TestUtils::removeFileIfExists(test_file_);
+  }
+
+  void TearDown() override { TestUtils::removeFileIfExists(test_file_); }
+
+  std::shared_ptr<ConfigManager> config_manager_;
+  std::filesystem::path test_file_;
+};
+
+TEST_F(ConfigCoverageTest, SetAndGetBasicTypes) {
+  ConfigItem str{"test.string", ConfigType::String, std::string("default"), "Test string", false};
+  config_manager_->register_item(str);
+  EXPECT_TRUE(config_manager_->set("test.string", std::string("hello")).is_valid);
+  EXPECT_EQ(std::any_cast<std::string>(config_manager_->get("test.string")), "hello");
+
+  ConfigItem i{"test.int", ConfigType::Integer, 1, "Test integer", false};
+  config_manager_->register_item(i);
+  EXPECT_TRUE(config_manager_->set("test.int", 123).is_valid);
+  EXPECT_EQ(std::any_cast<int>(config_manager_->get("test.int")), 123);
+
+  ConfigItem d{"test.double", ConfigType::Double, 3.14, "Test double", false};
+  config_manager_->register_item(d);
+  EXPECT_TRUE(config_manager_->set("test.double", 2.71).is_valid);
+  EXPECT_DOUBLE_EQ(std::any_cast<double>(config_manager_->get("test.double")), 2.71);
+
+  ConfigItem b{"test.bool", ConfigType::Boolean, false, "Test bool", false};
+  config_manager_->register_item(b);
+  EXPECT_TRUE(config_manager_->set("test.bool", true).is_valid);
+  EXPECT_TRUE(std::any_cast<bool>(config_manager_->get("test.bool")));
+}
+
+TEST_F(ConfigCoverageTest, HasAndKeys) {
+  ConfigItem item{"coverage.key", ConfigType::String, std::string("v"), "coverage", false};
+  config_manager_->register_item(item);
+  EXPECT_TRUE(config_manager_->has("coverage.key"));
+  auto keys = config_manager_->get_keys();
+  EXPECT_FALSE(keys.empty());
 }
 
 int main(int argc, char** argv) {

@@ -72,6 +72,14 @@ if(UNILINK_BUILD_TESTS)
   add_library(GTest::gtest_main ALIAS gtest_main)
   add_library(GTest::gmock ALIAS gmock)
   add_library(GTest::gmock_main ALIAS gmock_main)
+
+  # Silence noisy sign-conversion warnings inside GoogleTest sources on GCC/Clang
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+    target_compile_options(gtest PRIVATE -Wno-sign-conversion -Wno-conversion)
+    target_compile_options(gmock PRIVATE -Wno-sign-conversion -Wno-conversion)
+    target_compile_options(gtest_main PRIVATE -Wno-sign-conversion -Wno-conversion)
+    target_compile_options(gmock_main PRIVATE -Wno-sign-conversion -Wno-conversion)
+  endif()
 endif()
 
 # Doxygen for documentation

@@ -145,9 +145,6 @@ TEST_F(AdvancedTcpServerCoverageTest, SetMessageHandler) {
 
   ASSERT_NE(server_, nullptr);
 
-  bool handler_called = false;
-  std::string received_message;
-
   // Note: set_message_handler might not be available in this API
   // server_->set_message_handler([&handler_called, &received_message](
   //     const std::string& message, std::shared_ptr<interface::Channel> channel) {
@@ -164,9 +161,6 @@ TEST_F(AdvancedTcpServerCoverageTest, SetConnectionHandler) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-
-  bool connection_handler_called = false;
-  bool disconnection_handler_called = false;
 
   // Note: set_connection_handler might not be available in this API
   // server_->set_connection_handler([&connection_handler_called](

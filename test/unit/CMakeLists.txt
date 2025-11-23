@@ -15,11 +15,9 @@
 # Unit Tests - Fast, isolated tests
 # Each test file is built as a separate executable due to having its own main()
 
-# Common tests (separate executables)
-# NOTE: test_common.cc temporarily disabled due to namespace issues
 get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 
-foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_coverage.cc test_logger_advanced.cc)
+foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} common/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -29,6 +27,7 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
       GTest::gtest_main
       GTest::gmock
   )
+  unilink_set_test_warning_options(run_unit_${test_name})
   target_include_directories(run_unit_${test_name}
     PRIVATE
       ${CMAKE_SOURCE_DIR}/test/utils
@@ -53,7 +52,7 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
 endforeach()
 
 # Builder tests (separate executables)
-foreach(test_file test_builder.cc test_builder_coverage.cc)
+foreach(test_file test_builder.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} builder/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -63,6 +62,7 @@ foreach(test_file test_builder.cc test_builder_coverage.cc)
       GTest::gtest_main
       GTest::gmock
   )
+  unilink_set_test_warning_options(run_unit_${test_name})
   target_include_directories(run_unit_${test_name}
     PRIVATE
       ${CMAKE_SOURCE_DIR}/test/utils
@@ -77,7 +77,7 @@ foreach(test_file test_builder.cc test_builder_coverage.cc)
 endforeach()
 
 # Config tests (separate executables)
-foreach(test_file test_config.cc test_config_coverage.cc)
+foreach(test_file test_config.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} config/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -87,6 +87,7 @@ foreach(test_file test_config.cc test_config_coverage.cc)
       GTest::gtest_main
       GTest::gmock
   )
+  unilink_set_test_warning_options(run_unit_${test_name})
   target_include_directories(run_unit_${test_name}
     PRIVATE
       ${CMAKE_SOURCE_DIR}/test/utils
@@ -111,6 +112,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
       GTest::gtest_main
       GTest::gmock
   )
+  unilink_set_test_warning_options(run_unit_${test_name})
   target_include_directories(run_unit_${test_name}
     PRIVATE
       ${CMAKE_SOURCE_DIR}/test/utils

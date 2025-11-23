@@ -464,9 +464,8 @@ TEST_F(StressTest, LongRunningStability) {
       } else if (total_operations.load() % 3 == 1) {
         // Statistics query
         auto stats = pool.get_stats();
-        if (stats.total_allocations >= 0) {
-          successful_operations++;
-        }
+        (void)stats;
+        successful_operations++;
       } else {
         // Hit rate query
         double hit_rate = pool.get_hit_rate();

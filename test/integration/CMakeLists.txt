@@ -29,6 +29,7 @@ foreach(test_file test_integration.cc test_simple_server.cc test_client_limit_in
       GTest::gtest_main
       GTest::gmock
   )
+  unilink_set_test_warning_options(run_integration_${test_name})
   target_include_directories(run_integration_${test_name}
     PRIVATE
       ${CMAKE_SOURCE_DIR}/test/utils
@@ -47,6 +48,7 @@ foreach(test_file test_integration.cc test_simple_server.cc test_client_limit_in
       PROPERTIES
         LABELS "integration;tcp;medium"
         TIMEOUT 60
+        RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
   unilink_copy_runtime_dependency(run_integration_${test_name})
@@ -64,6 +66,7 @@ foreach(test_file test_serial_builder_improvements.cc)
       GTest::gtest_main
       GTest::gmock
   )
+  unilink_set_test_warning_options(run_integration_${test_name})
   target_include_directories(run_integration_${test_name}
     PRIVATE
       ${CMAKE_SOURCE_DIR}/test/utils
@@ -73,6 +76,7 @@ foreach(test_file test_serial_builder_improvements.cc)
     PROPERTIES
       LABELS "integration;serial;medium"
       TIMEOUT 60
+      RESOURCE_LOCK "tcp_port_allocation"
   )
   unilink_copy_runtime_dependency(run_integration_${test_name})
 endforeach()
@@ -114,6 +118,7 @@ foreach(test_file test_builder_integration.cc test_stable_integration.cc test_co
       GTest::gtest_main
       GTest::gmock
   )
+  unilink_set_test_warning_options(run_integration_${test_name})
   target_include_directories(run_integration_${test_name}
     PRIVATE
       ${CMAKE_SOURCE_DIR}/test/utils
@@ -133,6 +138,7 @@ foreach(test_file test_builder_integration.cc test_stable_integration.cc test_co
       PROPERTIES
         LABELS "integration;general;medium"
         TIMEOUT 60
+        RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
   unilink_copy_runtime_dependency(run_integration_${test_name})

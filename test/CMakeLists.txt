@@ -57,6 +57,22 @@ function(unilink_copy_runtime_dependency target)
   endif()
 endfunction()
 
+# Helper to silence benign warnings in test targets (keeps library build clean)
+function(unilink_set_test_warning_options target)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+    target_compile_options(${target} PRIVATE
+      -Wno-unused-parameter
+      -Wno-sign-conversion
+      -Wno-conversion)
+  elseif(MSVC)
+    target_compile_options(${target} PRIVATE
+      /wd4100 # unused parameter
+      /wd4244 # conversion
+      /wd4267 # size_t to narrower
+    )
+  endif()
+endfunction()
+
 # Include GoogleTest for test discovery
 include(GoogleTest)
 
