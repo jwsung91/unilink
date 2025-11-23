@@ -1,9 +1,28 @@
 # Unilink dependencies management
 # This file handles all external dependencies
 
-# Set CMake policy to suppress FindBoost deprecation warning
-if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31")
-  cmake_policy(SET CMP0167 NEW)
+# Keep FindBoost module available (CMP0167 makes it opt-in/removed in newer CMake)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31" AND POLICY CMP0167)
+  cmake_policy(SET CMP0167 OLD)
+endif()
+
+# Normalize Boost lookup variants to avoid missing component builds
+set(Boost_USE_STATIC_LIBS OFF CACHE BOOL "Prefer shared Boost libraries" FORCE)
+set(Boost_USE_MULTITHREADED ON CACHE BOOL "Use multithreaded Boost libraries" FORCE)
+set(Boost_USE_DEBUG_RUNTIME OFF CACHE BOOL "Do not require debug runtime Boost binaries" FORCE)
+
+# Control whether we must link Boost.System (off on macOS to use header-only mode)
+set(UNILINK_LINK_BOOST_SYSTEM ON)
+
+# Homebrew's BoostConfig packages on macOS (e.g., Boost 1.89) often miss
+# per-component config files such as boost_system-config.cmake, which causes
+# configure-time failures when CMake picks the config package first. Prefer the
+# classic FindBoost module on macOS unless the user explicitly overrides the
+# behavior.
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND NOT DEFINED Boost_NO_BOOST_CMAKE)
+  set(Boost_NO_BOOST_CMAKE ON CACHE BOOL
+      "Prefer FindBoost module over BoostConfig on macOS to avoid missing component configs")
+  message(STATUS "Forcing FindBoost module on macOS to avoid missing Boost component config files")
 endif()
 
 # Find required packages
@@ -31,9 +50,58 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       message(STATUS "Using Boost 1.74+ for Ubuntu 24.04+ compatibility (1.83 not available)")
     endif()
   endif()
+  if(NOT Boost_FOUND)
+    # Manual fallback if the packaged Boost variants don't match expectations (e.g., debug runtime mismatch)
+    find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
+      HINTS /usr/include /usr/local/include)
+    find_library(BOOST_FALLBACK_SYSTEM_LIB NAMES boost_system
+      HINTS /usr/lib /usr/lib/x86_64-linux-gnu /usr/local/lib)
+    if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
+      if(NOT TARGET Boost::system)
+        add_library(Boost::system UNKNOWN IMPORTED)
+        set_target_properties(Boost::system PROPERTIES
+          IMPORTED_LOCATION "${BOOST_FALLBACK_SYSTEM_LIB}"
+          INTERFACE_INCLUDE_DIRECTORIES "${BOOST_FALLBACK_INCLUDE_DIR}")
+      endif()
+      set(Boost_FOUND TRUE)
+      message(STATUS "Using manual Boost::system fallback on Linux at ${BOOST_FALLBACK_SYSTEM_LIB}")
+    endif()
+  endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  find_package(Boost 1.74 REQUIRED COMPONENTS system)
-  message(STATUS "Using Boost 1.74+ for macOS compatibility")
+  # Ensure Boost module lookup (skip BoostConfig.cmake) and point at Homebrew layout
+  if(POLICY CMP0144)
+    cmake_policy(SET CMP0144 NEW)
+  endif()
+  set(Boost_NO_BOOST_CMAKE ON CACHE BOOL "" FORCE)
+  set(Boost_DIR "" CACHE PATH "Ignore Boost config packages on macOS" FORCE)
+  set(BOOST_ROOT "/opt/homebrew/opt/boost" CACHE PATH "Homebrew Boost root" FORCE)
+  set(BOOST_INCLUDEDIR "/opt/homebrew/opt/boost/include" CACHE PATH "Homebrew Boost include dir" FORCE)
+  set(Boost_ADDITIONAL_VERSIONS "1.89" "1.89.0" CACHE STRING "" FORCE)
+  list(APPEND CMAKE_PREFIX_PATH
+    /opt/homebrew/opt/boost
+    /opt/homebrew
+    /usr/local/opt/boost
+    /usr/local)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
+
+  # Header-only Boost.System: only require headers, avoid lib lookup that is flaky on macOS Actions
+  find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
+    PATHS
+      /opt/homebrew/opt/boost
+      /opt/homebrew
+      /usr/local/opt/boost
+      /usr/local
+      /opt/homebrew/Cellar/boost
+      /usr/local/Cellar/boost
+    PATH_SUFFIXES include)
+  if(NOT BOOST_FALLBACK_INCLUDE_DIR)
+    message(FATAL_ERROR "Boost headers not found on macOS (looked in Homebrew paths)")
+  endif()
+
+  set(UNILINK_LINK_BOOST_SYSTEM OFF)
+  set(UNILINK_BOOST_INCLUDE_DIR "${BOOST_FALLBACK_INCLUDE_DIR}")
+  add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
+  message(STATUS "Using header-only Boost.System on macOS; include dir: ${BOOST_FALLBACK_INCLUDE_DIR}")
 else()
   # Other platforms: use a recent Boost version
   find_package(Boost 1.70 REQUIRED COMPONENTS system)
@@ -103,9 +171,13 @@ add_library(unilink_dependencies INTERFACE)
 
 # Link common dependencies
 target_link_libraries(unilink_dependencies INTERFACE
-  Boost::system
   Threads::Threads
 )
+if(UNILINK_LINK_BOOST_SYSTEM)
+  target_link_libraries(unilink_dependencies INTERFACE Boost::system)
+elseif(UNILINK_BOOST_INCLUDE_DIR)
+  target_include_directories(unilink_dependencies INTERFACE "${UNILINK_BOOST_INCLUDE_DIR}")
+endif()
 if(WIN32)
   target_link_libraries(unilink_dependencies INTERFACE
     ws2_32
@@ -133,9 +205,16 @@ if(WIN32)
     NOMINMAX
   )
 elseif(UNIX)
-  target_compile_definitions(unilink_dependencies INTERFACE
-    _POSIX_C_SOURCE=200809L
-  )
+  if(APPLE)
+    # macOS needs BSD extensions for networking macros (NI_MAXHOST, SO_NOSIGPIPE, etc.)
+    target_compile_definitions(unilink_dependencies INTERFACE
+      _DARWIN_C_SOURCE
+    )
+  else()
+    target_compile_definitions(unilink_dependencies INTERFACE
+      _POSIX_C_SOURCE=200809L
+    )
+  endif()
 endif()
 
 # Feature flags

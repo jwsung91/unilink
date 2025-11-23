@@ -78,6 +78,7 @@ class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient>
  private:
   std::unique_ptr<net::io_context> owned_ioc_;
   net::io_context* ioc_ = nullptr;
+  std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
   std::thread ioc_thread_;
   tcp::resolver resolver_;
   tcp::socket socket_;

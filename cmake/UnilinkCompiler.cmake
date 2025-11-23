@@ -151,7 +151,12 @@ if(WIN32)
     add_definitions(-DUNILINK_EXPORTS)
   endif()
 elseif(UNIX)
-  add_definitions(-D_POSIX_C_SOURCE=200809L)
+  if(APPLE)
+    # Enable full BSD/POSIX feature set on macOS (needed for networking macros like NI_MAXHOST)
+    add_definitions(-D_DARWIN_C_SOURCE)
+  else()
+    add_definitions(-D_POSIX_C_SOURCE=200809L)
+  endif()
 endif()
 
 # Debug information

@@ -43,6 +43,8 @@ TcpClient::TcpClient(const TcpClientConfig& cfg)
       retry_timer_(*ioc_),
       owns_ioc_(true),
       bp_high_(cfg.backpressure_threshold) {
+  // Keep the owned io_context alive even before work is posted to prevent early exit races
+  work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   bp_high_ = cfg_.backpressure_threshold;
@@ -76,6 +78,11 @@ TcpClient::~TcpClient() {
   on_bytes_ = nullptr;
   on_state_ = nullptr;
   on_bp_ = nullptr;
+
+  // Release work guard so run() can exit cleanly
+  if (work_guard_) {
+    work_guard_->reset();
+  }
 
   // Clear any pending operations
   tx_.clear();
@@ -117,6 +124,8 @@ void TcpClient::start() {
   stopping_.store(false);
 
   if (owns_ioc_) {
+    // Re-arm work guard in case stop() or destructor cleared it
+    work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
     // Create our own thread for this io_context
     ioc_thread_ = std::thread([this]() {
       try {
@@ -129,11 +138,12 @@ void TcpClient::start() {
     });
   }
 
-  net::post(*ioc_, [this] {
-    connected_.store(false);
-    state_.set_state(LinkState::Connecting);
-    notify_state();
-    do_resolve_connect();
+  auto self = shared_from_this();
+  net::post(*ioc_, [self] {
+    self->connected_.store(false);
+    self->state_.set_state(LinkState::Connecting);
+    self->notify_state();
+    self->do_resolve_connect();
   });
 }
 
@@ -143,35 +153,47 @@ void TcpClient::stop() {
   state_.set_state(LinkState::Closed);
 
   // Cleanup work; if we own the context, post; otherwise do best-effort sync if context is stopped
-  auto cleanup = [this] {
+  auto self = shared_from_this();
+  auto cleanup = [self] {
     try {
-      retry_timer_.cancel();
-      resolver_.cancel();
+      self->retry_timer_.cancel();
+      self->resolver_.cancel();
       boost::system::error_code ec_cancel;
-      socket_.cancel(ec_cancel);
-      close_socket();
+      self->socket_.cancel(ec_cancel);
+      self->close_socket();
       // Clear any pending write operations
-      tx_.clear();
-      queue_bytes_ = 0;
-      writing_ = false;
-      connected_.store(false);
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+      self->writing_ = false;
+      self->connected_.store(false);
     } catch (...) {
       // Ignore exceptions during cleanup
     }
   };
 
   if (ioc_) {
-    if (!owns_ioc_ && ioc_->stopped()) {
-      UNILINK_LOG_DEBUG("tcp_client", "stop", "io_context already stopped; running cleanup synchronously");
+    if (!owns_ioc_) {
+      // For external io_context, perform immediate cleanup (caller might not run the loop again)
       cleanup();
+      if (!ioc_->stopped()) {
+        net::post(*ioc_, std::move(cleanup));
+      }
     } else {
-      net::post(*ioc_, cleanup);
+      if (ioc_->stopped()) {
+        UNILINK_LOG_DEBUG("tcp_client", "stop", "io_context already stopped; running cleanup synchronously");
+        cleanup();
+      } else {
+        net::post(*ioc_, std::move(cleanup));
+      }
     }
   }
 
   // Stop io_context and wait for thread to finish only if we own it
   if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
     try {
+      if (work_guard_) {
+        work_guard_->reset();
+      }
       ioc_->stop();
       ioc_thread_.join();
     } catch (const std::exception& e) {

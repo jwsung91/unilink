@@ -45,35 +45,65 @@ jobs:
             cc: clang-15
             cxx: clang++-15
             boost_version: "1.83"
+          # macOS: Clang
+          - os: macos-14
+            compiler: clang
+            cc: clang
+            cxx: clang++
+            boost_version: "1.83"
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
 
+    - name: Compute CMakeLists hash
+      id: cmake-hash
+      run: |
+        FILES=$(git ls-files '**/CMakeLists.txt')
+        if [ -z "$FILES" ]; then
+          echo "hash=none" >> "$GITHUB_OUTPUT"
+        else
+          HASH=$(printf '%s\n' "$FILES" | LC_ALL=C sort | xargs shasum | shasum | awk '{print $1}')
+          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+        fi
+
     - name: Cache ccache
       uses: actions/cache@v4
       with:
         path: ~/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ hashFiles('**/CMakeLists.txt') }}
+        key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ steps.cmake-hash.outputs.hash }}
 
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          ccache
+        if [ "${{ runner.os }}" = "Linux" ]; then
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            ccache
 
-        # Install Boost (version-specific per OS)
-        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-        else
-          # ubuntu-24.04: try 1.83 first, fallback to 1.74
-          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
-            echo "Boost 1.83 not available, installing 1.74..."
+          # Install Boost (version-specific per OS)
+          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
             sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
+          else
+            # ubuntu-24.04: try 1.83 first, fallback to 1.74
+            if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
+              echo "Boost 1.83 not available, installing 1.74..."
+              sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
+            fi
           fi
+        else
+          brew update
+          brew install cmake ccache boost
+
+          # Ensure ccache shims are on PATH for clang on both Intel and Apple Silicon
+          echo "PATH=/opt/homebrew/opt/ccache/libexec:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
         fi
+       
+    - name: Detect CPU core count
+      run: |
+        CORES=$( (command -v nproc >/dev/null 2>&1 && nproc) || sysctl -n hw.logicalcpu || getconf _NPROCESSORS_ONLN || echo 4 )
+        echo "CORE_COUNT=$CORES" >> $GITHUB_ENV
        
     - name: Configure CMake
       run: |
@@ -88,14 +118,14 @@ jobs:
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build tests
-      run: cmake --build build-test -j $(nproc)
+      run: cmake --build build-test -j ${CORE_COUNT:-4}
 
     - name: Run unit tests
       run: |
         cd build-test
-        ctest --output-on-failure --parallel $(nproc) \
+        ctest --output-on-failure --parallel ${CORE_COUNT:-2} \
           --label-regex "unit|core|memory|config" || \
-        ctest --rerun-failed --output-on-failure --parallel $(nproc)
+        ctest --rerun-failed --output-on-failure --parallel ${CORE_COUNT:-2}
 
     - name: Upload test results
       uses: actions/upload-artifact@v5

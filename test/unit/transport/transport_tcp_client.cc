@@ -97,6 +97,9 @@ TEST_F(TransportTcpClientTest, StopPreventsReconnectAfterManualStop) {
   // Run longer than retry interval; should not see Connecting after stop
   ioc.run_for(std::chrono::milliseconds(100));
   EXPECT_EQ(reconnect_after_stop.load(), 0);
+
+  // Ensure client is destroyed before io_context goes out of scope
+  client_.reset();
 }
 
 TEST_F(TransportTcpClientTest, ExternalIoContextFlowsThroughLifecycle) {
@@ -114,6 +117,9 @@ TEST_F(TransportTcpClientTest, ExternalIoContextFlowsThroughLifecycle) {
     client_->stop();
     ioc.run_for(std::chrono::milliseconds(10));
   });
+
+  // Destroy client before io_context is torn down to avoid dangling pointer
+  client_.reset();
 }
 
 TEST_F(TransportTcpClientTest, StartStopIdempotent) {
@@ -134,4 +140,7 @@ TEST_F(TransportTcpClientTest, StartStopIdempotent) {
     client_->start();
     client_->stop();
   });
+
+  // Destroy client before io_context is torn down to avoid dangling pointer
+  client_.reset();
 }
