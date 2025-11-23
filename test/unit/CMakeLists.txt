@@ -127,6 +127,28 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
   unilink_copy_runtime_dependency(run_unit_${test_name})
 endforeach()
 
+# Wrapper serial config mapping
+add_executable(run_unit_wrapper_serial_config_mapping wrapper/test_serial_config_mapping.cc)
+target_link_libraries(run_unit_wrapper_serial_config_mapping
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_wrapper_serial_config_mapping)
+target_include_directories(run_unit_wrapper_serial_config_mapping
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+gtest_discover_tests(run_unit_wrapper_serial_config_mapping
+  PROPERTIES
+    LABELS "unit;wrapper;serial"
+    TIMEOUT 30
+)
+unilink_copy_runtime_dependency(run_unit_wrapper_serial_config_mapping)
+
 # Transport tests (fast, unit-level without real network dependencies)
 add_executable(run_unit_transport_tcp_client transport/transport_tcp_client.cc)
 target_link_libraries(run_unit_transport_tcp_client

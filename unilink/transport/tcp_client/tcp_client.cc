@@ -136,24 +136,30 @@ void TcpClient::stop() {
   // Set state to closed first to prevent new operations
   state_.set_state(LinkState::Closed);
 
-  // Post cleanup work to io_context
+  // Cleanup work; if we own the context, post; otherwise do best-effort sync if context is stopped
+  auto cleanup = [this] {
+    try {
+      retry_timer_.cancel();
+      resolver_.cancel();
+      boost::system::error_code ec_cancel;
+      socket_.cancel(ec_cancel);
+      close_socket();
+      // Clear any pending write operations
+      tx_.clear();
+      queue_bytes_ = 0;
+      writing_ = false;
+      connected_.store(false);
+    } catch (...) {
+      // Ignore exceptions during cleanup
+    }
+  };
+
   if (ioc_) {
-    net::post(*ioc_, [this] {
-      try {
-        retry_timer_.cancel();
-        resolver_.cancel();
-        boost::system::error_code ec_cancel;
-        socket_.cancel(ec_cancel);
-        close_socket();
-        // Clear any pending write operations
-        tx_.clear();
-        queue_bytes_ = 0;
-        writing_ = false;
-        connected_.store(false);
-      } catch (...) {
-        // Ignore exceptions during cleanup
-      }
-    });
+    if (!owns_ioc_ && ioc_->stopped()) {
+      cleanup();
+    } else {
+      net::post(*ioc_, cleanup);
+    }
   }
 
   // Stop io_context and wait for thread to finish only if we own it
