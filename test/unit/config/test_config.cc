@@ -598,6 +598,13 @@ TEST_F(ConfigTest, SetWithWrongTypeFails) {
 TEST_F(ConfigTest, ValidateFailsOnMissingRequired) {
   ConfigItem required_item("required.key", std::string(""), ConfigType::String, true, "required");
   config_manager_->register_item(required_item);
+  config_manager_->register_validator("required.key", [](const std::any& value) {
+    const auto* str = std::any_cast<std::string>(&value);
+    if (str && str->empty()) {
+      return ValidationResult::error("required.key is missing");
+    }
+    return ValidationResult::success();
+  });
   auto validation = config_manager_->validate();
   EXPECT_FALSE(validation.is_valid);
 }

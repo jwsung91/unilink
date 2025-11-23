@@ -116,7 +116,7 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
 
   // TCP Client retries in Connecting state, not Error state, when connection fails
   // Therefore, on_error callback is not called
-  TestUtils::waitFor(3000);
+  TestUtils::waitFor(500);
   std::cout << "✓ Connection refused error handled (retry mechanism working)" << std::endl;
 
   // 2. Timeout error (non-existent IP)
@@ -142,7 +142,7 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
   client2->start();
 
   // TCP Client retries on connection failure, so on_error callback is not called
-  TestUtils::waitFor(5000);
+  TestUtils::waitFor(1000);
   std::cout << "✓ Timeout error handled (retry mechanism working)" << std::endl;
 
   // 3. DNS resolution failure
@@ -161,7 +161,7 @@ TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
   client3->start();
 
   // TCP Client retries even on DNS failure, so on_error callback is not called
-  TestUtils::waitFor(5000);
+  TestUtils::waitFor(1000);
   std::cout << "✓ DNS resolution failure handled (retry mechanism working)" << std::endl;
 }
 
@@ -191,7 +191,7 @@ TEST_F(ErrorRecoveryTest, NetworkRetryMechanism) {
 
   // TCP Client는 연결 실패 시 재시도하지만 on_error 콜백을 호출하지 않습니다
   // 재시도 로그를 통해 동작을 확인합니다
-  TestUtils::waitFor(5000);
+  TestUtils::waitFor(1000);
   std::cout << "✓ Retry mechanism working (retry logs visible)" << std::endl;
 
   client->stop();
@@ -237,7 +237,7 @@ TEST_F(ErrorRecoveryTest, NetworkRecoveryAfterFailure) {
   client->start();
 
   // 잠시 대기 (연결 실패 확인)
-  TestUtils::waitFor(2000);
+  TestUtils::waitFor(500);
   // Note: Connection might succeed if server is already running from previous test
   // This is actually expected behavior in a test environment
   if (!connected.load()) {
@@ -248,11 +248,11 @@ TEST_F(ErrorRecoveryTest, NetworkRecoveryAfterFailure) {
 
   // 3. 서버 시작 (복구)
   server->start();
-  TestUtils::waitFor(1000);  // 서버 시작 대기
+  TestUtils::waitFor(500);  // 서버 시작 대기
 
   // 4. 연결 성공 대기 (더 긴 시간 대기)
   auto start_time = std::chrono::steady_clock::now();
-  while (std::chrono::steady_clock::now() - start_time < 15000ms) {
+  while (std::chrono::steady_clock::now() - start_time < 3000ms) {
     if (connected.load()) {
       recovery_success_ = true;
       break;
@@ -305,7 +305,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   serial1->start();
 
   // Serial은 reopen_on_error=true일 때 재시도하므로 on_error 콜백이 호출되지 않습니다
-  TestUtils::waitFor(5000);
+  TestUtils::waitFor(1000);
   std::cout << "✓ Nonexistent device error handled (retry mechanism working)" << std::endl;
 
   // 2. 권한 부족 (시스템 포트) - 기본적으로 재시도하므로 on_error 콜백이 호출되지 않음
@@ -324,7 +324,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   serial2->start();
 
   // Serial은 기본적으로 reopen_on_error=true이므로 재시도하고 on_error 콜백이 호출되지 않습니다
-  TestUtils::waitFor(3000);
+  TestUtils::waitFor(1000);
   std::cout << "✓ Permission denied error handled (retry mechanism working)" << std::endl;
 
   // 3. 잘못된 baud rate
@@ -410,7 +410,7 @@ TEST_F(ErrorRecoveryTest, ActualErrorStateTest) {
 
   // 상태 변화 대기
   auto start_time = std::chrono::steady_clock::now();
-  while (std::chrono::steady_clock::now() - start_time < 5000ms) {
+  while (std::chrono::steady_clock::now() - start_time < 2000ms) {
     if (any_state_reached.load()) {
       break;
     }
@@ -475,7 +475,7 @@ TEST_F(ErrorRecoveryTest, ExceptionSafetyInCallbacks) {
   ASSERT_NE(client, nullptr);
 
   // 연결 시도 (예외가 발생해도 프로그램이 크래시되지 않아야 함)
-  TestUtils::waitFor(3000);
+  TestUtils::waitFor(1000);
 
   // 서버와 클라이언트가 여전히 존재해야 함 (예외로 인한 크래시 방지)
   EXPECT_NE(server, nullptr);
