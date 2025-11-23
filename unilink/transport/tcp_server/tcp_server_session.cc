@@ -82,10 +82,10 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
 void TcpServerSession::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
 void TcpServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 void TcpServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }
-bool TcpServerSession::alive() const { return alive_; }
+bool TcpServerSession::alive() const { return alive_.load(); }
 
 void TcpServerSession::start_read() {
-  alive_ = true;
+  alive_.store(true);
   auto self = shared_from_this();
   socket_->async_read_some(net::buffer(rx_.data(), rx_.size()), [self](auto ec, std::size_t n) {
     if (ec) {
@@ -133,8 +133,7 @@ void TcpServerSession::do_write() {
 }
 
 void TcpServerSession::do_close() {
-  if (!alive_) return;
-  alive_ = false;
+  if (!alive_.exchange(false)) return;
   UNILINK_LOG_INFO("tcp_server_session", "disconnect", "Client disconnected");
   boost::system::error_code ec;
   socket_->shutdown(tcp::socket::shutdown_both, ec);

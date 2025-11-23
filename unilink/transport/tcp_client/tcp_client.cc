@@ -141,6 +141,9 @@ void TcpClient::stop() {
     net::post(*ioc_, [this] {
       try {
         retry_timer_.cancel();
+        resolver_.cancel();
+        boost::system::error_code ec_cancel;
+        socket_.cancel(ec_cancel);
         close_socket();
         // Clear any pending write operations
         tx_.clear();

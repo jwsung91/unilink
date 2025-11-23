@@ -18,6 +18,7 @@
 
 #include <array>
 #include <boost/asio.hpp>
+#include <atomic>
 #include <cstdint>
 #include <deque>
 #include <functional>
@@ -78,7 +79,7 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
   OnBytes on_bytes_;
   OnBackpressure on_bp_;
   OnClose on_close_;
-  bool alive_ = false;
+  std::atomic<bool> alive_{false};
 };
 }  // namespace transport
 }  // namespace unilink
