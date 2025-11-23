@@ -107,8 +107,8 @@ jobs:
           -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_CXX_STANDARD=17 \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_EXAMPLES=OFF \
-          -DBUILD_TESTING=ON
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_TESTS=ON
         cmake --build build-codeql -j $(nproc)
 
     - name: Perform CodeQL Analysis

@@ -178,6 +178,18 @@ ctest --test-dir build-windows --output-on-failure
 - [Tutorials](docs/tutorials/) - Step-by-step learning guides
 - [Documentation Index](docs/INDEX.md) - Complete documentation overview
 
+### 📦 Packaging (Conan / vcpkg)
+- Conan recipe lives in `packaging/conan` (run `conan create packaging/conan unilink/0.1.3@`; update `conandata.yml` SHA before tagging).
+- vcpkg overlay port lives in `packaging/vcpkg/ports/unilink` (use `vcpkg install unilink --overlay-ports=packaging/vcpkg/ports` for local tests).
+- Local test commands (run from repo root):
+  ```bash
+  # Conan (v2): build & test the recipe
+  conan create packaging/conan --name=unilink --version=0.1.3
+
+  # vcpkg: install using the local overlay port
+  vcpkg install unilink --overlay-ports=packaging/vcpkg/ports
+  ```
+
 ---
 
 ## 📄 License

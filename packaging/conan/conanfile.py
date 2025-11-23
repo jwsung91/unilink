@@ -40,18 +40,20 @@ class UnilinkConan(ConanFile):
 
     # CMake configuration
     generators = "CMakeToolchain"
-    exports_sources = (
-        "CMakeLists.txt",
-        "cmake/*",
-        "unilink/*",
-        "examples/*",
-        "test/*",
-        "docs/*",
-        "package/*",
-        "LICENSE",
-        "NOTICE",
-        "README.md",
-    )
+
+    def export_sources(self):
+        # Export the project sources (recipe lives in packaging/conan).
+        src_root = os.path.abspath(os.path.join(self.recipe_folder, "..", ".."))
+        copy(self, "CMakeLists.txt", src_root, self.export_sources_folder)
+        copy(self, "cmake/*", src_root, self.export_sources_folder)
+        copy(self, "unilink/*", src_root, self.export_sources_folder)
+        copy(self, "examples/*", src_root, self.export_sources_folder)
+        copy(self, "test/*", src_root, self.export_sources_folder)
+        copy(self, "docs/*", src_root, self.export_sources_folder)
+        copy(self, "package/*", src_root, self.export_sources_folder)
+        copy(self, "LICENSE", src_root, self.export_sources_folder)
+        copy(self, "NOTICE", src_root, self.export_sources_folder)
+        copy(self, "README.md", src_root, self.export_sources_folder)
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -94,7 +96,8 @@ class UnilinkConan(ConanFile):
             self.tool_requires("doxygen/1.9.8")
 
     def layout(self):
-        cmake_layout(self)
+        # After export, sources are rooted at the exported folder.
+        cmake_layout(self, src_folder=".")
 
     def generate(self):
         deps = CMakeDeps(self)

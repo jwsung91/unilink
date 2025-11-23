@@ -37,8 +37,8 @@ jobs:
           -DCMAKE_EXE_LINKER_FLAGS="--coverage" \
           -DUNILINK_ENABLE_CONFIG=ON \
           -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
-          -DBUILD_TESTING=ON \
-          -DBUILD_EXAMPLES=OFF
+          -DUNILINK_BUILD_TESTS=ON \
+          -DUNILINK_BUILD_EXAMPLES=OFF
 
     - name: Build with coverage
       run: cmake --build build-coverage -j $(nproc)
@@ -208,4 +208,3 @@ jobs:
         publish_dir: ./build-coverage/coverage_html
         publish_branch: gh-pages
         force_orphan: true
-

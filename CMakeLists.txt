@@ -140,6 +140,30 @@ if(TARGET unilink AND NOT TARGET unilink_shared AND NOT TARGET unilink_static)
     $<INSTALL_INTERFACE:include>)
 endif()
 
+# Disable MSVC LTCG for unilink libraries to avoid link.exe access violations
+if(MSVC)
+  set(_unilink_library_targets)
+  if(TARGET unilink_shared)
+    list(APPEND _unilink_library_targets unilink_shared)
+  endif()
+  if(TARGET unilink_static)
+    list(APPEND _unilink_library_targets unilink_static)
+  endif()
+  if(TARGET unilink AND NOT (TARGET unilink_shared OR TARGET unilink_static))
+    list(APPEND _unilink_library_targets unilink)
+  endif()
+
+  foreach(_target IN LISTS _unilink_library_targets)
+    target_compile_options(${_target} PRIVATE
+      "$<$<CONFIG:Release>:/GL->"
+      "$<$<CONFIG:RelWithDebInfo>:/GL->"
+      "$<$<CONFIG:MinSizeRel>:/GL->")
+    set_property(TARGET ${_target} APPEND_STRING PROPERTY LINK_FLAGS_RELEASE " /LTCG:OFF")
+    set_property(TARGET ${_target} APPEND_STRING PROPERTY LINK_FLAGS_RELWITHDEBINFO " /LTCG:OFF")
+    set_property(TARGET ${_target} APPEND_STRING PROPERTY LINK_FLAGS_MINSIZEREL " /LTCG:OFF")
+  endforeach()
+endif()
+
 # Export header generation
 if(UNILINK_ENABLE_EXPORT_HEADER)
   include(GenerateExportHeader)
@@ -158,77 +182,6 @@ if(UNILINK_ENABLE_EXPORT_HEADER)
     target_include_directories(unilink PUBLIC
       $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
   endif()
-endif()
-
-# Install configuration
-include(GNUInstallDirs)
-if(UNILINK_ENABLE_INSTALL)
-  # Install targets
-  if(TARGET unilink_shared)
-    install(TARGETS unilink_shared
-      EXPORT unilinkTargets
-      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-      INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-  endif()
-  
-  if(TARGET unilink_static)
-    install(TARGETS unilink_static
-      EXPORT unilinkTargets
-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-      INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-  endif()
-  
-  # unilink::unilink is an alias, so it doesn't need to be exported
-  # Consumers should use unilink_shared or unilink_static directly
-
-  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/unilink/
-          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/unilink
-          FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
-
-  include(CMakePackageConfigHelpers)
-  configure_package_config_file(
-      cmake/unilinkConfig.cmake.in
-      ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfig.cmake
-      INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unilink)
-  write_basic_package_version_file(
-      ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfigVersion.cmake
-      VERSION ${PROJECT_VERSION}
-      COMPATIBILITY SameMajorVersion)
-
-  install(FILES
-      ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfig.cmake
-      ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfigVersion.cmake
-      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unilink)
-
-  # Install dependencies target
-  install(TARGETS unilink_dependencies
-      EXPORT unilinkTargets
-      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unilink)
-  
-  install(EXPORT unilinkTargets
-      NAMESPACE unilink::
-      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unilink)
-endif()
-
-# pkg-config support
-if(UNILINK_ENABLE_INSTALL AND UNILINK_ENABLE_PKGCONFIG)
-  # Set pkg-config variables
-  set(PKGCONFIG_REQUIRES "")
-  set(PKGCONFIG_REQUIRES_PRIVATE "")
-  if(WIN32)
-    set(PKGCONFIG_LIBS_PRIVATE "-lboost_system")
-  else()
-    set(PKGCONFIG_LIBS_PRIVATE "-lboost_system -lpthread")
-  endif()
-  set(PKGCONFIG_CFLAGS "")
-  
-  configure_file(
-      ${CMAKE_CURRENT_SOURCE_DIR}/package/unilink.pc.in
-      ${CMAKE_CURRENT_BINARY_DIR}/unilink.pc
-      @ONLY)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unilink.pc
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 endif()
 
 # Examples
@@ -269,12 +222,6 @@ if(UNILINK_BUILD_DOCS AND UNILINK_DOXYGEN_AVAILABLE)
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Generating API documentation with Doxygen"
     VERBATIM
-  )
-  
-  # Add install target for documentation
-  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/html/
-    DESTINATION share/doc/unilink/html
-    OPTIONAL
   )
   
   message(STATUS "Documentation target 'docs' available")
