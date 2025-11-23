@@ -34,8 +34,8 @@ ctest --output-on-failure
 
 **Suite toggles**
 - Master switch: `-DUNILINK_BUILD_TESTS=ON|OFF`
-- Per-suite: `UNILINK_ENABLE_UNIT_TESTS`, `UNILINK_ENABLE_INTEGRATION_TESTS`, `UNILINK_ENABLE_E2E_TESTS`, `UNILINK_ENABLE_PERFORMANCE_TESTS`
-- Packaging tip: set the suite toggles to `OFF` (e.g., in vcpkg ports where `FETCHCONTENT_FULLY_DISCONNECTED=ON`) to skip fetching GoogleTest.
+- Performance-only toggle: `UNILINK_ENABLE_PERFORMANCE_TESTS`
+- Packaging tip: set `UNILINK_BUILD_TESTS=OFF` (and perf OFF) in vcpkg/air-gapped builds to skip fetching GoogleTest.
 
 ---
 

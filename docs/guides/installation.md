@@ -147,9 +147,6 @@ When building from source, you can configure various options:
 | `UNILINK_BUILD_SHARED` | `ON` | Build shared library |
 | `UNILINK_BUILD_EXAMPLES` | `ON` | Build example programs |
 | `UNILINK_BUILD_TESTS` | `ON` | Master test toggle |
-| `UNILINK_ENABLE_UNIT_TESTS` | `ON` | Build unit tests |
-| `UNILINK_ENABLE_INTEGRATION_TESTS` | `ON` | Build integration tests |
-| `UNILINK_ENABLE_E2E_TESTS` | `ON` | Build end-to-end tests |
 | `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF` | Build performance tests |
 | `UNILINK_BUILD_DOCS` | `ON` | Build documentation |
 | `UNILINK_ENABLE_INSTALL` | `ON` | Enable install targets |

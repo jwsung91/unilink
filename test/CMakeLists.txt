@@ -60,27 +60,15 @@ endfunction()
 # Include GoogleTest for test discovery
 include(GoogleTest)
 
-# Add subdirectories with organized tests (guarded by per-suite toggles)
-if(UNILINK_ENABLE_UNIT_TESTS)
-  message(STATUS "Building Unit Tests")
-  add_subdirectory(unit)
-else()
-  message(STATUS "Unit Tests disabled (use -DUNILINK_ENABLE_UNIT_TESTS=ON to enable)")
-endif()
+# Add organized tests (enabled when UNILINK_BUILD_TESTS is ON)
+message(STATUS "Building Unit Tests")
+add_subdirectory(unit)
 
-if(UNILINK_ENABLE_INTEGRATION_TESTS)
-  message(STATUS "Building Integration Tests")
-  add_subdirectory(integration)
-else()
-  message(STATUS "Integration Tests disabled (use -DUNILINK_ENABLE_INTEGRATION_TESTS=ON to enable)")
-endif()
+message(STATUS "Building Integration Tests")
+add_subdirectory(integration)
 
-if(UNILINK_ENABLE_E2E_TESTS)
-  message(STATUS "Building E2E Tests")
-  add_subdirectory(e2e)
-else()
-  message(STATUS "E2E Tests disabled (use -DUNILINK_ENABLE_E2E_TESTS=ON to enable)")
-endif()
+message(STATUS "Building E2E Tests")
+add_subdirectory(e2e)
 
 # Performance tests are optional (slower)
 if(UNILINK_ENABLE_PERFORMANCE_TESTS)
@@ -96,77 +84,75 @@ endif()
 
 # The following tests are kept temporarily for backward compatibility.
 # They will be removed once all tests are verified in the new structure.
-if(UNILINK_ENABLE_UNIT_TESTS OR UNILINK_ENABLE_INTEGRATION_TESTS OR UNILINK_ENABLE_E2E_TESTS)
-  # Check if there are any remaining test files in the root test/ directory
-  file(GLOB REMAINING_TESTS "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cc")
-  if(REMAINING_TESTS)
-    message(WARNING "Found ${CMAKE_CURRENT_SOURCE_DIR}/test_*.cc files that haven't been migrated:")
-    foreach(test_file ${REMAINING_TESTS})
-      message(WARNING "  - ${test_file}")
-    endforeach()
-    
-    # Keep old structure temporarily
-    # Architecture Tests
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_architecture.cc")
-      add_executable(run_architecture_tests
-        test_architecture.cc
-        test_utils.hpp
-      )
-      target_link_libraries(run_architecture_tests
-        PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
-      )
-      gtest_discover_tests(run_architecture_tests
-        PROPERTIES LABELS "legacy;e2e"
-      )
-      unilink_copy_runtime_dependency(run_architecture_tests)
-    endif()
-    
-    # Builder Tests
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_builder.cc")
-      add_executable(run_builder_tests
-        test_builder.cc
-        test_utils.hpp
-      )
-      target_link_libraries(run_builder_tests
-        PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
-      )
-      gtest_discover_tests(run_builder_tests
-        PROPERTIES LABELS "legacy;unit"
-      )
-      unilink_copy_runtime_dependency(run_builder_tests)
-    endif()
-    
-    # Common Tests
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_common.cc")
-      add_executable(run_common_tests
-        test_common.cc
-        test_utils.hpp
-      )
-      target_link_libraries(run_common_tests
-        PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
-      )
-      gtest_discover_tests(run_common_tests
-        PROPERTIES LABELS "legacy;unit"
-      )
-      unilink_copy_runtime_dependency(run_common_tests)
-    endif()
-    
-    # Communication Tests
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_communication.cc")
-      add_executable(run_communication_tests
-        test_communication.cc
-        test_utils.hpp
-      )
-      target_link_libraries(run_communication_tests
-        PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
-      )
-      gtest_discover_tests(run_communication_tests
-        PROPERTIES LABELS "legacy;integration"
-      )
-      unilink_copy_runtime_dependency(run_communication_tests)
-    endif()
-
+# Check if there are any remaining test files in the root test/ directory
+file(GLOB REMAINING_TESTS "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cc")
+if(REMAINING_TESTS)
+  message(WARNING "Found ${CMAKE_CURRENT_SOURCE_DIR}/test_*.cc files that haven't been migrated:")
+  foreach(test_file ${REMAINING_TESTS})
+    message(WARNING "  - ${test_file}")
+  endforeach()
+  
+  # Keep old structure temporarily
+  # Architecture Tests
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_architecture.cc")
+    add_executable(run_architecture_tests
+      test_architecture.cc
+      test_utils.hpp
+    )
+    target_link_libraries(run_architecture_tests
+      PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
+    )
+    gtest_discover_tests(run_architecture_tests
+      PROPERTIES LABELS "legacy;e2e"
+    )
+    unilink_copy_runtime_dependency(run_architecture_tests)
   endif()
+  
+  # Builder Tests
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_builder.cc")
+    add_executable(run_builder_tests
+      test_builder.cc
+      test_utils.hpp
+    )
+    target_link_libraries(run_builder_tests
+      PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
+    )
+    gtest_discover_tests(run_builder_tests
+      PROPERTIES LABELS "legacy;unit"
+    )
+    unilink_copy_runtime_dependency(run_builder_tests)
+  endif()
+  
+  # Common Tests
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_common.cc")
+    add_executable(run_common_tests
+      test_common.cc
+      test_utils.hpp
+    )
+    target_link_libraries(run_common_tests
+      PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
+    )
+    gtest_discover_tests(run_common_tests
+      PROPERTIES LABELS "legacy;unit"
+    )
+    unilink_copy_runtime_dependency(run_common_tests)
+  endif()
+  
+  # Communication Tests
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_communication.cc")
+    add_executable(run_communication_tests
+      test_communication.cc
+      test_utils.hpp
+    )
+    target_link_libraries(run_communication_tests
+      PRIVATE ${_unilink_test_lib} GTest::gtest_main GTest::gmock
+    )
+    gtest_discover_tests(run_communication_tests
+      PROPERTIES LABELS "legacy;integration"
+    )
+    unilink_copy_runtime_dependency(run_communication_tests)
+  endif()
+
 endif()
 
 # ============================================================================

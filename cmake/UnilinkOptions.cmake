@@ -1,24 +1,13 @@
 # Unilink build options
 # This file centralizes all build options for better maintainability
 
-include(CMakeDependentOption)
-
 # Build type options
 option(UNILINK_BUILD_SHARED "Build shared library" ON)
 option(UNILINK_BUILD_STATIC "Build static library" ON)
 option(UNILINK_BUILD_EXAMPLES "Build examples" ON)
 option(UNILINK_BUILD_TESTS "Build tests" ON)
 option(UNILINK_BUILD_DOCS "Build documentation" ON)
-
-# Granular test toggles (inherit from UNILINK_BUILD_TESTS)
-cmake_dependent_option(UNILINK_ENABLE_UNIT_TESTS "Build unit tests" ON
-  "UNILINK_BUILD_TESTS" OFF)
-cmake_dependent_option(UNILINK_ENABLE_INTEGRATION_TESTS "Build integration tests" ON
-  "UNILINK_BUILD_TESTS" OFF)
-cmake_dependent_option(UNILINK_ENABLE_E2E_TESTS "Build end-to-end tests" ON
-  "UNILINK_BUILD_TESTS" OFF)
-cmake_dependent_option(UNILINK_ENABLE_PERFORMANCE_TESTS "Enable performance/benchmark tests" OFF
-  "UNILINK_BUILD_TESTS" OFF)
+option(UNILINK_ENABLE_PERFORMANCE_TESTS "Enable performance/benchmark tests" OFF)
 
 # Feature options
 option(UNILINK_ENABLE_CONFIG "Enable configuration management API" ON)
@@ -43,16 +32,6 @@ option(UNILINK_ENABLE_TSAN "Enable ThreadSanitizer" OFF)
 # Performance options
 option(UNILINK_ENABLE_LTO "Enable Link Time Optimization" OFF)
 option(UNILINK_ENABLE_PCH "Enable Precompiled Headers" OFF)
-
-# Derived flag to simplify conditional test logic
-set(UNILINK_ENABLE_ANY_TESTS OFF)
-if(UNILINK_BUILD_TESTS AND
-   (UNILINK_ENABLE_UNIT_TESTS
-    OR UNILINK_ENABLE_INTEGRATION_TESTS
-    OR UNILINK_ENABLE_E2E_TESTS
-    OR UNILINK_ENABLE_PERFORMANCE_TESTS))
-  set(UNILINK_ENABLE_ANY_TESTS ON)
-endif()
 
 # Set default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
