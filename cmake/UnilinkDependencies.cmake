@@ -11,6 +11,9 @@ set(Boost_USE_STATIC_LIBS OFF CACHE BOOL "Prefer shared Boost libraries" FORCE)
 set(Boost_USE_MULTITHREADED ON CACHE BOOL "Use multithreaded Boost libraries" FORCE)
 set(Boost_USE_DEBUG_RUNTIME OFF CACHE BOOL "Do not require debug runtime Boost binaries" FORCE)
 
+# Control whether we must link Boost.System (off on macOS to use header-only mode)
+set(UNILINK_LINK_BOOST_SYSTEM ON)
+
 # Homebrew's BoostConfig packages on macOS (e.g., Boost 1.89) often miss
 # per-component config files such as boost_system-config.cmake, which causes
 # configure-time failures when CMake picks the config package first. Prefer the
@@ -73,7 +76,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   set(Boost_DIR "" CACHE PATH "Ignore Boost config packages on macOS" FORCE)
   set(BOOST_ROOT "/opt/homebrew/opt/boost" CACHE PATH "Homebrew Boost root" FORCE)
   set(BOOST_INCLUDEDIR "/opt/homebrew/opt/boost/include" CACHE PATH "Homebrew Boost include dir" FORCE)
-  set(BOOST_LIBRARYDIR "/opt/homebrew/opt/boost/lib" CACHE PATH "Homebrew Boost library dir" FORCE)
   set(Boost_ADDITIONAL_VERSIONS "1.89" "1.89.0" CACHE STRING "" FORCE)
   list(APPEND CMAKE_PREFIX_PATH
     /opt/homebrew/opt/boost
@@ -81,42 +83,25 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     /usr/local/opt/boost
     /usr/local)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
-  # Try manual detection first to avoid brittle FindBoost with Homebrew 1.89
-  file(GLOB _BREW_BOOST_CANDIDATE_DIRS
-    "/opt/homebrew/Cellar/boost/*"
-    "/usr/local/Cellar/boost/*")
-  set(_BOOST_INCLUDE_HINTS
-    /opt/homebrew/opt/boost
-    /opt/homebrew
-    /usr/local/opt/boost
-    /usr/local
-    ${_BREW_BOOST_CANDIDATE_DIRS})
-  find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
-    PATHS ${_BOOST_INCLUDE_HINTS}
-    PATH_SUFFIXES include)
-  find_library(BOOST_FALLBACK_SYSTEM_LIB
-    NAMES boost_system boost_system-mt boost_system-mt-x64 boost_system-1_89 boost_system-mt-1_89
-    PATHS ${_BOOST_INCLUDE_HINTS}
-    PATH_SUFFIXES lib lib64)
 
-  if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
-    if(NOT TARGET Boost::system)
-      add_library(Boost::system UNKNOWN IMPORTED)
-      set_target_properties(Boost::system PROPERTIES
-        IMPORTED_LOCATION "${BOOST_FALLBACK_SYSTEM_LIB}"
-        INTERFACE_INCLUDE_DIRECTORIES "${BOOST_FALLBACK_INCLUDE_DIR}")
-    endif()
-    set(Boost_FOUND TRUE)
-    message(STATUS "Using manual Boost::system fallback (Homebrew) at ${BOOST_FALLBACK_SYSTEM_LIB}")
-  else()
-    # Last resort: try FindBoost module quietly; if it still fails, surface an error
-    find_package(Boost 1.74 MODULE QUIET COMPONENTS system)
-    if(Boost_FOUND)
-      message(STATUS "Using Boost 1.74+ for macOS compatibility (FindBoost module)")
-    else()
-      message(FATAL_ERROR "Boost::system not found via manual fallback or FindBoost on macOS")
-    endif()
+  # Header-only Boost.System: only require headers, avoid lib lookup that is flaky on macOS Actions
+  find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
+    PATHS
+      /opt/homebrew/opt/boost
+      /opt/homebrew
+      /usr/local/opt/boost
+      /usr/local
+      /opt/homebrew/Cellar/boost
+      /usr/local/Cellar/boost
+    PATH_SUFFIXES include)
+  if(NOT BOOST_FALLBACK_INCLUDE_DIR)
+    message(FATAL_ERROR "Boost headers not found on macOS (looked in Homebrew paths)")
   endif()
+
+  set(UNILINK_LINK_BOOST_SYSTEM OFF)
+  set(UNILINK_BOOST_INCLUDE_DIR "${BOOST_FALLBACK_INCLUDE_DIR}")
+  add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
+  message(STATUS "Using header-only Boost.System on macOS; include dir: ${BOOST_FALLBACK_INCLUDE_DIR}")
 else()
   # Other platforms: use a recent Boost version
   find_package(Boost 1.70 REQUIRED COMPONENTS system)
@@ -186,9 +171,13 @@ add_library(unilink_dependencies INTERFACE)
 
 # Link common dependencies
 target_link_libraries(unilink_dependencies INTERFACE
-  Boost::system
   Threads::Threads
 )
+if(UNILINK_LINK_BOOST_SYSTEM)
+  target_link_libraries(unilink_dependencies INTERFACE Boost::system)
+elseif(UNILINK_BOOST_INCLUDE_DIR)
+  target_include_directories(unilink_dependencies INTERFACE "${UNILINK_BOOST_INCLUDE_DIR}")
+endif()
 if(WIN32)
   target_link_libraries(unilink_dependencies INTERFACE
     ws2_32
