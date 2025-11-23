@@ -47,7 +47,7 @@ class TransportTcpClientTest : public ::testing::Test {
 TEST_F(TransportTcpClientTest, BackpressureTriggersWithoutConnection) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
-  cfg.port = 0;  // invalid/closed port, no real connection expected
+  cfg.port = 0;                       // invalid/closed port, no real connection expected
   cfg.backpressure_threshold = 1024;  // 1KB threshold
 
   client_ = std::make_shared<TcpClient>(cfg);
