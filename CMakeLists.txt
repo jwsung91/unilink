@@ -140,6 +140,30 @@ if(TARGET unilink AND NOT TARGET unilink_shared AND NOT TARGET unilink_static)
     $<INSTALL_INTERFACE:include>)
 endif()
 
+# Disable MSVC LTCG for unilink libraries to avoid link.exe access violations
+if(MSVC)
+  set(_unilink_library_targets)
+  if(TARGET unilink_shared)
+    list(APPEND _unilink_library_targets unilink_shared)
+  endif()
+  if(TARGET unilink_static)
+    list(APPEND _unilink_library_targets unilink_static)
+  endif()
+  if(TARGET unilink AND NOT (TARGET unilink_shared OR TARGET unilink_static))
+    list(APPEND _unilink_library_targets unilink)
+  endif()
+
+  foreach(_target IN LISTS _unilink_library_targets)
+    target_compile_options(${_target} PRIVATE
+      "$<$<CONFIG:Release>:/GL->"
+      "$<$<CONFIG:RelWithDebInfo>:/GL->"
+      "$<$<CONFIG:MinSizeRel>:/GL->")
+    set_property(TARGET ${_target} APPEND_STRING PROPERTY LINK_FLAGS_RELEASE " /LTCG:OFF")
+    set_property(TARGET ${_target} APPEND_STRING PROPERTY LINK_FLAGS_RELWITHDEBINFO " /LTCG:OFF")
+    set_property(TARGET ${_target} APPEND_STRING PROPERTY LINK_FLAGS_MINSIZEREL " /LTCG:OFF")
+  endforeach()
+endif()
+
 # Export header generation
 if(UNILINK_ENABLE_EXPORT_HEADER)
   include(GenerateExportHeader)
