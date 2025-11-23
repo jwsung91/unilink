@@ -1,9 +1,9 @@
 # Unilink dependencies management
 # This file handles all external dependencies
 
-# Set CMake policy to suppress FindBoost deprecation warning
-if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31")
-  cmake_policy(SET CMP0167 NEW)
+# Keep FindBoost module available (CMP0167 makes it opt-in/removed in newer CMake)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31" AND POLICY CMP0167)
+  cmake_policy(SET CMP0167 OLD)
 endif()
 
 # Homebrew's BoostConfig packages on macOS (e.g., Boost 1.89) often miss
