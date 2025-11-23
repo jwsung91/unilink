@@ -56,6 +56,9 @@ void Serial::start() {
     auto config = build_config();
     channel_ = factory::ChannelFactory::create(config);
     setup_internal_handlers();
+  } else {
+    // Channel already exists; nothing to do if already started
+    if (started_) return;
   }
 
   channel_->start();

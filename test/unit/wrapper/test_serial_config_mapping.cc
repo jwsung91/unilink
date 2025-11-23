@@ -41,6 +41,18 @@ TEST(SerialConfigMappingTest, MapsParityFlowBitsAndBaud) {
   EXPECT_EQ(cfg.retry_interval_ms, 1500u);
   EXPECT_EQ(cfg.parity, config::SerialConfig::Parity::Even);
   EXPECT_EQ(cfg.flow, config::SerialConfig::Flow::Hardware);
+
+  // Mutate setters after first build and ensure config reflects changes
+  wrapper.set_parity("odd");
+  wrapper.set_flow_control("software");
+  wrapper.set_data_bits(6);
+  wrapper.set_stop_bits(1);
+  auto cfg2 = wrapper.build_config();
+
+  EXPECT_EQ(cfg2.parity, config::SerialConfig::Parity::Odd);
+  EXPECT_EQ(cfg2.flow, config::SerialConfig::Flow::Software);
+  EXPECT_EQ(cfg2.char_size, 6u);
+  EXPECT_EQ(cfg2.stop_bits, 1u);
 }
 
 TEST(SerialConfigMappingTest, InvalidStringsFallbackToNoneAndClampBits) {
