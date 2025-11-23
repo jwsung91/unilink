@@ -47,7 +47,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_TESTING=ON
+          -DUNILINK_BUILD_TESTS=ON
 
     - name: Build
       run: cmake --build build -j $(nproc)

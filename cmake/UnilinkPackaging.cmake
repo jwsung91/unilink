@@ -170,6 +170,7 @@ endif()
 # Install rules for components
 if(UNILINK_ENABLE_INSTALL AND TARGET unilink_shared)
   install(TARGETS unilink_shared
+    EXPORT unilinkTargets
     COMPONENT libraries
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -179,6 +180,7 @@ endif()
 
 if(UNILINK_ENABLE_INSTALL AND TARGET unilink_static)
   install(TARGETS unilink_static
+    EXPORT unilinkTargets
     COMPONENT libraries
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
@@ -186,6 +188,7 @@ endif()
 
 if(UNILINK_ENABLE_INSTALL AND TARGET unilink AND NOT TARGET unilink_shared AND NOT TARGET unilink_static)
   install(TARGETS unilink
+    EXPORT unilinkTargets
     COMPONENT libraries
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

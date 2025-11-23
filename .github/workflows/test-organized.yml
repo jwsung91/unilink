@@ -24,8 +24,8 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DBUILD_TESTING=ON \
-            -DBUILD_EXAMPLES=OFF
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_BUILD_EXAMPLES=OFF
 
       - name: Build
         run: cmake --build build -j $(nproc)
@@ -54,8 +54,8 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DBUILD_TESTING=ON \
-            -DBUILD_EXAMPLES=OFF
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_BUILD_EXAMPLES=OFF
 
       - name: Build
         run: cmake --build build -j $(nproc)
@@ -85,8 +85,8 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DBUILD_TESTING=ON \
-            -DBUILD_EXAMPLES=OFF
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_BUILD_EXAMPLES=OFF
 
       - name: Build
         run: cmake --build build -j $(nproc)
@@ -115,8 +115,8 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
             -DUNILINK_ENABLE_CONFIG=ON \
-            -DBUILD_TESTING=ON \
-            -DBUILD_EXAMPLES=OFF
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_BUILD_EXAMPLES=OFF
 
       - name: Build
         run: cmake --build build -j $(nproc)
@@ -134,4 +134,3 @@ jobs:
           path: build/performance_*
           retention-days: 30
           overwrite: true
-
