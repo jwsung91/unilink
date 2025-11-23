@@ -53,34 +53,7 @@ void Serial::start() {
 
   // Ensure flow/parity mapping is applied on subsequent starts if channel was recreated
   if (!channel_) {
-    // Create Channel
-    config::SerialConfig config;
-    config.device = device_;
-    config.baud_rate = baud_rate_;
-    config.char_size = static_cast<unsigned>(std::clamp(data_bits_, 5, 8));
-    config.stop_bits = static_cast<unsigned>(std::clamp(stop_bits_, 1, 2));
-    config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
-    // map parity
-    std::string parity_lower = parity_;
-    std::transform(parity_lower.begin(), parity_lower.end(), parity_lower.begin(), ::tolower);
-    if (parity_lower == "even") {
-      config.parity = config::SerialConfig::Parity::Even;
-    } else if (parity_lower == "odd") {
-      config.parity = config::SerialConfig::Parity::Odd;
-    } else {
-      config.parity = config::SerialConfig::Parity::None;
-    }
-
-    // map flow control
-    std::string flow_lower = flow_control_;
-    std::transform(flow_lower.begin(), flow_lower.end(), flow_lower.begin(), ::tolower);
-    if (flow_lower == "software" || flow_lower == "xonxoff" || flow_lower == "soft") {
-      config.flow = config::SerialConfig::Flow::Software;
-    } else if (flow_lower == "hardware" || flow_lower == "rtscts" || flow_lower == "hard") {
-      config.flow = config::SerialConfig::Flow::Hardware;
-    } else {
-      config.flow = config::SerialConfig::Flow::None;
-    }
+    auto config = build_config();
     channel_ = factory::ChannelFactory::create(config);
     setup_internal_handlers();
   }
@@ -193,6 +166,37 @@ void Serial::set_retry_interval(std::chrono::milliseconds interval) {
       transport_serial->set_retry_interval(static_cast<unsigned int>(interval.count()));
     }
   }
+}
+
+config::SerialConfig Serial::build_config() const {
+  config::SerialConfig config;
+  config.device = device_;
+  config.baud_rate = baud_rate_;
+  config.char_size = static_cast<unsigned>(std::clamp(data_bits_, 5, 8));
+  config.stop_bits = static_cast<unsigned>(std::clamp(stop_bits_, 1, 2));
+  config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
+
+  std::string parity_lower = parity_;
+  std::transform(parity_lower.begin(), parity_lower.end(), parity_lower.begin(), ::tolower);
+  if (parity_lower == "even") {
+    config.parity = config::SerialConfig::Parity::Even;
+  } else if (parity_lower == "odd") {
+    config.parity = config::SerialConfig::Parity::Odd;
+  } else {
+    config.parity = config::SerialConfig::Parity::None;
+  }
+
+  std::string flow_lower = flow_control_;
+  std::transform(flow_lower.begin(), flow_lower.end(), flow_lower.begin(), ::tolower);
+  if (flow_lower == "software" || flow_lower == "xonxoff" || flow_lower == "soft") {
+    config.flow = config::SerialConfig::Flow::Software;
+  } else if (flow_lower == "hardware" || flow_lower == "rtscts" || flow_lower == "hard") {
+    config.flow = config::SerialConfig::Flow::Hardware;
+  } else {
+    config.flow = config::SerialConfig::Flow::None;
+  }
+
+  return config;
 }
 
 }  // namespace wrapper

@@ -23,6 +23,7 @@
 
 #include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
+#include "unilink/config/serial_config.hpp"
 
 namespace unilink {
 namespace wrapper {
@@ -54,6 +55,8 @@ class Serial : public ChannelInterface {
   void set_parity(const std::string& parity);
   void set_flow_control(const std::string& flow_control);
   void set_retry_interval(std::chrono::milliseconds interval);
+  // Expose mapped config for testing/inspection
+  config::SerialConfig build_config() const;
 
  private:
   void setup_internal_handlers();
