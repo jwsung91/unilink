@@ -172,11 +172,19 @@ void TcpClient::stop() {
   };
 
   if (ioc_) {
-    if (!owns_ioc_ && ioc_->stopped()) {
-      UNILINK_LOG_DEBUG("tcp_client", "stop", "io_context already stopped; running cleanup synchronously");
+    if (!owns_ioc_) {
+      // For external io_context, perform immediate cleanup (caller might not run the loop again)
       cleanup();
+      if (!ioc_->stopped()) {
+        net::post(*ioc_, std::move(cleanup));
+      }
     } else {
-      net::post(*ioc_, cleanup);
+      if (ioc_->stopped()) {
+        UNILINK_LOG_DEBUG("tcp_client", "stop", "io_context already stopped; running cleanup synchronously");
+        cleanup();
+      } else {
+        net::post(*ioc_, std::move(cleanup));
+      }
     }
   }
 
