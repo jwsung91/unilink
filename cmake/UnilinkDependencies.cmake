@@ -6,6 +6,11 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31" AND POLICY CMP0167)
   cmake_policy(SET CMP0167 OLD)
 endif()
 
+# Normalize Boost lookup variants to avoid missing component builds
+set(Boost_USE_STATIC_LIBS OFF CACHE BOOL "Prefer shared Boost libraries" FORCE)
+set(Boost_USE_MULTITHREADED ON CACHE BOOL "Use multithreaded Boost libraries" FORCE)
+set(Boost_USE_DEBUG_RUNTIME OFF CACHE BOOL "Do not require debug runtime Boost binaries" FORCE)
+
 # Homebrew's BoostConfig packages on macOS (e.g., Boost 1.89) often miss
 # per-component config files such as boost_system-config.cmake, which causes
 # configure-time failures when CMake picks the config package first. Prefer the
@@ -49,10 +54,10 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   endif()
   set(Boost_NO_BOOST_CMAKE ON CACHE BOOL "" FORCE)
   set(Boost_DIR "" CACHE PATH "Ignore Boost config packages on macOS" FORCE)
-  set(BOOST_ROOT "/opt/homebrew/opt/boost" CACHE PATH "Homebrew Boost root" FORCE)
-  set(BOOST_INCLUDEDIR "${BOOST_ROOT}/include" CACHE PATH "Homebrew Boost include dir" FORCE)
-  set(BOOST_LIBRARYDIR "${BOOST_ROOT}/lib" CACHE PATH "Homebrew Boost library dir" FORCE)
-  # Explicitly add the built-in CMake module path in case the runner lacks it
+  set(BOOST_ROOT "/opt/homebrew" CACHE PATH "Homebrew root" FORCE)
+  set(BOOST_INCLUDEDIR "/opt/homebrew/include" CACHE PATH "Homebrew Boost include dir" FORCE)
+  set(BOOST_LIBRARYDIR "/opt/homebrew/lib" CACHE PATH "Homebrew Boost library dir" FORCE)
+  list(APPEND CMAKE_PREFIX_PATH /opt/homebrew /opt/homebrew/opt/boost)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
   find_package(Boost 1.74 MODULE REQUIRED COMPONENTS system)
   message(STATUS "Using Boost 1.74+ for macOS compatibility")
