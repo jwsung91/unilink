@@ -312,7 +312,7 @@ gdb ./test/unit/run_unit_test_builder
 ```bash
 # Clean rebuild
 rm -rf build
-cmake -S . -B build -DBUILD_TESTING=ON
+cmake -S . -B build -DUNILINK_BUILD_TESTS=ON
 cmake --build build
 
 # Check test targets
@@ -346,4 +346,3 @@ If tests timeout in CI:
 - [CTest Documentation](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
 - [Test Coverage Guide](./COVERAGE_IMPROVEMENT_GUIDE.md)
 - [Test Refactoring Plan](./TEST_REFACTORING_PLAN.md)
-

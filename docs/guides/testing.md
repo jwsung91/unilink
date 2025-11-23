@@ -21,7 +21,7 @@ Complete guide for testing `unilink`, including running tests, CI/CD integration
 
 ```bash
 # 1. Build with tests enabled
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DUNILINK_BUILD_TESTS=ON
 cmake --build build -j
 
 # 2. Run all tests
@@ -32,6 +32,11 @@ ctest --output-on-failure
 # All tests should pass with detailed output
 ```
 
+**Suite toggles**
+- Master switch: `-DUNILINK_BUILD_TESTS=ON|OFF`
+- Per-suite: `UNILINK_ENABLE_UNIT_TESTS`, `UNILINK_ENABLE_INTEGRATION_TESTS`, `UNILINK_ENABLE_E2E_TESTS`, `UNILINK_ENABLE_PERFORMANCE_TESTS`
+- Packaging tip: set the suite toggles to `OFF` (e.g., in vcpkg ports where `FETCHCONTENT_FULLY_DISCONNECTED=ON`) to skip fetching GoogleTest.
+
 ---
 
 ### Windows Build & Test Workflow
@@ -40,7 +45,7 @@ ctest --output-on-failure
 # 1. Configure with Visual Studio generator
 cmake -S . -B build-windows `
   -G "Visual Studio 17 2022" -A x64 `
-  -DBUILD_TESTING=ON
+  -DUNILINK_BUILD_TESTS=ON
 
 # 2. Build the desired configuration (Debug shown here)
 cmake --build build-windows --config Debug --target ALL_BUILD
@@ -57,7 +62,7 @@ cmake -S . -B build-windows -G "Ninja" `
   -DCMAKE_TOOLCHAIN_FILE="F:/lib/vcpkg/scripts/buildsystems/vcpkg.cmake" `
   -DVCPKG_TARGET_TRIPLET=x64-windows `
   -DUNILINK_BUILD_SHARED=ON `
-  -DBUILD_TESTING=ON
+  -DUNILINK_BUILD_TESTS=ON
 cmake --build build-windows
 ctest --test-dir build-windows --output-on-failure
 ```
@@ -283,7 +288,7 @@ Enable memory tracking for development:
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Debug \
   -DUNILINK_ENABLE_MEMORY_TRACKING=ON \
-  -DBUILD_TESTING=ON
+  -DUNILINK_BUILD_TESTS=ON
 
 cmake --build build -j
 cd build && ctest
@@ -305,7 +310,7 @@ Detect memory errors at runtime:
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Debug \
   -DUNILINK_ENABLE_SANITIZERS=ON \
-  -DBUILD_TESTING=ON
+  -DUNILINK_BUILD_TESTS=ON
 
 cmake --build build -j
 cd build && ctest --output-on-failure
@@ -330,7 +335,7 @@ Detect thread race conditions:
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_CXX_FLAGS="-fsanitize=thread" \
-  -DBUILD_TESTING=ON
+  -DUNILINK_BUILD_TESTS=ON
 
 cmake --build build -j
 cd build && ctest
@@ -349,7 +354,7 @@ Advanced memory debugging:
 
 ```bash
 # Build with debug symbols
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DUNILINK_BUILD_TESTS=ON
 cmake --build build -j
 
 # Run tests under Valgrind
@@ -415,7 +420,7 @@ Tests run across multiple configurations:
 **Local Testing on Ubuntu 20.04:**
 ```bash
 # Build and test locally on Ubuntu 20.04
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DUNILINK_BUILD_TESTS=ON
 cmake --build build -j
 cd build && ctest --output-on-failure
 ```
@@ -666,7 +671,7 @@ CI/CD automatically detects performance regressions > 10%.
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_CXX_FLAGS="--coverage" \
-  -DBUILD_TESTING=ON
+  -DUNILINK_BUILD_TESTS=ON
 
 cmake --build build -j
 
