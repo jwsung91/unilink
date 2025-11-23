@@ -1,7 +1,7 @@
 vcpkg_minimum_required(VERSION 2023-11-15)
 
-# Use local sources when consuming this overlay.
-set(SOURCE_PATH "${CURRENT_PORT_DIR}/../..")
+# Use local sources when consuming this overlay (project root).
+set(SOURCE_PATH "${CURRENT_PORT_DIR}/../../../..")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

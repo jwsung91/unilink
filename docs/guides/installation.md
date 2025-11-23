@@ -138,6 +138,15 @@ add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
+## Packaging (Conan / vcpkg)
+
+- **Conan recipe**: `packaging/conan`
+  - Build/test locally (Conan v2): `conan create packaging/conan --name=unilink --version=0.1.3`
+  - Update `conandata.yml` URL/SHA to the release tarball before publishing.
+- **vcpkg overlay port**: `packaging/vcpkg/ports/unilink`
+  - Consume with overlay: `vcpkg install unilink --overlay-ports=packaging/vcpkg/ports`
+  - Keep the portfile pointed at the repo root for local overlay builds.
+
 ## Build Options
 
 When building from source, you can configure various options:
