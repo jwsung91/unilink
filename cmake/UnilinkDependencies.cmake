@@ -205,9 +205,16 @@ if(WIN32)
     NOMINMAX
   )
 elseif(UNIX)
-  target_compile_definitions(unilink_dependencies INTERFACE
-    _POSIX_C_SOURCE=200809L
-  )
+  if(APPLE)
+    # macOS needs BSD extensions for networking macros (NI_MAXHOST, SO_NOSIGPIPE, etc.)
+    target_compile_definitions(unilink_dependencies INTERFACE
+      _DARWIN_C_SOURCE
+    )
+  else()
+    target_compile_definitions(unilink_dependencies INTERFACE
+      _POSIX_C_SOURCE=200809L
+    )
+  endif()
 endif()
 
 # Feature flags
