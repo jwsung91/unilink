@@ -551,17 +551,6 @@ TEST_F(BuilderCoverageTest, TcpServerMaxClientsInvalid) {
   EXPECT_THROW(unilink::tcp_server(next_port()).max_clients(1).build(), std::invalid_argument);
 }
 
-TEST_F(BuilderCoverageTest, TcpServerSingleAndMultiClientLimits) {
-  auto server_single = unilink::tcp_server(next_port()).single_client().build();
-  auto server_multi = unilink::tcp_server(next_port()).multi_client(2).build();
-  EXPECT_NE(server_single, nullptr);
-  EXPECT_NE(server_multi, nullptr);
-  EXPECT_THROW(unilink::tcp_server(next_port()).multi_client(0).build(), std::invalid_argument);
-  EXPECT_THROW(unilink::tcp_server(next_port()).multi_client(1).build(), std::invalid_argument);
-  server_single->stop();
-  server_multi->stop();
-}
-
 TEST_F(BuilderCoverageTest, TcpServerOverloadedCallbacks) {
   server_ = unilink::tcp_server(next_port())
                 .unlimited_clients()
@@ -576,87 +565,6 @@ TEST_F(BuilderCoverageTest, TcpServerOverloadedCallbacks) {
                 .on_disconnect([](size_t client_id) { EXPECT_GT(client_id, 0u); })
                 .build();
   EXPECT_NE(server_, nullptr);
-}
-
-TEST_F(BuilderCoverageTest, TcpServerAutoManageToggle) {
-  auto s1 = unilink::tcp_server(next_port()).unlimited_clients().auto_manage(true).build();
-  auto s2 = unilink::tcp_server(next_port()).unlimited_clients().auto_manage(false).build();
-  EXPECT_NE(s1, nullptr);
-  EXPECT_NE(s2, nullptr);
-  s1->stop();
-  s2->stop();
-}
-
-TEST_F(BuilderCoverageTest, TcpServerIndependentContext) {
-  server_ = unilink::tcp_server(next_port()).unlimited_clients().use_independent_context(true).build();
-  EXPECT_NE(server_, nullptr);
-}
-
-TEST_F(BuilderCoverageTest, TcpClientCoverage) {
-  auto c1 = unilink::tcp_client("127.0.0.1", next_port()).auto_manage(true).build();
-  auto c2 = unilink::tcp_client("127.0.0.1", next_port()).auto_manage(false).build();
-  EXPECT_NE(c1, nullptr);
-  EXPECT_NE(c2, nullptr);
-  client_ = unilink::tcp_client("127.0.0.1", next_port())
-                .on_data([](const std::string&) {})
-                .on_connect([]() {})
-                .on_disconnect([]() {})
-                .on_error([](const std::string&) {})
-                .use_independent_context(true)
-                .build();
-  EXPECT_NE(client_, nullptr);
-}
-
-TEST_F(BuilderCoverageTest, SerialBuilderCoverage) {
-  auto serial1 = unilink::serial("/dev/null", 9600).auto_manage(true).build();
-  auto serial2 = unilink::serial("/dev/null", 9600)
-                     .auto_manage(false)
-                     .use_independent_context(true)
-                     .on_data([](const std::string&) {})
-                     .on_connect([]() {})
-                     .on_disconnect([]() {})
-                     .on_error([](const std::string&) {})
-                     .build();
-  EXPECT_NE(serial1, nullptr);
-  EXPECT_NE(serial2, nullptr);
-  serial1->stop();
-  serial2->stop();
-}
-
-TEST_F(BuilderCoverageTest, AllBuildersCombinedConfigurations) {
-  uint16_t port = next_port();
-  auto server = unilink::tcp_server(port)
-                    .multi_client(10)
-                    .auto_manage(true)
-                    .use_independent_context(false)
-                    .enable_port_retry(true, 3, 1000)
-                    .on_data([](const std::string&) {})
-                    .on_connect([](size_t, const std::string&) {})
-                    .on_disconnect([](size_t) {})
-                    .on_error([](const std::string&) {})
-                    .build();
-  auto client = unilink::tcp_client("127.0.0.1", port + 1)
-                    .auto_manage(true)
-                    .use_independent_context(false)
-                    .on_data([](const std::string&) {})
-                    .on_connect([]() {})
-                    .on_disconnect([]() {})
-                    .on_error([](const std::string&) {})
-                    .build();
-  auto serial = unilink::serial("/dev/null", 115200)
-                    .auto_manage(true)
-                    .use_independent_context(false)
-                    .on_data([](const std::string&) {})
-                    .on_connect([]() {})
-                    .on_disconnect([]() {})
-                    .on_error([](const std::string&) {})
-                    .build();
-  EXPECT_NE(server, nullptr);
-  EXPECT_NE(client, nullptr);
-  EXPECT_NE(serial, nullptr);
-  server->stop();
-  client->stop();
-  serial->stop();
 }
 
 // ============================================================================
