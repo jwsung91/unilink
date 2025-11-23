@@ -15,7 +15,7 @@ services:
     environment:
       - CMAKE_BUILD_TYPE=Debug
       - UNILINK_ENABLE_CONFIG=ON
-      - BUILD_TESTING=ON
+      - UNILINK_BUILD_TESTS=ON
     networks:
       - unilink-network
 
@@ -51,7 +51,7 @@ services:
       - CMAKE_BUILD_TYPE=Debug
       - UNILINK_ENABLE_SANITIZERS=ON
       - UNILINK_ENABLE_MEMORY_TRACKING=ON
-      - BUILD_TESTING=ON
+      - UNILINK_BUILD_TESTS=ON
 
   # Performance testing
   perf:
@@ -70,7 +70,7 @@ services:
     environment:
       - CMAKE_BUILD_TYPE=Release
       - UNILINK_ENABLE_CONFIG=ON
-      - BUILD_TESTING=ON
+      - UNILINK_BUILD_TESTS=ON
 
   # Documentation server
   docs:

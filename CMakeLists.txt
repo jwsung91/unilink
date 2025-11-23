@@ -237,10 +237,12 @@ if(UNILINK_BUILD_EXAMPLES)
 endif()
 
 # Testing
-if(UNILINK_BUILD_TESTS)
+if(UNILINK_ENABLE_ANY_TESTS)
   include(CTest)
   enable_testing()
   add_subdirectory(test)
+elseif(UNILINK_BUILD_TESTS)
+  message(STATUS "Tests disabled: enable UNILINK_ENABLE_*_TESTS to build them")
 endif()
 
 # Documentation generation with Doxygen

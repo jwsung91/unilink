@@ -45,7 +45,9 @@ find_package(Threads REQUIRED)
 find_package(PkgConfig QUIET)
 
 # Google Test for testing
-if(UNILINK_BUILD_TESTS)
+# Note: Guarded so packaging environments (e.g., vcpkg with FETCHCONTENT_FULLY_DISCONNECTED)
+# can disable all tests and avoid downloading GoogleTest.
+if(UNILINK_ENABLE_ANY_TESTS)
   include(FetchContent)
   
   FetchContent_Declare(

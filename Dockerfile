@@ -27,9 +27,9 @@ RUN rm -rf build && mkdir build && cd build && \
         -DUNILINK_ENABLE_INSTALL=ON \
         -DUNILINK_ENABLE_PKGCONFIG=ON \
         -DUNILINK_ENABLE_EXPORT_HEADER=ON \
-        -DBUILD_EXAMPLES=ON \
-        -DBUILD_TESTING=ON \
-        -DBUILD_DOCUMENTATION=ON && \
+        -DUNILINK_BUILD_EXAMPLES=ON \
+        -DUNILINK_BUILD_TESTS=ON \
+        -DUNILINK_BUILD_DOCS=ON && \
     cmake --build . -j $(nproc)
 
 # Generate documentation (optional, skip if fails)
