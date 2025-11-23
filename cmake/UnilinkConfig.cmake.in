@@ -3,7 +3,8 @@
 include(CMakeFindDependencyMacro)
 
 # Find required dependencies
-find_dependency(Boost 1.70 REQUIRED COMPONENTS system)
+# Use more flexible Boost version detection for Conan compatibility
+find_dependency(Boost REQUIRED COMPONENTS system)
 find_dependency(Threads REQUIRED)
 
 # Include the targets file

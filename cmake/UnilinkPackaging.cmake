@@ -15,6 +15,9 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
+# Install dirs
+include(GNUInstallDirs)
+
 # Package file naming
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-source")
@@ -130,71 +133,107 @@ set(CPACK_COMPONENT_EXAMPLES_DISPLAY_NAME "Examples")
 set(CPACK_COMPONENT_EXAMPLES_DESCRIPTION "Example programs and tutorials")
 set(CPACK_COMPONENT_EXAMPLES_DEPENDS libraries headers)
 
+# Package config and pkg-config generation
+if(UNILINK_ENABLE_INSTALL)
+  include(CMakePackageConfigHelpers)
+
+  configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UnilinkConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unilink
+  )
+
+  write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+  )
+
+  if(UNILINK_ENABLE_PKGCONFIG)
+    set(PKGCONFIG_REQUIRES "")
+    set(PKGCONFIG_REQUIRES_PRIVATE "")
+    if(WIN32)
+      set(PKGCONFIG_LIBS_PRIVATE "-lboost_system")
+    else()
+      set(PKGCONFIG_LIBS_PRIVATE "-lboost_system -lpthread")
+    endif()
+    set(PKGCONFIG_CFLAGS "")
+
+    configure_file(
+      ${CMAKE_CURRENT_SOURCE_DIR}/package/unilink.pc.in
+      ${CMAKE_CURRENT_BINARY_DIR}/unilink.pc
+      @ONLY
+    )
+  endif()
+endif()
+
 # Install rules for components
-if(TARGET unilink_shared)
+if(UNILINK_ENABLE_INSTALL AND TARGET unilink_shared)
   install(TARGETS unilink_shared
     COMPONENT libraries
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 endif()
 
-if(TARGET unilink_static)
+if(UNILINK_ENABLE_INSTALL AND TARGET unilink_static)
   install(TARGETS unilink_static
     COMPONENT libraries
-    ARCHIVE DESTINATION lib
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 endif()
 
-if(TARGET unilink AND NOT TARGET unilink_shared AND NOT TARGET unilink_static)
+if(UNILINK_ENABLE_INSTALL AND TARGET unilink AND NOT TARGET unilink_shared AND NOT TARGET unilink_static)
   install(TARGETS unilink
     COMPONENT libraries
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 endif()
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/unilink/
-  COMPONENT headers
-  DESTINATION include/unilink
-  FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
-)
-
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfig.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfigVersion.cmake
-  COMPONENT cmake
-  DESTINATION lib/cmake/unilink
-)
-
-install(EXPORT unilinkTargets
-  COMPONENT cmake
-  NAMESPACE unilink::
-  DESTINATION lib/cmake/unilink
-)
-
-if(UNILINK_ENABLE_PKGCONFIG)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unilink.pc
-    COMPONENT pkgconfig
-    DESTINATION lib/pkgconfig
+if(UNILINK_ENABLE_INSTALL)
+  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/unilink/
+    COMPONENT headers
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/unilink
+    FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
   )
-endif()
 
-if(UNILINK_BUILD_DOCS AND UNILINK_DOXYGEN_AVAILABLE AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/docs/html/")
-  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/html/
-    COMPONENT documentation
-    DESTINATION share/doc/unilink/html
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/unilinkConfigVersion.cmake
+    COMPONENT cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unilink
   )
-endif()
 
-if(UNILINK_BUILD_EXAMPLES)
-  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples/
-    COMPONENT examples
-    DESTINATION share/unilink/examples
-    FILES_MATCHING PATTERN "*.cc" PATTERN "*.cpp" PATTERN "*.hpp" PATTERN "*.h"
+  install(EXPORT unilinkTargets
+    COMPONENT cmake
+    NAMESPACE unilink::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unilink
   )
+
+  if(UNILINK_ENABLE_PKGCONFIG)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unilink.pc
+      COMPONENT pkgconfig
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+    )
+  endif()
+
+  if(UNILINK_BUILD_DOCS AND UNILINK_DOXYGEN_AVAILABLE AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/docs/html/")
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs/html/
+      COMPONENT documentation
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/unilink/html
+    )
+  endif()
+
+  if(UNILINK_BUILD_EXAMPLES)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/examples/
+      COMPONENT examples
+      DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unilink/examples
+      FILES_MATCHING PATTERN "*.cc" PATTERN "*.cpp" PATTERN "*.hpp" PATTERN "*.h"
+    )
+  endif()
 endif()
 
 # Package versioning
