@@ -63,6 +63,17 @@ jobs:
           build-essential \
           cmake \
           ccache
+
+        # Install Boost (version-specific per OS)
+        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
+        else
+          # ubuntu-24.04: try 1.83 first, fallback to 1.74
+          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
+            echo "Boost 1.83 not available, installing 1.74..."
+            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
+          fi
+        fi
        
     - name: Configure CMake
       run: |
