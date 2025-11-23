@@ -1,5 +1,9 @@
 name: Test
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, develop ]
@@ -46,12 +50,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v5
 
+    - name: Cache ccache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ccache
+        key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ hashFiles('**/CMakeLists.txt') }}
+
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
           build-essential \
-          cmake
+          cmake \
+          ccache
        
     - name: Configure CMake
       run: |
@@ -59,8 +70,11 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_EXAMPLES=OFF \
-          -DBUILD_TESTING=ON
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=ON \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build tests
       run: cmake --build build-test -j $(nproc)
@@ -91,12 +105,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v5
 
+    - name: Cache ccache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ccache
+        key: ccache-${{ runner.os }}-integration-${{ hashFiles('**/CMakeLists.txt') }}
+
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
           build-essential \
           cmake \
+          ccache \
           gcc-11 g++-11 \
           libboost1.74-dev libboost-system1.74-dev
 
@@ -109,7 +130,9 @@ jobs:
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
-          -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF
+          -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build integration tests
       run: cmake --build build-integration -j $(nproc)
@@ -143,12 +166,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v5
 
+    - name: Cache ccache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ccache
+        key: ccache-${{ runner.os }}-performance-${{ hashFiles('**/CMakeLists.txt') }}
+
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
           build-essential \
           cmake \
+          ccache \
           gcc-11 g++-11 \
           libboost1.74-dev libboost-system1.74-dev
 
@@ -161,7 +191,9 @@ jobs:
           -DUNILINK_BUILD_EXAMPLES=OFF \
           -DUNILINK_BUILD_DOCS=OFF \
           -DUNILINK_BUILD_TESTS=ON \
-          -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON
+          -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build performance tests
       run: cmake --build build-perf -j $(nproc)
