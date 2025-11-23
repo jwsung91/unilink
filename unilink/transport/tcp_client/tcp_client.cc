@@ -203,6 +203,10 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
     return;
   }
 
+  if (on_bp_ && size >= bp_high_) {
+    on_bp_(size);
+  }
+
   // Use memory pool for better performance (only for reasonable sizes)
   if (size <= 65536) {  // Only use pool for buffers <= 64KB
     common::PooledBuffer pooled_buffer(size);
