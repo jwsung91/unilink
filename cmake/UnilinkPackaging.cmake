@@ -196,6 +196,13 @@ if(UNILINK_ENABLE_INSTALL AND TARGET unilink AND NOT TARGET unilink_shared AND N
   )
 endif()
 
+# Export dependency interface target so install(EXPORT ...) has all required targets
+if(UNILINK_ENABLE_INSTALL AND TARGET unilink_dependencies)
+  install(TARGETS unilink_dependencies
+    EXPORT unilinkTargets
+    COMPONENT cmake)
+endif()
+
 if(UNILINK_ENABLE_INSTALL)
   install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/unilink/
     COMPONENT headers
