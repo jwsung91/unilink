@@ -109,8 +109,8 @@ void TcpServer::stop() {
       {
         std::lock_guard<std::mutex> lock(self->sessions_mutex_);
         self->sessions_.clear();
+        self->current_session_.reset();
       }
-      if (self->current_session_) self->current_session_.reset();
       cleanup_promise.set_value();
     });
 
@@ -131,31 +131,52 @@ void TcpServer::stop() {
     {
       std::lock_guard<std::mutex> lock(sessions_mutex_);
       sessions_.clear();
+      current_session_.reset();
     }
-    if (current_session_) current_session_.reset();
   }
   state_.set_state(common::LinkState::Closed);
   // Don't call notify_state() in stop() as it may cause issues with callbacks
   // during destruction
 }
 
-bool TcpServer::is_connected() const { return current_session_ && current_session_->alive(); }
+bool TcpServer::is_connected() const {
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
+  return current_session_ && current_session_->alive();
+}
 
 void TcpServer::async_write_copy(const uint8_t* data, size_t size) {
-  if (current_session_ && current_session_->alive()) {
-    current_session_->async_write_copy(data, size);
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
+    session = current_session_;
+  }
+
+  if (session && session->alive()) {
+    session->async_write_copy(data, size);
   }
   // If no session or session is not alive, the write is silently dropped
 }
 
 void TcpServer::on_bytes(OnBytes cb) {
   on_bytes_ = std::move(cb);
-  if (current_session_) current_session_->on_bytes(on_bytes_);
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
+    session = current_session_;
+  }
+
+  if (session) session->on_bytes(on_bytes_);
 }
 void TcpServer::on_state(OnState cb) { on_state_ = std::move(cb); }
 void TcpServer::on_backpressure(OnBackpressure cb) {
   on_bp_ = std::move(cb);
-  if (current_session_) current_session_->on_backpressure(on_bp_);
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
+    session = current_session_;
+  }
+
+  if (session) session->on_backpressure(on_bp_);
 }
 
 void TcpServer::attempt_port_binding(int retry_count) {
@@ -308,10 +329,10 @@ void TcpServer::do_accept() {
 
       self->sessions_.push_back(new_session);
       client_id = self->sessions_.size() - 1;
-    }
 
-    // Update current active session (existing API compatibility)
-    self->current_session_ = new_session;
+      // Update current active session (existing API compatibility)
+      self->current_session_ = new_session;
+    }
 
     // Set session callbacks
     if (self->on_bytes_) {
@@ -338,6 +359,7 @@ void TcpServer::do_accept() {
         self->on_multi_disconnect_(client_id);
       }
 
+      bool was_current = false;
       // Remove from session list
       {
         std::lock_guard<std::mutex> lock(self->sessions_mutex_);
@@ -345,11 +367,14 @@ void TcpServer::do_accept() {
         if (it != self->sessions_.end()) {
           self->sessions_.erase(it);
         }
+        was_current = (self->current_session_ == new_session);
+        if (was_current) {
+          self->current_session_.reset();
+        }
       }
 
       // Clean up if current session is the terminated session
-      if (self->current_session_ == new_session) {
-        self->current_session_.reset();
+      if (was_current) {
         self->state_.set_state(common::LinkState::Listening);
         self->notify_state();
       }

@@ -100,7 +100,7 @@ class TcpServer : public Channel,
 
   // Multi-client support
   std::vector<std::shared_ptr<TcpServerSession>> sessions_;
-  mutable std::mutex sessions_mutex_;
+  mutable std::mutex sessions_mutex_;  // Guards sessions_ and current_session_
 
   // Client limit configuration
   size_t max_clients_;
