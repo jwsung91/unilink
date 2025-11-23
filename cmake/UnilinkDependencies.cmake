@@ -75,15 +75,30 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   set(BOOST_INCLUDEDIR "/opt/homebrew/opt/boost/include" CACHE PATH "Homebrew Boost include dir" FORCE)
   set(BOOST_LIBRARYDIR "/opt/homebrew/opt/boost/lib" CACHE PATH "Homebrew Boost library dir" FORCE)
   set(Boost_ADDITIONAL_VERSIONS "1.89" "1.89.0" CACHE STRING "" FORCE)
-  list(APPEND CMAKE_PREFIX_PATH /opt/homebrew/opt/boost /opt/homebrew)
+  list(APPEND CMAKE_PREFIX_PATH
+    /opt/homebrew/opt/boost
+    /opt/homebrew
+    /usr/local/opt/boost
+    /usr/local)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
   find_package(Boost 1.74 MODULE QUIET COMPONENTS system)
   if(NOT Boost_FOUND)
     # Manual fallback in case FindBoost fails to locate Homebrew Boost
     find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
-      HINTS /opt/homebrew/opt/boost/include /opt/homebrew/include)
-    find_library(BOOST_FALLBACK_SYSTEM_LIB NAMES boost_system
-      HINTS /opt/homebrew/opt/boost/lib /opt/homebrew/lib)
+      PATHS
+        /opt/homebrew/opt/boost
+        /opt/homebrew
+        /usr/local/opt/boost
+        /usr/local
+      PATH_SUFFIXES include)
+    find_library(BOOST_FALLBACK_SYSTEM_LIB
+      NAMES boost_system boost_system-mt
+      PATHS
+        /opt/homebrew/opt/boost
+        /opt/homebrew
+        /usr/local/opt/boost
+        /usr/local
+      PATH_SUFFIXES lib lib64)
     if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
       if(NOT TARGET Boost::system)
         add_library(Boost::system UNKNOWN IMPORTED)
