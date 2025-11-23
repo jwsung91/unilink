@@ -6,6 +6,17 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31")
   cmake_policy(SET CMP0167 NEW)
 endif()
 
+# Homebrew's BoostConfig packages on macOS (e.g., Boost 1.89) often miss
+# per-component config files such as boost_system-config.cmake, which causes
+# configure-time failures when CMake picks the config package first. Prefer the
+# classic FindBoost module on macOS unless the user explicitly overrides the
+# behavior.
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND NOT DEFINED Boost_NO_BOOST_CMAKE)
+  set(Boost_NO_BOOST_CMAKE ON CACHE BOOL
+      "Prefer FindBoost module over BoostConfig on macOS to avoid missing component configs")
+  message(STATUS "Forcing FindBoost module on macOS to avoid missing Boost component config files")
+endif()
+
 # Find required packages
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   # Windows builds: rely on recent Boost releases available via Conan/vcpkg
