@@ -92,7 +92,7 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 ```bash
 # Download and extract release package
 wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.0-linux-x64.tar.gz
-tar -xzf unilink-0.1.0-linux-x64.tar.gz
+tar -xzf unilink-0.1.3-linux-x64.tar.gz
 # Follow installation instructions in the package
 ```
 
@@ -106,7 +106,7 @@ tar -xzf unilink-0.1.0-linux-x64.tar.gz
 # Option A: Visual Studio generator (x64)
 cmake -S . -B build-windows `
   -G "Visual Studio 17 2022" -A x64 `
-  -DBUILD_TESTING=ON
+  -DUNILINK_BUILD_TESTS=ON
 cmake --build build-windows --config Release
 ctest --test-dir build-windows -C Release --output-on-failure
 

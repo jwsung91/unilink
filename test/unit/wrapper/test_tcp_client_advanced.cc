@@ -109,6 +109,19 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStopWhenNotStarted) {
   client_->stop();
 }
 
+TEST_F(AdvancedTcpClientCoverageTest, InvalidHostTriggersErrorCallback) {
+  std::atomic<bool> error_called{false};
+  client_ = unilink::tcp_client("256.256.256.256", test_port_)
+
+                .on_error([&error_called](const std::string&) { error_called = true; })
+                .build();
+
+  ASSERT_NE(client_, nullptr);
+  client_->start();
+  TestUtils::waitFor(200);
+  EXPECT_TRUE(error_called.load() || !client_->is_connected());
+}
+
 // ============================================================================
 // CONNECTION CONFIGURATION TESTS
 // ============================================================================

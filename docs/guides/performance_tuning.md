@@ -61,8 +61,8 @@ cmake -S . -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DUNILINK_ENABLE_CONFIG=OFF \
     -DUNILINK_ENABLE_MEMORY_TRACKING=OFF \
-    -DBUILD_EXAMPLES=OFF \
-    -DBUILD_TESTING=OFF
+    -DUNILINK_BUILD_EXAMPLES=OFF \
+    -DUNILINK_BUILD_TESTS=OFF
 
 cmake --build build -j
 ```
@@ -672,4 +672,3 @@ void benchmark_connection() {
 - [Best Practices](best_practices.md)
 - [Architecture Overview](../architecture/system_overview.md)
 - [Benchmarking Tests](../../test/performance/)
-

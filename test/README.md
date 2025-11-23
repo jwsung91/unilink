@@ -8,7 +8,7 @@ From the project's root directory, you can build and run the tests using the fol
 
 ```bash
 # 1. Configure the project with tests enabled
-cmake -S . -B build -DBUILD_TESTING=ON
+cmake -S . -B build -DUNILINK_BUILD_TESTS=ON
 
 # 2. Build the targets
 cmake --build build -j

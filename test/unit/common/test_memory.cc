@@ -93,8 +93,7 @@ class MemoryIntegratedTest : public ::testing::Test {
   // Helper function to generate random data
   std::vector<uint8_t> generate_random_data(size_t size) {
     std::vector<uint8_t> data(size);
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    static thread_local std::mt19937 gen(12345);
     std::uniform_int_distribution<> dis(0, 255);
 
     for (auto& byte : data) {
@@ -403,8 +402,7 @@ TEST_F(MemoryIntegratedTest, StressMemoryLeakDetection) {
   std::cout << "Total cycles: " << num_cycles << std::endl;
   std::cout << "Buffers per cycle: " << buffers_per_cycle << std::endl;
 
-  std::random_device rd;
-  std::mt19937 gen(rd());
+  static thread_local std::mt19937 gen(98765);
   std::uniform_int_distribution<> size_dis(min_buffer_size, max_buffer_size);
 
   // Perform stress allocation/deallocation cycles with safer approach

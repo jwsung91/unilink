@@ -1,5 +1,9 @@
 name: Security
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, develop ]
@@ -32,8 +36,9 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_STANDARD=17 \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_EXAMPLES=ON \
-          -DBUILD_TESTING=OFF
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=OFF
         cmake --build build-security -j $(nproc)
 
     - name: Run Trivy vulnerability scanner
@@ -101,8 +106,9 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_CXX_STANDARD=17 \
           -DUNILINK_ENABLE_CONFIG=ON \
-          -DBUILD_EXAMPLES=ON \
-          -DBUILD_TESTING=OFF
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=OFF
         cmake --build build-deps -j $(nproc)
 
     - name: Check for known vulnerabilities in dependencies

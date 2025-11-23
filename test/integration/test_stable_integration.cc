@@ -69,7 +69,7 @@ class StableIntegrationTest : public ::testing::Test {
 
     // Wait for cleanup to complete
     // Increased wait time to ensure complete cleanup and avoid port conflicts
-    TestUtils::waitFor(1000);
+    TestUtils::waitFor(200);
   }
 
   // Test objects
@@ -159,7 +159,7 @@ TEST_F(StableIntegrationTest, StableClientCreation) {
   client_->start();
 
   // Wait for connection attempt to complete
-  TestUtils::waitFor(1000);
+  TestUtils::waitFor(300);
 
   // Verify client was created successfully
   EXPECT_NE(client_, nullptr);
@@ -213,7 +213,7 @@ TEST_F(StableIntegrationTest, StableServerClientCommunication) {
   ASSERT_NE(client_, nullptr);
 
   // Wait for connection with retry logic
-  bool connected = TestUtils::waitForConditionWithRetry([this]() { return connection_established_.load(); }, 2000, 3);
+  bool connected = TestUtils::waitForConditionWithRetry([this]() { return connection_established_.load(); }, 1000, 2);
 
   if (connected) {
     // Test data transmission

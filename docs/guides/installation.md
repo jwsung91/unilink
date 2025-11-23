@@ -56,9 +56,9 @@ Download pre-built packages from GitHub releases.
 
 ```bash
 # Download latest release
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.0-linux-x64.tar.gz
-tar -xzf unilink-0.1.0-linux-x64.tar.gz
-cd unilink-0.1.0-linux-x64
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.3-linux-x64.tar.gz
+tar -xzf unilink-0.1.3-linux-x64.tar.gz
+cd unilink-0.1.3-linux-x64
 ```
 
 #### Step 2: Install
@@ -145,14 +145,15 @@ When building from source, you can configure various options:
 | Option | Default | Description |
 |--------|---------|-------------|
 | `UNILINK_BUILD_SHARED` | `ON` | Build shared library |
+| `UNILINK_BUILD_EXAMPLES` | `ON` | Build example programs |
+| `UNILINK_BUILD_TESTS` | `ON` | Master test toggle |
+| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF` | Build performance tests |
+| `UNILINK_BUILD_DOCS` | `ON` | Build documentation |
 | `UNILINK_ENABLE_INSTALL` | `ON` | Enable install targets |
 | `UNILINK_ENABLE_PKGCONFIG` | `ON` | Install pkg-config file |
 | `UNILINK_ENABLE_EXPORT_HEADER` | `ON` | Generate export header |
 | `UNILINK_ENABLE_WARNINGS` | `ON` | Enable compiler warnings |
 | `UNILINK_ENABLE_SANITIZERS` | `OFF` | Enable sanitizers in Debug |
-| `BUILD_EXAMPLES` | `ON` | Build example programs |
-| `BUILD_TESTING` | `ON` | Build test suite |
-| `BUILD_DOCUMENTATION` | `ON` | Build documentation |
 
 Example with custom options:
 
@@ -161,7 +162,8 @@ cmake -S . -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DUNILINK_BUILD_SHARED=OFF \
     -DUNILINK_ENABLE_SANITIZERS=ON \
-    -DBUILD_EXAMPLES=OFF
+    -DUNILINK_BUILD_EXAMPLES=OFF \
+    -DUNILINK_BUILD_TESTS=OFF
 ```
 
 ## Verification

@@ -27,6 +27,7 @@ foreach(test_file test_architecture.cc test_error_recovery.cc)
       GTest::gtest
       GTest::gmock
   )
+  unilink_set_test_warning_options(run_e2e_${test_name})
   target_include_directories(run_e2e_${test_name}
     PRIVATE
       ${CMAKE_SOURCE_DIR}/test/utils
@@ -36,6 +37,7 @@ foreach(test_file test_architecture.cc test_error_recovery.cc)
     PROPERTIES
       LABELS "e2e;scenario;slow"
       TIMEOUT 90
+      RESOURCE_LOCK "tcp_port_allocation"
   )
   unilink_copy_runtime_dependency(run_e2e_${test_name})
 endforeach()
@@ -49,6 +51,7 @@ target_link_libraries(run_e2e_test_stress
     GTest::gtest_main
     GTest::gmock
 )
+unilink_set_test_warning_options(run_e2e_test_stress)
 target_include_directories(run_e2e_test_stress
   PRIVATE
     ${CMAKE_SOURCE_DIR}/test/utils
@@ -58,5 +61,6 @@ gtest_discover_tests(run_e2e_test_stress
   PROPERTIES
     LABELS "e2e;stress;slow"
     TIMEOUT 120
+    RESOURCE_LOCK "tcp_port_allocation"
 )
 unilink_copy_runtime_dependency(run_e2e_test_stress)

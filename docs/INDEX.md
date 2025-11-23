@@ -161,11 +161,12 @@ For contributors and advanced users:
 | Option | Default | Description |
 |--------|---------|-------------|
 | `CMAKE_BUILD_TYPE` | `Release` | Build type (Release/Debug) |
+| `UNILINK_BUILD_EXAMPLES` | `ON` | Build example applications |
+| `UNILINK_BUILD_TESTS` | `ON` | Master test toggle |
+| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF` | Build performance/benchmark tests |
 | `UNILINK_ENABLE_CONFIG` | `ON` | Enable configuration API |
 | `UNILINK_ENABLE_MEMORY_TRACKING` | `ON` | Enable memory tracking |
 | `UNILINK_ENABLE_SANITIZERS` | `OFF` | Enable AddressSanitizer |
-| `BUILD_EXAMPLES` | `ON` | Build example applications |
-| `BUILD_TESTING` | `ON` | Build unit tests |
 
 ---
 
@@ -301,4 +302,3 @@ Found an issue or want to improve documentation?
 **Happy Coding with Unilink!** 🚀
 
 [Back to Main README](../README.md)
-

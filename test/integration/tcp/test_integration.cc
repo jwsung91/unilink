@@ -62,6 +62,7 @@ TEST_F(IntegrationTest, AutoInitialization) {
   // Test auto-initialization functionality
   // Note: IoContext might already be running from previous tests
   bool was_running = builder::AutoInitializer::is_io_context_running();
+  (void)was_running;
 
   builder::AutoInitializer::ensure_io_context_running();
   TestUtils::waitFor(100);

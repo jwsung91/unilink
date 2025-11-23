@@ -364,7 +364,7 @@ Run performance benchmarks:
 
 ```bash
 # Build with performance tests
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUNILINK_BUILD_TESTS=ON
 cmake --build build -j
 
 # Run performance tests
@@ -489,4 +489,3 @@ cmake --build build -j
 - [Runtime Behavior](../architecture/runtime_behavior.md) - Threading model and policies
 - [Best Practices](best_practices.md) - Recommended usage patterns
 - [Testing Guide](testing.md) - Performance benchmarks
-

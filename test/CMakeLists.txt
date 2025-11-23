@@ -57,10 +57,26 @@ function(unilink_copy_runtime_dependency target)
   endif()
 endfunction()
 
+# Helper to silence benign warnings in test targets (keeps library build clean)
+function(unilink_set_test_warning_options target)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+    target_compile_options(${target} PRIVATE
+      -Wno-unused-parameter
+      -Wno-sign-conversion
+      -Wno-conversion)
+  elseif(MSVC)
+    target_compile_options(${target} PRIVATE
+      /wd4100 # unused parameter
+      /wd4244 # conversion
+      /wd4267 # size_t to narrower
+    )
+  endif()
+endfunction()
+
 # Include GoogleTest for test discovery
 include(GoogleTest)
 
-# Add subdirectories with organized tests
+# Add organized tests (enabled when UNILINK_BUILD_TESTS is ON)
 message(STATUS "Building Unit Tests")
 add_subdirectory(unit)
 
@@ -84,7 +100,6 @@ endif()
 
 # The following tests are kept temporarily for backward compatibility.
 # They will be removed once all tests are verified in the new structure.
-
 # Check if there are any remaining test files in the root test/ directory
 file(GLOB REMAINING_TESTS "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cc")
 if(REMAINING_TESTS)

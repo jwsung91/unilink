@@ -19,13 +19,16 @@
 #include <atomic>
 #include <chrono>
 #include <memory>
+#include <string>
 #include <thread>
+#include <vector>
 
 #include "unilink/common/exceptions.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 class BuilderTest : public ::testing::Test {
  protected:
@@ -478,6 +481,109 @@ TEST_F(BuilderTest, MethodChainingWithIndependentContext) {
                     .build();
 
   EXPECT_NE(client, nullptr);
+}
+
+// ============================================================================
+// Additional coverage scenarios from coverage suite (merged to avoid duplicates)
+// ============================================================================
+
+class BuilderCoverageTest : public ::testing::Test {
+ protected:
+  void TearDown() override {
+    if (server_) server_->stop();
+    if (client_) client_->stop();
+    std::this_thread::sleep_for(100ms);
+  }
+
+  static uint16_t next_port() {
+    static std::atomic<uint16_t> port_counter{10000};
+    return port_counter.fetch_add(1);
+  }
+
+  std::shared_ptr<wrapper::TcpServer> server_;
+  std::shared_ptr<wrapper::TcpClient> client_;
+  std::atomic<int> multi_connect_count_{0};
+  std::atomic<int> multi_disconnect_count_{0};
+  std::vector<std::string> multi_data_received_;
+};
+
+TEST_F(BuilderCoverageTest, TcpServerMultiClientCallbacks) {
+  uint16_t port = next_port();
+  server_ = unilink::tcp_server(port)
+                .multi_client(3)
+                .on_multi_connect([this](size_t client_id, const std::string& ip) {
+                  multi_connect_count_++;
+                  EXPECT_GT(client_id, 0u);
+                  EXPECT_FALSE(ip.empty());
+                })
+                .on_multi_data([this](size_t client_id, const std::string& data) {
+                  multi_data_received_.push_back(data);
+                  EXPECT_GT(client_id, 0u);
+                  EXPECT_FALSE(data.empty());
+                })
+                .on_multi_disconnect([this](size_t client_id) {
+                  multi_disconnect_count_++;
+                  EXPECT_GT(client_id, 0u);
+                })
+                .build();
+  EXPECT_NE(server_, nullptr);
+}
+
+TEST_F(BuilderCoverageTest, TcpServerPortRetry) {
+  server_ = unilink::tcp_server(next_port()).unlimited_clients().enable_port_retry(true, 5, 500).build();
+  EXPECT_NE(server_, nullptr);
+}
+
+TEST_F(BuilderCoverageTest, TcpServerMaxClientsVariants) {
+  auto server1 = unilink::tcp_server(next_port()).max_clients(2).build();
+  auto server2 = unilink::tcp_server(next_port()).max_clients(5).build();
+  auto server3 = unilink::tcp_server(next_port()).max_clients(100).build();
+  EXPECT_NE(server1, nullptr);
+  EXPECT_NE(server2, nullptr);
+  EXPECT_NE(server3, nullptr);
+  server1->stop();
+  server2->stop();
+  server3->stop();
+}
+
+TEST_F(BuilderCoverageTest, TcpServerMaxClientsInvalid) {
+  EXPECT_THROW(unilink::tcp_server(next_port()).max_clients(0).build(), std::invalid_argument);
+  EXPECT_THROW(unilink::tcp_server(next_port()).max_clients(1).build(), std::invalid_argument);
+}
+
+TEST_F(BuilderCoverageTest, TcpServerInvalidPortThrows) {
+  EXPECT_ANY_THROW(unilink::tcp_server(0).unlimited_clients().build());
+}
+
+TEST_F(BuilderCoverageTest, TcpClientInvalidHostOrPortThrows) {
+  EXPECT_ANY_THROW(unilink::tcp_client("", 8080).build());
+  EXPECT_ANY_THROW(unilink::tcp_client("127.0.0.1", 0).build());
+}
+
+TEST_F(BuilderCoverageTest, TcpClientAutoManageAndIndependentContext) {
+  auto client = unilink::tcp_client("127.0.0.1", next_port())
+                    .auto_manage(false)
+                    .use_independent_context(true)
+                    .on_connect([]() {})
+                    .on_data([](const std::string&) {})
+                    .build();
+  EXPECT_NE(client, nullptr);
+}
+
+TEST_F(BuilderCoverageTest, TcpServerOverloadedCallbacks) {
+  server_ = unilink::tcp_server(next_port())
+                .unlimited_clients()
+                .on_data([](size_t client_id, const std::string& data) {
+                  EXPECT_GT(client_id, 0u);
+                  EXPECT_FALSE(data.empty());
+                })
+                .on_connect([](size_t client_id, const std::string& ip) {
+                  EXPECT_GT(client_id, 0u);
+                  EXPECT_FALSE(ip.empty());
+                })
+                .on_disconnect([](size_t client_id) { EXPECT_GT(client_id, 0u); })
+                .build();
+  EXPECT_NE(server_, nullptr);
 }
 
 // ============================================================================

@@ -75,8 +75,7 @@ class StressTest : public BaseTest {
   // Helper function to generate random data
   std::vector<uint8_t> generate_random_data(size_t size) {
     std::vector<uint8_t> data(size);
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    static thread_local std::mt19937 gen(24680);
     std::uniform_int_distribution<> dis(0, 255);
 
     for (auto& byte : data) {
@@ -464,9 +463,8 @@ TEST_F(StressTest, LongRunningStability) {
       } else if (total_operations.load() % 3 == 1) {
         // Statistics query
         auto stats = pool.get_stats();
-        if (stats.total_allocations >= 0) {
-          successful_operations++;
-        }
+        (void)stats;
+        successful_operations++;
       } else {
         // Hit rate query
         double hit_rate = pool.get_hit_rate();

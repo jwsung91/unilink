@@ -502,6 +502,10 @@ TEST_F(ConfigTest, ConfigIntrospection) {
   auto int_type = config_manager_->get_type("int_key");
   auto bool_type = config_manager_->get_type("bool_key");
   auto double_type = config_manager_->get_type("double_key");
+  (void)string_type;
+  (void)int_type;
+  (void)bool_type;
+  (void)double_type;
 
   std::cout << "Configuration introspection completed successfully" << std::endl;
   std::cout << "Keys found: " << keys.size() << std::endl;
@@ -578,6 +582,48 @@ TEST_F(ConfigTest, ConfigPerformanceLargeDataset) {
 
   // Performance should be reasonable (less than 100μs per item)
   EXPECT_LT(total_duration.count() / num_items, 100);
+}
+
+// ============================================================================
+// Additional negative/persistence coverage
+// ============================================================================
+
+TEST_F(ConfigTest, SetWithWrongTypeFails) {
+  ConfigItem item("wrong.type", std::any(1), ConfigType::Integer, false, "int");
+  config_manager_->register_item(item);
+  auto result = config_manager_->set("wrong.type", std::string("not an int"));
+  EXPECT_FALSE(result.is_valid);
+}
+
+TEST_F(ConfigTest, ValidateFailsOnMissingRequired) {
+  ConfigItem required_item("required.key", std::string(""), ConfigType::String, true, "required");
+  config_manager_->register_item(required_item);
+  config_manager_->register_validator("required.key", [](const std::any& value) {
+    const auto* str = std::any_cast<std::string>(&value);
+    if (str && str->empty()) {
+      return ValidationResult::error("required.key is missing");
+    }
+    return ValidationResult::success();
+  });
+  auto validation = config_manager_->validate();
+  EXPECT_FALSE(validation.is_valid);
+}
+
+TEST_F(ConfigTest, SaveAndLoadRoundTrip) {
+  ConfigItem item("persist.key", std::string("value"), ConfigType::String, false, "persist");
+  config_manager_->register_item(item);
+  config_manager_->set("persist.key", std::string("hello"));
+
+  // Save to file
+  EXPECT_TRUE(config_manager_->save_to_file(test_file_path_.string()));
+  EXPECT_TRUE(std::filesystem::exists(test_file_path_));
+
+  // Load into new manager
+  auto loaded_manager = std::make_shared<ConfigManager>();
+  EXPECT_TRUE(loaded_manager->load_from_file(test_file_path_.string()));
+
+  auto loaded_value = loaded_manager->get("persist.key");
+  EXPECT_EQ(std::any_cast<std::string>(loaded_value), "hello");
 }
 
 int main(int argc, char** argv) {

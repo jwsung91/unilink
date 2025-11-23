@@ -56,30 +56,27 @@ class TestUtils {
    * @brief Get a unique test port number
    * @return uint16_t Unique port number
    */
-  static uint16_t getTestPort() {
-    // Use very wide port spacing (100) to completely avoid TIME_WAIT conflicts
-    // Each test gets ports with 100-port gaps (30000, 30100, 30200, ...)
-    // This ensures that even in heavy parallel execution, ports don't conflict
-    static std::atomic<uint16_t> port_counter{30000};  // Start from higher port range
-    uint16_t port = port_counter.fetch_add(100);       // Skip 100 ports for each test
-
-    // Ensure port is in valid range and avoid system ports
-    if (port < 30000 || port > 60000) {
-      port_counter.store(30000);
-      port = 30000;
-    }
-
-    return port;
-  }
+  static uint16_t getTestPort() { return getAvailableTestPort(); }
 
   /**
    * @brief Get a guaranteed available test port
    * @return uint16_t Available port number
    */
   static uint16_t getAvailableTestPort() {
-    // Use atomic counter with very wide spacing (100 ports) for parallel execution
-    // This completely prevents TIME_WAIT state conflicts and TOCTOU race conditions
-    return getTestPort();  // No delay or checking needed with 100-port spacing
+    static std::atomic<uint16_t> port_counter{30000};  // Start from higher port range
+
+    for (int attempt = 0; attempt < 1024; ++attempt) {
+      uint16_t candidate = port_counter.fetch_add(1);
+      // Wrap if we go too high
+      if (candidate > 60000) {
+        port_counter.store(30000);
+        candidate = port_counter.fetch_add(1);
+      }
+      if (isPortAvailable(candidate)) {
+        return candidate;
+      }
+    }
+    throw std::runtime_error("Unable to find available test port after many attempts");
   }
 
   /**

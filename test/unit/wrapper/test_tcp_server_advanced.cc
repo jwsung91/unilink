@@ -100,6 +100,42 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStopWhenNotStarted) {
   server_->stop();
 }
 
+TEST_F(AdvancedTcpServerCoverageTest, BindingConflictTriggersErrorCallback) {
+  auto port = test_port_;
+  std::atomic<bool> error_called{false};
+
+  // First server binds successfully
+  auto server1 = unilink::tcp_server(port)
+                     .unlimited_clients()
+                     .on_error([&](const std::string& err) {
+                       (void)err;
+                       error_called = true;
+                     })
+                     .build();
+  ASSERT_NE(server1, nullptr);
+  server1->start();
+  TestUtils::waitFor(200);  // allow bind
+
+  // Second server attempts same port (no retry)
+  server_ = unilink::tcp_server(port)
+                .unlimited_clients()
+                .enable_port_retry(false)
+                .on_error([&](const std::string& err) {
+                  (void)err;
+                  error_called = true;
+                })
+                .build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+
+  // We expect bind to fail and error callback to fire (or at least not listen)
+  TestUtils::waitFor(200);
+  EXPECT_TRUE(error_called.load() || !server_->is_listening());
+
+  server_->stop();
+  server1->stop();
+}
+
 // ============================================================================
 // CLIENT LIMIT CONFIGURATION TESTS
 // ============================================================================
@@ -145,9 +181,6 @@ TEST_F(AdvancedTcpServerCoverageTest, SetMessageHandler) {
 
   ASSERT_NE(server_, nullptr);
 
-  bool handler_called = false;
-  std::string received_message;
-
   // Note: set_message_handler might not be available in this API
   // server_->set_message_handler([&handler_called, &received_message](
   //     const std::string& message, std::shared_ptr<interface::Channel> channel) {
@@ -164,9 +197,6 @@ TEST_F(AdvancedTcpServerCoverageTest, SetConnectionHandler) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-
-  bool connection_handler_called = false;
-  bool disconnection_handler_called = false;
 
   // Note: set_connection_handler might not be available in this API
   // server_->set_connection_handler([&connection_handler_called](

@@ -26,10 +26,12 @@
 #include <thread>
 #include <vector>
 
+#include "test_utils.hpp"
 #include "unilink/common/platform.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using unilink::test::TestUtils;
 using namespace std::chrono_literals;
 
 class ClientLimitIntegrationTest : public ::testing::Test {
@@ -48,27 +50,7 @@ class ClientLimitIntegrationTest : public ::testing::Test {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Wait longer for cleanup
   }
 
-  uint16_t getTestPort() {
-    // Use a combination of time-based and random offset to ensure unique ports
-    auto now = std::chrono::steady_clock::now();
-    auto time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-
-    // Base port + time offset + random component
-    uint16_t base_port = 50000;                                           // Use a smaller base port
-    uint16_t time_offset = static_cast<uint16_t>((time_ms % 1000) * 10);  // 0-9990 range
-    uint16_t random_offset = static_cast<uint16_t>(std::rand() % 100);    // 0-99 range
-
-    uint32_t port_calc = base_port + time_offset + random_offset;
-
-    // Ensure port is within valid range
-    if (port_calc > 65535) {
-      port_calc = 50000 + (port_calc % 1000);
-    }
-
-    uint16_t port = static_cast<uint16_t>(port_calc);
-
-    return port;
-  }
+  uint16_t getTestPort() { return TestUtils::getAvailableTestPort(); }
 
   // Helper function to simulate client connections
   std::vector<std::future<bool>> simulateClients(const std::string& host, uint16_t port, int count) {
@@ -121,7 +103,7 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
 
   // Start server
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(5000));  // Wait longer for port retry
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait for port retry
 
   // Check if server is actually listening
   if (!server_->is_listening()) {
@@ -174,7 +156,7 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
 
   // Start server
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(5000));  // Wait longer for port retry
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait for port retry
 
   // Check if server is actually listening
   if (!server_->is_listening()) {
@@ -219,7 +201,7 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
 
   // Start server
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(5000));  // Wait longer for port retry
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait for port retry
 
   // Check if server is actually listening
   if (!server_->is_listening()) {
@@ -264,7 +246,7 @@ TEST_F(ClientLimitIntegrationTest, DynamicClientLimitChangeTest) {
 
   // Start server
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(5000));  // Wait longer for port retry
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait for port retry
 
   std::cout << "Server started with limit 2, testing connections..." << std::endl;
 

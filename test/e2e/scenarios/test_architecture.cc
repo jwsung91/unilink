@@ -21,12 +21,14 @@
 #include <memory>
 #include <thread>
 
+#include "test_utils.hpp"
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
 using namespace std::chrono_literals;
+using unilink::test::TestUtils;
 
 // ============================================================================
 // IMPROVED ARCHITECTURE TESTS
@@ -68,11 +70,6 @@ class ImprovedArchitectureTest : public ::testing::Test {
     }
   }
 
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{static_cast<uint16_t>(60000)};
-    return port_counter.fetch_add(1);
-  }
-
  protected:
   std::shared_ptr<wrapper::TcpServer> server_;
   std::shared_ptr<wrapper::TcpClient> client_;
@@ -84,7 +81,7 @@ class ImprovedArchitectureTest : public ::testing::Test {
 TEST_F(ImprovedArchitectureTest, CurrentResourceSharingIssue) {
   std::cout << "Testing current resource sharing issue..." << std::endl;
 
-  uint16_t test_port = getTestPort();
+  uint16_t test_port = TestUtils::getAvailableTestPort();
 
   // Create server
   server_ = unilink::tcp_server(test_port).unlimited_clients().build();
@@ -128,7 +125,7 @@ TEST_F(ImprovedArchitectureTest, ProposedIndependentResourceManagement) {
 TEST_F(ImprovedArchitectureTest, UpperAPIAutoInitialization) {
   std::cout << "Testing upper API auto-initialization..." << std::endl;
 
-  uint16_t test_port = getTestPort();
+  uint16_t test_port = TestUtils::getAvailableTestPort();
 
   // Builder auto-initializes even if IoContextManager is not running
   if (common::IoContextManager::instance().is_running()) {
