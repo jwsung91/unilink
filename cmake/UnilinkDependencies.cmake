@@ -84,20 +84,26 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   find_package(Boost 1.74 MODULE QUIET COMPONENTS system)
   if(NOT Boost_FOUND)
     # Manual fallback in case FindBoost fails to locate Homebrew Boost
+    # Also search Homebrew Cellar paths explicitly
+    file(GLOB _BREW_BOOST_CANDIDATE_DIRS
+      "/opt/homebrew/Cellar/boost/*"
+      "/usr/local/Cellar/boost/*")
     find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
       PATHS
         /opt/homebrew/opt/boost
         /opt/homebrew
         /usr/local/opt/boost
         /usr/local
+        ${_BREW_BOOST_CANDIDATE_DIRS}
       PATH_SUFFIXES include)
     find_library(BOOST_FALLBACK_SYSTEM_LIB
-      NAMES boost_system boost_system-mt
+      NAMES boost_system boost_system-mt boost_system-mt-x64 boost_system-1_89 boost_system-mt-1_89
       PATHS
         /opt/homebrew/opt/boost
         /opt/homebrew
         /usr/local/opt/boost
         /usr/local
+        ${_BREW_BOOST_CANDIDATE_DIRS}
       PATH_SUFFIXES lib lib64)
     if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
       if(NOT TARGET Boost::system)
