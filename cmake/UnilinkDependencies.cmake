@@ -81,44 +81,41 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     /usr/local/opt/boost
     /usr/local)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
-  find_package(Boost 1.74 MODULE QUIET COMPONENTS system)
-  if(NOT Boost_FOUND)
-    # Manual fallback in case FindBoost fails to locate Homebrew Boost
-    # Also search Homebrew Cellar paths explicitly
-    file(GLOB _BREW_BOOST_CANDIDATE_DIRS
-      "/opt/homebrew/Cellar/boost/*"
-      "/usr/local/Cellar/boost/*")
-    find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
-      PATHS
-        /opt/homebrew/opt/boost
-        /opt/homebrew
-        /usr/local/opt/boost
-        /usr/local
-        ${_BREW_BOOST_CANDIDATE_DIRS}
-      PATH_SUFFIXES include)
-    find_library(BOOST_FALLBACK_SYSTEM_LIB
-      NAMES boost_system boost_system-mt boost_system-mt-x64 boost_system-1_89 boost_system-mt-1_89
-      PATHS
-        /opt/homebrew/opt/boost
-        /opt/homebrew
-        /usr/local/opt/boost
-        /usr/local
-        ${_BREW_BOOST_CANDIDATE_DIRS}
-      PATH_SUFFIXES lib lib64)
-    if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
-      if(NOT TARGET Boost::system)
-        add_library(Boost::system UNKNOWN IMPORTED)
-        set_target_properties(Boost::system PROPERTIES
-          IMPORTED_LOCATION "${BOOST_FALLBACK_SYSTEM_LIB}"
-          INTERFACE_INCLUDE_DIRECTORIES "${BOOST_FALLBACK_INCLUDE_DIR}")
-      endif()
-      set(Boost_FOUND TRUE)
-      message(STATUS "Using manual Boost::system fallback (Homebrew) at ${BOOST_FALLBACK_SYSTEM_LIB}")
-    else()
-      message(FATAL_ERROR "Boost::system not found via FindBoost or manual fallback on macOS")
+  # Try manual detection first to avoid brittle FindBoost with Homebrew 1.89
+  file(GLOB _BREW_BOOST_CANDIDATE_DIRS
+    "/opt/homebrew/Cellar/boost/*"
+    "/usr/local/Cellar/boost/*")
+  set(_BOOST_INCLUDE_HINTS
+    /opt/homebrew/opt/boost
+    /opt/homebrew
+    /usr/local/opt/boost
+    /usr/local
+    ${_BREW_BOOST_CANDIDATE_DIRS})
+  find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
+    PATHS ${_BOOST_INCLUDE_HINTS}
+    PATH_SUFFIXES include)
+  find_library(BOOST_FALLBACK_SYSTEM_LIB
+    NAMES boost_system boost_system-mt boost_system-mt-x64 boost_system-1_89 boost_system-mt-1_89
+    PATHS ${_BOOST_INCLUDE_HINTS}
+    PATH_SUFFIXES lib lib64)
+
+  if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
+    if(NOT TARGET Boost::system)
+      add_library(Boost::system UNKNOWN IMPORTED)
+      set_target_properties(Boost::system PROPERTIES
+        IMPORTED_LOCATION "${BOOST_FALLBACK_SYSTEM_LIB}"
+        INTERFACE_INCLUDE_DIRECTORIES "${BOOST_FALLBACK_INCLUDE_DIR}")
     endif()
+    set(Boost_FOUND TRUE)
+    message(STATUS "Using manual Boost::system fallback (Homebrew) at ${BOOST_FALLBACK_SYSTEM_LIB}")
   else()
-    message(STATUS "Using Boost 1.74+ for macOS compatibility")
+    # Last resort: try FindBoost module quietly; if it still fails, surface an error
+    find_package(Boost 1.74 MODULE QUIET COMPONENTS system)
+    if(Boost_FOUND)
+      message(STATUS "Using Boost 1.74+ for macOS compatibility (FindBoost module)")
+    else()
+      message(FATAL_ERROR "Boost::system not found via manual fallback or FindBoost on macOS")
+    endif()
   endif()
 else()
   # Other platforms: use a recent Boost version
