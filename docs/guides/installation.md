@@ -56,9 +56,9 @@ Download pre-built packages from GitHub releases.
 
 ```bash
 # Download latest release
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.0-linux-x64.tar.gz
-tar -xzf unilink-0.1.0-linux-x64.tar.gz
-cd unilink-0.1.0-linux-x64
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.3-linux-x64.tar.gz
+tar -xzf unilink-0.1.3-linux-x64.tar.gz
+cd unilink-0.1.3-linux-x64
 ```
 
 #### Step 2: Install

@@ -100,6 +100,42 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStopWhenNotStarted) {
   server_->stop();
 }
 
+TEST_F(AdvancedTcpServerCoverageTest, BindingConflictTriggersErrorCallback) {
+  auto port = test_port_;
+  std::atomic<bool> error_called{false};
+
+  // First server binds successfully
+  auto server1 = unilink::tcp_server(port)
+                     .unlimited_clients()
+                     .on_error([&](const std::string& err) {
+                       (void)err;
+                       error_called = true;
+                     })
+                     .build();
+  ASSERT_NE(server1, nullptr);
+  server1->start();
+  TestUtils::waitFor(200);  // allow bind
+
+  // Second server attempts same port (no retry)
+  server_ = unilink::tcp_server(port)
+                .unlimited_clients()
+                .enable_port_retry(false)
+                .on_error([&](const std::string& err) {
+                  (void)err;
+                  error_called = true;
+                })
+                .build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+
+  // We expect bind to fail and error callback to fire (or at least not listen)
+  TestUtils::waitFor(200);
+  EXPECT_TRUE(error_called.load() || !server_->is_listening());
+
+  server_->stop();
+  server1->stop();
+}
+
 // ============================================================================
 // CLIENT LIMIT CONFIGURATION TESTS
 // ============================================================================

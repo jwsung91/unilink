@@ -127,4 +127,25 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
   unilink_copy_runtime_dependency(run_unit_${test_name})
 endforeach()
 
+# Transport tests (fast, unit-level without real network dependencies)
+add_executable(run_unit_transport_tcp_client transport/transport_tcp_client.cc)
+target_link_libraries(run_unit_transport_tcp_client
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_transport_tcp_client)
+target_include_directories(run_unit_transport_tcp_client
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+gtest_discover_tests(run_unit_transport_tcp_client
+  PROPERTIES
+    LABELS "unit;transport;fast"
+    TIMEOUT 30
+)
+
 # Transport layer tests removed - they require actual network/serial devices

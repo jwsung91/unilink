@@ -92,7 +92,7 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 ```bash
 # Download and extract release package
 wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.0-linux-x64.tar.gz
-tar -xzf unilink-0.1.0-linux-x64.tar.gz
+tar -xzf unilink-0.1.3-linux-x64.tar.gz
 # Follow installation instructions in the package
 ```
 
