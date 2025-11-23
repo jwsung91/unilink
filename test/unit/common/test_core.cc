@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -198,8 +199,8 @@ class LogRotationTest : public ::testing::Test {
     // Generate unique test file prefix to avoid conflicts in parallel execution
     auto now = std::chrono::high_resolution_clock::now();
     auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
-    std::random_device rd;
-    auto unique_dir = "log_rotation_" + std::to_string(timestamp) + "_" + std::to_string(rd());
+    static std::atomic<uint64_t> seq{0};
+    auto unique_dir = "log_rotation_" + std::to_string(timestamp) + "_" + std::to_string(seq++);
     test_dir_ = TestUtils::getTempDirectory() / unique_dir;
     std::filesystem::create_directories(test_dir_);
 

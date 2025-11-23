@@ -551,6 +551,10 @@ TEST_F(BuilderCoverageTest, TcpServerMaxClientsInvalid) {
   EXPECT_THROW(unilink::tcp_server(next_port()).max_clients(1).build(), std::invalid_argument);
 }
 
+TEST_F(BuilderCoverageTest, TcpServerInvalidPortThrows) {
+  EXPECT_ANY_THROW(unilink::tcp_server(0).unlimited_clients().build());
+}
+
 TEST_F(BuilderCoverageTest, TcpServerOverloadedCallbacks) {
   server_ = unilink::tcp_server(next_port())
                 .unlimited_clients()

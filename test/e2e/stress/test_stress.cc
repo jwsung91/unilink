@@ -75,8 +75,7 @@ class StressTest : public BaseTest {
   // Helper function to generate random data
   std::vector<uint8_t> generate_random_data(size_t size) {
     std::vector<uint8_t> data(size);
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    static thread_local std::mt19937 gen(24680);
     std::uniform_int_distribution<> dis(0, 255);
 
     for (auto& byte : data) {

@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -43,9 +44,9 @@ class AdvancedLoggerCoverageTest : public ::testing::Test {
     std::string test_name = test_info->name();
 
     auto now = std::chrono::system_clock::now().time_since_epoch().count();
-    std::random_device rd;
+    static std::atomic<uint64_t> seq{0};
     std::string file_name =
-        "unilink_advanced_logger_test_" + test_name + "_" + std::to_string(now) + "_" + std::to_string(rd()) + ".log";
+        "unilink_advanced_logger_test_" + test_name + "_" + std::to_string(now) + "_" + std::to_string(seq++); 
     test_log_file_ = TestUtils::makeTempFilePath(file_name);
     TestUtils::removeFileIfExists(test_log_file_);
   }
