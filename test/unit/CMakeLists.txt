@@ -148,4 +148,25 @@ gtest_discover_tests(run_unit_transport_tcp_client
     TIMEOUT 30
 )
 
+# Serial lifecycle tests (fast, no real device)
+add_executable(run_unit_transport_serial transport/transport_serial.cc)
+target_link_libraries(run_unit_transport_serial
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_transport_serial)
+target_include_directories(run_unit_transport_serial
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+gtest_discover_tests(run_unit_transport_serial
+  PROPERTIES
+    LABELS "unit;transport;serial"
+    TIMEOUT 30
+)
+
 # Transport layer tests removed - they require actual network/serial devices
