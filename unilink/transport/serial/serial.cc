@@ -63,12 +63,14 @@ Serial::Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInt
 Serial::~Serial() {
   // stop() might have been called already. Ensure we don't double-stop,
   // but do clean up resources if we own them.
-  if (!state_.is_state(common::LinkState::Closed)) stop();
+  if (started_ && !state_.is_state(common::LinkState::Closed)) stop();
 
   // No need to clean up io_context as it's shared and managed by IoContextManager
 }
 
 void Serial::start() {
+  if (started_) return;
+  stopping_.store(false);
   UNILINK_LOG_INFO("serial", "start", "Starting device: " + cfg_.device);
   work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_.get_executor());
   if (owns_ioc_) {
@@ -80,18 +82,27 @@ void Serial::start() {
     notify_state();
     open_and_configure();
   });
+  started_ = true;
 }
 
 void Serial::stop() {
+  if (!started_) {
+    state_.set_state(common::LinkState::Closed);
+    return;
+  }
+
+  stopping_.store(true);
   if (!state_.is_state(common::LinkState::Closed)) {
-    work_guard_->reset();  // Allow the io_context to run out of work.
+    if (work_guard_) work_guard_->reset();  // Allow the io_context to run out of work.
     net::post(ioc_, [this] {
       // Cancel all pending async operations to unblock the io_context
       retry_timer_.cancel();
       close_port();
       // Post stop() to ensure it's the last thing to run before the context
       // runs out of work.
-      ioc_.stop();
+      if (owns_ioc_) {
+        ioc_.stop();
+      }
     });
 
     // Wait for all async operations to complete
@@ -104,12 +115,14 @@ void Serial::stop() {
       ioc_.restart();
     }
 
+    opened_.store(false);
     state_.set_state(common::LinkState::Closed);
     notify_state();
   }
+  started_ = false;
 }
 
-bool Serial::is_connected() const { return opened_; }
+bool Serial::is_connected() const { return opened_.load(); }
 
 void Serial::async_write_copy(const uint8_t* data, size_t n) {
   // Use memory pool for better performance (only for reasonable sizes)
@@ -207,7 +220,7 @@ void Serial::open_and_configure() {
   UNILINK_LOG_INFO("serial", "connect", "Device opened: " + cfg_.device + " @ " + std::to_string(cfg_.baud_rate));
   start_read();
 
-  opened_ = true;
+  opened_.store(true);
   state_.set_state(common::LinkState::Connected);
   notify_state();
 }
@@ -267,6 +280,14 @@ void Serial::handle_error(const char* where, const boost::system::error_code& ec
     return;
   }
 
+  if (stopping_.load() || ec == boost::asio::error::operation_aborted) {
+    opened_.store(false);
+    close_port();
+    state_.set_state(common::LinkState::Closed);
+    notify_state();
+    return;
+  }
+
   // 구조화된 에러 처리
   bool retryable = cfg_.reopen_on_error;
   common::error_reporting::report_connection_error("serial", where, ec, retryable);
@@ -274,13 +295,13 @@ void Serial::handle_error(const char* where, const boost::system::error_code& ec
   UNILINK_LOG_ERROR("serial", where, "Error: " + ec.message() + " (code: " + std::to_string(ec.value()) + ")");
 
   if (cfg_.reopen_on_error) {
-    opened_ = false;
+    opened_.store(false);
     close_port();
     state_.set_state(common::LinkState::Connecting);
     notify_state();
     schedule_retry(where, ec);
   } else {
-    opened_ = false;
+    opened_.store(false);
     close_port();
     state_.set_state(common::LinkState::Error);
     notify_state();
@@ -291,10 +312,11 @@ void Serial::schedule_retry(const char* where, const boost::system::error_code& 
   UNILINK_LOG_INFO("serial", "retry",
                    "Scheduling retry after " + std::to_string(cfg_.retry_interval_ms / 1000.0) + "s at " + where +
                        " (" + ec.message() + ")");
+  if (stopping_.load()) return;
   auto self = shared_from_this();
   retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
   retry_timer_.async_wait([self](auto e) {
-    if (!e) self->open_and_configure();
+    if (!e && !self->stopping_.load()) self->open_and_configure();
   });
 }
 

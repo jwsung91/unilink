@@ -71,6 +71,14 @@ TcpServer::~TcpServer() {
 }
 
 void TcpServer::start() {
+  // Prevent duplicate start calls when already running or in-progress
+  auto current = state_.get_state();
+  if (current == common::LinkState::Listening || current == common::LinkState::Connected ||
+      current == common::LinkState::Connecting) {
+    UNILINK_LOG_DEBUG("tcp_server", "start", "Start called while already active, ignoring");
+    return;
+  }
+
   if (!acceptor_) {
     UNILINK_LOG_ERROR("tcp_server", "start", "Acceptor is null");
     common::error_reporting::report_system_error("tcp_server", "start", "Acceptor is null");

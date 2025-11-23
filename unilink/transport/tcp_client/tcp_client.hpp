@@ -17,6 +17,7 @@
 #pragma once
 
 #include <array>
+#include <atomic>
 #include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
@@ -70,18 +71,20 @@ class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient>
   void schedule_retry();
   void start_read();
   void do_write();
-  void handle_close();
+  void handle_close(const boost::system::error_code& ec = {});
   void close_socket();
   void notify_state();
 
  private:
-  std::unique_ptr<net::io_context> ioc_;
+  std::unique_ptr<net::io_context> owned_ioc_;
+  net::io_context* ioc_ = nullptr;
   std::thread ioc_thread_;
   tcp::resolver resolver_;
   tcp::socket socket_;
   TcpClientConfig cfg_;
   net::steady_timer retry_timer_;
   bool owns_ioc_ = true;
+  std::atomic<bool> stopping_{false};
 
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>>> tx_;
@@ -92,7 +95,7 @@ class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient>
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;
-  bool connected_ = false;
+  std::atomic<bool> connected_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
 };
 }  // namespace transport
