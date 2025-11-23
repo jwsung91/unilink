@@ -584,6 +584,41 @@ TEST_F(ConfigTest, ConfigPerformanceLargeDataset) {
   EXPECT_LT(total_duration.count() / num_items, 100);
 }
 
+// ============================================================================
+// Additional negative/persistence coverage
+// ============================================================================
+
+TEST_F(ConfigTest, SetWithWrongTypeFails) {
+  ConfigItem item{"wrong.type", ConfigType::Integer, 1, "int", false};
+  config_manager_->register_item(item);
+  auto result = config_manager_->set("wrong.type", std::string("not an int"));
+  EXPECT_FALSE(result.is_valid);
+}
+
+TEST_F(ConfigTest, ValidateFailsOnMissingRequired) {
+  ConfigItem required_item{"required.key", ConfigType::String, std::string(""), "required", true};
+  config_manager_->register_item(required_item);
+  auto validation = config_manager_->validate();
+  EXPECT_FALSE(validation.is_valid);
+}
+
+TEST_F(ConfigTest, SaveAndLoadRoundTrip) {
+  ConfigItem item{"persist.key", ConfigType::String, std::string("value"), "persist", false};
+  config_manager_->register_item(item);
+  config_manager_->set("persist.key", std::string("hello"));
+
+  // Save to file
+  config_manager_->save(test_file_path_.string());
+  EXPECT_TRUE(std::filesystem::exists(test_file_path_));
+
+  // Load into new manager
+  auto loaded_manager = std::make_shared<ConfigManager>();
+  loaded_manager->load(test_file_path_.string());
+
+  auto loaded_value = loaded_manager->get("persist.key");
+  EXPECT_EQ(std::any_cast<std::string>(loaded_value), "hello");
+}
+
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

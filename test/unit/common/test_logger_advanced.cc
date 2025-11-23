@@ -117,6 +117,17 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToConsoleCriticalLevel) {
   // Should not crash
 }
 
+TEST_F(AdvancedLoggerCoverageTest, LogLevelFiltersOutLowerMessages) {
+  Logger::instance().set_level(LogLevel::ERROR);
+  // These should be filtered
+  UNILINK_LOG_DEBUG("test", "operation", "debug");
+  UNILINK_LOG_INFO("test", "operation", "info");
+  // This should pass
+  UNILINK_LOG_ERROR("test", "operation", "error");
+  Logger::instance().flush();
+  SUCCEED();
+}
+
 // ============================================================================
 // WRITE TO FILE TESTS
 // ============================================================================

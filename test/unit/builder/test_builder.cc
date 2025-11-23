@@ -555,6 +555,21 @@ TEST_F(BuilderCoverageTest, TcpServerInvalidPortThrows) {
   EXPECT_ANY_THROW(unilink::tcp_server(0).unlimited_clients().build());
 }
 
+TEST_F(BuilderCoverageTest, TcpClientInvalidHostOrPortThrows) {
+  EXPECT_ANY_THROW(unilink::tcp_client("", 8080).build());
+  EXPECT_ANY_THROW(unilink::tcp_client("127.0.0.1", 0).build());
+}
+
+TEST_F(BuilderCoverageTest, TcpClientAutoManageAndIndependentContext) {
+  auto client = unilink::tcp_client("127.0.0.1", next_port())
+                    .auto_manage(false)
+                    .use_independent_context(true)
+                    .on_connect([]() {})
+                    .on_data([](const std::string&) {})
+                    .build();
+  EXPECT_NE(client, nullptr);
+}
+
 TEST_F(BuilderCoverageTest, TcpServerOverloadedCallbacks) {
   server_ = unilink::tcp_server(next_port())
                 .unlimited_clients()
