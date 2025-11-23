@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <boost/asio.hpp>
 #include <cstddef>
 #include <deque>
@@ -75,6 +76,8 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   void notify_state();
 
  private:
+  bool started_ = false;
+  std::atomic<bool> stopping_{false};
   net::io_context& ioc_;
   bool owns_ioc_;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
@@ -94,7 +97,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   OnState on_state_;
   OnBackpressure on_bp_;
 
-  bool opened_ = false;
+  std::atomic<bool> opened_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
 };
 }  // namespace transport
