@@ -28,8 +28,6 @@ namespace transport {
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-// Specific namespace aliases instead of using namespace
-using common::IoContextManager;
 using common::LinkState;
 using common::ThreadSafeLinkState;
 using config::TcpClientConfig;
@@ -37,7 +35,8 @@ using interface::Channel;
 using namespace common;  // For error_reporting namespace
 
 TcpClient::TcpClient(const TcpClientConfig& cfg)
-    : ioc_(std::make_unique<net::io_context>()),
+    : owned_ioc_(std::make_unique<net::io_context>()),
+      ioc_(owned_ioc_.get()),
       resolver_(*ioc_),
       socket_(*ioc_),
       cfg_(cfg),
@@ -50,7 +49,8 @@ TcpClient::TcpClient(const TcpClientConfig& cfg)
 }
 
 TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
-    : ioc_(nullptr),
+    : owned_ioc_(nullptr),
+      ioc_(&ioc),
       resolver_(ioc),
       socket_(ioc),
       cfg_(cfg),
@@ -68,6 +68,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
 }
 
 TcpClient::~TcpClient() {
+  stopping_.store(true);
   // Set state to closed first
   state_.set_state(LinkState::Closed);
 
@@ -100,7 +101,16 @@ TcpClient::~TcpClient() {
 }
 
 void TcpClient::start() {
-  if (owns_ioc_ && ioc_) {
+  if (!ioc_) {
+    UNILINK_LOG_ERROR("tcp_client", "start", "io_context is null");
+    state_.set_state(LinkState::Error);
+    notify_state();
+    return;
+  }
+
+  stopping_.store(false);
+
+  if (owns_ioc_) {
     // Create our own thread for this io_context
     ioc_thread_ = std::thread([this]() {
       try {
@@ -113,16 +123,16 @@ void TcpClient::start() {
     });
   }
 
-  if (ioc_) {
-    net::post(*ioc_, [this] {
-      state_.set_state(LinkState::Connecting);
-      notify_state();
-      do_resolve_connect();
-    });
-  }
+  net::post(*ioc_, [this] {
+    connected_.store(false);
+    state_.set_state(LinkState::Connecting);
+    notify_state();
+    do_resolve_connect();
+  });
 }
 
 void TcpClient::stop() {
+  stopping_.store(true);
   // Set state to closed first to prevent new operations
   state_.set_state(LinkState::Closed);
 
@@ -136,6 +146,7 @@ void TcpClient::stop() {
         tx_.clear();
         queue_bytes_ = 0;
         writing_ = false;
+        connected_.store(false);
       } catch (...) {
         // Ignore exceptions during cleanup
       }
@@ -168,7 +179,7 @@ void TcpClient::stop() {
   }
 }
 
-bool TcpClient::is_connected() const { return connected_; }
+bool TcpClient::is_connected() const { return connected_.load(); }
 
 void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   // Don't queue writes if client is stopped or in error state
@@ -221,16 +232,23 @@ void TcpClient::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 void TcpClient::do_resolve_connect() {
   auto self = shared_from_this();
   resolver_.async_resolve(cfg_.host, std::to_string(cfg_.port), [self](auto ec, tcp::resolver::results_type results) {
+    if (self->stopping_.load()) {
+      return;
+    }
     if (ec) {
       self->schedule_retry();
       return;
     }
     net::async_connect(self->socket_, results, [self](auto ec2, const auto&) {
+      if (self->stopping_.load()) {
+        self->close_socket();
+        return;
+      }
       if (ec2) {
         self->schedule_retry();
         return;
       }
-      self->connected_ = true;
+      self->connected_.store(true);
       self->state_.set_state(LinkState::Connected);
       self->notify_state();
       boost::system::error_code ep_ec;
@@ -245,7 +263,10 @@ void TcpClient::do_resolve_connect() {
 }
 
 void TcpClient::schedule_retry() {
-  connected_ = false;
+  connected_.store(false);
+  if (stopping_.load()) {
+    return;
+  }
   state_.set_state(LinkState::Connecting);
   notify_state();
 
@@ -255,7 +276,7 @@ void TcpClient::schedule_retry() {
   auto self = shared_from_this();
   retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
   retry_timer_.async_wait([self](const boost::system::error_code& ec) {
-    if (!ec) self->do_resolve_connect();
+    if (!ec && !self->stopping_.load()) self->do_resolve_connect();
   });
 }
 
@@ -265,7 +286,7 @@ void TcpClient::start_read() {
   auto self = shared_from_this();
   socket_.async_read_some(net::buffer(rx_.data(), rx_.size()), [self](auto ec, std::size_t n) {
     if (ec) {
-      self->handle_close();
+      self->handle_close(ec);
       return;
     }
     if (self->on_bytes_) self->on_bytes_(self->rx_.data(), n);
@@ -293,7 +314,7 @@ void TcpClient::do_write() {
 
       self->queue_bytes_ -= n;
       if (ec) {
-        self->handle_close();
+        self->handle_close(ec);
         return;
       }
       self->tx_.pop_front();
@@ -309,7 +330,7 @@ void TcpClient::do_write() {
 
       self->queue_bytes_ -= n;
       if (ec) {
-        self->handle_close();
+        self->handle_close(ec);
         return;
       }
       self->tx_.pop_front();
@@ -318,9 +339,14 @@ void TcpClient::do_write() {
   }
 }
 
-void TcpClient::handle_close() {
-  connected_ = false;
+void TcpClient::handle_close(const boost::system::error_code& ec) {
+  connected_.store(false);
   close_socket();
+  if (stopping_.load() || state_.is_state(LinkState::Closed) || ec == boost::asio::error::operation_aborted) {
+    state_.set_state(LinkState::Closed);
+    notify_state();
+    return;
+  }
   state_.set_state(LinkState::Connecting);
   notify_state();
   schedule_retry();
