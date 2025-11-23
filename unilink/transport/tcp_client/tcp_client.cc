@@ -43,6 +43,8 @@ TcpClient::TcpClient(const TcpClientConfig& cfg)
       retry_timer_(*ioc_),
       owns_ioc_(true),
       bp_high_(cfg.backpressure_threshold) {
+  // Keep the owned io_context alive even before work is posted to prevent early exit races
+  work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   bp_high_ = cfg_.backpressure_threshold;
@@ -76,6 +78,11 @@ TcpClient::~TcpClient() {
   on_bytes_ = nullptr;
   on_state_ = nullptr;
   on_bp_ = nullptr;
+
+  // Release work guard so run() can exit cleanly
+  if (work_guard_) {
+    work_guard_->reset();
+  }
 
   // Clear any pending operations
   tx_.clear();
@@ -117,6 +124,8 @@ void TcpClient::start() {
   stopping_.store(false);
 
   if (owns_ioc_) {
+    // Re-arm work guard in case stop() or destructor cleared it
+    work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
     // Create our own thread for this io_context
     ioc_thread_ = std::thread([this]() {
       try {
@@ -172,6 +181,9 @@ void TcpClient::stop() {
   // Stop io_context and wait for thread to finish only if we own it
   if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
     try {
+      if (work_guard_) {
+        work_guard_->reset();
+      }
       ioc_->stop();
       ioc_thread_.join();
     } catch (const std::exception& e) {
