@@ -56,11 +56,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v5
 
+    - name: Compute CMakeLists hash
+      id: cmake-hash
+      run: |
+        FILES=$(git ls-files '**/CMakeLists.txt')
+        if [ -z "$FILES" ]; then
+          echo "hash=none" >> "$GITHUB_OUTPUT"
+        else
+          HASH=$(printf '%s\n' "$FILES" | LC_ALL=C sort | xargs shasum | shasum | awk '{print $1}')
+          echo "hash=$HASH" >> "$GITHUB_OUTPUT"
+        fi
+
     - name: Cache ccache
       uses: actions/cache@v4
       with:
         path: ~/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ hashFiles('**/CMakeLists.txt') }}
+        key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ steps.cmake-hash.outputs.hash }}
 
     - name: Install dependencies
       run: |
