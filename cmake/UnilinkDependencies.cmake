@@ -52,6 +52,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   set(BOOST_ROOT "/opt/homebrew/opt/boost" CACHE PATH "Homebrew Boost root" FORCE)
   set(BOOST_INCLUDEDIR "${BOOST_ROOT}/include" CACHE PATH "Homebrew Boost include dir" FORCE)
   set(BOOST_LIBRARYDIR "${BOOST_ROOT}/lib" CACHE PATH "Homebrew Boost library dir" FORCE)
+  # Explicitly add the built-in CMake module path in case the runner lacks it
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
   find_package(Boost 1.74 MODULE REQUIRED COMPONENTS system)
   message(STATUS "Using Boost 1.74+ for macOS compatibility")
 else()
