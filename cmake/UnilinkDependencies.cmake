@@ -47,6 +47,23 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       message(STATUS "Using Boost 1.74+ for Ubuntu 24.04+ compatibility (1.83 not available)")
     endif()
   endif()
+  if(NOT Boost_FOUND)
+    # Manual fallback if the packaged Boost variants don't match expectations (e.g., debug runtime mismatch)
+    find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
+      HINTS /usr/include /usr/local/include)
+    find_library(BOOST_FALLBACK_SYSTEM_LIB NAMES boost_system
+      HINTS /usr/lib /usr/lib/x86_64-linux-gnu /usr/local/lib)
+    if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
+      if(NOT TARGET Boost::system)
+        add_library(Boost::system UNKNOWN IMPORTED)
+        set_target_properties(Boost::system PROPERTIES
+          IMPORTED_LOCATION "${BOOST_FALLBACK_SYSTEM_LIB}"
+          INTERFACE_INCLUDE_DIRECTORIES "${BOOST_FALLBACK_INCLUDE_DIR}")
+      endif()
+      set(Boost_FOUND TRUE)
+      message(STATUS "Using manual Boost::system fallback on Linux at ${BOOST_FALLBACK_SYSTEM_LIB}")
+    endif()
+  endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   # Ensure Boost module lookup (skip BoostConfig.cmake) and point at Homebrew layout
   if(POLICY CMP0144)
@@ -60,8 +77,28 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   set(Boost_ADDITIONAL_VERSIONS "1.89" "1.89.0" CACHE STRING "" FORCE)
   list(APPEND CMAKE_PREFIX_PATH /opt/homebrew/opt/boost /opt/homebrew)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
-  find_package(Boost 1.74 REQUIRED COMPONENTS system)
-  message(STATUS "Using Boost 1.74+ for macOS compatibility")
+  find_package(Boost 1.74 MODULE QUIET COMPONENTS system)
+  if(NOT Boost_FOUND)
+    # Manual fallback in case FindBoost fails to locate Homebrew Boost
+    find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
+      HINTS /opt/homebrew/opt/boost/include /opt/homebrew/include)
+    find_library(BOOST_FALLBACK_SYSTEM_LIB NAMES boost_system
+      HINTS /opt/homebrew/opt/boost/lib /opt/homebrew/lib)
+    if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
+      if(NOT TARGET Boost::system)
+        add_library(Boost::system UNKNOWN IMPORTED)
+        set_target_properties(Boost::system PROPERTIES
+          IMPORTED_LOCATION "${BOOST_FALLBACK_SYSTEM_LIB}"
+          INTERFACE_INCLUDE_DIRECTORIES "${BOOST_FALLBACK_INCLUDE_DIR}")
+      endif()
+      set(Boost_FOUND TRUE)
+      message(STATUS "Using manual Boost::system fallback (Homebrew) at ${BOOST_FALLBACK_SYSTEM_LIB}")
+    else()
+      message(FATAL_ERROR "Boost::system not found via FindBoost or manual fallback on macOS")
+    endif()
+  else()
+    message(STATUS "Using Boost 1.74+ for macOS compatibility")
+  endif()
 else()
   # Other platforms: use a recent Boost version
   find_package(Boost 1.70 REQUIRED COMPONENTS system)
