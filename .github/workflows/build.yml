@@ -142,6 +142,57 @@ jobs:
         retention-days: 7
         overwrite: true
 
+  # Windows Build (MSVC + vcpkg)
+  build-windows:
+    name: Build (windows-2022, msvc)
+    runs-on: windows-2022
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Restore vcpkg and install Boost
+      uses: microsoft/vcpkg-action@v1
+      with:
+        triplet: x64-windows
+        vcpkgArguments: "boost-system"
+        cacheHitVar: VCPKG_CACHE_HIT
+
+    - name: Configure CMake (MSVC + vcpkg)
+      shell: pwsh
+      run: |
+        cmake -S . -B build-windows `
+          -G "Ninja" `
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} `
+          -DUNILINK_ENABLE_CONFIG=ON `
+          -DUNILINK_BUILD_EXAMPLES=OFF `
+          -DUNILINK_BUILD_TESTS=ON `
+          -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" `
+          -DVCPKG_TARGET_TRIPLET=x64-windows
+
+    - name: Build (Release)
+      shell: pwsh
+      run: cmake --build build-windows --config ${{ env.BUILD_TYPE }}
+
+    - name: Smoke tests (exclude slow/perf)
+      shell: pwsh
+      run: |
+        ctest --test-dir build-windows `
+          -C ${{ env.BUILD_TYPE }} `
+          --output-on-failure `
+          --label-exclude "performance|benchmark|stress|slow|serial"
+
+    - name: Upload Windows artifacts
+      uses: actions/upload-artifact@v5
+      if: always()
+      with:
+        name: build-artifacts-windows-msvc
+        path: |
+          build-windows/
+        retention-days: 7
+        overwrite: true
+
   # Docker Build
   docker-build:
     name: Docker Build
