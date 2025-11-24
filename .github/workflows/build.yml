@@ -151,12 +151,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v6
 
-    - name: Restore vcpkg and install Boost
-      uses: lukka/run-vcpkg@v11
-      with:
-        vcpkgArguments: "install boost-system"
-        triplet: x64-windows
-        appendedCacheKey: windows-2022-msvc
+    - name: Install dependencies via vcpkg
+      shell: pwsh
+      env:
+        VCPKG_ROOT: C:\vcpkg
+      run: |
+        & "${env:VCPKG_ROOT}\vcpkg.exe" install boost-system --triplet x64-windows --clean-after-build
 
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
@@ -168,7 +168,7 @@ jobs:
           -DUNILINK_ENABLE_CONFIG=ON `
           -DUNILINK_BUILD_EXAMPLES=OFF `
           -DUNILINK_BUILD_TESTS=ON `
-          -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" `
+          -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
           -DVCPKG_TARGET_TRIPLET=x64-windows
 
     - name: Build (Release)
