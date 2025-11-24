@@ -162,7 +162,7 @@ jobs:
         foreach ($pkg in $packages) {
           for ($i = 1; $i -le 3; $i++) {
             try {
-              & "${env:VCPKG_ROOT}\vcpkg.exe" install $pkg --triplet x64-windows --clean-after-build --x-use-aria2
+              & "${env:VCPKG_ROOT}\vcpkg.exe" install $pkg --triplet x64-windows --clean-after-build
               break
             } catch {
               if ($i -eq 3) { throw }
