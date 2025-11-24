@@ -151,6 +151,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v6
 
+    - name: Set CMake path without spaces
+      shell: pwsh
+      run: |
+        echo "CMAKE_EXE=C:/PROGRA~1/CMake/bin/cmake.exe" >> $env:GITHUB_ENV
+        echo "CTEST_EXE=C:/PROGRA~1/CMake/bin/ctest.exe" >> $env:GITHUB_ENV
+
     - name: Install dependencies via vcpkg
       shell: pwsh
       env:
@@ -175,7 +181,7 @@ jobs:
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
       run: |
-        cmake -S . -B build-windows `
+        & "$env:CMAKE_EXE" -S . -B build-windows `
           -G "Visual Studio 17 2022" -A x64 `
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} `
@@ -187,12 +193,13 @@ jobs:
 
     - name: Build (Release)
       shell: pwsh
-      run: cmake --build build-windows --config ${{ env.BUILD_TYPE }}
+      run: |
+        & "$env:CMAKE_EXE" --build build-windows --config ${{ env.BUILD_TYPE }}
 
     - name: Smoke tests (exclude slow/perf)
       shell: pwsh
       run: |
-        ctest --test-dir build-windows `
+        & "$env:CTEST_EXE" --test-dir build-windows `
           -C ${{ env.BUILD_TYPE }} `
           --output-on-failure `
           --label-exclude "performance|benchmark|stress|slow|serial"
