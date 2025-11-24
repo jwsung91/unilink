@@ -156,13 +156,13 @@ jobs:
       env:
         VCPKG_ROOT: C:\vcpkg
       run: |
-        & "${env:VCPKG_ROOT}\vcpkg.exe" install boost-system --triplet x64-windows --clean-after-build
+        & "${env:VCPKG_ROOT}\vcpkg.exe" install boost-asio boost-system --triplet x64-windows --clean-after-build
 
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
       run: |
         cmake -S . -B build-windows `
-          -G "Ninja" `
+          -G "Visual Studio 17 2022" -A x64 `
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} `
           -DUNILINK_ENABLE_CONFIG=ON `
