@@ -152,11 +152,11 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Restore vcpkg and install Boost
-      uses: microsoft/vcpkg-action@v1
+      uses: lukka/run-vcpkg@v11
       with:
+        vcpkgArguments: "install boost-system"
         triplet: x64-windows
-        vcpkgArguments: "boost-system"
-        cacheHitVar: VCPKG_CACHE_HIT
+        appendedCacheKey: windows-2022-msvc
 
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
