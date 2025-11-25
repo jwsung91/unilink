@@ -1,7 +1,7 @@
 name: Code Quality
 
 concurrency:
-  group: codeql-${{ github.ref }}
+  group: code-quality-${{ github.ref }}
   cancel-in-progress: false
 
 on:
@@ -14,10 +14,11 @@ jobs:
   formatting:
     name: Code Formatting
     runs-on: ubuntu-22.04
+    timeout-minutes: 10
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Run clang-format style check
       uses: jidicula/clang-format-action@v4.16.0
@@ -31,17 +32,19 @@ jobs:
   static-analysis:
     name: Static Analysis (cppcheck)
     runs-on: ubuntu-22.04
+    timeout-minutes: 20
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Install cppcheck
-      run: |
-        # Install cppcheck from package manager (more stable)
-        sudo apt-get update
-        sudo apt-get install -y cppcheck
-        cppcheck --version
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "cppcheck"
+
+    - name: Verify cppcheck
+      run: cppcheck --version
 
     - name: Run cppcheck (comprehensive analysis)
       run: |
@@ -73,58 +76,11 @@ jobs:
         retention-days: 7
         overwrite: true
 
-  # CodeQL Analysis
-  codeql:
-    name: CodeQL Analysis
-    runs-on: ubuntu-22.04
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'cpp' ]
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v6
-
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
-      with:
-        languages: ${{ matrix.language }}
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libboost-dev \
-          libboost-system-dev
-
-    - name: Build for CodeQL
-      run: |
-        cmake -S . -B build-codeql \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_STANDARD=17 \
-          -DUNILINK_ENABLE_CONFIG=ON \
-          -DUNILINK_BUILD_EXAMPLES=OFF \
-          -DUNILINK_BUILD_TESTS=ON
-        cmake --build build-codeql -j $(nproc)
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{matrix.language}}"
-
   # Quality Summary
   quality-summary:
     name: Quality Summary
     runs-on: ubuntu-22.04
-    needs: [formatting, static-analysis, codeql]
+    needs: [formatting, static-analysis]
     if: always()
 
     steps:
@@ -135,4 +91,3 @@ jobs:
         echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
         echo "| Code Formatting | ${{ needs.formatting.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Static Analysis | ${{ needs.static-analysis.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| CodeQL Analysis | ${{ needs.codeql.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

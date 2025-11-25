@@ -14,6 +14,7 @@ jobs:
   unit-tests:
     name: Unit Tests (${{ matrix.os }}, ${{ matrix.compiler }})
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
     needs: []
     strategy:
       fail-fast: false
@@ -50,7 +51,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Compute CMakeLists hash
       id: cmake-hash
@@ -68,33 +69,36 @@ jobs:
       with:
         path: ~/.cache/ccache
         key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ steps.cmake-hash.outputs.hash }}
+        restore-keys: |
+          ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-
 
-    - name: Install dependencies
+    - name: Install base dependencies (Linux)
+      if: runner.os == 'Linux'
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake ccache"
+
+    - name: Install Boost (Linux)
+      if: runner.os == 'Linux'
       run: |
-        if [ "${{ runner.os }}" = "Linux" ]; then
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            ccache
-
-          # Install Boost (version-specific per OS)
-          if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
-            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-          else
-            # ubuntu-24.04: try 1.83 first, fallback to 1.74
-            if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
-              echo "Boost 1.83 not available, installing 1.74..."
-              sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
-            fi
-          fi
+        if [ "${{ matrix.os }}" = "ubuntu-22.04" ]; then
+          sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
         else
-          brew update
-          brew install cmake ccache boost
-
-          # Ensure ccache shims are on PATH for clang on both Intel and Apple Silicon
-          echo "PATH=/opt/homebrew/opt/ccache/libexec:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
+          # ubuntu-24.04: try 1.83 first, fallback to 1.74
+          if ! sudo apt-get install -y libboost1.83-dev libboost-system1.83-dev; then
+            echo "Boost 1.83 not available, installing 1.74..."
+            sudo apt-get install -y libboost1.74-dev libboost-system1.74-dev
+          fi
         fi
+
+    - name: Install dependencies (macOS)
+      if: runner.os != 'Linux'
+      run: |
+        brew update
+        brew install cmake ccache boost
+
+        # Ensure ccache shims are on PATH for clang on both Intel and Apple Silicon
+        echo "PATH=/opt/homebrew/opt/ccache/libexec:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
        
     - name: Detect CPU core count
       run: |
@@ -136,27 +140,25 @@ jobs:
   integration-tests:
     name: Integration Tests (ubuntu-22.04, gcc)
     runs-on: ubuntu-22.04
+    timeout-minutes: 45
     needs: []
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Cache ccache
       uses: actions/cache@v4
       with:
         path: ~/.cache/ccache
         key: ccache-${{ runner.os }}-integration-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ccache-${{ runner.os }}-integration-
 
     - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          ccache \
-          gcc-11 g++-11 \
-          libboost1.74-dev libboost-system1.74-dev
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake ccache gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev"
 
     - name: Configure CMake
       run: |
@@ -197,27 +199,25 @@ jobs:
   performance-tests:
     name: Performance Tests (ubuntu-22.04, gcc)
     runs-on: ubuntu-22.04
+    timeout-minutes: 60
     needs: []
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Cache ccache
       uses: actions/cache@v4
       with:
         path: ~/.cache/ccache
         key: ccache-${{ runner.os }}-performance-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ccache-${{ runner.os }}-performance-
 
     - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          ccache \
-          gcc-11 g++-11 \
-          libboost1.74-dev libboost-system1.74-dev
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake ccache gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev"
 
     - name: Configure CMake
       run: |
@@ -254,25 +254,17 @@ jobs:
   memory-safety-tests:
     name: Memory Safety Tests
     runs-on: ubuntu-22.04
+    timeout-minutes: 45
     needs: []
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          gcc-11 \
-          g++-11 \
-          libboost1.74-dev \
-          libboost-system1.74-dev \
-          clang \
-          libc++-dev \
-          libc++abi-dev
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake gcc-11 g++-11 libboost1.74-dev libboost-system1.74-dev clang libc++-dev libc++abi-dev"
 
     - name: Configure CMake with Sanitizers
       run: |

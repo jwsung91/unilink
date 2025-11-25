@@ -12,19 +12,16 @@ jobs:
   trivy-scan:
     name: Trivy Security Scan
     runs-on: ubuntu-22.04
+    timeout-minutes: 45
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libboost-dev \
-          libboost-system-dev
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake libboost-dev libboost-system-dev"
 
     - name: Build project
       run: |
@@ -38,7 +35,7 @@ jobs:
         cmake --build build-security -j $(nproc)
 
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@0.28.0
       with:
         scan-type: 'fs'
         scan-ref: '.'
@@ -55,18 +52,19 @@ jobs:
   docker-security:
     name: Docker Security Scan
     runs-on: ubuntu-22.04
+    timeout-minutes: 45
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Build Docker image
       run: |
         docker build -t unilink:security-scan .
 
     - name: Run Trivy vulnerability scanner on Docker image
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@0.28.0
       with:
         image-ref: 'unilink:security-scan'
         format: 'sarif'
@@ -85,7 +83,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
