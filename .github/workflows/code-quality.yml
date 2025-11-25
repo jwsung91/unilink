@@ -1,5 +1,9 @@
 name: Code Quality
 
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: false
+
 on:
   push:
     branches: [ main, develop ]
@@ -21,7 +25,7 @@ jobs:
         clang-format-version: '18'  # Use latest clang-format version
         check-path: '.'             # Check current directory
         fallback-style: 'Google'    # Fallback style if .clang-format not found
-        exclude: 'build*'           # Exclude build directories
+        exclude-regex: '^build'     # Exclude build directories
 
   # Static Analysis with cppcheck
   static-analysis:
