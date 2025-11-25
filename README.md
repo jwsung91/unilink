@@ -9,7 +9,6 @@
 
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
-
 ## One interface, reliable connections
 
 `unilink` is a modern C++17 library that provides a unified, high-level Builder API for TCP (client/server) and Serial port communication. It simplifies network and serial programming with a fluent, easy-to-use interface that handles all the complexity behind the scenes.
@@ -54,6 +53,7 @@ int main() {
 ### Installation
 
 #### Option 1: CMake Package (Recommended)
+
 ```cmake
 # In your CMakeLists.txt
 cmake_minimum_required(VERSION 3.12)
@@ -74,6 +74,7 @@ int main() {
 ```
 
 #### Option 2: Build from Source
+
 ```bash
 # Install dependencies (Ubuntu/Debian)
 sudo apt update && sudo apt install -y build-essential cmake libboost-dev libboost-system-dev
@@ -89,11 +90,22 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
 #### Option 3: Download Release Package
+
 ```bash
-# Download and extract release package
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.0-linux-x64.tar.gz
-tar -xzf unilink-0.1.6-linux-x64.tar.gz
-# Follow installation instructions in the package
+# Download and extract the package for your OS/arch
+# File pattern: unilink-<version>-<OS>-<arch>.<ext>
+
+# Linux (tar.gz)
+curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-Linux-x86_64.tar.gz
+tar -xzf unilink-0.1.6-Linux-x86_64.tar.gz
+
+# macOS (tar.gz; .dmg also available in Releases)
+curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-Darwin-arm64.tar.gz
+tar -xzf unilink-0.1.6-Darwin-arm64.tar.gz
+
+# Windows (zip)
+curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-Windows-AMD64.zip
+unzip unilink-0.1.6-Windows-AMD64.zip
 ```
 
 **For detailed installation instructions, see [Installation Guide](docs/guides/installation.md).**
@@ -124,6 +136,7 @@ ctest --test-dir build-windows --output-on-failure
 ```
 
 **Windows notes**
+
 - Re-run CMake (or start from a clean build directory) after pulling the latest branch so that example targets pick up the new post-build copy step for `unilink.dll`.
 - Serial port recovery scenarios are Unix-only and are skipped automatically on Windows test runs.
 - Async logging performance expectations are slightly lower on Windows (≥50k messages/sec) to account for timer granularity and scheduler differences.
@@ -138,8 +151,8 @@ ctest --test-dir build-windows --output-on-failure
 - **Performance**: Automated regression testing and benchmarking
 
 ### Build Matrix
-| Platform | Compiler | Status |
-|----------|----------|--------|
+| Platform     | Compiler         | Status         |
+| ------------ | ---------------- | -------------- |
 | Ubuntu 22.04 | GCC 11, Clang 14 | ✅ Full Testing |
 | Ubuntu 24.04 | GCC 13, Clang 15 | ✅ Full Testing |
 

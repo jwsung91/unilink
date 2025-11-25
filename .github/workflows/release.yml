@@ -18,52 +18,92 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04]
+        include:
+          - os: ubuntu-24.04
+            label: Linux (Ubuntu 24.04)
+            cmake_generator: "Ninja"
+            cpack_generator: "TGZ"
+            release_files: |
+              build/package/unilink-*.tar.gz
+
+          - os: macos-14
+            label: macOS 14
+            cmake_generator: "Ninja"
+            cpack_generator: "TGZ;DragNDrop"
+            release_files: |
+              build/package/unilink-*.tar.gz
+              build/package/unilink-*.dmg
+
+          - os: windows-latest
+            label: Windows (VS 2022)
+            cmake_generator: "Visual Studio 17 2022"
+            cmake_arch: "x64"
+            cpack_generator: "ZIP"
+            release_files: |
+              build/package/unilink-*.zip
     
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up C++ toolchain (Ubuntu 22.04)
-        if: matrix.os == 'ubuntu-22.04'
+      - name: Set up C++ toolchain (Linux)
+        if: runner.os == 'Linux'
         run: |
           # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update --allow-releaseinfo-change
           sudo apt-get install -y build-essential cmake ninja-build libboost-all-dev
 
-      - name: Set up C++ toolchain (Ubuntu 24.04)
-        if: matrix.os == 'ubuntu-24.04'
+      - name: Set up C++ toolchain (macOS)
+        if: runner.os == 'macOS'
         run: |
-          # Remove problematic Microsoft repository to avoid 421 Misdirected Request error
-          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
-          sudo apt-get update --allow-releaseinfo-change
-          sudo apt-get install -y build-essential cmake ninja-build libboost-all-dev
+          brew update
+          brew install cmake ninja boost
+
+      - name: Set up C++ toolchain (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          choco install ninja --no-progress -y
+          & "C:\vcpkg\vcpkg.exe" install boost-system:x64-windows
 
       - name: Configure
+        shell: bash
         run: |
-          cmake -S . -B build -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DUNILINK_ENABLE_INSTALL=ON \
-            -DUNILINK_ENABLE_PKGCONFIG=ON \
-            -DUNILINK_ENABLE_EXPORT_HEADER=ON
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cmake -S . -B build -G "${{ matrix.cmake_generator }}" -A "${{ matrix.cmake_arch }}" \
+              -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+              -DVCPKG_TARGET_TRIPLET=x64-windows \
+              -DUNILINK_ENABLE_INSTALL=ON \
+              -DUNILINK_ENABLE_PKGCONFIG=ON \
+              -DUNILINK_ENABLE_EXPORT_HEADER=ON
+          else
+            cmake -S . -B build -G "${{ matrix.cmake_generator }}" \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DUNILINK_ENABLE_INSTALL=ON \
+              -DUNILINK_ENABLE_PKGCONFIG=ON \
+              -DUNILINK_ENABLE_EXPORT_HEADER=ON
+          fi
 
       - name: Build
-        run: cmake --build build --config Release -- -v
+        shell: bash
+        run: cmake --build build --config Release --parallel
 
       - name: Test
-        run: cmake --build build --target test
+        shell: bash
+        run: ctest --test-dir build --output-on-failure -C Release
 
       - name: Package
+        shell: bash
         run: |
           cd build
-          cpack -B package -G TGZ
+          cpack -C Release -B package -G "${{ matrix.cpack_generator }}"
           ls -la package/
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          files: build/package/unilink-*.tar.gz
-          name: Release ${{ github.ref_name || inputs.tag_name }} (${{ matrix.os }})
+          files: ${{ matrix.release_files }}
+          name: Release ${{ github.ref_name || inputs.tag_name }} (${{ matrix.label }})
           tag_name: ${{ github.ref_name || inputs.tag_name }}
           draft: true
           prerelease: true
