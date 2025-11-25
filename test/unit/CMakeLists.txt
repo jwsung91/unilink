@@ -17,6 +17,12 @@
 
 get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 
+set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
+if(WIN32)
+  # Avoid MSBuild invoking CMake scripts from paths with spaces; defer discovery to ctest
+  set(_UNILINK_GTEST_DISCOVERY_MODE PRE_TEST)
+endif()
+
 foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} common/${test_file})
@@ -36,6 +42,7 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
   # Mark test_core tests to use resource lock to avoid file I/O conflicts
   if(test_name STREQUAL "test_core")
     gtest_discover_tests(run_unit_${test_name}
+      DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
       PROPERTIES
         LABELS "unit;common;fast"
         TIMEOUT 30
@@ -43,6 +50,7 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
     )
   else()
     gtest_discover_tests(run_unit_${test_name}
+      DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
       PROPERTIES
         LABELS "unit;common;fast"
         TIMEOUT 30
@@ -69,6 +77,7 @@ foreach(test_file test_builder.cc)
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
   gtest_discover_tests(run_unit_${test_name}
+    DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
     PROPERTIES
       LABELS "unit;builder;fast"
       TIMEOUT 30
@@ -94,6 +103,7 @@ foreach(test_file test_config.cc)
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
   gtest_discover_tests(run_unit_${test_name}
+    DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
     PROPERTIES
       LABELS "unit;config;fast"
       TIMEOUT 30
@@ -119,6 +129,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
   gtest_discover_tests(run_unit_${test_name}
+    DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
     PROPERTIES
       LABELS "unit;wrapper;tcp;coverage"
       TIMEOUT 60
@@ -143,6 +154,7 @@ target_include_directories(run_unit_wrapper_serial_config_mapping
     ${CMAKE_SOURCE_DIR}/test/fixtures
 )
 gtest_discover_tests(run_unit_wrapper_serial_config_mapping
+  DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
   PROPERTIES
     LABELS "unit;wrapper;serial"
     TIMEOUT 30
@@ -165,6 +177,7 @@ target_include_directories(run_unit_transport_tcp_client
     ${CMAKE_SOURCE_DIR}/test/fixtures
 )
 gtest_discover_tests(run_unit_transport_tcp_client
+  DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
   PROPERTIES
     LABELS "unit;transport;fast"
     TIMEOUT 30
@@ -186,6 +199,7 @@ target_include_directories(run_unit_transport_serial
     ${CMAKE_SOURCE_DIR}/test/fixtures
 )
 gtest_discover_tests(run_unit_transport_serial
+  DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
   PROPERTIES
     LABELS "unit;transport;serial"
     TIMEOUT 30
