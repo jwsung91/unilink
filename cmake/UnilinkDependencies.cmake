@@ -68,40 +68,47 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     endif()
   endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  # Ensure Boost module lookup (skip BoostConfig.cmake) and point at Homebrew layout
-  if(POLICY CMP0144)
-    cmake_policy(SET CMP0144 NEW)
-  endif()
-  set(Boost_NO_BOOST_CMAKE ON CACHE BOOL "" FORCE)
-  set(Boost_DIR "" CACHE PATH "Ignore Boost config packages on macOS" FORCE)
-  set(BOOST_ROOT "/opt/homebrew/opt/boost" CACHE PATH "Homebrew Boost root" FORCE)
-  set(BOOST_INCLUDEDIR "/opt/homebrew/opt/boost/include" CACHE PATH "Homebrew Boost include dir" FORCE)
-  set(Boost_ADDITIONAL_VERSIONS "1.89" "1.89.0" CACHE STRING "" FORCE)
-  list(APPEND CMAKE_PREFIX_PATH
-    /opt/homebrew/opt/boost
-    /opt/homebrew
-    /usr/local/opt/boost
-    /usr/local)
-  list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
-
-  # Header-only Boost.System: only require headers, avoid lib lookup that is flaky on macOS Actions
-  find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
-    PATHS
+  # vcpkg builds: let the vcpkg toolchain drive Boost discovery (do not force Homebrew paths)
+  if(DEFINED VCPKG_TARGET_TRIPLET OR DEFINED ENV{VCPKG_ROOT} OR CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
+    find_package(Boost 1.70 REQUIRED COMPONENTS system)
+    set(UNILINK_LINK_BOOST_SYSTEM ON)
+    message(STATUS "Using Boost from vcpkg on macOS (triplet: ${VCPKG_TARGET_TRIPLET})")
+  else()
+    # Ensure Boost module lookup (skip BoostConfig.cmake) and point at Homebrew layout
+    if(POLICY CMP0144)
+      cmake_policy(SET CMP0144 NEW)
+    endif()
+    set(Boost_NO_BOOST_CMAKE ON CACHE BOOL "" FORCE)
+    set(Boost_DIR "" CACHE PATH "Ignore Boost config packages on macOS" FORCE)
+    set(BOOST_ROOT "/opt/homebrew/opt/boost" CACHE PATH "Homebrew Boost root" FORCE)
+    set(BOOST_INCLUDEDIR "/opt/homebrew/opt/boost/include" CACHE PATH "Homebrew Boost include dir" FORCE)
+    set(Boost_ADDITIONAL_VERSIONS "1.89" "1.89.0" CACHE STRING "" FORCE)
+    list(APPEND CMAKE_PREFIX_PATH
       /opt/homebrew/opt/boost
       /opt/homebrew
       /usr/local/opt/boost
-      /usr/local
-      /opt/homebrew/Cellar/boost
-      /usr/local/Cellar/boost
-    PATH_SUFFIXES include)
-  if(NOT BOOST_FALLBACK_INCLUDE_DIR)
-    message(FATAL_ERROR "Boost headers not found on macOS (looked in Homebrew paths)")
-  endif()
+      /usr/local)
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules")
 
-  set(UNILINK_LINK_BOOST_SYSTEM OFF)
-  set(UNILINK_BOOST_INCLUDE_DIR "${BOOST_FALLBACK_INCLUDE_DIR}")
-  add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
-  message(STATUS "Using header-only Boost.System on macOS; include dir: ${BOOST_FALLBACK_INCLUDE_DIR}")
+    # Header-only Boost.System: only require headers, avoid lib lookup that is flaky on macOS Actions
+    find_path(BOOST_FALLBACK_INCLUDE_DIR boost/version.hpp
+      PATHS
+        /opt/homebrew/opt/boost
+        /opt/homebrew
+        /usr/local/opt/boost
+        /usr/local
+        /opt/homebrew/Cellar/boost
+        /usr/local/Cellar/boost
+      PATH_SUFFIXES include)
+    if(NOT BOOST_FALLBACK_INCLUDE_DIR)
+      message(FATAL_ERROR "Boost headers not found on macOS (looked in Homebrew paths)")
+    endif()
+
+    set(UNILINK_LINK_BOOST_SYSTEM OFF)
+    set(UNILINK_BOOST_INCLUDE_DIR "${BOOST_FALLBACK_INCLUDE_DIR}")
+    add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
+    message(STATUS "Using header-only Boost.System on macOS; include dir: ${BOOST_FALLBACK_INCLUDE_DIR}")
+  endif()
 else()
   # Other platforms: use a recent Boost version
   find_package(Boost 1.70 REQUIRED COMPONENTS system)
