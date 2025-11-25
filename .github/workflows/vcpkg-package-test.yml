@@ -81,11 +81,13 @@ jobs:
         echo "Checking pkg-config file..."
         test -f "${INSTALL_ROOT}/lib/pkgconfig/unilink.pc"
 
-        echo "Checking libraries..."
-        LIB_FILES=$(find "${INSTALL_ROOT}" \( -path "*/lib" -o -path "*/bin" \) -type f \
-          \( -name "libunilink*.a" -o -name "libunilink*.so*" -o -name "libunilink*.dylib" \))
+        echo "Checking libraries (release + debug)..."
+        LIB_FILES=$(find "${INSTALL_ROOT}" \( -path "*/lib" -o -path "*/lib64" -o -path "*/debug/lib" -o -path "*/bin" \) -type f \
+          \( -name "libunilink*.a" -o -name "libunilink*.so*" -o -name "libunilink*.dylib" -o -name "unilink*.dll" -o -name "unilink*.lib" \) | sort || true)
         if [ -z "${LIB_FILES}" ]; then
           echo "No unilink libraries found in ${INSTALL_ROOT}"
+          echo "Listing tree for debugging:"
+          find "${INSTALL_ROOT}" -maxdepth 3 -type d -print
           exit 1
         fi
         echo "${LIB_FILES}"
