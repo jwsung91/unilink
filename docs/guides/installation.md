@@ -56,9 +56,9 @@ Download pre-built packages from GitHub releases.
 
 ```bash
 # Download latest release
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.5-linux-x64.tar.gz
-tar -xzf unilink-0.1.5-linux-x64.tar.gz
-cd unilink-0.1.5-linux-x64
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-linux-x64.tar.gz
+tar -xzf unilink-0.1.6-linux-x64.tar.gz
+cd unilink-0.1.6-linux-x64
 ```
 
 #### Step 2: Install
@@ -141,7 +141,7 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 ## Packaging (Conan / vcpkg)
 
 - **Conan recipe**: `packaging/conan`
-  - Build/test locally (Conan v2): `conan create packaging/conan --name=unilink --version=0.1.5`
+  - Build/test locally (Conan v2): `conan create packaging/conan --name=unilink --version=0.1.6`
   - Update `conandata.yml` URL/SHA to the release tarball before publishing.
 - **vcpkg overlay port**: `packaging/vcpkg/ports/unilink`
   - Consume with overlay: `vcpkg install unilink --overlay-ports=packaging/vcpkg/ports`

@@ -7,7 +7,7 @@ import os
 
 class UnilinkConan(ConanFile):
     name = "unilink"
-    version = "0.1.5"
+    version = "0.1.6"
     description = "Unified async communication library for TCP and Serial communication"
     license = "Apache-2.0"
     url = "https://github.com/jwsung91/unilink"
