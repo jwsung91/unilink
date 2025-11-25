@@ -1,0 +1,14 @@
+name: apt-install
+description: Install packages via apt-get update/install
+inputs:
+  packages:
+    description: Space-separated list of packages to install
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        set -euo pipefail
+        sudo apt-get update
+        sudo apt-get install -y ${{ inputs.packages }}

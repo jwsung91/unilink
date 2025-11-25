@@ -54,11 +54,18 @@ Download pre-built packages from GitHub releases.
 
 #### Step 1: Download and extract
 
+Pick the archive that matches your OS/architecture. The naming pattern is:
+`unilink-<version>-<OS>-<arch>.<ext>`
+
+- Linux: `.tar.gz` (e.g., `unilink-0.1.6-Linux-x86_64.tar.gz`)
+- macOS: `.tar.gz` and `.dmg` (e.g., `unilink-0.1.6-Darwin-arm64.tar.gz`)
+- Windows: `.zip` (e.g., `unilink-0.1.6-Windows-AMD64.zip`)
+
 ```bash
-# Download latest release
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-linux-x64.tar.gz
-tar -xzf unilink-0.1.6-linux-x64.tar.gz
-cd unilink-0.1.6-linux-x64
+# Linux example
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-Linux-x86_64.tar.gz
+tar -xzf unilink-0.1.6-Linux-x86_64.tar.gz
+cd unilink-0.1.6-Linux-x86_64
 ```
 
 #### Step 2: Install
@@ -69,6 +76,9 @@ sudo cmake --install .
 
 # Or install to custom prefix
 cmake --install . --prefix /opt/unilink
+
+# Windows example (Release config)
+cmake --install . --config Release --prefix "C:/unilink"
 ```
 
 #### Step 3: Use in your project
@@ -151,18 +161,18 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 
 When building from source, you can configure various options:
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `UNILINK_BUILD_SHARED` | `ON` | Build shared library |
-| `UNILINK_BUILD_EXAMPLES` | `ON` | Build example programs |
-| `UNILINK_BUILD_TESTS` | `ON` | Master test toggle |
-| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF` | Build performance tests |
-| `UNILINK_BUILD_DOCS` | `ON` | Build documentation |
-| `UNILINK_ENABLE_INSTALL` | `ON` | Enable install targets |
-| `UNILINK_ENABLE_PKGCONFIG` | `ON` | Install pkg-config file |
-| `UNILINK_ENABLE_EXPORT_HEADER` | `ON` | Generate export header |
-| `UNILINK_ENABLE_WARNINGS` | `ON` | Enable compiler warnings |
-| `UNILINK_ENABLE_SANITIZERS` | `OFF` | Enable sanitizers in Debug |
+| Option                             | Default | Description                |
+| ---------------------------------- | ------- | -------------------------- |
+| `UNILINK_BUILD_SHARED`             | `ON`    | Build shared library       |
+| `UNILINK_BUILD_EXAMPLES`           | `ON`    | Build example programs     |
+| `UNILINK_BUILD_TESTS`              | `ON`    | Master test toggle         |
+| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF`   | Build performance tests    |
+| `UNILINK_BUILD_DOCS`               | `ON`    | Build documentation        |
+| `UNILINK_ENABLE_INSTALL`           | `ON`    | Enable install targets     |
+| `UNILINK_ENABLE_PKGCONFIG`         | `ON`    | Install pkg-config file    |
+| `UNILINK_ENABLE_EXPORT_HEADER`     | `ON`    | Generate export header     |
+| `UNILINK_ENABLE_WARNINGS`          | `ON`    | Enable compiler warnings   |
+| `UNILINK_ENABLE_SANITIZERS`        | `OFF`   | Enable sanitizers in Debug |
 
 Example with custom options:
 

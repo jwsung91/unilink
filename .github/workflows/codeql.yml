@@ -1,5 +1,9 @@
 name: "CodeQL"
 
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: false
+
 on:
   push:
     branches: [ main, develop ]
@@ -12,6 +16,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
       actions: read
       contents: read
@@ -24,7 +29,15 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
+
+    - name: Cache CodeQL build
+      uses: actions/cache@v4
+      with:
+        path: build
+        key: codeql-build-${{ runner.os }}-${{ matrix.language }}-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          codeql-build-${{ runner.os }}-${{ matrix.language }}-
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
@@ -33,13 +46,9 @@ jobs:
         queries: security-and-quality
 
     - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libboost-dev \
-          libboost-system-dev
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake libboost-dev libboost-system-dev"
 
     - name: Configure CMake
       run: |
