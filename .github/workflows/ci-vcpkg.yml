@@ -63,7 +63,7 @@ jobs:
           fi
 
       - name: Clone vcpkg
-        run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${VCPKG_ROOT}"
+        run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
 
       - name: Bootstrap vcpkg (Linux/macOS)
         if: runner.os != 'Windows'
