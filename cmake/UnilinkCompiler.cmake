@@ -40,11 +40,14 @@ if(MSVC)
     endif()
   endif()
   
-  # MSVC-specific optimizations
-  if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    add_compile_options(/O2 /Ob2 /Oi /Ot /Oy /GL)
-    add_link_options(/LTCG)
-  endif()
+  # MSVC-specific optimizations and debug information
+  add_compile_options(
+    $<$<CONFIG:Release>:/O2 /Ob2 /Oi /Ot /Oy /GL>
+    $<$<CONFIG:Debug>:/Zi>
+    $<$<CONFIG:RelWithDebInfo>:/O2 /Zi>
+    $<$<CONFIG:MinSizeRel>:/O1 /Os>
+  )
+  add_link_options($<$<CONFIG:Release>:/LTCG>)
   
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   # GCC or Clang
@@ -105,30 +108,31 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   # Visibility settings (disabled for now to avoid linking issues)
   # add_compile_options(-fvisibility=hidden -fvisibility-inlines-hidden)
   
-  # Optimization flags
-  if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    add_compile_options(-O3 -DNDEBUG)
-    if(UNILINK_ENABLE_LTO)
-      add_compile_options(-flto)
-      add_link_options(-flto)
-    endif()
-  elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_options(-g -O0)
+  # Optimization and debug flags
+  add_compile_options(
+    $<$<CONFIG:Release>:-O3 -DNDEBUG>
+    $<$<CONFIG:Debug>:-g -O0>
+    $<$<CONFIG:RelWithDebInfo>:-O2 -g -DNDEBUG>
+    $<$<CONFIG:MinSizeRel>:-Os -DNDEBUG>
+  )
+  if(UNILINK_ENABLE_LTO)
+    add_compile_options($<$<CONFIG:Release>:-flto>)
+    add_link_options($<$<CONFIG:Release>:-flto>)
   endif()
   
   # Sanitizer support
-  if(UNILINK_ENABLE_SANITIZERS AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+  if(UNILINK_ENABLE_SANITIZERS)
     if(UNILINK_ENABLE_ASAN)
-      add_compile_options(-fsanitize=address)
-      add_link_options(-fsanitize=address)
+      add_compile_options($<$<CONFIG:Debug>:-fsanitize=address>)
+      add_link_options($<$<CONFIG:Debug>:-fsanitize=address>)
     endif()
     if(UNILINK_ENABLE_UBSAN)
-      add_compile_options(-fsanitize=undefined)
-      add_link_options(-fsanitize=undefined)
+      add_compile_options($<$<CONFIG:Debug>:-fsanitize=undefined>)
+      add_link_options($<$<CONFIG:Debug>:-fsanitize=undefined>)
     endif()
     if(UNILINK_ENABLE_TSAN)
-      add_compile_options(-fsanitize=thread)
-      add_link_options(-fsanitize=thread)
+      add_compile_options($<$<CONFIG:Debug>:-fsanitize=thread>)
+      add_link_options($<$<CONFIG:Debug>:-fsanitize=thread>)
     endif()
   endif()
   
@@ -156,14 +160,5 @@ elseif(UNIX)
     add_definitions(-D_DARWIN_C_SOURCE)
   else()
     add_definitions(-D_POSIX_C_SOURCE=200809L)
-  endif()
-endif()
-
-# Debug information
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  if(UNILINK_COMPILER_MSVC)
-    add_compile_options(/Zi)
-  else()
-    add_compile_options(-g3)
   endif()
 endif()
