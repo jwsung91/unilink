@@ -206,3 +206,43 @@ gtest_discover_tests(run_unit_transport_serial
 )
 
 # Transport layer tests removed - they require actual network/serial devices
+
+
+
+# Create a custom target to build all unit tests
+
+add_custom_target(unilink_unit_tests)
+
+
+
+# Add dependencies to the custom target
+
+add_dependencies(unilink_unit_tests
+
+  run_unit_test_core
+
+  run_unit_test_memory
+
+  run_unit_test_boundary
+
+  run_unit_test_error_handler
+
+  run_unit_test_input_validator
+
+  run_unit_test_logger_advanced
+
+  run_unit_test_builder
+
+  run_unit_test_config
+
+  run_unit_test_tcp_server_advanced
+
+  run_unit_test_tcp_client_advanced
+
+  run_unit_wrapper_serial_config_mapping
+
+  run_unit_transport_tcp_client
+
+  run_unit_transport_serial
+
+)

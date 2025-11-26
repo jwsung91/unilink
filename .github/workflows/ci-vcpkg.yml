@@ -122,6 +122,10 @@ jobs:
       - name: Build
         run: cmake --build build --config "${BUILD_TYPE}" --parallel
 
+      - name: Build unit tests
+        if: runner.os == 'Windows'
+        run: cmake --build build --target unilink_unit_tests --config "${BUILD_TYPE}"
+
       - name: Test (Windows)
         if: runner.os == 'Windows'
         working-directory: build
