@@ -40,25 +40,23 @@ if(MSVC)
     endif()
   endif()
   
-    # MSVC-specific optimizations and debug information
+      # MSVC-specific optimizations and debug information
   
-    add_compile_options(
+      set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /Oy /GL")
   
-      $<$<CONFIG:Release>:/O2 /Ob2 /Oi /Ot /Oy /GL>
+      set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi")
   
-      $<$<CONFIG:Debug>:/Zi>
+      set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2 /Zi")
   
-      $<$<CONFIG:RelWithDebInfo>:/O2 /Zi>
+      set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /O1 /Os")
   
-      $<$<CONFIG:MinSizeRel>:/O1 /Os>
+      set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
   
-    )
+      set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
   
-    add_link_options($<$<CONFIG:Release>:/LTCG>)
+      
   
-    
-  
-  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   
     # GCC or Clang
   
