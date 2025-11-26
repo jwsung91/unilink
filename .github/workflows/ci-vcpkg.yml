@@ -122,11 +122,13 @@ jobs:
       - name: Build
         run: cmake --build build --config "${BUILD_TYPE}" --parallel
 
-      - name: Test
+      - name: Test (Windows)
+        if: runner.os == 'Windows'
         working-directory: build
-        run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            ctest -C "${BUILD_TYPE}" --output-on-failure
-          else
-            ctest --output-on-failure --parallel 2
-          fi
+        shell: pwsh
+        run: ctest -C "${env:BUILD_TYPE}" --output-on-failure
+
+      - name: Test (Linux/macOS)
+        if: runner.os != 'Windows'
+        working-directory: build
+        run: ctest --output-on-failure --parallel 2
