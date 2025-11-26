@@ -12,6 +12,8 @@ jobs:
     name: vcpkg (${{ matrix.os }} - ${{ matrix.triplet }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
+    outputs:
+      ${{ matrix.os }}-${{ matrix.triplet }}: ${{ job.status }}
     strategy:
       fail-fast: false
       matrix:
@@ -24,7 +26,7 @@ jobs:
             triplet: x64-windows
           - os: windows-2022
             triplet: x64-windows-static
-          - os: macos-13
+          - os: macos-12
             triplet: x64-osx
           - os: macos-14
             triplet: arm64-osx
@@ -38,7 +40,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v6
 
+    - name: Cache vcpkg
+      id: cache-vcpkg
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.VCPKG_ROOT }}
+        key: vcpkg-${{ runner.os }}-${{ hashFiles('**/vcpkg.json') }}
+
     - name: Clone vcpkg
+      if: steps.cache-vcpkg.outputs.cache-hit != 'true'
       run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
 
     - name: Bootstrap vcpkg (Unix)
@@ -82,8 +92,10 @@ jobs:
         test -f "${INSTALL_ROOT}/lib/pkgconfig/unilink.pc"
 
         echo "Checking libraries (release + debug)..."
-        LIB_FILES=$(find "${INSTALL_ROOT}" \( -path "*/lib" -o -path "*/lib64" -o -path "*/debug/lib" -o -path "*/bin" \) -type f \
-          \( -name "libunilink*.a" -o -name "libunilink*.so*" -o -name "libunilink*.dylib" -o -name "unilink*.dll" -o -name "unilink*.lib" \) | sort || true)
+        LIB_FILES=$(find "${INSTALL_ROOT}" -type f \
+          \( -path "*/lib/*" -o -path "*/lib64/*" -o -path "*/debug/lib/*" -o -path "*/bin/*" \) \
+          \( -name "libunilink*.a" -o -name "libunilink*.so*" -o -name "libunilink*.dylib" -o -name "unilink*.dll" -o -name "unilink*.lib" \) \
+          | sort || true)
         if [ -z "${LIB_FILES}" ]; then
           echo "No unilink libraries found in ${INSTALL_ROOT}"
           echo "Listing tree for debugging:"
@@ -211,3 +223,28 @@ jobs:
         } else {
           throw "Consumer executable not found"
         }
+
+  summary:
+    name: Summary
+    needs: [vcpkg-overlay]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Install jq
+        run: sudo apt-get install -y jq
+      - name: Summarize results
+        run: |
+          echo "## Vcpkg Package Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| OS | Triplet | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          for job in $(echo '${{ toJSON(needs.vcpkg-overlay.outputs) }}' | jq -r 'to_entries | .[] | .key + "=" + .value'); do
+            flavour=$(echo "$job" | cut -d'=' -f1)
+            status=$(echo "$job" | cut -d'=' -f2)
+            os=$(echo "$flavour" | cut -d'-' -f1,2)
+            triplet=$(echo "$flavour" | cut -d'-' -f3-)
+            if [ "$status" == "Success" ]; then
+              echo "| $os | $triplet | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "| $os | $triplet | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
