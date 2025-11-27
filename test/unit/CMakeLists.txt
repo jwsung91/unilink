@@ -26,6 +26,7 @@ endif()
 foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/common/${test_file})
+  set_target_properties(run_unit_${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   target_link_libraries(run_unit_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -63,6 +64,7 @@ endforeach()
 foreach(test_file test_builder.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/builder/${test_file})
+  set_target_properties(run_unit_${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   target_link_libraries(run_unit_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -89,6 +91,7 @@ endforeach()
 foreach(test_file test_config.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/config/${test_file})
+  set_target_properties(run_unit_${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   target_link_libraries(run_unit_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -115,6 +118,7 @@ endforeach()
 foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file})
+  set_target_properties(run_unit_${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   target_link_libraries(run_unit_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -140,6 +144,7 @@ endforeach()
 
 # Wrapper serial config mapping
 add_executable(run_unit_wrapper_serial_config_mapping ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/test_serial_config_mapping.cc)
+set_target_properties(run_unit_wrapper_serial_config_mapping PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 target_link_libraries(run_unit_wrapper_serial_config_mapping
   PRIVATE
     ${_unilink_test_lib}
@@ -163,6 +168,7 @@ unilink_copy_runtime_dependency(run_unit_wrapper_serial_config_mapping)
 
 # Transport tests (fast, unit-level without real network dependencies)
 add_executable(run_unit_transport_tcp_client ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_client.cc)
+set_target_properties(run_unit_transport_tcp_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 target_link_libraries(run_unit_transport_tcp_client
   PRIVATE
     ${_unilink_test_lib}
@@ -185,6 +191,7 @@ gtest_discover_tests(run_unit_transport_tcp_client
 
 # Serial lifecycle tests (fast, no real device)
 add_executable(run_unit_transport_serial ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_serial.cc)
+set_target_properties(run_unit_transport_serial PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 target_link_libraries(run_unit_transport_serial
   PRIVATE
     ${_unilink_test_lib}
