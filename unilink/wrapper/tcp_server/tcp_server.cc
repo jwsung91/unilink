@@ -68,14 +68,21 @@ void TcpServer::start() {
 }
 
 void TcpServer::stop() {
-void TcpServer::stop() {
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (!started_) return;
-
-  if (channel_) {
-    channel_->stop();
+  std::shared_ptr<interface::Channel> local_channel;
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (!started_) {
+      return;
+    }
+    started_ = false;
+    local_channel = std::move(channel_);
   }
-  started_ = false;
+
+  if (local_channel) {
+    local_channel->stop();
+    // Allow async operations to complete
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
 }
 
 void TcpServer::send(const std::string& data) {
