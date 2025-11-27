@@ -25,7 +25,7 @@ endif()
 
 foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(run_unit_${test_name} common/${test_file})
+  add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/common/${test_file})
   target_link_libraries(run_unit_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -62,7 +62,7 @@ endforeach()
 # Builder tests (separate executables)
 foreach(test_file test_builder.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(run_unit_${test_name} builder/${test_file})
+  add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/builder/${test_file})
   target_link_libraries(run_unit_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -88,7 +88,7 @@ endforeach()
 # Config tests (separate executables)
 foreach(test_file test_config.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(run_unit_${test_name} config/${test_file})
+  add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/config/${test_file})
   target_link_libraries(run_unit_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -114,7 +114,7 @@ endforeach()
 # Wrapper tests (separate executables)
 foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
-  add_executable(run_unit_${test_name} wrapper/${test_file})
+  add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file})
   target_link_libraries(run_unit_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -139,7 +139,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
 endforeach()
 
 # Wrapper serial config mapping
-add_executable(run_unit_wrapper_serial_config_mapping wrapper/test_serial_config_mapping.cc)
+add_executable(run_unit_wrapper_serial_config_mapping ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/test_serial_config_mapping.cc)
 target_link_libraries(run_unit_wrapper_serial_config_mapping
   PRIVATE
     ${_unilink_test_lib}
@@ -162,7 +162,7 @@ gtest_discover_tests(run_unit_wrapper_serial_config_mapping
 unilink_copy_runtime_dependency(run_unit_wrapper_serial_config_mapping)
 
 # Transport tests (fast, unit-level without real network dependencies)
-add_executable(run_unit_transport_tcp_client transport/transport_tcp_client.cc)
+add_executable(run_unit_transport_tcp_client ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_client.cc)
 target_link_libraries(run_unit_transport_tcp_client
   PRIVATE
     ${_unilink_test_lib}
@@ -184,7 +184,7 @@ gtest_discover_tests(run_unit_transport_tcp_client
 )
 
 # Serial lifecycle tests (fast, no real device)
-add_executable(run_unit_transport_serial transport/transport_serial.cc)
+add_executable(run_unit_transport_serial ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_serial.cc)
 target_link_libraries(run_unit_transport_serial
   PRIVATE
     ${_unilink_test_lib}
