@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set(UNILINK_BUILD_TESTS ON)
+
 cmake_minimum_required(VERSION 3.10)
 project(unilink-test)
 
