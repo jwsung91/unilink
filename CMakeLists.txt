@@ -19,6 +19,12 @@ project(unilink
   HOMEPAGE_URL "https://github.com/jwsung91/unilink"
   LANGUAGES CXX)
 
+if(NOT CMAKE_BUILD_PARALLEL_LEVEL)
+  include(ProcessorCount)
+  ProcessorCount(N)
+  set(CMAKE_BUILD_PARALLEL_LEVEL ${N})
+endif()
+
 # Include build options
 include(cmake/UnilinkOptions.cmake)
 
