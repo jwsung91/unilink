@@ -20,8 +20,9 @@ get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 # Default: discover after build so test executables exist
 set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
 
-# On Windows, only fall back to PRE_TEST when the binary dir has spaces (MSBuild bug)
-if(WIN32 AND CMAKE_BINARY_DIR MATCHES " ")
+# On Windows/MSVC, always use PRE_TEST to avoid the CMake path-with-spaces quoting
+# issue in Visual Studio custom commands (GoogleTestAddTests.cmake invocation).
+if(WIN32)
   set(_UNILINK_GTEST_DISCOVERY_MODE PRE_TEST)
 endif()
 
