@@ -95,10 +95,9 @@ void TcpServer::start() {
 }
 
 void TcpServer::stop() {
-  if (state_.is_one_of({common::LinkState::Closing, common::LinkState::Closed})) {
+  if (state_.is_state(common::LinkState::Closed)) {
     return;
   }
-  state_.set_state(common::LinkState::Closing);
 
   // Use a promise to wait for cleanup to finish on the IO thread
   std::promise<void> cleanup_promise;
