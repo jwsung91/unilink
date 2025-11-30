@@ -41,7 +41,7 @@ class TcpServer : public ChannelInterface {
 
   // IChannel interface implementation
   void start() override;
-  void stop() override;
+  void stop(std::function<void()> on_stopped = nullptr) override;
   void send(const std::string& data) override;
   bool is_connected() const override;
 

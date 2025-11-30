@@ -22,6 +22,8 @@
 #include <thread>
 #include <vector>
 
+#include <future>
+
 #include "test/utils/test_utils.hpp"
 #include "unilink/unilink.hpp"
 
@@ -43,7 +45,10 @@ class AdvancedTcpServerCoverageTest : public ::testing::Test {
   void TearDown() override {
     if (server_) {
       try {
-        server_->stop();
+        std::promise<void> stop_promise;
+        auto stop_future = stop_promise.get_future();
+        server_->stop([&] { stop_promise.set_value(); });
+        stop_future.wait_for(1s);
       } catch (...) {
         // Ignore cleanup errors
       }
@@ -70,13 +75,19 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
   // Note: is_running() method might not be available
 
   // Stop server
-  server_->stop();
+  std::promise<void> stop_promise1;
+  auto stop_future1 = stop_promise1.get_future();
+  server_->stop([&] { stop_promise1.set_value(); });
+  stop_future1.wait();
 
   // Start again
   server_->start();
 
   // Stop again
-  server_->stop();
+  std::promise<void> stop_promise2;
+  auto stop_future2 = stop_promise2.get_future();
+  server_->stop([&] { stop_promise2.set_value(); });
+  stop_future2.wait();
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerStartWhenAlreadyStarted) {
@@ -360,7 +371,10 @@ TEST_F(AdvancedTcpServerCoverageTest, RapidStartStop) {
   for (int i = 0; i < 10; ++i) {
     server_->start();
     std::this_thread::sleep_for(10ms);
-    server_->stop();
+    std::promise<void> stop_promise;
+    auto stop_future = stop_promise.get_future();
+    server_->stop([&] { stop_promise.set_value(); });
+    stop_future.wait();
     std::this_thread::sleep_for(10ms);
   }
 }

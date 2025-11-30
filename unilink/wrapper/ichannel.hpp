@@ -41,7 +41,7 @@ class UNILINK_EXPORT ChannelInterface {
 
   // Common methods
   virtual void start() = 0;
-  virtual void stop() = 0;
+  virtual void stop(std::function<void()> on_stopped = nullptr) = 0;
   virtual void send(const std::string& data) = 0;
   virtual void send_line(const std::string& line) = 0;
   virtual bool is_connected() const = 0;

@@ -58,7 +58,7 @@ class TcpServer : public Channel,
   ~TcpServer();
 
   void start() override;
-  void stop() override;
+  void stop(std::function<void()> on_stopped = nullptr) override;
   bool is_connected() const override;
   void async_write_copy(const uint8_t* data, size_t size) override;
   void on_bytes(OnBytes cb) override;

@@ -54,7 +54,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   ~Serial() override;
 
   void start() override;
-  void stop() override;
+  void stop(std::function<void()> on_stopped = nullptr) override;
   bool is_connected() const override;
 
   void async_write_copy(const uint8_t* data, size_t n) override;

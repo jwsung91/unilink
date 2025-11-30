@@ -63,14 +63,21 @@ void TcpClient::start() {
   started_ = true;
 }
 
-void TcpClient::stop() {
-  if (!started_ || !channel_) return;
+void TcpClient::stop(std::function<void()> on_stopped) {
+  if (!started_ || !channel_) {
+    if (on_stopped) {
+      on_stopped();
+    }
+    return;
+  }
 
-  channel_->stop();
-  // Brief wait for async operations to complete
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  channel_.reset();
-  started_ = false;
+  channel_->stop([this, on_stopped] {
+    channel_.reset();
+    started_ = false;
+    if (on_stopped) {
+      on_stopped();
+    }
+  });
 }
 
 void TcpClient::send(const std::string& data) {

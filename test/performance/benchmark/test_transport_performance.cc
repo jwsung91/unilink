@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-
-#include <atomic>
-#include <chrono>
-#include <memory>
-#include <thread>
-#include <vector>
+#include <future>
 
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
@@ -61,15 +54,21 @@ class TransportPerformanceTest : public ::testing::Test {
   void TearDown() override {
     // Clean up after test
     if (client_) {
-      client_->stop();
+      std::promise<void> promise;
+      client_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       client_.reset();
     }
     if (server_) {
-      server_->stop();
+      std::promise<void> promise;
+      server_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       server_.reset();
     }
     if (serial_) {
-      serial_->stop();
+      std::promise<void> promise;
+      serial_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       serial_.reset();
     }
 
@@ -533,9 +532,11 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
     // 데이터 전송
     std::string data = "memory_test_" + std::to_string(cycle);
     std::vector<uint8_t> binary_data(data.begin(), data.end());
-    client->async_write_copy(binary_data.data(), binary_data.size());
+    client->async_write_copy(binary_data..data(), binary_data.size());
 
-    client->stop();
+    std::promise<void> promise;
+    client->stop([&] { promise.set_value(); });
+    promise.get_future().wait();
     // client가 스코프를 벗어나면 자동으로 소멸
   }
 
@@ -564,7 +565,9 @@ TEST_F(TransportPerformanceTest, TcpServerMemoryLeak) {
     std::vector<uint8_t> binary_data(data.begin(), data.end());
     server->async_write_copy(binary_data.data(), binary_data.size());
 
-    server->stop();
+    std::promise<void> promise;
+    server->stop([&] { promise.set_value(); });
+    promise.get_future().wait();
     // server가 스코프를 벗어나면 자동으로 소멸
   }
 

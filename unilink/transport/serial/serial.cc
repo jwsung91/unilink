@@ -85,16 +85,19 @@ void Serial::start() {
   started_ = true;
 }
 
-void Serial::stop() {
+void Serial::stop(std::function<void()> on_stopped) {
   if (!started_) {
     state_.set_state(common::LinkState::Closed);
+    if (on_stopped) {
+      on_stopped();
+    }
     return;
   }
 
   stopping_.store(true);
   if (!state_.is_state(common::LinkState::Closed)) {
     if (work_guard_) work_guard_->reset();  // Allow the io_context to run out of work.
-    net::post(ioc_, [this] {
+    net::post(ioc_, [this, on_stopped] {
       // Cancel all pending async operations to unblock the io_context
       retry_timer_.cancel();
       close_port();
@@ -102,6 +105,9 @@ void Serial::stop() {
       // runs out of work.
       if (owns_ioc_) {
         ioc_.stop();
+      }
+      if (on_stopped) {
+        on_stopped();
       }
     });
 
@@ -118,6 +124,10 @@ void Serial::stop() {
     opened_.store(false);
     state_.set_state(common::LinkState::Closed);
     notify_state();
+  } else {
+    if (on_stopped) {
+      on_stopped();
+    }
   }
   started_ = false;
 }

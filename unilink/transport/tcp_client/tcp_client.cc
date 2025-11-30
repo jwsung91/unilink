@@ -147,14 +147,14 @@ void TcpClient::start() {
   });
 }
 
-void TcpClient::stop() {
+void TcpClient::stop(std::function<void()> on_stopped) {
   stopping_.store(true);
   // Set state to closed first to prevent new operations
   state_.set_state(LinkState::Closed);
 
   // Cleanup work; if we own the context, post; otherwise do best-effort sync if context is stopped
   auto self = shared_from_this();
-  auto cleanup = [self] {
+  auto cleanup = [self, on_stopped] {
     try {
       self->retry_timer_.cancel();
       self->resolver_.cancel();
@@ -166,6 +166,10 @@ void TcpClient::stop() {
       self->queue_bytes_ = 0;
       self->writing_ = false;
       self->connected_.store(false);
+
+      if (on_stopped) {
+        on_stopped();
+      }
     } catch (...) {
       // Ignore exceptions during cleanup
     }
@@ -185,6 +189,10 @@ void TcpClient::stop() {
       } else {
         net::post(*ioc_, std::move(cleanup));
       }
+    }
+  } else {
+    if (on_stopped) {
+      on_stopped();
     }
   }
 

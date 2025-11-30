@@ -94,18 +94,17 @@ void TcpServer::start() {
   net::post(ioc_, [self] { self->attempt_port_binding(0); });
 }
 
-void TcpServer::stop() {
+void TcpServer::stop(std::function<void()> on_stopped) {
   if (state_.is_state(common::LinkState::Closed)) {
+    if (on_stopped) {
+      on_stopped();
+    }
     return;
   }
 
-  // Use a promise to wait for cleanup to finish on the IO thread
-  std::promise<void> cleanup_promise;
-  auto cleanup_future = cleanup_promise.get_future();
-
   // Post cleanup tasks to the IO context to run on its thread
   auto self = shared_from_this();
-  net::post(ioc_, [self, &cleanup_promise] {
+  net::post(ioc_, [self, on_stopped] {
     boost::system::error_code ec;
 
     // 1. Close the acceptor to stop accepting new connections
@@ -128,22 +127,20 @@ void TcpServer::stop() {
       self->current_session_.reset();
     }
 
-    // 3. Signal that cleanup is complete
-    cleanup_promise.set_value();
+    // If the server owned the io_context, stop it and join the thread
+    if (self->owns_ioc_ && self->ioc_thread_.joinable()) {
+      self->ioc_.stop();
+      self->ioc_thread_.join();
+      self->ioc_.restart();
+    }
+
+    self->state_.set_state(common::LinkState::Closed);
+    self->notify_state();
+
+    if (on_stopped) {
+      on_stopped();
+    }
   });
-
-  // Block until the cleanup tasks on the IO thread are finished
-  cleanup_future.wait();
-
-  // If the server owned the io_context, stop it and join the thread
-  if (owns_ioc_ && ioc_thread_.joinable()) {
-    ioc_.stop();
-    ioc_thread_.join();
-    ioc_.restart();
-  }
-
-  state_.set_state(common::LinkState::Closed);
-  notify_state();
 }
 
 bool TcpServer::is_connected() const {

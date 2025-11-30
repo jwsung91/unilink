@@ -35,7 +35,7 @@ class TcpClient : public ChannelInterface {
 
   // IChannel implementation
   void start() override;
-  void stop() override;
+  void stop(std::function<void()> on_stopped = nullptr) override;
   void send(const std::string& data) override;
   void send_line(const std::string& line) override;
   bool is_connected() const override;
