@@ -56,6 +56,7 @@ class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
                    size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
 
   void start();
+  void close();
   void async_write_copy(const uint8_t* data, size_t size);
   void on_bytes(OnBytes cb);
   void on_backpressure(OnBackpressure cb);
