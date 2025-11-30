@@ -17,9 +17,11 @@
 
 get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 
+# Default: discover after build so test executables exist
 set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
-if(WIN32)
-  # Avoid MSBuild invoking CMake scripts from paths with spaces; defer discovery to ctest
+
+# On Windows, only fall back to PRE_TEST when the binary dir has spaces (MSBuild bug)
+if(WIN32 AND CMAKE_BINARY_DIR MATCHES " ")
   set(_UNILINK_GTEST_DISCOVERY_MODE PRE_TEST)
 endif()
 
