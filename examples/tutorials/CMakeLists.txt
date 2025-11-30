@@ -24,7 +24,7 @@ find_package(Threads REQUIRED)
 add_executable(tutorial_simple_client
     getting_started/simple_client.cpp
 )
-target_link_berries(tutorial_simple_client
+target_link_libraries(tutorial_simple_client
     PRIVATE
         unilink
         Threads::Threads
