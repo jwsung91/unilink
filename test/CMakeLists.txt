@@ -47,14 +47,8 @@ set_property(GLOBAL PROPERTY UNILINK_TEST_LIB_IS_SHARED ${_unilink_test_lib_is_s
 
 # Helper to copy the shared library next to a test executable on Windows
 function(unilink_copy_runtime_dependency target)
-  get_property(_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
-  get_property(_is_shared GLOBAL PROPERTY UNILINK_TEST_LIB_IS_SHARED)
-  if(WIN32 AND _is_shared)
-    add_custom_command(TARGET ${target} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:${_test_lib}>
-        $<TARGET_FILE_DIR:${target}>)
-  endif()
+  # No-op: Runtime dependencies are now handled by global CMAKE_RUNTIME_OUTPUT_DIRECTORY
+  # which places all executables and DLLs in the same bin/ directory.
 endfunction()
 
 # Helper to silence benign warnings in test targets (keeps library build clean)

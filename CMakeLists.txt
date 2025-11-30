@@ -25,6 +25,11 @@ if(NOT CMAKE_BUILD_PARALLEL_LEVEL)
   set(CMAKE_BUILD_PARALLEL_LEVEL ${N})
 endif()
 
+# Set global output directories to avoid copying runtime dependencies
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
 # Include build options
 include(cmake/UnilinkOptions.cmake)
 

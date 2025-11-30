@@ -22,7 +22,6 @@ get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 foreach(test_file test_integration.cc test_simple_server.cc test_client_limit_integration.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/tcp/${test_file})
-  set_target_properties(run_integration_${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   target_link_libraries(run_integration_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -52,7 +51,6 @@ foreach(test_file test_integration.cc test_simple_server.cc test_client_limit_in
         RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
-  unilink_copy_runtime_dependency(run_integration_${test_name})
 endforeach()
 
 # Serial integration tests
@@ -60,7 +58,6 @@ endforeach()
 foreach(test_file test_serial_builder_improvements.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/serial/${test_file})
-  set_target_properties(run_integration_${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   target_link_libraries(run_integration_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -80,7 +77,6 @@ foreach(test_file test_serial_builder_improvements.cc)
       TIMEOUT 60
       RESOURCE_LOCK "tcp_port_allocation"
   )
-  unilink_copy_runtime_dependency(run_integration_${test_name})
 endforeach()
 
 # Mock integration tests - DISABLED due to dependency injection issues
@@ -113,7 +109,6 @@ endforeach()
 foreach(test_file test_builder_integration.cc test_stable_integration.cc test_core_integrated.cc test_safety_integrated.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/${test_file})
-  set_target_properties(run_integration_${test_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
   target_link_libraries(run_integration_${test_name}
     PRIVATE
       ${_unilink_test_lib}
@@ -144,5 +139,4 @@ foreach(test_file test_builder_integration.cc test_stable_integration.cc test_co
         RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
-  unilink_copy_runtime_dependency(run_integration_${test_name})
 endforeach()

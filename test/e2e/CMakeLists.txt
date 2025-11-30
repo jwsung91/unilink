@@ -39,7 +39,6 @@ foreach(test_file test_architecture.cc test_error_recovery.cc)
       TIMEOUT 90
       RESOURCE_LOCK "tcp_port_allocation"
   )
-  unilink_copy_runtime_dependency(run_e2e_${test_name})
 endforeach()
 
 # Stress tests
@@ -63,4 +62,3 @@ gtest_discover_tests(run_e2e_test_stress
     TIMEOUT 120
     RESOURCE_LOCK "tcp_port_allocation"
 )
-unilink_copy_runtime_dependency(run_e2e_test_stress)
