@@ -50,9 +50,10 @@ RUN useradd -m -u 1000 appuser
 WORKDIR /app
 
 # Copy built artifacts from builder stage
-COPY --from=builder /app/build/libunilink_static.a /app/lib/libunilink.a
-COPY --from=builder /app/build/libunilink.so* /app/lib/
-COPY --from=builder /app/build/examples /app/examples
+COPY --from=builder /app/build/lib/libunilink_static.a /app/lib/libunilink.a
+COPY --from=builder /app/build/lib/libunilink.so* /app/lib/
+COPY --from=builder /app/build/bin /app/bin
+
 # Create docs directory (documentation is optional)
 RUN mkdir -p /app/docs
 
@@ -67,4 +68,4 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 # Default command
-CMD ["./examples/tcp/single-echo/echo_tcp_server"]
+CMD ["/app/bin/echo_tcp_server"]
