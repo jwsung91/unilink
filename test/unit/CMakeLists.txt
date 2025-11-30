@@ -51,6 +51,7 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
   if(test_name STREQUAL "test_core")
     gtest_discover_tests(run_unit_${test_name}
       DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
+      WORKING_DIRECTORY "$<TARGET_FILE_DIR:run_unit_${test_name}>"
       PROPERTIES
         LABELS "unit;common;fast"
         TIMEOUT 30
@@ -59,6 +60,7 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
   else()
     gtest_discover_tests(run_unit_${test_name}
       DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
+      WORKING_DIRECTORY "$<TARGET_FILE_DIR:run_unit_${test_name}>"
       PROPERTIES
         LABELS "unit;common;fast"
         TIMEOUT 30
@@ -89,6 +91,7 @@ foreach(test_file test_builder.cc)
 
   gtest_discover_tests(run_unit_${test_name}
     DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:run_unit_${test_name}>"
     PROPERTIES
       LABELS "unit;builder;fast"
       TIMEOUT 30
@@ -118,6 +121,7 @@ foreach(test_file test_config.cc)
 
   gtest_discover_tests(run_unit_${test_name}
     DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:run_unit_${test_name}>"
     PROPERTIES
       LABELS "unit;config;fast"
       TIMEOUT 30
@@ -147,6 +151,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
 
   gtest_discover_tests(run_unit_${test_name}
     DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:run_unit_${test_name}>"
     PROPERTIES
       LABELS "unit;wrapper;tcp;coverage"
       TIMEOUT 60
@@ -175,6 +180,7 @@ unilink_copy_runtime_dependency(run_unit_wrapper_serial_config_mapping)
 
 gtest_discover_tests(run_unit_wrapper_serial_config_mapping
   DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
+  WORKING_DIRECTORY "$<TARGET_FILE_DIR:run_unit_wrapper_serial_config_mapping>"
   PROPERTIES
     LABELS "unit;wrapper;serial"
     TIMEOUT 30
@@ -201,6 +207,7 @@ unilink_copy_runtime_dependency(run_unit_transport_tcp_client)
 
 gtest_discover_tests(run_unit_transport_tcp_client
   DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
+  WORKING_DIRECTORY "$<TARGET_FILE_DIR:run_unit_transport_tcp_client>"
   PROPERTIES
     LABELS "unit;transport;fast"
     TIMEOUT 30
@@ -227,6 +234,7 @@ unilink_copy_runtime_dependency(run_unit_transport_serial)
 
 gtest_discover_tests(run_unit_transport_serial
   DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
+  WORKING_DIRECTORY "$<TARGET_FILE_DIR:run_unit_transport_serial>"
   PROPERTIES
     LABELS "unit;transport;serial"
     TIMEOUT 30
