@@ -1,0 +1,250 @@
+name: Vcpkg Package Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  vcpkg-overlay:
+    name: vcpkg (${{ matrix.os }} - ${{ matrix.triplet }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    outputs:
+      ${{ matrix.os }}-${{ matrix.triplet }}: ${{ job.status }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            triplet: x64-linux
+          - os: ubuntu-24.04
+            triplet: x64-linux-dynamic
+          - os: windows-2022
+            triplet: x64-windows
+          - os: windows-2022
+            triplet: x64-windows-static
+          - os: macos-12
+            triplet: x64-osx
+          - os: macos-14
+            triplet: arm64-osx
+
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_OVERLAY_PORTS: ${{ github.workspace }}/packaging/vcpkg/ports
+      VCPKG_BINARY_SOURCES: "clear;default"
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Cache vcpkg
+      id: cache-vcpkg
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.VCPKG_ROOT }}
+        key: vcpkg-${{ runner.os }}-${{ hashFiles('**/vcpkg.json') }}
+
+    - name: Clone vcpkg
+      if: steps.cache-vcpkg.outputs.cache-hit != 'true'
+      run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
+
+    - name: Bootstrap vcpkg (Unix)
+      if: runner.os != 'Windows'
+      run: "${VCPKG_ROOT}/bootstrap-vcpkg.sh"
+
+    - name: Bootstrap vcpkg (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
+
+    - name: Install unilink via vcpkg (Unix)
+      if: runner.os != 'Windows'
+      run: |
+        "${VCPKG_ROOT}/vcpkg" install "unilink:${{ matrix.triplet }}" \
+          --overlay-ports="${VCPKG_OVERLAY_PORTS}" \
+          --clean-after-build
+
+    - name: Install unilink via vcpkg (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        & "${env:VCPKG_ROOT}\vcpkg.exe" install "unilink:${{ matrix.triplet }}" `
+          --overlay-ports="${env:VCPKG_OVERLAY_PORTS}" `
+          --clean-after-build
+
+    - name: Verify installation layout (Unix)
+      if: runner.os != 'Windows'
+      run: |
+        set -euo pipefail
+        INSTALL_ROOT="${VCPKG_ROOT}/installed/${{ matrix.triplet }}"
+
+        echo "Checking headers..."
+        test -d "${INSTALL_ROOT}/include/unilink"
+
+        echo "Checking CMake package config..."
+        test -f "${INSTALL_ROOT}/share/unilink/unilinkConfig.cmake"
+
+        echo "Checking pkg-config file..."
+        test -f "${INSTALL_ROOT}/lib/pkgconfig/unilink.pc"
+
+        echo "Checking libraries (release + debug)..."
+        LIB_FILES=$(find "${INSTALL_ROOT}" -type f \
+          \( -path "*/lib/*" -o -path "*/lib64/*" -o -path "*/debug/lib/*" -o -path "*/bin/*" \) \
+          \( -name "libunilink*.a" -o -name "libunilink*.so*" -o -name "libunilink*.dylib" -o -name "unilink*.dll" -o -name "unilink*.lib" \) \
+          | sort || true)
+        if [ -z "${LIB_FILES}" ]; then
+          echo "No unilink libraries found in ${INSTALL_ROOT}"
+          echo "Listing tree for debugging:"
+          find "${INSTALL_ROOT}" -maxdepth 3 -type d -print
+          exit 1
+        fi
+        echo "${LIB_FILES}"
+
+    - name: Verify installation layout (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $installRoot = "$env:VCPKG_ROOT\installed\${{ matrix.triplet }}"
+
+        Write-Host "Checking headers..."
+        if (-not (Test-Path "$installRoot\include\unilink")) { throw "Headers not found" }
+
+        Write-Host "Checking CMake package config..."
+        if (-not (Test-Path "$installRoot\share\unilink\unilinkConfig.cmake")) { throw "unilinkConfig.cmake not found" }
+
+        Write-Host "Collecting libraries..."
+        $libs = @(Get-ChildItem -Path "$installRoot\lib" -Recurse -Include *unilink*.lib -ErrorAction SilentlyContinue)
+        $dlls = @(Get-ChildItem -Path "$installRoot\bin" -Recurse -Include *unilink*.dll -ErrorAction SilentlyContinue)
+        if ($libs.Count -eq 0 -and $dlls.Count -eq 0) {
+          throw "No unilink libraries or DLLs found under $installRoot"
+        }
+        $libs + $dlls | ForEach-Object { Write-Host "  $_" }
+
+    - name: Build and run consumer sample (Unix)
+      if: runner.os != 'Windows'
+      run: |
+        set -euo pipefail
+        WORKDIR=$(mktemp -d)
+
+        cat > "${WORKDIR}/CMakeLists.txt" <<'EOF'
+        cmake_minimum_required(VERSION 3.15)
+        project(unilink_consumer LANGUAGES CXX)
+        set(CMAKE_CXX_STANDARD 17)
+        find_package(unilink CONFIG REQUIRED)
+
+        add_executable(vcpkg_consumer main.cpp)
+        if(TARGET unilink::unilink_shared)
+          target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink_shared)
+        elseif(TARGET unilink::unilink)
+          target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink)
+        else()
+          target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink_static)
+        endif()
+        EOF
+
+        cat > "${WORKDIR}/main.cpp" <<'EOF'
+        #include <unilink/wrapper/tcp_client/tcp_client.hpp>
+        #include <chrono>
+        #include <iostream>
+
+        int main() {
+          unilink::wrapper::TcpClient client("127.0.0.1", 9000);
+          client.set_retry_interval(std::chrono::milliseconds(250));
+          client.set_max_retries(1);
+          client.auto_manage(false);
+          std::cout << "unilink vcpkg package loaded" << std::endl;
+          return 0;
+        }
+        EOF
+
+        cmake -S "${WORKDIR}" -B "${WORKDIR}/build" \
+          -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
+          -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
+          -DCMAKE_BUILD_TYPE=Release
+
+        cmake --build "${WORKDIR}/build" --config Release
+        "${WORKDIR}/build/vcpkg_consumer"
+
+    - name: Build and run consumer sample (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $workDir = Join-Path $env:RUNNER_TEMP "unilink-consumer"
+        New-Item -ItemType Directory -Force -Path $workDir | Out-Null
+
+        @"
+        cmake_minimum_required(VERSION 3.15)
+        project(unilink_consumer LANGUAGES CXX)
+        set(CMAKE_CXX_STANDARD 17)
+        find_package(unilink CONFIG REQUIRED)
+
+        add_executable(vcpkg_consumer main.cpp)
+        if(TARGET unilink::unilink_shared)
+          target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink_shared)
+        elseif(TARGET unilink::unilink)
+          target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink)
+        else()
+          target_link_libraries(vcpkg_consumer PRIVATE unilink::unilink_static)
+        endif()
+        "@ | Set-Content -Path (Join-Path $workDir "CMakeLists.txt")
+
+        @"
+        #include <unilink/wrapper/tcp_client/tcp_client.hpp>
+        #include <chrono>
+        #include <iostream>
+
+        int main() {
+          unilink::wrapper::TcpClient client("127.0.0.1", 9000);
+          client.set_retry_interval(std::chrono::milliseconds(250));
+          client.set_max_retries(1);
+          client.auto_manage(false);
+          std::cout << "unilink vcpkg package loaded" << std::endl;
+          return 0;
+        }
+        "@ | Set-Content -Path (Join-Path $workDir "main.cpp")
+
+        cmake -S $workDir -B "$workDir/build" `
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
+          -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
+          -DCMAKE_BUILD_TYPE=Release
+
+        cmake --build "$workDir/build" --config Release
+
+        $exe = Join-Path "$workDir/build" "vcpkg_consumer.exe"
+        $alt = Join-Path "$workDir/build/Release" "vcpkg_consumer.exe"
+        if (Test-Path $exe) {
+          & $exe
+        } elseif (Test-Path $alt) {
+          & $alt
+        } else {
+          throw "Consumer executable not found"
+        }
+
+  summary:
+    name: Summary
+    needs: [vcpkg-overlay]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Install jq
+        run: sudo apt-get install -y jq
+      - name: Summarize results
+        run: |
+          echo "## Vcpkg Package Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| OS | Triplet | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          for job in $(echo '${{ toJSON(needs.vcpkg-overlay.outputs) }}' | jq -r 'to_entries | .[] | .key + "=" + .value'); do
+            flavour=$(echo "$job" | cut -d'=' -f1)
+            status=$(echo "$job" | cut -d'=' -f2)
+            os=$(echo "$flavour" | cut -d'-' -f1,2)
+            triplet=$(echo "$flavour" | cut -d'-' -f3-)
+            if [ "$status" == "Success" ]; then
+              echo "| $os | $triplet | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "| $os | $triplet | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done

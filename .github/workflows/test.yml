@@ -298,11 +298,46 @@ jobs:
         retention-days: 7
         overwrite: true
 
+  # E2E Tests
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-22.04
+    needs: []
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libboost-dev libboost-system-dev
+      - name: Configure
+        run: |
+          cmake -S . -B build-e2e \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DUNILINK_ENABLE_CONFIG=ON \
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_BUILD_EXAMPLES=OFF
+      - name: Build
+        run: cmake --build build-e2e -j $(nproc)
+      - name: Run E2E Tests
+        run: |
+          cd build-e2e
+          ctest -L e2e --output-on-failure --parallel 2 || \
+          ctest -L e2e --rerun-failed --output-on-failure --parallel 2
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: e2e-test-results
+          path: build-e2e/Testing/
+          retention-days: 7
+          overwrite: true
+
   # Test Summary
   test-summary:
     name: Test Summary
     runs-on: ubuntu-22.04
-    needs: [unit-tests, integration-tests, performance-tests, memory-safety-tests]
+    needs: [unit-tests, integration-tests, performance-tests, memory-safety-tests, e2e-tests]
     if: always()
 
     steps:
@@ -315,3 +350,4 @@ jobs:
         echo "| Integration Tests | ${{ needs.integration-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Performance Tests | ${{ needs.performance-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Memory Safety Tests | ${{ needs.memory-safety-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| E2E Tests | ${{ needs.e2e-tests.result == 'success' && '✅ Passed' || needs.e2e-tests.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

@@ -36,6 +36,7 @@ TcpServer::TcpServer(std::shared_ptr<interface::Channel> channel) : port_(0), ch
 }
 
 void TcpServer::start() {
+  std::lock_guard<std::mutex> lock(mutex_);
   if (started_) return;
 
   if (!channel_) {
@@ -67,23 +68,35 @@ void TcpServer::start() {
 }
 
 void TcpServer::stop() {
-  if (!started_ || !channel_) return;
+  std::shared_ptr<interface::Channel> local_channel;
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (!started_) {
+      return;
+    }
+    started_ = false;
+    local_channel = std::move(channel_);
+  }
 
-  channel_->stop();
-  // Allow async operations to complete
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  channel_.reset();
-  started_ = false;
+  if (local_channel) {
+    local_channel->stop();
+    // Allow async operations to complete
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
 }
 
 void TcpServer::send(const std::string& data) {
+  std::lock_guard<std::mutex> lock(mutex_);
   if (is_connected() && channel_) {
     auto binary_data = common::safe_convert::string_to_uint8(data);
     channel_->async_write_copy(binary_data.data(), binary_data.size());
   }
 }
 
-bool TcpServer::is_connected() const { return channel_ && channel_->is_connected(); }
+bool TcpServer::is_connected() const {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return channel_ && channel_->is_connected();
+}
 
 ChannelInterface& TcpServer::on_data(DataHandler handler) {
   on_data_ = std::move(handler);
@@ -162,11 +175,14 @@ void TcpServer::handle_bytes(const uint8_t* data, size_t size) {
 }
 
 void TcpServer::handle_state(common::LinkState state) {
-  // Update listening state based on server state
-  if (state == common::LinkState::Listening) {
-    is_listening_ = true;
-  } else if (state == common::LinkState::Error || state == common::LinkState::Closed) {
-    is_listening_ = false;
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    // Update listening state based on server state
+    if (state == common::LinkState::Listening) {
+      is_listening_ = true;
+    } else if (state == common::LinkState::Error || state == common::LinkState::Closed) {
+      is_listening_ = false;
+    }
   }
 
   switch (state) {

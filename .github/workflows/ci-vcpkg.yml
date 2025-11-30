@@ -1,0 +1,138 @@
+name: CI - vcpkg toolchain
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux (GCC + vcpkg)
+            os: ubuntu-24.04
+            triplet: x64-linux
+            cc: gcc
+            cxx: g++
+            generator: Ninja
+            build_type: Release
+          - name: Windows (MSVC + vcpkg)
+            os: windows-2022
+            triplet: x64-windows
+            cc: cl
+            cxx: cl
+            generator: "Visual Studio 17 2022"
+            build_type: Release
+          - name: macOS (Clang + vcpkg)
+            os: macos-14
+            triplet: arm64-osx
+            cc: clang
+            cxx: clang++
+            generator: Ninja
+            build_type: Release
+
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_OVERLAY_PORTS: ${{ github.workspace }}/packaging/vcpkg/ports
+      VCPKG_TARGET_TRIPLET: ${{ matrix.triplet }}
+      VCPKG_BINARY_SOURCES: "clear;default"
+      BUILD_TYPE: ${{ matrix.build_type }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Ninja (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          if command -v ninja >/dev/null 2>&1; then
+            exit 0
+          fi
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y ninja-build
+          else
+            brew install ninja
+          fi
+
+      - name: Clone vcpkg
+        run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
+
+      - name: Bootstrap vcpkg (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: "${VCPKG_ROOT}/bootstrap-vcpkg.sh"
+
+      - name: Bootstrap vcpkg (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
+
+      - name: Install dependencies via vcpkg (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          "${VCPKG_ROOT}/vcpkg" install boost-asio:${{ matrix.triplet }} boost-system:${{ matrix.triplet }} \
+            --overlay-ports="${VCPKG_OVERLAY_PORTS}" \
+            --clean-after-build
+
+      - name: Install dependencies via vcpkg (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          & "${env:VCPKG_ROOT}\vcpkg.exe" install boost-asio:${{ matrix.triplet }} boost-system:${{ matrix.triplet }} `
+            --overlay-ports="${env:VCPKG_OVERLAY_PORTS}" `
+            --clean-after-build
+
+      - name: Configure (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          cmake -S . -B build \
+            -G "${{ matrix.generator }}" \
+            -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
+            -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
+            -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
+            -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
+            -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" \
+            -DUNILINK_BUILD_EXAMPLES=OFF \
+            -DUNILINK_BUILD_DOCS=OFF \
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF
+
+      - name: Configure (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cmake -S . -B build `
+            -G "${{ matrix.generator }}" -A x64 `
+            -DCMAKE_BUILD_TYPE="${env:BUILD_TYPE}" `
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
+            -DUNILINK_BUILD_EXAMPLES=OFF `
+            -DUNILINK_BUILD_DOCS=OFF `
+            -DUNILINK_BUILD_TESTS=ON `
+            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF
+
+      - name: Build
+        run: cmake --build build --config "${BUILD_TYPE}" --parallel
+
+      - name: Build unit tests
+        if: runner.os == 'Windows'
+        run: cmake --build build --target unilink_unit_tests --config "${BUILD_TYPE}"
+
+      - name: Test (Windows)
+        if: runner.os == 'Windows'
+        working-directory: build
+        shell: pwsh
+        run: ctest -C "${env:BUILD_TYPE}" --output-on-failure
+
+      - name: Test (Linux/macOS)
+        if: runner.os != 'Windows'
+        working-directory: build
+        run: ctest --output-on-failure --parallel 2

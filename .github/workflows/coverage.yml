@@ -16,13 +16,13 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libboost-dev \
-          libboost-system-dev \
+      uses: ./.github/actions/apt-install
+      with:
+        packages: >-
+          build-essential
+          cmake
+          libboost-dev
+          libboost-system-dev
           lcov
 
     - name: Configure with coverage
@@ -167,3 +167,129 @@ jobs:
         else
           echo "✅ Coverage ${COVERAGE}% meets threshold ${THRESHOLD}%"
         fi
+
+  deploy-coverage:
+    name: Deploy Coverage to GitHub Pages
+    needs: coverage
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+    - name: Download coverage report
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-report
+        path: ./build-coverage/coverage_html
+    - name: Download coverage data
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-data
+        path: ./build-coverage
+    - name: Generate coverage badge JSON
+      id: coverage_badge
+      run: |
+        cd build-coverage
+        COVERAGE_PERCENT=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}' | sed 's/%//')
+        echo "Coverage: ${COVERAGE_PERCENT}%"
+        if (( $(echo "$COVERAGE_PERCENT >= 80" | bc -l) )); then
+          COLOR="brightgreen"
+          GRADE="excellent"
+        elif (( $(echo "$COVERAGE_PERCENT >= 60" | bc -l) )); then
+          COLOR="green"
+          GRADE="good"
+        elif (( $(echo "$COVERAGE_PERCENT >= 40" | bc -l) )); then
+          COLOR="yellow"
+          GRADE="fair"
+        else
+          COLOR="red"
+          GRADE="poor"
+        fi
+        mkdir -p coverage_html/badges
+        cat > coverage_html/badges/coverage.json << EOF
+        {
+          "schemaVersion": 1,
+          "label": "test coverage",
+          "message": "${COVERAGE_PERCENT}%",
+          "color": "${COLOR}"
+        }
+        EOF
+        echo "✅ Coverage badge JSON created: ${COVERAGE_PERCENT}% (${GRADE}, ${COLOR})"
+        echo "coverage_percent=${COVERAGE_PERCENT}" >> $GITHUB_OUTPUT
+        echo "coverage_grade=${GRADE}" >> $GITHUB_OUTPUT
+
+    - name: Create index page
+      run: |
+        cd build-coverage/coverage_html
+        COVERAGE="${{ steps.coverage_badge.outputs.coverage_percent }}%"
+        GRADE="${{ steps.coverage_badge.outputs.coverage_grade }}"
+        if [ -f index.html ]; then
+          mv index.html index-original.html
+        fi
+        cat > index.html << EOF
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>unilink Coverage Report</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background: #f5f5f5;
+            }
+            .container {
+              max-width: 1200px;
+              margin: 0 auto;
+              background: white;
+              padding: 40px;
+              border-radius: 8px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            h1 { color: #333; margin-bottom: 10px; }
+            .coverage { font-size: 48px; font-weight: bold; color: #4CAF50; margin: 20px 0; }
+            .grade { font-size: 24px; color: #666; margin: 10px 0; text-transform: uppercase; }
+            .badge { margin: 20px 0; }
+            .links { margin-top: 30px; }
+            .link { 
+              display: inline-block;
+              padding: 12px 24px;
+              background: #2196F3;
+              color: white;
+              text-decoration: none;
+              border-radius: 4px;
+              margin-right: 10px;
+            }
+            .link:hover { background: #1976D2; }
+            .timestamp { color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>🎯 unilink Code Coverage</h1>
+            <p class="timestamp">Generated: $(date '+%Y-%m-%d %H:%M:%S UTC')</p>
+            <div class="coverage">Coverage: ${COVERAGE}</div>
+            <div class="grade">Grade: ${GRADE}</div>
+            <div class="badge">
+              <img src="https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/badges/coverage.json" alt="Coverage Badge">
+            </div>
+            <div class="links">
+              <a href="index-original.html" class="link">📊 Detailed Report</a>
+              <a href="https://github.com/jwsung91/unilink" class="link">📦 Repository</a>
+            </div>
+          </div>
+        </body>
+        </html>
+        EOF
+        echo "✅ Custom index page created with coverage: ${COVERAGE}"
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build-coverage/coverage_html
+        publish_branch: gh-pages
+        force_orphan: true
