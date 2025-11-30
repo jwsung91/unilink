@@ -20,6 +20,12 @@ get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 # Default: discover after build so test executables exist
 set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
 
+# On Windows/MSVC, always use PRE_TEST to avoid the CMake path-with-spaces quoting
+# issue in Visual Studio custom commands (GoogleTestAddTests.cmake invocation).
+if(WIN32)
+  set(_UNILINK_GTEST_DISCOVERY_MODE PRE_TEST)
+endif()
+
 foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/common/${test_file})
