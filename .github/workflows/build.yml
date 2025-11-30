@@ -196,6 +196,13 @@ jobs:
       run: |
         & "$env:CMAKE_EXE" --build build-windows --config ${{ env.BUILD_TYPE }}
 
+    - name: Build unit tests (Release)
+      shell: pwsh
+      run: |
+        & "$env:CMAKE_EXE" --build build-windows `
+          --target unilink_unit_tests `
+          --config ${{ env.BUILD_TYPE }}
+
     - name: Smoke tests (exclude slow/perf)
       shell: pwsh
       run: |
