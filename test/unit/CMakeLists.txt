@@ -20,12 +20,6 @@ get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 # Default: discover after build so test executables exist
 set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
 
-# On Windows/MSVC, always use PRE_TEST to avoid the CMake path-with-spaces quoting
-# issue in Visual Studio custom commands (GoogleTestAddTests.cmake invocation).
-if(WIN32)
-  set(_UNILINK_GTEST_DISCOVERY_MODE PRE_TEST)
-endif()
-
 foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/common/${test_file})
@@ -43,6 +37,10 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
       ${CMAKE_SOURCE_DIR}/test/utils
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
+
+  # Copy runtime dependency BEFORE test discovery to ensure executable can run
+  unilink_copy_runtime_dependency(run_unit_${test_name})
+
   # Mark test_core tests to use resource lock to avoid file I/O conflicts
   if(test_name STREQUAL "test_core")
     gtest_discover_tests(run_unit_${test_name}
@@ -60,7 +58,6 @@ foreach(test_file test_core.cc test_memory.cc test_boundary.cc test_error_handle
         TIMEOUT 30
     )
   endif()
-  unilink_copy_runtime_dependency(run_unit_${test_name})
 endforeach()
 
 # Builder tests (separate executables)
@@ -81,13 +78,15 @@ foreach(test_file test_builder.cc)
       ${CMAKE_SOURCE_DIR}/test/utils
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
+
+  unilink_copy_runtime_dependency(run_unit_${test_name})
+
   gtest_discover_tests(run_unit_${test_name}
     DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
     PROPERTIES
       LABELS "unit;builder;fast"
       TIMEOUT 30
   )
-  unilink_copy_runtime_dependency(run_unit_${test_name})
 endforeach()
 
 # Config tests (separate executables)
@@ -108,13 +107,15 @@ foreach(test_file test_config.cc)
       ${CMAKE_SOURCE_DIR}/test/utils
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
+
+  unilink_copy_runtime_dependency(run_unit_${test_name})
+
   gtest_discover_tests(run_unit_${test_name}
     DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
     PROPERTIES
       LABELS "unit;config;fast"
       TIMEOUT 30
   )
-  unilink_copy_runtime_dependency(run_unit_${test_name})
 endforeach()
 
 # Wrapper tests (separate executables)
@@ -135,6 +136,9 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
       ${CMAKE_SOURCE_DIR}/test/utils
       ${CMAKE_SOURCE_DIR}/test/fixtures
   )
+
+  unilink_copy_runtime_dependency(run_unit_${test_name})
+
   gtest_discover_tests(run_unit_${test_name}
     DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
     PROPERTIES
@@ -142,7 +146,6 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
       TIMEOUT 60
       RESOURCE_LOCK "tcp_port_allocation"
   )
-  unilink_copy_runtime_dependency(run_unit_${test_name})
 endforeach()
 
 # Wrapper serial config mapping
@@ -161,13 +164,15 @@ target_include_directories(run_unit_wrapper_serial_config_mapping
     ${CMAKE_SOURCE_DIR}/test/utils
     ${CMAKE_SOURCE_DIR}/test/fixtures
 )
+
+unilink_copy_runtime_dependency(run_unit_wrapper_serial_config_mapping)
+
 gtest_discover_tests(run_unit_wrapper_serial_config_mapping
   DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
   PROPERTIES
     LABELS "unit;wrapper;serial"
     TIMEOUT 30
 )
-unilink_copy_runtime_dependency(run_unit_wrapper_serial_config_mapping)
 
 # Transport tests (fast, unit-level without real network dependencies)
 add_executable(run_unit_transport_tcp_client ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_client.cc)
@@ -185,6 +190,9 @@ target_include_directories(run_unit_transport_tcp_client
     ${CMAKE_SOURCE_DIR}/test/utils
     ${CMAKE_SOURCE_DIR}/test/fixtures
 )
+
+unilink_copy_runtime_dependency(run_unit_transport_tcp_client)
+
 gtest_discover_tests(run_unit_transport_tcp_client
   DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
   PROPERTIES
@@ -208,6 +216,9 @@ target_include_directories(run_unit_transport_serial
     ${CMAKE_SOURCE_DIR}/test/utils
     ${CMAKE_SOURCE_DIR}/test/fixtures
 )
+
+unilink_copy_runtime_dependency(run_unit_transport_serial)
+
 gtest_discover_tests(run_unit_transport_serial
   DISCOVERY_MODE ${_UNILINK_GTEST_DISCOVERY_MODE}
   PROPERTIES
@@ -217,42 +228,22 @@ gtest_discover_tests(run_unit_transport_serial
 
 # Transport layer tests removed - they require actual network/serial devices
 
-
-
 # Create a custom target to build all unit tests
-
 add_custom_target(unilink_unit_tests)
 
-
-
 # Add dependencies to the custom target
-
 add_dependencies(unilink_unit_tests
-
   run_unit_test_core
-
   run_unit_test_memory
-
   run_unit_test_boundary
-
   run_unit_test_error_handler
-
   run_unit_test_input_validator
-
   run_unit_test_logger_advanced
-
   run_unit_test_builder
-
   run_unit_test_config
-
   run_unit_test_tcp_server_advanced
-
   run_unit_test_tcp_client_advanced
-
   run_unit_wrapper_serial_config_mapping
-
   run_unit_transport_tcp_client
-
   run_unit_transport_serial
-
 )
