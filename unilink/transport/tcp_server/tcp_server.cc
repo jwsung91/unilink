@@ -95,48 +95,56 @@ void TcpServer::start() {
 }
 
 void TcpServer::stop() {
+  if (state_.is_one_of({common::LinkState::Closing, common::LinkState::Closed})) {
+    return;
+  }
+  state_.set_state(common::LinkState::Closing);
+
+  // Use a promise to wait for cleanup to finish on the IO thread
+  std::promise<void> cleanup_promise;
+  auto cleanup_future = cleanup_promise.get_future();
+
+  // Post cleanup tasks to the IO context to run on its thread
+  auto self = shared_from_this();
+  net::post(ioc_, [self, &cleanup_promise] {
+    boost::system::error_code ec;
+
+    // 1. Close the acceptor to stop accepting new connections
+    if (self->acceptor_ && self->acceptor_->is_open()) {
+      self->acceptor_->close(ec);
+      if (ec) {
+        UNILINK_LOG_ERROR("tcp_server", "stop", "Failed to close acceptor: " + ec.message());
+      }
+    }
+
+    // 2. Close all active sessions
+    {
+      std::lock_guard<std::mutex> lock(self->sessions_mutex_);
+      for (auto& session : self->sessions_) {
+        if (session && session->alive()) {
+          session->close();
+        }
+      }
+      self->sessions_.clear();
+      self->current_session_.reset();
+    }
+
+    // 3. Signal that cleanup is complete
+    cleanup_promise.set_value();
+  });
+
+  // Block until the cleanup tasks on the IO thread are finished
+  cleanup_future.wait();
+
+  // If the server owned the io_context, stop it and join the thread
   if (owns_ioc_ && ioc_thread_.joinable()) {
-    auto self = shared_from_this();
-    std::promise<void> cleanup_promise;
-    auto cleanup_future = cleanup_promise.get_future();
-
-    net::post(ioc_, [self, &cleanup_promise] {
-      boost::system::error_code ec;
-      if (self->acceptor_ && self->acceptor_->is_open()) {
-        self->acceptor_->close(ec);
-      }
-      // Clean up all sessions
-      {
-        std::lock_guard<std::mutex> lock(self->sessions_mutex_);
-        self->sessions_.clear();
-        self->current_session_.reset();
-      }
-      cleanup_promise.set_value();
-    });
-
-    // Wait for cleanup completion
-    cleanup_future.wait();
-
     ioc_.stop();
     ioc_thread_.join();
-    // Reset io_context to clear any remaining work
     ioc_.restart();
-  } else {
-    // If server was never started, just clean up
-    boost::system::error_code ec;
-    if (acceptor_ && acceptor_->is_open()) {
-      acceptor_->close(ec);
-    }
-    // Clean up all sessions
-    {
-      std::lock_guard<std::mutex> lock(sessions_mutex_);
-      sessions_.clear();
-      current_session_.reset();
-    }
   }
+
   state_.set_state(common::LinkState::Closed);
-  // Don't call notify_state() in stop() as it may cause issues with callbacks
-  // during destruction
+  notify_state();
 }
 
 bool TcpServer::is_connected() const {

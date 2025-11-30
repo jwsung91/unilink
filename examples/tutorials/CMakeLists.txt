@@ -18,17 +18,15 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Find required packages
-find_package(Boost REQUIRED COMPONENTS system)
 find_package(Threads REQUIRED)
 
 # Tutorial 1: Getting Started Examples
 add_executable(tutorial_simple_client
     getting_started/simple_client.cpp
 )
-target_link_libraries(tutorial_simple_client
+target_link_berries(tutorial_simple_client
     PRIVATE
         unilink
-        ${Boost_LIBRARIES}
         Threads::Threads
 )
 unilink_configure_executable(tutorial_simple_client)
@@ -39,7 +37,6 @@ add_executable(tutorial_my_first_client
 target_link_libraries(tutorial_my_first_client
     PRIVATE
         unilink
-        ${Boost_LIBRARIES}
         Threads::Threads
 )
 unilink_configure_executable(tutorial_my_first_client)
@@ -51,7 +48,6 @@ add_executable(tutorial_echo_server
 target_link_libraries(tutorial_echo_server
     PRIVATE
         unilink
-        ${Boost_LIBRARIES}
         Threads::Threads
 )
 unilink_configure_executable(tutorial_echo_server)
@@ -62,7 +58,6 @@ add_executable(tutorial_chat_server
 target_link_libraries(tutorial_chat_server
     PRIVATE
         unilink
-        ${Boost_LIBRARIES}
         Threads::Threads
 )
 unilink_configure_executable(tutorial_chat_server)
