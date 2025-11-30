@@ -124,7 +124,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc)
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;wrapper;tcp;coverage"
+      LABELS "unit;wrapper;tcp"
       TIMEOUT 60
       RESOURCE_LOCK "tcp_port_allocation"
   )

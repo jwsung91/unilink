@@ -56,8 +56,8 @@ class ConfigTest : public ::testing::Test {
     // Create a fresh config manager for each test
     config_manager_ = std::make_shared<ConfigManager>();
 
-    // Set up test file path
-    test_file_path_ = TestUtils::makeTempFilePath("unilink_test_config.json");
+    // Set up test file path in the system temp directory to ensure writability
+    test_file_path_ = std::filesystem::temp_directory_path() / ("unilink_test_config_" + std::to_string(test_port_) + ".json");
 
     // Clean up any existing test file
     TestUtils::removeFileIfExists(test_file_path_);
