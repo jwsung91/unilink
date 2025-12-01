@@ -20,6 +20,7 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -39,8 +40,6 @@ class BuilderIntegrationTest : public ::testing::Test {
     connection_established_ = false;
     error_occurred_ = false;
   }
-
-#include <future>
 
   void TearDown() override {
     // 테스트 후 정리
