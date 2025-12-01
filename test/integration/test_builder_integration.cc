@@ -44,21 +44,21 @@ class BuilderIntegrationTest : public ::testing::Test {
   void TearDown() override {
     // 테스트 후 정리
     if (server_) {
-      std::promise<void> promise;
-      server_->stop([&] { promise.set_value(); });
-      promise.get_future().wait_for(1s);
+      auto promise = std::make_shared<std::promise<void>>();
+      server_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       server_.reset();
     }
     if (client_) {
-      std::promise<void> promise;
-      client_->stop([&] { promise.set_value(); });
-      promise.get_future().wait_for(1s);
+      auto promise = std::make_shared<std::promise<void>>();
+      client_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       client_.reset();
     }
     if (serial_) {
-      std::promise<void> promise;
-      serial_->stop([&] { promise.set_value(); });
-      promise.get_future().wait_for(1s);
+      auto promise = std::make_shared<std::promise<void>>();
+      serial_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       serial_.reset();
     }
 
@@ -960,17 +960,17 @@ TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
   EXPECT_TRUE(client_ != nullptr);
   EXPECT_TRUE(serial_ != nullptr);
 
-  std::promise<void> server_promise;
-  server_->stop([&] { server_promise.set_value(); });
-  server_promise.get_future().wait();
+  auto server_promise = std::make_shared<std::promise<void>>();
+  server_->stop([server_promise] { server_promise->set_value(); });
+  server_promise->get_future().wait_for(1s);
 
-  std::promise<void> client_promise;
-  client_->stop([&] { client_promise.set_value(); });
-  client_promise.get_future().wait();
+  auto client_promise = std::make_shared<std::promise<void>>();
+  client_->stop([client_promise] { client_promise->set_value(); });
+  client_promise->get_future().wait_for(1s);
 
-  std::promise<void> serial_promise;
-  serial_->stop([&] { serial_promise.set_value(); });
-  serial_promise.get_future().wait();
+  auto serial_promise = std::make_shared<std::promise<void>>();
+  serial_->stop([serial_promise] { serial_promise->set_value(); });
+  serial_promise->get_future().wait_for(1s);
 }
 
 int main(int argc, char** argv) {

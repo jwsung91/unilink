@@ -46,21 +46,21 @@ class BuilderTest : public ::testing::Test {
   void TearDown() override {
     // Clean up after test
     if (server_) {
-      std::promise<void> promise;
-      server_->stop([&] { promise.set_value(); });
-      promise.get_future().wait_for(1s);
+      auto promise = std::make_shared<std::promise<void>>();
+      server_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       server_.reset();
     }
     if (client_) {
-      std::promise<void> promise;
-      client_->stop([&] { promise.set_value(); });
-      promise.get_future().wait_for(1s);
+      auto promise = std::make_shared<std::promise<void>>();
+      client_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       client_.reset();
     }
     if (serial_) {
-      std::promise<void> promise;
-      serial_->stop([&] { promise.set_value(); });
-      promise.get_future().wait_for(1s);
+      auto promise = std::make_shared<std::promise<void>>();
+      serial_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       serial_.reset();
     }
 
@@ -340,13 +340,13 @@ TEST_F(BuilderTest, BuilderReuse) {
   EXPECT_TRUE(server2 != nullptr);
 
   // 정리
-  std::promise<void> promise1;
-  server1->stop([&] { promise1.set_value(); });
-  promise1.get_future().wait();
+  auto promise1 = std::make_shared<std::promise<void>>();
+  server1->stop([promise1] { promise1->set_value(); });
+  promise1->get_future().wait_for(1s);
 
-  std::promise<void> promise2;
-  server2->stop([&] { promise2.set_value(); });
-  promise2.get_future().wait();
+  auto promise2 = std::make_shared<std::promise<void>>();
+  server2->stop([promise2] { promise2->set_value(); });
+  promise2->get_future().wait_for(1s);
 }
 
 // 편의 함수 테스트
@@ -378,17 +378,17 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
   EXPECT_TRUE(dynamic_cast<wrapper::Serial*>(serial.get()) != nullptr);
 
   // 정리
-  std::promise<void> server_promise;
-  server->stop([&] { server_promise.set_value(); });
-  server_promise.get_future().wait();
+  auto server_promise = std::make_shared<std::promise<void>>();
+  server->stop([server_promise] { server_promise->set_value(); });
+  server_promise->get_future().wait_for(1s);
 
-  std::promise<void> client_promise;
-  client->stop([&] { client_promise.set_value(); });
-  client_promise.get_future().wait();
+  auto client_promise = std::make_shared<std::promise<void>>();
+  client->stop([client_promise] { client_promise->set_value(); });
+  client_promise->get_future().wait_for(1s);
 
-  std::promise<void> serial_promise;
-  serial->stop([&] { serial_promise.set_value(); });
-  serial_promise.get_future().wait();
+  auto serial_promise = std::make_shared<std::promise<void>>();
+  serial->stop([serial_promise] { serial_promise->set_value(); });
+  serial_promise->get_future().wait_for(1s);
 }
 
 // ============================================================================
@@ -506,14 +506,14 @@ class BuilderCoverageTest : public ::testing::Test {
  protected:
   void TearDown() override {
     if (server_) {
-      std::promise<void> promise;
-      server_->stop([&] { promise.set_value(); });
-      promise.get_future().wait();
+      auto promise = std::make_shared<std::promise<void>>();
+      server_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
     }
     if (client_) {
-      std::promise<void> promise;
-      client_->stop([&] { promise.set_value(); });
-      promise.get_future().wait();
+      auto promise = std::make_shared<std::promise<void>>();
+      client_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
     }
     std::this_thread::sleep_for(100ms);
   }
@@ -564,15 +564,15 @@ TEST_F(BuilderCoverageTest, TcpServerMaxClientsVariants) {
   EXPECT_NE(server1, nullptr);
   EXPECT_NE(server2, nullptr);
   EXPECT_NE(server3, nullptr);
-  std::promise<void> promise1;
-  server1->stop([&] { promise1.set_value(); });
-  promise1.get_future().wait();
-  std::promise<void> promise2;
-  server2->stop([&] { promise2.set_value(); });
-  promise2.get_future().wait();
-  std::promise<void> promise3;
-  server3->stop([&] { promise3.set_value(); });
-  promise3.get_future().wait();
+  auto promise1 = std::make_shared<std::promise<void>>();
+  server1->stop([promise1] { promise1->set_value(); });
+  promise1->get_future().wait_for(1s);
+  auto promise2 = std::make_shared<std::promise<void>>();
+  server2->stop([promise2] { promise2->set_value(); });
+  promise2->get_future().wait_for(1s);
+  auto promise3 = std::make_shared<std::promise<void>>();
+  server3->stop([promise3] { promise3->set_value(); });
+  promise3->get_future().wait_for(1s);
 }
 
 TEST_F(BuilderCoverageTest, TcpServerMaxClientsInvalid) {
