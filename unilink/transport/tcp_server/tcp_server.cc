@@ -64,7 +64,7 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interfa
 TcpServer::~TcpServer() {
   // Ensure proper cleanup even if stop() wasn't called explicitly
   if (!state_.is_state(common::LinkState::Closed)) {
-    stop();
+    stop_internal(true, nullptr);
   }
 
   // No need to clean up io_context as it's shared and managed by IoContextManager
@@ -94,7 +94,9 @@ void TcpServer::start() {
   net::post(ioc_, [self] { self->attempt_port_binding(0); });
 }
 
-void TcpServer::stop(std::function<void()> on_stopped) {
+void TcpServer::stop(std::function<void()> on_stopped) { stop_internal(false, on_stopped); }
+
+void TcpServer::stop_internal(bool from_destructor, std::function<void()> on_stopped) {
   if (state_.is_state(common::LinkState::Closed)) {
     if (on_stopped) {
       on_stopped();
@@ -102,7 +104,41 @@ void TcpServer::stop(std::function<void()> on_stopped) {
     return;
   }
 
-  // Post cleanup tasks to the IO context to run on its thread
+  // If called from destructor, we cannot use shared_from_this() or keep the object alive asynchronously.
+  // We must perform a best-effort synchronous cleanup of what we can access safely.
+  if (from_destructor) {
+    boost::system::error_code ec;
+    if (acceptor_ && acceptor_->is_open()) {
+      acceptor_->close(ec);
+    }
+    // We can't safely access sessions_mutex_ or sessions_ here if they might be in use by the io_context thread
+    // concurrently, but in the destructor, we assume we are the only owner left (or at least the main one).
+    // However, io_context might still be running.
+    // Since we are destroying, we just want to close sockets.
+    {
+      // Try to lock, but if we can't, we might be in trouble. Usually safe in destructor if no other thread holds it.
+      std::lock_guard<std::mutex> lock(sessions_mutex_);
+      for (auto& session : sessions_) {
+        if (session && session->alive()) {
+          // We can't call session->close() because it posts to ioc which might need shared_ptr
+          // But session is a shared_ptr, so we can reset it.
+          // Actually session->close() uses session->shared_from_this(), which is fine as session is not being destroyed yet.
+          session->close();
+        }
+      }
+      sessions_.clear();
+      current_session_.reset();
+    }
+
+    if (owns_ioc_ && ioc_thread_.joinable()) {
+      ioc_.stop();
+      ioc_thread_.join();
+    }
+    state_.set_state(common::LinkState::Closed);
+    return;
+  }
+
+  // Normal stop logic (not from destructor)
   auto self = shared_from_this();
   net::post(ioc_, [self, on_stopped] {
     boost::system::error_code ec;

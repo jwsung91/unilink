@@ -85,6 +85,7 @@ class TcpServer : public Channel,
   void set_unlimited_clients();
 
  private:
+  void stop_internal(bool from_destructor, std::function<void()> on_stopped);
   void do_accept();
   void notify_state();
   void attempt_port_binding(int retry_count);
