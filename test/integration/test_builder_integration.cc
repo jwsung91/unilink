@@ -40,24 +40,32 @@ class BuilderIntegrationTest : public ::testing::Test {
     error_occurred_ = false;
   }
 
+#include <future>
+
   void TearDown() override {
     // 테스트 후 정리
     if (server_) {
-      server_->stop();
+      std::promise<void> promise;
+      server_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       server_.reset();
     }
     if (client_) {
-      client_->stop();
+      std::promise<void> promise;
+      client_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       client_.reset();
     }
     if (serial_) {
-      serial_->stop();
+      std::promise<void> promise;
+      serial_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       serial_.reset();
     }
 
     // 충분한 시간을 두고 정리 완료 보장
-    // TIME_WAIT 상태에서도 포트 충돌 방지를 위해 1000ms 대기
-    std::this_thread::sleep_for(1000ms);
+    // TIME_WAIT 상태에서도 포트 충돌 방지를 위해 200ms 대기
+    std::this_thread::sleep_for(200ms);
   }
 
   // 테스트용 포트 번호 - TestUtils의 통합 포트 할당 사용
@@ -952,6 +960,18 @@ TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
   EXPECT_TRUE(server_ != nullptr);
   EXPECT_TRUE(client_ != nullptr);
   EXPECT_TRUE(serial_ != nullptr);
+
+  std::promise<void> server_promise;
+  server_->stop([&] { server_promise.set_value(); });
+  server_promise.get_future().wait();
+
+  std::promise<void> client_promise;
+  client_->stop([&] { client_promise.set_value(); });
+  client_promise.get_future().wait();
+
+  std::promise<void> serial_promise;
+  serial_->stop([&] { serial_promise.set_value(); });
+  serial_promise.get_future().wait();
 }
 
 int main(int argc, char** argv) {
