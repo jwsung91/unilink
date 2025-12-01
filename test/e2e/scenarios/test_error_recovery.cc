@@ -29,6 +29,7 @@
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/common/constants.hpp"
 #include "unilink/common/exceptions.hpp"
+#include "unilink/common/io_context_manager.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
@@ -57,6 +58,9 @@ class ErrorRecoveryTest : public BaseTest {
     error_count_ = 0;
     connection_attempts_ = 0;
     recovery_success_ = false;
+    
+    // Ensure IoContextManager is running for direct transport usage
+    IoContextManager::instance().start();
   }
 
   void TearDown() override { BaseTest::TearDown(); }
