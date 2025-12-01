@@ -186,6 +186,7 @@ TEST_F(BuilderTest, TcpClientBuilderBasic) {
 // SerialBuilder 기본 테스트
 TEST_F(BuilderTest, SerialBuilderBasic) {
   serial_ = unilink::serial(nullDevice(), 9600)
+                .use_independent_context(true)
                 // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 처리
@@ -244,7 +245,7 @@ TEST_F(BuilderTest, MultipleBuilders) {
 
   client_ = unilink::tcp_client("127.0.0.1", test_port).build();
 
-  serial_ = unilink::serial(nullDevice(), 115200).build();
+  serial_ = unilink::serial(nullDevice(), 115200).use_independent_context(true).build();
 
   ASSERT_NE(server_, nullptr);
   ASSERT_NE(client_, nullptr);
@@ -364,7 +365,11 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
       unilink::tcp_client("127.0.0.1", test_port).on_connect([]() {}).on_data([](const std::string& data) {}).build();
 
   // serial 편의 함수 테스트
-  auto serial = unilink::serial(nullDevice(), 9600).on_connect([]() {}).on_data([](const std::string& data) {}).build();
+  auto serial = unilink::serial(nullDevice(), 9600)
+                    .use_independent_context(true)
+                    .on_connect([]() {})
+                    .on_data([](const std::string& data) {})
+                    .build();
 
   // 객체들이 제대로 생성되었는지 확인
   EXPECT_NE(server, nullptr);

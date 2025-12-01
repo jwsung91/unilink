@@ -54,7 +54,7 @@ class TransportPerformanceTest : public ::testing::Test {
     retry_count_ = 0;
     
     // Ensure IoContextManager is running for tests that use shared context
-    common::IoContextManager::instance().start();
+    IoContextManager::instance().start();
   }
 
   void TearDown() override {

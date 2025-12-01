@@ -730,6 +730,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCreatesSerial) {
 
   // --- Test Logic ---
   serial_ = unilink::serial(test_device, test_baud_rate)
+                .use_independent_context(true)
                 // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 핸들러
@@ -764,7 +765,8 @@ TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
 
   // --- Test Logic ---
   // auto_start = false인 경우
-  auto serial_manual = unilink::serial(test_device, test_baud_rate).build();
+  auto serial_manual =
+      unilink::serial(test_device, test_baud_rate).use_independent_context(true).build();
 
   EXPECT_FALSE(serial_manual->is_connected());
 
@@ -777,7 +779,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
   serial_manual->stop();
 
   // auto_start = true인 경우
-  auto serial_auto = unilink::serial(test_device, test_baud_rate + 1).build();
+  auto serial_auto = unilink::serial(test_device, test_baud_rate + 1).use_independent_context(true).build();
 
   std::this_thread::sleep_for(100ms);
 
@@ -800,6 +802,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCallbackRegistration) {
 
   // --- Test Logic ---
   auto serial = unilink::serial(test_device, test_baud_rate)
+                    .use_independent_context(true)
                     .on_data([&](const std::string& data) { data_callback_count++; })
                     .on_connect([&]() { connect_callback_count++; })
                     .on_error([&](const std::string& error) { error_callback_count++; })
@@ -832,6 +835,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderMethodChaining) {
 
   // --- Test Logic ---
   auto serial = unilink::serial(test_device, test_baud_rate)
+                    .use_independent_context(true)
 
                     .auto_manage(true)
                     .on_data([](const std::string& data) {})
@@ -863,6 +867,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderErrorHandling) {
 
   // --- Test Logic ---
   auto serial = unilink::serial(invalid_device, test_baud_rate)
+                    .use_independent_context(true)
 
                     .on_error([this](const std::string& error) {
                       std::lock_guard<std::mutex> lock(mtx_);
@@ -899,7 +904,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderPerformance) {
     std::string device = "/dev/null";
     uint32_t baud_rate = 9600 + i;
 
-    auto serial = unilink::serial(device, baud_rate).build();
+    auto serial = unilink::serial(device, baud_rate).use_independent_context(true).build();
 
     serials.push_back(std::shared_ptr<wrapper::Serial>(serial.release()));
   }
@@ -941,7 +946,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
   client_ = unilink::tcp_client("127.0.0.1", test_port).build();
 
   // Serial 생성
-  serial_ = unilink::serial(test_device, test_baud_rate).build();
+  serial_ = unilink::serial(test_device, test_baud_rate).use_independent_context(true).build();
 
   // --- Verification ---
   ASSERT_NE(server_, nullptr);
