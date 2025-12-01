@@ -63,7 +63,12 @@ class TestUtils {
    * @return uint16_t Available port number
    */
   static uint16_t getAvailableTestPort() {
-    static std::atomic<uint16_t> port_counter{30000};  // Start from higher port range
+    static std::atomic<uint16_t> port_counter = []() {
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      std::uniform_int_distribution<uint16_t> dis(10000, 50000);
+      return dis(gen);
+    }();
 
     for (int attempt = 0; attempt < 1024; ++attempt) {
       uint16_t candidate = port_counter.fetch_add(1);
