@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
+#include <gmock/gmock.h>
 #include <future>
 
+#include "unilink/common/io_context_manager.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
@@ -459,7 +459,6 @@ TEST_F(TransportPerformanceTest, TcpClientThroughput) {
 
   const int num_messages = 10000;
   const size_t message_size = 100;  // 100 bytes per message
-  const size_t total_data = num_messages * message_size;
 
   auto start_time = std::chrono::high_resolution_clock::now();
 

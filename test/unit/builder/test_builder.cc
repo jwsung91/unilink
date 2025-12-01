@@ -314,6 +314,10 @@ TEST_F(BuilderTest, CallbackRegistration) {
     EXPECT_EQ(callback_count.load(), 0);
     EXPECT_EQ(error_callback_count.load(), 0);
   }
+
+  auto promise = std::make_shared<std::promise<void>>();
+  server_->stop([promise] { promise->set_value(); });
+  promise->get_future().wait();
 }
 
 // 빌더 재사용 테스트

@@ -73,6 +73,8 @@ void Serial::stop(std::function<void()> on_stopped) {
     return;
   }
 
+  channel_->on_state(nullptr);
+  channel_->on_bytes(nullptr);
   channel_->stop([this, on_stopped] {
     channel_.reset();
     started_ = false;

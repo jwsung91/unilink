@@ -82,6 +82,8 @@ void TcpServer::stop(std::function<void()> on_stopped) {
   }
 
   if (local_channel) {
+    local_channel->on_state(nullptr);
+    local_channel->on_bytes(nullptr);
     local_channel->stop(on_stopped);
   } else {
     if (on_stopped) {
