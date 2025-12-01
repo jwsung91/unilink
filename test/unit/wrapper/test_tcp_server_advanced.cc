@@ -149,8 +149,13 @@ TEST_F(AdvancedTcpServerCoverageTest, BindingConflictTriggersErrorCallback) {
   TestUtils::waitFor(200);
   EXPECT_TRUE(error_called.load() || !server_->is_listening());
 
-  server_->stop();
-  server1->stop();
+  std::promise<void> promise1;
+  server_->stop([&] { promise1.set_value(); });
+  promise1.get_future().wait();
+
+  std::promise<void> promise2;
+  server1->stop([&] { promise2.set_value(); });
+  promise2.get_future().wait();
 }
 
 // ============================================================================
