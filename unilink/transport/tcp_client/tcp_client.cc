@@ -174,10 +174,12 @@ void TcpClient::stop_internal(bool from_destructor, std::function<void()> on_sto
 
   if (ioc_) {
     if (!owns_ioc_) {
-      // For external io_context, perform immediate cleanup (caller might not run the loop again)
-      cleanup();
+      // For external io_context, only post cleanup to ensure thread safety
       if (!ioc_->stopped()) {
         net::post(*ioc_, std::move(cleanup));
+      } else {
+        // If stopped, run synchronously as fallback
+        cleanup();
       }
     } else {
       if (ioc_->stopped()) {
