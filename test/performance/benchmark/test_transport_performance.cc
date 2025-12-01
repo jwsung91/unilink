@@ -534,7 +534,7 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
     // 데이터 전송
     std::string data = "memory_test_" + std::to_string(cycle);
     std::vector<uint8_t> binary_data(data.begin(), data.end());
-    client->async_write_copy(binary_data..data(), binary_data.size());
+    client->async_write_copy(binary_data.data(), binary_data.size());
 
     std::promise<void> promise;
     client->stop([&] { promise.set_value(); });
