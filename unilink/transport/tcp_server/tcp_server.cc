@@ -122,7 +122,8 @@ void TcpServer::stop_internal(bool from_destructor, std::function<void()> on_sto
         if (session && session->alive()) {
           // We can't call session->close() because it posts to ioc which might need shared_ptr
           // But session is a shared_ptr, so we can reset it.
-          // Actually session->close() uses session->shared_from_this(), which is fine as session is not being destroyed yet.
+          // Actually session->close() uses session->shared_from_this(), which is fine as session is not being destroyed
+          // yet.
           session->close();
         }
       }

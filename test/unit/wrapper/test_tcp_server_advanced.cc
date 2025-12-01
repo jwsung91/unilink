@@ -17,12 +17,11 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <future>
 #include <memory>
 #include <string>
 #include <thread>
 #include <vector>
-
-#include <future>
 
 #include "test/utils/test_utils.hpp"
 #include "unilink/unilink.hpp"
