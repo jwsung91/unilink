@@ -67,6 +67,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   void set_retry_interval(unsigned interval_ms);
 
  private:
+  void stop_internal(bool from_destructor, std::function<void()> on_stopped);
   void open_and_configure();
   void start_read();
   void do_write();

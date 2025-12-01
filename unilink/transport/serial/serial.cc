@@ -63,7 +63,7 @@ Serial::Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInt
 Serial::~Serial() {
   // stop() might have been called already. Ensure we don't double-stop,
   // but do clean up resources if we own them.
-  if (started_ && !state_.is_state(common::LinkState::Closed)) stop();
+  stop_internal(true, nullptr);
 
   // No need to clean up io_context as it's shared and managed by IoContextManager
 }
@@ -85,7 +85,9 @@ void Serial::start() {
   started_ = true;
 }
 
-void Serial::stop(std::function<void()> on_stopped) {
+void Serial::stop(std::function<void()> on_stopped) { stop_internal(false, on_stopped); }
+
+void Serial::stop_internal(bool from_destructor, std::function<void()> on_stopped) {
   if (!started_) {
     state_.set_state(common::LinkState::Closed);
     if (on_stopped) {
@@ -95,6 +97,26 @@ void Serial::stop(std::function<void()> on_stopped) {
   }
 
   stopping_.store(true);
+
+  if (from_destructor) {
+    // Synchronous best-effort cleanup
+    try {
+      if (work_guard_) work_guard_->reset();
+      retry_timer_.cancel();
+      close_port();
+
+      if (owns_ioc_ && ioc_thread_.joinable()) {
+        ioc_.stop();
+        ioc_thread_.join();
+      }
+    } catch (...) {
+      // Ignore exceptions in destructor
+    }
+    opened_.store(false);
+    state_.set_state(common::LinkState::Closed);
+    return;
+  }
+
   if (!state_.is_state(common::LinkState::Closed)) {
     if (work_guard_) work_guard_->reset();  // Allow the io_context to run out of work.
     net::post(ioc_, [this, on_stopped] {

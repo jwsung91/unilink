@@ -67,6 +67,7 @@ class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient>
   void set_retry_interval(unsigned interval_ms);
 
  private:
+  void stop_internal(bool from_destructor, std::function<void()> on_stopped);
   void do_resolve_connect();
   void schedule_retry();
   void start_read();

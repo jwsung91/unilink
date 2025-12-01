@@ -70,40 +70,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
 }
 
 TcpClient::~TcpClient() {
-  stopping_.store(true);
-  // Set state to closed first
-  state_.set_state(LinkState::Closed);
-
-  // Clear callbacks to prevent dangling references
-  on_bytes_ = nullptr;
-  on_state_ = nullptr;
-  on_bp_ = nullptr;
-
-  // Release work guard so run() can exit cleanly
-  if (work_guard_) {
-    work_guard_->reset();
-  }
-
-  // Clear any pending operations
-  tx_.clear();
-  queue_bytes_ = 0;
-  writing_ = false;
-
-  // Clean up thread if still running and we own the io_context
-  if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
-    try {
-      ioc_->stop();
-      ioc_thread_.join();
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_client", "destructor", "Destructor error: " + std::string(e.what()));
-      error_reporting::report_system_error("tcp_client", "destructor",
-                                           "Exception in destructor: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("tcp_client", "destructor", "Unknown error in destructor");
-      error_reporting::report_system_error("tcp_client", "destructor", "Unknown error in destructor");
-    }
-  }
-
+  stop_internal(true, nullptr);
   // io_context is automatically deleted by unique_ptr
 }
 
@@ -147,10 +114,40 @@ void TcpClient::start() {
   });
 }
 
-void TcpClient::stop(std::function<void()> on_stopped) {
+void TcpClient::stop(std::function<void()> on_stopped) { stop_internal(false, on_stopped); }
+
+void TcpClient::stop_internal(bool from_destructor, std::function<void()> on_stopped) {
   stopping_.store(true);
   // Set state to closed first to prevent new operations
   state_.set_state(LinkState::Closed);
+
+  if (from_destructor) {
+    // Synchronous best-effort cleanup
+    try {
+      // Clear callbacks to prevent dangling references
+      on_bytes_ = nullptr;
+      on_state_ = nullptr;
+      on_bp_ = nullptr;
+
+      if (work_guard_) {
+        work_guard_->reset();
+      }
+
+      // Clear any pending operations
+      tx_.clear();
+      queue_bytes_ = 0;
+      writing_ = false;
+
+      // Clean up thread if still running and we own the io_context
+      if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
+        ioc_->stop();
+        ioc_thread_.join();
+      }
+    } catch (...) {
+      // Ignore exceptions in destructor
+    }
+    return;
+  }
 
   // Cleanup work; if we own the context, post; otherwise do best-effort sync if context is stopped
   auto self = shared_from_this();
