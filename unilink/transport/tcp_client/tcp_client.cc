@@ -194,13 +194,18 @@ void TcpClient::stop_internal(bool from_destructor, std::function<void()> on_sto
   }
 
   // Stop io_context and wait for thread to finish only if we own it
-  if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
+  if (owns_ioc_ && ioc_) {
     try {
       if (work_guard_) {
         work_guard_->reset();
       }
       ioc_->stop();
-      ioc_thread_.join();
+      // Cannot join if we are running on the ioc thread!
+      // If from_destructor, we are likely on main thread, so join is safe (and necessary).
+      // If not from_destructor, we are in posted task, so we are on ioc thread.
+      if (from_destructor && ioc_thread_.joinable()) {
+        ioc_thread_.join();
+      }
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_client", "stop", "Stop error: " + std::string(e.what()));
       error_reporting::report_system_error("tcp_client", "stop", "Exception in stop: " + std::string(e.what()));

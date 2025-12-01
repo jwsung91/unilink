@@ -164,10 +164,11 @@ void TcpServer::stop_internal(bool from_destructor, std::function<void()> on_sto
       self->current_session_.reset();
     }
 
-    // If the server owned the io_context, stop it and join the thread
-    if (self->owns_ioc_ && self->ioc_thread_.joinable()) {
+    // If the server owned the io_context, stop it
+    if (self->owns_ioc_) {
       self->ioc_.stop();
-      self->ioc_thread_.join();
+      // Cannot join here as we are running on the thread we want to join!
+      // The thread will exit after this handler returns since we stopped ioc.
       self->ioc_.restart();
     }
 

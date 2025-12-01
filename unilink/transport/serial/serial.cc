@@ -33,7 +33,7 @@ using namespace common;  // For error_reporting namespace
 
 Serial::Serial(const config::SerialConfig& cfg)
     : ioc_(common::IoContextManager::instance().get_context()),
-      owns_ioc_(true),  // Set to true to run io_context in our own thread
+      owns_ioc_(false),  // Shared context is managed by IoContextManager
       cfg_(cfg),
       retry_timer_(ioc_),
       bp_high_(cfg.backpressure_threshold) {
@@ -133,14 +133,76 @@ void Serial::stop_internal(bool from_destructor, std::function<void()> on_stoppe
       }
     });
 
-    // Wait for all async operations to complete
-    if (owns_ioc_ && ioc_thread_.joinable()) {
-      ioc_thread_.join();
-    }
+    // Wait for all async operations to complete ONLY if we are not in the posted handler
+    // But here we ARE in the posted handler? No, this block is OUTSIDE net::post?
+    // Wait, let's check the logic flow.
+    
+    // logic: 
+    // net::post(ioc_, [this, on_stopped] { ... });
+    // if (owns_ioc_ && ioc_thread_.joinable()) { ioc_thread_.join(); } 
+    
+    // The join is OUTSIDE the post lambda!
+    // But stop_internal is called from stop(). stop() is called from main thread.
+    // So we ARE on main thread here.
+    // BUT wait, if stop_internal is called from... where?
+    // stop() calls stop_internal(false).
+    // So we are on main thread.
+    // So joining IS safe here?
+    // net::post posts to ioc thread.
+    // Then we call join() on main thread.
+    // ioc thread runs lambda. Lambda closes port. Lambda stops ioc.
+    // ioc thread exits.
+    // join() returns.
+    
+    // So the previous code WAS correct for Serial?
+    // Let's look at TcpServer/TcpClient again.
+    // TcpServer::stop_internal posts a lambda. Inside lambda it had join code.
+    // Serial::stop_internal has join code OUTSIDE lambda?
+    
+    // Let's read Serial::stop_internal again carefully.
+    
+    /* 
+    if (!state_.is_state(common::LinkState::Closed)) {
+      if (work_guard_) work_guard_->reset();
+      net::post(ioc_, [this, on_stopped] {
+        retry_timer_.cancel();
+        close_port();
+        if (owns_ioc_) {
+          ioc_.stop();
+        }
+        if (on_stopped) {
+          on_stopped();
+        }
+      });
 
+      if (owns_ioc_ && ioc_thread_.joinable()) {
+        ioc_thread_.join();
+      }
+      // ...
+    }
+    */
+    
+    // If stop() is called from main thread, this logic is:
+    // 1. Post stop task to ioc thread.
+    // 2. Wait for ioc thread to finish.
+    
+    // This blocks the main thread until ioc stops.
+    // stop() is supposed to be ASYNC now.
+    // If we join here, it's BLOCKING.
+    
+    // So we MUST remove the join here to make it async.
+    // But if we remove join, who joins?
+    // ~Serial.
+    
+    // So I should remove the join here.
+    
     // Reset the io_context to clear any remaining work
     if (owns_ioc_) {
-      ioc_.restart();
+      // We can't restart if thread is still running? 
+      // Or if we don't join, we assume it will die.
+      // But we shouldn't touch ioc_ (restart) if thread might be accessing it.
+      // restart() is not thread safe if run() is executing.
+      // So we cannot restart here if we don't join.
     }
 
     opened_.store(false);
