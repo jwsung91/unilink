@@ -19,11 +19,13 @@
 
 #include <future>
 
+#include "../../utils/test_utils.hpp"
 #include "unilink/common/exceptions.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace unilink::test;
 using namespace std::chrono_literals;
 
 class BuilderTest : public ::testing::Test {
@@ -69,10 +71,7 @@ class BuilderTest : public ::testing::Test {
   }
 
   // Test port number (dynamic allocation to prevent conflicts)
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{9000};
-    return port_counter.fetch_add(1);
-  }
+  uint16_t getTestPort() { return TestUtils::getAvailableTestPort(); }
 
   // 테스트용 데이터 핸들러
   void setupDataHandler() {
@@ -518,10 +517,7 @@ class BuilderCoverageTest : public ::testing::Test {
     std::this_thread::sleep_for(100ms);
   }
 
-  static uint16_t next_port() {
-    static std::atomic<uint16_t> port_counter{10000};
-    return port_counter.fetch_add(1);
-  }
+  static uint16_t next_port() { return TestUtils::getAvailableTestPort(); }
 
   std::shared_ptr<wrapper::TcpServer> server_;
   std::shared_ptr<wrapper::TcpClient> client_;
