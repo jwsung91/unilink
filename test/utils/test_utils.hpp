@@ -36,6 +36,7 @@
 #include <filesystem>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -63,6 +64,13 @@ class TestUtils {
    * @return uint16_t Available port number
    */
   static uint16_t getAvailableTestPort() {
+    // First try to let the OS pick an ephemeral port for us. This avoids
+    // collisions when many tests run in parallel or when sandboxing blocks
+    // binding to specific ports.
+    if (auto ephemeral = try_get_ephemeral_port()) {
+      return *ephemeral;
+    }
+
     static std::atomic<uint16_t> port_counter = []() {
       std::random_device rd;
       std::mt19937 gen(rd());
@@ -82,6 +90,69 @@ class TestUtils {
       }
     }
     throw std::runtime_error("Unable to find available test port after many attempts");
+  }
+
+  /**
+   * @brief Ask the OS for an ephemeral port by binding to port 0.
+   * @return std::optional<uint16_t> Port number if successful.
+   */
+  static std::optional<uint16_t> try_get_ephemeral_port() {
+#ifdef _WIN32
+    ensure_winsock_initialized();
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (sock == INVALID_SOCKET) return std::nullopt;
+
+    BOOL reuse = 1;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&reuse), sizeof(reuse));
+
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(0);  // request ephemeral port
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind(sock, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
+      closesocket(sock);
+      return std::nullopt;
+    }
+
+    int len = sizeof(addr);
+    if (getsockname(sock, reinterpret_cast<sockaddr*>(&addr), &len) != 0) {
+      closesocket(sock);
+      return std::nullopt;
+    }
+
+    uint16_t port = ntohs(addr.sin_port);
+    closesocket(sock);
+    if (port == 0) return std::nullopt;
+    return port;
+#else
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) return std::nullopt;
+
+    int reuse = 1;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(0);  // request ephemeral port
+    addr.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(sock, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
+      close(sock);
+      return std::nullopt;
+    }
+
+    socklen_t len = sizeof(addr);
+    if (getsockname(sock, reinterpret_cast<sockaddr*>(&addr), &len) != 0) {
+      close(sock);
+      return std::nullopt;
+    }
+
+    uint16_t port = ntohs(addr.sin_port);
+    close(sock);
+    if (port == 0) return std::nullopt;
+    return port;
+#endif
   }
 
   /**

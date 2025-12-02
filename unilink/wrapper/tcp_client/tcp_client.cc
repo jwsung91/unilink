@@ -47,6 +47,7 @@ TcpClient::~TcpClient() {
 }
 
 void TcpClient::start() {
+  std::lock_guard<std::mutex> lock(mutex_);
   if (started_) return;
 
   if (!channel_) {
@@ -66,7 +67,7 @@ void TcpClient::start() {
 void TcpClient::stop(std::function<void()> on_stopped) {
   std::shared_ptr<interface::Channel> local_channel;
   {
-    // No mutex in TcpClient currently, but if added, lock here
+    std::lock_guard<std::mutex> lock(mutex_);
     if (!started_ || !channel_) {
       if (on_stopped) {
         on_stopped();
@@ -89,15 +90,23 @@ void TcpClient::stop(std::function<void()> on_stopped) {
 }
 
 void TcpClient::send(const std::string& data) {
-  if (is_connected() && channel_) {
-    auto binary_data = common::safe_convert::string_to_uint8(data);
-    channel_->async_write_copy(binary_data.data(), binary_data.size());
+  std::shared_ptr<interface::Channel> local_channel;
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (!channel_ || !channel_->is_connected()) return;
+    local_channel = channel_;
   }
+
+  auto binary_data = common::safe_convert::string_to_uint8(data);
+  local_channel->async_write_copy(binary_data.data(), binary_data.size());
 }
 
 void TcpClient::send_line(const std::string& line) { send(line + "\n"); }
 
-bool TcpClient::is_connected() const { return channel_ && channel_->is_connected(); }
+bool TcpClient::is_connected() const {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return channel_ && channel_->is_connected();
+}
 
 ChannelInterface& TcpClient::on_data(DataHandler handler) {
   data_handler_ = std::move(handler);

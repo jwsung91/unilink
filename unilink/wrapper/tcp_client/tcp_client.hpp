@@ -19,6 +19,7 @@
 #include <chrono>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include "unilink/interface/channel.hpp"
@@ -59,6 +60,7 @@ class TcpClient : public ChannelInterface {
  private:
   std::string host_;
   uint16_t port_;
+  mutable std::mutex mutex_;
   std::shared_ptr<interface::Channel> channel_;
 
   // Event handlers
