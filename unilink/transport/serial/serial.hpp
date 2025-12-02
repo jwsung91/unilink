@@ -54,7 +54,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   ~Serial() override;
 
   void start() override;
-  void stop() override;
+  void stop(std::function<void()> on_stopped = nullptr) override;
   bool is_connected() const override;
 
   void async_write_copy(const uint8_t* data, size_t n) override;
@@ -67,6 +67,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   void set_retry_interval(unsigned interval_ms);
 
  private:
+  void stop_internal(bool from_destructor, std::function<void()> on_stopped);
   void open_and_configure();
   void start_read();
   void do_write();
@@ -96,6 +97,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;
+  std::mutex callback_mutex_;
 
   std::atomic<bool> opened_{false};
   ThreadSafeLinkState state_{LinkState::Idle};

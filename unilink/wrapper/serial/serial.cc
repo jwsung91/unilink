@@ -65,14 +65,28 @@ void Serial::start() {
   started_ = true;
 }
 
-void Serial::stop() {
-  if (!started_ || !channel_) return;
+void Serial::stop(std::function<void()> on_stopped) {
+  std::shared_ptr<interface::Channel> local_channel;
+  {
+    if (!started_ || !channel_) {
+      if (on_stopped) {
+        on_stopped();
+      }
+      return;
+    }
+    started_ = false;
+    local_channel = std::move(channel_);
+  }
 
-  channel_->stop();
-  // Brief wait for async operations to complete
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  channel_.reset();
-  started_ = false;
+  if (local_channel) {
+    local_channel->on_state(nullptr);
+    local_channel->on_bytes(nullptr);
+    local_channel->stop(on_stopped);
+  } else {
+    if (on_stopped) {
+      on_stopped();
+    }
+  }
 }
 
 void Serial::send(const std::string& data) {

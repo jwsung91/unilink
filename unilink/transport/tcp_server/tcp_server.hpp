@@ -58,7 +58,7 @@ class TcpServer : public Channel,
   ~TcpServer();
 
   void start() override;
-  void stop() override;
+  void stop(std::function<void()> on_stopped = nullptr) override;
   bool is_connected() const override;
   void async_write_copy(const uint8_t* data, size_t size) override;
   void on_bytes(OnBytes cb) override;
@@ -85,6 +85,7 @@ class TcpServer : public Channel,
   void set_unlimited_clients();
 
  private:
+  void stop_internal(bool from_destructor, std::function<void()> on_stopped);
   void do_accept();
   void notify_state();
   void attempt_port_binding(int retry_count);
@@ -118,6 +119,7 @@ class TcpServer : public Channel,
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;
+  std::mutex callback_mutex_;
   ThreadSafeLinkState state_{LinkState::Idle};
 };
 }  // namespace transport

@@ -20,6 +20,7 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -43,21 +44,27 @@ class BuilderIntegrationTest : public ::testing::Test {
   void TearDown() override {
     // 테스트 후 정리
     if (server_) {
-      server_->stop();
+      auto promise = std::make_shared<std::promise<void>>();
+      server_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       server_.reset();
     }
     if (client_) {
-      client_->stop();
+      auto promise = std::make_shared<std::promise<void>>();
+      client_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       client_.reset();
     }
     if (serial_) {
-      serial_->stop();
+      auto promise = std::make_shared<std::promise<void>>();
+      serial_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       serial_.reset();
     }
 
     // 충분한 시간을 두고 정리 완료 보장
-    // TIME_WAIT 상태에서도 포트 충돌 방지를 위해 1000ms 대기
-    std::this_thread::sleep_for(1000ms);
+    // TIME_WAIT 상태에서도 포트 충돌 방지를 위해 200ms 대기
+    std::this_thread::sleep_for(200ms);
   }
 
   // 테스트용 포트 번호 - TestUtils의 통합 포트 할당 사용
@@ -718,11 +725,16 @@ TEST_F(BuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderCreatesSerial) {
   // --- Setup ---
-  std::string test_device = "/dev/null";  // 테스트용 장치
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
+  std::string test_device = "/dev/null";
+#endif  // 테스트용 장치
   uint32_t test_baud_rate = 9600;
 
   // --- Test Logic ---
   serial_ = unilink::serial(test_device, test_baud_rate)
+                .use_independent_context(true)
                 // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 핸들러
@@ -752,12 +764,16 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCreatesSerial) {
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
   // --- Setup ---
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
   std::string test_device = "/dev/null";
+#endif
   uint32_t test_baud_rate = 115200;
 
   // --- Test Logic ---
   // auto_start = false인 경우
-  auto serial_manual = unilink::serial(test_device, test_baud_rate).build();
+  auto serial_manual = unilink::serial(test_device, test_baud_rate).use_independent_context(true).build();
 
   EXPECT_FALSE(serial_manual->is_connected());
 
@@ -770,7 +786,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
   serial_manual->stop();
 
   // auto_start = true인 경우
-  auto serial_auto = unilink::serial(test_device, test_baud_rate + 1).build();
+  auto serial_auto = unilink::serial(test_device, test_baud_rate + 1).use_independent_context(true).build();
 
   std::this_thread::sleep_for(100ms);
 
@@ -785,7 +801,11 @@ TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderCallbackRegistration) {
   // --- Setup ---
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
   std::string test_device = "/dev/null";
+#endif
   uint32_t test_baud_rate = 9600;
   std::atomic<int> data_callback_count{0};
   std::atomic<int> connect_callback_count{0};
@@ -793,6 +813,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCallbackRegistration) {
 
   // --- Test Logic ---
   auto serial = unilink::serial(test_device, test_baud_rate)
+                    .use_independent_context(true)
                     .on_data([&](const std::string& data) { data_callback_count++; })
                     .on_connect([&]() { connect_callback_count++; })
                     .on_error([&](const std::string& error) { error_callback_count++; })
@@ -820,11 +841,16 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCallbackRegistration) {
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderMethodChaining) {
   // --- Setup ---
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
   std::string test_device = "/dev/null";
+#endif
   uint32_t test_baud_rate = 19200;
 
   // --- Test Logic ---
   auto serial = unilink::serial(test_device, test_baud_rate)
+                    .use_independent_context(true)
 
                     .auto_manage(true)
                     .on_data([](const std::string& data) {})
@@ -856,6 +882,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderErrorHandling) {
 
   // --- Test Logic ---
   auto serial = unilink::serial(invalid_device, test_baud_rate)
+                    .use_independent_context(true)
 
                     .on_error([this](const std::string& error) {
                       std::lock_guard<std::mutex> lock(mtx_);
@@ -892,7 +919,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderPerformance) {
     std::string device = "/dev/null";
     uint32_t baud_rate = 9600 + i;
 
-    auto serial = unilink::serial(device, baud_rate).build();
+    auto serial = unilink::serial(device, baud_rate).use_independent_context(true).build();
 
     serials.push_back(std::shared_ptr<wrapper::Serial>(serial.release()));
   }
@@ -921,9 +948,16 @@ TEST_F(BuilderIntegrationTest, SerialBuilderPerformance) {
  * @brief SerialBuilder와 다른 빌더들의 통합 테스트
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
+#ifdef _WIN32
+  GTEST_SKIP() << "Serial placeholder devices are not available on Windows CI; skipping serial integration mix test.";
+#endif
   // --- Setup ---
   uint16_t test_port = getTestPort();
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
   std::string test_device = "/dev/null";
+#endif
   uint32_t test_baud_rate = 9600;
 
   // --- Test Logic ---
@@ -934,7 +968,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
   client_ = unilink::tcp_client("127.0.0.1", test_port).build();
 
   // Serial 생성
-  serial_ = unilink::serial(test_device, test_baud_rate).build();
+  serial_ = unilink::serial(test_device, test_baud_rate).use_independent_context(true).build();
 
   // --- Verification ---
   ASSERT_NE(server_, nullptr);
@@ -952,6 +986,18 @@ TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
   EXPECT_TRUE(server_ != nullptr);
   EXPECT_TRUE(client_ != nullptr);
   EXPECT_TRUE(serial_ != nullptr);
+
+  auto server_promise = std::make_shared<std::promise<void>>();
+  server_->stop([server_promise] { server_promise->set_value(); });
+  server_promise->get_future().wait_for(1s);
+
+  auto client_promise = std::make_shared<std::promise<void>>();
+  client_->stop([client_promise] { client_promise->set_value(); });
+  client_promise->get_future().wait_for(1s);
+
+  auto serial_promise = std::make_shared<std::promise<void>>();
+  serial_->stop([serial_promise] { serial_promise->set_value(); });
+  serial_promise->get_future().wait_for(1s);
 }
 
 int main(int argc, char** argv) {

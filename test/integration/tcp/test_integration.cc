@@ -19,6 +19,7 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -27,6 +28,7 @@
 #include "test_utils.hpp"
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/common/exceptions.hpp"
+#include "unilink/common/io_context_manager.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -160,6 +162,18 @@ TEST_F(IntegrationTest, BasicCommunication) {
     if (data_received.load()) {
       EXPECT_EQ(received_data, "test message");
     }
+  }
+
+  // Clean up to avoid lingering io_context threads keeping the test binary alive
+  if (client) {
+    auto promise = std::make_shared<std::promise<void>>();
+    client->stop([promise] { promise->set_value(); });
+    promise->get_future().wait_for(std::chrono::seconds(1));
+  }
+  if (server) {
+    auto promise = std::make_shared<std::promise<void>>();
+    server->stop([promise] { promise->set_value(); });
+    promise->get_future().wait_for(std::chrono::seconds(1));
   }
 }
 
@@ -365,5 +379,8 @@ TEST_F(IntegrationTest, ComprehensiveBuilderMethodChaining) {
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  int result = RUN_ALL_TESTS();
+  // Ensure shared io_context threads do not keep the process alive after tests complete
+  unilink::common::IoContextManager::instance().stop();
+  return result;
 }

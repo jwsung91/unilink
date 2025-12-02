@@ -46,6 +46,10 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interfa
 
 void TcpServerSession::start() { start_read(); }
 
+void TcpServerSession::close() {
+  net::post(ioc_, [self = shared_from_this()] { self->do_close(); });
+}
+
 void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
   if (!alive_) return;  // Don't queue writes if session is not alive
 

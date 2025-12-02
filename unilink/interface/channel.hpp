@@ -30,7 +30,7 @@ class Channel {
   virtual ~Channel() = default;
 
   virtual void start() = 0;
-  virtual void stop() = 0;
+  virtual void stop(std::function<void()> on_stopped = nullptr) = 0;
   virtual bool is_connected() const = 0;
 
   // Single send API (copies into internal queue)

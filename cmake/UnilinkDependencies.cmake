@@ -180,6 +180,9 @@ add_library(unilink_dependencies INTERFACE)
 target_link_libraries(unilink_dependencies INTERFACE
   Threads::Threads
 )
+if(Boost_FOUND)
+  target_link_libraries(unilink_dependencies INTERFACE Boost::headers)
+endif()
 if(UNILINK_LINK_BOOST_SYSTEM)
   target_link_libraries(unilink_dependencies INTERFACE Boost::system)
 elseif(UNILINK_BOOST_INCLUDE_DIR)

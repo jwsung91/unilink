@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <atomic>
-#include <chrono>
-#include <memory>
-#include <string>
-#include <thread>
-#include <vector>
+#include <future>
 
+#include "../../utils/test_utils.hpp"
 #include "unilink/common/exceptions.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace unilink::test;
 using namespace std::chrono_literals;
 
 class BuilderTest : public ::testing::Test {
@@ -50,15 +48,21 @@ class BuilderTest : public ::testing::Test {
   void TearDown() override {
     // Clean up after test
     if (server_) {
-      server_->stop();
+      auto promise = std::make_shared<std::promise<void>>();
+      server_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       server_.reset();
     }
     if (client_) {
-      client_->stop();
+      auto promise = std::make_shared<std::promise<void>>();
+      client_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       client_.reset();
     }
     if (serial_) {
-      serial_->stop();
+      auto promise = std::make_shared<std::promise<void>>();
+      serial_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
       serial_.reset();
     }
 
@@ -67,10 +71,7 @@ class BuilderTest : public ::testing::Test {
   }
 
   // Test port number (dynamic allocation to prevent conflicts)
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{9000};
-    return port_counter.fetch_add(1);
-  }
+  uint16_t getTestPort() { return TestUtils::getAvailableTestPort(); }
 
   // 테스트용 데이터 핸들러
   void setupDataHandler() {
@@ -185,6 +186,7 @@ TEST_F(BuilderTest, TcpClientBuilderBasic) {
 // SerialBuilder 기본 테스트
 TEST_F(BuilderTest, SerialBuilderBasic) {
   serial_ = unilink::serial(nullDevice(), 9600)
+                .use_independent_context(true)
                 // 수동 시작으로 제어
                 .on_data([](const std::string& data) {
                   // 데이터 처리
@@ -237,13 +239,16 @@ TEST_F(BuilderTest, BuilderChaining) {
 
 // 여러 Builder 동시 사용 테스트
 TEST_F(BuilderTest, MultipleBuilders) {
+#ifdef _WIN32
+  GTEST_SKIP() << "Serial placeholder devices are unavailable on Windows CI; skipping combined builder test.";
+#endif
   uint16_t test_port = getTestPort();
 
   server_ = unilink::tcp_server(test_port).unlimited_clients().build();
 
   client_ = unilink::tcp_client("127.0.0.1", test_port).build();
 
-  serial_ = unilink::serial(nullDevice(), 115200).build();
+  serial_ = unilink::serial(nullDevice(), 115200).use_independent_context(true).build();
 
   ASSERT_NE(server_, nullptr);
   ASSERT_NE(client_, nullptr);
@@ -312,6 +317,10 @@ TEST_F(BuilderTest, CallbackRegistration) {
     EXPECT_EQ(callback_count.load(), 0);
     EXPECT_EQ(error_callback_count.load(), 0);
   }
+
+  auto promise = std::make_shared<std::promise<void>>();
+  server_->stop([promise] { promise->set_value(); });
+  promise->get_future().wait_for(1s);
 }
 
 // 빌더 재사용 테스트
@@ -338,8 +347,13 @@ TEST_F(BuilderTest, BuilderReuse) {
   EXPECT_TRUE(server2 != nullptr);
 
   // 정리
-  server1->stop();
-  server2->stop();
+  auto promise1 = std::make_shared<std::promise<void>>();
+  server1->stop([promise1] { promise1->set_value(); });
+  promise1->get_future().wait_for(1s);
+
+  auto promise2 = std::make_shared<std::promise<void>>();
+  server2->stop([promise2] { promise2->set_value(); });
+  promise2->get_future().wait_for(1s);
 }
 
 // 편의 함수 테스트
@@ -358,7 +372,11 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
       unilink::tcp_client("127.0.0.1", test_port).on_connect([]() {}).on_data([](const std::string& data) {}).build();
 
   // serial 편의 함수 테스트
-  auto serial = unilink::serial(nullDevice(), 9600).on_connect([]() {}).on_data([](const std::string& data) {}).build();
+  auto serial = unilink::serial(nullDevice(), 9600)
+                    .use_independent_context(true)
+                    .on_connect([]() {})
+                    .on_data([](const std::string& data) {})
+                    .build();
 
   // 객체들이 제대로 생성되었는지 확인
   EXPECT_NE(server, nullptr);
@@ -371,9 +389,17 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
   EXPECT_TRUE(dynamic_cast<wrapper::Serial*>(serial.get()) != nullptr);
 
   // 정리
-  server->stop();
-  client->stop();
-  serial->stop();
+  auto server_promise = std::make_shared<std::promise<void>>();
+  server->stop([server_promise] { server_promise->set_value(); });
+  server_promise->get_future().wait_for(1s);
+
+  auto client_promise = std::make_shared<std::promise<void>>();
+  client->stop([client_promise] { client_promise->set_value(); });
+  client_promise->get_future().wait_for(1s);
+
+  auto serial_promise = std::make_shared<std::promise<void>>();
+  serial->stop([serial_promise] { serial_promise->set_value(); });
+  serial_promise->get_future().wait_for(1s);
 }
 
 // ============================================================================
@@ -490,15 +516,20 @@ TEST_F(BuilderTest, MethodChainingWithIndependentContext) {
 class BuilderCoverageTest : public ::testing::Test {
  protected:
   void TearDown() override {
-    if (server_) server_->stop();
-    if (client_) client_->stop();
+    if (server_) {
+      auto promise = std::make_shared<std::promise<void>>();
+      server_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
+    }
+    if (client_) {
+      auto promise = std::make_shared<std::promise<void>>();
+      client_->stop([promise] { promise->set_value(); });
+      promise->get_future().wait_for(1s);
+    }
     std::this_thread::sleep_for(100ms);
   }
 
-  static uint16_t next_port() {
-    static std::atomic<uint16_t> port_counter{10000};
-    return port_counter.fetch_add(1);
-  }
+  static uint16_t next_port() { return TestUtils::getAvailableTestPort(); }
 
   std::shared_ptr<wrapper::TcpServer> server_;
   std::shared_ptr<wrapper::TcpClient> client_;
@@ -541,9 +572,15 @@ TEST_F(BuilderCoverageTest, TcpServerMaxClientsVariants) {
   EXPECT_NE(server1, nullptr);
   EXPECT_NE(server2, nullptr);
   EXPECT_NE(server3, nullptr);
-  server1->stop();
-  server2->stop();
-  server3->stop();
+  auto promise1 = std::make_shared<std::promise<void>>();
+  server1->stop([promise1] { promise1->set_value(); });
+  promise1->get_future().wait_for(1s);
+  auto promise2 = std::make_shared<std::promise<void>>();
+  server2->stop([promise2] { promise2->set_value(); });
+  promise2->get_future().wait_for(1s);
+  auto promise3 = std::make_shared<std::promise<void>>();
+  server3->stop([promise3] { promise3->set_value(); });
+  promise3->get_future().wait_for(1s);
 }
 
 TEST_F(BuilderCoverageTest, TcpServerMaxClientsInvalid) {

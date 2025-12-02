@@ -33,7 +33,7 @@ using namespace common;  // For error_reporting namespace
 
 Serial::Serial(const config::SerialConfig& cfg)
     : ioc_(common::IoContextManager::instance().get_context()),
-      owns_ioc_(true),  // Set to true to run io_context in our own thread
+      owns_ioc_(false),  // Shared context is managed by IoContextManager
       cfg_(cfg),
       retry_timer_(ioc_),
       bp_high_(cfg.backpressure_threshold) {
@@ -63,7 +63,7 @@ Serial::Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInt
 Serial::~Serial() {
   // stop() might have been called already. Ensure we don't double-stop,
   // but do clean up resources if we own them.
-  if (started_ && !state_.is_state(common::LinkState::Closed)) stop();
+  stop_internal(true, nullptr);
 
   // No need to clean up io_context as it's shared and managed by IoContextManager
 }
@@ -85,16 +85,41 @@ void Serial::start() {
   started_ = true;
 }
 
-void Serial::stop() {
+void Serial::stop(std::function<void()> on_stopped) { stop_internal(false, on_stopped); }
+
+void Serial::stop_internal(bool from_destructor, std::function<void()> on_stopped) {
   if (!started_) {
     state_.set_state(common::LinkState::Closed);
+    if (on_stopped) {
+      on_stopped();
+    }
     return;
   }
 
   stopping_.store(true);
+
+  if (from_destructor) {
+    // Synchronous best-effort cleanup
+    try {
+      if (work_guard_) work_guard_->reset();
+      retry_timer_.cancel();
+      close_port();
+
+      if (owns_ioc_ && ioc_thread_.joinable()) {
+        ioc_.stop();
+        ioc_thread_.join();
+      }
+    } catch (...) {
+      // Ignore exceptions in destructor
+    }
+    opened_.store(false);
+    state_.set_state(common::LinkState::Closed);
+    return;
+  }
+
   if (!state_.is_state(common::LinkState::Closed)) {
     if (work_guard_) work_guard_->reset();  // Allow the io_context to run out of work.
-    net::post(ioc_, [this] {
+    net::post(ioc_, [this, on_stopped] {
       // Cancel all pending async operations to unblock the io_context
       retry_timer_.cancel();
       close_port();
@@ -103,21 +128,20 @@ void Serial::stop() {
       if (owns_ioc_) {
         ioc_.stop();
       }
+      if (on_stopped) {
+        on_stopped();
+      }
     });
 
-    // Wait for all async operations to complete
-    if (owns_ioc_ && ioc_thread_.joinable()) {
-      ioc_thread_.join();
-    }
-
-    // Reset the io_context to clear any remaining work
-    if (owns_ioc_) {
-      ioc_.restart();
-    }
+    // Wait for all async operations to complete ONLY if we are not in the posted handler
 
     opened_.store(false);
     state_.set_state(common::LinkState::Closed);
     notify_state();
+  } else {
+    if (on_stopped) {
+      on_stopped();
+    }
   }
   started_ = false;
 }
@@ -135,7 +159,14 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
       net::post(ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         self->queued_bytes_ += buf.size();
         self->tx_.emplace_back(std::move(buf));
-        if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
+
+        OnBackpressure cb;
+        {
+          std::lock_guard<std::mutex> lock(self->callback_mutex_);
+          cb = self->on_bp_;
+        }
+        if (cb && self->queued_bytes_ > self->bp_high_) cb(self->queued_bytes_);
+
         if (!self->writing_) self->do_write();
       });
       return;
@@ -148,14 +179,30 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
   net::post(ioc_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     self->queued_bytes_ += buf.size();
     self->tx_.emplace_back(std::move(buf));
-    if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
+
+    OnBackpressure cb;
+    {
+      std::lock_guard<std::mutex> lock(self->callback_mutex_);
+      cb = self->on_bp_;
+    }
+    if (cb && self->queued_bytes_ > self->bp_high_) cb(self->queued_bytes_);
+
     if (!self->writing_) self->do_write();
   });
 }
 
-void Serial::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
-void Serial::on_state(OnState cb) { on_state_ = std::move(cb); }
-void Serial::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
+void Serial::on_bytes(OnBytes cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_bytes_ = std::move(cb);
+}
+void Serial::on_state(OnState cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_state_ = std::move(cb);
+}
+void Serial::on_backpressure(OnBackpressure cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_bp_ = std::move(cb);
+}
 
 void Serial::open_and_configure() {
   boost::system::error_code ec;
@@ -232,7 +279,12 @@ void Serial::start_read() {
       self->handle_error("read", ec);
       return;
     }
-    if (self->on_bytes_) self->on_bytes_(self->rx_.data(), n);
+    OnBytes cb;
+    {
+      std::lock_guard<std::mutex> lock(self->callback_mutex_);
+      cb = self->on_bytes_;
+    }
+    if (cb) cb(self->rx_.data(), n);
     self->start_read();
   });
 }

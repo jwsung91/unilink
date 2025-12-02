@@ -19,6 +19,7 @@
 #include <chrono>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include "unilink/interface/channel.hpp"
@@ -35,7 +36,7 @@ class TcpClient : public ChannelInterface {
 
   // IChannel implementation
   void start() override;
-  void stop() override;
+  void stop(std::function<void()> on_stopped = nullptr) override;
   void send(const std::string& data) override;
   void send_line(const std::string& line) override;
   bool is_connected() const override;
@@ -59,6 +60,7 @@ class TcpClient : public ChannelInterface {
  private:
   std::string host_;
   uint16_t port_;
+  mutable std::mutex mutex_;
   std::shared_ptr<interface::Channel> channel_;
 
   // Event handlers

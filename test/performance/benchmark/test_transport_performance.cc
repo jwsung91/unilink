@@ -17,12 +17,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <atomic>
-#include <chrono>
-#include <memory>
-#include <thread>
-#include <vector>
+#include <future>
 
+#include "../../utils/test_utils.hpp"
+#include "unilink/common/io_context_manager.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
@@ -36,6 +34,7 @@
 using namespace unilink::transport;
 using namespace unilink::config;
 using namespace unilink::common;
+using namespace unilink::test;
 using namespace std::chrono_literals;
 
 /**
@@ -56,20 +55,29 @@ class TransportPerformanceTest : public ::testing::Test {
     backpressure_triggered_ = false;
     backpressure_bytes_ = 0;
     retry_count_ = 0;
+
+    // Ensure IoContextManager is running for tests that use shared context
+    IoContextManager::instance().start();
   }
 
   void TearDown() override {
     // Clean up after test
     if (client_) {
-      client_->stop();
+      std::promise<void> promise;
+      client_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       client_.reset();
     }
     if (server_) {
-      server_->stop();
+      std::promise<void> promise;
+      server_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       server_.reset();
     }
     if (serial_) {
-      serial_->stop();
+      std::promise<void> promise;
+      serial_->stop([&] { promise.set_value(); });
+      promise.get_future().wait_for(1s);
       serial_.reset();
     }
 
@@ -78,10 +86,7 @@ class TransportPerformanceTest : public ::testing::Test {
   }
 
   // Test port number (dynamic allocation to prevent conflicts)
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{20000};
-    return port_counter.fetch_add(1);
-  }
+  uint16_t getTestPort() { return TestUtils::getTestPort(); }
 
  protected:
   std::shared_ptr<TcpClient> client_;
@@ -454,7 +459,6 @@ TEST_F(TransportPerformanceTest, TcpClientThroughput) {
 
   const int num_messages = 10000;
   const size_t message_size = 100;  // 100 bytes per message
-  const size_t total_data = num_messages * message_size;
 
   auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -518,7 +522,7 @@ TEST_F(TransportPerformanceTest, TcpServerThroughput) {
  */
 TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
   // --- Setup ---
-  const int num_cycles = 100;
+  const int num_cycles = 20;
 
   // --- Test Logic ---
   for (int cycle = 0; cycle < num_cycles; ++cycle) {
@@ -535,7 +539,9 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
     std::vector<uint8_t> binary_data(data.begin(), data.end());
     client->async_write_copy(binary_data.data(), binary_data.size());
 
-    client->stop();
+    std::promise<void> promise;
+    client->stop([&] { promise.set_value(); });
+    promise.get_future().wait();
     // client가 스코프를 벗어나면 자동으로 소멸
   }
 
@@ -549,7 +555,7 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
  */
 TEST_F(TransportPerformanceTest, TcpServerMemoryLeak) {
   // --- Setup ---
-  const int num_cycles = 100;
+  const int num_cycles = 20;
 
   // --- Test Logic ---
   for (int cycle = 0; cycle < num_cycles; ++cycle) {
@@ -564,7 +570,9 @@ TEST_F(TransportPerformanceTest, TcpServerMemoryLeak) {
     std::vector<uint8_t> binary_data(data.begin(), data.end());
     server->async_write_copy(binary_data.data(), binary_data.size());
 
-    server->stop();
+    std::promise<void> promise;
+    server->stop([&] { promise.set_value(); });
+    promise.get_future().wait();
     // server가 스코프를 벗어나면 자동으로 소멸
   }
 

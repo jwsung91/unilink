@@ -29,6 +29,7 @@
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/common/constants.hpp"
 #include "unilink/common/exceptions.hpp"
+#include "unilink/common/io_context_manager.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
@@ -57,6 +58,9 @@ class ErrorRecoveryTest : public BaseTest {
     error_count_ = 0;
     connection_attempts_ = 0;
     recovery_success_ = false;
+
+    // Ensure IoContextManager is running for direct transport usage
+    IoContextManager::instance().start();
   }
 
   void TearDown() override { BaseTest::TearDown(); }
@@ -307,6 +311,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   // Serial은 reopen_on_error=true일 때 재시도하므로 on_error 콜백이 호출되지 않습니다
   TestUtils::waitFor(1000);
   std::cout << "✓ Nonexistent device error handled (retry mechanism working)" << std::endl;
+  serial1->stop();
 
   // 2. 권한 부족 (시스템 포트) - 기본적으로 재시도하므로 on_error 콜백이 호출되지 않음
   std::cout << "Testing permission denied error..." << std::endl;
@@ -326,6 +331,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   // Serial은 기본적으로 reopen_on_error=true이므로 재시도하고 on_error 콜백이 호출되지 않습니다
   TestUtils::waitFor(1000);
   std::cout << "✓ Permission denied error handled (retry mechanism working)" << std::endl;
+  serial2->stop();
 
   // 3. 잘못된 baud rate
   std::cout << "Testing invalid baud rate..." << std::endl;
@@ -345,6 +351,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   // Serial은 기본적으로 reopen_on_error=true이므로 재시도하고 on_error 콜백이 호출되지 않습니다
   TestUtils::waitFor(3000);
   std::cout << "✓ Invalid baud rate error handled (retry mechanism working)" << std::endl;
+  serial3->stop();
 }
 
 /**

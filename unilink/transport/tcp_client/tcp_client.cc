@@ -70,40 +70,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
 }
 
 TcpClient::~TcpClient() {
-  stopping_.store(true);
-  // Set state to closed first
-  state_.set_state(LinkState::Closed);
-
-  // Clear callbacks to prevent dangling references
-  on_bytes_ = nullptr;
-  on_state_ = nullptr;
-  on_bp_ = nullptr;
-
-  // Release work guard so run() can exit cleanly
-  if (work_guard_) {
-    work_guard_->reset();
-  }
-
-  // Clear any pending operations
-  tx_.clear();
-  queue_bytes_ = 0;
-  writing_ = false;
-
-  // Clean up thread if still running and we own the io_context
-  if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
-    try {
-      ioc_->stop();
-      ioc_thread_.join();
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_client", "destructor", "Destructor error: " + std::string(e.what()));
-      error_reporting::report_system_error("tcp_client", "destructor",
-                                           "Exception in destructor: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("tcp_client", "destructor", "Unknown error in destructor");
-      error_reporting::report_system_error("tcp_client", "destructor", "Unknown error in destructor");
-    }
-  }
-
+  stop_internal(true, nullptr);
   // io_context is automatically deleted by unique_ptr
 }
 
@@ -124,6 +91,9 @@ void TcpClient::start() {
   stopping_.store(false);
 
   if (owns_ioc_) {
+    if (ioc_->stopped()) {
+      ioc_->restart();
+    }
     // Re-arm work guard in case stop() or destructor cleared it
     work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
     // Create our own thread for this io_context
@@ -147,14 +117,44 @@ void TcpClient::start() {
   });
 }
 
-void TcpClient::stop() {
+void TcpClient::stop(std::function<void()> on_stopped) { stop_internal(false, on_stopped); }
+
+void TcpClient::stop_internal(bool from_destructor, std::function<void()> on_stopped) {
   stopping_.store(true);
   // Set state to closed first to prevent new operations
   state_.set_state(LinkState::Closed);
 
+  if (from_destructor) {
+    // Synchronous best-effort cleanup
+    try {
+      // Clear callbacks to prevent dangling references
+      on_bytes_ = nullptr;
+      on_state_ = nullptr;
+      on_bp_ = nullptr;
+
+      if (work_guard_) {
+        work_guard_->reset();
+      }
+
+      // Clear any pending operations
+      tx_.clear();
+      queue_bytes_ = 0;
+      writing_ = false;
+
+      // Clean up thread if still running and we own the io_context
+      if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
+        ioc_->stop();
+        ioc_thread_.join();
+      }
+    } catch (...) {
+      // Ignore exceptions in destructor
+    }
+    return;
+  }
+
   // Cleanup work; if we own the context, post; otherwise do best-effort sync if context is stopped
   auto self = shared_from_this();
-  auto cleanup = [self] {
+  auto cleanup = [self, on_stopped] {
     try {
       self->retry_timer_.cancel();
       self->resolver_.cancel();
@@ -166,17 +166,33 @@ void TcpClient::stop() {
       self->queue_bytes_ = 0;
       self->writing_ = false;
       self->connected_.store(false);
+
+      // If we own the io_context, stop it here to ensure it happens after cleanup
+      if (self->owns_ioc_ && self->ioc_) {
+        self->ioc_->stop();
+      }
+
+      if (on_stopped) {
+        on_stopped();
+      }
     } catch (...) {
       // Ignore exceptions during cleanup
     }
   };
 
+  // Reset work guard to allow io_context to exit after cleanup
+  if (owns_ioc_ && work_guard_) {
+    work_guard_->reset();
+  }
+
   if (ioc_) {
     if (!owns_ioc_) {
-      // For external io_context, perform immediate cleanup (caller might not run the loop again)
-      cleanup();
+      // For external io_context, only post cleanup to ensure thread safety
       if (!ioc_->stopped()) {
         net::post(*ioc_, std::move(cleanup));
+      } else {
+        // If stopped, run synchronously as fallback
+        cleanup();
       }
     } else {
       if (ioc_->stopped()) {
@@ -186,22 +202,9 @@ void TcpClient::stop() {
         net::post(*ioc_, std::move(cleanup));
       }
     }
-  }
-
-  // Stop io_context and wait for thread to finish only if we own it
-  if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
-    try {
-      if (work_guard_) {
-        work_guard_->reset();
-      }
-      ioc_->stop();
-      ioc_thread_.join();
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_client", "stop", "Stop error: " + std::string(e.what()));
-      error_reporting::report_system_error("tcp_client", "stop", "Exception in stop: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("tcp_client", "stop", "Unknown error in stop");
-      error_reporting::report_system_error("tcp_client", "stop", "Unknown error in stop");
+  } else {
+    if (on_stopped) {
+      on_stopped();
     }
   }
 
@@ -225,8 +228,11 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
     return;
   }
 
-  if (on_bp_ && size >= bp_high_) {
-    on_bp_(size);
+  {
+    std::lock_guard<std::mutex> lock(callback_mutex_);
+    if (on_bp_ && size >= bp_high_) {
+      on_bp_(size);
+    }
   }
 
   // Use memory pool for better performance (only for reasonable sizes)
@@ -244,7 +250,14 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
 
         self->queue_bytes_ += buf.size();
         self->tx_.emplace_back(std::move(buf));
-        if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) self->on_bp_(self->queue_bytes_);
+
+        OnBackpressure cb;
+        {
+          std::lock_guard<std::mutex> lock(self->callback_mutex_);
+          cb = self->on_bp_;
+        }
+        if (cb && self->queue_bytes_ > self->bp_high_) cb(self->queue_bytes_);
+
         self->do_write();
       });
       return;
@@ -262,14 +275,30 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
 
     self->queue_bytes_ += buf.size();
     self->tx_.emplace_back(std::move(buf));
-    if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) self->on_bp_(self->queue_bytes_);
+
+    OnBackpressure cb;
+    {
+      std::lock_guard<std::mutex> lock(self->callback_mutex_);
+      cb = self->on_bp_;
+    }
+    if (cb && self->queue_bytes_ > self->bp_high_) cb(self->queue_bytes_);
+
     if (!self->writing_) self->do_write();
   });
 }
 
-void TcpClient::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
-void TcpClient::on_state(OnState cb) { on_state_ = std::move(cb); }
-void TcpClient::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
+void TcpClient::on_bytes(OnBytes cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_bytes_ = std::move(cb);
+}
+void TcpClient::on_state(OnState cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_state_ = std::move(cb);
+}
+void TcpClient::on_backpressure(OnBackpressure cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_bp_ = std::move(cb);
+}
 
 void TcpClient::do_resolve_connect() {
   auto self = shared_from_this();
@@ -331,7 +360,12 @@ void TcpClient::start_read() {
       self->handle_close(ec);
       return;
     }
-    if (self->on_bytes_) self->on_bytes_(self->rx_.data(), n);
+    OnBytes cb;
+    {
+      std::lock_guard<std::mutex> lock(self->callback_mutex_);
+      cb = self->on_bytes_;
+    }
+    if (cb) cb(self->rx_.data(), n);
     self->start_read();
   });
 }
@@ -401,7 +435,12 @@ void TcpClient::close_socket() {
 }
 
 void TcpClient::notify_state() {
-  if (on_state_) on_state_(state_.get_state());
+  OnState cb;
+  {
+    std::lock_guard<std::mutex> lock(callback_mutex_);
+    cb = on_state_;
+  }
+  if (cb) cb(state_.get_state());
 }
 }  // namespace transport
 }  // namespace unilink
