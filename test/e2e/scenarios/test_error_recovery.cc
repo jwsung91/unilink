@@ -311,6 +311,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   // Serial은 reopen_on_error=true일 때 재시도하므로 on_error 콜백이 호출되지 않습니다
   TestUtils::waitFor(1000);
   std::cout << "✓ Nonexistent device error handled (retry mechanism working)" << std::endl;
+  serial1->stop();
 
   // 2. 권한 부족 (시스템 포트) - 기본적으로 재시도하므로 on_error 콜백이 호출되지 않음
   std::cout << "Testing permission denied error..." << std::endl;
@@ -330,6 +331,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   // Serial은 기본적으로 reopen_on_error=true이므로 재시도하고 on_error 콜백이 호출되지 않습니다
   TestUtils::waitFor(1000);
   std::cout << "✓ Permission denied error handled (retry mechanism working)" << std::endl;
+  serial2->stop();
 
   // 3. 잘못된 baud rate
   std::cout << "Testing invalid baud rate..." << std::endl;
@@ -349,6 +351,7 @@ TEST_F(ErrorRecoveryTest, SerialPortErrors) {
   // Serial은 기본적으로 reopen_on_error=true이므로 재시도하고 on_error 콜백이 호출되지 않습니다
   TestUtils::waitFor(3000);
   std::cout << "✓ Invalid baud rate error handled (retry mechanism working)" << std::endl;
+  serial3->stop();
 }
 
 /**

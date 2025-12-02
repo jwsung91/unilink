@@ -239,6 +239,9 @@ TEST_F(BuilderTest, BuilderChaining) {
 
 // 여러 Builder 동시 사용 테스트
 TEST_F(BuilderTest, MultipleBuilders) {
+#ifdef _WIN32
+  GTEST_SKIP() << "Serial placeholder devices are unavailable on Windows CI; skipping combined builder test.";
+#endif
   uint16_t test_port = getTestPort();
 
   server_ = unilink::tcp_server(test_port).unlimited_clients().build();

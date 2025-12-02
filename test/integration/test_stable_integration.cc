@@ -27,6 +27,7 @@
 #include "test_utils.hpp"
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/common/exceptions.hpp"
+#include "unilink/common/io_context_manager.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -370,5 +371,7 @@ TEST_F(StableIntegrationTest, StableBuilderPattern) {
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  int result = RUN_ALL_TESTS();
+  unilink::common::IoContextManager::instance().stop();
+  return result;
 }

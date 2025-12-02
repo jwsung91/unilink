@@ -948,6 +948,9 @@ TEST_F(BuilderIntegrationTest, SerialBuilderPerformance) {
  * @brief SerialBuilder와 다른 빌더들의 통합 테스트
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
+#ifdef _WIN32
+  GTEST_SKIP() << "Serial placeholder devices are not available on Windows CI; skipping serial integration mix test.";
+#endif
   // --- Setup ---
   uint16_t test_port = getTestPort();
 #ifdef _WIN32
