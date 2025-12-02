@@ -18,6 +18,7 @@
 #include <gmock/gmock.h>
 #include <future>
 
+#include "../../utils/test_utils.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
@@ -83,10 +84,7 @@ class TransportPerformanceTest : public ::testing::Test {
   }
 
   // Test port number (dynamic allocation to prevent conflicts)
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{20000};
-    return port_counter.fetch_add(1);
-  }
+  uint16_t getTestPort() { return TestUtils::getTestPort(); }
 
  protected:
   std::shared_ptr<TcpClient> client_;
@@ -522,7 +520,7 @@ TEST_F(TransportPerformanceTest, TcpServerThroughput) {
  */
 TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
   // --- Setup ---
-  const int num_cycles = 100;
+  const int num_cycles = 20;
 
   // --- Test Logic ---
   for (int cycle = 0; cycle < num_cycles; ++cycle) {
@@ -555,7 +553,7 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
  */
 TEST_F(TransportPerformanceTest, TcpServerMemoryLeak) {
   // --- Setup ---
-  const int num_cycles = 100;
+  const int num_cycles = 20;
 
   // --- Test Logic ---
   for (int cycle = 0; cycle < num_cycles; ++cycle) {

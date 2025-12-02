@@ -64,22 +64,28 @@ void TcpClient::start() {
 }
 
 void TcpClient::stop(std::function<void()> on_stopped) {
-  if (!started_ || !channel_) {
-    if (on_stopped) {
-      on_stopped();
+  std::shared_ptr<interface::Channel> local_channel;
+  {
+    // No mutex in TcpClient currently, but if added, lock here
+    if (!started_ || !channel_) {
+      if (on_stopped) {
+        on_stopped();
+      }
+      return;
     }
-    return;
+    started_ = false;
+    local_channel = std::move(channel_);
   }
 
-  channel_->on_state(nullptr);
-  channel_->on_bytes(nullptr);
-  channel_->stop([this, on_stopped] {
-    channel_.reset();
-    started_ = false;
+  if (local_channel) {
+    local_channel->on_state(nullptr);
+    local_channel->on_bytes(nullptr);
+    local_channel->stop(on_stopped);
+  } else {
     if (on_stopped) {
       on_stopped();
     }
-  });
+  }
 }
 
 void TcpClient::send(const std::string& data) {
