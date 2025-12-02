@@ -119,6 +119,7 @@ class TcpServer : public Channel,
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;
+  std::mutex callback_mutex_;
   ThreadSafeLinkState state_{LinkState::Idle};
 };
 }  // namespace transport

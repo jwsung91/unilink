@@ -237,8 +237,11 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
     return;
   }
 
-  if (on_bp_ && size >= bp_high_) {
-    on_bp_(size);
+  {
+    std::lock_guard<std::mutex> lock(callback_mutex_);
+    if (on_bp_ && size >= bp_high_) {
+      on_bp_(size);
+    }
   }
 
   // Use memory pool for better performance (only for reasonable sizes)
@@ -256,7 +259,14 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
 
         self->queue_bytes_ += buf.size();
         self->tx_.emplace_back(std::move(buf));
-        if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) self->on_bp_(self->queue_bytes_);
+        
+        OnBackpressure cb;
+        {
+           std::lock_guard<std::mutex> lock(self->callback_mutex_);
+           cb = self->on_bp_;
+        }
+        if (cb && self->queue_bytes_ > self->bp_high_) cb(self->queue_bytes_);
+        
         self->do_write();
       });
       return;
@@ -274,14 +284,30 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
 
     self->queue_bytes_ += buf.size();
     self->tx_.emplace_back(std::move(buf));
-    if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) self->on_bp_(self->queue_bytes_);
+    
+    OnBackpressure cb;
+    {
+       std::lock_guard<std::mutex> lock(self->callback_mutex_);
+       cb = self->on_bp_;
+    }
+    if (cb && self->queue_bytes_ > self->bp_high_) cb(self->queue_bytes_);
+    
     if (!self->writing_) self->do_write();
   });
 }
 
-void TcpClient::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
-void TcpClient::on_state(OnState cb) { on_state_ = std::move(cb); }
-void TcpClient::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
+void TcpClient::on_bytes(OnBytes cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_bytes_ = std::move(cb);
+}
+void TcpClient::on_state(OnState cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_state_ = std::move(cb);
+}
+void TcpClient::on_backpressure(OnBackpressure cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_bp_ = std::move(cb);
+}
 
 void TcpClient::do_resolve_connect() {
   auto self = shared_from_this();
@@ -343,7 +369,12 @@ void TcpClient::start_read() {
       self->handle_close(ec);
       return;
     }
-    if (self->on_bytes_) self->on_bytes_(self->rx_.data(), n);
+    OnBytes cb;
+    {
+      std::lock_guard<std::mutex> lock(self->callback_mutex_);
+      cb = self->on_bytes_;
+    }
+    if (cb) cb(self->rx_.data(), n);
     self->start_read();
   });
 }
@@ -413,7 +444,12 @@ void TcpClient::close_socket() {
 }
 
 void TcpClient::notify_state() {
-  if (on_state_) on_state_(state_.get_state());
+  OnState cb;
+  {
+    std::lock_guard<std::mutex> lock(callback_mutex_);
+    cb = on_state_;
+  }
+  if (cb) cb(state_.get_state());
 }
 }  // namespace transport
 }  // namespace unilink

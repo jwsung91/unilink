@@ -229,7 +229,14 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
       net::post(ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         self->queued_bytes_ += buf.size();
         self->tx_.emplace_back(std::move(buf));
-        if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
+        
+        OnBackpressure cb;
+        {
+           std::lock_guard<std::mutex> lock(self->callback_mutex_);
+           cb = self->on_bp_;
+        }
+        if (cb && self->queued_bytes_ > self->bp_high_) cb(self->queued_bytes_);
+        
         if (!self->writing_) self->do_write();
       });
       return;
@@ -242,14 +249,30 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
   net::post(ioc_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     self->queued_bytes_ += buf.size();
     self->tx_.emplace_back(std::move(buf));
-    if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
+    
+    OnBackpressure cb;
+    {
+       std::lock_guard<std::mutex> lock(self->callback_mutex_);
+       cb = self->on_bp_;
+    }
+    if (cb && self->queued_bytes_ > self->bp_high_) cb(self->queued_bytes_);
+    
     if (!self->writing_) self->do_write();
   });
 }
 
-void Serial::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
-void Serial::on_state(OnState cb) { on_state_ = std::move(cb); }
-void Serial::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
+void Serial::on_bytes(OnBytes cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_bytes_ = std::move(cb);
+}
+void Serial::on_state(OnState cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_state_ = std::move(cb);
+}
+void Serial::on_backpressure(OnBackpressure cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_bp_ = std::move(cb);
+}
 
 void Serial::open_and_configure() {
   boost::system::error_code ec;
@@ -326,7 +349,12 @@ void Serial::start_read() {
       self->handle_error("read", ec);
       return;
     }
-    if (self->on_bytes_) self->on_bytes_(self->rx_.data(), n);
+    OnBytes cb;
+    {
+      std::lock_guard<std::mutex> lock(self->callback_mutex_);
+      cb = self->on_bytes_;
+    }
+    if (cb) cb(self->rx_.data(), n);
     self->start_read();
   });
 }

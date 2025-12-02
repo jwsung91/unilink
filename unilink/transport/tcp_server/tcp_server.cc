@@ -200,6 +200,7 @@ void TcpServer::async_write_copy(const uint8_t* data, size_t size) {
 }
 
 void TcpServer::on_bytes(OnBytes cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
   on_bytes_ = std::move(cb);
   std::shared_ptr<TcpServerSession> session;
   {
@@ -209,8 +210,12 @@ void TcpServer::on_bytes(OnBytes cb) {
 
   if (session) session->on_bytes(on_bytes_);
 }
-void TcpServer::on_state(OnState cb) { on_state_ = std::move(cb); }
+void TcpServer::on_state(OnState cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_state_ = std::move(cb);
+}
 void TcpServer::on_backpressure(OnBackpressure cb) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
   on_bp_ = std::move(cb);
   std::shared_ptr<TcpServerSession> session;
   {
@@ -377,28 +382,42 @@ void TcpServer::do_accept() {
     }
 
     // Set session callbacks
-    if (self->on_bytes_) {
-      new_session->on_bytes([self, client_id](const uint8_t* data, size_t size) {
-        // Call existing callback (compatibility)
-        if (self->on_bytes_) {
-          self->on_bytes_(data, size);
-        }
+    new_session->on_bytes([self, client_id](const uint8_t* data, size_t size) {
+      OnBytes cb;
+      MultiClientDataHandler multi_cb;
+      {
+        std::lock_guard<std::mutex> lock(self->callback_mutex_);
+        cb = self->on_bytes_;
+        multi_cb = self->on_multi_data_;
+      }
 
-        // Call multi-client callback
-        if (self->on_multi_data_) {
-          std::string str_data = common::safe_convert::uint8_to_string(data, size);
-          self->on_multi_data_(client_id, str_data);
-        }
-      });
+      // Call existing callback (compatibility)
+      if (cb) {
+        cb(data, size);
+      }
+
+      // Call multi-client callback
+      if (multi_cb) {
+        std::string str_data = common::safe_convert::uint8_to_string(data, size);
+        multi_cb(client_id, str_data);
+      }
+    });
+
+    {
+      std::lock_guard<std::mutex> lock(self->callback_mutex_);
+      if (self->on_bp_) new_session->on_backpressure(self->on_bp_);
     }
-
-    if (self->on_bp_) new_session->on_backpressure(self->on_bp_);
 
     // Handle session termination
     new_session->on_close([self, client_id, new_session] {
       // Call multi-client callback
-      if (self->on_multi_disconnect_) {
-        self->on_multi_disconnect_(client_id);
+      MultiClientDisconnectHandler disconnect_cb;
+      {
+        std::lock_guard<std::mutex> lock(self->callback_mutex_);
+        disconnect_cb = self->on_multi_disconnect_;
+      }
+      if (disconnect_cb) {
+        disconnect_cb(client_id);
       }
 
       bool was_current = false;
@@ -423,8 +442,13 @@ void TcpServer::do_accept() {
     });
 
     // Call multi-client connection callback
-    if (self->on_multi_connect_) {
-      self->on_multi_connect_(client_id, client_info);
+    MultiClientConnectHandler connect_cb;
+    {
+      std::lock_guard<std::mutex> lock(self->callback_mutex_);
+      connect_cb = self->on_multi_connect_;
+    }
+    if (connect_cb) {
+      connect_cb(client_id, client_info);
     }
 
     // Update state for existing API compatibility
@@ -439,9 +463,14 @@ void TcpServer::do_accept() {
 }
 
 void TcpServer::notify_state() {
-  if (on_state_) {
+  OnState cb;
+  {
+    std::lock_guard<std::mutex> lock(callback_mutex_);
+    cb = on_state_;
+  }
+  if (cb) {
     try {
-      on_state_(state_.get_state());
+      cb(state_.get_state());
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_server", "callback", "State callback error: " + std::string(e.what()));
       common::error_reporting::report_system_error("tcp_server", "state_callback",
@@ -492,11 +521,20 @@ std::vector<size_t> TcpServer::get_connected_clients() const {
   return connected_clients;
 }
 
-void TcpServer::on_multi_connect(MultiClientConnectHandler handler) { on_multi_connect_ = std::move(handler); }
+void TcpServer::on_multi_connect(MultiClientConnectHandler handler) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_multi_connect_ = std::move(handler);
+}
 
-void TcpServer::on_multi_data(MultiClientDataHandler handler) { on_multi_data_ = std::move(handler); }
+void TcpServer::on_multi_data(MultiClientDataHandler handler) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_multi_data_ = std::move(handler);
+}
 
-void TcpServer::on_multi_disconnect(MultiClientDisconnectHandler handler) { on_multi_disconnect_ = std::move(handler); }
+void TcpServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
+  std::lock_guard<std::mutex> lock(callback_mutex_);
+  on_multi_disconnect_ = std::move(handler);
+}
 
 void TcpServer::set_client_limit(size_t max_clients) {
   max_clients_ = max_clients;

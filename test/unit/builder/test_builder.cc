@@ -317,7 +317,7 @@ TEST_F(BuilderTest, CallbackRegistration) {
 
   auto promise = std::make_shared<std::promise<void>>();
   server_->stop([promise] { promise->set_value(); });
-  promise->get_future().wait();
+  promise->get_future().wait_for(1s);
 }
 
 // 빌더 재사용 테스트

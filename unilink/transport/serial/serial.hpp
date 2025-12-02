@@ -97,6 +97,7 @@ class Serial : public Channel, public std::enable_shared_from_this<Serial> {
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;
+  std::mutex callback_mutex_;
 
   std::atomic<bool> opened_{false};
   ThreadSafeLinkState state_{LinkState::Idle};

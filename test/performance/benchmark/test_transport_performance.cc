@@ -33,6 +33,7 @@
 using namespace unilink::transport;
 using namespace unilink::config;
 using namespace unilink::common;
+using namespace unilink::test;
 using namespace std::chrono_literals;
 
 /**

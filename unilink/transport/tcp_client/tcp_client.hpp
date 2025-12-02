@@ -97,6 +97,7 @@ class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient>
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;
+  std::mutex callback_mutex_;
   std::atomic<bool> connected_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
 };
