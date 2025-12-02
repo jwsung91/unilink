@@ -58,7 +58,7 @@ class ErrorRecoveryTest : public BaseTest {
     error_count_ = 0;
     connection_attempts_ = 0;
     recovery_success_ = false;
-    
+
     // Ensure IoContextManager is running for direct transport usage
     IoContextManager::instance().start();
   }

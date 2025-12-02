@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
 #include <future>
 
 #include "../../utils/test_utils.hpp"
@@ -54,7 +55,7 @@ class TransportPerformanceTest : public ::testing::Test {
     backpressure_triggered_ = false;
     backpressure_bytes_ = 0;
     retry_count_ = 0;
-    
+
     // Ensure IoContextManager is running for tests that use shared context
     IoContextManager::instance().start();
   }

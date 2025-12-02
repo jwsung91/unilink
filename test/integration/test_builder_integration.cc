@@ -765,8 +765,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
 
   // --- Test Logic ---
   // auto_start = false인 경우
-  auto serial_manual =
-      unilink::serial(test_device, test_baud_rate).use_independent_context(true).build();
+  auto serial_manual = unilink::serial(test_device, test_baud_rate).use_independent_context(true).build();
 
   EXPECT_FALSE(serial_manual->is_connected());
 
