@@ -725,7 +725,11 @@ TEST_F(BuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderCreatesSerial) {
   // --- Setup ---
-  std::string test_device = "/dev/null";  // 테스트용 장치
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
+  std::string test_device = "/dev/null";
+#endif  // 테스트용 장치
   uint32_t test_baud_rate = 9600;
 
   // --- Test Logic ---
@@ -760,7 +764,11 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCreatesSerial) {
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
   // --- Setup ---
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
   std::string test_device = "/dev/null";
+#endif
   uint32_t test_baud_rate = 115200;
 
   // --- Test Logic ---
@@ -793,7 +801,11 @@ TEST_F(BuilderIntegrationTest, SerialBuilderConfiguration) {
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderCallbackRegistration) {
   // --- Setup ---
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
   std::string test_device = "/dev/null";
+#endif
   uint32_t test_baud_rate = 9600;
   std::atomic<int> data_callback_count{0};
   std::atomic<int> connect_callback_count{0};
@@ -829,7 +841,11 @@ TEST_F(BuilderIntegrationTest, SerialBuilderCallbackRegistration) {
  */
 TEST_F(BuilderIntegrationTest, SerialBuilderMethodChaining) {
   // --- Setup ---
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
   std::string test_device = "/dev/null";
+#endif
   uint32_t test_baud_rate = 19200;
 
   // --- Test Logic ---
@@ -934,7 +950,11 @@ TEST_F(BuilderIntegrationTest, SerialBuilderPerformance) {
 TEST_F(BuilderIntegrationTest, SerialBuilderWithOtherBuilders) {
   // --- Setup ---
   uint16_t test_port = getTestPort();
+#ifdef _WIN32
+  std::string test_device = "NUL";
+#else
   std::string test_device = "/dev/null";
+#endif
   uint32_t test_baud_rate = 9600;
 
   // --- Test Logic ---

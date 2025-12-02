@@ -91,6 +91,9 @@ void TcpClient::start() {
   stopping_.store(false);
 
   if (owns_ioc_) {
+    if (ioc_->stopped()) {
+      ioc_->restart();
+    }
     // Re-arm work guard in case stop() or destructor cleared it
     work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
     // Create our own thread for this io_context
