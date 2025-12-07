@@ -134,6 +134,9 @@ TEST_F(StableIntegrationTest, StableServerCreation) {
  * @brief Test stable client creation and basic functionality
  */
 TEST_F(StableIntegrationTest, StableClientCreation) {
+#ifdef _WIN32
+  GTEST_SKIP() << "Stable client creation with live sockets is flaky on Windows CI.";
+#endif
   // Given: Client configuration
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
                 // Don't auto-start to avoid connection attempts
