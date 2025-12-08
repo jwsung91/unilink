@@ -35,7 +35,7 @@ jobs:
         cmake --build build-security -j $(nproc)
 
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@0.28.0
+      uses: aquasecurity/trivy-action@0.33.1
       with:
         scan-type: 'fs'
         scan-ref: '.'
@@ -64,7 +64,7 @@ jobs:
         docker build -t unilink:security-scan .
 
     - name: Run Trivy vulnerability scanner on Docker image
-      uses: aquasecurity/trivy-action@0.28.0
+      uses: aquasecurity/trivy-action@0.33.1
       with:
         image-ref: 'unilink:security-scan'
         format: 'sarif'
