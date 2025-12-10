@@ -64,7 +64,7 @@ jobs:
         shell: pwsh
         run: |
           choco install ninja --no-progress -y
-          & "C:\vcpkg\vcpkg.exe" install boost-system:x64-windows
+          & "C:\vcpkg\vcpkg.exe" install boost-asio:x64-windows boost-system:x64-windows
 
       - name: Configure
         shell: bash

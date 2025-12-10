@@ -10,6 +10,7 @@ endif()
 set(Boost_USE_STATIC_LIBS OFF CACHE BOOL "Prefer shared Boost libraries" FORCE)
 set(Boost_USE_MULTITHREADED ON CACHE BOOL "Use multithreaded Boost libraries" FORCE)
 set(Boost_USE_DEBUG_RUNTIME OFF CACHE BOOL "Do not require debug runtime Boost binaries" FORCE)
+set(UNILINK_BOOST_COMPONENTS system asio)
 
 # Control whether we must link Boost.System (off on macOS to use header-only mode)
 set(UNILINK_LINK_BOOST_SYSTEM ON)
@@ -28,25 +29,25 @@ endif()
 # Find required packages
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   # Windows builds: rely on recent Boost releases available via Conan/vcpkg
-  find_package(Boost 1.70 REQUIRED COMPONENTS system)
+  find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
   message(STATUS "Using Boost 1.70+ for Windows compatibility")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   # Detect Ubuntu version and set appropriate Boost version
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
     # Ubuntu 20.04: GCC 9-10, Boost 1.65+
-    find_package(Boost 1.65 REQUIRED COMPONENTS system)
+    find_package(Boost 1.65 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
     message(STATUS "Using Boost 1.65+ for Ubuntu 20.04 compatibility")
   elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "13.0")
     # Ubuntu 22.04: GCC 11-12, Boost 1.74+
-    find_package(Boost 1.74 REQUIRED COMPONENTS system)
+    find_package(Boost 1.74 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
     message(STATUS "Using Boost 1.74+ for Ubuntu 22.04 compatibility")
   else()
     # Ubuntu 24.04+: GCC 13+, try Boost 1.83+ first, fallback to 1.74+
-    find_package(Boost 1.83 QUIET COMPONENTS system)
+    find_package(Boost 1.83 QUIET COMPONENTS ${UNILINK_BOOST_COMPONENTS})
     if(Boost_FOUND)
       message(STATUS "Using Boost 1.83+ for Ubuntu 24.04+ compatibility")
     else()
-      find_package(Boost 1.74 REQUIRED COMPONENTS system)
+      find_package(Boost 1.74 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
       message(STATUS "Using Boost 1.74+ for Ubuntu 24.04+ compatibility (1.83 not available)")
     endif()
   endif()
@@ -56,7 +57,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       HINTS /usr/include /usr/local/include)
     find_library(BOOST_FALLBACK_SYSTEM_LIB NAMES boost_system
       HINTS /usr/lib /usr/lib/x86_64-linux-gnu /usr/local/lib)
-    if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB)
+    if(BOOST_FALLBACK_INCLUDE_DIR AND BOOST_FALLBACK_SYSTEM_LIB AND EXISTS "${BOOST_FALLBACK_INCLUDE_DIR}/boost/asio.hpp")
       if(NOT TARGET Boost::system)
         add_library(Boost::system UNKNOWN IMPORTED)
         set_target_properties(Boost::system PROPERTIES
@@ -70,7 +71,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   # vcpkg builds: let the vcpkg toolchain drive Boost discovery (do not force Homebrew paths)
   if(DEFINED VCPKG_TARGET_TRIPLET OR DEFINED ENV{VCPKG_ROOT} OR CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
-    find_package(Boost 1.70 REQUIRED COMPONENTS system)
+    find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
     set(UNILINK_LINK_BOOST_SYSTEM ON)
     message(STATUS "Using Boost from vcpkg on macOS (triplet: ${VCPKG_TARGET_TRIPLET})")
   else()
@@ -100,7 +101,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         /opt/homebrew/Cellar/boost
         /usr/local/Cellar/boost
       PATH_SUFFIXES include)
-    if(NOT BOOST_FALLBACK_INCLUDE_DIR)
+    if(NOT BOOST_FALLBACK_INCLUDE_DIR OR NOT EXISTS "${BOOST_FALLBACK_INCLUDE_DIR}/boost/asio.hpp")
       message(FATAL_ERROR "Boost headers not found on macOS (looked in Homebrew paths)")
     endif()
 
@@ -111,7 +112,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   endif()
 else()
   # Other platforms: use a recent Boost version
-  find_package(Boost 1.70 REQUIRED COMPONENTS system)
+  find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
 endif()
 
 find_package(Threads REQUIRED)
@@ -234,8 +235,10 @@ if(UNILINK_ENABLE_MEMORY_TRACKING)
 endif()
 
 # Export dependencies for downstream projects
+set(_UNILINK_DEPENDENCY_TARGETS Threads::Threads)
+if(UNILINK_LINK_BOOST_SYSTEM)
+  list(APPEND _UNILINK_DEPENDENCY_TARGETS Boost::system)
+endif()
 set(UNILINK_DEPENDENCIES
-  Boost::system
-  Threads::Threads
-  CACHE INTERNAL "Unilink dependencies"
-)
+  ${_UNILINK_DEPENDENCY_TARGETS}
+  CACHE INTERNAL "Unilink dependencies")
