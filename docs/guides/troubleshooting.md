@@ -273,7 +273,7 @@ vcpkg install boost
 #### Manual Boost Path
 ```cmake
 set(BOOST_ROOT /path/to/boost)
-find_package(Boost REQUIRED COMPONENTS system asio)
+find_package(Boost REQUIRED COMPONENTS system)
 ```
 
 ---

@@ -10,7 +10,7 @@ endif()
 set(Boost_USE_STATIC_LIBS OFF CACHE BOOL "Prefer shared Boost libraries" FORCE)
 set(Boost_USE_MULTITHREADED ON CACHE BOOL "Use multithreaded Boost libraries" FORCE)
 set(Boost_USE_DEBUG_RUNTIME OFF CACHE BOOL "Do not require debug runtime Boost binaries" FORCE)
-set(UNILINK_BOOST_COMPONENTS system asio)
+set(UNILINK_BOOST_COMPONENTS system)
 
 # Control whether we must link Boost.System (off on macOS to use header-only mode)
 set(UNILINK_LINK_BOOST_SYSTEM ON)
@@ -113,6 +113,26 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 else()
   # Other platforms: use a recent Boost version
   find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
+endif()
+
+# Ensure Boost.Asio headers are present even when BoostConfig packages omit an asio component
+if(NOT UNILINK_BOOST_INCLUDE_DIR)
+  set(_boost_asio_search_paths
+    ${Boost_INCLUDE_DIRS}
+    ${BOOST_INCLUDEDIR}
+    ${BOOST_ROOT}
+    /usr/include
+    /usr/local/include
+    /opt/homebrew/include
+    /opt/homebrew/opt/boost/include
+    /opt/homebrew/Cellar/boost/*/include)
+  find_path(BOOST_ASIO_HEADER boost/asio.hpp
+    PATHS ${_boost_asio_search_paths}
+    PATH_SUFFIXES include
+    NO_CACHE)
+  if(NOT BOOST_ASIO_HEADER)
+    message(FATAL_ERROR "Boost.Asio headers not found. Install boost-asio/boost headers or set BOOST_ROOT.")
+  endif()
 endif()
 
 find_package(Threads REQUIRED)
