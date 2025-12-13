@@ -129,9 +129,9 @@ inline void InputValidator::validate_retry_interval(unsigned interval_ms) {
 
 inline void InputValidator::validate_retry_count(int retry_count) {
   if (retry_count < MIN_RETRY_COUNT || retry_count > MAX_RETRY_COUNT) {
-    throw ValidationException("retry_count out of range", "retry_count",
-                              std::to_string(MIN_RETRY_COUNT) + " <= retry_count <= " +
-                                  std::to_string(MAX_RETRY_COUNT));
+    throw ValidationException(
+        "retry_count out of range", "retry_count",
+        std::to_string(MIN_RETRY_COUNT) + " <= retry_count <= " + std::to_string(MAX_RETRY_COUNT));
   }
 }
 
