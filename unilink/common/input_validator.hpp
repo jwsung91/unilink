@@ -127,7 +127,8 @@ inline void InputValidator::validate_range(size_t value, size_t min, size_t max,
 }
 
 inline void InputValidator::validate_buffer_size(size_t size) {
-  validate_range(size, constants::MIN_BUFFER_SIZE, constants::MAX_BUFFER_SIZE, "buffer_size");
+  validate_range(size, static_cast<size_t>(constants::MIN_BUFFER_SIZE), static_cast<size_t>(constants::MAX_BUFFER_SIZE),
+                 "buffer_size");
 }
 
 inline void InputValidator::validate_timeout(unsigned timeout_ms) {
