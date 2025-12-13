@@ -31,13 +31,13 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
 # Include build options
-include(cmake/UnilinkOptions.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/UnilinkOptions.cmake)
 
-# Include compiler configuration
-include(cmake/UnilinkCompiler.cmake)
+# Include compiler configuration (must remain before any target definitions)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/UnilinkCompiler.cmake)
 
 # Include dependencies
-include(cmake/UnilinkDependencies.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/UnilinkDependencies.cmake)
 
 # Source files
 file(GLOB_RECURSE UNILINK_SOURCES CONFIGURE_DEPENDS
