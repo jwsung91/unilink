@@ -131,13 +131,13 @@ inline void InputValidator::validate_buffer_size(size_t size) {
 }
 
 inline void InputValidator::validate_timeout(unsigned timeout_ms) {
-  validate_range(static_cast<int64_t>(timeout_ms), constants::MIN_CONNECTION_TIMEOUT_MS,
-                 constants::MAX_CONNECTION_TIMEOUT_MS, "timeout_ms");
+  validate_range(static_cast<int64_t>(timeout_ms), static_cast<int64_t>(constants::MIN_CONNECTION_TIMEOUT_MS),
+                 static_cast<int64_t>(constants::MAX_CONNECTION_TIMEOUT_MS), "timeout_ms");
 }
 
 inline void InputValidator::validate_retry_interval(unsigned interval_ms) {
-  validate_range(static_cast<int64_t>(interval_ms), constants::MIN_RETRY_INTERVAL_MS, constants::MAX_RETRY_INTERVAL_MS,
-                 "retry_interval_ms");
+  validate_range(static_cast<int64_t>(interval_ms), static_cast<int64_t>(constants::MIN_RETRY_INTERVAL_MS),
+                 static_cast<int64_t>(constants::MAX_RETRY_INTERVAL_MS), "retry_interval_ms");
 }
 
 inline void InputValidator::validate_retry_count(int retry_count) {
@@ -154,15 +154,18 @@ inline void InputValidator::validate_port(uint16_t port) {
 }
 
 inline void InputValidator::validate_baud_rate(uint32_t baud_rate) {
-  validate_range(static_cast<int64_t>(baud_rate), MIN_BAUD_RATE, MAX_BAUD_RATE, "baud_rate");
+  validate_range(static_cast<int64_t>(baud_rate), static_cast<int64_t>(MIN_BAUD_RATE),
+                 static_cast<int64_t>(MAX_BAUD_RATE), "baud_rate");
 }
 
 inline void InputValidator::validate_data_bits(uint8_t data_bits) {
-  validate_range(static_cast<int64_t>(data_bits), MIN_DATA_BITS, MAX_DATA_BITS, "data_bits");
+  validate_range(static_cast<int64_t>(data_bits), static_cast<int64_t>(MIN_DATA_BITS),
+                 static_cast<int64_t>(MAX_DATA_BITS), "data_bits");
 }
 
 inline void InputValidator::validate_stop_bits(uint8_t stop_bits) {
-  validate_range(static_cast<int64_t>(stop_bits), MIN_STOP_BITS, MAX_STOP_BITS, "stop_bits");
+  validate_range(static_cast<int64_t>(stop_bits), static_cast<int64_t>(MIN_STOP_BITS),
+                 static_cast<int64_t>(MAX_STOP_BITS), "stop_bits");
 }
 
 inline void InputValidator::validate_memory_alignment(const void* ptr, size_t alignment) {
