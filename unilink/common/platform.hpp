@@ -33,7 +33,6 @@
 #endif
 
 #if defined(UNILINK_PLATFORM_WINDOWS)
-#  // Provide Windows SDK architecture aliases when the compiler exposes only _M_* macros.
 #if !defined(_AMD64_) && (defined(_M_AMD64) || defined(_M_X64))
 #define _AMD64_ 1
 #endif
