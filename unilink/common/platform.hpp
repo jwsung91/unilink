@@ -33,6 +33,16 @@
 #endif
 
 #if defined(UNILINK_PLATFORM_WINDOWS)
+#  // Provide Windows SDK architecture aliases when the compiler exposes only _M_* macros.
+#if !defined(_AMD64_) && (defined(_M_AMD64) || defined(_M_X64))
+#define _AMD64_ 1
+#endif
+#if !defined(_X86_) && defined(_M_IX86)
+#define _X86_ 1
+#endif
+#if !defined(_ARM64_) && defined(_M_ARM64)
+#define _ARM64_ 1
+#endif
 #ifndef BOOST_ASIO_DISABLE_WINDOWS_OBJECT_HANDLE
 #define BOOST_ASIO_DISABLE_WINDOWS_OBJECT_HANDLE
 #endif
