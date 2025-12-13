@@ -25,7 +25,7 @@ namespace common {
 
 void InputValidator::validate_host(const std::string& host) {
   validate_non_empty_string(host, "host");
-  validate_string_length(host, MAX_HOSTNAME_LENGTH, "host");
+  validate_string_length(host, constants::MAX_HOSTNAME_LENGTH, "host");
 
   // Check if it's an IPv4 address
   if (is_valid_ipv4(host)) {
@@ -63,7 +63,7 @@ void InputValidator::validate_ipv6_address(const std::string& address) {
 
 void InputValidator::validate_device_path(const std::string& device) {
   validate_non_empty_string(device, "device_path");
-  validate_string_length(device, MAX_DEVICE_PATH_LENGTH, "device_path");
+  validate_string_length(device, constants::MAX_DEVICE_PATH_LENGTH, "device_path");
 
   if (!is_valid_device_path(device)) {
     throw ValidationException("invalid device path format", "device_path", "valid device path");
@@ -146,7 +146,7 @@ bool InputValidator::is_valid_hostname(const std::string& hostname) {
   // - Each label must be 1-63 characters
   // - Total length must not exceed 253 characters
 
-  if (hostname.empty() || hostname.length() > MAX_HOSTNAME_LENGTH) {
+  if (hostname.empty() || hostname.length() > constants::MAX_HOSTNAME_LENGTH) {
     return false;
   }
 

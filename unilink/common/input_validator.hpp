@@ -73,22 +73,8 @@ class InputValidator {
   static bool is_valid_device_path(const std::string& device);
 
   // Constants
-  static constexpr size_t MAX_HOSTNAME_LENGTH = 253;
-  static constexpr size_t MAX_DEVICE_PATH_LENGTH = 256;
-  static constexpr size_t MAX_BUFFER_SIZE = 64 * 1024 * 1024;  // 64MB
-  static constexpr size_t MIN_BUFFER_SIZE = 1;
-  static constexpr uint32_t MIN_BAUD_RATE = 50;
-  static constexpr uint32_t MAX_BAUD_RATE = 4000000;
-  static constexpr uint8_t MIN_DATA_BITS = 5;
-  static constexpr uint8_t MAX_DATA_BITS = 8;
-  static constexpr uint8_t MIN_STOP_BITS = 1;
-  static constexpr uint8_t MAX_STOP_BITS = 2;
-  static constexpr unsigned MAX_TIMEOUT_MS = 300000;  // 5 minutes
-  static constexpr unsigned MIN_TIMEOUT_MS = 1;
-  static constexpr unsigned MAX_RETRY_INTERVAL_MS = 300000;  // 5 minutes
-  static constexpr unsigned MIN_RETRY_INTERVAL_MS = 1;
-  static constexpr int MAX_RETRY_COUNT = 10000;
-  static constexpr int MIN_RETRY_COUNT = -1;  // -1 means unlimited
+  static constexpr int MIN_RETRY_COUNT = 0;
+  static constexpr int MAX_RETRY_COUNT = 100;
 };
 
 // Inline implementations for simple validations
@@ -142,8 +128,10 @@ inline void InputValidator::validate_retry_interval(unsigned interval_ms) {
 }
 
 inline void InputValidator::validate_retry_count(int retry_count) {
-  if (retry_count < 0 || retry_count > 100) {
-    throw ValidationException("retry_count out of range", "retry_count", "0 <= retry_count <= 100");
+  if (retry_count < MIN_RETRY_COUNT || retry_count > MAX_RETRY_COUNT) {
+    throw ValidationException("retry_count out of range", "retry_count",
+                              std::to_string(MIN_RETRY_COUNT) + " <= retry_count <= " +
+                                  std::to_string(MAX_RETRY_COUNT));
   }
 }
 
@@ -155,18 +143,18 @@ inline void InputValidator::validate_port(uint16_t port) {
 }
 
 inline void InputValidator::validate_baud_rate(uint32_t baud_rate) {
-  validate_range(static_cast<int64_t>(baud_rate), static_cast<int64_t>(MIN_BAUD_RATE),
-                 static_cast<int64_t>(MAX_BAUD_RATE), "baud_rate");
+  validate_range(static_cast<int64_t>(baud_rate), static_cast<int64_t>(constants::MIN_BAUD_RATE),
+                 static_cast<int64_t>(constants::MAX_BAUD_RATE), "baud_rate");
 }
 
 inline void InputValidator::validate_data_bits(uint8_t data_bits) {
-  validate_range(static_cast<int64_t>(data_bits), static_cast<int64_t>(MIN_DATA_BITS),
-                 static_cast<int64_t>(MAX_DATA_BITS), "data_bits");
+  validate_range(static_cast<int64_t>(data_bits), static_cast<int64_t>(constants::MIN_DATA_BITS),
+                 static_cast<int64_t>(constants::MAX_DATA_BITS), "data_bits");
 }
 
 inline void InputValidator::validate_stop_bits(uint8_t stop_bits) {
-  validate_range(static_cast<int64_t>(stop_bits), static_cast<int64_t>(MIN_STOP_BITS),
-                 static_cast<int64_t>(MAX_STOP_BITS), "stop_bits");
+  validate_range(static_cast<int64_t>(stop_bits), static_cast<int64_t>(constants::MIN_STOP_BITS),
+                 static_cast<int64_t>(constants::MAX_STOP_BITS), "stop_bits");
 }
 
 inline void InputValidator::validate_memory_alignment(const void* ptr, size_t alignment) {
