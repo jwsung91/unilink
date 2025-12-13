@@ -16,9 +16,12 @@
 
 #pragma once
 
+#include <algorithm>
+#include <cctype>
 #include <cstdint>
 #include <regex>
 #include <string>
+#include <vector>
 
 #include "unilink/common/constants.hpp"
 #include "unilink/common/exceptions.hpp"
