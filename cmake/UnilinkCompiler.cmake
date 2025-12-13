@@ -5,7 +5,6 @@
 if(MSVC)
   # Microsoft Visual C++
   set(UNILINK_COMPILER_MSVC ON)
-  add_definitions(-DUNILINK_PLATFORM_WINDOWS=1)
   
   # Remove any existing /W[0-4] flags the generator might have added so we control warning level explicitly.
   foreach(flag_var
@@ -26,12 +25,8 @@ if(MSVC)
       set(${flag_var} "${_cleaned_flags}" CACHE STRING "" FORCE)
     endif()
   endforeach()
-  # Ensure Windows headers detect a target architecture even if the toolchain omits it.
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    add_compile_definitions(_WIN64=1 _AMD64_=1 _M_AMD64=1 _M_X64=1)
-  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-    add_compile_definitions(_WIN32=1 _X86_=1 _M_IX86=1)
-  endif()
+  # Do not redefine compiler-provided Windows macros such as _WIN32 or _M_IX86.
+  # Those come from the toolchain and are consumed by Windows SDK and STL headers.
 
   if(UNILINK_ENABLE_WARNINGS)
     add_compile_options(/W4 /permissive- /utf-8)
@@ -250,14 +245,35 @@ if(MSVC)
   
   
   
-  # Platform-specific settings
-  
-  if(WIN32)
-  
+# Platform-specific settings
+
+if(WIN32)
+
+    # Detect platform/architecture without redefining MSVC/Windows built-in macros.
+    add_compile_definitions(UNILINK_PLATFORM_WINDOWS=1)
+
+    set(_UNILINK_IS_ARM64 OFF)
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "^[Aa][Rr][Mm]64")
+      set(_UNILINK_IS_ARM64 ON)
+    endif()
+
+    # Prefer pointer size for architecture detection, fall back to processor hint.
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      add_compile_definitions(UNILINK_ARCH_X64=1)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+      if(_UNILINK_IS_ARM64)
+        add_compile_definitions(UNILINK_ARCH_ARM64=1)
+      else()
+        add_compile_definitions(UNILINK_ARCH_X86=1)
+      endif()
+    elseif(_UNILINK_IS_ARM64)
+      add_compile_definitions(UNILINK_ARCH_ARM64=1)
+    endif()
+
     add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX -D_WIN32_WINNT=0x0A00)
-  
+
     if(UNILINK_BUILD_SHARED)
-  
+
       add_definitions(-DUNILINK_EXPORTS)
   
     endif()

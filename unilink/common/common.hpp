@@ -60,7 +60,7 @@ inline std::string ts_now() {
   const auto now = system_clock::now();
   const auto tt = system_clock::to_time_t(now);
   std::tm tm{};
-#if defined(_WIN32)
+#if defined(UNILINK_PLATFORM_WINDOWS)
   localtime_s(&tm, &tt);
 #else
   localtime_r(&tt, &tm);
