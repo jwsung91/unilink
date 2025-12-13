@@ -18,7 +18,21 @@
 
 #include <string>
 
-#if defined(_WIN32)
+#if !defined(UNILINK_PLATFORM_WINDOWS) && defined(_WIN32)
+#define UNILINK_PLATFORM_WINDOWS 1
+#endif
+
+#if !defined(UNILINK_ARCH_X64) && !defined(UNILINK_ARCH_X86) && !defined(UNILINK_ARCH_ARM64)
+#if defined(_M_ARM64) || defined(__aarch64__)
+#define UNILINK_ARCH_ARM64 1
+#elif defined(_M_X64) || defined(_M_AMD64) || defined(__x86_64__) || defined(__amd64__)
+#define UNILINK_ARCH_X64 1
+#elif defined(_M_IX86) || defined(__i386__)
+#define UNILINK_ARCH_X86 1
+#endif
+#endif
+
+#if defined(UNILINK_PLATFORM_WINDOWS)
 #ifndef BOOST_ASIO_DISABLE_WINDOWS_OBJECT_HANDLE
 #define BOOST_ASIO_DISABLE_WINDOWS_OBJECT_HANDLE
 #endif
@@ -50,7 +64,7 @@ typedef void* PVOID;
 #ifndef BOOLEAN
 typedef unsigned char BOOLEAN;
 #endif
-#endif  // defined(_WIN32)
+#endif  // defined(UNILINK_PLATFORM_WINDOWS)
 
 namespace unilink {
 namespace common {
@@ -72,8 +86,7 @@ namespace common {
 #elif defined(UNILINK_UBUNTU_24_04)
 #define UNILINK_UBUNTU_VERSION 24
 #define UNILINK_FEATURE_LEVEL 3  // All features
-#elif defined(UNILINK_PLATFORM_WINDOWS) || defined(_WIN32)
-#define UNILINK_PLATFORM_WINDOWS 1
+#elif defined(UNILINK_PLATFORM_WINDOWS)
 #define UNILINK_UBUNTU_VERSION 0
 #define UNILINK_FEATURE_LEVEL 2  // Windows matches standard feature set
 #elif defined(UNILINK_PLATFORM_MACOS) || defined(__APPLE__)
