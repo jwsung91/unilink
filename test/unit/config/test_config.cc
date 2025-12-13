@@ -57,8 +57,12 @@ class ConfigTest : public ::testing::Test {
     config_manager_ = std::make_shared<ConfigManager>();
 
     // Set up test file path in the system temp directory to ensure writability
+    auto temp_dir = TestUtils::getTempDirectory();  // ensures directory exists cross-platform
+    auto now_ns =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch())
+            .count();
     test_file_path_ =
-        std::filesystem::temp_directory_path() / ("unilink_test_config_" + std::to_string(test_port_) + ".json");
+        temp_dir / ("unilink_test_config_" + std::to_string(now_ns) + "_" + std::to_string(test_port_) + ".json");
 
     // Clean up any existing test file
     TestUtils::removeFileIfExists(test_file_path_);
