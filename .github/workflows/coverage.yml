@@ -10,6 +10,8 @@ jobs:
   coverage:
     name: Code Coverage Analysis
     runs-on: ubuntu-22.04
+    outputs:
+      coverage_percent: ${{ steps.coverage.outputs.percentage }}
     permissions:
       contents: read
       issues: write
@@ -196,33 +198,54 @@ jobs:
       id: coverage_badge
       run: |
         cd build-coverage
-        COVERAGE_PERCENT=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}' | sed 's/%//')
-        echo "Coverage: ${COVERAGE_PERCENT}%"
-        if (( $(echo "$COVERAGE_PERCENT >= 80" | bc -l) )); then
-          COLOR="brightgreen"
-          GRADE="excellent"
-        elif (( $(echo "$COVERAGE_PERCENT >= 60" | bc -l) )); then
-          COLOR="green"
-          GRADE="good"
-        elif (( $(echo "$COVERAGE_PERCENT >= 40" | bc -l) )); then
-          COLOR="yellow"
-          GRADE="fair"
-        else
-          COLOR="red"
-          GRADE="poor"
+        set -euo pipefail
+
+        # Prefer the value computed in the coverage job; fall back to the artifact files if missing
+        COVERAGE_PERCENT="${{ needs.coverage.outputs.coverage_percent }}"
+        if [ -z "$COVERAGE_PERCENT" ]; then
+          SUMMARY_FILE=$(find . -name "coverage_summary.txt" | head -n 1 || true)
+          if [ -n "$SUMMARY_FILE" ]; then
+            COVERAGE_PERCENT=$(grep -m1 "lines" "$SUMMARY_FILE" | awk '{print $2}' | tr -d '%') || true
+          fi
         fi
+        if [ -z "$COVERAGE_PERCENT" ]; then
+          echo "⚠️  coverage_percent was empty, defaulting to 0" >&2
+          COVERAGE_PERCENT="0"
+        fi
+        export COVERAGE_PERCENT
+
+        cov_formatted=$(awk -v v="$COVERAGE_PERCENT" 'BEGIN{printf "%.1f", v+0}')
+
+        color="red"
+        grade="poor"
+        if awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=80)}'; then
+          color="brightgreen"
+          grade="excellent"
+        elif awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=60)}'; then
+          color="green"
+          grade="good"
+        elif awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=40)}'; then
+          color="yellow"
+          grade="fair"
+        fi
+
         mkdir -p coverage_html/badges
         cat > coverage_html/badges/coverage.json << EOF
         {
           "schemaVersion": 1,
           "label": "test coverage",
-          "message": "${COVERAGE_PERCENT}%",
-          "color": "${COLOR}"
+          "message": "${cov_formatted}%",
+          "color": "${color}"
         }
         EOF
-        echo "✅ Coverage badge JSON created: ${COVERAGE_PERCENT}% (${GRADE}, ${COLOR})"
-        echo "coverage_percent=${COVERAGE_PERCENT}" >> $GITHUB_OUTPUT
-        echo "coverage_grade=${GRADE}" >> $GITHUB_OUTPUT
+
+        {
+          echo "coverage_percent=${cov_formatted}"
+          echo "coverage_grade=${grade}"
+          echo "coverage_color=${color}"
+        } >> "$GITHUB_OUTPUT"
+
+        echo "✅ Coverage badge JSON created: ${cov_formatted}% (${grade}, ${color})"
 
     - name: Create index page
       run: |
