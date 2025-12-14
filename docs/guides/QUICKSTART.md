@@ -157,16 +157,16 @@ class MyApp {
 };
 ```
 
-### Pattern 4: Single vs Multi-Client Server
+### Pattern 4: Single vs Multi-Client Server (choose one)
 ```cpp
 // Single client only (reject others)
 auto server = unilink::tcp_server(8080)
     .single_client()
     .build();
 
-// Multiple clients (default)
+// Multiple clients (set an explicit limit)
 auto server = unilink::tcp_server(8080)
-    .multi_client()
+    .multi_client(8)  // allow up to 8 clients
     .build();
 ```
 
@@ -174,7 +174,7 @@ auto server = unilink::tcp_server(8080)
 
 ## Next Steps
 
-1. **Read the API Guide**: `docs/API_GUIDE.md`
+1. **Read the API Guide**: `docs/reference/API_GUIDE.md`
 2. **Check Examples**: `examples/` directory
 3. **Run Tests**: `cd build && ctest`
 4. **View Full Docs**: `docs/html/index.html` (run `make docs` first)
@@ -214,4 +214,3 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
 - **Examples**: `examples/` directory
 
 Happy coding! 🚀
-

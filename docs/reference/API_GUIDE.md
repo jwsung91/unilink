@@ -39,18 +39,34 @@ auto channel = unilink::{type}(params)
 | `.on_connect(callback)` | Handle connection events | None |
 | `.on_disconnect(callback)` | Handle disconnection | None |
 | `.on_error(callback)` | Handle errors | None |
-| `.retry_interval(ms)` | Reconnection interval | `3000` |
 | `.auto_manage(bool)` | Auto resource management | `false` |
-| `.build()` | **Required**: Build the client | - |
+| `.use_independent_context(bool)` | Use separate IO thread (testing/isolation) | `false` |
+| `.build()` | **Required**: Build the wrapper instance | - |
+
+**Builder-Specific Options**
+- `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
+- `TcpServerBuilder`: `.enable_port_retry(enable, max_retries, retry_interval_ms)`
+- `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` **(must choose one before `build()`)**
+- TCP server callbacks also accept multi-client signatures: `.on_connect(size_t, std::string)`, `.on_data(size_t, std::string)`, `.on_disconnect(size_t)`
 
 **Lifecycle Methods:**
 | Method | Description |
 |--------|-------------|
 | `->start()` | **Required**: Start the connection |
 | `->stop()` | Stop the connection |
-| `->send(data)` | Send data to server |
-| `->is_connected()` | Check connection status |
-| `.use_independent_context(bool)` | Use separate IO thread | `false` |
+| `->send(data)` / `->send_line(text)` | Send data to peer(s) |
+| `->is_connected()` | Check connection status (`TcpServer` reports underlying channel state) |
+| `TcpServer::is_listening()` | Check if the server socket is bound and listening |
+
+**Builder Flow**
+```
+tcp_server(port)
+    ↓ configure callbacks / limits / port retry
+    build()  → std::unique_ptr<wrapper::TcpServer>
+                 ↓
+                 start()
+                 ↓ callbacks fire: on_connect → on_data → on_disconnect/on_error
+```
 
 ---
 
@@ -89,9 +105,6 @@ if (client->is_connected()) {
 
 // Stop when done
 client->stop();
-
-// Stop client
-client->stop();
 ```
 
 ### API Reference
@@ -104,16 +117,21 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 #### Builder Methods
 | Method | Parameters | Description |
 |--------|------------|-------------|
-| `retry_interval()` | `unsigned ms` | Set reconnection interval in milliseconds |
+| `retry_interval(ms)` | `unsigned` | Set reconnection interval in milliseconds (default `3000`) |
 | `use_independent_context()` | `bool` | Use separate IO thread (for testing) |
+| `auto_manage()` | `bool` | Auto-manage lifecycle (stop on destruction) |
 
 #### Instance Methods
 | Method | Return | Description |
 |--------|--------|-------------|
 | `send()` | `void` | Send data to server |
+| `send_line()` | `void` | Send data with trailing newline |
 | `is_connected()` | `bool` | Check connection status |
 | `start()` | `void` | Start connection attempt |
 | `stop()` | `void` | Stop and disconnect |
+| `set_retry_interval()` | `void` | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
+| `set_max_retries()` | `void` | Set max reconnect attempts (`-1` for unlimited) |
+| `set_connection_timeout()` | `void` | Set connection timeout (`std::chrono::milliseconds`) |
 
 ### Advanced Examples
 
@@ -187,6 +205,9 @@ if (server->is_listening()) {
 server->stop();
 ```
 
+> Note: `TcpServerBuilder` requires an explicit client limit before `build()` is called. Choose one of
+> `.single_client()`, `.multi_client(max)`, or `.unlimited_clients()` during construction.
+
 ### API Reference
 
 #### Constructor
@@ -197,15 +218,26 @@ unilink::tcp_server(uint16_t port)
 #### Builder Methods
 | Method | Parameters | Description |
 |--------|------------|-------------|
-| `single_client()` | None | Accept only one client at a time |
-| `multi_client()` | None | Accept multiple clients (default) |
+| `single_client()` | None | Accept only one client (required to choose a limit before `build()`) |
+| `multi_client(max)` | `size_t (>=2)` | Accept up to `max` clients |
+| `unlimited_clients()` | None | Accept unlimited clients |
 | `enable_port_retry()` | `bool, retries, interval_ms` | Retry if port is in use |
+| `use_independent_context()` | `bool` | Use separate IO thread (for testing) |
+
+Multi-client callbacks can be registered with either signature-based overloads (`.on_connect(size_t, std::string)`,
+`.on_data(size_t, std::string)`, `.on_disconnect(size_t)`) or the explicit helpers
+`.on_multi_connect`, `.on_multi_data`, and `.on_multi_disconnect` (available on both the builder and the wrapper).
 
 #### Instance Methods
 | Method | Return | Description |
 |--------|--------|-------------|
-| `send()` | `void` | Send to all clients |
+| `send()` | `void` | Send to all connected clients |
 | `send_to_client()` | `void` | Send to specific client |
+| `broadcast()` | `void` | Explicit broadcast helper |
+| `send_line()` | `void` | Send data with trailing newline |
+| `get_client_count()` | `size_t` | Number of connected clients |
+| `get_connected_clients()` | `std::vector<size_t>` | List of connected client IDs |
+| `is_connected()` | `bool` | Channel connection state |
 | `is_listening()` | `bool` | Check if server is listening |
 | `start()` | `void` | Start accepting connections |
 | `stop()` | `void` | Stop server and disconnect all |
@@ -235,11 +267,14 @@ auto server = unilink::tcp_server(8080)
 #### Echo Server Pattern
 ```cpp
 auto server = unilink::tcp_server(8080)
-    .on_data([](size_t client_id, const std::string& data) {
-        // Echo back to sender
-        server->send_to_client(client_id, "Echo: " + data);
-    })
+    .unlimited_clients()
     .build();
+
+server->on_multi_data([&server](size_t client_id, const std::string& data) {
+    server->send_to_client(client_id, "Echo: " + data);
+});
+
+server->start();
 ```
 
 ---
@@ -286,16 +321,25 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 #### Builder Methods
 | Method | Parameters | Description |
 |--------|------------|-------------|
-| `retry_interval()` | `unsigned ms` | Set reconnection interval |
+| `retry_interval(ms)` | `unsigned` | Set reconnection interval (default `3000`) |
 | `use_independent_context()` | `bool` | Use separate IO thread |
+| `auto_manage()` | `bool` | Auto-manage lifecycle (stop on destruction) |
 
 #### Instance Methods
 | Method | Return | Description |
 |--------|--------|-------------|
 | `send()` | `void` | Send data to device |
+| `send_line()` | `void` | Send data with trailing newline |
 | `is_connected()` | `bool` | Check if port is open |
 | `start()` | `void` | Open serial port |
 | `stop()` | `void` | Close serial port |
+| `set_baud_rate()` | `void` | Adjust baud rate at runtime |
+| `set_data_bits()` | `void` | Set data bits (5-8) |
+| `set_stop_bits()` | `void` | Set stop bits (1-2) |
+| `set_parity()` | `void` | Set parity (`none`, `even`, `odd`) |
+| `set_flow_control()` | `void` | Set flow control (`none`, `software`, `hardware`) |
+| `set_retry_interval()` | `void` | Adjust reconnection interval (`std::chrono::milliseconds`) |
+| `build_config()` | `SerialConfig` | Inspect current mapped serial config |
 
 ### Device Paths
 
@@ -681,4 +725,3 @@ cmake -DUNILINK_ENABLE_CONFIG=OFF -DUNILINK_ENABLE_MEMORY_TRACKING=OFF
 
 **Version**: 1.0  
 **Last Updated**: 2025-10-11
-

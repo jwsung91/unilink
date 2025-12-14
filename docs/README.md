@@ -7,13 +7,14 @@ This directory contains all documentation-related files for the unilink library.
 ```
 docs/
 ├── README.md              # This file
-├── api_guide.md           # API usage guide
-├── config/                # Documentation configuration
-│   └── Doxyfile          # Doxygen configuration
+├── INDEX.md               # Documentation entry point
+├── guides/                # Quickstart, best practices, troubleshooting
+├── reference/             # API reference (API_GUIDE.md)
+├── architecture/          # System overview and design notes
+├── tutorials/             # Step-by-step tutorials
+├── development/           # Contributor guides and notes
 ├── scripts/               # Documentation generation scripts
-│   ├── generate_docs.sh  # Generate documentation
-│   ├── serve_docs.sh     # Serve documentation locally
-│   └── clean_docs.sh     # Clean generated files
+├── config/                # Doxygen configuration
 └── html/                  # Generated HTML documentation (after generation)
 ```
 
