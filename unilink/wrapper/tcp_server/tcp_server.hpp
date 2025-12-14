@@ -16,10 +16,13 @@
 
 #pragma once
 
+#include <boost/asio/executor_work_guard.hpp>
+#include <boost/asio/io_context.hpp>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <thread>
 
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/wrapper/ichannel.hpp"
@@ -36,6 +39,7 @@ namespace wrapper {
 class TcpServer : public ChannelInterface {
  public:
   explicit TcpServer(uint16_t port);
+  TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc);
   explicit TcpServer(std::shared_ptr<interface::Channel> channel);
   ~TcpServer() = default;
 
@@ -90,6 +94,10 @@ class TcpServer : public ChannelInterface {
   std::shared_ptr<interface::Channel> channel_;
   bool started_{false};
   bool auto_manage_{false};
+  std::shared_ptr<boost::asio::io_context> external_ioc_;
+  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> external_guard_;
+  std::thread external_thread_;
+  bool use_external_context_{false};
 
   // Port retry configuration
   bool port_retry_enabled_{false};

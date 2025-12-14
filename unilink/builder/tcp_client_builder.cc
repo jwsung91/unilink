@@ -16,6 +16,8 @@
 
 #include "unilink/builder/tcp_client_builder.hpp"
 
+#include <boost/asio/io_context.hpp>
+
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/common/constants.hpp"
 #include "unilink/common/exceptions.hpp"
@@ -44,25 +46,23 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
     common::InputValidator::validate_port(port_);
     common::InputValidator::validate_retry_interval(retry_interval_ms_);
 
+    std::shared_ptr<boost::asio::io_context> external_ioc;
     // IoContext management
     if (use_independent_context_) {
       // Use independent IoContext (for test isolation)
-      // Create independent context through IoContextManager
       auto independent_context = common::IoContextManager::instance().create_independent_context();
-      // Currently maintaining default implementation, can be extended in future for wrapper to accept independent
-      // context
+      external_ioc = std::shared_ptr<boost::asio::io_context>(std::move(independent_context));
     } else {
       // Automatically initialize IoContextManager (default behavior)
       AutoInitializer::ensure_io_context_running();
     }
 
-    auto client = std::make_unique<wrapper::TcpClient>(host_, port_);
+    auto client = external_ioc ? std::make_unique<wrapper::TcpClient>(host_, port_, external_ioc)
+                               : std::make_unique<wrapper::TcpClient>(host_, port_);
 
     // Apply configuration with exception safety
     try {
-      if (auto_manage_) {
-        client->auto_manage(true);
-      }
+      client->auto_manage(auto_manage_);
 
       // Set callbacks with exception safety
       if (on_data_) {
@@ -89,6 +89,10 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
       client.reset();
       throw common::BuilderException("Failed to configure TCP client: " + std::string(e.what()), "TcpClientBuilder",
                                      "build");
+    }
+
+    if (auto_manage_) {
+      client->start();
     }
 
     return client;

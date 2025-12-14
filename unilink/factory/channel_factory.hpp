@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <boost/asio/io_context.hpp>
 #include <memory>
 #include <variant>
 
@@ -37,13 +38,17 @@ class ChannelFactory {
   using ChannelOptions = std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig>;
 
   // Channel creation
-  static std::shared_ptr<interface::Channel> create(const ChannelOptions& options);
+  static std::shared_ptr<interface::Channel> create(const ChannelOptions& options,
+                                                    std::shared_ptr<boost::asio::io_context> external_ioc = nullptr);
 
  private:
   // Creation functions for each Transport type
-  static std::shared_ptr<interface::Channel> create_tcp_server(const config::TcpServerConfig& cfg);
-  static std::shared_ptr<interface::Channel> create_tcp_client(const config::TcpClientConfig& cfg);
-  static std::shared_ptr<interface::Channel> create_serial(const config::SerialConfig& cfg);
+  static std::shared_ptr<interface::Channel> create_tcp_server(const config::TcpServerConfig& cfg,
+                                                               std::shared_ptr<boost::asio::io_context> external_ioc);
+  static std::shared_ptr<interface::Channel> create_tcp_client(const config::TcpClientConfig& cfg,
+                                                               std::shared_ptr<boost::asio::io_context> external_ioc);
+  static std::shared_ptr<interface::Channel> create_serial(const config::SerialConfig& cfg,
+                                                           std::shared_ptr<boost::asio::io_context> external_ioc);
 };
 
 }  // namespace factory

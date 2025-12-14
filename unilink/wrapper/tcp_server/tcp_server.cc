@@ -18,6 +18,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <stdexcept>
 #include <thread>
 
 #include "unilink/config/tcp_server_config.hpp"
@@ -31,6 +32,12 @@ TcpServer::TcpServer(uint16_t port) : port_(port), channel_(nullptr) {
   // Channel will be created later at start() time
 }
 
+TcpServer::TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
+    : port_(port),
+      channel_(nullptr),
+      external_ioc_(std::move(external_ioc)),
+      use_external_context_(external_ioc_ != nullptr) {}
+
 TcpServer::TcpServer(std::shared_ptr<interface::Channel> channel) : port_(0), channel_(channel) {
   setup_internal_handlers();
 }
@@ -38,6 +45,22 @@ TcpServer::TcpServer(std::shared_ptr<interface::Channel> channel) : port_(0), ch
 void TcpServer::start() {
   std::lock_guard<std::mutex> lock(mutex_);
   if (started_) return;
+
+  if (use_external_context_) {
+    if (!external_ioc_) {
+      throw std::runtime_error("External io_context is not set");
+    }
+    if (external_ioc_->stopped()) {
+      external_ioc_->restart();
+    }
+    if (!external_guard_) {
+      external_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+          external_ioc_->get_executor());
+    }
+    if (!external_thread_.joinable()) {
+      external_thread_ = std::thread([ioc = external_ioc_]() { ioc->run(); });
+    }
+  }
 
   if (!channel_) {
     // Use improved Factory
@@ -47,7 +70,7 @@ void TcpServer::start() {
     config.max_port_retries = max_port_retries_;
     config.port_retry_interval_ms = port_retry_interval_ms_;
 
-    channel_ = factory::ChannelFactory::create(config);
+    channel_ = factory::ChannelFactory::create(config, external_ioc_);
     setup_internal_handlers();
 
     // Apply stored client limit configuration
@@ -82,6 +105,18 @@ void TcpServer::stop() {
     local_channel->stop();
     // Allow async operations to complete
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
+
+  if (use_external_context_) {
+    if (external_guard_) {
+      external_guard_->reset();
+    }
+    if (external_ioc_) {
+      external_ioc_->stop();
+    }
+    if (external_thread_.joinable()) {
+      external_thread_.join();
+    }
   }
 }
 

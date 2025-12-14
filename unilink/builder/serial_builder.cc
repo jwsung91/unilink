@@ -16,6 +16,9 @@
 
 #include "unilink/builder/serial_builder.hpp"
 
+#include <boost/asio/io_context.hpp>
+
+#include "unilink/builder/auto_initializer.hpp"
 #include "unilink/common/constants.hpp"
 #include "unilink/common/exceptions.hpp"
 #include "unilink/common/input_validator.hpp"
@@ -47,24 +50,22 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
     common::InputValidator::validate_baud_rate(baud_rate_);
     common::InputValidator::validate_retry_interval(retry_interval_ms_);
 
-    // IoContext management
+    std::shared_ptr<boost::asio::io_context> external_ioc;
     if (use_independent_context_) {
       // Use independent IoContext (for test isolation)
-      // Create independent context through IoContextManager
       auto independent_context = common::IoContextManager::instance().create_independent_context();
-      // Currently maintaining default implementation, can be extended in future for wrapper to accept independent
-      // context
+      external_ioc = std::shared_ptr<boost::asio::io_context>(std::move(independent_context));
     } else {
-      // Default behavior (Serial manages IoContext independently)
+      // Default behavior uses shared IoContextManager - ensure it is running
+      AutoInitializer::ensure_io_context_running();
     }
 
-    auto serial = std::make_unique<wrapper::Serial>(device_, baud_rate_);
+    auto serial = external_ioc ? std::make_unique<wrapper::Serial>(device_, baud_rate_, external_ioc)
+                               : std::make_unique<wrapper::Serial>(device_, baud_rate_);
 
     // Apply configuration with exception safety
     try {
-      if (auto_manage_) {
-        serial->auto_manage(true);
-      }
+      serial->auto_manage(auto_manage_);
 
       // Set callbacks with exception safety
       if (on_data_) {
@@ -90,6 +91,10 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
       // If configuration fails, ensure serial is properly cleaned up
       serial.reset();
       throw common::BuilderException("Failed to configure Serial: " + std::string(e.what()), "SerialBuilder", "build");
+    }
+
+    if (auto_manage_) {
+      serial->start();
     }
 
     return serial;

@@ -84,6 +84,7 @@ class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient>
   tcp::socket socket_;
   TcpClientConfig cfg_;
   net::steady_timer retry_timer_;
+  net::steady_timer connect_timer_;
   bool owns_ioc_ = true;
   std::atomic<bool> stopping_{false};
 
@@ -98,6 +99,7 @@ class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient>
   OnBackpressure on_bp_;
   std::atomic<bool> connected_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
+  int retry_attempts_ = 0;
 };
 }  // namespace transport
 }  // namespace unilink
