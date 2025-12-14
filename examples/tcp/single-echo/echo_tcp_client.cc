@@ -307,6 +307,7 @@ int main(int argc, char** argv) {
 
   // Shutdown the client
   echo_client->shutdown();
+  g_echo_client = nullptr;
 
   // Force cleanup and exit
   std::cout << "Client process exiting..." << std::endl;

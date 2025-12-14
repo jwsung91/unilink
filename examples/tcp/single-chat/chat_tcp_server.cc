@@ -63,6 +63,7 @@ class TcpServerChatApp {
         // Ignore errors during destruction
       }
     }
+    instance_ = nullptr;
   }
 
   void signal_handler_instance(int signal) {
@@ -221,8 +222,9 @@ TcpServerChatApp* TcpServerChatApp::instance_ = nullptr;
 int main(int argc, char** argv) {
   unsigned short port = (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 9000;
 
-  TcpServerChatApp app(port);
-  app.run();
+  // Create instance on the heap so the static signal handler never references a stack object
+  auto app = std::make_unique<TcpServerChatApp>(port);
+  app->run();
 
   // Force cleanup and exit
   std::cout << "Server process exiting..." << std::endl;
