@@ -19,8 +19,8 @@
 #include "unilink/transport/serial/boost_serial_port.hpp"
 #include "unilink/transport/serial/serial.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
-#include "unilink/transport/tcp_server/tcp_server.hpp"
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
+#include "unilink/transport/tcp_server/tcp_server.hpp"
 
 namespace unilink {
 namespace factory {
@@ -62,8 +62,8 @@ std::shared_ptr<interface::Channel> ChannelFactory::create_tcp_client(
   return std::make_shared<transport::TcpClient>(cfg);
 }
 
-std::shared_ptr<interface::Channel> ChannelFactory::create_serial(const config::SerialConfig& cfg,
-                                                                  std::shared_ptr<boost::asio::io_context> external_ioc) {
+std::shared_ptr<interface::Channel> ChannelFactory::create_serial(
+    const config::SerialConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc) {
   if (external_ioc) {
     return std::make_shared<transport::Serial>(cfg, std::make_unique<transport::BoostSerialPort>(*external_ioc),
                                                *external_ioc);
