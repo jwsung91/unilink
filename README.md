@@ -3,9 +3,8 @@
 [![CI/CD Pipeline](https://github.com/jwsung91/unilink/actions/workflows/ci.yml/badge.svg)](https://github.com/jwsung91/unilink/actions/workflows/ci.yml)
 [![Test Coverage](https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/badges/coverage.json)](https://github.com/jwsung91/unilink)
 
-
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
-![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20Mac-Green)
 
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
@@ -96,16 +95,16 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 # File pattern: unilink-<version>-<OS>-<arch>.<ext>
 
 # Linux (tar.gz)
-curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-Linux-x86_64.tar.gz
-tar -xzf unilink-0.1.6-Linux-x86_64.tar.gz
+curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.9-Linux-x86_64.tar.gz
+tar -xzf unilink-0.1.9-Linux-x86_64.tar.gz
 
 # macOS (tar.gz; .dmg also available in Releases)
-curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-Darwin-arm64.tar.gz
-tar -xzf unilink-0.1.6-Darwin-arm64.tar.gz
+curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.9-Darwin-arm64.tar.gz
+tar -xzf unilink-0.1.9-Darwin-arm64.tar.gz
 
 # Windows (zip)
-curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-Windows-AMD64.zip
-unzip unilink-0.1.6-Windows-AMD64.zip
+curl -LO https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.9-Windows-AMD64.zip
+unzip unilink-0.1.9-Windows-AMD64.zip
 ```
 
 **For detailed installation instructions, see [Installation Guide](docs/guides/installation.md).**
@@ -192,12 +191,12 @@ ctest --test-dir build-windows --output-on-failure
 - [Documentation Index](docs/INDEX.md) - Complete documentation overview
 
 ### 📦 Packaging (Conan / vcpkg)
-- Conan recipe lives in `packaging/conan` (run `conan create packaging/conan unilink/0.1.6@`; update `conandata.yml` SHA before tagging).
+- Conan recipe lives in `packaging/conan` (run `conan create packaging/conan unilink/0.1.9@`; update `conandata.yml` SHA before tagging).
 - vcpkg overlay port lives in `packaging/vcpkg/ports/unilink` (use `vcpkg install unilink --overlay-ports=packaging/vcpkg/ports` for local tests).
 - Local test commands (run from repo root):
   ```bash
   # Conan (v2): build & test the recipe
-  conan create packaging/conan --name=unilink --version=0.1.6
+  conan create packaging/conan --name=unilink --version=0.1.9
 
   # vcpkg: install using the local overlay port
   vcpkg install unilink --overlay-ports=packaging/vcpkg/ports
