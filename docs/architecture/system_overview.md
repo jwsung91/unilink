@@ -154,7 +154,7 @@ namespace unilink::transport {
 **Key Features:**
 - Boost.Asio based
 - Asynchronous I/O
-- Connection pooling
+- Connection pooling (Planned)
 - Retry logic
 
 ### 4. Common Utilities
@@ -525,7 +525,7 @@ class RetryPolicy {
 };
 ```
 
-#### 2. Circuit Breaker
+#### 2. Circuit Breaker (Planned)
 ```cpp
 class CircuitBreaker {
     enum class State { CLOSED, OPEN, HALF_OPEN };
@@ -590,7 +590,7 @@ void send(std::string&& data);  // Move semantics
 void send(std::string_view data);  // View (no copy)
 ```
 
-### 3. Connection Pooling
+### 3. Connection Pooling (Planned)
 ```cpp
 // Reuse connections
 class ConnectionPool {
