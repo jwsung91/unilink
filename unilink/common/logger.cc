@@ -239,9 +239,16 @@ std::string Logger::get_timestamp() {
   auto now = std::chrono::system_clock::now();
   auto time_t = std::chrono::system_clock::to_time_t(now);
   auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+  std::tm time_info{};
+
+#if defined(_WIN32)
+  ::localtime_s(&time_info, &time_t);
+#else
+  ::localtime_r(&time_t, &time_info);
+#endif
 
   std::ostringstream oss;
-  oss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S");
+  oss << std::put_time(&time_info, "%Y-%m-%d %H:%M:%S");
   oss << '.' << std::setfill('0') << std::setw(3) << ms.count();
   return oss.str();
 }
