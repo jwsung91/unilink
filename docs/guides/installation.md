@@ -57,15 +57,15 @@ Download pre-built packages from GitHub releases.
 Pick the archive that matches your OS/architecture. The naming pattern is:
 `unilink-<version>-<OS>-<arch>.<ext>`
 
-- Linux: `.tar.gz` (e.g., `unilink-0.1.6-Linux-x86_64.tar.gz`)
-- macOS: `.tar.gz` and `.dmg` (e.g., `unilink-0.1.6-Darwin-arm64.tar.gz`)
-- Windows: `.zip` (e.g., `unilink-0.1.6-Windows-AMD64.zip`)
+- Linux: `.tar.gz` (e.g., `unilink-0.1.9-Linux-x86_64.tar.gz`)
+- macOS: `.tar.gz` and `.dmg` (e.g., `unilink-0.1.9-Darwin-arm64.tar.gz`)
+- Windows: `.zip` (e.g., `unilink-0.1.9-Windows-AMD64.zip`)
 
 ```bash
 # Linux example
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.6-Linux-x86_64.tar.gz
-tar -xzf unilink-0.1.6-Linux-x86_64.tar.gz
-cd unilink-0.1.6-Linux-x86_64
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.1.9-Linux-x86_64.tar.gz
+tar -xzf unilink-0.1.9-Linux-x86_64.tar.gz
+cd unilink-0.1.9-Linux-x86_64
 ```
 
 #### Step 2: Install
@@ -151,7 +151,7 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 ## Packaging (Conan / vcpkg)
 
 - **Conan recipe**: `packaging/conan`
-  - Build/test locally (Conan v2): `conan create packaging/conan --name=unilink --version=0.1.6`
+  - Build/test locally (Conan v2): `conan create packaging/conan --name=unilink --version=0.1.9`
   - Update `conandata.yml` URL/SHA to the release tarball before publishing.
 - **vcpkg overlay port**: `packaging/vcpkg/ports/unilink`
   - Consume with overlay: `vcpkg install unilink --overlay-ports=packaging/vcpkg/ports`

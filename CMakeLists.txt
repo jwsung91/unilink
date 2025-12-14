@@ -14,7 +14,7 @@
 
 cmake_minimum_required(VERSION 3.12)
 project(unilink
-  VERSION 0.1.6
+  VERSION 0.1.9
   DESCRIPTION "Unified async communication library"
   HOMEPAGE_URL "https://github.com/jwsung91/unilink"
   LANGUAGES CXX)
