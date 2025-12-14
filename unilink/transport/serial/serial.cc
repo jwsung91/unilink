@@ -31,8 +31,17 @@ namespace net = boost::asio;
 // Use fully qualified names for clarity
 using namespace common;  // For error_reporting namespace
 
+namespace {
+// Ensure IoContextManager is running before we capture its io_context reference
+net::io_context& acquire_shared_serial_context() {
+  auto& manager = common::IoContextManager::instance();
+  manager.start();
+  return manager.get_context();
+}
+}  // namespace
+
 Serial::Serial(const config::SerialConfig& cfg)
-    : ioc_(common::IoContextManager::instance().get_context()),
+    : ioc_(acquire_shared_serial_context()),
       owns_ioc_(false),  // Shared global io_context managed by IoContextManager
       cfg_(cfg),
       retry_timer_(ioc_),
@@ -72,6 +81,15 @@ void Serial::start() {
   if (started_) return;
   stopping_.store(false);
   UNILINK_LOG_INFO("serial", "start", "Starting device: " + cfg_.device);
+  if (!owns_ioc_) {
+    auto& manager = common::IoContextManager::instance();
+    if (!manager.is_running()) {
+      manager.start();
+    }
+    if (ioc_.stopped()) {
+      ioc_.restart();
+    }
+  }
   work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_.get_executor());
   if (owns_ioc_) {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
