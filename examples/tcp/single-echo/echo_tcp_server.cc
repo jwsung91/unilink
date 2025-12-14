@@ -248,26 +248,27 @@ void signal_handler_wrapper(int signal) {
 int main(int argc, char** argv) {
   unsigned short port = (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 8080;
 
-  // Create EchoServer instance
-  EchoServer echo_server(port);
-  g_echo_server = &echo_server;
+  // Create EchoServer instance on the heap so the signal handler never points to a dangling stack object
+  auto echo_server = std::make_unique<EchoServer>(port);
+  g_echo_server = echo_server.get();
 
   // Set up signal handlers
   std::signal(SIGINT, signal_handler_wrapper);
   std::signal(SIGTERM, signal_handler_wrapper);
 
   // Start the server
-  if (!echo_server.start()) {
+  if (!echo_server->start()) {
     return 1;
   }
 
-  echo_server.print_info();
+  echo_server->print_info();
 
   // Run the main loop
-  echo_server.run();
+  echo_server->run();
 
   // Shutdown the server
-  echo_server.shutdown();
+  echo_server->shutdown();
+  g_echo_server = nullptr;
 
   // Force cleanup and exit
   std::cout << "Server process exiting..." << std::endl;

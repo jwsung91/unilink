@@ -292,21 +292,22 @@ int main(int argc, char** argv) {
   std::string server_ip = argv[1];
   unsigned short port = static_cast<unsigned short>(std::stoi(argv[2]));
 
-  // Create EchoClient instance
-  EchoClient echo_client(server_ip, port);
-  g_echo_client = &echo_client;
+  // Create EchoClient instance on the heap
+  std::unique_ptr<EchoClient> echo_client = std::make_unique<EchoClient>(server_ip, port);
+  g_echo_client = echo_client.get();
 
   // Set up signal handlers
   std::signal(SIGINT, signal_handler_wrapper);
   std::signal(SIGTERM, signal_handler_wrapper);
 
-  echo_client.print_info();
+  echo_client->print_info();
 
   // Run the main loop
-  echo_client.run();
+  echo_client->run();
 
   // Shutdown the client
-  echo_client.shutdown();
+  echo_client->shutdown();
+  g_echo_client = nullptr;
 
   // Force cleanup and exit
   std::cout << "Client process exiting..." << std::endl;

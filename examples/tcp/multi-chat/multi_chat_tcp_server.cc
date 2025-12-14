@@ -268,29 +268,30 @@ void signal_handler_wrapper(int signal) {
 int main(int argc, char** argv) {
   unsigned short port = (argc > 1) ? static_cast<unsigned short>(std::stoi(argv[1])) : 8080;
 
-  // Create ChatServer instance
-  ChatServer chat_server(port);
-  g_chat_server = &chat_server;
+  // Create ChatServer instance on the heap to avoid dangling stack pointers in the signal handler
+  auto chat_server = std::make_unique<ChatServer>(port);
+  g_chat_server = chat_server.get();
 
   // Set up signal handlers
   std::signal(SIGINT, signal_handler_wrapper);
   std::signal(SIGTERM, signal_handler_wrapper);
 
   // Start the server
-  if (!chat_server.start()) {
+  if (!chat_server->start()) {
     return 1;
   }
 
-  chat_server.print_info();
+  chat_server->print_info();
 
   // Set up broadcast timer
-  chat_server.setup_broadcast_timer();
+  chat_server->setup_broadcast_timer();
 
   // Run the main loop
-  chat_server.run();
+  chat_server->run();
 
   // Shutdown the server
-  chat_server.shutdown();
+  chat_server->shutdown();
+  g_chat_server = nullptr;
 
   // Force cleanup and exit
   std::cout << "Server process exiting..." << std::endl;

@@ -250,21 +250,22 @@ int main(int argc, char** argv) {
   std::string server_ip = argv[1];
   unsigned short port = static_cast<unsigned short>(std::stoi(argv[2]));
 
-  // Create ChatClient instance
-  ChatClient chat_client(server_ip, port);
-  g_chat_client = &chat_client;
+  // Create ChatClient instance on the heap to keep the signal handler from holding a stack address
+  auto chat_client = std::make_unique<ChatClient>(server_ip, port);
+  g_chat_client = chat_client.get();
 
   // Set up signal handlers
   std::signal(SIGINT, signal_handler_wrapper);
   std::signal(SIGTERM, signal_handler_wrapper);
 
-  chat_client.print_info();
+  chat_client->print_info();
 
   // Run the main loop
-  chat_client.run();
+  chat_client->run();
 
   // Shutdown the client
-  chat_client.shutdown();
+  chat_client->shutdown();
+  g_chat_client = nullptr;
 
   // Force cleanup and exit
   std::cout << "Client process exiting..." << std::endl;
