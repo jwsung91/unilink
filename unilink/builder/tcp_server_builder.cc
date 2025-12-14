@@ -16,6 +16,8 @@
 
 #include "unilink/builder/tcp_server_builder.hpp"
 
+#include <boost/asio/io_context.hpp>
+
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/common/exceptions.hpp"
 #include "unilink/common/input_validator.hpp"
@@ -51,18 +53,19 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
         "unlimited_clients()");
   }
 
+  std::shared_ptr<boost::asio::io_context> external_ioc;
   // IoContext management
   if (use_independent_context_) {
     // Use independent IoContext (for test isolation)
-    // Create independent context through IoContextManager
     auto independent_context = common::IoContextManager::instance().create_independent_context();
-    // Currently maintaining default implementation, can be extended in future for wrapper to accept independent context
+    external_ioc = std::shared_ptr<boost::asio::io_context>(std::move(independent_context));
   } else {
     // Automatically initialize IoContextManager (default behavior)
     AutoInitializer::ensure_io_context_running();
   }
 
-  auto server = std::make_unique<wrapper::TcpServer>(port_);
+  auto server = external_ioc ? std::make_unique<wrapper::TcpServer>(port_, external_ioc)
+                             : std::make_unique<wrapper::TcpServer>(port_);
 
   // Apply client limit configuration
   UNILINK_LOG_DEBUG(
@@ -83,9 +86,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   }
 
   // Apply configuration
-  if (auto_manage_) {
-    server->auto_manage(true);
-  }
+  server->auto_manage(auto_manage_);
 
   // Set callbacks
   if (on_data_) {
@@ -124,6 +125,10 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
                       "Setting port retry: max=" + std::to_string(max_port_retries_) +
                           ", interval=" + std::to_string(port_retry_interval_ms_) + "ms");
     server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
+  }
+
+  if (auto_manage_) {
+    server->start();
   }
 
   return server;

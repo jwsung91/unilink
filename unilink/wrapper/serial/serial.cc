@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <chrono>
 #include <iostream>
+#include <stdexcept>
 #include <thread>
 
 #include "unilink/config/serial_config.hpp"
@@ -32,6 +33,13 @@ Serial::Serial(const std::string& device, uint32_t baud_rate)
     : device_(device), baud_rate_(baud_rate), channel_(nullptr) {
   // Channel will be created later at start() time
 }
+
+Serial::Serial(const std::string& device, uint32_t baud_rate, std::shared_ptr<boost::asio::io_context> external_ioc)
+    : device_(device),
+      baud_rate_(baud_rate),
+      channel_(nullptr),
+      external_ioc_(std::move(external_ioc)),
+      use_external_context_(external_ioc_ != nullptr) {}
 
 Serial::Serial(std::shared_ptr<interface::Channel> channel) : device_(""), baud_rate_(9600), channel_(channel) {
   setup_internal_handlers();
@@ -50,11 +58,26 @@ Serial::~Serial() {
 
 void Serial::start() {
   if (started_) return;
+  if (use_external_context_) {
+    if (!external_ioc_) {
+      throw std::runtime_error("External io_context is not set");
+    }
+    if (external_ioc_->stopped()) {
+      external_ioc_->restart();
+    }
+    if (!external_guard_) {
+      external_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+          external_ioc_->get_executor());
+    }
+    if (!external_thread_.joinable()) {
+      external_thread_ = std::thread([ioc = external_ioc_]() { ioc->run(); });
+    }
+  }
 
   // Ensure flow/parity mapping is applied on subsequent starts if channel was recreated
   if (!channel_) {
     auto config = build_config();
-    channel_ = factory::ChannelFactory::create(config);
+    channel_ = factory::ChannelFactory::create(config, external_ioc_);
     setup_internal_handlers();
   } else {
     // Channel already exists; nothing to do if already started
@@ -73,6 +96,18 @@ void Serial::stop() {
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
   channel_.reset();
   started_ = false;
+
+  if (use_external_context_) {
+    if (external_guard_) {
+      external_guard_->reset();
+    }
+    if (external_ioc_) {
+      external_ioc_->stop();
+    }
+    if (external_thread_.joinable()) {
+      external_thread_.join();
+    }
+  }
 }
 
 void Serial::send(const std::string& data) {

@@ -33,7 +33,7 @@ using namespace common;  // For error_reporting namespace
 
 Serial::Serial(const config::SerialConfig& cfg)
     : ioc_(common::IoContextManager::instance().get_context()),
-      owns_ioc_(true),  // Set to true to run io_context in our own thread
+      owns_ioc_(false),  // Shared global io_context managed by IoContextManager
       cfg_(cfg),
       retry_timer_(ioc_),
       bp_high_(cfg.backpressure_threshold) {
@@ -108,10 +108,7 @@ void Serial::stop() {
     // Wait for all async operations to complete
     if (owns_ioc_ && ioc_thread_.joinable()) {
       ioc_thread_.join();
-    }
-
-    // Reset the io_context to clear any remaining work
-    if (owns_ioc_) {
+      // Reset the io_context to clear any remaining work
       ioc_.restart();
     }
 

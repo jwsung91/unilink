@@ -41,6 +41,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg)
       socket_(*ioc_),
       cfg_(cfg),
       retry_timer_(*ioc_),
+      connect_timer_(*ioc_),
       owns_ioc_(true),
       bp_high_(cfg.backpressure_threshold) {
   // Keep the owned io_context alive even before work is posted to prevent early exit races
@@ -57,6 +58,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
       socket_(ioc),
       cfg_(cfg),
       retry_timer_(ioc),
+      connect_timer_(ioc),
       owns_ioc_(false),
       bp_high_(cfg.backpressure_threshold) {
   // Initialize state (ThreadSafeLinkState is already initialized in header)
@@ -122,6 +124,7 @@ void TcpClient::start() {
   }
 
   stopping_.store(false);
+  retry_attempts_ = 0;
 
   if (owns_ioc_) {
     // Re-arm work guard in case stop() or destructor cleared it
@@ -157,6 +160,7 @@ void TcpClient::stop() {
   auto cleanup = [self] {
     try {
       self->retry_timer_.cancel();
+      self->connect_timer_.cancel();
       self->resolver_.cancel();
       boost::system::error_code ec_cancel;
       self->socket_.cancel(ec_cancel);
@@ -281,15 +285,29 @@ void TcpClient::do_resolve_connect() {
       self->schedule_retry();
       return;
     }
+    // Set up connection timeout
+    self->connect_timer_.expires_after(std::chrono::milliseconds(self->cfg_.connection_timeout_ms));
+    self->connect_timer_.async_wait([self](const boost::system::error_code& timer_ec) {
+      if (!timer_ec && !self->stopping_.load()) {
+        UNILINK_LOG_ERROR("tcp_client", "connect_timeout",
+                          "Connection timed out after " + std::to_string(self->cfg_.connection_timeout_ms) + "ms");
+        self->handle_close(boost::asio::error::timed_out);
+      }
+    });
+
     net::async_connect(self->socket_, results, [self](auto ec2, const auto&) {
       if (self->stopping_.load()) {
         self->close_socket();
+        self->connect_timer_.cancel();
         return;
       }
       if (ec2) {
+        self->connect_timer_.cancel();
         self->schedule_retry();
         return;
       }
+      self->connect_timer_.cancel();
+      self->retry_attempts_ = 0;
       self->connected_.store(true);
       self->state_.set_state(LinkState::Connected);
       self->notify_state();
@@ -309,6 +327,12 @@ void TcpClient::schedule_retry() {
   if (stopping_.load()) {
     return;
   }
+  if (cfg_.max_retries != -1 && retry_attempts_ >= cfg_.max_retries) {
+    state_.set_state(LinkState::Error);
+    notify_state();
+    return;
+  }
+  ++retry_attempts_;
   state_.set_state(LinkState::Connecting);
   notify_state();
 
@@ -383,6 +407,7 @@ void TcpClient::do_write() {
 
 void TcpClient::handle_close(const boost::system::error_code& ec) {
   connected_.store(false);
+  connect_timer_.cancel();
   close_socket();
   if (stopping_.load() || state_.is_state(LinkState::Closed) || ec == boost::asio::error::operation_aborted) {
     state_.set_state(LinkState::Closed);

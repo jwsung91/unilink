@@ -16,10 +16,13 @@
 
 #pragma once
 
+#include <boost/asio/executor_work_guard.hpp>
+#include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/channel.hpp"
@@ -31,6 +34,7 @@ namespace wrapper {
 class Serial : public ChannelInterface {
  public:
   Serial(const std::string& device, uint32_t baud_rate);
+  Serial(const std::string& device, uint32_t baud_rate, std::shared_ptr<boost::asio::io_context> external_ioc);
   explicit Serial(std::shared_ptr<interface::Channel> channel);
   ~Serial() override;
 
@@ -66,6 +70,10 @@ class Serial : public ChannelInterface {
   std::string device_;
   uint32_t baud_rate_;
   std::shared_ptr<interface::Channel> channel_;
+  std::shared_ptr<boost::asio::io_context> external_ioc_;
+  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> external_guard_;
+  std::thread external_thread_;
+  bool use_external_context_{false};
 
   // Event handlers
   DataHandler data_handler_;

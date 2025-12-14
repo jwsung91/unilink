@@ -16,10 +16,13 @@
 
 #pragma once
 
+#include <boost/asio/executor_work_guard.hpp>
+#include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
@@ -30,6 +33,7 @@ namespace wrapper {
 class TcpClient : public ChannelInterface {
  public:
   TcpClient(const std::string& host, uint16_t port);
+  TcpClient(const std::string& host, uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc);
   explicit TcpClient(std::shared_ptr<interface::Channel> channel);
   ~TcpClient() override;
 
@@ -60,6 +64,10 @@ class TcpClient : public ChannelInterface {
   std::string host_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
+  std::shared_ptr<boost::asio::io_context> external_ioc_;
+  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> external_guard_;
+  std::thread external_thread_;
+  bool use_external_context_{false};
 
   // Event handlers
   DataHandler data_handler_;
