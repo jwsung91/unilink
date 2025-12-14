@@ -25,6 +25,7 @@
 
 #include "unilink/common/constants.hpp"
 #include "unilink/common/exceptions.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace common {
@@ -35,7 +36,7 @@ namespace common {
  * Provides comprehensive input validation for all unilink components.
  * Throws ValidationException for invalid inputs with detailed error messages.
  */
-class InputValidator {
+class UNILINK_API InputValidator {
  public:
   // Network validation
   static void validate_host(const std::string& host);

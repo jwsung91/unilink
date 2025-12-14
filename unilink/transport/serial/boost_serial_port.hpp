@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include "unilink/common/visibility.hpp"
 #include "unilink/interface/iserial_port.hpp"
 
 namespace unilink {
@@ -23,7 +24,7 @@ namespace transport {
 
 namespace net = boost::asio;
 
-class BoostSerialPort : public interface::SerialPortInterface {
+class UNILINK_API BoostSerialPort : public interface::SerialPortInterface {
  public:
   explicit BoostSerialPort(net::io_context& ioc) : port_(ioc) {}
 

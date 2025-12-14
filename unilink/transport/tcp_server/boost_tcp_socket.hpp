@@ -20,6 +20,7 @@
 #include <memory>
 
 #include "unilink/common/platform.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/interface/itcp_socket.hpp"
 
 namespace unilink {
@@ -32,7 +33,7 @@ using tcp = net::ip::tcp;
  * @brief Boost.Asio implementation of ITcpSocket interface.
  * This is the real implementation used in production.
  */
-class BoostTcpSocket : public interface::TcpSocketInterface {
+class UNILINK_API BoostTcpSocket : public interface::TcpSocketInterface {
  public:
   explicit BoostTcpSocket(tcp::socket sock);
   ~BoostTcpSocket() override = default;

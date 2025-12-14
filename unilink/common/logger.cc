@@ -35,10 +35,12 @@ Logger::~Logger() {
   flush();
 }
 
-Logger& Logger::instance() {
+Logger& Logger::default_logger() {
   static Logger instance;
   return instance;
 }
+
+Logger& Logger::instance() { return default_logger(); }
 
 void Logger::set_level(LogLevel level) { current_level_.store(level); }
 
@@ -339,38 +341,47 @@ AsyncLogStats Logger::get_async_stats() const {
 }
 
 void Logger::setup_async_logging(const AsyncLogConfig& config) {
-  std::lock_guard<std::mutex> lock(mutex_);
+  teardown_async_logging();
 
-  if (async_enabled_.load()) {
-    teardown_async_logging();
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    async_config_ = config;
+    async_stats_.reset();
+    shutdown_requested_.store(false);
+    running_.store(true);
+    async_enabled_.store(true);
   }
 
-  async_config_ = config;
-  async_stats_.reset();
-
-  shutdown_requested_.store(false);
-  running_.store(true);
-
-  worker_thread_ = std::make_unique<std::thread>(&Logger::worker_loop, this);
-  async_enabled_.store(true);
+  worker_thread_ = std::thread(&Logger::worker_loop, this);
 }
 
 void Logger::teardown_async_logging() {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::thread worker_to_join;
+  bool notify_worker = false;
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    async_enabled_.store(false);
 
-  if (running_.load()) {
-    shutdown_requested_.store(true);
-    queue_cv_.notify_all();
-
-    if (worker_thread_ && worker_thread_->joinable()) {
-      // Use detach instead of join to avoid hanging
-      worker_thread_->detach();
+    if (running_.load()) {
+      shutdown_requested_.store(true);
+      notify_worker = true;
     }
 
-    running_.store(false);
+    if (worker_thread_.joinable()) {
+      worker_to_join = std::move(worker_thread_);
+    }
   }
 
-  async_enabled_.store(false);
+  if (notify_worker) {
+    queue_cv_.notify_all();
+  }
+
+  if (worker_to_join.joinable()) {
+    worker_to_join.join();
+  }
+
+  running_.store(false);
+  shutdown_requested_.store(false);
 }
 
 void Logger::worker_loop() {
@@ -379,29 +390,12 @@ void Logger::worker_loop() {
 
   auto last_flush = std::chrono::steady_clock::now();
 
-  while (!shutdown_requested_.load()) {
+  while (true) {
     std::unique_lock<std::mutex> lock(queue_mutex_);
 
     // Wait for logs or timeout
     bool has_logs = queue_cv_.wait_for(lock, async_config_.flush_interval,
                                        [this] { return !log_queue_.empty() || shutdown_requested_.load(); });
-
-    if (shutdown_requested_.load()) {
-      // Process remaining logs before exit
-      if (!log_queue_.empty()) {
-        batch.clear();
-        while (!log_queue_.empty()) {
-          batch.push_back(std::move(log_queue_.front()));
-          log_queue_.pop();
-        }
-        lock.unlock();
-        if (!batch.empty()) {
-          process_batch(batch);
-          update_stats_on_batch(batch.size());
-        }
-      }
-      break;
-    }
 
     // Collect logs for batch processing
     if (has_logs && !log_queue_.empty()) {
@@ -432,7 +426,14 @@ void Logger::worker_loop() {
     if (now - last_flush >= async_config_.flush_interval) {
       last_flush = now;
     }
+
+    if (shutdown_requested_.load() && log_queue_.empty()) {
+      break;
+    }
   }
+
+  flush();
+  running_.store(false);
 }
 
 void Logger::process_batch(const std::vector<LogEntry>& batch) {

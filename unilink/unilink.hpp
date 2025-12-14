@@ -16,17 +16,11 @@
 
 #pragma once
 
-#if __has_include(<unilink_export.hpp>)
-#include <unilink_export.hpp>
-#else
-// Fallback for when build directory is not included in include path
-#define UNILINK_EXPORT
-#endif
-
 #include <memory>
 #include <variant>
 
 #include "unilink/common/platform.hpp"
+#include "unilink/common/visibility.hpp"
 
 // Internal includes for Builder API (not exposed to users)
 #include "unilink/wrapper/ichannel.hpp"

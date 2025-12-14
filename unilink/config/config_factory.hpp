@@ -20,6 +20,7 @@
 #include <mutex>
 
 #include "iconfig_manager.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace config {
@@ -27,7 +28,7 @@ namespace config {
 /**
  * Factory for creating configuration managers
  */
-class ConfigFactory {
+class UNILINK_API ConfigFactory {
  public:
   /**
    * Create a new configuration manager instance
@@ -57,7 +58,7 @@ class ConfigFactory {
 /**
  * Configuration presets for common use cases
  */
-class ConfigPresets {
+class UNILINK_API ConfigPresets {
  public:
   /**
    * Setup default configuration for TCP client

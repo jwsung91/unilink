@@ -18,6 +18,8 @@
 
 #include <string>
 
+#include "visibility.hpp"
+
 #if !defined(UNILINK_PLATFORM_WINDOWS) && defined(_WIN32)
 #define UNILINK_PLATFORM_WINDOWS 1
 #endif
@@ -119,7 +121,7 @@ namespace common {
 /**
  * @brief Platform information utilities
  */
-class PlatformInfo {
+class UNILINK_API PlatformInfo {
  public:
   /**
    * @brief Get the detected Ubuntu version

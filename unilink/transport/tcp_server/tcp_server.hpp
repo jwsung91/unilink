@@ -31,6 +31,7 @@
 #include "unilink/common/logger.hpp"
 #include "unilink/common/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
@@ -48,8 +49,8 @@ using interface::Channel;
 using interface::TcpAcceptorInterface;
 using tcp = net::ip::tcp;
 
-class TcpServer : public Channel,
-                  public std::enable_shared_from_this<TcpServer> {  // NOLINT
+class UNILINK_API TcpServer : public Channel,
+                              public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:
   explicit TcpServer(const TcpServerConfig& cfg);
   // Constructor for testing with dependency injection

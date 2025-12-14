@@ -20,6 +20,7 @@
 #include <memory>
 #include <variant>
 
+#include "unilink/common/visibility.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
@@ -33,7 +34,7 @@ namespace factory {
  * - Uses existing Transport classes
  * - Maintains backward compatibility
  */
-class ChannelFactory {
+class UNILINK_API ChannelFactory {
  public:
   using ChannelOptions = std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig>;
 

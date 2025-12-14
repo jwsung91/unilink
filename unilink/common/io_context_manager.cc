@@ -16,14 +16,18 @@
 
 #include "unilink/common/io_context_manager.hpp"
 
-#include <chrono>
-#include <future>
-#include <iostream>
-
 #include "unilink/common/logger.hpp"
 
 namespace unilink {
 namespace common {
+
+IoContextManager::IoContextManager() = default;
+
+IoContextManager::IoContextManager(std::shared_ptr<IoContext> external_context)
+    : owns_context_(false), ioc_(std::move(external_context)) {}
+
+IoContextManager::IoContextManager(IoContext& external_context)
+    : owns_context_(false), ioc_(std::shared_ptr<IoContext>(&external_context, [](IoContext*) {})) {}
 
 IoContextManager& IoContextManager::instance() {
   static IoContextManager instance;
@@ -33,90 +37,89 @@ IoContextManager& IoContextManager::instance() {
 boost::asio::io_context& IoContextManager::get_context() {
   std::lock_guard<std::mutex> lock(mutex_);
   if (!ioc_) {
-    ioc_ = std::make_unique<IoContext>();
+    ioc_ = std::make_shared<IoContext>();
+    owns_context_ = true;
   }
   return *ioc_;
 }
 
 void IoContextManager::start() {
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (running_) {
-    return;
-  }
-
-  // Clean up previous state if exists
-  if (io_thread_.joinable()) {
-    try {
-      io_thread_.join();
-    } catch (...) {
-      // Ignore join failure
-    }
-  }
-
-  // Always create new io_context to ensure clean state
-  ioc_ = std::make_unique<IoContext>();
-
-  // Create work guard to keep io_context from becoming empty
-  work_guard_ = std::make_unique<WorkGuard>(ioc_->get_executor());
-
-  // Run io_context in separate thread
-  io_thread_ = std::thread([this]() {
-    try {
-      ioc_->run();
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
-    }
-  });
-
-  running_ = true;
-}
-
-void IoContextManager::stop() {
-  try {
+  std::thread previous_thread;
+  std::shared_ptr<IoContext> context;
+  {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (!running_) {
+    if (running_) {
       return;
     }
 
-    // Release work guard to allow io_context to terminate naturally
-    work_guard_.reset();
+    if (io_thread_.joinable()) {
+      previous_thread = std::move(io_thread_);
+    }
 
-    // Stop io_context
+    if (!ioc_) {
+      ioc_ = std::make_shared<IoContext>();
+      owns_context_ = true;
+    }
+
+    if (ioc_->stopped()) {
+      ioc_->restart();
+    }
+    work_guard_ = std::make_unique<WorkGuard>(ioc_->get_executor());
+    context = ioc_;
+    running_.store(true);
+  }
+
+  if (previous_thread.joinable()) {
+    previous_thread.join();
+  }
+
+  // Run io_context in separate thread
+  try {
+    io_thread_ = std::thread([this, context]() {
+      try {
+        context->run();
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
+      }
+    });
+  } catch (...) {
+    running_.store(false);
+    throw;
+  }
+}
+
+void IoContextManager::stop() {
+  std::thread worker;
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (!running_ && !io_thread_.joinable()) {
+      return;
+    }
+
+    if (work_guard_) {
+      work_guard_.reset();
+    }
+
     if (ioc_) {
       ioc_->stop();
     }
 
-    // Wait for thread termination (safe way)
     if (io_thread_.joinable()) {
-      try {
-        // Attempt join with short timeout
-        auto future = std::async(std::launch::async, [this]() { io_thread_.join(); });
-
-        if (future.wait_for(std::chrono::milliseconds(100)) == std::future_status::timeout) {
-          // Detach on timeout
-          io_thread_.detach();
-        }
-      } catch (...) {
-        // Detach on exception
-        try {
-          io_thread_.detach();
-        } catch (...) {
-          // Ignore if detach also fails
-        }
-      }
+      worker = std::move(io_thread_);
     }
 
     running_ = false;
-
-    // Create completely new io_context to reset state
-    ioc_.reset();
-    work_guard_.reset();
-  } catch (...) {
-    // Ignore exceptions in stop()
-    running_ = false;
-    ioc_.reset();
-    work_guard_.reset();
   }
+
+  if (worker.joinable()) {
+    worker.join();
+  }
+
+  std::lock_guard<std::mutex> lock(mutex_);
+  if (owns_context_) {
+    ioc_.reset();
+  }
+  work_guard_.reset();
 }
 
 bool IoContextManager::is_running() const { return running_.load(); }

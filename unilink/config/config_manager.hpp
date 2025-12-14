@@ -22,6 +22,7 @@
 #include <sstream>
 
 #include "iconfig_manager.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace config {
@@ -29,7 +30,7 @@ namespace config {
 /**
  * Thread-safe configuration manager implementation
  */
-class ConfigManager : public ConfigManagerInterface {
+class UNILINK_API ConfigManager : public ConfigManagerInterface {
  public:
   ConfigManager() = default;
   ~ConfigManager() = default;

@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "unilink/common/safe_span.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace common {
@@ -36,7 +37,7 @@ namespace common {
  * This class provides a safe wrapper around binary data that can be
  * constructed from various sources and provides safe access methods.
  */
-class SafeDataBuffer {
+class UNILINK_API SafeDataBuffer {
  public:
   // Constructors
   explicit SafeDataBuffer(const std::string& data);

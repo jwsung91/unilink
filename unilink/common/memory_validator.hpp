@@ -22,6 +22,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include "visibility.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -118,7 +120,7 @@ bool is_use_after_free(const void* ptr);
 /**
  * @brief RAII wrapper for memory validation
  */
-class MemoryValidator {
+class UNILINK_API MemoryValidator {
  public:
   explicit MemoryValidator(void* ptr, size_t size, size_t canary_size = 8);
   ~MemoryValidator();
@@ -151,7 +153,7 @@ class MemoryValidator {
 /**
  * @brief Memory pattern generator for testing
  */
-class MemoryPatternGenerator {
+class UNILINK_API MemoryPatternGenerator {
  public:
   static std::vector<uint8_t> generate_pattern(size_t size, uint8_t seed = 0xAA);
   static std::vector<uint8_t> generate_random_pattern(size_t size);

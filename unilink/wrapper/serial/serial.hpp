@@ -24,6 +24,7 @@
 #include <string>
 #include <thread>
 
+#include "unilink/common/visibility.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
@@ -31,7 +32,7 @@
 namespace unilink {
 namespace wrapper {
 
-class Serial : public ChannelInterface {
+class UNILINK_API Serial : public ChannelInterface {
  public:
   Serial(const std::string& device, uint32_t baud_rate);
   Serial(const std::string& device, uint32_t baud_rate, std::shared_ptr<boost::asio::io_context> external_ioc);

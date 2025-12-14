@@ -31,6 +31,7 @@
 #include "unilink/common/logger.hpp"
 #include "unilink/common/memory_pool.hpp"
 #include "unilink/common/platform.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_socket.hpp"
 
@@ -43,7 +44,7 @@ using common::LinkState;
 using interface::TcpSocketInterface;
 using tcp = net::ip::tcp;
 
-class TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
+class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServerSession> {
  public:
   using OnBytes = interface::Channel::OnBytes;
   using OnBackpressure = interface::Channel::OnBackpressure;

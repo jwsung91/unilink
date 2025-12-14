@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "error_types.hpp"
+#include "visibility.hpp"
 
 namespace unilink {
 namespace common {
@@ -34,7 +35,7 @@ namespace common {
  * Provides thread-safe error reporting, statistics collection,
  * and callback-based error handling for the entire unilink library.
  */
-class ErrorHandler {
+class UNILINK_API ErrorHandler {
  public:
   using ErrorCallback = std::function<void(const ErrorInfo&)>;
 
@@ -42,6 +43,10 @@ class ErrorHandler {
    * @brief Get singleton instance
    */
   static ErrorHandler& instance();
+  static ErrorHandler& default_handler();
+
+  ErrorHandler();
+  ~ErrorHandler();
 
   /**
    * @brief Report an error
@@ -118,9 +123,6 @@ class ErrorHandler {
   size_t get_error_count(const std::string& component, ErrorLevel level) const;
 
  private:
-  ErrorHandler() = default;
-  ~ErrorHandler() = default;
-
   // Non-copyable, non-movable
   ErrorHandler(const ErrorHandler&) = delete;
   ErrorHandler& operator=(const ErrorHandler&) = delete;

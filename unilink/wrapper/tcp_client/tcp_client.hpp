@@ -24,13 +24,14 @@
 #include <string>
 #include <thread>
 
+#include "unilink/common/visibility.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
 namespace unilink {
 namespace wrapper {
 
-class TcpClient : public ChannelInterface {
+class UNILINK_API TcpClient : public ChannelInterface {
  public:
   TcpClient(const std::string& host, uint16_t port);
   TcpClient(const std::string& host, uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc);

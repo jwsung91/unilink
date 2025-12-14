@@ -24,6 +24,7 @@
 #include <string>
 #include <thread>
 
+#include "unilink/common/visibility.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
@@ -36,7 +37,7 @@ namespace wrapper {
  * - Prevents memory leaks
  * - Automatic resource management
  */
-class TcpServer : public ChannelInterface {
+class UNILINK_API TcpServer : public ChannelInterface {
  public:
   explicit TcpServer(uint16_t port);
   TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc);

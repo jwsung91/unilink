@@ -19,6 +19,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "visibility.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -28,7 +30,7 @@ namespace common {
  * Provides a common base for all exceptions thrown by the unilink library.
  * Includes additional context information for better error reporting.
  */
-class UnilinkException : public std::runtime_error {
+class UNILINK_API UnilinkException : public std::runtime_error {
  public:
   explicit UnilinkException(const std::string& message, const std::string& component = "",
                             const std::string& operation = "")
@@ -59,7 +61,7 @@ class UnilinkException : public std::runtime_error {
  * Indicates errors that occur during the construction or configuration
  * of communication channels using the Builder pattern.
  */
-class BuilderException : public UnilinkException {
+class UNILINK_API BuilderException : public UnilinkException {
  public:
   explicit BuilderException(const std::string& message, const std::string& builder_type = "",
                             const std::string& operation = "")
@@ -85,7 +87,7 @@ class BuilderException : public UnilinkException {
  * Indicates that input parameters failed validation checks.
  * Provides detailed information about what validation failed.
  */
-class ValidationException : public UnilinkException {
+class UNILINK_API ValidationException : public UnilinkException {
  public:
   explicit ValidationException(const std::string& message, const std::string& parameter = "",
                                const std::string& expected = "")
@@ -116,7 +118,7 @@ class ValidationException : public UnilinkException {
  * Indicates errors related to memory allocation, deallocation,
  * or memory safety violations.
  */
-class MemoryException : public UnilinkException {
+class UNILINK_API MemoryException : public UnilinkException {
  public:
   explicit MemoryException(const std::string& message, size_t size = 0, const std::string& operation = "")
       : UnilinkException(message, "memory", operation), size_(size) {}
@@ -141,7 +143,7 @@ class MemoryException : public UnilinkException {
  * Indicates errors that occur during network or serial connection
  * establishment, maintenance, or teardown.
  */
-class ConnectionException : public UnilinkException {
+class UNILINK_API ConnectionException : public UnilinkException {
  public:
   explicit ConnectionException(const std::string& message, const std::string& connection_type = "",
                                const std::string& operation = "")
@@ -167,7 +169,7 @@ class ConnectionException : public UnilinkException {
  * Indicates errors that occur during configuration loading,
  * validation, or application.
  */
-class ConfigurationException : public UnilinkException {
+class UNILINK_API ConfigurationException : public UnilinkException {
  public:
   explicit ConfigurationException(const std::string& message, const std::string& config_section = "",
                                   const std::string& operation = "")

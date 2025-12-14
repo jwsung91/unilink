@@ -23,6 +23,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "unilink/common/visibility.hpp"
+
 namespace unilink {
 namespace config {
 
@@ -71,7 +73,7 @@ using ConfigChangeCallback =
 /**
  * Abstract interface for configuration management
  */
-class ConfigManagerInterface {
+class UNILINK_API ConfigManagerInterface {
  public:
   virtual ~ConfigManagerInterface() = default;
 

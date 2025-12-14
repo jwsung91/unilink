@@ -23,6 +23,7 @@
 #include <thread>
 
 #include "unilink/common/platform.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace common {
@@ -32,13 +33,17 @@ namespace common {
  * All Transports share one io_context for improved memory efficiency
  * Added independent context creation functionality for test isolation
  */
-class IoContextManager {
+class UNILINK_API IoContextManager {
  public:
   using IoContext = boost::asio::io_context;
   using WorkGuard = boost::asio::executor_work_guard<IoContext::executor_type>;
 
   // Singleton instance access
   static IoContextManager& instance();
+
+  IoContextManager();
+  explicit IoContextManager(std::shared_ptr<IoContext> external_context);
+  explicit IoContextManager(IoContext& external_context);
 
   // Return io_context reference (existing functionality)
   IoContext& get_context();
@@ -57,11 +62,11 @@ class IoContextManager {
   ~IoContextManager();
 
  private:
-  IoContextManager() = default;
   IoContextManager(const IoContextManager&) = delete;
   IoContextManager& operator=(const IoContextManager&) = delete;
 
-  std::unique_ptr<IoContext> ioc_;
+  bool owns_context_{true};
+  std::shared_ptr<IoContext> ioc_;
   std::unique_ptr<WorkGuard> work_guard_;
   std::thread io_thread_;
   std::atomic<bool> running_{false};

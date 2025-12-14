@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+#include "visibility.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -46,7 +48,7 @@ struct LogRotationConfig {
  * Handles log file rotation based on size and automatic cleanup
  * of old log files based on count limits.
  */
-class LogRotation {
+class UNILINK_API LogRotation {
  public:
   /**
    * @brief Constructor
