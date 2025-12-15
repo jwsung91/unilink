@@ -31,6 +31,7 @@ using tcp = net::ip::tcp;
 TcpServer::TcpServer(const config::TcpServerConfig& cfg)
     : owned_ioc_(nullptr),
       owns_ioc_(false),
+      uses_global_ioc_(true),
       ioc_(common::IoContextManager::instance().get_context()),
       acceptor_(nullptr),
       cfg_(cfg),
@@ -49,6 +50,7 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interfa
                      net::io_context& ioc)
     : owned_ioc_(nullptr),
       owns_ioc_(false),
+      uses_global_ioc_(false),
       ioc_(ioc),
       acceptor_(std::move(acceptor)),
       cfg_(cfg),
@@ -80,6 +82,14 @@ void TcpServer::start() {
   }
   stopping_.store(false);
 
+  // Ensure the shared io_context is running when we rely on the global manager.
+  if (uses_global_ioc_) {
+    auto& manager = common::IoContextManager::instance();
+    if (!manager.is_running()) {
+      manager.start();
+    }
+  }
+
   if (!acceptor_) {
     UNILINK_LOG_ERROR("tcp_server", "start", "Acceptor is null");
     common::error_reporting::report_system_error("tcp_server", "start", "Acceptor is null");
@@ -103,26 +113,38 @@ void TcpServer::stop() {
     return;  // Already stopping/stopped
   }
 
-  auto self = shared_from_this();
-  std::promise<void> cleanup_promise;
-  auto cleanup_future = cleanup_promise.get_future();
-
-  net::post(ioc_, [self, &cleanup_promise] {
+  auto cleanup = [this]() {
     boost::system::error_code ec;
-    if (self->acceptor_ && self->acceptor_->is_open()) {
-      self->acceptor_->close(ec);
+    if (acceptor_ && acceptor_->is_open()) {
+      acceptor_->close(ec);
     }
     // Clean up all sessions
     {
-      std::lock_guard<std::mutex> lock(self->sessions_mutex_);
-      self->sessions_.clear();
-      self->current_session_.reset();
+      std::lock_guard<std::mutex> lock(sessions_mutex_);
+      sessions_.clear();
+      current_session_.reset();
     }
-    self->state_.set_state(common::LinkState::Closed);
-    cleanup_promise.set_value();
-  });
+    state_.set_state(common::LinkState::Closed);
+  };
 
-  cleanup_future.wait();
+  const bool has_active_ioc_thread =
+      owns_ioc_ || (uses_global_ioc_ && common::IoContextManager::instance().is_running());
+
+  if (has_active_ioc_thread) {
+    auto self = shared_from_this();
+    auto cleanup_promise = std::make_shared<std::promise<void>>();
+    auto cleanup_future = cleanup_promise->get_future();
+
+    net::post(ioc_, [self, cleanup, cleanup_promise] {
+      cleanup();
+      cleanup_promise->set_value();
+    });
+
+    cleanup_future.wait();
+  } else {
+    // io_context is not running (e.g., never started); perform best-effort cleanup synchronously
+    cleanup();
+  }
 
   if (owns_ioc_ && ioc_thread_.joinable()) {
     ioc_.stop();

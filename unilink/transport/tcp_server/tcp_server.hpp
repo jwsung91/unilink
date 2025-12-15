@@ -18,10 +18,10 @@
 
 #include <algorithm>
 #include <array>
+#include <atomic>
 #include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
-#include <atomic>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -96,6 +96,7 @@ class UNILINK_API TcpServer : public Channel,
 
   std::unique_ptr<net::io_context> owned_ioc_;
   bool owns_ioc_;
+  bool uses_global_ioc_;
   net::io_context& ioc_;
   std::thread ioc_thread_;
 
