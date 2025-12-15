@@ -16,16 +16,11 @@
 
 #pragma once
 
-#if __has_include(<unilink_export.hpp>)
-#include <unilink_export.hpp>
-#else
-#define UNILINK_EXPORT
-#endif
-
 #include <cstdint>
 #include <string>
 
 #include "unilink/builder/ibuilder.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/wrapper/tcp_client/tcp_client.hpp"
 
 namespace unilink {
@@ -41,7 +36,7 @@ namespace builder {
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_EXPORT TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
+class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient> {
  public:
   /**
    * @brief Construct a new TcpClientBuilder

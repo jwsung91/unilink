@@ -16,21 +16,17 @@
 
 #pragma once
 
-#if __has_include(<unilink_export.hpp>)
-#include <unilink_export.hpp>
-#else
-#define UNILINK_EXPORT
-#endif
-
 #include <functional>
 #include <memory>
 #include <string>
+
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace wrapper {
 
 // Common interface for all Wrapper communication classes
-class UNILINK_EXPORT ChannelInterface {
+class UNILINK_API ChannelInterface {
  public:
   using DataHandler = std::function<void(const std::string&)>;
   using ConnectHandler = std::function<void()>;

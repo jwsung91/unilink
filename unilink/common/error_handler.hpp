@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "error_types.hpp"
+#include "visibility.hpp"
 
 namespace unilink {
 namespace common {
@@ -34,7 +35,7 @@ namespace common {
  * Provides thread-safe error reporting, statistics collection,
  * and callback-based error handling for the entire unilink library.
  */
-class ErrorHandler {
+class UNILINK_API ErrorHandler {
  public:
   using ErrorCallback = std::function<void(const ErrorInfo&)>;
 
@@ -42,6 +43,10 @@ class ErrorHandler {
    * @brief Get singleton instance
    */
   static ErrorHandler& instance();
+  static ErrorHandler& default_handler();
+
+  ErrorHandler();
+  ~ErrorHandler();
 
   /**
    * @brief Report an error
@@ -118,9 +123,6 @@ class ErrorHandler {
   size_t get_error_count(const std::string& component, ErrorLevel level) const;
 
  private:
-  ErrorHandler() = default;
-  ~ErrorHandler() = default;
-
   // Non-copyable, non-movable
   ErrorHandler(const ErrorHandler&) = delete;
   ErrorHandler& operator=(const ErrorHandler&) = delete;
@@ -158,8 +160,8 @@ namespace error_reporting {
  * @param ec Boost error code
  * @param retryable Whether this error is retryable
  */
-void report_connection_error(const std::string& component, const std::string& operation,
-                             const boost::system::error_code& ec, bool retryable = true);
+UNILINK_API void report_connection_error(const std::string& component, const std::string& operation,
+                                         const boost::system::error_code& ec, bool retryable = true);
 
 /**
  * @brief Report communication-related error
@@ -168,8 +170,8 @@ void report_connection_error(const std::string& component, const std::string& op
  * @param message Error message
  * @param retryable Whether this error is retryable
  */
-void report_communication_error(const std::string& component, const std::string& operation, const std::string& message,
-                                bool retryable = false);
+UNILINK_API void report_communication_error(const std::string& component, const std::string& operation,
+                                            const std::string& message, bool retryable = false);
 
 /**
  * @brief Report configuration error
@@ -177,7 +179,8 @@ void report_communication_error(const std::string& component, const std::string&
  * @param operation Operation that failed (e.g., "validate", "apply")
  * @param message Error message
  */
-void report_configuration_error(const std::string& component, const std::string& operation, const std::string& message);
+UNILINK_API void report_configuration_error(const std::string& component, const std::string& operation,
+                                            const std::string& message);
 
 /**
  * @brief Report memory-related error
@@ -185,7 +188,8 @@ void report_configuration_error(const std::string& component, const std::string&
  * @param operation Operation that failed (e.g., "allocate", "deallocate")
  * @param message Error message
  */
-void report_memory_error(const std::string& component, const std::string& operation, const std::string& message);
+UNILINK_API void report_memory_error(const std::string& component, const std::string& operation,
+                                     const std::string& message);
 
 /**
  * @brief Report system-level error
@@ -194,8 +198,9 @@ void report_memory_error(const std::string& component, const std::string& operat
  * @param message Error message
  * @param ec Optional Boost error code
  */
-void report_system_error(const std::string& component, const std::string& operation, const std::string& message,
-                         const boost::system::error_code& ec = boost::system::error_code{});
+UNILINK_API void report_system_error(const std::string& component, const std::string& operation,
+                                     const std::string& message,
+                                     const boost::system::error_code& ec = boost::system::error_code{});
 
 /**
  * @brief Report warning (non-critical issue)
@@ -203,7 +208,7 @@ void report_system_error(const std::string& component, const std::string& operat
  * @param operation Operation
  * @param message Warning message
  */
-void report_warning(const std::string& component, const std::string& operation, const std::string& message);
+UNILINK_API void report_warning(const std::string& component, const std::string& operation, const std::string& message);
 
 /**
  * @brief Report informational message
@@ -211,7 +216,7 @@ void report_warning(const std::string& component, const std::string& operation, 
  * @param operation Operation
  * @param message Information message
  */
-void report_info(const std::string& component, const std::string& operation, const std::string& message);
+UNILINK_API void report_info(const std::string& component, const std::string& operation, const std::string& message);
 
 }  // namespace error_reporting
 

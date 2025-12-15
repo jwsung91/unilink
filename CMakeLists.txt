@@ -19,17 +19,6 @@ project(unilink
   HOMEPAGE_URL "https://github.com/jwsung91/unilink"
   LANGUAGES CXX)
 
-if(NOT CMAKE_BUILD_PARALLEL_LEVEL)
-  include(ProcessorCount)
-  ProcessorCount(N)
-  set(CMAKE_BUILD_PARALLEL_LEVEL ${N})
-endif()
-
-# Set global output directories to avoid copying runtime dependencies
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-
 # Include build options
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/UnilinkOptions.cmake)
 
@@ -60,15 +49,20 @@ if(UNILINK_BUILD_SHARED AND UNILINK_BUILD_STATIC)
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
     OUTPUT_NAME "unilink"
-    CXX_VISIBILITY_PRESET default
-    VISIBILITY_INLINES_HIDDEN NO
-    WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN YES
+    WINDOWS_EXPORT_ALL_SYMBOLS OFF)
   
   # Set target properties for static library
   set_target_properties(unilink_static PROPERTIES
     OUTPUT_NAME "unilink_static"
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN YES)
+
+  target_compile_definitions(unilink_shared
+    PUBLIC UNILINK_BUILD_SHARED
+    PRIVATE UNILINK_BUILDING_LIBRARY)
+  target_compile_definitions(unilink_static PUBLIC UNILINK_BUILD_STATIC)
   
   # Create unified target
   add_library(unilink INTERFACE)
@@ -84,9 +78,12 @@ elseif(UNILINK_BUILD_SHARED)
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
     OUTPUT_NAME "unilink"
-    CXX_VISIBILITY_PRESET default
-    VISIBILITY_INLINES_HIDDEN NO
-    WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN YES
+    WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+  target_compile_definitions(unilink
+    PUBLIC UNILINK_BUILD_SHARED
+    PRIVATE UNILINK_BUILDING_LIBRARY)
     
 elseif(UNILINK_BUILD_STATIC)
   # Build only static library
@@ -95,6 +92,7 @@ elseif(UNILINK_BUILD_STATIC)
     OUTPUT_NAME "unilink"
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN YES)
+  target_compile_definitions(unilink PUBLIC UNILINK_BUILD_STATIC)
     
 else()
   message(FATAL_ERROR "At least one library type (shared or static) must be enabled")

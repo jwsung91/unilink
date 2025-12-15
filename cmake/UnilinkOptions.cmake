@@ -33,6 +33,26 @@ option(UNILINK_ENABLE_TSAN "Enable ThreadSanitizer" OFF)
 option(UNILINK_ENABLE_LTO "Enable Link Time Optimization" OFF)
 option(UNILINK_ENABLE_PCH "Enable Precompiled Headers" OFF)
 
+# Consolidate build outputs into predictable bin/lib directories so Docker and
+# tests can copy artifacts reliably without relying on generator defaults.
+if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+endif()
+if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+endif()
+if(NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+endif()
+if(CMAKE_CONFIGURATION_TYPES)
+  foreach(cfg ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER "${cfg}" cfg_upper)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${cfg_upper} "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${cfg_upper} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${cfg_upper} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+  endforeach()
+endif()
+
 # Set default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)

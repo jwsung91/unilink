@@ -318,6 +318,8 @@ void TcpClient::do_resolve_connect() {
                          "Connected to " + rep.address().to_string() + ":" + std::to_string(rep.port()));
       }
       self->start_read();
+      // Flush any queued writes that accumulated while disconnected
+      self->do_write();
     });
   });
 }
@@ -361,6 +363,13 @@ void TcpClient::start_read() {
 }
 
 void TcpClient::do_write() {
+  // If we are not connected yet, keep the queued data and exit; writes will
+  // resume once a connection is established.
+  if (!connected_.load()) {
+    writing_ = false;
+    return;
+  }
+
   if (tx_.empty() || state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error)) {
     writing_ = false;
     return;
@@ -380,6 +389,7 @@ void TcpClient::do_write() {
 
       self->queue_bytes_ -= n;
       if (ec) {
+        self->writing_ = false;
         self->handle_close(ec);
         return;
       }
@@ -396,6 +406,7 @@ void TcpClient::do_write() {
 
       self->queue_bytes_ -= n;
       if (ec) {
+        self->writing_ = false;
         self->handle_close(ec);
         return;
       }
@@ -407,6 +418,7 @@ void TcpClient::do_write() {
 
 void TcpClient::handle_close(const boost::system::error_code& ec) {
   connected_.store(false);
+  writing_ = false;
   connect_timer_.cancel();
   close_socket();
   if (stopping_.load() || state_.is_state(LinkState::Closed) || ec == boost::asio::error::operation_aborted) {

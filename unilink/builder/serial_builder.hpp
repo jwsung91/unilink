@@ -16,16 +16,11 @@
 
 #pragma once
 
-#if __has_include(<unilink_export.hpp>)
-#include <unilink_export.hpp>
-#else
-#define UNILINK_EXPORT
-#endif
-
 #include <cstdint>
 #include <string>
 
 #include "unilink/builder/ibuilder.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/wrapper/serial/serial.hpp"
 
 namespace unilink {
@@ -41,7 +36,7 @@ namespace builder {
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_EXPORT SerialBuilder : public BuilderInterface<wrapper::Serial> {
+class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial> {
  public:
   /**
    * @brief Construct a new SerialBuilder

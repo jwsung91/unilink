@@ -32,6 +32,7 @@
 #include "unilink/common/memory_pool.hpp"
 #include "unilink/common/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/iserial_port.hpp"
@@ -46,7 +47,7 @@ using interface::Channel;
 using interface::SerialPortInterface;
 namespace net = boost::asio;
 
-class Serial : public Channel, public std::enable_shared_from_this<Serial> {
+class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<Serial> {
  public:
   explicit Serial(const SerialConfig& cfg);
   // Constructor for testing with dependency injection

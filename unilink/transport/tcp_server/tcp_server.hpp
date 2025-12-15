@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <array>
+#include <atomic>
 #include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
@@ -31,6 +32,7 @@
 #include "unilink/common/logger.hpp"
 #include "unilink/common/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
@@ -48,8 +50,8 @@ using interface::Channel;
 using interface::TcpAcceptorInterface;
 using tcp = net::ip::tcp;
 
-class TcpServer : public Channel,
-                  public std::enable_shared_from_this<TcpServer> {  // NOLINT
+class UNILINK_API TcpServer : public Channel,
+                              public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:
   explicit TcpServer(const TcpServerConfig& cfg);
   // Constructor for testing with dependency injection
@@ -90,8 +92,11 @@ class TcpServer : public Channel,
   void attempt_port_binding(int retry_count);
 
  private:
+  std::atomic<bool> stopping_{false};
+
   std::unique_ptr<net::io_context> owned_ioc_;
   bool owns_ioc_;
+  bool uses_global_ioc_;
   net::io_context& ioc_;
   std::thread ioc_thread_;
 

@@ -20,6 +20,7 @@
 #include <functional>
 
 #include "unilink/common/platform.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace interface {
@@ -30,7 +31,7 @@ namespace net = boost::asio;
  * @brief An interface abstracting Boost.Asio's tcp::resolver for testability.
  * This is an internal interface used for dependency injection and mocking.
  */
-class TcpResolverInterface {
+class UNILINK_API TcpResolverInterface {
  public:
   virtual ~TcpResolverInterface() = default;
 

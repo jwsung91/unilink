@@ -18,10 +18,11 @@
 #include <functional>
 
 #include "unilink/common/common.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace interface {
-class Channel {
+class UNILINK_API Channel {
  public:
   using OnBytes = std::function<void(const uint8_t*, size_t)>;
   using OnState = std::function<void(common::LinkState)>;

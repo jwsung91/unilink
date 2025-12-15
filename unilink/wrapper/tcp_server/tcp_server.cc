@@ -42,6 +42,14 @@ TcpServer::TcpServer(std::shared_ptr<interface::Channel> channel) : port_(0), ch
   setup_internal_handlers();
 }
 
+TcpServer::~TcpServer() {
+  try {
+    stop();
+  } catch (...) {
+    // Suppress all exceptions during cleanup to keep destruction noexcept
+  }
+}
+
 void TcpServer::start() {
   std::lock_guard<std::mutex> lock(mutex_);
   if (started_) return;
@@ -94,10 +102,19 @@ void TcpServer::stop() {
   std::shared_ptr<interface::Channel> local_channel;
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (!started_) {
+    if (!started_ && !channel_) {
       return;
     }
+
+    // Detach callbacks to prevent use-after-free if background events arrive
+    if (channel_) {
+      channel_->on_bytes({});
+      channel_->on_state({});
+      channel_->on_backpressure({});
+    }
+
     started_ = false;
+    is_listening_ = false;
     local_channel = std::move(channel_);
   }
 

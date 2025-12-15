@@ -31,6 +31,7 @@ using tcp = net::ip::tcp;
 TcpServer::TcpServer(const config::TcpServerConfig& cfg)
     : owned_ioc_(nullptr),
       owns_ioc_(false),
+      uses_global_ioc_(true),
       ioc_(common::IoContextManager::instance().get_context()),
       acceptor_(nullptr),
       cfg_(cfg),
@@ -49,6 +50,7 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interfa
                      net::io_context& ioc)
     : owned_ioc_(nullptr),
       owns_ioc_(false),
+      uses_global_ioc_(false),
       ioc_(ioc),
       acceptor_(std::move(acceptor)),
       cfg_(cfg),
@@ -78,6 +80,15 @@ void TcpServer::start() {
     UNILINK_LOG_DEBUG("tcp_server", "start", "Start called while already active, ignoring");
     return;
   }
+  stopping_.store(false);
+
+  // Ensure the shared io_context is running when we rely on the global manager.
+  if (uses_global_ioc_) {
+    auto& manager = common::IoContextManager::instance();
+    if (!manager.is_running()) {
+      manager.start();
+    }
+  }
 
   if (!acceptor_) {
     UNILINK_LOG_ERROR("tcp_server", "start", "Acceptor is null");
@@ -91,38 +102,18 @@ void TcpServer::start() {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
   auto self = shared_from_this();
-  net::post(ioc_, [self] { self->attempt_port_binding(0); });
+  net::post(ioc_, [self] {
+    if (self->stopping_.load()) return;
+    self->attempt_port_binding(0);
+  });
 }
 
 void TcpServer::stop() {
-  if (owns_ioc_ && ioc_thread_.joinable()) {
-    auto self = shared_from_this();
-    std::promise<void> cleanup_promise;
-    auto cleanup_future = cleanup_promise.get_future();
+  if (stopping_.exchange(true)) {
+    return;  // Already stopping/stopped
+  }
 
-    net::post(ioc_, [self, &cleanup_promise] {
-      boost::system::error_code ec;
-      if (self->acceptor_ && self->acceptor_->is_open()) {
-        self->acceptor_->close(ec);
-      }
-      // Clean up all sessions
-      {
-        std::lock_guard<std::mutex> lock(self->sessions_mutex_);
-        self->sessions_.clear();
-        self->current_session_.reset();
-      }
-      cleanup_promise.set_value();
-    });
-
-    // Wait for cleanup completion
-    cleanup_future.wait();
-
-    ioc_.stop();
-    ioc_thread_.join();
-    // Reset io_context to clear any remaining work
-    ioc_.restart();
-  } else {
-    // If server was never started, just clean up
+  auto cleanup = [this]() {
     boost::system::error_code ec;
     if (acceptor_ && acceptor_->is_open()) {
       acceptor_->close(ec);
@@ -133,8 +124,34 @@ void TcpServer::stop() {
       sessions_.clear();
       current_session_.reset();
     }
+    state_.set_state(common::LinkState::Closed);
+  };
+
+  const bool has_active_ioc_thread =
+      owns_ioc_ || (uses_global_ioc_ && common::IoContextManager::instance().is_running());
+
+  if (has_active_ioc_thread) {
+    auto self = shared_from_this();
+    auto cleanup_promise = std::make_shared<std::promise<void>>();
+    auto cleanup_future = cleanup_promise->get_future();
+
+    net::post(ioc_, [self, cleanup, cleanup_promise] {
+      cleanup();
+      cleanup_promise->set_value();
+    });
+
+    cleanup_future.wait();
+  } else {
+    // io_context is not running (e.g., never started); perform best-effort cleanup synchronously
+    cleanup();
   }
-  state_.set_state(common::LinkState::Closed);
+
+  if (owns_ioc_ && ioc_thread_.joinable()) {
+    ioc_.stop();
+    ioc_thread_.join();
+    // Reset io_context to clear any remaining work
+    ioc_.restart();
+  }
   // Don't call notify_state() in stop() as it may cause issues with callbacks
   // during destruction
 }
@@ -180,6 +197,7 @@ void TcpServer::on_backpressure(OnBackpressure cb) {
 }
 
 void TcpServer::attempt_port_binding(int retry_count) {
+  if (stopping_.load()) return;
   boost::system::error_code ec;
 
   // Log retry configuration for debugging
@@ -262,10 +280,13 @@ void TcpServer::attempt_port_binding(int retry_count) {
 }
 
 void TcpServer::do_accept() {
-  if (!acceptor_ || !acceptor_->is_open()) return;
+  if (stopping_.load() || !acceptor_ || !acceptor_->is_open()) return;
 
   auto self = shared_from_this();
   acceptor_->async_accept([self](auto ec, tcp::socket sock) {
+    if (self->stopping_.load()) {
+      return;
+    }
     if (ec) {
       // "Operation canceled"는 정상적인 종료 과정에서 발생하는 에러이므로 로그 레벨을 낮춤
       if (ec == boost::asio::error::operation_aborted) {
@@ -277,7 +298,7 @@ void TcpServer::do_accept() {
         self->notify_state();
       }
       // Continue accepting only if server is not shutting down
-      if (!self->state_.is_state(common::LinkState::Closed)) {
+      if (!self->state_.is_state(common::LinkState::Closed) && !self->stopping_.load()) {
         self->do_accept();
       }
       return;
@@ -354,6 +375,9 @@ void TcpServer::do_accept() {
 
     // Handle session termination
     new_session->on_close([self, client_id, new_session] {
+      if (self->stopping_.load()) {
+        return;
+      }
       // Call multi-client callback
       if (self->on_multi_disconnect_) {
         self->on_multi_disconnect_(client_id);

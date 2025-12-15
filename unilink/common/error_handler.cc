@@ -26,10 +26,15 @@
 namespace unilink {
 namespace common {
 
-ErrorHandler& ErrorHandler::instance() {
+ErrorHandler::ErrorHandler() = default;
+ErrorHandler::~ErrorHandler() = default;
+
+ErrorHandler& ErrorHandler::default_handler() {
   static ErrorHandler instance;
   return instance;
 }
+
+ErrorHandler& ErrorHandler::instance() { return default_handler(); }
 
 void ErrorHandler::report_error(const ErrorInfo& error) {
   if (!enabled_.load()) {

@@ -31,6 +31,7 @@
 #include <vector>
 
 #include "log_rotation.hpp"
+#include "visibility.hpp"
 
 #ifdef DEBUG
 #undef DEBUG
@@ -138,7 +139,7 @@ struct AsyncLogStats {
  * Provides thread-safe, configurable logging with multiple output destinations,
  * async processing, batch operations, and performance optimizations for production use.
  */
-class Logger {
+class UNILINK_API Logger {
  public:
   using LogCallback = std::function<void(LogLevel level, const std::string& formatted_message)>;
 
@@ -146,6 +147,10 @@ class Logger {
    * @brief Get singleton instance
    */
   static Logger& instance();
+  static Logger& default_logger();
+
+  Logger();
+  ~Logger();
 
   /**
    * @brief Set minimum log level
@@ -239,9 +244,6 @@ class Logger {
   void critical(const std::string& component, const std::string& operation, const std::string& message);
 
  private:
-  Logger();
-  ~Logger();
-
   // Non-copyable, non-movable
   Logger(const Logger&) = delete;
   Logger& operator=(const Logger&) = delete;
@@ -267,7 +269,7 @@ class Logger {
   AsyncLogStats async_stats_;
 
   // Threading for async logging
-  std::unique_ptr<std::thread> worker_thread_;
+  std::thread worker_thread_;
   std::atomic<bool> running_{false};
   std::atomic<bool> shutdown_requested_{false};
 

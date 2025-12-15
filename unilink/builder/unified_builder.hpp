@@ -22,6 +22,7 @@
 #include "unilink/builder/serial_builder.hpp"
 #include "unilink/builder/tcp_client_builder.hpp"
 #include "unilink/builder/tcp_server_builder.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace builder {
@@ -32,7 +33,7 @@ namespace builder {
  * Provides a single entry point for creating TcpServer, TcpClient, and Serial
  * wrapper instances using a consistent fluent API pattern.
  */
-class UnifiedBuilder {
+class UNILINK_API UnifiedBuilder {
  public:
   /**
    * @brief Create a TcpServer builder

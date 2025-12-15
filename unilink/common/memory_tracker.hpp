@@ -24,6 +24,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "visibility.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -33,7 +35,7 @@ namespace common {
  * Tracks memory allocations and deallocations to detect leaks,
  * monitor usage patterns, and provide debugging information.
  */
-class MemoryTracker {
+class UNILINK_API MemoryTracker {
  public:
   struct AllocationInfo {
     void* ptr;
@@ -99,7 +101,7 @@ class MemoryTracker {
 /**
  * @brief RAII helper for automatic memory tracking
  */
-class ScopedMemoryTracker {
+class UNILINK_API ScopedMemoryTracker {
  public:
   ScopedMemoryTracker(const char* file, int line, const char* function);
   ~ScopedMemoryTracker();

@@ -20,6 +20,7 @@
 #include <memory>
 
 #include "unilink/common/platform.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
 
 namespace unilink {
@@ -31,7 +32,7 @@ namespace net = boost::asio;
  * @brief Boost.Asio implementation of ITcpAcceptor interface.
  * This is the real implementation used in production.
  */
-class BoostTcpAcceptor : public interface::TcpAcceptorInterface {
+class UNILINK_API BoostTcpAcceptor : public interface::TcpAcceptorInterface {
  public:
   explicit BoostTcpAcceptor(net::io_context& ioc);
   ~BoostTcpAcceptor() override = default;

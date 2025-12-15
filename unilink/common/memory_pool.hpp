@@ -27,6 +27,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "visibility.hpp"
+
 namespace unilink {
 namespace common {
 
@@ -39,7 +41,7 @@ namespace common {
  * - Memory alignment: 64-byte alignment for buffers >= 4KB
  * - Minimal statistics: Basic stats only to minimize overhead
  */
-class MemoryPool {
+class UNILINK_API MemoryPool {
  public:
   // Basic statistics
   struct PoolStats {
@@ -116,7 +118,7 @@ class MemoryPool {
 /**
  * @brief Global memory pool instance
  */
-class GlobalMemoryPool {
+class UNILINK_API GlobalMemoryPool {
  public:
   static MemoryPool& instance() {
     static MemoryPool pool;
@@ -142,7 +144,7 @@ class GlobalMemoryPool {
 /**
  * @brief RAII wrapper for memory pool buffers with enhanced safety
  */
-class PooledBuffer {
+class UNILINK_API PooledBuffer {
  public:
   explicit PooledBuffer(size_t size);
   explicit PooledBuffer(MemoryPool::BufferSize buffer_size);

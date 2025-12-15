@@ -16,15 +16,10 @@
 
 #pragma once
 
-#if __has_include(<unilink_export.hpp>)
-#include <unilink_export.hpp>
-#else
-#define UNILINK_EXPORT
-#endif
-
 #include <mutex>
 
 #include "unilink/common/io_context_manager.hpp"
+#include "unilink/common/visibility.hpp"
 
 namespace unilink {
 namespace builder {
@@ -35,7 +30,7 @@ namespace builder {
  * This class automatically starts IoContextManager when using Builder pattern,
  * eliminating the need for manual initialization by users.
  */
-class UNILINK_EXPORT AutoInitializer {
+class UNILINK_API AutoInitializer {
  public:
   /**
    * @brief Automatically start IoContextManager if not running

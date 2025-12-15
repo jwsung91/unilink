@@ -33,6 +33,7 @@
 #include "unilink/common/memory_pool.hpp"
 #include "unilink/common/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"
+#include "unilink/common/visibility.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/interface/channel.hpp"
 
@@ -47,7 +48,7 @@ using config::TcpClientConfig;
 using interface::Channel;
 using tcp = net::ip::tcp;
 
-class TcpClient : public Channel, public std::enable_shared_from_this<TcpClient> {
+class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_this<TcpClient> {
  public:
   explicit TcpClient(const TcpClientConfig& cfg);
   explicit TcpClient(const TcpClientConfig& cfg, net::io_context& ioc);
