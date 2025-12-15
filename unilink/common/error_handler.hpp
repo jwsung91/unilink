@@ -208,8 +208,7 @@ UNILINK_API void report_system_error(const std::string& component, const std::st
  * @param operation Operation
  * @param message Warning message
  */
-UNILINK_API void report_warning(const std::string& component, const std::string& operation,
-                                const std::string& message);
+UNILINK_API void report_warning(const std::string& component, const std::string& operation, const std::string& message);
 
 /**
  * @brief Report informational message
@@ -217,8 +216,7 @@ UNILINK_API void report_warning(const std::string& component, const std::string&
  * @param operation Operation
  * @param message Information message
  */
-UNILINK_API void report_info(const std::string& component, const std::string& operation,
-                             const std::string& message);
+UNILINK_API void report_info(const std::string& component, const std::string& operation, const std::string& message);
 
 }  // namespace error_reporting
 
