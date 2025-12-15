@@ -78,6 +78,7 @@ void TcpServer::start() {
     UNILINK_LOG_DEBUG("tcp_server", "start", "Start called while already active, ignoring");
     return;
   }
+  stopping_.store(false);
 
   if (!acceptor_) {
     UNILINK_LOG_ERROR("tcp_server", "start", "Acceptor is null");
@@ -91,50 +92,44 @@ void TcpServer::start() {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
   auto self = shared_from_this();
-  net::post(ioc_, [self] { self->attempt_port_binding(0); });
+  net::post(ioc_, [self] {
+    if (self->stopping_.load()) return;
+    self->attempt_port_binding(0);
+  });
 }
 
 void TcpServer::stop() {
+  if (stopping_.exchange(true)) {
+    return;  // Already stopping/stopped
+  }
+
+  auto self = shared_from_this();
+  std::promise<void> cleanup_promise;
+  auto cleanup_future = cleanup_promise.get_future();
+
+  net::post(ioc_, [self, &cleanup_promise] {
+    boost::system::error_code ec;
+    if (self->acceptor_ && self->acceptor_->is_open()) {
+      self->acceptor_->close(ec);
+    }
+    // Clean up all sessions
+    {
+      std::lock_guard<std::mutex> lock(self->sessions_mutex_);
+      self->sessions_.clear();
+      self->current_session_.reset();
+    }
+    self->state_.set_state(common::LinkState::Closed);
+    cleanup_promise.set_value();
+  });
+
+  cleanup_future.wait();
+
   if (owns_ioc_ && ioc_thread_.joinable()) {
-    auto self = shared_from_this();
-    std::promise<void> cleanup_promise;
-    auto cleanup_future = cleanup_promise.get_future();
-
-    net::post(ioc_, [self, &cleanup_promise] {
-      boost::system::error_code ec;
-      if (self->acceptor_ && self->acceptor_->is_open()) {
-        self->acceptor_->close(ec);
-      }
-      // Clean up all sessions
-      {
-        std::lock_guard<std::mutex> lock(self->sessions_mutex_);
-        self->sessions_.clear();
-        self->current_session_.reset();
-      }
-      cleanup_promise.set_value();
-    });
-
-    // Wait for cleanup completion
-    cleanup_future.wait();
-
     ioc_.stop();
     ioc_thread_.join();
     // Reset io_context to clear any remaining work
     ioc_.restart();
-  } else {
-    // If server was never started, just clean up
-    boost::system::error_code ec;
-    if (acceptor_ && acceptor_->is_open()) {
-      acceptor_->close(ec);
-    }
-    // Clean up all sessions
-    {
-      std::lock_guard<std::mutex> lock(sessions_mutex_);
-      sessions_.clear();
-      current_session_.reset();
-    }
   }
-  state_.set_state(common::LinkState::Closed);
   // Don't call notify_state() in stop() as it may cause issues with callbacks
   // during destruction
 }
@@ -180,6 +175,7 @@ void TcpServer::on_backpressure(OnBackpressure cb) {
 }
 
 void TcpServer::attempt_port_binding(int retry_count) {
+  if (stopping_.load()) return;
   boost::system::error_code ec;
 
   // Log retry configuration for debugging
@@ -262,10 +258,13 @@ void TcpServer::attempt_port_binding(int retry_count) {
 }
 
 void TcpServer::do_accept() {
-  if (!acceptor_ || !acceptor_->is_open()) return;
+  if (stopping_.load() || !acceptor_ || !acceptor_->is_open()) return;
 
   auto self = shared_from_this();
   acceptor_->async_accept([self](auto ec, tcp::socket sock) {
+    if (self->stopping_.load()) {
+      return;
+    }
     if (ec) {
       // "Operation canceled"는 정상적인 종료 과정에서 발생하는 에러이므로 로그 레벨을 낮춤
       if (ec == boost::asio::error::operation_aborted) {
@@ -277,7 +276,7 @@ void TcpServer::do_accept() {
         self->notify_state();
       }
       // Continue accepting only if server is not shutting down
-      if (!self->state_.is_state(common::LinkState::Closed)) {
+      if (!self->state_.is_state(common::LinkState::Closed) && !self->stopping_.load()) {
         self->do_accept();
       }
       return;
@@ -354,6 +353,9 @@ void TcpServer::do_accept() {
 
     // Handle session termination
     new_session->on_close([self, client_id, new_session] {
+      if (self->stopping_.load()) {
+        return;
+      }
       // Call multi-client callback
       if (self->on_multi_disconnect_) {
         self->on_multi_disconnect_(client_id);

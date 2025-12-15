@@ -21,6 +21,7 @@
 #include <boost/asio.hpp>
 #include <cstdint>
 #include <deque>
+#include <atomic>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -91,6 +92,8 @@ class UNILINK_API TcpServer : public Channel,
   void attempt_port_binding(int retry_count);
 
  private:
+  std::atomic<bool> stopping_{false};
+
   std::unique_ptr<net::io_context> owned_ioc_;
   bool owns_ioc_;
   net::io_context& ioc_;
