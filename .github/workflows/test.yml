@@ -65,7 +65,7 @@ jobs:
         fi
 
     - name: Cache ccache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.cache/ccache
         key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ steps.cmake-hash.outputs.hash }}
@@ -148,7 +148,7 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Cache ccache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.cache/ccache
         key: ccache-${{ runner.os }}-integration-${{ hashFiles('**/CMakeLists.txt') }}
@@ -207,7 +207,7 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Cache ccache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.cache/ccache
         key: ccache-${{ runner.os }}-performance-${{ hashFiles('**/CMakeLists.txt') }}
