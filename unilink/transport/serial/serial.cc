@@ -94,11 +94,14 @@ void Serial::start() {
   if (owns_ioc_) {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
-  net::post(ioc_, [this] {
-    UNILINK_LOG_DEBUG("serial", "start", "Posting open_and_configure for device: " + cfg_.device);
-    state_.set_state(common::LinkState::Connecting);
-    notify_state();
-    open_and_configure();
+  auto self = weak_from_this();
+  net::post(ioc_, [self] {
+    if (auto s = self.lock()) {
+      UNILINK_LOG_DEBUG("serial", "start", "Posting open_and_configure for device: " + s->cfg_.device);
+      s->state_.set_state(common::LinkState::Connecting);
+      s->notify_state();
+      s->open_and_configure();
+    }
   });
   started_ = true;
 }
@@ -112,14 +115,17 @@ void Serial::stop() {
   stopping_.store(true);
   if (!state_.is_state(common::LinkState::Closed)) {
     if (work_guard_) work_guard_->reset();  // Allow the io_context to run out of work.
-    net::post(ioc_, [this] {
-      // Cancel all pending async operations to unblock the io_context
-      retry_timer_.cancel();
-      close_port();
-      // Post stop() to ensure it's the last thing to run before the context
-      // runs out of work.
-      if (owns_ioc_) {
-        ioc_.stop();
+    auto self = weak_from_this();
+    net::post(ioc_, [self] {
+      if (auto s = self.lock()) {
+        // Cancel all pending async operations to unblock the io_context
+        s->retry_timer_.cancel();
+        s->close_port();
+        // Post stop() to ensure it's the last thing to run before the context
+        // runs out of work.
+        if (s->owns_ioc_) {
+          s->ioc_.stop();
+        }
       }
     });
 
