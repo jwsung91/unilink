@@ -108,7 +108,7 @@ jobs:
         echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
     - name: Upload HTML Coverage Report
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: coverage-report
         path: build-coverage/coverage_html
@@ -116,7 +116,7 @@ jobs:
         overwrite: true
 
     - name: Upload Coverage Data
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: coverage-data
         path: |
