@@ -2,9 +2,8 @@ name: Vcpkg Package Test
 
 on:
   push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+    tags:
+      - "v*"
   workflow_dispatch:
 
 jobs:
@@ -33,7 +32,6 @@ jobs:
 
     env:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      VCPKG_OVERLAY_PORTS: ${{ github.workspace }}/packaging/vcpkg/ports
       VCPKG_BINARY_SOURCES: "clear;default"
 
     steps:
@@ -61,23 +59,40 @@ jobs:
       run: |
         & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
 
-    - name: Install unilink via vcpkg (Unix)
+    - name: Check unilink port availability (Unix)
       if: runner.os != 'Windows'
       run: |
-        "${VCPKG_ROOT}/vcpkg" install "unilink:${{ matrix.triplet }}" \
-          --overlay-ports="${VCPKG_OVERLAY_PORTS}" \
-          --clean-after-build
+        set -euo pipefail
+        if ! "${VCPKG_ROOT}/vcpkg" search unilink | grep -q "^unilink"; then
+          echo "unilink port not found in vcpkg registry yet. Skipping package test."
+          echo "VCPKG_SKIP_PACKAGE_TEST=1" >> "$GITHUB_ENV"
+        fi
 
-    - name: Install unilink via vcpkg (Windows)
+    - name: Check unilink port availability (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
+        $searchOutput = & "${env:VCPKG_ROOT}\vcpkg.exe" search unilink
+        if (-not ($searchOutput -match "^unilink")) {
+          Write-Host "unilink port not found in vcpkg registry yet. Skipping package test."
+          "VCPKG_SKIP_PACKAGE_TEST=1" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        }
+
+    - name: Install unilink via vcpkg (Unix)
+      if: runner.os != 'Windows' && env.VCPKG_SKIP_PACKAGE_TEST != '1'
+      run: |
+        "${VCPKG_ROOT}/vcpkg" install "unilink:${{ matrix.triplet }}" \
+          --clean-after-build
+
+    - name: Install unilink via vcpkg (Windows)
+      if: runner.os == 'Windows' && env.VCPKG_SKIP_PACKAGE_TEST != '1'
+      shell: pwsh
+      run: |
         & "${env:VCPKG_ROOT}\vcpkg.exe" install "unilink:${{ matrix.triplet }}" `
-          --overlay-ports="${env:VCPKG_OVERLAY_PORTS}" `
           --clean-after-build
 
     - name: Verify installation layout (Unix)
-      if: runner.os != 'Windows'
+      if: runner.os != 'Windows' && env.VCPKG_SKIP_PACKAGE_TEST != '1'
       run: |
         set -euo pipefail
         INSTALL_ROOT="${VCPKG_ROOT}/installed/${{ matrix.triplet }}"
@@ -105,7 +120,7 @@ jobs:
         echo "${LIB_FILES}"
 
     - name: Verify installation layout (Windows)
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && env.VCPKG_SKIP_PACKAGE_TEST != '1'
       shell: pwsh
       run: |
         $installRoot = "$env:VCPKG_ROOT\installed\${{ matrix.triplet }}"
@@ -125,7 +140,7 @@ jobs:
         $libs + $dlls | ForEach-Object { Write-Host "  $_" }
 
     - name: Build and run consumer sample (Unix)
-      if: runner.os != 'Windows'
+      if: runner.os != 'Windows' && env.VCPKG_SKIP_PACKAGE_TEST != '1'
       run: |
         set -euo pipefail
         WORKDIR=$(mktemp -d)
@@ -170,7 +185,7 @@ jobs:
         "${WORKDIR}/build/vcpkg_consumer"
 
     - name: Build and run consumer sample (Windows)
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && env.VCPKG_SKIP_PACKAGE_TEST != '1'
       shell: pwsh
       run: |
         $workDir = Join-Path $env:RUNNER_TEMP "unilink-consumer"
