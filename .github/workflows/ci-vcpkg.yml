@@ -40,7 +40,6 @@ jobs:
 
     env:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      VCPKG_OVERLAY_PORTS: ${{ github.workspace }}/packaging/vcpkg/ports
       VCPKG_TARGET_TRIPLET: ${{ matrix.triplet }}
       VCPKG_BINARY_SOURCES: "clear;default"
       BUILD_TYPE: ${{ matrix.build_type }}
@@ -79,7 +78,6 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           "${VCPKG_ROOT}/vcpkg" install boost-asio:${{ matrix.triplet }} boost-system:${{ matrix.triplet }} \
-            --overlay-ports="${VCPKG_OVERLAY_PORTS}" \
             --clean-after-build
 
       - name: Install dependencies via vcpkg (Windows)
@@ -87,7 +85,6 @@ jobs:
         shell: pwsh
         run: |
           & "${env:VCPKG_ROOT}\vcpkg.exe" install boost-asio:${{ matrix.triplet }} boost-system:${{ matrix.triplet }} `
-            --overlay-ports="${env:VCPKG_OVERLAY_PORTS}" `
             --clean-after-build
 
       - name: Configure (Linux/macOS)
