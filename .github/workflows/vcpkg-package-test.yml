@@ -14,8 +14,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
-    outputs:
-      ${{ matrix.os }}-${{ matrix.triplet }}: ${{ job.status }}
     strategy:
       fail-fast: false
       matrix:
@@ -241,28 +239,3 @@ jobs:
           } else {
             throw "Consumer executable not found"
           }
-
-  summary:
-    name: Summary
-    needs: [vcpkg-overlay]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Install jq
-        run: sudo apt-get install -y jq
-      - name: Summarize results
-        run: |
-          echo "## Vcpkg Package Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "| OS | Triplet | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|----|---------|--------|" >> $GITHUB_STEP_SUMMARY
-          for job in $(echo '${{ toJSON(needs.vcpkg-overlay.outputs) }}' | jq -r 'to_entries | .[] | .key + "=" + .value'); do
-            flavour=$(echo "$job" | cut -d'=' -f1)
-            status=$(echo "$job" | cut -d'=' -f2)
-            os=$(echo "$flavour" | cut -d'-' -f1,2)
-            triplet=$(echo "$flavour" | cut -d'-' -f3-)
-            if [ "$status" == "Success" ]; then
-              echo "| $os | $triplet | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "| $os | $triplet | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
-            fi
-          done
