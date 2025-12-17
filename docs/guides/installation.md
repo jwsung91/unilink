@@ -1,24 +1,56 @@
 # Installation Guide
 
-This guide covers different ways to install and use the unilink library in your project.
+This guide covers the supported ways to install and use the **unilink** library in your project. For most users, **vcpkg** is the recommended and simplest option.
 
 ## Prerequisites
 
 - **CMake**: 3.12 or higher
 - **C++ Compiler**: C++17 compatible (GCC 7+, Clang 5+, MSVC 2017+)
-- **Boost**: 1.70 or higher (system component required)
-- **Platform**: Linux (Ubuntu 18.04+, CentOS 7+, etc.)
+- **Platform**: Linux, Windows, macOS
+
+> Note: When using a package manager (vcpkg), dependencies such as Boost are handled automatically.
 
 ## Installation Methods
 
-### Method 1: CMake Package (Recommended)
+### Method 1: vcpkg (Recommended)
 
-The easiest way to use unilink is through CMake's package system.
+The easiest and most reliable way to consume **unilink** is via **vcpkg**, which provides a fully integrated CMake workflow and cross-platform builds.
 
-#### Step 1: Install unilink
+#### Step 1: Install via vcpkg
 
 ```bash
-# Build and install from source
+vcpkg install jwsung91-unilink
+```
+
+#### Step 2: Use in your project
+
+```cmake
+cmake_minimum_required(VERSION 3.12)
+project(my_app CXX)
+
+find_package(unilink CONFIG REQUIRED)
+add_executable(my_app main.cpp)
+target_link_libraries(my_app PRIVATE unilink::unilink)
+```
+
+```cpp
+#include <unilink/unilink.hpp>
+
+int main() {
+    auto client = unilink::tcp_client("127.0.0.1", 8080).build();
+    // ...
+}
+```
+
+> Note: The vcpkg port name is `jwsung91-unilink`, while the CMake package and target name remain `unilink`.
+
+### Method 2: Install from Source (CMake Package)
+
+Use this method if you prefer not to rely on a package manager or need a custom build.
+
+#### Step 1: Build and install
+
+```bash
 git clone https://github.com/jwsung91/unilink.git
 cd unilink
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -29,105 +61,51 @@ sudo cmake --install build
 #### Step 2: Use in your project
 
 ```cmake
-# CMakeLists.txt
-cmake_minimum_required(VERSION 3.12)
-project(my_app CXX)
-
 find_package(unilink CONFIG REQUIRED)
 add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
-```cpp
-// main.cpp
-#include <unilink/unilink.hpp>
+### Method 3: Release Packages
 
-int main() {
-    auto client = unilink::tcp_client("127.0.0.1", 8080).build();
-    // ...
-}
-```
-
-### Method 2: Release Package
-
-Download pre-built packages from GitHub releases.
+Pre-built binary packages are available from GitHub Releases.
 
 #### Step 1: Download and extract
 
-Pick the archive that matches your OS/architecture. The naming pattern is:
-`unilink-<version>-<OS>-<arch>.<ext>`
+Choose the archive matching your OS and architecture:
 
-- Linux: `.tar.gz` (e.g., `unilink-0.2.0-Linux-x86_64.tar.gz`)
-- macOS: `.tar.gz` and `.dmg` (e.g., `unilink-0.2.0-Darwin-arm64.tar.gz`)
-- Windows: `.zip` (e.g., `unilink-0.2.0-Windows-AMD64.zip`)
+- **Linux**: `.tar.gz` (e.g. `unilink-0.2.0-Linux-x86_64.tar.gz`)
+- **macOS**: `.tar.gz`, `.dmg`
+- **Windows**: `.zip`
 
 ```bash
-# Linux example
-wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-0.2.0-Linux-x86_64.tar.gz
-tar -xzf unilink-0.2.0-Linux-x86_64.tar.gz
-cd unilink-0.2.0-Linux-x86_64
+wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-<version>-Linux-x86_64.tar.gz
+tar -xzf unilink-<version>-Linux-x86_64.tar.gz
+cd unilink-<version>-Linux-x86_64.tar.gz
 ```
 
 #### Step 2: Install
 
 ```bash
-# Install to system
+# System install
 sudo cmake --install .
 
-# Or install to custom prefix
+# Custom prefix
 cmake --install . --prefix /opt/unilink
-
-# Windows example (Release config)
-cmake --install . --config Release --prefix "C:/unilink"
 ```
 
 #### Step 3: Use in your project
 
 ```cmake
-# If installed to system
-find_package(unilink CONFIG REQUIRED)
-
-# If installed to custom prefix
 set(CMAKE_PREFIX_PATH "/opt/unilink")
 find_package(unilink CONFIG REQUIRED)
 ```
 
-### Method 3: Build from Source
+### Method 4: Git Submodule Integration
 
-For development or custom builds.
+For projects that want to vendor **unilink** directly.
 
-#### Step 1: Clone and build
-
-```bash
-git clone https://github.com/jwsung91/unilink.git
-cd unilink
-
-# Configure with options
-cmake -S . -B build \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DUNILINK_ENABLE_INSTALL=ON \
-    -DUNILINK_ENABLE_PKGCONFIG=ON \
-    -DUNILINK_ENABLE_EXPORT_HEADER=ON
-
-# Build
-cmake --build build -j
-```
-
-#### Step 2: Install
-
-```bash
-# Install to system
-sudo cmake --install build
-
-# Or install to custom prefix
-cmake --install build --prefix /opt/unilink
-```
-
-### Method 4: Submodule Integration
-
-For projects that want to include unilink as a submodule.
-
-#### Step 1: Add as submodule
+#### Step 1: Add submodule
 
 ```bash
 git submodule add https://github.com/jwsung91/unilink.git third_party/unilink
@@ -137,98 +115,43 @@ git submodule update --init --recursive
 #### Step 2: Use in CMake
 
 ```cmake
-# CMakeLists.txt
-cmake_minimum_required(VERSION 3.12)
-project(my_app CXX)
-
-# Add unilink subdirectory
 add_subdirectory(third_party/unilink)
-
 add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
-## Packaging (Conan / vcpkg)
+## Packaging Notes
 
-- **Conan recipe**: `packaging/conan`
-  - Build/test locally (Conan v2): `conan create packaging/conan --name=unilink --version=0.2.0`
-  - Update `conandata.yml` URL/SHA to the release tarball before publishing.
-- **vcpkg overlay port**: `packaging/vcpkg/ports/unilink`
-  - Consume with overlay: `vcpkg install unilink --overlay-ports=packaging/vcpkg/ports`
-  - Keep the portfile pointed at the repo root for local overlay builds.
+- **vcpkg**
+  - Official port: `jwsung91-unilink`
+  - Recommended for most users
 
-## Build Options
+Other package managers (e.g., Conan) are planned but not yet officially supported.
 
-When building from source, you can configure various options:
+## Build Options (Source Builds)
 
-| Option                             | Default | Description                |
-| ---------------------------------- | ------- | -------------------------- |
-| `UNILINK_BUILD_SHARED`             | `ON`    | Build shared library       |
-| `UNILINK_BUILD_EXAMPLES`           | `ON`    | Build example programs     |
-| `UNILINK_BUILD_TESTS`              | `ON`    | Master test toggle         |
-| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF`   | Build performance tests    |
-| `UNILINK_BUILD_DOCS`               | `ON`    | Build documentation        |
-| `UNILINK_ENABLE_INSTALL`           | `ON`    | Enable install targets     |
-| `UNILINK_ENABLE_PKGCONFIG`         | `ON`    | Install pkg-config file    |
-| `UNILINK_ENABLE_EXPORT_HEADER`     | `ON`    | Generate export header     |
-| `UNILINK_ENABLE_WARNINGS`          | `ON`    | Enable compiler warnings   |
-| `UNILINK_ENABLE_SANITIZERS`        | `OFF`   | Enable sanitizers in Debug |
+| Option                         | Default | Description                |
+|--------------------------------|---------|----------------------------|
+| `UNILINK_BUILD_SHARED`         | `ON`    | Build shared library       |
+| `UNILINK_BUILD_EXAMPLES`       | `ON`    | Build example programs     |
+| `UNILINK_BUILD_TESTS`          | `ON`    | Build tests                |
+| `UNILINK_BUILD_DOCS`           | `ON`    | Build documentation        |
+| `UNILINK_ENABLE_INSTALL`       | `ON`    | Enable install targets     |
+| `UNILINK_ENABLE_PKGCONFIG`     | `ON`    | Install pkg-config file    |
+| `UNILINK_ENABLE_EXPORT_HEADER` | `ON`    | Generate export header     |
 
-Example with custom options:
+Example:
 
 ```bash
 cmake -S . -B build \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DUNILINK_BUILD_SHARED=OFF \
-    -DUNILINK_ENABLE_SANITIZERS=ON \
-    -DUNILINK_BUILD_EXAMPLES=OFF \
-    -DUNILINK_BUILD_TESTS=OFF
+  -DCMAKE_BUILD_TYPE=Release \
+  -DUNILINK_BUILD_SHARED=OFF \
+  -DUNILINK_BUILD_EXAMPLES=OFF \
+  -DUNILINK_BUILD_TESTS=OFF
 ```
-
-## Verification
-
-After installation, verify that unilink is properly installed:
-
-```bash
-# Check CMake package
-cmake --find-package -DNAME=unilink -DCOMPILER_ID=GNU -DLANGUAGE=CXX
-
-# Check pkg-config (if enabled)
-pkg-config --cflags --libs unilink
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **CMake can't find unilink**
-   ```bash
-   # Set CMAKE_PREFIX_PATH
-   export CMAKE_PREFIX_PATH="/path/to/unilink/install:$CMAKE_PREFIX_PATH"
-   ```
-
-2. **Missing Boost dependency**
-   ```bash
-   # Ubuntu/Debian
-   sudo apt install libboost-dev libboost-system-dev
-   
-   # CentOS/RHEL
-   sudo yum install boost-devel
-   ```
-
-3. **Version compatibility**
-   - Ensure CMake 3.12+
-   - Ensure C++17 compatible compiler
-   - Ensure Boost 1.70+
-
-### Getting Help
-
-- Check [Troubleshooting Guide](troubleshooting.md)
-- Open an issue on [GitHub](https://github.com/jwsung91/unilink/issues)
-- Review [API Documentation](../reference/API_GUIDE.md)
 
 ## Next Steps
 
-- [Quick Start Guide](QUICKSTART.md) - Get up and running quickly
-- [API Reference](../reference/API_GUIDE.md) - Learn the API
-- [Examples](../../examples/) - See practical examples
+- [Quick Start Guide](QUICKSTART.md)
+- [API Reference](../reference/API_GUIDE.md)
+- [Examples](../../examples/)
