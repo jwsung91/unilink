@@ -269,9 +269,7 @@ TEST_F(AdvancedTcpServerCoverageTest, StableClientIdsAreMonotonicAndNotReused) {
   ASSERT_NE(server_, nullptr);
   server_->start();
 
-  auto make_client = [&]() {
-    return unilink::tcp_client("127.0.0.1", test_port_).auto_manage(true).build();
-  };
+  auto make_client = [&]() { return unilink::tcp_client("127.0.0.1", test_port_).auto_manage(true).build(); };
 
   auto client1 = make_client();
   ASSERT_NE(client1, nullptr);

@@ -481,7 +481,8 @@ bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
     it->second->async_write_copy(data.data(), data.size());
     return true;
   }
-  UNILINK_LOG_DEBUG("tcp_server", "send_to_client", "Send failed: client_id " + std::to_string(client_id) + " not found");
+  UNILINK_LOG_DEBUG("tcp_server", "send_to_client",
+                    "Send failed: client_id " + std::to_string(client_id) + " not found");
   return false;
 }
 

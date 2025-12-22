@@ -67,8 +67,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
             UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
                               "Exception in backpressure callback: " + std::string(e.what()));
           } catch (...) {
-            UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
-                              "Unknown exception in backpressure callback");
+            UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
           }
         }
         if (!self->writing_) self->do_write();
@@ -91,8 +90,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
         UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
                           "Exception in backpressure callback: " + std::string(e.what()));
       } catch (...) {
-        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
-                          "Unknown exception in backpressure callback");
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
       }
     }
     if (!self->writing_) self->do_write();
