@@ -156,6 +156,10 @@ class Application {
 };
 ```
 
+> Tip: Register all callbacks before calling `.auto_manage(true)` or manually invoking `start()`, because `auto_manage(true)` now starts the connection immediately.
+
+> Advanced: If you supply your own `boost::asio::io_context` to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with `set_manage_external_context(true)`). Make sure the context is running on a thread you control.
+
 ### ✅ DO: Reuse Connections When Possible
 
 ```cpp
@@ -613,51 +617,3 @@ logger.info("tcp_client", "connect",
 // BAD - Insufficient context
 logger.info("tcp_client", "connect", "Connected");  // To what? When? How many attempts?
 ```
-
----
-
-## Summary Checklist
-
-### Error Handling
-- [ ] Always register `.on_error()` callbacks
-- [ ] Check connection status before sending
-- [ ] Implement retry logic for recoverable errors
-- [ ] Use centralized error handler
-
-### Resource Management
-- [ ] Use `.auto_manage(true)` when possible
-- [ ] Call `stop()` before destruction
-- [ ] Reuse connections instead of creating new ones
-- [ ] Use RAII and smart pointers
-
-### Thread Safety
-- [ ] Protect all shared state with mutexes
-- [ ] Don't block in callbacks
-- [ ] Use `ThreadSafeState` for complex state
-- [ ] Be aware of which thread executes callbacks
-
-### Performance
-- [ ] Use move semantics for large data
-- [ ] Enable async logging
-- [ ] Batch small messages
-- [ ] Use shared IO context (default)
-
-### Security
-- [ ] Validate all input
-- [ ] Implement rate limiting
-- [ ] Set connection limits
-- [ ] Sanitize log output
-
-### Testing
-- [ ] Use dependency injection
-- [ ] Test error scenarios
-- [ ] Use independent context for isolation
-- [ ] Mock external dependencies
-
----
-
-**See Also:**
-- [API Guide](../reference/API_GUIDE.md)
-- [Performance Tuning](performance_tuning.md)
-- [Troubleshooting](troubleshooting.md)
-
