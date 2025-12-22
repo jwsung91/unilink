@@ -102,6 +102,7 @@ void TcpServer::start() {
 
 void TcpServer::stop() {
   std::shared_ptr<interface::Channel> local_channel;
+  bool posted_transport_stop = false;
   {
     std::lock_guard<std::mutex> lock(mutex_);
     if (!started_ && !channel_) {
@@ -113,11 +114,20 @@ void TcpServer::stop() {
       channel_->on_bytes({});
       channel_->on_state({});
       channel_->on_backpressure({});
+
+      // If underlying transport is TcpServer, prefer async stop to avoid callback reentrancy issues
+      auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+      if (transport_server) {
+        transport_server->request_stop();
+        posted_transport_stop = true;
+      }
     }
 
     started_ = false;
     is_listening_ = false;
-    local_channel = std::move(channel_);
+    if (!posted_transport_stop) {
+      local_channel = std::move(channel_);
+    }
   }
 
   if (local_channel) {

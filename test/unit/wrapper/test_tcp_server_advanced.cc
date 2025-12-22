@@ -330,8 +330,9 @@ TEST_F(AdvancedTcpServerCoverageTest, StopFromCallbackDoesNotDeadlock) {
   ASSERT_NE(server_, nullptr);
   server_->start();
 
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(true).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
   ASSERT_NE(client, nullptr);
+  client->start();
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return stop_called.load(); }, 2000));
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return !server_->is_listening(); }, 2000));
@@ -380,7 +381,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
   EXPECT_FALSE(server_->send_to_client(999999, "invalid"));
 
   server_->stop();
-  EXPECT_EQ(server_->get_client_count(), 0U);
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() == 0; }, 2000));
   EXPECT_FALSE(server_->send_to_client(first_id, "should fail"));
   EXPECT_FALSE(server_->broadcast("down"));
 

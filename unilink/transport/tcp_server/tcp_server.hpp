@@ -74,6 +74,9 @@ class UNILINK_API TcpServer : public Channel,
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 
+  // Async stop request (safe to call from callbacks)
+  void request_stop();
+
   // Multi-client callback type definitions
   using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
   using MultiClientDataHandler = std::function<void(size_t client_id, const std::string& data)>;

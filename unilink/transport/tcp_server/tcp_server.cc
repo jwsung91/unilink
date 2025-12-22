@@ -175,6 +175,12 @@ void TcpServer::stop() {
   // during destruction
 }
 
+void TcpServer::request_stop() {
+  if (stopping_.load()) return;
+  auto self = shared_from_this();
+  net::post(ioc_, [self] { self->stop(); });
+}
+
 bool TcpServer::is_connected() const {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
   return current_session_ && current_session_->alive();
