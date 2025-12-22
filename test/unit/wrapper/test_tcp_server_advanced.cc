@@ -255,6 +255,142 @@ TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsAllConnectedClients) {
   client2->stop();
 }
 
+TEST_F(AdvancedTcpServerCoverageTest, StableClientIdsAreMonotonicAndNotReused) {
+  std::mutex ids_mutex;
+  std::vector<size_t> ids;
+
+  server_ = unilink::tcp_server(test_port_)
+                .unlimited_clients()
+                .on_multi_connect([&](size_t client_id, const std::string&) {
+                  std::lock_guard<std::mutex> lk(ids_mutex);
+                  ids.push_back(client_id);
+                })
+                .build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+  TestUtils::waitFor(50);
+
+  auto make_client = [&]() { return unilink::tcp_client("127.0.0.1", test_port_).auto_manage(true).build(); };
+
+  auto client1 = make_client();
+  ASSERT_NE(client1, nullptr);
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&]() {
+        std::lock_guard<std::mutex> lk(ids_mutex);
+        return ids.size() >= 1;
+      },
+      6000));
+
+  client1->stop();
+  TestUtils::waitFor(200);
+
+  auto client2 = make_client();
+  ASSERT_NE(client2, nullptr);
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&]() {
+        std::lock_guard<std::mutex> lk(ids_mutex);
+        return ids.size() >= 2;
+      },
+      6000));
+
+  auto client3 = make_client();
+  ASSERT_NE(client3, nullptr);
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&]() {
+        std::lock_guard<std::mutex> lk(ids_mutex);
+        return ids.size() >= 3;
+      },
+      6000));
+
+  std::vector<size_t> ids_snapshot;
+  {
+    std::lock_guard<std::mutex> lk(ids_mutex);
+    ids_snapshot = ids;
+  }
+
+  ASSERT_EQ(ids_snapshot.size(), 3U);
+  EXPECT_LT(ids_snapshot[0], ids_snapshot[1]);
+  EXPECT_LT(ids_snapshot[1], ids_snapshot[2]);
+
+  client2->stop();
+  client3->stop();
+  server_->stop();
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, StopFromCallbackDoesNotDeadlock) {
+  std::atomic<bool> stop_called{false};
+
+  server_ = unilink::tcp_server(test_port_)
+                .unlimited_clients()
+                .on_multi_connect([&](size_t, const std::string&) {
+                  stop_called = true;
+                  server_->stop();
+                })
+                .build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
+  ASSERT_NE(client, nullptr);
+  client->start();
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return stop_called.load(); }, 2000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return !server_->is_listening(); }, 2000));
+
+  client->stop();
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnStatus) {
+  std::mutex ids_mutex;
+  std::vector<size_t> ids;
+  std::atomic<bool> error_called{false};
+
+  server_ = unilink::tcp_server(test_port_)
+                .unlimited_clients()
+                .on_multi_connect([&](size_t client_id, const std::string&) {
+                  std::lock_guard<std::mutex> lk(ids_mutex);
+                  ids.push_back(client_id);
+                })
+                .build();
+  ASSERT_NE(server_, nullptr);
+  server_->notify_send_failure(true).on_error([&](const std::string&) { error_called = true; });
+  server_->start();
+
+  auto client1 = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
+  auto client2 = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
+  ASSERT_NE(client1, nullptr);
+  ASSERT_NE(client2, nullptr);
+
+  client1->start();
+  client2->start();
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() {
+    std::lock_guard<std::mutex> lk(ids_mutex);
+    return ids.size() >= 2 && server_->get_client_count() == 2;
+  }));
+
+  size_t first_id = 0;
+  {
+    std::lock_guard<std::mutex> lk(ids_mutex);
+    first_id = ids.front();
+  }
+
+  EXPECT_TRUE(server_->send_to_client(first_id, "ping"));
+  EXPECT_TRUE(server_->broadcast("hello"));
+
+  EXPECT_FALSE(server_->send_to_client(999999, "invalid"));
+
+  server_->stop();
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() == 0; }, 2000));
+  EXPECT_FALSE(server_->send_to_client(first_id, "should fail"));
+  EXPECT_FALSE(server_->broadcast("down"));
+
+  client1->stop();
+  client2->stop();
+
+  EXPECT_TRUE(error_called.load());
+}
+
 // ============================================================================
 // CLIENT LIMIT CONFIGURATION TESTS
 // ============================================================================

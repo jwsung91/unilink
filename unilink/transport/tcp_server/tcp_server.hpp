@@ -26,6 +26,7 @@
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #include "unilink/common/error_handler.hpp"
@@ -68,10 +69,13 @@ class UNILINK_API TcpServer : public Channel,
   void on_backpressure(OnBackpressure cb) override;
 
   // Multi-client support methods
-  void broadcast(const std::string& message);
-  void send_to_client(size_t client_id, const std::string& message);
+  bool broadcast(const std::string& message);
+  bool send_to_client(size_t client_id, const std::string& message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
+
+  // Async stop request (safe to call from callbacks)
+  void request_stop();
 
   // Multi-client callback type definitions
   using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
@@ -93,6 +97,7 @@ class UNILINK_API TcpServer : public Channel,
 
  private:
   std::atomic<bool> stopping_{false};
+  std::atomic<size_t> next_client_id_{0};
 
   std::unique_ptr<net::io_context> owned_ioc_;
   bool owns_ioc_;
@@ -104,7 +109,7 @@ class UNILINK_API TcpServer : public Channel,
   TcpServerConfig cfg_;
 
   // Multi-client support
-  std::vector<std::shared_ptr<TcpServerSession>> sessions_;
+  std::unordered_map<size_t, std::shared_ptr<TcpServerSession>> sessions_;
   mutable std::mutex sessions_mutex_;  // Guards sessions_ and current_session_
 
   // Client limit configuration

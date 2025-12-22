@@ -60,7 +60,16 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
         if (!self->alive_) return;  // Double-check in case session was closed
         self->queue_bytes_ += buf.size();
         self->tx_.emplace_back(std::move(buf));
-        if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) self->on_bp_(self->queue_bytes_);
+        if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) {
+          try {
+            self->on_bp_(self->queue_bytes_);
+          } catch (const std::exception& e) {
+            UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
+                              "Exception in backpressure callback: " + std::string(e.what()));
+          } catch (...) {
+            UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
+          }
+        }
         if (!self->writing_) self->do_write();
       });
       return;
@@ -74,7 +83,16 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
     if (!self->alive_) return;  // Double-check in case session was closed
     self->queue_bytes_ += buf.size();
     self->tx_.emplace_back(std::move(buf));
-    if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) self->on_bp_(self->queue_bytes_);
+    if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) {
+      try {
+        self->on_bp_(self->queue_bytes_);
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
+                          "Exception in backpressure callback: " + std::string(e.what()));
+      } catch (...) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
+      }
+    }
     if (!self->writing_) self->do_write();
   });
 }
@@ -97,7 +115,19 @@ void TcpServerSession::start_read() {
       self->do_close();
       return;
     }
-    if (self->on_bytes_) self->on_bytes_(self->rx_.data(), n);
+    if (self->on_bytes_) {
+      try {
+        self->on_bytes_(self->rx_.data(), n);
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_bytes", "Exception in on_bytes callback: " + std::string(e.what()));
+        self->do_close();
+        return;
+      } catch (...) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_bytes", "Unknown exception in on_bytes callback");
+        self->do_close();
+        return;
+      }
+    }
     self->start_read();
   });
 }
@@ -143,7 +173,15 @@ void TcpServerSession::do_close() {
   boost::system::error_code ec;
   socket_->shutdown(tcp::socket::shutdown_both, ec);
   socket_->close(ec);
-  if (on_close_) on_close_();
+  if (on_close_) {
+    try {
+      on_close_();
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("tcp_server_session", "on_close", "Exception in on_close callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("tcp_server_session", "on_close", "Unknown exception in on_close callback");
+    }
+  }
 }
 
 }  // namespace transport

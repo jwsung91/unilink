@@ -102,6 +102,7 @@ void TcpServer::start() {
 
 void TcpServer::stop() {
   std::shared_ptr<interface::Channel> local_channel;
+  bool posted_transport_stop = false;
   {
     std::lock_guard<std::mutex> lock(mutex_);
     if (!started_ && !channel_) {
@@ -113,11 +114,20 @@ void TcpServer::stop() {
       channel_->on_bytes({});
       channel_->on_state({});
       channel_->on_backpressure({});
+
+      // If underlying transport is TcpServer, prefer async stop to avoid callback reentrancy issues
+      auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+      if (transport_server) {
+        transport_server->request_stop();
+        posted_transport_stop = true;
+      }
     }
 
     started_ = false;
     is_listening_ = false;
-    local_channel = std::move(channel_);
+    if (!posted_transport_stop) {
+      local_channel = std::move(channel_);
+    }
   }
 
   if (local_channel) {
@@ -166,6 +176,11 @@ ChannelInterface& TcpServer::on_disconnect(DisconnectHandler handler) {
 
 ChannelInterface& TcpServer::on_error(ErrorHandler handler) {
   on_error_ = std::move(handler);
+  return *this;
+}
+
+TcpServer& TcpServer::notify_send_failure(bool enable) {
+  notify_send_failure_ = enable;
   return *this;
 }
 
@@ -267,22 +282,32 @@ void TcpServer::handle_state(common::LinkState state) {
 }
 
 // Multi-client support method implementations
-void TcpServer::broadcast(const std::string& message) {
+bool TcpServer::broadcast(const std::string& message) {
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->broadcast(message);
+      bool ok = transport_server->broadcast(message);
+      if (!ok && notify_send_failure_ && on_error_) {
+        on_error_("Broadcast failed: no active clients");
+      }
+      return ok;
     }
   }
+  return false;
 }
 
-void TcpServer::send_to_client(size_t client_id, const std::string& message) {
+bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->send_to_client(client_id, message);
+      bool ok = transport_server->send_to_client(client_id, message);
+      if (!ok && notify_send_failure_ && on_error_) {
+        on_error_("Send failed: client not found or disconnected");
+      }
+      return ok;
     }
   }
+  return false;
 }
 
 size_t TcpServer::get_client_count() const {
@@ -367,7 +392,7 @@ TcpServer& TcpServer::enable_port_retry(bool enable, int max_retries, int retry_
   return *this;
 }
 
-bool TcpServer::is_listening() const { return is_listening_; }
+bool TcpServer::is_listening() const { return is_listening_.load(); }
 
 void TcpServer::set_manage_external_context(bool manage) { manage_external_context_ = manage; }
 

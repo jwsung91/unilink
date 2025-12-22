@@ -121,7 +121,10 @@ void TcpServer::stop() {
     std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
     {
       std::lock_guard<std::mutex> lock(sessions_mutex_);
-      sessions_copy = sessions_;
+      sessions_copy.reserve(sessions_.size());
+      for (auto& kv : sessions_) {
+        sessions_copy.push_back(kv.second);
+      }
       sessions_.clear();
       current_session_.reset();
     }
@@ -134,8 +137,17 @@ void TcpServer::stop() {
     state_.set_state(common::LinkState::Closed);
   };
 
+  const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
   const bool has_active_ioc_thread =
       owns_ioc_ || (uses_global_ioc_ && common::IoContextManager::instance().is_running());
+
+  if (in_ioc_thread) {
+    cleanup();
+    if (owns_ioc_) {
+      ioc_.stop();
+    }
+    return;
+  }
 
   if (has_active_ioc_thread) {
     auto self = shared_from_this();
@@ -161,6 +173,12 @@ void TcpServer::stop() {
   }
   // Don't call notify_state() in stop() as it may cause issues with callbacks
   // during destruction
+}
+
+void TcpServer::request_stop() {
+  if (stopping_.load()) return;
+  auto self = shared_from_this();
+  net::post(ioc_, [self] { self->stop(); });
 }
 
 bool TcpServer::is_connected() const {
@@ -355,8 +373,8 @@ void TcpServer::do_accept() {
     {
       std::lock_guard<std::mutex> lock(self->sessions_mutex_);
 
-      self->sessions_.push_back(new_session);
-      client_id = self->sessions_.size() - 1;
+      client_id = self->next_client_id_.fetch_add(1);
+      self->sessions_.emplace(client_id, new_session);
 
       // Update current active session (existing API compatibility)
       self->current_session_ = new_session;
@@ -394,13 +412,14 @@ void TcpServer::do_accept() {
       // Remove from session list
       {
         std::lock_guard<std::mutex> lock(self->sessions_mutex_);
-        auto it = std::find(self->sessions_.begin(), self->sessions_.end(), new_session);
-        if (it != self->sessions_.end()) {
-          self->sessions_.erase(it);
-        }
+        self->sessions_.erase(client_id);
         was_current = (self->current_session_ == new_session);
         if (was_current) {
-          self->current_session_.reset();
+          if (!self->sessions_.empty()) {
+            self->current_session_ = self->sessions_.begin()->second;
+          } else {
+            self->current_session_.reset();
+          }
         }
       }
 
@@ -443,38 +462,54 @@ void TcpServer::notify_state() {
 }
 
 // Multi-client support method implementations
-void TcpServer::broadcast(const std::string& message) {
+bool TcpServer::broadcast(const std::string& message) {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
   auto data = common::safe_convert::string_to_uint8(message);
 
-  for (auto& session : sessions_) {
+  bool sent = false;
+  for (auto& entry : sessions_) {
+    auto& session = entry.second;
     if (session && session->alive()) {
       session->async_write_copy(data.data(), data.size());
+      sent = true;
     }
   }
+
+  return sent;
 }
 
-void TcpServer::send_to_client(size_t client_id, const std::string& message) {
+bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
 
-  if (client_id < sessions_.size() && sessions_[client_id] && sessions_[client_id]->alive()) {
+  auto it = sessions_.find(client_id);
+  if (it != sessions_.end() && it->second && it->second->alive()) {
     auto data = common::safe_convert::string_to_uint8(message);
-    sessions_[client_id]->async_write_copy(data.data(), data.size());
+    it->second->async_write_copy(data.data(), data.size());
+    return true;
   }
+  UNILINK_LOG_DEBUG("tcp_server", "send_to_client",
+                    "Send failed: client_id " + std::to_string(client_id) + " not found");
+  return false;
 }
 
 size_t TcpServer::get_client_count() const {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
-  return sessions_.size();
+  size_t alive = 0;
+  for (const auto& entry : sessions_) {
+    if (entry.second && entry.second->alive()) {
+      ++alive;
+    }
+  }
+  return alive;
 }
 
 std::vector<size_t> TcpServer::get_connected_clients() const {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
   std::vector<size_t> connected_clients;
 
-  for (size_t i = 0; i < sessions_.size(); ++i) {
-    if (sessions_[i] && sessions_[i]->alive()) {
-      connected_clients.push_back(i);
+  for (const auto& entry : sessions_) {
+    if (entry.second && entry.second->alive()) {
+      connected_clients.push_back(entry.first);
     }
   }
 
