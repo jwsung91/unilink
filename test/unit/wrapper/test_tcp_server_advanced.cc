@@ -218,6 +218,46 @@ TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsConnectedClients) {
   client->stop();
 }
 
+TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsAllConnectedClients) {
+  server_ =
+      unilink::tcp_server(test_port_).unlimited_clients().on_multi_connect([](size_t, const std::string&) {}).build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+
+  std::atomic<int> connected{0};
+  std::atomic<int> disconnected{0};
+
+  auto make_client = [&](int id) {
+    return unilink::tcp_client("127.0.0.1", test_port_)
+        .on_connect([&, id]() {
+          (void)id;
+          connected.fetch_add(1);
+        })
+        .on_disconnect([&]() { disconnected.fetch_add(1); })
+        .on_error([&](const std::string&) { disconnected.fetch_add(1); })
+        .auto_manage(true)
+        .build();
+  };
+
+  auto client1 = make_client(1);
+  auto client2 = make_client(2);
+  ASSERT_NE(client1, nullptr);
+  ASSERT_NE(client2, nullptr);
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load() >= 2; }, 2000));
+
+  server_->stop();
+
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&]() {
+        return disconnected.load() >= 2 || (!client1->is_connected() && !client2->is_connected());
+      },
+      2000));
+
+  client1->stop();
+  client2->stop();
+}
+
 // ============================================================================
 // CLIENT LIMIT CONFIGURATION TESTS
 // ============================================================================
