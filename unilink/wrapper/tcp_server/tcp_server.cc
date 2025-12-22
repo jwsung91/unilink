@@ -367,7 +367,7 @@ TcpServer& TcpServer::enable_port_retry(bool enable, int max_retries, int retry_
   return *this;
 }
 
-bool TcpServer::is_listening() const { return is_listening_; }
+bool TcpServer::is_listening() const { return is_listening_.load(); }
 
 void TcpServer::set_manage_external_context(bool manage) { manage_external_context_ = manage; }
 

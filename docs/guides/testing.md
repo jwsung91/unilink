@@ -235,6 +235,18 @@ Thread safety and concurrent access patterns.
 
 ---
 
+**TCP server regressions (stable IDs & safe stop)**
+
+- Verifies that TCP server client IDs never get reused and that `stop()` is safe when called from callbacks.
+- Run the focused checks:
+  ```bash
+  ./build/bin/run_unit_test_tcp_server_advanced \
+    --gtest_filter=AdvancedTcpServerCoverageTest.StableClientIdsAreMonotonicAndNotReused:AdvancedTcpServerCoverageTest.StopFromCallbackDoesNotDeadlock
+  ```
+- Requires permission to bind local TCP ports; allow local sockets if your environment sandboxes networking.
+
+---
+
 ### Performance Tests
 
 Performance benchmarks and optimization validation.

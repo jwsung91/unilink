@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <boost/asio/io_context.hpp>
 #include <functional>
 #include <memory>
@@ -110,7 +111,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
   size_t max_clients_{0};
 
   // Server state tracking
-  bool is_listening_{false};
+  std::atomic<bool> is_listening_{false};
 
   // User callbacks
   DataHandler on_data_;

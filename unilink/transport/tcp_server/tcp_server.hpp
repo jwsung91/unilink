@@ -26,6 +26,7 @@
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #include "unilink/common/error_handler.hpp"
@@ -93,6 +94,7 @@ class UNILINK_API TcpServer : public Channel,
 
  private:
   std::atomic<bool> stopping_{false};
+  std::atomic<size_t> next_client_id_{0};
 
   std::unique_ptr<net::io_context> owned_ioc_;
   bool owns_ioc_;
@@ -104,7 +106,7 @@ class UNILINK_API TcpServer : public Channel,
   TcpServerConfig cfg_;
 
   // Multi-client support
-  std::vector<std::shared_ptr<TcpServerSession>> sessions_;
+  std::unordered_map<size_t, std::shared_ptr<TcpServerSession>> sessions_;
   mutable std::mutex sessions_mutex_;  // Guards sessions_ and current_session_
 
   // Client limit configuration
