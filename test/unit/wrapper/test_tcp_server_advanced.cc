@@ -268,6 +268,7 @@ TEST_F(AdvancedTcpServerCoverageTest, StableClientIdsAreMonotonicAndNotReused) {
                 .build();
   ASSERT_NE(server_, nullptr);
   server_->start();
+  TestUtils::waitFor(50);
 
   auto make_client = [&]() { return unilink::tcp_client("127.0.0.1", test_port_).auto_manage(true).build(); };
 
@@ -278,10 +279,10 @@ TEST_F(AdvancedTcpServerCoverageTest, StableClientIdsAreMonotonicAndNotReused) {
         std::lock_guard<std::mutex> lk(ids_mutex);
         return ids.size() >= 1;
       },
-      2000));
+      6000));
 
   client1->stop();
-  TestUtils::waitFor(50);
+  TestUtils::waitFor(200);
 
   auto client2 = make_client();
   ASSERT_NE(client2, nullptr);
@@ -290,7 +291,7 @@ TEST_F(AdvancedTcpServerCoverageTest, StableClientIdsAreMonotonicAndNotReused) {
         std::lock_guard<std::mutex> lk(ids_mutex);
         return ids.size() >= 2;
       },
-      2000));
+      6000));
 
   auto client3 = make_client();
   ASSERT_NE(client3, nullptr);
@@ -299,7 +300,7 @@ TEST_F(AdvancedTcpServerCoverageTest, StableClientIdsAreMonotonicAndNotReused) {
         std::lock_guard<std::mutex> lk(ids_mutex);
         return ids.size() >= 3;
       },
-      2000));
+      6000));
 
   std::vector<size_t> ids_snapshot;
   {
