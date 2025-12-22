@@ -62,6 +62,7 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   void on_backpressure(OnBackpressure cb);
   void on_close(OnClose cb);
   bool alive() const;
+  void stop();
 
  private:
   void start_read();

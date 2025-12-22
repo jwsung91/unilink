@@ -16,6 +16,7 @@
 
 #include "unilink/wrapper/tcp_server/tcp_server.hpp"
 
+#include <boost/asio/executor_work_guard.hpp>
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
@@ -58,15 +59,10 @@ void TcpServer::start() {
     if (!external_ioc_) {
       throw std::runtime_error("External io_context is not set");
     }
-    if (external_ioc_->stopped()) {
-      external_ioc_->restart();
-    }
-    if (!external_guard_) {
-      external_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
-          external_ioc_->get_executor());
-    }
-    if (!external_thread_.joinable()) {
-      external_thread_ = std::thread([ioc = external_ioc_]() { ioc->run(); });
+    if (manage_external_context_) {
+      if (external_ioc_->stopped()) {
+        external_ioc_->restart();
+      }
     }
   }
 
@@ -95,6 +91,12 @@ void TcpServer::start() {
   }
 
   channel_->start();
+  if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+    external_thread_ = std::thread([ioc = external_ioc_]() {
+      boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
+      ioc->run();
+    });
+  }
   started_ = true;
 }
 
@@ -125,13 +127,10 @@ void TcpServer::stop() {
   }
 
   if (use_external_context_) {
-    if (external_guard_) {
-      external_guard_->reset();
-    }
-    if (external_ioc_) {
+    if (manage_external_context_ && external_ioc_) {
       external_ioc_->stop();
     }
-    if (external_thread_.joinable()) {
+    if (manage_external_context_ && external_thread_.joinable()) {
       external_thread_.join();
     }
   }
@@ -172,6 +171,9 @@ ChannelInterface& TcpServer::on_error(ErrorHandler handler) {
 
 ChannelInterface& TcpServer::auto_manage(bool manage) {
   auto_manage_ = manage;
+  if (auto_manage_ && !started_) {
+    start();
+  }
   return *this;
 }
 
@@ -366,6 +368,8 @@ TcpServer& TcpServer::enable_port_retry(bool enable, int max_retries, int retry_
 }
 
 bool TcpServer::is_listening() const { return is_listening_; }
+
+void TcpServer::set_manage_external_context(bool manage) { manage_external_context_ = manage; }
 
 void TcpServer::set_client_limit(size_t max_clients) {
   max_clients_ = max_clients;

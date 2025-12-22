@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <functional>
 #include <memory>
@@ -84,6 +83,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
 
   // Server state checking
   bool is_listening() const;
+  void set_manage_external_context(bool manage);
 
  private:
   void setup_internal_handlers();
@@ -96,9 +96,9 @@ class UNILINK_API TcpServer : public ChannelInterface {
   bool started_{false};
   bool auto_manage_{false};
   std::shared_ptr<boost::asio::io_context> external_ioc_;
-  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> external_guard_;
-  std::thread external_thread_;
   bool use_external_context_{false};
+  bool manage_external_context_{false};
+  std::thread external_thread_;
 
   // Port retry configuration
   bool port_retry_enabled_{false};

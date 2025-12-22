@@ -17,6 +17,7 @@
 #include "unilink/wrapper/serial/serial.hpp"
 
 #include <algorithm>
+#include <boost/asio/executor_work_guard.hpp>
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
@@ -62,15 +63,10 @@ void Serial::start() {
     if (!external_ioc_) {
       throw std::runtime_error("External io_context is not set");
     }
-    if (external_ioc_->stopped()) {
-      external_ioc_->restart();
-    }
-    if (!external_guard_) {
-      external_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
-          external_ioc_->get_executor());
-    }
-    if (!external_thread_.joinable()) {
-      external_thread_ = std::thread([ioc = external_ioc_]() { ioc->run(); });
+    if (manage_external_context_) {
+      if (external_ioc_->stopped()) {
+        external_ioc_->restart();
+      }
     }
   }
 
@@ -85,6 +81,12 @@ void Serial::start() {
   }
 
   channel_->start();
+  if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+    external_thread_ = std::thread([ioc = external_ioc_]() {
+      boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
+      ioc->run();
+    });
+  }
   started_ = true;
 }
 
@@ -97,10 +99,7 @@ void Serial::stop() {
   channel_.reset();
   started_ = false;
 
-  if (use_external_context_) {
-    if (external_guard_) {
-      external_guard_->reset();
-    }
+  if (use_external_context_ && manage_external_context_) {
     if (external_ioc_) {
       external_ioc_->stop();
     }
@@ -146,6 +145,9 @@ ChannelInterface& Serial::on_error(ErrorHandler handler) {
 
 ChannelInterface& Serial::auto_manage(bool manage) {
   auto_manage_ = manage;
+  if (auto_manage_ && !started_) {
+    start();
+  }
   return *this;
 }
 
@@ -236,6 +238,8 @@ config::SerialConfig Serial::build_config() const {
 
   return config;
 }
+
+void Serial::set_manage_external_context(bool manage) { manage_external_context_ = manage; }
 
 }  // namespace wrapper
 }  // namespace unilink
