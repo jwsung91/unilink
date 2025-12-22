@@ -16,6 +16,10 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
+#include <boost/asio/executor_work_guard.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/post.hpp>
 #include <chrono>
 #include <memory>
 #include <string>
@@ -100,6 +104,51 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStopWhenNotStarted) {
   server_->stop();
 }
 
+TEST_F(AdvancedTcpServerCoverageTest, AutoManageStartsListening) {
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_manage(true).build();
+
+  ASSERT_NE(server_, nullptr);
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 1000));
+
+  server_->stop();
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
+  auto external_ioc = std::make_shared<boost::asio::io_context>();
+  auto guard = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+      external_ioc->get_executor());
+  std::thread ioc_thread([&]() { external_ioc->run(); });
+
+  auto server = std::make_shared<wrapper::TcpServer>(test_port_, external_ioc);
+  server->set_unlimited_clients();
+  server->start();
+  server->stop();
+
+  EXPECT_FALSE(external_ioc->stopped());
+
+  guard.reset();
+  external_ioc->stop();
+  if (ioc_thread.joinable()) {
+    ioc_thread.join();
+  }
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
+  auto external_ioc = std::make_shared<boost::asio::io_context>();
+  auto server = std::make_shared<wrapper::TcpServer>(test_port_, external_ioc);
+  server->set_manage_external_context(true);
+  server->set_unlimited_clients();
+
+  std::atomic<bool> ran{false};
+  server->start();
+  boost::asio::post(*external_ioc, [&]() { ran = true; });
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return ran.load(); }, 1000));
+
+  server->stop();
+  EXPECT_TRUE(external_ioc->stopped());
+}
+
 TEST_F(AdvancedTcpServerCoverageTest, BindingConflictTriggersErrorCallback) {
 #ifdef _WIN32
   // Windows sockets can allow rapid rebinds due to TIME_WAIT/port reuse behavior.
@@ -140,6 +189,70 @@ TEST_F(AdvancedTcpServerCoverageTest, BindingConflictTriggersErrorCallback) {
 
   server_->stop();
   server1->stop();
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsConnectedClients) {
+  server_ =
+      unilink::tcp_server(test_port_).unlimited_clients().on_multi_connect([](size_t, const std::string&) {}).build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+
+  std::atomic<bool> connected{false};
+  std::atomic<bool> disconnected_or_down{false};
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
+                    .on_connect([&]() { connected = true; })
+                    .on_disconnect([&]() { disconnected_or_down = true; })
+                    .on_error([&](const std::string&) { disconnected_or_down = true; })
+                    .auto_manage(true)
+                    .build();
+
+  ASSERT_NE(client, nullptr);
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load(); }, 1000));
+
+  server_->stop();
+
+  EXPECT_TRUE(
+      TestUtils::waitForCondition([&]() { return disconnected_or_down.load() || !client->is_connected(); }, 1500));
+
+  client->stop();
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsAllConnectedClients) {
+  server_ =
+      unilink::tcp_server(test_port_).unlimited_clients().on_multi_connect([](size_t, const std::string&) {}).build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+
+  std::atomic<int> connected{0};
+  std::atomic<int> disconnected{0};
+
+  auto make_client = [&](int id) {
+    return unilink::tcp_client("127.0.0.1", test_port_)
+        .on_connect([&, id]() {
+          (void)id;
+          connected.fetch_add(1);
+        })
+        .on_disconnect([&]() { disconnected.fetch_add(1); })
+        .on_error([&](const std::string&) { disconnected.fetch_add(1); })
+        .auto_manage(true)
+        .build();
+  };
+
+  auto client1 = make_client(1);
+  auto client2 = make_client(2);
+  ASSERT_NE(client1, nullptr);
+  ASSERT_NE(client2, nullptr);
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load() >= 2; }, 2000));
+
+  server_->stop();
+
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&]() { return disconnected.load() >= 2 || (!client1->is_connected() && !client2->is_connected()); }, 2000));
+
+  client1->stop();
+  client2->stop();
 }
 
 // ============================================================================

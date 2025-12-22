@@ -67,6 +67,10 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   auto server = external_ioc ? std::make_unique<wrapper::TcpServer>(port_, external_ioc)
                              : std::make_unique<wrapper::TcpServer>(port_);
 
+  if (external_ioc) {
+    server->set_manage_external_context(use_independent_context_);
+  }
+
   // Apply client limit configuration
   UNILINK_LOG_DEBUG(
       "tcp_server_builder", "build",
@@ -84,9 +88,6 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   } else {
     UNILINK_LOG_DEBUG("tcp_server_builder", "build", "No client limit set");
   }
-
-  // Apply configuration
-  server->auto_manage(auto_manage_);
 
   // Set callbacks
   if (on_data_) {
@@ -127,9 +128,8 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
   }
 
-  if (auto_manage_) {
-    server->start();
-  }
+  // Apply configuration and auto-start if requested
+  server->auto_manage(auto_manage_);
 
   return server;
 }

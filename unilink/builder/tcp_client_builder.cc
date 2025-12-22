@@ -62,7 +62,9 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
 
     // Apply configuration with exception safety
     try {
-      client->auto_manage(auto_manage_);
+      if (external_ioc) {
+        client->set_manage_external_context(use_independent_context_);
+      }
 
       // Set callbacks with exception safety
       if (on_data_) {
@@ -84,15 +86,13 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
       // Set retry interval
       client->set_retry_interval(std::chrono::milliseconds(retry_interval_ms_));
 
+      client->auto_manage(auto_manage_);
+
     } catch (const std::exception& e) {
       // If configuration fails, ensure client is properly cleaned up
       client.reset();
       throw common::BuilderException("Failed to configure TCP client: " + std::string(e.what()), "TcpClientBuilder",
                                      "build");
-    }
-
-    if (auto_manage_) {
-      client->start();
     }
 
     return client;

@@ -65,7 +65,9 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
 
     // Apply configuration with exception safety
     try {
-      serial->auto_manage(auto_manage_);
+      if (external_ioc) {
+        serial->set_manage_external_context(use_independent_context_);
+      }
 
       // Set callbacks with exception safety
       if (on_data_) {
@@ -87,14 +89,12 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
       // Set retry interval
       serial->set_retry_interval(std::chrono::milliseconds(retry_interval_ms_));
 
+      serial->auto_manage(auto_manage_);
+
     } catch (const std::exception& e) {
       // If configuration fails, ensure serial is properly cleaned up
       serial.reset();
       throw common::BuilderException("Failed to configure Serial: " + std::string(e.what()), "SerialBuilder", "build");
-    }
-
-    if (auto_manage_) {
-      serial->start();
     }
 
     return serial;

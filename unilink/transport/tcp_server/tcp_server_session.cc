@@ -84,6 +84,11 @@ void TcpServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(c
 void TcpServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }
 bool TcpServerSession::alive() const { return alive_.load(); }
 
+void TcpServerSession::stop() {
+  auto self = shared_from_this();
+  net::post(ioc_, [self] { self->do_close(); });
+}
+
 void TcpServerSession::start_read() {
   alive_.store(true);
   auto self = shared_from_this();

@@ -118,12 +118,19 @@ void TcpServer::stop() {
     if (acceptor_ && acceptor_->is_open()) {
       acceptor_->close(ec);
     }
-    // Clean up all sessions
+    std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
     {
       std::lock_guard<std::mutex> lock(sessions_mutex_);
+      sessions_copy = sessions_;
       sessions_.clear();
       current_session_.reset();
     }
+    for (auto& session : sessions_copy) {
+      if (session) {
+        session->stop();
+      }
+    }
+    // Clean up all sessions
     state_.set_state(common::LinkState::Closed);
   };
 

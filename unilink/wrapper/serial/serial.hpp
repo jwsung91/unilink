@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <functional>
@@ -62,6 +61,7 @@ class UNILINK_API Serial : public ChannelInterface {
   void set_retry_interval(std::chrono::milliseconds interval);
   // Expose mapped config for testing/inspection
   config::SerialConfig build_config() const;
+  void set_manage_external_context(bool manage);
 
  private:
   void setup_internal_handlers();
@@ -72,9 +72,9 @@ class UNILINK_API Serial : public ChannelInterface {
   uint32_t baud_rate_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
-  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> external_guard_;
-  std::thread external_thread_;
   bool use_external_context_{false};
+  bool manage_external_context_{false};
+  std::thread external_thread_;
 
   // Event handlers
   DataHandler data_handler_;
