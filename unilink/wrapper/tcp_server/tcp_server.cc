@@ -169,6 +169,11 @@ ChannelInterface& TcpServer::on_error(ErrorHandler handler) {
   return *this;
 }
 
+TcpServer& TcpServer::notify_send_failure(bool enable) {
+  notify_send_failure_ = enable;
+  return *this;
+}
+
 ChannelInterface& TcpServer::auto_manage(bool manage) {
   auto_manage_ = manage;
   if (auto_manage_ && !started_) {
@@ -267,22 +272,32 @@ void TcpServer::handle_state(common::LinkState state) {
 }
 
 // Multi-client support method implementations
-void TcpServer::broadcast(const std::string& message) {
+bool TcpServer::broadcast(const std::string& message) {
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->broadcast(message);
+      bool ok = transport_server->broadcast(message);
+      if (!ok && notify_send_failure_ && on_error_) {
+        on_error_("Broadcast failed: no active clients");
+      }
+      return ok;
     }
   }
+  return false;
 }
 
-void TcpServer::send_to_client(size_t client_id, const std::string& message) {
+bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->send_to_client(client_id, message);
+      bool ok = transport_server->send_to_client(client_id, message);
+      if (!ok && notify_send_failure_ && on_error_) {
+        on_error_("Send failed: client not found or disconnected");
+      }
+      return ok;
     }
   }
+  return false;
 }
 
 size_t TcpServer::get_client_count() const {

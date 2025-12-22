@@ -61,8 +61,8 @@ class UNILINK_API TcpServer : public ChannelInterface {
   // void send_binary(const std::vector<uint8_t>& data) override;
 
   // Multi-client support methods
-  void broadcast(const std::string& message);
-  void send_to_client(size_t client_id, const std::string& message);
+  bool broadcast(const std::string& message);
+  bool send_to_client(size_t client_id, const std::string& message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 
@@ -74,6 +74,9 @@ class UNILINK_API TcpServer : public ChannelInterface {
   TcpServer& on_multi_connect(MultiClientConnectHandler handler);
   TcpServer& on_multi_data(MultiClientDataHandler handler);
   TcpServer& on_multi_disconnect(MultiClientDisconnectHandler handler);
+
+  // 실패 시 bool 반환 외에 on_error 알림을 받을지 설정
+  TcpServer& notify_send_failure(bool enable = true);
 
   // Client limit configuration
   void set_client_limit(size_t max_clients);
@@ -123,6 +126,9 @@ class UNILINK_API TcpServer : public ChannelInterface {
   MultiClientConnectHandler on_multi_connect_;
   MultiClientDataHandler on_multi_data_;
   MultiClientDisconnectHandler on_multi_disconnect_;
+
+  // Send/broadcast 실패 시 on_error 호출 여부
+  bool notify_send_failure_{false};
 };
 
 }  // namespace wrapper

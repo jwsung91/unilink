@@ -340,6 +340,57 @@ TEST_F(AdvancedTcpServerCoverageTest, StopFromCallbackDoesNotDeadlock) {
   client->stop();
 }
 
+TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnStatus) {
+  std::mutex ids_mutex;
+  std::vector<size_t> ids;
+  std::atomic<bool> error_called{false};
+
+  server_ = unilink::tcp_server(test_port_)
+                .unlimited_clients()
+                .on_multi_connect([&](size_t client_id, const std::string&) {
+                  std::lock_guard<std::mutex> lk(ids_mutex);
+                  ids.push_back(client_id);
+                })
+                .build();
+  ASSERT_NE(server_, nullptr);
+  server_->notify_send_failure(true).on_error([&](const std::string&) { error_called = true; });
+  server_->start();
+
+  auto client1 = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
+  auto client2 = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
+  ASSERT_NE(client1, nullptr);
+  ASSERT_NE(client2, nullptr);
+
+  client1->start();
+  client2->start();
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() {
+    std::lock_guard<std::mutex> lk(ids_mutex);
+    return ids.size() >= 2 && server_->get_client_count() == 2;
+  }));
+
+  size_t first_id = 0;
+  {
+    std::lock_guard<std::mutex> lk(ids_mutex);
+    first_id = ids.front();
+  }
+
+  EXPECT_TRUE(server_->send_to_client(first_id, "ping"));
+  EXPECT_TRUE(server_->broadcast("hello"));
+
+  EXPECT_FALSE(server_->send_to_client(999999, "invalid"));
+
+  server_->stop();
+  EXPECT_EQ(server_->get_client_count(), 0U);
+  EXPECT_FALSE(server_->send_to_client(first_id, "should fail"));
+  EXPECT_FALSE(server_->broadcast("down"));
+
+  client1->stop();
+  client2->stop();
+
+  EXPECT_TRUE(error_called.load());
+}
+
 // ============================================================================
 // CLIENT LIMIT CONFIGURATION TESTS
 // ============================================================================

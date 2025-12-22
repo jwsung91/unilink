@@ -456,31 +456,44 @@ void TcpServer::notify_state() {
 }
 
 // Multi-client support method implementations
-void TcpServer::broadcast(const std::string& message) {
+bool TcpServer::broadcast(const std::string& message) {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
   auto data = common::safe_convert::string_to_uint8(message);
 
+  bool sent = false;
   for (auto& entry : sessions_) {
     auto& session = entry.second;
     if (session && session->alive()) {
       session->async_write_copy(data.data(), data.size());
+      sent = true;
     }
   }
+
+  return sent;
 }
 
-void TcpServer::send_to_client(size_t client_id, const std::string& message) {
+bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
 
   auto it = sessions_.find(client_id);
   if (it != sessions_.end() && it->second && it->second->alive()) {
     auto data = common::safe_convert::string_to_uint8(message);
     it->second->async_write_copy(data.data(), data.size());
+    return true;
   }
+  UNILINK_LOG_DEBUG("tcp_server", "send_to_client", "Send failed: client_id " + std::to_string(client_id) + " not found");
+  return false;
 }
 
 size_t TcpServer::get_client_count() const {
   std::lock_guard<std::mutex> lock(sessions_mutex_);
-  return sessions_.size();
+  size_t alive = 0;
+  for (const auto& entry : sessions_) {
+    if (entry.second && entry.second->alive()) {
+      ++alive;
+    }
+  }
+  return alive;
 }
 
 std::vector<size_t> TcpServer::get_connected_clients() const {

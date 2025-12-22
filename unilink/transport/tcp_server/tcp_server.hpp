@@ -69,8 +69,8 @@ class UNILINK_API TcpServer : public Channel,
   void on_backpressure(OnBackpressure cb) override;
 
   // Multi-client support methods
-  void broadcast(const std::string& message);
-  void send_to_client(size_t client_id, const std::string& message);
+  bool broadcast(const std::string& message);
+  bool send_to_client(size_t client_id, const std::string& message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 

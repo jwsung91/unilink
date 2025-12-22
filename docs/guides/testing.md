@@ -244,6 +244,7 @@ Thread safety and concurrent access patterns.
     --gtest_filter=AdvancedTcpServerCoverageTest.StableClientIdsAreMonotonicAndNotReused:AdvancedTcpServerCoverageTest.StopFromCallbackDoesNotDeadlock
   ```
 - Requires permission to bind local TCP ports; allow local sockets if your environment sandboxes networking.
+- TCP server multi-client send APIs return a bool (true on success, false if no target). Enable `notify_send_failure(true)` to trigger `on_error` when the target is missing or disconnected.
 
 ---
 
