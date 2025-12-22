@@ -212,8 +212,8 @@ TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsConnectedClients) {
 
   server_->stop();
 
-  EXPECT_TRUE(TestUtils::waitForCondition(
-      [&]() { return disconnected_or_down.load() || !client->is_connected(); }, 1500));
+  EXPECT_TRUE(
+      TestUtils::waitForCondition([&]() { return disconnected_or_down.load() || !client->is_connected(); }, 1500));
 
   client->stop();
 }
