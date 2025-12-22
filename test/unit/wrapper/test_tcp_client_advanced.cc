@@ -16,6 +16,10 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
+#include <boost/asio/executor_work_guard.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/post.hpp>
 #include <chrono>
 #include <memory>
 #include <string>
@@ -386,6 +390,61 @@ TEST_F(AdvancedTcpClientCoverageTest, AutoStartDisabled) {
 
   ASSERT_NE(client_, nullptr);
   // Client should not be started automatically
+}
+
+TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) {
+  server_ =
+      unilink::tcp_server(test_port_).unlimited_clients().on_multi_connect([](size_t, const std::string&) {}).build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+
+  std::atomic<bool> connected{false};
+  client_ =
+      unilink::tcp_client("127.0.0.1", test_port_).on_connect([&]() { connected = true; }).auto_manage(true).build();
+  ASSERT_NE(client_, nullptr);
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load(); }, 1000));
+
+  client_->stop();
+  server_->stop();
+}
+
+TEST_F(AdvancedTcpClientCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
+  auto external_ioc = std::make_shared<boost::asio::io_context>();
+  auto guard = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+      external_ioc->get_executor());
+  std::thread ioc_thread([&]() { external_ioc->run(); });
+
+  auto client = std::make_shared<wrapper::TcpClient>("127.0.0.1", test_port_, external_ioc);
+  ASSERT_NE(client, nullptr);
+
+  client->start();
+  client->stop();
+
+  EXPECT_FALSE(external_ioc->stopped());
+
+  guard.reset();
+  external_ioc->stop();
+  if (ioc_thread.joinable()) {
+    ioc_thread.join();
+  }
+}
+
+TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
+  auto external_ioc = std::make_shared<boost::asio::io_context>();
+  auto client = std::make_shared<wrapper::TcpClient>("127.0.0.1", test_port_, external_ioc);
+  client->set_manage_external_context(true);
+
+  ASSERT_NE(client, nullptr);
+
+  std::atomic<bool> ran{false};
+
+  client->start();
+  boost::asio::post(*external_ioc, [&]() { ran = true; });
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return ran.load(); }, 1000));
+
+  client->stop();
+  EXPECT_TRUE(external_ioc->stopped());
 }
 
 // ============================================================================
