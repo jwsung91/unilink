@@ -13,6 +13,7 @@ Comprehensive overview of unilink's architecture and design principles.
 5. [Threading Model](#threading-model)
 6. [Memory Management](#memory-management)
 7. [Error Handling](#error-handling)
+8. [Development & Tooling](#development--tooling)
 
 ---
 
@@ -32,24 +33,20 @@ Unilink is designed as a layered, modular communication library with clear separ
 
 ## Layered Architecture
 
-```
-┌─────────────────────────────────────────────────┐
-│          User Application Layer                  │
-├─────────────────────────────────────────────────┤
-│          Builder API Layer                       │
-│  (TcpClientBuilder, TcpServerBuilder, etc.)     │
-├─────────────────────────────────────────────────┤
-│          Wrapper API Layer                       │
-│  (TcpClient, TcpServer, Serial)                 │
-├─────────────────────────────────────────────────┤
-│          Transport Layer                         │
-│  (TcpTransport, SerialTransport)                │
-├─────────────────────────────────────────────────┤
-│          Common Utilities Layer                  │
-│  (Thread Safety, Memory Management, Logging)    │
-├─────────────────────────────────────────────────┤
-│          Platform Layer (Boost.Asio)            │
-└─────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    User[User Application Layer]
+    Builder[Builder API Layer<br/>TcpClientBuilder, TcpServerBuilder, etc.]
+    Wrapper[Wrapper API Layer<br/>TcpClient, TcpServer, Serial]
+    Transport[Transport Layer<br/>TcpTransport, SerialTransport]
+    Common[Common Utilities Layer<br/>Thread Safety, Memory Management, Logging]
+    Platform[Platform Layer<br/>Boost.Asio]
+
+    User --> Builder
+    Builder --> Wrapper
+    Wrapper --> Transport
+    Transport --> Common
+    Common --> Platform
 ```
 
 ### Layer Responsibilities
@@ -309,25 +306,18 @@ protected:
 
 ## Threading Model
 
+> **Note:** For a detailed execution model, see [Runtime Behavior](runtime_behavior.md).
+
 ### Overview
 
-```
-┌─────────────────────────────────────────────┐
-│         User Thread (Application)            │
-│  - Calls API methods                         │
-│  - Receives callbacks                        │
-└──────────────────┬──────────────────────────┘
-                   │
-         ┌─────────▼──────────┐
-         │  Thread-Safe Queue  │
-         └─────────┬──────────┘
-                   │
-┌──────────────────▼──────────────────────────┐
-│         I/O Thread (Boost.Asio)              │
-│  - Handles network I/O                       │
-│  - Manages connections                       │
-│  - Executes async operations                 │
-└─────────────────────────────────────────────┘
+```mermaid
+graph TD
+    User[User Thread Application<br/>- Calls API methods<br/>- Receives callbacks]
+    Queue[Thread-Safe Queue]
+    IO[I/O Thread Boost.Asio<br/>- Handles network I/O<br/>- Manages connections<br/>- Executes async operations]
+
+    User --> Queue
+    Queue --> IO
 ```
 
 ### Thread Safety Guarantees
@@ -470,26 +460,16 @@ public:
 
 ### Error Propagation Flow
 
-```
-┌────────────────────────────────────────────┐
-│  Transport Layer Error                      │
-│  (Boost.Asio error_code)                   │
-└─────────────────┬──────────────────────────┘
-                  │
-        ┌─────────▼──────────┐
-        │  Error Handler       │
-        │  - Categorize        │
-        │  - Log               │
-        │  - Notify callbacks  │
-        └─────────┬──────────┘
-                  │
-   ┌──────────────┴──────────────┐
-   │                             │
-   ▼                             ▼
-┌──────────────┐       ┌─────────────────┐
-│ User Callback│       │ Retry Logic     │
-│ (on_error)   │       │ (if applicable) │
-└──────────────┘       └─────────────────┘
+```mermaid
+graph TD
+    Transport[Transport Layer Error<br/>Boost.Asio error_code]
+    Handler[Error Handler<br/>- Categorize<br/>- Log<br/>- Notify callbacks]
+    Callback[User Callback<br/>on_error]
+    Retry[Retry Logic<br/>if applicable]
+
+    Transport --> Handler
+    Handler --> Callback
+    Handler --> Retry
 ```
 
 ### Error Categories
@@ -644,6 +624,40 @@ ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
 
 ---
 
+## Development & Tooling
+
+### 1. Docker-based Environment
+
+Unilink provides a Docker Compose-based environment to maintain a consistent development environment across various platforms.
+
+| Service | Purpose       | Key Features                                                 |
+| ------- | ------------- | ------------------------------------------------------------ |
+| `dev`   | Development   | Debug build, interactive shell provided                      |
+| `test`  | Testing       | Sanitizers (ASan/UBSan) and memory tracking enabled          |
+| `perf`  | Performance   | Release build-based performance benchmarks                   |
+| `docs`  | Documentation | Doxygen documentation generation and HTTP server (port 8000) |
+| `prod`  | Production    | Optimized production image build                             |
+
+**Usage Examples:**
+```bash
+docker-compose up test  # Run all tests and sanitizers
+docker-compose up docs  # Generate API docs and start server
+```
+
+### 2. Documentation Generation
+
+You can generate API documentation directly from the source code using Doxygen.
+
+```bash
+# Direct generation via CMake
+make docs
+
+# Generation via Docker
+docker-compose up docs
+```
+
+---
+
 ## Testing Architecture
 
 ### 1. Dependency Injection
@@ -694,4 +708,3 @@ Unilink's architecture emphasizes:
 - [Design Patterns](design_patterns.md)
 - [Threading Model](threading_model.md)
 - [Performance Guide](../guides/performance_tuning.md)
-

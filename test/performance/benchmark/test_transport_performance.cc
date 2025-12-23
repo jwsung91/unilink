@@ -113,7 +113,7 @@ TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
   cfg.port = getTestPort();
   cfg.retry_interval_ms = 1000;
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
 
   // Set backpressure callback
   client_->on_backpressure([this](size_t bytes) {
@@ -159,7 +159,7 @@ TEST_F(TransportPerformanceTest, TcpServerBackpressureThreshold) {
   TcpServerConfig cfg;
   cfg.port = getTestPort();
 
-  server_ = std::make_shared<TcpServer>(cfg);
+  server_ = TcpServer::create(cfg);
 
   // Set backpressure callback
   server_->on_backpressure([this](size_t bytes) {
@@ -196,7 +196,7 @@ TEST_F(TransportPerformanceTest, SerialBackpressureThreshold) {
   cfg.baud_rate = 9600;
   cfg.retry_interval_ms = 1000;
 
-  serial_ = std::make_shared<Serial>(cfg);
+  serial_ = Serial::create(cfg);
 
   // Set backpressure callback
   serial_->on_backpressure([this](size_t bytes) {
@@ -235,7 +235,7 @@ TEST_F(TransportPerformanceTest, TcpClientRetryMechanism) {
   cfg.port = 1;                 // Induce connection failure with non-existent port
   cfg.retry_interval_ms = 100;  // Test with short reconnection interval
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
 
   // Count reconnection attempts with state callback
   client_->on_state([this](LinkState state) {
@@ -264,7 +264,7 @@ TEST_F(TransportPerformanceTest, SerialRetryMechanism) {
   cfg.baud_rate = 9600;
   cfg.retry_interval_ms = 100;  // Test with short reconnection interval
 
-  serial_ = std::make_shared<Serial>(cfg);
+  serial_ = Serial::create(cfg);
 
   // Count reconnection attempts with state callback
   serial_->on_state([this](LinkState state) {
@@ -299,7 +299,7 @@ TEST_F(TransportPerformanceTest, TcpClientQueueManagement) {
   cfg.port = getTestPort();
   cfg.retry_interval_ms = 1000;
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
 
   // --- Test Logic ---
   client_->start();
@@ -328,7 +328,7 @@ TEST_F(TransportPerformanceTest, TcpServerQueueManagement) {
   TcpServerConfig cfg;
   cfg.port = getTestPort();
 
-  server_ = std::make_shared<TcpServer>(cfg);
+  server_ = TcpServer::create(cfg);
 
   // --- Test Logic ---
   server_->start();
@@ -363,7 +363,7 @@ TEST_F(TransportPerformanceTest, TcpClientConcurrentAccess) {
   cfg.port = getTestPort();
   cfg.retry_interval_ms = 1000;
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
 
   // --- Test Logic ---
   client_->start();
@@ -401,7 +401,7 @@ TEST_F(TransportPerformanceTest, TcpServerConcurrentAccess) {
   TcpServerConfig cfg;
   cfg.port = getTestPort();
 
-  server_ = std::make_shared<TcpServer>(cfg);
+  server_ = TcpServer::create(cfg);
 
   // --- Test Logic ---
   server_->start();
@@ -447,7 +447,7 @@ TEST_F(TransportPerformanceTest, TcpClientThroughput) {
   cfg.port = getTestPort();
   cfg.retry_interval_ms = 1000;
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
 
   // --- Test Logic ---
   client_->start();
@@ -482,7 +482,7 @@ TEST_F(TransportPerformanceTest, TcpServerThroughput) {
   TcpServerConfig cfg;
   cfg.port = getTestPort();
 
-  server_ = std::make_shared<TcpServer>(cfg);
+  server_ = TcpServer::create(cfg);
 
   // --- Test Logic ---
   server_->start();
@@ -527,7 +527,7 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
     cfg.port = getTestPort();
     cfg.retry_interval_ms = 100;
 
-    auto client = std::make_shared<TcpClient>(cfg);
+    auto client = TcpClient::create(cfg);
     client->start();
 
     // 데이터 전송
@@ -556,7 +556,7 @@ TEST_F(TransportPerformanceTest, TcpServerMemoryLeak) {
     TcpServerConfig cfg;
     cfg.port = getTestPort();
 
-    auto server = std::make_shared<TcpServer>(cfg);
+    auto server = TcpServer::create(cfg);
     server->start();
 
     // 데이터 전송
@@ -776,7 +776,7 @@ TEST_F(TransportPerformanceTest, TransportLayerMemoryPoolUsage) {
   cfg.port = getTestPort();
   cfg.retry_interval_ms = 1000;
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
 
   // --- Test Logic ---
   client_->start();
@@ -810,7 +810,7 @@ TEST_F(TransportPerformanceTest, TransportLayerLargeDataHandling) {
   cfg.port = getTestPort();
   cfg.retry_interval_ms = 1000;
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
 
   // --- Test Logic ---
   client_->start();
@@ -844,8 +844,8 @@ TEST_F(TransportPerformanceTest, TransportLayerConfigurationValidation) {
   client_cfg.backpressure_threshold = 2048;  // 2KB
   client_cfg.max_retries = 2;                // 재시도 횟수 제한
 
-  server_ = std::make_shared<TcpServer>(server_cfg);
-  client_ = std::make_shared<TcpClient>(client_cfg);
+  server_ = TcpServer::create(server_cfg);
+  client_ = TcpClient::create(client_cfg);
 
   // --- Test Logic ---
   server_->start();
@@ -875,7 +875,7 @@ TEST_F(TransportPerformanceTest, TransportLayerResourceCleanup) {
 
   // --- Test Logic ---
   {
-    auto client = std::make_shared<TcpClient>(cfg);
+    auto client = TcpClient::create(cfg);
     client->start();
 
     // 데이터 전송

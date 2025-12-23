@@ -51,13 +51,14 @@ using interface::Channel;
 using interface::TcpAcceptorInterface;
 using tcp = net::ip::tcp;
 
+// Use static create() helpers to construct safely
 class UNILINK_API TcpServer : public Channel,
                               public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:
-  explicit TcpServer(const TcpServerConfig& cfg);
-  // Constructor for testing with dependency injection
-  TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
-            net::io_context& ioc);
+  static std::shared_ptr<TcpServer> create(const TcpServerConfig& cfg);
+  static std::shared_ptr<TcpServer> create(const TcpServerConfig& cfg,
+                                           std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
+                                           net::io_context& ioc);
   ~TcpServer();
 
   void start() override;
@@ -91,6 +92,9 @@ class UNILINK_API TcpServer : public Channel,
   void set_unlimited_clients();
 
  private:
+  explicit TcpServer(const TcpServerConfig& cfg);
+  TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
+            net::io_context& ioc);
   void do_accept();
   void notify_state();
   void attempt_port_binding(int retry_count);

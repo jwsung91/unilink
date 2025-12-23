@@ -40,6 +40,19 @@ net::io_context& acquire_shared_serial_context() {
 }
 }  // namespace
 
+std::shared_ptr<Serial> Serial::create(const config::SerialConfig& cfg) {
+  return std::shared_ptr<Serial>(new Serial(cfg));
+}
+
+std::shared_ptr<Serial> Serial::create(const config::SerialConfig& cfg, net::io_context& ioc) {
+  return std::shared_ptr<Serial>(new Serial(cfg, std::make_unique<BoostSerialPort>(ioc), ioc));
+}
+
+std::shared_ptr<Serial> Serial::create(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port,
+                                       net::io_context& ioc) {
+  return std::shared_ptr<Serial>(new Serial(cfg, std::move(port), ioc));
+}
+
 Serial::Serial(const config::SerialConfig& cfg)
     : ioc_(acquire_shared_serial_context()),
       owns_ioc_(false),  // Shared global io_context managed by IoContextManager
