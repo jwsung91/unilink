@@ -16,6 +16,7 @@
 
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
+#include <algorithm>
 #include <cstring>
 #include <iostream>
 
@@ -49,6 +50,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg)
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   bp_high_ = cfg_.backpressure_threshold;
+  first_retry_interval_ms_ = std::min(first_retry_interval_ms_, cfg_.retry_interval_ms);
 }
 
 TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
@@ -69,6 +71,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   bp_high_ = cfg_.backpressure_threshold;
+  first_retry_interval_ms_ = std::min(first_retry_interval_ms_, cfg_.retry_interval_ms);
 }
 
 TcpClient::~TcpClient() {
@@ -229,29 +232,44 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
     return;
   }
 
+  if (size == 0) {
+    UNILINK_LOG_WARNING("tcp_client", "async_write_copy", "Ignoring zero-length write");
+    return;
+  }
+
+  if (size > common::constants::MAX_BUFFER_SIZE) {
+    UNILINK_LOG_ERROR("tcp_client", "async_write_copy",
+                      "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
+    return;
+  }
+
   if (on_bp_ && size >= bp_high_) {
     on_bp_(size);
   }
 
   // Use memory pool for better performance (only for reasonable sizes)
   if (size <= 65536) {  // Only use pool for buffers <= 64KB
-    common::PooledBuffer pooled_buffer(size);
-    if (pooled_buffer.valid()) {
-      // Copy data to pooled buffer safely
-      common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);
+    try {
+      common::PooledBuffer pooled_buffer(size);
+      if (pooled_buffer.valid()) {
+        // Copy data to pooled buffer safely
+        common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);
 
-      net::post(*ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
-        // Double-check state in case client was stopped while in queue
-        if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
-          return;
-        }
+        net::post(*ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
+          // Double-check state in case client was stopped while in queue
+          if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+            return;
+          }
 
-        self->queue_bytes_ += buf.size();
-        self->tx_.emplace_back(std::move(buf));
-        if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) self->on_bp_(self->queue_bytes_);
-        self->do_write();
-      });
-      return;
+          self->queue_bytes_ += buf.size();
+          self->tx_.emplace_back(std::move(buf));
+          if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) self->on_bp_(self->queue_bytes_);
+          if (!self->writing_) self->do_write();
+        });
+        return;
+      }
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("tcp_client", "async_write_copy", "Failed to acquire pooled buffer: " + std::string(e.what()));
     }
   }
 
@@ -338,11 +356,14 @@ void TcpClient::schedule_retry() {
   state_.set_state(LinkState::Connecting);
   notify_state();
 
-  UNILINK_LOG_INFO("tcp_client", "retry",
-                   "Scheduling retry in " + std::to_string(cfg_.retry_interval_ms / 1000.0) + "s");
+  UNILINK_LOG_INFO(
+      "tcp_client", "retry",
+      "Scheduling retry in " +
+          std::to_string((retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms) / 1000.0) + "s");
 
   auto self = shared_from_this();
-  retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
+  const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;
+  retry_timer_.expires_after(std::chrono::milliseconds(interval));
   retry_timer_.async_wait([self](const boost::system::error_code& ec) {
     if (!ec && !self->stopping_.load()) self->do_resolve_connect();
   });
@@ -377,42 +398,46 @@ void TcpClient::do_write() {
   writing_ = true;
   auto self = shared_from_this();
 
+  auto current = std::move(tx_.front());
+  tx_.pop_front();
+
+  auto on_write = [self](auto ec, std::size_t n) {
+    if (self->queue_bytes_ >= n) {
+      self->queue_bytes_ -= n;
+    } else {
+      self->queue_bytes_ = 0;
+    }
+
+    if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+      self->writing_ = false;
+      return;
+    }
+
+    if (ec) {
+      self->writing_ = false;
+      self->handle_close(ec);
+      return;
+    }
+
+    self->do_write();
+  };
+
   // Handle both PooledBuffer and std::vector<uint8_t> (fallback)
-  auto& front_buffer = tx_.front();
-  if (std::holds_alternative<common::PooledBuffer>(front_buffer)) {
-    auto& pooled_buf = std::get<common::PooledBuffer>(front_buffer);
-    net::async_write(socket_, net::buffer(pooled_buf.data(), pooled_buf.size()), [self](auto ec, std::size_t n) {
-      if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
-        self->writing_ = false;
-        return;
-      }
-
-      self->queue_bytes_ -= n;
-      if (ec) {
-        self->writing_ = false;
-        self->handle_close(ec);
-        return;
-      }
-      self->tx_.pop_front();
-      self->do_write();
-    });
+  if (std::holds_alternative<common::PooledBuffer>(current)) {
+    auto pooled_buf = std::get<common::PooledBuffer>(std::move(current));
+    auto data = pooled_buf.data();
+    auto size = pooled_buf.size();
+    net::async_write(socket_, net::buffer(data, size),
+                     [self, buf = std::move(pooled_buf), on_write = std::move(on_write)](
+                         auto ec, std::size_t n) mutable { on_write(ec, n); });
   } else {
-    auto& vec_buf = std::get<std::vector<uint8_t>>(front_buffer);
-    net::async_write(socket_, net::buffer(vec_buf), [self](auto ec, std::size_t n) {
-      if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
-        self->writing_ = false;
-        return;
-      }
-
-      self->queue_bytes_ -= n;
-      if (ec) {
-        self->writing_ = false;
-        self->handle_close(ec);
-        return;
-      }
-      self->tx_.pop_front();
-      self->do_write();
-    });
+    auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
+    auto data = vec_buf.data();
+    auto size = vec_buf.size();
+    net::async_write(socket_, net::buffer(data, size),
+                     [self, buf = std::move(vec_buf), on_write = std::move(on_write)](auto ec, std::size_t n) mutable {
+                       on_write(ec, n);
+                     });
   }
 }
 

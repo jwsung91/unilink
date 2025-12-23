@@ -537,7 +537,9 @@ TEST_F(BuilderIntegrationTest, FastObjectCreation) {
   auto start_time = std::chrono::high_resolution_clock::now();
 
   for (int i = 0; i < num_objects; ++i) {
-    uint16_t port = getTestPort();
+    // We don't bind or start the objects here, so just use a monotonic port
+    // to avoid slow availability probes during bulk creation.
+    uint16_t port = static_cast<uint16_t>(30000 + i);
 
     auto server = unilink::tcp_server(port).unlimited_clients().build();
 

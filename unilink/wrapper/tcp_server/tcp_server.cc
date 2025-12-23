@@ -147,10 +147,17 @@ void TcpServer::stop() {
 }
 
 void TcpServer::send(const std::string& data) {
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (is_connected() && channel_) {
+  std::shared_ptr<interface::Channel> channel;
+  bool connected = false;
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    channel = channel_;
+    connected = channel && channel->is_connected();
+  }
+
+  if (connected && channel) {
     auto binary_data = common::safe_convert::string_to_uint8(data);
-    channel_->async_write_copy(binary_data.data(), binary_data.size());
+    channel->async_write_copy(binary_data.data(), binary_data.size());
   }
 }
 
