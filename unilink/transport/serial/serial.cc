@@ -121,6 +121,9 @@ void Serial::stop() {
         // Cancel all pending async operations to unblock the io_context
         s->retry_timer_.cancel();
         s->close_port();
+        s->tx_.clear();
+        s->queued_bytes_ = 0;
+        s->writing_ = false;
         // Post stop() to ensure it's the last thing to run before the context
         // runs out of work.
         if (s->owns_ioc_) {
@@ -146,6 +149,10 @@ void Serial::stop() {
 bool Serial::is_connected() const { return opened_.load(); }
 
 void Serial::async_write_copy(const uint8_t* data, size_t n) {
+  if (stopping_.load() || state_.is_state(common::LinkState::Closed) || state_.is_state(common::LinkState::Error)) {
+    return;
+  }
+
   // Use memory pool for better performance (only for reasonable sizes)
   if (n <= 65536) {  // Only use pool for buffers <= 64KB
     common::PooledBuffer pooled_buffer(n);
