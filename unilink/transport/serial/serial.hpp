@@ -47,6 +47,7 @@ using interface::Channel;
 using interface::SerialPortInterface;
 namespace net = boost::asio;
 
+// Use static create() helpers to construct safely
 class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<Serial> {
  public:
   static std::shared_ptr<Serial> create(const SerialConfig& cfg);

@@ -51,6 +51,7 @@ using interface::Channel;
 using interface::TcpAcceptorInterface;
 using tcp = net::ip::tcp;
 
+// Use static create() helpers to construct safely
 class UNILINK_API TcpServer : public Channel,
                               public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:

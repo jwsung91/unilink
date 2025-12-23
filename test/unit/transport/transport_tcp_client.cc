@@ -25,7 +25,9 @@
 
 #include "test/utils/test_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"
+#include "unilink/config/tcp_server_config.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
+#include "unilink/transport/tcp_server/tcp_server.hpp"
 
 using namespace unilink;
 using namespace unilink::transport;
@@ -86,6 +88,17 @@ TEST_F(TransportTcpClientTest, CreateProvidesSharedFromThis) {
     EXPECT_EQ(self.get(), client.get());
   });
   client->stop();
+}
+
+TEST_F(TransportTcpClientTest, TcpServerCreateProvidesSharedFromThis) {
+  config::TcpServerConfig cfg;
+  cfg.port = 0;
+  auto server = TcpServer::create(cfg);
+  EXPECT_NO_THROW({
+    auto self = server->shared_from_this();
+    EXPECT_EQ(self.get(), server.get());
+  });
+  server->stop();
 }
 
 TEST_F(TransportTcpClientTest, StopPreventsReconnectAfterManualStop) {

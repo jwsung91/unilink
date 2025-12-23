@@ -48,6 +48,7 @@ using config::TcpClientConfig;
 using interface::Channel;
 using tcp = net::ip::tcp;
 
+// Use static create() helpers to construct safely
 class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_this<TcpClient> {
  public:
   static std::shared_ptr<TcpClient> create(const TcpClientConfig& cfg);

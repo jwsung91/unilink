@@ -94,6 +94,18 @@ TEST(TransportSerialTest, DestructorWithoutStartIsSafe) {
   EXPECT_NO_THROW({ auto serial = Serial::create(cfg, std::move(port), ioc); });
 }
 
+TEST(TransportSerialTest, CreateProvidesSharedFromThis) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+  EXPECT_NO_THROW({
+    auto self = serial->shared_from_this();
+    EXPECT_EQ(self.get(), serial.get());
+  });
+  serial->stop();
+}
+
 // operation_aborted after stop must not trigger reconnect/reopen
 TEST(TransportSerialTest, StopPreventsReopenAfterOperationAborted) {
   boost::asio::io_context ioc;
