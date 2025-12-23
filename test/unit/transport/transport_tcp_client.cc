@@ -52,7 +52,7 @@ TEST_F(TransportTcpClientTest, BackpressureTriggersWithoutConnection) {
   cfg.port = 0;                       // invalid/closed port, no real connection expected
   cfg.backpressure_threshold = 1024;  // 1KB threshold
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
   std::atomic<bool> triggered{false};
   std::atomic<size_t> bytes_seen{0};
   client_->on_backpressure([&](size_t bytes) {
@@ -75,6 +75,19 @@ TEST_F(TransportTcpClientTest, BackpressureTriggersWithoutConnection) {
   client_.reset();
 }
 
+TEST_F(TransportTcpClientTest, CreateProvidesSharedFromThis) {
+  config::TcpClientConfig cfg;
+  cfg.host = "localhost";
+  cfg.port = 0;
+
+  auto client = TcpClient::create(cfg);
+  EXPECT_NO_THROW({
+    auto self = client->shared_from_this();
+    EXPECT_EQ(self.get(), client.get());
+  });
+  client->stop();
+}
+
 TEST_F(TransportTcpClientTest, StopPreventsReconnectAfterManualStop) {
   boost::asio::io_context ioc;
   config::TcpClientConfig cfg;
@@ -82,7 +95,7 @@ TEST_F(TransportTcpClientTest, StopPreventsReconnectAfterManualStop) {
   cfg.port = 12345;
   cfg.retry_interval_ms = 30;
 
-  client_ = std::make_shared<TcpClient>(cfg, ioc);
+  client_ = TcpClient::create(cfg, ioc);
 
   std::atomic<bool> stop_called{false};
   std::atomic<int> reconnect_after_stop{0};
@@ -113,7 +126,7 @@ TEST_F(TransportTcpClientTest, ExternalIoContextFlowsThroughLifecycle) {
   cfg.port = 0;  // invalid port to avoid real connect
   cfg.retry_interval_ms = 20;
 
-  client_ = std::make_shared<TcpClient>(cfg, ioc);
+  client_ = TcpClient::create(cfg, ioc);
 
   ASSERT_NO_THROW({
     client_->start();
@@ -133,7 +146,7 @@ TEST_F(TransportTcpClientTest, StartStopIdempotent) {
   cfg.host = "localhost";
   cfg.port = 0;  // invalid/closed port
 
-  client_ = std::make_shared<TcpClient>(cfg, ioc);
+  client_ = TcpClient::create(cfg, ioc);
 
   // Multiple start/stop cycles should be safe even without running io_context
   EXPECT_NO_THROW({
@@ -156,7 +169,7 @@ TEST_F(TransportTcpClientTest, QueueLimitMovesClientToError) {
   cfg.port = 1;                       // no real server needed
   cfg.backpressure_threshold = 1024;  // limit becomes 1MB
 
-  client_ = std::make_shared<TcpClient>(cfg, ioc);
+  client_ = TcpClient::create(cfg, ioc);
 
   std::atomic<bool> error_seen{false};
   client_->on_state([&](common::LinkState state) {
@@ -184,7 +197,7 @@ TEST_F(TransportTcpClientTest, BackpressureReliefEmitsAfterDrain) {
   cfg.port = 0;  // no real socket use
   cfg.backpressure_threshold = 1024;
 
-  client_ = std::make_shared<TcpClient>(cfg, ioc);
+  client_ = TcpClient::create(cfg, ioc);
 
   std::vector<size_t> bp_events;
   client_->on_backpressure([&](size_t queued) { bp_events.push_back(queued); });
@@ -217,7 +230,7 @@ TEST_F(TransportTcpClientTest, OwnedIoContextRestartAfterStopStart) {
   cfg.port = 0;
   cfg.max_retries = 0;  // avoid retry storm
 
-  client_ = std::make_shared<TcpClient>(cfg);
+  client_ = TcpClient::create(cfg);
 
   std::atomic<int> connecting_count{0};
   client_->on_state([&](common::LinkState state) {

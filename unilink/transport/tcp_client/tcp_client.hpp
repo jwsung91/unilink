@@ -50,8 +50,8 @@ using tcp = net::ip::tcp;
 
 class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_this<TcpClient> {
  public:
-  explicit TcpClient(const TcpClientConfig& cfg);
-  explicit TcpClient(const TcpClientConfig& cfg, net::io_context& ioc);
+  static std::shared_ptr<TcpClient> create(const TcpClientConfig& cfg);
+  static std::shared_ptr<TcpClient> create(const TcpClientConfig& cfg, net::io_context& ioc);
   ~TcpClient();
 
   void start() override;
@@ -68,6 +68,8 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   void set_retry_interval(unsigned interval_ms);
 
  private:
+  explicit TcpClient(const TcpClientConfig& cfg);
+  explicit TcpClient(const TcpClientConfig& cfg, net::io_context& ioc);
   void do_resolve_connect();
   void schedule_retry();
   void start_read();

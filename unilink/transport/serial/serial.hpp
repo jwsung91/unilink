@@ -49,9 +49,10 @@ namespace net = boost::asio;
 
 class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<Serial> {
  public:
-  explicit Serial(const SerialConfig& cfg);
-  // Constructor for testing with dependency injection
-  Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port, net::io_context& ioc);
+  static std::shared_ptr<Serial> create(const SerialConfig& cfg);
+  static std::shared_ptr<Serial> create(const SerialConfig& cfg, net::io_context& ioc);
+  static std::shared_ptr<Serial> create(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port,
+                                        net::io_context& ioc);
   ~Serial() override;
 
   void start() override;
@@ -68,6 +69,8 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   void set_retry_interval(unsigned interval_ms);
 
  private:
+  explicit Serial(const SerialConfig& cfg);
+  Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port, net::io_context& ioc);
   void open_and_configure();
   void start_read();
   void do_write();

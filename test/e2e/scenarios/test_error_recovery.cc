@@ -397,7 +397,7 @@ TEST_F(ErrorRecoveryTest, ActualErrorStateTest) {
   error_cfg.reopen_on_error = false;  // 재시도 안함
   error_cfg.max_retries = 0;
 
-  auto serial = std::make_shared<Serial>(error_cfg);
+  auto serial = Serial::create(error_cfg);
 
   std::atomic<bool> any_state_reached{false};
 

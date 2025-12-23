@@ -35,6 +35,14 @@ using config::TcpClientConfig;
 using interface::Channel;
 using namespace common;  // For error_reporting namespace
 
+std::shared_ptr<TcpClient> TcpClient::create(const TcpClientConfig& cfg) {
+  return std::shared_ptr<TcpClient>(new TcpClient(cfg));
+}
+
+std::shared_ptr<TcpClient> TcpClient::create(const TcpClientConfig& cfg, net::io_context& ioc) {
+  return std::shared_ptr<TcpClient>(new TcpClient(cfg, ioc));
+}
+
 TcpClient::TcpClient(const TcpClientConfig& cfg)
     : owned_ioc_(std::make_unique<net::io_context>()),
       ioc_(owned_ioc_.get()),

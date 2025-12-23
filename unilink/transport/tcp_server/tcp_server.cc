@@ -28,6 +28,16 @@ namespace transport {
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
+std::shared_ptr<TcpServer> TcpServer::create(const config::TcpServerConfig& cfg) {
+  return std::shared_ptr<TcpServer>(new TcpServer(cfg));
+}
+
+std::shared_ptr<TcpServer> TcpServer::create(const config::TcpServerConfig& cfg,
+                                             std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
+                                             net::io_context& ioc) {
+  return std::shared_ptr<TcpServer>(new TcpServer(cfg, std::move(acceptor), ioc));
+}
+
 TcpServer::TcpServer(const config::TcpServerConfig& cfg)
     : owned_ioc_(nullptr),
       owns_ioc_(false),
