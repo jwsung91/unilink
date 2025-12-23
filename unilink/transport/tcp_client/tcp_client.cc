@@ -16,6 +16,7 @@
 
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
+#include <algorithm>
 #include <cstring>
 #include <iostream>
 
@@ -49,6 +50,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg)
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   bp_high_ = cfg_.backpressure_threshold;
+  first_retry_interval_ms_ = std::min(first_retry_interval_ms_, cfg_.retry_interval_ms);
 }
 
 TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
@@ -69,6 +71,7 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   bp_high_ = cfg_.backpressure_threshold;
+  first_retry_interval_ms_ = std::min(first_retry_interval_ms_, cfg_.retry_interval_ms);
 }
 
 TcpClient::~TcpClient() {
@@ -338,11 +341,14 @@ void TcpClient::schedule_retry() {
   state_.set_state(LinkState::Connecting);
   notify_state();
 
-  UNILINK_LOG_INFO("tcp_client", "retry",
-                   "Scheduling retry in " + std::to_string(cfg_.retry_interval_ms / 1000.0) + "s");
+  UNILINK_LOG_INFO(
+      "tcp_client", "retry",
+      "Scheduling retry in " +
+          std::to_string((retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms) / 1000.0) + "s");
 
   auto self = shared_from_this();
-  retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
+  const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;
+  retry_timer_.expires_after(std::chrono::milliseconds(interval));
   retry_timer_.async_wait([self](const boost::system::error_code& ec) {
     if (!ec && !self->stopping_.load()) self->do_resolve_connect();
   });

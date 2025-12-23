@@ -102,10 +102,18 @@ void TcpServer::start() {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
   auto self = shared_from_this();
-  net::post(ioc_, [self] {
-    if (self->stopping_.load()) return;
-    self->attempt_port_binding(0);
-  });
+  if (ioc_.get_executor().running_in_this_thread()) {
+    // If start is invoked from the IO thread, bind immediately to avoid race with early clients
+    if (!self->stopping_.load()) {
+      self->attempt_port_binding(0);
+    }
+  } else {
+    // dispatch allows immediate execution if the IO thread is already running
+    net::dispatch(ioc_, [self] {
+      if (self->stopping_.load()) return;
+      self->attempt_port_binding(0);
+    });
+  }
 }
 
 void TcpServer::stop() {
