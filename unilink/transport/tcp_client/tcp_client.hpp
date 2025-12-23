@@ -74,11 +74,15 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   void do_write();
   void handle_close(const boost::system::error_code& ec = {});
   void close_socket();
+  void recalculate_backpressure_bounds();
+  void report_backpressure(size_t queued_bytes);
   void notify_state();
+  void reset_io_objects();
 
  private:
   std::unique_ptr<net::io_context> owned_ioc_;
   net::io_context* ioc_ = nullptr;
+  net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
   std::thread ioc_thread_;
   tcp::resolver resolver_;
@@ -93,7 +97,10 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>>> tx_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
-  size_t bp_high_;                          // Configurable backpressure threshold
+  size_t bp_high_;   // Configurable backpressure threshold (high watermark)
+  size_t bp_low_;    // Backpressure relief watermark
+  size_t bp_limit_;  // Hard cap for queued bytes
+  bool backpressure_active_ = false;
   unsigned first_retry_interval_ms_ = 100;  // Short first retry to reduce initial connection delay
 
   OnBytes on_bytes_;
