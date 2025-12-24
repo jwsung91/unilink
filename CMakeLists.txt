@@ -150,6 +150,9 @@ if(TARGET unilink AND NOT TARGET unilink_shared AND NOT TARGET unilink_static)
 endif()
 
 # Disable MSVC LTCG for unilink libraries to avoid link.exe access violations
+# Disable MSVC LTCG for unilink libraries to avoid link.exe access violations.
+# This is a known workaround. Future investigation should aim to resolve the
+# underlying conflict that causes these violations when LTCG is enabled.
 if(MSVC)
   set(_unilink_library_targets)
   if(TARGET unilink_shared)

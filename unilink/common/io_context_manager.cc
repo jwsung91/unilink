@@ -44,16 +44,12 @@ boost::asio::io_context& IoContextManager::get_context() {
 }
 
 void IoContextManager::start() {
-  std::thread previous_thread;
   std::shared_ptr<IoContext> context;
   {
     std::lock_guard<std::mutex> lock(mutex_);
     if (running_) {
+      UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContextManager already running, ignoring start call.");
       return;
-    }
-
-    if (io_thread_.joinable()) {
-      previous_thread = std::move(io_thread_);
     }
 
     if (!ioc_) {
@@ -65,61 +61,73 @@ void IoContextManager::start() {
       ioc_->restart();
     }
     work_guard_ = std::make_unique<WorkGuard>(ioc_->get_executor());
-    context = ioc_;
-    running_.store(true);
-  }
+    context = ioc_;  // Capture shared_ptr to io_context
 
-  if (previous_thread.joinable()) {
-    previous_thread.join();
-  }
+    // If there was a previous thread, ensure it's joined before starting a new one
+    if (io_thread_.joinable()) {
+      io_thread_.join();
+    }
 
-  // Run io_context in separate thread
-  try {
+    // Launch the io_context run in a new thread
     io_thread_ = std::thread([this, context]() {
       try {
+        UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread started.");
         context->run();
+        UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread finished running.");
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
       }
+      running_.store(false);  // Mark as not running when thread exits
     });
-  } catch (...) {
-    running_.store(false);
-    throw;
+    running_.store(true);  // Mark as running after thread is launched
   }
 }
 
 void IoContextManager::stop() {
-  std::thread worker;
+  std::thread worker;  // Declare outside the lock
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (!running_ && !io_thread_.joinable()) {
+    if (!running_.load() && !io_thread_.joinable()) {
+      UNILINK_LOG_DEBUG("io_context_manager", "stop",
+                        "IoContextManager not running or thread not joinable, ignoring stop call.");
       return;
     }
 
+    // Reset work_guard to allow io_context to stop once all tasks are done
     if (work_guard_) {
       work_guard_.reset();
     }
 
+    // Stop io_context
     if (ioc_) {
       ioc_->stop();
     }
 
+    // Move the thread handle out of the protected member to join it outside the lock
     if (io_thread_.joinable()) {
       worker = std::move(io_thread_);
     }
 
-    running_ = false;
-  }
+    running_.store(false);
+  }  // Mutex is released here
 
+  // Join the thread outside the lock to prevent deadlocks
   if (worker.joinable()) {
+    UNILINK_LOG_DEBUG("io_context_manager", "stop", "Joining IoContext thread.");
     worker.join();
+    UNILINK_LOG_DEBUG("io_context_manager", "stop", "IoContext thread joined.");
   }
 
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (owns_context_) {
-    ioc_.reset();
+  // After the thread has joined, perform final cleanup that might require the mutex again
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (owns_context_) {
+      ioc_.reset();  // Reset owned io_context
+    }
+    // The work_guard_ should already be reset at the beginning of stop to unblock io_context.run()
+    // If it's a shared context that is not owned, it should not be reset here.
+    // If the context is owned, ioc_.reset() effectively cleans up the underlying Boost.Asio context.
   }
-  work_guard_.reset();
 }
 
 bool IoContextManager::is_running() const { return running_.load(); }

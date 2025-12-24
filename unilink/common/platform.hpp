@@ -82,34 +82,18 @@ namespace common {
 
 /**
  * @brief Platform detection and feature availability
- *
- * This header provides platform detection macros and feature availability
- * functions for different Ubuntu versions and compilers.
  */
 
 // Platform detection macros (set by CMake or inferred from compiler)
-#if defined(UNILINK_UBUNTU_20_04)
-#define UNILINK_UBUNTU_VERSION 20
-#define UNILINK_FEATURE_LEVEL 1  // Basic features only
-#elif defined(UNILINK_UBUNTU_22_04)
-#define UNILINK_UBUNTU_VERSION 22
-#define UNILINK_FEATURE_LEVEL 2  // Standard features
-#elif defined(UNILINK_UBUNTU_24_04)
-#define UNILINK_UBUNTU_VERSION 24
-#define UNILINK_FEATURE_LEVEL 3  // All features
-#elif defined(UNILINK_PLATFORM_WINDOWS)
-#define UNILINK_UBUNTU_VERSION 0
-#define UNILINK_FEATURE_LEVEL 2  // Windows matches standard feature set
+#if defined(UNILINK_PLATFORM_WINDOWS)
+#define UNILINK_FEATURE_LEVEL 3  // Windows matches standard feature set
 #elif defined(UNILINK_PLATFORM_MACOS) || defined(__APPLE__)
 #define UNILINK_PLATFORM_MACOS 1
-#define UNILINK_UBUNTU_VERSION 0
-#define UNILINK_FEATURE_LEVEL 2  // macOS matches standard feature set
+#define UNILINK_FEATURE_LEVEL 3  // macOS matches standard feature set
 #elif defined(UNILINK_PLATFORM_POSIX)
-#define UNILINK_UBUNTU_VERSION 0
-#define UNILINK_FEATURE_LEVEL 2
+#define UNILINK_FEATURE_LEVEL 3
 #else
-#define UNILINK_UBUNTU_VERSION 0
-#define UNILINK_FEATURE_LEVEL 2  // Default to standard
+#define UNILINK_FEATURE_LEVEL 3  // Default to standard
 #endif
 
 // Feature availability macros
@@ -124,12 +108,6 @@ namespace common {
 class UNILINK_API PlatformInfo {
  public:
   /**
-   * @brief Get the detected Ubuntu version
-   * @return Ubuntu version number (20, 22, 24, or 0 for unknown)
-   */
-  static int get_ubuntu_version() { return UNILINK_UBUNTU_VERSION; }
-
-  /**
    * @brief Get the feature level
    * @return Feature level (1=basic, 2=standard, 3=all)
    */
@@ -140,18 +118,12 @@ class UNILINK_API PlatformInfo {
    * @return Platform description string
    */
   static std::string get_platform_description() {
-#if defined(UNILINK_UBUNTU_20_04)
-    return "Ubuntu 20.04 (Limited Features)";
-#elif defined(UNILINK_UBUNTU_22_04)
-    return "Ubuntu 22.04 (Full Features)";
-#elif defined(UNILINK_UBUNTU_24_04)
-    return "Ubuntu 24.04 (All Features)";
-#elif defined(UNILINK_PLATFORM_WINDOWS)
+#if defined(UNILINK_PLATFORM_WINDOWS)
     return "Windows (Full Features)";
 #elif defined(UNILINK_PLATFORM_MACOS)
     return "macOS (Full Features)";
 #elif defined(UNILINK_PLATFORM_POSIX)
-    return "POSIX Platform (Standard Features)";
+    return "POSIX Platform (Full Features)";
 #else
     return "Unknown Platform";
 #endif
@@ -185,18 +157,7 @@ class UNILINK_API PlatformInfo {
    * @brief Get a warning message for limited support platforms
    * @return Warning message or empty string
    */
-  static std::string get_support_warning() {
-#if defined(UNILINK_UBUNTU_20_04)
-    return "WARNING: Running on Ubuntu 20.04 with limited support. "
-           "Consider upgrading to Ubuntu 22.04+ for full features.";
-#elif defined(UNILINK_PLATFORM_WINDOWS)
-    return "";
-#elif defined(UNILINK_PLATFORM_MACOS)
-    return "";
-#else
-    return "";
-#endif
-  }
+  static std::string get_support_warning() { return ""; }
 };
 
 }  // namespace common
