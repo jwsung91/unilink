@@ -136,3 +136,76 @@ TEST(TransportSerialTest, StopPreventsReopenAfterOperationAborted) {
   ioc.run_for(50ms);
   EXPECT_EQ(reconnect_after_stop.load(), 0);
 }
+
+TEST(TransportSerialTest, QueueLimitMovesSerialToError) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.backpressure_threshold = 1024;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+
+  std::atomic<bool> error_seen{false};
+  serial->on_state([&](common::LinkState state) {
+    if (state == common::LinkState::Error) error_seen = true;
+  });
+
+  serial->start();
+
+  // 2MB buffer exceeds default limit (usually 1MB)
+  std::vector<uint8_t> huge(2 * 1024 * 1024, 0xEF);
+  serial->async_write_copy(huge.data(), huge.size());
+
+  ioc.run_for(50ms);
+
+  EXPECT_TRUE(error_seen.load());
+  serial->stop();
+}
+
+TEST(TransportSerialTest, MoveWriteRespectsQueueLimit) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.backpressure_threshold = 1024;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+
+  std::atomic<bool> error_seen{false};
+  serial->on_state([&](common::LinkState state) {
+    if (state == common::LinkState::Error) error_seen = true;
+  });
+
+  serial->start();
+
+  std::vector<uint8_t> huge(2 * 1024 * 1024, 0xCD);
+  serial->async_write_move(std::move(huge));
+
+  ioc.run_for(50ms);
+
+  EXPECT_TRUE(error_seen.load());
+  serial->stop();
+}
+
+TEST(TransportSerialTest, SharedWriteRespectsQueueLimit) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.backpressure_threshold = 1024;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+
+  std::atomic<bool> error_seen{false};
+  serial->on_state([&](common::LinkState state) {
+    if (state == common::LinkState::Error) error_seen = true;
+  });
+
+  serial->start();
+
+  auto huge = std::make_shared<const std::vector<uint8_t>>(2 * 1024 * 1024, 0xAB);
+  serial->async_write_shared(huge);
+
+  ioc.run_for(50ms);
+
+  EXPECT_TRUE(error_seen.load());
+  serial->stop();
+}

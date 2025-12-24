@@ -19,6 +19,7 @@
 #include <atomic>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "test/utils/test_utils.hpp"
 #include "unilink/interface/channel.hpp"
@@ -44,6 +45,8 @@ class DummyChannel : public interface::Channel {
   bool is_connected() const override { return started_ && !stopped_; }
 
   void async_write_copy(const uint8_t* /*data*/, size_t /*size*/) override {}
+  void async_write_move(std::vector<uint8_t>&& /*data*/) override {}
+  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> /*data*/) override {}
 
   void on_bytes(OnBytes cb) override { on_bytes_ = std::move(cb); }
   void on_state(OnState cb) override { on_state_ = std::move(cb); }

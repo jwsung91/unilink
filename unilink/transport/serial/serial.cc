@@ -62,6 +62,8 @@ Serial::Serial(const config::SerialConfig& cfg)
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   bp_high_ = cfg_.backpressure_threshold;
+  bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                       common::constants::MAX_BUFFER_SIZE);
 
   rx_.resize(cfg_.read_chunk);
   port_ = std::make_unique<BoostSerialPort>(ioc_);
@@ -78,6 +80,8 @@ Serial::Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInt
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   bp_high_ = cfg_.backpressure_threshold;
+  bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                       common::constants::MAX_BUFFER_SIZE);
 
   rx_.resize(cfg_.read_chunk);
 }
@@ -166,6 +170,11 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
     return;
   }
 
+  if (n > common::constants::MAX_BUFFER_SIZE) {
+    UNILINK_LOG_ERROR("serial", "write", "Write size exceeds maximum allowed");
+    return;
+  }
+
   // Use memory pool for better performance (only for reasonable sizes)
   if (n <= 65536) {  // Only use pool for buffers <= 64KB
     common::PooledBuffer pooled_buffer(n);
@@ -174,6 +183,17 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
       common::safe_memory::safe_memcpy(pooled_buffer.data(), data, n);
 
       net::post(ioc_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
+        if (self->queued_bytes_ + buf.size() > self->bp_limit_) {
+          UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
+          self->opened_.store(false);
+          self->close_port();
+          self->tx_.clear();
+          self->queued_bytes_ = 0;
+          self->writing_ = false;
+          self->state_.set_state(common::LinkState::Error);
+          self->notify_state();
+          return;
+        }
         self->queued_bytes_ += buf.size();
         self->tx_.emplace_back(std::move(buf));
         if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
@@ -187,7 +207,75 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
   std::vector<uint8_t> fallback(data, data + n);
 
   net::post(ioc_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
+    if (self->queued_bytes_ + buf.size() > self->bp_limit_) {
+      UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
+      self->opened_.store(false);
+      self->close_port();
+      self->tx_.clear();
+      self->queued_bytes_ = 0;
+      self->writing_ = false;
+      self->state_.set_state(common::LinkState::Error);
+      self->notify_state();
+      return;
+    }
     self->queued_bytes_ += buf.size();
+    self->tx_.emplace_back(std::move(buf));
+    if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
+    if (!self->writing_) self->do_write();
+  });
+}
+
+void Serial::async_write_move(std::vector<uint8_t>&& data) {
+  if (stopping_.load() || state_.is_state(common::LinkState::Closed) || state_.is_state(common::LinkState::Error)) {
+    return;
+  }
+  const auto added = data.size();
+  if (added > common::constants::MAX_BUFFER_SIZE) {
+    UNILINK_LOG_ERROR("serial", "write", "Write size exceeds maximum allowed");
+    return;
+  }
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    if (self->queued_bytes_ + added > self->bp_limit_) {
+      UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
+      self->opened_.store(false);
+      self->close_port();
+      self->tx_.clear();
+      self->queued_bytes_ = 0;
+      self->writing_ = false;
+      self->state_.set_state(common::LinkState::Error);
+      self->notify_state();
+      return;
+    }
+    self->queued_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
+    if (!self->writing_) self->do_write();
+  });
+}
+
+void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (stopping_.load() || state_.is_state(common::LinkState::Closed) || state_.is_state(common::LinkState::Error)) {
+    return;
+  }
+  if (!data || data->empty()) return;
+  const auto added = data->size();
+  if (added > common::constants::MAX_BUFFER_SIZE) {
+    UNILINK_LOG_ERROR("serial", "write", "Write size exceeds maximum allowed");
+    return;
+  }
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    if (self->queued_bytes_ + added > self->bp_limit_) {
+      UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
+      self->opened_.store(false);
+      self->close_port();
+      self->tx_.clear();
+      self->queued_bytes_ = 0;
+      self->writing_ = false;
+      self->state_.set_state(common::LinkState::Error);
+      self->notify_state();
+      return;
+    }
+    self->queued_bytes_ += added;
     self->tx_.emplace_back(std::move(buf));
     if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
     if (!self->writing_) self->do_write();
@@ -264,6 +352,9 @@ void Serial::open_and_configure() {
   opened_.store(true);
   state_.set_state(common::LinkState::Connected);
   notify_state();
+
+  // Flush any pending writes that were queued during reconnection
+  do_write();
 }
 
 void Serial::start_read() {
@@ -286,30 +377,44 @@ void Serial::do_write() {
   writing_ = true;
   auto self = shared_from_this();
 
-  // Handle both PooledBuffer and std::vector<uint8_t> (fallback)
-  auto& front_buffer = tx_.front();
-  if (std::holds_alternative<common::PooledBuffer>(front_buffer)) {
-    auto& pooled_buf = std::get<common::PooledBuffer>(front_buffer);
-    port_->async_write(net::buffer(pooled_buf.data(), pooled_buf.size()), [self](auto ec, std::size_t n) {
+  // Move buffer out of queue immediately to ensure lifetime safety during async op
+  auto current = std::move(tx_.front());
+  tx_.pop_front();
+
+  auto on_write = [self](const boost::system::error_code& ec, std::size_t n) {
+    if (self->queued_bytes_ >= n) {
       self->queued_bytes_ -= n;
-      if (ec) {
-        self->handle_error("write", ec);
-        return;
-      }
-      self->tx_.pop_front();
-      self->do_write();
-    });
+    } else {
+      self->queued_bytes_ = 0;
+    }
+
+    if (ec) {
+      self->handle_error("write", ec);
+      return;
+    }
+    self->do_write();
+  };
+
+  if (std::holds_alternative<common::PooledBuffer>(current)) {
+    auto pooled_buf = std::get<common::PooledBuffer>(std::move(current));
+    auto shared_pooled = std::make_shared<common::PooledBuffer>(std::move(pooled_buf));
+    auto data = shared_pooled->data();
+    auto size = shared_pooled->size();
+    port_->async_write(net::buffer(data, size),
+                       [self, buf = shared_pooled, on_write](auto ec, auto n) { on_write(ec, n); });
+  } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
+    auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
+    auto data = shared_buf->data();
+    auto size = shared_buf->size();
+    port_->async_write(net::buffer(data, size),
+                       [self, buf = std::move(shared_buf), on_write](auto ec, auto n) { on_write(ec, n); });
   } else {
-    auto& vec_buf = std::get<std::vector<uint8_t>>(front_buffer);
-    port_->async_write(net::buffer(vec_buf), [self](auto ec, std::size_t n) {
-      self->queued_bytes_ -= n;
-      if (ec) {
-        self->handle_error("write", ec);
-        return;
-      }
-      self->tx_.pop_front();
-      self->do_write();
-    });
+    auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
+    auto shared_vec = std::make_shared<std::vector<uint8_t>>(std::move(vec_buf));
+    auto data = shared_vec->data();
+    auto size = shared_vec->size();
+    port_->async_write(net::buffer(data, size),
+                       [self, buf = shared_vec, on_write](auto ec, auto n) { on_write(ec, n); });
   }
 }
 

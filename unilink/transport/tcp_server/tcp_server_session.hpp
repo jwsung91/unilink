@@ -58,6 +58,8 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
 
   void start();
   void async_write_copy(const uint8_t* data, size_t size);
+  void async_write_move(std::vector<uint8_t>&& data);
+  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data);
   void on_bytes(OnBytes cb);
   void on_backpressure(OnBackpressure cb);
   void on_close(OnClose cb);
@@ -73,10 +75,11 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   net::io_context& ioc_;
   std::unique_ptr<interface::TcpSocketInterface> socket_;
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
-  std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>>> tx_;
+  std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
-  size_t bp_high_;  // Configurable backpressure threshold
+  size_t bp_high_;   // Configurable backpressure threshold
+  size_t bp_limit_;  // Hard cap for queued bytes
 
   OnBytes on_bytes_;
   OnBackpressure on_bp_;

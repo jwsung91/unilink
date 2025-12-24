@@ -61,6 +61,8 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   bool is_connected() const override;
 
   void async_write_copy(const uint8_t* data, size_t n) override;
+  void async_write_move(std::vector<uint8_t>&& data) override;
+  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
@@ -93,10 +95,11 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   net::steady_timer retry_timer_;
 
   std::vector<uint8_t> rx_;
-  std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>>> tx_;
+  std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
   bool writing_ = false;
   size_t queued_bytes_ = 0;
-  size_t bp_high_;  // Configurable backpressure threshold
+  size_t bp_high_;   // Configurable backpressure threshold
+  size_t bp_limit_;  // Hard cap for queued bytes
 
   OnBytes on_bytes_;
   OnState on_state_;

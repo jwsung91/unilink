@@ -217,6 +217,31 @@ void TcpServer::async_write_copy(const uint8_t* data, size_t size) {
   // If no session or session is not alive, the write is silently dropped
 }
 
+void TcpServer::async_write_move(std::vector<uint8_t>&& data) {
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
+    session = current_session_;
+  }
+
+  if (session && session->alive()) {
+    session->async_write_move(std::move(data));
+  }
+}
+
+void TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!data) return;
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
+    session = current_session_;
+  }
+
+  if (session && session->alive()) {
+    session->async_write_shared(std::move(data));
+  }
+}
+
 void TcpServer::on_bytes(OnBytes cb) {
   on_bytes_ = std::move(cb);
   std::shared_ptr<TcpServerSession> session;
@@ -481,14 +506,14 @@ void TcpServer::notify_state() {
 
 // Multi-client support method implementations
 bool TcpServer::broadcast(const std::string& message) {
-  std::lock_guard<std::mutex> lock(sessions_mutex_);
-  auto data = common::safe_convert::string_to_uint8(message);
+  auto shared_data = std::make_shared<const std::vector<uint8_t>>(common::safe_convert::string_to_uint8(message));
 
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
   bool sent = false;
   for (auto& entry : sessions_) {
     auto& session = entry.second;
     if (session && session->alive()) {
-      session->async_write_copy(data.data(), data.size());
+      session->async_write_shared(shared_data);
       sent = true;
     }
   }
