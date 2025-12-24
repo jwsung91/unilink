@@ -16,6 +16,8 @@
 
 #include "unilink/common/memory_pool.hpp"
 
+#include "unilink/common/memory_tracker.hpp"
+
 #include <algorithm>
 #include <cstdlib>
 #include <stdexcept>
@@ -159,10 +161,19 @@ void MemoryPool::release_to_bucket(PoolBucket& bucket, std::unique_ptr<uint8_t[]
   } else {
     // If pool is full, discard buffer (auto-release)
     // buffer is unique_ptr so it will be automatically deleted when out of scope
+    MEMORY_TRACK_DEALLOCATION(buffer.get());
   }
 }
 
-std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) { return std::make_unique<uint8_t[]>(size); }
+std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) {
+  uint8_t* raw_buffer = new (std::nothrow) uint8_t[size];
+  if (raw_buffer) {
+    MEMORY_TRACK_ALLOCATION(raw_buffer, size);
+  } else {
+    throw std::bad_alloc(); // Or handle error appropriately
+  }
+  return std::unique_ptr<uint8_t[]>(raw_buffer);
+}
 
 void MemoryPool::validate_size(size_t size) const {
   if (size == 0 || size > 64 * 1024 * 1024) {  // 64MB maximum

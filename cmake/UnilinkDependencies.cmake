@@ -69,6 +69,12 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     endif()
   endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  # This section contains complex logic to handle Boost discovery on macOS,
+  # especially concerning Homebrew installations and potential conflicts with
+  # BoostConfig. It also uses header-only Boost.System to avoid flaky linking
+  # issues on CI. Future efforts should aim to simplify this logic and rely
+  # more on standard CMake Boost discovery mechanisms, or investigate the
+  # root causes of the flaky linking on CI.
   # vcpkg builds: let the vcpkg toolchain drive Boost discovery (do not force Homebrew paths)
   if(DEFINED VCPKG_TARGET_TRIPLET OR DEFINED ENV{VCPKG_ROOT} OR CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
     find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
