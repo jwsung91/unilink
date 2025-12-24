@@ -66,10 +66,11 @@ class FakeSerialPort : public interface::SerialPortInterface {
     read_handler_ = std::move(handler);
   }
 
-  void async_write(const boost::asio::const_buffer&,
+  void async_write(const boost::asio::const_buffer& buffer,
                    std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
     boost::system::error_code ok;
-    boost::asio::post(ioc_, [handler = std::move(handler), ok]() { handler(ok, 0); });
+    auto size = buffer.size();
+    boost::asio::post(ioc_, [handler = std::move(handler), ok, size]() { handler(ok, size); });
   }
 
   void emit_operation_aborted() {
@@ -207,5 +208,30 @@ TEST(TransportSerialTest, SharedWriteRespectsQueueLimit) {
   ioc.run_for(50ms);
 
   EXPECT_TRUE(error_seen.load());
+  serial->stop();
+}
+
+TEST(TransportSerialTest, BackpressureReliefAfterDrain) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.backpressure_threshold = 1024;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+
+  std::vector<size_t> events;
+  serial->on_backpressure([&](size_t queued) { events.push_back(queued); });
+
+  serial->start();
+
+  std::vector<uint8_t> payload(cfg.backpressure_threshold * 2, 0x11);  // exceed high watermark, below limit
+  serial->async_write_copy(payload.data(), payload.size());
+
+  ioc.run_for(50ms);
+
+  ASSERT_GE(events.size(), 2u);
+  EXPECT_GE(events.front(), cfg.backpressure_threshold);
+  EXPECT_LE(events.back(), cfg.backpressure_threshold / 2);
+
   serial->stop();
 }
