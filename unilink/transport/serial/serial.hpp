@@ -98,7 +98,8 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
   bool writing_ = false;
   size_t queued_bytes_ = 0;
-  size_t bp_high_;  // Configurable backpressure threshold
+  size_t bp_high_;   // Configurable backpressure threshold
+  size_t bp_limit_;  // Hard cap for queued bytes
 
   OnBytes on_bytes_;
   OnState on_state_;
