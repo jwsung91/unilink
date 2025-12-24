@@ -143,13 +143,13 @@ boost::asio::post(io_context, [&client]() {
 
 ### Threading Model Summary
 
-| Aspect | Details |
-|--------|---------|
-| **I/O Thread** | Single dedicated thread running `io_context.run()` |
-| **Application Threads** | Any number of threads calling API methods |
-| **Callback Thread** | Always I/O thread |
-| **Thread Safety** | All API methods thread-safe via `post()` |
-| **Synchronization** | Automatic via Boost.Asio |
+| Aspect                  | Details                                            |
+| ----------------------- | -------------------------------------------------- |
+| **I/O Thread**          | Single dedicated thread running `io_context.run()` |
+| **Application Threads** | Any number of threads calling API methods          |
+| **Callback Thread**     | Always I/O thread                                  |
+| **Thread Safety**       | All API methods thread-safe via `post()`           |
+| **Synchronization**     | Automatic via Boost.Asio                           |
 
 ---
 
@@ -193,12 +193,12 @@ stateDiagram-v2
 
 ### Connection States
 
-| State | Description | Transitions |
-|-------|-------------|-------------|
-| **Closed** | Not started or explicitly stopped | → Connecting (on `start()`) |
+| State          | Description                        | Transitions                                                            |
+| -------------- | ---------------------------------- | ---------------------------------------------------------------------- |
+| **Closed**     | Not started or explicitly stopped  | → Connecting (on `start()`)                                            |
 | **Connecting** | Attempting to establish connection | → Connected (success)<br>→ Connecting (retry)<br>→ Error (max retries) |
-| **Connected** | Active connection | → Closed (on `stop()`)<br>→ Connecting (connection lost) |
-| **Error** | Unrecoverable error occurred | → Closed (on `stop()`) |
+| **Connected**  | Active connection                  | → Closed (on `stop()`)<br>→ Connecting (connection lost)               |
+| **Error**      | Unrecoverable error occurred       | → Closed (on `stop()`)                                                 |
 
 ---
 
@@ -289,12 +289,12 @@ client->start();
 
 #### 1. Choose Appropriate Retry Interval
 
-| Use Case | Retry Interval | Reason |
-|----------|---------------|---------|
-| **Local network** | 1-2 seconds | Quick recovery |
-| **Internet connection** | 5-10 seconds | Avoid overwhelming server |
-| **Mobile/unstable** | 10-30 seconds | Conserve battery, reduce load |
-| **Background service** | 30-60 seconds | Minimal resource usage |
+| Use Case                | Retry Interval | Reason                        |
+| ----------------------- | -------------- | ----------------------------- |
+| **Local network**       | 1-2 seconds    | Quick recovery                |
+| **Internet connection** | 5-10 seconds   | Avoid overwhelming server     |
+| **Mobile/unstable**     | 10-30 seconds  | Conserve battery, reduce load |
+| **Background service**  | 30-60 seconds  | Minimal resource usage        |
 
 ---
 
@@ -460,16 +460,16 @@ if (!high_backpressure || is_critical) {
 
 ---
 
-#### Strategy 4: Buffer Expansion (Default)
+#### Strategy 4: Buffer Expansion
 
-Continue sending, allow queue to grow:
+Continue sending, allow queue to grow. **Deprecated as default.**
 
 ```cpp
-// Default behavior - no backpressure handling
+// Explicit opt-in required
 auto client = unilink::tcp_client("server.com", 8080)
+    .backpressure_strategy(Backpressure::Expand) // Must be explicit
     .build();
 
-// Queue will grow until memory exhausted
 ```
 
 **Best for:** Short bursts, ample memory available  
@@ -585,4 +585,3 @@ Backpressure handling ensures:
 - [System Overview](system_overview.md) - High-level architecture
 - [Performance Guide](../guides/performance.md) - Optimization techniques
 - [Best Practices](../guides/best_practices.md) - Recommended patterns
-

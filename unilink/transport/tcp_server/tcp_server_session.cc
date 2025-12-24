@@ -225,56 +225,44 @@ void TcpServerSession::do_write() {
   writing_ = true;
   auto self = shared_from_this();
 
-  // Handle both PooledBuffer and std::vector<uint8_t> (fallback)
-  auto& front_buffer = tx_.front();
-  if (std::holds_alternative<common::PooledBuffer>(front_buffer)) {
-    auto& pooled_buf = std::get<common::PooledBuffer>(front_buffer);
-    socket_->async_write(net::buffer(pooled_buf.data(), pooled_buf.size()), [self](auto ec, std::size_t n) {
-      if (self->queue_bytes_ >= n) {
-        self->queue_bytes_ -= n;
-      } else {
-        self->queue_bytes_ = 0;
-      }
-      if (ec) {
-        self->do_close();
-        return;
-      }
-      if (self->tx_.empty()) return;
-      self->tx_.pop_front();
-      self->do_write();
-    });
-  } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(front_buffer)) {
-    auto& shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(front_buffer);
-    socket_->async_write(net::buffer(*shared_buf), [self, shared_buf](auto ec, std::size_t n) {
-      if (self->queue_bytes_ >= n) {
-        self->queue_bytes_ -= n;
-      } else {
-        self->queue_bytes_ = 0;
-      }
-      if (ec) {
-        self->do_close();
-        return;
-      }
-      if (self->tx_.empty()) return;
-      self->tx_.pop_front();
-      self->do_write();
-    });
+  // Move buffer out of queue immediately to ensure lifetime safety during async op
+  auto current = std::move(tx_.front());
+  tx_.pop_front();
+
+  auto on_write = [self](const boost::system::error_code& ec, std::size_t n) {
+    if (self->queue_bytes_ >= n) {
+      self->queue_bytes_ -= n;
+    } else {
+      self->queue_bytes_ = 0;
+    }
+
+    if (ec) {
+      self->do_close();
+      return;
+    }
+    self->do_write();
+  };
+
+  if (std::holds_alternative<common::PooledBuffer>(current)) {
+    auto pooled_buf = std::get<common::PooledBuffer>(std::move(current));
+    auto shared_pooled = std::make_shared<common::PooledBuffer>(std::move(pooled_buf));
+    auto data = shared_pooled->data();
+    auto size = shared_pooled->size();
+    socket_->async_write(net::buffer(data, size),
+                         [self, buf = shared_pooled, on_write](auto ec, auto n) { on_write(ec, n); });
+  } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
+    auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
+    auto data = shared_buf->data();
+    auto size = shared_buf->size();
+    socket_->async_write(net::buffer(data, size),
+                         [self, buf = std::move(shared_buf), on_write](auto ec, auto n) { on_write(ec, n); });
   } else {
-    auto& vec_buf = std::get<std::vector<uint8_t>>(front_buffer);
-    socket_->async_write(net::buffer(vec_buf), [self](auto ec, std::size_t n) {
-      if (self->queue_bytes_ >= n) {
-        self->queue_bytes_ -= n;
-      } else {
-        self->queue_bytes_ = 0;
-      }
-      if (ec) {
-        self->do_close();
-        return;
-      }
-      if (self->tx_.empty()) return;
-      self->tx_.pop_front();
-      self->do_write();
-    });
+    auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
+    auto shared_vec = std::make_shared<std::vector<uint8_t>>(std::move(vec_buf));
+    auto data = shared_vec->data();
+    auto size = shared_vec->size();
+    socket_->async_write(net::buffer(data, size),
+                         [self, buf = shared_vec, on_write](auto ec, auto n) { on_write(ec, n); });
   }
 }
 
