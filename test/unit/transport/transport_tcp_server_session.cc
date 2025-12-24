@@ -137,3 +137,26 @@ TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
   EXPECT_TRUE(closed.load());
   EXPECT_FALSE(session->alive());
 }
+
+TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
+  net::io_context ioc;
+  size_t bp_threshold = 1024;
+
+  auto socket = std::make_unique<FakeTcpSocket>(ioc);
+  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
+
+  std::vector<size_t> events;
+  session->on_backpressure([&](size_t queued) { events.push_back(queued); });
+
+  session->start();
+  EXPECT_TRUE(session->alive());
+
+  std::vector<uint8_t> payload(bp_threshold * 2, 0xDD);  // exceed threshold, far below limit
+  session->async_write_copy(payload.data(), payload.size());
+
+  ioc.run_for(50ms);
+
+  ASSERT_GE(events.size(), 2u);
+  EXPECT_GE(events.front(), bp_threshold);
+  EXPECT_LE(events.back(), bp_threshold / 2);
+}
