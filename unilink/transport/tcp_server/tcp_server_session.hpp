@@ -70,9 +70,11 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   void start_read();
   void do_write();
   void do_close();
+  void report_backpressure(size_t queued_bytes);
 
  private:
   net::io_context& ioc_;
+  net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<interface::TcpSocketInterface> socket_;
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
@@ -80,6 +82,8 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   size_t queue_bytes_ = 0;
   size_t bp_high_;   // Configurable backpressure threshold
   size_t bp_limit_;  // Hard cap for queued bytes
+  size_t bp_low_;    // Backpressure relief threshold
+  bool backpressure_active_ = false;
 
   OnBytes on_bytes_;
   OnBackpressure on_bp_;

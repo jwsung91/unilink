@@ -78,6 +78,7 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   void start_read();
   void do_write();
   void handle_error(const char* where, const boost::system::error_code& ec);
+  void report_backpressure(size_t queued_bytes);
   void schedule_retry(const char* where, const boost::system::error_code&);
   void close_port();
   void notify_state();
@@ -87,6 +88,7 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   std::atomic<bool> stopping_{false};
   net::io_context& ioc_;
   bool owns_ioc_;
+  net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
   std::thread ioc_thread_;
 
@@ -100,6 +102,8 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   size_t queued_bytes_ = 0;
   size_t bp_high_;   // Configurable backpressure threshold
   size_t bp_limit_;  // Hard cap for queued bytes
+  size_t bp_low_;    // Backpressure relief threshold
+  bool backpressure_active_ = false;
 
   OnBytes on_bytes_;
   OnState on_state_;
