@@ -157,9 +157,7 @@ class UNILINK_API PlatformInfo {
    * @brief Get a warning message for limited support platforms
    * @return Warning message or empty string
    */
-  static std::string get_support_warning() {
-    return "";
-  }
+  static std::string get_support_warning() { return ""; }
 };
 
 }  // namespace common

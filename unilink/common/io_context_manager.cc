@@ -61,7 +61,7 @@ void IoContextManager::start() {
       ioc_->restart();
     }
     work_guard_ = std::make_unique<WorkGuard>(ioc_->get_executor());
-    context = ioc_; // Capture shared_ptr to io_context
+    context = ioc_;  // Capture shared_ptr to io_context
 
     // If there was a previous thread, ensure it's joined before starting a new one
     if (io_thread_.joinable()) {
@@ -77,18 +77,19 @@ void IoContextManager::start() {
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
       }
-      running_.store(false); // Mark as not running when thread exits
+      running_.store(false);  // Mark as not running when thread exits
     });
-    running_.store(true); // Mark as running after thread is launched
+    running_.store(true);  // Mark as running after thread is launched
   }
 }
 
 void IoContextManager::stop() {
-  std::thread worker; // Declare outside the lock
+  std::thread worker;  // Declare outside the lock
   {
     std::lock_guard<std::mutex> lock(mutex_);
     if (!running_.load() && !io_thread_.joinable()) {
-      UNILINK_LOG_DEBUG("io_context_manager", "stop", "IoContextManager not running or thread not joinable, ignoring stop call.");
+      UNILINK_LOG_DEBUG("io_context_manager", "stop",
+                        "IoContextManager not running or thread not joinable, ignoring stop call.");
       return;
     }
 
@@ -108,7 +109,7 @@ void IoContextManager::stop() {
     }
 
     running_.store(false);
-  } // Mutex is released here
+  }  // Mutex is released here
 
   // Join the thread outside the lock to prevent deadlocks
   if (worker.joinable()) {
@@ -119,13 +120,13 @@ void IoContextManager::stop() {
 
   // After the thread has joined, perform final cleanup that might require the mutex again
   {
-      std::lock_guard<std::mutex> lock(mutex_);
-      if (owns_context_) {
-          ioc_.reset(); // Reset owned io_context
-      }
-      // The work_guard_ should already be reset at the beginning of stop to unblock io_context.run()
-      // If it's a shared context that is not owned, it should not be reset here.
-      // If the context is owned, ioc_.reset() effectively cleans up the underlying Boost.Asio context.
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (owns_context_) {
+      ioc_.reset();  // Reset owned io_context
+    }
+    // The work_guard_ should already be reset at the beginning of stop to unblock io_context.run()
+    // If it's a shared context that is not owned, it should not be reset here.
+    // If the context is owned, ioc_.reset() effectively cleans up the underlying Boost.Asio context.
   }
 }
 

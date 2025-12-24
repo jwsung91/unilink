@@ -16,11 +16,11 @@
 
 #include "unilink/common/memory_pool.hpp"
 
-#include "unilink/common/memory_tracker.hpp"
-
 #include <algorithm>
 #include <cstdlib>
 #include <stdexcept>
+
+#include "unilink/common/memory_tracker.hpp"
 
 namespace unilink {
 namespace common {
@@ -170,7 +170,7 @@ std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) {
   if (raw_buffer) {
     MEMORY_TRACK_ALLOCATION(raw_buffer, size);
   } else {
-    throw std::bad_alloc(); // Or handle error appropriately
+    throw std::bad_alloc();  // Or handle error appropriately
   }
   return std::unique_ptr<uint8_t[]>(raw_buffer);
 }
