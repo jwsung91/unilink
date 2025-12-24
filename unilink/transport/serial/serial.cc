@@ -194,6 +194,33 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
   });
 }
 
+void Serial::async_write_move(std::vector<uint8_t>&& data) {
+  if (stopping_.load() || state_.is_state(common::LinkState::Closed) || state_.is_state(common::LinkState::Error)) {
+    return;
+  }
+  const auto added = data.size();
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    self->queued_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
+    if (!self->writing_) self->do_write();
+  });
+}
+
+void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (stopping_.load() || state_.is_state(common::LinkState::Closed) || state_.is_state(common::LinkState::Error)) {
+    return;
+  }
+  if (!data || data->empty()) return;
+  const auto added = data->size();
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    self->queued_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    if (self->on_bp_ && self->queued_bytes_ > self->bp_high_) self->on_bp_(self->queued_bytes_);
+    if (!self->writing_) self->do_write();
+  });
+}
+
 void Serial::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
 void Serial::on_state(OnState cb) { on_state_ = std::move(cb); }
 void Serial::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
@@ -286,11 +313,22 @@ void Serial::do_write() {
   writing_ = true;
   auto self = shared_from_this();
 
-  // Handle both PooledBuffer and std::vector<uint8_t> (fallback)
+  // Handle PooledBuffer, shared_ptr buffer, or std::vector<uint8_t> (fallback)
   auto& front_buffer = tx_.front();
   if (std::holds_alternative<common::PooledBuffer>(front_buffer)) {
     auto& pooled_buf = std::get<common::PooledBuffer>(front_buffer);
     port_->async_write(net::buffer(pooled_buf.data(), pooled_buf.size()), [self](auto ec, std::size_t n) {
+      self->queued_bytes_ -= n;
+      if (ec) {
+        self->handle_error("write", ec);
+        return;
+      }
+      self->tx_.pop_front();
+      self->do_write();
+    });
+  } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(front_buffer)) {
+    auto& shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(front_buffer);
+    port_->async_write(net::buffer(*shared_buf), [self, shared_buf](auto ec, std::size_t n) {
       self->queued_bytes_ -= n;
       if (ec) {
         self->handle_error("write", ec);

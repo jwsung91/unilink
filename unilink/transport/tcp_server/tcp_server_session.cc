@@ -97,6 +97,48 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
   });
 }
 
+void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
+  if (!alive_) return;
+  const auto added = data.size();
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    if (!self->alive_) return;
+    self->queue_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) {
+      try {
+        self->on_bp_(self->queue_bytes_);
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
+                          "Exception in backpressure callback: " + std::string(e.what()));
+      } catch (...) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
+      }
+    }
+    if (!self->writing_) self->do_write();
+  });
+}
+
+void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!alive_ || !data) return;
+  const auto added = data->size();
+  net::post(ioc_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    if (!self->alive_) return;
+    self->queue_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    if (self->on_bp_ && self->queue_bytes_ > self->bp_high_) {
+      try {
+        self->on_bp_(self->queue_bytes_);
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure",
+                          "Exception in backpressure callback: " + std::string(e.what()));
+      } catch (...) {
+        UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
+      }
+    }
+    if (!self->writing_) self->do_write();
+  });
+}
+
 void TcpServerSession::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
 void TcpServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 void TcpServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }
@@ -145,6 +187,17 @@ void TcpServerSession::do_write() {
   if (std::holds_alternative<common::PooledBuffer>(front_buffer)) {
     auto& pooled_buf = std::get<common::PooledBuffer>(front_buffer);
     socket_->async_write(net::buffer(pooled_buf.data(), pooled_buf.size()), [self](auto ec, std::size_t n) {
+      self->queue_bytes_ -= n;
+      if (ec) {
+        self->do_close();
+        return;
+      }
+      self->tx_.pop_front();
+      self->do_write();
+    });
+  } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(front_buffer)) {
+    auto& shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(front_buffer);
+    socket_->async_write(net::buffer(*shared_buf), [self, shared_buf](auto ec, std::size_t n) {
       self->queue_bytes_ -= n;
       if (ec) {
         self->do_close();

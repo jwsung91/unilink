@@ -16,6 +16,8 @@
 
 #pragma once
 #include <functional>
+#include <memory>
+#include <vector>
 
 #include "unilink/common/common.hpp"
 #include "unilink/common/visibility.hpp"
@@ -36,6 +38,9 @@ class UNILINK_API Channel {
 
   // Single send API (copies into internal queue)
   virtual void async_write_copy(const uint8_t* data, size_t size) = 0;
+  // Zero-copy APIs (ownership transfer or shared ownership)
+  virtual void async_write_move(std::vector<uint8_t>&& data) = 0;
+  virtual void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) = 0;
 
   // Callbacks
   virtual void on_bytes(OnBytes cb) = 0;

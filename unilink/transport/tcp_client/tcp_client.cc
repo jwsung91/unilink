@@ -325,6 +325,90 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   });
 }
 
+void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
+  if (state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
+    return;
+  }
+  const auto size = data.size();
+  if (size == 0) {
+    UNILINK_LOG_WARNING("tcp_client", "async_write_move", "Ignoring zero-length write");
+    return;
+  }
+  if (size > common::constants::MAX_BUFFER_SIZE) {
+    UNILINK_LOG_ERROR("tcp_client", "async_write_move",
+                      "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
+    return;
+  }
+
+  const auto added = size;
+  net::dispatch(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+      return;
+    }
+
+    if (self->queue_bytes_ + added > self->bp_limit_) {
+      UNILINK_LOG_ERROR("tcp_client", "async_write_move",
+                        "Queue limit exceeded (" + std::to_string(self->queue_bytes_ + added) + " bytes)");
+      self->connected_.store(false);
+      self->close_socket();
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+      self->writing_ = false;
+      self->backpressure_active_ = false;
+      self->state_.set_state(LinkState::Error);
+      self->notify_state();
+      return;
+    }
+
+    self->queue_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    self->report_backpressure(self->queue_bytes_);
+    if (!self->writing_) self->do_write();
+  });
+}
+
+void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
+    return;
+  }
+  if (!data || data->empty()) {
+    UNILINK_LOG_WARNING("tcp_client", "async_write_shared", "Ignoring empty shared buffer");
+    return;
+  }
+  const auto size = data->size();
+  if (size > common::constants::MAX_BUFFER_SIZE) {
+    UNILINK_LOG_ERROR("tcp_client", "async_write_shared",
+                      "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
+    return;
+  }
+
+  const auto added = size;
+  net::dispatch(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
+    if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+      return;
+    }
+
+    if (self->queue_bytes_ + added > self->bp_limit_) {
+      UNILINK_LOG_ERROR("tcp_client", "async_write_shared",
+                        "Queue limit exceeded (" + std::to_string(self->queue_bytes_ + added) + " bytes)");
+      self->connected_.store(false);
+      self->close_socket();
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+      self->writing_ = false;
+      self->backpressure_active_ = false;
+      self->state_.set_state(LinkState::Error);
+      self->notify_state();
+      return;
+    }
+
+    self->queue_bytes_ += added;
+    self->tx_.emplace_back(std::move(buf));
+    self->report_backpressure(self->queue_bytes_);
+    if (!self->writing_) self->do_write();
+  });
+}
+
 void TcpClient::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
 void TcpClient::on_state(OnState cb) { on_state_ = std::move(cb); }
 void TcpClient::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
@@ -459,13 +543,18 @@ void TcpClient::do_write() {
     self->do_write();
   };
 
-  // Handle both PooledBuffer and std::vector<uint8_t> (fallback)
+  // Handle PooledBuffer, shared_ptr buffer, or std::vector<uint8_t> (fallback)
   if (std::holds_alternative<common::PooledBuffer>(current)) {
     auto pooled_buf = std::get<common::PooledBuffer>(std::move(current));
     auto data = pooled_buf.data();
     auto size = pooled_buf.size();
     net::async_write(socket_, net::buffer(data, size),
                      [self, buf = std::move(pooled_buf), on_write = std::move(on_write)](
+                         auto ec, std::size_t n) mutable { on_write(ec, n); });
+  } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
+    auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
+    net::async_write(socket_, net::buffer(*shared_buf),
+                     [self, buf = std::move(shared_buf), on_write = std::move(on_write)](
                          auto ec, std::size_t n) mutable { on_write(ec, n); });
   } else {
     auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
