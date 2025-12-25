@@ -146,6 +146,13 @@ ctest -j 4
 
 ---
 
+## UDP-specific test policies
+
+- **Truncation handling**: UDP receive treats `boost::asio::error::message_size` or `bytes >= rx_buffer_size` as truncation and fails fast into `Error` (no silent truncation, no re-armed receive loop).
+- **Port allocation**: UDP tests use ephemeral ports (bind to port 0) helpers to minimize collisions; note this reduces but does not fully eliminate TOCTOU risk when rebinding.
+- **Wait-until patterns**: Tests wait for conditions (peer learned, state change) with timeouts instead of fixed sleeps to reduce CI flakiness.
+- **Stop semantics**: After `stop()`, user-level callbacks must not fire; cancellation stays internal (no user bytes callbacks after stop).
+
 ## Test Categories
 
 ### Core Tests

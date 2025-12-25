@@ -10,26 +10,6 @@
 
 `unilink` is a modern C++17 library that provides a unified, high-level Builder API for TCP (client/server), UDP, and Serial port communication. It simplifies network and serial programming with a fluent, easy-to-use interface that handles all the complexity behind the scenes.
 
-### UDP in the same API
-
-```cpp
-#include "unilink/unilink.hpp"
-
-int main() {
-  auto channel = unilink::udp(9000)
-                     .set_remote("127.0.0.1", 9001)  // Optional: can also learn the peer from first packet
-                     .on_data([](const std::string& data) { /* handle data */ })
-                     .build();
-
-  channel->start();
-  channel->send("hello over udp");
-}
-```
-
-- Uses Boost.Asio async `send_to`/`receive_from` under the hood
-- Message boundaries are preserved (datagram semantics)
-- No connection handshake; `Connected` state simply means the socket is bound and a peer is known
-
 ## 📦 Installation
 
 ### vcpkg (recommended)

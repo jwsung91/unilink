@@ -42,7 +42,30 @@ uint16_t reserve_free_port() {
   boost::asio::ip::udp::socket socket(ioc, {boost::asio::ip::udp::v4(), 0});
   auto port = socket.local_endpoint().port();
   socket.close();
+  // Note: This minimizes port collisions but does not fully eliminate TOCTOU;
+  // we release the socket before the test channel binds. Good enough for CI,
+  // and the retry/wait logic in tests further reduces flakiness.
   return port;
+}
+
+template <typename Pred>
+bool wait_for_condition(boost::asio::io_context& ioc, Pred pred, std::chrono::milliseconds timeout,
+                        std::chrono::milliseconds step = 5ms) {
+  auto deadline = std::chrono::steady_clock::now() + timeout;
+  while (std::chrono::steady_clock::now() < deadline) {
+    if (pred()) return true;
+    ioc.run_for(step);
+    ioc.restart();
+  }
+  return pred();
+}
+
+void pump_io(boost::asio::io_context& ioc, std::chrono::milliseconds duration, std::chrono::milliseconds step = 5ms) {
+  auto deadline = std::chrono::steady_clock::now() + duration;
+  while (std::chrono::steady_clock::now() < deadline) {
+    ioc.run_for(step);
+    ioc.restart();
+  }
 }
 }  // namespace
 
@@ -74,8 +97,7 @@ TEST(TransportUdpTest, LoopbackSendReceive) {
   auto data = common::safe_convert::string_to_uint8(payload);
   sender->async_write_copy(data.data(), data.size());
 
-  ioc.run_for(100ms);
-  EXPECT_EQ(received, payload);
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return received == payload; }, 200ms));
 
   sender->stop();
   receiver->stop();
@@ -115,24 +137,18 @@ TEST(TransportUdpTest, LearnsRemoteFromFirstPacket) {
 
   channel->start();
 
-  ioc.run_for(30ms);  // allow receive loop to start
-  ioc.restart();
+  pump_io(ioc, 30ms);  // allow receive loop to start
 
   const std::string first = "discover";
   peer.send_to(boost::asio::buffer(first), peer_ep);
 
-  ioc.run_for(100ms);
-  EXPECT_EQ(inbound, first);
-  EXPECT_TRUE(channel->is_connected());
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return inbound == first && channel->is_connected(); }, 200ms));
   EXPECT_GE(connected_events.load(), 1);
 
-  ioc.restart();
   const std::string response = "ack";
   auto out = common::safe_convert::string_to_uint8(response);
   channel->async_write_copy(out.data(), out.size());
-  ioc.run_for(100ms);
-
-  EXPECT_EQ(reply_size.load(), response.size());
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return reply_size.load() == response.size(); }, 200ms));
   EXPECT_EQ(std::string(reply_buf.begin(), reply_buf.begin() + static_cast<std::ptrdiff_t>(reply_size.load())),
             response);
 
@@ -143,7 +159,7 @@ TEST(TransportUdpTest, LearnsRemoteFromFirstPacket) {
 TEST(TransportUdpTest, WriteWithoutRemoteIsNoop) {
   boost::asio::io_context ioc;
   config::UdpConfig cfg;
-  cfg.local_port = next_port();
+  cfg.local_port = reserve_free_port();
 
   auto channel = transport::UdpChannel::create(cfg, ioc);
   std::atomic<common::LinkState> last_state{common::LinkState::Idle};
@@ -153,8 +169,7 @@ TEST(TransportUdpTest, WriteWithoutRemoteIsNoop) {
   auto payload = common::safe_convert::string_to_uint8("orphan");
   channel->async_write_copy(payload.data(), payload.size());  // no remote yet
 
-  ioc.run_for(30ms);
-  EXPECT_NE(last_state.load(), common::LinkState::Error);
+  EXPECT_FALSE(wait_for_condition(ioc, [&] { return last_state.load() == common::LinkState::Error; }, 100ms));
   channel->stop();
 }
 
@@ -185,21 +200,18 @@ TEST(TransportUdpTest, RemoteStaysFirstPeer) {
 
   channel->start();
 
-  ioc.run_for(30ms);  // allow receive loop to start
-  ioc.restart();
+  pump_io(ioc, 30ms);  // allow receive loop to start
 
   peer1.send_to(boost::asio::buffer(std::string("hello1")), channel_ep);
-  ioc.run_for(60ms);  // allow remote learn
-  ioc.restart();
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return channel->is_connected(); }, 200ms));
 
   // Later packet from a different peer should not change remote
   peer2.send_to(boost::asio::buffer(std::string("hello2")), channel_ep);
-  ioc.run_for(40ms);
-  ioc.restart();
+  pump_io(ioc, 40ms);
 
   auto reply = common::safe_convert::string_to_uint8("only-peer1");
   channel->async_write_copy(reply.data(), reply.size());
-  ioc.run_for(60ms);
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return recv1_size.load() == reply.size(); }, 200ms));
 
   EXPECT_EQ(recv1_size.load(), reply.size());
   EXPECT_EQ(recv2_size.load(), 0U);
@@ -221,8 +233,7 @@ TEST(TransportUdpTest, TruncatedDatagramSetsError) {
   channel->on_state([&](common::LinkState s) { last_state.store(s); });
   channel->start();
 
-  ioc.run_for(30ms);  // allow bind + receive to arm
-  ioc.restart();
+  pump_io(ioc, 30ms);  // allow bind + receive to arm
 
   boost::asio::ip::udp::socket peer(ioc, {boost::asio::ip::udp::v4(), 0});
   boost::asio::ip::udp::endpoint ep{boost::asio::ip::make_address("127.0.0.1"), port};
@@ -230,8 +241,7 @@ TEST(TransportUdpTest, TruncatedDatagramSetsError) {
   std::vector<uint8_t> big(common::constants::DEFAULT_READ_BUFFER_SIZE + 512, 0xAB);
   peer.send_to(boost::asio::buffer(big), ep);
 
-  ioc.run_for(60ms);
-  EXPECT_EQ(last_state.load(), common::LinkState::Error);
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return last_state.load() == common::LinkState::Error; }, 200ms));
 
   peer.close();
   channel->stop();
@@ -256,8 +266,7 @@ TEST(TransportUdpTest, QueueLimitMovesToError) {
   std::vector<uint8_t> huge(common::constants::DEFAULT_BACKPRESSURE_THRESHOLD * 2, 0xCD);
   channel->async_write_copy(huge.data(), huge.size());
 
-  ioc.run_for(40ms);
-  EXPECT_EQ(last_state.load(), common::LinkState::Error);
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return last_state.load() == common::LinkState::Error; }, 200ms));
   channel->stop();
 }
 
@@ -278,7 +287,8 @@ TEST(TransportUdpTest, StopCancelsInFlightHandlers) {
   boost::asio::ip::udp::endpoint ep{boost::asio::ip::make_address("127.0.0.1"), port};
   peer.send_to(boost::asio::buffer(std::string("late")), ep);
 
-  ioc.run_for(30ms);
-  EXPECT_EQ(bytes_callbacks.load(), 0);
+  EXPECT_FALSE(wait_for_condition(
+      ioc, [&] { return bytes_callbacks.load() > 0; }, 100ms))
+      << "stop semantics: no user callbacks after stop";
   peer.close();
 }

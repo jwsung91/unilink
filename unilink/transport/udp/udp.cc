@@ -268,6 +268,8 @@ void UdpChannel::start_receive() {
 void UdpChannel::handle_receive(const boost::system::error_code& ec, std::size_t bytes) {
   if (stopping_.load() || ec == boost::asio::error::operation_aborted) return;
 
+  // Fail-fast on truncation: treat both message_size and full-buffer reads as truncated datagrams.
+  // We set Error once and exit without re-arming the receive loop, so user callbacks are not spammed.
   if (ec == boost::asio::error::message_size || bytes >= rx_.size()) {
     UNILINK_LOG_ERROR("udp", "receive", "Datagram truncated (buffer too small)");
     state_.set_state(LinkState::Error);
