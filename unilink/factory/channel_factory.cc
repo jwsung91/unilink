@@ -21,6 +21,7 @@
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
+#include "unilink/transport/udp/udp.hpp"
 
 namespace unilink {
 namespace factory {
@@ -37,6 +38,8 @@ std::shared_ptr<interface::Channel> ChannelFactory::create(const ChannelOptions&
           return create_tcp_server(config, external_ioc);
         } else if constexpr (std::is_same_v<T, config::SerialConfig>) {
           return create_serial(config, external_ioc);
+        } else if constexpr (std::is_same_v<T, config::UdpConfig>) {
+          return create_udp(config, external_ioc);
         } else {
           static_assert(std::is_same_v<T, void>, "Unsupported config type");
           return nullptr;
@@ -68,6 +71,14 @@ std::shared_ptr<interface::Channel> ChannelFactory::create_serial(
     return transport::Serial::create(cfg, std::make_unique<transport::BoostSerialPort>(*external_ioc), *external_ioc);
   }
   return transport::Serial::create(cfg);
+}
+
+std::shared_ptr<interface::Channel> ChannelFactory::create_udp(const config::UdpConfig& cfg,
+                                                               std::shared_ptr<boost::asio::io_context> external_ioc) {
+  if (external_ioc) {
+    return transport::UdpChannel::create(cfg, *external_ioc);
+  }
+  return transport::UdpChannel::create(cfg);
 }
 
 }  // namespace factory

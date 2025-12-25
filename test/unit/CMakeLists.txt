@@ -196,6 +196,28 @@ gtest_discover_tests(run_unit_transport_serial
     TIMEOUT 30
 )
 
+# UDP transport loopback tests
+add_executable(run_unit_transport_udp ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_udp.cc)
+target_link_libraries(run_unit_transport_udp
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_transport_udp)
+target_include_directories(run_unit_transport_udp
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+
+gtest_discover_tests(run_unit_transport_udp
+  PROPERTIES
+    LABELS "unit;transport;udp"
+    TIMEOUT 30
+)
+
 # Transport layer tests removed - they require actual network/serial devices
 
 # Create a custom target to build all unit tests
