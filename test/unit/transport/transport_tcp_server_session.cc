@@ -50,6 +50,12 @@ class FakeTcpSocket : public interface::TcpSocketInterface {
     net::post(ioc_, [handler = std::move(handler), size]() { handler({}, size); });
   }
 
+  void emit_read(std::size_t n = 1, const boost::system::error_code& ec = {}) {
+    if (!read_handler_) return;
+    auto handler = std::move(read_handler_);
+    net::post(ioc_, [handler = std::move(handler), ec, n]() { handler(ec, n); });
+  }
+
   void shutdown(tcp::socket::shutdown_type, boost::system::error_code& ec) override { ec.clear(); }
 
   void close(boost::system::error_code& ec) override { ec.clear(); }
@@ -159,4 +165,28 @@ TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
   ASSERT_GE(events.size(), 2u);
   EXPECT_GE(events.front(), bp_threshold);
   EXPECT_LE(events.back(), bp_threshold / 2);
+}
+
+TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
+  net::io_context ioc;
+  size_t bp_threshold = 1024;
+
+  auto socket = std::make_unique<FakeTcpSocket>(ioc);
+  auto* socket_raw = socket.get();
+  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
+
+  std::atomic<bool> closed{false};
+  session->on_close([&]() { closed = true; });
+  session->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+
+  session->start();
+  EXPECT_TRUE(session->alive());
+
+  // Trigger read handler to invoke throwing callback
+  socket_raw->emit_read(4);
+
+  ioc.run_for(50ms);
+
+  EXPECT_TRUE(closed.load());
+  EXPECT_FALSE(session->alive());
 }
