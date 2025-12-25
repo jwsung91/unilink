@@ -27,12 +27,14 @@
 #include "unilink/wrapper/serial/serial.hpp"
 #include "unilink/wrapper/tcp_client/tcp_client.hpp"
 #include "unilink/wrapper/tcp_server/tcp_server.hpp"
+#include "unilink/wrapper/udp/udp.hpp"
 
 // New high-level Builder API includes
 #include "unilink/builder/ibuilder.hpp"
 #include "unilink/builder/serial_builder.hpp"
 #include "unilink/builder/tcp_client_builder.hpp"
 #include "unilink/builder/tcp_server_builder.hpp"
+#include "unilink/builder/udp_builder.hpp"
 #include "unilink/builder/unified_builder.hpp"
 
 // Configuration Management API includes (optional)
@@ -57,6 +59,7 @@ namespace builder {
 class TcpServerBuilder;
 class TcpClientBuilder;
 class SerialBuilder;
+class UdpBuilder;
 class UnifiedBuilder;
 }  // namespace builder
 
@@ -66,6 +69,7 @@ namespace wrapper {
 class TcpServer;
 class TcpClient;
 class Serial;
+class Udp;
 class ChannelInterface;
 }  // namespace wrapper
 
@@ -100,6 +104,17 @@ inline builder::TcpClientBuilder tcp_client(const std::string& host, uint16_t po
  */
 inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_rate) {
   return builder::SerialBuilder(device, baud_rate);
+}
+
+/**
+ * @brief Create a UDP builder
+ * @param local_port The local port to bind
+ * @return UdpBuilder A configured builder for UDP
+ */
+inline builder::UdpBuilder udp(uint16_t local_port) {
+  builder::UdpBuilder b;
+  b.set_local_port(local_port);
+  return b;
 }
 
 // === Configuration Management API (optional) ===

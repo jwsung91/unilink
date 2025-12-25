@@ -61,6 +61,10 @@ class BuilderTest : public ::testing::Test {
       serial_->stop();
       serial_.reset();
     }
+    if (udp_) {
+      udp_->stop();
+      udp_.reset();
+    }
 
     // Ensure cleanup completion with sufficient time
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -124,6 +128,7 @@ class BuilderTest : public ::testing::Test {
   std::shared_ptr<wrapper::TcpServer> server_;
   std::shared_ptr<wrapper::TcpClient> client_;
   std::shared_ptr<wrapper::Serial> serial_;
+  std::shared_ptr<wrapper::Udp> udp_;
 
   std::vector<std::string> data_received_;
   std::atomic<bool> connection_established_{false};
@@ -203,6 +208,18 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
 
   // Serial이 생성되었는지 확인
   EXPECT_TRUE(serial_ != nullptr);
+}
+
+TEST_F(BuilderTest, UdpBuilderBasic) {
+  uint16_t test_port = getTestPort();
+  udp_ = unilink::udp(test_port).set_remote("127.0.0.1", static_cast<uint16_t>(test_port + 1)).build();
+
+  ASSERT_NE(udp_, nullptr);
+  EXPECT_FALSE(udp_->is_connected());
+
+  udp_->start();
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  udp_->stop();
 }
 
 // Builder 체이닝 테스트
@@ -360,6 +377,13 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
   // serial 편의 함수 테스트
   auto serial = unilink::serial(nullDevice(), 9600).on_connect([]() {}).on_data([](const std::string& data) {}).build();
 
+  // udp 편의 함수 테스트
+  auto udp = unilink::udp(test_port)
+                 .set_remote("127.0.0.1", static_cast<uint16_t>(test_port + 1))
+                 .on_connect([]() {})
+                 .on_data([](const std::string& data) {})
+                 .build();
+
   // 객체들이 제대로 생성되었는지 확인
   EXPECT_NE(server, nullptr);
   EXPECT_NE(client, nullptr);
@@ -369,11 +393,13 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
   EXPECT_TRUE(dynamic_cast<wrapper::TcpServer*>(server.get()) != nullptr);
   EXPECT_TRUE(dynamic_cast<wrapper::TcpClient*>(client.get()) != nullptr);
   EXPECT_TRUE(dynamic_cast<wrapper::Serial*>(serial.get()) != nullptr);
+  EXPECT_TRUE(dynamic_cast<wrapper::Udp*>(udp.get()) != nullptr);
 
   // 정리
   server->stop();
   client->stop();
   serial->stop();
+  udp->stop();
 }
 
 // ============================================================================

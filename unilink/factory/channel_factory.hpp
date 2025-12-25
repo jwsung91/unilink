@@ -24,6 +24,7 @@
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
+#include "unilink/config/udp_config.hpp"
 #include "unilink/interface/channel.hpp"
 
 namespace unilink {
@@ -36,7 +37,8 @@ namespace factory {
  */
 class UNILINK_API ChannelFactory {
  public:
-  using ChannelOptions = std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig>;
+  using ChannelOptions =
+      std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig, config::UdpConfig>;
 
   // Channel creation
   static std::shared_ptr<interface::Channel> create(const ChannelOptions& options,
@@ -50,6 +52,8 @@ class UNILINK_API ChannelFactory {
                                                                std::shared_ptr<boost::asio::io_context> external_ioc);
   static std::shared_ptr<interface::Channel> create_serial(const config::SerialConfig& cfg,
                                                            std::shared_ptr<boost::asio::io_context> external_ioc);
+  static std::shared_ptr<interface::Channel> create_udp(const config::UdpConfig& cfg,
+                                                        std::shared_ptr<boost::asio::io_context> external_ioc);
 };
 
 }  // namespace factory

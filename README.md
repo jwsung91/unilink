@@ -8,7 +8,7 @@
 
 ## One interface, reliable connections
 
-`unilink` is a modern C++17 library that provides a unified, high-level Builder API for TCP (client/server) and Serial port communication. It simplifies network and serial programming with a fluent, easy-to-use interface that handles all the complexity behind the scenes.
+`unilink` is a modern C++17 library that provides a unified, high-level Builder API for TCP (client/server), UDP, and Serial port communication. It simplifies network and serial programming with a fluent, easy-to-use interface that handles all the complexity behind the scenes.
 
 ## 📦 Installation
 

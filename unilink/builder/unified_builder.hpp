@@ -22,6 +22,7 @@
 #include "unilink/builder/serial_builder.hpp"
 #include "unilink/builder/tcp_client_builder.hpp"
 #include "unilink/builder/tcp_server_builder.hpp"
+#include "unilink/builder/udp_builder.hpp"
 #include "unilink/common/visibility.hpp"
 
 namespace unilink {
@@ -57,6 +58,13 @@ class UNILINK_API UnifiedBuilder {
    * @return SerialBuilder A configured builder for Serial
    */
   static SerialBuilder serial(const std::string& device, uint32_t baud_rate);
+
+  /**
+   * @brief Create a UDP builder
+   * @param local_port The local port to bind
+   * @return UdpBuilder A configured builder for UDP communication
+   */
+  static UdpBuilder udp(uint16_t local_port);
 };
 
 }  // namespace builder
