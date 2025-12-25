@@ -58,7 +58,6 @@ class UNILINK_API TcpServer : public ChannelInterface {
   ChannelInterface& auto_manage(bool manage = true) override;
 
   void send_line(const std::string& line) override;
-  // void send_binary(const std::vector<uint8_t>& data) override;
 
   // Multi-client support methods
   bool broadcast(const std::string& message);
