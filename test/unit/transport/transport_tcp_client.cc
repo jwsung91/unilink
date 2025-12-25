@@ -34,6 +34,7 @@ using namespace unilink::transport;
 using namespace unilink::test;
 using namespace std::chrono_literals;
 namespace net = boost::asio;
+using tcp = net::ip::tcp;
 
 class TransportTcpClientTest : public ::testing::Test {
  protected:
@@ -195,6 +196,50 @@ TEST_F(TransportTcpClientTest, QueueLimitMovesClientToError) {
   ioc.run_for(std::chrono::milliseconds(20));
 
   EXPECT_TRUE(error_seen.load());
+
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, OnBytesExceptionTriggersReconnect) {
+  net::io_context ioc;
+
+  // Spin up a local acceptor to allow a real connection and deliver one read.
+  tcp::acceptor acceptor(ioc, tcp::endpoint(tcp::v4(), 0));
+  auto port = acceptor.local_endpoint().port();
+
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = port;
+  cfg.retry_interval_ms = 20;
+
+  client_ = TcpClient::create(cfg, ioc);
+
+  std::atomic<int> connecting_events{0};
+  std::atomic<int> error_events{0};
+  client_->on_state([&](common::LinkState state) {
+    if (state == common::LinkState::Connecting) connecting_events.fetch_add(1);
+    if (state == common::LinkState::Error) error_events.fetch_add(1);
+  });
+
+  client_->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+
+  // Accept a client and send a small payload to trigger on_bytes
+  acceptor.async_accept([&](const boost::system::error_code& ec, tcp::socket sock) {
+    if (!ec) {
+      auto data = std::make_shared<std::string>("ping");
+      net::async_write(sock, net::buffer(*data), [data](auto, auto) {});
+    }
+  });
+
+  client_->start();
+
+  // Run enough to connect, receive, throw, and schedule a retry
+  ioc.run_for(150ms);
+
+  EXPECT_EQ(error_events.load(), 0);
+  // At least two Connecting states: initial + post-exception reconnect attempt
+  EXPECT_GE(connecting_events.load(), 2);
 
   client_->stop();
   client_.reset();

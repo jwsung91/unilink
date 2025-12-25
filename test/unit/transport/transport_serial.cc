@@ -73,6 +73,12 @@ class FakeSerialPort : public interface::SerialPortInterface {
     boost::asio::post(ioc_, [handler = std::move(handler), ok, size]() { handler(ok, size); });
   }
 
+  void emit_read(std::size_t n = 1, const boost::system::error_code& ec = {}) {
+    if (!read_handler_) return;
+    auto handler = std::move(read_handler_);
+    boost::asio::post(ioc_, [handler = std::move(handler), ec, n]() { handler(ec, n); });
+  }
+
   void emit_operation_aborted() {
     if (!read_handler_) return;
     auto handler = std::move(read_handler_);
@@ -208,6 +214,67 @@ TEST(TransportSerialTest, SharedWriteRespectsQueueLimit) {
   ioc.run_for(50ms);
 
   EXPECT_TRUE(error_seen.load());
+  serial->stop();
+}
+
+TEST(TransportSerialTest, CallbackExceptionStopsWhenConfigured) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.stop_on_callback_exception = true;
+  cfg.retry_interval_ms = 10;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto* port_raw = port.get();
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+
+  std::atomic<bool> error_seen{false};
+  serial->on_state([&](common::LinkState state) {
+    if (state == common::LinkState::Error) error_seen = true;
+  });
+
+  serial->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+
+  serial->start();
+  ioc.run_for(5ms);  // allow start to set up read handler
+
+  // Simulate a successful read that triggers the throwing callback.
+  port_raw->emit_read(4);
+
+  ioc.run_for(20ms);
+
+  EXPECT_TRUE(error_seen.load());
+  serial->stop();
+}
+
+TEST(TransportSerialTest, CallbackExceptionRetriesWhenAllowed) {
+  boost::asio::io_context ioc;
+  config::SerialConfig cfg;
+  cfg.stop_on_callback_exception = false;
+  cfg.retry_interval_ms = 10;
+
+  auto port = std::make_unique<FakeSerialPort>(ioc);
+  auto* port_raw = port.get();
+  auto serial = Serial::create(cfg, std::move(port), ioc);
+
+  std::atomic<int> error_events{0};
+  std::atomic<int> connecting_events{0};
+  serial->on_state([&](common::LinkState state) {
+    if (state == common::LinkState::Error) error_events.fetch_add(1);
+    if (state == common::LinkState::Connecting) connecting_events.fetch_add(1);
+  });
+
+  serial->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+
+  serial->start();
+  ioc.run_for(5ms);
+
+  port_raw->emit_read(4);
+
+  // Allow retry timer to fire at least once.
+  ioc.run_for(40ms);
+
+  EXPECT_EQ(error_events.load(), 0);
+  EXPECT_GE(connecting_events.load(), 2);  // initial start + retry attempt
   serial->stop();
 }
 

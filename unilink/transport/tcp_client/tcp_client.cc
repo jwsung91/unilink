@@ -498,7 +498,19 @@ void TcpClient::start_read() {
       self->handle_close(ec);
       return;
     }
-    if (self->on_bytes_) self->on_bytes_(self->rx_.data(), n);
+    if (self->on_bytes_) {
+      try {
+        self->on_bytes_(self->rx_.data(), n);
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("tcp_client", "on_bytes", "Exception in on_bytes callback: " + std::string(e.what()));
+        self->handle_close(make_error_code(boost::asio::error::connection_aborted));
+        return;
+      } catch (...) {
+        UNILINK_LOG_ERROR("tcp_client", "on_bytes", "Unknown exception in on_bytes callback");
+        self->handle_close(make_error_code(boost::asio::error::connection_aborted));
+        return;
+      }
+    }
     self->start_read();
   });
 }
@@ -611,10 +623,24 @@ void TcpClient::report_backpressure(size_t queued_bytes) {
 
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
-    on_bp_(queued_bytes);
+    try {
+      on_bp_(queued_bytes);
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
+                        "Exception in backpressure callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("tcp_client", "on_backpressure", "Unknown exception in backpressure callback");
+    }
   } else if (backpressure_active_ && queued_bytes <= bp_low_) {
     backpressure_active_ = false;
-    on_bp_(queued_bytes);
+    try {
+      on_bp_(queued_bytes);
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
+                        "Exception in backpressure callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("tcp_client", "on_backpressure", "Unknown exception in backpressure callback");
+    }
   }
 }
 

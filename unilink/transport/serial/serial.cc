@@ -16,6 +16,7 @@
 
 #include "unilink/transport/serial/serial.hpp"
 
+#include <boost/system/error_code.hpp>
 #include <cstring>
 #include <iostream>
 
@@ -192,14 +193,15 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         if (self->queued_bytes_ + buf.size() > self->bp_limit_) {
           UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
-          self->opened_.store(false);
-          self->close_port();
           self->tx_.clear();
           self->queued_bytes_ = 0;
           self->writing_ = false;
+          self->report_backpressure(self->queued_bytes_);
+          // Surface error state immediately for observability, then reuse retry flow via handle_error.
           self->state_.set_state(common::LinkState::Error);
           self->notify_state();
-          self->report_backpressure(self->queued_bytes_);
+          const auto overflow_ec = make_error_code(boost::system::errc::no_buffer_space);
+          self->handle_error("write_queue_overflow", overflow_ec);
           return;
         }
         self->queued_bytes_ += buf.size();
@@ -217,14 +219,14 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
   net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     if (self->queued_bytes_ + buf.size() > self->bp_limit_) {
       UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
-      self->opened_.store(false);
-      self->close_port();
       self->tx_.clear();
       self->queued_bytes_ = 0;
       self->writing_ = false;
+      self->report_backpressure(self->queued_bytes_);
       self->state_.set_state(common::LinkState::Error);
       self->notify_state();
-      self->report_backpressure(self->queued_bytes_);
+      const auto overflow_ec = make_error_code(boost::system::errc::no_buffer_space);
+      self->handle_error("write_queue_overflow", overflow_ec);
       return;
     }
     self->queued_bytes_ += buf.size();
@@ -246,14 +248,14 @@ void Serial::async_write_move(std::vector<uint8_t>&& data) {
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (self->queued_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
-      self->opened_.store(false);
-      self->close_port();
       self->tx_.clear();
       self->queued_bytes_ = 0;
       self->writing_ = false;
+      self->report_backpressure(self->queued_bytes_);
       self->state_.set_state(common::LinkState::Error);
       self->notify_state();
-      self->report_backpressure(self->queued_bytes_);
+      const auto overflow_ec = make_error_code(boost::system::errc::no_buffer_space);
+      self->handle_error("write_queue_overflow", overflow_ec);
       return;
     }
     self->queued_bytes_ += added;
@@ -276,14 +278,14 @@ void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (self->queued_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
-      self->opened_.store(false);
-      self->close_port();
       self->tx_.clear();
       self->queued_bytes_ = 0;
       self->writing_ = false;
+      self->report_backpressure(self->queued_bytes_);
       self->state_.set_state(common::LinkState::Error);
       self->notify_state();
-      self->report_backpressure(self->queued_bytes_);
+      const auto overflow_ec = make_error_code(boost::system::errc::no_buffer_space);
+      self->handle_error("write_queue_overflow", overflow_ec);
       return;
     }
     self->queued_bytes_ += added;
@@ -370,15 +372,41 @@ void Serial::open_and_configure() {
 
 void Serial::start_read() {
   auto self = shared_from_this();
-  port_->async_read_some(net::buffer(rx_.data(), rx_.size()),
-                         net::bind_executor(strand_, [self](auto ec, std::size_t n) {
-                           if (ec) {
-                             self->handle_error("read", ec);
-                             return;
-                           }
-                           if (self->on_bytes_) self->on_bytes_(self->rx_.data(), n);
-                           self->start_read();
-                         }));
+  port_->async_read_some(
+      net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {
+        if (ec) {
+          self->handle_error("read", ec);
+          return;
+        }
+        if (self->on_bytes_) {
+          try {
+            self->on_bytes_(self->rx_.data(), n);
+          } catch (const std::exception& e) {
+            UNILINK_LOG_ERROR("serial", "on_bytes", "Exception in on_bytes callback: " + std::string(e.what()));
+            if (self->cfg_.stop_on_callback_exception) {
+              self->opened_.store(false);
+              self->close_port();
+              self->state_.set_state(common::LinkState::Error);
+              self->notify_state();
+              return;
+            }
+            self->handle_error("on_bytes_callback", make_error_code(boost::system::errc::io_error));
+            return;
+          } catch (...) {
+            UNILINK_LOG_ERROR("serial", "on_bytes", "Unknown exception in on_bytes callback");
+            if (self->cfg_.stop_on_callback_exception) {
+              self->opened_.store(false);
+              self->close_port();
+              self->state_.set_state(common::LinkState::Error);
+              self->notify_state();
+              return;
+            }
+            self->handle_error("on_bytes_callback", make_error_code(boost::system::errc::io_error));
+            return;
+          }
+        }
+        self->start_read();
+      }));
 }
 
 void Serial::do_write() {
@@ -523,10 +551,22 @@ void Serial::report_backpressure(size_t queued_bytes) {
   if (!on_bp_) return;
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
-    on_bp_(queued_bytes);
+    try {
+      on_bp_(queued_bytes);
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("serial", "on_backpressure", "Exception in backpressure callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("serial", "on_backpressure", "Unknown exception in backpressure callback");
+    }
   } else if (backpressure_active_ && queued_bytes <= bp_low_) {
     backpressure_active_ = false;
-    on_bp_(queued_bytes);
+    try {
+      on_bp_(queued_bytes);
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("serial", "on_backpressure", "Exception in backpressure callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("serial", "on_backpressure", "Unknown exception in backpressure callback");
+    }
   }
 }
 

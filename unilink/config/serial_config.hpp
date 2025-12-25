@@ -39,6 +39,8 @@ struct SerialConfig {
   bool reopen_on_error = true;  // Attempt to reopen on device disconnection/error
   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_memory_pool = true;
+  // Controls whether callback exceptions halt the link (true) or trigger the normal retry flow (false)
+  bool stop_on_callback_exception = false;
 
   unsigned retry_interval_ms = common::constants::DEFAULT_RETRY_INTERVAL_MS;
   int max_retries = common::constants::DEFAULT_MAX_RETRIES;
