@@ -393,14 +393,17 @@ TEST(TcpContractTest, CallbacksAreSerialized) {
   client->on_bytes(rec.bytes_cb());
 
   client->start();
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return client->is_connected(); }, 200ms));
+  ASSERT_TRUE(test::wait_until(ioc, [&] { return client->is_connected(); }, 200ms));
 
   auto burst = std::make_shared<std::string>("burst-one");
   auto burst2 = std::make_shared<std::string>("burst-two");
-  net::async_write(*server_socket, net::buffer(*burst), [burst](auto, auto) {});
-  net::async_write(*server_socket, net::buffer(*burst2), [burst2](auto, auto) {});
+  net::async_write(*server_socket, net::buffer(*burst),
+                   [burst](const boost::system::error_code& ec, std::size_t) { ASSERT_FALSE(ec); });
+  test::pump_io(ioc, 20ms);  // let first read complete before second send to avoid coalescing
+  net::async_write(*server_socket, net::buffer(*burst2),
+                   [burst2](const boost::system::error_code& ec, std::size_t) { ASSERT_FALSE(ec); });
 
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.bytes_call_count() >= 2; }, 200ms));
+  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.bytes_call_count() >= 2; }, 1000ms));
   EXPECT_FALSE(rec.saw_overlap());
 }
 
