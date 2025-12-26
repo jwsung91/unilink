@@ -95,8 +95,8 @@ TEST(SerialContractTest, StopIsIdempotent) {
   auto port = std::make_unique<FakeSerialPort>(ioc);
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
-  test::CallbackRecorder rec;
-  serial->on_state(rec.state_cb());
+  auto rec = std::make_shared<test::CallbackRecorder>();
+  serial->on_state(test::CallbackRecorder::state_cb_weak(rec));
 
   serial->start();
   test::pump_io(ioc, 10ms);
@@ -104,7 +104,7 @@ TEST(SerialContractTest, StopIsIdempotent) {
   serial->stop();
   test::pump_io(ioc, 10ms);
 
-  EXPECT_EQ(rec.state_count(common::LinkState::Closed), 1u);
+  EXPECT_EQ(rec->state_count(common::LinkState::Closed), 1u);
 }
 
 TEST(SerialContractTest, NoUserCallbackAfterStop) {
@@ -115,15 +115,15 @@ TEST(SerialContractTest, NoUserCallbackAfterStop) {
   auto* port_raw = port.get();
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
-  test::CallbackRecorder rec;
-  serial->on_bytes(rec.bytes_cb());
+  auto rec = std::make_shared<test::CallbackRecorder>();
+  serial->on_bytes(test::CallbackRecorder::bytes_cb_weak(rec));
 
   serial->start();
   test::pump_io(ioc, 5ms);
   serial->stop();
   port_raw->emit_operation_aborted();
 
-  EXPECT_FALSE(test::wait_until(ioc, [&] { return rec.bytes_call_count() > 0; }, 100ms));
+  EXPECT_FALSE(test::wait_until(ioc, [&] { return rec->bytes_call_count() > 0; }, 100ms));
 }
 
 TEST(SerialContractTest, ErrorNotifyOnlyOnce) {
@@ -135,15 +135,15 @@ TEST(SerialContractTest, ErrorNotifyOnlyOnce) {
   auto port = std::make_unique<FakeSerialPort>(ioc);
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
-  test::CallbackRecorder rec;
-  serial->on_state(rec.state_cb());
+  auto rec = std::make_shared<test::CallbackRecorder>();
+  serial->on_state(test::CallbackRecorder::state_cb_weak(rec));
   serial->start();
 
   std::vector<uint8_t> huge(common::constants::DEFAULT_BACKPRESSURE_THRESHOLD * 2, 0xEF);
   serial->async_write_copy(huge.data(), huge.size());
 
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Error) == 1u; }, 200ms));
-  EXPECT_EQ(rec.state_count(common::LinkState::Error), 1u);
+  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec->state_count(common::LinkState::Error) == 1u; }, 200ms));
+  EXPECT_EQ(rec->state_count(common::LinkState::Error), 1u);
 }
 
 TEST(SerialContractTest, CallbacksAreSerialized) {
@@ -154,8 +154,8 @@ TEST(SerialContractTest, CallbacksAreSerialized) {
   auto* port_raw = port.get();
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
-  test::CallbackRecorder rec;
-  serial->on_bytes(rec.bytes_cb());
+  auto rec = std::make_shared<test::CallbackRecorder>();
+  serial->on_bytes(test::CallbackRecorder::bytes_cb_weak(rec));
 
   serial->start();
   test::pump_io(ioc, 5ms);
@@ -164,8 +164,8 @@ TEST(SerialContractTest, CallbacksAreSerialized) {
   test::pump_io(ioc, 5ms);  // allow re-arm
   port_raw->emit_read(6);
 
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.bytes_call_count() >= 2; }, 200ms));
-  EXPECT_FALSE(rec.saw_overlap());
+  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec->bytes_call_count() >= 2; }, 200ms));
+  EXPECT_FALSE(rec->saw_overlap());
 }
 
 TEST(SerialContractTest, BackpressurePolicyFailFast) {
@@ -177,14 +177,14 @@ TEST(SerialContractTest, BackpressurePolicyFailFast) {
   auto port = std::make_unique<FakeSerialPort>(ioc);
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
-  test::CallbackRecorder rec;
-  serial->on_state(rec.state_cb());
+  auto rec = std::make_shared<test::CallbackRecorder>();
+  serial->on_state(test::CallbackRecorder::state_cb_weak(rec));
   serial->start();
 
   std::vector<uint8_t> huge(common::constants::DEFAULT_BACKPRESSURE_THRESHOLD * 2, 0xCD);
   serial->async_write_copy(huge.data(), huge.size());
 
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Error) == 1u; }, 200ms));
+  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec->state_count(common::LinkState::Error) == 1u; }, 200ms));
 }
 
 TEST(SerialContractTest, OpenCloseLifecycle) {
@@ -194,13 +194,13 @@ TEST(SerialContractTest, OpenCloseLifecycle) {
   auto port = std::make_unique<FakeSerialPort>(ioc);
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
-  test::CallbackRecorder rec;
-  serial->on_state(rec.state_cb());
+  auto rec = std::make_shared<test::CallbackRecorder>();
+  serial->on_state(test::CallbackRecorder::state_cb_weak(rec));
 
   serial->start();
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Connected) == 1u; }, 200ms));
+  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec->state_count(common::LinkState::Connected) == 1u; }, 200ms));
   serial->stop();
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Closed) == 1u; }, 200ms));
+  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec->state_count(common::LinkState::Closed) == 1u; }, 200ms));
 }
 
 }  // namespace transport

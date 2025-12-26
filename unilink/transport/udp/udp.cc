@@ -264,7 +264,15 @@ void UdpChannel::start_receive() {
   auto self = shared_from_this();
   socket_.async_receive_from(
       net::buffer(rx_), recv_endpoint_,
-      [self](const boost::system::error_code& ec, std::size_t bytes) { self->handle_receive(ec, bytes); });
+      [self](const boost::system::error_code& ec, std::size_t bytes) {
+        try {
+          self->handle_receive(ec, bytes);
+        } catch (const std::exception& e) {
+          UNILINK_LOG_ERROR("udp", "receive", "Unhandled exception: " + std::string(e.what()));
+        } catch (...) {
+          UNILINK_LOG_ERROR("udp", "receive", "Unhandled unknown exception");
+        }
+      });
 }
 
 void UdpChannel::handle_receive(const boost::system::error_code& ec, std::size_t bytes) {
@@ -329,22 +337,28 @@ void UdpChannel::do_write() {
   auto bytes_queued = queued_bytes_front();
 
   auto on_write = [self = shared_from_this(), bytes_queued](const boost::system::error_code& ec, std::size_t) {
-    self->queue_bytes_ = (self->queue_bytes_ > bytes_queued) ? (self->queue_bytes_ - bytes_queued) : 0;
-    if (!self->tx_.empty()) self->tx_.pop_front();
-    self->report_backpressure(self->queue_bytes_);
+    try {
+      self->queue_bytes_ = (self->queue_bytes_ > bytes_queued) ? (self->queue_bytes_ - bytes_queued) : 0;
+      if (!self->tx_.empty()) self->tx_.pop_front();
+      self->report_backpressure(self->queue_bytes_);
 
-    if (ec) {
-      if (ec != boost::asio::error::operation_aborted) {
-        UNILINK_LOG_ERROR("udp", "write", "Send failed: " + ec.message());
-        self->state_.set_state(LinkState::Error);
-        self->notify_state();
+      if (ec) {
+        if (ec != boost::asio::error::operation_aborted) {
+          UNILINK_LOG_ERROR("udp", "write", "Send failed: " + ec.message());
+          self->state_.set_state(LinkState::Error);
+          self->notify_state();
+        }
+        self->writing_ = false;
+        return;
       }
-      self->writing_ = false;
-      return;
-    }
 
-    self->writing_ = false;
-    self->do_write();
+      self->writing_ = false;
+      self->do_write();
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("udp", "write", "Unhandled exception: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("udp", "write", "Unhandled unknown exception");
+    }
   };
 
   if (std::holds_alternative<common::PooledBuffer>(current)) {
@@ -380,7 +394,13 @@ void UdpChannel::notify_state() {
     auto previous = last_notified_.exchange(current);
     if (previous == current) return;
   }
-  on_state_(current);
+  try {
+    on_state_(current);
+  } catch (const std::exception& e) {
+    UNILINK_LOG_ERROR("udp", "state_notify", "Exception in state callback: " + std::string(e.what()));
+  } catch (...) {
+    UNILINK_LOG_ERROR("udp", "state_notify", "Unknown exception in state callback");
+  }
 }
 
 void UdpChannel::report_backpressure(size_t queued_bytes) {

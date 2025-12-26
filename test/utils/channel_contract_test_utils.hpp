@@ -22,6 +22,7 @@
 #include <chrono>
 #include <cstddef>
 #include <functional>
+#include <memory>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -74,19 +75,15 @@ class CallbackRecorder {
  public:
   CallbackRecorder() = default;
 
-  std::function<void(common::LinkState)> state_cb() {
-    return [this](common::LinkState state) {
-      CallbackGuard guard(*this);
-      std::lock_guard<std::mutex> lock(mu_);
-      states_.push_back(state);
+  static std::function<void(common::LinkState)> state_cb_weak(std::weak_ptr<CallbackRecorder> weak) {
+    return [weak = std::move(weak)](common::LinkState state) {
+      if (auto locked = weak.lock()) locked->record_state(state);
     };
   }
 
-  std::function<void(const uint8_t*, size_t)> bytes_cb() {
-    return [this](const uint8_t*, size_t n) {
-      CallbackGuard guard(*this);
-      std::lock_guard<std::mutex> lock(mu_);
-      bytes_calls_.push_back(n);
+  static std::function<void(const uint8_t*, size_t)> bytes_cb_weak(std::weak_ptr<CallbackRecorder> weak) {
+    return [weak = std::move(weak)](const uint8_t* data, size_t n) {
+      if (auto locked = weak.lock()) locked->record_bytes(data, n);
     };
   }
 
@@ -101,6 +98,7 @@ class CallbackRecorder {
   }
 
   bool saw_overlap() const { return overlap_.load(); }
+  bool saw_exception() const { return saw_exception_.load(); }
 
   void reset() {
     std::lock_guard<std::mutex> lock(mu_);
@@ -108,6 +106,7 @@ class CallbackRecorder {
     bytes_calls_.clear();
     overlap_.store(false);
     in_callback_.clear();
+    saw_exception_.store(false);
   }
 
  private:
@@ -130,6 +129,46 @@ class CallbackRecorder {
   std::vector<size_t> bytes_calls_;
   std::atomic_flag in_callback_ = ATOMIC_FLAG_INIT;
   std::atomic<bool> overlap_{false};
+  std::atomic<bool> saw_exception_{false};
+
+  void record_state(common::LinkState state) {
+    CallbackGuard guard(*this);
+    try {
+      std::lock_guard<std::mutex> lock(mu_);
+      states_.push_back(state);
+    } catch (...) {
+      saw_exception_.store(true);
+    }
+  }
+
+  void record_bytes(const uint8_t*, size_t n) {
+    CallbackGuard guard(*this);
+    try {
+      std::lock_guard<std::mutex> lock(mu_);
+      bytes_calls_.push_back(n);
+    } catch (...) {
+      saw_exception_.store(true);
+    }
+  }
 };
+
+template <typename ChannelPtr>
+void stop_and_drain(ChannelPtr& channel, boost::asio::io_context& ioc, std::chrono::milliseconds total = 200ms,
+                    std::chrono::milliseconds step = 20ms) {
+  if (channel) {
+    channel->stop();
+  }
+  auto deadline = std::chrono::steady_clock::now() + total;
+  while (std::chrono::steady_clock::now() < deadline) {
+    ioc.run_for(step);
+    ioc.restart();
+  }
+  channel.reset();
+  auto drain_deadline = std::chrono::steady_clock::now() + total;
+  while (std::chrono::steady_clock::now() < drain_deadline) {
+    ioc.run_for(step);
+    ioc.restart();
+  }
+}
 
 }  // namespace unilink::test
