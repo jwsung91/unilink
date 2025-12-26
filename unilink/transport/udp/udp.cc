@@ -120,13 +120,15 @@ void UdpChannel::stop() {
   stopping_.store(true);
   if (work_guard_) work_guard_->reset();
 
-  auto self = shared_from_this();
-  net::post(strand_, [self]() {
-    self->close_socket();
-    self->tx_.clear();
-    self->queue_bytes_ = 0;
-    self->writing_ = false;
-    self->report_backpressure(self->queue_bytes_);
+  auto weak_self = weak_from_this();
+  net::post(strand_, [weak_self]() {
+    if (auto self = weak_self.lock()) {
+      self->close_socket();
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+      self->writing_ = false;
+      self->report_backpressure(self->queue_bytes_);
+    }
   });
 
   if (owns_ioc_) {
@@ -372,9 +374,11 @@ void UdpChannel::close_socket() {
 }
 
 void UdpChannel::notify_state() {
-  if (on_state_) {
-    on_state_(state_.get_state());
-  }
+  if (!on_state_) return;
+  auto current = state_.get_state();
+  auto previous = last_notified_.exchange(current);
+  if (previous == current) return;
+  on_state_(current);
 }
 
 void UdpChannel::report_backpressure(size_t queued_bytes) {

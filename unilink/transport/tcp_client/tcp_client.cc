@@ -136,6 +136,12 @@ void TcpClient::start() {
     return;
   }
 
+  if (fatal_error_.load()) {
+    state_.set_state(LinkState::Error);
+    notify_state();
+    return;
+  }
+
   stopping_.store(false);
   retry_attempts_ = 0;
   recalculate_backpressure_bounds();
@@ -278,7 +284,12 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
             self->writing_ = false;
             self->backpressure_active_ = false;
             self->state_.set_state(LinkState::Error);
+            self->fatal_error_.store(true);
             self->notify_state();
+            self->stopping_.store(true);
+            self->resolver_.cancel();
+            self->retry_timer_.cancel();
+            self->connect_timer_.cancel();
             return;
           }
 
@@ -314,7 +325,12 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
       self->writing_ = false;
       self->backpressure_active_ = false;
       self->state_.set_state(LinkState::Error);
+      self->fatal_error_.store(true);
       self->notify_state();
+      self->stopping_.store(true);
+      self->resolver_.cancel();
+      self->retry_timer_.cancel();
+      self->connect_timer_.cancel();
       return;
     }
 
@@ -356,7 +372,12 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
       self->writing_ = false;
       self->backpressure_active_ = false;
       self->state_.set_state(LinkState::Error);
+      self->fatal_error_.store(true);
       self->notify_state();
+      self->stopping_.store(true);
+      self->resolver_.cancel();
+      self->retry_timer_.cancel();
+      self->connect_timer_.cancel();
       return;
     }
 
@@ -398,7 +419,12 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
       self->writing_ = false;
       self->backpressure_active_ = false;
       self->state_.set_state(LinkState::Error);
+      self->fatal_error_.store(true);
       self->notify_state();
+      self->stopping_.store(true);
+      self->resolver_.cancel();
+      self->retry_timer_.cancel();
+      self->connect_timer_.cancel();
       return;
     }
 
@@ -584,6 +610,9 @@ void TcpClient::do_write() {
 }
 
 void TcpClient::handle_close(const boost::system::error_code& ec) {
+  if (fatal_error_.load()) {
+    return;
+  }
   connected_.store(false);
   writing_ = false;
   connect_timer_.cancel();
@@ -645,7 +674,11 @@ void TcpClient::report_backpressure(size_t queued_bytes) {
 }
 
 void TcpClient::notify_state() {
-  if (on_state_) on_state_(state_.get_state());
+  if (!on_state_) return;
+  auto current = state_.get_state();
+  auto previous = last_notified_.exchange(current);
+  if (previous == current) return;
+  on_state_(current);
 }
 
 void TcpClient::reset_io_objects() {

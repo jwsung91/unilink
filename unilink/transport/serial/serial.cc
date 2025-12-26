@@ -533,17 +533,19 @@ void Serial::close_port() {
 }
 
 void Serial::notify_state() {
-  if (on_state_) {
-    try {
-      on_state_(state_.get_state());
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("serial", "callback", "State callback error: " + std::string(e.what()));
-      common::error_reporting::report_system_error("serial", "state_callback",
-                                                   "Exception in state callback: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("serial", "callback", "Unknown error in state callback");
-      common::error_reporting::report_system_error("serial", "state_callback", "Unknown error in state callback");
-    }
+  if (!on_state_) return;
+  auto current = state_.get_state();
+  auto previous = last_notified_.exchange(current);
+  if (previous == current) return;
+  try {
+    on_state_(current);
+  } catch (const std::exception& e) {
+    UNILINK_LOG_ERROR("serial", "callback", "State callback error: " + std::string(e.what()));
+    common::error_reporting::report_system_error("serial", "state_callback",
+                                                 "Exception in state callback: " + std::string(e.what()));
+  } catch (...) {
+    UNILINK_LOG_ERROR("serial", "callback", "Unknown error in state callback");
+    common::error_reporting::report_system_error("serial", "state_callback", "Unknown error in state callback");
   }
 }
 

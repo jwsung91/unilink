@@ -104,6 +104,7 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   size_t bp_limit_;  // Hard cap for queued bytes
   size_t bp_low_;    // Backpressure relief threshold
   bool backpressure_active_ = false;
+  std::atomic<common::LinkState> last_notified_{common::LinkState::Idle};
 
   OnBytes on_bytes_;
   OnState on_state_;
