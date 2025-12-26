@@ -12,11 +12,10 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-project(unilink_examples)
+add_executable(udp_sender udp_sender.cpp)
+target_link_libraries(udp_sender PRIVATE unilink::unilink)
+unilink_configure_executable(udp_sender)
 
-# Add subdirectories
-add_subdirectory(tutorials)
-add_subdirectory(serial)
-add_subdirectory(tcp)
-add_subdirectory(udp)
-add_subdirectory(common)
+add_executable(udp_receiver udp_receiver.cpp)
+target_link_libraries(udp_receiver PRIVATE unilink::unilink)
+unilink_configure_executable(udp_receiver)
