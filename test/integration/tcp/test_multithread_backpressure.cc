@@ -16,9 +16,9 @@
 
 #include <gtest/gtest.h>
 
+#include <array>
 #include <atomic>
 #include <boost/asio.hpp>
-#include <array>
 #include <condition_variable>
 #include <cstdint>
 #include <memory>
@@ -83,7 +83,8 @@ TEST_F(IntegrationTest, TcpServerSessionBackpressureMultithreadedIoContext) {
 
   ASSERT_TRUE(session);
 
-  // Drain client receive buffer so server writes can complete on platforms with small TCP windows (e.g., Windows loopback)
+  // Drain client receive buffer so server writes can complete on platforms with small TCP windows (e.g., Windows
+  // loopback)
   std::atomic<bool> draining{true};
   std::thread drain_thread([&] {
     std::array<uint8_t, 64 * 1024> buf{};
