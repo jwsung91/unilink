@@ -676,8 +676,10 @@ void TcpClient::report_backpressure(size_t queued_bytes) {
 void TcpClient::notify_state() {
   if (!on_state_) return;
   auto current = state_.get_state();
-  auto previous = last_notified_.exchange(current);
-  if (previous == current) return;
+  if (current == LinkState::Error || current == LinkState::Closed) {
+    auto previous = last_notified_.exchange(current);
+    if (previous == current) return;
+  }
   on_state_(current);
 }
 

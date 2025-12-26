@@ -535,8 +535,10 @@ void Serial::close_port() {
 void Serial::notify_state() {
   if (!on_state_) return;
   auto current = state_.get_state();
-  auto previous = last_notified_.exchange(current);
-  if (previous == current) return;
+  if (current == common::LinkState::Error || current == common::LinkState::Closed) {
+    auto previous = last_notified_.exchange(current);
+    if (previous == current) return;
+  }
   try {
     on_state_(current);
   } catch (const std::exception& e) {
