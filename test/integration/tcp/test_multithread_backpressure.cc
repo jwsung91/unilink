@@ -18,6 +18,7 @@
 
 #include <atomic>
 #include <boost/asio.hpp>
+#include <array>
 #include <condition_variable>
 #include <cstdint>
 #include <memory>
@@ -82,6 +83,17 @@ TEST_F(IntegrationTest, TcpServerSessionBackpressureMultithreadedIoContext) {
 
   ASSERT_TRUE(session);
 
+  // Drain client receive buffer so server writes can complete on platforms with small TCP windows (e.g., Windows loopback)
+  std::atomic<bool> draining{true};
+  std::thread drain_thread([&] {
+    std::array<uint8_t, 64 * 1024> buf{};
+    while (draining.load()) {
+      boost::system::error_code ec;
+      auto n = client.read_some(net::buffer(buf), ec);
+      if (ec || n == 0) break;
+    }
+  });
+
   // Queue enough data to trigger high watermark but stay under the hard limit (1MB)
   std::vector<uint8_t> payload(512 * 1024, 0x5A);
   session->async_write_copy(payload.data(), payload.size());
@@ -90,6 +102,12 @@ TEST_F(IntegrationTest, TcpServerSessionBackpressureMultithreadedIoContext) {
     std::unique_lock<std::mutex> lock(mutex);
     ASSERT_TRUE(cv.wait_for(lock, std::chrono::seconds(5), [&] { return bp_events.size() >= 2; }));
   }
+
+  draining = false;
+  boost::system::error_code ec;
+  client.shutdown(tcp::socket::shutdown_both, ec);
+  client.close(ec);
+  if (drain_thread.joinable()) drain_thread.join();
 
   guard.reset();
   ioc.stop();
