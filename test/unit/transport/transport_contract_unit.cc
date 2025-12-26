@@ -73,9 +73,7 @@ class FakeSerialPort : public interface::SerialPortInterface {
     net::post(ioc_, [handler = std::move(handler), ec, n]() { handler(ec, n); });
   }
 
-  void emit_operation_aborted() {
-    emit_read(0, make_error_code(net::error::operation_aborted));
-  }
+  void emit_operation_aborted() { emit_read(0, make_error_code(net::error::operation_aborted)); }
 
  private:
   net::io_context& ioc_;
