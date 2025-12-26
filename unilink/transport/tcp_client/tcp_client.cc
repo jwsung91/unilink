@@ -623,6 +623,7 @@ void TcpClient::transition_to(LinkState next, const boost::system::error_code& e
   }
 
   const auto current = state_.get_state();
+  const bool retrying_same_state = (next == LinkState::Connecting && current == LinkState::Connecting);
   if ((current == LinkState::Closed || current == LinkState::Error) &&
       (next == LinkState::Closed || next == LinkState::Error)) {
     return;
@@ -632,7 +633,7 @@ void TcpClient::transition_to(LinkState next, const boost::system::error_code& e
     if (terminal_state_notified_.exchange(true)) {
       return;
     }
-  } else if (current == next) {
+  } else if (current == next && !retrying_same_state) {
     return;
   }
 
@@ -658,7 +659,8 @@ void TcpClient::perform_stop_cleanup() {
       try {
         on_bp_(queue_bytes_);
       } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("tcp_client", "on_backpressure", "Exception in backpressure callback: " + std::string(e.what()));
+        UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
+                          "Exception in backpressure callback: " + std::string(e.what()));
       } catch (...) {
         UNILINK_LOG_ERROR("tcp_client", "on_backpressure", "Unknown exception in backpressure callback");
       }

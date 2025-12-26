@@ -19,9 +19,9 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
+#include <functional>
 #include <memory>
 #include <mutex>
-#include <functional>
 #include <thread>
 #include <vector>
 
@@ -83,8 +83,8 @@ TEST_F(IntegrationTest, TcpClientStartStopStress) {
   const int iterations = 200;
   for (int i = 0; i < iterations; ++i) {
     client->start();
-    EXPECT_TRUE(TestUtils::waitForCondition(
-        [&] { return client->is_connected() || terminal_notifications.load() > i; }, 2000));
+    EXPECT_TRUE(
+        TestUtils::waitForCondition([&] { return client->is_connected() || terminal_notifications.load() > i; }, 2000));
     client->stop();
     EXPECT_TRUE(TestUtils::waitForCondition([&] { return terminal_notifications.load() >= i + 1; }, 2000));
   }
