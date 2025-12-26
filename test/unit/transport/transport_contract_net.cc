@@ -28,11 +28,8 @@
 #include "test/utils/channel_contract_test_utils.hpp"
 #include "unilink/common/common.hpp"
 #include "unilink/common/constants.hpp"
-#include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/udp_config.hpp"
-#include "unilink/interface/iserial_port.hpp"
-#include "unilink/transport/serial/serial.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/udp/udp.hpp"
 
@@ -54,52 +51,6 @@ uint16_t reserve_udp_port() {
   socket.close();
   return port;
 }
-
-// Minimal fake serial port to drive contract tests without hardware.
-class FakeSerialPort : public unilink::interface::SerialPortInterface {
- public:
-  explicit FakeSerialPort(net::io_context& ioc) : ioc_(ioc) {}
-
-  void open(const std::string&, boost::system::error_code& ec) override {
-    open_ = true;
-    ec.clear();
-  }
-  bool is_open() const override { return open_; }
-  void close(boost::system::error_code& ec) override {
-    open_ = false;
-    ec.clear();
-  }
-
-  void set_option(const net::serial_port_base::baud_rate&, boost::system::error_code& ec) override { ec.clear(); }
-  void set_option(const net::serial_port_base::character_size&, boost::system::error_code& ec) override { ec.clear(); }
-  void set_option(const net::serial_port_base::stop_bits&, boost::system::error_code& ec) override { ec.clear(); }
-  void set_option(const net::serial_port_base::parity&, boost::system::error_code& ec) override { ec.clear(); }
-  void set_option(const net::serial_port_base::flow_control&, boost::system::error_code& ec) override { ec.clear(); }
-
-  void async_read_some(const boost::asio::mutable_buffer&,
-                       std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
-    read_handler_ = std::move(handler);
-  }
-
-  void async_write(const boost::asio::const_buffer& buffer,
-                   std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
-    auto size = buffer.size();
-    net::post(ioc_, [handler = std::move(handler), size]() { handler({}, size); });
-  }
-
-  void emit_read(std::size_t n = 1, const boost::system::error_code& ec = {}) {
-    if (!read_handler_) return;
-    auto handler = std::move(read_handler_);
-    net::post(ioc_, [handler = std::move(handler), ec, n]() { handler(ec, n); });
-  }
-
-  void emit_operation_aborted() { emit_read(0, make_error_code(net::error::operation_aborted)); }
-
- private:
-  net::io_context& ioc_;
-  bool open_{false};
-  std::function<void(const boost::system::error_code&, std::size_t)> read_handler_;
-};
 
 bool can_bind_udp() {
   try {
@@ -126,7 +77,7 @@ bool can_bind_tcp() {
 namespace unilink {
 namespace transport {
 
-// --- UDP contract tests ---
+// --- UDP contract tests (network/loopback) ---
 
 TEST(UdpContractTest, StopIsIdempotent) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
@@ -171,11 +122,6 @@ TEST(UdpContractTest, NoUserCallbackAfterStop) {
   EXPECT_FALSE(test::wait_until(ioc, [&] { return rec.bytes_call_count() > 0; }, 100ms));
 }
 
-#if defined(__APPLE__)
-TEST(UdpContractTest, DISABLED_ErrorNotifyOnlyOnceMac) {
-  GTEST_SKIP() << "UDP error contract test disabled on macOS CI";
-}
-#else
 TEST(UdpContractTest, ErrorNotifyOnlyOnce) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
   net::io_context ioc;
@@ -199,7 +145,6 @@ TEST(UdpContractTest, ErrorNotifyOnlyOnce) {
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Error) == 1u; }, 200ms));
   EXPECT_EQ(rec.state_count(common::LinkState::Error), 1u);
 }
-#endif
 
 TEST(UdpContractTest, CallbacksAreSerialized) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
@@ -228,11 +173,6 @@ TEST(UdpContractTest, CallbacksAreSerialized) {
   EXPECT_FALSE(rec.saw_overlap());
 }
 
-#if defined(__APPLE__)
-TEST(UdpContractTest, DISABLED_BackpressurePolicyFailFastMac) {
-  GTEST_SKIP() << "UDP backpressure contract test disabled on macOS CI";
-}
-#else
 TEST(UdpContractTest, BackpressurePolicyFailFast) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
   net::io_context ioc;
@@ -254,7 +194,6 @@ TEST(UdpContractTest, BackpressurePolicyFailFast) {
 
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Error) == 1u; }, 200ms));
 }
-#endif
 
 TEST(UdpContractTest, OpenCloseLifecycle) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
@@ -307,7 +246,7 @@ TEST(UdpContractTest, WriteWithoutRemoteIsDocumentedNoop) {
   channel->stop();
 }
 
-// --- TCP client contract tests ---
+// --- TCP client contract tests (network/loopback) ---
 
 TEST(TcpContractTest, StopIsIdempotent) {
   if (!can_bind_tcp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
@@ -355,13 +294,13 @@ TEST(TcpContractTest, NoUserCallbackAfterStop) {
   client->start();
   EXPECT_TRUE(test::wait_until(ioc, [&] { return client->is_connected(); }, 200ms));
 
-  // Deliver one payload to ensure callback works, then stop and send another.
   auto data1 = std::make_shared<std::string>("before-stop");
   net::async_write(*server_socket, net::buffer(*data1), [data1](auto, auto) {});
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.bytes_call_count() >= 1; }, 200ms));
 
   client->stop();
-  test::pump_io(ioc, 50ms);  // ensure stop is processed before further writes
+  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Closed) >= 1; }, 200ms));
+  test::pump_io(ioc, 50ms);
   auto data2 = std::make_shared<std::string>("after-stop");
   net::async_write(*server_socket, net::buffer(*data2), [data2](auto, auto) {});
   EXPECT_FALSE(test::wait_until(ioc, [&] { return rec.bytes_call_count() > 1; }, 500ms));
@@ -412,7 +351,7 @@ TEST(TcpContractTest, CallbacksAreSerialized) {
   auto burst2 = std::make_shared<std::string>("burst-two");
   net::async_write(*server_socket, net::buffer(*burst),
                    [burst](const boost::system::error_code& ec, std::size_t) { ASSERT_FALSE(ec); });
-  test::pump_io(ioc, 20ms);  // let first read complete before second send to avoid coalescing
+  test::pump_io(ioc, 20ms);
   net::async_write(*server_socket, net::buffer(*burst2),
                    [burst2](const boost::system::error_code& ec, std::size_t) { ASSERT_FALSE(ec); });
 
@@ -460,120 +399,6 @@ TEST(TcpContractTest, OpenCloseLifecycle) {
   client->start();
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Connected) == 1u; }, 200ms));
   client->stop();
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Closed) == 1u; }, 200ms));
-}
-
-// --- Serial contract tests ---
-
-TEST(SerialContractTest, StopIsIdempotent) {
-  net::io_context ioc;
-  config::SerialConfig cfg;
-  auto port = std::make_unique<FakeSerialPort>(ioc);
-  auto serial = Serial::create(cfg, std::move(port), ioc);
-
-  test::CallbackRecorder rec;
-  serial->on_state(rec.state_cb());
-
-  serial->start();
-  test::pump_io(ioc, 10ms);
-  serial->stop();
-  serial->stop();
-  test::pump_io(ioc, 10ms);
-
-  EXPECT_EQ(rec.state_count(common::LinkState::Closed), 1u);
-}
-
-TEST(SerialContractTest, NoUserCallbackAfterStop) {
-  net::io_context ioc;
-  config::SerialConfig cfg;
-  auto port = std::make_unique<FakeSerialPort>(ioc);
-  auto* port_raw = port.get();
-  auto serial = Serial::create(cfg, std::move(port), ioc);
-
-  test::CallbackRecorder rec;
-  serial->on_bytes(rec.bytes_cb());
-
-  serial->start();
-  test::pump_io(ioc, 5ms);
-  serial->stop();
-  port_raw->emit_operation_aborted();
-
-  EXPECT_FALSE(test::wait_until(ioc, [&] { return rec.bytes_call_count() > 0; }, 100ms));
-}
-
-TEST(SerialContractTest, ErrorNotifyOnlyOnce) {
-  net::io_context ioc;
-  config::SerialConfig cfg;
-  cfg.device = "";  // ensure FakeSerialPort path is taken
-  cfg.reopen_on_error = false;
-  cfg.backpressure_threshold = 512;
-  auto port = std::make_unique<FakeSerialPort>(ioc);
-  auto serial = Serial::create(cfg, std::move(port), ioc);
-
-  test::CallbackRecorder rec;
-  serial->on_state(rec.state_cb());
-  serial->start();
-
-  std::vector<uint8_t> huge(common::constants::DEFAULT_BACKPRESSURE_THRESHOLD * 2, 0xEF);
-  serial->async_write_copy(huge.data(), huge.size());
-
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Error) == 1u; }, 200ms));
-  EXPECT_EQ(rec.state_count(common::LinkState::Error), 1u);
-}
-
-TEST(SerialContractTest, CallbacksAreSerialized) {
-  net::io_context ioc;
-  config::SerialConfig cfg;
-  cfg.device = "";  // ensure FakeSerialPort path is taken
-  auto port = std::make_unique<FakeSerialPort>(ioc);
-  auto* port_raw = port.get();
-  auto serial = Serial::create(cfg, std::move(port), ioc);
-
-  test::CallbackRecorder rec;
-  serial->on_bytes(rec.bytes_cb());
-
-  serial->start();
-  test::pump_io(ioc, 5ms);
-
-  port_raw->emit_read(4);
-  test::pump_io(ioc, 5ms);  // allow re-arm
-  port_raw->emit_read(6);
-
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.bytes_call_count() >= 2; }, 200ms));
-  EXPECT_FALSE(rec.saw_overlap());
-}
-
-TEST(SerialContractTest, BackpressurePolicyFailFast) {
-  net::io_context ioc;
-  config::SerialConfig cfg;
-  cfg.device = "";  // ensure FakeSerialPort path is taken
-  cfg.backpressure_threshold = 256;
-  cfg.reopen_on_error = false;
-  auto port = std::make_unique<FakeSerialPort>(ioc);
-  auto serial = Serial::create(cfg, std::move(port), ioc);
-
-  test::CallbackRecorder rec;
-  serial->on_state(rec.state_cb());
-  serial->start();
-
-  std::vector<uint8_t> huge(common::constants::DEFAULT_BACKPRESSURE_THRESHOLD * 2, 0xCD);
-  serial->async_write_copy(huge.data(), huge.size());
-
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Error) == 1u; }, 200ms));
-}
-
-TEST(SerialContractTest, OpenCloseLifecycle) {
-  net::io_context ioc;
-  config::SerialConfig cfg;
-  auto port = std::make_unique<FakeSerialPort>(ioc);
-  auto serial = Serial::create(cfg, std::move(port), ioc);
-
-  test::CallbackRecorder rec;
-  serial->on_state(rec.state_cb());
-
-  serial->start();
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Connected) == 1u; }, 200ms));
-  serial->stop();
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Closed) == 1u; }, 200ms));
 }
 

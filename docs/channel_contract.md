@@ -75,3 +75,9 @@
 ## Test Coverage
 
 - Contract tests validate: idempotent `stop()`, no user callbacks after stop, single `Error` notification, serialized callbacks (no re-entry), fail-fast backpressure policy, and `open → ready → stop → closed` lifecycle across TCP/Serial/UDP.
+
+## Running Contract Tests
+
+- Always run in CI: `ctest -L contract_unit --output-on-failure` (no real sockets or devices required).
+- Optional (requires loopback socket access): `ctest -L contract_net --output-on-failure`.
+- `contract_net` tests may `GTEST_SKIP` in sandboxes where socket bind/connect is blocked; skip messages indicate the reason (e.g., “Socket open not permitted in sandbox”).

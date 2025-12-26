@@ -218,26 +218,47 @@ gtest_discover_tests(run_unit_transport_udp
     TIMEOUT 30
 )
 
-# Contract-based transport tests shared across channels
-add_executable(run_unit_transport_contract ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_contract_common.cc)
-target_link_libraries(run_unit_transport_contract
+# Contract-based transport tests (unit vs net)
+add_executable(run_unit_transport_contract_unit ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_contract_unit.cc)
+target_link_libraries(run_unit_transport_contract_unit
   PRIVATE
     ${_unilink_test_lib}
     GTest::gtest
     GTest::gtest_main
     GTest::gmock
 )
-unilink_set_test_warning_options(run_unit_transport_contract)
-target_include_directories(run_unit_transport_contract
+unilink_set_test_warning_options(run_unit_transport_contract_unit)
+target_include_directories(run_unit_transport_contract_unit
   PRIVATE
     ${CMAKE_SOURCE_DIR}/test/utils
     ${CMAKE_SOURCE_DIR}/test/fixtures
 )
 
-gtest_discover_tests(run_unit_transport_contract
+gtest_discover_tests(run_unit_transport_contract_unit
   PROPERTIES
-    LABELS "unit;transport;contract"
+    LABELS "unit;transport;contract_unit"
     TIMEOUT 60
+)
+
+add_executable(run_unit_transport_contract_net ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_contract_net.cc)
+target_link_libraries(run_unit_transport_contract_net
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_transport_contract_net)
+target_include_directories(run_unit_transport_contract_net
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+
+gtest_discover_tests(run_unit_transport_contract_net
+  PROPERTIES
+    LABELS "unit;transport;contract_net"
+    TIMEOUT 120
 )
 
 # Transport layer tests removed - they require actual network/serial devices
@@ -260,5 +281,6 @@ add_dependencies(unilink_unit_tests
   run_unit_wrapper_serial_config_mapping
   run_unit_transport_tcp_client
   run_unit_transport_serial
-  run_unit_transport_contract
+  run_unit_transport_contract_unit
+  run_unit_transport_contract_net
 )
