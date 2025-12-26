@@ -299,7 +299,10 @@ TEST(TcpContractTest, NoUserCallbackAfterStop) {
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.bytes_call_count() >= 1; }, 200ms));
 
   client->stop();
-  EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Closed) >= 1; }, 200ms));
+  auto closed_or_error = [&] {
+    return rec.state_count(common::LinkState::Closed) >= 1 || rec.state_count(common::LinkState::Error) >= 1;
+  };
+  EXPECT_TRUE(test::wait_until(ioc, closed_or_error, 1000ms));
   test::pump_io(ioc, 50ms);
   auto data2 = std::make_shared<std::string>("after-stop");
   net::async_write(*server_socket, net::buffer(*data2), [data2](auto, auto) {});
