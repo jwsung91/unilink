@@ -73,8 +73,37 @@ UdpChannel::UdpChannel(const config::UdpConfig& cfg, net::io_context& ioc)
 }
 
 UdpChannel::~UdpChannel() {
-  if (started_ && !state_.is_state(LinkState::Closed)) {
-    stop();
+  stop_requested_.store(true);
+  stopping_.store(true);
+  if (work_guard_) work_guard_->reset();
+
+  // Best-effort synchronous cleanup without posting new work.
+  boost::system::error_code ec;
+  socket_.cancel(ec);
+  socket_.close(ec);
+  tx_.clear();
+  queue_bytes_ = 0;
+  writing_ = false;
+  backpressure_active_ = false;
+  connected_.store(false);
+  opened_.store(false);
+  state_.set_state(LinkState::Closed);
+  clear_callbacks();
+  started_ = false;
+
+  if (owns_ioc_) {
+    if (ioc_) {
+      ioc_->stop();
+    }
+    if (ioc_thread_.joinable()) {
+      try {
+        ioc_thread_.join();
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("udp", "destructor", "Join failed: " + std::string(e.what()));
+      } catch (...) {
+        UNILINK_LOG_ERROR("udp", "destructor", "Join failed with unknown error");
+      }
+    }
   }
 }
 
@@ -89,9 +118,9 @@ void UdpChannel::start() {
     owned_ioc_->restart();
   }
 
+  stop_requested_.store(false);
   work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
-  state_.set_state(LinkState::Connecting);
-  notify_state();
+  transition_to(LinkState::Connecting);
 
   auto self = shared_from_this();
   net::post(strand_, [self]() { self->open_socket(); });
@@ -112,27 +141,37 @@ void UdpChannel::start() {
 }
 
 void UdpChannel::stop() {
+  if (stop_requested_.exchange(true)) return;
+
   if (!started_) {
-    state_.set_state(LinkState::Closed);
+    transition_to(LinkState::Closed);
+    clear_callbacks();
     return;
   }
 
   stopping_.store(true);
   if (work_guard_) work_guard_->reset();
 
-  auto self = shared_from_this();
-  net::post(strand_, [self]() {
-    self->close_socket();
-    self->tx_.clear();
-    self->queue_bytes_ = 0;
-    self->writing_ = false;
-    self->report_backpressure(self->queue_bytes_);
+  auto self = weak_from_this();
+  net::dispatch(strand_, [self]() {
+    if (auto s = self.lock()) {
+      s->close_socket();
+      s->tx_.clear();
+      s->queue_bytes_ = 0;
+      s->writing_ = false;
+      s->backpressure_active_ = false;
+      s->report_backpressure(s->queue_bytes_);
+      s->connected_.store(false);
+      s->opened_.store(false);
+      s->transition_to(LinkState::Closed);
+      s->clear_callbacks();
+      if (s->owns_ioc_ && s->ioc_) {
+        s->ioc_->stop();
+      }
+    }
   });
 
   if (owns_ioc_) {
-    if (ioc_) {
-      ioc_->stop();
-    }
     if (ioc_thread_.joinable()) {
       ioc_thread_.join();
     }
@@ -141,10 +180,6 @@ void UdpChannel::stop() {
     }
   }
 
-  connected_.store(false);
-  opened_.store(false);
-  state_.set_state(LinkState::Closed);
-  notify_state();
   started_ = false;
 }
 
@@ -163,22 +198,32 @@ void UdpChannel::async_write_copy(const uint8_t* data, size_t size) {
     return;
   }
 
+  if (size > bp_limit_) {
+    UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded by single write");
+    transition_to(LinkState::Error);
+    return;
+  }
+
   if (cfg_.enable_memory_pool && size <= 65536) {
     common::PooledBuffer pooled(size);
     if (pooled.valid()) {
       common::safe_memory::safe_memcpy(pooled.data(), data, size);
-      net::post(strand_, [self = shared_from_this(), buf = std::move(pooled), size]() mutable {
-        if (!self->enqueue_buffer(std::move(buf), size)) return;
-        self->do_write();
+      net::post(strand_, [self = weak_from_this(), buf = std::move(pooled), size]() mutable {
+        if (auto s = self.lock()) {
+          if (!s->enqueue_buffer(std::move(buf), size)) return;
+          s->do_write();
+        }
       });
       return;
     }
   }
 
   std::vector<uint8_t> copy(data, data + size);
-  net::post(strand_, [self = shared_from_this(), buf = std::move(copy), size]() mutable {
-    if (!self->enqueue_buffer(std::move(buf), size)) return;
-    self->do_write();
+  net::post(strand_, [self = weak_from_this(), buf = std::move(copy), size]() mutable {
+    if (auto s = self.lock()) {
+      if (!s->enqueue_buffer(std::move(buf), size)) return;
+      s->do_write();
+    }
   });
 }
 
@@ -191,9 +236,17 @@ void UdpChannel::async_write_move(std::vector<uint8_t>&& data) {
     return;
   }
 
-  net::post(strand_, [self = shared_from_this(), buf = std::move(data), size]() mutable {
-    if (!self->enqueue_buffer(std::move(buf), size)) return;
-    self->do_write();
+  if (size > bp_limit_) {
+    UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded by single write");
+    transition_to(LinkState::Error);
+    return;
+  }
+
+  net::post(strand_, [self = weak_from_this(), buf = std::move(data), size]() mutable {
+    if (auto s = self.lock()) {
+      if (!s->enqueue_buffer(std::move(buf), size)) return;
+      s->do_write();
+    }
   });
 }
 
@@ -206,9 +259,17 @@ void UdpChannel::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> 
   }
 
   auto size = data->size();
-  net::post(strand_, [self = shared_from_this(), buf = std::move(data), size]() mutable {
-    if (!self->enqueue_buffer(std::move(buf), size)) return;
-    self->do_write();
+  if (size > bp_limit_) {
+    UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded by single write");
+    transition_to(LinkState::Error);
+    return;
+  }
+
+  net::post(strand_, [self = weak_from_this(), buf = std::move(data), size]() mutable {
+    if (auto s = self.lock()) {
+      if (!s->enqueue_buffer(std::move(buf), size)) return;
+      s->do_write();
+    }
   });
 }
 
@@ -219,12 +280,13 @@ void UdpChannel::on_state(OnState cb) { on_state_ = std::move(cb); }
 void UdpChannel::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 
 void UdpChannel::open_socket() {
+  if (stopping_.load() || stop_requested_.load()) return;
+
   boost::system::error_code ec;
   auto address = net::ip::make_address(cfg_.local_address, ec);
   if (ec) {
     UNILINK_LOG_ERROR("udp", "bind", "Invalid local address: " + cfg_.local_address);
-    state_.set_state(LinkState::Error);
-    notify_state();
+    transition_to(LinkState::Error);
     return;
   }
 
@@ -232,32 +294,32 @@ void UdpChannel::open_socket() {
   socket_.open(local_endpoint_.protocol(), ec);
   if (ec) {
     UNILINK_LOG_ERROR("udp", "open", "Socket open failed: " + ec.message());
-    state_.set_state(LinkState::Error);
-    notify_state();
+    transition_to(LinkState::Error);
     return;
   }
 
   socket_.bind(local_endpoint_, ec);
   if (ec) {
     UNILINK_LOG_ERROR("udp", "bind", "Bind failed: " + ec.message());
-    state_.set_state(LinkState::Error);
-    notify_state();
+    transition_to(LinkState::Error);
     return;
   }
 
   opened_.store(true);
   if (remote_endpoint_) {
     connected_.store(true);
-    state_.set_state(LinkState::Connected);
+    transition_to(LinkState::Connected);
   } else {
-    state_.set_state(LinkState::Listening);
+    transition_to(LinkState::Listening);
   }
-  notify_state();
   start_receive();
 }
 
 void UdpChannel::start_receive() {
-  if (stopping_.load() || !socket_.is_open()) return;
+  if (stopping_.load() || stop_requested_.load() || state_.is_state(LinkState::Closed) ||
+      state_.is_state(LinkState::Error) || !socket_.is_open()) {
+    return;
+  }
 
   auto self = shared_from_this();
   socket_.async_receive_from(
@@ -266,29 +328,29 @@ void UdpChannel::start_receive() {
 }
 
 void UdpChannel::handle_receive(const boost::system::error_code& ec, std::size_t bytes) {
-  if (stopping_.load() || ec == boost::asio::error::operation_aborted) return;
+  if (stopping_.load() || stop_requested_.load() || state_.is_state(LinkState::Closed) ||
+      state_.is_state(LinkState::Error) || ec == boost::asio::error::operation_aborted) {
+    return;
+  }
 
   // Fail-fast on truncation: treat both message_size and full-buffer reads as truncated datagrams.
   // We set Error once and exit without re-arming the receive loop, so user callbacks are not spammed.
   if (ec == boost::asio::error::message_size || bytes >= rx_.size()) {
     UNILINK_LOG_ERROR("udp", "receive", "Datagram truncated (buffer too small)");
-    state_.set_state(LinkState::Error);
-    notify_state();
+    transition_to(LinkState::Error);
     return;
   }
 
   if (ec) {
     UNILINK_LOG_ERROR("udp", "receive", "Receive failed: " + ec.message());
-    state_.set_state(LinkState::Error);
-    notify_state();
+    transition_to(LinkState::Error);
     return;
   }
 
   if (!remote_endpoint_) {
     remote_endpoint_ = recv_endpoint_;
     connected_.store(true);
-    state_.set_state(LinkState::Connected);
-    notify_state();
+    transition_to(LinkState::Connected);
   }
 
   if (bytes > 0 && on_bytes_) {
@@ -297,15 +359,13 @@ void UdpChannel::handle_receive(const boost::system::error_code& ec, std::size_t
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("udp", "on_bytes", "Exception in bytes callback: " + std::string(e.what()));
       if (cfg_.stop_on_callback_exception) {
-        state_.set_state(LinkState::Error);
-        notify_state();
+        transition_to(LinkState::Error);
         return;
       }
     } catch (...) {
       UNILINK_LOG_ERROR("udp", "on_bytes", "Unknown exception in bytes callback");
       if (cfg_.stop_on_callback_exception) {
-        state_.set_state(LinkState::Error);
-        notify_state();
+        transition_to(LinkState::Error);
         return;
       }
     }
@@ -316,6 +376,14 @@ void UdpChannel::handle_receive(const boost::system::error_code& ec, std::size_t
 
 void UdpChannel::do_write() {
   if (writing_ || tx_.empty()) return;
+  if (stopping_.load() || stop_requested_.load() || state_.is_state(LinkState::Closed) ||
+      state_.is_state(LinkState::Error)) {
+    tx_.clear();
+    queue_bytes_ = 0;
+    writing_ = false;
+    report_backpressure(queue_bytes_);
+    return;
+  }
   if (!remote_endpoint_) {
     writing_ = false;
     return;
@@ -327,6 +395,15 @@ void UdpChannel::do_write() {
   auto bytes_queued = queued_bytes_front();
 
   auto on_write = [self = shared_from_this(), bytes_queued](const boost::system::error_code& ec, std::size_t) {
+    if (self->stopping_.load() || self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
+        self->state_.is_state(LinkState::Error)) {
+      self->writing_ = false;
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+      self->report_backpressure(self->queue_bytes_);
+      return;
+    }
+
     self->queue_bytes_ = (self->queue_bytes_ > bytes_queued) ? (self->queue_bytes_ - bytes_queued) : 0;
     if (!self->tx_.empty()) self->tx_.pop_front();
     self->report_backpressure(self->queue_bytes_);
@@ -334,8 +411,7 @@ void UdpChannel::do_write() {
     if (ec) {
       if (ec != boost::asio::error::operation_aborted) {
         UNILINK_LOG_ERROR("udp", "write", "Send failed: " + ec.message());
-        self->state_.set_state(LinkState::Error);
-        self->notify_state();
+        self->transition_to(LinkState::Error);
       }
       self->writing_ = false;
       return;
@@ -378,7 +454,7 @@ void UdpChannel::notify_state() {
 }
 
 void UdpChannel::report_backpressure(size_t queued_bytes) {
-  if (!on_bp_) return;
+  if (stop_requested_.load() || !on_bp_) return;
 
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
@@ -417,10 +493,14 @@ size_t UdpChannel::queued_bytes_front() const {
 bool UdpChannel::enqueue_buffer(
     std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>&& buffer,
     size_t size) {
+  if (stopping_.load() || stop_requested_.load() || state_.is_state(LinkState::Closed) ||
+      state_.is_state(LinkState::Error)) {
+    return false;
+  }
+
   if (queue_bytes_ + size > bp_limit_) {
     UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded");
-    state_.set_state(LinkState::Error);
-    notify_state();
+    transition_to(LinkState::Error);
     return false;
   }
   queue_bytes_ += size;
@@ -437,6 +517,19 @@ void UdpChannel::set_remote_from_config() {
     throw std::runtime_error("Invalid remote address: " + *cfg_.remote_address);
   }
   remote_endpoint_ = udp::endpoint(addr, *cfg_.remote_port);
+}
+
+bool UdpChannel::transition_to(LinkState target) {
+  if (state_.is_state(target)) return false;
+  state_.set_state(target);
+  notify_state();
+  return true;
+}
+
+void UdpChannel::clear_callbacks() {
+  on_bytes_ = nullptr;
+  on_state_ = nullptr;
+  on_bp_ = nullptr;
 }
 
 }  // namespace transport
