@@ -78,6 +78,8 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
       std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>&& buffer,
       size_t size);
   void set_remote_from_config();
+  bool transition_to(LinkState target);
+  void clear_callbacks();
 
  private:
   std::unique_ptr<net::io_context> owned_ioc_;
@@ -102,6 +104,7 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   size_t bp_limit_;
   bool backpressure_active_{false};
 
+  std::atomic<bool> stop_requested_{false};
   std::atomic<bool> stopping_{false};
   std::atomic<bool> opened_{false};
   std::atomic<bool> connected_{false};
