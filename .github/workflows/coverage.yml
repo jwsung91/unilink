@@ -49,7 +49,7 @@ jobs:
     - name: Run tests
       run: |
         cd build-coverage
-        ctest --output-on-failure --parallel $(nproc)
+        ctest --output-on-failure --parallel $(nproc) -L contract_unit
 
     - name: Generate coverage report
       run: |

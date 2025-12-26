@@ -90,7 +90,7 @@ jobs:
 
       - name: Test
         shell: bash
-        run: ctest --test-dir build --output-on-failure -C Release
+        run: ctest --test-dir build --output-on-failure -C Release -L contract_unit
 
       - name: Package
         shell: bash

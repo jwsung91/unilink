@@ -236,7 +236,7 @@ target_include_directories(run_unit_transport_contract_unit
 
 gtest_discover_tests(run_unit_transport_contract_unit
   PROPERTIES
-    LABELS "unit;transport;contract_unit"
+    LABELS "contract_unit"
     TIMEOUT 60
 )
 
@@ -257,7 +257,7 @@ target_include_directories(run_unit_transport_contract_net
 
 gtest_discover_tests(run_unit_transport_contract_net
   PROPERTIES
-    LABELS "unit;transport;contract_net"
+    LABELS "contract_net"
     TIMEOUT 120
 )
 

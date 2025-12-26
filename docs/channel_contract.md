@@ -81,3 +81,4 @@
 - Always run in CI: `ctest -L contract_unit --output-on-failure` (no real sockets or devices required).
 - Optional (requires loopback socket access): `ctest -L contract_net --output-on-failure`.
 - `contract_net` tests may `GTEST_SKIP` in sandboxes where socket bind/connect is blocked; skip messages indicate the reason (e.g., “Socket open not permitted in sandbox”).
+  - CI default runs only `contract_unit`; run `contract_net` locally or on a network-enabled runner.
