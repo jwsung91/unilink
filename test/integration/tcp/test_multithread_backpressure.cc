@@ -20,6 +20,7 @@
 #include <boost/asio.hpp>
 #include <condition_variable>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -74,6 +75,14 @@ TEST_F(IntegrationTest, TcpServerSessionBackpressureMultithreadedIoContext) {
 
   tcp::socket client(ioc);
   client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), port));
+
+  // Drain data from client to ensure server window doesn't fill up
+  std::vector<uint8_t> read_buf(4096);
+  std::function<void(boost::system::error_code, size_t)> on_read;
+  on_read = [&](boost::system::error_code ec, size_t) {
+    if (!ec) client.async_read_some(net::buffer(read_buf), on_read);
+  };
+  client.async_read_some(net::buffer(read_buf), on_read);
 
   {
     std::unique_lock<std::mutex> lock(mutex);

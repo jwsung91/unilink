@@ -35,10 +35,15 @@ using namespace std::chrono_literals;
 
 template <typename Pred>
 bool wait_until(boost::asio::io_context& ioc, Pred&& pred, std::chrono::milliseconds timeout,
-                std::chrono::milliseconds step = 5ms) {
+                std::chrono::milliseconds step = 10ms) {
   const auto deadline = std::chrono::steady_clock::now() + timeout;
   while (std::chrono::steady_clock::now() < deadline) {
     if (pred()) return true;
+    // Process any ready handlers immediately
+    ioc.poll();
+    if (pred()) return true;
+    ioc.restart();
+    // Wait for new events or timeout
     ioc.run_for(step);
     ioc.restart();
   }
