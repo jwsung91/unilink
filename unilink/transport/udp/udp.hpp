@@ -58,6 +58,7 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   void async_write_move(std::vector<uint8_t>&& data) override;
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 
+  // Callbacks must be configured before start() is invoked to avoid setter races.
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
@@ -78,8 +79,11 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
       std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>&& buffer,
       size_t size);
   void set_remote_from_config();
-  bool transition_to(LinkState target);
+  void transition_to(LinkState target, const boost::system::error_code& ec = {});
   void clear_callbacks();
+  void perform_stop_cleanup();
+  void reset_start_state();
+  void join_ioc_thread(bool allow_detach);
 
  private:
   std::unique_ptr<net::io_context> owned_ioc_;
@@ -110,6 +114,7 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   std::atomic<bool> connected_{false};
   bool started_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
+  std::atomic<bool> terminal_state_notified_{false};
 
   OnBytes on_bytes_;
   OnState on_state_;

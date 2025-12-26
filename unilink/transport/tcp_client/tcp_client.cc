@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <type_traits>
 
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/common/memory_pool.hpp"
@@ -54,8 +55,6 @@ TcpClient::TcpClient(const TcpClientConfig& cfg)
       connect_timer_(strand_),
       owns_ioc_(true),
       bp_high_(cfg.backpressure_threshold) {
-  // Keep the owned io_context alive even before work is posted to prevent early exit races
-  work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
   // Validate and clamp configuration
   cfg_.validate_and_clamp();
   recalculate_backpressure_bounds();
@@ -85,41 +84,13 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
 }
 
 TcpClient::~TcpClient() {
-  stopping_.store(true);
-  // Set state to closed first
-  state_.set_state(LinkState::Closed);
+  stop();
 
-  // Clear callbacks to prevent dangling references
   on_bytes_ = nullptr;
   on_state_ = nullptr;
   on_bp_ = nullptr;
 
-  // Release work guard so run() can exit cleanly
-  if (work_guard_) {
-    work_guard_->reset();
-  }
-
-  // Clear any pending operations
-  tx_.clear();
-  queue_bytes_ = 0;
-  writing_ = false;
-
-  // Clean up thread if still running and we own the io_context
-  if (owns_ioc_ && ioc_ && ioc_thread_.joinable()) {
-    try {
-      ioc_->stop();
-      ioc_thread_.join();
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_client", "destructor", "Destructor error: " + std::string(e.what()));
-      error_reporting::report_system_error("tcp_client", "destructor",
-                                           "Exception in destructor: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("tcp_client", "destructor", "Unknown error in destructor");
-      error_reporting::report_system_error("tcp_client", "destructor", "Unknown error in destructor");
-    }
-  }
-
-  // io_context is automatically deleted by unique_ptr
+  join_ioc_thread(true);
 }
 
 void TcpClient::start() {
@@ -131,13 +102,10 @@ void TcpClient::start() {
 
   if (!ioc_) {
     UNILINK_LOG_ERROR("tcp_client", "start", "io_context is null");
-    state_.set_state(LinkState::Error);
-    notify_state();
+    transition_to(LinkState::Error);
     return;
   }
 
-  stopping_.store(false);
-  retry_attempts_ = 0;
   recalculate_backpressure_bounds();
 
   if (ioc_->stopped()) {
@@ -145,8 +113,14 @@ void TcpClient::start() {
     ioc_->restart();
   }
 
+  if (ioc_thread_.joinable()) {
+    join_ioc_thread(false);
+  }
+
+  const auto seq = lifecycle_seq_.fetch_add(1) + 1;
+  current_seq_.store(seq);
+
   if (owns_ioc_) {
-    // Re-arm work guard in case stop() or destructor cleared it
     work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(ioc_->get_executor());
     // Create our own thread for this io_context
     ioc_thread_ = std::thread([this]() {
@@ -160,85 +134,48 @@ void TcpClient::start() {
     });
   }
 
-  auto self = shared_from_this();
-  net::dispatch(strand_, [self] {
-    self->connected_.store(false);
-    self->reset_io_objects();
-    self->state_.set_state(LinkState::Connecting);
-    self->notify_state();
-    self->do_resolve_connect();
+  auto weak_self = weak_from_this();
+  net::dispatch(strand_, [weak_self, seq] {
+    if (auto self = weak_self.lock()) {
+      if (seq <= self->stop_seq_.load()) {
+        return;
+      }
+      self->reset_start_state();
+      self->connected_.store(false);
+      self->reset_io_objects();
+      self->transition_to(LinkState::Connecting);
+      self->do_resolve_connect();
+    }
   });
 }
 
 void TcpClient::stop() {
-  stopping_.store(true);
-  auto self = shared_from_this();
-  auto cleanup = [self] {
-    try {
-      self->state_.set_state(LinkState::Closed);
-      self->retry_timer_.cancel();
-      self->connect_timer_.cancel();
-      self->resolver_.cancel();
-      boost::system::error_code ec_cancel;
-      self->socket_.cancel(ec_cancel);
-      self->close_socket();
-      // Clear any pending write operations
-      self->tx_.clear();
-      self->queue_bytes_ = 0;
-      self->writing_ = false;
-      self->connected_.store(false);
-      self->report_backpressure(self->queue_bytes_);
-      self->backpressure_active_ = false;
-      if (self->owns_ioc_ && self->work_guard_) {
-        self->work_guard_->reset();
-      }
-      self->notify_state();
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_client", "stop", "Cleanup error: " + std::string(e.what()));
-      error_reporting::report_system_error("tcp_client", "stop", "Exception in stop cleanup: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("tcp_client", "stop", "Unknown error in stop cleanup");
-      error_reporting::report_system_error("tcp_client", "stop", "Unknown error in stop cleanup");
-    }
-  };
-
-  if (!ioc_) {
-    cleanup();
+  if (stop_requested_.exchange(true)) {
     return;
   }
 
-  if (owns_ioc_) {
-    if (!ioc_thread_.joinable()) {
-      cleanup();
-    } else {
-      net::post(strand_, cleanup);
-    }
-  } else {
-    if (ioc_->stopped()) {
-      cleanup();
-    } else {
-      net::post(strand_, cleanup);
-    }
+  stopping_.store(true);
+  stop_seq_.store(current_seq_.load());
+  auto weak_self = weak_from_this();
+  if (!ioc_) {
+    perform_stop_cleanup();
+    return;
   }
 
-  if (owns_ioc_ && ioc_thread_.joinable()) {
-    try {
-      ioc_thread_.join();
-    } catch (const std::exception& e) {
-      UNILINK_LOG_ERROR("tcp_client", "stop", "Stop error: " + std::string(e.what()));
-      error_reporting::report_system_error("tcp_client", "stop", "Exception in stop: " + std::string(e.what()));
-    } catch (...) {
-      UNILINK_LOG_ERROR("tcp_client", "stop", "Unknown error in stop");
-      error_reporting::report_system_error("tcp_client", "stop", "Unknown error in stop");
-    }
+  if (auto self = weak_self.lock()) {
+    net::post(strand_, [self]() { self->perform_stop_cleanup(); });
+  } else {
+    perform_stop_cleanup();
   }
+
+  join_ioc_thread(false);
 }
 
 bool TcpClient::is_connected() const { return connected_.load(); }
 
 void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   // Don't queue writes if client is stopped or in error state
-  if (state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
+  if (stop_requested_.load() || state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
     return;
   }
 
@@ -264,7 +201,8 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
         const auto added = pooled_buffer.size();
         net::dispatch(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer), added]() mutable {
           // Double-check state in case client was stopped while in queue
-          if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+          if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
+              self->state_.is_state(LinkState::Error)) {
             return;
           }
 
@@ -277,8 +215,7 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
             self->queue_bytes_ = 0;
             self->writing_ = false;
             self->backpressure_active_ = false;
-            self->state_.set_state(LinkState::Error);
-            self->notify_state();
+            self->transition_to(LinkState::Error);
             return;
           }
 
@@ -300,7 +237,8 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
 
   net::dispatch(strand_, [self = shared_from_this(), buf = std::move(fallback), added]() mutable {
     // Double-check state in case client was stopped while in queue
-    if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+    if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
+        self->state_.is_state(LinkState::Error)) {
       return;
     }
 
@@ -313,8 +251,7 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
       self->queue_bytes_ = 0;
       self->writing_ = false;
       self->backpressure_active_ = false;
-      self->state_.set_state(LinkState::Error);
-      self->notify_state();
+      self->transition_to(LinkState::Error);
       return;
     }
 
@@ -326,7 +263,7 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
 }
 
 void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
-  if (state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
+  if (stop_requested_.load() || state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
     return;
   }
   const auto size = data.size();
@@ -342,7 +279,8 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
 
   const auto added = size;
   net::dispatch(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
-    if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+    if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
+        self->state_.is_state(LinkState::Error)) {
       return;
     }
 
@@ -355,8 +293,7 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
       self->queue_bytes_ = 0;
       self->writing_ = false;
       self->backpressure_active_ = false;
-      self->state_.set_state(LinkState::Error);
-      self->notify_state();
+      self->transition_to(LinkState::Error);
       return;
     }
 
@@ -368,7 +305,7 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
+  if (stop_requested_.load() || state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error) || !ioc_) {
     return;
   }
   if (!data || data->empty()) {
@@ -384,7 +321,8 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
 
   const auto added = size;
   net::dispatch(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
-    if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+    if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
+        self->state_.is_state(LinkState::Error)) {
       return;
     }
 
@@ -397,8 +335,7 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
       self->queue_bytes_ = 0;
       self->writing_ = false;
       self->backpressure_active_ = false;
-      self->state_.set_state(LinkState::Error);
-      self->notify_state();
+      self->transition_to(LinkState::Error);
       return;
     }
 
@@ -416,7 +353,10 @@ void TcpClient::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
 void TcpClient::do_resolve_connect() {
   auto self = shared_from_this();
   resolver_.async_resolve(cfg_.host, std::to_string(cfg_.port), [self](auto ec, tcp::resolver::results_type results) {
-    if (self->stopping_.load()) {
+    if (ec == net::error::operation_aborted) {
+      return;
+    }
+    if (self->stop_requested_.load() || self->stopping_.load()) {
       return;
     }
     if (ec) {
@@ -426,7 +366,10 @@ void TcpClient::do_resolve_connect() {
     // Set up connection timeout
     self->connect_timer_.expires_after(std::chrono::milliseconds(self->cfg_.connection_timeout_ms));
     self->connect_timer_.async_wait([self](const boost::system::error_code& timer_ec) {
-      if (!timer_ec && !self->stopping_.load()) {
+      if (timer_ec == net::error::operation_aborted) {
+        return;
+      }
+      if (!timer_ec && !self->stop_requested_.load() && !self->stopping_.load()) {
         UNILINK_LOG_ERROR("tcp_client", "connect_timeout",
                           "Connection timed out after " + std::to_string(self->cfg_.connection_timeout_ms) + "ms");
         self->handle_close(boost::asio::error::timed_out);
@@ -434,7 +377,10 @@ void TcpClient::do_resolve_connect() {
     });
 
     net::async_connect(self->socket_, results, [self](auto ec2, const auto&) {
-      if (self->stopping_.load()) {
+      if (ec2 == net::error::operation_aborted) {
+        return;
+      }
+      if (self->stop_requested_.load() || self->stopping_.load()) {
         self->close_socket();
         self->connect_timer_.cancel();
         return;
@@ -447,8 +393,7 @@ void TcpClient::do_resolve_connect() {
       self->connect_timer_.cancel();
       self->retry_attempts_ = 0;
       self->connected_.store(true);
-      self->state_.set_state(LinkState::Connected);
-      self->notify_state();
+      self->transition_to(LinkState::Connected);
       boost::system::error_code ep_ec;
       auto rep = self->socket_.remote_endpoint(ep_ec);
       if (!ep_ec) {
@@ -464,17 +409,15 @@ void TcpClient::do_resolve_connect() {
 
 void TcpClient::schedule_retry() {
   connected_.store(false);
-  if (stopping_.load()) {
+  if (stop_requested_.load() || stopping_.load()) {
     return;
   }
   if (cfg_.max_retries != -1 && retry_attempts_ >= cfg_.max_retries) {
-    state_.set_state(LinkState::Error);
-    notify_state();
+    transition_to(LinkState::Error);
     return;
   }
   ++retry_attempts_;
-  state_.set_state(LinkState::Connecting);
-  notify_state();
+  transition_to(LinkState::Connecting);
 
   UNILINK_LOG_INFO(
       "tcp_client", "retry",
@@ -485,7 +428,10 @@ void TcpClient::schedule_retry() {
   const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;
   retry_timer_.expires_after(std::chrono::milliseconds(interval));
   retry_timer_.async_wait([self](const boost::system::error_code& ec) {
-    if (!ec && !self->stopping_.load()) self->do_resolve_connect();
+    if (ec == net::error::operation_aborted) {
+      return;
+    }
+    if (!ec && !self->stop_requested_.load() && !self->stopping_.load()) self->do_resolve_connect();
   });
 }
 
@@ -494,6 +440,12 @@ void TcpClient::set_retry_interval(unsigned interval_ms) { cfg_.retry_interval_m
 void TcpClient::start_read() {
   auto self = shared_from_this();
   socket_.async_read_some(net::buffer(rx_.data(), rx_.size()), [self](auto ec, std::size_t n) {
+    if (ec == net::error::operation_aborted) {
+      return;
+    }
+    if (self->stop_requested_.load()) {
+      return;
+    }
     if (ec) {
       self->handle_close(ec);
       return;
@@ -518,6 +470,14 @@ void TcpClient::start_read() {
 void TcpClient::do_write() {
   // If we are not connected yet, keep the queued data and exit; writes will
   // resume once a connection is established.
+  if (stop_requested_.load()) {
+    tx_.clear();
+    queue_bytes_ = 0;
+    writing_ = false;
+    report_backpressure(queue_bytes_);
+    return;
+  }
+
   if (!connected_.load()) {
     writing_ = false;
     return;
@@ -532,16 +492,28 @@ void TcpClient::do_write() {
 
   auto current = std::move(tx_.front());
   tx_.pop_front();
+  auto queued_bytes = std::visit(
+      [](auto&& buf) -> size_t {
+        using Buffer = std::decay_t<decltype(buf)>;
+        if constexpr (std::is_same_v<Buffer, std::shared_ptr<const std::vector<uint8_t>>>) {
+          return buf ? buf->size() : 0;
+        } else {
+          return buf.size();
+        }
+      },
+      current);
 
-  auto on_write = [self](auto ec, std::size_t n) {
-    if (self->queue_bytes_ >= n) {
-      self->queue_bytes_ -= n;
-    } else {
-      self->queue_bytes_ = 0;
-    }
+  auto on_write = [self, queued_bytes](auto ec, std::size_t) {
+    self->queue_bytes_ = (self->queue_bytes_ > queued_bytes) ? (self->queue_bytes_ - queued_bytes) : 0;
     self->report_backpressure(self->queue_bytes_);
 
-    if (self->state_.is_state(LinkState::Closed) || self->state_.is_state(LinkState::Error)) {
+    if (ec == net::error::operation_aborted) {
+      self->writing_ = false;
+      return;
+    }
+
+    if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
+        self->state_.is_state(LinkState::Error)) {
       self->writing_ = false;
       return;
     }
@@ -584,17 +556,18 @@ void TcpClient::do_write() {
 }
 
 void TcpClient::handle_close(const boost::system::error_code& ec) {
+  if (ec == net::error::operation_aborted) {
+    return;
+  }
   connected_.store(false);
   writing_ = false;
   connect_timer_.cancel();
   close_socket();
-  if (stopping_.load() || state_.is_state(LinkState::Closed) || ec == boost::asio::error::operation_aborted) {
-    state_.set_state(LinkState::Closed);
-    notify_state();
+  if (stop_requested_.load() || stopping_.load() || state_.is_state(LinkState::Closed)) {
+    transition_to(LinkState::Closed, ec);
     return;
   }
-  state_.set_state(LinkState::Connecting);
-  notify_state();
+  transition_to(LinkState::Connecting, ec);
   schedule_retry();
 }
 
@@ -619,7 +592,7 @@ void TcpClient::recalculate_backpressure_bounds() {
 }
 
 void TcpClient::report_backpressure(size_t queued_bytes) {
-  if (!on_bp_) return;
+  if (stop_requested_.load() || !on_bp_) return;
 
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
@@ -644,8 +617,110 @@ void TcpClient::report_backpressure(size_t queued_bytes) {
   }
 }
 
+void TcpClient::transition_to(LinkState next, const boost::system::error_code& ec) {
+  if (ec == net::error::operation_aborted) {
+    return;
+  }
+
+  const auto current = state_.get_state();
+  const bool retrying_same_state = (next == LinkState::Connecting && current == LinkState::Connecting);
+  if ((current == LinkState::Closed || current == LinkState::Error) &&
+      (next == LinkState::Closed || next == LinkState::Error)) {
+    return;
+  }
+
+  if (next == LinkState::Closed || next == LinkState::Error) {
+    if (terminal_state_notified_.exchange(true)) {
+      return;
+    }
+  } else if (current == next && !retrying_same_state) {
+    return;
+  }
+
+  state_.set_state(next);
+  notify_state();
+}
+
+void TcpClient::perform_stop_cleanup() {
+  try {
+    retry_timer_.cancel();
+    connect_timer_.cancel();
+    resolver_.cancel();
+    boost::system::error_code ec_cancel;
+    socket_.cancel(ec_cancel);
+    close_socket();
+    tx_.clear();
+    queue_bytes_ = 0;
+    writing_ = false;
+    connected_.store(false);
+    const bool had_backpressure = backpressure_active_;
+    backpressure_active_ = false;
+    if (had_backpressure && on_bp_) {
+      try {
+        on_bp_(queue_bytes_);
+      } catch (const std::exception& e) {
+        UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
+                          "Exception in backpressure callback: " + std::string(e.what()));
+      } catch (...) {
+        UNILINK_LOG_ERROR("tcp_client", "on_backpressure", "Unknown exception in backpressure callback");
+      }
+    }
+    if (owns_ioc_ && work_guard_) {
+      work_guard_->reset();
+    }
+    transition_to(LinkState::Closed);
+  } catch (const std::exception& e) {
+    UNILINK_LOG_ERROR("tcp_client", "stop_cleanup", "Cleanup error: " + std::string(e.what()));
+    error_reporting::report_system_error("tcp_client", "stop_cleanup",
+                                         "Exception in stop cleanup: " + std::string(e.what()));
+  } catch (...) {
+    UNILINK_LOG_ERROR("tcp_client", "stop_cleanup", "Unknown error in stop cleanup");
+    error_reporting::report_system_error("tcp_client", "stop_cleanup", "Unknown error in stop cleanup");
+  }
+}
+
+void TcpClient::reset_start_state() {
+  stop_requested_.store(false);
+  stopping_.store(false);
+  terminal_state_notified_.store(false);
+  retry_attempts_ = 0;
+  connected_.store(false);
+  writing_ = false;
+  queue_bytes_ = 0;
+  backpressure_active_ = false;
+  state_.set_state(LinkState::Idle);
+}
+
+void TcpClient::join_ioc_thread(bool allow_detach) {
+  if (!owns_ioc_ || !ioc_thread_.joinable()) {
+    return;
+  }
+
+  if (std::this_thread::get_id() == ioc_thread_.get_id()) {
+    if (allow_detach) {
+      ioc_thread_.detach();
+    }
+    return;
+  }
+
+  try {
+    ioc_thread_.join();
+  } catch (const std::exception& e) {
+    UNILINK_LOG_ERROR("tcp_client", "join", "Join failed: " + std::string(e.what()));
+  } catch (...) {
+    UNILINK_LOG_ERROR("tcp_client", "join", "Join failed with unknown error");
+  }
+}
+
 void TcpClient::notify_state() {
-  if (on_state_) on_state_(state_.get_state());
+  if (!on_state_) return;
+  try {
+    on_state_(state_.get_state());
+  } catch (const std::exception& e) {
+    UNILINK_LOG_ERROR("tcp_client", "on_state", "Exception in state callback: " + std::string(e.what()));
+  } catch (...) {
+    UNILINK_LOG_ERROR("tcp_client", "on_state", "Unknown exception in state callback");
+  }
 }
 
 void TcpClient::reset_io_objects() {

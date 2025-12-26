@@ -22,6 +22,7 @@ get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 foreach(test_file
         test_integration.cc test_simple_server.cc
         test_client_limit_integration.cc test_multithread_backpressure.cc
+        test_stop_from_callback.cc test_start_stop_stress.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(

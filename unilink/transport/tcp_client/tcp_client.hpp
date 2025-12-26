@@ -63,6 +63,7 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   void async_write_move(std::vector<uint8_t>&& data) override;
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 
+  // Callbacks must be configured before start() is invoked to avoid setter races.
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
@@ -78,6 +79,10 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   void start_read();
   void do_write();
   void handle_close(const boost::system::error_code& ec = {});
+  void transition_to(LinkState next, const boost::system::error_code& ec = {});
+  void perform_stop_cleanup();
+  void reset_start_state();
+  void join_ioc_thread(bool allow_detach);
   void close_socket();
   void recalculate_backpressure_bounds();
   void report_backpressure(size_t queued_bytes);
@@ -90,13 +95,18 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
   std::thread ioc_thread_;
+  std::atomic<uint64_t> lifecycle_seq_{0};
+  std::atomic<uint64_t> stop_seq_{0};
+  std::atomic<uint64_t> current_seq_{0};
   tcp::resolver resolver_;
   tcp::socket socket_;
   TcpClientConfig cfg_;
   net::steady_timer retry_timer_;
   net::steady_timer connect_timer_;
   bool owns_ioc_ = true;
+  std::atomic<bool> stop_requested_{false};
   std::atomic<bool> stopping_{false};
+  std::atomic<bool> terminal_state_notified_{false};
 
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
