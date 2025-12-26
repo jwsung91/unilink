@@ -114,6 +114,8 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   std::atomic<bool> connected_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
   int retry_attempts_ = 0;
+  std::atomic<LinkState> last_notified_{LinkState::Idle};
+  std::atomic<bool> fatal_error_{false};
 };
 }  // namespace transport
 }  // namespace unilink

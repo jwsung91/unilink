@@ -107,6 +107,7 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   std::atomic<bool> connected_{false};
   bool started_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
+  std::atomic<LinkState> last_notified_{LinkState::Idle};
 
   OnBytes on_bytes_;
   OnState on_state_;

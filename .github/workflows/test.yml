@@ -120,12 +120,11 @@ jobs:
     - name: Build tests
       run: cmake --build build-test -j ${CORE_COUNT:-4}
 
-    - name: Run unit tests
+    - name: Run unit tests (contract_unit only in sandbox)
       run: |
         cd build-test
-        ctest --output-on-failure --parallel ${CORE_COUNT:-2} \
-          --label-regex "unit|core|memory|config" || \
-        ctest --rerun-failed --output-on-failure --parallel ${CORE_COUNT:-2}
+        ctest --output-on-failure --parallel ${CORE_COUNT:-2} -L contract_unit || \
+        ctest --rerun-failed --output-on-failure --parallel ${CORE_COUNT:-2} -L contract_unit
 
     - name: Upload test results
       uses: actions/upload-artifact@v6

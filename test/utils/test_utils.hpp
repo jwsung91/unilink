@@ -63,6 +63,44 @@ class TestUtils {
    * @return uint16_t Available port number
    */
   static uint16_t getAvailableTestPort() {
+    static std::once_flag port_probe_flag;
+    static std::atomic<bool> port_probe_ok{true};
+    std::call_once(port_probe_flag, []() {
+#ifdef _WIN32
+      ensure_winsock_initialized();
+      SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+      if (sock == INVALID_SOCKET) {
+        port_probe_ok = false;
+        return;
+      }
+      sockaddr_in addr{};
+      addr.sin_family = AF_INET;
+      addr.sin_port = 0;
+      addr.sin_addr.s_addr = htonl(INADDR_ANY);
+      if (bind(sock, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
+        port_probe_ok = false;
+      }
+      closesocket(sock);
+#else
+      int sock = socket(AF_INET, SOCK_STREAM, 0);
+      if (sock < 0) {
+        port_probe_ok = false;
+        return;
+      }
+      sockaddr_in addr{};
+      addr.sin_family = AF_INET;
+      addr.sin_port = 0;
+      addr.sin_addr.s_addr = INADDR_ANY;
+      if (bind(sock, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
+        port_probe_ok = false;
+      }
+      close(sock);
+#endif
+    });
+    if (!port_probe_ok.load()) {
+      throw std::runtime_error("Socket bind not permitted in sandbox; network-dependent tests cannot run");
+    }
+
     static std::atomic<uint16_t> port_counter{30000};  // Start from higher port range
 
     for (int attempt = 0; attempt < 1024; ++attempt) {
