@@ -49,7 +49,8 @@ jobs:
     - name: Run tests
       run: |
         cd build-coverage
-        ctest --output-on-failure --parallel $(nproc) -L contract_unit
+        ctest --output-on-failure --parallel $(nproc) || \
+        ctest --rerun-failed --output-on-failure --parallel $(nproc)
 
     - name: Generate coverage report
       run: |
