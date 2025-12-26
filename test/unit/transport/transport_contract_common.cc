@@ -171,10 +171,12 @@ TEST(UdpContractTest, NoUserCallbackAfterStop) {
   EXPECT_FALSE(test::wait_until(ioc, [&] { return rec.bytes_call_count() > 0; }, 100ms));
 }
 
-TEST(UdpContractTest, ErrorNotifyOnlyOnce) {
-#ifdef __APPLE__
+#if defined(__APPLE__)
+TEST(UdpContractTest, DISABLED_ErrorNotifyOnlyOnceMac) {
   GTEST_SKIP() << "UDP error contract test disabled on macOS CI";
-#endif
+}
+#else
+TEST(UdpContractTest, ErrorNotifyOnlyOnce) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
   net::io_context ioc;
   uint16_t port = reserve_udp_port();
@@ -197,6 +199,7 @@ TEST(UdpContractTest, ErrorNotifyOnlyOnce) {
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Error) == 1u; }, 200ms));
   EXPECT_EQ(rec.state_count(common::LinkState::Error), 1u);
 }
+#endif
 
 TEST(UdpContractTest, CallbacksAreSerialized) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
@@ -225,10 +228,12 @@ TEST(UdpContractTest, CallbacksAreSerialized) {
   EXPECT_FALSE(rec.saw_overlap());
 }
 
-TEST(UdpContractTest, BackpressurePolicyFailFast) {
-#ifdef __APPLE__
+#if defined(__APPLE__)
+TEST(UdpContractTest, DISABLED_BackpressurePolicyFailFastMac) {
   GTEST_SKIP() << "UDP backpressure contract test disabled on macOS CI";
-#endif
+}
+#else
+TEST(UdpContractTest, BackpressurePolicyFailFast) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
   net::io_context ioc;
   uint16_t base_port = reserve_udp_port();
@@ -249,6 +254,7 @@ TEST(UdpContractTest, BackpressurePolicyFailFast) {
 
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.state_count(common::LinkState::Error) == 1u; }, 200ms));
 }
+#endif
 
 TEST(UdpContractTest, OpenCloseLifecycle) {
   if (!can_bind_udp()) GTEST_SKIP() << "Socket open not permitted in sandbox";
@@ -355,9 +361,10 @@ TEST(TcpContractTest, NoUserCallbackAfterStop) {
   EXPECT_TRUE(test::wait_until(ioc, [&] { return rec.bytes_call_count() >= 1; }, 200ms));
 
   client->stop();
+  test::pump_io(ioc, 50ms);  // ensure stop is processed before further writes
   auto data2 = std::make_shared<std::string>("after-stop");
   net::async_write(*server_socket, net::buffer(*data2), [data2](auto, auto) {});
-  EXPECT_FALSE(test::wait_until(ioc, [&] { return rec.bytes_call_count() > 1; }, 200ms));
+  EXPECT_FALSE(test::wait_until(ioc, [&] { return rec.bytes_call_count() > 1; }, 500ms));
 }
 
 TEST(TcpContractTest, ErrorNotifyOnlyOnce) {
@@ -497,6 +504,7 @@ TEST(SerialContractTest, NoUserCallbackAfterStop) {
 TEST(SerialContractTest, ErrorNotifyOnlyOnce) {
   net::io_context ioc;
   config::SerialConfig cfg;
+  cfg.device = "";  // ensure FakeSerialPort path is taken
   cfg.reopen_on_error = false;
   cfg.backpressure_threshold = 512;
   auto port = std::make_unique<FakeSerialPort>(ioc);
@@ -516,6 +524,7 @@ TEST(SerialContractTest, ErrorNotifyOnlyOnce) {
 TEST(SerialContractTest, CallbacksAreSerialized) {
   net::io_context ioc;
   config::SerialConfig cfg;
+  cfg.device = "";  // ensure FakeSerialPort path is taken
   auto port = std::make_unique<FakeSerialPort>(ioc);
   auto* port_raw = port.get();
   auto serial = Serial::create(cfg, std::move(port), ioc);
@@ -537,6 +546,7 @@ TEST(SerialContractTest, CallbacksAreSerialized) {
 TEST(SerialContractTest, BackpressurePolicyFailFast) {
   net::io_context ioc;
   config::SerialConfig cfg;
+  cfg.device = "";  // ensure FakeSerialPort path is taken
   cfg.backpressure_threshold = 256;
   cfg.reopen_on_error = false;
   auto port = std::make_unique<FakeSerialPort>(ioc);
