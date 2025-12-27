@@ -25,18 +25,18 @@ sequenceDiagram
     participant Queue as Thread-Safe Queue
     participant IO as I/O Thread (Boost.Asio)
     participant Net as Network/Serial Device
-    
+
     Note over App,Net: Sending Data
     App->>Queue: client->send("data")
     Queue->>IO: Post to io_context
     IO->>Net: async_write()
     Net-->>IO: write complete
-    
+
     Note over App,Net: Receiving Data
     Net-->>IO: async_read() complete
     IO->>IO: Execute on_data callback
     Note over IO: ⚠️ Callbacks run in I/O thread<br/>Don't block here!
-    
+
     Note over App,Net: Thread-Safe API Calls
     App->>Queue: Multiple threads can call
     App->>Queue: send(), stop(), etc.
@@ -59,6 +59,7 @@ std::thread t3([&client]() { client->stop(); });
 ```
 
 **Implementation:**
+
 - All API calls are serialized through `boost::asio::post()`
 - Operations are queued and executed in the I/O thread
 - No manual locking required by users
@@ -80,6 +81,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 ```
 
 **Available callbacks:**
+
 - `on_connect()` - Connection established
 - `on_disconnect()` - Connection lost
 - `on_data()` - Data received
@@ -110,7 +112,7 @@ auto client = unilink::tcp_client("server.com", 8080)
         heavy_computation(data);
         database_query(data);
     }).detach();
-    
+
     // Or use a thread pool
     thread_pool.submit([data]() {
         heavy_computation(data);
@@ -119,6 +121,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 ```
 
 **Impact of blocking:**
+
 - Blocks all I/O operations
 - Prevents other connections from processing data
 - Can cause timeouts and dropped connections
@@ -163,24 +166,25 @@ TCP clients and Serial connections automatically handle connection failures with
 stateDiagram-v2
     [*] --> Closed
     Closed --> Connecting: start()
-    
+
     Connecting --> Connected: Connection Success
     Connecting --> Connecting: Connection Failed<br/>(retry after interval)
-    
+
     Connected --> Closed: stop()
     Connected --> Connecting: Connection Lost<br/>(auto-reconnect)
-    
+
     Connecting --> Error: Max Retries Exceeded<br/>(if configured)
     Error --> Closed: stop()
-    
+
     note right of Connecting
         Retry Interval:
-        - Default: 2000ms (2s)
+        - Default: 3000ms (3s)
+        - First retry: 100ms
         - Min: 100ms
         - Max: 300000ms (5min)
         - Configurable via retry_interval()
     end note
-    
+
     note right of Connected
         Connection Timeout:
         - Default: 5000ms (5s)
@@ -207,10 +211,10 @@ stateDiagram-v2
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
     .retry_interval(5000)    // Retry every 5 seconds
-    .on_connect([]() { 
+    .on_connect([]() {
         std::cout << "Connected!" << std::endl;
     })
-    .on_disconnect([]() { 
+    .on_disconnect([]() {
         std::cout << "Disconnected - will auto-reconnect" << std::endl;
     })
     .build();
@@ -224,7 +228,7 @@ client->start();  // Start the connection explicitly
 
 #### Default Behavior
 
-- **Unlimited retries** with 2-second intervals
+- **Unlimited retries** with 3-second intervals (first retry after 100ms)
 - Automatically reconnects on connection loss
 - No exponential backoff (constant interval)
 
@@ -235,7 +239,7 @@ client->start();  // Start the connection explicitly
 .retry_interval(100)  // 100 ms
 
 // Moderate reconnection (default)
-.retry_interval(2000)  // 2 seconds
+.retry_interval(3000)  // 3 seconds
 
 // Slow reconnection (conservative)
 .retry_interval(10000)  // 10 seconds
@@ -336,7 +340,7 @@ client.reset();
 
 ## Backpressure Handling
 
-When the send queue grows too large (network slower than application), `unilink` notifies your application via backpressure callbacks.
+When the send queue grows too large (network slower than application), `unilink` notifies your application via backpressure callbacks. If a safety cap is exceeded, the transport closes the socket, clears the queue, and transitions to `Error`.
 
 ### Backpressure Flow
 
@@ -344,27 +348,27 @@ When the send queue grows too large (network slower than application), `unilink`
 flowchart TD
     Start([Application calls send]) --> Queue[Add to Send Queue]
     Queue --> Check{Queue Size ><br/>Threshold?}
-    
+
     Check -->|No| Write[Continue Normal Write]
     Write --> Complete([Data Sent])
-    
+
     Check -->|Yes: queue_bytes > 1MB| Callback[Trigger on_backpressure callback]
     Callback --> AppDecision{Application Decision}
-    
+
     AppDecision -->|Pause Sending| Wait[Wait for queue to drain]
     AppDecision -->|Rate Limit| Throttle[Reduce send rate]
     AppDecision -->|Drop Data| Drop[Skip non-critical data]
     AppDecision -->|Continue| Force[Force send anyway<br/>⚠️ May cause memory growth]
-    
+
     Wait --> Monitor{Queue Size ><br/>Threshold?}
     Monitor -->|Still high| Wait
     Monitor -->|Normal| Resume[Resume normal operation]
-    
+
     Throttle --> Resume
     Drop --> Resume
     Force --> Write
     Resume --> Complete
-    
+
     style Callback fill:#f9f,stroke:#333,stroke-width:2px
     style AppDecision fill:#ff9,stroke:#333,stroke-width:2px
     style Force fill:#f66,stroke:#333,stroke-width:2px
@@ -378,7 +382,7 @@ flowchart TD
 auto client = unilink::tcp_client("server.com", 8080)
     .on_backpressure([](size_t queue_bytes) {
         std::cout << "⚠️ Queue size: " << queue_bytes << " bytes" << std::endl;
-        
+
         // Option 1: Pause sending
         // Option 2: Rate limit
         // Option 3: Drop non-critical data
@@ -387,7 +391,8 @@ auto client = unilink::tcp_client("server.com", 8080)
 ```
 
 **Default threshold:** 1 MB (1,048,576 bytes)  
-**Configurable range:** 1 KB - 100 MB
+**Configurable range:** 1 KB - 100 MB  
+**Safety cap:** ~4x the high watermark (capped at 64 MB) triggers automatic close + Error state
 
 ---
 
@@ -460,23 +465,6 @@ if (!high_backpressure || is_critical) {
 
 ---
 
-#### Strategy 4: Buffer Expansion
-
-Continue sending, allow queue to grow. **Deprecated as default.**
-
-```cpp
-// Explicit opt-in required
-auto client = unilink::tcp_client("server.com", 8080)
-    .backpressure_strategy(Backpressure::Expand) // Must be explicit
-    .build();
-
-```
-
-**Best for:** Short bursts, ample memory available  
-**Warning:** May cause out-of-memory if sustained
-
----
-
 ### Backpressure Monitoring
 
 Track queue size continuously:
@@ -487,7 +475,7 @@ size_t max_queue_size = 0;
 auto client = unilink::tcp_client("server.com", 8080)
     .on_backpressure([&max_queue_size](size_t queue_bytes) {
         max_queue_size = std::max(max_queue_size, queue_bytes);
-        std::cout << "Current queue: " << queue_bytes 
+        std::cout << "Current queue: " << queue_bytes
                   << " bytes, Max: " << max_queue_size << " bytes\n";
     })
     .build();
@@ -512,12 +500,14 @@ Backpressure handling ensures:
 ### 1. Threading Best Practices
 
 #### ✅ DO
+
 - Keep callbacks short and non-blocking
 - Offload heavy work to worker threads
 - Use thread pools for parallel processing
 - Check connection state before sending
 
 #### ❌ DON'T
+
 - Block in callbacks
 - Call `sleep()` in callbacks
 - Perform database queries in callbacks
@@ -528,12 +518,14 @@ Backpressure handling ensures:
 ### 2. Reconnection Best Practices
 
 #### ✅ DO
+
 - Set appropriate retry intervals for your use case
 - Handle state transitions (connect/disconnect)
 - Implement graceful shutdown
 - Monitor connection status
 
 #### ❌ DON'T
+
 - Set extremely short retry intervals (<100ms)
 - Ignore disconnect callbacks
 - Assume connection is always available
@@ -544,12 +536,14 @@ Backpressure handling ensures:
 ### 3. Backpressure Best Practices
 
 #### ✅ DO
+
 - Monitor backpressure in production
 - Implement appropriate handling strategy
 - Test with slow networks
 - Set reasonable thresholds
 
 #### ❌ DON'T
+
 - Ignore backpressure callbacks
 - Assume unlimited memory
 - Send without rate limiting
@@ -582,6 +576,6 @@ Backpressure handling ensures:
 ## Next Steps
 
 - [Memory Safety](memory_safety.md) - Memory safety features
-- [System Overview](system_overview.md) - High-level architecture
+- [System Overview](README.md) - High-level architecture
 - [Performance Guide](../guides/performance.md) - Optimization techniques
 - [Best Practices](../guides/best_practices.md) - Recommended patterns

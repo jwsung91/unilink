@@ -319,4 +319,5 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./build-coverage/coverage_html
         publish_branch: gh-pages
-        force_orphan: true
+        destination_dir: coverage
+        keep_files: true

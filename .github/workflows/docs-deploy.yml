@@ -1,0 +1,36 @@
+name: Documentation Deployment
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-docs:
+    name: Build and Deploy Doxygen
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Doxygen
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen graphviz
+
+    - name: Generate Documentation
+      run: |
+        chmod +x ./docs/scripts/generate_docs.sh
+        ./docs/scripts/generate_docs.sh
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/html
+        publish_branch: gh-pages
+        keep_files: true

@@ -52,6 +52,7 @@ graph TD
 ### Layer Responsibilities
 
 #### 1. Builder API Layer
+
 - **Purpose**: Provide fluent, chainable interface
 - **Components**: `TcpClientBuilder`, `TcpServerBuilder`, `SerialBuilder`
 - **Responsibilities**:
@@ -60,6 +61,7 @@ graph TD
   - Callback registration
 
 #### 2. Wrapper API Layer
+
 - **Purpose**: High-level, easy-to-use interfaces
 - **Components**: `TcpClient`, `TcpServer`, `Serial`
 - **Responsibilities**:
@@ -69,6 +71,7 @@ graph TD
   - Event callbacks
 
 #### 3. Transport Layer
+
 - **Purpose**: Low-level communication implementation
 - **Components**: Protocol-specific transports
 - **Responsibilities**:
@@ -77,6 +80,7 @@ graph TD
   - Connection state management
 
 #### 4. Common Utilities Layer
+
 - **Purpose**: Shared functionality
 - **Components**: Thread safety, memory management, logging
 - **Responsibilities**:
@@ -96,7 +100,7 @@ namespace unilink::builder {
     // Base interface
     template<typename T>
     class BuilderInterface { ... };
-    
+
     // Concrete builders
     class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient>;
     class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer>;
@@ -105,6 +109,7 @@ namespace unilink::builder {
 ```
 
 **Key Features:**
+
 - Method chaining
 - Type-safe configuration
 - Compile-time validation
@@ -120,7 +125,7 @@ namespace unilink::wrapper {
         virtual void start() = 0;
         virtual void stop() = 0;
     };
-    
+
     // Implementations
     class TcpClient : public ChannelInterface;
     class TcpServer : public ChannelInterface;
@@ -129,6 +134,7 @@ namespace unilink::wrapper {
 ```
 
 **Key Features:**
+
 - Unified interface
 - Automatic resource management
 - Callback-based events
@@ -142,17 +148,19 @@ namespace unilink::transport {
     class TcpClient { ... };
     class TcpServer { ... };
     class TcpServerSession { ... };
-    
+
     // Serial transport
     class Serial { ... };
 }
 ```
 
 **Key Features:**
+
 - Boost.Asio based
 - Asynchronous I/O
-- Connection pooling (Planned)
-- Retry logic
+- Retry logic (3s default interval, first retry at 100ms)
+- Backpressure guard: callback at high watermark (default 1 MiB), hard cap triggers socket close + Error state
+- Connection pooling (planned)
 
 ### 4. Common Utilities
 
@@ -161,19 +169,19 @@ namespace unilink::common {
     // Thread safety
     template<typename T>
     class ThreadSafeState;
-    
+
     template<typename T>
     class AtomicState;
-    
+
     // Memory management
     class MemoryPool;
     class MemoryTracker;
     class SafeDataBuffer;
-    
+
     // Logging
     class Logger;
     class LogRotation;
-    
+
     // Error handling
     class ErrorHandler;
 }
@@ -201,6 +209,7 @@ client->start();  // Explicit lifecycle control
 ```
 
 **Benefits:**
+
 - Readable configuration
 - Optional parameters
 - Compile-time validation
@@ -237,11 +246,11 @@ class TcpClient {
     std::function<void()> on_connect_;
     std::function<void(const std::string&)> on_data_;
     std::function<void()> on_disconnect_;
-    
+
     void notify_connect() {
         if (on_connect_) on_connect_();
     }
-    
+
     void notify_data(const std::string& data) {
         if (on_data_) on_data_(data);
     }
@@ -259,7 +268,7 @@ public:
         static Logger instance;
         return instance;
     }
-    
+
 private:
     Logger() = default;
     Logger(const Logger&) = delete;
@@ -277,7 +286,7 @@ class TcpClient {
         // Automatically stop and clean up
         stop();
     }
-    
+
     std::unique_ptr<IoContext> io_context_;  // Auto-deleted
     std::shared_ptr<Connection> connection_; // Ref-counted
 };
@@ -294,7 +303,7 @@ class ChannelInterface {
         do_start();      // Virtual - customizable
         after_start();
     }
-    
+
 protected:
     virtual void do_start() = 0;
     virtual void before_start() {}
@@ -323,6 +332,7 @@ graph TD
 ### Thread Safety Guarantees
 
 #### 1. API Methods
+
 All public API methods are thread-safe:
 
 ```cpp
@@ -333,6 +343,7 @@ client->stop();         // Thread 3
 ```
 
 #### 2. Callbacks
+
 Callbacks are executed in the I/O thread context:
 
 ```cpp
@@ -343,6 +354,7 @@ Callbacks are executed in the I/O thread context:
 ```
 
 #### 3. Shared State
+
 All shared state is protected:
 
 ```cpp
@@ -356,6 +368,7 @@ class TcpClient {
 ### IO Context Management
 
 #### Shared Context (Default)
+
 ```cpp
 // Multiple channels share one I/O thread
 auto client1 = tcp_client("server1.com", 8080).build();
@@ -364,13 +377,16 @@ auto client2 = tcp_client("server2.com", 8080).build();
 ```
 
 **Pros:**
+
 - Efficient resource usage
 - Single I/O thread handles all connections
 
 **Cons:**
+
 - All connections share same thread
 
 #### Independent Context
+
 ```cpp
 // Each channel has its own I/O thread
 auto client = tcp_client("server.com", 8080)
@@ -379,10 +395,12 @@ auto client = tcp_client("server.com", 8080)
 ```
 
 **Pros:**
+
 - Isolation between connections
 - Useful for testing
 
 **Cons:**
+
 - More resource usage
 - More threads
 
@@ -401,28 +419,25 @@ std::weak_ptr<Connection> conn_;     // Non-owning reference
 
 ### 2. Memory Pool
 
-For high-performance scenarios:
+For high-performance scenarios, transports use a bucketed pool and an RAII buffer wrapper.
 
 ```cpp
-class MemoryPool {
-    std::vector<Block> blocks_;
-    std::queue<Block*> free_list_;
-    
-public:
-    void* allocate(size_t size);
-    void deallocate(void* ptr);
-};
+// Acquire/release with size buckets (1KB/4KB/16KB/64KB)
+auto buf = GlobalMemoryPool::instance().acquire(4096);
+// ... use buf.get() ...
+GlobalMemoryPool::instance().release(std::move(buf), 4096);
+
+// Preferred: RAII wrapper used by transports
+common::PooledBuffer pooled(common::MemoryPool::BufferSize::MEDIUM);
+if (pooled.valid()) {
+    common::safe_memory::safe_memcpy(pooled.data(), src, pooled.size());
+}
 ```
 
-**Use Case:**
-```cpp
-MemoryPool pool(1024, 100);  // 100 blocks of 1KB
+**Notes:**
 
-// Allocate from pool (fast)
-auto buffer = pool.allocate();
-// ... use buffer ...
-pool.deallocate(buffer);  // Return to pool
-```
+- Pool applies to moderate sizes (<=64KB); larger buffers fall back to regular allocations.
+- PooledBuffer enforces bounds in debug paths; `.data()` is validated before writes.
 
 ### 3. Memory Tracking
 
@@ -445,11 +460,11 @@ Bounds-checked buffer:
 ```cpp
 class SafeDataBuffer {
     std::vector<uint8_t> data_;
-    
+
 public:
     void append(const std::string& str);  // Bounds checked
     void append_bytes(const std::vector<uint8_t>& bytes);
-    
+
     std::string to_string() const;  // Safe conversion
 };
 ```
@@ -494,26 +509,28 @@ enum class ErrorLevel {
 ### Error Recovery Strategies
 
 #### 1. Automatic Retry
+
 ```cpp
 class RetryPolicy {
     unsigned max_attempts{5};
     unsigned interval_ms{3000};
     bool exponential_backoff{false};
-    
+
     bool should_retry(unsigned attempt);
     unsigned get_delay(unsigned attempt);
 };
 ```
 
 #### 2. Circuit Breaker (Planned)
+
 ```cpp
 class CircuitBreaker {
     enum class State { CLOSED, OPEN, HALF_OPEN };
-    
+
     State state_{State::CLOSED};
     unsigned failure_threshold_{5};
     std::chrono::seconds timeout_{30};
-    
+
     bool allow_request();
     void record_success();
     void record_failure();
@@ -559,11 +576,13 @@ auto client_config = config->get_tcp_client_config("my_client");
 ## Performance Considerations
 
 ### 1. Asynchronous I/O
+
 - Non-blocking operations
 - Efficient event loop (Boost.Asio)
 - Minimal context switching
 
 ### 2. Zero-Copy Operations
+
 ```cpp
 // Avoid unnecessary copies
 void send(std::string&& data);  // Move semantics
@@ -571,18 +590,20 @@ void send(std::string_view data);  // View (no copy)
 ```
 
 ### 3. Connection Pooling (Planned)
+
 ```cpp
 // Reuse connections
 class ConnectionPool {
     std::queue<Connection*> available_;
     std::vector<std::unique_ptr<Connection>> all_;
-    
+
     Connection* acquire();
     void release(Connection* conn);
 };
 ```
 
 ### 4. Memory Pooling
+
 ```cpp
 // Avoid repeated allocations
 MemoryPool buffer_pool_(1024, 100);
@@ -594,6 +615,7 @@ auto buffer = buffer_pool_.allocate();  // Fast!
 ## Extension Points
 
 ### 1. Custom Transports
+
 ```cpp
 class MyCustomTransport : public transport::TransportInterface {
     void connect() override { /* ... */ }
@@ -603,6 +625,7 @@ class MyCustomTransport : public transport::TransportInterface {
 ```
 
 ### 2. Custom Builders
+
 ```cpp
 class MyCustomBuilder : public BuilderInterface<MyWrapper> {
     std::unique_ptr<MyWrapper> build() override {
@@ -612,6 +635,7 @@ class MyCustomBuilder : public BuilderInterface<MyWrapper> {
 ```
 
 ### 3. Custom Error Handlers
+
 ```cpp
 ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
     // Custom error handling logic
@@ -639,6 +663,7 @@ Unilink provides a Docker Compose-based environment to maintain a consistent dev
 | `prod`  | Production    | Optimized production image build                             |
 
 **Usage Examples:**
+
 ```bash
 docker-compose up test  # Run all tests and sanitizers
 docker-compose up docs  # Generate API docs and start server
@@ -661,6 +686,7 @@ docker-compose up docs
 ## Testing Architecture
 
 ### 1. Dependency Injection
+
 ```cpp
 // Easy to mock
 class Serial {
@@ -675,6 +701,7 @@ Serial serial(mock_port);
 ```
 
 ### 2. Independent Contexts
+
 ```cpp
 // Isolated testing
 auto client = tcp_client("127.0.0.1", 8080)
@@ -683,6 +710,7 @@ auto client = tcp_client("127.0.0.1", 8080)
 ```
 
 ### 3. State Verification
+
 ```cpp
 // Check internal state
 ASSERT_EQ(client->get_state(), State::CONNECTED);
@@ -700,11 +728,12 @@ Unilink's architecture emphasizes:
 ✅ **Performance** - Asynchronous I/O, efficient resource management  
 ✅ **Testability** - Dependency injection, mockable interfaces  
 ✅ **Extensibility** - Easy to add new transports and features  
-✅ **Maintainability** - Clean code, well-documented  
+✅ **Maintainability** - Clean code, well-documented
 
 ---
 
 **See Also:**
+
 - [Design Patterns](design_patterns.md)
 - [Threading Model](threading_model.md)
 - [Performance Guide](../guides/performance_tuning.md)

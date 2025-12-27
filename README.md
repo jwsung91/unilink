@@ -1,7 +1,7 @@
 # unilink
 
 [![CI](https://github.com/jwsung91/unilink/actions/workflows/ci.yml/badge.svg)](https://github.com/jwsung91/unilink/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/badges/coverage.json)](https://github.com/jwsung91/unilink)
+[![Coverage](https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/coverage/badges/coverage.json)](https://github.com/jwsung91/unilink)
 
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-informational)
 ![vcpkg](https://img.shields.io/badge/vcpkg-jwsung91--unilink-0078D6)
@@ -19,16 +19,16 @@ vcpkg install jwsung91-unilink
 ```
 
 > For CMake usage, source builds, and other installation options,
-> see the [Installation Guide](docs/guides/installation.md).
+> see the [Installation Guide](docs/guides/setup/installation.md).
 
 ## 📚 Documentation
 
 ### 🚦 Getting Started
 
-- [Quick Start Guide](docs/guides/QUICKSTART.md) - Get up and running in 5 minutes
-- [Installation Guide](docs/guides/installation.md) - CMake package, source build, and release packages
-- [Build Guide](docs/guides/build_guide.md) - Detailed build instructions and options
-- [Requirements](docs/guides/requirements.md) - System requirements and dependencies
+- [Quick Start Guide](docs/guides/core/quickstart.md) - Get up and running in 5 minutes
+- [Installation Guide](docs/guides/setup/installation.md) - CMake package, source build, and release packages
+- [Build Guide](docs/guides/setup/build_guide.md) - Detailed build instructions and options
+- [Requirements](docs/guides/setup/requirements.md) - System requirements and dependencies
 
 ### 🏗️ Architecture & Design
 
@@ -38,12 +38,11 @@ vcpkg install jwsung91-unilink
 
 ### 🔧 Guides & Reference
 
-- [API Reference](docs/reference/API_GUIDE.md) - Comprehensive API documentation
-- [Performance Optimization](docs/guides/performance.md) - Build configurations and optimization
-- [Testing Guide](docs/guides/testing.md) - Running tests and CI/CD integration
-- [Best Practices](docs/guides/best_practices.md) - Recommended patterns and usage
-- [Troubleshooting](docs/guides/troubleshooting.md) - Common issues and solutions
-- [Release Notes](docs/releases/) - Version history and migration guides
+- [API Reference](docs/reference/api_guide.md) - Comprehensive API documentation
+- [Performance Optimization](docs/guides/advanced/performance.md) - Build configurations and optimization
+- [Testing Guide](docs/guides/core/testing.md) - Running tests and CI/CD integration
+- [Best Practices](docs/guides/core/best_practices.md) - Recommended patterns and usage
+- [Troubleshooting](docs/guides/core/troubleshooting.md) - Common issues and solutions
 
 ### 💡 Examples & Tutorials
 
@@ -51,7 +50,7 @@ vcpkg install jwsung91-unilink
 - [UDP Examples](examples/udp/) - Sender/Receiver examples
 - [Serial Examples](examples/serial/) - Serial port communication
 - [Tutorials](docs/tutorials/) - Step-by-step learning guides
-- [Documentation Index](docs/INDEX.md) - Complete documentation overview
+- [Documentation Index](docs/index.md) - Complete documentation overview
 
 ## 📄 License
 

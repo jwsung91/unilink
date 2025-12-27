@@ -19,13 +19,13 @@
 
 ### Memory Safety Guarantees
 
-| Feature | Description | Performance Impact |
-|---------|-------------|-------------------|
-| **Bounds Checking** | All buffer access validated | Minimal (<1%) |
-| **Type Safety** | Safe conversions prevent UB | Zero (compile-time) |
-| **Leak Detection** | Track allocations/deallocations | Zero (Release builds) |
-| **Thread Safety** | All state management thread-safe | Minimal (~2-5%) |
-| **Memory Pools** | Reduce fragmentation | Positive (+30% for small buffers) |
+| Feature             | Description                      | Performance Impact                |
+| ------------------- | -------------------------------- | --------------------------------- |
+| **Bounds Checking** | All buffer access validated      | Minimal (<1%)                     |
+| **Type Safety**     | Safe conversions prevent UB      | Zero (compile-time)               |
+| **Leak Detection**  | Track allocations/deallocations  | Zero (Release builds)             |
+| **Thread Safety**   | All state management thread-safe | Minimal (~2-5%)                   |
+| **Memory Pools**    | Reduce fragmentation             | Positive (+30% for small buffers) |
 
 ---
 
@@ -33,33 +33,12 @@
 
 `unilink` provides multiple levels of memory safety:
 
-```
-┌─────────────────────────────────────┐
-│  Level 1: Compile-Time Safety       │  ← Always enabled
-│  - Type safety                       │
-│  - RAII resource management          │
-└─────────────────────────────────────┘
-              ↓
-┌─────────────────────────────────────┐
-│  Level 2: Runtime Safety (Release)  │  ← Enabled in Release
-│  - Bounds checking                   │
-│  - Safe conversions                  │
-│  - Thread synchronization            │
-└─────────────────────────────────────┘
-              ↓
-┌─────────────────────────────────────┐
-│  Level 3: Debug Safety (Debug)      │  ← Enabled in Debug
-│  - Memory tracking                   │
-│  - Allocation tracking               │
-│  - Leak detection                    │
-└─────────────────────────────────────┘
-              ↓
-┌─────────────────────────────────────┐
-│  Level 4: Sanitizers (Optional)     │  ← Enable with flag
-│  - AddressSanitizer                  │
-│  - ThreadSanitizer                   │
-│  - UndefinedBehaviorSanitizer       │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TD
+    L1[Level 1: Compile-Time Safety<br/>- Type safety<br/>- RAII resource management] --> L2
+    L2[Level 2: Runtime Safety (Release)<br/>- Bounds checking<br/>- Safe conversions<br/>- Thread synchronization] --> L3
+    L3[Level 3: Debug Safety (Debug)<br/>- Memory tracking<br/>- Allocation tracking<br/>- Leak detection] --> L4
+    L4[Level 4: Sanitizers (Optional)<br/>- AddressSanitizer<br/>- ThreadSanitizer<br/>- UndefinedBehaviorSanitizer]
 ```
 
 ---
@@ -68,58 +47,32 @@
 
 ### SafeDataBuffer
 
-Type-safe data buffer with automatic bounds checking:
+Immutable, type-safe buffer wrapper around existing data:
 
 ```cpp
 #include "unilink/common/safe_data_buffer.hpp"
 
 using namespace unilink::common;
 
-// Create safe buffer
-SafeDataBuffer buffer(1024);  // 1 KB buffer
+// Create from existing data
+SafeDataBuffer from_vec(std::vector<uint8_t>{1, 2, 3});
+SafeDataBuffer from_str(std::string("hello"));
 
-// Safe write (bounds checked)
-const uint8_t* data = ...;
-size_t size = ...;
-bool success = buffer.write(data, size);
-
-if (!success) {
-    // Write failed - would overflow buffer
-    std::cerr << "Buffer overflow prevented!" << std::endl;
-}
-
-// Safe read (bounds checked)
-const uint8_t* read_data = buffer.data();
-size_t read_size = buffer.size();
+// Read access
+auto span = from_vec.as_span();      // Non-owning view
+auto byte = from_vec.at(1);          // Bounds-checked
+auto unchecked = from_vec.data()[0]; // Pointer access
 ```
 
 ---
 
 ### Features
 
-#### 1. Automatic Bounds Checking
+#### 1. Construction Validation
 
-All buffer access is validated:
-
-```cpp
-SafeDataBuffer buffer(10);  // 10 bytes
-
-// ✅ SAFE: Write fits in buffer
-buffer.write(data, 5);  // OK
-
-// ✅ SAFE: Write prevented, returns false
-bool success = buffer.write(data, 20);  // Overflow prevented
-assert(!success);  // Write fails, no corruption
-
-// ❌ UNSAFE (traditional approach):
-// uint8_t buf[10];
-// memcpy(buf, data, 20);  // BUFFER OVERFLOW!
-```
-
-**Benefits:**
-- Prevents buffer overflows
-- Prevents buffer under-runs
-- Returns error instead of corrupting memory
+- Rejects null pointers when size > 0
+- Rejects buffers >100MB
+- Copies incoming data into owned storage
 
 ---
 
@@ -162,11 +115,11 @@ if (buffer.is_valid()) {
     handle_error();
 }
 
-// Check capacity
-if (buffer.capacity() >= required_size) {
-    buffer.write(data, required_size);
-}
+// Explicit validation (throws on oversize)
+buffer.validate();
 ```
+
+**Mutation model:** Data is populated at construction; no in-place `write/append` helpers exist. Use `clear()/resize()/reserve()` only when you control the backing data size.
 
 ---
 
@@ -180,14 +133,14 @@ Lightweight, non-owning view of contiguous data:
 using namespace unilink::common;
 
 void process_data(safe_span<const uint8_t> data) {
-    // Safe iteration
+    // Iteration (operator[] is unchecked)
     for (size_t i = 0; i < data.size(); i++) {
-        uint8_t byte = data[i];  // Bounds checked in debug builds
+        uint8_t byte = data[i];
         process_byte(byte);
     }
-    
-    // Safe subspan
-    auto subset = data.subspan(10, 20);  // Bounds checked
+
+    // Bounds-checked access
+    auto subset = data.subspan(1, 2);  // throws on invalid ranges
 }
 
 // Usage
@@ -196,8 +149,9 @@ process_data(safe_span<const uint8_t>(buffer));
 ```
 
 **Features:**
+
 - No ownership (lightweight)
-- Bounds checking in debug builds
+- `at()/subspan()` are checked; `operator[]` is unchecked
 - C++17 compatible (pre-C++20 `std::span`)
 - Zero overhead in release builds
 
@@ -256,6 +210,7 @@ bool success = counter.compare_exchange_strong(expected, 20);
 ```
 
 **Use when:**
+
 - High contention scenarios
 - Low latency required
 - Simple atomic types (int, bool, etc.)
@@ -306,12 +261,12 @@ if (ready_flag.is_set()) {
 
 ### Thread Safety Summary
 
-| Primitive | Lock-Free | Blocking | Use Case |
-|-----------|-----------|----------|----------|
-| **ThreadSafeState** | No | No | Complex state management |
-| **AtomicState** | Yes | No | Simple atomic types |
-| **ThreadSafeCounter** | Yes | No | Counters, statistics |
-| **ThreadSafeFlag** | No | Yes | Synchronization, signals |
+| Primitive             | Lock-Free | Blocking | Use Case                 |
+| --------------------- | --------- | -------- | ------------------------ |
+| **ThreadSafeState**   | No        | No       | Complex state management |
+| **AtomicState**       | Yes       | No       | Simple atomic types      |
+| **ThreadSafeCounter** | Yes       | No       | Counters, statistics     |
+| **ThreadSafeFlag**    | No        | Yes      | Synchronization, signals |
 
 ---
 
@@ -363,15 +318,16 @@ MemoryTracker::Stats stats = MemoryTracker::instance().get_stats();
 
 if (stats.total_allocations != stats.total_deallocations) {
     size_t leaked = stats.total_allocations - stats.total_deallocations;
-    std::cerr << "⚠️ Memory leak detected: " 
+    std::cerr << "⚠️ Memory leak detected: "
               << leaked << " allocations not freed" << std::endl;
-    
+
     // Get detailed report
     MemoryTracker::instance().print_report();
 }
 ```
 
 **Output example:**
+
 ```
 === Memory Tracking Report ===
 Total allocations: 1250
@@ -466,6 +422,7 @@ ctest --output-on-failure
 ```
 
 **ASan output example:**
+
 ```
 =================================================================
 ==12345==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000000050
@@ -491,11 +448,10 @@ WRITE of size 4 at 0x602000000050 thread T0
 #### ✅ DO
 
 ```cpp
-// Use SafeDataBuffer for dynamic buffers
-SafeDataBuffer buffer(size);
-if (buffer.write(data, len)) {
-    process_buffer(buffer);
-}
+// Use SafeDataBuffer to wrap existing data
+std::vector<uint8_t> raw(data, data + len);
+SafeDataBuffer buffer(raw);
+process_buffer(buffer);
 
 // Use safe_span for views
 void process(safe_span<const uint8_t> data) {
@@ -615,25 +571,25 @@ ctest --output-on-failure
 
 ### Prevents Common Vulnerabilities
 
-| Vulnerability | Traditional C++ | unilink |
-|---------------|----------------|---------|
-| **Buffer Overflow** | Possible | Prevented (bounds checked) |
-| **Use-After-Free** | Possible | Detected (ASan) |
-| **Memory Leak** | Possible | Detected (tracking) |
-| **Data Race** | Possible | Prevented (thread-safe) |
-| **Type Confusion** | Possible | Prevented (type-safe) |
+| Vulnerability       | Traditional C++ | unilink                    |
+| ------------------- | --------------- | -------------------------- |
+| **Buffer Overflow** | Possible        | Prevented (bounds checked) |
+| **Use-After-Free**  | Possible        | Detected (ASan)            |
+| **Memory Leak**     | Possible        | Detected (tracking)        |
+| **Data Race**       | Possible        | Prevented (thread-safe)    |
+| **Type Confusion**  | Possible        | Prevented (type-safe)      |
 
 ---
 
 ### Performance
 
-| Feature | Debug Overhead | Release Overhead |
-|---------|---------------|------------------|
-| **Bounds Checking** | ~5% | <1% |
-| **Memory Tracking** | ~10% | 0% (disabled) |
-| **Thread Safety** | ~5% | ~2-5% |
-| **Memory Pools** | 0% | Negative (faster!) |
-| **AddressSanitizer** | ~200-300% | N/A (not used) |
+| Feature              | Debug Overhead | Release Overhead   |
+| -------------------- | -------------- | ------------------ |
+| **Bounds Checking**  | ~5%            | <1%                |
+| **Memory Tracking**  | ~10%           | 0% (disabled)      |
+| **Thread Safety**    | ~5%            | ~2-5%              |
+| **Memory Pools**     | 0%             | Negative (faster!) |
+| **AddressSanitizer** | ~200-300%      | N/A (not used)     |
 
 ---
 
@@ -647,6 +603,7 @@ ctest --output-on-failure
 ```
 
 **Tests cover:**
+
 - Buffer bounds checking
 - Memory leak detection
 - Safe type conversions
@@ -669,6 +626,7 @@ cd build && ctest
 ### Continuous Integration
 
 All memory safety features are tested in CI/CD:
+
 - ✅ Memory tracking enabled
 - ✅ AddressSanitizer enabled
 - ✅ ThreadSanitizer enabled (selected tests)
@@ -681,7 +639,6 @@ See [Testing Guide](../guides/testing.md) for details.
 ## Next Steps
 
 - [Runtime Behavior](runtime_behavior.md) - Threading and execution model
-- [System Overview](system_overview.md) - High-level architecture
+- [System Overview](README.md) - High-level architecture
 - [Testing Guide](../guides/testing.md) - Memory safety testing
 - [Best Practices](../guides/best_practices.md) - Safe coding patterns
-

@@ -8,7 +8,10 @@ Welcome to the comprehensive documentation for unilink - a modern C++ communicat
 
 ```
 docs/
-├── guides/          # User guides and best practices
+├── guides/
+│   ├── setup/       # Installation and build guides
+│   ├── core/        # Core concepts and usage guides
+│   └── advanced/    # Performance and advanced topics
 ├── tutorials/       # Step-by-step tutorials
 ├── reference/       # API reference documentation
 ├── architecture/    # System design and architecture
@@ -21,18 +24,18 @@ docs/
 
 ### New to Unilink?
 
-1. **[Quick Start Guide](guides/QUICKSTART.md)** - Get up and running in 5 minutes
+1. **[Quick Start Guide](guides/core/quickstart.md)** - Get up and running in 5 minutes
 2. **[Tutorial 1: Getting Started](tutorials/01_getting_started.md)** - Your first application
-3. **[API Guide](reference/API_GUIDE.md)** - Complete API reference
+3. **[API Guide](reference/api_guide.md)** - Complete API reference
 
 ### Core Documentation
 
 | Document | Description | Difficulty |
 |----------|-------------|------------|
-| [Quick Start](guides/QUICKSTART.md) | 5-minute quick start | ⭐ Beginner |
-| [API Guide](reference/API_GUIDE.md) | Comprehensive API reference | ⭐⭐ All Levels |
-| [Best Practices](guides/best_practices.md) | Recommended patterns | ⭐⭐ Intermediate |
-| [System Overview](architecture/system_overview.md) | Architecture deep-dive | ⭐⭐⭐ Advanced |
+| [Quick Start](guides/core/quickstart.md) | 5-minute quick start | ⭐ Beginner |
+| [API Guide](reference/api_guide.md) | Comprehensive API reference | ⭐⭐ All Levels |
+| [Best Practices](guides/core/best_practices.md) | Recommended patterns | ⭐⭐ Intermediate |
+| [System Overview](architecture/README.md) | Architecture deep-dive | ⭐⭐⭐ Advanced |
 
 ---
 
@@ -65,20 +68,31 @@ Step-by-step guides for common tasks:
 
 Practical guides for using unilink effectively:
 
-### User Guides
-
+### Setup Guides
 | Guide | Topics Covered |
 |-------|----------------|
-| **[Best Practices](guides/best_practices.md)** | Error handling, resource management, thread safety, performance |
-| **[Troubleshooting](guides/troubleshooting.md)** | Common issues, debugging tips, solutions |
-| **[Performance Tuning](guides/performance_tuning.md)** | Optimization techniques, benchmarking, case studies |
+| **[Installation](guides/setup/installation.md)** | Installing dependencies, CMake setup |
+| **[Build Guide](guides/setup/build_guide.md)** | Build options, configurations |
+| **[Requirements](guides/setup/requirements.md)** | System requirements |
+
+### Core Guides
+| Guide | Topics Covered |
+|-------|----------------|
+| **[Best Practices](guides/core/best_practices.md)** | Error handling, resource management, thread safety |
+| **[Troubleshooting](guides/core/troubleshooting.md)** | Common issues, debugging tips, solutions |
+| **[Testing](guides/core/testing.md)** | Testing strategies, unit tests |
+
+### Advanced Guides
+| Guide | Topics Covered |
+|-------|----------------|
+| **[Performance Guide](guides/advanced/performance.md)** | Optimization, tuning, benchmarks |
 
 ### Quick Reference
 
-- **Error Handling**: [Best Practices §1](guides/best_practices.md#error-handling)
-- **Thread Safety**: [Best Practices §3](guides/best_practices.md#thread-safety)
-- **Performance**: [Performance Guide](guides/performance_tuning.md)
-- **Debugging**: [Troubleshooting](guides/troubleshooting.md#debugging-tips)
+- **Error Handling**: [Best Practices §1](guides/core/best_practices.md#error-handling)
+- **Thread Safety**: [Best Practices §3](guides/core/best_practices.md#thread-safety)
+- **Performance**: [Performance Guide](guides/advanced/performance.md)
+- **Debugging**: [Troubleshooting](guides/core/troubleshooting.md#debugging-tips)
 
 ---
 
@@ -90,18 +104,18 @@ Complete API documentation:
 
 | API | Description |
 |-----|-------------|
-| **[TCP Client](reference/API_GUIDE.md#tcp-client)** | Connect to TCP servers |
-| **[TCP Server](reference/API_GUIDE.md#tcp-server)** | Accept client connections |
-| **[Serial Communication](reference/API_GUIDE.md#serial-communication)** | Interface with serial devices |
-| **[Error Handling](reference/API_GUIDE.md#error-handling)** | Centralized error management |
-| **[Logging System](reference/API_GUIDE.md#logging-system)** | Flexible logging |
+| **[TCP Client](reference/api_guide.md#tcp-client)** | Connect to TCP servers |
+| **[TCP Server](reference/api_guide.md#tcp-server)** | Accept client connections |
+| **[Serial Communication](reference/api_guide.md#serial-communication)** | Interface with serial devices |
+| **[Error Handling](reference/api_guide.md#error-handling)** | Centralized error management |
+| **[Logging System](reference/api_guide.md#logging-system)** | Flexible logging |
 
 ### Advanced Features
 
-- **[Configuration Management](reference/API_GUIDE.md#configuration-management)** (Optional)
-- **[Memory Pool](reference/API_GUIDE.md#memory-pool)**
-- **[Thread-Safe State](reference/API_GUIDE.md#thread-safe-state)**
-- **[Safe Data Buffer](reference/API_GUIDE.md#safe-data-buffer)**
+- **[Configuration Management](reference/api_guide.md#configuration-management)** (Optional)
+- **[Memory Pool](reference/api_guide.md#memory-pool)**
+- **[Thread-Safe State](reference/api_guide.md#thread-safe-state)**
+- **[Safe Data Buffer](reference/api_guide.md#safe-data-buffer)**
 
 ---
 
@@ -113,30 +127,30 @@ Understanding unilink's design:
 
 | Document | Description |
 |----------|-------------|
-| **[System Overview](architecture/system_overview.md)** | Complete architecture documentation |
+| **[System Overview](architecture/README.md)** | Complete architecture documentation |
 | Design Patterns | Patterns used in unilink (Coming Soon) |
 | Threading Model | Concurrency and thread safety (Coming Soon) |
 
 ### Key Concepts
 
-1. **[Layered Architecture](architecture/system_overview.md#layered-architecture)**
+1. **[Layered Architecture](architecture/README.md#layered-architecture)**
    - Builder API Layer
    - Wrapper API Layer
    - Transport Layer
    - Common Utilities Layer
 
-2. **[Design Patterns](architecture/system_overview.md#design-patterns)**
+2. **[Design Patterns](architecture/README.md#design-patterns)**
    - Builder Pattern
    - Observer Pattern
    - Dependency Injection
    - RAII
 
-3. **[Threading Model](architecture/system_overview.md#threading-model)**
+3. **[Threading Model](architecture/README.md#threading-model)**
    - IO Context Management
    - Thread Safety
    - Callback Execution
 
-4. **[Memory Management](architecture/system_overview.md#memory-management)**
+4. **[Memory Management](architecture/README.md#memory-management)**
    - Smart Pointers
    - Memory Pools
    - Safe Buffers
@@ -151,7 +165,7 @@ For contributors and advanced users:
 
 | Document | Description |
 |----------|-------------|
-| **[Improvement Recommendations](development/IMPROVEMENT_RECOMMENDATIONS.md)** | Code quality assessment & roadmap |
+| **[Improvement Recommendations](development/improvement_recommendations.md)** | Code quality assessment & roadmap |
 | Contributing Guide | How to contribute (Coming Soon) |
 | Code Style Guide | Coding standards (Coming Soon) |
 | Testing Guide | Writing and running tests (Coming Soon) |
@@ -220,20 +234,20 @@ server->stop();  // Clean shutdown
 
 ### By Topic
 
-- **Connection Issues**: [Troubleshooting §1](guides/troubleshooting.md#connection-issues)
-- **Performance Problems**: [Troubleshooting §4](guides/troubleshooting.md#performance-issues)
-- **Memory Leaks**: [Troubleshooting §5](guides/troubleshooting.md#memory-issues)
-- **Thread Safety**: [Best Practices §3](guides/best_practices.md#thread-safety)
-- **Error Handling**: [Best Practices §1](guides/best_practices.md#error-handling)
+- **Connection Issues**: [Troubleshooting §1](guides/core/troubleshooting.md#connection-issues)
+- **Performance Problems**: [Troubleshooting §4](guides/core/troubleshooting.md#performance-issues)
+- **Memory Leaks**: [Troubleshooting §5](guides/core/troubleshooting.md#memory-issues)
+- **Thread Safety**: [Best Practices §3](guides/core/best_practices.md#thread-safety)
+- **Error Handling**: [Best Practices §1](guides/core/best_practices.md#error-handling)
 
 ### By Use Case
 
 | Use Case | Relevant Documentation |
 |----------|------------------------|
-| IoT Device | [Serial API](reference/API_GUIDE.md#serial-communication), [Performance](guides/performance_tuning.md) |
-| Web Service | [TCP Server](reference/API_GUIDE.md#tcp-server), [Best Practices](guides/best_practices.md) |
-| Data Streaming | [Performance Guide](guides/performance_tuning.md), [Architecture](architecture/system_overview.md) |
-| Testing | [Troubleshooting](guides/troubleshooting.md), [API Guide](reference/API_GUIDE.md) |
+| IoT Device | [Serial API](reference/api_guide.md#serial-communication), [Performance](guides/advanced/performance.md) |
+| Web Service | [TCP Server](reference/api_guide.md#tcp-server), [Best Practices](guides/core/best_practices.md) |
+| Data Streaming | [Performance Guide](guides/advanced/performance.md), [Architecture](architecture/README.md) |
+| Testing | [Troubleshooting](guides/core/troubleshooting.md), [API Guide](reference/api_guide.md) |
 
 ---
 
@@ -243,7 +257,7 @@ server->stop();  // Clean shutdown
 |--------|-------|
 | Total Pages | 10+ |
 | Tutorials | 2 (more coming) |
-| Guides | 3 |
+| Guides | 7 |
 | Code Examples | 50+ |
 | API Methods Documented | 100+ |
 
@@ -253,8 +267,8 @@ server->stop();  // Clean shutdown
 
 ### Quick Links
 
-- **Common Issues**: [Troubleshooting Guide](guides/troubleshooting.md)
-- **FAQ**: [Troubleshooting §Getting Help](guides/troubleshooting.md#getting-help)
+- **Common Issues**: [Troubleshooting Guide](guides/core/troubleshooting.md)
+- **FAQ**: [Troubleshooting §Getting Help](guides/core/troubleshooting.md#getting-help)
 - **Examples**: [Examples Directory](../examples/)
 - **GitHub Issues**: [Report a Bug](https://github.com/jwsung91/unilink/issues)
 
@@ -270,7 +284,7 @@ server->stop();  // Clean shutdown
 **Intermediate Path:**
 1. API Guide (complete)
 2. Best Practices (complete)
-3. Performance Tuning
+3. Performance Guide
 4. Architecture Overview
 
 **Advanced Path:**
@@ -286,6 +300,7 @@ server->stop();  // Clean shutdown
 | Date | Version | Changes |
 |------|---------|---------|
 | 2025-10-11 | 1.0 | Initial comprehensive documentation release |
+| 2025-12-27 | 1.1 | Restructured documentation (Categories, snake_case) |
 
 ---
 
