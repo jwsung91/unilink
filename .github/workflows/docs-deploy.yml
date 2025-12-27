@@ -28,8 +28,9 @@ jobs:
         ./docs/scripts/generate_docs.sh
 
     - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
+      uses: peaceiris/actions-gh-pages@v4
       with:
-        folder: docs/html
-        branch: gh-pages
-        clean: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/html
+        publish_branch: gh-pages
+        keep_files: true
