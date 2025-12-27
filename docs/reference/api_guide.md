@@ -416,6 +416,90 @@ auto gps = unilink::serial("/dev/ttyUSB0", 9600)
 
 ---
 
+## UDP Communication
+
+Connectionless communication using UDP protocol.
+
+### Basic Usage
+
+#### UDP Receiver (Server)
+
+```cpp
+#include "unilink/unilink.hpp"
+
+// Create a UDP socket bound to port 8080
+auto receiver = unilink::udp(8080)
+    .on_data([](const std::string& data) {
+        std::cout << "Received: " << data << std::endl;
+    })
+    .build();
+
+receiver->start();
+
+// Keep running...
+std::this_thread::sleep_for(std::chrono::seconds(60));
+receiver->stop();
+```
+
+#### UDP Sender (Client)
+
+```cpp
+#include "unilink/unilink.hpp"
+
+// Create a UDP socket and set remote destination
+auto sender = unilink::udp(0)  // 0 = ephemeral port
+    .set_remote("127.0.0.1", 8080)
+    .build();
+
+sender->start();
+sender->send("Hello UDP!");
+```
+
+### API Reference
+
+#### Constructor
+
+```cpp
+// Create UDP builder with local port binding
+unilink::udp(uint16_t local_port)
+```
+
+#### Builder Methods
+
+| Method                      | Parameters         | Description                                   |
+| --------------------------- | ------------------ | --------------------------------------------- |
+| `set_local_port(port)`      | `uint16_t`         | Bind to specific local port                   |
+| `set_local_address(ip)`     | `string`           | Bind to specific local IP (default "0.0.0.0") |
+| `set_remote(ip, port)`      | `string, uint16_t` | Set default destination for `send()`          |
+| `use_independent_context()` | `bool`             | Run on dedicated IO thread                    |
+| `auto_manage()`             | `bool`             | Auto-start/stop lifecycle                     |
+
+#### Instance Methods
+
+| Method           | Return | Description                            |
+| ---------------- | ------ | -------------------------------------- |
+| `send()`         | `void` | Send data to configured remote address |
+| `start()`        | `void` | Start listening/sending                |
+| `stop()`         | `void` | Close socket                           |
+| `is_connected()` | `bool` | Check if socket is open and ready      |
+
+### Advanced Examples
+
+#### Echo Reply (Receiver)
+
+```cpp
+auto socket = unilink::udp(8080)
+    .on_data([&](const std::string& data) {
+        std::cout << "Received: " << data << std::endl;
+        // Reply to the sender (automatically tracks last sender)
+        // Note: Full symmetric echo requires manual address handling
+        // which will be available in future updates.
+    })
+    .build();
+```
+
+---
+
 ## Error Handling
 
 Centralized error handling system with callbacks and statistics.
