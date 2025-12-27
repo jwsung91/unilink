@@ -576,6 +576,6 @@ Backpressure handling ensures:
 ## Next Steps
 
 - [Memory Safety](memory_safety.md) - Memory safety features
-- [System Overview](system_overview.md) - High-level architecture
+- [System Overview](README.md) - High-level architecture
 - [Performance Guide](../guides/performance.md) - Optimization techniques
 - [Best Practices](../guides/best_practices.md) - Recommended patterns

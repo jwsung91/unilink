@@ -32,7 +32,7 @@ docs/
 | [Quick Start](guides/QUICKSTART.md) | 5-minute quick start | ⭐ Beginner |
 | [API Guide](reference/API_GUIDE.md) | Comprehensive API reference | ⭐⭐ All Levels |
 | [Best Practices](guides/best_practices.md) | Recommended patterns | ⭐⭐ Intermediate |
-| [System Overview](architecture/system_overview.md) | Architecture deep-dive | ⭐⭐⭐ Advanced |
+| [System Overview](architecture/README.md) | Architecture deep-dive | ⭐⭐⭐ Advanced |
 
 ---
 
@@ -113,30 +113,30 @@ Understanding unilink's design:
 
 | Document | Description |
 |----------|-------------|
-| **[System Overview](architecture/system_overview.md)** | Complete architecture documentation |
+| **[System Overview](architecture/README.md)** | Complete architecture documentation |
 | Design Patterns | Patterns used in unilink (Coming Soon) |
 | Threading Model | Concurrency and thread safety (Coming Soon) |
 
 ### Key Concepts
 
-1. **[Layered Architecture](architecture/system_overview.md#layered-architecture)**
+1. **[Layered Architecture](architecture/README.md#layered-architecture)**
    - Builder API Layer
    - Wrapper API Layer
    - Transport Layer
    - Common Utilities Layer
 
-2. **[Design Patterns](architecture/system_overview.md#design-patterns)**
+2. **[Design Patterns](architecture/README.md#design-patterns)**
    - Builder Pattern
    - Observer Pattern
    - Dependency Injection
    - RAII
 
-3. **[Threading Model](architecture/system_overview.md#threading-model)**
+3. **[Threading Model](architecture/README.md#threading-model)**
    - IO Context Management
    - Thread Safety
    - Callback Execution
 
-4. **[Memory Management](architecture/system_overview.md#memory-management)**
+4. **[Memory Management](architecture/README.md#memory-management)**
    - Smart Pointers
    - Memory Pools
    - Safe Buffers
@@ -232,7 +232,7 @@ server->stop();  // Clean shutdown
 |----------|------------------------|
 | IoT Device | [Serial API](reference/API_GUIDE.md#serial-communication), [Performance](guides/performance_tuning.md) |
 | Web Service | [TCP Server](reference/API_GUIDE.md#tcp-server), [Best Practices](guides/best_practices.md) |
-| Data Streaming | [Performance Guide](guides/performance_tuning.md), [Architecture](architecture/system_overview.md) |
+| Data Streaming | [Performance Guide](guides/performance_tuning.md), [Architecture](architecture/README.md) |
 | Testing | [Troubleshooting](guides/troubleshooting.md), [API Guide](reference/API_GUIDE.md) |
 
 ---

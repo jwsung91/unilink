@@ -670,5 +670,5 @@ void benchmark_connection() {
 
 **See Also:**
 - [Best Practices](best_practices.md)
-- [Architecture Overview](../architecture/system_overview.md)
+- [Architecture Overview](../architecture/README.md)
 - [Benchmarking Tests](../../test/performance/)

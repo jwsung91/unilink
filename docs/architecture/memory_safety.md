@@ -639,6 +639,6 @@ See [Testing Guide](../guides/testing.md) for details.
 ## Next Steps
 
 - [Runtime Behavior](runtime_behavior.md) - Threading and execution model
-- [System Overview](system_overview.md) - High-level architecture
+- [System Overview](README.md) - High-level architecture
 - [Testing Guide](../guides/testing.md) - Memory safety testing
 - [Best Practices](../guides/best_practices.md) - Safe coding patterns
