@@ -44,21 +44,23 @@ auto channel = unilink::{type}(params)
 | `.build()`                       | **Required**: Build the wrapper instance                          | -       |
 
 **Builder-Specific Options**
+
 - `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
 - `TcpServerBuilder`: `.enable_port_retry(enable, max_retries, retry_interval_ms)`
 - `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` **(must choose one before `build()`)**
 - TCP server callbacks also accept multi-client signatures: `.on_connect(size_t, std::string)`, `.on_data(size_t, std::string)`, `.on_disconnect(size_t)`
 
 **Lifecycle Methods:**
-| Method                               | Description                                                            |
+| Method | Description |
 | ------------------------------------ | ---------------------------------------------------------------------- |
-| `->start()`                          | **Required**: Start the connection                                     |
-| `->stop()`                           | Stop the connection                                                    |
-| `->send(data)` / `->send_line(text)` | Send data to peer(s)                                                   |
-| `->is_connected()`                   | Check connection status (`TcpServer` reports underlying channel state) |
-| `TcpServer::is_listening()`          | Check if the server socket is bound and listening                      |
+| `->start()` | **Required**: Start the connection |
+| `->stop()` | Stop the connection |
+| `->send(data)` / `->send_line(text)` | Send data to peer(s) |
+| `->is_connected()` | Check connection status (`TcpServer` reports underlying channel state) |
+| `TcpServer::is_listening()` | Check if the server socket is bound and listening |
 
 **Builder Flow**
+
 ```
 tcp_server(port)
     ↓ configure callbacks / limits / port retry
@@ -69,9 +71,10 @@ tcp_server(port)
 ```
 
 ### IO Context Ownership (advanced)
+
 - **Default**: Builders use the shared `IoContextManager` thread; unilink starts/stops it for you.
 - **`use_independent_context(true)`**: Builder creates its own `io_context` and runs it on an internal thread; cleanup is automatic.
-- **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will *not* run/stop it unless you call `set_manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_manage(true)` (it starts immediately).
+- **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will _not_ run/stop it unless you call `set_manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_manage(true)` (it starts immediately).
 
 ---
 
@@ -115,11 +118,13 @@ client->stop();
 ### API Reference
 
 #### Constructor
+
 ```cpp
 unilink::tcp_client(const std::string& host, uint16_t port)
 ```
 
 #### Builder Methods
+
 | Method                      | Parameters | Description                                                |
 | --------------------------- | ---------- | ---------------------------------------------------------- |
 | `retry_interval(ms)`        | `unsigned` | Set reconnection interval in milliseconds (default `3000`) |
@@ -127,6 +132,7 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 | `auto_manage()`             | `bool`     | Auto-start immediately and stop on destruction             |
 
 #### Instance Methods
+
 | Method                     | Return | Description                                                           |
 | -------------------------- | ------ | --------------------------------------------------------------------- |
 | `send()`                   | `void` | Send data to server                                                   |
@@ -141,15 +147,16 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 ### Advanced Examples
 
 #### With Member Functions
+
 ```cpp
 class MyClient {
     std::shared_ptr<unilink::wrapper::TcpClient> client_;
-    
+
 public:
     void on_data(const std::string& data) {
         // Handle data
     }
-    
+
     void connect() {
         client_ = unilink::tcp_client("server.com", 8080)
             .on_data(this, &MyClient::on_data)  // Member function!
@@ -160,6 +167,7 @@ public:
 ```
 
 #### With Lambda Capture
+
 ```cpp
 std::string device_id = "sensor_001";
 auto client = unilink::tcp_client("127.0.0.1", 8080)
@@ -216,11 +224,13 @@ server->stop();
 ### API Reference
 
 #### Constructor
+
 ```cpp
 unilink::tcp_server(uint16_t port)
 ```
 
 #### Builder Methods
+
 | Method                      | Parameters                   | Description                                                          |
 | --------------------------- | ---------------------------- | -------------------------------------------------------------------- |
 | `single_client()`           | None                         | Accept only one client (required to choose a limit before `build()`) |
@@ -235,6 +245,7 @@ Multi-client callbacks can be registered with either signature-based overloads (
 `.on_multi_connect`, `.on_multi_data`, and `.on_multi_disconnect` (available on both the builder and the wrapper).
 
 #### Instance Methods
+
 | Method                    | Return                | Description                     |
 | ------------------------- | --------------------- | ------------------------------- |
 | `send()`                  | `void`                | Send to all connected clients   |
@@ -251,6 +262,7 @@ Multi-client callbacks can be registered with either signature-based overloads (
 ### Advanced Examples
 
 #### Single Client Mode
+
 ```cpp
 auto server = unilink::tcp_server(8080)
     .single_client()  // Only one client allowed
@@ -261,6 +273,7 @@ auto server = unilink::tcp_server(8080)
 ```
 
 #### Port Retry
+
 ```cpp
 auto server = unilink::tcp_server(8080)
     .enable_port_retry(true, 5, 1000)  // 5 retries, 1 second each
@@ -271,6 +284,7 @@ auto server = unilink::tcp_server(8080)
 ```
 
 #### Echo Server Pattern
+
 ```cpp
 auto server = unilink::tcp_server(8080)
     .unlimited_clients()
@@ -317,14 +331,17 @@ serial->send(binary);
 ### API Reference
 
 #### Constructor
+
 ```cpp
 unilink::serial(const std::string& device, uint32_t baud_rate)
 ```
 
 **Common Baud Rates:**
+
 - 9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600
 
 #### Builder Methods
+
 | Method                      | Parameters | Description                                               |
 | --------------------------- | ---------- | --------------------------------------------------------- |
 | `retry_interval(ms)`        | `unsigned` | Set reconnection interval (default `3000`)                |
@@ -332,6 +349,7 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 | `auto_manage()`             | `bool`     | Auto-start immediately and stop on destruction            |
 
 #### Instance Methods
+
 | Method                 | Return         | Description                                                |
 | ---------------------- | -------------- | ---------------------------------------------------------- |
 | `send()`               | `void`         | Send data to device                                        |
@@ -350,6 +368,7 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 ### Device Paths
 
 **Linux:**
+
 ```cpp
 "/dev/ttyUSB0"  // USB serial adapter
 "/dev/ttyACM0"  // Arduino, CDC devices
@@ -357,6 +376,7 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 ```
 
 **Windows:**
+
 ```cpp
 "COM3"
 "COM4"
@@ -365,6 +385,7 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 ### Advanced Examples
 
 #### Arduino Communication
+
 ```cpp
 auto arduino = unilink::serial("/dev/ttyACM0", 9600)
     .on_connect([]() {
@@ -381,6 +402,7 @@ auto arduino = unilink::serial("/dev/ttyACM0", 9600)
 ```
 
 #### GPS Module
+
 ```cpp
 auto gps = unilink::serial("/dev/ttyUSB0", 9600)
     .on_data([](const std::string& nmea) {
@@ -407,9 +429,9 @@ using namespace unilink::common;
 
 // Register global error callback
 ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
-    std::cerr << "[" << error.component << "] " 
+    std::cerr << "[" << error.component << "] "
               << error.message << std::endl;
-              
+
     if (error.level == ErrorLevel::CRITICAL) {
         // Handle critical errors
         std::cerr << "CRITICAL ERROR! " << error.get_summary() << std::endl;
@@ -499,9 +521,11 @@ logger.critical("component", "operation", "Critical message");
 
 ```cpp
 // Enable async logging for better performance
-logger.enable_async(true);
-logger.set_batch_size(100);     // Process 100 logs at once
-logger.set_flush_interval(1000); // Flush every 1 second
+AsyncLogConfig config;
+config.batch_size = 100;                    // Process 100 logs at once
+config.flush_interval = std::chrono::milliseconds(1000); // Flush every 1 second
+
+logger.set_async_logging(true, config);
 ```
 
 ### Log Rotation
@@ -519,7 +543,7 @@ rotation.rotate_if_needed("app.log");
 
 ## Configuration Management
 
-*(Available when built with `UNILINK_ENABLE_CONFIG=ON`)*
+_(Available when built with `UNILINK_ENABLE_CONFIG=ON`)_
 
 ### Load Configuration from File
 
@@ -635,6 +659,7 @@ state.compare_exchange(State::Idle, State::Running);
 ## Best Practices
 
 ### 1. Always Handle Errors
+
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
     .on_error([](const std::string& error) {
@@ -644,6 +669,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 ```
 
 ### 2. Use Explicit Lifecycle Control
+
 ```cpp
 // Always use explicit start/stop for clarity
 auto client = unilink::tcp_client("127.0.0.1", 8080)
@@ -656,6 +682,7 @@ client->stop();   // Stop when done
 ```
 
 ### 3. Set Appropriate Retry Intervals
+
 ```cpp
 // Fast retry for local connections
 auto local_client = unilink::tcp_client("127.0.0.1", 8080)
@@ -669,18 +696,20 @@ auto remote_client = unilink::tcp_client("remote.com", 8080)
 ```
 
 ### 4. Enable Logging for Debugging
+
 ```cpp
 unilink::common::Logger::instance().set_level(unilink::common::LogLevel::DEBUG);
 unilink::common::Logger::instance().set_console_output(true);
 ```
 
 ### 5. Use Member Functions for OOP Design
+
 ```cpp
 class MyApplication {
     std::shared_ptr<unilink::wrapper::TcpClient> client_;
-    
+
     void on_data(const std::string& data) { /* ... */ }
-    
+
     void start() {
         client_ = unilink::tcp_client("server.com", 8080)
             .on_data(this, &MyApplication::on_data)
@@ -694,6 +723,7 @@ class MyApplication {
 ## Performance Tips
 
 ### 1. Use Independent Context for Testing Only
+
 ```cpp
 // Testing (isolated IO thread)
 .use_independent_context(true)
@@ -703,16 +733,19 @@ class MyApplication {
 ```
 
 ### 2. Enable Async Logging
+
 ```cpp
 Logger::instance().enable_async(true);
 ```
 
 ### 3. Use Memory Pool for Frequent Allocations
+
 ```cpp
 MemoryPool pool(buffer_size, pool_size);
 ```
 
 ### 4. Disable Unnecessary Features
+
 ```bash
 # Build with minimal features
 cmake -DUNILINK_ENABLE_CONFIG=OFF -DUNILINK_ENABLE_MEMORY_TRACKING=OFF

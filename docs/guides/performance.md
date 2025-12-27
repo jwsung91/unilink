@@ -20,14 +20,14 @@ This guide covers performance optimization strategies for `unilink`, including b
 
 Choose the right build configuration based on your use case:
 
-| Feature | Minimal Build | Full Build |
-|---------|---------------|------------|
-| **Configuration** | `UNILINK_ENABLE_CONFIG=OFF` | `UNILINK_ENABLE_CONFIG=ON` |
-| **Binary Size** | Smaller (~30% reduction) | Larger |
-| **Compilation Time** | Faster | Slower |
-| **Memory Usage** | Lower (no config overhead) | Higher |
-| **Dependencies** | Fewer include files | More includes |
-| **Features** | Builder API only | + Configuration Management |
+| Feature              | Minimal Build               | Full Build                 |
+| -------------------- | --------------------------- | -------------------------- |
+| **Configuration**    | `UNILINK_ENABLE_CONFIG=OFF` | `UNILINK_ENABLE_CONFIG=ON` |
+| **Binary Size**      | Smaller (~30% reduction)    | Larger                     |
+| **Compilation Time** | Faster                      | Slower                     |
+| **Memory Usage**     | Lower (no config overhead)  | Higher                     |
+| **Dependencies**     | Fewer include files         | More includes              |
+| **Features**         | Builder API only            | + Configuration Management |
 
 ---
 
@@ -41,6 +41,7 @@ When building with `UNILINK_ENABLE_CONFIG=OFF`:
 - ✅ **Simpler Dependencies**: Fewer include files and link dependencies
 
 **Build command:**
+
 ```bash
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
@@ -60,6 +61,7 @@ When building with `UNILINK_ENABLE_CONFIG=ON`:
 - ✅ **Advanced Features**: Full feature set for complex applications
 
 **Build command:**
+
 ```bash
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
@@ -71,14 +73,14 @@ cmake --build build -j
 
 ### When to Use Each Build
 
-| Use Case | Recommended Build | Reason |
-|----------|------------------|---------|
-| **Simple TCP/Serial apps** | `UNILINK_ENABLE_CONFIG=OFF` | Minimal footprint, faster compilation |
-| **Embedded systems** | `UNILINK_ENABLE_CONFIG=OFF` | Memory constraints |
-| **IoT devices** | `UNILINK_ENABLE_CONFIG=OFF` | Limited resources |
-| **Configuration-heavy apps** | `UNILINK_ENABLE_CONFIG=ON` | Dynamic configuration needed |
-| **Enterprise applications** | `UNILINK_ENABLE_CONFIG=ON` | Runtime configurability |
-| **Testing/Development** | `UNILINK_ENABLE_CONFIG=ON` | Full feature set for testing |
+| Use Case                     | Recommended Build           | Reason                                |
+| ---------------------------- | --------------------------- | ------------------------------------- |
+| **Simple TCP/Serial apps**   | `UNILINK_ENABLE_CONFIG=OFF` | Minimal footprint, faster compilation |
+| **Embedded systems**         | `UNILINK_ENABLE_CONFIG=OFF` | Memory constraints                    |
+| **IoT devices**              | `UNILINK_ENABLE_CONFIG=OFF` | Limited resources                     |
+| **Configuration-heavy apps** | `UNILINK_ENABLE_CONFIG=ON`  | Dynamic configuration needed          |
+| **Enterprise applications**  | `UNILINK_ENABLE_CONFIG=ON`  | Runtime configurability               |
+| **Testing/Development**      | `UNILINK_ENABLE_CONFIG=ON`  | Full feature set for testing          |
 
 ---
 
@@ -117,6 +119,7 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
 #### 1. Don't Block in Callbacks
 
 **Bad:**
+
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
     .on_data([](const std::string& data) {
@@ -128,6 +131,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 ```
 
 **Good:**
+
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
     .on_data([](const std::string& data) {
@@ -135,7 +139,7 @@ auto client = unilink::tcp_client("server.com", 8080)
         std::thread([data]() {
             process_heavy_computation(data);
         }).detach();
-        
+
         // Or use a thread pool
         thread_pool.submit([data]() {
             process_heavy_computation(data);
@@ -151,6 +155,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 #### 2. Minimize Callback Overhead
 
 **Bad:**
+
 ```cpp
 .on_data([](const std::string& data) {
     // ❌ BAD: Multiple allocations
@@ -161,6 +166,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 ```
 
 **Good:**
+
 ```cpp
 .on_data([](const std::string& data) {
     // ✅ GOOD: Process directly, minimal copies
@@ -175,6 +181,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 #### Reuse Connections
 
 **Bad:**
+
 ```cpp
 // ❌ BAD: Creating new connection for each request
 for (int i = 0; i < 1000; i++) {
@@ -187,6 +194,7 @@ for (int i = 0; i < 1000; i++) {
 ```
 
 **Good:**
+
 ```cpp
 // ✅ GOOD: Reuse single connection
 auto client = unilink::tcp_client("server.com", 8080)
@@ -208,6 +216,7 @@ for (int i = 0; i < 1000; i++) {
 #### Batch Multiple Sends
 
 **Bad:**
+
 ```cpp
 // ❌ BAD: Individual sends
 for (const auto& msg : messages) {
@@ -216,6 +225,7 @@ for (const auto& msg : messages) {
 ```
 
 **Good:**
+
 ```cpp
 // ✅ GOOD: Batch into single send
 std::string batch;
@@ -240,21 +250,7 @@ client->send(batch);  // Single call, better performance
 // Default backpressure threshold: 1 MB
 ```
 
-#### Optimize for Your Use Case
-
-**For high-throughput applications:**
-```cpp
-auto client = unilink::tcp_client("server.com", 8080)
-    .read_buffer_size(64 * 1024)  // 64 KB read buffer
-    .build();
-```
-
-**For memory-constrained systems:**
-```cpp
-auto client = unilink::tcp_client("server.com", 8080)
-    .read_buffer_size(1024)  // 1 KB read buffer
-    .build();
-```
+`unilink` uses optimized buffer sizes by default.
 
 ---
 
@@ -267,6 +263,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 - ✅ Reduces memory fragmentation
 
 **Automatic optimization:**
+
 - Buffers ≤ 64 KB: Use memory pool
 - Buffers > 64 KB: Direct allocation
 
@@ -276,21 +273,11 @@ auto client = unilink::tcp_client("server.com", 8080)
 
 ### Backpressure Management
 
-Monitor and handle backpressure to prevent memory growth:
+The library automatically monitors backpressure to prevent unbounded memory growth.
 
-```cpp
-auto client = unilink::tcp_client("server.com", 8080)
-    .on_backpressure([](size_t queue_bytes) {
-        if (queue_bytes > 10 * 1024 * 1024) {  // 10 MB
-            // Pause sending or apply rate limiting
-            std::cout << "⚠️ High backpressure: " << queue_bytes << " bytes\n";
-        }
-    })
-    .build();
-```
-
-**Default threshold:** 1 MB  
-**Configurable range:** 1 KB - 100 MB
+**Default threshold:** 1 MB
+**Behavior:**
+When the send queue exceeds the threshold, the library may log warnings or adjust internal buffering.
 
 See [Runtime Behavior - Backpressure](../architecture/runtime_behavior.md#backpressure-handling) for details.
 
@@ -310,6 +297,7 @@ For low-latency applications:
 ```
 
 **Trade-off:**
+
 - ✅ Lower latency
 - ⚠️ More packets, slightly higher bandwidth usage
 
@@ -372,6 +360,7 @@ cmake --build build -j
 ```
 
 **Benchmark categories:**
+
 - TCP throughput (Mb/s)
 - TCP latency (μs)
 - Serial throughput
@@ -423,6 +412,7 @@ cmake --build build -j
 ```
 
 **Detects:**
+
 - Memory leaks
 - Use-after-free
 - Buffer overflows
@@ -463,23 +453,23 @@ cmake --build build -j
 
 ### Build Configuration Impact
 
-| Metric | Minimal Build | Full Build |
-|--------|---------------|------------|
-| **Binary Size** | 250 KB | 350 KB |
-| **Compilation Time** | 15 sec | 22 sec |
-| **Memory Usage (runtime)** | 2 MB | 3 MB |
-| **Throughput** | Same | Same |
-| **Latency** | Same | Same |
+| Metric                     | Minimal Build | Full Build |
+| -------------------------- | ------------- | ---------- |
+| **Binary Size**            | 250 KB        | 350 KB     |
+| **Compilation Time**       | 15 sec        | 22 sec     |
+| **Memory Usage (runtime)** | 2 MB          | 3 MB       |
+| **Throughput**             | Same          | Same       |
+| **Latency**                | Same          | Same       |
 
-*Measurements on Ubuntu 22.04, GCC 11.4, -O3 optimization*
+_Measurements on Ubuntu 22.04, GCC 11.4, -O3 optimization_
 
 ### Connection Reuse Impact
 
-| Operation | New Connection | Reused Connection | Speedup |
-|-----------|----------------|-------------------|---------|
-| Single request | 50 ms | 5 ms | 10x |
-| 100 requests | 5000 ms | 500 ms | 10x |
-| 1000 requests | 50000 ms | 5000 ms | 10x |
+| Operation      | New Connection | Reused Connection | Speedup |
+| -------------- | -------------- | ----------------- | ------- |
+| Single request | 50 ms          | 5 ms              | 10x     |
+| 100 requests   | 5000 ms        | 500 ms            | 10x     |
+| 1000 requests  | 50000 ms       | 5000 ms           | 10x     |
 
 ---
 
