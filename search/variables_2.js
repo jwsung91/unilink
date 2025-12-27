@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['default_5fbackpressure_5fthreshold_1278',['DEFAULT_BACKPRESSURE_THRESHOLD',['../namespaceunilink_1_1common_1_1constants.html#a78f14a97bea3b97c5e53a40d8187aea1',1,'unilink::common::constants']]],
+  ['default_5fbuffer_5fsize_1279',['DEFAULT_BUFFER_SIZE',['../namespaceunilink_1_1common_1_1constants.html#a3dfad22e12639e08a436629f1f8a5df3',1,'unilink::common::constants']]],
+  ['default_5fcleanup_5finterval_5fms_1280',['DEFAULT_CLEANUP_INTERVAL_MS',['../namespaceunilink_1_1common_1_1constants.html#a58ad1e790acc9aea5ba4e3e39d31d952',1,'unilink::common::constants']]],
+  ['default_5fconnection_5ftimeout_5fms_1281',['DEFAULT_CONNECTION_TIMEOUT_MS',['../namespaceunilink_1_1common_1_1constants.html#a02d5f5d0f5bb76414da33078a6888c32',1,'unilink::common::constants']]],
+  ['default_5ferror_5fcleanup_5finterval_5fms_1282',['DEFAULT_ERROR_CLEANUP_INTERVAL_MS',['../namespaceunilink_1_1common_1_1constants.html#a06c4472670038c4e088700a7d575e034',1,'unilink::common::constants']]],
+  ['default_5fhealth_5fcheck_5finterval_5fms_1283',['DEFAULT_HEALTH_CHECK_INTERVAL_MS',['../namespaceunilink_1_1common_1_1constants.html#a76ec437ef9fed7891928a3e129b8515b',1,'unilink::common::constants']]],
+  ['default_5fmax_5fconnections_1284',['DEFAULT_MAX_CONNECTIONS',['../namespaceunilink_1_1common_1_1constants.html#a0e2fd8f322080293d41c53c2ea4e8c74',1,'unilink::common::constants']]],
+  ['default_5fmax_5frecent_5ferrors_1285',['DEFAULT_MAX_RECENT_ERRORS',['../namespaceunilink_1_1common_1_1constants.html#a3a71bb0dbdf38aa9dd7b9aec11512c23',1,'unilink::common::constants']]],
+  ['default_5fmax_5fretries_1286',['DEFAULT_MAX_RETRIES',['../namespaceunilink_1_1common_1_1constants.html#a4ad67be9bbd1cd2d0ca4059ae734f39d',1,'unilink::common::constants']]],
+  ['default_5fmemory_5fpool_5fsize_1287',['DEFAULT_MEMORY_POOL_SIZE',['../namespaceunilink_1_1common_1_1constants.html#a17a6ae6fbbb27d3fe3cf17b126c20640',1,'unilink::common::constants']]],
+  ['default_5fread_5fbuffer_5fsize_1288',['DEFAULT_READ_BUFFER_SIZE',['../namespaceunilink_1_1common_1_1constants.html#a328636330dca44d05167998426700b1b',1,'unilink::common::constants']]],
+  ['default_5fretry_5finterval_5fms_1289',['DEFAULT_RETRY_INTERVAL_MS',['../namespaceunilink_1_1common_1_1constants.html#a3ecdb4bf1657f05554c16236ce4e6a18',1,'unilink::common::constants']]],
+  ['default_5fsession_5ftimeout_5fms_1290',['DEFAULT_SESSION_TIMEOUT_MS',['../namespaceunilink_1_1common_1_1constants.html#a82e918692d392b3ccea32c76237df17f',1,'unilink::common::constants']]],
+  ['default_5fthread_5fpool_5fsize_1291',['DEFAULT_THREAD_POOL_SIZE',['../namespaceunilink_1_1common_1_1constants.html#ae13af6f8ca5ee7084169e55581cd9499',1,'unilink::common::constants']]],
+  ['default_5fthread_5fstack_5fsize_1292',['DEFAULT_THREAD_STACK_SIZE',['../namespaceunilink_1_1common_1_1constants.html#ad366fa24c2aea65b935b8a0f0061ce63',1,'unilink::common::constants']]],
+  ['description_1293',['description',['../structunilink_1_1config_1_1ConfigItem.html#a1143874d476454d08812ddadbe33f548',1,'unilink::config::ConfigItem']]],
+  ['device_1294',['device',['../structunilink_1_1config_1_1SerialConfig.html#a41549c201c0c4da44fe186dd32e9968d',1,'unilink::config::SerialConfig']]],
+  ['dropped_5flogs_1295',['dropped_logs',['../structunilink_1_1common_1_1AsyncLogStats.html#a7f1a5ee300b58e0d933d46b6705e5d7b',1,'unilink::common::AsyncLogStats']]]
+];

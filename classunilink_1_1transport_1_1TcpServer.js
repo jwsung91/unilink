@@ -1,0 +1,28 @@
+var classunilink_1_1transport_1_1TcpServer =
+[
+    [ "MultiClientConnectHandler", "classunilink_1_1transport_1_1TcpServer.html#ad90ed82ab725073a4f691c7100667352", null ],
+    [ "MultiClientDataHandler", "classunilink_1_1transport_1_1TcpServer.html#a2da555520638f4d97bab972b0e3e3014", null ],
+    [ "MultiClientDisconnectHandler", "classunilink_1_1transport_1_1TcpServer.html#aaa9095088caef6466a937bf488a2a90e", null ],
+    [ "~TcpServer", "classunilink_1_1transport_1_1TcpServer.html#a6ff5138e6d2ce8028a1d7cf486fb6ee8", null ],
+    [ "async_write_copy", "classunilink_1_1transport_1_1TcpServer.html#ad9fb79e1510abc6a7d47b3eb7b6173bd", null ],
+    [ "async_write_move", "classunilink_1_1transport_1_1TcpServer.html#af1aa40f2c75c5a7921370440ae00ed82", null ],
+    [ "async_write_shared", "classunilink_1_1transport_1_1TcpServer.html#ab55a6cc2c2711fe1104f0c5c5e2222b0", null ],
+    [ "broadcast", "classunilink_1_1transport_1_1TcpServer.html#a653e854dae2669fc7417da3e76c16926", null ],
+    [ "create", "classunilink_1_1transport_1_1TcpServer.html#a369a188592f16f5c3a072ac5a4cb49f2", null ],
+    [ "create", "classunilink_1_1transport_1_1TcpServer.html#ad01ed6cb06160b13f3b15ddaf0e74c84", null ],
+    [ "get_client_count", "classunilink_1_1transport_1_1TcpServer.html#aa29309881c8e770de1f5fb9b6c4899a3", null ],
+    [ "get_connected_clients", "classunilink_1_1transport_1_1TcpServer.html#a47970b11dfc44edd9a781de5e4196dea", null ],
+    [ "is_connected", "classunilink_1_1transport_1_1TcpServer.html#afb43ac8461d5c61cddf4fb76a4af3f34", null ],
+    [ "on_backpressure", "classunilink_1_1transport_1_1TcpServer.html#a3c53da70b5af81134dee8b8ddee79a42", null ],
+    [ "on_bytes", "classunilink_1_1transport_1_1TcpServer.html#a0d8b30bf523a712a686bc66141f26b4e", null ],
+    [ "on_multi_connect", "classunilink_1_1transport_1_1TcpServer.html#a61b139de8bf96ef26e4b7da7227b3d76", null ],
+    [ "on_multi_data", "classunilink_1_1transport_1_1TcpServer.html#a8182dd520e9502a1d564961ef7f4cb03", null ],
+    [ "on_multi_disconnect", "classunilink_1_1transport_1_1TcpServer.html#a576d942411d9db8bbc88abf7dfe21bf4", null ],
+    [ "on_state", "classunilink_1_1transport_1_1TcpServer.html#accb7f241221b8b1b275e2a1a52cfcdf7", null ],
+    [ "request_stop", "classunilink_1_1transport_1_1TcpServer.html#af8eac26a2744e09859d0023838a61ae3", null ],
+    [ "send_to_client", "classunilink_1_1transport_1_1TcpServer.html#aabfa390a0064f3fef75c7a777c54a73a", null ],
+    [ "set_client_limit", "classunilink_1_1transport_1_1TcpServer.html#afa002ff3287e69e7815e73d39cc4aac8", null ],
+    [ "set_unlimited_clients", "classunilink_1_1transport_1_1TcpServer.html#a0305142a02b64cf7b68c2e3256a45180", null ],
+    [ "start", "classunilink_1_1transport_1_1TcpServer.html#a7dc115cc9cc67ae7c5990c0d01a5a0a6", null ],
+    [ "stop", "classunilink_1_1transport_1_1TcpServer.html#a3535932f4b2d08af75ac212aa6d11a12", null ]
+];

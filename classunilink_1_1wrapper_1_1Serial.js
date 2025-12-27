@@ -1,0 +1,25 @@
+var classunilink_1_1wrapper_1_1Serial =
+[
+    [ "Serial", "classunilink_1_1wrapper_1_1Serial.html#aa0f2fccb8e5d86b5e35b4cc0adebb66d", null ],
+    [ "Serial", "classunilink_1_1wrapper_1_1Serial.html#a9d16f32df3b73a11fbc8db75d51db03d", null ],
+    [ "Serial", "classunilink_1_1wrapper_1_1Serial.html#a81629c8bfaf3220c128f37ca9de2858d", null ],
+    [ "~Serial", "classunilink_1_1wrapper_1_1Serial.html#ac777f965de97bd0f6aa6b4ee3002a70d", null ],
+    [ "auto_manage", "classunilink_1_1wrapper_1_1Serial.html#a49a8f65c60fe8de6accf0dde6688dd67", null ],
+    [ "build_config", "classunilink_1_1wrapper_1_1Serial.html#a187aba4ee4b20cc58f9bf6715291983b", null ],
+    [ "is_connected", "classunilink_1_1wrapper_1_1Serial.html#a19032f98db2f1cbf4382f03ad9c97730", null ],
+    [ "on_connect", "classunilink_1_1wrapper_1_1Serial.html#a20f5732ead28cafd58542e8f5e9f5d10", null ],
+    [ "on_data", "classunilink_1_1wrapper_1_1Serial.html#a0ebffd2ae6d013f6978e47334f202a95", null ],
+    [ "on_disconnect", "classunilink_1_1wrapper_1_1Serial.html#a9d8a5f09ad47b36d2d5cb128d18c36b0", null ],
+    [ "on_error", "classunilink_1_1wrapper_1_1Serial.html#a9c7f8154cf8fa1f00053308eb116ba1a", null ],
+    [ "send", "classunilink_1_1wrapper_1_1Serial.html#a509451154ccdbc54e5d19f4ac886f275", null ],
+    [ "send_line", "classunilink_1_1wrapper_1_1Serial.html#af7570d67749da13b1bee6444ec664bc6", null ],
+    [ "set_baud_rate", "classunilink_1_1wrapper_1_1Serial.html#ab8896db9d9979af19b3ef575a8cc8cc3", null ],
+    [ "set_data_bits", "classunilink_1_1wrapper_1_1Serial.html#a4a81c653e5af8fb52a62df82ff5a309f", null ],
+    [ "set_flow_control", "classunilink_1_1wrapper_1_1Serial.html#a75d92342feb50976937067a8472cbdb3", null ],
+    [ "set_manage_external_context", "classunilink_1_1wrapper_1_1Serial.html#a976dc35b1bf360fcb28f0d3056d30bad", null ],
+    [ "set_parity", "classunilink_1_1wrapper_1_1Serial.html#a235e1dc10b317e618f3e1fa3fcf1efaf", null ],
+    [ "set_retry_interval", "classunilink_1_1wrapper_1_1Serial.html#a118a73d96c0a7426ffee945aba05a74b", null ],
+    [ "set_stop_bits", "classunilink_1_1wrapper_1_1Serial.html#a0aa6bbf8e1e28cfa0132e85f3363f134", null ],
+    [ "start", "classunilink_1_1wrapper_1_1Serial.html#a107677371e75bc12350ea4f078a53074", null ],
+    [ "stop", "classunilink_1_1wrapper_1_1Serial.html#ad65a699425f67b86cfc2e55ca3c455ca", null ]
+];

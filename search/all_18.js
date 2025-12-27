@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['_7eboosttcpacceptor_709',['~BoostTcpAcceptor',['../classunilink_1_1transport_1_1BoostTcpAcceptor.html#ae3b544aae350bd44de4c3d81ae205748',1,'unilink::transport::BoostTcpAcceptor']]],
+  ['_7eboosttcpsocket_710',['~BoostTcpSocket',['../classunilink_1_1transport_1_1BoostTcpSocket.html#a389bcc23eccbe6eb9a7348fe8ca716c2',1,'unilink::transport::BoostTcpSocket']]],
+  ['_7ebuilderinterface_711',['~BuilderInterface',['../classunilink_1_1builder_1_1BuilderInterface.html#a1e68960b2ab20879023eb8e4f02bb2a3',1,'unilink::builder::BuilderInterface']]],
+  ['_7echannel_712',['~Channel',['../classunilink_1_1interface_1_1Channel.html#a2c3cac3c076f640761003abffc15b3e0',1,'unilink::interface::Channel']]],
+  ['_7echannelinterface_713',['~ChannelInterface',['../classunilink_1_1wrapper_1_1ChannelInterface.html#abddae5fa4d73b824ca5ef57c0d6bd003',1,'unilink::wrapper::ChannelInterface']]],
+  ['_7econfigmanager_714',['~ConfigManager',['../classunilink_1_1config_1_1ConfigManager.html#a6c0c268a0b83a05d8ff58711e2bdf27b',1,'unilink::config::ConfigManager']]],
+  ['_7econfigmanagerinterface_715',['~ConfigManagerInterface',['../classunilink_1_1config_1_1ConfigManagerInterface.html#a23fd2ad2ed72aa51f4d43585705dabd6',1,'unilink::config::ConfigManagerInterface']]],
+  ['_7eerrorhandler_716',['~ErrorHandler',['../classunilink_1_1common_1_1ErrorHandler.html#af167de657f473323a933b1a5a129186a',1,'unilink::common::ErrorHandler']]],
+  ['_7eiocontextmanager_717',['~IoContextManager',['../classunilink_1_1common_1_1IoContextManager.html#a6289f2e47ee1c13829eaa78e5c470782',1,'unilink::common::IoContextManager']]],
+  ['_7elogger_718',['~Logger',['../classunilink_1_1common_1_1Logger.html#a69a58595328343b54031d685cf647a7b',1,'unilink::common::Logger']]],
+  ['_7ememorypool_719',['~MemoryPool',['../classunilink_1_1common_1_1MemoryPool.html#a6fb45633e5e3c1447f5b41a3afaebaf9',1,'unilink::common::MemoryPool']]],
+  ['_7ememoryvalidator_720',['~MemoryValidator',['../classunilink_1_1common_1_1MemoryValidator.html#ad935638e4ebf8ff248aa309dc4044599',1,'unilink::common::MemoryValidator']]],
+  ['_7epooledbuffer_721',['~PooledBuffer',['../classunilink_1_1common_1_1PooledBuffer.html#a02e6fb0e9cb60c38627b12f96e93361b',1,'unilink::common::PooledBuffer']]],
+  ['_7esafedatabuffer_722',['~SafeDataBuffer',['../classunilink_1_1common_1_1SafeDataBuffer.html#a4ce3cfbc74e990df10fffdd9698e95f9',1,'unilink::common::SafeDataBuffer']]],
+  ['_7escopedmemorytracker_723',['~ScopedMemoryTracker',['../classunilink_1_1common_1_1ScopedMemoryTracker.html#adabb8d564b4cfc7239b8c24ac542be4b',1,'unilink::common::ScopedMemoryTracker']]],
+  ['_7eserial_724',['~Serial',['../classunilink_1_1transport_1_1Serial.html#a7adb91b607dfc1dc5ee9362bf7c7f1e5',1,'unilink::transport::Serial::~Serial()'],['../classunilink_1_1wrapper_1_1Serial.html#ac777f965de97bd0f6aa6b4ee3002a70d',1,'unilink::wrapper::Serial::~Serial()']]],
+  ['_7eserialportinterface_725',['~SerialPortInterface',['../classunilink_1_1interface_1_1SerialPortInterface.html#a4f159c27e29601fc120f9c9b9dd0d257',1,'unilink::interface::SerialPortInterface']]],
+  ['_7etcpacceptorinterface_726',['~TcpAcceptorInterface',['../classunilink_1_1interface_1_1TcpAcceptorInterface.html#a85aefbbc0f87f4573be852971fa8e4b8',1,'unilink::interface::TcpAcceptorInterface']]],
+  ['_7etcpclient_727',['~TcpClient',['../classunilink_1_1transport_1_1TcpClient.html#a691f5852b555c9a261324a00447c6683',1,'unilink::transport::TcpClient::~TcpClient()'],['../classunilink_1_1wrapper_1_1TcpClient.html#a13df30e6120e04031d291161174ec20a',1,'unilink::wrapper::TcpClient::~TcpClient()']]],
+  ['_7etcpresolverinterface_728',['~TcpResolverInterface',['../classunilink_1_1interface_1_1TcpResolverInterface.html#a0471c9874aa96a41ccd36df0c88a926d',1,'unilink::interface::TcpResolverInterface']]],
+  ['_7etcpserver_729',['~TcpServer',['../classunilink_1_1transport_1_1TcpServer.html#a6ff5138e6d2ce8028a1d7cf486fb6ee8',1,'unilink::transport::TcpServer::~TcpServer()'],['../classunilink_1_1wrapper_1_1TcpServer.html#a8e6f61603de2ec5c4e5a0fd38122cb9d',1,'unilink::wrapper::TcpServer::~TcpServer()']]],
+  ['_7etcpsocketinterface_730',['~TcpSocketInterface',['../classunilink_1_1interface_1_1TcpSocketInterface.html#ad738a5ee0f412be766fdfb3e0b6d113f',1,'unilink::interface::TcpSocketInterface']]],
+  ['_7etimerinterface_731',['~TimerInterface',['../classunilink_1_1interface_1_1TimerInterface.html#aa783c32961493fe8131428fff5bb73b1',1,'unilink::interface::TimerInterface']]],
+  ['_7eudp_732',['~Udp',['../classunilink_1_1wrapper_1_1Udp.html#acf9d4884df80f0447b36e98bfaf09204',1,'unilink::wrapper::Udp']]],
+  ['_7eudpchannel_733',['~UdpChannel',['../classunilink_1_1transport_1_1UdpChannel.html#af45443300992f84500fc96423620fd13',1,'unilink::transport::UdpChannel']]]
+];

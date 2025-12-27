@@ -1,0 +1,8 @@
+var searchData=
+[
+  ['max_5fclients_1076',['max_clients',['../classunilink_1_1builder_1_1TcpServerBuilder.html#a4de3178841f4d383fbaa9761b55e7a1f',1,'unilink::builder::TcpServerBuilder']]],
+  ['memoryexception_1077',['MemoryException',['../classunilink_1_1common_1_1MemoryException.html#a4e21f681b528585fb55869c416cc4c88',1,'unilink::common::MemoryException']]],
+  ['memorypool_1078',['MemoryPool',['../classunilink_1_1common_1_1MemoryPool.html#aeb6227d08313028ef0f5d576971d940d',1,'unilink::common::MemoryPool::MemoryPool(size_t initial_pool_size=400, size_t max_pool_size=2000)'],['../classunilink_1_1common_1_1MemoryPool.html#abf1eaeb163dcd5ae2ea23ed42f756d36',1,'unilink::common::MemoryPool::MemoryPool(const MemoryPool &amp;)=delete'],['../classunilink_1_1common_1_1MemoryPool.html#a03b4152f3474b6babbbe2f52048c7f80',1,'unilink::common::MemoryPool::MemoryPool(MemoryPool &amp;&amp;)=delete']]],
+  ['memoryvalidator_1079',['MemoryValidator',['../classunilink_1_1common_1_1MemoryValidator.html#a17c78ba0dbacddd778820d30c52b08b2',1,'unilink::common::MemoryValidator::MemoryValidator(void *ptr, size_t size, size_t canary_size=8)'],['../classunilink_1_1common_1_1MemoryValidator.html#a21e3c247bb499957bff44b9cd6b2204c',1,'unilink::common::MemoryValidator::MemoryValidator(const MemoryValidator &amp;)=delete'],['../classunilink_1_1common_1_1MemoryValidator.html#a43dacd0c5a4da08f7c6e705e6c12f2ae',1,'unilink::common::MemoryValidator::MemoryValidator(MemoryValidator &amp;&amp;)=delete']]],
+  ['multi_5fclient_1080',['multi_client',['../classunilink_1_1builder_1_1TcpServerBuilder.html#a69b66ca3b486d1241d517c7b3ebbcfa0',1,'unilink::builder::TcpServerBuilder']]]
+];
