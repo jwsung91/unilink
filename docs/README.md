@@ -65,6 +65,8 @@ make generate
 doxygen docs/config/Doxyfile
 ```
 
+> The scripts and make targets pass the top-level `project(VERSION ...)` from `CMakeLists.txt` into Doxygen automatically. If you invoke Doxygen manually, export `PROJECT_NUMBER` yourself to keep the displayed version in sync.
+
 ### Viewing Documentation
 
 After generation, you can view the documentation in several ways:
