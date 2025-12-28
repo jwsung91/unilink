@@ -263,7 +263,7 @@ TEST_F(ErrorHandlerTest, ErrorCallbackWithLevels) {
   // Then: Verify callback received errors
   EXPECT_TRUE(TestUtils::waitForCondition([&received_levels]() { return received_levels.size() >= 2; }, 1000));
   EXPECT_GE(received_levels.size(), 2);
-  
+
   error_handler.clear_callbacks();
 }
 
@@ -407,13 +407,13 @@ TEST_F(ErrorHandlerTest, RecursiveErrorReporting_DeadlockTest) {
 
   error_handler.register_callback([&](const common::ErrorInfo& error) {
     int current_count = callback_count.fetch_add(1);
-    
+
     // Only recurse once to demonstrate the deadlock fix
     // (If not fixed, the second call hangs)
     if (current_count < max_recursions) {
-        // Trigger another error report from within the callback
-        // This simulates a logging failure or similar chain reaction
-        common::error_reporting::report_info("test_component", "recursive_call", "Triggering recursive error");
+      // Trigger another error report from within the callback
+      // This simulates a logging failure or similar chain reaction
+      common::error_reporting::report_info("test_component", "recursive_call", "Triggering recursive error");
     }
   });
 
@@ -422,7 +422,7 @@ TEST_F(ErrorHandlerTest, RecursiveErrorReporting_DeadlockTest) {
 
   // If we reach here without hanging, the test passes (no deadlock).
   EXPECT_EQ(callback_count.load(), 2);
-  
+
   error_handler.clear_callbacks();
 }
 
@@ -435,13 +435,13 @@ TEST_F(ErrorHandlerTest, CallbackRegistrationInsideCallback_CrashTest) {
   bool second_callback_called = false;
 
   error_handler.register_callback([&](const common::ErrorInfo& error) {
-      if (error.message == "First Error") {
-          error_handler.register_callback([&](const common::ErrorInfo& inner_error) {
-              if (inner_error.message == "Second Error") {
-                  second_callback_called = true;
-              }
-          });
-      }
+    if (error.message == "First Error") {
+      error_handler.register_callback([&](const common::ErrorInfo& inner_error) {
+        if (inner_error.message == "Second Error") {
+          second_callback_called = true;
+        }
+      });
+    }
   });
 
   // Trigger first error (registers the second callback)
@@ -451,7 +451,7 @@ TEST_F(ErrorHandlerTest, CallbackRegistrationInsideCallback_CrashTest) {
   common::error_reporting::report_info("test_component", "op2", "Second Error");
 
   EXPECT_TRUE(second_callback_called);
-  
+
   error_handler.clear_callbacks();
 }
 

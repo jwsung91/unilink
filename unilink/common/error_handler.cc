@@ -157,9 +157,9 @@ void ErrorHandler::add_to_recent_errors(const ErrorInfo& error) {
 
   // Keep only the most recent errors
   if (recent_errors_.size() > MAX_RECENT_ERRORS) {
-    recent_errors_.erase(recent_errors_.begin(),
-                         recent_errors_.begin() +
-                             static_cast<std::ptrdiff_t>(recent_errors_.size() - MAX_RECENT_ERRORS));
+    recent_errors_.erase(
+        recent_errors_.begin(),
+        recent_errors_.begin() + static_cast<std::ptrdiff_t>(recent_errors_.size() - MAX_RECENT_ERRORS));
   }
 }
 
@@ -170,9 +170,9 @@ void ErrorHandler::add_to_component_errors(const ErrorInfo& error) {
   constexpr size_t MAX_COMPONENT_ERRORS = 100;
   auto& component_errors = errors_by_component_[error.component];
   if (component_errors.size() > MAX_COMPONENT_ERRORS) {
-    component_errors.erase(component_errors.begin(),
-                           component_errors.begin() +
-                               static_cast<std::ptrdiff_t>(component_errors.size() - MAX_COMPONENT_ERRORS));
+    component_errors.erase(
+        component_errors.begin(),
+        component_errors.begin() + static_cast<std::ptrdiff_t>(component_errors.size() - MAX_COMPONENT_ERRORS));
   }
 }
 
