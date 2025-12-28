@@ -45,13 +45,15 @@ void ErrorHandler::report_error(const ErrorInfo& error) {
     return;
   }
 
+  std::vector<ErrorCallback> callbacks_copy;
   {
     std::lock_guard<std::mutex> lock(mutex_);
     update_stats(error);
     add_to_recent_errors(error);
     add_to_component_errors(error);
-    notify_callbacks(error);
+    callbacks_copy = callbacks_;
   }
+  notify_callbacks(callbacks_copy, error);
 }
 
 void ErrorHandler::register_callback(ErrorCallback callback) {
@@ -99,7 +101,8 @@ std::vector<ErrorInfo> ErrorHandler::get_recent_errors(size_t count) const {
     start_index = recent_errors_.size() - count;
   }
 
-  return std::vector<ErrorInfo>(recent_errors_.begin() + start_index, recent_errors_.end());
+  return std::vector<ErrorInfo>(recent_errors_.begin() + static_cast<std::ptrdiff_t>(start_index),
+                                recent_errors_.end());
 }
 
 bool ErrorHandler::has_errors(const std::string& component) const {
@@ -115,8 +118,8 @@ size_t ErrorHandler::get_error_count(const std::string& component, ErrorLevel le
     return 0;
   }
 
-  return std::count_if(it->second.begin(), it->second.end(),
-                       [level](const ErrorInfo& error) { return error.level == level; });
+  return static_cast<size_t>(std::count_if(it->second.begin(), it->second.end(),
+                                           [level](const ErrorInfo& error) { return error.level == level; }));
 }
 
 void ErrorHandler::update_stats(const ErrorInfo& error) {
@@ -136,8 +139,8 @@ void ErrorHandler::update_stats(const ErrorInfo& error) {
   stats_.last_error = error.timestamp;
 }
 
-void ErrorHandler::notify_callbacks(const ErrorInfo& error) {
-  for (const auto& callback : callbacks_) {
+void ErrorHandler::notify_callbacks(const std::vector<ErrorCallback>& callbacks, const ErrorInfo& error) {
+  for (const auto& callback : callbacks) {
     try {
       callback(error);
     } catch (const std::exception& e) {
@@ -154,7 +157,9 @@ void ErrorHandler::add_to_recent_errors(const ErrorInfo& error) {
 
   // Keep only the most recent errors
   if (recent_errors_.size() > MAX_RECENT_ERRORS) {
-    recent_errors_.erase(recent_errors_.begin(), recent_errors_.begin() + (recent_errors_.size() - MAX_RECENT_ERRORS));
+    recent_errors_.erase(
+        recent_errors_.begin(),
+        recent_errors_.begin() + static_cast<std::ptrdiff_t>(recent_errors_.size() - MAX_RECENT_ERRORS));
   }
 }
 
@@ -165,8 +170,9 @@ void ErrorHandler::add_to_component_errors(const ErrorInfo& error) {
   constexpr size_t MAX_COMPONENT_ERRORS = 100;
   auto& component_errors = errors_by_component_[error.component];
   if (component_errors.size() > MAX_COMPONENT_ERRORS) {
-    component_errors.erase(component_errors.begin(),
-                           component_errors.begin() + (component_errors.size() - MAX_COMPONENT_ERRORS));
+    component_errors.erase(
+        component_errors.begin(),
+        component_errors.begin() + static_cast<std::ptrdiff_t>(component_errors.size() - MAX_COMPONENT_ERRORS));
   }
 }
 

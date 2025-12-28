@@ -143,7 +143,7 @@ class UNILINK_API ErrorHandler {
   static constexpr size_t MAX_RECENT_ERRORS = 1000;
 
   void update_stats(const ErrorInfo& error);
-  void notify_callbacks(const ErrorInfo& error);
+  void notify_callbacks(const std::vector<ErrorCallback>& callbacks, const ErrorInfo& error);
   void add_to_recent_errors(const ErrorInfo& error);
   void add_to_component_errors(const ErrorInfo& error);
 };
