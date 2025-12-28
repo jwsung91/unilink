@@ -177,7 +177,7 @@ Error Handling</h1>
 <div class="line"><span class="keyword">auto</span> client1 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server1.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line"><span class="keyword">auto</span> client2 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server2.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line"><span class="comment">// Both use the same error handler</span></div>
-<div class="ttc" id="aclassunilink_1_1common_1_1ErrorHandler_html_a2b58dfcae768dcad095c2452049f2c5c"><div class="ttname"><a href="classunilink_1_1common_1_1ErrorHandler.html#a2b58dfcae768dcad095c2452049f2c5c">unilink::common::ErrorHandler::register_callback</a></div><div class="ttdeci">void register_callback(ErrorCallback callback)</div><div class="ttdoc">Register error callback.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00057">error_handler.cc:57</a></div></div>
+<div class="ttc" id="aclassunilink_1_1common_1_1ErrorHandler_html_a2b58dfcae768dcad095c2452049f2c5c"><div class="ttname"><a href="classunilink_1_1common_1_1ErrorHandler.html#a2b58dfcae768dcad095c2452049f2c5c">unilink::common::ErrorHandler::register_callback</a></div><div class="ttdeci">void register_callback(ErrorCallback callback)</div><div class="ttdoc">Register error callback.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00059">error_handler.cc:59</a></div></div>
 <div class="ttc" id="aclassunilink_1_1common_1_1ErrorHandler_html_a5c3fc001c1d6ee7c5652f6522fc20426"><div class="ttname"><a href="classunilink_1_1common_1_1ErrorHandler.html#a5c3fc001c1d6ee7c5652f6522fc20426">unilink::common::ErrorHandler::instance</a></div><div class="ttdeci">static ErrorHandler &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00037">error_handler.cc:37</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md286"></a>
@@ -627,7 +627,7 @@ Logging and Debugging</h1>
 <div class="line">    <a class="code" href="classunilink_1_1common_1_1Logger.html#a589b942f4cc41fee69d57f79990d9412">unilink::common::Logger::instance</a>().<a class="code" href="classunilink_1_1common_1_1Logger.html#aad9ad255219da193b6c25f61d8c7a37f">set_level</a>(LogLevel::WARNING);</div>
 <div class="line">    <a class="code" href="classunilink_1_1common_1_1ErrorHandler.html#a5c3fc001c1d6ee7c5652f6522fc20426">unilink::common::ErrorHandler::instance</a>().<a class="code" href="classunilink_1_1common_1_1ErrorHandler.html#a5059eed4495f3529adc6b6ce10bd170a">set_min_error_level</a>(ErrorLevel::WARNING);</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassunilink_1_1common_1_1ErrorHandler_html_a5059eed4495f3529adc6b6ce10bd170a"><div class="ttname"><a href="classunilink_1_1common_1_1ErrorHandler.html#a5059eed4495f3529adc6b6ce10bd170a">unilink::common::ErrorHandler::set_min_error_level</a></div><div class="ttdeci">void set_min_error_level(ErrorLevel level)</div><div class="ttdoc">Set minimum error level to report.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00067">error_handler.cc:67</a></div></div>
+<div class="ttc" id="aclassunilink_1_1common_1_1ErrorHandler_html_a5059eed4495f3529adc6b6ce10bd170a"><div class="ttname"><a href="classunilink_1_1common_1_1ErrorHandler.html#a5059eed4495f3529adc6b6ce10bd170a">unilink::common::ErrorHandler::set_min_error_level</a></div><div class="ttdeci">void set_min_error_level(ErrorLevel level)</div><div class="ttdoc">Set minimum error level to report.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00069">error_handler.cc:69</a></div></div>
 <div class="ttc" id="aclassunilink_1_1common_1_1Logger_html_aad9ad255219da193b6c25f61d8c7a37f"><div class="ttname"><a href="classunilink_1_1common_1_1Logger.html#aad9ad255219da193b6c25f61d8c7a37f">unilink::common::Logger::set_level</a></div><div class="ttdeci">void set_level(LogLevel level)</div><div class="ttdoc">Set minimum log level.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00045">logger.cc:45</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md319"></a>
 ✅ DO: Log Context Information</h2>
@@ -644,7 +644,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Dec 28 2025 10:09:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Dec 28 2025 12:10:05 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
