@@ -45,13 +45,15 @@ void ErrorHandler::report_error(const ErrorInfo& error) {
     return;
   }
 
+  std::vector<ErrorCallback> callbacks_copy;
   {
     std::lock_guard<std::mutex> lock(mutex_);
     update_stats(error);
     add_to_recent_errors(error);
     add_to_component_errors(error);
-    notify_callbacks(error);
+    callbacks_copy = callbacks_;
   }
+  notify_callbacks(callbacks_copy, error);
 }
 
 void ErrorHandler::register_callback(ErrorCallback callback) {
@@ -136,8 +138,8 @@ void ErrorHandler::update_stats(const ErrorInfo& error) {
   stats_.last_error = error.timestamp;
 }
 
-void ErrorHandler::notify_callbacks(const ErrorInfo& error) {
-  for (const auto& callback : callbacks_) {
+void ErrorHandler::notify_callbacks(const std::vector<ErrorCallback>& callbacks, const ErrorInfo& error) {
+  for (const auto& callback : callbacks) {
     try {
       callback(error);
     } catch (const std::exception& e) {

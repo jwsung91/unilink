@@ -42,7 +42,10 @@ class ErrorHandlerTest : public ::testing::Test {
   void SetUp() override {
     // Reset error handler state
     auto& error_handler = common::ErrorHandler::instance();
+    error_handler.clear_callbacks();
     error_handler.reset_stats();
+    error_handler.set_enabled(true);
+    error_handler.set_min_error_level(common::ErrorLevel::INFO);
 
     // Initialize test state
     error_count_ = 0;
@@ -232,6 +235,9 @@ TEST_F(ErrorHandlerTest, ErrorCallbackRegistration) {
   // Then: Verify callback was called
   EXPECT_TRUE(TestUtils::waitForCondition([&callback_count]() { return callback_count.load() > 0; }, 1000));
   EXPECT_GT(callback_count.load(), 0);
+
+  // Clean up to prevent dangling references
+  error_handler.clear_callbacks();
 }
 
 /**
@@ -257,6 +263,8 @@ TEST_F(ErrorHandlerTest, ErrorCallbackWithLevels) {
   // Then: Verify callback received errors
   EXPECT_TRUE(TestUtils::waitForCondition([&received_levels]() { return received_levels.size() >= 2; }, 1000));
   EXPECT_GE(received_levels.size(), 2);
+  
+  error_handler.clear_callbacks();
 }
 
 // ============================================================================
@@ -382,6 +390,69 @@ TEST_F(ErrorHandlerTest, ErrorHandlerEnableDisable) {
 
   // Re-enable for cleanup
   error_handler.set_enabled(true);
+}
+
+// ============================================================================
+// CONCURRENCY TESTS
+// ============================================================================
+
+TEST_F(ErrorHandlerTest, RecursiveErrorReporting_DeadlockTest) {
+  // Scenario: A callback that triggers another error report.
+  // Before fix: This causes deadlock (mutex recursion).
+  // After fix: This should complete successfully.
+
+  auto& error_handler = common::ErrorHandler::instance();
+  std::atomic<int> callback_count{0};
+  const int max_recursions = 1;
+
+  error_handler.register_callback([&](const common::ErrorInfo& error) {
+    int current_count = callback_count.fetch_add(1);
+    
+    // Only recurse once to demonstrate the deadlock fix
+    // (If not fixed, the second call hangs)
+    if (current_count < max_recursions) {
+        // Trigger another error report from within the callback
+        // This simulates a logging failure or similar chain reaction
+        common::error_reporting::report_info("test_component", "recursive_call", "Triggering recursive error");
+    }
+  });
+
+  // Trigger the first error
+  common::error_reporting::report_info("test_component", "initial_call", "Initial error");
+
+  // If we reach here without hanging, the test passes (no deadlock).
+  EXPECT_EQ(callback_count.load(), 2);
+  
+  error_handler.clear_callbacks();
+}
+
+TEST_F(ErrorHandlerTest, CallbackRegistrationInsideCallback_CrashTest) {
+  // Scenario: A callback that registers another callback.
+  // Before fix: This invalidates iterators if using direct vector iteration.
+  // After fix: Iterating over a copy prevents invalidation.
+
+  auto& error_handler = common::ErrorHandler::instance();
+  bool second_callback_called = false;
+
+  error_handler.register_callback([&](const common::ErrorInfo& error) {
+      if (error.message == "First Error") {
+          error_handler.register_callback([&](const common::ErrorInfo& inner_error) {
+              if (inner_error.message == "Second Error") {
+                  second_callback_called = true;
+              }
+          });
+      }
+  });
+
+  // Trigger first error (registers the second callback)
+  common::error_reporting::report_info("test_component", "op1", "First Error");
+
+  // Trigger second error (should hit the new callback)
+  common::error_reporting::report_info("test_component", "op2", "Second Error");
+
+  EXPECT_TRUE(second_callback_called);
+  
+  error_handler.clear_callbacks();
 }
 
 int main(int argc, char** argv) {
