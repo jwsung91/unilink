@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-28 12:26:29</td>
+            <td class="headerValue">2025-12-28 13:04:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -108,15 +108,15 @@
 <a name="38"><span class="lineNum">      38 </span>            :    * This method is thread-safe and can be called multiple times safely.</a>
 <a name="39"><span class="lineNum">      39 </span>            :    * If already running, it does nothing.</a>
 <a name="40"><span class="lineNum">      40 </span>            :    */</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">        583 :   static void ensure_io_context_running() {</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">        583 :     if (!common::IoContextManager::instance().is_running()) {</span></a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        145 :       std::lock_guard&lt;std::mutex&gt; lock(init_mutex());</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">        586 :   static void ensure_io_context_running() {</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">        586 :     if (!common::IoContextManager::instance().is_running()) {</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        143 :       std::lock_guard&lt;std::mutex&gt; lock(init_mutex());</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :       // Double-check locking</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">        145 :       if (!common::IoContextManager::instance().is_running()) {</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">        143 :       if (!common::IoContextManager::instance().is_running()) {</span></a>
 <a name="46"><span class="lineNum">      46 </span><span class="lineCov">        141 :         common::IoContextManager::instance().start();</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :       }</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        145 :     }</span></a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">        584 :   }</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        143 :     }</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">        585 :   }</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span>            :   /**</a>
 <a name="52"><span class="lineNum">      52 </span>            :    * @brief Check if IoContextManager is running</a>
