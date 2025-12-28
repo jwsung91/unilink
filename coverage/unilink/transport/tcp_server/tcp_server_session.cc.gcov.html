@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-28 10:19:07</td>
+            <td class="headerValue">2025-12-28 12:12:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">24</td>
@@ -227,25 +227,25 @@
 <a name="157"><span class="lineNum">     157 </span>            : }</a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
 <a name="159"><span class="lineNum">     159 </span><span class="lineCov">         43 : void TcpServerSession::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }</span></a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">         16 : void TcpServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">         17 : void TcpServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }</span></a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineCov">         30 : void TcpServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }</span></a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineCov">         16 : bool TcpServerSession::alive() const { return alive_.load(); }</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">         14 : void TcpServerSession::stop() {</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">         14 :   auto self = shared_from_this();</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">         28 :   net::post(strand_, [self] { self-&gt;do_close(); });</span></a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">         14 : }</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">         12 : void TcpServerSession::stop() {</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">         12 :   auto self = shared_from_this();</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">         24 :   net::post(strand_, [self] { self-&gt;do_close(); });</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">         12 : }</span></a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">         32 : void TcpServerSession::start_read() {</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">         32 :   alive_.store(true);</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">         32 :   auto self = shared_from_this();</span></a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">         96 :   socket_-&gt;async_read_some(</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">         96 :       net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">         32 :         if (ec) {</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">        337 : void TcpServerSession::start_read() {</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        337 :   alive_.store(true);</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">        337 :   auto self = shared_from_this();</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">       1011 :   socket_-&gt;async_read_some(</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">       1011 :       net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        337 :         if (ec) {</span></a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineCov">         31 :           self-&gt;do_close();</span></a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineCov">         31 :           return;</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :         }</a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">          1 :         if (self-&gt;on_bytes_) {</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">        306 :         if (self-&gt;on_bytes_) {</span></a>
 <a name="179"><span class="lineNum">     179 </span>            :           try {</a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineCov">          1 :             self-&gt;on_bytes_(self-&gt;rx_.data(), n);</span></a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :           } catch (const std::exception&amp; e) {</span></a>
@@ -259,9 +259,9 @@
 <a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :             return;</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :           }</a>
 <a name="191"><span class="lineNum">     191 </span>            :         }</a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">          1 :         self-&gt;start_read();</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">        306 :         self-&gt;start_read();</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :       }));</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">         32 : }</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">        337 : }</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineCov">          8 : void TcpServerSession::do_write() {</span></a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineCov">          8 :   if (tx_.empty()) {</span></a>
@@ -317,8 +317,8 @@
 <a name="247"><span class="lineNum">     247 </span><span class="lineCov">          1 :   }</span></a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineCov">          4 : }</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">         45 : void TcpServerSession::do_close() {</span></a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">         45 :   if (!alive_.exchange(false)) return;</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">         43 : void TcpServerSession::do_close() {</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">         43 :   if (!alive_.exchange(false)) return;</span></a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineCov">         31 :   UNILINK_LOG_INFO(&quot;tcp_server_session&quot;, &quot;disconnect&quot;, &quot;Client disconnected&quot;);</span></a>
 <a name="253"><span class="lineNum">     253 </span><span class="lineCov">         31 :   boost::system::error_code ec;</span></a>
 <a name="254"><span class="lineNum">     254 </span><span class="lineCov">         31 :   socket_-&gt;shutdown(tcp::socket::shutdown_both, ec);</span></a>
