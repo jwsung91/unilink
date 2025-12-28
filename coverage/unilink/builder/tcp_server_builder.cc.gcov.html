@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-28 12:12:58</td>
+            <td class="headerValue">2025-12-28 12:26:29</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">19</td>
@@ -108,48 +108,48 @@
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">        211 :       client_limit_set_(false) {</span></a>
 <a name="39"><span class="lineNum">      39 </span>            :   // Validate input parameters</a>
 <a name="40"><span class="lineNum">      40 </span>            :   try {</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">        211 :     common::InputValidator::validate_port(port_);</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">        210 :     common::InputValidator::validate_port(port_);</span></a>
 <a name="42"><span class="lineNum">      42 </span><span class="lineCov">          6 :   } catch (const common::ValidationException&amp; e) {</span></a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">          6 :     throw common::BuilderException(&quot;Invalid TCP server parameters: &quot; + e.get_full_message(), &quot;TcpServerBuilder&quot;,</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">         12 :                                    &quot;constructor&quot;);</span></a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">          6 :   }</span></a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">        253 : }</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">        252 : }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        202 : std::unique_ptr&lt;wrapper::TcpServer&gt; TcpServerBuilder::build() {</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        201 : std::unique_ptr&lt;wrapper::TcpServer&gt; TcpServerBuilder::build() {</span></a>
 <a name="49"><span class="lineNum">      49 </span>            :   // Client limit validation</a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">        202 :   if (!client_limit_set_) {</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">        201 :   if (!client_limit_set_) {</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     throw std::runtime_error(</span></a>
 <a name="52"><span class="lineNum">      52 </span>            :         &quot;Client limit must be set before building server. Use single_client(), multi_client(n), or &quot;</a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :         &quot;unlimited_clients()&quot;);</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :   }</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        202 :   std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc;</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        201 :   std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc;</span></a>
 <a name="57"><span class="lineNum">      57 </span>            :   // IoContext management</a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">        202 :   if (use_independent_context_) {</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">        201 :   if (use_independent_context_) {</span></a>
 <a name="59"><span class="lineNum">      59 </span>            :     // Use independent IoContext (for test isolation)</a>
 <a name="60"><span class="lineNum">      60 </span><span class="lineCov">          1 :     auto independent_context = common::IoContextManager::instance().create_independent_context();</span></a>
 <a name="61"><span class="lineNum">      61 </span><span class="lineCov">          1 :     external_ioc = std::shared_ptr&lt;boost::asio::io_context&gt;(std::move(independent_context));</span></a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineCov">          1 :   } else {</span></a>
 <a name="63"><span class="lineNum">      63 </span>            :     // Automatically initialize IoContextManager (default behavior)</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">        201 :     AutoInitializer::ensure_io_context_running();</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">        200 :     AutoInitializer::ensure_io_context_running();</span></a>
 <a name="65"><span class="lineNum">      65 </span>            :   }</a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineCov">          1 :   auto server = external_ioc ? std::make_unique&lt;wrapper::TcpServer&gt;(port_, external_ioc)</span></a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">        202 :                              : std::make_unique&lt;wrapper::TcpServer&gt;(port_);</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">        201 :                              : std::make_unique&lt;wrapper::TcpServer&gt;(port_);</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">        202 :   if (external_ioc) {</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">        201 :   if (external_ioc) {</span></a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineCov">          1 :     server-&gt;set_manage_external_context(use_independent_context_);</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :   }</a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span>            :   // Apply client limit configuration</a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">        202 :   UNILINK_LOG_DEBUG(</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">        201 :   UNILINK_LOG_DEBUG(</span></a>
 <a name="76"><span class="lineNum">      76 </span>            :       &quot;tcp_server_builder&quot;, &quot;build&quot;,</a>
 <a name="77"><span class="lineNum">      77 </span>            :       &quot;client_limit_set=&quot; + std::to_string(client_limit_set_) + &quot;, max_clients=&quot; + std::to_string(max_clients_));</a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">        202 :   if (client_limit_set_) {</span></a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineCov">        202 :     if (max_clients_ == 0) {</span></a>
 <a name="80"><span class="lineNum">      80 </span>            :       // Unlimited clients</a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineCov">        191 :       UNILINK_LOG_DEBUG(&quot;tcp_server_builder&quot;, &quot;build&quot;, &quot;Setting unlimited clients&quot;);</span></a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">        191 :       server-&gt;set_unlimited_clients();</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">        190 :       server-&gt;set_unlimited_clients();</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :     } else {</a>
 <a name="84"><span class="lineNum">      84 </span>            :       // Limited clients</a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineCov">         11 :       UNILINK_LOG_DEBUG(&quot;tcp_server_builder&quot;, &quot;build&quot;, &quot;Setting client limit to &quot; + std::to_string(max_clients_));</span></a>
@@ -160,38 +160,38 @@
 <a name="90"><span class="lineNum">      90 </span>            :   }</a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
 <a name="92"><span class="lineNum">      92 </span>            :   // Set callbacks</a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">        202 :   if (on_data_) {</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">        200 :   if (on_data_) {</span></a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineCov">         17 :     server-&gt;on_data(on_data_);</span></a>
 <a name="95"><span class="lineNum">      95 </span>            :   }</a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">        202 :   if (on_connect_) {</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">        200 :   if (on_connect_) {</span></a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineCov">         18 :     server-&gt;on_connect(on_connect_);</span></a>
 <a name="99"><span class="lineNum">      99 </span>            :   }</a>
 <a name="100"><span class="lineNum">     100 </span>            : </a>
-<a name="101"><span class="lineNum">     101 </span><span class="lineCov">        202 :   if (on_disconnect_) {</span></a>
+<a name="101"><span class="lineNum">     101 </span><span class="lineCov">        200 :   if (on_disconnect_) {</span></a>
 <a name="102"><span class="lineNum">     102 </span><span class="lineCov">          5 :     server-&gt;on_disconnect(on_disconnect_);</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :   }</a>
 <a name="104"><span class="lineNum">     104 </span>            : </a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        202 :   if (on_error_) {</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        200 :   if (on_error_) {</span></a>
 <a name="106"><span class="lineNum">     106 </span><span class="lineCov">         13 :     server-&gt;on_error(on_error_);</span></a>
 <a name="107"><span class="lineNum">     107 </span>            :   }</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
 <a name="109"><span class="lineNum">     109 </span>            :   // Multi-client callback configuration</a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">        202 :   if (on_multi_connect_) {</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">        200 :   if (on_multi_connect_) {</span></a>
 <a name="111"><span class="lineNum">     111 </span><span class="lineCov">          8 :     server-&gt;on_multi_connect(on_multi_connect_);</span></a>
 <a name="112"><span class="lineNum">     112 </span>            :   }</a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">        202 :   if (on_multi_data_) {</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">        200 :   if (on_multi_data_) {</span></a>
 <a name="115"><span class="lineNum">     115 </span><span class="lineCov">          2 :     server-&gt;on_multi_data(on_multi_data_);</span></a>
 <a name="116"><span class="lineNum">     116 </span>            :   }</a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">        202 :   if (on_multi_disconnect_) {</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">        200 :   if (on_multi_disconnect_) {</span></a>
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">          2 :     server-&gt;on_multi_disconnect(on_multi_disconnect_);</span></a>
 <a name="120"><span class="lineNum">     120 </span>            :   }</a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
 <a name="122"><span class="lineNum">     122 </span>            :   // Port retry configuration</a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">        202 :   UNILINK_LOG_DEBUG(&quot;tcp_server_builder&quot;, &quot;build&quot;, &quot;enable_port_retry=&quot; + std::to_string(enable_port_retry_));</span></a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        202 :   if (enable_port_retry_) {</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">        200 :   UNILINK_LOG_DEBUG(&quot;tcp_server_builder&quot;, &quot;build&quot;, &quot;enable_port_retry=&quot; + std::to_string(enable_port_retry_));</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        200 :   if (enable_port_retry_) {</span></a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineCov">          5 :     UNILINK_LOG_DEBUG(&quot;tcp_server_builder&quot;, &quot;build&quot;,</span></a>
 <a name="126"><span class="lineNum">     126 </span>            :                       &quot;Setting port retry: max=&quot; + std::to_string(max_port_retries_) +</a>
 <a name="127"><span class="lineNum">     127 </span>            :                           &quot;, interval=&quot; + std::to_string(port_retry_interval_ms_) + &quot;ms&quot;);</a>
@@ -199,10 +199,10 @@
 <a name="129"><span class="lineNum">     129 </span>            :   }</a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
 <a name="131"><span class="lineNum">     131 </span>            :   // Apply configuration and auto-start if requested</a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">        202 :   server-&gt;auto_manage(auto_manage_);</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">        200 :   server-&gt;auto_manage(auto_manage_);</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">        404 :   return server;</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        202 : }</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">        400 :   return server;</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        200 : }</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">          7 : TcpServerBuilder&amp; TcpServerBuilder::auto_manage(bool auto_manage) {</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">          7 :   auto_manage_ = auto_manage;</span></a>
@@ -302,10 +302,10 @@
 <a name="232"><span class="lineNum">     232 </span><span class="lineCov">          5 :   return *this;</span></a>
 <a name="233"><span class="lineNum">     233 </span>            : }</a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">        190 : TcpServerBuilder&amp; TcpServerBuilder::unlimited_clients() {</span></a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        190 :   max_clients_ = 0;  // 0 = unlimited</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">        190 :   client_limit_set_ = true;</span></a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">        190 :   return *this;</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">        189 : TcpServerBuilder&amp; TcpServerBuilder::unlimited_clients() {</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        189 :   max_clients_ = 0;  // 0 = unlimited</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">        189 :   client_limit_set_ = true;</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">        189 :   return *this;</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : }</a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
 <a name="241"><span class="lineNum">     241 </span>            : }  // namespace builder</a>
