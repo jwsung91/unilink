@@ -2,8 +2,8 @@
 
 # Project related configuration options
 PROJECT_NAME           = "unilink"
-PROJECT_NUMBER         = "1.0.0"
-PROJECT_BRIEF          = "A unified C++17 communication library"
+PROJECT_NUMBER         = $(PROJECT_NUMBER)
+PROJECT_BRIEF          = "A simple C++ library for unified async communication"
 OUTPUT_DIRECTORY       = docs
 CREATE_SUBDIRS         = NO
 ALLOW_UNICODE_NAMES    = NO

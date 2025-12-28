@@ -29,10 +29,35 @@ if [ ! -f "docs/config/Doxyfile" ]; then
     exit 1
 fi
 
+if ! command -v python3 &> /dev/null; then
+    echo "❌ python3 is required to read the project version from CMakeLists.txt"
+    exit 1
+fi
+
+PROJECT_VERSION=$(python3 - <<'PY'
+import pathlib
+import re
+
+cmake_lists = pathlib.Path("CMakeLists.txt")
+match = re.search(
+    r"^\s*VERSION\s+([0-9]+(?:\.[0-9]+){1,3})",
+    cmake_lists.read_text(),
+    re.MULTILINE,
+)
+print(match.group(1) if match else "")
+PY
+)
+
+if [ -z "$PROJECT_VERSION" ]; then
+    echo "⚠️ Could not find project version in CMakeLists.txt, defaulting to 0.0.0"
+    PROJECT_VERSION="0.0.0"
+fi
+
+echo "📦 Using project version: $PROJECT_VERSION"
 echo "📚 Generating documentation..."
 
 # Generate documentation
-doxygen docs/config/Doxyfile
+PROJECT_NUMBER="$PROJECT_VERSION" doxygen docs/config/Doxyfile
 
 # Check if documentation was generated successfully
 if [ -d "docs/html" ] && [ -f "docs/html/index.html" ]; then
