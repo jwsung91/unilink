@@ -31,7 +31,7 @@ jobs:
             generator: "Visual Studio 17 2022"
             build_type: Release
           - name: macOS (Clang + vcpkg)
-            os: macos-latest
+            os: macos-14
             triplet: arm64-osx
             cc: clang
             cxx: clang++

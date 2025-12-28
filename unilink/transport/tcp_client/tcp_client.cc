@@ -85,12 +85,11 @@ TcpClient::TcpClient(const TcpClientConfig& cfg, net::io_context& ioc)
 
 TcpClient::~TcpClient() {
   stop();
+  join_ioc_thread(true);
 
   on_bytes_ = nullptr;
   on_state_ = nullptr;
   on_bp_ = nullptr;
-
-  join_ioc_thread(true);
 }
 
 void TcpClient::start() {
