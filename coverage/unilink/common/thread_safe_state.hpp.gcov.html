@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-28 17:04:22</td>
+            <td class="headerValue">2025-12-30 13:09:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -235,32 +235,32 @@
 <a name="165"><span class="lineNum">     165 </span><span class="lineCov">        370 : ThreadSafeState&lt;StateType&gt;::ThreadSafeState(const State&amp; initial_state) : state_(initial_state) {}</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
 <a name="167"><span class="lineNum">     167 </span>            : template &lt;typename StateType&gt;</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       2443 : StateType ThreadSafeState&lt;StateType&gt;::get_state() const {</span></a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">       2443 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">       2443 :   return state_;</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">       2443 : }</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       2441 : StateType ThreadSafeState&lt;StateType&gt;::get_state() const {</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">       2441 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">       2441 :   return state_;</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">       2441 : }</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
 <a name="173"><span class="lineNum">     173 </span>            : template &lt;typename StateType&gt;</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        943 : void ThreadSafeState&lt;StateType&gt;::set_state(const State&amp; new_state) {</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        945 : void ThreadSafeState&lt;StateType&gt;::set_state(const State&amp; new_state) {</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :   {</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        943 :     std::unique_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">        943 :     state_ = new_state;</span></a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">        943 :     state_changed_.store(true);</span></a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">        943 :   }</span></a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">        943 :   notify_callbacks(new_state);</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">        943 :   state_cv_.notify_all();</span></a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">        943 : }</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        945 :     std::unique_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">        945 :     state_ = new_state;</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">        945 :     state_changed_.store(true);</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">        945 :   }</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">        945 :   notify_callbacks(new_state);</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">        945 :   state_cv_.notify_all();</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">        945 : }</span></a>
 <a name="183"><span class="lineNum">     183 </span>            : </a>
 <a name="184"><span class="lineNum">     184 </span>            : template &lt;typename StateType&gt;</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">        626 : void ThreadSafeState&lt;StateType&gt;::set_state(State&amp;&amp; new_state) {</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">        623 : void ThreadSafeState&lt;StateType&gt;::set_state(State&amp;&amp; new_state) {</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :   {</a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">        626 :     std::unique_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        626 :     state_ = std::move(new_state);</span></a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">        626 :     state_changed_.store(true);</span></a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">        626 :   }</span></a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">        626 :   notify_callbacks(state_);</span></a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">        626 :   state_cv_.notify_all();</span></a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">        626 : }</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">        623 :     std::unique_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        623 :     state_ = std::move(new_state);</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">        623 :     state_changed_.store(true);</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">        623 :   }</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">        623 :   notify_callbacks(state_);</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">        623 :   state_cv_.notify_all();</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">        623 : }</span></a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
 <a name="195"><span class="lineNum">     195 </span>            : template &lt;typename StateType&gt;</a>
 <a name="196"><span class="lineNum">     196 </span>            : bool ThreadSafeState&lt;StateType&gt;::compare_and_set(const State&amp; expected, const State&amp; desired) {</a>
@@ -322,10 +322,10 @@
 <a name="252"><span class="lineNum">     252 </span>            : }</a>
 <a name="253"><span class="lineNum">     253 </span>            : </a>
 <a name="254"><span class="lineNum">     254 </span>            : template &lt;typename StateType&gt;</a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">      50449 : bool ThreadSafeState&lt;StateType&gt;::is_state(const State&amp; expected_state) const {</span></a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">      50449 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">      50441 :   return state_ == expected_state;</span></a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">      50452 : }</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">      58073 : bool ThreadSafeState&lt;StateType&gt;::is_state(const State&amp; expected_state) const {</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">      58073 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">      58063 :   return state_ == expected_state;</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">      58070 : }</span></a>
 <a name="259"><span class="lineNum">     259 </span>            : </a>
 <a name="260"><span class="lineNum">     260 </span>            : template &lt;typename StateType&gt;</a>
 <a name="261"><span class="lineNum">     261 </span>            : void ThreadSafeState&lt;StateType&gt;::notify_state_change() {</a>
@@ -333,8 +333,8 @@
 <a name="263"><span class="lineNum">     263 </span>            : }</a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>
 <a name="265"><span class="lineNum">     265 </span>            : template &lt;typename StateType&gt;</a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">       1569 : void ThreadSafeState&lt;StateType&gt;::notify_callbacks(const State&amp; new_state) {</span></a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       1569 :   std::lock_guard&lt;std::mutex&gt; lock(callbacks_mutex_);</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">       1568 : void ThreadSafeState&lt;StateType&gt;::notify_callbacks(const State&amp; new_state) {</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       1568 :   std::lock_guard&lt;std::mutex&gt; lock(callbacks_mutex_);</span></a>
 <a name="268"><span class="lineNum">     268 </span><span class="lineCov">       1568 :   for (const auto&amp; callback : callbacks_) {</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :     try {</a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :       callback(new_state);</span></a>
