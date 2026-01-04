@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">370</td>
+            <td class="headerCovTableEntry">372</td>
             <td class="headerCovTableEntry">506</td>
-            <td class="headerCovTableEntryLo">73.1 %</td>
+            <td class="headerCovTableEntryLo">73.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-30 13:09:33</td>
+            <td class="headerValue">2026-01-04 18:53:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">44</td>
@@ -91,8 +91,8 @@
 <a name="21"><span class="lineNum">      21 </span>            : #include &lt;iostream&gt;</a>
 <a name="22"><span class="lineNum">      22 </span>            : #include &lt;type_traits&gt;</a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span>            : #include &quot;unilink/common/io_context_manager.hpp&quot;</a>
-<a name="25"><span class="lineNum">      25 </span>            : #include &quot;unilink/common/memory_pool.hpp&quot;</a>
+<a name="24"><span class="lineNum">      24 </span>            : #include &quot;unilink/concurrency/io_context_manager.hpp&quot;</a>
+<a name="25"><span class="lineNum">      25 </span>            : #include &quot;unilink/memory/memory_pool.hpp&quot;</a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            : namespace unilink {</a>
 <a name="28"><span class="lineNum">      28 </span>            : namespace transport {</a>
@@ -100,36 +100,36 @@
 <a name="30"><span class="lineNum">      30 </span>            : namespace net = boost::asio;</a>
 <a name="31"><span class="lineNum">      31 </span>            : using tcp = net::ip::tcp;</a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
-<a name="33"><span class="lineNum">      33 </span>            : using common::LinkState;</a>
-<a name="34"><span class="lineNum">      34 </span>            : using common::ThreadSafeLinkState;</a>
+<a name="33"><span class="lineNum">      33 </span>            : using base::LinkState;</a>
+<a name="34"><span class="lineNum">      34 </span>            : using concurrency::ThreadSafeLinkState;</a>
 <a name="35"><span class="lineNum">      35 </span>            : using config::TcpClientConfig;</a>
 <a name="36"><span class="lineNum">      36 </span>            : using interface::Channel;</a>
 <a name="37"><span class="lineNum">      37 </span>            : using namespace common;  // For error_reporting namespace</a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">        167 : std::shared_ptr&lt;TcpClient&gt; TcpClient::create(const TcpClientConfig&amp; cfg) {</span></a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">        167 :   return std::shared_ptr&lt;TcpClient&gt;(new TcpClient(cfg));</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">        163 : std::shared_ptr&lt;TcpClient&gt; TcpClient::create(const TcpClientConfig&amp; cfg) {</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">        163 :   return std::shared_ptr&lt;TcpClient&gt;(new TcpClient(cfg));</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : }</a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">         10 : std::shared_ptr&lt;TcpClient&gt; TcpClient::create(const TcpClientConfig&amp; cfg, net::io_context&amp; ioc) {</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">         10 :   return std::shared_ptr&lt;TcpClient&gt;(new TcpClient(cfg, ioc));</span></a>
 <a name="45"><span class="lineNum">      45 </span>            : }</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">        167 : TcpClient::TcpClient(const TcpClientConfig&amp; cfg)</span></a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        167 :     : owned_ioc_(std::make_unique&lt;net::io_context&gt;()),</span></a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">        167 :       ioc_(owned_ioc_.get()),</span></a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">        167 :       strand_(net::make_strand(*ioc_)),</span></a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">        167 :       resolver_(strand_),</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">        167 :       socket_(strand_),</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        167 :       cfg_(cfg),</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">        167 :       retry_timer_(strand_),</span></a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        167 :       connect_timer_(strand_),</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        167 :       owns_ioc_(true),</span></a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        501 :       bp_high_(cfg.backpressure_threshold) {</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">        163 : TcpClient::TcpClient(const TcpClientConfig&amp; cfg)</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        163 :     : owned_ioc_(std::make_unique&lt;net::io_context&gt;()),</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">        163 :       ioc_(owned_ioc_.get()),</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">        163 :       strand_(net::make_strand(*ioc_)),</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">        163 :       resolver_(strand_),</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">        163 :       socket_(strand_),</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        163 :       cfg_(cfg),</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">        163 :       retry_timer_(strand_),</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        163 :       connect_timer_(strand_),</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        163 :       owns_ioc_(true),</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        489 :       bp_high_(cfg.backpressure_threshold) {</span></a>
 <a name="58"><span class="lineNum">      58 </span>            :   // Validate and clamp configuration</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">        167 :   cfg_.validate_and_clamp();</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        167 :   recalculate_backpressure_bounds();</span></a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">        167 :   first_retry_interval_ms_ = std::min(first_retry_interval_ms_, cfg_.retry_interval_ms);</span></a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">        167 : }</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">        163 :   cfg_.validate_and_clamp();</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        163 :   recalculate_backpressure_bounds();</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">        163 :   first_retry_interval_ms_ = std::min(first_retry_interval_ms_, cfg_.retry_interval_ms);</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">        163 : }</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineCov">         10 : TcpClient::TcpClient(const TcpClientConfig&amp; cfg, net::io_context&amp; ioc)</span></a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineCov">         10 :     : owned_ioc_(nullptr),</span></a>
@@ -153,94 +153,94 @@
 <a name="83"><span class="lineNum">      83 </span><span class="lineCov">         10 :   first_retry_interval_ms_ = std::min(first_retry_interval_ms_, cfg_.retry_interval_ms);</span></a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineCov">         10 : }</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">        352 : TcpClient::~TcpClient() {</span></a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        176 :   stop();</span></a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">        176 :   join_ioc_thread(true);</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">        344 : TcpClient::~TcpClient() {</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        172 :   stop();</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">        172 :   join_ioc_thread(true);</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">        176 :   on_bytes_ = nullptr;</span></a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov">        176 :   on_state_ = nullptr;</span></a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">        176 :   on_bp_ = nullptr;</span></a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">        352 : }</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">        172 :   on_bytes_ = nullptr;</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">        172 :   on_state_ = nullptr;</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">        172 :   on_bp_ = nullptr;</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">        344 : }</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">        374 : void TcpClient::start() {</span></a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">        374 :   auto current_state = state_.get_state();</span></a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">        374 :   if (current_state == LinkState::Connecting || current_state == LinkState::Connected) {</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">        370 : void TcpClient::start() {</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">        370 :   auto current_state = state_.get_state();</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">        370 :   if (current_state == LinkState::Connecting || current_state == LinkState::Connected) {</span></a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :     UNILINK_LOG_DEBUG(&quot;tcp_client&quot;, &quot;start&quot;, &quot;Start called while already active, ignoring&quot;);</span></a>
 <a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :     return;</span></a>
 <a name="100"><span class="lineNum">     100 </span>            :   }</a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">        374 :   if (!ioc_) {</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">        370 :   if (!ioc_) {</span></a>
 <a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;start&quot;, &quot;io_context is null&quot;);</span></a>
 <a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :     transition_to(LinkState::Error);</span></a>
 <a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :     return;</span></a>
 <a name="106"><span class="lineNum">     106 </span>            :   }</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">        374 :   recalculate_backpressure_bounds();</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">        370 :   recalculate_backpressure_bounds();</span></a>
 <a name="109"><span class="lineNum">     109 </span>            : </a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">        374 :   if (ioc_-&gt;stopped()) {</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">        370 :   if (ioc_-&gt;stopped()) {</span></a>
 <a name="111"><span class="lineNum">     111 </span><span class="lineCov">        200 :     UNILINK_LOG_DEBUG(&quot;tcp_client&quot;, &quot;start&quot;, &quot;io_context stopped; restarting before start&quot;);</span></a>
 <a name="112"><span class="lineNum">     112 </span><span class="lineCov">        200 :     ioc_-&gt;restart();</span></a>
 <a name="113"><span class="lineNum">     113 </span>            :   }</a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">        374 :   if (ioc_thread_.joinable()) {</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">        370 :   if (ioc_thread_.joinable()) {</span></a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :     join_ioc_thread(false);</span></a>
 <a name="117"><span class="lineNum">     117 </span>            :   }</a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">        374 :   const auto seq = lifecycle_seq_.fetch_add(1) + 1;</span></a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">        374 :   current_seq_.store(seq);</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">        370 :   const auto seq = lifecycle_seq_.fetch_add(1) + 1;</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">        370 :   current_seq_.store(seq);</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        374 :   if (owns_ioc_) {</span></a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">        366 :     work_guard_ = std::make_unique&lt;net::executor_work_guard&lt;net::io_context::executor_type&gt;&gt;(ioc_-&gt;get_executor());</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        370 :   if (owns_ioc_) {</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">        362 :     work_guard_ = std::make_unique&lt;net::executor_work_guard&lt;net::io_context::executor_type&gt;&gt;(ioc_-&gt;get_executor());</span></a>
 <a name="124"><span class="lineNum">     124 </span>            :     // Create our own thread for this io_context</a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineCov">        732 :     ioc_thread_ = std::thread([this]() {</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">        724 :     ioc_thread_ = std::thread([this]() {</span></a>
 <a name="126"><span class="lineNum">     126 </span>            :       try {</a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">        366 :         ioc_-&gt;run();</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">        362 :         ioc_-&gt;run();</span></a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :       } catch (const std::exception&amp; e) {</span></a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :         UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;io_context&quot;, &quot;IO context error: &quot; + std::string(e.what()));</span></a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :         error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;io_context&quot;,</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :                                              &quot;Exception in IO context: &quot; + std::string(e.what()));</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :         diagnostics::error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;io_context&quot;,</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :                                                           &quot;Exception in IO context: &quot; + std::string(e.what()));</span></a>
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :       }</span></a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">        732 :     });</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">        724 :     });</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :   }</a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        374 :   auto weak_self = weak_from_this();</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        374 :   net::dispatch(strand_, [weak_self, seq] {</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        371 :     if (auto self = weak_self.lock()) {</span></a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">        742 :       if (seq &lt;= self-&gt;stop_seq_.load()) {</span></a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">        114 :         return;</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        370 :   auto weak_self = weak_from_this();</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        370 :   net::dispatch(strand_, [weak_self, seq] {</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        367 :     if (auto self = weak_self.lock()) {</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">        733 :       if (seq &lt;= self-&gt;stop_seq_.load()) {</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">        116 :         return;</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :       }</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        257 :       self-&gt;reset_start_state();</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">        257 :       self-&gt;connected_.store(false);</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        257 :       self-&gt;reset_io_objects();</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        257 :       self-&gt;transition_to(LinkState::Connecting);</span></a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">        257 :       self-&gt;do_resolve_connect();</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">        371 :     }</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        251 :       self-&gt;reset_start_state();</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">        251 :       self-&gt;connected_.store(false);</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        251 :       self-&gt;reset_io_objects();</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        251 :       self-&gt;transition_to(LinkState::Connecting);</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">        251 :       self-&gt;do_resolve_connect();</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">        367 :     }</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :   });</a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">        374 : }</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">        370 : }</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">        558 : void TcpClient::stop() {</span></a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        558 :   if (stop_requested_.exchange(true)) {</span></a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">        181 :     return;</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">        550 : void TcpClient::stop() {</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        550 :   if (stop_requested_.exchange(true)) {</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">        177 :     return;</span></a>
 <a name="154"><span class="lineNum">     154 </span>            :   }</a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        377 :   stopping_.store(true);</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">        754 :   stop_seq_.store(current_seq_.load());</span></a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">        377 :   auto weak_self = weak_from_this();</span></a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">        377 :   if (!ioc_) {</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        373 :   stopping_.store(true);</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">        746 :   stop_seq_.store(current_seq_.load());</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">        373 :   auto weak_self = weak_from_this();</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">        373 :   if (!ioc_) {</span></a>
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     perform_stop_cleanup();</span></a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     return;</span></a>
 <a name="162"><span class="lineNum">     162 </span>            :   }</a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">        377 :   if (auto self = weak_self.lock()) {</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">        748 :     net::post(strand_, [self]() { self-&gt;perform_stop_cleanup(); });</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">        373 :   if (auto self = weak_self.lock()) {</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">        740 :     net::post(strand_, [self]() { self-&gt;perform_stop_cleanup(); });</span></a>
 <a name="166"><span class="lineNum">     166 </span>            :   } else {</a>
 <a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :     perform_stop_cleanup();</span></a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">        377 :   }</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">        373 :   }</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        377 :   join_ioc_thread(false);</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">        377 : }</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        373 :   join_ioc_thread(false);</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">        373 : }</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">        435 : bool TcpClient::is_connected() const { return connected_.load(); }</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">        434 : bool TcpClient::is_connected() const { return connected_.load(); }</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineCov">      12607 : void TcpClient::async_write_copy(const uint8_t* data, size_t size) {</span></a>
 <a name="176"><span class="lineNum">     176 </span>            :   // Don't queue writes if client is stopped or in error state</a>
@@ -262,7 +262,7 @@
 <a name="192"><span class="lineNum">     192 </span>            :   // Use memory pool for better performance (only for reasonable sizes)</a>
 <a name="193"><span class="lineNum">     193 </span><span class="lineCov">      12607 :   if (size &lt;= 65536) {  // Only use pool for buffers &lt;= 64KB</span></a>
 <a name="194"><span class="lineNum">     194 </span>            :     try {</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">      12604 :       common::PooledBuffer pooled_buffer(size);</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">      12604 :       memory::PooledBuffer pooled_buffer(size);</span></a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineCov">      12604 :       if (pooled_buffer.valid()) {</span></a>
 <a name="197"><span class="lineNum">     197 </span>            :         // Copy data to pooled buffer safely</a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineCov">      12604 :         common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);</span></a>
@@ -415,28 +415,28 @@
 <a name="345"><span class="lineNum">     345 </span>            :   });</a>
 <a name="346"><span class="lineNum">     346 </span>            : }</a>
 <a name="347"><span class="lineNum">     347 </span>            : </a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">         57 : void TcpClient::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }</span></a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineCov">         64 : void TcpClient::on_state(OnState cb) { on_state_ = std::move(cb); }</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">         53 : void TcpClient::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">         60 : void TcpClient::on_state(OnState cb) { on_state_ = std::move(cb); }</span></a>
 <a name="350"><span class="lineNum">     350 </span><span class="lineCov">          3 : void TcpClient::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }</span></a>
 <a name="351"><span class="lineNum">     351 </span>            : </a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineCov">        280 : void TcpClient::do_resolve_connect() {</span></a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">        280 :   auto self = shared_from_this();</span></a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineCov">        280 :   resolver_.async_resolve(cfg_.host, std::to_string(cfg_.port), [self](auto ec, tcp::resolver::results_type results) {</span></a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineCov">        280 :     if (ec == net::error::operation_aborted) {</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">        273 : void TcpClient::do_resolve_connect() {</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">        273 :   auto self = shared_from_this();</span></a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineCov">        273 :   resolver_.async_resolve(cfg_.host, std::to_string(cfg_.port), [self](auto ec, tcp::resolver::results_type results) {</span></a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineCov">        273 :     if (ec == net::error::operation_aborted) {</span></a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineCov">          1 :       return;</span></a>
 <a name="357"><span class="lineNum">     357 </span>            :     }</a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineCov">        279 :     if (self-&gt;stop_requested_.load() || self-&gt;stopping_.load()) {</span></a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">          3 :       return;</span></a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineCov">        272 :     if (self-&gt;stop_requested_.load() || self-&gt;stopping_.load()) {</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">          2 :       return;</span></a>
 <a name="360"><span class="lineNum">     360 </span>            :     }</a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineCov">        276 :     if (ec) {</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">          4 :       self-&gt;schedule_retry();</span></a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineCov">          4 :       return;</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">        270 :     if (ec) {</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">          2 :       self-&gt;schedule_retry();</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">          2 :       return;</span></a>
 <a name="364"><span class="lineNum">     364 </span>            :     }</a>
 <a name="365"><span class="lineNum">     365 </span>            :     // Set up connection timeout</a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">        272 :     self-&gt;connect_timer_.expires_after(std::chrono::milliseconds(self-&gt;cfg_.connection_timeout_ms));</span></a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">        272 :     self-&gt;connect_timer_.async_wait([self](const boost::system::error_code&amp; timer_ec) {</span></a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">        272 :       if (timer_ec == net::error::operation_aborted) {</span></a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineCov">        272 :         return;</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">        268 :     self-&gt;connect_timer_.expires_after(std::chrono::milliseconds(self-&gt;cfg_.connection_timeout_ms));</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineCov">        268 :     self-&gt;connect_timer_.async_wait([self](const boost::system::error_code&amp; timer_ec) {</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">        268 :       if (timer_ec == net::error::operation_aborted) {</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineCov">        268 :         return;</span></a>
 <a name="370"><span class="lineNum">     370 </span>            :       }</a>
 <a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :       if (!timer_ec &amp;&amp; !self-&gt;stop_requested_.load() &amp;&amp; !self-&gt;stopping_.load()) {</span></a>
 <a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 :         UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;connect_timeout&quot;,</span></a>
@@ -445,19 +445,19 @@
 <a name="375"><span class="lineNum">     375 </span>            :       }</a>
 <a name="376"><span class="lineNum">     376 </span>            :     });</a>
 <a name="377"><span class="lineNum">     377 </span>            : </a>
-<a name="378"><span class="lineNum">     378 </span><span class="lineCov">        272 :     net::async_connect(self-&gt;socket_, results, [self](auto ec2, const auto&amp;) {</span></a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineCov">        272 :       if (ec2 == net::error::operation_aborted) {</span></a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineCov">         48 :         return;</span></a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineCov">        268 :     net::async_connect(self-&gt;socket_, results, [self](auto ec2, const auto&amp;) {</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineCov">        268 :       if (ec2 == net::error::operation_aborted) {</span></a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineCov">         44 :         return;</span></a>
 <a name="381"><span class="lineNum">     381 </span>            :       }</a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">        271 :       if (self-&gt;stop_requested_.load() || self-&gt;stopping_.load()) {</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineCov">        266 :       if (self-&gt;stop_requested_.load() || self-&gt;stopping_.load()) {</span></a>
 <a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 :         self-&gt;close_socket();</span></a>
 <a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :         self-&gt;connect_timer_.cancel();</span></a>
 <a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="386"><span class="lineNum">     386 </span>            :       }</a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineCov">        271 :       if (ec2) {</span></a>
-<a name="388"><span class="lineNum">     388 </span><span class="lineCov">         47 :         self-&gt;connect_timer_.cancel();</span></a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineCov">         47 :         self-&gt;schedule_retry();</span></a>
-<a name="390"><span class="lineNum">     390 </span><span class="lineCov">         47 :         return;</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineCov">        266 :       if (ec2) {</span></a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineCov">         42 :         self-&gt;connect_timer_.cancel();</span></a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineCov">         42 :         self-&gt;schedule_retry();</span></a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineCov">         42 :         return;</span></a>
 <a name="391"><span class="lineNum">     391 </span>            :       }</a>
 <a name="392"><span class="lineNum">     392 </span><span class="lineCov">        224 :       self-&gt;connect_timer_.cancel();</span></a>
 <a name="393"><span class="lineNum">     393 </span><span class="lineCov">        224 :       self-&gt;retry_attempts_ = 0;</span></a>
@@ -474,35 +474,35 @@
 <a name="404"><span class="lineNum">     404 </span><span class="lineCov">        224 :       self-&gt;do_write();</span></a>
 <a name="405"><span class="lineNum">     405 </span>            :     });</a>
 <a name="406"><span class="lineNum">     406 </span>            :   });</a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineCov">        280 : }</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineCov">        273 : }</span></a>
 <a name="408"><span class="lineNum">     408 </span>            : </a>
-<a name="409"><span class="lineNum">     409 </span><span class="lineCov">         61 : void TcpClient::schedule_retry() {</span></a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineCov">         61 :   connected_.store(false);</span></a>
-<a name="411"><span class="lineNum">     411 </span><span class="lineCov">         61 :   if (stop_requested_.load() || stopping_.load()) {</span></a>
+<a name="409"><span class="lineNum">     409 </span><span class="lineCov">         53 : void TcpClient::schedule_retry() {</span></a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineCov">         53 :   connected_.store(false);</span></a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineCov">         53 :   if (stop_requested_.load() || stopping_.load()) {</span></a>
 <a name="412"><span class="lineNum">     412 </span><span class="lineCov">          2 :     return;</span></a>
 <a name="413"><span class="lineNum">     413 </span>            :   }</a>
-<a name="414"><span class="lineNum">     414 </span><span class="lineCov">         61 :   if (cfg_.max_retries != -1 &amp;&amp; retry_attempts_ &gt;= cfg_.max_retries) {</span></a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineCov">         53 :   if (cfg_.max_retries != -1 &amp;&amp; retry_attempts_ &gt;= cfg_.max_retries) {</span></a>
 <a name="415"><span class="lineNum">     415 </span><span class="lineCov">          2 :     transition_to(LinkState::Error);</span></a>
 <a name="416"><span class="lineNum">     416 </span><span class="lineCov">          2 :     return;</span></a>
 <a name="417"><span class="lineNum">     417 </span>            :   }</a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineCov">         59 :   ++retry_attempts_;</span></a>
-<a name="419"><span class="lineNum">     419 </span><span class="lineCov">         59 :   transition_to(LinkState::Connecting);</span></a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineCov">         51 :   ++retry_attempts_;</span></a>
+<a name="419"><span class="lineNum">     419 </span><span class="lineCov">         51 :   transition_to(LinkState::Connecting);</span></a>
 <a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineCov">         59 :   UNILINK_LOG_INFO(</span></a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineCov">         51 :   UNILINK_LOG_INFO(</span></a>
 <a name="422"><span class="lineNum">     422 </span>            :       &quot;tcp_client&quot;, &quot;retry&quot;,</a>
 <a name="423"><span class="lineNum">     423 </span>            :       &quot;Scheduling retry in &quot; +</a>
 <a name="424"><span class="lineNum">     424 </span>            :           std::to_string((retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms) / 1000.0) + &quot;s&quot;);</a>
 <a name="425"><span class="lineNum">     425 </span>            : </a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineCov">         59 :   auto self = shared_from_this();</span></a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineCov">         59 :   const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;</span></a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineCov">         59 :   retry_timer_.expires_after(std::chrono::milliseconds(interval));</span></a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineCov">         59 :   retry_timer_.async_wait([self](const boost::system::error_code&amp; ec) {</span></a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineCov">         59 :     if (ec == net::error::operation_aborted) {</span></a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineCov">         35 :       return;</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineCov">         51 :   auto self = shared_from_this();</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineCov">         51 :   const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineCov">         51 :   retry_timer_.expires_after(std::chrono::milliseconds(interval));</span></a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineCov">         51 :   retry_timer_.async_wait([self](const boost::system::error_code&amp; ec) {</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineCov">         51 :     if (ec == net::error::operation_aborted) {</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineCov">         28 :       return;</span></a>
 <a name="432"><span class="lineNum">     432 </span>            :     }</a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineCov">         24 :     if (!ec &amp;&amp; !self-&gt;stop_requested_.load() &amp;&amp; !self-&gt;stopping_.load()) self-&gt;do_resolve_connect();</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">         23 :     if (!ec &amp;&amp; !self-&gt;stop_requested_.load() &amp;&amp; !self-&gt;stopping_.load()) self-&gt;do_resolve_connect();</span></a>
 <a name="434"><span class="lineNum">     434 </span>            :   });</a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineCov">         59 : }</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">         51 : }</span></a>
 <a name="436"><span class="lineNum">     436 </span>            : </a>
 <a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 : void TcpClient::set_retry_interval(unsigned interval_ms) { cfg_.retry_interval_ms = interval_ms; }</span></a>
 <a name="438"><span class="lineNum">     438 </span>            : </a>
@@ -510,14 +510,14 @@
 <a name="440"><span class="lineNum">     440 </span><span class="lineCov">        226 :   auto self = shared_from_this();</span></a>
 <a name="441"><span class="lineNum">     441 </span><span class="lineCov">        226 :   socket_.async_read_some(net::buffer(rx_.data(), rx_.size()), [self](auto ec, std::size_t n) {</span></a>
 <a name="442"><span class="lineNum">     442 </span><span class="lineCov">        225 :     if (ec == net::error::operation_aborted) {</span></a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineCov">        212 :       return;</span></a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">        213 :       return;</span></a>
 <a name="444"><span class="lineNum">     444 </span>            :     }</a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineCov">         13 :     if (self-&gt;stop_requested_.load()) {</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">         12 :     if (self-&gt;stop_requested_.load()) {</span></a>
 <a name="446"><span class="lineNum">     446 </span><span class="lineCov">          1 :       return;</span></a>
 <a name="447"><span class="lineNum">     447 </span>            :     }</a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineCov">         12 :     if (ec) {</span></a>
-<a name="449"><span class="lineNum">     449 </span><span class="lineCov">          9 :       self-&gt;handle_close(ec);</span></a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineCov">          9 :       return;</span></a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineCov">         11 :     if (ec) {</span></a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">          8 :       self-&gt;handle_close(ec);</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">          8 :       return;</span></a>
 <a name="451"><span class="lineNum">     451 </span>            :     }</a>
 <a name="452"><span class="lineNum">     452 </span><span class="lineCov">          3 :     if (self-&gt;on_bytes_) {</span></a>
 <a name="453"><span class="lineNum">     453 </span>            :       try {</a>
@@ -536,77 +536,77 @@
 <a name="466"><span class="lineNum">     466 </span>            :   });</a>
 <a name="467"><span class="lineNum">     467 </span><span class="lineCov">        226 : }</span></a>
 <a name="468"><span class="lineNum">     468 </span>            : </a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineCov">      12076 : void TcpClient::do_write() {</span></a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineCov">       9782 : void TcpClient::do_write() {</span></a>
 <a name="470"><span class="lineNum">     470 </span>            :   // If we are not connected yet, keep the queued data and exit; writes will</a>
 <a name="471"><span class="lineNum">     471 </span>            :   // resume once a connection is established.</a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineCov">      12076 :   if (stop_requested_.load()) {</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       9782 :   if (stop_requested_.load()) {</span></a>
 <a name="473"><span class="lineNum">     473 </span><span class="lineCov">          1 :     tx_.clear();</span></a>
 <a name="474"><span class="lineNum">     474 </span><span class="lineCov">          1 :     queue_bytes_ = 0;</span></a>
 <a name="475"><span class="lineNum">     475 </span><span class="lineCov">          1 :     writing_ = false;</span></a>
 <a name="476"><span class="lineNum">     476 </span><span class="lineCov">          1 :     report_backpressure(queue_bytes_);</span></a>
-<a name="477"><span class="lineNum">     477 </span><span class="lineCov">      11523 :     return;</span></a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineCov">       8667 :     return;</span></a>
 <a name="478"><span class="lineNum">     478 </span>            :   }</a>
 <a name="479"><span class="lineNum">     479 </span>            : </a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineCov">      12075 :   if (!connected_.load()) {</span></a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineCov">      11300 :     writing_ = false;</span></a>
-<a name="482"><span class="lineNum">     482 </span><span class="lineCov">      11300 :     return;</span></a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineCov">       9781 :   if (!connected_.load()) {</span></a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineCov">       8445 :     writing_ = false;</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineCov">       8445 :     return;</span></a>
 <a name="483"><span class="lineNum">     483 </span>            :   }</a>
 <a name="484"><span class="lineNum">     484 </span>            : </a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineCov">        775 :   if (tx_.empty() || state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error)) {</span></a>
-<a name="486"><span class="lineNum">     486 </span><span class="lineCov">        222 :     writing_ = false;</span></a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineCov">        222 :     return;</span></a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineCov">       1336 :   if (tx_.empty() || state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error)) {</span></a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineCov">        221 :     writing_ = false;</span></a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineCov">        221 :     return;</span></a>
 <a name="488"><span class="lineNum">     488 </span>            :   }</a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">        553 :   writing_ = true;</span></a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineCov">        553 :   auto self = shared_from_this();</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">       1115 :   writing_ = true;</span></a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">       1115 :   auto self = shared_from_this();</span></a>
 <a name="491"><span class="lineNum">     491 </span>            : </a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineCov">        553 :   auto current = std::move(tx_.front());</span></a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineCov">        553 :   tx_.pop_front();</span></a>
-<a name="494"><span class="lineNum">     494 </span><span class="lineCov">        553 :   auto queued_bytes = std::visit(</span></a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineCov">        553 :       [](auto&amp;&amp; buf) -&gt; size_t {</span></a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineCov">       1115 :   auto current = std::move(tx_.front());</span></a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineCov">       1115 :   tx_.pop_front();</span></a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineCov">       1115 :   auto queued_bytes = std::visit(</span></a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">       1115 :       [](auto&amp;&amp; buf) -&gt; size_t {</span></a>
 <a name="496"><span class="lineNum">     496 </span>            :         using Buffer = std::decay_t&lt;decltype(buf)&gt;;</a>
 <a name="497"><span class="lineNum">     497 </span>            :         if constexpr (std::is_same_v&lt;Buffer, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;) {</a>
 <a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :           return buf ? buf-&gt;size() : 0;</span></a>
 <a name="499"><span class="lineNum">     499 </span>            :         } else {</a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineCov">        553 :           return buf.size();</span></a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineCov">       1115 :           return buf.size();</span></a>
 <a name="501"><span class="lineNum">     501 </span>            :         }</a>
 <a name="502"><span class="lineNum">     502 </span>            :       },</a>
 <a name="503"><span class="lineNum">     503 </span>            :       current);</a>
 <a name="504"><span class="lineNum">     504 </span>            : </a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineCov">       1658 :   auto on_write = [self, queued_bytes](auto ec, std::size_t) {</span></a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineCov">        553 :     self-&gt;queue_bytes_ = (self-&gt;queue_bytes_ &gt; queued_bytes) ? (self-&gt;queue_bytes_ - queued_bytes) : 0;</span></a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineCov">        553 :     self-&gt;report_backpressure(self-&gt;queue_bytes_);</span></a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineCov">       3342 :   auto on_write = [self, queued_bytes](auto ec, std::size_t) {</span></a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineCov">       1115 :     self-&gt;queue_bytes_ = (self-&gt;queue_bytes_ &gt; queued_bytes) ? (self-&gt;queue_bytes_ - queued_bytes) : 0;</span></a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineCov">       1115 :     self-&gt;report_backpressure(self-&gt;queue_bytes_);</span></a>
 <a name="508"><span class="lineNum">     508 </span>            : </a>
-<a name="509"><span class="lineNum">     509 </span><span class="lineCov">        553 :     if (ec == net::error::operation_aborted) {</span></a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineCov">       1115 :     if (ec == net::error::operation_aborted) {</span></a>
 <a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :       self-&gt;writing_ = false;</span></a>
 <a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 :       return;</span></a>
 <a name="512"><span class="lineNum">     512 </span>            :     }</a>
 <a name="513"><span class="lineNum">     513 </span>            : </a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineCov">       1106 :     if (self-&gt;stop_requested_.load() || self-&gt;state_.is_state(LinkState::Closed) ||</span></a>
-<a name="515"><span class="lineNum">     515 </span><span class="lineCov">       1106 :         self-&gt;state_.is_state(LinkState::Error)) {</span></a>
-<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :       self-&gt;writing_ = false;</span></a>
-<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :       return;</span></a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineCov">       2228 :     if (self-&gt;stop_requested_.load() || self-&gt;state_.is_state(LinkState::Closed) ||</span></a>
+<a name="515"><span class="lineNum">     515 </span><span class="lineCov">       2228 :         self-&gt;state_.is_state(LinkState::Error)) {</span></a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineCov">          2 :       self-&gt;writing_ = false;</span></a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineCov">          2 :       return;</span></a>
 <a name="518"><span class="lineNum">     518 </span>            :     }</a>
 <a name="519"><span class="lineNum">     519 </span>            : </a>
-<a name="520"><span class="lineNum">     520 </span><span class="lineCov">        553 :     if (ec) {</span></a>
+<a name="520"><span class="lineNum">     520 </span><span class="lineCov">       1113 :     if (ec) {</span></a>
 <a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 :       self-&gt;writing_ = false;</span></a>
 <a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :       self-&gt;handle_close(ec);</span></a>
 <a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :       return;</span></a>
 <a name="524"><span class="lineNum">     524 </span>            :     }</a>
 <a name="525"><span class="lineNum">     525 </span>            : </a>
-<a name="526"><span class="lineNum">     526 </span><span class="lineCov">        553 :     self-&gt;do_write();</span></a>
-<a name="527"><span class="lineNum">     527 </span><span class="lineCov">        553 :   };</span></a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineCov">       1113 :     self-&gt;do_write();</span></a>
+<a name="527"><span class="lineNum">     527 </span><span class="lineCov">       1115 :   };</span></a>
 <a name="528"><span class="lineNum">     528 </span>            : </a>
 <a name="529"><span class="lineNum">     529 </span>            :   // Handle PooledBuffer, shared_ptr buffer, or std::vector&lt;uint8_t&gt; (fallback)</a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineCov">        553 :   if (std::holds_alternative&lt;common::PooledBuffer&gt;(current)) {</span></a>
-<a name="531"><span class="lineNum">     531 </span><span class="lineCov">        553 :     auto pooled_buf = std::get&lt;common::PooledBuffer&gt;(std::move(current));</span></a>
-<a name="532"><span class="lineNum">     532 </span><span class="lineCov">        553 :     auto shared_pooled = std::make_shared&lt;common::PooledBuffer&gt;(std::move(pooled_buf));</span></a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineCov">        553 :     auto data = shared_pooled-&gt;data();</span></a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineCov">        553 :     auto size = shared_pooled-&gt;size();</span></a>
-<a name="535"><span class="lineNum">     535 </span><span class="lineCov">       1106 :     net::async_write(socket_, net::buffer(data, size),</span></a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineCov">        553 :                      [self, buf = shared_pooled, on_write = std::move(on_write)](auto ec, std::size_t n) mutable {</span></a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineCov">        553 :                        on_write(ec, n);</span></a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineCov">        553 :                      });</span></a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineCov">        553 :   } else if (std::holds_alternative&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(current)) {</span></a>
+<a name="530"><span class="lineNum">     530 </span><span class="lineCov">       1115 :   if (std::holds_alternative&lt;memory::PooledBuffer&gt;(current)) {</span></a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineCov">       1115 :     auto pooled_buf = std::get&lt;memory::PooledBuffer&gt;(std::move(current));</span></a>
+<a name="532"><span class="lineNum">     532 </span><span class="lineCov">       1115 :     auto shared_pooled = std::make_shared&lt;memory::PooledBuffer&gt;(std::move(pooled_buf));</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineCov">       1115 :     auto data = shared_pooled-&gt;data();</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineCov">       1115 :     auto size = shared_pooled-&gt;size();</span></a>
+<a name="535"><span class="lineNum">     535 </span><span class="lineCov">       2230 :     net::async_write(socket_, net::buffer(data, size),</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">       1115 :                      [self, buf = shared_pooled, on_write = std::move(on_write)](auto ec, std::size_t n) mutable {</span></a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineCov">       1115 :                        on_write(ec, n);</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineCov">       1115 :                      });</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineCov">       1115 :   } else if (std::holds_alternative&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(current)) {</span></a>
 <a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 :     auto shared_buf = std::get&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(std::move(current));</span></a>
 <a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 :     auto data = shared_buf-&gt;data();</span></a>
 <a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 :     auto size = shared_buf-&gt;size();</span></a>
@@ -622,46 +622,46 @@
 <a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 :         socket_, net::buffer(data, size),</span></a>
 <a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :         [self, buf = shared_vec, on_write = std::move(on_write)](auto ec, std::size_t n) mutable { on_write(ec, n); });</span></a>
 <a name="554"><span class="lineNum">     554 </span><span class="lineNoCov">          0 :   }</span></a>
-<a name="555"><span class="lineNum">     555 </span><span class="lineCov">        553 : }</span></a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineCov">       1115 : }</span></a>
 <a name="556"><span class="lineNum">     556 </span>            : </a>
-<a name="557"><span class="lineNum">     557 </span><span class="lineCov">         10 : void TcpClient::handle_close(const boost::system::error_code&amp; ec) {</span></a>
-<a name="558"><span class="lineNum">     558 </span><span class="lineCov">         10 :   if (ec == net::error::operation_aborted) {</span></a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineCov">          9 : void TcpClient::handle_close(const boost::system::error_code&amp; ec) {</span></a>
+<a name="558"><span class="lineNum">     558 </span><span class="lineCov">          9 :   if (ec == net::error::operation_aborted) {</span></a>
 <a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 :     return;</span></a>
 <a name="560"><span class="lineNum">     560 </span>            :   }</a>
-<a name="561"><span class="lineNum">     561 </span><span class="lineCov">         10 :   connected_.store(false);</span></a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineCov">         10 :   writing_ = false;</span></a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineCov">         10 :   connect_timer_.cancel();</span></a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineCov">         10 :   close_socket();</span></a>
-<a name="565"><span class="lineNum">     565 </span><span class="lineCov">         10 :   if (stop_requested_.load() || stopping_.load() || state_.is_state(LinkState::Closed)) {</span></a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineCov">          9 :   connected_.store(false);</span></a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineCov">          9 :   writing_ = false;</span></a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineCov">          9 :   connect_timer_.cancel();</span></a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineCov">          9 :   close_socket();</span></a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineCov">          9 :   if (stop_requested_.load() || stopping_.load() || state_.is_state(LinkState::Closed)) {</span></a>
 <a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 :     transition_to(LinkState::Closed, ec);</span></a>
 <a name="567"><span class="lineNum">     567 </span><span class="lineNoCov">          0 :     return;</span></a>
 <a name="568"><span class="lineNum">     568 </span>            :   }</a>
-<a name="569"><span class="lineNum">     569 </span><span class="lineCov">         10 :   transition_to(LinkState::Connecting, ec);</span></a>
-<a name="570"><span class="lineNum">     570 </span><span class="lineCov">         10 :   schedule_retry();</span></a>
+<a name="569"><span class="lineNum">     569 </span><span class="lineCov">          9 :   transition_to(LinkState::Connecting, ec);</span></a>
+<a name="570"><span class="lineNum">     570 </span><span class="lineCov">          9 :   schedule_retry();</span></a>
 <a name="571"><span class="lineNum">     571 </span>            : }</a>
 <a name="572"><span class="lineNum">     572 </span>            : </a>
-<a name="573"><span class="lineNum">     573 </span><span class="lineCov">        641 : void TcpClient::close_socket() {</span></a>
-<a name="574"><span class="lineNum">     574 </span><span class="lineCov">        641 :   boost::system::error_code ec;</span></a>
-<a name="575"><span class="lineNum">     575 </span><span class="lineCov">        641 :   socket_.shutdown(tcp::socket::shutdown_both, ec);</span></a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineCov">        641 :   socket_.close(ec);</span></a>
-<a name="577"><span class="lineNum">     577 </span><span class="lineCov">        641 : }</span></a>
+<a name="573"><span class="lineNum">     573 </span><span class="lineCov">        630 : void TcpClient::close_socket() {</span></a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineCov">        630 :   boost::system::error_code ec;</span></a>
+<a name="575"><span class="lineNum">     575 </span><span class="lineCov">        630 :   socket_.shutdown(tcp::socket::shutdown_both, ec);</span></a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineCov">        630 :   socket_.close(ec);</span></a>
+<a name="577"><span class="lineNum">     577 </span><span class="lineCov">        630 : }</span></a>
 <a name="578"><span class="lineNum">     578 </span>            : </a>
-<a name="579"><span class="lineNum">     579 </span><span class="lineCov">        551 : void TcpClient::recalculate_backpressure_bounds() {</span></a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineCov">        551 :   bp_high_ = cfg_.backpressure_threshold;</span></a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineCov">        551 :   bp_low_ = bp_high_ &gt; 1 ? bp_high_ / 2 : bp_high_;</span></a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineCov">        551 :   if (bp_low_ == 0) {</span></a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineCov">        543 : void TcpClient::recalculate_backpressure_bounds() {</span></a>
+<a name="580"><span class="lineNum">     580 </span><span class="lineCov">        543 :   bp_high_ = cfg_.backpressure_threshold;</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">        543 :   bp_low_ = bp_high_ &gt; 1 ? bp_high_ / 2 : bp_high_;</span></a>
+<a name="582"><span class="lineNum">     582 </span><span class="lineCov">        543 :   if (bp_low_ == 0) {</span></a>
 <a name="583"><span class="lineNum">     583 </span><span class="lineNoCov">          0 :     bp_low_ = 1;</span></a>
 <a name="584"><span class="lineNum">     584 </span>            :   }</a>
-<a name="585"><span class="lineNum">     585 </span><span class="lineCov">        551 :   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),</span></a>
+<a name="585"><span class="lineNum">     585 </span><span class="lineCov">        543 :   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),</span></a>
 <a name="586"><span class="lineNum">     586 </span>            :                        common::constants::MAX_BUFFER_SIZE);</a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineCov">        551 :   if (bp_limit_ &lt; bp_high_) {</span></a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineCov">        543 :   if (bp_limit_ &lt; bp_high_) {</span></a>
 <a name="588"><span class="lineNum">     588 </span><span class="lineNoCov">          0 :     bp_limit_ = bp_high_;</span></a>
 <a name="589"><span class="lineNum">     589 </span>            :   }</a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineCov">        551 :   backpressure_active_ = false;</span></a>
-<a name="591"><span class="lineNum">     591 </span><span class="lineCov">        551 : }</span></a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineCov">        543 :   backpressure_active_ = false;</span></a>
+<a name="591"><span class="lineNum">     591 </span><span class="lineCov">        543 : }</span></a>
 <a name="592"><span class="lineNum">     592 </span>            : </a>
-<a name="593"><span class="lineNum">     593 </span><span class="lineCov">      13059 : void TcpClient::report_backpressure(size_t queued_bytes) {</span></a>
-<a name="594"><span class="lineNum">     594 </span><span class="lineCov">      13059 :   if (stop_requested_.load() || !on_bp_) return;</span></a>
+<a name="593"><span class="lineNum">     593 </span><span class="lineCov">      13621 : void TcpClient::report_backpressure(size_t queued_bytes) {</span></a>
+<a name="594"><span class="lineNum">     594 </span><span class="lineCov">      13621 :   if (stop_requested_.load() || !on_bp_) return;</span></a>
 <a name="595"><span class="lineNum">     595 </span>            : </a>
 <a name="596"><span class="lineNum">     596 </span><span class="lineCov">          3 :   if (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</span></a>
 <a name="597"><span class="lineNum">     597 </span><span class="lineCov">          3 :     backpressure_active_ = true;</span></a>
@@ -686,45 +686,45 @@
 <a name="616"><span class="lineNum">     616 </span>            :   }</a>
 <a name="617"><span class="lineNum">     617 </span>            : }</a>
 <a name="618"><span class="lineNum">     618 </span>            : </a>
-<a name="619"><span class="lineNum">     619 </span><span class="lineCov">        926 : void TcpClient::transition_to(LinkState next, const boost::system::error_code&amp; ec) {</span></a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineCov">        926 :   if (ec == net::error::operation_aborted) {</span></a>
+<a name="619"><span class="lineNum">     619 </span><span class="lineCov">        907 : void TcpClient::transition_to(LinkState next, const boost::system::error_code&amp; ec) {</span></a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineCov">        907 :   if (ec == net::error::operation_aborted) {</span></a>
 <a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :     return;</span></a>
 <a name="622"><span class="lineNum">     622 </span>            :   }</a>
 <a name="623"><span class="lineNum">     623 </span>            : </a>
-<a name="624"><span class="lineNum">     624 </span><span class="lineCov">        926 :   const auto current = state_.get_state();</span></a>
-<a name="625"><span class="lineNum">     625 </span><span class="lineCov">        926 :   const bool retrying_same_state = (next == LinkState::Connecting &amp;&amp; current == LinkState::Connecting);</span></a>
-<a name="626"><span class="lineNum">     626 </span><span class="lineCov">        926 :   if ((current == LinkState::Closed || current == LinkState::Error) &amp;&amp;</span></a>
+<a name="624"><span class="lineNum">     624 </span><span class="lineCov">        907 :   const auto current = state_.get_state();</span></a>
+<a name="625"><span class="lineNum">     625 </span><span class="lineCov">        906 :   const bool retrying_same_state = (next == LinkState::Connecting &amp;&amp; current == LinkState::Connecting);</span></a>
+<a name="626"><span class="lineNum">     626 </span><span class="lineCov">        906 :   if ((current == LinkState::Closed || current == LinkState::Error) &amp;&amp;</span></a>
 <a name="627"><span class="lineNum">     627 </span><span class="lineCov">          2 :       (next == LinkState::Closed || next == LinkState::Error)) {</span></a>
 <a name="628"><span class="lineNum">     628 </span><span class="lineCov">          2 :     return;</span></a>
 <a name="629"><span class="lineNum">     629 </span>            :   }</a>
 <a name="630"><span class="lineNum">     630 </span>            : </a>
-<a name="631"><span class="lineNum">     631 </span><span class="lineCov">        924 :   if (next == LinkState::Closed || next == LinkState::Error) {</span></a>
-<a name="632"><span class="lineNum">     632 </span><span class="lineCov">        374 :     if (terminal_state_notified_.exchange(true)) {</span></a>
+<a name="631"><span class="lineNum">     631 </span><span class="lineCov">        904 :   if (next == LinkState::Closed || next == LinkState::Error) {</span></a>
+<a name="632"><span class="lineNum">     632 </span><span class="lineCov">        370 :     if (terminal_state_notified_.exchange(true)) {</span></a>
 <a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :       return;</span></a>
 <a name="634"><span class="lineNum">     634 </span>            :     }</a>
-<a name="635"><span class="lineNum">     635 </span><span class="lineCov">        550 :   } else if (current == next &amp;&amp; !retrying_same_state) {</span></a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineCov">        534 :   } else if (current == next &amp;&amp; !retrying_same_state) {</span></a>
 <a name="636"><span class="lineNum">     636 </span><span class="lineNoCov">          0 :     return;</span></a>
 <a name="637"><span class="lineNum">     637 </span>            :   }</a>
 <a name="638"><span class="lineNum">     638 </span>            : </a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineCov">        924 :   state_.set_state(next);</span></a>
-<a name="640"><span class="lineNum">     640 </span><span class="lineCov">        924 :   notify_state();</span></a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineCov">        904 :   state_.set_state(next);</span></a>
+<a name="640"><span class="lineNum">     640 </span><span class="lineCov">        905 :   notify_state();</span></a>
 <a name="641"><span class="lineNum">     641 </span>            : }</a>
 <a name="642"><span class="lineNum">     642 </span>            : </a>
-<a name="643"><span class="lineNum">     643 </span><span class="lineCov">        371 : void TcpClient::perform_stop_cleanup() {</span></a>
+<a name="643"><span class="lineNum">     643 </span><span class="lineCov">        367 : void TcpClient::perform_stop_cleanup() {</span></a>
 <a name="644"><span class="lineNum">     644 </span>            :   try {</a>
-<a name="645"><span class="lineNum">     645 </span><span class="lineCov">        371 :     retry_timer_.cancel();</span></a>
-<a name="646"><span class="lineNum">     646 </span><span class="lineCov">        371 :     connect_timer_.cancel();</span></a>
-<a name="647"><span class="lineNum">     647 </span><span class="lineCov">        371 :     resolver_.cancel();</span></a>
-<a name="648"><span class="lineNum">     648 </span><span class="lineCov">        371 :     boost::system::error_code ec_cancel;</span></a>
-<a name="649"><span class="lineNum">     649 </span><span class="lineCov">        371 :     socket_.cancel(ec_cancel);</span></a>
-<a name="650"><span class="lineNum">     650 </span><span class="lineCov">        371 :     close_socket();</span></a>
-<a name="651"><span class="lineNum">     651 </span><span class="lineCov">        371 :     tx_.clear();</span></a>
-<a name="652"><span class="lineNum">     652 </span><span class="lineCov">        371 :     queue_bytes_ = 0;</span></a>
-<a name="653"><span class="lineNum">     653 </span><span class="lineCov">        371 :     writing_ = false;</span></a>
-<a name="654"><span class="lineNum">     654 </span><span class="lineCov">        371 :     connected_.store(false);</span></a>
-<a name="655"><span class="lineNum">     655 </span><span class="lineCov">        371 :     const bool had_backpressure = backpressure_active_;</span></a>
-<a name="656"><span class="lineNum">     656 </span><span class="lineCov">        371 :     backpressure_active_ = false;</span></a>
-<a name="657"><span class="lineNum">     657 </span><span class="lineCov">        371 :     if (had_backpressure &amp;&amp; on_bp_) {</span></a>
+<a name="645"><span class="lineNum">     645 </span><span class="lineCov">        367 :     retry_timer_.cancel();</span></a>
+<a name="646"><span class="lineNum">     646 </span><span class="lineCov">        367 :     connect_timer_.cancel();</span></a>
+<a name="647"><span class="lineNum">     647 </span><span class="lineCov">        367 :     resolver_.cancel();</span></a>
+<a name="648"><span class="lineNum">     648 </span><span class="lineCov">        367 :     boost::system::error_code ec_cancel;</span></a>
+<a name="649"><span class="lineNum">     649 </span><span class="lineCov">        367 :     socket_.cancel(ec_cancel);</span></a>
+<a name="650"><span class="lineNum">     650 </span><span class="lineCov">        367 :     close_socket();</span></a>
+<a name="651"><span class="lineNum">     651 </span><span class="lineCov">        367 :     tx_.clear();</span></a>
+<a name="652"><span class="lineNum">     652 </span><span class="lineCov">        367 :     queue_bytes_ = 0;</span></a>
+<a name="653"><span class="lineNum">     653 </span><span class="lineCov">        367 :     writing_ = false;</span></a>
+<a name="654"><span class="lineNum">     654 </span><span class="lineCov">        367 :     connected_.store(false);</span></a>
+<a name="655"><span class="lineNum">     655 </span><span class="lineCov">        367 :     const bool had_backpressure = backpressure_active_;</span></a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineCov">        367 :     backpressure_active_ = false;</span></a>
+<a name="657"><span class="lineNum">     657 </span><span class="lineCov">        367 :     if (had_backpressure &amp;&amp; on_bp_) {</span></a>
 <a name="658"><span class="lineNum">     658 </span>            :       try {</a>
 <a name="659"><span class="lineNum">     659 </span><span class="lineCov">          3 :         on_bp_(queue_bytes_);</span></a>
 <a name="660"><span class="lineNum">     660 </span><span class="lineNoCov">          0 :       } catch (const std::exception&amp; e) {</span></a>
@@ -734,38 +734,38 @@
 <a name="664"><span class="lineNum">     664 </span><span class="lineNoCov">          0 :         UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;on_backpressure&quot;, &quot;Unknown exception in backpressure callback&quot;);</span></a>
 <a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :       }</span></a>
 <a name="666"><span class="lineNum">     666 </span>            :     }</a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">        371 :     if (owns_ioc_ &amp;&amp; work_guard_) {</span></a>
-<a name="668"><span class="lineNum">     668 </span><span class="lineCov">        366 :       work_guard_-&gt;reset();</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">        367 :     if (owns_ioc_ &amp;&amp; work_guard_) {</span></a>
+<a name="668"><span class="lineNum">     668 </span><span class="lineCov">        362 :       work_guard_-&gt;reset();</span></a>
 <a name="669"><span class="lineNum">     669 </span>            :     }</a>
-<a name="670"><span class="lineNum">     670 </span><span class="lineCov">        371 :     transition_to(LinkState::Closed);</span></a>
+<a name="670"><span class="lineNum">     670 </span><span class="lineCov">        367 :     transition_to(LinkState::Closed);</span></a>
 <a name="671"><span class="lineNum">     671 </span><span class="lineNoCov">          0 :   } catch (const std::exception&amp; e) {</span></a>
 <a name="672"><span class="lineNum">     672 </span><span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;stop_cleanup&quot;, &quot;Cleanup error: &quot; + std::string(e.what()));</span></a>
-<a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 :     error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;stop_cleanup&quot;,</span></a>
-<a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 :                                          &quot;Exception in stop cleanup: &quot; + std::string(e.what()));</span></a>
+<a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 :     diagnostics::error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;stop_cleanup&quot;,</span></a>
+<a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 :                                                       &quot;Exception in stop cleanup: &quot; + std::string(e.what()));</span></a>
 <a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 :   } catch (...) {</span></a>
 <a name="676"><span class="lineNum">     676 </span><span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;stop_cleanup&quot;, &quot;Unknown error in stop cleanup&quot;);</span></a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineNoCov">          0 :     error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;stop_cleanup&quot;, &quot;Unknown error in stop cleanup&quot;);</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineNoCov">          0 :     diagnostics::error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;stop_cleanup&quot;, &quot;Unknown error in stop cleanup&quot;);</span></a>
 <a name="678"><span class="lineNum">     678 </span><span class="lineNoCov">          0 :   }</span></a>
-<a name="679"><span class="lineNum">     679 </span><span class="lineCov">        371 : }</span></a>
+<a name="679"><span class="lineNum">     679 </span><span class="lineCov">        367 : }</span></a>
 <a name="680"><span class="lineNum">     680 </span>            : </a>
-<a name="681"><span class="lineNum">     681 </span><span class="lineCov">        257 : void TcpClient::reset_start_state() {</span></a>
-<a name="682"><span class="lineNum">     682 </span><span class="lineCov">        257 :   stop_requested_.store(false);</span></a>
-<a name="683"><span class="lineNum">     683 </span><span class="lineCov">        257 :   stopping_.store(false);</span></a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineCov">        257 :   terminal_state_notified_.store(false);</span></a>
-<a name="685"><span class="lineNum">     685 </span><span class="lineCov">        257 :   retry_attempts_ = 0;</span></a>
-<a name="686"><span class="lineNum">     686 </span><span class="lineCov">        257 :   connected_.store(false);</span></a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">        257 :   writing_ = false;</span></a>
-<a name="688"><span class="lineNum">     688 </span><span class="lineCov">        257 :   queue_bytes_ = 0;</span></a>
-<a name="689"><span class="lineNum">     689 </span><span class="lineCov">        257 :   backpressure_active_ = false;</span></a>
-<a name="690"><span class="lineNum">     690 </span><span class="lineCov">        257 :   state_.set_state(LinkState::Idle);</span></a>
-<a name="691"><span class="lineNum">     691 </span><span class="lineCov">        257 : }</span></a>
+<a name="681"><span class="lineNum">     681 </span><span class="lineCov">        251 : void TcpClient::reset_start_state() {</span></a>
+<a name="682"><span class="lineNum">     682 </span><span class="lineCov">        251 :   stop_requested_.store(false);</span></a>
+<a name="683"><span class="lineNum">     683 </span><span class="lineCov">        251 :   stopping_.store(false);</span></a>
+<a name="684"><span class="lineNum">     684 </span><span class="lineCov">        251 :   terminal_state_notified_.store(false);</span></a>
+<a name="685"><span class="lineNum">     685 </span><span class="lineCov">        251 :   retry_attempts_ = 0;</span></a>
+<a name="686"><span class="lineNum">     686 </span><span class="lineCov">        251 :   connected_.store(false);</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">        251 :   writing_ = false;</span></a>
+<a name="688"><span class="lineNum">     688 </span><span class="lineCov">        251 :   queue_bytes_ = 0;</span></a>
+<a name="689"><span class="lineNum">     689 </span><span class="lineCov">        251 :   backpressure_active_ = false;</span></a>
+<a name="690"><span class="lineNum">     690 </span><span class="lineCov">        251 :   state_.set_state(LinkState::Idle);</span></a>
+<a name="691"><span class="lineNum">     691 </span><span class="lineCov">        251 : }</span></a>
 <a name="692"><span class="lineNum">     692 </span>            : </a>
-<a name="693"><span class="lineNum">     693 </span><span class="lineCov">        553 : void TcpClient::join_ioc_thread(bool allow_detach) {</span></a>
-<a name="694"><span class="lineNum">     694 </span><span class="lineCov">        553 :   if (!owns_ioc_ || !ioc_thread_.joinable()) {</span></a>
-<a name="695"><span class="lineNum">     695 </span><span class="lineCov">        186 :     return;</span></a>
+<a name="693"><span class="lineNum">     693 </span><span class="lineCov">        545 : void TcpClient::join_ioc_thread(bool allow_detach) {</span></a>
+<a name="694"><span class="lineNum">     694 </span><span class="lineCov">        545 :   if (!owns_ioc_ || !ioc_thread_.joinable()) {</span></a>
+<a name="695"><span class="lineNum">     695 </span><span class="lineCov">        182 :     return;</span></a>
 <a name="696"><span class="lineNum">     696 </span>            :   }</a>
 <a name="697"><span class="lineNum">     697 </span>            : </a>
-<a name="698"><span class="lineNum">     698 </span><span class="lineCov">        367 :   if (std::this_thread::get_id() == ioc_thread_.get_id()) {</span></a>
+<a name="698"><span class="lineNum">     698 </span><span class="lineCov">        363 :   if (std::this_thread::get_id() == ioc_thread_.get_id()) {</span></a>
 <a name="699"><span class="lineNum">     699 </span><span class="lineCov">          1 :     if (allow_detach) {</span></a>
 <a name="700"><span class="lineNum">     700 </span><span class="lineNoCov">          0 :       ioc_thread_.detach();</span></a>
 <a name="701"><span class="lineNum">     701 </span>            :     }</a>
@@ -773,7 +773,7 @@
 <a name="703"><span class="lineNum">     703 </span>            :   }</a>
 <a name="704"><span class="lineNum">     704 </span>            : </a>
 <a name="705"><span class="lineNum">     705 </span>            :   try {</a>
-<a name="706"><span class="lineNum">     706 </span><span class="lineCov">        366 :     ioc_thread_.join();</span></a>
+<a name="706"><span class="lineNum">     706 </span><span class="lineCov">        362 :     ioc_thread_.join();</span></a>
 <a name="707"><span class="lineNum">     707 </span><span class="lineNoCov">          0 :   } catch (const std::exception&amp; e) {</span></a>
 <a name="708"><span class="lineNum">     708 </span><span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;join&quot;, &quot;Join failed: &quot; + std::string(e.what()));</span></a>
 <a name="709"><span class="lineNum">     709 </span><span class="lineNoCov">          0 :   } catch (...) {</span></a>
@@ -781,10 +781,10 @@
 <a name="711"><span class="lineNum">     711 </span><span class="lineNoCov">          0 :   }</span></a>
 <a name="712"><span class="lineNum">     712 </span>            : }</a>
 <a name="713"><span class="lineNum">     713 </span>            : </a>
-<a name="714"><span class="lineNum">     714 </span><span class="lineCov">        924 : void TcpClient::notify_state() {</span></a>
-<a name="715"><span class="lineNum">     715 </span><span class="lineCov">        924 :   if (!on_state_) return;</span></a>
+<a name="714"><span class="lineNum">     714 </span><span class="lineCov">        905 : void TcpClient::notify_state() {</span></a>
+<a name="715"><span class="lineNum">     715 </span><span class="lineCov">        905 :   if (!on_state_) return;</span></a>
 <a name="716"><span class="lineNum">     716 </span>            :   try {</a>
-<a name="717"><span class="lineNum">     717 </span><span class="lineCov">        788 :     on_state_(state_.get_state());</span></a>
+<a name="717"><span class="lineNum">     717 </span><span class="lineCov">        768 :     on_state_(state_.get_state());</span></a>
 <a name="718"><span class="lineNum">     718 </span><span class="lineNoCov">          0 :   } catch (const std::exception&amp; e) {</span></a>
 <a name="719"><span class="lineNum">     719 </span><span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;on_state&quot;, &quot;Exception in state callback: &quot; + std::string(e.what()));</span></a>
 <a name="720"><span class="lineNum">     720 </span><span class="lineNoCov">          0 :   } catch (...) {</span></a>
@@ -792,32 +792,33 @@
 <a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :   }</span></a>
 <a name="723"><span class="lineNum">     723 </span>            : }</a>
 <a name="724"><span class="lineNum">     724 </span>            : </a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineCov">        257 : void TcpClient::reset_io_objects() {</span></a>
+<a name="725"><span class="lineNum">     725 </span><span class="lineCov">        251 : void TcpClient::reset_io_objects() {</span></a>
 <a name="726"><span class="lineNum">     726 </span>            :   // All callers must already be on the strand</a>
 <a name="727"><span class="lineNum">     727 </span>            :   try {</a>
-<a name="728"><span class="lineNum">     728 </span><span class="lineCov">        257 :     boost::system::error_code ec_cancel;</span></a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineCov">        257 :     socket_.cancel(ec_cancel);</span></a>
-<a name="730"><span class="lineNum">     730 </span><span class="lineCov">        257 :     close_socket();</span></a>
-<a name="731"><span class="lineNum">     731 </span><span class="lineCov">        257 :     socket_ = tcp::socket(strand_);</span></a>
-<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        257 :     resolver_.cancel();</span></a>
-<a name="733"><span class="lineNum">     733 </span><span class="lineCov">        257 :     resolver_ = tcp::resolver(strand_);</span></a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineCov">        257 :     retry_timer_ = net::steady_timer(strand_);</span></a>
-<a name="735"><span class="lineNum">     735 </span><span class="lineCov">        257 :     connect_timer_ = net::steady_timer(strand_);</span></a>
-<a name="736"><span class="lineNum">     736 </span><span class="lineCov">        257 :     tx_.clear();</span></a>
-<a name="737"><span class="lineNum">     737 </span><span class="lineCov">        257 :     queue_bytes_ = 0;</span></a>
-<a name="738"><span class="lineNum">     738 </span><span class="lineCov">        257 :     writing_ = false;</span></a>
-<a name="739"><span class="lineNum">     739 </span><span class="lineCov">        257 :     backpressure_active_ = false;</span></a>
+<a name="728"><span class="lineNum">     728 </span><span class="lineCov">        251 :     boost::system::error_code ec_cancel;</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineCov">        251 :     socket_.cancel(ec_cancel);</span></a>
+<a name="730"><span class="lineNum">     730 </span><span class="lineCov">        251 :     close_socket();</span></a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineCov">        251 :     socket_ = tcp::socket(strand_);</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        251 :     resolver_.cancel();</span></a>
+<a name="733"><span class="lineNum">     733 </span><span class="lineCov">        251 :     resolver_ = tcp::resolver(strand_);</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineCov">        251 :     retry_timer_ = net::steady_timer(strand_);</span></a>
+<a name="735"><span class="lineNum">     735 </span><span class="lineCov">        251 :     connect_timer_ = net::steady_timer(strand_);</span></a>
+<a name="736"><span class="lineNum">     736 </span><span class="lineCov">        251 :     tx_.clear();</span></a>
+<a name="737"><span class="lineNum">     737 </span><span class="lineCov">        251 :     queue_bytes_ = 0;</span></a>
+<a name="738"><span class="lineNum">     738 </span><span class="lineCov">        251 :     writing_ = false;</span></a>
+<a name="739"><span class="lineNum">     739 </span><span class="lineCov">        251 :     backpressure_active_ = false;</span></a>
 <a name="740"><span class="lineNum">     740 </span><span class="lineNoCov">          0 :   } catch (const std::exception&amp; e) {</span></a>
 <a name="741"><span class="lineNum">     741 </span><span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;reset_io_objects&quot;, &quot;Reset error: &quot; + std::string(e.what()));</span></a>
-<a name="742"><span class="lineNum">     742 </span><span class="lineNoCov">          0 :     error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;reset_io_objects&quot;,</span></a>
-<a name="743"><span class="lineNum">     743 </span><span class="lineNoCov">          0 :                                          &quot;Exception while resetting io objects: &quot; + std::string(e.what()));</span></a>
+<a name="742"><span class="lineNum">     742 </span><span class="lineNoCov">          0 :     diagnostics::error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;reset_io_objects&quot;,</span></a>
+<a name="743"><span class="lineNum">     743 </span><span class="lineNoCov">          0 :                                                       &quot;Exception while resetting io objects: &quot; + std::string(e.what()));</span></a>
 <a name="744"><span class="lineNum">     744 </span><span class="lineNoCov">          0 :   } catch (...) {</span></a>
 <a name="745"><span class="lineNum">     745 </span><span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;tcp_client&quot;, &quot;reset_io_objects&quot;, &quot;Unknown reset error&quot;);</span></a>
-<a name="746"><span class="lineNum">     746 </span><span class="lineNoCov">          0 :     error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;reset_io_objects&quot;, &quot;Unknown error while resetting io objects&quot;);</span></a>
-<a name="747"><span class="lineNum">     747 </span><span class="lineNoCov">          0 :   }</span></a>
-<a name="748"><span class="lineNum">     748 </span><span class="lineCov">        257 : }</span></a>
-<a name="749"><span class="lineNum">     749 </span>            : }  // namespace transport</a>
-<a name="750"><span class="lineNum">     750 </span>            : }  // namespace unilink</a>
+<a name="746"><span class="lineNum">     746 </span><span class="lineNoCov">          0 :     diagnostics::error_reporting::report_system_error(&quot;tcp_client&quot;, &quot;reset_io_objects&quot;,</span></a>
+<a name="747"><span class="lineNum">     747 </span>            :                                                       &quot;Unknown error while resetting io objects&quot;);</a>
+<a name="748"><span class="lineNum">     748 </span><span class="lineNoCov">          0 :   }</span></a>
+<a name="749"><span class="lineNum">     749 </span><span class="lineCov">        251 : }</span></a>
+<a name="750"><span class="lineNum">     750 </span>            : }  // namespace transport</a>
+<a name="751"><span class="lineNum">     751 </span>            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-30 13:09:33</td>
+            <td class="headerValue">2026-01-04 18:53:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">34</td>
@@ -90,8 +90,8 @@
 <a name="20"><span class="lineNum">      20 </span>            : #include &lt;stdexcept&gt;</a>
 <a name="21"><span class="lineNum">      21 </span>            : #include &lt;type_traits&gt;</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span>            : #include &quot;unilink/common/common.hpp&quot;</a>
-<a name="24"><span class="lineNum">      24 </span>            : #include &quot;unilink/common/error_handler.hpp&quot;</a>
+<a name="23"><span class="lineNum">      23 </span>            : #include &quot;unilink/base/common.hpp&quot;</a>
+<a name="24"><span class="lineNum">      24 </span>            : #include &quot;unilink/diagnostics/error_handler.hpp&quot;</a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span>            : namespace unilink {</a>
 <a name="27"><span class="lineNum">      27 </span>            : namespace transport {</a>
@@ -240,7 +240,7 @@
 <a name="170"><span class="lineNum">     170 </span>            :   }</a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
 <a name="172"><span class="lineNum">     172 </span><span class="lineCov">          3 :   if (cfg_.enable_memory_pool &amp;&amp; size &lt;= 65536) {</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          3 :     common::PooledBuffer pooled(size);</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          3 :     memory::PooledBuffer pooled(size);</span></a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineCov">          3 :     if (pooled.valid()) {</span></a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineCov">          3 :       common::safe_memory::safe_memcpy(pooled.data(), data, size);</span></a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineCov">          3 :       net::post(strand_, [self = weak_from_this(), buf = std::move(pooled), size]() mutable {</span></a>
@@ -475,9 +475,9 @@
 <a name="405"><span class="lineNum">     405 </span><span class="lineCov">          3 :     self-&gt;do_write();</span></a>
 <a name="406"><span class="lineNum">     406 </span><span class="lineCov">          3 :   };</span></a>
 <a name="407"><span class="lineNum">     407 </span>            : </a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineCov">          3 :   if (std::holds_alternative&lt;common::PooledBuffer&gt;(current)) {</span></a>
-<a name="409"><span class="lineNum">     409 </span><span class="lineCov">          3 :     auto pooled = std::get&lt;common::PooledBuffer&gt;(std::move(current));</span></a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineCov">          3 :     auto shared_buf = std::make_shared&lt;common::PooledBuffer&gt;(std::move(pooled));</span></a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineCov">          3 :   if (std::holds_alternative&lt;memory::PooledBuffer&gt;(current)) {</span></a>
+<a name="409"><span class="lineNum">     409 </span><span class="lineCov">          3 :     auto pooled = std::get&lt;memory::PooledBuffer&gt;(std::move(current));</span></a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineCov">          3 :     auto shared_buf = std::make_shared&lt;memory::PooledBuffer&gt;(std::move(pooled));</span></a>
 <a name="411"><span class="lineNum">     411 </span><span class="lineCov">          6 :     socket_.async_send_to(net::buffer(shared_buf-&gt;data(), shared_buf-&gt;size()), *remote_endpoint_,</span></a>
 <a name="412"><span class="lineNum">     412 </span><span class="lineCov">          3 :                           [shared_buf, on_write = std::move(on_write)](</span></a>
 <a name="413"><span class="lineNum">     413 </span><span class="lineCov">          3 :                               const boost::system::error_code&amp; ec, std::size_t bytes) mutable { on_write(ec, bytes); });</span></a>
@@ -540,8 +540,8 @@
 <a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 :   if (tx_.empty()) return 0;</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
 <a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :   const auto&amp; front = tx_.front();</span></a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :   if (std::holds_alternative&lt;common::PooledBuffer&gt;(front)) {</span></a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :     return std::get&lt;common::PooledBuffer&gt;(front).size();</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :   if (std::holds_alternative&lt;memory::PooledBuffer&gt;(front)) {</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :     return std::get&lt;memory::PooledBuffer&gt;(front).size();</span></a>
 <a name="475"><span class="lineNum">     475 </span>            :   }</a>
 <a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :   if (std::holds_alternative&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(front)) {</span></a>
 <a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :     return std::get&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(front)-&gt;size();</span></a>
@@ -550,7 +550,7 @@
 <a name="480"><span class="lineNum">     480 </span>            : }</a>
 <a name="481"><span class="lineNum">     481 </span>            : </a>
 <a name="482"><span class="lineNum">     482 </span><span class="lineCov">          3 : bool UdpChannel::enqueue_buffer(</span></a>
-<a name="483"><span class="lineNum">     483 </span>            :     std::variant&lt;common::PooledBuffer, std::vector&lt;uint8_t&gt;, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;&amp;&amp; buffer,</a>
+<a name="483"><span class="lineNum">     483 </span>            :     std::variant&lt;memory::PooledBuffer, std::vector&lt;uint8_t&gt;, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;&amp;&amp; buffer,</a>
 <a name="484"><span class="lineNum">     484 </span>            :     size_t size) {</a>
 <a name="485"><span class="lineNum">     485 </span><span class="lineCov">          6 :   if (stopping_.load() || stop_requested_.load() || state_.is_state(LinkState::Closed) ||</span></a>
 <a name="486"><span class="lineNum">     486 </span><span class="lineCov">          6 :       state_.is_state(LinkState::Error)) {</span></a>

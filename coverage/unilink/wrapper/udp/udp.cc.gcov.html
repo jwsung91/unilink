@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-30 13:09:33</td>
+            <td class="headerValue">2026-01-04 18:53:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -90,7 +90,7 @@
 <a name="20"><span class="lineNum">      20 </span>            : #include &lt;chrono&gt;</a>
 <a name="21"><span class="lineNum">      21 </span>            : #include &lt;stdexcept&gt;</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span>            : #include &quot;unilink/common/common.hpp&quot;</a>
+<a name="23"><span class="lineNum">      23 </span>            : #include &quot;unilink/base/common.hpp&quot;</a>
 <a name="24"><span class="lineNum">      24 </span>            : #include &quot;unilink/factory/channel_factory.hpp&quot;</a>
 <a name="25"><span class="lineNum">      25 </span>            : #include &quot;unilink/transport/udp/udp.hpp&quot;</a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
@@ -208,18 +208,18 @@
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :   });</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          4 :   channel_-&gt;on_state([this](common::LinkState state) { notify_state_change(state); });</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          4 :   channel_-&gt;on_state([this](base::LinkState state) { notify_state_change(state); });</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : }</a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">          3 : void Udp::notify_state_change(common::LinkState state) {</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">          3 : void Udp::notify_state_change(base::LinkState state) {</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineCov">          3 :   switch (state) {</span></a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">          1 :     case common::LinkState::Connected:</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">          1 :     case base::LinkState::Connected:</span></a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineCov">          1 :       if (connect_handler_) connect_handler_();</span></a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineCov">          1 :       break;</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          1 :     case common::LinkState::Closed:</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          1 :     case base::LinkState::Closed:</span></a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineCov">          1 :       if (disconnect_handler_) disconnect_handler_();</span></a>
 <a name="151"><span class="lineNum">     151 </span><span class="lineCov">          1 :       break;</span></a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     case common::LinkState::Error:</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     case base::LinkState::Error:</span></a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :       if (error_handler_) error_handler_(&quot;UDP channel error occurred&quot;);</span></a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :       break;</span></a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineCov">          1 :     default:</span></a>

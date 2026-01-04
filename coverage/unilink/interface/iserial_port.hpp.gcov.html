@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-30 13:09:33</td>
+            <td class="headerValue">2026-01-04 18:53:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -90,8 +90,8 @@
 <a name="20"><span class="lineNum">      20 </span>            : #include &lt;functional&gt;</a>
 <a name="21"><span class="lineNum">      21 </span>            : #include &lt;string&gt;</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span>            : #include &quot;unilink/common/platform.hpp&quot;</a>
-<a name="24"><span class="lineNum">      24 </span>            : #include &quot;unilink/common/visibility.hpp&quot;</a>
+<a name="23"><span class="lineNum">      23 </span>            : #include &quot;unilink/base/platform.hpp&quot;</a>
+<a name="24"><span class="lineNum">      24 </span>            : #include &quot;unilink/base/visibility.hpp&quot;</a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span>            : namespace unilink {</a>
 <a name="27"><span class="lineNum">      27 </span>            : namespace interface {</a>
@@ -104,7 +104,7 @@
 <a name="34"><span class="lineNum">      34 </span>            :  */</a>
 <a name="35"><span class="lineNum">      35 </span>            : class UNILINK_API SerialPortInterface {</a>
 <a name="36"><span class="lineNum">      36 </span>            :  public:</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         20 :   virtual ~SerialPortInterface() = default;</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         15 :   virtual ~SerialPortInterface() = default;</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span>            :   virtual void open(const std::string&amp; device, boost::system::error_code&amp; ec) = 0;</a>
 <a name="40"><span class="lineNum">      40 </span>            :   virtual bool is_open() const = 0;</a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2025-12-30 13:09:33</td>
+            <td class="headerValue">2026-01-04 18:53:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -89,8 +89,8 @@
 <a name="19"><span class="lineNum">      19 </span>            : #include &lt;memory&gt;</a>
 <a name="20"><span class="lineNum">      20 </span>            : #include &lt;variant&gt;</a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
-<a name="22"><span class="lineNum">      22 </span>            : #include &quot;unilink/common/platform.hpp&quot;</a>
-<a name="23"><span class="lineNum">      23 </span>            : #include &quot;unilink/common/visibility.hpp&quot;</a>
+<a name="22"><span class="lineNum">      22 </span>            : #include &quot;unilink/base/platform.hpp&quot;</a>
+<a name="23"><span class="lineNum">      23 </span>            : #include &quot;unilink/base/visibility.hpp&quot;</a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span>            : // Internal includes for Builder API (not exposed to users)</a>
 <a name="26"><span class="lineNum">      26 </span>            : #include &quot;unilink/wrapper/ichannel.hpp&quot;</a>
@@ -115,8 +115,8 @@
 <a name="45"><span class="lineNum">      45 </span>            : #endif</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span>            : // Error handling and logging system includes</a>
-<a name="48"><span class="lineNum">      48 </span>            : #include &quot;unilink/common/error_handler.hpp&quot;</a>
-<a name="49"><span class="lineNum">      49 </span>            : #include &quot;unilink/common/logger.hpp&quot;</a>
+<a name="48"><span class="lineNum">      48 </span>            : #include &quot;unilink/diagnostics/error_handler.hpp&quot;</a>
+<a name="49"><span class="lineNum">      49 </span>            : #include &quot;unilink/diagnostics/logger.hpp&quot;</a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span>            : namespace unilink {</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
@@ -154,7 +154,7 @@
 <a name="84"><span class="lineNum">      84 </span>            :  * @param port The port number for the server</a>
 <a name="85"><span class="lineNum">      85 </span>            :  * @return TcpServerBuilder A configured builder for TcpServer</a>
 <a name="86"><span class="lineNum">      86 </span>            :  */</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        197 : inline builder::TcpServerBuilder tcp_server(uint16_t port) { return builder::TcpServerBuilder(port); }</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">        187 : inline builder::TcpServerBuilder tcp_server(uint16_t port) { return builder::TcpServerBuilder(port); }</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span>            : /**</a>
 <a name="90"><span class="lineNum">      90 </span>            :  * @brief Create a TCP client builder</a>
@@ -162,8 +162,8 @@
 <a name="92"><span class="lineNum">      92 </span>            :  * @param port The port number to connect to</a>
 <a name="93"><span class="lineNum">      93 </span>            :  * @return TcpClientBuilder A configured builder for TcpClient</a>
 <a name="94"><span class="lineNum">      94 </span>            :  */</a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">        275 : inline builder::TcpClientBuilder tcp_client(const std::string&amp; host, uint16_t port) {</span></a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">        275 :   return builder::TcpClientBuilder(host, port);</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">        272 : inline builder::TcpClientBuilder tcp_client(const std::string&amp; host, uint16_t port) {</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">        272 :   return builder::TcpClientBuilder(host, port);</span></a>
 <a name="97"><span class="lineNum">      97 </span>            : }</a>
 <a name="98"><span class="lineNum">      98 </span>            : </a>
 <a name="99"><span class="lineNum">      99 </span>            : /**</a>
@@ -172,8 +172,8 @@
 <a name="102"><span class="lineNum">     102 </span>            :  * @param baud_rate The baud rate for serial communication</a>
 <a name="103"><span class="lineNum">     103 </span>            :  * @return SerialBuilder A configured builder for Serial</a>
 <a name="104"><span class="lineNum">     104 </span>            :  */</a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">         73 : inline builder::SerialBuilder serial(const std::string&amp; device, uint32_t baud_rate) {</span></a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineCov">         73 :   return builder::SerialBuilder(device, baud_rate);</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">         60 : inline builder::SerialBuilder serial(const std::string&amp; device, uint32_t baud_rate) {</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">         60 :   return builder::SerialBuilder(device, baud_rate);</span></a>
 <a name="107"><span class="lineNum">     107 </span>            : }</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
 <a name="109"><span class="lineNum">     109 </span>            : /**</a>
@@ -198,23 +198,10 @@
 <a name="128"><span class="lineNum">     128 </span>            : #endif</a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span>            : // === Common Utilities ===</a>
-<a name="131"><span class="lineNum">     131 </span>            : // Utility functions and error handling</a>
-<a name="132"><span class="lineNum">     132 </span>            : namespace common {</a>
-<a name="133"><span class="lineNum">     133 </span>            : // Forward declarations for utility functions</a>
-<a name="134"><span class="lineNum">     134 </span>            : std::string log_message(const std::string&amp; message);</a>
-<a name="135"><span class="lineNum">     135 </span>            : const char* to_cstr(const std::string&amp; str);</a>
-<a name="136"><span class="lineNum">     136 </span>            : std::string ts_now();</a>
-<a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span>            : // Forward declarations for error handling and logging</a>
-<a name="139"><span class="lineNum">     139 </span>            : enum class ErrorCategory;</a>
-<a name="140"><span class="lineNum">     140 </span>            : class ErrorHandler;</a>
-<a name="141"><span class="lineNum">     141 </span>            : struct ErrorInfo;</a>
-<a name="142"><span class="lineNum">     142 </span>            : enum class ErrorLevel;</a>
-<a name="143"><span class="lineNum">     143 </span>            : class Logger;</a>
-<a name="144"><span class="lineNum">     144 </span>            : enum class LogLevel;</a>
-<a name="145"><span class="lineNum">     145 </span>            : }  // namespace common</a>
-<a name="146"><span class="lineNum">     146 </span>            : </a>
-<a name="147"><span class="lineNum">     147 </span>            : }  // namespace unilink</a>
+<a name="131"><span class="lineNum">     131 </span>            : // Utility functions and error handling are provided via unilink/base/common.hpp</a>
+<a name="132"><span class="lineNum">     132 </span>            : // included by other modules.</a>
+<a name="133"><span class="lineNum">     133 </span>            : </a>
+<a name="134"><span class="lineNum">     134 </span>            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
