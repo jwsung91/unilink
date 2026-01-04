@@ -166,7 +166,7 @@ process_data(safe_span<const uint8_t>(buffer));
 Read-write lock based state management:
 
 ```cpp
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 
 using namespace unilink::common;
 
@@ -199,7 +199,7 @@ bool updated = state.compare_and_set(
 Lock-free atomic state operations:
 
 ```cpp
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 
 AtomicState<int> counter(0);
 

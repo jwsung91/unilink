@@ -722,7 +722,7 @@ auto bytes = buffer.to_vector();
 Thread-safe state management with read-write locks.
 
 ```cpp
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 
 using namespace unilink::common;
 

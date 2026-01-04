@@ -21,7 +21,7 @@
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/common/input_validator.hpp"
-#include "unilink/common/io_context_manager.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {

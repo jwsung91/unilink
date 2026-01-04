@@ -26,11 +26,11 @@
 
 #include "test_utils.hpp"
 #include "unilink/diagnostics/error_handler.hpp"
-#include "unilink/common/io_context_manager.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/memory/memory_pool.hpp"
 #include "unilink/memory/safe_data_buffer.hpp"
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/unilink.hpp"
 
 // Test namespace aliases for cleaner code

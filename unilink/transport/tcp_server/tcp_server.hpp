@@ -32,7 +32,7 @@
 #include "unilink/diagnostics/error_handler.hpp"
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/base/platform.hpp"
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/interface/channel.hpp"
