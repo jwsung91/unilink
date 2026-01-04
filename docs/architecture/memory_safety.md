@@ -50,7 +50,9 @@ flowchart TD
 Immutable, type-safe buffer wrapper around existing data:
 
 ```cpp
-#include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/memory/memory_tracker.hpp"
+#include "unilink/memory/safe_span.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 
 using namespace unilink::common;
 

@@ -684,7 +684,8 @@ auto client = unilink::tcp_client(host, port)
 Efficient memory allocation for high-performance scenarios.
 
 ```cpp
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 
 using namespace unilink::common;
 
