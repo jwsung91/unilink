@@ -507,7 +507,7 @@ Centralized error handling system with callbacks and statistics.
 ### Setup Error Handler
 
 ```cpp
-#include "unilink/common/error_handler.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 
 using namespace unilink::common;
 
@@ -616,7 +616,7 @@ logger.set_async_logging(true, config);
 ### Log Rotation
 
 ```cpp
-#include "unilink/common/log_rotation.hpp"
+#include "unilink/diagnostics/log_rotation.hpp"
 
 LogRotation rotation;
 rotation.set_max_file_size(10 * 1024 * 1024);  // 10 MB
@@ -703,7 +703,7 @@ pool.deallocate(buffer);
 Type-safe data buffer with bounds checking.
 
 ```cpp
-#include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 
 using namespace unilink::common;
 

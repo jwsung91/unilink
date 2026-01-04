@@ -83,7 +83,7 @@ auto unchecked = from_vec.data()[0]; // Pointer access
 Utility functions prevent undefined behavior:
 
 ```cpp
-#include "unilink/common/safe_convert.hpp"
+#include "unilink/base/common.hpp"
 
 using namespace unilink::common::safe_convert;
 
@@ -130,7 +130,7 @@ buffer.validate();
 Lightweight, non-owning view of contiguous data:
 
 ```cpp
-#include "unilink/common/safe_span.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 using namespace unilink::common;
 
@@ -293,7 +293,7 @@ cmake -S . -B build \
 Monitor all memory allocations and deallocations:
 
 ```cpp
-#include "unilink/common/memory_tracker.hpp"
+#include "unilink/memory/memory_tracker.hpp"
 
 using namespace unilink::common;
 
