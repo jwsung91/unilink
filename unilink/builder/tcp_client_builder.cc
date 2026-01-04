@@ -20,7 +20,7 @@
 
 #include "unilink/builder/auto_initializer.hpp"
 #include "unilink/base/constants.hpp"
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/common/input_validator.hpp"
 #include "unilink/common/io_context_manager.hpp"
 

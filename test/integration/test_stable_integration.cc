@@ -26,7 +26,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/base/common.hpp"
 #include "unilink/unilink.hpp"
 

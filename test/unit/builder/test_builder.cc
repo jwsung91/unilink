@@ -23,7 +23,7 @@
 #include <thread>
 #include <vector>
 
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/common/io_context_manager.hpp"
 #include "unilink/unilink.hpp"
 

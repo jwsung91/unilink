@@ -24,8 +24,8 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 using namespace unilink;
 using namespace unilink::test;

@@ -26,7 +26,7 @@
 #include <thread>
 
 #include "test_utils.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 using namespace unilink::common;
 using namespace std::chrono_literals;

@@ -28,8 +28,8 @@
 #include <vector>
 
 #include "unilink/base/constants.hpp"
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/memory/memory_pool.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"

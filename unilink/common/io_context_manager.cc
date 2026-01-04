@@ -16,7 +16,7 @@
 
 #include "unilink/common/io_context_manager.hpp"
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
 namespace common {

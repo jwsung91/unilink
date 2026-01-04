@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/common/input_validator.hpp"
 
 using namespace unilink::common;

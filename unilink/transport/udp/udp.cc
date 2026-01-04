@@ -21,7 +21,7 @@
 #include <type_traits>
 
 #include "unilink/base/common.hpp"
-#include "unilink/common/error_handler.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 
 namespace unilink {
 namespace transport {

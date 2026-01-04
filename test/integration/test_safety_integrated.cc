@@ -26,7 +26,7 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/memory/safe_data_buffer.hpp"
 #include "unilink/unilink.hpp"
 

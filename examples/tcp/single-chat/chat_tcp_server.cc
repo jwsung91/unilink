@@ -23,7 +23,7 @@
 #include <thread>
 #include <vector>
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/unilink.hpp"
 
 /**

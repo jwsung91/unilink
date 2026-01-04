@@ -24,7 +24,7 @@
 #include <vector>
 
 #include "unilink/base/constants.hpp"
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/base/visibility.hpp"
 
 namespace unilink {

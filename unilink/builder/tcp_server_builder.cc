@@ -19,10 +19,10 @@
 #include <boost/asio/io_context.hpp>
 
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/common/input_validator.hpp"
 #include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
 namespace builder {

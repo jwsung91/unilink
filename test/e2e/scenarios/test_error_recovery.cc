@@ -28,7 +28,7 @@
 #include "test_utils.hpp"
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/base/constants.hpp"
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"

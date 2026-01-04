@@ -45,8 +45,8 @@
 #endif
 
 // Error handling and logging system includes
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "log_rotation.hpp"
+#include "unilink/diagnostics/log_rotation.hpp"
 
 #include <algorithm>
 #include <iomanip>

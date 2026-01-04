@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "error_handler.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 
-#include "logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
 namespace common {

@@ -29,8 +29,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/common/thread_safe_state.hpp"
 #include "unilink/base/visibility.hpp"

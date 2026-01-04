@@ -20,7 +20,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
 namespace common {

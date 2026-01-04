@@ -22,7 +22,7 @@
 
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/base/constants.hpp"
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/common/input_validator.hpp"
 #include "unilink/unilink.hpp"
 

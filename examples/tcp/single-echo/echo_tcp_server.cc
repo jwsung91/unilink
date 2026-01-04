@@ -22,7 +22,7 @@
 #include <string>
 #include <thread>
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/unilink.hpp"
 
 // Example namespace usage - using namespace for simplicity in examples

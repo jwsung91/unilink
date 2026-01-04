@@ -571,7 +571,8 @@ Flexible logging with multiple outputs and async processing.
 ### Basic Usage
 
 ```cpp
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 
 using namespace unilink::common;
 
