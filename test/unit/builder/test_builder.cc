@@ -410,7 +410,7 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
  * @brief IoContextManager 기본 기능 테스트
  */
 TEST_F(BuilderTest, IoContextManagerBasicFunctionality) {
-  auto& manager = concurrency::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // 이전 테스트의 영향을 받을 수 있으므로 현재 상태 확인
   bool was_running = manager.is_running();
@@ -437,7 +437,7 @@ TEST_F(BuilderTest, IoContextManagerBasicFunctionality) {
  * @brief 독립적인 컨텍스트 생성 테스트
  */
 TEST_F(BuilderTest, IndependentContextCreation) {
-  auto& manager = concurrency::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // 독립적인 컨텍스트 생성
   auto independent_context = manager.create_independent_context();

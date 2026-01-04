@@ -75,7 +75,7 @@ TEST_F(BaseTest, ConfigManager) {
  * @brief IoContextManager basic functionality tests
  */
 TEST_F(BaseTest, IoContextManagerBasicFunctionality) {
-  auto& manager = concurrency::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // Test basic operations
   EXPECT_FALSE(manager.is_running());
@@ -94,7 +94,7 @@ TEST_F(BaseTest, IoContextManagerBasicFunctionality) {
  * @brief Independent context creation tests
  */
 TEST_F(BaseTest, IndependentContextCreation) {
-  auto& manager = concurrency::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // Create independent context
   auto independent_context = manager.create_independent_context();

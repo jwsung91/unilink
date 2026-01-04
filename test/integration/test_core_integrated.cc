@@ -210,7 +210,7 @@ TEST_F(CoreIntegratedTest, SafeDataBufferBoundsChecking) {
  */
 TEST_F(CoreIntegratedTest, IoContextManagerBasicFunctionality) {
   // Test IoContextManager singleton access
-  auto& manager = concurrency::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
   EXPECT_NE(&manager, nullptr);
 
   // Test context creation (simplified)
@@ -223,7 +223,7 @@ TEST_F(CoreIntegratedTest, IoContextManagerBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
   // Test IoContextManager singleton access
-  auto& manager = concurrency::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
   EXPECT_NE(&manager, nullptr);
 
   // Test independent context creation (simplified)
@@ -240,7 +240,7 @@ TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateBasicFunctionality) {
   // Test common::ThreadSafeState creation (simplified)
-  concurrency::ThreadSafeState<std::string> state("initial");
+  unilink::concurrency::ThreadSafeState<std::string> state("initial");
   EXPECT_NE(&state, nullptr);
 
   // Note: Actual API may differ - this is a placeholder test
@@ -252,7 +252,7 @@ TEST_F(CoreIntegratedTest, ThreadSafeStateBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateConcurrentAccess) {
   // Test common::ThreadSafeState creation (simplified)
-  concurrency::ThreadSafeState<int> state(0);
+  unilink::concurrency::ThreadSafeState<int> state(0);
   EXPECT_NE(&state, nullptr);
 
   // Note: Actual API may differ - this is a placeholder test
