@@ -30,9 +30,9 @@
 
 #include "test_utils.hpp"
 #include "unilink/builder/unified_builder.hpp"
-#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/config/config_factory.hpp"
 #include "unilink/config/config_manager.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 
 using namespace unilink;
 using namespace unilink::test;

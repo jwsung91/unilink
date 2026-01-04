@@ -23,8 +23,8 @@
 #include <thread>
 #include <vector>
 
-#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;

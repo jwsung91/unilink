@@ -28,8 +28,8 @@
 #include "test_utils.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/memory/safe_data_buffer.hpp"
-#include "unilink/util/input_validator.hpp"
 #include "unilink/unilink.hpp"
+#include "unilink/util/input_validator.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
@@ -43,13 +43,9 @@ using namespace std::chrono_literals;
  */
 class SafetyIntegratedTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    test_port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
 
-  void TearDown() override {
-    TestUtils::waitFor(1000);
-  }
+  void TearDown() override { TestUtils::waitFor(1000); }
 
   uint16_t test_port_;
 };
@@ -58,9 +54,7 @@ TEST_F(SafetyIntegratedTest, ApiSafetyNullPointers) {
   auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
   EXPECT_NE(client, nullptr);
 
-  auto server = unilink::tcp_server(test_port_)
-                    .unlimited_clients()
-                    .build();
+  auto server = unilink::tcp_server(test_port_).unlimited_clients().build();
   EXPECT_NE(server, nullptr);
 }
 

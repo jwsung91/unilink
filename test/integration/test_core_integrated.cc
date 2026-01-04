@@ -25,12 +25,12 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/diagnostics/error_handler.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/memory/memory_pool.hpp"
 #include "unilink/memory/safe_data_buffer.hpp"
-#include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/unilink.hpp"
 
 // Test namespace aliases for cleaner code
@@ -240,7 +240,7 @@ TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateBasicFunctionality) {
   // Test common::ThreadSafeState creation (simplified)
-concurrency::ThreadSafeState<std::string> state("initial");
+  concurrency::ThreadSafeState<std::string> state("initial");
   EXPECT_NE(&state, nullptr);
 
   // Note: Actual API may differ - this is a placeholder test
@@ -252,7 +252,7 @@ concurrency::ThreadSafeState<std::string> state("initial");
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateConcurrentAccess) {
   // Test common::ThreadSafeState creation (simplified)
-concurrency::ThreadSafeState<int> state(0);
+  concurrency::ThreadSafeState<int> state(0);
   EXPECT_NE(&state, nullptr);
 
   // Note: Actual API may differ - this is a placeholder test
