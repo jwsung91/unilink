@@ -22,7 +22,7 @@
 #include <string>
 
 #include "unilink/builder/ibuilder.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 #include "unilink/config/udp_config.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
 

@@ -19,8 +19,8 @@
 #include <memory>
 #include <variant>
 
-#include "unilink/common/platform.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/platform.hpp"
+#include "unilink/base/visibility.hpp"
 
 // Internal includes for Builder API (not exposed to users)
 #include "unilink/wrapper/ichannel.hpp"

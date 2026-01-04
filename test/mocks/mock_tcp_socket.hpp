@@ -22,7 +22,7 @@
 #include <functional>
 #include <memory>
 
-#include "unilink/common/platform.hpp"
+#include "unilink/base/platform.hpp"
 
 namespace unilink {
 namespace test {

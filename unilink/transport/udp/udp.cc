@@ -20,7 +20,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "unilink/common/common.hpp"
+#include "unilink/base/common.hpp"
 #include "unilink/common/error_handler.hpp"
 
 namespace unilink {

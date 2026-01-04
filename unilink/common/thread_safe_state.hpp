@@ -25,7 +25,7 @@
 #include <shared_mutex>
 #include <vector>
 
-#include "unilink/common/common.hpp"
+#include "unilink/base/common.hpp"
 
 namespace unilink {
 namespace common {

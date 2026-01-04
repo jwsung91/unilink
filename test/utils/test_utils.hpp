@@ -18,7 +18,7 @@
 
 #include <gtest/gtest.h>
 
-#include "unilink/common/platform.hpp"
+#include "unilink/base/platform.hpp"
 
 #ifdef _WIN32
 #include <winsock2.h>

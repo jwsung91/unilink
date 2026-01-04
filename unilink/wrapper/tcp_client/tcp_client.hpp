@@ -23,7 +23,7 @@
 #include <string>
 #include <thread>
 
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 

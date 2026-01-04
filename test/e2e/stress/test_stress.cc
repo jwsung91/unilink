@@ -31,7 +31,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/builder/unified_builder.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/base/common.hpp"
 
 // Test namespace aliases for cleaner code
 using namespace unilink;

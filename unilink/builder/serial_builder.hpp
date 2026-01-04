@@ -20,7 +20,7 @@
 #include <string>
 
 #include "unilink/builder/ibuilder.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 #include "unilink/wrapper/serial/serial.hpp"
 
 namespace unilink {

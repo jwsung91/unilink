@@ -19,7 +19,7 @@
 #include <mutex>
 
 #include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace builder {

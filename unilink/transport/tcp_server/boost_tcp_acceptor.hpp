@@ -19,8 +19,8 @@
 #include <boost/asio.hpp>
 #include <memory>
 
-#include "unilink/common/platform.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/platform.hpp"
+#include "unilink/base/visibility.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
 
 namespace unilink {

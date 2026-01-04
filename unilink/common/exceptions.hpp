@@ -19,7 +19,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace common {

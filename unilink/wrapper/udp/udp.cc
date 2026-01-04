@@ -20,7 +20,7 @@
 #include <chrono>
 #include <stdexcept>
 
-#include "unilink/common/common.hpp"
+#include "unilink/base/common.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/transport/udp/udp.hpp"
 

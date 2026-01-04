@@ -26,7 +26,7 @@
 #include <vector>
 
 #include "unilink/common/safe_span.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace common {

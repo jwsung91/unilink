@@ -31,7 +31,7 @@
 #include <vector>
 
 #include "log_rotation.hpp"
-#include "visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 #ifdef DEBUG
 #undef DEBUG

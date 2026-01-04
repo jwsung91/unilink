@@ -24,7 +24,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace common {

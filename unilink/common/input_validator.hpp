@@ -23,9 +23,9 @@
 #include <string>
 #include <vector>
 
-#include "unilink/common/constants.hpp"
+#include "unilink/base/constants.hpp"
 #include "unilink/common/exceptions.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace common {

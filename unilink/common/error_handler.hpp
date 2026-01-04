@@ -24,7 +24,7 @@
 #include <vector>
 
 #include "error_types.hpp"
-#include "visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace common {

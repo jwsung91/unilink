@@ -27,12 +27,12 @@
 #include <variant>
 #include <vector>
 
-#include "unilink/common/constants.hpp"
+#include "unilink/base/constants.hpp"
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/logger.hpp"
 #include "unilink/common/memory_pool.hpp"
 #include "unilink/common/thread_safe_state.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 #include "unilink/config/udp_config.hpp"
 #include "unilink/interface/channel.hpp"
 

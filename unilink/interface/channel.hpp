@@ -19,8 +19,8 @@
 #include <memory>
 #include <vector>
 
-#include "unilink/common/common.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/common.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace interface {
