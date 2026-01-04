@@ -151,8 +151,7 @@ TEST_F(ImprovedArchitectureTest, ResourceSharingAnalysis) {
   std::cout << "Analyzing resource sharing..." << std::endl;
 
   // Resource management test through IoContextManager
-  auto& context = concurrency::IoContextManager::instance().get_context();
-  EXPECT_TRUE(&context != nullptr);
+  concurrency::IoContextManager::instance().get_context();
 
   std::cout << "Resource sharing analysis completed" << std::endl;
 }
