@@ -1,6 +1,9 @@
 var annotated_dup =
 [
     [ "unilink", "namespaceunilink.html", [
+      [ "base", "namespaceunilink_1_1base.html", [
+        [ "PlatformInfo", "classunilink_1_1base_1_1PlatformInfo.html", "classunilink_1_1base_1_1PlatformInfo" ]
+      ] ],
       [ "builder", "namespaceunilink_1_1builder.html", [
         [ "AutoInitializer", "classunilink_1_1builder_1_1AutoInitializer.html", "classunilink_1_1builder_1_1AutoInitializer" ],
         [ "BuilderInterface", "classunilink_1_1builder_1_1BuilderInterface.html", "classunilink_1_1builder_1_1BuilderInterface" ],
@@ -10,38 +13,12 @@ var annotated_dup =
         [ "UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", "classunilink_1_1builder_1_1UdpBuilder" ],
         [ "UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", "classunilink_1_1builder_1_1UnifiedBuilder" ]
       ] ],
-      [ "common", "namespaceunilink_1_1common.html", [
-        [ "ErrorHandler", "classunilink_1_1common_1_1ErrorHandler.html", "classunilink_1_1common_1_1ErrorHandler" ],
-        [ "ErrorInfo", "structunilink_1_1common_1_1ErrorInfo.html", "structunilink_1_1common_1_1ErrorInfo" ],
-        [ "ErrorStats", "structunilink_1_1common_1_1ErrorStats.html", "structunilink_1_1common_1_1ErrorStats" ],
-        [ "UnilinkException", "classunilink_1_1common_1_1UnilinkException.html", "classunilink_1_1common_1_1UnilinkException" ],
-        [ "BuilderException", "classunilink_1_1common_1_1BuilderException.html", "classunilink_1_1common_1_1BuilderException" ],
-        [ "ValidationException", "classunilink_1_1common_1_1ValidationException.html", "classunilink_1_1common_1_1ValidationException" ],
-        [ "MemoryException", "classunilink_1_1common_1_1MemoryException.html", "classunilink_1_1common_1_1MemoryException" ],
-        [ "ConnectionException", "classunilink_1_1common_1_1ConnectionException.html", "classunilink_1_1common_1_1ConnectionException" ],
-        [ "ConfigurationException", "classunilink_1_1common_1_1ConfigurationException.html", "classunilink_1_1common_1_1ConfigurationException" ],
-        [ "InputValidator", "classunilink_1_1common_1_1InputValidator.html", "classunilink_1_1common_1_1InputValidator" ],
-        [ "IoContextManager", "classunilink_1_1common_1_1IoContextManager.html", "classunilink_1_1common_1_1IoContextManager" ],
-        [ "LogRotationConfig", "structunilink_1_1common_1_1LogRotationConfig.html", "structunilink_1_1common_1_1LogRotationConfig" ],
-        [ "LogRotation", "classunilink_1_1common_1_1LogRotation.html", "classunilink_1_1common_1_1LogRotation" ],
-        [ "LogEntry", "structunilink_1_1common_1_1LogEntry.html", "structunilink_1_1common_1_1LogEntry" ],
-        [ "AsyncLogConfig", "structunilink_1_1common_1_1AsyncLogConfig.html", "structunilink_1_1common_1_1AsyncLogConfig" ],
-        [ "AsyncLogStats", "structunilink_1_1common_1_1AsyncLogStats.html", "structunilink_1_1common_1_1AsyncLogStats" ],
-        [ "Logger", "classunilink_1_1common_1_1Logger.html", "classunilink_1_1common_1_1Logger" ],
-        [ "MemoryPool", "classunilink_1_1common_1_1MemoryPool.html", "classunilink_1_1common_1_1MemoryPool" ],
-        [ "GlobalMemoryPool", "classunilink_1_1common_1_1GlobalMemoryPool.html", "classunilink_1_1common_1_1GlobalMemoryPool" ],
-        [ "PooledBuffer", "classunilink_1_1common_1_1PooledBuffer.html", "classunilink_1_1common_1_1PooledBuffer" ],
-        [ "MemoryTracker", "classunilink_1_1common_1_1MemoryTracker.html", "classunilink_1_1common_1_1MemoryTracker" ],
-        [ "ScopedMemoryTracker", "classunilink_1_1common_1_1ScopedMemoryTracker.html", "classunilink_1_1common_1_1ScopedMemoryTracker" ],
-        [ "MemoryValidator", "classunilink_1_1common_1_1MemoryValidator.html", "classunilink_1_1common_1_1MemoryValidator" ],
-        [ "MemoryPatternGenerator", "classunilink_1_1common_1_1MemoryPatternGenerator.html", "classunilink_1_1common_1_1MemoryPatternGenerator" ],
-        [ "PlatformInfo", "classunilink_1_1common_1_1PlatformInfo.html", "classunilink_1_1common_1_1PlatformInfo" ],
-        [ "SafeDataBuffer", "classunilink_1_1common_1_1SafeDataBuffer.html", "classunilink_1_1common_1_1SafeDataBuffer" ],
-        [ "SafeSpan", "classunilink_1_1common_1_1SafeSpan.html", "classunilink_1_1common_1_1SafeSpan" ],
-        [ "ThreadSafeState", "classunilink_1_1common_1_1ThreadSafeState.html", "classunilink_1_1common_1_1ThreadSafeState" ],
-        [ "AtomicState", "classunilink_1_1common_1_1AtomicState.html", "classunilink_1_1common_1_1AtomicState" ],
-        [ "ThreadSafeCounter", "classunilink_1_1common_1_1ThreadSafeCounter.html", "classunilink_1_1common_1_1ThreadSafeCounter" ],
-        [ "ThreadSafeFlag", "classunilink_1_1common_1_1ThreadSafeFlag.html", "classunilink_1_1common_1_1ThreadSafeFlag" ]
+      [ "concurrency", "namespaceunilink_1_1concurrency.html", [
+        [ "IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", "classunilink_1_1concurrency_1_1IoContextManager" ],
+        [ "ThreadSafeState", "classunilink_1_1concurrency_1_1ThreadSafeState.html", "classunilink_1_1concurrency_1_1ThreadSafeState" ],
+        [ "AtomicState", "classunilink_1_1concurrency_1_1AtomicState.html", "classunilink_1_1concurrency_1_1AtomicState" ],
+        [ "ThreadSafeCounter", "classunilink_1_1concurrency_1_1ThreadSafeCounter.html", "classunilink_1_1concurrency_1_1ThreadSafeCounter" ],
+        [ "ThreadSafeFlag", "classunilink_1_1concurrency_1_1ThreadSafeFlag.html", "classunilink_1_1concurrency_1_1ThreadSafeFlag" ]
       ] ],
       [ "config", "namespaceunilink_1_1config.html", [
         [ "ConfigFactory", "classunilink_1_1config_1_1ConfigFactory.html", "classunilink_1_1config_1_1ConfigFactory" ],
@@ -55,6 +32,23 @@ var annotated_dup =
         [ "TcpServerConfig", "structunilink_1_1config_1_1TcpServerConfig.html", "structunilink_1_1config_1_1TcpServerConfig" ],
         [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", "structunilink_1_1config_1_1UdpConfig" ]
       ] ],
+      [ "diagnostics", "namespaceunilink_1_1diagnostics.html", [
+        [ "ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", "classunilink_1_1diagnostics_1_1ErrorHandler" ],
+        [ "ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html", "structunilink_1_1diagnostics_1_1ErrorInfo" ],
+        [ "ErrorStats", "structunilink_1_1diagnostics_1_1ErrorStats.html", "structunilink_1_1diagnostics_1_1ErrorStats" ],
+        [ "UnilinkException", "classunilink_1_1diagnostics_1_1UnilinkException.html", "classunilink_1_1diagnostics_1_1UnilinkException" ],
+        [ "BuilderException", "classunilink_1_1diagnostics_1_1BuilderException.html", "classunilink_1_1diagnostics_1_1BuilderException" ],
+        [ "ValidationException", "classunilink_1_1diagnostics_1_1ValidationException.html", "classunilink_1_1diagnostics_1_1ValidationException" ],
+        [ "MemoryException", "classunilink_1_1diagnostics_1_1MemoryException.html", "classunilink_1_1diagnostics_1_1MemoryException" ],
+        [ "ConnectionException", "classunilink_1_1diagnostics_1_1ConnectionException.html", "classunilink_1_1diagnostics_1_1ConnectionException" ],
+        [ "ConfigurationException", "classunilink_1_1diagnostics_1_1ConfigurationException.html", "classunilink_1_1diagnostics_1_1ConfigurationException" ],
+        [ "LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],
+        [ "LogRotation", "classunilink_1_1diagnostics_1_1LogRotation.html", "classunilink_1_1diagnostics_1_1LogRotation" ],
+        [ "LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", "structunilink_1_1diagnostics_1_1LogEntry" ],
+        [ "AsyncLogConfig", "structunilink_1_1diagnostics_1_1AsyncLogConfig.html", "structunilink_1_1diagnostics_1_1AsyncLogConfig" ],
+        [ "AsyncLogStats", "structunilink_1_1diagnostics_1_1AsyncLogStats.html", "structunilink_1_1diagnostics_1_1AsyncLogStats" ],
+        [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ]
+      ] ],
       [ "factory", "namespaceunilink_1_1factory.html", [
         [ "ChannelFactory", "classunilink_1_1factory_1_1ChannelFactory.html", "classunilink_1_1factory_1_1ChannelFactory" ]
       ] ],
@@ -66,6 +60,17 @@ var annotated_dup =
         [ "TcpSocketInterface", "classunilink_1_1interface_1_1TcpSocketInterface.html", "classunilink_1_1interface_1_1TcpSocketInterface" ],
         [ "TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", "classunilink_1_1interface_1_1TimerInterface" ]
       ] ],
+      [ "memory", "namespaceunilink_1_1memory.html", [
+        [ "MemoryPool", "classunilink_1_1memory_1_1MemoryPool.html", "classunilink_1_1memory_1_1MemoryPool" ],
+        [ "GlobalMemoryPool", "classunilink_1_1memory_1_1GlobalMemoryPool.html", "classunilink_1_1memory_1_1GlobalMemoryPool" ],
+        [ "PooledBuffer", "classunilink_1_1memory_1_1PooledBuffer.html", "classunilink_1_1memory_1_1PooledBuffer" ],
+        [ "MemoryTracker", "classunilink_1_1memory_1_1MemoryTracker.html", "classunilink_1_1memory_1_1MemoryTracker" ],
+        [ "ScopedMemoryTracker", "classunilink_1_1memory_1_1ScopedMemoryTracker.html", "classunilink_1_1memory_1_1ScopedMemoryTracker" ],
+        [ "MemoryValidator", "classunilink_1_1memory_1_1MemoryValidator.html", "classunilink_1_1memory_1_1MemoryValidator" ],
+        [ "MemoryPatternGenerator", "classunilink_1_1memory_1_1MemoryPatternGenerator.html", "classunilink_1_1memory_1_1MemoryPatternGenerator" ],
+        [ "SafeDataBuffer", "classunilink_1_1memory_1_1SafeDataBuffer.html", "classunilink_1_1memory_1_1SafeDataBuffer" ],
+        [ "SafeSpan", "classunilink_1_1memory_1_1SafeSpan.html", "classunilink_1_1memory_1_1SafeSpan" ]
+      ] ],
       [ "transport", "namespaceunilink_1_1transport.html", [
         [ "BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", "classunilink_1_1transport_1_1BoostSerialPort" ],
         [ "Serial", "classunilink_1_1transport_1_1Serial.html", "classunilink_1_1transport_1_1Serial" ],
@@ -75,6 +80,9 @@ var annotated_dup =
         [ "TcpServer", "classunilink_1_1transport_1_1TcpServer.html", "classunilink_1_1transport_1_1TcpServer" ],
         [ "TcpServerSession", "classunilink_1_1transport_1_1TcpServerSession.html", "classunilink_1_1transport_1_1TcpServerSession" ],
         [ "UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", "classunilink_1_1transport_1_1UdpChannel" ]
+      ] ],
+      [ "util", "namespaceunilink_1_1util.html", [
+        [ "InputValidator", "classunilink_1_1util_1_1InputValidator.html", "classunilink_1_1util_1_1InputValidator" ]
       ] ],
       [ "wrapper", "namespaceunilink_1_1wrapper.html", [
         [ "ChannelInterface", "classunilink_1_1wrapper_1_1ChannelInterface.html", "classunilink_1_1wrapper_1_1ChannelInterface" ],

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['buffersize_1432',['BufferSize',['../classunilink_1_1common_1_1MemoryPool.html#a70c0eaf5fae110b7050bc03bc1d52e94',1,'unilink::common::MemoryPool']]]
+  ['buffersize_1451',['BufferSize',['../classunilink_1_1memory_1_1MemoryPool.html#a12ac59625a62a3c6729d3360d852410d',1,'unilink::memory::MemoryPool']]]
 ];

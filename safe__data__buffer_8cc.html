@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>unilink: unilink/common/safe_data_buffer.cc File Reference</title>
+<title>unilink: unilink/memory/safe_data_buffer.cc File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -90,7 +90,7 @@ $(document).ready(function(){initNavTree('safe__data__buffer_8cc.html',''); init
 <div class="title">safe_data_buffer.cc File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="safe__data__buffer_8hpp_source.html">unilink/common/safe_data_buffer.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="safe__data__buffer_8hpp_source.html">unilink/memory/safe_data_buffer.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cstring&gt;</code><br />
 </div>
@@ -100,32 +100,32 @@ $(document).ready(function(){initNavTree('safe__data__buffer_8cc.html',''); init
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html">unilink</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespaceunilink_1_1common"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html">unilink::common</a></td></tr>
+<tr class="memitem:namespaceunilink_1_1memory"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1memory.html">unilink::memory</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespaceunilink_1_1common_1_1safe__buffer__factory"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__buffer__factory.html">unilink::common::safe_buffer_factory</a></td></tr>
-<tr class="memdesc:namespaceunilink_1_1common_1_1safe__buffer__factory"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory functions for creating <a class="el" href="classunilink_1_1common_1_1SafeDataBuffer.html" title="Safe data buffer for type-safe data transfer.">SafeDataBuffer</a> instances. <br /></td></tr>
+<tr class="memitem:namespaceunilink_1_1memory_1_1safe__buffer__factory"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1memory_1_1safe__buffer__factory.html">unilink::memory::safe_buffer_factory</a></td></tr>
+<tr class="memdesc:namespaceunilink_1_1memory_1_1safe__buffer__factory"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory functions for creating <a class="el" href="classunilink_1_1memory_1_1SafeDataBuffer.html" title="Safe data buffer for type-safe data transfer.">SafeDataBuffer</a> instances. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a45f9789810a33ac9d4cf871cfc6b6901"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__buffer__factory.html#a45f9789810a33ac9d4cf871cfc6b6901">unilink::common::safe_buffer_factory::from_string</a> (const std::string &amp;str)</td></tr>
-<tr class="separator:a45f9789810a33ac9d4cf871cfc6b6901"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8dac8a12f78b2d821f097dbc370cc4a"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__buffer__factory.html#ae8dac8a12f78b2d821f097dbc370cc4a">unilink::common::safe_buffer_factory::from_c_string</a> (const char *str)</td></tr>
-<tr class="separator:ae8dac8a12f78b2d821f097dbc370cc4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55b4899b1b04a44d34300e9c4f981a4b"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__buffer__factory.html#a55b4899b1b04a44d34300e9c4f981a4b">unilink::common::safe_buffer_factory::from_vector</a> (const std::vector&lt; uint8_t &gt; &amp;vec)</td></tr>
-<tr class="separator:a55b4899b1b04a44d34300e9c4f981a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e11118d243ceb595fbc458321ed59f4"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__buffer__factory.html#a0e11118d243ceb595fbc458321ed59f4">unilink::common::safe_buffer_factory::from_raw_data</a> (const uint8_t *data, size_t size)</td></tr>
-<tr class="separator:a0e11118d243ceb595fbc458321ed59f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71d68cdb4a27c7c1b17e0de0a66df971"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__buffer__factory.html#a71d68cdb4a27c7c1b17e0de0a66df971">unilink::common::safe_buffer_factory::from_span</a> (ConstByteSpan span)</td></tr>
-<tr class="separator:a71d68cdb4a27c7c1b17e0de0a66df971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2d7304198383247e983f6b2f5b62f3e"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad2d7304198383247e983f6b2f5b62f3e">unilink::memory::safe_buffer_factory::from_string</a> (const std::string &amp;str)</td></tr>
+<tr class="separator:ad2d7304198383247e983f6b2f5b62f3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad47b9c31322e249f60bb70e5d71c3f5f"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad47b9c31322e249f60bb70e5d71c3f5f">unilink::memory::safe_buffer_factory::from_c_string</a> (const char *str)</td></tr>
+<tr class="separator:ad47b9c31322e249f60bb70e5d71c3f5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a287eb0d65ad65944a76d964008609cc1"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a287eb0d65ad65944a76d964008609cc1">unilink::memory::safe_buffer_factory::from_vector</a> (const std::vector&lt; uint8_t &gt; &amp;vec)</td></tr>
+<tr class="separator:a287eb0d65ad65944a76d964008609cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af038015aafcb3ab44bd10eb3392752ac"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1memory_1_1safe__buffer__factory.html#af038015aafcb3ab44bd10eb3392752ac">unilink::memory::safe_buffer_factory::from_raw_data</a> (const uint8_t *data, size_t size)</td></tr>
+<tr class="separator:af038015aafcb3ab44bd10eb3392752ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ee9d29f198e862b650cdffa34f48abb"><td class="memItemLeft" align="right" valign="top">SafeDataBuffer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a5ee9d29f198e862b650cdffa34f48abb">unilink::memory::safe_buffer_factory::from_span</a> (ConstByteSpan span)</td></tr>
+<tr class="separator:a5ee9d29f198e862b650cdffa34f48abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_bd4c58992a2229dff77ccbb60623b7cd.html">common</a></li><li class="navelem"><a class="el" href="safe__data__buffer_8cc.html">safe_data_buffer.cc</a></li>
-    <li class="footer">Generated on Tue Dec 30 2025 13:07:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c49fb1fe3cdea7da91949965a419900.html">memory</a></li><li class="navelem"><a class="el" href="safe__data__buffer_8cc.html">safe_data_buffer.cc</a></li>
+    <li class="footer">Generated on Sun Jan 4 2026 18:49:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

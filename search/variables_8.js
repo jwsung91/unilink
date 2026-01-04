@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['large_5fbuffer_5fthreshold_1317',['LARGE_BUFFER_THRESHOLD',['../namespaceunilink_1_1common_1_1constants.html#a66fe2f997139af473593785c45a75e58',1,'unilink::common::constants']]],
-  ['last_5ferror_1318',['last_error',['../structunilink_1_1common_1_1ErrorStats.html#ac28cf6ac87b92c36bfdd084690803806',1,'unilink::common::ErrorStats']]],
-  ['level_1319',['level',['../structunilink_1_1common_1_1ErrorInfo.html#a8b8b7b0bcac92ecb02eedbf0cd5b3dca',1,'unilink::common::ErrorInfo::level()'],['../structunilink_1_1common_1_1LogEntry.html#a0854471d3e29c93e4c76f6d0ae82a058',1,'unilink::common::LogEntry::level()']]],
-  ['line_1320',['line',['../structunilink_1_1common_1_1MemoryTracker_1_1AllocationInfo.html#accbb3a5e81b4841896e72c6c8b9ef638',1,'unilink::common::MemoryTracker::AllocationInfo']]],
-  ['local_5faddress_1321',['local_address',['../structunilink_1_1config_1_1UdpConfig.html#af3692dcfb43f946cde3a71b75e58b1b9',1,'unilink::config::UdpConfig']]],
-  ['local_5fport_1322',['local_port',['../structunilink_1_1config_1_1UdpConfig.html#aed5e6c6e7407e9309bfdae634bcf5e71',1,'unilink::config::UdpConfig']]]
+  ['large_5fbuffer_5fthreshold_1327',['LARGE_BUFFER_THRESHOLD',['../namespaceunilink_1_1base_1_1constants.html#a31fd082f102ca75d526f168d29727168',1,'unilink::base::constants']]],
+  ['last_5ferror_1328',['last_error',['../structunilink_1_1diagnostics_1_1ErrorStats.html#ac4ac3c900ac7b8e6e2dc31c59d8c610b',1,'unilink::diagnostics::ErrorStats']]],
+  ['level_1329',['level',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#ac3644d1d58ce2a174d87f319ec7c6071',1,'unilink::diagnostics::ErrorInfo::level()'],['../structunilink_1_1diagnostics_1_1LogEntry.html#a14f7040624854a72de28224d3c7a6aea',1,'unilink::diagnostics::LogEntry::level()']]],
+  ['line_1330',['line',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a733e2ad1c87818881716646ebf885c60',1,'unilink::memory::MemoryTracker::AllocationInfo']]],
+  ['local_5faddress_1331',['local_address',['../structunilink_1_1config_1_1UdpConfig.html#af3692dcfb43f946cde3a71b75e58b1b9',1,'unilink::config::UdpConfig']]],
+  ['local_5fport_1332',['local_port',['../structunilink_1_1config_1_1UdpConfig.html#aed5e6c6e7407e9309bfdae634bcf5e71',1,'unilink::config::UdpConfig']]]
 ];

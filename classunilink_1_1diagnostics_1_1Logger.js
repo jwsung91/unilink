@@ -1,0 +1,28 @@
+var classunilink_1_1diagnostics_1_1Logger =
+[
+    [ "LogCallback", "classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122", null ],
+    [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html#a124de78d8aaa1591849e8c3588ef027f", null ],
+    [ "~Logger", "classunilink_1_1diagnostics_1_1Logger.html#aec9b6e07aab5229a4077b58410a94d78", null ],
+    [ "critical", "classunilink_1_1diagnostics_1_1Logger.html#ae57adea617a2a66ecfeb7f1fd824cea2", null ],
+    [ "debug", "classunilink_1_1diagnostics_1_1Logger.html#a4672b49f658dd5fdc3f7a470c2d4a6f3", null ],
+    [ "default_logger", "classunilink_1_1diagnostics_1_1Logger.html#a144b6e7c317d47e2e4fb9e0109eb7a9d", null ],
+    [ "error", "classunilink_1_1diagnostics_1_1Logger.html#ae0c8c7f32b953f7e9387b8704dc38adf", null ],
+    [ "flush", "classunilink_1_1diagnostics_1_1Logger.html#aaced1d16dd069a52e2696c020be26073", null ],
+    [ "get_async_stats", "classunilink_1_1diagnostics_1_1Logger.html#a2c0d709227b861bfc4e19466af8dcfe4", null ],
+    [ "get_level", "classunilink_1_1diagnostics_1_1Logger.html#a3e4e4095e335cb7b4b51241300a8d7d9", null ],
+    [ "info", "classunilink_1_1diagnostics_1_1Logger.html#a63d829cad8406042164538af3af28646", null ],
+    [ "instance", "classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9", null ],
+    [ "is_async_logging_enabled", "classunilink_1_1diagnostics_1_1Logger.html#a73ad8498f1b23670d4302b470316841f", null ],
+    [ "is_enabled", "classunilink_1_1diagnostics_1_1Logger.html#a7c30d5ca44ef1d1dc20e5a57ad3145e3", null ],
+    [ "log", "classunilink_1_1diagnostics_1_1Logger.html#a35f08113cfa58419da10046a3092058f", null ],
+    [ "set_async_logging", "classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4", null ],
+    [ "set_callback", "classunilink_1_1diagnostics_1_1Logger.html#af2ba283a30ba91bc5cb75959e2f61eb0", null ],
+    [ "set_console_output", "classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416", null ],
+    [ "set_enabled", "classunilink_1_1diagnostics_1_1Logger.html#af51329390a3c9fd12a6b53b28b6e508c", null ],
+    [ "set_file_output", "classunilink_1_1diagnostics_1_1Logger.html#ae27d90acc4c3646587ab4aa620bef18f", null ],
+    [ "set_file_output_with_rotation", "classunilink_1_1diagnostics_1_1Logger.html#ada26b971ae75266aff644f17ecb670e8", null ],
+    [ "set_format", "classunilink_1_1diagnostics_1_1Logger.html#a0943018bf72c79971e7233be8438714c", null ],
+    [ "set_level", "classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b", null ],
+    [ "set_outputs", "classunilink_1_1diagnostics_1_1Logger.html#aeed67807bc170affe354d4110c4439a2", null ],
+    [ "warning", "classunilink_1_1diagnostics_1_1Logger.html#a958b24e039c4307637afc75479f0625b", null ]
+];

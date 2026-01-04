@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__client_2tcp__client_8hpp
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="visibility_8hpp.html">unilink/common/visibility.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="visibility_8hpp.html">unilink/base/visibility.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="channel_8hpp.html">unilink/interface/channel.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ichannel_8hpp.html">unilink/wrapper/ichannel.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
@@ -148,7 +148,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__client_2tcp__client_8hpp
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keywordtype">void</span> setup_internal_handlers();</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordtype">void</span> notify_state_change(<a class="code" href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdc">common::LinkState</a> state);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordtype">void</span> notify_state_change(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> state);</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  std::string host_;</div>
@@ -185,8 +185,8 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__client_2tcp__client_8hpp
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_aef1171a7f6d2c91ccb90cb59958d9ec2"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">unilink::wrapper::ChannelInterface::ErrorHandler</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; ErrorHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00034">ichannel.hpp:34</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpClient_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpClient.html">unilink::wrapper::TcpClient</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__client_2tcp__client_8hpp_source.html#l00033">tcp_client.hpp:33</a></div></div>
 <div class="ttc" id="aichannel_8hpp_html"><div class="ttname"><a href="ichannel_8hpp.html">ichannel.hpp</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1common_html_aef0e027fb2d9f2de20481ac3f91eafdc"><div class="ttname"><a href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdc">unilink::common::LinkState</a></div><div class="ttdeci">LinkState</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00038">common.hpp:38</a></div></div>
-<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="auto__initializer_8cc_source.html#l00019">auto_initializer.cc:19</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75c"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">unilink::base::LinkState</a></div><div class="ttdeci">LinkState</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00038">common.hpp:38</a></div></div>
+<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00035">common.hpp:35</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="visibility_8hpp.html">visibility.hpp</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html_acdf44665d6deacb60ead833c4a5b0361"><div class="ttname"><a href="visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361">UNILINK_API</a></div><div class="ttdeci">#define UNILINK_API</div><div class="ttdef"><b>Definition:</b> <a href="visibility_8hpp_source.html#l00037">visibility.hpp:37</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -195,7 +195,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__client_2tcp__client_8hpp
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_d1704df37e1cea997490230b5e7b9125.html">tcp_client</a></li><li class="navelem"><a class="el" href="wrapper_2tcp__client_2tcp__client_8hpp.html">tcp_client.hpp</a></li>
-    <li class="footer">Generated on Tue Dec 30 2025 13:07:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Jan 4 2026 18:49:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

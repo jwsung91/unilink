@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['data_966',['data',['../classunilink_1_1common_1_1PooledBuffer.html#af37ee82c8ccc6f8822f25b04c01f248c',1,'unilink::common::PooledBuffer::data()'],['../classunilink_1_1common_1_1MemoryValidator.html#afaf5b8082bcb5c909a4347d9092e96f3',1,'unilink::common::MemoryValidator::data()'],['../classunilink_1_1common_1_1SafeDataBuffer.html#ac8195b42e8360835db6bd3f3fd4329ab',1,'unilink::common::SafeDataBuffer::data()'],['../classunilink_1_1common_1_1SafeSpan.html#a1d298fb693d51543c41ceda165ea35c1',1,'unilink::common::SafeSpan::data()']]],
-  ['debug_967',['debug',['../classunilink_1_1common_1_1Logger.html#a7ca96db2939998b54684e0b031fb7e49',1,'unilink::common::Logger']]],
-  ['decrement_968',['decrement',['../classunilink_1_1common_1_1ThreadSafeCounter.html#a44f33b6ca2ee81fb85e7910d007bb8a1',1,'unilink::common::ThreadSafeCounter']]],
-  ['default_5fhandler_969',['default_handler',['../classunilink_1_1common_1_1ErrorHandler.html#a191c872f9fce3635a57363c8e20ae8f7',1,'unilink::common::ErrorHandler']]],
-  ['default_5flogger_970',['default_logger',['../classunilink_1_1common_1_1Logger.html#a4f65c623ed086bc2e371a5f995658ea9',1,'unilink::common::Logger']]],
-  ['disable_5ftracking_971',['disable_tracking',['../classunilink_1_1common_1_1MemoryTracker.html#a03de9928f78c21623d8e387990d11e94',1,'unilink::common::MemoryTracker']]]
+  ['data_977',['data',['../classunilink_1_1memory_1_1PooledBuffer.html#a7aa1378391f5ef5a4ddbf6abff971f81',1,'unilink::memory::PooledBuffer::data()'],['../classunilink_1_1memory_1_1MemoryValidator.html#aad922cc62359f2b0082c124fcbab5124',1,'unilink::memory::MemoryValidator::data()'],['../classunilink_1_1memory_1_1SafeDataBuffer.html#aca37b8c40359695418d5c250606f8aa3',1,'unilink::memory::SafeDataBuffer::data()'],['../classunilink_1_1memory_1_1SafeSpan.html#a203851d86025e579f73f04da0828e2bd',1,'unilink::memory::SafeSpan::data()']]],
+  ['debug_978',['debug',['../classunilink_1_1diagnostics_1_1Logger.html#a4672b49f658dd5fdc3f7a470c2d4a6f3',1,'unilink::diagnostics::Logger']]],
+  ['decrement_979',['decrement',['../classunilink_1_1concurrency_1_1ThreadSafeCounter.html#aae639040c032849ee12e21a3e6c74259',1,'unilink::concurrency::ThreadSafeCounter']]],
+  ['default_5fhandler_980',['default_handler',['../classunilink_1_1diagnostics_1_1ErrorHandler.html#a8a49a9d271c27a737b31e980e731fa6c',1,'unilink::diagnostics::ErrorHandler']]],
+  ['default_5flogger_981',['default_logger',['../classunilink_1_1diagnostics_1_1Logger.html#a144b6e7c317d47e2e4fb9e0109eb7a9d',1,'unilink::diagnostics::Logger']]],
+  ['disable_5ftracking_982',['disable_tracking',['../classunilink_1_1memory_1_1MemoryTracker.html#ab421bb4652423f07572998918194b622',1,'unilink::memory::MemoryTracker']]]
 ];

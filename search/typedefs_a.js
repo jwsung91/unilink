@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['reference_1421',['reference',['../classunilink_1_1common_1_1SafeSpan.html#a730fbcd04bf16a7bd11a4286de2d6e31',1,'unilink::common::SafeSpan']]],
-  ['reverse_5fiterator_1422',['reverse_iterator',['../classunilink_1_1common_1_1SafeSpan.html#a5516f51a6c04655d2fb08854e1b59231',1,'unilink::common::SafeSpan']]]
+  ['reference_1438',['reference',['../classunilink_1_1memory_1_1SafeSpan.html#a78e14f40eb6de7c90f78aa31ff4c3930',1,'unilink::memory::SafeSpan']]],
+  ['reverse_5fiterator_1439',['reverse_iterator',['../classunilink_1_1memory_1_1SafeSpan.html#ab2a7660b73412356e8d5c87042276219',1,'unilink::memory::SafeSpan']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>unilink: unilink/common/platform.hpp File Reference</title>
+<title>unilink: unilink/base/platform.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,7 +86,8 @@ $(document).ready(function(){initNavTree('platform_8hpp.html',''); initResizable
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">platform.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -98,13 +99,15 @@ $(document).ready(function(){initNavTree('platform_8hpp.html',''); initResizable
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1common_1_1PlatformInfo.html">unilink::common::PlatformInfo</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Platform information utilities.  <a href="classunilink_1_1common_1_1PlatformInfo.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1base_1_1PlatformInfo.html">unilink::base::PlatformInfo</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Platform information utilities.  <a href="classunilink_1_1base_1_1PlatformInfo.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html">unilink</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceunilink_1_1base"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html">unilink::base</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceunilink_1_1common"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html">unilink::common</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,6 +125,11 @@ Macros</h2></td></tr>
 <tr class="separator:adacb9ea273da583f2e9794813d90efdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cc28df63e5129310463918a2e98290e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="platform_8hpp.html#a2cc28df63e5129310463918a2e98290e">UNILINK_ENABLE_EXPERIMENTAL_FEATURES</a>&#160;&#160;&#160;(<a class="el" href="platform_8hpp.html#aab65e8c2881837b14f4a4622d3cd07db">UNILINK_FEATURE_LEVEL</a> &gt;= 3)</td></tr>
 <tr class="separator:a2cc28df63e5129310463918a2e98290e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a4bfa8e4aac6180db678118209ad654fa"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#a4bfa8e4aac6180db678118209ad654fa">unilink::common::PlatformInfo</a> = base::PlatformInfo</td></tr>
+<tr class="separator:a4bfa8e4aac6180db678118209ad654fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="afe0d7cd7df252192d1141a62f7d9115a"></a>
@@ -211,8 +219,8 @@ Macros</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_bd4c58992a2229dff77ccbb60623b7cd.html">common</a></li><li class="navelem"><a class="el" href="platform_8hpp.html">platform.hpp</a></li>
-    <li class="footer">Generated on Tue Dec 30 2025 13:07:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_1b267b6cbe170e06255a29a9b0340896.html">base</a></li><li class="navelem"><a class="el" href="platform_8hpp.html">platform.hpp</a></li>
+    <li class="footer">Generated on Sun Jan 4 2026 18:49:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

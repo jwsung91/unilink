@@ -2,7 +2,7 @@ var classunilink_1_1interface_1_1Channel =
 [
     [ "OnBackpressure", "classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5", null ],
     [ "OnBytes", "classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55", null ],
-    [ "OnState", "classunilink_1_1interface_1_1Channel.html#a2206b77b8f1b7b980886e3cfa09c6642", null ],
+    [ "OnState", "classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d", null ],
     [ "~Channel", "classunilink_1_1interface_1_1Channel.html#a2c3cac3c076f640761003abffc15b3e0", null ],
     [ "async_write_copy", "classunilink_1_1interface_1_1Channel.html#a77068c3759acd3355ffeecf652661505", null ],
     [ "async_write_move", "classunilink_1_1interface_1_1Channel.html#a9e73efa207faca2b8f4a5d07b4c95268", null ],

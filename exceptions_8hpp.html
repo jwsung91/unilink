@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>unilink: unilink/common/exceptions.hpp File Reference</title>
+<title>unilink: unilink/diagnostics/exceptions.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,52 +85,70 @@ $(document).ready(function(){initNavTree('exceptions_8hpp.html',''); initResizab
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">exceptions.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
-<code>#include &quot;<a class="el" href="visibility_8hpp_source.html">visibility.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="visibility_8hpp_source.html">unilink/base/visibility.hpp</a>&quot;</code><br />
 </div>
 <p><a href="exceptions_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1common_1_1UnilinkException.html">unilink::common::UnilinkException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base exception class for all unilink exceptions.  <a href="classunilink_1_1common_1_1UnilinkException.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html">unilink::diagnostics::UnilinkException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base exception class for all unilink exceptions.  <a href="classunilink_1_1diagnostics_1_1UnilinkException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1common_1_1BuilderException.html">unilink::common::BuilderException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during builder operations.  <a href="classunilink_1_1common_1_1BuilderException.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1BuilderException.html">unilink::diagnostics::BuilderException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during builder operations.  <a href="classunilink_1_1diagnostics_1_1BuilderException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1common_1_1ValidationException.html">unilink::common::ValidationException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during input validation.  <a href="classunilink_1_1common_1_1ValidationException.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1ValidationException.html">unilink::diagnostics::ValidationException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during input validation.  <a href="classunilink_1_1diagnostics_1_1ValidationException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1common_1_1MemoryException.html">unilink::common::MemoryException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during memory operations.  <a href="classunilink_1_1common_1_1MemoryException.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1MemoryException.html">unilink::diagnostics::MemoryException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during memory operations.  <a href="classunilink_1_1diagnostics_1_1MemoryException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1common_1_1ConnectionException.html">unilink::common::ConnectionException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during connection operations.  <a href="classunilink_1_1common_1_1ConnectionException.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1ConnectionException.html">unilink::diagnostics::ConnectionException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during connection operations.  <a href="classunilink_1_1diagnostics_1_1ConnectionException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1common_1_1ConfigurationException.html">unilink::common::ConfigurationException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during configuration operations.  <a href="classunilink_1_1common_1_1ConfigurationException.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1ConfigurationException.html">unilink::diagnostics::ConfigurationException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown during configuration operations.  <a href="classunilink_1_1diagnostics_1_1ConfigurationException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html">unilink</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceunilink_1_1diagnostics"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1diagnostics.html">unilink::diagnostics</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceunilink_1_1common"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html">unilink::common</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:aebd52022731114dbccbf21ffbf5654d2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#aebd52022731114dbccbf21ffbf5654d2">unilink::common::UnilinkException</a> = diagnostics::UnilinkException</td></tr>
+<tr class="separator:aebd52022731114dbccbf21ffbf5654d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a076e76a2fb9d28f8e7fcdd3d28f46b49"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#a076e76a2fb9d28f8e7fcdd3d28f46b49">unilink::common::BuilderException</a> = diagnostics::BuilderException</td></tr>
+<tr class="separator:a076e76a2fb9d28f8e7fcdd3d28f46b49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47be5bfced15f828bb05505c02933b64"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#a47be5bfced15f828bb05505c02933b64">unilink::common::ValidationException</a> = diagnostics::ValidationException</td></tr>
+<tr class="separator:a47be5bfced15f828bb05505c02933b64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62f3e8f6668279c0fbc26ea10a5c318b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#a62f3e8f6668279c0fbc26ea10a5c318b">unilink::common::MemoryException</a> = diagnostics::MemoryException</td></tr>
+<tr class="separator:a62f3e8f6668279c0fbc26ea10a5c318b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac53bea10e6c0431bf16c02b246ffbb07"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#ac53bea10e6c0431bf16c02b246ffbb07">unilink::common::ConnectionException</a> = diagnostics::ConnectionException</td></tr>
+<tr class="separator:ac53bea10e6c0431bf16c02b246ffbb07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73fd9ee71b0358d499f750fffd68efa2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#a73fd9ee71b0358d499f750fffd68efa2">unilink::common::ConfigurationException</a> = diagnostics::ConfigurationException</td></tr>
+<tr class="separator:a73fd9ee71b0358d499f750fffd68efa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_bd4c58992a2229dff77ccbb60623b7cd.html">common</a></li><li class="navelem"><a class="el" href="exceptions_8hpp.html">exceptions.hpp</a></li>
-    <li class="footer">Generated on Tue Dec 30 2025 13:07:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="exceptions_8hpp.html">exceptions.hpp</a></li>
+    <li class="footer">Generated on Sun Jan 4 2026 18:49:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['callback_1443',['CALLBACK',['../namespaceunilink_1_1common.html#ad139751114e17db924ee46970b3e44baaeccf265bbbbc377fc3269da59745e209',1,'unilink::common']]],
-  ['closed_1444',['Closed',['../namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdca03f4a47830f97377a35321051685071e',1,'unilink::common']]],
-  ['communication_1445',['COMMUNICATION',['../namespaceunilink_1_1common.html#a7070596d0362708a28e590dd418cadfba3f27148a0073e6705ee8277dc392ab7d',1,'unilink::common']]],
-  ['configuration_1446',['CONFIGURATION',['../namespaceunilink_1_1common.html#a7070596d0362708a28e590dd418cadfbad08e68ea80bc3bf47a03757579c11900',1,'unilink::common']]],
-  ['connected_1447',['Connected',['../namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdca2ec0d16e4ca169baedb9b2d50ec5c6d7',1,'unilink::common']]],
-  ['connecting_1448',['Connecting',['../namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdcae321c53b354930ba96f0243e652df458',1,'unilink::common']]],
-  ['connection_1449',['CONNECTION',['../namespaceunilink_1_1common.html#a7070596d0362708a28e590dd418cadfbaf877da16e0c12743466e4059018d0d98',1,'unilink::common']]],
-  ['console_1450',['CONSOLE',['../namespaceunilink_1_1common.html#ad139751114e17db924ee46970b3e44baa4695859f52d337ca3d7020b2c8f7882a',1,'unilink::common']]],
-  ['critical_1451',['CRITICAL',['../namespaceunilink_1_1common.html#a73fe100879f88169307d811aaf5c746da99cd1c61610c76a57cb8d10d6df6b870',1,'unilink::common::CRITICAL()'],['../namespaceunilink_1_1common.html#ad66cb0d4130aa2d21ef54722489a2fb6a99cd1c61610c76a57cb8d10d6df6b870',1,'unilink::common::CRITICAL()']]]
+  ['callback_1462',['CALLBACK',['../namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209',1,'unilink::diagnostics']]],
+  ['closed_1463',['Closed',['../namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e',1,'unilink::base']]],
+  ['communication_1464',['COMMUNICATION',['../namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a3f27148a0073e6705ee8277dc392ab7d',1,'unilink::diagnostics']]],
+  ['configuration_1465',['CONFIGURATION',['../namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900',1,'unilink::diagnostics']]],
+  ['connected_1466',['Connected',['../namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca2ec0d16e4ca169baedb9b2d50ec5c6d7',1,'unilink::base']]],
+  ['connecting_1467',['Connecting',['../namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae321c53b354930ba96f0243e652df458',1,'unilink::base']]],
+  ['connection_1468',['CONNECTION',['../namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98',1,'unilink::diagnostics']]],
+  ['console_1469',['CONSOLE',['../namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa4695859f52d337ca3d7020b2c8f7882a',1,'unilink::diagnostics']]],
+  ['critical_1470',['CRITICAL',['../namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a99cd1c61610c76a57cb8d10d6df6b870',1,'unilink::diagnostics::CRITICAL()'],['../namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a99cd1c61610c76a57cb8d10d6df6b870',1,'unilink::diagnostics::CRITICAL()']]]
 ];

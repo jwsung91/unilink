@@ -899,14 +899,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classunilink_1_1common_1_1MemoryPool.html",
-"classunilink_1_1interface_1_1Channel.html#a77068c3759acd3355ffeecf652661505",
+"classunilink_1_1diagnostics_1_1BuilderException.html#ab4498d992f4c33f0146151fba84aadf8",
+"classunilink_1_1memory_1_1SafeSpan.html#a78e14f40eb6de7c90f78aa31ff4c3930",
 "classunilink_1_1wrapper_1_1Udp.html#a8e83e46303c4cedf045f96bb22c5446b",
-"index.html#autotoc_md146",
-"md_docs_guides_core_testing.html#autotoc_md347",
-"md_docs_index.html#autotoc_md691",
-"namespaceunilink_1_1common_1_1constants.html#a02d5f5d0f5bb76414da33078a6888c32",
-"structunilink_1_1config_1_1TcpClientConfig.html#acba30b670711d398bb87ba94c3eb56f3"
+"index.html#autotoc_md133",
+"md_docs_guides_core_quickstart.html#autotoc_md331",
+"md_docs_index.html#autotoc_md674",
+"namespaceunilink_1_1base_1_1constants.html#a69a33af91a75d2c380f8d510812e4ffc",
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a8fa68489fc95d06793652536800ad066"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

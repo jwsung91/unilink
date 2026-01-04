@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>unilink: unilink/common/common.hpp File Reference</title>
+<title>unilink: unilink/base/common.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('common_8hpp.html',''); initResizable()
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -102,8 +103,8 @@ $(document).ready(function(){initNavTree('common_8hpp.html',''); initResizable()
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &quot;<a class="el" href="logger_8hpp_source.html">logger.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="platform_8hpp_source.html">platform.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="platform_8hpp_source.html">unilink/base/platform.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="logger_8hpp_source.html">unilink/diagnostics/logger.hpp</a>&quot;</code><br />
 </div>
 <p><a href="common_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -111,68 +112,75 @@ $(document).ready(function(){initNavTree('common_8hpp.html',''); initResizable()
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html">unilink</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceunilink_1_1base"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html">unilink::base</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceunilink_1_1base_1_1safe__memory"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__memory.html">unilink::base::safe_memory</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceunilink_1_1base_1_1safe__convert"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html">unilink::base::safe_convert</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceunilink_1_1common"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html">unilink::common</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespaceunilink_1_1common_1_1safe__memory"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__memory.html">unilink::common::safe_memory</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespaceunilink_1_1common_1_1safe__convert"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__convert.html">unilink::common::safe_convert</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:acefe4df3bdf442f64977be84b5a278e2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#acefe4df3bdf442f64977be84b5a278e2">unilink::common::LinkState</a> = base::LinkState</td></tr>
+<tr class="separator:acefe4df3bdf442f64977be84b5a278e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:aef0e027fb2d9f2de20481ac3f91eafdc"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdc">unilink::common::LinkState</a> { <br />
-&#160;&#160;<a class="el" href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdcae599161956d626eda4cb0a5ffb85271c">unilink::common::Idle</a>
-, <a class="el" href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdcae321c53b354930ba96f0243e652df458">unilink::common::Connecting</a>
-, <a class="el" href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdca962ef616821625a13a028ac14ac0fef8">unilink::common::Listening</a>
-, <a class="el" href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdca2ec0d16e4ca169baedb9b2d50ec5c6d7">unilink::common::Connected</a>
+<tr class="memitem:a309474018616d324e14830540edab75c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">unilink::base::LinkState</a> { <br />
+&#160;&#160;<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae599161956d626eda4cb0a5ffb85271c">unilink::base::Idle</a>
+, <a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae321c53b354930ba96f0243e652df458">unilink::base::Connecting</a>
+, <a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">unilink::base::Listening</a>
+, <a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca2ec0d16e4ca169baedb9b2d50ec5c6d7">unilink::base::Connected</a>
 , <br />
-&#160;&#160;<a class="el" href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdca03f4a47830f97377a35321051685071e">unilink::common::Closed</a>
-, <a class="el" href="namespaceunilink_1_1common.html#aef0e027fb2d9f2de20481ac3f91eafdca902b0d55fddef6f8d651fe1035b7d4bd">unilink::common::Error</a>
+&#160;&#160;<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e">unilink::base::Closed</a>
+, <a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">unilink::base::Error</a>
 <br />
  }</td></tr>
-<tr class="separator:aef0e027fb2d9f2de20481ac3f91eafdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a309474018616d324e14830540edab75c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7c08c8f54561b2f5e6266cee0301b048"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#a7c08c8f54561b2f5e6266cee0301b048">unilink::common::to_cstr</a> (LinkState s)</td></tr>
-<tr class="separator:a7c08c8f54561b2f5e6266cee0301b048"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8bf5707ac7374b80f56953fa7b7290f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#ae8bf5707ac7374b80f56953fa7b7290f">unilink::common::ts_now</a> ()</td></tr>
-<tr class="separator:ae8bf5707ac7374b80f56953fa7b7290f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb88dd2438778b3f952404b258b08670"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#aeb88dd2438778b3f952404b258b08670">unilink::common::log_message</a> (const std::string &amp;tag, const std::string &amp;direction, const std::string &amp;message)</td></tr>
-<tr class="separator:aeb88dd2438778b3f952404b258b08670"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d350f2e7b05483035a2d6e4a61a0086"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#a4d350f2e7b05483035a2d6e4a61a0086">unilink::common::is_advanced_logging_available</a> ()</td></tr>
-<tr class="separator:a4d350f2e7b05483035a2d6e4a61a0086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cccba065e7c62e493d4311ae7372566"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#a5cccba065e7c62e493d4311ae7372566">unilink::common::is_performance_monitoring_available</a> ()</td></tr>
-<tr class="separator:a5cccba065e7c62e493d4311ae7372566"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdb72647749301fb056596acdf260e74"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#acdb72647749301fb056596acdf260e74">unilink::common::is_latest_optimizations_available</a> ()</td></tr>
-<tr class="separator:acdb72647749301fb056596acdf260e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac15701a5f10ef63e47b591f25b0c7b9c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#ac15701a5f10ef63e47b591f25b0c7b9c">unilink::common::is_experimental_features_available</a> ()</td></tr>
-<tr class="separator:ac15701a5f10ef63e47b591f25b0c7b9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd7c294b595eccb9cde27f59ae8bd986"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common.html#abd7c294b595eccb9cde27f59ae8bd986">unilink::common::get_platform_warning</a> ()</td></tr>
-<tr class="separator:abd7c294b595eccb9cde27f59ae8bd986"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f4231e71a0b2e86fa39cdce4b05ccae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__memory.html#a1f4231e71a0b2e86fa39cdce4b05ccae">unilink::common::safe_memory::safe_memcpy</a> (uint8_t *dest, const uint8_t *src, size_t size)</td></tr>
-<tr class="memdesc:a1f4231e71a0b2e86fa39cdce4b05ccae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely copy memory with bounds checking.  <a href="namespaceunilink_1_1common_1_1safe__memory.html#a1f4231e71a0b2e86fa39cdce4b05ccae">More...</a><br /></td></tr>
-<tr class="separator:a1f4231e71a0b2e86fa39cdce4b05ccae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6425dd4cd2eb939e3dc9f71b6dec68ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__memory.html#a6425dd4cd2eb939e3dc9f71b6dec68ec">unilink::common::safe_memory::safe_memcpy</a> (char *dest, const char *src, size_t size)</td></tr>
-<tr class="memdesc:a6425dd4cd2eb939e3dc9f71b6dec68ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely copy memory with bounds checking (overloaded for char*)  <a href="namespaceunilink_1_1common_1_1safe__memory.html#a6425dd4cd2eb939e3dc9f71b6dec68ec">More...</a><br /></td></tr>
-<tr class="separator:a6425dd4cd2eb939e3dc9f71b6dec68ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1064b9cd1385fec5892f1922bededbcc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__convert.html#a1064b9cd1385fec5892f1922bededbcc">unilink::common::safe_convert::uint8_to_string</a> (const uint8_t *data, size_t size)</td></tr>
-<tr class="memdesc:a1064b9cd1385fec5892f1922bededbcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert uint8_t* to const char* for string operations.  <a href="namespaceunilink_1_1common_1_1safe__convert.html#a1064b9cd1385fec5892f1922bededbcc">More...</a><br /></td></tr>
-<tr class="separator:a1064b9cd1385fec5892f1922bededbcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f333c08689052d33ea69448ceae4de1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__convert.html#a3f333c08689052d33ea69448ceae4de1">unilink::common::safe_convert::string_to_uint8</a> (const char *data, size_t size)</td></tr>
-<tr class="memdesc:a3f333c08689052d33ea69448ceae4de1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert const char* to const uint8_t* for binary operations.  <a href="namespaceunilink_1_1common_1_1safe__convert.html#a3f333c08689052d33ea69448ceae4de1">More...</a><br /></td></tr>
-<tr class="separator:a3f333c08689052d33ea69448ceae4de1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff93b833788f237d05abeeb9aa786de9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1common_1_1safe__convert.html#aff93b833788f237d05abeeb9aa786de9">unilink::common::safe_convert::string_to_uint8</a> (const std::string &amp;str)</td></tr>
-<tr class="memdesc:aff93b833788f237d05abeeb9aa786de9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert std::string to std::vector&lt;uint8_t&gt;  <a href="namespaceunilink_1_1common_1_1safe__convert.html#aff93b833788f237d05abeeb9aa786de9">More...</a><br /></td></tr>
-<tr class="separator:aff93b833788f237d05abeeb9aa786de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae891a72972b7893b2b357d661a993b6c"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#ae891a72972b7893b2b357d661a993b6c">unilink::base::to_cstr</a> (LinkState s)</td></tr>
+<tr class="separator:ae891a72972b7893b2b357d661a993b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75098fc6310384d9e2ffdcdb499a2fa6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a75098fc6310384d9e2ffdcdb499a2fa6">unilink::base::ts_now</a> ()</td></tr>
+<tr class="separator:a75098fc6310384d9e2ffdcdb499a2fa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96460b35caac65798f8973d5de522294"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a96460b35caac65798f8973d5de522294">unilink::base::log_message</a> (const std::string &amp;tag, const std::string &amp;direction, const std::string &amp;message)</td></tr>
+<tr class="separator:a96460b35caac65798f8973d5de522294"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac773dc00985343d2bdc81d0491a144c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#ac773dc00985343d2bdc81d0491a144c0">unilink::base::is_advanced_logging_available</a> ()</td></tr>
+<tr class="separator:ac773dc00985343d2bdc81d0491a144c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bfe0d74314577e9537832a986691f22"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a6bfe0d74314577e9537832a986691f22">unilink::base::is_performance_monitoring_available</a> ()</td></tr>
+<tr class="separator:a6bfe0d74314577e9537832a986691f22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1e34784f82457b606120d7988b787df"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#ac1e34784f82457b606120d7988b787df">unilink::base::is_latest_optimizations_available</a> ()</td></tr>
+<tr class="separator:ac1e34784f82457b606120d7988b787df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f77a227090a94bc1af4d332e02b57ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a0f77a227090a94bc1af4d332e02b57ee">unilink::base::is_experimental_features_available</a> ()</td></tr>
+<tr class="separator:a0f77a227090a94bc1af4d332e02b57ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0138626e065771057209440b9d46be74"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a0138626e065771057209440b9d46be74">unilink::base::get_platform_warning</a> ()</td></tr>
+<tr class="separator:a0138626e065771057209440b9d46be74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d7e2bd9069bd2febb47c18298fe5e0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__memory.html#a4d7e2bd9069bd2febb47c18298fe5e0d">unilink::base::safe_memory::safe_memcpy</a> (uint8_t *dest, const uint8_t *src, size_t size)</td></tr>
+<tr class="memdesc:a4d7e2bd9069bd2febb47c18298fe5e0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely copy memory with bounds checking.  <a href="namespaceunilink_1_1base_1_1safe__memory.html#a4d7e2bd9069bd2febb47c18298fe5e0d">More...</a><br /></td></tr>
+<tr class="separator:a4d7e2bd9069bd2febb47c18298fe5e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2082b2fb949dd2120cf5d70598c690d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__memory.html#a2082b2fb949dd2120cf5d70598c690d8">unilink::base::safe_memory::safe_memcpy</a> (char *dest, const char *src, size_t size)</td></tr>
+<tr class="memdesc:a2082b2fb949dd2120cf5d70598c690d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely copy memory with bounds checking (overloaded for char*)  <a href="namespaceunilink_1_1base_1_1safe__memory.html#a2082b2fb949dd2120cf5d70598c690d8">More...</a><br /></td></tr>
+<tr class="separator:a2082b2fb949dd2120cf5d70598c690d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c41d9c6266428458c97891710ac2f0d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">unilink::base::safe_convert::uint8_to_string</a> (const uint8_t *data, size_t size)</td></tr>
+<tr class="memdesc:a3c41d9c6266428458c97891710ac2f0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert uint8_t* to const char* for string operations.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">More...</a><br /></td></tr>
+<tr class="separator:a3c41d9c6266428458c97891710ac2f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a439f562cc86e942edf24d1408bcb8a92"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92">unilink::base::safe_convert::string_to_uint8</a> (const char *data, size_t size)</td></tr>
+<tr class="memdesc:a439f562cc86e942edf24d1408bcb8a92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert const char* to const uint8_t* for binary operations.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92">More...</a><br /></td></tr>
+<tr class="separator:a439f562cc86e942edf24d1408bcb8a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a748a98e5ca3e6a83a693ac12ac51219a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a">unilink::base::safe_convert::string_to_uint8</a> (const std::string &amp;str)</td></tr>
+<tr class="memdesc:a748a98e5ca3e6a83a693ac12ac51219a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert std::string to std::vector&lt;uint8_t&gt;  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a">More...</a><br /></td></tr>
+<tr class="separator:a748a98e5ca3e6a83a693ac12ac51219a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_bd4c58992a2229dff77ccbb60623b7cd.html">common</a></li><li class="navelem"><a class="el" href="common_8hpp.html">common.hpp</a></li>
-    <li class="footer">Generated on Tue Dec 30 2025 13:07:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_1b267b6cbe170e06255a29a9b0340896.html">base</a></li><li class="navelem"><a class="el" href="common_8hpp.html">common.hpp</a></li>
+    <li class="footer">Generated on Sun Jan 4 2026 18:49:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

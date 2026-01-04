@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['logcallback_1412',['LogCallback',['../classunilink_1_1common_1_1Logger.html#a8d1d34750207484d54fe953c13b5bcf1',1,'unilink::common::Logger']]]
+  ['linkstate_1426',['LinkState',['../namespaceunilink_1_1common.html#acefe4df3bdf442f64977be84b5a278e2',1,'unilink::common']]],
+  ['logcallback_1427',['LogCallback',['../classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122',1,'unilink::diagnostics::Logger']]]
 ];

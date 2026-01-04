@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['queue_5fsize_437',['queue_size',['../structunilink_1_1common_1_1AsyncLogStats.html#a1d77da8a32344866cb211a4874863055',1,'unilink::common::AsyncLogStats']]],
+  ['queue_5fsize_437',['queue_size',['../structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc',1,'unilink::diagnostics::AsyncLogStats']]],
   ['quickstart_2emd_438',['quickstart.md',['../quickstart_8md.html',1,'']]]
 ];

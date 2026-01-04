@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['pointer_1420',['pointer',['../classunilink_1_1common_1_1SafeSpan.html#aab8e0458234c5446e9039b8d11e203fc',1,'unilink::common::SafeSpan']]]
+  ['platforminfo_1436',['PlatformInfo',['../namespaceunilink_1_1common.html#a4bfa8e4aac6180db678118209ad654fa',1,'unilink::common']]],
+  ['pointer_1437',['pointer',['../classunilink_1_1memory_1_1SafeSpan.html#a545cf36f3ef1dd29b8fd433bbcadd4dc',1,'unilink::memory::SafeSpan']]]
 ];
