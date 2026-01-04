@@ -539,7 +539,7 @@ void Serial::notify_state() {
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("serial", "callback", "State callback error: " + std::string(e.what()));
       diagnostics::error_reporting::report_system_error("serial", "state_callback",
-                                                   "Exception in state callback: " + std::string(e.what()));
+                                                        "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("serial", "callback", "Unknown error in state callback");
       diagnostics::error_reporting::report_system_error("serial", "state_callback", "Unknown error in state callback");

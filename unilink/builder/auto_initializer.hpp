@@ -18,8 +18,8 @@
 
 #include <mutex>
 
-#include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/base/visibility.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
 
 namespace unilink {
 namespace builder {

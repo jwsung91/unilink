@@ -328,18 +328,18 @@ class UNILINK_API Logger {
 /**
  * @brief Conditional logging macros (only evaluate message if level is enabled)
  */
-#define UNILINK_LOG_DEBUG_IF(component, operation, message)                                    \
-  do {                                                                                         \
+#define UNILINK_LOG_DEBUG_IF(component, operation, message)                                              \
+  do {                                                                                                   \
     if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::DEBUG) { \
-      UNILINK_LOG_DEBUG(component, operation, message);                                        \
-    }                                                                                          \
+      UNILINK_LOG_DEBUG(component, operation, message);                                                  \
+    }                                                                                                    \
   } while (0)
 
-#define UNILINK_LOG_INFO_IF(component, operation, message)                                    \
-  do {                                                                                        \
+#define UNILINK_LOG_INFO_IF(component, operation, message)                                              \
+  do {                                                                                                  \
     if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::INFO) { \
-      UNILINK_LOG_INFO(component, operation, message);                                        \
-    }                                                                                         \
+      UNILINK_LOG_INFO(component, operation, message);                                                  \
+    }                                                                                                   \
   } while (0)
 
 /**
@@ -358,6 +358,5 @@ class UNILINK_API Logger {
   } while (0)
 
 }  // namespace diagnostics
-
 
 }  // namespace unilink

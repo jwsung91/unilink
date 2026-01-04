@@ -18,8 +18,8 @@
 
 #include <cstdint>
 
-#include "unilink/builder/ibuilder.hpp"
 #include "unilink/base/visibility.hpp"
+#include "unilink/builder/ibuilder.hpp"
 #include "unilink/wrapper/tcp_server/tcp_server.hpp"
 
 namespace unilink {

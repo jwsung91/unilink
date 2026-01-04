@@ -27,13 +27,13 @@
 #include <vector>
 
 #include "unilink/base/constants.hpp"
-#include "unilink/diagnostics/error_handler.hpp"
-#include "unilink/diagnostics/logger.hpp"
-#include "unilink/memory/memory_pool.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_socket.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {

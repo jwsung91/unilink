@@ -496,10 +496,11 @@ void TcpServer::notify_state() {
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_server", "callback", "State callback error: " + std::string(e.what()));
       diagnostics::error_reporting::report_system_error("tcp_server", "state_callback",
-                                                   "Exception in state callback: " + std::string(e.what()));
+                                                        "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("tcp_server", "callback", "Unknown error in state callback");
-      diagnostics::error_reporting::report_system_error("tcp_server", "state_callback", "Unknown error in state callback");
+      diagnostics::error_reporting::report_system_error("tcp_server", "state_callback",
+                                                        "Unknown error in state callback");
     }
   }
 }

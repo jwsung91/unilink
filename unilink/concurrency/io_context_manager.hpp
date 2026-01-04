@@ -78,5 +78,5 @@ class UNILINK_API IoContextManager {
 // Compatibility alias while transitioning from legacy `common` namespace.
 namespace common {
 using IoContextManager = concurrency::IoContextManager;
-}  // namespace concurrency
+}  // namespace common
 }  // namespace unilink

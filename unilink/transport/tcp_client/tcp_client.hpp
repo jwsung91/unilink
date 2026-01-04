@@ -28,14 +28,14 @@
 #include <vector>
 
 #include "unilink/base/constants.hpp"
+#include "unilink/base/platform.hpp"
+#include "unilink/base/visibility.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
+#include "unilink/config/tcp_client_config.hpp"
 #include "unilink/diagnostics/error_handler.hpp"
 #include "unilink/diagnostics/logger.hpp"
-#include "unilink/memory/memory_pool.hpp"
-#include "unilink/base/platform.hpp"
-#include "unilink/concurrency/thread_safe_state.hpp"
-#include "unilink/base/visibility.hpp"
-#include "unilink/config/tcp_client_config.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {

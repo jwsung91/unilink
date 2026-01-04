@@ -19,11 +19,11 @@
 #include <cstdint>
 #include <string>
 
+#include "unilink/base/visibility.hpp"
 #include "unilink/builder/serial_builder.hpp"
 #include "unilink/builder/tcp_client_builder.hpp"
 #include "unilink/builder/tcp_server_builder.hpp"
 #include "unilink/builder/udp_builder.hpp"
-#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace builder {

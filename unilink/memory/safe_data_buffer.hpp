@@ -25,8 +25,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "unilink/memory/safe_span.hpp"
 #include "unilink/base/visibility.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 namespace unilink {
 namespace memory {

@@ -24,8 +24,8 @@
 #include <vector>
 
 #include "unilink/base/constants.hpp"
-#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/base/visibility.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 
 namespace unilink {
 namespace util {

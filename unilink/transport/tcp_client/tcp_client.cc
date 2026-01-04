@@ -128,7 +128,7 @@ void TcpClient::start() {
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("tcp_client", "io_context", "IO context error: " + std::string(e.what()));
         diagnostics::error_reporting::report_system_error("tcp_client", "io_context",
-                                             "Exception in IO context: " + std::string(e.what()));
+                                                          "Exception in IO context: " + std::string(e.what()));
       }
     });
   }
@@ -671,7 +671,7 @@ void TcpClient::perform_stop_cleanup() {
   } catch (const std::exception& e) {
     UNILINK_LOG_ERROR("tcp_client", "stop_cleanup", "Cleanup error: " + std::string(e.what()));
     diagnostics::error_reporting::report_system_error("tcp_client", "stop_cleanup",
-                                         "Exception in stop cleanup: " + std::string(e.what()));
+                                                      "Exception in stop cleanup: " + std::string(e.what()));
   } catch (...) {
     UNILINK_LOG_ERROR("tcp_client", "stop_cleanup", "Unknown error in stop cleanup");
     diagnostics::error_reporting::report_system_error("tcp_client", "stop_cleanup", "Unknown error in stop cleanup");
@@ -740,10 +740,11 @@ void TcpClient::reset_io_objects() {
   } catch (const std::exception& e) {
     UNILINK_LOG_ERROR("tcp_client", "reset_io_objects", "Reset error: " + std::string(e.what()));
     diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects",
-                                         "Exception while resetting io objects: " + std::string(e.what()));
+                                                      "Exception while resetting io objects: " + std::string(e.what()));
   } catch (...) {
     UNILINK_LOG_ERROR("tcp_client", "reset_io_objects", "Unknown reset error");
-    diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects", "Unknown error while resetting io objects");
+    diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects",
+                                                      "Unknown error while resetting io objects");
   }
 }
 }  // namespace transport

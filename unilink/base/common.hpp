@@ -29,8 +29,8 @@
 #include <vector>
 
 // Include logger for log_message function
-#include "unilink/diagnostics/logger.hpp"
 #include "unilink/base/platform.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
 namespace base {
