@@ -19,10 +19,10 @@
 #include <stdexcept>
 #include <string>
 
-#include "visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 /**
  * @brief Base exception class for all unilink exceptions
@@ -189,5 +189,15 @@ class UNILINK_API ConfigurationException : public UnilinkException {
   std::string config_section_;
 };
 
+}  // namespace diagnostics
+
+// Compatibility alias while transitioning from legacy `common` namespace.
+namespace common {
+using UnilinkException = diagnostics::UnilinkException;
+using BuilderException = diagnostics::BuilderException;
+using ValidationException = diagnostics::ValidationException;
+using MemoryException = diagnostics::MemoryException;
+using ConnectionException = diagnostics::ConnectionException;
+using ConfigurationException = diagnostics::ConfigurationException;
 }  // namespace common
 }  // namespace unilink

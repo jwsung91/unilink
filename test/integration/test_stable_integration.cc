@@ -25,8 +25,9 @@
 #include <thread>
 
 #include "test_utils.hpp"
+#include "unilink/base/common.hpp"
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/common/exceptions.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -258,7 +259,7 @@ TEST_F(StableIntegrationTest, StableErrorHandling) {
                                            cv_.notify_one();
                                          })
                                          .build(),
-               common::BuilderException);
+               diagnostics::BuilderException);
 
   // Test invalid host handling
   auto invalid_client = unilink::tcp_client("invalid.host", 12345)

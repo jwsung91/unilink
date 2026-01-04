@@ -23,7 +23,7 @@
 #include <thread>
 #include <vector>
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/unilink.hpp"
 
 /**
@@ -34,16 +34,16 @@
 class TcpServerChatApp {
  private:
   std::shared_ptr<unilink::wrapper::TcpServer> server_;
-  unilink::common::Logger& logger_;
+  unilink::diagnostics::Logger& logger_;
   unsigned short port_;
   std::atomic<bool> connected_;
   std::atomic<bool> running_;
 
  public:
   TcpServerChatApp(unsigned short port)
-      : logger_(unilink::common::Logger::instance()), port_(port), connected_(false), running_(true) {
+      : logger_(unilink::diagnostics::Logger::instance()), port_(port), connected_(false), running_(true) {
     // Initialize logger
-    logger_.set_level(unilink::common::LogLevel::INFO);
+    logger_.set_level(unilink::diagnostics::LogLevel::INFO);
     logger_.set_console_output(true);
 
     // Set static instance for signal handling

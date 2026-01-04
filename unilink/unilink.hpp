@@ -19,8 +19,8 @@
 #include <memory>
 #include <variant>
 
-#include "unilink/common/platform.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/platform.hpp"
+#include "unilink/base/visibility.hpp"
 
 // Internal includes for Builder API (not exposed to users)
 #include "unilink/wrapper/ichannel.hpp"
@@ -45,8 +45,8 @@
 #endif
 
 // Error handling and logging system includes
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
 
@@ -128,20 +128,7 @@ class ConfigManagerInterface;
 #endif
 
 // === Common Utilities ===
-// Utility functions and error handling
-namespace common {
-// Forward declarations for utility functions
-std::string log_message(const std::string& message);
-const char* to_cstr(const std::string& str);
-std::string ts_now();
-
-// Forward declarations for error handling and logging
-enum class ErrorCategory;
-class ErrorHandler;
-struct ErrorInfo;
-enum class ErrorLevel;
-class Logger;
-enum class LogLevel;
-}  // namespace common
+// Utility functions and error handling are provided via unilink/base/common.hpp
+// included by other modules.
 
 }  // namespace unilink

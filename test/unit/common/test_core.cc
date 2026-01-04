@@ -26,13 +26,16 @@
 #include <thread>
 
 #include "test_utils.hpp"
-#include "unilink/common/common.hpp"
-#include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/base/common.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/config/config_manager.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
+using namespace unilink::diagnostics;
+using namespace unilink::concurrency;
+using namespace unilink::memory;
 using namespace std::chrono_literals;
 
 // ============================================================================
@@ -44,9 +47,9 @@ using namespace std::chrono_literals;
  */
 TEST_F(BaseTest, CommonFunctionality) {
   // Test LinkState enum
-  EXPECT_STREQ(common::to_cstr(common::LinkState::Idle), "Idle");
-  EXPECT_STREQ(common::to_cstr(common::LinkState::Connected), "Connected");
-  EXPECT_STREQ(common::to_cstr(common::LinkState::Error), "Error");
+  EXPECT_STREQ(base::to_cstr(base::LinkState::Idle), "Idle");
+  EXPECT_STREQ(base::to_cstr(base::LinkState::Connected), "Connected");
+  EXPECT_STREQ(base::to_cstr(base::LinkState::Error), "Error");
 
   // Test timestamp functionality
   std::string timestamp = common::ts_now();
@@ -72,7 +75,7 @@ TEST_F(BaseTest, ConfigManager) {
  * @brief IoContextManager basic functionality tests
  */
 TEST_F(BaseTest, IoContextManagerBasicFunctionality) {
-  auto& manager = common::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // Test basic operations
   EXPECT_FALSE(manager.is_running());
@@ -91,7 +94,7 @@ TEST_F(BaseTest, IoContextManagerBasicFunctionality) {
  * @brief Independent context creation tests
  */
 TEST_F(BaseTest, IndependentContextCreation) {
-  auto& manager = common::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // Create independent context
   auto independent_context = manager.create_independent_context();
@@ -113,7 +116,7 @@ TEST_F(BaseTest, IndependentContextCreation) {
  * @brief Memory pool basic functionality tests
  */
 TEST_F(MemoryTest, MemoryPoolBasicFunctionality) {
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
 
   // Test basic acquire/release
   auto buffer = pool.acquire(1024);
@@ -130,7 +133,7 @@ TEST_F(MemoryTest, MemoryPoolBasicFunctionality) {
  * @brief Memory pool performance tests
  */
 TEST_F(MemoryTest, MemoryPoolPerformance) {
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
 
   const int num_operations = 1000;
   const size_t buffer_size = 4096;
@@ -166,7 +169,7 @@ TEST_F(MemoryTest, MemoryPoolPerformance) {
  * @brief Memory pool statistics tests
  */
 TEST_F(MemoryTest, MemoryPoolStatistics) {
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
 
   // Perform some operations
   for (int i = 0; i < 100; ++i) {
@@ -211,12 +214,12 @@ class LogRotationTest : public ::testing::Test {
     cleanup_test_files();
 
     // Setup logger for testing
-    common::Logger::instance().set_level(common::LogLevel::DEBUG);
-    common::Logger::instance().set_console_output(false);  // Disable console for file testing
+    diagnostics::Logger::instance().set_level(diagnostics::LogLevel::DEBUG);
+    diagnostics::Logger::instance().set_console_output(false);  // Disable console for file testing
   }
 
   void TearDown() override {
-    auto& logger = common::Logger::instance();
+    auto& logger = diagnostics::Logger::instance();
     logger.flush();
     logger.set_file_output("");  // Disable file output (closes file handle on Windows)
     logger.set_console_output(true);
@@ -268,7 +271,7 @@ class LogRotationTest : public ::testing::Test {
 
 TEST_F(LogRotationTest, BasicRotationSetup) {
   // Test basic rotation configuration
-  common::LogRotationConfig config;
+  diagnostics::LogRotationConfig config;
   config.max_file_size_bytes = 1024;  // 1KB for testing
   config.max_files = 3;
 
@@ -278,11 +281,11 @@ TEST_F(LogRotationTest, BasicRotationSetup) {
 
 TEST_F(LogRotationTest, FileSizeBasedRotation) {
   // Setup rotation with very small file size for testing
-  common::LogRotationConfig config;
+  diagnostics::LogRotationConfig config;
   config.max_file_size_bytes = 512;  // 512 bytes
   config.max_files = 5;
 
-  common::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
+  diagnostics::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
 
   // Generate enough log data to trigger rotation
   for (int i = 0; i < 20; ++i) {
@@ -292,7 +295,7 @@ TEST_F(LogRotationTest, FileSizeBasedRotation) {
   }
 
   // Flush to ensure all data is written
-  common::Logger::instance().flush();
+  diagnostics::Logger::instance().flush();
 
   // Check if rotation occurred (should have multiple files)
   size_t file_count = count_log_files();
@@ -307,11 +310,11 @@ TEST_F(LogRotationTest, FileSizeBasedRotation) {
 
 TEST_F(LogRotationTest, FileCountLimit) {
   // Setup rotation with small file size and low file count
-  common::LogRotationConfig config;
+  diagnostics::LogRotationConfig config;
   config.max_file_size_bytes = 256;  // 256 bytes
   config.max_files = 2;              // Only keep 2 files
 
-  common::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
+  diagnostics::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
 
   // Generate lots of log data to trigger multiple rotations
   for (int i = 0; i < 50; ++i) {
@@ -320,7 +323,7 @@ TEST_F(LogRotationTest, FileCountLimit) {
                          " - Generating enough data to trigger multiple rotations and test file count limits.");
   }
 
-  common::Logger::instance().flush();
+  diagnostics::Logger::instance().flush();
 
   // Check that file count doesn't exceed limit
   size_t file_count = count_log_files();
@@ -329,11 +332,11 @@ TEST_F(LogRotationTest, FileCountLimit) {
 
 TEST_F(LogRotationTest, LogRotationManagerDirectTest) {
   // Test LogRotation class directly
-  common::LogRotationConfig config;
+  diagnostics::LogRotationConfig config;
   config.max_file_size_bytes = 100;  // Very small for testing
   config.max_files = 2;
 
-  common::LogRotation rotation(config);
+  diagnostics::LogRotation rotation(config);
 
   // Create a test file
   std::string test_file = base_log_path_.string();
@@ -360,18 +363,18 @@ TEST_F(LogRotationTest, LogRotationManagerDirectTest) {
 
 TEST_F(LogRotationTest, LogRotationWithoutRotation) {
   // Test that rotation doesn't occur when file is small
-  common::LogRotationConfig config;
+  diagnostics::LogRotationConfig config;
   config.max_file_size_bytes = 1024 * 1024;  // 1MB - very large
   config.max_files = 5;
 
-  common::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
+  diagnostics::Logger::instance().set_file_output_with_rotation(base_log_path_.string(), config);
 
   // Generate small amount of log data
   for (int i = 0; i < 5; ++i) {
     UNILINK_LOG_INFO("test", "no_rotation", "Small message " + std::to_string(i));
   }
 
-  common::Logger::instance().flush();
+  diagnostics::Logger::instance().flush();
 
   // Should only have one file
   size_t file_count = count_log_files();
@@ -399,12 +402,12 @@ class AsyncLoggingTest : public ::testing::Test {
     cleanup_test_files();
 
     // Setup logger for testing
-    common::Logger::instance().set_level(common::LogLevel::DEBUG);
-    common::Logger::instance().set_console_output(false);  // Disable console for file testing
+    diagnostics::Logger::instance().set_level(diagnostics::LogLevel::DEBUG);
+    diagnostics::Logger::instance().set_console_output(false);  // Disable console for file testing
   }
 
   void TearDown() override {
-    auto& logger = common::Logger::instance();
+    auto& logger = diagnostics::Logger::instance();
 
     // Stop async logging before flushing to ensure background threads exit
     logger.set_async_logging(false);
@@ -441,7 +444,7 @@ class AsyncLoggingTest : public ::testing::Test {
 
 TEST_F(AsyncLoggingTest, BasicAsyncLoggingSetup) {
   // Test basic async logging configuration
-  common::AsyncLogConfig config;
+  diagnostics::AsyncLogConfig config;
   config.max_queue_size = 1000;
   config.batch_size = 50;
   config.flush_interval = std::chrono::milliseconds(100);
@@ -453,14 +456,14 @@ TEST_F(AsyncLoggingTest, BasicAsyncLoggingSetup) {
 
 TEST_F(AsyncLoggingTest, AsyncLoggingEnabled) {
   // Setup async logging
-  common::AsyncLogConfig config;
+  diagnostics::AsyncLogConfig config;
   config.max_queue_size = 1000;
   config.batch_size = 10;
   config.flush_interval = std::chrono::milliseconds(50);
 
-  common::Logger::instance().set_async_logging(true, config);
+  diagnostics::Logger::instance().set_async_logging(true, config);
 
-  EXPECT_TRUE(common::Logger::instance().is_async_logging_enabled());
+  EXPECT_TRUE(diagnostics::Logger::instance().is_async_logging_enabled());
 
   // Generate some log messages
   for (int i = 0; i < 5; ++i) {
@@ -471,25 +474,25 @@ TEST_F(AsyncLoggingTest, AsyncLoggingEnabled) {
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   // Check statistics
-  auto stats = common::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().get_async_stats();
   EXPECT_GT(stats.total_logs, 0) << "Should have processed some logs";
   EXPECT_EQ(stats.dropped_logs, 0) << "Should not have dropped any logs";
 
   // Disable async logging to clean up
-  common::Logger::instance().set_async_logging(false);
+  diagnostics::Logger::instance().set_async_logging(false);
 }
 
 TEST_F(AsyncLoggingTest, AsyncLoggingWithFileOutput) {
   std::string log_filename = test_file_prefix_ + ".log";
 
   // Setup async logging with file output
-  common::AsyncLogConfig config;
+  diagnostics::AsyncLogConfig config;
   config.max_queue_size = 1000;
   config.batch_size = 20;
   config.flush_interval = std::chrono::milliseconds(100);
 
-  common::Logger::instance().set_file_output(log_filename);
-  common::Logger::instance().set_async_logging(true, config);
+  diagnostics::Logger::instance().set_file_output(log_filename);
+  diagnostics::Logger::instance().set_async_logging(true, config);
 
   // Generate log messages
   for (int i = 0; i < 10; ++i) {
@@ -505,22 +508,22 @@ TEST_F(AsyncLoggingTest, AsyncLoggingWithFileOutput) {
   EXPECT_GT(file_size, 0) << "Log file should have content";
 
   // Check statistics
-  auto stats = common::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().get_async_stats();
   EXPECT_GT(stats.total_logs, 0) << "Should have processed logs";
   EXPECT_GT(stats.batch_count, 0) << "Should have processed batches";
 
   // Disable async logging to clean up
-  common::Logger::instance().set_async_logging(false);
+  diagnostics::Logger::instance().set_async_logging(false);
 }
 
 TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
   // Test async logging performance
-  common::AsyncLogConfig config;
+  diagnostics::AsyncLogConfig config;
   config.max_queue_size = 10000;
   config.batch_size = 100;
   config.flush_interval = std::chrono::milliseconds(50);
 
-  common::Logger::instance().set_async_logging(true, config);
+  diagnostics::Logger::instance().set_async_logging(true, config);
 
   const int num_messages = 1000;
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -548,24 +551,24 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
       << "Should process at least " << expected_threshold << " messages per second";
 
   // Check statistics
-  auto stats = common::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().get_async_stats();
   EXPECT_EQ(stats.total_logs, num_messages) << "Should have processed all messages";
   EXPECT_EQ(stats.dropped_logs, 0) << "Should not have dropped any messages";
 
   std::cout << "Async logging performance: " << messages_per_second << " messages/second" << std::endl;
 
-  common::Logger::instance().set_async_logging(false);
+  diagnostics::Logger::instance().set_async_logging(false);
 }
 
 TEST_F(AsyncLoggingTest, AsyncLoggingBackpressure) {
   // Test backpressure handling with small queue
-  common::AsyncLogConfig config;
+  diagnostics::AsyncLogConfig config;
   config.max_queue_size = 5;  // Very small queue
   config.batch_size = 2;
   config.flush_interval = std::chrono::milliseconds(200);
   config.enable_backpressure = true;
 
-  common::Logger::instance().set_async_logging(true, config);
+  diagnostics::Logger::instance().set_async_logging(true, config);
 
   // Generate more messages than queue can handle
   for (int i = 0; i < 20; ++i) {
@@ -576,7 +579,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingBackpressure) {
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   // Check statistics - should have some dropped messages
-  auto stats = common::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().get_async_stats();
   EXPECT_GT(stats.total_logs, 0) << "Should have processed some messages";
   EXPECT_GT(stats.dropped_logs, 0) << "Should have dropped some messages due to backpressure";
 
@@ -591,17 +594,17 @@ TEST_F(AsyncLoggingTest, AsyncLoggingBackpressure) {
 
 TEST_F(AsyncLoggingTest, AsyncLoggingDisable) {
   // Test disabling async logging
-  common::AsyncLogConfig config;
+  diagnostics::AsyncLogConfig config;
   config.max_queue_size = 1000;
   config.batch_size = 50;
 
   // Enable async logging
-  common::Logger::instance().set_async_logging(true, config);
-  EXPECT_TRUE(common::Logger::instance().is_async_logging_enabled());
+  diagnostics::Logger::instance().set_async_logging(true, config);
+  EXPECT_TRUE(diagnostics::Logger::instance().is_async_logging_enabled());
 
   // Disable async logging
-  common::Logger::instance().set_async_logging(false);
-  EXPECT_FALSE(common::Logger::instance().is_async_logging_enabled());
+  diagnostics::Logger::instance().set_async_logging(false);
+  EXPECT_FALSE(diagnostics::Logger::instance().is_async_logging_enabled());
 
   // Generate some log messages (should use synchronous logging)
   for (int i = 0; i < 10; ++i) {
@@ -609,7 +612,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingDisable) {
   }
 
   // Check statistics (should be empty since async is disabled)
-  auto stats = common::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().get_async_stats();
   EXPECT_EQ(stats.total_logs, 0) << "Should not have async statistics when disabled";
 }
 

@@ -20,7 +20,7 @@
 #include <optional>
 #include <string>
 
-#include "unilink/common/constants.hpp"
+#include "unilink/base/constants.hpp"
 
 namespace unilink {
 namespace config {

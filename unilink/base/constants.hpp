@@ -19,7 +19,7 @@
 #include <cstddef>
 
 namespace unilink {
-namespace common {
+namespace base {
 
 // Network and I/O constants
 namespace constants {
@@ -89,5 +89,10 @@ constexpr unsigned DEFAULT_THREAD_STACK_SIZE = 1024 * 1024;  // 1MB default stac
 
 }  // namespace constants
 
+}  // namespace base
+
+// Compatibility alias while transitioning from legacy `common` namespace.
+namespace common {
+namespace constants = base::constants;
 }  // namespace common
 }  // namespace unilink

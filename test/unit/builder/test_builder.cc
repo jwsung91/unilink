@@ -23,8 +23,8 @@
 #include <thread>
 #include <vector>
 
-#include "unilink/common/exceptions.hpp"
-#include "unilink/common/io_context_manager.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -410,7 +410,7 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
  * @brief IoContextManager 기본 기능 테스트
  */
 TEST_F(BuilderTest, IoContextManagerBasicFunctionality) {
-  auto& manager = common::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // 이전 테스트의 영향을 받을 수 있으므로 현재 상태 확인
   bool was_running = manager.is_running();
@@ -437,7 +437,7 @@ TEST_F(BuilderTest, IoContextManagerBasicFunctionality) {
  * @brief 독립적인 컨텍스트 생성 테스트
  */
 TEST_F(BuilderTest, IndependentContextCreation) {
-  auto& manager = common::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // 독립적인 컨텍스트 생성
   auto independent_context = manager.create_independent_context();
@@ -622,15 +622,15 @@ TEST_F(BuilderCoverageTest, TcpServerOverloadedCallbacks) {
  */
 TEST_F(BuilderTest, DISABLED_TcpClientBuilderExceptionSafety) {
   // Test invalid host
-  // EXPECT_THROW({ auto client = unilink::tcp_client("", 8080).build(); }, common::BuilderException);
+  // EXPECT_THROW({ auto client = unilink::tcp_client("", 8080).build(); }, diagnostics::BuilderException);
 
   // Test invalid port
-  // EXPECT_THROW({ auto client = unilink::tcp_client("localhost", 0).build(); }, common::BuilderException);
+  // EXPECT_THROW({ auto client = unilink::tcp_client("localhost", 0).build(); }, diagnostics::BuilderException);
 
   // Test invalid retry interval
   // EXPECT_THROW(
   //     { auto client = unilink::tcp_client("localhost", 8080).retry_interval(0).build(); },
-  //     common::BuilderException);
+  //     diagnostics::BuilderException);
 
   // Test valid configuration
   // EXPECT_NO_THROW({
@@ -645,9 +645,9 @@ TEST_F(BuilderTest, DISABLED_TcpClientBuilderExceptionSafety) {
  */
 TEST_F(BuilderTest, DISABLED_EndToEndExceptionSafety) {
   // Test that invalid configurations throw appropriate exceptions
-  // EXPECT_THROW(auto server = unilink::tcp_server(0).unlimited_clients().build(), common::BuilderException);
+  // EXPECT_THROW(auto server = unilink::tcp_server(0).unlimited_clients().build(), diagnostics::BuilderException);
 
-  // EXPECT_THROW(auto client = unilink::tcp_client("invalid..hostname", 8080).build(), common::BuilderException);
+  // EXPECT_THROW(auto client = unilink::tcp_client("invalid..hostname", 8080).build(), diagnostics::BuilderException);
 
   // Test that valid configurations work
   // EXPECT_NO_THROW(auto server = unilink::tcp_server(8080).unlimited_clients().build());

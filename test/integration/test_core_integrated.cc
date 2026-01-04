@@ -25,12 +25,12 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/logger.hpp"
-#include "unilink/common/memory_pool.hpp"
-#include "unilink/common/safe_data_buffer.hpp"
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
+#include "unilink/memory/memory_pool.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 #include "unilink/unilink.hpp"
 
 // Test namespace aliases for cleaner code
@@ -39,7 +39,6 @@ using namespace unilink::test;
 using namespace std::chrono_literals;
 
 // Specific namespace aliases for better clarity
-namespace common = unilink::common;
 namespace builder = unilink::builder;
 
 /**
@@ -55,7 +54,7 @@ class CoreIntegratedTest : public ::testing::Test {
     test_port_ = TestUtils::getAvailableTestPort();
 
     // Reset error handler
-    auto& error_handler = common::ErrorHandler::instance();
+    auto& error_handler = diagnostics::ErrorHandler::instance();
     error_handler.reset_stats();
   }
 
@@ -76,7 +75,7 @@ class CoreIntegratedTest : public ::testing::Test {
  * @brief Test memory pool basic functionality
  */
 TEST_F(CoreIntegratedTest, MemoryPoolBasicFunctionality) {
-  common::MemoryPool pool(100, 200);
+  memory::MemoryPool pool(100, 200);
 
   // Test basic allocation and release
   auto buffer1 = pool.acquire(1024);
@@ -98,7 +97,7 @@ TEST_F(CoreIntegratedTest, MemoryPoolBasicFunctionality) {
  * @brief Test memory pool performance
  */
 TEST_F(CoreIntegratedTest, MemoryPoolPerformance) {
-  common::MemoryPool pool(1000, 2000);
+  memory::MemoryPool pool(1000, 2000);
   const int num_operations = 100;
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -121,7 +120,7 @@ TEST_F(CoreIntegratedTest, MemoryPoolPerformance) {
  * @brief Test memory pool statistics
  */
 TEST_F(CoreIntegratedTest, MemoryPoolStatistics) {
-  common::MemoryPool pool(50, 100);
+  memory::MemoryPool pool(50, 100);
 
   // Perform some operations
   for (int i = 0; i < 10; ++i) {
@@ -144,10 +143,10 @@ TEST_F(CoreIntegratedTest, MemoryPoolStatistics) {
  * @brief Test error handler basic functionality
  */
 TEST_F(CoreIntegratedTest, ErrorHandlerBasicFunctionality) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Test error reporting
-  common::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
+  diagnostics::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
 
   auto stats = error_handler.get_error_stats();
   EXPECT_GT(stats.total_errors, 0);
@@ -157,13 +156,13 @@ TEST_F(CoreIntegratedTest, ErrorHandlerBasicFunctionality) {
  * @brief Test error handler callback
  */
 TEST_F(CoreIntegratedTest, ErrorHandlerCallback) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   std::atomic<int> callback_count{0};
-  auto callback = [&callback_count](const common::ErrorInfo&) { callback_count++; };
+  auto callback = [&callback_count](const diagnostics::ErrorInfo&) { callback_count++; };
 
   error_handler.register_callback(callback);
-  common::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
+  diagnostics::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
 
   // Wait for callback
   EXPECT_TRUE(TestUtils::waitForCondition([&callback_count]() { return callback_count.load() > 0; }, 1000));
@@ -177,9 +176,9 @@ TEST_F(CoreIntegratedTest, ErrorHandlerCallback) {
  * @brief Test safe data buffer basic functionality
  */
 TEST_F(CoreIntegratedTest, SafeDataBufferBasicFunctionality) {
-  // Test common::SafeDataBuffer creation with proper size
+  // Test memory::SafeDataBuffer creation with proper size
   std::vector<uint8_t> data(1024, 0);
-  common::SafeDataBuffer buffer(data);
+  memory::SafeDataBuffer buffer(data);
   EXPECT_NE(&buffer, nullptr);
 
   // Test basic operations (simplified)
@@ -193,7 +192,7 @@ TEST_F(CoreIntegratedTest, SafeDataBufferBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, SafeDataBufferBoundsChecking) {
   std::vector<uint8_t> data(100, 0);
-  common::SafeDataBuffer buffer(data);
+  memory::SafeDataBuffer buffer(data);
   EXPECT_NE(&buffer, nullptr);
 
   // Test buffer creation with size limit
@@ -211,7 +210,7 @@ TEST_F(CoreIntegratedTest, SafeDataBufferBoundsChecking) {
  */
 TEST_F(CoreIntegratedTest, IoContextManagerBasicFunctionality) {
   // Test IoContextManager singleton access
-  auto& manager = common::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
   EXPECT_NE(&manager, nullptr);
 
   // Test context creation (simplified)
@@ -224,7 +223,7 @@ TEST_F(CoreIntegratedTest, IoContextManagerBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
   // Test IoContextManager singleton access
-  auto& manager = common::IoContextManager::instance();
+  auto& manager = unilink::concurrency::IoContextManager::instance();
   EXPECT_NE(&manager, nullptr);
 
   // Test independent context creation (simplified)
@@ -241,7 +240,7 @@ TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateBasicFunctionality) {
   // Test common::ThreadSafeState creation (simplified)
-  common::ThreadSafeState<std::string> state("initial");
+  unilink::concurrency::ThreadSafeState<std::string> state("initial");
   EXPECT_NE(&state, nullptr);
 
   // Note: Actual API may differ - this is a placeholder test
@@ -253,7 +252,7 @@ TEST_F(CoreIntegratedTest, ThreadSafeStateBasicFunctionality) {
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateConcurrentAccess) {
   // Test common::ThreadSafeState creation (simplified)
-  common::ThreadSafeState<int> state(0);
+  unilink::concurrency::ThreadSafeState<int> state(0);
   EXPECT_NE(&state, nullptr);
 
   // Note: Actual API may differ - this is a placeholder test

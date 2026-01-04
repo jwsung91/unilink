@@ -20,8 +20,8 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "unilink/common/common.hpp"
-#include "unilink/common/error_handler.hpp"
+#include "unilink/base/common.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 
 namespace unilink {
 namespace transport {
@@ -170,7 +170,7 @@ void UdpChannel::async_write_copy(const uint8_t* data, size_t size) {
   }
 
   if (cfg_.enable_memory_pool && size <= 65536) {
-    common::PooledBuffer pooled(size);
+    memory::PooledBuffer pooled(size);
     if (pooled.valid()) {
       common::safe_memory::safe_memcpy(pooled.data(), data, size);
       net::post(strand_, [self = weak_from_this(), buf = std::move(pooled), size]() mutable {
@@ -405,9 +405,9 @@ void UdpChannel::do_write() {
     self->do_write();
   };
 
-  if (std::holds_alternative<common::PooledBuffer>(current)) {
-    auto pooled = std::get<common::PooledBuffer>(std::move(current));
-    auto shared_buf = std::make_shared<common::PooledBuffer>(std::move(pooled));
+  if (std::holds_alternative<memory::PooledBuffer>(current)) {
+    auto pooled = std::get<memory::PooledBuffer>(std::move(current));
+    auto shared_buf = std::make_shared<memory::PooledBuffer>(std::move(pooled));
     socket_.async_send_to(net::buffer(shared_buf->data(), shared_buf->size()), *remote_endpoint_,
                           [shared_buf, on_write = std::move(on_write)](
                               const boost::system::error_code& ec, std::size_t bytes) mutable { on_write(ec, bytes); });
@@ -470,8 +470,8 @@ size_t UdpChannel::queued_bytes_front() const {
   if (tx_.empty()) return 0;
 
   const auto& front = tx_.front();
-  if (std::holds_alternative<common::PooledBuffer>(front)) {
-    return std::get<common::PooledBuffer>(front).size();
+  if (std::holds_alternative<memory::PooledBuffer>(front)) {
+    return std::get<memory::PooledBuffer>(front).size();
   }
   if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(front)) {
     return std::get<std::shared_ptr<const std::vector<uint8_t>>>(front)->size();
@@ -480,7 +480,7 @@ size_t UdpChannel::queued_bytes_front() const {
 }
 
 bool UdpChannel::enqueue_buffer(
-    std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>&& buffer,
+    std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>&& buffer,
     size_t size) {
   if (stopping_.load() || stop_requested_.load() || state_.is_state(LinkState::Closed) ||
       state_.is_state(LinkState::Error)) {

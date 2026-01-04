@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-#include "error_handler.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 
-#include "logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 ErrorHandler::ErrorHandler() = default;
 ErrorHandler::~ErrorHandler() = default;
@@ -221,5 +221,5 @@ void report_info(const std::string& component, const std::string& operation, con
 
 }  // namespace error_reporting
 
-}  // namespace common
+}  // namespace diagnostics
 }  // namespace unilink

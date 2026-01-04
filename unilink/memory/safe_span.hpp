@@ -21,7 +21,7 @@
 #include <type_traits>
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 /**
  * @brief A C++17 compatible span-like class for safe array access
@@ -123,5 +123,5 @@ using ConstByteSpan = SafeSpan<const uint8_t>;
 using CharSpan = SafeSpan<char>;
 using ConstCharSpan = SafeSpan<const char>;
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink

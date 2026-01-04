@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 #include <algorithm>
 #include <cstdlib>
 #include <stdexcept>
 
-#include "unilink/common/memory_tracker.hpp"
+#include "unilink/memory/memory_tracker.hpp"
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 // ============================================================================
 // SelectiveMemoryPool Implementation
@@ -281,5 +281,5 @@ void PooledBuffer::check_bounds(size_t index) const {
   }
 }
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink

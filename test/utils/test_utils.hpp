@@ -18,7 +18,7 @@
 
 #include <gtest/gtest.h>
 
-#include "unilink/common/platform.hpp"
+#include "unilink/base/platform.hpp"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -42,7 +42,7 @@
 #include <thread>
 #include <vector>
 
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 namespace unilink {
 namespace test {
@@ -299,13 +299,13 @@ class MemoryTest : public BaseTest {
   void SetUp() override {
     BaseTest::SetUp();
     // Reset memory pool for clean testing
-    auto& pool = unilink::common::GlobalMemoryPool::instance();
+    auto& pool = unilink::memory::GlobalMemoryPool::instance();
     pool.cleanup_old_buffers(std::chrono::milliseconds(0));
   }
 
   void TearDown() override {
     // Clean up memory pool
-    auto& pool = unilink::common::GlobalMemoryPool::instance();
+    auto& pool = unilink::memory::GlobalMemoryPool::instance();
     pool.cleanup_old_buffers(std::chrono::milliseconds(0));
     BaseTest::TearDown();
   }

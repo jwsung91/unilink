@@ -19,7 +19,7 @@
 #include <cstring>
 #include <iostream>
 
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 #include "unilink/transport/tcp_server/boost_tcp_socket.hpp"
 
 namespace unilink {
@@ -72,7 +72,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
 
   // Use memory pool for better performance (only for reasonable sizes)
   if (size <= common::constants::LARGE_BUFFER_THRESHOLD) {  // Only use pool for buffers <= 64KB
-    common::PooledBuffer pooled_buffer(size);
+    memory::PooledBuffer pooled_buffer(size);
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely
       common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);
@@ -220,9 +220,9 @@ void TcpServerSession::do_write() {
     self->do_write();
   };
 
-  if (std::holds_alternative<common::PooledBuffer>(current)) {
-    auto pooled_buf = std::get<common::PooledBuffer>(std::move(current));
-    auto shared_pooled = std::make_shared<common::PooledBuffer>(std::move(pooled_buf));
+  if (std::holds_alternative<memory::PooledBuffer>(current)) {
+    auto pooled_buf = std::get<memory::PooledBuffer>(std::move(current));
+    auto shared_pooled = std::make_shared<memory::PooledBuffer>(std::move(pooled_buf));
     auto data = shared_pooled->data();
     auto size = shared_pooled->size();
     socket_->async_write(

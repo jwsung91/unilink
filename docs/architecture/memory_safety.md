@@ -50,7 +50,9 @@ flowchart TD
 Immutable, type-safe buffer wrapper around existing data:
 
 ```cpp
-#include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/memory/memory_tracker.hpp"
+#include "unilink/memory/safe_span.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 
 using namespace unilink::common;
 
@@ -81,7 +83,7 @@ auto unchecked = from_vec.data()[0]; // Pointer access
 Utility functions prevent undefined behavior:
 
 ```cpp
-#include "unilink/common/safe_convert.hpp"
+#include "unilink/base/common.hpp"
 
 using namespace unilink::common::safe_convert;
 
@@ -128,7 +130,7 @@ buffer.validate();
 Lightweight, non-owning view of contiguous data:
 
 ```cpp
-#include "unilink/common/safe_span.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 using namespace unilink::common;
 
@@ -164,7 +166,7 @@ process_data(safe_span<const uint8_t>(buffer));
 Read-write lock based state management:
 
 ```cpp
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 
 using namespace unilink::common;
 
@@ -197,7 +199,7 @@ bool updated = state.compare_and_set(
 Lock-free atomic state operations:
 
 ```cpp
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 
 AtomicState<int> counter(0);
 
@@ -291,7 +293,7 @@ cmake -S . -B build \
 Monitor all memory allocations and deallocations:
 
 ```cpp
-#include "unilink/common/memory_tracker.hpp"
+#include "unilink/memory/memory_tracker.hpp"
 
 using namespace unilink::common;
 

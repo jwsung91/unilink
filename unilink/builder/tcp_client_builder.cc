@@ -18,39 +18,43 @@
 
 #include <boost/asio/io_context.hpp>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/common/constants.hpp"
-#include "unilink/common/exceptions.hpp"
-#include "unilink/common/input_validator.hpp"
-#include "unilink/common/io_context_manager.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
+#include "unilink/util/input_validator.hpp"
 
 namespace unilink {
 namespace builder {
 
 TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
-    : host_(host), port_(port), auto_manage_(false), use_independent_context_(false), retry_interval_ms_(3000) {
+    : host_(host),
+      port_(port),
+      auto_manage_(false),
+      use_independent_context_(false),
+      retry_interval_ms_(base::constants::DEFAULT_RETRY_INTERVAL_MS) {
   // Validate input parameters
   try {
-    common::InputValidator::validate_host(host_);
-    common::InputValidator::validate_port(port_);
-  } catch (const common::ValidationException& e) {
-    throw common::BuilderException("Invalid TCP client parameters: " + e.get_full_message(), "TcpClientBuilder",
-                                   "constructor");
+    util::InputValidator::validate_host(host_);
+    util::InputValidator::validate_port(port_);
+  } catch (const diagnostics::ValidationException& e) {
+    throw diagnostics::BuilderException("Invalid TCP client parameters: " + e.get_full_message(), "TcpClientBuilder",
+                                        "constructor");
   }
 }
 
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   try {
     // Final validation before building
-    common::InputValidator::validate_host(host_);
-    common::InputValidator::validate_port(port_);
-    common::InputValidator::validate_retry_interval(retry_interval_ms_);
+    util::InputValidator::validate_host(host_);
+    util::InputValidator::validate_port(port_);
+    util::InputValidator::validate_retry_interval(retry_interval_ms_);
 
     std::shared_ptr<boost::asio::io_context> external_ioc;
     // IoContext management
     if (use_independent_context_) {
       // Use independent IoContext (for test isolation)
-      auto independent_context = common::IoContextManager::instance().create_independent_context();
+      auto independent_context = concurrency::IoContextManager::instance().create_independent_context();
       external_ioc = std::shared_ptr<boost::asio::io_context>(std::move(independent_context));
     } else {
       // Automatically initialize IoContextManager (default behavior)
@@ -91,21 +95,21 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
     } catch (const std::exception& e) {
       // If configuration fails, ensure client is properly cleaned up
       client.reset();
-      throw common::BuilderException("Failed to configure TCP client: " + std::string(e.what()), "TcpClientBuilder",
-                                     "build");
+      throw diagnostics::BuilderException("Failed to configure TCP client: " + std::string(e.what()),
+                                          "TcpClientBuilder", "build");
     }
 
     return client;
 
-  } catch (const common::ValidationException& e) {
-    throw common::BuilderException("Validation failed during TCP client build: " + e.get_full_message(),
-                                   "TcpClientBuilder", "build");
+  } catch (const diagnostics::ValidationException& e) {
+    throw diagnostics::BuilderException("Validation failed during TCP client build: " + e.get_full_message(),
+                                        "TcpClientBuilder", "build");
   } catch (const std::bad_alloc& e) {
-    throw common::BuilderException("Memory allocation failed during TCP client build: " + std::string(e.what()),
-                                   "TcpClientBuilder", "build");
+    throw diagnostics::BuilderException("Memory allocation failed during TCP client build: " + std::string(e.what()),
+                                        "TcpClientBuilder", "build");
   } catch (const std::exception& e) {
-    throw common::BuilderException("Unexpected error during TCP client build: " + std::string(e.what()),
-                                   "TcpClientBuilder", "build");
+    throw diagnostics::BuilderException("Unexpected error during TCP client build: " + std::string(e.what()),
+                                        "TcpClientBuilder", "build");
   }
 }
 
@@ -141,11 +145,11 @@ TcpClientBuilder& TcpClientBuilder::use_independent_context(bool use_independent
 
 TcpClientBuilder& TcpClientBuilder::retry_interval(unsigned interval_ms) {
   try {
-    common::InputValidator::validate_retry_interval(interval_ms);
+    util::InputValidator::validate_retry_interval(interval_ms);
     retry_interval_ms_ = interval_ms;
-  } catch (const common::ValidationException& e) {
-    throw common::BuilderException("Invalid retry interval: " + e.get_full_message(), "TcpClientBuilder",
-                                   "retry_interval");
+  } catch (const diagnostics::ValidationException& e) {
+    throw diagnostics::BuilderException("Invalid retry interval: " + e.get_full_message(), "TcpClientBuilder",
+                                        "retry_interval");
   }
   return *this;
 }

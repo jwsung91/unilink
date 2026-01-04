@@ -21,8 +21,8 @@
 #include <iostream>
 #include <type_traits>
 
-#include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {
@@ -30,8 +30,8 @@ namespace transport {
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-using common::LinkState;
-using common::ThreadSafeLinkState;
+using base::LinkState;
+using concurrency::ThreadSafeLinkState;
 using config::TcpClientConfig;
 using interface::Channel;
 using namespace common;  // For error_reporting namespace
@@ -127,8 +127,8 @@ void TcpClient::start() {
         ioc_->run();
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("tcp_client", "io_context", "IO context error: " + std::string(e.what()));
-        error_reporting::report_system_error("tcp_client", "io_context",
-                                             "Exception in IO context: " + std::string(e.what()));
+        diagnostics::error_reporting::report_system_error("tcp_client", "io_context",
+                                                          "Exception in IO context: " + std::string(e.what()));
       }
     });
   }
@@ -192,7 +192,7 @@ void TcpClient::async_write_copy(const uint8_t* data, size_t size) {
   // Use memory pool for better performance (only for reasonable sizes)
   if (size <= 65536) {  // Only use pool for buffers <= 64KB
     try {
-      common::PooledBuffer pooled_buffer(size);
+      memory::PooledBuffer pooled_buffer(size);
       if (pooled_buffer.valid()) {
         // Copy data to pooled buffer safely
         common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);
@@ -527,9 +527,9 @@ void TcpClient::do_write() {
   };
 
   // Handle PooledBuffer, shared_ptr buffer, or std::vector<uint8_t> (fallback)
-  if (std::holds_alternative<common::PooledBuffer>(current)) {
-    auto pooled_buf = std::get<common::PooledBuffer>(std::move(current));
-    auto shared_pooled = std::make_shared<common::PooledBuffer>(std::move(pooled_buf));
+  if (std::holds_alternative<memory::PooledBuffer>(current)) {
+    auto pooled_buf = std::get<memory::PooledBuffer>(std::move(current));
+    auto shared_pooled = std::make_shared<memory::PooledBuffer>(std::move(pooled_buf));
     auto data = shared_pooled->data();
     auto size = shared_pooled->size();
     net::async_write(socket_, net::buffer(data, size),
@@ -670,11 +670,11 @@ void TcpClient::perform_stop_cleanup() {
     transition_to(LinkState::Closed);
   } catch (const std::exception& e) {
     UNILINK_LOG_ERROR("tcp_client", "stop_cleanup", "Cleanup error: " + std::string(e.what()));
-    error_reporting::report_system_error("tcp_client", "stop_cleanup",
-                                         "Exception in stop cleanup: " + std::string(e.what()));
+    diagnostics::error_reporting::report_system_error("tcp_client", "stop_cleanup",
+                                                      "Exception in stop cleanup: " + std::string(e.what()));
   } catch (...) {
     UNILINK_LOG_ERROR("tcp_client", "stop_cleanup", "Unknown error in stop cleanup");
-    error_reporting::report_system_error("tcp_client", "stop_cleanup", "Unknown error in stop cleanup");
+    diagnostics::error_reporting::report_system_error("tcp_client", "stop_cleanup", "Unknown error in stop cleanup");
   }
 }
 
@@ -739,11 +739,12 @@ void TcpClient::reset_io_objects() {
     backpressure_active_ = false;
   } catch (const std::exception& e) {
     UNILINK_LOG_ERROR("tcp_client", "reset_io_objects", "Reset error: " + std::string(e.what()));
-    error_reporting::report_system_error("tcp_client", "reset_io_objects",
-                                         "Exception while resetting io objects: " + std::string(e.what()));
+    diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects",
+                                                      "Exception while resetting io objects: " + std::string(e.what()));
   } catch (...) {
     UNILINK_LOG_ERROR("tcp_client", "reset_io_objects", "Unknown reset error");
-    error_reporting::report_system_error("tcp_client", "reset_io_objects", "Unknown error while resetting io objects");
+    diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects",
+                                                      "Unknown error while resetting io objects");
   }
 }
 }  // namespace transport

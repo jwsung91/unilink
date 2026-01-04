@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#include "unilink/common/memory_tracker.hpp"
+#include "unilink/memory/memory_tracker.hpp"
 
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 MemoryTracker& MemoryTracker::instance() {
   static MemoryTracker instance;
@@ -233,5 +233,5 @@ void ScopedMemoryTracker::track_allocation(void* ptr, size_t size) {
 
 void ScopedMemoryTracker::track_deallocation(void* ptr) { MemoryTracker::instance().track_deallocation(ptr); }
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink
