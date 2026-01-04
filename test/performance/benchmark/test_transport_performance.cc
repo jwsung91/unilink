@@ -36,6 +36,10 @@
 using namespace unilink::transport;
 using namespace unilink::config;
 using namespace unilink::common;
+using namespace unilink::memory;
+using namespace unilink::diagnostics;
+using namespace unilink::concurrency;
+using namespace unilink::util;
 using namespace std::chrono_literals;
 
 /**

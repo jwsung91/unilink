@@ -54,13 +54,13 @@ class StressTest : public BaseTest {
   void SetUp() override {
     BaseTest::SetUp();
     // Reset memory pool for clean testing
-    auto& pool = common::GlobalMemoryPool::instance();
+    auto& pool = memory::GlobalMemoryPool::instance();
     pool.cleanup_old_buffers(std::chrono::milliseconds(0));
   }
 
   void TearDown() override {
     // Clean up memory pool
-    auto& pool = common::GlobalMemoryPool::instance();
+    auto& pool = memory::GlobalMemoryPool::instance();
     pool.cleanup_old_buffers(std::chrono::milliseconds(0));
     BaseTest::TearDown();
   }
@@ -95,7 +95,7 @@ class StressTest : public BaseTest {
 TEST_F(StressTest, MemoryPoolHighLoad) {
   std::cout << "\n=== Memory Pool High Load Stress Test ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const int num_threads = 4;                               // Reduced thread count for stability
   const int operations_per_thread = 100;                   // Reduced operations for stability
   const auto timeout_duration = std::chrono::seconds(30);  // 30 second timeout
@@ -206,7 +206,7 @@ TEST_F(StressTest, MemoryPoolHighLoad) {
 TEST_F(StressTest, MemoryPoolConcurrentAccess) {
   std::cout << "\n=== Memory Pool Concurrent Access Stress Test ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const int num_threads = 5;             // Reduced threads
   const int operations_per_thread = 50;  // Reduced operations
 
@@ -317,7 +317,7 @@ TEST_F(StressTest, HighFrequencyDataTransmission) {
   const size_t message_size = 1024;
 
   // Test memory pool performance with high-frequency allocations
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   std::atomic<int> successful_allocations{0};
   std::atomic<int> failed_allocations{0};
 
@@ -371,7 +371,7 @@ TEST_F(StressTest, MemoryLeakDetection) {
   const int iterations = 100;
   const int objects_per_iteration = 5;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
 
   // Get initial memory pool stats
   auto initial_stats = pool.get_stats();
@@ -436,7 +436,7 @@ TEST_F(StressTest, LongRunningStability) {
   const auto test_duration = std::chrono::seconds(2);  // 2 seconds
   const int operations_per_second = 100;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   std::atomic<int> total_operations{0};
   std::atomic<int> successful_operations{0};
 

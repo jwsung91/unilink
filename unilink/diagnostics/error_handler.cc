@@ -24,7 +24,7 @@
 #include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 ErrorHandler::ErrorHandler() = default;
 ErrorHandler::~ErrorHandler() = default;
@@ -221,5 +221,5 @@ void report_info(const std::string& component, const std::string& operation, con
 
 }  // namespace error_reporting
 
-}  // namespace common
+}  // namespace diagnostics
 }  // namespace unilink

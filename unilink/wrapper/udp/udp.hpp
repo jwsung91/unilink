@@ -56,7 +56,7 @@ class UNILINK_API Udp : public ChannelInterface {
 
  private:
   void setup_internal_handlers();
-  void notify_state_change(common::LinkState state);
+  void notify_state_change(base::LinkState state);
 
  private:
   config::UdpConfig cfg_;

@@ -34,12 +34,12 @@ class DummyChannel : public interface::Channel {
  public:
   void start() override {
     started_ = true;
-    if (on_state_) on_state_(common::LinkState::Connected);
+    if (on_state_) on_state_(base::LinkState::Connected);
   }
 
   void stop() override {
     stopped_ = true;
-    if (on_state_) on_state_(common::LinkState::Closed);
+    if (on_state_) on_state_(base::LinkState::Closed);
   }
 
   bool is_connected() const override { return started_ && !stopped_; }

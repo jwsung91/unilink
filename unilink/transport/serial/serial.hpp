@@ -40,8 +40,8 @@
 namespace unilink {
 namespace transport {
 
-using common::LinkState;
-using common::ThreadSafeLinkState;
+using base::LinkState;
+using concurrency::ThreadSafeLinkState;
 using config::SerialConfig;
 using interface::Channel;
 using interface::SerialPortInterface;
@@ -97,7 +97,7 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   net::steady_timer retry_timer_;
 
   std::vector<uint8_t> rx_;
-  std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
+  std::deque<std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
   bool writing_ = false;
   size_t queued_bytes_ = 0;
   size_t bp_high_;   // Configurable backpressure threshold

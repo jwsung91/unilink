@@ -210,10 +210,10 @@ TEST_F(ConfigTest, ConfigValidationInvalidValuesNetwork) {
   std::cout << "\n=== Configuration Validation Invalid Values Network Test ===" << std::endl;
 
   // Test with invalid port (should throw exception due to input validation)
-  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).build(), common::BuilderException);
+  EXPECT_THROW(auto client = UnifiedBuilder::tcp_client("127.0.0.1", 0).build(), diagnostics::BuilderException);
 
   // Test with invalid host (should throw exception due to input validation)
-  EXPECT_THROW(auto client2 = UnifiedBuilder::tcp_client("", test_port_).build(), common::BuilderException);
+  EXPECT_THROW(auto client2 = UnifiedBuilder::tcp_client("", test_port_).build(), diagnostics::BuilderException);
 }
 
 // ============================================================================

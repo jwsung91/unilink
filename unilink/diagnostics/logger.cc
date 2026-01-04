@@ -26,7 +26,7 @@
 #include <thread>
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 Logger::Logger() = default;
 
@@ -492,5 +492,5 @@ void Logger::update_stats_on_flush() {
   async_stats_.flush_count++;
 }
 
-}  // namespace common
+}  // namespace diagnostics
 }  // namespace unilink

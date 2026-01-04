@@ -29,7 +29,7 @@
 #include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 /**
  * @brief Safe data buffer for type-safe data transfer
@@ -104,5 +104,5 @@ SafeDataBuffer from_raw_data(const uint8_t* data, size_t size);
 SafeDataBuffer from_span(ConstByteSpan span);
 }  // namespace safe_buffer_factory
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink

@@ -27,7 +27,7 @@
 #include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 /**
  * @brief Centralized error handling system
@@ -220,5 +220,5 @@ UNILINK_API void report_info(const std::string& component, const std::string& op
 
 }  // namespace error_reporting
 
-}  // namespace common
+}  // namespace diagnostics
 }  // namespace unilink

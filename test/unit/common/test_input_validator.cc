@@ -23,7 +23,9 @@
 #include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/util/input_validator.hpp"
 
-using namespace unilink::common;
+using namespace unilink;
+using namespace unilink::diagnostics;
+using namespace unilink::util;
 
 /**
  * @brief Input Validator Coverage Test

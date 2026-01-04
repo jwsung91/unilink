@@ -44,8 +44,8 @@ namespace transport {
 
 namespace net = boost::asio;
 
-using common::LinkState;
-using common::ThreadSafeLinkState;
+using base::LinkState;
+using concurrency::ThreadSafeLinkState;
 using config::TcpServerConfig;
 using interface::Channel;
 using interface::TcpAcceptorInterface;

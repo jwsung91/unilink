@@ -42,7 +42,7 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg)
     : owned_ioc_(nullptr),
       owns_ioc_(false),
       uses_global_ioc_(true),
-      ioc_(common::IoContextManager::instance().get_context()),
+      ioc_(concurrency::IoContextManager::instance().get_context()),
       acceptor_(nullptr),
       cfg_(cfg),
       max_clients_(0),
@@ -75,7 +75,7 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interfa
 
 TcpServer::~TcpServer() {
   // Ensure proper cleanup even if stop() wasn't called explicitly
-  if (!state_.is_state(common::LinkState::Closed)) {
+  if (!state_.is_state(base::LinkState::Closed)) {
     stop();
   }
 
@@ -85,8 +85,8 @@ TcpServer::~TcpServer() {
 void TcpServer::start() {
   // Prevent duplicate start calls when already running or in-progress
   auto current = state_.get_state();
-  if (current == common::LinkState::Listening || current == common::LinkState::Connected ||
-      current == common::LinkState::Connecting) {
+  if (current == base::LinkState::Listening || current == base::LinkState::Connected ||
+      current == base::LinkState::Connecting) {
     UNILINK_LOG_DEBUG("tcp_server", "start", "Start called while already active, ignoring");
     return;
   }
@@ -94,7 +94,7 @@ void TcpServer::start() {
 
   // Ensure the shared io_context is running when we rely on the global manager.
   if (uses_global_ioc_) {
-    auto& manager = common::IoContextManager::instance();
+    auto& manager = concurrency::IoContextManager::instance();
     if (!manager.is_running()) {
       manager.start();
     }
@@ -102,8 +102,8 @@ void TcpServer::start() {
 
   if (!acceptor_) {
     UNILINK_LOG_ERROR("tcp_server", "start", "Acceptor is null");
-    common::error_reporting::report_system_error("tcp_server", "start", "Acceptor is null");
-    state_.set_state(common::LinkState::Error);
+    diagnostics::error_reporting::report_system_error("tcp_server", "start", "Acceptor is null");
+    state_.set_state(base::LinkState::Error);
     notify_state();
     return;
   }
@@ -152,12 +152,12 @@ void TcpServer::stop() {
       }
     }
     // Clean up all sessions
-    state_.set_state(common::LinkState::Closed);
+    state_.set_state(base::LinkState::Closed);
   };
 
   const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
   const bool has_active_ioc_thread =
-      owns_ioc_ || (uses_global_ioc_ && common::IoContextManager::instance().is_running());
+      owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
 
   if (in_ioc_thread) {
     cleanup();
@@ -281,8 +281,8 @@ void TcpServer::attempt_port_binding(int retry_count) {
     acceptor_->open(tcp::v4(), ec);
     if (ec) {
       UNILINK_LOG_ERROR("tcp_server", "open", "Failed to open acceptor: " + ec.message());
-      common::error_reporting::report_connection_error("tcp_server", "open", ec, false);
-      state_.set_state(common::LinkState::Error);
+      diagnostics::error_reporting::report_connection_error("tcp_server", "open", ec, false);
+      state_.set_state(base::LinkState::Error);
       notify_state();
       return;
     }
@@ -315,8 +315,8 @@ void TcpServer::attempt_port_binding(int retry_count) {
         error_msg += " (after " + std::to_string(retry_count) + " retries)";
       }
       UNILINK_LOG_ERROR("tcp_server", "bind", error_msg);
-      common::error_reporting::report_connection_error("tcp_server", "bind", ec, false);
-      state_.set_state(common::LinkState::Error);
+      diagnostics::error_reporting::report_connection_error("tcp_server", "bind", ec, false);
+      state_.set_state(base::LinkState::Error);
       notify_state();
       return;
     }
@@ -327,8 +327,8 @@ void TcpServer::attempt_port_binding(int retry_count) {
   if (ec) {
     UNILINK_LOG_ERROR("tcp_server", "listen",
                       "Failed to listen on port: " + std::to_string(cfg_.port) + " - " + ec.message());
-    common::error_reporting::report_connection_error("tcp_server", "listen", ec, false);
-    state_.set_state(common::LinkState::Error);
+    diagnostics::error_reporting::report_connection_error("tcp_server", "listen", ec, false);
+    state_.set_state(base::LinkState::Error);
     notify_state();
     return;
   }
@@ -342,7 +342,7 @@ void TcpServer::attempt_port_binding(int retry_count) {
     UNILINK_LOG_INFO("tcp_server", "bind", "Successfully bound to port " + std::to_string(cfg_.port));
   }
 
-  state_.set_state(common::LinkState::Listening);
+  state_.set_state(base::LinkState::Listening);
   notify_state();
   do_accept();
 }
@@ -361,12 +361,12 @@ void TcpServer::do_accept() {
         UNILINK_LOG_DEBUG("tcp_server", "accept", "Accept canceled (server shutting down)");
       } else {
         UNILINK_LOG_ERROR("tcp_server", "accept", "Accept error: " + ec.message());
-        common::error_reporting::report_connection_error("tcp_server", "accept", ec, true);
-        self->state_.set_state(common::LinkState::Error);
+        diagnostics::error_reporting::report_connection_error("tcp_server", "accept", ec, true);
+        self->state_.set_state(base::LinkState::Error);
         self->notify_state();
       }
       // Continue accepting only if server is not shutting down
-      if (!self->state_.is_state(common::LinkState::Closed) && !self->stopping_.load()) {
+      if (!self->state_.is_state(base::LinkState::Closed) && !self->stopping_.load()) {
         self->do_accept();
       }
       return;
@@ -468,7 +468,7 @@ void TcpServer::do_accept() {
 
       // Clean up if current session is the terminated session
       if (was_current) {
-        self->state_.set_state(common::LinkState::Listening);
+        self->state_.set_state(base::LinkState::Listening);
         self->notify_state();
       }
     });
@@ -479,7 +479,7 @@ void TcpServer::do_accept() {
     }
 
     // Update state for existing API compatibility
-    self->state_.set_state(common::LinkState::Connected);
+    self->state_.set_state(base::LinkState::Connected);
     self->notify_state();
 
     new_session->start();
@@ -495,11 +495,11 @@ void TcpServer::notify_state() {
       on_state_(state_.get_state());
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_server", "callback", "State callback error: " + std::string(e.what()));
-      common::error_reporting::report_system_error("tcp_server", "state_callback",
+      diagnostics::error_reporting::report_system_error("tcp_server", "state_callback",
                                                    "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("tcp_server", "callback", "Unknown error in state callback");
-      common::error_reporting::report_system_error("tcp_server", "state_callback", "Unknown error in state callback");
+      diagnostics::error_reporting::report_system_error("tcp_server", "state_callback", "Unknown error in state callback");
     }
   }
 }

@@ -16,16 +16,16 @@
 
 #include "unilink/util/input_validator.hpp"
 
-#include <regex>
+#include <algorithm>
+#include <cstring>
 #include <sstream>
-#include <string>
 
 namespace unilink {
-namespace common {
+namespace util {
 
 void InputValidator::validate_host(const std::string& host) {
   validate_non_empty_string(host, "host");
-  validate_string_length(host, constants::MAX_HOSTNAME_LENGTH, "host");
+  validate_string_length(host, base::constants::MAX_HOSTNAME_LENGTH, "host");
 
   // Check if it's an IPv4 address
   if (is_valid_ipv4(host)) {
@@ -42,14 +42,14 @@ void InputValidator::validate_host(const std::string& host) {
     return;
   }
 
-  throw ValidationException("invalid host format", "host", "valid IPv4, IPv6, or hostname");
+  throw diagnostics::ValidationException("invalid host format", "host", "valid IPv4, IPv6, or hostname");
 }
 
 void InputValidator::validate_ipv4_address(const std::string& address) {
   validate_non_empty_string(address, "ipv4_address");
 
   if (!is_valid_ipv4(address)) {
-    throw ValidationException("invalid IPv4 address format", "ipv4_address", "valid IPv4 address");
+    throw diagnostics::ValidationException("invalid IPv4 address format", "ipv4_address", "valid IPv4 address");
   }
 }
 
@@ -57,16 +57,16 @@ void InputValidator::validate_ipv6_address(const std::string& address) {
   validate_non_empty_string(address, "ipv6_address");
 
   if (!is_valid_ipv6(address)) {
-    throw ValidationException("invalid IPv6 address format", "ipv6_address", "valid IPv6 address");
+    throw diagnostics::ValidationException("invalid IPv6 address format", "ipv6_address", "valid IPv6 address");
   }
 }
 
 void InputValidator::validate_device_path(const std::string& device) {
   validate_non_empty_string(device, "device_path");
-  validate_string_length(device, constants::MAX_DEVICE_PATH_LENGTH, "device_path");
+  validate_string_length(device, base::constants::MAX_DEVICE_PATH_LENGTH, "device_path");
 
   if (!is_valid_device_path(device)) {
-    throw ValidationException("invalid device path format", "device_path", "valid device path");
+    throw diagnostics::ValidationException("invalid device path format", "device_path", "valid device path");
   }
 }
 
@@ -78,7 +78,7 @@ void InputValidator::validate_parity(const std::string& parity) {
   std::transform(lower_parity.begin(), lower_parity.end(), lower_parity.begin(), ::tolower);
 
   if (lower_parity != "none" && lower_parity != "odd" && lower_parity != "even") {
-    throw ValidationException("invalid parity value", "parity", "none, odd, or even");
+    throw diagnostics::ValidationException("invalid parity value", "parity", "none, odd, or even");
   }
 }
 
@@ -146,7 +146,7 @@ bool InputValidator::is_valid_hostname(const std::string& hostname) {
   // - Each label must be 1-63 characters
   // - Total length must not exceed 253 characters
 
-  if (hostname.empty() || hostname.length() > constants::MAX_HOSTNAME_LENGTH) {
+  if (hostname.empty() || hostname.length() > base::constants::MAX_HOSTNAME_LENGTH) {
     return false;
   }
 
@@ -215,5 +215,5 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
   return false;
 }
 
-}  // namespace common
+}  // namespace util
 }  // namespace unilink

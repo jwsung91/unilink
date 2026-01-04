@@ -23,7 +23,7 @@
 #include "unilink/memory/memory_tracker.hpp"
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 // ============================================================================
 // SelectiveMemoryPool Implementation
@@ -281,5 +281,5 @@ void PooledBuffer::check_bounds(size_t index) const {
   }
 }
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink

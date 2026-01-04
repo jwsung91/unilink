@@ -26,7 +26,7 @@
 #include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 /**
  * @brief Log rotation configuration
@@ -148,5 +148,5 @@ class UNILINK_API LogRotation {
   void sort_files_by_time(std::vector<std::string>& files) const;
 };
 
-}  // namespace common
+}  // namespace diagnostics
 }  // namespace unilink

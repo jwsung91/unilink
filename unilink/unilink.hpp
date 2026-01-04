@@ -128,20 +128,7 @@ class ConfigManagerInterface;
 #endif
 
 // === Common Utilities ===
-// Utility functions and error handling
-namespace common {
-// Forward declarations for utility functions
-std::string log_message(const std::string& message);
-const char* to_cstr(const std::string& str);
-std::string ts_now();
-
-// Forward declarations for error handling and logging
-enum class ErrorCategory;
-class ErrorHandler;
-struct ErrorInfo;
-enum class ErrorLevel;
-class Logger;
-enum class LogLevel;
-}  // namespace common
+// Utility functions and error handling are provided via unilink/base/common.hpp
+// included by other modules.
 
 }  // namespace unilink

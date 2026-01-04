@@ -28,16 +28,16 @@
 class ChatClient {
  private:
   std::shared_ptr<unilink::wrapper::TcpClient> client_;
-  unilink::common::Logger& logger_;
+  unilink::diagnostics::Logger& logger_;
   std::atomic<bool> running_;
   std::string server_ip_;
   unsigned short port_;
 
  public:
   ChatClient(const std::string& server_ip, unsigned short port)
-      : logger_(unilink::common::Logger::instance()), running_(true), server_ip_(server_ip), port_(port) {
+      : logger_(unilink::diagnostics::Logger::instance()), running_(true), server_ip_(server_ip), port_(port) {
     // Initialize logger
-    logger_.set_level(unilink::common::LogLevel::INFO);
+    logger_.set_level(unilink::diagnostics::LogLevel::INFO);
     logger_.set_console_output(true);
   }
 

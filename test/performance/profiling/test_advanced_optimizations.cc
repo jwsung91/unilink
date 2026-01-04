@@ -27,6 +27,10 @@
 #include "unilink/memory/memory_pool.hpp"
 
 using namespace unilink::common;
+using namespace unilink::memory;
+using namespace unilink::diagnostics;
+using namespace unilink::concurrency;
+using namespace unilink::util;
 
 class AdvancedOptimizationsTest : public ::testing::Test {
  protected:

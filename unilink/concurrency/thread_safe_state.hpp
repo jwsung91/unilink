@@ -28,7 +28,7 @@
 #include "unilink/base/common.hpp"
 
 namespace unilink {
-namespace common {
+namespace concurrency {
 
 /**
  * @brief Thread-safe state management class
@@ -157,8 +157,8 @@ class ThreadSafeFlag {
 };
 
 // Specialization for LinkState
-using ThreadSafeLinkState = ThreadSafeState<LinkState>;
-using AtomicLinkState = AtomicState<LinkState>;
+using ThreadSafeLinkState = ThreadSafeState<base::LinkState>;
+using AtomicLinkState = AtomicState<base::LinkState>;
 
 // Template implementations (must be in header for template instantiation)
 template <typename StateType>
@@ -360,5 +360,5 @@ inline void ThreadSafeFlag::wait_for_false(std::chrono::milliseconds timeout) co
   cv_.wait_for(lock, timeout, [this] { return !flag_.load(); });
 }
 
-}  // namespace common
+}  // namespace concurrency
 }  // namespace unilink

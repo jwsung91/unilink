@@ -28,7 +28,8 @@
 #include "test_utils.hpp"
 #include "unilink/diagnostics/logger.hpp"
 
-using namespace unilink::common;
+using namespace unilink;
+using namespace unilink::diagnostics;
 using namespace std::chrono_literals;
 using unilink::test::TestUtils;
 
@@ -173,13 +174,10 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithRotation) {
     }
   }
 
-  // If no file exists, the test still passes as long as no crash occurred
-  // This tests the rotation logic execution, not file creation
-  EXPECT_TRUE(file_exists || true);  // Always pass - we're testing code coverage, not file creation
+  EXPECT_TRUE(file_exists || true);
 }
 
 TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithoutOpenFile) {
-  // Test write_to_file when no file is open
   Logger::instance().set_file_output("");  // Clear file output
   Logger::instance().set_level(LogLevel::DEBUG);
 
@@ -289,52 +287,35 @@ TEST_F(AdvancedLoggerCoverageTest, LogCallback) {
 
 TEST_F(AdvancedLoggerCoverageTest, LogWithEmptyComponent) {
   Logger::instance().set_level(LogLevel::DEBUG);
-
-  // Test logging with empty component
   UNILINK_LOG_DEBUG("", "operation", "Message with empty component");
-
   // Should not crash
 }
 
 TEST_F(AdvancedLoggerCoverageTest, LogWithEmptyOperation) {
   Logger::instance().set_level(LogLevel::DEBUG);
-
-  // Test logging with empty operation
   UNILINK_LOG_DEBUG("component", "", "Message with empty operation");
-
   // Should not crash
 }
 
 TEST_F(AdvancedLoggerCoverageTest, LogWithEmptyMessage) {
   Logger::instance().set_level(LogLevel::DEBUG);
-
-  // Test logging with empty message
   UNILINK_LOG_DEBUG("component", "operation", "");
-
   // Should not crash
 }
 
 TEST_F(AdvancedLoggerCoverageTest, LogWhenDisabled) {
   Logger::instance().set_enabled(false);
   Logger::instance().set_level(LogLevel::DEBUG);
-
-  // Logging when disabled should not crash
   UNILINK_LOG_DEBUG("test", "operation", "Message when disabled");
-
   // Should not crash
 }
 
 TEST_F(AdvancedLoggerCoverageTest, LogLevelFiltering) {
   Logger::instance().set_level(LogLevel::WARNING);
-
-  // These should be filtered out
   UNILINK_LOG_DEBUG("test", "operation", "Debug message");
   UNILINK_LOG_INFO("test", "operation", "Info message");
-
-  // This should be logged
   UNILINK_LOG_WARNING("test", "operation", "Warning message");
   UNILINK_LOG_ERROR("test", "operation", "Error message");
-
   // Should not crash
 }
 
@@ -350,7 +331,6 @@ TEST_F(AdvancedLoggerCoverageTest, ConcurrentLogging) {
   const int messages_per_thread = 10;
   std::vector<std::thread> threads;
 
-  // Start multiple threads logging concurrently
   for (int t = 0; t < num_threads; ++t) {
     threads.emplace_back([t, messages_per_thread]() {
       for (int i = 0; i < messages_per_thread; ++i) {
@@ -359,15 +339,11 @@ TEST_F(AdvancedLoggerCoverageTest, ConcurrentLogging) {
     });
   }
 
-  // Wait for all threads to complete
   for (auto& thread : threads) {
     thread.join();
   }
 
-  // Flush to ensure all messages are written
   Logger::instance().flush();
-
-  // Verify file was created
   std::ifstream file(test_log_file_);
   ASSERT_TRUE(file.is_open());
 }
@@ -381,15 +357,11 @@ TEST_F(AdvancedLoggerCoverageTest, HighVolumeLogging) {
   Logger::instance().set_level(LogLevel::DEBUG);
 
   const int num_messages = 1000;
-
-  // Log many messages
   for (int i = 0; i < num_messages; ++i) {
     UNILINK_LOG_DEBUG("test", "operation", "High volume message " + std::to_string(i));
   }
 
   Logger::instance().flush();
-
-  // Verify file was created
   std::ifstream file(test_log_file_);
   ASSERT_TRUE(file.is_open());
 }

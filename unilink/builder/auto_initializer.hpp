@@ -39,11 +39,11 @@ class UNILINK_API AutoInitializer {
    * If already running, it does nothing.
    */
   static void ensure_io_context_running() {
-    if (!common::IoContextManager::instance().is_running()) {
+    if (!concurrency::IoContextManager::instance().is_running()) {
       std::lock_guard<std::mutex> lock(init_mutex());
       // Double-check locking
-      if (!common::IoContextManager::instance().is_running()) {
-        common::IoContextManager::instance().start();
+      if (!concurrency::IoContextManager::instance().is_running()) {
+        concurrency::IoContextManager::instance().start();
       }
     }
   }
@@ -51,7 +51,7 @@ class UNILINK_API AutoInitializer {
   /**
    * @brief Check if IoContextManager is running
    */
-  static bool is_io_context_running() { return common::IoContextManager::instance().is_running(); }
+  static bool is_io_context_running() { return concurrency::IoContextManager::instance().is_running(); }
 
  private:
   static std::mutex& init_mutex();

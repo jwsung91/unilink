@@ -172,7 +172,7 @@ TEST_F(IntegrationTest, ErrorHandling) {
                                  .unlimited_clients()  // 클라이언트 제한 없음
 
                                  .build(),
-               common::BuilderException);
+               diagnostics::BuilderException);
 
   // Test error callback
   std::atomic<bool> error_occurred{false};
@@ -215,12 +215,12 @@ TEST_F(IntegrationTest, ResourceSharing) {
  * @brief State management tests
  */
 TEST_F(IntegrationTest, StateManagement) {
-  std::atomic<common::LinkState> client_state{common::LinkState::Idle};
+  std::atomic<base::LinkState> client_state{base::LinkState::Idle};
 
   auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
 
   EXPECT_NE(client, nullptr);
-  EXPECT_EQ(client_state.load(), common::LinkState::Idle);
+  EXPECT_EQ(client_state.load(), base::LinkState::Idle);
 }
 
 // ============================================================================
@@ -318,7 +318,7 @@ TEST_F(IntegrationTest, ErrorHandlingAndRecovery) {
                                    error_message = error;
                                  })
                                  .build(),
-               common::BuilderException);
+               diagnostics::BuilderException);
 
   // Test client with invalid host
   auto client = unilink::tcp_client("invalid.host", 12345)

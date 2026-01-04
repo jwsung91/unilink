@@ -259,7 +259,7 @@ TEST_F(StableIntegrationTest, StableErrorHandling) {
                                            cv_.notify_one();
                                          })
                                          .build(),
-               common::BuilderException);
+               diagnostics::BuilderException);
 
   // Test invalid host handling
   auto invalid_client = unilink::tcp_client("invalid.host", 12345)

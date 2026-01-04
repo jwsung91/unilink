@@ -30,13 +30,13 @@ int main() {
   std::cout << "\n1. Logging system setup" << std::endl;
 
   // Set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-  common::Logger::instance().set_level(common::LogLevel::DEBUG);
+  diagnostics::Logger::instance().set_level(diagnostics::LogLevel::DEBUG);
 
   // Set file output
-  common::Logger::instance().set_file_output("unilink_example.log");
+  diagnostics::Logger::instance().set_file_output("unilink_example.log");
 
   // Enable console output
-  common::Logger::instance().set_console_output(true);
+  diagnostics::Logger::instance().set_console_output(true);
 
   // 2. Basic logging usage
   std::cout << "\n2. Basic logging usage" << std::endl;
@@ -107,17 +107,17 @@ int main() {
   UNILINK_LOG_DEBUG("example", "test", "This message is DEBUG level");
 
   // Change to INFO level
-  common::Logger::instance().set_level(common::LogLevel::INFO);
+  diagnostics::Logger::instance().set_level(diagnostics::LogLevel::INFO);
   UNILINK_LOG_DEBUG("example", "test", "This message is not visible (DEBUG level)");
   UNILINK_LOG_INFO("example", "test", "This message is visible (INFO level)");
 
   // 8. Disable log output
   std::cout << "\n8. Disable log output" << std::endl;
 
-  common::Logger::instance().set_enabled(false);
+  diagnostics::Logger::instance().set_enabled(false);
   UNILINK_LOG_INFO("example", "test", "This message is not visible (logging disabled)");
 
-  common::Logger::instance().set_enabled(true);
+  diagnostics::Logger::instance().set_enabled(true);
   UNILINK_LOG_INFO("example", "test", "Logging re-enabled");
 
   // 9. Cleanup
@@ -129,7 +129,7 @@ int main() {
   UNILINK_LOG_INFO("example", "shutdown", "Application shutdown");
 
   // Flush log file
-  common::Logger::instance().flush();
+  diagnostics::Logger::instance().flush();
 
   std::cout << "\n=== Logging example completed ===" << std::endl;
   std::cout << "Log file: unilink_example.log" << std::endl;

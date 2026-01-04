@@ -26,7 +26,7 @@
 #include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace concurrency {
 
 /**
  * Global io_context manager
@@ -73,5 +73,10 @@ class UNILINK_API IoContextManager {
   mutable std::mutex mutex_;
 };
 
-}  // namespace common
+}  // namespace concurrency
+
+// Compatibility alias while transitioning from legacy `common` namespace.
+namespace common {
+using IoContextManager = concurrency::IoContextManager;
+}  // namespace concurrency
 }  // namespace unilink

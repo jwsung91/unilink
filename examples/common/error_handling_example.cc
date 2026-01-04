@@ -30,13 +30,13 @@ int main() {
   std::cout << "\n1. Error handler setup" << std::endl;
 
   // Set minimum error level
-  common::ErrorHandler::instance().set_min_error_level(common::ErrorLevel::INFO);
+  diagnostics::ErrorHandler::instance().set_min_error_level(diagnostics::ErrorLevel::INFO);
 
   // Register error callback
-  common::ErrorHandler::instance().register_callback([](const common::ErrorInfo& error) {
+  diagnostics::ErrorHandler::instance().register_callback([](const diagnostics::ErrorInfo& error) {
     std::cout << "🚨 Error occurred: " << error.get_summary() << std::endl;
 
-    if (error.level == common::ErrorLevel::CRITICAL) {
+    if (error.level == diagnostics::ErrorLevel::CRITICAL) {
       std::cout << "   ⚠️  Critical error - immediate action required!" << std::endl;
     }
   });
@@ -46,30 +46,30 @@ int main() {
 
   // Connection error
   boost::system::error_code ec(boost::system::errc::connection_refused, boost::system::system_category());
-  common::error_reporting::report_connection_error("tcp_client", "connect", ec, true);
+  diagnostics::error_reporting::report_connection_error("tcp_client", "connect", ec, true);
 
   // Communication error
-  common::error_reporting::report_communication_error("tcp_server", "read", "Data read failure", false);
+  diagnostics::error_reporting::report_communication_error("tcp_server", "read", "Data read failure", false);
 
   // Configuration error
-  common::error_reporting::report_configuration_error("serial", "validate", "Invalid baud rate setting");
+  diagnostics::error_reporting::report_configuration_error("serial", "validate", "Invalid baud rate setting");
 
   // Memory error
-  common::error_reporting::report_memory_error("buffer", "allocate", "Memory allocation failed");
+  diagnostics::error_reporting::report_memory_error("buffer", "allocate", "Memory allocation failed");
 
   // System error
-  common::error_reporting::report_system_error("io_context", "run", "IO context execution failed", ec);
+  diagnostics::error_reporting::report_system_error("io_context", "run", "IO context execution failed", ec);
 
   // Warning
-  common::error_reporting::report_warning("config", "load", "Configuration file not found, using defaults");
+  diagnostics::error_reporting::report_warning("config", "load", "Configuration file not found, using defaults");
 
   // Info
-  common::error_reporting::report_info("startup", "init", "Application initialization completed");
+  diagnostics::error_reporting::report_info("startup", "init", "Application initialization completed");
 
   // 3. Error statistics check
   std::cout << "\n3. Error statistics check" << std::endl;
 
-  auto stats = common::ErrorHandler::instance().get_error_stats();
+  auto stats = diagnostics::ErrorHandler::instance().get_error_stats();
   std::cout << "Total errors: " << stats.total_errors << std::endl;
   std::cout << "INFO: " << stats.errors_by_level[0] << std::endl;
   std::cout << "WARNING: " << stats.errors_by_level[1] << std::endl;
@@ -85,16 +85,16 @@ int main() {
   // 4. Component-specific error queries
   std::cout << "\n4. Component-specific error queries" << std::endl;
 
-  auto tcp_errors = common::ErrorHandler::instance().get_errors_by_component("tcp_client");
+  auto tcp_errors = diagnostics::ErrorHandler::instance().get_errors_by_component("tcp_client");
   std::cout << "TCP client error count: " << tcp_errors.size() << std::endl;
 
-  auto serial_errors = common::ErrorHandler::instance().get_errors_by_component("serial");
+  auto serial_errors = diagnostics::ErrorHandler::instance().get_errors_by_component("serial");
   std::cout << "Serial error count: " << serial_errors.size() << std::endl;
 
   // 5. Recent error queries
   std::cout << "\n5. Recent error queries" << std::endl;
 
-  auto recent_errors = common::ErrorHandler::instance().get_recent_errors(3);
+  auto recent_errors = diagnostics::ErrorHandler::instance().get_recent_errors(3);
   std::cout << "Recent 3 errors:" << std::endl;
   for (const auto& error : recent_errors) {
     std::cout << "  - " << error.get_summary() << std::endl;
@@ -122,17 +122,17 @@ int main() {
   // 7. Error handler disable/enable
   std::cout << "\n7. Error handler disable/enable" << std::endl;
 
-  common::ErrorHandler::instance().set_enabled(false);
-  common::error_reporting::report_info("test", "disabled", "This message is not visible");
+  diagnostics::ErrorHandler::instance().set_enabled(false);
+  diagnostics::error_reporting::report_info("test", "disabled", "This message is not visible");
 
-  common::ErrorHandler::instance().set_enabled(true);
-  common::error_reporting::report_info("test", "enabled", "Error handler re-enabled");
+  diagnostics::ErrorHandler::instance().set_enabled(true);
+  diagnostics::error_reporting::report_info("test", "enabled", "Error handler re-enabled");
 
   // 8. Error statistics reset
   std::cout << "\n8. Error statistics reset" << std::endl;
 
-  common::ErrorHandler::instance().reset_stats();
-  auto reset_stats = common::ErrorHandler::instance().get_error_stats();
+  diagnostics::ErrorHandler::instance().reset_stats();
+  auto reset_stats = diagnostics::ErrorHandler::instance().get_error_stats();
   std::cout << "Total errors after reset: " << reset_stats.total_errors << std::endl;
 
   std::cout << "\n=== Error handling example completed ===" << std::endl;

@@ -183,18 +183,18 @@ void TcpClient::setup_internal_handlers() {
   });
 
   // Handle state changes
-  channel_->on_state([this](common::LinkState state) { notify_state_change(state); });
+  channel_->on_state([this](base::LinkState state) { notify_state_change(state); });
 }
 
-void TcpClient::notify_state_change(common::LinkState state) {
+void TcpClient::notify_state_change(base::LinkState state) {
   switch (state) {
-    case common::LinkState::Connected:
+    case base::LinkState::Connected:
       if (connect_handler_) connect_handler_();
       break;
-    case common::LinkState::Closed:
+    case base::LinkState::Closed:
       if (disconnect_handler_) disconnect_handler_();
       break;
-    case common::LinkState::Error:
+    case base::LinkState::Error:
       if (error_handler_) error_handler_("Connection error occurred");
       break;
     default:

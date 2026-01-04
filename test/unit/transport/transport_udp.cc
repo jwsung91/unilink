@@ -119,8 +119,8 @@ TEST(TransportUdpTest, LearnsRemoteFromFirstPacket) {
 
   std::atomic<int> connected_events{0};
   std::string inbound;
-  channel->on_state([&](common::LinkState s) {
-    if (s == common::LinkState::Connected) connected_events.fetch_add(1);
+  channel->on_state([&](base::LinkState s) {
+    if (s == base::LinkState::Connected) connected_events.fetch_add(1);
   });
   channel->on_bytes([&](const uint8_t* data, size_t n) { inbound.assign(reinterpret_cast<const char*>(data), n); });
 
@@ -162,14 +162,14 @@ TEST(TransportUdpTest, WriteWithoutRemoteIsNoop) {
   cfg.local_port = reserve_free_port();
 
   auto channel = transport::UdpChannel::create(cfg, ioc);
-  std::atomic<common::LinkState> last_state{common::LinkState::Idle};
-  channel->on_state([&](common::LinkState s) { last_state.store(s); });
+  std::atomic<base::LinkState> last_state{base::LinkState::Idle};
+  channel->on_state([&](base::LinkState s) { last_state.store(s); });
 
   channel->start();
   auto payload = common::safe_convert::string_to_uint8("orphan");
   channel->async_write_copy(payload.data(), payload.size());  // no remote yet
 
-  EXPECT_FALSE(wait_for_condition(ioc, [&] { return last_state.load() == common::LinkState::Error; }, 100ms));
+  EXPECT_FALSE(wait_for_condition(ioc, [&] { return last_state.load() == base::LinkState::Error; }, 100ms));
   channel->stop();
 }
 
@@ -229,8 +229,8 @@ TEST(TransportUdpTest, TruncatedDatagramSetsError) {
   cfg.local_port = port;
   auto channel = transport::UdpChannel::create(cfg, ioc);
 
-  std::atomic<common::LinkState> last_state{common::LinkState::Idle};
-  channel->on_state([&](common::LinkState s) { last_state.store(s); });
+  std::atomic<base::LinkState> last_state{base::LinkState::Idle};
+  channel->on_state([&](base::LinkState s) { last_state.store(s); });
   channel->start();
 
   pump_io(ioc, 30ms);  // allow bind + receive to arm
@@ -241,7 +241,7 @@ TEST(TransportUdpTest, TruncatedDatagramSetsError) {
   std::vector<uint8_t> big(common::constants::DEFAULT_READ_BUFFER_SIZE + 512, 0xAB);
   peer.send_to(boost::asio::buffer(big), ep);
 
-  EXPECT_TRUE(wait_for_condition(ioc, [&] { return last_state.load() == common::LinkState::Error; }, 200ms));
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return last_state.load() == base::LinkState::Error; }, 200ms));
 
   peer.close();
   channel->stop();
@@ -260,13 +260,13 @@ TEST(TransportUdpTest, QueueLimitMovesToError) {
   auto channel = transport::UdpChannel::create(cfg, ioc);
   channel->start();
 
-  std::atomic<common::LinkState> last_state{common::LinkState::Idle};
-  channel->on_state([&](common::LinkState s) { last_state.store(s); });
+  std::atomic<base::LinkState> last_state{base::LinkState::Idle};
+  channel->on_state([&](base::LinkState s) { last_state.store(s); });
 
   std::vector<uint8_t> huge(common::constants::DEFAULT_BACKPRESSURE_THRESHOLD * 2, 0xCD);
   channel->async_write_copy(huge.data(), huge.size());
 
-  EXPECT_TRUE(wait_for_condition(ioc, [&] { return last_state.load() == common::LinkState::Error; }, 200ms));
+  EXPECT_TRUE(wait_for_condition(ioc, [&] { return last_state.load() == base::LinkState::Error; }, 200ms));
   channel->stop();
 }
 

@@ -19,7 +19,7 @@
 #include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
-namespace common {
+namespace concurrency {
 
 IoContextManager::IoContextManager() = default;
 
@@ -147,5 +147,5 @@ IoContextManager::~IoContextManager() {
   }
 }
 
-}  // namespace common
+}  // namespace concurrency
 }  // namespace unilink

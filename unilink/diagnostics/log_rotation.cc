@@ -22,7 +22,7 @@
 #include <sstream>
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 LogRotation::LogRotation(const LogRotationConfig& config) : config_(config) {}
 
@@ -192,5 +192,5 @@ void LogRotation::sort_files_by_time(std::vector<std::string>& files) const {
   });
 }
 
-}  // namespace common
+}  // namespace diagnostics
 }  // namespace unilink

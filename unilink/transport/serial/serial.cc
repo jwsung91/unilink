@@ -35,7 +35,7 @@ using namespace common;  // For error_reporting namespace
 namespace {
 // Ensure IoContextManager is running before we capture its io_context reference
 net::io_context& acquire_shared_serial_context() {
-  auto& manager = common::IoContextManager::instance();
+  auto& manager = concurrency::IoContextManager::instance();
   manager.start();
   return manager.get_context();
 }
@@ -96,7 +96,7 @@ Serial::Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInt
 Serial::~Serial() {
   // stop() might have been called already. Ensure we don't double-stop,
   // but do clean up resources if we own them.
-  if (started_ && !state_.is_state(common::LinkState::Closed)) stop();
+  if (started_ && !state_.is_state(base::LinkState::Closed)) stop();
 
   // No need to clean up io_context as it's shared and managed by IoContextManager
 }
@@ -106,7 +106,7 @@ void Serial::start() {
   stopping_.store(false);
   UNILINK_LOG_INFO("serial", "start", "Starting device: " + cfg_.device);
   if (!owns_ioc_) {
-    auto& manager = common::IoContextManager::instance();
+    auto& manager = concurrency::IoContextManager::instance();
     if (!manager.is_running()) {
       manager.start();
     }
@@ -122,7 +122,7 @@ void Serial::start() {
   net::post(strand_, [self] {
     if (auto s = self.lock()) {
       UNILINK_LOG_DEBUG("serial", "start", "Posting open_and_configure for device: " + s->cfg_.device);
-      s->state_.set_state(common::LinkState::Connecting);
+      s->state_.set_state(base::LinkState::Connecting);
       s->notify_state();
       s->open_and_configure();
     }
@@ -132,12 +132,12 @@ void Serial::start() {
 
 void Serial::stop() {
   if (!started_) {
-    state_.set_state(common::LinkState::Closed);
+    state_.set_state(base::LinkState::Closed);
     return;
   }
 
   stopping_.store(true);
-  if (!state_.is_state(common::LinkState::Closed)) {
+  if (!state_.is_state(base::LinkState::Closed)) {
     if (work_guard_) work_guard_->reset();  // Allow the io_context to run out of work.
     auto self = weak_from_this();
     net::post(strand_, [self] {
@@ -165,7 +165,7 @@ void Serial::stop() {
     }
 
     opened_.store(false);
-    state_.set_state(common::LinkState::Closed);
+    state_.set_state(base::LinkState::Closed);
     notify_state();
   }
   started_ = false;
@@ -174,7 +174,7 @@ void Serial::stop() {
 bool Serial::is_connected() const { return opened_.load(); }
 
 void Serial::async_write_copy(const uint8_t* data, size_t n) {
-  if (stopping_.load() || state_.is_state(common::LinkState::Closed) || state_.is_state(common::LinkState::Error)) {
+  if (stopping_.load() || state_.is_state(base::LinkState::Closed) || state_.is_state(base::LinkState::Error)) {
     return;
   }
 
@@ -185,7 +185,7 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
 
   // Use memory pool for better performance (only for reasonable sizes)
   if (n <= 65536) {  // Only use pool for buffers <= 64KB
-    common::PooledBuffer pooled_buffer(n);
+    memory::PooledBuffer pooled_buffer(n);
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely
       common::safe_memory::safe_memcpy(pooled_buffer.data(), data, n);
@@ -198,7 +198,7 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
           self->writing_ = false;
           self->report_backpressure(self->queued_bytes_);
           // Surface error state immediately for observability, then reuse retry flow via handle_error.
-          self->state_.set_state(common::LinkState::Error);
+          self->state_.set_state(base::LinkState::Error);
           self->notify_state();
           const auto overflow_ec = make_error_code(boost::system::errc::no_buffer_space);
           self->handle_error("write_queue_overflow", overflow_ec);
@@ -223,7 +223,7 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
       self->queued_bytes_ = 0;
       self->writing_ = false;
       self->report_backpressure(self->queued_bytes_);
-      self->state_.set_state(common::LinkState::Error);
+      self->state_.set_state(base::LinkState::Error);
       self->notify_state();
       const auto overflow_ec = make_error_code(boost::system::errc::no_buffer_space);
       self->handle_error("write_queue_overflow", overflow_ec);
@@ -237,7 +237,7 @@ void Serial::async_write_copy(const uint8_t* data, size_t n) {
 }
 
 void Serial::async_write_move(std::vector<uint8_t>&& data) {
-  if (stopping_.load() || state_.is_state(common::LinkState::Closed) || state_.is_state(common::LinkState::Error)) {
+  if (stopping_.load() || state_.is_state(base::LinkState::Closed) || state_.is_state(base::LinkState::Error)) {
     return;
   }
   const auto added = data.size();
@@ -252,7 +252,7 @@ void Serial::async_write_move(std::vector<uint8_t>&& data) {
       self->queued_bytes_ = 0;
       self->writing_ = false;
       self->report_backpressure(self->queued_bytes_);
-      self->state_.set_state(common::LinkState::Error);
+      self->state_.set_state(base::LinkState::Error);
       self->notify_state();
       const auto overflow_ec = make_error_code(boost::system::errc::no_buffer_space);
       self->handle_error("write_queue_overflow", overflow_ec);
@@ -266,7 +266,7 @@ void Serial::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (stopping_.load() || state_.is_state(common::LinkState::Closed) || state_.is_state(common::LinkState::Error)) {
+  if (stopping_.load() || state_.is_state(base::LinkState::Closed) || state_.is_state(base::LinkState::Error)) {
     return;
   }
   if (!data || data->empty()) return;
@@ -282,7 +282,7 @@ void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
       self->queued_bytes_ = 0;
       self->writing_ = false;
       self->report_backpressure(self->queued_bytes_);
-      self->state_.set_state(common::LinkState::Error);
+      self->state_.set_state(base::LinkState::Error);
       self->notify_state();
       const auto overflow_ec = make_error_code(boost::system::errc::no_buffer_space);
       self->handle_error("write_queue_overflow", overflow_ec);
@@ -363,7 +363,7 @@ void Serial::open_and_configure() {
   start_read();
 
   opened_.store(true);
-  state_.set_state(common::LinkState::Connected);
+  state_.set_state(base::LinkState::Connected);
   notify_state();
 
   // Flush any pending writes that were queued during reconnection
@@ -386,7 +386,7 @@ void Serial::start_read() {
             if (self->cfg_.stop_on_callback_exception) {
               self->opened_.store(false);
               self->close_port();
-              self->state_.set_state(common::LinkState::Error);
+              self->state_.set_state(base::LinkState::Error);
               self->notify_state();
               return;
             }
@@ -397,7 +397,7 @@ void Serial::start_read() {
             if (self->cfg_.stop_on_callback_exception) {
               self->opened_.store(false);
               self->close_port();
-              self->state_.set_state(common::LinkState::Error);
+              self->state_.set_state(base::LinkState::Error);
               self->notify_state();
               return;
             }
@@ -436,9 +436,9 @@ void Serial::do_write() {
     self->do_write();
   };
 
-  if (std::holds_alternative<common::PooledBuffer>(current)) {
-    auto pooled_buf = std::get<common::PooledBuffer>(std::move(current));
-    auto shared_pooled = std::make_shared<common::PooledBuffer>(std::move(pooled_buf));
+  if (std::holds_alternative<memory::PooledBuffer>(current)) {
+    auto pooled_buf = std::get<memory::PooledBuffer>(std::move(current));
+    auto shared_pooled = std::make_shared<memory::PooledBuffer>(std::move(pooled_buf));
     auto data = shared_pooled->data();
     auto size = shared_pooled->size();
     port_->async_write(net::buffer(data, size), net::bind_executor(strand_, [self, buf = shared_pooled, on_write](
@@ -472,39 +472,39 @@ void Serial::handle_error(const char* where, const boost::system::error_code& ec
   if (stopping_.load()) {
     opened_.store(false);
     close_port();
-    state_.set_state(common::LinkState::Closed);
+    state_.set_state(base::LinkState::Closed);
     notify_state();
     return;
   }
 
   if (ec == boost::asio::error::operation_aborted) {
     // If we already flagged an error (e.g., queue overflow) don't override with Closed.
-    if (state_.is_state(common::LinkState::Error)) {
+    if (state_.is_state(base::LinkState::Error)) {
       return;
     }
     opened_.store(false);
     close_port();
-    state_.set_state(common::LinkState::Closed);
+    state_.set_state(base::LinkState::Closed);
     notify_state();
     return;
   }
 
   // 구조화된 에러 처리
   bool retryable = cfg_.reopen_on_error;
-  common::error_reporting::report_connection_error("serial", where, ec, retryable);
+  diagnostics::error_reporting::report_connection_error("serial", where, ec, retryable);
 
   UNILINK_LOG_ERROR("serial", where, "Error: " + ec.message() + " (code: " + std::to_string(ec.value()) + ")");
 
   if (cfg_.reopen_on_error) {
     opened_.store(false);
     close_port();
-    state_.set_state(common::LinkState::Connecting);
+    state_.set_state(base::LinkState::Connecting);
     notify_state();
     schedule_retry(where, ec);
   } else {
     opened_.store(false);
     close_port();
-    state_.set_state(common::LinkState::Error);
+    state_.set_state(base::LinkState::Error);
     notify_state();
   }
 }
@@ -538,11 +538,11 @@ void Serial::notify_state() {
       on_state_(state_.get_state());
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("serial", "callback", "State callback error: " + std::string(e.what()));
-      common::error_reporting::report_system_error("serial", "state_callback",
+      diagnostics::error_reporting::report_system_error("serial", "state_callback",
                                                    "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("serial", "callback", "Unknown error in state callback");
-      common::error_reporting::report_system_error("serial", "state_callback", "Unknown error in state callback");
+      diagnostics::error_reporting::report_system_error("serial", "state_callback", "Unknown error in state callback");
     }
   }
 }

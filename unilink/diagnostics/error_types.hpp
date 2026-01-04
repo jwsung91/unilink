@@ -26,7 +26,7 @@
 #include <string>
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 #ifdef ERROR
 #undef ERROR
@@ -216,5 +216,5 @@ struct ErrorStats {
   }
 };
 
-}  // namespace common
+}  // namespace diagnostics
 }  // namespace unilink

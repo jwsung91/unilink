@@ -212,7 +212,7 @@ void TcpServer::setup_internal_handlers() {
 
   channel_->on_bytes([this](const uint8_t* data, size_t size) { handle_bytes(data, size); });
 
-  channel_->on_state([this](common::LinkState state) { handle_state(state); });
+  channel_->on_state([this](base::LinkState state) { handle_state(state); });
 
   // Set multi-client callbacks
   auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
@@ -250,36 +250,36 @@ void TcpServer::handle_bytes(const uint8_t* data, size_t size) {
   }
 }
 
-void TcpServer::handle_state(common::LinkState state) {
+void TcpServer::handle_state(base::LinkState state) {
   {
     std::lock_guard<std::mutex> lock(mutex_);
     // Update listening state based on server state
-    if (state == common::LinkState::Listening) {
+    if (state == base::LinkState::Listening) {
       is_listening_ = true;
-    } else if (state == common::LinkState::Error || state == common::LinkState::Closed) {
+    } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
       is_listening_ = false;
     }
   }
 
   switch (state) {
-    case common::LinkState::Connected:
+    case base::LinkState::Connected:
       // For TCP server, Connected state means a client connected
       // This should only be called when a client actually connects, not when server starts listening
       if (on_connect_) {
         on_connect_();
       }
       break;
-    case common::LinkState::Closed:
+    case base::LinkState::Closed:
       if (on_disconnect_) {
         on_disconnect_();
       }
       break;
-    case common::LinkState::Error:
+    case base::LinkState::Error:
       if (on_error_) {
         on_error_("Connection error");
       }
       break;
-    case common::LinkState::Listening:
+    case base::LinkState::Listening:
       // Server is now listening - this is not a connection event
       // Do not call on_connect_ here
       break;

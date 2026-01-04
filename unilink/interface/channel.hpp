@@ -27,7 +27,7 @@ namespace interface {
 class UNILINK_API Channel {
  public:
   using OnBytes = std::function<void(const uint8_t*, size_t)>;
-  using OnState = std::function<void(common::LinkState)>;
+  using OnState = std::function<void(base::LinkState)>;
   using OnBackpressure = std::function<void(size_t /*queued_bytes*/)>;
 
   virtual ~Channel() = default;

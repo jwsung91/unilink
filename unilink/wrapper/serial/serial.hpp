@@ -65,7 +65,7 @@ class UNILINK_API Serial : public ChannelInterface {
 
  private:
   void setup_internal_handlers();
-  void notify_state_change(common::LinkState state);
+  void notify_state_change(base::LinkState state);
 
  private:
   std::string device_;

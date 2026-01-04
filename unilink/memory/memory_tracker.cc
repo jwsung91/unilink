@@ -23,7 +23,7 @@
 #include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 MemoryTracker& MemoryTracker::instance() {
   static MemoryTracker instance;
@@ -233,5 +233,5 @@ void ScopedMemoryTracker::track_allocation(void* ptr, size_t size) {
 
 void ScopedMemoryTracker::track_deallocation(void* ptr) { MemoryTracker::instance().track_deallocation(ptr); }
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink

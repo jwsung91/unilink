@@ -31,16 +31,16 @@ using namespace unilink;
 class EchoServer {
  private:
   std::shared_ptr<wrapper::TcpServer> server_;
-  common::Logger& logger_;
+  diagnostics::Logger& logger_;
   std::atomic<bool> running_;
   unsigned short port_;
   std::atomic<bool> client_connected_;
 
  public:
   EchoServer(unsigned short port)
-      : logger_(unilink::common::Logger::instance()), running_(true), port_(port), client_connected_(false) {
+      : logger_(unilink::diagnostics::Logger::instance()), running_(true), port_(port), client_connected_(false) {
     // Initialize logger
-    logger_.set_level(unilink::common::LogLevel::INFO);
+    logger_.set_level(unilink::diagnostics::LogLevel::INFO);
     logger_.set_console_output(true);
   }
 

@@ -38,6 +38,10 @@
 using namespace unilink;
 using namespace unilink::test;
 using namespace unilink::common;
+using namespace unilink::memory;
+using namespace unilink::diagnostics;
+using namespace unilink::concurrency;
+using namespace unilink::util;
 using namespace unilink::builder;
 using namespace std::chrono_literals;
 

@@ -38,9 +38,9 @@ class ImprovedArchitectureTest : public ::testing::Test {
  protected:
   void SetUp() override {
     // Stop IoContextManager for auto-init test
-    if (common::IoContextManager::instance().is_running()) {
+    if (concurrency::IoContextManager::instance().is_running()) {
       std::cout << "Stopping IoContextManager for auto-init test..." << std::endl;
-      common::IoContextManager::instance().stop();
+      concurrency::IoContextManager::instance().stop();
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
   }
@@ -128,8 +128,8 @@ TEST_F(ImprovedArchitectureTest, UpperAPIAutoInitialization) {
   uint16_t test_port = TestUtils::getAvailableTestPort();
 
   // Builder auto-initializes even if IoContextManager is not running
-  if (common::IoContextManager::instance().is_running()) {
-    common::IoContextManager::instance().stop();
+  if (concurrency::IoContextManager::instance().is_running()) {
+    concurrency::IoContextManager::instance().stop();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
@@ -139,7 +139,7 @@ TEST_F(ImprovedArchitectureTest, UpperAPIAutoInitialization) {
   ASSERT_NE(server_, nullptr);
 
   // Check if IoContextManager started automatically
-  EXPECT_TRUE(common::IoContextManager::instance().is_running());
+  EXPECT_TRUE(concurrency::IoContextManager::instance().is_running());
 
   std::cout << "Upper API auto-initialization test completed" << std::endl;
 }
@@ -151,7 +151,7 @@ TEST_F(ImprovedArchitectureTest, ResourceSharingAnalysis) {
   std::cout << "Analyzing resource sharing..." << std::endl;
 
   // Resource management test through IoContextManager
-  auto& context = common::IoContextManager::instance().get_context();
+  auto& context = concurrency::IoContextManager::instance().get_context();
   EXPECT_TRUE(&context != nullptr);
 
   std::cout << "Resource sharing analysis completed" << std::endl;

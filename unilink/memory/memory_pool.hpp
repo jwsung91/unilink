@@ -30,7 +30,7 @@
 #include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 /**
  * @brief Selective simplified memory pool with optimized performance
@@ -181,5 +181,5 @@ class UNILINK_API PooledBuffer {
   void check_bounds(size_t index) const;
 };
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink
