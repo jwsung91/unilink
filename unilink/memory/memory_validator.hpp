@@ -22,10 +22,10 @@
 #include <stdexcept>
 #include <vector>
 
-#include "visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 /**
  * @brief Memory validation utilities for enhanced safety
@@ -160,5 +160,5 @@ class UNILINK_API MemoryPatternGenerator {
   static bool validate_pattern(const void* ptr, size_t size, uint8_t expected_seed = 0xAA);
 };
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink

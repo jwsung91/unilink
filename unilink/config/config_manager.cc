@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
 namespace config {

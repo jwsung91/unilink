@@ -27,7 +27,7 @@
 #include <thread>
 
 #include "mock_tcp_socket.hpp"
-#include "unilink/common/platform.hpp"
+#include "unilink/base/platform.hpp"
 
 namespace unilink {
 namespace test {

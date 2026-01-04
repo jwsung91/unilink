@@ -254,8 +254,8 @@ Enable debug logging in the examples:
 
 ```cpp
 // Add at the beginning of main()
-unilink::common::Logger::instance().set_level(unilink::common::LogLevel::DEBUG);
-unilink::common::Logger::instance().set_console_output(true);
+unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+unilink::diagnostics::Logger::instance().set_console_output(true);
 ```
 
 ### Testing Without netcat

@@ -78,7 +78,7 @@ typedef unsigned char BOOLEAN;
 #endif  // defined(UNILINK_PLATFORM_WINDOWS)
 
 namespace unilink {
-namespace common {
+namespace base {
 
 /**
  * @brief Platform detection and feature availability
@@ -160,5 +160,10 @@ class UNILINK_API PlatformInfo {
   static std::string get_support_warning() { return ""; }
 };
 
+}  // namespace base
+
+// Compatibility alias while transitioning from legacy `common` namespace.
+namespace common {
+using PlatformInfo = base::PlatformInfo;
 }  // namespace common
 }  // namespace unilink

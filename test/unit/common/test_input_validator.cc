@@ -20,10 +20,12 @@
 #include <string>
 #include <vector>
 
-#include "unilink/common/exceptions.hpp"
-#include "unilink/common/input_validator.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
+#include "unilink/util/input_validator.hpp"
 
-using namespace unilink::common;
+using namespace unilink;
+using namespace unilink::diagnostics;
+using namespace unilink::util;
 
 /**
  * @brief Input Validator Coverage Test

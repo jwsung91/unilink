@@ -615,7 +615,7 @@ void add_client(size_t id) {
 
 #### 2. Use Thread-Safe Containers
 ```cpp
-#include <unilink/common/thread_safe_state.hpp>
+#include <unilink/concurrency/thread_safe_state.hpp>
 
 unilink::common::ThreadSafeState<State> state_;
 // All operations are thread-safe

@@ -20,7 +20,7 @@
 #include <memory>
 #include <string>
 
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
 namespace wrapper {

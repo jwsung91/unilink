@@ -27,7 +27,7 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/common/platform.hpp"
+#include "unilink/base/platform.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;

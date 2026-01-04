@@ -222,7 +222,7 @@ class Server {
 
 ```cpp
 // GOOD - Use provided thread-safe utilities
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 
 class Connection {
     unilink::common::ThreadSafeState<State> state_;

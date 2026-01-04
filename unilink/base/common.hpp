@@ -29,11 +29,11 @@
 #include <vector>
 
 // Include logger for log_message function
-#include "logger.hpp"
-#include "platform.hpp"
+#include "unilink/base/platform.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
-namespace common {
+namespace base {
 
 enum class LinkState { Idle, Connecting, Listening, Connected, Closed, Error };
 
@@ -79,7 +79,7 @@ inline void log_message(const std::string& tag, const std::string& direction, co
   }
 
   // Use new logging system
-  Logger::instance().info(tag, direction, clean_message);
+  diagnostics::Logger::instance().info(tag, direction, clean_message);
 }
 
 // Platform-specific feature availability
@@ -170,5 +170,20 @@ inline std::vector<uint8_t> string_to_uint8(const std::string& str) {
 }  // namespace safe_convert
 
 // Removed unused feed_lines function to eliminate -Wunused-function warning
+}  // namespace base
+
+// Compatibility alias while transitioning from legacy `common` namespace.
+namespace common {
+namespace safe_memory = base::safe_memory;
+namespace safe_convert = base::safe_convert;
+using LinkState = base::LinkState;
+using base::get_platform_warning;
+using base::is_advanced_logging_available;
+using base::is_experimental_features_available;
+using base::is_latest_optimizations_available;
+using base::is_performance_monitoring_available;
+using base::log_message;
+using base::to_cstr;
+using base::ts_now;
 }  // namespace common
 }  // namespace unilink

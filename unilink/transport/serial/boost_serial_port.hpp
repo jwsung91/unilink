@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 #include "unilink/interface/iserial_port.hpp"
 
 namespace unilink {

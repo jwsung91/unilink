@@ -29,12 +29,12 @@
 #include <unordered_map>
 #include <vector>
 
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
-#include "unilink/common/platform.hpp"
-#include "unilink/common/thread_safe_state.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/platform.hpp"
+#include "unilink/base/visibility.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/config/tcp_server_config.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
@@ -44,8 +44,8 @@ namespace transport {
 
 namespace net = boost::asio;
 
-using common::LinkState;
-using common::ThreadSafeLinkState;
+using base::LinkState;
+using concurrency::ThreadSafeLinkState;
 using config::TcpServerConfig;
 using interface::Channel;
 using interface::TcpAcceptorInterface;

@@ -19,10 +19,10 @@
 #include <boost/asio/io_context.hpp>
 
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/common/exceptions.hpp"
-#include "unilink/common/input_validator.hpp"
-#include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
+#include "unilink/diagnostics/logger.hpp"
+#include "unilink/util/input_validator.hpp"
 
 namespace unilink {
 namespace builder {
@@ -33,15 +33,15 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
       use_independent_context_(false),
       enable_port_retry_(false),
       max_port_retries_(3),
-      port_retry_interval_ms_(common::constants::DEFAULT_RETRY_INTERVAL_MS / 2),
+      port_retry_interval_ms_(base::constants::DEFAULT_RETRY_INTERVAL_MS / 2),
       max_clients_(SIZE_MAX),
       client_limit_set_(false) {
   // Validate input parameters
   try {
-    common::InputValidator::validate_port(port_);
-  } catch (const common::ValidationException& e) {
-    throw common::BuilderException("Invalid TCP server parameters: " + e.get_full_message(), "TcpServerBuilder",
-                                   "constructor");
+    util::InputValidator::validate_port(port_);
+  } catch (const diagnostics::ValidationException& e) {
+    throw diagnostics::BuilderException("Invalid TCP server parameters: " + e.get_full_message(), "TcpServerBuilder",
+                                        "constructor");
   }
 }
 
@@ -57,7 +57,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   // IoContext management
   if (use_independent_context_) {
     // Use independent IoContext (for test isolation)
-    auto independent_context = common::IoContextManager::instance().create_independent_context();
+    auto independent_context = concurrency::IoContextManager::instance().create_independent_context();
     external_ioc = std::shared_ptr<boost::asio::io_context>(std::move(independent_context));
   } else {
     // Automatically initialize IoContextManager (default behavior)

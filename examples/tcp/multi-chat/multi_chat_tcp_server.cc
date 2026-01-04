@@ -22,20 +22,20 @@
 #include <string>
 #include <thread>
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/unilink.hpp"
 
 class ChatServer {
  private:
   std::shared_ptr<unilink::wrapper::TcpServer> server_;
-  unilink::common::Logger& logger_;
+  unilink::diagnostics::Logger& logger_;
   std::atomic<bool> running_;
   unsigned short port_;
 
  public:
-  ChatServer(unsigned short port) : logger_(unilink::common::Logger::instance()), running_(true), port_(port) {
+  ChatServer(unsigned short port) : logger_(unilink::diagnostics::Logger::instance()), running_(true), port_(port) {
     // Initialize logger
-    logger_.set_level(unilink::common::LogLevel::INFO);
+    logger_.set_level(unilink::diagnostics::LogLevel::INFO);
     logger_.set_console_output(true);
   }
 

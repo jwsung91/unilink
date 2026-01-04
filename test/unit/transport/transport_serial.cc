@@ -125,8 +125,8 @@ TEST(TransportSerialTest, StopPreventsReopenAfterOperationAborted) {
 
   std::atomic<bool> stop_called{false};
   std::atomic<int> reconnect_after_stop{0};
-  serial->on_state([&](common::LinkState state) {
-    if (stop_called.load() && state == common::LinkState::Connecting) {
+  serial->on_state([&](base::LinkState state) {
+    if (stop_called.load() && state == base::LinkState::Connecting) {
       reconnect_after_stop.fetch_add(1);
     }
   });
@@ -153,8 +153,8 @@ TEST(TransportSerialTest, QueueLimitMovesSerialToError) {
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
   std::atomic<bool> error_seen{false};
-  serial->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Error) error_seen = true;
+  serial->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_seen = true;
   });
 
   serial->start();
@@ -178,8 +178,8 @@ TEST(TransportSerialTest, MoveWriteRespectsQueueLimit) {
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
   std::atomic<bool> error_seen{false};
-  serial->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Error) error_seen = true;
+  serial->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_seen = true;
   });
 
   serial->start();
@@ -202,8 +202,8 @@ TEST(TransportSerialTest, SharedWriteRespectsQueueLimit) {
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
   std::atomic<bool> error_seen{false};
-  serial->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Error) error_seen = true;
+  serial->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_seen = true;
   });
 
   serial->start();
@@ -228,8 +228,8 @@ TEST(TransportSerialTest, CallbackExceptionStopsWhenConfigured) {
   auto serial = Serial::create(cfg, std::move(port), ioc);
 
   std::atomic<bool> error_seen{false};
-  serial->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Error) error_seen = true;
+  serial->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_seen = true;
   });
 
   serial->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
@@ -258,9 +258,9 @@ TEST(TransportSerialTest, CallbackExceptionRetriesWhenAllowed) {
 
   std::atomic<int> error_events{0};
   std::atomic<int> connecting_events{0};
-  serial->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Error) error_events.fetch_add(1);
-    if (state == common::LinkState::Connecting) connecting_events.fetch_add(1);
+  serial->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_events.fetch_add(1);
+    if (state == base::LinkState::Connecting) connecting_events.fetch_add(1);
   });
 
   serial->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });

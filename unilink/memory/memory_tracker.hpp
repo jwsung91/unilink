@@ -24,10 +24,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 /**
  * @brief Memory allocation tracker for debugging and monitoring
@@ -115,17 +115,17 @@ class UNILINK_API ScopedMemoryTracker {
   const char* function_;
 };
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink
 
 // Convenience macros for automatic tracking
 #ifdef UNILINK_ENABLE_MEMORY_TRACKING
 #define MEMORY_TRACK_ALLOCATION(ptr, size) \
-  unilink::common::MemoryTracker::instance().track_allocation(ptr, size, __FILE__, __LINE__, __FUNCTION__)
+  unilink::memory::MemoryTracker::instance().track_allocation(ptr, size, __FILE__, __LINE__, __FUNCTION__)
 
-#define MEMORY_TRACK_DEALLOCATION(ptr) unilink::common::MemoryTracker::instance().track_deallocation(ptr)
+#define MEMORY_TRACK_DEALLOCATION(ptr) unilink::memory::MemoryTracker::instance().track_deallocation(ptr)
 
-#define MEMORY_TRACK_SCOPE() unilink::common::ScopedMemoryTracker _mem_tracker(__FILE__, __LINE__, __FUNCTION__)
+#define MEMORY_TRACK_SCOPE() unilink::memory::ScopedMemoryTracker _mem_tracker(__FILE__, __LINE__, __FUNCTION__)
 #else
 #define MEMORY_TRACK_ALLOCATION(ptr, size) ((void)0)
 #define MEMORY_TRACK_DEALLOCATION(ptr) ((void)0)

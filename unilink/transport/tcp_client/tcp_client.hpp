@@ -27,23 +27,23 @@
 #include <variant>
 #include <vector>
 
-#include "unilink/common/constants.hpp"
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
-#include "unilink/common/memory_pool.hpp"
-#include "unilink/common/platform.hpp"
-#include "unilink/common/thread_safe_state.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/constants.hpp"
+#include "unilink/base/platform.hpp"
+#include "unilink/base/visibility.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/config/tcp_client_config.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {
 
 namespace net = boost::asio;
 
-using common::LinkState;
-using common::ThreadSafeLinkState;
+using base::LinkState;
+using concurrency::ThreadSafeLinkState;
 using config::TcpClientConfig;
 using interface::Channel;
 using tcp = net::ip::tcp;
@@ -109,7 +109,7 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   std::atomic<bool> terminal_state_notified_{false};
 
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
-  std::deque<std::variant<common::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
+  std::deque<std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
   size_t bp_high_;   // Configurable backpressure threshold (high watermark)

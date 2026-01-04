@@ -22,11 +22,11 @@
 #include <mutex>
 #include <thread>
 
-#include "unilink/common/platform.hpp"
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/platform.hpp"
+#include "unilink/base/visibility.hpp"
 
 namespace unilink {
-namespace common {
+namespace concurrency {
 
 /**
  * Global io_context manager
@@ -73,5 +73,10 @@ class UNILINK_API IoContextManager {
   mutable std::mutex mutex_;
 };
 
+}  // namespace concurrency
+
+// Compatibility alias while transitioning from legacy `common` namespace.
+namespace common {
+using IoContextManager = concurrency::IoContextManager;
 }  // namespace common
 }  // namespace unilink

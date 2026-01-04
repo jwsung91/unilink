@@ -507,7 +507,7 @@ Centralized error handling system with callbacks and statistics.
 ### Setup Error Handler
 
 ```cpp
-#include "unilink/common/error_handler.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 
 using namespace unilink::common;
 
@@ -571,7 +571,8 @@ Flexible logging with multiple outputs and async processing.
 ### Basic Usage
 
 ```cpp
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
 
 using namespace unilink::common;
 
@@ -615,7 +616,7 @@ logger.set_async_logging(true, config);
 ### Log Rotation
 
 ```cpp
-#include "unilink/common/log_rotation.hpp"
+#include "unilink/diagnostics/log_rotation.hpp"
 
 LogRotation rotation;
 rotation.set_max_file_size(10 * 1024 * 1024);  // 10 MB
@@ -684,7 +685,8 @@ auto client = unilink::tcp_client(host, port)
 Efficient memory allocation for high-performance scenarios.
 
 ```cpp
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 
 using namespace unilink::common;
 
@@ -701,7 +703,7 @@ pool.deallocate(buffer);
 Type-safe data buffer with bounds checking.
 
 ```cpp
-#include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 
 using namespace unilink::common;
 
@@ -720,7 +722,7 @@ auto bytes = buffer.to_vector();
 Thread-safe state management with read-write locks.
 
 ```cpp
-#include "unilink/common/thread_safe_state.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
 
 using namespace unilink::common;
 

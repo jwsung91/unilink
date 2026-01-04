@@ -24,8 +24,8 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/common/error_handler.hpp"
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
@@ -41,16 +41,16 @@ class ErrorHandlerTest : public ::testing::Test {
  protected:
   void SetUp() override {
     // Reset error handler state
-    auto& error_handler = common::ErrorHandler::instance();
+    auto& error_handler = diagnostics::ErrorHandler::instance();
     error_handler.clear_callbacks();
     error_handler.reset_stats();
     error_handler.set_enabled(true);
-    error_handler.set_min_error_level(common::ErrorLevel::INFO);
+    error_handler.set_min_error_level(diagnostics::ErrorLevel::INFO);
 
     // Initialize test state
     error_count_ = 0;
     last_error_category_ = "";
-    last_error_level_ = common::ErrorLevel::INFO;
+    last_error_level_ = diagnostics::ErrorLevel::INFO;
   }
 
   void TearDown() override {
@@ -61,7 +61,7 @@ class ErrorHandlerTest : public ::testing::Test {
   // Test state
   std::atomic<int> error_count_{0};
   std::string last_error_category_;
-  common::ErrorLevel last_error_level_;
+  diagnostics::ErrorLevel last_error_level_;
 };
 
 // ============================================================================
@@ -72,7 +72,7 @@ class ErrorHandlerTest : public ::testing::Test {
  * @brief Test connection error reporting
  */
 TEST_F(ErrorHandlerTest, ConnectionErrorReporting) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Connection error scenario
   std::string component = "tcp_client";
@@ -81,7 +81,7 @@ TEST_F(ErrorHandlerTest, ConnectionErrorReporting) {
   bool is_retryable = true;
 
   // When: Report connection error
-  common::error_reporting::report_connection_error(component, operation, ec, is_retryable);
+  diagnostics::error_reporting::report_connection_error(component, operation, ec, is_retryable);
 
   // Then: Verify error was recorded
   auto stats = error_handler.get_error_stats();
@@ -92,7 +92,7 @@ TEST_F(ErrorHandlerTest, ConnectionErrorReporting) {
  * @brief Test communication error reporting
  */
 TEST_F(ErrorHandlerTest, CommunicationErrorReporting) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Communication error scenario
   std::string component = "tcp_client";
@@ -101,7 +101,7 @@ TEST_F(ErrorHandlerTest, CommunicationErrorReporting) {
   bool is_retryable = false;
 
   // When: Report communication error
-  common::error_reporting::report_communication_error(component, operation, error_message, is_retryable);
+  diagnostics::error_reporting::report_communication_error(component, operation, error_message, is_retryable);
 
   // Then: Verify error was recorded
   auto stats = error_handler.get_error_stats();
@@ -112,7 +112,7 @@ TEST_F(ErrorHandlerTest, CommunicationErrorReporting) {
  * @brief Test configuration error reporting
  */
 TEST_F(ErrorHandlerTest, ConfigurationErrorReporting) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Configuration error scenario
   std::string component = "config_manager";
@@ -120,7 +120,7 @@ TEST_F(ErrorHandlerTest, ConfigurationErrorReporting) {
   std::string error_message = "Invalid configuration file";
 
   // When: Report configuration error
-  common::error_reporting::report_configuration_error(component, operation, error_message);
+  diagnostics::error_reporting::report_configuration_error(component, operation, error_message);
 
   // Then: Verify error was recorded
   auto stats = error_handler.get_error_stats();
@@ -131,7 +131,7 @@ TEST_F(ErrorHandlerTest, ConfigurationErrorReporting) {
  * @brief Test memory error reporting
  */
 TEST_F(ErrorHandlerTest, MemoryErrorReporting) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Memory error scenario
   std::string component = "memory_pool";
@@ -139,7 +139,7 @@ TEST_F(ErrorHandlerTest, MemoryErrorReporting) {
   std::string error_message = "Memory allocation failed";
 
   // When: Report memory error
-  common::error_reporting::report_memory_error(component, operation, error_message);
+  diagnostics::error_reporting::report_memory_error(component, operation, error_message);
 
   // Then: Verify error was recorded
   auto stats = error_handler.get_error_stats();
@@ -150,7 +150,7 @@ TEST_F(ErrorHandlerTest, MemoryErrorReporting) {
  * @brief Test system error reporting
  */
 TEST_F(ErrorHandlerTest, SystemErrorReporting) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: System error scenario
   std::string component = "io_context";
@@ -159,7 +159,7 @@ TEST_F(ErrorHandlerTest, SystemErrorReporting) {
   boost::system::error_code ec(boost::system::errc::resource_unavailable_try_again, boost::system::generic_category());
 
   // When: Report system error
-  common::error_reporting::report_system_error(component, operation, error_message, ec);
+  diagnostics::error_reporting::report_system_error(component, operation, error_message, ec);
 
   // Then: Verify error was recorded
   auto stats = error_handler.get_error_stats();
@@ -174,14 +174,14 @@ TEST_F(ErrorHandlerTest, SystemErrorReporting) {
  * @brief Test error statistics collection
  */
 TEST_F(ErrorHandlerTest, ErrorStatisticsCollection) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Multiple error reports
-  common::error_reporting::report_connection_error("client1", "connect", boost::system::error_code{}, true);
-  common::error_reporting::report_connection_error("client2", "connect", boost::system::error_code{}, false);
-  common::error_reporting::report_configuration_error("config", "load", "Error 3");
-  common::error_reporting::report_memory_error("pool", "alloc", "Error 4");
-  common::error_reporting::report_system_error("io", "run", "Error 5");
+  diagnostics::error_reporting::report_connection_error("client1", "connect", boost::system::error_code{}, true);
+  diagnostics::error_reporting::report_connection_error("client2", "connect", boost::system::error_code{}, false);
+  diagnostics::error_reporting::report_configuration_error("config", "load", "Error 3");
+  diagnostics::error_reporting::report_memory_error("pool", "alloc", "Error 4");
+  diagnostics::error_reporting::report_system_error("io", "run", "Error 5");
 
   // When: Get statistics
   auto stats = error_handler.get_error_stats();
@@ -194,11 +194,11 @@ TEST_F(ErrorHandlerTest, ErrorStatisticsCollection) {
  * @brief Test error rate calculation
  */
 TEST_F(ErrorHandlerTest, ErrorRateCalculation) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Error reports over time
   for (int i = 0; i < 10; ++i) {
-    common::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, true);
+    diagnostics::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, true);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 
@@ -217,20 +217,20 @@ TEST_F(ErrorHandlerTest, ErrorRateCalculation) {
  * @brief Test error callback registration
  */
 TEST_F(ErrorHandlerTest, ErrorCallbackRegistration) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Error callback
   std::atomic<int> callback_count{0};
   std::string last_callback_error;
 
-  auto callback = [&callback_count, &last_callback_error](const common::ErrorInfo& error_info) {
+  auto callback = [&callback_count, &last_callback_error](const diagnostics::ErrorInfo& error_info) {
     callback_count++;
     last_callback_error = error_info.message;
   };
 
   // When: Register callback and report error
   error_handler.register_callback(callback);
-  common::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
+  diagnostics::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
 
   // Then: Verify callback was called
   EXPECT_TRUE(TestUtils::waitForCondition([&callback_count]() { return callback_count.load() > 0; }, 1000));
@@ -244,12 +244,12 @@ TEST_F(ErrorHandlerTest, ErrorCallbackRegistration) {
  * @brief Test error callback with different error levels
  */
 TEST_F(ErrorHandlerTest, ErrorCallbackWithLevels) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Error callback that tracks levels
-  std::vector<common::ErrorLevel> received_levels;
+  std::vector<diagnostics::ErrorLevel> received_levels;
 
-  auto callback = [&received_levels](const common::ErrorInfo& error_info) {
+  auto callback = [&received_levels](const diagnostics::ErrorInfo& error_info) {
     received_levels.push_back(error_info.level);
   };
 
@@ -257,8 +257,8 @@ TEST_F(ErrorHandlerTest, ErrorCallbackWithLevels) {
   error_handler.register_callback(callback);
 
   // Report errors with different levels (simulated)
-  common::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, false);
-  common::error_reporting::report_memory_error("pool", "alloc", "Memory error");
+  diagnostics::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, false);
+  diagnostics::error_reporting::report_memory_error("pool", "alloc", "Memory error");
 
   // Then: Verify callback received errors
   EXPECT_TRUE(TestUtils::waitForCondition([&received_levels]() { return received_levels.size() >= 2; }, 1000));
@@ -275,10 +275,10 @@ TEST_F(ErrorHandlerTest, ErrorCallbackWithLevels) {
  * @brief Test error recovery mechanisms
  */
 TEST_F(ErrorHandlerTest, ErrorRecoveryMechanisms) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Retryable error
-  common::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, true);
+  diagnostics::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, true);
 
   // When: Check if error is retryable
   auto stats = error_handler.get_error_stats();
@@ -291,11 +291,11 @@ TEST_F(ErrorHandlerTest, ErrorRecoveryMechanisms) {
  * @brief Test error threshold detection
  */
 TEST_F(ErrorHandlerTest, ErrorThresholdDetection) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Multiple rapid errors
   for (int i = 0; i < 5; ++i) {
-    common::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, false);
+    diagnostics::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, false);
   }
 
   // When: Check error threshold
@@ -313,11 +313,11 @@ TEST_F(ErrorHandlerTest, ErrorThresholdDetection) {
  * @brief Test error statistics cleanup
  */
 TEST_F(ErrorHandlerTest, ErrorStatisticsCleanup) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Some errors reported
-  common::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, false);
-  common::error_reporting::report_configuration_error("config", "load", "Error 2");
+  diagnostics::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, false);
+  diagnostics::error_reporting::report_configuration_error("config", "load", "Error 2");
 
   // When: Clear statistics
   error_handler.reset_stats();
@@ -331,18 +331,18 @@ TEST_F(ErrorHandlerTest, ErrorStatisticsCleanup) {
  * @brief Test error handler reset
  */
 TEST_F(ErrorHandlerTest, ErrorHandlerReset) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Error callback registered
   std::atomic<int> callback_count{0};
-  auto callback = [&callback_count](const common::ErrorInfo&) { callback_count++; };
+  auto callback = [&callback_count](const diagnostics::ErrorInfo&) { callback_count++; };
   error_handler.register_callback(callback);
 
   // When: Clear callbacks
   error_handler.clear_callbacks();
 
   // Then: Verify callback was cleared
-  common::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
+  diagnostics::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
 
   // Callback should not be called after clear
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -357,15 +357,15 @@ TEST_F(ErrorHandlerTest, ErrorHandlerReset) {
  * @brief Test error level filtering
  */
 TEST_F(ErrorHandlerTest, ErrorLevelFiltering) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Set minimum error level
-  error_handler.set_min_error_level(common::ErrorLevel::WARNING);
+  error_handler.set_min_error_level(diagnostics::ErrorLevel::WARNING);
 
   // When: Report errors with different levels
-  common::error_reporting::report_info("component", "operation", "Info message");
-  common::error_reporting::report_warning("component", "operation", "Warning message");
-  common::error_reporting::report_memory_error("component", "operation", "Error message");
+  diagnostics::error_reporting::report_info("component", "operation", "Info message");
+  diagnostics::error_reporting::report_warning("component", "operation", "Warning message");
+  diagnostics::error_reporting::report_memory_error("component", "operation", "Error message");
 
   // Then: Verify only appropriate errors were recorded
   auto stats = error_handler.get_error_stats();
@@ -376,13 +376,13 @@ TEST_F(ErrorHandlerTest, ErrorLevelFiltering) {
  * @brief Test error handler enable/disable
  */
 TEST_F(ErrorHandlerTest, ErrorHandlerEnableDisable) {
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
 
   // Given: Disable error reporting
   error_handler.set_enabled(false);
 
   // When: Report error
-  common::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
+  diagnostics::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
 
   // Then: Verify error was not recorded
   auto stats = error_handler.get_error_stats();
@@ -401,11 +401,11 @@ TEST_F(ErrorHandlerTest, RecursiveErrorReporting_DeadlockTest) {
   // Before fix: This causes deadlock (mutex recursion).
   // After fix: This should complete successfully.
 
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
   std::atomic<int> callback_count{0};
   const int max_recursions = 1;
 
-  error_handler.register_callback([&](const common::ErrorInfo& error) {
+  error_handler.register_callback([&](const diagnostics::ErrorInfo& error) {
     int current_count = callback_count.fetch_add(1);
 
     // Only recurse once to demonstrate the deadlock fix
@@ -413,12 +413,12 @@ TEST_F(ErrorHandlerTest, RecursiveErrorReporting_DeadlockTest) {
     if (current_count < max_recursions) {
       // Trigger another error report from within the callback
       // This simulates a logging failure or similar chain reaction
-      common::error_reporting::report_info("test_component", "recursive_call", "Triggering recursive error");
+      diagnostics::error_reporting::report_info("test_component", "recursive_call", "Triggering recursive error");
     }
   });
 
   // Trigger the first error
-  common::error_reporting::report_info("test_component", "initial_call", "Initial error");
+  diagnostics::error_reporting::report_info("test_component", "initial_call", "Initial error");
 
   // If we reach here without hanging, the test passes (no deadlock).
   EXPECT_EQ(callback_count.load(), 2);
@@ -431,12 +431,12 @@ TEST_F(ErrorHandlerTest, CallbackRegistrationInsideCallback_CrashTest) {
   // Before fix: This invalidates iterators if using direct vector iteration.
   // After fix: Iterating over a copy prevents invalidation.
 
-  auto& error_handler = common::ErrorHandler::instance();
+  auto& error_handler = diagnostics::ErrorHandler::instance();
   bool second_callback_called = false;
 
-  error_handler.register_callback([&](const common::ErrorInfo& error) {
+  error_handler.register_callback([&](const diagnostics::ErrorInfo& error) {
     if (error.message == "First Error") {
-      error_handler.register_callback([&](const common::ErrorInfo& inner_error) {
+      error_handler.register_callback([&](const diagnostics::ErrorInfo& inner_error) {
         if (inner_error.message == "Second Error") {
           second_callback_called = true;
         }
@@ -445,10 +445,10 @@ TEST_F(ErrorHandlerTest, CallbackRegistrationInsideCallback_CrashTest) {
   });
 
   // Trigger first error (registers the second callback)
-  common::error_reporting::report_info("test_component", "op1", "First Error");
+  diagnostics::error_reporting::report_info("test_component", "op1", "First Error");
 
   // Trigger second error (should hit the new callback)
-  common::error_reporting::report_info("test_component", "op2", "Second Error");
+  diagnostics::error_reporting::report_info("test_component", "op2", "Second Error");
 
   EXPECT_TRUE(second_callback_called);
 

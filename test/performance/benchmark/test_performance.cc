@@ -32,13 +32,12 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/builder/unified_builder.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/base/common.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
-using namespace unilink::common;
-using namespace unilink::builder;
+using namespace unilink::memory;
 using namespace std::chrono_literals;
 
 /**

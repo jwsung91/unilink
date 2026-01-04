@@ -24,7 +24,7 @@
 #include <string>
 #include <thread>
 
-#include "unilink/common/visibility.hpp"
+#include "unilink/base/visibility.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
@@ -91,7 +91,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
  private:
   void setup_internal_handlers();
   void handle_bytes(const uint8_t* data, size_t size);
-  void handle_state(common::LinkState state);
+  void handle_state(base::LinkState state);
 
   mutable std::mutex mutex_;
   uint16_t port_;

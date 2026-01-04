@@ -113,8 +113,8 @@ TEST_F(TransportTcpClientTest, StopPreventsReconnectAfterManualStop) {
 
   std::atomic<bool> stop_called{false};
   std::atomic<int> reconnect_after_stop{0};
-  client_->on_state([&](common::LinkState state) {
-    if (stop_called.load() && state == common::LinkState::Connecting) {
+  client_->on_state([&](base::LinkState state) {
+    if (stop_called.load() && state == base::LinkState::Connecting) {
       reconnect_after_stop.fetch_add(1);
     }
   });
@@ -186,8 +186,8 @@ TEST_F(TransportTcpClientTest, QueueLimitMovesClientToError) {
   client_ = TcpClient::create(cfg, ioc);
 
   std::atomic<bool> error_seen{false};
-  client_->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Error) error_seen = true;
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_seen = true;
   });
 
   std::vector<uint8_t> huge(cfg.backpressure_threshold * 2048, 0xEF);  // 2MB, exceeds queue cap
@@ -217,9 +217,9 @@ TEST_F(TransportTcpClientTest, OnBytesExceptionTriggersReconnect) {
 
   std::atomic<int> connecting_events{0};
   std::atomic<int> error_events{0};
-  client_->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Connecting) connecting_events.fetch_add(1);
-    if (state == common::LinkState::Error) error_events.fetch_add(1);
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) connecting_events.fetch_add(1);
+    if (state == base::LinkState::Error) error_events.fetch_add(1);
   });
 
   client_->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
@@ -255,8 +255,8 @@ TEST_F(TransportTcpClientTest, MoveWriteRespectsQueueLimit) {
   client_ = TcpClient::create(cfg, ioc);
 
   std::atomic<bool> error_seen{false};
-  client_->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Error) error_seen = true;
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_seen = true;
   });
 
   std::vector<uint8_t> huge(cfg.backpressure_threshold * 2048, 0xCD);  // 2MB, exceeds queue cap
@@ -280,8 +280,8 @@ TEST_F(TransportTcpClientTest, SharedWriteRespectsQueueLimit) {
   client_ = TcpClient::create(cfg, ioc);
 
   std::atomic<bool> error_seen{false};
-  client_->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Error) error_seen = true;
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) error_seen = true;
   });
 
   auto huge = std::make_shared<const std::vector<uint8_t>>(cfg.backpressure_threshold * 2048, 0xAB);  // 2MB
@@ -341,8 +341,8 @@ TEST_F(TransportTcpClientTest, OwnedIoContextRestartAfterStopStart) {
   client_ = TcpClient::create(cfg);
 
   std::atomic<int> connecting_count{0};
-  client_->on_state([&](common::LinkState state) {
-    if (state == common::LinkState::Connecting) {
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) {
       connecting_count.fetch_add(1);
     }
   });

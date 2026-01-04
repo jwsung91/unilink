@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include "unilink/common/io_context_manager.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
 
-#include "unilink/common/logger.hpp"
+#include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
-namespace common {
+namespace concurrency {
 
 IoContextManager::IoContextManager() = default;
 
@@ -147,5 +147,5 @@ IoContextManager::~IoContextManager() {
   }
 }
 
-}  // namespace common
+}  // namespace concurrency
 }  // namespace unilink

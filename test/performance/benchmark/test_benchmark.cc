@@ -32,13 +32,11 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/builder/unified_builder.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
-using namespace unilink::builder;
-using namespace unilink::common;
+using namespace unilink::memory;
 using namespace std::chrono_literals;
 
 // ============================================================================
@@ -53,13 +51,13 @@ class BenchmarkTest : public BaseTest {
   void SetUp() override {
     BaseTest::SetUp();
     // Reset memory pool for clean benchmarking
-    auto& pool = common::GlobalMemoryPool::instance();
+    auto& pool = memory::GlobalMemoryPool::instance();
     pool.cleanup_old_buffers(std::chrono::milliseconds(0));
   }
 
   void TearDown() override {
     // Clean up memory pool
-    auto& pool = common::GlobalMemoryPool::instance();
+    auto& pool = memory::GlobalMemoryPool::instance();
     pool.cleanup_old_buffers(std::chrono::milliseconds(0));
     BaseTest::TearDown();
   }
@@ -97,7 +95,7 @@ class BenchmarkTest : public BaseTest {
 TEST_F(BenchmarkTest, MemoryPoolAllocationPerformance) {
   std::cout << "\n=== Memory Pool Allocation Performance Benchmark ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const size_t num_operations = 100000;
   const size_t buffer_size = 4096;
 
@@ -161,7 +159,7 @@ TEST_F(BenchmarkTest, MemoryPoolAllocationPerformance) {
 TEST_F(BenchmarkTest, MemoryPoolConcurrentPerformance) {
   std::cout << "\n=== Memory Pool Concurrent Performance Benchmark ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const int num_threads = 8;
   const int operations_per_thread = 10000;
   const size_t buffer_size = 1024;
@@ -225,7 +223,7 @@ TEST_F(BenchmarkTest, MemoryPoolConcurrentPerformance) {
 TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
   std::cout << "\n=== Memory Pool Hit Rate Analysis Benchmark ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const size_t num_cycles = 1000;
   const size_t buffers_per_cycle = 100;
   const size_t buffer_size = 2048;
@@ -294,7 +292,7 @@ TEST_F(BenchmarkTest, NetworkCommunicationThroughput) {
   std::cout << "\n=== Network Communication Throughput Benchmark ===" << std::endl;
 
   // Simulate network communication using memory pool
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const size_t num_messages = 1000;
   const size_t message_size = 1024;
 
@@ -348,7 +346,7 @@ TEST_F(BenchmarkTest, NetworkCommunicationThroughput) {
 TEST_F(BenchmarkTest, NetworkLatencyBenchmark) {
   std::cout << "\n=== Network Latency Benchmark ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const size_t num_requests = 1000;
   const size_t request_size = 512;
 
@@ -415,7 +413,7 @@ TEST_F(BenchmarkTest, NetworkLatencyBenchmark) {
 TEST_F(BenchmarkTest, ConcurrentOperationsPerformance) {
   std::cout << "\n=== Concurrent Operations Performance Benchmark ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const int num_threads = 4;
   const int operations_per_thread = 500;
   const size_t buffer_size = 1024;
@@ -482,7 +480,7 @@ TEST_F(BenchmarkTest, ConcurrentOperationsPerformance) {
 TEST_F(BenchmarkTest, MemoryUsageMonitoring) {
   std::cout << "\n=== Memory Usage Monitoring Benchmark ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const size_t num_cycles = 50;
   const size_t buffers_per_cycle = 20;
   const size_t buffer_size = 2048;
@@ -564,7 +562,7 @@ TEST_F(BenchmarkTest, MemoryUsageMonitoring) {
 TEST_F(BenchmarkTest, PerformanceRegressionDetection) {
   std::cout << "\n=== Performance Regression Detection Benchmark ===" << std::endl;
 
-  auto& pool = common::GlobalMemoryPool::instance();
+  auto& pool = memory::GlobalMemoryPool::instance();
   const size_t num_iterations = 20;              // Increased for better statistical significance
   const size_t operations_per_iteration = 1000;  // Increased to reduce noise
   const size_t buffer_size = 1024;

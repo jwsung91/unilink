@@ -35,7 +35,7 @@
 
 using namespace unilink::transport;
 using namespace unilink::config;
-using namespace unilink::common;
+using namespace unilink::memory;
 using namespace std::chrono_literals;
 
 /**
@@ -454,7 +454,6 @@ TEST_F(TransportPerformanceTest, TcpClientThroughput) {
 
   const int num_messages = 10000;
   const size_t message_size = 100;  // 100 bytes per message
-  const size_t total_data = num_messages * message_size;
 
   auto start_time = std::chrono::high_resolution_clock::now();
 

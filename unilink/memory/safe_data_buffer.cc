@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 
 #include <algorithm>
 #include <cstring>
 
 namespace unilink {
-namespace common {
+namespace memory {
 
 // Constructors
 SafeDataBuffer::SafeDataBuffer(const std::string& data) : data_(data.begin(), data.end()) {
@@ -139,5 +139,5 @@ SafeDataBuffer from_span(ConstByteSpan span) { return SafeDataBuffer(span); }
 
 }  // namespace safe_buffer_factory
 
-}  // namespace common
+}  // namespace memory
 }  // namespace unilink

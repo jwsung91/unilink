@@ -31,7 +31,7 @@
 #include <vector>
 
 #include "log_rotation.hpp"
-#include "visibility.hpp"
+#include "unilink/base/visibility.hpp"
 
 #ifdef DEBUG
 #undef DEBUG
@@ -53,7 +53,7 @@
 #endif
 
 namespace unilink {
-namespace common {
+namespace diagnostics {
 
 /**
  * @brief Log severity levels
@@ -311,35 +311,35 @@ class UNILINK_API Logger {
  * @brief Convenience macros for logging
  */
 #define UNILINK_LOG_DEBUG(component, operation, message) \
-  unilink::common::Logger::instance().debug(component, operation, message)
+  unilink::diagnostics::Logger::instance().debug(component, operation, message)
 
 #define UNILINK_LOG_INFO(component, operation, message) \
-  unilink::common::Logger::instance().info(component, operation, message)
+  unilink::diagnostics::Logger::instance().info(component, operation, message)
 
 #define UNILINK_LOG_WARNING(component, operation, message) \
-  unilink::common::Logger::instance().warning(component, operation, message)
+  unilink::diagnostics::Logger::instance().warning(component, operation, message)
 
 #define UNILINK_LOG_ERROR(component, operation, message) \
-  unilink::common::Logger::instance().error(component, operation, message)
+  unilink::diagnostics::Logger::instance().error(component, operation, message)
 
 #define UNILINK_LOG_CRITICAL(component, operation, message) \
-  unilink::common::Logger::instance().critical(component, operation, message)
+  unilink::diagnostics::Logger::instance().critical(component, operation, message)
 
 /**
  * @brief Conditional logging macros (only evaluate message if level is enabled)
  */
-#define UNILINK_LOG_DEBUG_IF(component, operation, message)                                    \
-  do {                                                                                         \
-    if (unilink::common::Logger::instance().get_level() <= unilink::common::LogLevel::DEBUG) { \
-      UNILINK_LOG_DEBUG(component, operation, message);                                        \
-    }                                                                                          \
+#define UNILINK_LOG_DEBUG_IF(component, operation, message)                                              \
+  do {                                                                                                   \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::DEBUG) { \
+      UNILINK_LOG_DEBUG(component, operation, message);                                                  \
+    }                                                                                                    \
   } while (0)
 
-#define UNILINK_LOG_INFO_IF(component, operation, message)                                    \
-  do {                                                                                        \
-    if (unilink::common::Logger::instance().get_level() <= unilink::common::LogLevel::INFO) { \
-      UNILINK_LOG_INFO(component, operation, message);                                        \
-    }                                                                                         \
+#define UNILINK_LOG_INFO_IF(component, operation, message)                                              \
+  do {                                                                                                  \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::INFO) { \
+      UNILINK_LOG_INFO(component, operation, message);                                                  \
+    }                                                                                                   \
   } while (0)
 
 /**
@@ -357,5 +357,6 @@ class UNILINK_API Logger {
     UNILINK_LOG_DEBUG(component, operation, "Duration: " + std::to_string(_perf_duration_##operation) + " μs"); \
   } while (0)
 
-}  // namespace common
+}  // namespace diagnostics
+
 }  // namespace unilink
