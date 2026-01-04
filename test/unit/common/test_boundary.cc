@@ -26,7 +26,7 @@
 #include "test_utils.hpp"
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/base/constants.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"

@@ -42,7 +42,7 @@
 #include <thread>
 #include <vector>
 
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 namespace unilink {
 namespace test {

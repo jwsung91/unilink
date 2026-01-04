@@ -27,7 +27,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/common/exceptions.hpp"
-#include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;

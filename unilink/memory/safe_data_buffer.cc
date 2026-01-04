@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "unilink/common/safe_data_buffer.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 
 #include <algorithm>
 #include <cstring>

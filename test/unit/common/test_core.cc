@@ -28,7 +28,7 @@
 #include "test_utils.hpp"
 #include "unilink/base/common.hpp"
 #include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 #include "unilink/config/config_manager.hpp"
 
 using namespace unilink;

@@ -19,7 +19,7 @@
 #include <cstring>
 #include <iostream>
 
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 #include "unilink/transport/tcp_server/boost_tcp_socket.hpp"
 
 namespace unilink {

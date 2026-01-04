@@ -22,7 +22,7 @@
 #include <type_traits>
 
 #include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 namespace unilink {
 namespace transport {

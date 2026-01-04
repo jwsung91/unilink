@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "unilink/common/memory_tracker.hpp"
+#include "unilink/memory/memory_tracker.hpp"
 
 #include <iomanip>
 #include <iostream>

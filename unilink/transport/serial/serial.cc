@@ -21,7 +21,7 @@
 #include <iostream>
 
 #include "unilink/common/io_context_manager.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 #include "unilink/transport/serial/boost_serial_port.hpp"
 
 namespace unilink {

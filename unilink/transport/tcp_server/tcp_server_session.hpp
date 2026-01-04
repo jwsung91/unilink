@@ -29,7 +29,7 @@
 #include "unilink/base/constants.hpp"
 #include "unilink/common/error_handler.hpp"
 #include "unilink/common/logger.hpp"
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/interface/channel.hpp"

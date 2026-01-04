@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#include "unilink/common/memory_pool.hpp"
+#include "unilink/memory/memory_pool.hpp"
 
 #include <algorithm>
 #include <cstdlib>
 #include <stdexcept>
 
-#include "unilink/common/memory_tracker.hpp"
+#include "unilink/memory/memory_tracker.hpp"
 
 namespace unilink {
 namespace common {
