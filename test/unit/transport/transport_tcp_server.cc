@@ -63,11 +63,14 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
   // First server occupies the port
   uint16_t port = TestUtils::getAvailableTestPort();
   net::io_context ioc_occupy; // Use a separate io_context for the occupying acceptor
-  tcp::acceptor acceptor(ioc_occupy); // Create acceptor
+  
+  // Explicitly disable reuse_address on ALL platforms to ensure conflict.
+  // Standard acceptor constructor enables reuse_address by default, which can cause
+  // flaky tests on Unix systems if the kernel decides to allow binding (e.g. SO_REUSEPORT).
+  tcp::acceptor acceptor(ioc_occupy);
   boost::system::error_code ec_bind;
   acceptor.open(tcp::v4(), ec_bind);
   if (!ec_bind) {
-      // Explicitly set reuse_address to false to ensure exclusive binding
       acceptor.set_option(net::socket_base::reuse_address(false), ec_bind);
   }
   acceptor.bind(tcp::endpoint(tcp::v4(), port), ec_bind);
@@ -171,7 +174,7 @@ TEST_F(TransportTcpServerTest, PortBindingRetrySuccess) {
     config::TcpServerConfig cfg;
     cfg.port = port;
     cfg.enable_port_retry = true;
-    cfg.max_port_retries = 3;
+    cfg.max_port_retries = 15; // Increased to 15 to allow sufficient time for port release
     cfg.port_retry_interval_ms = 50;
     
     server_ = TcpServer::create(cfg);
