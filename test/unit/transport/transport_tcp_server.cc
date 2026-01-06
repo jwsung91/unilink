@@ -62,9 +62,28 @@ TEST_F(TransportTcpServerTest, LifecycleStartStop) {
 TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
   // First server occupies the port
   uint16_t port = TestUtils::getAvailableTestPort();
-  net::io_context ioc;
-  tcp::acceptor acceptor(ioc, tcp::endpoint(tcp::v4(), port));
+  net::io_context ioc_occupy; // Use a separate io_context for the occupying acceptor
+  tcp::acceptor acceptor(ioc_occupy); // Create acceptor
+  boost::system::error_code ec_bind;
+  acceptor.open(tcp::v4(), ec_bind);
+  if (!ec_bind) {
+      // Explicitly set reuse_address to false to ensure exclusive binding
+      acceptor.set_option(net::socket_base::reuse_address(false), ec_bind);
+  }
+  acceptor.bind(tcp::endpoint(tcp::v4(), port), ec_bind);
+  acceptor.listen(net::socket_base::max_listen_connections, ec_bind);
   
+  // Ensure the occupying acceptor is actually listening
+  EXPECT_FALSE(ec_bind) << "Occupying acceptor failed to bind/listen: " << ec_bind.message();
+
+  // Run the occupying io_context in a thread to keep the port occupied
+  std::thread occupy_thread([&ioc_occupy]() {
+      ioc_occupy.run();
+  });
+  
+  // Give it a moment to ensure port is occupied
+  TestUtils::waitFor(100);
+
   // Second server tries to bind to same port
   config::TcpServerConfig cfg;
   cfg.port = port;
@@ -83,9 +102,15 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
   server_->start();
   
   // Wait for error state
-  EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_occurred.load(); }, 500));
+  EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_occurred.load(); }, 1000)); // Increased timeout
   
   server_->stop();
+
+  // Clean up occupying thread
+  ioc_occupy.stop();
+  if (occupy_thread.joinable()) {
+      occupy_thread.join();
+  }
 }
 
 TEST_F(TransportTcpServerTest, MaxClientsLimit) {

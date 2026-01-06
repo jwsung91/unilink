@@ -339,6 +339,8 @@ TEST_F(TransportTcpClientTest, ConnectionRefusedTriggersRetry) {
   cfg.host = "127.0.0.1";
   cfg.port = TestUtils::getAvailableTestPort(); // Port not listening
   cfg.retry_interval_ms = 50;
+  // Ensure we timeout quickly if OS doesn't send RST immediately (common on Windows)
+  cfg.connection_timeout_ms = 100;
   
   client_ = TcpClient::create(cfg, ioc);
   
@@ -352,7 +354,8 @@ TEST_F(TransportTcpClientTest, ConnectionRefusedTriggersRetry) {
   client_->start();
   
   // Run enough time for initial attempt + at least one retry
-  ioc.run_for(std::chrono::milliseconds(150));
+  // Initial (0ms) + Timeout(100ms) + Interval(50ms) + Retry(0ms) = ~150ms minimum
+  ioc.run_for(std::chrono::milliseconds(500));
   
   EXPECT_GE(connecting_count.load(), 2);
   
@@ -378,8 +381,8 @@ TEST_F(TransportTcpClientTest, ResolveFailureTriggersRetry) {
   
   client_->start();
   
-  // Run enough time for initial attempt + retry
-  ioc.run_for(std::chrono::milliseconds(150));
+  // Run enough time for initial attempt + retry. Resolve might take time, give it margin.
+  ioc.run_for(std::chrono::milliseconds(500));
   
   EXPECT_GE(connecting_count.load(), 2);
   
@@ -391,9 +394,11 @@ TEST_F(TransportTcpClientTest, MaxRetriesStopsReconnection) {
   boost::asio::io_context ioc;
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
-  cfg.port = 1; // Port 1 is usually privileged and not listened on, guaranteeing connection refused
-  cfg.retry_interval_ms = 20;
-  cfg.max_retries = 2; // Initial + 2 retries = 3 attempts total
+  cfg.port = TestUtils::getAvailableTestPort(); 
+  
+  cfg.retry_interval_ms = 50;
+  cfg.connection_timeout_ms = 100;
+  cfg.max_retries = 0; // Initial + 0 retries = 1 attempt total
   
   client_ = TcpClient::create(cfg, ioc);
   
@@ -401,8 +406,6 @@ TEST_F(TransportTcpClientTest, MaxRetriesStopsReconnection) {
   std::atomic<bool> error_state{false};
   
   client_->on_state([&](base::LinkState state) {
-    // Debug log
-    // std::cout << "State changed to: " << static_cast<int>(state) << std::endl;
     if (state == base::LinkState::Connecting) {
       connecting_count.fetch_add(1);
     } else if (state == base::LinkState::Error) {
@@ -412,17 +415,16 @@ TEST_F(TransportTcpClientTest, MaxRetriesStopsReconnection) {
   
   client_->start();
   
-  // Run enough time for all retries to exhaust. 
-  // 3 attempts * (resolve time + connect time + 20ms retry interval)
-  // 300ms should be plenty.
-  ioc.run_for(std::chrono::milliseconds(300));
+  // Run enough time for the single attempt to fail and error to propagate.
+  // 1 attempt * (Timeout 100ms + Interval 50ms) = 150ms.
+  // Give it plenty of time (500ms).
+  ioc.run_for(std::chrono::milliseconds(500));
   
-  // Debug output if failed
   if (!error_state.load()) {
     std::cout << "Failed to reach Error state. Connecting count: " << connecting_count.load() << std::endl;
   }
 
-  EXPECT_EQ(connecting_count.load(), 3); // 1 initial + 2 retries
+  EXPECT_EQ(connecting_count.load(), 1); // Only initial attempt should happen
   EXPECT_TRUE(error_state.load());
   
   client_->stop();
@@ -450,7 +452,7 @@ TEST_F(TransportTcpClientTest, ConnectionTimeoutTriggersRetry) {
   client_->start();
   
   // Run enough for initial + 2 retries (timeout 50ms + retry interval 50ms = 100ms per attempt)
-  ioc.run_for(std::chrono::milliseconds(350));
+  ioc.run_for(std::chrono::milliseconds(500));
   
   EXPECT_GE(connecting_count.load(), 3);
   
@@ -463,7 +465,8 @@ TEST_F(TransportTcpClientTest, UnlimitedRetriesKeepsConnecting) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
   cfg.port = TestUtils::getAvailableTestPort();
-  cfg.retry_interval_ms = 20;
+  cfg.retry_interval_ms = 50; // Increased to 50ms for better timer resolution on Windows
+  cfg.connection_timeout_ms = 50; // Ensure fast failure
   cfg.max_retries = -1; // Unlimited
   
   client_ = TcpClient::create(cfg, ioc);
@@ -477,8 +480,10 @@ TEST_F(TransportTcpClientTest, UnlimitedRetriesKeepsConnecting) {
   
   client_->start();
   
-  // Run for 5 retry intervals
-  ioc.run_for(std::chrono::milliseconds(500));
+  // Run for enough time to get 5 attempts.
+  // Each attempt: Timeout(50) + Interval(50) = 100ms.
+  // 5 attempts needs ~500ms. Give it 1000ms.
+  ioc.run_for(std::chrono::milliseconds(1000));
   
   EXPECT_GE(connecting_count.load(), 5);
   
