@@ -332,6 +332,160 @@ TEST_F(TransportTcpClientTest, BackpressureReliefEmitsAfterDrain) {
   }
 }
 
+
+TEST_F(TransportTcpClientTest, ConnectionRefusedTriggersRetry) {
+  boost::asio::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = TestUtils::getAvailableTestPort(); // Port not listening
+  cfg.retry_interval_ms = 50;
+  
+  client_ = TcpClient::create(cfg, ioc);
+  
+  std::atomic<int> connecting_count{0};
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) {
+      connecting_count.fetch_add(1);
+    }
+  });
+  
+  client_->start();
+  
+  // Run enough time for initial attempt + at least one retry
+  ioc.run_for(std::chrono::milliseconds(150));
+  
+  EXPECT_GE(connecting_count.load(), 2);
+  
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, ResolveFailureTriggersRetry) {
+  boost::asio::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "invalid.host.name.that.does.not.exist";
+  cfg.port = 80;
+  cfg.retry_interval_ms = 50;
+  
+  client_ = TcpClient::create(cfg, ioc);
+  
+  std::atomic<int> connecting_count{0};
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) {
+      connecting_count.fetch_add(1);
+    }
+  });
+  
+  client_->start();
+  
+  // Run enough time for initial attempt + retry
+  ioc.run_for(std::chrono::milliseconds(150));
+  
+  EXPECT_GE(connecting_count.load(), 2);
+  
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, MaxRetriesStopsReconnection) {
+  boost::asio::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = 1; // Port 1 is usually privileged and not listened on, guaranteeing connection refused
+  cfg.retry_interval_ms = 20;
+  cfg.max_retries = 2; // Initial + 2 retries = 3 attempts total
+  
+  client_ = TcpClient::create(cfg, ioc);
+  
+  std::atomic<int> connecting_count{0};
+  std::atomic<bool> error_state{false};
+  
+  client_->on_state([&](base::LinkState state) {
+    // Debug log
+    // std::cout << "State changed to: " << static_cast<int>(state) << std::endl;
+    if (state == base::LinkState::Connecting) {
+      connecting_count.fetch_add(1);
+    } else if (state == base::LinkState::Error) {
+      error_state = true;
+    }
+  });
+  
+  client_->start();
+  
+  // Run enough time for all retries to exhaust. 
+  // 3 attempts * (resolve time + connect time + 20ms retry interval)
+  // 300ms should be plenty.
+  ioc.run_for(std::chrono::milliseconds(300));
+  
+  // Debug output if failed
+  if (!error_state.load()) {
+    std::cout << "Failed to reach Error state. Connecting count: " << connecting_count.load() << std::endl;
+  }
+
+  EXPECT_EQ(connecting_count.load(), 3); // 1 initial + 2 retries
+  EXPECT_TRUE(error_state.load());
+  
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, ConnectionTimeoutTriggersRetry) {
+  boost::asio::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "10.255.255.1"; // Unreachable IP to force timeout (or route failure)
+  cfg.port = 80;
+  cfg.connection_timeout_ms = 50; // Short timeout
+  cfg.retry_interval_ms = 50;
+  cfg.max_retries = 2;
+  
+  client_ = TcpClient::create(cfg, ioc);
+  
+  std::atomic<int> connecting_count{0};
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) {
+      connecting_count.fetch_add(1);
+    }
+  });
+  
+  client_->start();
+  
+  // Run enough for initial + 2 retries (timeout 50ms + retry interval 50ms = 100ms per attempt)
+  ioc.run_for(std::chrono::milliseconds(350));
+  
+  EXPECT_GE(connecting_count.load(), 3);
+  
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientTest, UnlimitedRetriesKeepsConnecting) {
+  boost::asio::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = TestUtils::getAvailableTestPort();
+  cfg.retry_interval_ms = 20;
+  cfg.max_retries = -1; // Unlimited
+  
+  client_ = TcpClient::create(cfg, ioc);
+  
+  std::atomic<int> connecting_count{0};
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) {
+      connecting_count.fetch_add(1);
+    }
+  });
+  
+  client_->start();
+  
+  // Run for 5 retry intervals
+  ioc.run_for(std::chrono::milliseconds(500));
+  
+  EXPECT_GE(connecting_count.load(), 5);
+  
+  client_->stop();
+  client_.reset();
+}
+
 TEST_F(TransportTcpClientTest, OwnedIoContextRestartAfterStopStart) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";

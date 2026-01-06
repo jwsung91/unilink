@@ -76,9 +76,9 @@ class UNILINK_API InputValidator {
   static bool is_valid_hostname(const std::string& hostname);
   static bool is_valid_device_path(const std::string& device);
 
-  // Constants
-  static constexpr int MIN_RETRY_COUNT = 0;
-  static constexpr int MAX_RETRY_COUNT = 100;
+  // Constants for retry count
+  static constexpr int FINITE_MIN_RETRY_COUNT = 0;
+  static constexpr int FINITE_MAX_RETRY_COUNT = base::constants::MAX_RETRIES_LIMIT;
 };
 
 // Inline implementations for simple validations
@@ -132,10 +132,14 @@ inline void InputValidator::validate_retry_interval(unsigned interval_ms) {
 }
 
 inline void InputValidator::validate_retry_count(int retry_count) {
-  if (retry_count < MIN_RETRY_COUNT || retry_count > MAX_RETRY_COUNT) {
+  if (retry_count == common::constants::DEFAULT_MAX_RETRIES) { // -1 means infinite, which is valid
+    return;
+  }
+  if (retry_count < FINITE_MIN_RETRY_COUNT || retry_count > FINITE_MAX_RETRY_COUNT) {
     throw diagnostics::ValidationException(
         "retry_count out of range", "retry_count",
-        std::to_string(MIN_RETRY_COUNT) + " <= retry_count <= " + std::to_string(MAX_RETRY_COUNT));
+        std::to_string(FINITE_MIN_RETRY_COUNT) + " <= retry_count <= " + std::to_string(FINITE_MAX_RETRY_COUNT) +
+            " or -1 for infinite");
   }
 }
 
