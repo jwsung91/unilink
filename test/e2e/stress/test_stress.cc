@@ -523,9 +523,8 @@ TEST_F(StressTest, RealNetworkHighThroughput) {
 
   // Create Client
   std::atomic<bool> client_connected{false};
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port)
-                    .on_connect([&]() { client_connected = true; })
-                    .build();
+  auto client =
+      builder::UnifiedBuilder::tcp_client("127.0.0.1", port).on_connect([&]() { client_connected = true; }).build();
 
   ASSERT_NE(client, nullptr);
   client->start();
@@ -564,7 +563,7 @@ TEST_F(StressTest, RealNetworkHighThroughput) {
 
   client->stop();
   server->stop();
-  
+
   std::cout << "✓ Real network high-throughput test passed" << std::endl;
 }
 

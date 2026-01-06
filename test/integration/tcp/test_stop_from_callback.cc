@@ -70,7 +70,8 @@ TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
   cfg.max_retries = 0;
 
   auto client = TcpClient::create(cfg);
-  client->on_state([&](LinkState state) {
+  client->on_state([client, &state_notifications, &stop_from_state, &terminal_notifications, &terminal_once,
+                    &terminal_reached](LinkState state) {
     state_notifications.fetch_add(1);
     if (state == LinkState::Connected) {
       stop_from_state.store(true);
@@ -81,7 +82,7 @@ TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
       std::call_once(terminal_once, [&]() { terminal_reached.set_value(); });
     }
   });
-  client->on_bytes([&](const uint8_t*, size_t) {
+  client->on_bytes([client, &stop_from_bytes](const uint8_t*, size_t) {
     stop_from_bytes.store(true);
     client->stop();
   });
