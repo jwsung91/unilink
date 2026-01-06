@@ -91,6 +91,78 @@ TEST_F(BaseTest, IoContextManagerBasicFunctionality) {
 }
 
 /**
+ * @brief IoContextManager duplicate start/stop tests
+ */
+TEST_F(BaseTest, IoContextManagerDuplicateStartStop) {
+  auto& manager = unilink::concurrency::IoContextManager::instance();
+  
+  // Start twice
+  manager.start();
+  manager.start(); 
+  EXPECT_TRUE(manager.is_running());
+  
+  // Stop twice
+  manager.stop();
+  manager.stop();
+  EXPECT_FALSE(manager.is_running());
+}
+
+/**
+ * @brief IoContextManager thread safety tests
+ */
+TEST_F(BaseTest, IoContextManagerThreadSafety) {
+  auto& manager = unilink::concurrency::IoContextManager::instance();
+  
+  std::vector<std::thread> threads;
+  for (int i = 0; i < 10; ++i) {
+    threads.emplace_back([&manager]() {
+      for (int j = 0; j < 10; ++j) {
+        manager.start();
+        std::this_thread::yield();
+        manager.stop();
+      }
+    });
+  }
+  
+  for (auto& t : threads) {
+    t.join();
+  }
+  
+  // Final state check (could be either running or stopped, but should be stable)
+  // Ensure we can cleanly stop it
+  manager.stop();
+  EXPECT_FALSE(manager.is_running());
+}
+
+/**
+ * @brief IoContextManager exception handling tests
+ */
+TEST_F(BaseTest, IoContextManagerExceptionHandling) {
+  auto& manager = unilink::concurrency::IoContextManager::instance();
+  manager.start();
+  
+  auto& ioc = manager.get_context();
+  
+  // Post a task that throws an exception
+  // Unilink's IoContextManager wraps run() in a try-catch block inside the thread.
+  // So this should log an error but NOT crash the process.
+  // And the thread loop should exit (running_ becomes false).
+  
+  boost::asio::post(ioc, []() {
+    throw std::runtime_error("Test exception in io_context");
+  });
+  
+  // Wait for exception to be processed
+  // Since the thread exits on exception, is_running() should eventually become false.
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { 
+    return !manager.is_running(); 
+  }, 1000));
+  
+  // Clean up (restart for next tests)
+  manager.stop();
+}
+
+/**
  * @brief Independent context creation tests
  */
 TEST_F(BaseTest, IndependentContextCreation) {

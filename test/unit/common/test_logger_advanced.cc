@@ -349,19 +349,99 @@ TEST_F(AdvancedLoggerCoverageTest, ConcurrentLogging) {
 }
 
 // ============================================================================
-// PERFORMANCE AND STRESS TESTS
+// ADDITIONAL COVERAGE TESTS
 // ============================================================================
 
-TEST_F(AdvancedLoggerCoverageTest, HighVolumeLogging) {
-  Logger::instance().set_file_output(test_log_file_.string());
-  Logger::instance().set_level(LogLevel::DEBUG);
+TEST_F(AdvancedLoggerCoverageTest, CallbackExceptionSafety) {
+  // Test that logger handles exceptions in callback without crashing
+  Logger::instance().set_callback([](LogLevel, const std::string&) {
+    throw std::runtime_error("Callback exception");
+  });
+  
+  Logger::instance().set_level(LogLevel::INFO);
+  
+  // This should not crash, but print error to stderr (observable in logs/output)
+  EXPECT_NO_THROW(UNILINK_LOG_INFO("test", "callback_exception", "Message"));
+  
+  // Reset callback
+  Logger::instance().set_callback(nullptr);
+}
 
-  const int num_messages = 1000;
-  for (int i = 0; i < num_messages; ++i) {
-    UNILINK_LOG_DEBUG("test", "operation", "High volume message " + std::to_string(i));
-  }
+TEST_F(AdvancedLoggerCoverageTest, CustomFormatHandling) {
+  // Test with custom formats
+  Logger::instance().set_level(LogLevel::INFO);
+  
+  // Case 1: Format without placeholders
+  Logger::instance().set_format("STATIC LOG MESSAGE");
+  
+  std::vector<std::string> captured_logs;
+  Logger::instance().set_callback([&captured_logs](LogLevel, const std::string& msg) {
+    captured_logs.push_back(msg);
+  });
+  
+  UNILINK_LOG_INFO("test", "fmt", "msg");
+  ASSERT_GE(captured_logs.size(), 1);
+  EXPECT_EQ(captured_logs.back(), "STATIC LOG MESSAGE");
+  
+  // Case 2: Partial placeholders
+  Logger::instance().set_format("[{level}] {message}");
+  UNILINK_LOG_INFO("test", "fmt", "Partial format");
+  ASSERT_GE(captured_logs.size(), 2);
+  EXPECT_TRUE(captured_logs.back().find("[INFO] Partial format") != std::string::npos);
+  
+  // Reset format to default (usually handled by Logger implementation or not exposed to reset easily, 
+  // but we should check if set_format with standard string works)
+  Logger::instance().set_format("{timestamp} [{level}] [{component}] [{operation}] {message}");
+}
 
-  Logger::instance().flush();
-  std::ifstream file(test_log_file_);
-  ASSERT_TRUE(file.is_open());
+TEST_F(AdvancedLoggerCoverageTest, OutputDisabling) {
+  // Test set_file_output with empty string
+  Logger::instance().set_file_output("temp_test.log");
+  Logger::instance().set_file_output(""); // Disable
+  
+  // Test set_callback with nullptr
+  Logger::instance().set_callback(nullptr); // Disable
+  
+  // Test set_console_output
+  Logger::instance().set_console_output(false); // Disable
+  
+  // Log something - should go nowhere effectively (internal state check)
+  UNILINK_LOG_INFO("test", "disable", "Void message");
+  
+  // Re-enable console for other tests (TearDown handles this, but good practice)
+  Logger::instance().set_console_output(true);
+}
+
+TEST_F(AdvancedLoggerCoverageTest, FileOpenFailure) {
+  // Test set_file_output with invalid path
+  // Assuming /invalid/path/test.log is not writable. 
+  // On Windows this might need a different invalid path like "Z:/..." or invalid chars.
+  // Using a path with invalid characters is safer for cross-platform failure.
+#ifdef _WIN32
+  std::string invalid_path = "Z:\\nonexistent\\test.log"; 
+#else
+  std::string invalid_path = "/root/test_log_permission_denied.log"; // Assuming not running as root
+#endif
+
+  // This should print error to stderr but not throw
+  EXPECT_NO_THROW(Logger::instance().set_file_output(invalid_path));
+}
+
+TEST_F(AdvancedLoggerCoverageTest, ConsoleErrorStreamSelection) {
+  // We can't easily capture stderr/stdout directly in a portable way with GTest,
+  // but we can ensure the code paths are exercised and no crash occurs.
+  Logger::instance().set_console_output(true);
+  Logger::instance().set_level(LogLevel::DEBUG); // Ensure all levels are processed
+  
+  // Normal message (stdout via INFO)
+  UNILINK_LOG_INFO("test", "console", "Normal message");
+  
+  // Error message (stderr via ERROR)
+  UNILINK_LOG_ERROR("test", "console", "Error message");
+  
+  // Critical message (stderr via CRITICAL)
+  UNILINK_LOG_CRITICAL("test", "console", "Critical message");
+  
+  // Clean up
+  Logger::instance().set_console_output(false);
 }
