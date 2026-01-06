@@ -169,3 +169,47 @@ TEST(InputValidatorTest, ValidateGenericHelpers) {
   void* unaligned_ptr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(aligned_ptr) + 1); // Not 8-byte aligned
   EXPECT_THROW(InputValidator::validate_memory_alignment(unaligned_ptr, 8), diagnostics::ValidationException);
 }
+
+TEST(InputValidatorTest, DetailedHelperLogic) {
+  // IPv4 Edge Cases
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.2.3"), diagnostics::ValidationException);       // Too few octets
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.2.3.4.5"), diagnostics::ValidationException);   // Too many octets
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1..3.4"), diagnostics::ValidationException);      // Empty octet
+  EXPECT_THROW(InputValidator::validate_ipv4_address(".1.2.3"), diagnostics::ValidationException);      // Empty first octet
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.2.3."), diagnostics::ValidationException);      // Empty last octet
+  EXPECT_THROW(InputValidator::validate_ipv4_address("01.1.1.1"), diagnostics::ValidationException);    // Leading zero
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.01.1.1"), diagnostics::ValidationException);    // Leading zero
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.1.1.01"), diagnostics::ValidationException);    // Leading zero
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.a.1.1"), diagnostics::ValidationException);     // Non-digit
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.1.1.256"), diagnostics::ValidationException);   // Out of range > 255
+  EXPECT_THROW(InputValidator::validate_ipv4_address("256.1.1.1"), diagnostics::ValidationException);   // Out of range > 255
+
+  // IPv6 Edge Cases (Regex based)
+  EXPECT_THROW(InputValidator::validate_ipv6_address("1:2"), diagnostics::ValidationException);         // Malformed
+  EXPECT_THROW(InputValidator::validate_ipv6_address("g::1"), diagnostics::ValidationException);        // Invalid hex char
+
+  // Hostname Edge Cases
+  EXPECT_THROW(InputValidator::validate_host("-test.com"), diagnostics::ValidationException);           // Starts with hyphen
+  EXPECT_THROW(InputValidator::validate_host("test.com-"), diagnostics::ValidationException);           // Ends with hyphen
+  EXPECT_THROW(InputValidator::validate_host("invalid_host.com"), diagnostics::ValidationException);    // Underscore invalid
+  EXPECT_THROW(InputValidator::validate_host("test..com"), diagnostics::ValidationException);           // Empty label
+  
+  std::string long_label(64, 'a');
+  EXPECT_THROW(InputValidator::validate_host(long_label + ".com"), diagnostics::ValidationException);   // Label too long
+
+  // Device Path Edge Cases
+  EXPECT_THROW(InputValidator::validate_device_path("/dev/bad?"), diagnostics::ValidationException);    // Invalid char in unix path
+  EXPECT_THROW(InputValidator::validate_device_path("COM"), diagnostics::ValidationException);          // Incomplete COM
+  EXPECT_THROW(InputValidator::validate_device_path("COM0"), diagnostics::ValidationException);         // COM0 invalid
+  EXPECT_THROW(InputValidator::validate_device_path("COM256"), diagnostics::ValidationException);       // COM256 invalid
+  EXPECT_THROW(InputValidator::validate_device_path("COM1a"), diagnostics::ValidationException);        // Invalid number format
+  
+  // Valid Windows Special Names (as per code)
+  EXPECT_NO_THROW(InputValidator::validate_device_path("NUL"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("CON"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("PRN"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("AUX"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("LPT1"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("LPT2"));
+  EXPECT_NO_THROW(InputValidator::validate_device_path("LPT3"));
+}

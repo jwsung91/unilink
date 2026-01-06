@@ -198,6 +198,12 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
   // Windows-style COM port (e.g., COM1, COM2, etc.)
   if (device.length() >= 4 && device.substr(0, 3) == "COM") {
     std::string port_num = device.substr(3);
+    
+    // Check if port_num contains only digits
+    if (port_num.empty() || !std::all_of(port_num.begin(), port_num.end(), ::isdigit)) {
+        return false;
+    }
+
     try {
       int port = std::stoi(port_num);
       return port >= 1 && port <= 255;
