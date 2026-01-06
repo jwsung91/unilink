@@ -132,14 +132,13 @@ inline void InputValidator::validate_retry_interval(unsigned interval_ms) {
 }
 
 inline void InputValidator::validate_retry_count(int retry_count) {
-  if (retry_count == common::constants::DEFAULT_MAX_RETRIES) { // -1 means infinite, which is valid
+  if (retry_count == common::constants::DEFAULT_MAX_RETRIES) {  // -1 means infinite, which is valid
     return;
   }
   if (retry_count < FINITE_MIN_RETRY_COUNT || retry_count > FINITE_MAX_RETRY_COUNT) {
-    throw diagnostics::ValidationException(
-        "retry_count out of range", "retry_count",
-        std::to_string(FINITE_MIN_RETRY_COUNT) + " <= retry_count <= " + std::to_string(FINITE_MAX_RETRY_COUNT) +
-            " or -1 for infinite");
+    throw diagnostics::ValidationException("retry_count out of range", "retry_count",
+                                           std::to_string(FINITE_MIN_RETRY_COUNT) + " <= retry_count <= " +
+                                               std::to_string(FINITE_MAX_RETRY_COUNT) + " or -1 for infinite");
   }
 }
 
