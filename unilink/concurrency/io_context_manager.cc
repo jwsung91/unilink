@@ -47,9 +47,31 @@ void IoContextManager::start() {
   std::shared_ptr<IoContext> context;
   {
     std::unique_lock<std::mutex> lock(mutex_);
+    
+    // If we don't own the context, we treat start() as a check/no-op.
+    if (!owns_context_ && ioc_) {
+      if (ioc_->stopped()) {
+        UNILINK_LOG_WARNING("io_context_manager", "start", 
+          "External io_context is stopped. The external owner must restart/run it.");
+      } else {
+        UNILINK_LOG_DEBUG("io_context_manager", "start", 
+          "IoContextManager using external context. Thread creation skipped.");
+      }
+      // running_ represents "internal thread running", so we leave it false.
+      // Callers checking is_running() will get false, which is correct (we aren't running it).
+      return;
+    }
+
     cv_.wait(lock, [this] { return !stopping_; });
+
     if (running_) {
       UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContextManager already running, ignoring start call.");
+      return;
+    }
+
+    // Prevent self-join if start() is called from within the IO thread
+    if (io_thread_.joinable() && io_thread_.get_id() == std::this_thread::get_id()) {
+      UNILINK_LOG_ERROR("io_context_manager", "start", "Cannot restart IoContextManager from within its own thread.");
       return;
     }
 
@@ -88,6 +110,13 @@ void IoContextManager::stop() {
   std::thread worker;  // Declare outside the lock
   {
     std::lock_guard<std::mutex> lock(mutex_);
+    
+    // If we don't own the context, we just return.
+    if (!owns_context_ && ioc_) {
+        // running_ should already be false, but strict no-op is safest.
+        return;
+    }
+
     if (!running_.load() && !io_thread_.joinable()) {
       UNILINK_LOG_DEBUG("io_context_manager", "stop",
                         "IoContextManager not running or thread not joinable, ignoring stop call.");
@@ -101,17 +130,27 @@ void IoContextManager::stop() {
       work_guard_.reset();
     }
 
-    // Stop io_context
-    if (ioc_) {
+    // Stop io_context only if we own it
+    if (ioc_ && owns_context_) {
       ioc_->stop();
     }
 
     // Move the thread handle out of the protected member to join it outside the lock
-    if (io_thread_.joinable() && io_thread_.get_id() != std::this_thread::get_id()) {
-      worker = std::move(io_thread_);
+    if (io_thread_.joinable()) {
+      // Prevent self-join if stop() is called from within the IO thread
+      if (io_thread_.get_id() != std::this_thread::get_id()) {
+        worker = std::move(io_thread_);
+      } else {
+        UNILINK_LOG_ERROR("io_context_manager", "stop", "Cannot join IoContext thread from within itself. Skipping join.");
+        
+        // REVERT STATE: Failed to stop.
+        stopping_ = false;
+        
+        // NOTIFY: Wake up anyone waiting in start()
+        cv_.notify_all();
+        return; 
+      }
     }
-
-    running_.store(false);
   }  // Mutex is released here
 
   // Join the thread outside the lock to prevent deadlocks
@@ -124,13 +163,12 @@ void IoContextManager::stop() {
   // After the thread has joined, perform final cleanup that might require the mutex again
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (owns_context_) {
-      ioc_.reset();  // Reset owned io_context
-    }
-    // The work_guard_ should already be reset at the beginning of stop to unblock io_context.run()
-    // If it's a shared context that is not owned, it should not be reset here.
-    // If the context is owned, ioc_.reset() effectively cleans up the underlying Boost.Asio context.
     stopping_ = false;
+    
+    // Ensure running flag is sync with reality
+    if (!worker.joinable() && !io_thread_.joinable()) {
+        running_.store(false);
+    }
   }
   cv_.notify_all();
 }
@@ -146,9 +184,12 @@ std::unique_ptr<boost::asio::io_context> IoContextManager::create_independent_co
 IoContextManager::~IoContextManager() {
   try {
     stop();
+    // Ensure thread is joined if it was left over (e.g. from failed self-stop)
+    if (io_thread_.joinable() && io_thread_.get_id() != std::this_thread::get_id()) {
+        io_thread_.join();
+    }
   } catch (...) {
-    // 소멸자에서는 예외를 무시
-    // 로깅은 하지 않음 (소멸자에서 로깅은 위험할 수 있음)
+    // Ignore exceptions in destructor
   }
 }
 
