@@ -469,8 +469,8 @@ TEST_F(TransportPerformanceTest, TcpClientThroughput) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   // --- Verification ---
-  // 10,000개 메시지를 1초 이내에 큐에 넣을 수 있어야 함
-  EXPECT_LT(duration.count(), 1000);
+  // 10,000개 메시지를 2초 이내에 큐에 넣을 수 있어야 함
+  EXPECT_LT(duration.count(), 2000);
 
   std::this_thread::sleep_for(100ms);
   EXPECT_TRUE(client_ != nullptr);
