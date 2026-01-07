@@ -70,21 +70,27 @@ TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
   cfg.max_retries = 0;
 
   auto client = TcpClient::create(cfg);
-  client->on_state([client, &state_notifications, &stop_from_state, &terminal_notifications, &terminal_once,
+  std::weak_ptr<TcpClient> weak_client = client;
+  
+  client->on_state([weak_client, &state_notifications, &stop_from_state, &terminal_notifications, &terminal_once,
                     &terminal_reached](LinkState state) {
     state_notifications.fetch_add(1);
     if (state == LinkState::Connected) {
       stop_from_state.store(true);
-      client->stop();
+      if (auto c = weak_client.lock()) {
+        c->stop();
+      }
     }
     if (state == LinkState::Closed || state == LinkState::Error) {
       terminal_notifications.fetch_add(1);
       std::call_once(terminal_once, [&]() { terminal_reached.set_value(); });
     }
   });
-  client->on_bytes([client, &stop_from_bytes](const uint8_t*, size_t) {
+  client->on_bytes([weak_client, &stop_from_bytes](const uint8_t*, size_t) {
     stop_from_bytes.store(true);
-    client->stop();
+    if (auto c = weak_client.lock()) {
+      c->stop();
+    }
   });
 
   client->start();
