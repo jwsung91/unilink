@@ -47,15 +47,15 @@ void IoContextManager::start() {
   std::shared_ptr<IoContext> context;
   {
     std::unique_lock<std::mutex> lock(mutex_);
-    
+
     // If we don't own the context, we treat start() as a check/no-op.
     if (!owns_context_ && ioc_) {
       if (ioc_->stopped()) {
-        UNILINK_LOG_WARNING("io_context_manager", "start", 
-          "External io_context is stopped. The external owner must restart/run it.");
+        UNILINK_LOG_WARNING("io_context_manager", "start",
+                            "External io_context is stopped. The external owner must restart/run it.");
       } else {
-        UNILINK_LOG_DEBUG("io_context_manager", "start", 
-          "IoContextManager using external context. Thread creation skipped.");
+        UNILINK_LOG_DEBUG("io_context_manager", "start",
+                          "IoContextManager using external context. Thread creation skipped.");
       }
       // running_ represents "internal thread running", so we leave it false.
       // Callers checking is_running() will get false, which is correct (we aren't running it).
@@ -110,11 +110,11 @@ void IoContextManager::stop() {
   std::thread worker;  // Declare outside the lock
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    
+
     // If we don't own the context, we just return.
     if (!owns_context_ && ioc_) {
-        // running_ should already be false, but strict no-op is safest.
-        return;
+      // running_ should already be false, but strict no-op is safest.
+      return;
     }
 
     if (!running_.load() && !io_thread_.joinable()) {
@@ -141,14 +141,15 @@ void IoContextManager::stop() {
       if (io_thread_.get_id() != std::this_thread::get_id()) {
         worker = std::move(io_thread_);
       } else {
-        UNILINK_LOG_ERROR("io_context_manager", "stop", "Cannot join IoContext thread from within itself. Skipping join.");
-        
+        UNILINK_LOG_ERROR("io_context_manager", "stop",
+                          "Cannot join IoContext thread from within itself. Skipping join.");
+
         // REVERT STATE: Failed to stop.
         stopping_ = false;
-        
+
         // NOTIFY: Wake up anyone waiting in start()
         cv_.notify_all();
-        return; 
+        return;
       }
     }
   }  // Mutex is released here
@@ -164,10 +165,10 @@ void IoContextManager::stop() {
   {
     std::lock_guard<std::mutex> lock(mutex_);
     stopping_ = false;
-    
+
     // Ensure running flag is sync with reality
     if (!worker.joinable() && !io_thread_.joinable()) {
-        running_.store(false);
+      running_.store(false);
     }
   }
   cv_.notify_all();
@@ -186,7 +187,7 @@ IoContextManager::~IoContextManager() {
     stop();
     // Ensure thread is joined if it was left over (e.g. from failed self-stop)
     if (io_thread_.joinable() && io_thread_.get_id() != std::this_thread::get_id()) {
-        io_thread_.join();
+      io_thread_.join();
     }
   } catch (...) {
     // Ignore exceptions in destructor

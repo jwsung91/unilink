@@ -539,7 +539,7 @@ assert(stats.total_allocations == stats.total_deallocations);
 // cmake -DCMAKE_BUILD_TYPE=Release -DUNILINK_ENABLE_MEMORY_TRACKING=ON
 
 // Don't ignore leak reports
-// if (leaks) { /* TODO: fix later */ }
+
 ```
 
 ---
