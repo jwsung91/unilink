@@ -111,45 +111,47 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
   TestUtils::waitFor(100);
 
   // Verify port is actually occupied by connecting to it (with retries)
-  boost::system::error_code probe_ec;
-  for (int i = 0; i < 10; ++i) {
-    tcp::socket probe_sock(probe_ioc);
-    probe_sock.connect(tcp::endpoint(net::ip::address_v4::loopback(), port), probe_ec);
-    if (!probe_ec) break;
+  {
+    net::io_context probe_ioc;
+    boost::system::error_code probe_ec;
+    for (int i = 0; i < 10; ++i) {
+      tcp::socket probe_sock(probe_ioc);
+      probe_sock.connect(tcp::endpoint(net::ip::address_v4::loopback(), port), probe_ec);
+      if (!probe_ec) break;
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    ASSERT_FALSE(probe_ec) << "Failed to connect to occupying acceptor on port " << port << ": " << probe_ec.message();
   }
 
-  ASSERT_FALSE(probe_ec) << "Failed to connect to occupying acceptor on port " << port << ": " << probe_ec.message();
-}
+  // Second server tries to bind to same port
 
-// Second server tries to bind to same port
+  config::TcpServerConfig cfg;
 
-config::TcpServerConfig cfg;
+  cfg.port = port;
 
-cfg.port = port;
+  cfg.port_retry_interval_ms = 50;
 
-cfg.port_retry_interval_ms = 50;
+  cfg.max_port_retries = 0;  // Fail immediately after first attempt
 
-cfg.max_port_retries = 0;  // Fail immediately after first attempt
+  server_ = TcpServer::create(cfg);
 
-server_ = TcpServer::create(cfg);
+  std::atomic<bool> error_occurred{false};
 
-std::atomic<bool> error_occurred{false};
+  server_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Error) {
+      error_occurred = true;
+    }
+  });
 
-server_->on_state([&](base::LinkState state) {
-  if (state == base::LinkState::Error) {
-    error_occurred = true;
-  }
-});
+  server_->start();
 
-server_->start();
+  // Wait for error state
 
-// Wait for error state
+  EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_occurred.load(); }, 1000));  // Increased timeout
 
-EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_occurred.load(); }, 1000));  // Increased timeout
-
-server_->stop();
+  server_->stop();
 }
 
 TEST_F(TransportTcpServerTest, MaxClientsLimit) {
