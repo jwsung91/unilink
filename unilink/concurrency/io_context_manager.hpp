@@ -18,6 +18,7 @@
 
 #include <atomic>
 #include <boost/asio.hpp>
+#include <condition_variable>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -71,6 +72,8 @@ class UNILINK_API IoContextManager {
   std::thread io_thread_;
   std::atomic<bool> running_{false};
   mutable std::mutex mutex_;
+  std::condition_variable cv_;
+  bool stopping_{false};
 };
 
 }  // namespace concurrency
