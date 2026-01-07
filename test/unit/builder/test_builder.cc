@@ -23,6 +23,7 @@
 #include <thread>
 #include <vector>
 
+#include "test/utils/test_utils.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/unilink.hpp"
@@ -71,10 +72,7 @@ class BuilderTest : public ::testing::Test {
   }
 
   // Test port number (dynamic allocation to prevent conflicts)
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{9000};
-    return port_counter.fetch_add(1);
-  }
+  uint16_t getTestPort() { return unilink::test::TestUtils::getAvailableTestPort(); }
 
   // 테스트용 데이터 핸들러
   void setupDataHandler() {

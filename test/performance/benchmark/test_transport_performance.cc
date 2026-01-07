@@ -118,7 +118,10 @@ TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
   // Set backpressure callback
   client_->on_backpressure([this](size_t bytes) {
     backpressure_triggered_ = true;
-    backpressure_bytes_ = bytes;
+    size_t current = backpressure_bytes_.load();
+    if (bytes > current) {
+      backpressure_bytes_.store(bytes);
+    }
   });
 
   // --- Test Logic ---

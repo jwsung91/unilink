@@ -20,6 +20,7 @@
 #include <atomic>
 #include <chrono>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <vector>
@@ -176,29 +177,35 @@ TEST_F(CoreIntegratedTest, ErrorHandlerCallback) {
  * @brief Test safe data buffer basic functionality
  */
 TEST_F(CoreIntegratedTest, SafeDataBufferBasicFunctionality) {
-  // Test memory::SafeDataBuffer creation with proper size
-  std::vector<uint8_t> data(1024, 0);
-  memory::SafeDataBuffer buffer(data);
-  EXPECT_NE(&buffer, nullptr);
+  std::string test_str = "Hello SafeDataBuffer";
+  memory::SafeDataBuffer buffer(test_str);
 
-  // Test basic operations (simplified)
-  std::string test_data = "Hello, World!";
-  // Note: Actual API may differ - this is a placeholder test
-  EXPECT_FALSE(test_data.empty());
+  EXPECT_FALSE(buffer.empty());
+  EXPECT_EQ(buffer.size(), test_str.size());
+  EXPECT_EQ(buffer.as_string(), test_str);
+
+  std::vector<uint8_t> vec(test_str.begin(), test_str.end());
+  memory::SafeDataBuffer buffer_from_vec(vec);
+  EXPECT_EQ(buffer, buffer_from_vec);
+  EXPECT_EQ(buffer.as_string(), buffer_from_vec.as_string());
 }
 
 /**
  * @brief Test safe data buffer bounds checking
  */
 TEST_F(CoreIntegratedTest, SafeDataBufferBoundsChecking) {
-  std::vector<uint8_t> data(100, 0);
+  std::vector<uint8_t> data = {1, 2, 3};
   memory::SafeDataBuffer buffer(data);
-  EXPECT_NE(&buffer, nullptr);
+  EXPECT_FALSE(buffer.empty());
+  EXPECT_EQ(buffer.size(), 3);
 
-  // Test buffer creation with size limit
-  std::string large_data(200, 'A');
-  EXPECT_EQ(large_data.size(), 200);
-  EXPECT_GT(large_data.size(), 100);
+  // Valid access
+  EXPECT_NO_THROW(buffer.at(0));
+  EXPECT_EQ(buffer.at(0), 1);
+  EXPECT_EQ(buffer.at(2), 3);
+
+  // Out of bounds access
+  EXPECT_THROW(buffer.at(3), std::out_of_range);
 }
 
 // ============================================================================
@@ -209,26 +216,46 @@ TEST_F(CoreIntegratedTest, SafeDataBufferBoundsChecking) {
  * @brief Test IO context manager basic functionality
  */
 TEST_F(CoreIntegratedTest, IoContextManagerBasicFunctionality) {
-  // Test IoContextManager singleton access
   auto& manager = unilink::concurrency::IoContextManager::instance();
   EXPECT_NE(&manager, nullptr);
 
-  // Test context creation (simplified)
-  // Note: Actual API may differ - this is a placeholder test
-  EXPECT_TRUE(true);
+  // Start the manager
+  manager.start();
+  EXPECT_TRUE(manager.is_running());
+
+  // Verify context is working by posting a task
+  auto& ioc = manager.get_context();
+  std::atomic<bool> task_executed{false};
+  boost::asio::post(ioc, [&task_executed]() { task_executed = true; });
+
+  // Wait for task execution
+  EXPECT_TRUE(TestUtils::waitForCondition([&task_executed]() { return task_executed.load(); }, 1000));
+
+  // Stop the manager
+  manager.stop();
+  EXPECT_FALSE(manager.is_running());
 }
 
 /**
  * @brief Test IO context manager independent contexts
  */
 TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
-  // Test IoContextManager singleton access
   auto& manager = unilink::concurrency::IoContextManager::instance();
-  EXPECT_NE(&manager, nullptr);
 
-  // Test independent context creation (simplified)
-  // Note: Actual API may differ - this is a placeholder test
-  EXPECT_TRUE(true);
+  // Create an independent context
+  auto ioc_ptr = manager.create_independent_context();
+  EXPECT_NE(ioc_ptr, nullptr);
+
+  // Verify it works independently
+  std::atomic<bool> task_executed{false};
+  boost::asio::post(*ioc_ptr, [&task_executed]() { task_executed = true; });
+
+  // Independent context shouldn't run automatically via manager's thread
+  // We need to run it manually
+  EXPECT_FALSE(task_executed.load());
+
+  ioc_ptr->run_one();
+  EXPECT_TRUE(task_executed.load());
 }
 
 // ============================================================================
@@ -239,24 +266,51 @@ TEST_F(CoreIntegratedTest, IoContextManagerIndependentContexts) {
  * @brief Test thread safe state basic functionality
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateBasicFunctionality) {
-  // Test common::ThreadSafeState creation (simplified)
-  unilink::concurrency::ThreadSafeState<std::string> state("initial");
-  EXPECT_NE(&state, nullptr);
+  using State = std::string;
+  unilink::concurrency::ThreadSafeState<State> state("initial");
 
-  // Note: Actual API may differ - this is a placeholder test
-  EXPECT_TRUE(true);
+  EXPECT_EQ(state.get_state(), "initial");
+
+  // Test set_state
+  state.set_state("updated");
+  EXPECT_EQ(state.get_state(), "updated");
+
+  // Test compare_and_set (success)
+  EXPECT_TRUE(state.compare_and_set("updated", "final"));
+  EXPECT_EQ(state.get_state(), "final");
+
+  // Test compare_and_set (failure)
+  EXPECT_FALSE(state.compare_and_set("wrong", "never"));
+  EXPECT_EQ(state.get_state(), "final");
 }
 
 /**
  * @brief Test thread safe state concurrent access
  */
 TEST_F(CoreIntegratedTest, ThreadSafeStateConcurrentAccess) {
-  // Test common::ThreadSafeState creation (simplified)
   unilink::concurrency::ThreadSafeState<int> state(0);
-  EXPECT_NE(&state, nullptr);
+  std::atomic<bool> thread_started{false};
 
-  // Note: Actual API may differ - this is a placeholder test
-  EXPECT_TRUE(true);
+  std::thread t([&]() {
+    thread_started = true;
+    // Wait for state to become 1, then set to 2
+    state.wait_for_state(1);
+    state.set_state(2);
+  });
+
+  // Wait for thread to start
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return thread_started.load(); }, 1000));
+
+  // Update state to 1 to trigger the thread
+  state.set_state(1);
+
+  // Wait for thread to update to 2
+  // wait_for_state uses condition variable, so it should return when state becomes 2
+  state.wait_for_state(2, std::chrono::milliseconds(2000));
+
+  EXPECT_EQ(state.get_state(), 2);
+
+  if (t.joinable()) t.join();
 }
 
 // ============================================================================

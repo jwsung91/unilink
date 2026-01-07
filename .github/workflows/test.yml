@@ -303,7 +303,7 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-22.04
     needs: []
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v6
       - name: Install dependencies

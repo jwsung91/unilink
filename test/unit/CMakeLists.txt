@@ -174,6 +174,28 @@ gtest_discover_tests(run_unit_transport_tcp_client
     TIMEOUT 30
 )
 
+# TcpServer transport tests (fast, unit-level without real network dependencies)
+add_executable(run_unit_transport_tcp_server ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_server.cc)
+target_link_libraries(run_unit_transport_tcp_server
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_transport_tcp_server)
+target_include_directories(run_unit_transport_tcp_server
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+
+gtest_discover_tests(run_unit_transport_tcp_server
+  PROPERTIES
+    LABELS "unit;transport;fast"
+    TIMEOUT 30
+)
+
 # Serial lifecycle tests (fast, no real device)
 add_executable(run_unit_transport_serial ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_serial.cc)
 target_link_libraries(run_unit_transport_serial
@@ -237,5 +259,6 @@ add_dependencies(unilink_unit_tests
   run_unit_test_tcp_client_advanced
   run_unit_wrapper_serial_config_mapping
   run_unit_transport_tcp_client
+  run_unit_transport_tcp_server
   run_unit_transport_serial
 )

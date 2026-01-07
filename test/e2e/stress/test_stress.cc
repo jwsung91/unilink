@@ -499,6 +499,74 @@ TEST_F(StressTest, LongRunningStability) {
   std::cout << "✓ Long-running stability test passed (memory pool operations)" << std::endl;
 }
 
+/**
+ * @brief Real network high-throughput test
+ */
+TEST_F(StressTest, RealNetworkHighThroughput) {
+  std::cout << "\n=== Real Network High Throughput Stress Test ===" << std::endl;
+
+  const uint16_t port = TestUtils::getAvailableTestPort();
+  const size_t chunk_size = 64 * 1024;  // 64KB chunks
+  const int chunk_count = 100;          // 100 chunks = 6.4MB total
+
+  std::atomic<size_t> server_received_bytes{0};
+
+  // Create Server
+  auto server = builder::UnifiedBuilder::tcp_server(port)
+                    .unlimited_clients()
+                    .on_data([&](const std::string& data) { server_received_bytes += data.size(); })
+                    .build();
+
+  ASSERT_NE(server, nullptr);
+  server->start();
+  TestUtils::waitFor(100);
+
+  // Create Client
+  std::atomic<bool> client_connected{false};
+  auto client =
+      builder::UnifiedBuilder::tcp_client("127.0.0.1", port).on_connect([&]() { client_connected = true; }).build();
+
+  ASSERT_NE(client, nullptr);
+  client->start();
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_connected.load(); }, 2000));
+
+  // Generate random data chunk
+  std::string chunk(chunk_size, 'X');  // Simple pattern
+
+  auto start_time = std::chrono::high_resolution_clock::now();
+
+  // Send data
+  for (int i = 0; i < chunk_count; ++i) {
+    client->send(chunk);
+    // Small yield to prevent flooding local loopback too fast causing dropped packets in some OS buffers
+    if (i % 10 == 0) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+  }
+
+  // Wait for reception
+  auto target_bytes = chunk_size * chunk_count;
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_received_bytes.load() >= target_bytes; },
+                                          10000));  // 10 seconds timeout
+
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+  std::cout << "Total sent: " << target_bytes << " bytes" << std::endl;
+  std::cout << "Total received: " << server_received_bytes.load() << " bytes" << std::endl;
+  std::cout << "Duration: " << duration.count() << " ms" << std::endl;
+
+  if (duration.count() > 0) {
+    double throughput_mbps = (target_bytes * 8.0 / 1000000.0) / (duration.count() / 1000.0);
+    std::cout << "Throughput: " << throughput_mbps << " Mbps" << std::endl;
+  }
+
+  EXPECT_EQ(server_received_bytes.load(), target_bytes);
+
+  client->stop();
+  server->stop();
+
+  std::cout << "✓ Real network high-throughput test passed" << std::endl;
+}
+
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

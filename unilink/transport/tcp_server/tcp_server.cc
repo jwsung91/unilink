@@ -45,8 +45,8 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg)
       ioc_(concurrency::IoContextManager::instance().get_context()),
       acceptor_(nullptr),
       cfg_(cfg),
-      max_clients_(0),
-      client_limit_enabled_(false),
+      max_clients_(cfg.max_connections > 0 ? cfg.max_connections : 0),
+      client_limit_enabled_(cfg.max_connections > 0),
       current_session_(nullptr) {
   // Create acceptor after all members are initialized
   try {
@@ -64,8 +64,8 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interfa
       ioc_(ioc),
       acceptor_(std::move(acceptor)),
       cfg_(cfg),
-      max_clients_(0),
-      client_limit_enabled_(false),
+      max_clients_(cfg.max_connections > 0 ? cfg.max_connections : 0),
+      client_limit_enabled_(cfg.max_connections > 0),
       current_session_(nullptr) {
   // Ensure acceptor is properly initialized
   if (!acceptor_) {
