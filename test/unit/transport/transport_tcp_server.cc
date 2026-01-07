@@ -110,47 +110,46 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
 
   TestUtils::waitFor(100);
 
-  // Verify port is actually occupied by connecting to it
-
-  {
-    net::io_context probe_ioc;
-
+  // Verify port is actually occupied by connecting to it (with retries)
+  boost::system::error_code probe_ec;
+  for (int i = 0; i < 10; ++i) {
     tcp::socket probe_sock(probe_ioc);
-
-    boost::system::error_code probe_ec;
-
     probe_sock.connect(tcp::endpoint(net::ip::address_v4::loopback(), port), probe_ec);
+    if (!probe_ec) break;
 
-    ASSERT_FALSE(probe_ec) << "Failed to connect to occupying acceptor on port " << port << ": " << probe_ec.message();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
-  // Second server tries to bind to same port
+  ASSERT_FALSE(probe_ec) << "Failed to connect to occupying acceptor on port " << port << ": " << probe_ec.message();
+}
 
-  config::TcpServerConfig cfg;
+// Second server tries to bind to same port
 
-  cfg.port = port;
+config::TcpServerConfig cfg;
 
-  cfg.port_retry_interval_ms = 50;
+cfg.port = port;
 
-  cfg.max_port_retries = 0;  // Fail immediately after first attempt
+cfg.port_retry_interval_ms = 50;
 
-  server_ = TcpServer::create(cfg);
+cfg.max_port_retries = 0;  // Fail immediately after first attempt
 
-  std::atomic<bool> error_occurred{false};
+server_ = TcpServer::create(cfg);
 
-  server_->on_state([&](base::LinkState state) {
-    if (state == base::LinkState::Error) {
-      error_occurred = true;
-    }
-  });
+std::atomic<bool> error_occurred{false};
 
-  server_->start();
+server_->on_state([&](base::LinkState state) {
+  if (state == base::LinkState::Error) {
+    error_occurred = true;
+  }
+});
 
-  // Wait for error state
+server_->start();
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_occurred.load(); }, 1000));  // Increased timeout
+// Wait for error state
 
-  server_->stop();
+EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_occurred.load(); }, 1000));  // Increased timeout
+
+server_->stop();
 }
 
 TEST_F(TransportTcpServerTest, MaxClientsLimit) {
