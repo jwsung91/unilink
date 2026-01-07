@@ -69,9 +69,7 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
   auto work_guard = net::make_work_guard(ioc_occupy);  // Prevent run() from returning
 
   // Explicitly disable reuse_address on ALL platforms to ensure conflict.
-
   // Standard acceptor constructor enables reuse_address by default, which can cause
-
   // flaky tests on Unix systems if the kernel decides to allow binding (e.g. SO_REUSEPORT).
 
   tcp::acceptor acceptor(ioc_occupy);
@@ -84,7 +82,8 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
     acceptor.set_option(net::socket_base::reuse_address(false), ec_bind);
   }
 
-  acceptor.bind(tcp::endpoint(net::ip::address_v4::loopback(), port), ec_bind);
+  // Bind to INADDR_ANY to match the server bind address and force a real conflict on macOS.
+  acceptor.bind(tcp::endpoint(tcp::v4(), port), ec_bind);
 
   acceptor.listen(net::socket_base::max_listen_connections, ec_bind);
 
