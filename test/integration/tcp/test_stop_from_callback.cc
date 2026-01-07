@@ -71,7 +71,7 @@ TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
 
   auto client = TcpClient::create(cfg);
   std::weak_ptr<TcpClient> weak_client = client;
-  
+
   client->on_state([weak_client, &state_notifications, &stop_from_state, &terminal_notifications, &terminal_once,
                     &terminal_reached](LinkState state) {
     state_notifications.fetch_add(1);

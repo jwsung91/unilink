@@ -64,7 +64,7 @@ class TestUtils {
    */
   static uint16_t getAvailableTestPort() {
     static std::atomic<uint16_t> port_counter{0};
-    
+
     // Initialize with random offset on first use to avoid collisions between test processes
     uint16_t current = port_counter.load();
     if (current == 0) {
