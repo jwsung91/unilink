@@ -110,21 +110,25 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
 
   TestUtils::waitFor(100);
 
-  // Verify port is actually occupied by connecting to it (with retries)
-  {
-    net::io_context probe_ioc;
-    boost::system::error_code probe_ec;
-    for (int i = 0; i < 10; ++i) {
-      tcp::socket probe_sock(probe_ioc);
-      probe_sock.connect(tcp::endpoint(net::ip::address_v4::loopback(), port), probe_ec);
-      if (!probe_ec) break;
-
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // Verify port is actually occupied by connecting to it (with retries)
+    {
+      net::io_context probe_ioc;
+      boost::system::error_code probe_ec;
+      // Increase retry count to handle slow macOS CI environments
+      for (int i = 0; i < 50; ++i) {
+        tcp::socket probe_sock(probe_ioc);
+        probe_sock.connect(tcp::endpoint(net::ip::address_v4::loopback(), port), probe_ec);
+        if (!probe_ec) break;
+        
+        // Log retry on failure to help debug persistent issues
+        if (i > 0 && i % 10 == 0) {
+          std::cerr << "Probe connection retry " << i << " failed: " << probe_ec.message() << std::endl;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      }
+  
+      ASSERT_FALSE(probe_ec) << "Failed to connect to occupying acceptor on port " << port << ": " << probe_ec.message();
     }
-
-    ASSERT_FALSE(probe_ec) << "Failed to connect to occupying acceptor on port " << port << ": " << probe_ec.message();
-  }
-
   // Second server tries to bind to same port
 
   config::TcpServerConfig cfg;
