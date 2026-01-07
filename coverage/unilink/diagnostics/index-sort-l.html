@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">511</td>
+            <td class="headerCovTableEntry">521</td>
             <td class="headerCovTableEntry">606</td>
-            <td class="headerCovTableEntryMed">84.3 %</td>
+            <td class="headerCovTableEntryMed">86.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-01-04 18:53:40</td>
+            <td class="headerValue">2026-01-07 18:47:57</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">87</td>
+            <td class="headerCovTableEntry">88</td>
             <td class="headerCovTableEntry">101</td>
-            <td class="headerCovTableEntryMed">86.1 %</td>
+            <td class="headerCovTableEntryMed">87.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -52,6 +52,10 @@
             <span class="coverLegendCovHi" title="Coverage rates of 90 % and more are classified as high">high: &gt;= 90 %</span>
 </td>
             <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">392</td>
+            <td class="headerCovTableEntry">770</td>
+            <td class="headerCovTableEntryLo">50.9 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -65,18 +69,21 @@
   <table width="80%" cellpadding=1 cellspacing=1 border=0>
 
     <tr>
-      <td width="50%"><br></td>
-      <td width="10%"></td>
-      <td width="10%"></td>
-      <td width="10%"></td>
-      <td width="10%"></td>
-      <td width="10%"></td>
+      <td width="44%"><br></td>
+      <td width="8%"></td>
+      <td width="8%"></td>
+      <td width="8%"></td>
+      <td width="8%"></td>
+      <td width="8%"></td>
+      <td width="8%"></td>
+      <td width="8%"></td>
     </tr>
 
     <tr>
       <td class="tableHead">Filename <span class="tableHeadSort"><a href="index.html"><img src="../../updown.png" width=10 height=14 alt="Sort by name" title="Sort by name" border=0></a></span></td>
       <td class="tableHead" colspan=3>Line Coverage ( <a class="detail" href="index-detail-sort-l.html">show details</a> ) <span class="tableHeadSort"><img src="../../glass.png" width=10 height=14 alt="Sort by line coverage" title="Sort by line coverage" border=0></span></td>
       <td class="tableHead" colspan=2>Functions <span class="tableHeadSort"><a href="index-sort-f.html"><img src="../../updown.png" width=10 height=14 alt="Sort by function coverage" title="Sort by function coverage" border=0></a></span></td>
+      <td class="tableHead" colspan=2>Branches <span class="tableHeadSort"><a href="index-sort-b.html"><img src="../../updown.png" width=10 height=14 alt="Sort by branch coverage" title="Sort by branch coverage" border=0></a></span></td>
     </tr>
     <tr>
       <td class="coverFile"><a href="error_handler.cc.gcov.html">error_handler.cc</a></td>
@@ -87,6 +94,8 @@
       <td class="coverNumLo">92 / 133</td>
       <td class="coverPerMed">75.9&nbsp;%</td>
       <td class="coverNumMed">22 / 29</td>
+      <td class="coverPerLo">34.2&nbsp;%</td>
+      <td class="coverNumLo">54 / 158</td>
     </tr>
     <tr>
       <td class="coverFile"><a href="log_rotation.cc.gcov.html">log_rotation.cc</a></td>
@@ -97,16 +106,8 @@
       <td class="coverNumMed">82 / 104</td>
       <td class="coverPerHi">92.9&nbsp;%</td>
       <td class="coverNumHi">13 / 14</td>
-    </tr>
-    <tr>
-      <td class="coverFile"><a href="logger.cc.gcov.html">logger.cc</a></td>
-      <td class="coverBar" align="center">
-        <table border=0 cellspacing=0 cellpadding=1><tr><td class="coverBarOutline"><img src="../../emerald.png" width=90 height=10 alt="90.0%"><img src="../../snow.png" width=10 height=10 alt="90.0%"></td></tr></table>
-      </td>
-      <td class="coverPerHi">90.0&nbsp;%</td>
-      <td class="coverNumHi">269 / 299</td>
-      <td class="coverPerMed">86.4&nbsp;%</td>
-      <td class="coverNumMed">38 / 44</td>
+      <td class="coverPerLo">45.0&nbsp;%</td>
+      <td class="coverNumLo">91 / 202</td>
     </tr>
     <tr>
       <td class="coverFile"><a href="exceptions.hpp.gcov.html">exceptions.hpp</a></td>
@@ -117,6 +118,20 @@
       <td class="coverNumHi">20 / 22</td>
       <td class="coverPerHi">100.0&nbsp;%</td>
       <td class="coverNumHi">5 / 5</td>
+      <td class="coverPerLo">50.0&nbsp;%</td>
+      <td class="coverNumLo">27 / 54</td>
+    </tr>
+    <tr>
+      <td class="coverFile"><a href="logger.cc.gcov.html">logger.cc</a></td>
+      <td class="coverBar" align="center">
+        <table border=0 cellspacing=0 cellpadding=1><tr><td class="coverBarOutline"><img src="../../emerald.png" width=93 height=10 alt="93.3%"><img src="../../snow.png" width=7 height=10 alt="93.3%"></td></tr></table>
+      </td>
+      <td class="coverPerHi">93.3&nbsp;%</td>
+      <td class="coverNumHi">279 / 299</td>
+      <td class="coverPerMed">88.6&nbsp;%</td>
+      <td class="coverNumMed">39 / 44</td>
+      <td class="coverPerLo">62.5&nbsp;%</td>
+      <td class="coverNumLo">210 / 336</td>
     </tr>
     <tr>
       <td class="coverFile"><a href="log_rotation.hpp.gcov.html">log_rotation.hpp</a></td>
@@ -127,6 +142,8 @@
       <td class="coverNumHi">1 / 1</td>
       <td class="coverPerHi">100.0&nbsp;%</td>
       <td class="coverNumHi">1 / 1</td>
+      <td class="coverPerLo">50.0&nbsp;%</td>
+      <td class="coverNumLo">1 / 2</td>
     </tr>
     <tr>
       <td class="coverFile"><a href="logger.hpp.gcov.html">logger.hpp</a></td>
@@ -137,6 +154,8 @@
       <td class="coverNumHi">18 / 18</td>
       <td class="coverPerHi">100.0&nbsp;%</td>
       <td class="coverNumHi">5 / 5</td>
+      <td class="coverPerLo">50.0&nbsp;%</td>
+      <td class="coverNumLo">3 / 6</td>
     </tr>
     <tr>
       <td class="coverFile"><a href="error_types.hpp.gcov.html">error_types.hpp</a></td>
@@ -147,6 +166,8 @@
       <td class="coverNumHi">29 / 29</td>
       <td class="coverPerHi">100.0&nbsp;%</td>
       <td class="coverNumHi">3 / 3</td>
+      <td class="coverPerLo">50.0&nbsp;%</td>
+      <td class="coverNumLo">6 / 12</td>
     </tr>
   </table>
   </center>
