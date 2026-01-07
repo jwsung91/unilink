@@ -84,7 +84,7 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
     acceptor.set_option(net::socket_base::reuse_address(false), ec_bind);
   }
 
-  acceptor.bind(tcp::endpoint(tcp::v4(), port), ec_bind);
+  acceptor.bind(tcp::endpoint(net::ip::address_v4::loopback(), port), ec_bind);
 
   acceptor.listen(net::socket_base::max_listen_connections, ec_bind);
 
@@ -94,9 +94,17 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
 
   // Run the occupying io_context in a thread to keep the port occupied
 
-  std::thread occupy_thread([&ioc_occupy]() {
-    ioc_occupy.run();
-  });
+  std::thread occupy_thread([&ioc_occupy]() { ioc_occupy.run(); });
+
+  // Guard to ensure thread is joined even if assertions fail
+  struct ThreadGuard {
+    std::thread& t;
+    net::io_context& ioc;
+    ~ThreadGuard() {
+      ioc.stop();
+      if (t.joinable()) t.join();
+    }
+  } thread_guard{occupy_thread, ioc_occupy};
 
   // Give it a moment to ensure port is occupied
 
@@ -143,16 +151,6 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
   EXPECT_TRUE(TestUtils::waitForCondition([&] { return error_occurred.load(); }, 1000));  // Increased timeout
 
   server_->stop();
-
-  // Clean up occupying thread
-
-  work_guard.reset();  // Allow run() to return
-
-  ioc_occupy.stop();
-
-  if (occupy_thread.joinable()) {
-    occupy_thread.join();
-  }
 }
 
 TEST_F(TransportTcpServerTest, MaxClientsLimit) {
