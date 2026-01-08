@@ -84,6 +84,7 @@ $(document).ready(function(){initNavTree('classunilink_1_1concurrency_1_1ThreadS
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classunilink_1_1concurrency_1_1ThreadSafeState-members.html">List of all members</a>  </div>
@@ -103,6 +104,8 @@ Public Types</h2></td></tr>
 <tr class="separator:a04390997b93863b05dbb1a8fce304484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a974567d33f60e72c4fd166f666c15c17"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17">StateCallback</a> = std::function&lt; void(const <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a04390997b93863b05dbb1a8fce304484">State</a> &amp;)&gt;</td></tr>
 <tr class="separator:a974567d33f60e72c4fd166f666c15c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7302349515a2a7571b40780f35a93481"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a7302349515a2a7571b40780f35a93481">StateCallbackHandle</a> = size_t</td></tr>
+<tr class="separator:a7302349515a2a7571b40780f35a93481"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -126,10 +129,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a801aa228c55ce37a501c9313137140b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3d10b517a73888472fa445a96c5b521"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a04390997b93863b05dbb1a8fce304484">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#ab3d10b517a73888472fa445a96c5b521">exchange</a> (const <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a04390997b93863b05dbb1a8fce304484">State</a> &amp;new_state)</td></tr>
 <tr class="separator:ab3d10b517a73888472fa445a96c5b521"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83ccf75ad00eb46600257e6103f58777"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a83ccf75ad00eb46600257e6103f58777">add_state_change_callback</a> (<a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17">StateCallback</a> callback)</td></tr>
-<tr class="separator:a83ccf75ad00eb46600257e6103f58777"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a379b47e86658c3b96a45f528d4a1d8a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a379b47e86658c3b96a45f528d4a1d8a0">remove_state_change_callback</a> (<a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17">StateCallback</a> callback)</td></tr>
-<tr class="separator:a379b47e86658c3b96a45f528d4a1d8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3665523a22bdec10571067c5902451e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a7302349515a2a7571b40780f35a93481">StateCallbackHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#af3665523a22bdec10571067c5902451e">add_state_change_callback</a> (<a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17">StateCallback</a> callback)</td></tr>
+<tr class="separator:af3665523a22bdec10571067c5902451e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71a15117b2c2641f296042f89d421377"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a71a15117b2c2641f296042f89d421377">remove_state_change_callback</a> (<a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a7302349515a2a7571b40780f35a93481">StateCallbackHandle</a> handle)</td></tr>
+<tr class="separator:a71a15117b2c2641f296042f89d421377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacc09e9632ebc96702ac595d5776d42b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#aacc09e9632ebc96702ac595d5776d42b">clear_state_change_callbacks</a> ()</td></tr>
 <tr class="separator:aacc09e9632ebc96702ac595d5776d42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6082300976a0a6880a0323d25def1399"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a6082300976a0a6880a0323d25def1399">wait_for_state</a> (const <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a04390997b93863b05dbb1a8fce304484">State</a> &amp;expected_state, std::chrono::milliseconds timeout=std::chrono::milliseconds(1000))</td></tr>
@@ -186,6 +189,24 @@ template&lt;typename StateType &gt; </div>
 
 </div>
 </div>
+<a id="a7302349515a2a7571b40780f35a93481"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7302349515a2a7571b40780f35a93481">&#9670;&nbsp;</a></span>StateCallbackHandle</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename StateType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html">unilink::concurrency::ThreadSafeState</a>&lt; StateType &gt;::<a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a7302349515a2a7571b40780f35a93481">StateCallbackHandle</a> =  size_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00045">45</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2d36c6590b7df157ed62ecdb6e187532"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2d36c6590b7df157ed62ecdb6e187532">&#9670;&nbsp;</a></span>ThreadSafeState() <span class="overload">[1/3]</span></h2>
@@ -213,7 +234,7 @@ template&lt;typename StateType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00165">165</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00171">171</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -274,8 +295,8 @@ template&lt;typename StateType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a83ccf75ad00eb46600257e6103f58777"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83ccf75ad00eb46600257e6103f58777">&#9670;&nbsp;</a></span>add_state_change_callback()</h2>
+<a id="af3665523a22bdec10571067c5902451e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3665523a22bdec10571067c5902451e">&#9670;&nbsp;</a></span>add_state_change_callback()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,7 +304,7 @@ template&lt;typename StateType &gt; </div>
 template&lt;typename StateType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html">unilink::concurrency::ThreadSafeState</a>&lt; StateType &gt;::add_state_change_callback </td>
+          <td class="memname"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html">ThreadSafeState</a>&lt; StateType &gt;::<a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a7302349515a2a7571b40780f35a93481">StateCallbackHandle</a> <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html">unilink::concurrency::ThreadSafeState</a>&lt; StateType &gt;::add_state_change_callback </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17">StateCallback</a>&#160;</td>
           <td class="paramname"><em>callback</em></td><td>)</td>
@@ -292,7 +313,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00224">224</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00230">230</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -310,7 +331,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00236">236</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00247">247</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -342,7 +363,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00196">196</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00202">202</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -364,7 +385,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00210">210</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00216">216</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -382,7 +403,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00168">168</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00174">174</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -404,7 +425,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00255">255</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00266">266</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -422,7 +443,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00261">261</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00272">272</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -482,8 +503,8 @@ template&lt;typename StateType &gt; </div>
 
 </div>
 </div>
-<a id="a379b47e86658c3b96a45f528d4a1d8a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a379b47e86658c3b96a45f528d4a1d8a0">&#9670;&nbsp;</a></span>remove_state_change_callback()</h2>
+<a id="a71a15117b2c2641f296042f89d421377"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71a15117b2c2641f296042f89d421377">&#9670;&nbsp;</a></span>remove_state_change_callback()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -493,14 +514,14 @@ template&lt;typename StateType &gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html">unilink::concurrency::ThreadSafeState</a>&lt; StateType &gt;::remove_state_change_callback </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17">StateCallback</a>&#160;</td>
-          <td class="paramname"><em>callback</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a7302349515a2a7571b40780f35a93481">StateCallbackHandle</a>&#160;</td>
+          <td class="paramname"><em>handle</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00230">230</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00239">239</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -522,7 +543,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00174">174</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00180">180</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -544,7 +565,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00185">185</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00191">191</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -576,7 +597,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00242">242</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00253">253</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -598,7 +619,7 @@ template&lt;typename StateType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00248">248</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="thread__safe__state_8hpp_source.html#l00259">259</a> of file <a class="el" href="thread__safe__state_8hpp_source.html">thread_safe_state.hpp</a>.</p>
 
 </div>
 </div>
@@ -611,7 +632,7 @@ template&lt;typename StateType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1concurrency.html">concurrency</a></li><li class="navelem"><a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html">ThreadSafeState</a></li>
-    <li class="footer">Generated on Wed Jan 7 2026 18:43:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Jan 8 2026 00:09:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"index.html#autotoc_md131":[0,6,3],
 "index.html#autotoc_md133":[0,7],
 "index.html#autotoc_md134":[0,7,0],
 "index.html#autotoc_md135":[0,7,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "md_docs_guides_core_quickstart.html#autotoc_md322":[5,0,0],
 "md_docs_guides_core_quickstart.html#autotoc_md323":[5,0,1],
 "md_docs_guides_core_quickstart.html#autotoc_md325":[5,1],
-"md_docs_guides_core_quickstart.html#autotoc_md327":[5,2],
-"md_docs_guides_core_quickstart.html#autotoc_md329":[5,3]
+"md_docs_guides_core_quickstart.html#autotoc_md327":[5,2]
 };

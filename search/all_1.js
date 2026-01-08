@@ -2,7 +2,7 @@ var searchData=
 [
   ['acquire_2',['acquire',['../classunilink_1_1memory_1_1MemoryPool.html#af6f9fcc223cf0c55a124169978b11490',1,'unilink::memory::MemoryPool::acquire(BufferSize buffer_size)'],['../classunilink_1_1memory_1_1MemoryPool.html#a72af4e14f7dc98ae5cbb227546c1e015',1,'unilink::memory::MemoryPool::acquire(size_t size)']]],
   ['add_3',['add',['../classunilink_1_1concurrency_1_1ThreadSafeCounter.html#a8852c5296afb7cd845ed254334143d6f',1,'unilink::concurrency::ThreadSafeCounter']]],
-  ['add_5fstate_5fchange_5fcallback_4',['add_state_change_callback',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#a83ccf75ad00eb46600257e6103f58777',1,'unilink::concurrency::ThreadSafeState']]],
+  ['add_5fstate_5fchange_5fcallback_4',['add_state_change_callback',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#af3665523a22bdec10571067c5902451e',1,'unilink::concurrency::ThreadSafeState']]],
   ['alive_5',['alive',['../classunilink_1_1transport_1_1TcpServerSession.html#aaa115257406370201054e5d57e2a2626',1,'unilink::transport::TcpServerSession']]],
   ['allocationinfo_6',['AllocationInfo',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html',1,'unilink::memory::MemoryTracker']]],
   ['api_5fguide_2emd_7',['api_guide.md',['../api__guide_8md.html',1,'']]],
