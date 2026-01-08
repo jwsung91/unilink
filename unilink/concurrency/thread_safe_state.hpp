@@ -42,6 +42,7 @@ class ThreadSafeState {
  public:
   using State = StateType;
   using StateCallback = std::function<void(const State&)>;
+  using StateCallbackHandle = size_t;
 
   // Constructors
   explicit ThreadSafeState(const State& initial_state = State{});
@@ -60,8 +61,8 @@ class ThreadSafeState {
   State exchange(const State& new_state);
 
   // State change notifications
-  void add_state_change_callback(StateCallback callback);
-  void remove_state_change_callback(StateCallback callback);
+  StateCallbackHandle add_state_change_callback(StateCallback callback);
+  void remove_state_change_callback(StateCallbackHandle handle);
   void clear_state_change_callbacks();
 
   // Wait for state change
@@ -77,7 +78,12 @@ class ThreadSafeState {
   State state_;
   std::atomic<bool> state_changed_{false};
 
-  std::vector<StateCallback> callbacks_;
+  struct CallbackInfo {
+    StateCallbackHandle handle;
+    StateCallback callback;
+  };
+  std::vector<CallbackInfo> callbacks_;
+  StateCallbackHandle next_handle_{1};
   mutable std::mutex callbacks_mutex_;
 
   std::condition_variable_any state_cv_;
@@ -221,15 +227,20 @@ StateType ThreadSafeState<StateType>::exchange(const State& new_state) {
 }
 
 template <typename StateType>
-void ThreadSafeState<StateType>::add_state_change_callback(StateCallback callback) {
+typename ThreadSafeState<StateType>::StateCallbackHandle ThreadSafeState<StateType>::add_state_change_callback(
+    StateCallback callback) {
   std::lock_guard<std::mutex> lock(callbacks_mutex_);
-  callbacks_.push_back(callback);
+  StateCallbackHandle handle = next_handle_++;
+  callbacks_.push_back({handle, std::move(callback)});
+  return handle;
 }
 
 template <typename StateType>
-void ThreadSafeState<StateType>::remove_state_change_callback(StateCallback callback) {
+void ThreadSafeState<StateType>::remove_state_change_callback(StateCallbackHandle handle) {
   std::lock_guard<std::mutex> lock(callbacks_mutex_);
-  callbacks_.erase(std::remove(callbacks_.begin(), callbacks_.end(), callback), callbacks_.end());
+  callbacks_.erase(std::remove_if(callbacks_.begin(), callbacks_.end(),
+                                  [handle](const CallbackInfo& info) { return info.handle == handle; }),
+                   callbacks_.end());
 }
 
 template <typename StateType>
@@ -265,9 +276,9 @@ void ThreadSafeState<StateType>::notify_state_change() {
 template <typename StateType>
 void ThreadSafeState<StateType>::notify_callbacks(const State& new_state) {
   std::lock_guard<std::mutex> lock(callbacks_mutex_);
-  for (const auto& callback : callbacks_) {
+  for (const auto& info : callbacks_) {
     try {
-      callback(new_state);
+      info.callback(new_state);
     } catch (...) {
       // Ignore callback exceptions to prevent state corruption
     }
