@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('md_docs_tutorials_02_tcp_server.html',
  <b>Difficulty</b>: Beginner to Intermediate <br  />
  <b>Prerequisites</b>: <a class="el" href="md_docs_tutorials_01_getting_started.html">Tutorial 1: Getting Started</a></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md895"></a>
+<h1><a class="anchor" id="autotoc_md903"></a>
 What You'll Build</h1>
 <p>A TCP echo server that:</p><ol type="1">
 <li>Accepts multiple client connections</li>
@@ -101,7 +101,7 @@ What You'll Build</h1>
 <li>Handles client disconnections gracefully</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md897"></a>
+<h1><a class="anchor" id="autotoc_md905"></a>
 Step 1: Basic Server Setup</h1>
 <p>Create <code>echo_server.cpp</code>:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -199,22 +199,22 @@ Step 1: Basic Server Setup</h1>
 <div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00087">unilink.hpp:87</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md899"></a>
+<h1><a class="anchor" id="autotoc_md907"></a>
 Step 2: Build and Test</h1>
-<h2><a class="anchor" id="autotoc_md900"></a>
+<h2><a class="anchor" id="autotoc_md908"></a>
 Compile</h2>
 <div class="fragment"><div class="line">g++ -std=c++17 echo_server.cpp -o echo_server -lunilink -lboost_system -pthread</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md901"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md909"></a>
 Run Server</h2>
 <div class="fragment"><div class="line">./echo_server 8080</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md902"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md910"></a>
 Test with Multiple Clients</h2>
 <p><b>Terminal 1</b> (Server): </p><div class="fragment"><div class="line">./echo_server 8080</div>
 </div><!-- fragment --><p><b>Terminal 2</b> (Client 1): </p><div class="fragment"><div class="line">telnet localhost 8080</div>
 </div><!-- fragment --><p><b>Terminal 3</b> (Client 2): </p><div class="fragment"><div class="line">telnet localhost 8080</div>
 </div><!-- fragment --><p>Type messages in each client terminal and see them echoed back!</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md904"></a>
+<h1><a class="anchor" id="autotoc_md912"></a>
 Step 3: Add Client Management</h1>
 <p>Enhanced version with client tracking:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;map&gt;</span></div>
@@ -317,7 +317,7 @@ Step 3: Add Client Management</h1>
 <div class="line">    }</div>
 <div class="line">};</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md906"></a>
+<h1><a class="anchor" id="autotoc_md914"></a>
 Step 4: Single Client Mode</h1>
 <p>For applications that only need one client at a time:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
@@ -336,7 +336,7 @@ Step 4: Single Client Mode</h1>
 <div class="line">server-&gt;stop();  <span class="comment">// Clean shutdown when done</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9349e7963408c74d2dac92fae288cddc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder &amp; single_client()</div><div class="ttdoc">Configure server for single client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00217">tcp_server_builder.cc:217</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md908"></a>
+<h1><a class="anchor" id="autotoc_md916"></a>
 Step 5: Port Retry Logic</h1>
 <p>Handle cases where the port might be in use:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
@@ -364,7 +364,7 @@ Step 5: Port Retry Logic</h1>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5361cef3aa804d32cba0b73c02e6492d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">unilink::builder::TcpServerBuilder::enable_port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00198">tcp_server_builder.cc:198</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a56c7eb778bed9c2b217704a081d59fea"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a56c7eb778bed9c2b217704a081d59fea">unilink::builder::TcpServerBuilder::on_error</a></div><div class="ttdeci">TcpServerBuilder &amp; on_error(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00172">tcp_server_builder.cc:172</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md910"></a>
+<h1><a class="anchor" id="autotoc_md918"></a>
 Step 6: Broadcasting to All Clients</h1>
 <p>Send messages to all connected clients:</p>
 <div class="fragment"><div class="line"><span class="keyword">class </span>BroadcastServer {</div>
@@ -388,7 +388,7 @@ Step 6: Broadcasting to All Clients</h1>
 <div class="line">};</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_ace77ca7bebea0c6ddd962c230c207f6a"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ace77ca7bebea0c6ddd962c230c207f6a">unilink::builder::TcpServerBuilder::on_data</a></div><div class="ttdeci">TcpServerBuilder &amp; on_data(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback (simple version)</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00142">tcp_server_builder.cc:142</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md912"></a>
+<h1><a class="anchor" id="autotoc_md920"></a>
 Complete Example: Chat Server</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;map&gt;</span></div>
@@ -467,12 +467,12 @@ Complete Example: Chat Server</h1>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md914"></a>
+<h1><a class="anchor" id="autotoc_md922"></a>
 Testing Your Chat Server</h1>
-<h2><a class="anchor" id="autotoc_md915"></a>
+<h2><a class="anchor" id="autotoc_md923"></a>
 Start Server</h2>
 <div class="fragment"><div class="line">./chat_server 8080</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md916"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md924"></a>
 Connect Multiple Clients</h2>
 <div class="fragment"><div class="line"># Terminal 1</div>
 <div class="line">telnet localhost 8080</div>
@@ -482,22 +482,22 @@ Connect Multiple Clients</h2>
 <div class="line"> </div>
 <div class="line"># Terminal 3</div>
 <div class="line">telnet localhost 8080</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md917"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md925"></a>
 Try Commands</h2>
 <div class="fragment"><div class="line">/nick Alice</div>
 <div class="line">Hello everyone!</div>
 <div class="line">/nick Bob</div>
 <div class="line">Hi Alice!</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md919"></a>
+<h1><a class="anchor" id="autotoc_md927"></a>
 Best Practices</h1>
-<h2><a class="anchor" id="autotoc_md920"></a>
+<h2><a class="anchor" id="autotoc_md928"></a>
 1. Always Check Server Status</h2>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (!server-&gt;is_listening()) {</div>
 <div class="line">    std::cerr &lt;&lt; <span class="stringliteral">&quot;Server failed to start&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">    <span class="keywordflow">return</span> 1;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md921"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md929"></a>
 2. Use Thread-Safe Data Structures</h2>
 <div class="fragment"><div class="line">std::mutex mutex_;</div>
 <div class="line">std::map&lt;size_t, ClientInfo&gt; clients_;</div>
@@ -507,7 +507,7 @@ Best Practices</h1>
 <div class="line">    std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
 <div class="line">    clients_[id] = info;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md922"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md930"></a>
 3. Handle Graceful Shutdown</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> shutdown() {</div>
 <div class="line">    <span class="comment">// Notify clients</span></div>
@@ -519,7 +519,7 @@ Best Practices</h1>
 <div class="line">    <span class="comment">// Stop server</span></div>
 <div class="line">    server_-&gt;stop();</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md923"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md931"></a>
 4. Implement Error Recovery</h2>
 <div class="fragment"><div class="line">.on_error([<span class="keyword">this</span>](<span class="keyword">const</span> std::string&amp; error) {</div>
 <div class="line">    log_error(error);</div>
@@ -530,9 +530,9 @@ Best Practices</h1>
 <div class="line">    }</div>
 <div class="line">})</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md925"></a>
+<h1><a class="anchor" id="autotoc_md933"></a>
 Common Patterns</h1>
-<h2><a class="anchor" id="autotoc_md926"></a>
+<h2><a class="anchor" id="autotoc_md934"></a>
 Pattern 1: Command Parser</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> handle_command(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; cmd) {</div>
 <div class="line">    <span class="keywordflow">if</span> (cmd == <span class="stringliteral">&quot;/help&quot;</span>) {</div>
@@ -545,7 +545,7 @@ Pattern 1: Command Parser</h2>
 <div class="line">        server_-&gt;send_to_client(client_id, <span class="stringliteral">&quot;Unknown command\n&quot;</span>);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md927"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md935"></a>
 Pattern 2: Rate Limiting</h2>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>RateLimiter {</div>
 <div class="line">    <span class="keywordtype">size_t</span> max_messages_per_second{10};</div>
@@ -571,7 +571,7 @@ Pattern 2: Rate Limiting</h2>
 <div class="line">    }</div>
 <div class="line">};</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md929"></a>
+<h1><a class="anchor" id="autotoc_md937"></a>
 Next Steps</h1>
 <ul>
 <li>Tutorial 3: Serial Communication →</li>
@@ -579,7 +579,7 @@ Next Steps</h1>
 <li>../guides/performance_tuning.md "Performance Tuning"</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md931"></a>
+<h1><a class="anchor" id="autotoc_md939"></a>
 Full Example Code</h1>
 <p>✅ <b>Ready-to-compile examples are available!</b></p>
 <p><b>Location</b>: <code>examples/tutorials/tcp_server/</code></p>
@@ -608,7 +608,7 @@ Full Example Code</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 8 2026 00:09:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jan 9 2026 23:25:29 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

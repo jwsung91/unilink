@@ -89,16 +89,16 @@ $(document).ready(function(){initNavTree('md_docs_guides_setup_requirements.html
 <div class="contents">
 <div class="textblock"><p>This guide describes the system requirements and dependencies needed to build and use <code>unilink</code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md608"></a>
+<h1><a class="anchor" id="autotoc_md616"></a>
 System Requirements</h1>
-<h2><a class="anchor" id="autotoc_md609"></a>
+<h2><a class="anchor" id="autotoc_md617"></a>
 Recommended Platform</h2>
 <ul>
 <li><b>Ubuntu 22.04 LTS or later</b></li>
 <li><b>C++17 compatible compiler</b> (GCC 11+ or Clang 14+)</li>
 <li><b>CMake 3.10 or later</b></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md610"></a>
+<h2><a class="anchor" id="autotoc_md618"></a>
 Supported Platforms</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -113,9 +113,9 @@ Supported Platforms</h2>
 <td class="markdownTableBodyNone">Other Linux   </td><td class="markdownTableBodyNone">🔄 Should Work   </td><td class="markdownTableBodyNone">Not officially tested   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md612"></a>
+<h1><a class="anchor" id="autotoc_md620"></a>
 Dependencies</h1>
-<h2><a class="anchor" id="autotoc_md613"></a>
+<h2><a class="anchor" id="autotoc_md621"></a>
 Core Library Dependencies</h2>
 <p>The following packages are required to build and use <code>unilink</code>:</p>
 <div class="fragment"><div class="line"># Ubuntu/Debian</div>
@@ -124,7 +124,7 @@ Core Library Dependencies</h2>
 <div class="line">  cmake \</div>
 <div class="line">  libboost-dev \</div>
 <div class="line">  libboost-system-dev</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md614"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md622"></a>
 Dependency Details</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -139,12 +139,12 @@ Dependency Details</h2>
 <td class="markdownTableBodyNone"><b>Boost</b>   </td><td class="markdownTableBodyNone">1.65+   </td><td class="markdownTableBodyNone">BSL 1.0   </td><td class="markdownTableBodyNone">Asio for async I/O   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md616"></a>
+<h1><a class="anchor" id="autotoc_md624"></a>
 Optional Dependencies</h1>
-<h2><a class="anchor" id="autotoc_md617"></a>
+<h2><a class="anchor" id="autotoc_md625"></a>
 For Documentation Generation</h2>
 <div class="fragment"><div class="line">sudo apt install -y doxygen graphviz</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md618"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md626"></a>
 For Development</h2>
 <div class="fragment"><div class="line"># AddressSanitizer support (included in GCC/Clang)</div>
 <div class="line"># Valgrind for memory debugging</div>
@@ -153,9 +153,9 @@ For Development</h2>
 <div class="line"># clang-format for code formatting</div>
 <div class="line">sudo apt install -y clang-format</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md620"></a>
+<h1><a class="anchor" id="autotoc_md628"></a>
 Compiler Requirements</h1>
-<h2><a class="anchor" id="autotoc_md621"></a>
+<h2><a class="anchor" id="autotoc_md629"></a>
 Minimum Compiler Versions</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -165,13 +165,13 @@ Minimum Compiler Versions</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Clang   </td><td class="markdownTableBodyNone">14.0   </td><td class="markdownTableBodyNone">14.0+   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md622"></a>
+<h2><a class="anchor" id="autotoc_md630"></a>
 C++ Standard</h2>
 <ul>
 <li><b>C++17</b> is required</li>
 <li>C++20 and C++23 are supported but not required</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md623"></a>
+<h2><a class="anchor" id="autotoc_md631"></a>
 Compiler Features Required</h2>
 <ul>
 <li>Lambda expressions</li>
@@ -181,52 +181,52 @@ Compiler Features Required</h2>
 <li>Variadic templates</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md625"></a>
+<h1><a class="anchor" id="autotoc_md633"></a>
 Build Environment</h1>
-<h2><a class="anchor" id="autotoc_md626"></a>
+<h2><a class="anchor" id="autotoc_md634"></a>
 Disk Space</h2>
 <ul>
 <li><b>Source code</b>: ~10 MB</li>
 <li><b>Build artifacts</b>: ~50-100 MB (depending on configuration)</li>
 <li><b>Examples and tests</b>: ~50 MB additional</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md627"></a>
+<h2><a class="anchor" id="autotoc_md635"></a>
 Memory Requirements</h2>
 <ul>
 <li><b>Compilation</b>: Minimum 2 GB RAM recommended</li>
 <li><b>Parallel builds</b> (<code>-j</code>): Additional 500 MB per core</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md628"></a>
+<h2><a class="anchor" id="autotoc_md636"></a>
 CPU</h2>
 <ul>
 <li>Any modern x86_64 or ARM64 processor</li>
 <li>Parallel builds benefit from multi-core processors</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md630"></a>
+<h1><a class="anchor" id="autotoc_md638"></a>
 Runtime Requirements</h1>
-<h2><a class="anchor" id="autotoc_md631"></a>
+<h2><a class="anchor" id="autotoc_md639"></a>
 For Applications Using unilink</h2>
 <div class="fragment"><div class="line"># Install runtime libraries only</div>
 <div class="line">sudo apt install -y libboost-system1.74.0</div>
 <div class="line"># Version may vary depending on your Ubuntu version</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md632"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md640"></a>
 Thread Support</h2>
 <ul>
 <li>POSIX threads (pthread) support required</li>
 <li>Typically included in standard Linux distributions</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md634"></a>
+<h1><a class="anchor" id="autotoc_md642"></a>
 Platform-Specific Notes</h1>
-<h2><a class="anchor" id="autotoc_md635"></a>
+<h2><a class="anchor" id="autotoc_md643"></a>
 Ubuntu 22.04 LTS</h2>
 <ul>
 <li>Default GCC 11.4 meets all requirements</li>
 <li>All features fully supported</li>
 <li>Recommended platform for production use</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md636"></a>
+<h2><a class="anchor" id="autotoc_md644"></a>
 Ubuntu 20.04 LTS</h2>
 <ul>
 <li>Default GCC 9.4 does <b>not</b> meet requirements</li>
@@ -236,7 +236,7 @@ Ubuntu 20.04 LTS</h2>
 <li><b>CI/CD Policy</b>: Not supported in automated CI/CD due to runner availability issues</li>
 <li><b>Local Development</b>: You can still build and test locally on Ubuntu 20.04</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md637"></a>
+<h2><a class="anchor" id="autotoc_md645"></a>
 Other Linux Distributions</h2>
 <ul>
 <li>Debian 11+: Supported with default packages</li>
@@ -245,9 +245,9 @@ Other Linux Distributions</h2>
 <li>Arch Linux: Fully supported with latest packages</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md639"></a>
+<h1><a class="anchor" id="autotoc_md647"></a>
 Verifying Your Environment</h1>
-<h2><a class="anchor" id="autotoc_md640"></a>
+<h2><a class="anchor" id="autotoc_md648"></a>
 Check Compiler Version</h2>
 <div class="fragment"><div class="line"># GCC</div>
 <div class="line">g++ --version</div>
@@ -256,15 +256,15 @@ Check Compiler Version</h2>
 <div class="line"># Clang (if using)</div>
 <div class="line">clang++ --version</div>
 <div class="line"># Should show version 14.0 or higher</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md641"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md649"></a>
 Check CMake Version</h2>
 <div class="fragment"><div class="line">cmake --version</div>
 <div class="line"># Should show version 3.10 or higher</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md642"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md650"></a>
 Check Boost Version</h2>
 <div class="fragment"><div class="line">dpkg -l | grep libboost</div>
 <div class="line"># Should show boost libraries version 1.65 or higher</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md643"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md651"></a>
 Quick Environment Test</h2>
 <div class="fragment"><div class="line"># Test compilation with C++17</div>
 <div class="line">echo &#39;int main() { return 0; }&#39; &gt; test.cpp</div>
@@ -272,22 +272,22 @@ Quick Environment Test</h2>
 <div class="line">./test &amp;&amp; echo &quot;C++17 support: OK&quot;</div>
 <div class="line">rm test test.cpp</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md645"></a>
+<h1><a class="anchor" id="autotoc_md653"></a>
 Troubleshooting</h1>
-<h2><a class="anchor" id="autotoc_md646"></a>
+<h2><a class="anchor" id="autotoc_md654"></a>
 Problem: Compiler Too Old</h2>
 <div class="fragment"><div class="line"># Ubuntu 20.04: Install newer GCC</div>
 <div class="line">sudo apt install -y gcc-11 g++-11</div>
 <div class="line">export CC=gcc-11</div>
 <div class="line">export CXX=g++-11</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md647"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md655"></a>
 Problem: Boost Not Found</h2>
 <div class="fragment"><div class="line"># Install Boost development packages</div>
 <div class="line">sudo apt install -y libboost-all-dev</div>
 <div class="line"> </div>
 <div class="line"># Or specify Boost location to CMake</div>
 <div class="line">cmake -DBOOST_ROOT=/path/to/boost ...</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md648"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md656"></a>
 Problem: CMake Too Old</h2>
 <div class="fragment"><div class="line"># Install latest CMake from official repository</div>
 <div class="line">wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2&gt;/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg &gt;/dev/null</div>
@@ -295,7 +295,7 @@ Problem: CMake Too Old</h2>
 <div class="line">sudo apt update</div>
 <div class="line">sudo apt install cmake</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md650"></a>
+<h1><a class="anchor" id="autotoc_md658"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="md_docs_guides_setup_build_guide.html">Build Guide</a> - Build instructions for different configurations</li>
@@ -308,7 +308,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 8 2026 00:09:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jan 9 2026 23:25:29 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

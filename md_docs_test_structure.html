@@ -89,7 +89,7 @@ $(document).ready(function(){initNavTree('md_docs_test_structure.html',''); init
 <div class="contents">
 <div class="textblock"><p>This document describes the organized test structure of the <code>unilink</code> library.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md810"></a>
+<h1><a class="anchor" id="autotoc_md818"></a>
 Overview</h1>
 <p>Tests are organized into <b>4 main categories</b>:</p>
 <table class="markdownTable">
@@ -106,7 +106,7 @@ Overview</h1>
 </table>
 <p><b>Total</b>: 295 tests (~160 seconds full suite)</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md812"></a>
+<h1><a class="anchor" id="autotoc_md820"></a>
 Directory Structure</h1>
 <div class="fragment"><div class="line">test/</div>
 <div class="line">├── unit/                       # Fast unit tests</div>
@@ -164,13 +164,13 @@ Directory Structure</h1>
 <div class="line">│</div>
 <div class="line">└── CMakeLists.txt              # Main test configuration</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md814"></a>
+<h1><a class="anchor" id="autotoc_md822"></a>
 Running Tests</h1>
-<h2><a class="anchor" id="autotoc_md815"></a>
+<h2><a class="anchor" id="autotoc_md823"></a>
 Run All Tests</h2>
 <div class="fragment"><div class="line">cd build</div>
 <div class="line">ctest --output-on-failure</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md816"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md824"></a>
 Run by Category</h2>
 <div class="fragment"><div class="line"># Fast feedback (unit tests only)</div>
 <div class="line">ctest -L unit</div>
@@ -183,7 +183,7 @@ Run by Category</h2>
 <div class="line"> </div>
 <div class="line"># Performance tests</div>
 <div class="line">ctest -L performance</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md817"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md825"></a>
 Run by Component</h2>
 <div class="fragment"><div class="line"># All TCP-related tests</div>
 <div class="line">ctest -L tcp</div>
@@ -193,7 +193,7 @@ Run by Component</h2>
 <div class="line"> </div>
 <div class="line"># All mock tests</div>
 <div class="line">ctest -L mock</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md818"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md826"></a>
 Run Specific Test Executable</h2>
 <div class="fragment"><div class="line"># Run specific test file</div>
 <div class="line">./test/unit/run_unit_test_builder --gtest_filter=&quot;BuilderTest.*&quot;</div>
@@ -204,32 +204,32 @@ Run Specific Test Executable</h2>
 <div class="line"># Run with verbose output</div>
 <div class="line">./test/unit/run_unit_test_builder --gtest_verbose</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md820"></a>
+<h1><a class="anchor" id="autotoc_md828"></a>
 CI/CD Integration</h1>
-<h2><a class="anchor" id="autotoc_md821"></a>
+<h2><a class="anchor" id="autotoc_md829"></a>
 GitHub Actions Workflows</h2>
 <p>The project uses a <b>staged testing approach</b> in CI:</p>
-<h3><a class="anchor" id="autotoc_md822"></a>
+<h3><a class="anchor" id="autotoc_md830"></a>
 1. &lt;strong&gt;Pull Request&lt;/strong&gt; (Fast feedback)</h3>
 <ul>
 <li>✅ Unit Tests (~10s)</li>
 <li>✅ Integration Tests (~75s)</li>
 <li>⏭️ E2E Tests (skipped for PRs)</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md823"></a>
+<h3><a class="anchor" id="autotoc_md831"></a>
 2. &lt;strong&gt;Main/Develop Branch&lt;/strong&gt; (Full validation)</h3>
 <ul>
 <li>✅ Unit Tests</li>
 <li>✅ Integration Tests</li>
 <li>✅ E2E Tests (~64s)</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md824"></a>
+<h3><a class="anchor" id="autotoc_md832"></a>
 3. &lt;strong&gt;Nightly/On-Demand&lt;/strong&gt; (Performance)</h3>
 <ul>
 <li>✅ Performance Tests (~10s)</li>
 <li>📊 Benchmark results archived</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md825"></a>
+<h2><a class="anchor" id="autotoc_md833"></a>
 Workflow Files</h2>
 <ul>
 <li><code>.github/workflows/test-organized.yml</code> - Organized test execution</li>
@@ -237,7 +237,7 @@ Workflow Files</h2>
 <li><code>.github/workflows/coverage.yml</code> - Code coverage analysis</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md827"></a>
+<h1><a class="anchor" id="autotoc_md835"></a>
 Test Results Summary</h1>
 <p>Latest test run results:</p>
 <div class="fragment"><div class="line">Unit Tests:         91% pass rate (88/97)   ~10s</div>
@@ -247,23 +247,23 @@ Test Results Summary</h1>
 <div class="line">----------------------------------------</div>
 <div class="line">Total:              89% pass rate (264/295) ~160s</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md829"></a>
+<h1><a class="anchor" id="autotoc_md837"></a>
 Benefits of Organized Structure</h1>
-<h2><a class="anchor" id="autotoc_md830"></a>
+<h2><a class="anchor" id="autotoc_md838"></a>
 1. &lt;strong&gt;Faster Feedback&lt;/strong&gt; ⚡</h2>
 <ul>
 <li>PR feedback in &lt;2 minutes (unit tests only)</li>
 <li>Parallel test execution</li>
 <li>Selective test running</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md831"></a>
+<h2><a class="anchor" id="autotoc_md839"></a>
 2. **Better Maintainability** 🔧</h2>
 <ul>
 <li>Clear test organization</li>
 <li>Easy to find specific tests</li>
 <li>Logical grouping by functionality</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md832"></a>
+<h2><a class="anchor" id="autotoc_md840"></a>
 3. **Improved Developer Experience** 👨‍💻</h2>
 <div class="fragment"><div class="line"># Quick check during development</div>
 <div class="line">ctest -L unit</div>
@@ -273,7 +273,7 @@ Benefits of Organized Structure</h1>
 <div class="line"> </div>
 <div class="line"># Performance regression check</div>
 <div class="line">ctest -L performance</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md833"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md841"></a>
 4. **CI Optimization** 🚀</h2>
 <ul>
 <li>Unit tests on every PR</li>
@@ -282,9 +282,9 @@ Benefits of Organized Structure</h1>
 <li>Performance tests nightly</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md835"></a>
+<h1><a class="anchor" id="autotoc_md843"></a>
 Adding New Tests</h1>
-<h2><a class="anchor" id="autotoc_md836"></a>
+<h2><a class="anchor" id="autotoc_md844"></a>
 1. Choose the Right Category</h2>
 <ul>
 <li><b>Unit Test</b>: Testing a single class/function in isolation</li>
@@ -292,7 +292,7 @@ Adding New Tests</h1>
 <li><b>E2E Test</b>: Testing complete user scenarios</li>
 <li><b>Performance Test</b>: Benchmarking and profiling</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md837"></a>
+<h2><a class="anchor" id="autotoc_md845"></a>
 2. Add Test File</h2>
 <div class="fragment"><div class="line"><span class="comment">// test/unit/common/test_my_feature.cc</span></div>
 <div class="line"><span class="preprocessor">#include &lt;gtest/gtest.h&gt;</span></div>
@@ -306,7 +306,7 @@ Adding New Tests</h1>
 <div class="line">  ::testing::InitGoogleTest(&amp;argc, argv);</div>
 <div class="line">  <span class="keywordflow">return</span> RUN_ALL_TESTS();</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md838"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md846"></a>
 3. Update CMakeLists.txt</h2>
 <div class="fragment"><div class="line"># test/unit/CMakeLists.txt</div>
 <div class="line">add_executable(run_unit_test_my_feature common/test_my_feature.cc)</div>
@@ -322,15 +322,15 @@ Adding New Tests</h1>
 <div class="line">    LABELS &quot;unit;common;fast&quot;</div>
 <div class="line">    TIMEOUT 30</div>
 <div class="line">)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md839"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md847"></a>
 4. Build and Run</h2>
 <div class="fragment"><div class="line">cd build</div>
 <div class="line">cmake --build . --target run_unit_test_my_feature</div>
 <div class="line">./test/unit/run_unit_test_my_feature</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md841"></a>
+<h1><a class="anchor" id="autotoc_md849"></a>
 Test Best Practices</h1>
-<h2><a class="anchor" id="autotoc_md842"></a>
+<h2><a class="anchor" id="autotoc_md850"></a>
 Unit Tests</h2>
 <ul>
 <li>✅ Fast (&lt; 1 second per test)</li>
@@ -338,7 +338,7 @@ Unit Tests</h2>
 <li>✅ Deterministic (same result every time)</li>
 <li>✅ Focus on single responsibility</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md843"></a>
+<h2><a class="anchor" id="autotoc_md851"></a>
 Integration Tests</h2>
 <ul>
 <li>✅ Test component interactions</li>
@@ -346,7 +346,7 @@ Integration Tests</h2>
 <li>✅ Keep under 60 seconds</li>
 <li>✅ Test realistic scenarios</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md844"></a>
+<h2><a class="anchor" id="autotoc_md852"></a>
 E2E Tests</h2>
 <ul>
 <li>✅ Test complete user workflows</li>
@@ -354,7 +354,7 @@ E2E Tests</h2>
 <li>✅ Can be slower (up to 2 minutes)</li>
 <li>✅ Test critical paths</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md845"></a>
+<h2><a class="anchor" id="autotoc_md853"></a>
 Performance Tests</h2>
 <ul>
 <li>✅ Measure performance metrics</li>
@@ -363,9 +363,9 @@ Performance Tests</h2>
 <li>✅ Run in Release mode</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md847"></a>
+<h1><a class="anchor" id="autotoc_md855"></a>
 Troubleshooting</h1>
-<h2><a class="anchor" id="autotoc_md848"></a>
+<h2><a class="anchor" id="autotoc_md856"></a>
 Test Failures</h2>
 <div class="fragment"><div class="line"># Run specific test with verbose output</div>
 <div class="line">ctest -R &quot;test_name&quot; --verbose --output-on-failure</div>
@@ -375,7 +375,7 @@ Test Failures</h2>
 <div class="line"> </div>
 <div class="line"># Run with debugging</div>
 <div class="line">gdb ./test/unit/run_unit_test_builder</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md849"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md857"></a>
 Build Issues</h2>
 <div class="fragment"><div class="line"># Clean rebuild</div>
 <div class="line">rm -rf build</div>
@@ -384,7 +384,7 @@ Build Issues</h2>
 <div class="line"> </div>
 <div class="line"># Check test targets</div>
 <div class="line">cmake --build build --target help | grep test</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md850"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md858"></a>
 Timeout Issues</h2>
 <p>If tests timeout in CI:</p><ol type="1">
 <li>Check test timeout settings in CMakeLists.txt</li>
@@ -393,7 +393,7 @@ Timeout Issues</h2>
 <li>Consider moving to E2E category</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md852"></a>
+<h1><a class="anchor" id="autotoc_md860"></a>
 Future Improvements</h1>
 <ul>
 <li>[ ] Add code coverage per test category</li>
@@ -404,7 +404,7 @@ Future Improvements</h1>
 <li>[ ] Implement visual test reports</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md854"></a>
+<h1><a class="anchor" id="autotoc_md862"></a>
 References</h1>
 <ul>
 <li><a href="https://google.github.io/googletest/">Google Test Documentation</a></li>
@@ -418,7 +418,7 @@ References</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 8 2026 00:09:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jan 9 2026 23:25:29 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

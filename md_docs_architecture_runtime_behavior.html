@@ -89,7 +89,7 @@ $(document).ready(function(){initNavTree('md_docs_architecture_runtime_behavior.
 <div class="contents">
 <div class="textblock"><p>Understanding how <code>unilink</code> operates internally helps you write more efficient and robust applications. This document describes the threading model, reconnection policies, and backpressure handling.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md168"></a>
+<h1><a class="anchor" id="autotoc_md176"></a>
 Table of Contents</h1>
 <ol type="1">
 <li><a href="#threading-model--callback-execution">Threading Model &amp; Callback Execution</a></li>
@@ -98,10 +98,10 @@ Table of Contents</h1>
 <li><a href="#best-practices">Best Practices</a></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md170"></a>
+<h1><a class="anchor" id="autotoc_md178"></a>
 Threading Model &amp; Callback Execution</h1>
 <p>All I/O operations run in a dedicated I/O thread (Boost.Asio), while user code runs in separate application threads. Callbacks are always executed in the I/O thread context.</p>
-<h2><a class="anchor" id="autotoc_md171"></a>
+<h2><a class="anchor" id="autotoc_md179"></a>
 Architecture Diagram</h2>
 <div class="fragment"><div class="line">sequenceDiagram</div>
 <div class="line">    participant App as Application Thread</div>
@@ -125,9 +125,9 @@ Architecture Diagram</h2>
 <div class="line">    App-&gt;&gt;Queue: send(), stop(), etc.</div>
 <div class="line">    Queue-&gt;&gt;IO: Serialized execution</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md173"></a>
+<h2><a class="anchor" id="autotoc_md181"></a>
 Key Points</h2>
-<h3><a class="anchor" id="autotoc_md174"></a>
+<h3><a class="anchor" id="autotoc_md182"></a>
 ✅ Thread-Safe API Methods</h3>
 <p>All public API methods are thread-safe and can be called from any thread:</p>
 <div class="fragment"><div class="line"><span class="comment">// Safe to call from multiple threads simultaneously</span></div>
@@ -141,7 +141,7 @@ Key Points</h2>
 <li>No manual locking required by users</li>
 </ul>
 <hr  />
-<h3><a class="anchor" id="autotoc_md176"></a>
+<h3><a class="anchor" id="autotoc_md184"></a>
 ✅ Callback Execution Context</h3>
 <p><b>Important:</b> Callbacks execute in the I/O thread context:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -162,7 +162,7 @@ Key Points</h2>
 <li><code>on_backpressure()</code> - Queue size exceeded threshold</li>
 </ul>
 <hr  />
-<h3><a class="anchor" id="autotoc_md178"></a>
+<h3><a class="anchor" id="autotoc_md186"></a>
 ⚠️ Never Block in Callbacks</h3>
 <p><b>Bad - Blocks I/O thread:</b></p>
 <div class="fragment"><div class="line">.on_data([](<span class="keyword">const</span> std::string&amp; data) {</div>
@@ -192,7 +192,7 @@ Key Points</h2>
 <li>Reduces throughput by 10-100x</li>
 </ul>
 <hr  />
-<h3><a class="anchor" id="autotoc_md180"></a>
+<h3><a class="anchor" id="autotoc_md188"></a>
 ✅ Thread-Safe State Access</h3>
 <p>Use <code>net::post()</code> to safely access state from application threads:</p>
 <div class="fragment"><div class="line"><span class="comment">// Application thread wants to access I/O thread state</span></div>
@@ -202,7 +202,7 @@ Key Points</h2>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Connected: &quot;</span> &lt;&lt; connected &lt;&lt; std::endl;</div>
 <div class="line">});</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md182"></a>
+<h2><a class="anchor" id="autotoc_md190"></a>
 Threading Model Summary</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -219,10 +219,10 @@ Threading Model Summary</h2>
 <td class="markdownTableBodyNone"><b>Synchronization</b>   </td><td class="markdownTableBodyNone">Automatic via Boost.Asio   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md184"></a>
+<h1><a class="anchor" id="autotoc_md192"></a>
 Reconnection Policy &amp; State Machine</h1>
 <p>TCP clients and Serial connections automatically handle connection failures with configurable retry logic.</p>
-<h2><a class="anchor" id="autotoc_md185"></a>
+<h2><a class="anchor" id="autotoc_md193"></a>
 State Machine Diagram</h2>
 <div class="fragment"><div class="line">stateDiagram-v2</div>
 <div class="line">    [*] --&gt; Closed</div>
@@ -253,7 +253,7 @@ State Machine Diagram</h2>
 <div class="line">        - Max: 300000ms (5min)</div>
 <div class="line">    end note</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md187"></a>
+<h2><a class="anchor" id="autotoc_md195"></a>
 Connection States</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -271,7 +271,7 @@ Connection States</h2>
 <td class="markdownTableBodyNone"><b>Error</b>   </td><td class="markdownTableBodyNone">Unrecoverable error occurred   </td><td class="markdownTableBodyNone">→ Closed (on <code>stop()</code>)   </td></tr>
 </table>
 <hr  />
-<h2><a class="anchor" id="autotoc_md189"></a>
+<h2><a class="anchor" id="autotoc_md197"></a>
 Configuration Example</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a61c44f9311cd798efac3449fdd2034d5">retry_interval</a>(5000)    <span class="comment">// Retry every 5 seconds</span></div>
@@ -287,16 +287,16 @@ Configuration Example</h2>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a4ae0c7b5b6f6c02066844fcb5a71ad9a"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a4ae0c7b5b6f6c02066844fcb5a71ad9a">unilink::builder::TcpClientBuilder::on_connect</a></div><div class="ttdeci">TcpClientBuilder &amp; on_connect(std::function&lt; void()&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00126">tcp_client_builder.cc:126</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a61c44f9311cd798efac3449fdd2034d5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a61c44f9311cd798efac3449fdd2034d5">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder &amp; retry_interval(unsigned interval_ms)</div><div class="ttdoc">Set retry interval for automatic reconnection.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00146">tcp_client_builder.cc:146</a></div></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md191"></a>
+<h2><a class="anchor" id="autotoc_md199"></a>
 Retry Behavior</h2>
-<h3><a class="anchor" id="autotoc_md192"></a>
+<h3><a class="anchor" id="autotoc_md200"></a>
 Default Behavior</h3>
 <ul>
 <li><b>Unlimited retries</b> with 3-second intervals (first retry after 100ms)</li>
 <li>Automatically reconnects on connection loss</li>
 <li>No exponential backoff (constant interval)</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md193"></a>
+<h3><a class="anchor" id="autotoc_md201"></a>
 Retry Interval Configuration</h3>
 <div class="fragment"><div class="line"><span class="comment">// Fast reconnection (aggressive)</span></div>
 <div class="line">.retry_interval(100)  <span class="comment">// 100 ms</span></div>
@@ -308,7 +308,7 @@ Retry Interval Configuration</h3>
 <div class="line">.retry_interval(10000)  <span class="comment">// 10 seconds</span></div>
 </div><!-- fragment --><p><b>Range:</b> 100 ms - 300,000 ms (5 minutes)</p>
 <hr  />
-<h3><a class="anchor" id="autotoc_md195"></a>
+<h3><a class="anchor" id="autotoc_md203"></a>
 State Callbacks</h3>
 <p>Monitor connection state changes:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -326,7 +326,7 @@ State Callbacks</h3>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 </div><!-- fragment --><hr  />
-<h3><a class="anchor" id="autotoc_md197"></a>
+<h3><a class="anchor" id="autotoc_md205"></a>
 Manual Control</h3>
 <p>Stop automatic reconnection:</p>
 <div class="fragment"><div class="line"><span class="comment">// Stop and prevent reconnection</span></div>
@@ -338,9 +338,9 @@ Manual Control</h3>
 <div class="line"><span class="comment">// Restart connection</span></div>
 <div class="line">client-&gt;start();</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md199"></a>
+<h2><a class="anchor" id="autotoc_md207"></a>
 Reconnection Best Practices</h2>
-<h3><a class="anchor" id="autotoc_md200"></a>
+<h3><a class="anchor" id="autotoc_md208"></a>
 1. Choose Appropriate Retry Interval</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -355,7 +355,7 @@ Reconnection Best Practices</h2>
 <td class="markdownTableBodyNone"><b>Background service</b>   </td><td class="markdownTableBodyNone">30-60 seconds   </td><td class="markdownTableBodyNone">Minimal resource usage   </td></tr>
 </table>
 <hr  />
-<h3><a class="anchor" id="autotoc_md202"></a>
+<h3><a class="anchor" id="autotoc_md210"></a>
 2. Handle State Transitions</h3>
 <div class="fragment"><div class="line">std::atomic&lt;bool&gt; is_ready{<span class="keyword">false</span>};</div>
 <div class="line"> </div>
@@ -375,7 +375,7 @@ Reconnection Best Practices</h2>
 <div class="line">    client-&gt;send(<span class="stringliteral">&quot;data&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h3><a class="anchor" id="autotoc_md204"></a>
+<h3><a class="anchor" id="autotoc_md212"></a>
 3. Graceful Shutdown</h3>
 <div class="fragment"><div class="line"><span class="comment">// Stop reconnection before exiting</span></div>
 <div class="line">client-&gt;stop();</div>
@@ -383,10 +383,10 @@ Reconnection Best Practices</h2>
 <div class="line"><span class="comment">// Wait for I/O thread to finish (automatic in destructor)</span></div>
 <div class="line">client.reset();</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md206"></a>
+<h1><a class="anchor" id="autotoc_md214"></a>
 Backpressure Handling</h1>
 <p>When the send queue grows too large (network slower than application), <code>unilink</code> notifies your application via backpressure callbacks. If a safety cap is exceeded, the transport closes the socket, clears the queue, and transitions to <code>Error</code>.</p>
-<h2><a class="anchor" id="autotoc_md207"></a>
+<h2><a class="anchor" id="autotoc_md215"></a>
 Backpressure Flow</h2>
 <div class="fragment"><div class="line">flowchart TD</div>
 <div class="line">    Start([Application calls send]) --&gt; Queue[Add to Send Queue]</div>
@@ -416,7 +416,7 @@ Backpressure Flow</h2>
 <div class="line">    style AppDecision fill:#ff9,stroke:#333,stroke-width:2px</div>
 <div class="line">    style Force fill:#f66,stroke:#333,stroke-width:2px</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md209"></a>
+<h2><a class="anchor" id="autotoc_md217"></a>
 Backpressure Configuration</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
 <div class="line">    .on_backpressure([](<span class="keywordtype">size_t</span> queue_bytes) {</div>
@@ -431,9 +431,9 @@ Backpressure Configuration</h2>
  <b>Configurable range:</b> 1 KB - 100 MB <br  />
  <b>Safety cap:</b> ~4x the high watermark (capped at 64 MB) triggers automatic close + Error state</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md211"></a>
+<h2><a class="anchor" id="autotoc_md219"></a>
 Backpressure Strategies</h2>
-<h3><a class="anchor" id="autotoc_md212"></a>
+<h3><a class="anchor" id="autotoc_md220"></a>
 Strategy 1: Pause Sending</h3>
 <p>Stop sending until queue drains:</p>
 <div class="fragment"><div class="line">std::atomic&lt;bool&gt; can_send{<span class="keyword">true</span>};</div>
@@ -454,7 +454,7 @@ Strategy 1: Pause Sending</h3>
 <div class="line">}</div>
 </div><!-- fragment --><p><b>Best for:</b> Real-time data, can tolerate delays</p>
 <hr  />
-<h3><a class="anchor" id="autotoc_md214"></a>
+<h3><a class="anchor" id="autotoc_md222"></a>
 Strategy 2: Rate Limiting</h3>
 <p>Reduce send rate:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -465,7 +465,7 @@ Strategy 2: Rate Limiting</h3>
 <div class="line">    .build();</div>
 </div><!-- fragment --><p><b>Best for:</b> Continuous data streams</p>
 <hr  />
-<h3><a class="anchor" id="autotoc_md216"></a>
+<h3><a class="anchor" id="autotoc_md224"></a>
 Strategy 3: Drop Data</h3>
 <p>Skip non-critical data:</p>
 <div class="fragment"><div class="line">std::atomic&lt;bool&gt; high_backpressure{<span class="keyword">false</span>};</div>
@@ -482,7 +482,7 @@ Strategy 3: Drop Data</h3>
 <div class="line">}</div>
 </div><!-- fragment --><p><b>Best for:</b> Non-critical telemetry, logging</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md218"></a>
+<h2><a class="anchor" id="autotoc_md226"></a>
 Backpressure Monitoring</h2>
 <p>Track queue size continuously:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">size_t</span> max_queue_size = 0;</div>
@@ -495,7 +495,7 @@ Backpressure Monitoring</h2>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md220"></a>
+<h2><a class="anchor" id="autotoc_md228"></a>
 Memory Safety</h2>
 <p>Backpressure handling ensures:</p>
 <ul>
@@ -506,11 +506,11 @@ Memory Safety</h2>
 <li>✅ Memory pools reduce allocation overhead for small buffers (&lt;64KB)</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md222"></a>
+<h1><a class="anchor" id="autotoc_md230"></a>
 Best Practices</h1>
-<h2><a class="anchor" id="autotoc_md223"></a>
+<h2><a class="anchor" id="autotoc_md231"></a>
 1. Threading Best Practices</h2>
-<h3><a class="anchor" id="autotoc_md224"></a>
+<h3><a class="anchor" id="autotoc_md232"></a>
 ✅ DO</h3>
 <ul>
 <li>Keep callbacks short and non-blocking</li>
@@ -518,7 +518,7 @@ Best Practices</h1>
 <li>Use thread pools for parallel processing</li>
 <li>Check connection state before sending</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md225"></a>
+<h3><a class="anchor" id="autotoc_md233"></a>
 ❌ DON'T</h3>
 <ul>
 <li>Block in callbacks</li>
@@ -527,9 +527,9 @@ Best Practices</h1>
 <li>Do heavy computation in callbacks</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md227"></a>
+<h2><a class="anchor" id="autotoc_md235"></a>
 2. Reconnection Best Practices</h2>
-<h3><a class="anchor" id="autotoc_md228"></a>
+<h3><a class="anchor" id="autotoc_md236"></a>
 ✅ DO</h3>
 <ul>
 <li>Set appropriate retry intervals for your use case</li>
@@ -537,7 +537,7 @@ Best Practices</h1>
 <li>Implement graceful shutdown</li>
 <li>Monitor connection status</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md229"></a>
+<h3><a class="anchor" id="autotoc_md237"></a>
 ❌ DON'T</h3>
 <ul>
 <li>Set extremely short retry intervals (&lt;100ms)</li>
@@ -546,9 +546,9 @@ Best Practices</h1>
 <li>Forget to call <code>stop()</code> before cleanup</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md231"></a>
+<h2><a class="anchor" id="autotoc_md239"></a>
 3. Backpressure Best Practices</h2>
-<h3><a class="anchor" id="autotoc_md232"></a>
+<h3><a class="anchor" id="autotoc_md240"></a>
 ✅ DO</h3>
 <ul>
 <li>Monitor backpressure in production</li>
@@ -556,7 +556,7 @@ Best Practices</h1>
 <li>Test with slow networks</li>
 <li>Set reasonable thresholds</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md233"></a>
+<h3><a class="anchor" id="autotoc_md241"></a>
 ❌ DON'T</h3>
 <ul>
 <li>Ignore backpressure callbacks</li>
@@ -565,23 +565,23 @@ Best Practices</h1>
 <li>Forget to handle high-load scenarios</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md235"></a>
+<h1><a class="anchor" id="autotoc_md243"></a>
 Performance Considerations</h1>
-<h2><a class="anchor" id="autotoc_md236"></a>
+<h2><a class="anchor" id="autotoc_md244"></a>
 Threading Overhead</h2>
 <ul>
 <li><b>Callback invocation:</b> ~1-5 μs overhead</li>
 <li><b>Thread-safe API calls:</b> ~2-10 μs overhead (post to I/O thread)</li>
 <li><b>Context switching:</b> Minimize by batching operations</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md237"></a>
+<h2><a class="anchor" id="autotoc_md245"></a>
 Reconnection Overhead</h2>
 <ul>
 <li><b>TCP connection establishment:</b> ~10-100 ms</li>
 <li><b>Retry timer:</b> ~0.1 ms overhead per retry</li>
 <li><b>Recommendation:</b> Reuse connections when possible</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md238"></a>
+<h2><a class="anchor" id="autotoc_md246"></a>
 Backpressure Overhead</h2>
 <ul>
 <li><b>Queue monitoring:</b> Negligible (&lt;0.1% CPU)</li>
@@ -589,7 +589,7 @@ Backpressure Overhead</h2>
 <li><b>Memory pools:</b> ~30% faster for small buffers</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md240"></a>
+<h1><a class="anchor" id="autotoc_md248"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="md_docs_architecture_memory_safety.html">Memory Safety</a> - Memory safety features</li>
@@ -603,7 +603,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 8 2026 00:09:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jan 9 2026 23:25:29 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['memory_20safety_20architecture_1520',['Memory Safety Architecture',['../md_docs_architecture_memory_safety.html',1,'']]]
+  ['installation_20guide_1523',['Installation Guide',['../md_docs_guides_setup_installation.html',1,'']]]
 ];

@@ -89,7 +89,7 @@ $(document).ready(function(){initNavTree('md_docs_guides_advanced_performance.ht
 <div class="contents">
 <div class="textblock"><p>This guide covers performance optimization strategies for <code>unilink</code>, including build configuration, runtime optimization, tuning techniques, and benchmarking.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md243"></a>
+<h1><a class="anchor" id="autotoc_md251"></a>
 Table of Contents</h1>
 <ol type="1">
 <li><a href="#performance-overview">Performance Overview</a></li>
@@ -101,9 +101,9 @@ Table of Contents</h1>
 <li><a href="#real-world-case-studies">Real-World Case Studies</a></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md245"></a>
+<h1><a class="anchor" id="autotoc_md253"></a>
 Performance Overview</h1>
-<h2><a class="anchor" id="autotoc_md246"></a>
+<h2><a class="anchor" id="autotoc_md254"></a>
 Characteristics &amp; Goals</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -126,9 +126,9 @@ Characteristics &amp; Goals</h2>
 <li><b>Scalability</b>: Handle many concurrent connections.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md248"></a>
+<h1><a class="anchor" id="autotoc_md256"></a>
 Build Configuration Optimization</h1>
-<h2><a class="anchor" id="autotoc_md249"></a>
+<h2><a class="anchor" id="autotoc_md257"></a>
 Minimal Build vs Full Build</h2>
 <p>Choose the right build configuration based on your use case:</p>
 <table class="markdownTable">
@@ -149,7 +149,7 @@ Minimal Build vs Full Build</h2>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=OFF</div>
 <div class="line">cmake --build build -j</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md250"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md258"></a>
 Compiler Optimization Levels</h2>
 <p>Always use <b>Release</b> builds for production performance.</p>
 <div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
@@ -158,9 +158,9 @@ Compiler Optimization Levels</h2>
 <li><b>Impact</b>: 5-15% performance improvement compared to default release builds.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md252"></a>
+<h1><a class="anchor" id="autotoc_md260"></a>
 Runtime Optimization</h1>
-<h2><a class="anchor" id="autotoc_md253"></a>
+<h2><a class="anchor" id="autotoc_md261"></a>
 1. Threading Model &amp; IO Context</h2>
 <p><b>Use Shared IO Context (Default)</b> Unilink defaults to a shared IO context model, which is highly efficient for most use cases.</p>
 <div class="fragment"><div class="line"><span class="comment">// ✅ GOOD: Shared context (efficient)</span></div>
@@ -176,7 +176,7 @@ Runtime Optimization</h1>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured TcpClient.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00046">tcp_client_builder.cc:46</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00095">unilink.hpp:95</a></div></div>
 </div><!-- fragment --><p><b>Impact</b>: Reduces memory usage by ~90% per connection and CPU context switching by ~80%.</p>
-<h2><a class="anchor" id="autotoc_md254"></a>
+<h2><a class="anchor" id="autotoc_md262"></a>
 2. Async Logging</h2>
 <p>Logging can be a major bottleneck. Enable async logging for high-performance applications.</p>
 <div class="fragment"><div class="line"><span class="comment">// ✅ GOOD: Async logging (non-blocking)</span></div>
@@ -186,7 +186,7 @@ Runtime Optimization</h1>
 <div class="line"> </div>
 <div class="line">unilink::common::Logger::instance().set_async_logging(<span class="keyword">true</span>, config);</div>
 </div><!-- fragment --><p><b>Impact</b>: 10-100x faster logging throughput.</p>
-<h2><a class="anchor" id="autotoc_md255"></a>
+<h2><a class="anchor" id="autotoc_md263"></a>
 3. Non-Blocking Callbacks</h2>
 <p>Never perform heavy computation or blocking operations (like <code>sleep</code>) inside callbacks.</p>
 <div class="fragment"><div class="line"><span class="comment">// ❌ BAD: Blocking I/O thread</span></div>
@@ -202,15 +202,15 @@ Runtime Optimization</h1>
 <div class="line">    });</div>
 <div class="line">})</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md257"></a>
+<h1><a class="anchor" id="autotoc_md265"></a>
 Memory Optimization</h1>
-<h2><a class="anchor" id="autotoc_md258"></a>
+<h2><a class="anchor" id="autotoc_md266"></a>
 1. Memory Pool Usage</h2>
 <p><code>unilink</code> automatically uses memory pools for buffers ≤ 64 KB.</p><ul>
 <li><b>Buffers ≤ 64 KB</b>: Use memory pool (fast allocation, no fragmentation).</li>
 <li><b>Buffers &gt; 64 KB</b>: Direct allocation.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md259"></a>
+<h2><a class="anchor" id="autotoc_md267"></a>
 2. Avoid Data Copies</h2>
 <p>Use move semantics and avoid unnecessary string copies.</p>
 <div class="fragment"><div class="line"><span class="comment">// ✅ GOOD: Move (no copy)</span></div>
@@ -219,16 +219,16 @@ Memory Optimization</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ✅ GOOD: Use string_view for parsing (if supported)</span></div>
 <div class="line"><span class="keywordtype">void</span> parse(std::string_view msg) { ... }</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md260"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md268"></a>
 3. Reserve Vector Capacity</h2>
 <p>When building vectors of data, always <code>reserve</code> capacity to avoid reallocations.</p>
 <div class="fragment"><div class="line">std::vector&lt;std::string&gt; messages;</div>
 <div class="line">messages.reserve(1000);  <span class="comment">// Pre-allocate</span></div>
 <div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 1000; ++i) messages.push_back(msg);</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md262"></a>
+<h1><a class="anchor" id="autotoc_md270"></a>
 Network Optimization</h1>
-<h2><a class="anchor" id="autotoc_md263"></a>
+<h2><a class="anchor" id="autotoc_md271"></a>
 1. Batch Small Messages</h2>
 <p>Sending many small packets incurs high system call overhead.</p>
 <div class="fragment"><div class="line"><span class="comment">// ❌ BAD: 1000 system calls</span></div>
@@ -240,7 +240,7 @@ Network Optimization</h1>
 <div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 1000; ++i) batch += <span class="stringliteral">&quot;msg&quot;</span>;</div>
 <div class="line">client-&gt;send(batch);</div>
 </div><!-- fragment --><p><b>Impact</b>: up to 50x throughput improvement for small messages.</p>
-<h2><a class="anchor" id="autotoc_md264"></a>
+<h2><a class="anchor" id="autotoc_md272"></a>
 2. Connection Reuse</h2>
 <p>Reusing connections is significantly faster than creating new ones.</p>
 <table class="markdownTable">
@@ -249,19 +249,19 @@ Network Optimization</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Single request   </td><td class="markdownTableBodyNone">50 ms   </td><td class="markdownTableBodyNone">5 ms   </td><td class="markdownTableBodyNone">10x   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md265"></a>
+<h2><a class="anchor" id="autotoc_md273"></a>
 3. Socket Tuning</h2>
 <p>For extremely high throughput, tune OS-level socket buffers: </p><div class="fragment"><div class="line">sudo sysctl -w net.core.rmem_max=16777216  # 16 MB</div>
 <div class="line">sudo sysctl -w net.core.wmem_max=16777216  # 16 MB</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md267"></a>
+<h1><a class="anchor" id="autotoc_md275"></a>
 Benchmarking &amp; Profiling</h1>
-<h2><a class="anchor" id="autotoc_md268"></a>
+<h2><a class="anchor" id="autotoc_md276"></a>
 Built-in Performance Tests</h2>
 <div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUNILINK_BUILD_TESTS=ON</div>
 <div class="line">cmake --build build -j</div>
 <div class="line">./build/test/run_performance_tests</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md269"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md277"></a>
 Profiling with Tools</h2>
 <p><b>Linux <code>perf</code>:</b> </p><div class="fragment"><div class="line"># Build with debug symbols</div>
 <div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo</div>
@@ -269,7 +269,7 @@ Profiling with Tools</h2>
 <div class="line">perf report</div>
 </div><!-- fragment --><p><b>Valgrind (Memory):</b> </p><div class="fragment"><div class="line">valgrind --tool=massif ./my_app</div>
 <div class="line">ms_print massif.out</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md270"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md278"></a>
 Simple Throughput Benchmark Code</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> benchmark_throughput() {</div>
 <div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
@@ -286,15 +286,15 @@ Simple Throughput Benchmark Code</h2>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Throughput: &quot;</span> &lt;&lt; (10000 * 1024 / 1024.0 / 1024.0) / seconds &lt;&lt; <span class="stringliteral">&quot; MB/s\n&quot;</span>;</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md272"></a>
+<h1><a class="anchor" id="autotoc_md280"></a>
 Real-World Case Studies</h1>
-<h2><a class="anchor" id="autotoc_md273"></a>
+<h2><a class="anchor" id="autotoc_md281"></a>
 Case Study 1: High-Throughput Data Streaming</h2>
 <p><b>Scenario</b>: Stream 1 GB/s of data from sensors. <b>Optimizations</b>: Binary protocol, 1000-sample batching, memory pools, async logging. <b>Result</b>: <b>10x improvement</b> (120 MB/s -&gt; 1.2 GB/s), CPU usage dropped from 80% to 15%.</p>
-<h2><a class="anchor" id="autotoc_md274"></a>
+<h2><a class="anchor" id="autotoc_md282"></a>
 Case Study 2: Low-Latency Trading System</h2>
 <p><b>Scenario</b>: &lt; 100μs latency required. <b>Optimizations</b>: Pinned threads, lock-free queues, pre-allocated buffers, disabled logging. <b>Result</b>: <b>6x improvement</b> (450μs -&gt; 75μs avg latency).</p>
-<h2><a class="anchor" id="autotoc_md275"></a>
+<h2><a class="anchor" id="autotoc_md283"></a>
 Case Study 3: IoT Gateway (1000+ Connections)</h2>
 <p><b>Scenario</b>: Handle 1000 concurrent sensor connections. <b>Optimizations</b>: Shared IO context, connection pooling, rate limiting. <b>Result</b>: <b>2.4x capacity increase</b>, 60% less memory usage (2GB -&gt; 800MB). </p>
 </div></div><!-- contents -->
@@ -303,7 +303,7 @@ Case Study 3: IoT Gateway (1000+ Connections)</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 8 2026 00:09:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jan 9 2026 23:25:29 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

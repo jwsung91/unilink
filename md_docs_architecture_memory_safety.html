@@ -89,7 +89,7 @@ $(document).ready(function(){initNavTree('md_docs_architecture_memory_safety.htm
 <div class="contents">
 <div class="textblock"><p><code>unilink</code> provides comprehensive memory safety features to ensure robust and secure applications. This document describes the memory safety architecture, features, and best practices.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 Table of Contents</h1>
 <ol type="1">
 <li><a href="#overview">Overview</a></li>
@@ -100,9 +100,9 @@ Table of Contents</h1>
 <li><a href="#best-practices">Best Practices</a></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Overview</h1>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 Memory Safety Guarantees</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -119,7 +119,7 @@ Memory Safety Guarantees</h2>
 <td class="markdownTableBodyNone"><b>Memory Pools</b>   </td><td class="markdownTableBodyNone">Reduce fragmentation   </td><td class="markdownTableBodyNone">Positive (+30% for small buffers)   </td></tr>
 </table>
 <hr  />
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Safety Levels</h2>
 <p><code>unilink</code> provides multiple levels of memory safety:</p>
 <div class="fragment"><div class="line">flowchart TD</div>
@@ -128,9 +128,9 @@ Safety Levels</h2>
 <div class="line">    L3[Level 3: Debug Safety (Debug)&lt;br/&gt;- Memory tracking&lt;br/&gt;- Allocation tracking&lt;br/&gt;- Leak detection] --&gt; L4</div>
 <div class="line">    L4[Level 4: Sanitizers (Optional)&lt;br/&gt;- AddressSanitizer&lt;br/&gt;- ThreadSanitizer&lt;br/&gt;- UndefinedBehaviorSanitizer]</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
 Safe Data Handling</h1>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md18"></a>
 SafeDataBuffer</h2>
 <p>Immutable, type-safe buffer wrapper around existing data:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="memory__tracker_8hpp.html">unilink/memory/memory_tracker.hpp</a>&quot;</span></div>
@@ -152,9 +152,9 @@ SafeDataBuffer</h2>
 <div class="ttc" id="asafe__data__buffer_8hpp_html"><div class="ttname"><a href="safe__data__buffer_8hpp.html">safe_data_buffer.hpp</a></div></div>
 <div class="ttc" id="asafe__span_8hpp_html"><div class="ttname"><a href="safe__span_8hpp.html">safe_span.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md20"></a>
 Features</h2>
-<h3><a class="anchor" id="autotoc_md13"></a>
+<h3><a class="anchor" id="autotoc_md21"></a>
 1. Construction Validation</h3>
 <ul>
 <li>Rejects null pointers when size &gt; 0</li>
@@ -162,7 +162,7 @@ Features</h2>
 <li>Copies incoming data into owned storage</li>
 </ul>
 <hr  />
-<h3><a class="anchor" id="autotoc_md15"></a>
+<h3><a class="anchor" id="autotoc_md23"></a>
 2. Safe Type Conversions</h3>
 <p>Utility functions prevent undefined behavior:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="common_8hpp.html">unilink/base/common.hpp</a>&quot;</span></div>
@@ -185,7 +185,7 @@ Features</h2>
 <div class="ttc" id="anamespaceunilink_1_1base_1_1safe__convert_html_a3c41d9c6266428458c97891710ac2f0d"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">unilink::base::safe_convert::uint8_to_string</a></div><div class="ttdeci">std::string uint8_to_string(const uint8_t *data, size_t size)</div><div class="ttdoc">Safely convert uint8_t* to const char* for string operations.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00142">common.hpp:142</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_1_1safe__convert_html_a439f562cc86e942edf24d1408bcb8a92"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92">unilink::base::safe_convert::string_to_uint8</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; string_to_uint8(const char *data, size_t size)</div><div class="ttdoc">Safely convert const char* to const uint8_t* for binary operations.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00155">common.hpp:155</a></div></div>
 </div><!-- fragment --><hr  />
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md25"></a>
 3. Memory Validation</h3>
 <p>Comprehensive validation of data integrity:</p>
 <div class="fragment"><div class="line"><span class="comment">// Validate buffer state</span></div>
@@ -201,7 +201,7 @@ Features</h2>
 <div class="line">buffer.validate();</div>
 </div><!-- fragment --><p><b>Mutation model:</b> Data is populated at construction; no in-place <code>write/append</code> helpers exist. Use <code>clear()/resize()/reserve()</code> only when you control the backing data size.</p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md19"></a>
+<h2><a class="anchor" id="autotoc_md27"></a>
 Safe Span (C++17 Compatible)</h2>
 <p>Lightweight, non-owning view of contiguous data:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="safe__span_8hpp.html">unilink/memory/safe_span.hpp</a>&quot;</span></div>
@@ -230,9 +230,9 @@ Safe Span (C++17 Compatible)</h2>
 <li>Zero overhead in release builds</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md21"></a>
+<h1><a class="anchor" id="autotoc_md29"></a>
 Thread-Safe State Management</h1>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md30"></a>
 ThreadSafeState</h2>
 <p>Read-write lock based state management:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="thread__safe__state_8hpp.html">unilink/concurrency/thread_safe_state.hpp</a>&quot;</span></div>
@@ -265,7 +265,7 @@ ThreadSafeState</h2>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75cae321c53b354930ba96f0243e652df458"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae321c53b354930ba96f0243e652df458">unilink::base::LinkState::Connecting</a></div><div class="ttdeci">@ Connecting</div></div>
 <div class="ttc" id="athread__safe__state_8hpp_html"><div class="ttname"><a href="thread__safe__state_8hpp.html">thread_safe_state.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md24"></a>
+<h2><a class="anchor" id="autotoc_md32"></a>
 AtomicState</h2>
 <p>Lock-free atomic state operations:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="thread__safe__state_8hpp.html">unilink/concurrency/thread_safe_state.hpp</a>&quot;</span></div>
@@ -285,7 +285,7 @@ AtomicState</h2>
 <li>Simple atomic types (int, bool, etc.)</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md26"></a>
+<h2><a class="anchor" id="autotoc_md34"></a>
 ThreadSafeCounter</h2>
 <p>Thread-safe counter with atomic operations:</p>
 <div class="fragment"><div class="line">ThreadSafeCounter counter;</div>
@@ -299,7 +299,7 @@ ThreadSafeCounter</h2>
 <div class="line"><span class="comment">// Thread 3</span></div>
 <div class="line"><span class="keywordtype">size_t</span> value = counter.get();</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md28"></a>
+<h2><a class="anchor" id="autotoc_md36"></a>
 ThreadSafeFlag</h2>
 <p>Condition variable supported flags:</p>
 <div class="fragment"><div class="line">ThreadSafeFlag ready_flag;</div>
@@ -317,7 +317,7 @@ ThreadSafeFlag</h2>
 <div class="line">    <span class="comment">// Flag is set</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md30"></a>
+<h2><a class="anchor" id="autotoc_md38"></a>
 Thread Safety Summary</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -332,18 +332,18 @@ Thread Safety Summary</h2>
 <td class="markdownTableBodyNone"><b>ThreadSafeFlag</b>   </td><td class="markdownTableBodyNone">No   </td><td class="markdownTableBodyNone">Yes   </td><td class="markdownTableBodyNone">Synchronization, signals   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md32"></a>
+<h1><a class="anchor" id="autotoc_md40"></a>
 Memory Tracking</h1>
-<h2><a class="anchor" id="autotoc_md33"></a>
+<h2><a class="anchor" id="autotoc_md41"></a>
 Built-in Memory Tracking</h2>
 <p>Enable for debugging and development:</p>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
 <div class="line">  -DUNILINK_ENABLE_MEMORY_TRACKING=ON</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md35"></a>
+<h2><a class="anchor" id="autotoc_md43"></a>
 Features</h2>
-<h3><a class="anchor" id="autotoc_md36"></a>
+<h3><a class="anchor" id="autotoc_md44"></a>
 1. Allocation Tracking</h3>
 <p>Monitor all memory allocations and deallocations:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="memory__tracker_8hpp.html">unilink/memory/memory_tracker.hpp</a>&quot;</span></div>
@@ -360,7 +360,7 @@ Features</h2>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Total deallocations: &quot;</span> &lt;&lt; stats.total_deallocations &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current usage: &quot;</span> &lt;&lt; stats.current_usage &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
 </div><!-- fragment --><hr  />
-<h3><a class="anchor" id="autotoc_md38"></a>
+<h3><a class="anchor" id="autotoc_md46"></a>
 2. Leak Detection</h3>
 <p>Identify potential memory leaks:</p>
 <div class="fragment"><div class="line"><span class="comment">// At program exit, check for leaks</span></div>
@@ -382,7 +382,7 @@ Features</h2>
 <div class="line">Current memory usage: 2048 bytes</div>
 <div class="line">Peak memory usage: 4096 bytes</div>
 </div><!-- fragment --><hr  />
-<h3><a class="anchor" id="autotoc_md40"></a>
+<h3><a class="anchor" id="autotoc_md48"></a>
 3. Performance Monitoring</h3>
 <p>Track memory usage patterns:</p>
 <div class="fragment"><div class="line"><span class="comment">// Track peak memory usage</span></div>
@@ -393,7 +393,7 @@ Features</h2>
 <div class="line"><span class="keywordtype">size_t</span> alloc_count = MemoryTracker::instance().get_allocation_count();</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Allocations: &quot;</span> &lt;&lt; alloc_count &lt;&lt; std::endl;</div>
 </div><!-- fragment --><hr  />
-<h3><a class="anchor" id="autotoc_md42"></a>
+<h3><a class="anchor" id="autotoc_md50"></a>
 4. Debug Reports</h3>
 <p>Detailed memory usage reports:</p>
 <div class="fragment"><div class="line"><span class="comment">// Print detailed report to stdout</span></div>
@@ -402,7 +402,7 @@ Features</h2>
 <div class="line"><span class="comment">// Or get as string</span></div>
 <div class="line">std::string report = MemoryTracker::instance().get_report_string();</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md52"></a>
 Zero Overhead in Release</h2>
 <p>Memory tracking has <b>zero overhead</b> in Release builds:</p>
 <div class="fragment"><div class="line"><span class="comment">// In Release builds (UNILINK_ENABLE_MEMORY_TRACKING=OFF):</span></div>
@@ -410,9 +410,9 @@ Zero Overhead in Release</h2>
 <div class="line"><span class="comment">// No runtime overhead</span></div>
 <div class="line"><span class="comment">// No memory overhead</span></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md46"></a>
+<h1><a class="anchor" id="autotoc_md54"></a>
 AddressSanitizer Support</h1>
-<h2><a class="anchor" id="autotoc_md47"></a>
+<h2><a class="anchor" id="autotoc_md55"></a>
 Enable AddressSanitizer</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
@@ -420,7 +420,7 @@ Enable AddressSanitizer</h2>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md49"></a>
+<h2><a class="anchor" id="autotoc_md57"></a>
 What ASan Detects</h2>
 <p>AddressSanitizer detects:</p>
 <ul>
@@ -433,7 +433,7 @@ What ASan Detects</h2>
 <li>✅ <b>Invalid free</b></li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md51"></a>
+<h2><a class="anchor" id="autotoc_md59"></a>
 Running with ASan</h2>
 <div class="fragment"><div class="line"># Run application</div>
 <div class="line">./my_app</div>
@@ -448,7 +448,7 @@ Running with ASan</h2>
 <div class="line">    #0 0x7f8a4b5c6d42 in main</div>
 <div class="line">    #1 0x7f8a4b3c7082 in __libc_start_main</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md53"></a>
+<h2><a class="anchor" id="autotoc_md61"></a>
 Performance Impact</h2>
 <ul>
 <li><b>Runtime overhead:</b> ~2-3x slowdown</li>
@@ -456,11 +456,11 @@ Performance Impact</h2>
 <li><b>Only for testing</b> - not for production</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md55"></a>
+<h1><a class="anchor" id="autotoc_md63"></a>
 Best Practices</h1>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md64"></a>
 1. Buffer Management</h2>
-<h3><a class="anchor" id="autotoc_md57"></a>
+<h3><a class="anchor" id="autotoc_md65"></a>
 ✅ DO</h3>
 <div class="fragment"><div class="line"><span class="comment">// Use SafeDataBuffer to wrap existing data</span></div>
 <div class="line">std::vector&lt;uint8_t&gt; raw(data, data + len);</div>
@@ -471,7 +471,7 @@ Best Practices</h1>
 <div class="line"><span class="keywordtype">void</span> process(safe_span&lt;const uint8_t&gt; data) {</div>
 <div class="line">    <span class="comment">// ...</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md58"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md66"></a>
 ❌ DON'T</h3>
 <div class="fragment"><div class="line"><span class="comment">// Avoid raw pointers without bounds checking</span></div>
 <div class="line">uint8_t* buf = <span class="keyword">new</span> uint8_t[size];</div>
@@ -480,22 +480,22 @@ Best Practices</h1>
 <div class="line"><span class="comment">// Avoid pointer arithmetic without validation</span></div>
 <div class="line">uint8_t* ptr = buffer + offset;  <span class="comment">// May go out of bounds</span></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md60"></a>
+<h2><a class="anchor" id="autotoc_md68"></a>
 2. Type Conversions</h2>
-<h3><a class="anchor" id="autotoc_md61"></a>
+<h3><a class="anchor" id="autotoc_md69"></a>
 ✅ DO</h3>
 <div class="fragment"><div class="line"><span class="comment">// Use safe conversion utilities</span></div>
 <div class="line">std::string str = <a class="code" href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">safe_convert::uint8_to_string</a>(data, size);</div>
 <div class="line"><span class="keyword">const</span> uint8_t* bytes = <a class="code" href="namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92">safe_convert::string_to_uint8</a>(str);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md62"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md70"></a>
 ❌ DON'T</h3>
 <div class="fragment"><div class="line"><span class="comment">// Avoid unsafe casts</span></div>
 <div class="line">std::string str = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(data);  <span class="comment">// May not be null-terminated</span></div>
 <div class="line">uint8_t* bytes = <span class="keyword">const_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(str.data());  <span class="comment">// Removes const incorrectly</span></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md64"></a>
+<h2><a class="anchor" id="autotoc_md72"></a>
 3. Thread Safety</h2>
-<h3><a class="anchor" id="autotoc_md65"></a>
+<h3><a class="anchor" id="autotoc_md73"></a>
 ✅ DO</h3>
 <div class="fragment"><div class="line"><span class="comment">// Use thread-safe primitives</span></div>
 <div class="line">ThreadSafeState&lt;State&gt; state;</div>
@@ -503,7 +503,7 @@ Best Practices</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Let unilink handle synchronization</span></div>
 <div class="line">client-&gt;send(data);  <span class="comment">// Already thread-safe</span></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md66"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md74"></a>
 ❌ DON'T</h3>
 <div class="fragment"><div class="line"><span class="comment">// Avoid manual locking of unilink internals</span></div>
 <div class="line"><span class="comment">// std::lock_guard&lt;std::mutex&gt; lock(internal_mutex);  // DON&#39;T DO THIS</span></div>
@@ -511,9 +511,9 @@ Best Practices</h1>
 <div class="line"><span class="comment">// Avoid shared state without synchronization</span></div>
 <div class="line"><span class="comment">// state = NewState;  // Race condition!</span></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md68"></a>
+<h2><a class="anchor" id="autotoc_md76"></a>
 4. Memory Tracking</h2>
-<h3><a class="anchor" id="autotoc_md69"></a>
+<h3><a class="anchor" id="autotoc_md77"></a>
 ✅ DO</h3>
 <div class="fragment"><div class="line"><span class="comment">// Enable in Debug builds</span></div>
 <div class="line">cmake -DCMAKE_BUILD_TYPE=Debug -DUNILINK_ENABLE_MEMORY_TRACKING=ON</div>
@@ -521,16 +521,16 @@ Best Practices</h1>
 <div class="line"><span class="comment">// Check for leaks at exit</span></div>
 <div class="line"><span class="keyword">auto</span> stats = MemoryTracker::instance().get_stats();</div>
 <div class="line">assert(stats.total_allocations == stats.total_deallocations);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md70"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md78"></a>
 ❌ DON'T</h3>
 <div class="fragment"><div class="line"><span class="comment">// Don&#39;t enable in Release builds (performance)</span></div>
 <div class="line"><span class="comment">// cmake -DCMAKE_BUILD_TYPE=Release -DUNILINK_ENABLE_MEMORY_TRACKING=ON</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Don&#39;t ignore leak reports</span></div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md72"></a>
+<h2><a class="anchor" id="autotoc_md80"></a>
 5. Sanitizers</h2>
-<h3><a class="anchor" id="autotoc_md73"></a>
+<h3><a class="anchor" id="autotoc_md81"></a>
 ✅ DO</h3>
 <div class="fragment"><div class="line"><span class="comment">// Use during development and testing</span></div>
 <div class="line">cmake -DCMAKE_BUILD_TYPE=Debug -DUNILINK_ENABLE_SANITIZERS=ON</div>
@@ -539,16 +539,16 @@ Best Practices</h1>
 <div class="line">ctest --output-on-failure</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Fix all reported issues</span></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md74"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md82"></a>
 ❌ DON'T</h3>
 <div class="fragment"><div class="line"><span class="comment">// Never deploy with sanitizers enabled</span></div>
 <div class="line"><span class="comment">// (2-3x performance penalty)</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Don&#39;t suppress sanitizer warnings without investigation</span></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md76"></a>
+<h1><a class="anchor" id="autotoc_md84"></a>
 Memory Safety Benefits</h1>
-<h2><a class="anchor" id="autotoc_md77"></a>
+<h2><a class="anchor" id="autotoc_md85"></a>
 Prevents Common Vulnerabilities</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -565,7 +565,7 @@ Prevents Common Vulnerabilities</h2>
 <td class="markdownTableBodyNone"><b>Type Confusion</b>   </td><td class="markdownTableBodyNone">Possible   </td><td class="markdownTableBodyNone">Prevented (type-safe)   </td></tr>
 </table>
 <hr  />
-<h2><a class="anchor" id="autotoc_md79"></a>
+<h2><a class="anchor" id="autotoc_md87"></a>
 Performance</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -582,9 +582,9 @@ Performance</h2>
 <td class="markdownTableBodyNone"><b>AddressSanitizer</b>   </td><td class="markdownTableBodyNone">~200-300%   </td><td class="markdownTableBodyNone">N/A (not used)   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md81"></a>
+<h1><a class="anchor" id="autotoc_md89"></a>
 Testing Memory Safety</h1>
-<h2><a class="anchor" id="autotoc_md82"></a>
+<h2><a class="anchor" id="autotoc_md90"></a>
 Unit Tests</h2>
 <div class="fragment"><div class="line"># Run memory safety tests</div>
 <div class="line">./build/test/run_memory_safety_tests</div>
@@ -597,14 +597,14 @@ Unit Tests</h2>
 <li>Memory pool correctness</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md84"></a>
+<h2><a class="anchor" id="autotoc_md92"></a>
 Integration Tests</h2>
 <div class="fragment"><div class="line"># Run with AddressSanitizer</div>
 <div class="line">cmake -S . -B build -DUNILINK_ENABLE_SANITIZERS=ON</div>
 <div class="line">cmake --build build</div>
 <div class="line">cd build &amp;&amp; ctest</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md86"></a>
+<h2><a class="anchor" id="autotoc_md94"></a>
 Continuous Integration</h2>
 <p>All memory safety features are tested in CI/CD:</p>
 <ul>
@@ -615,7 +615,7 @@ Continuous Integration</h2>
 </ul>
 <p>See ../guides/testing.md "Testing Guide" for details.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md88"></a>
+<h1><a class="anchor" id="autotoc_md96"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="md_docs_architecture_runtime_behavior.html">Runtime Behavior</a> - Threading and execution model</li>
@@ -629,7 +629,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 8 2026 00:09:11 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Jan 9 2026 23:25:29 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
