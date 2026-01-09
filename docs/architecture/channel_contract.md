@@ -35,7 +35,19 @@ This rule ensures that once an application explicitly requests a channel to stop
     *   `stop()` method includes a `try-catch` block around `shared_from_this()` to handle cases where the object is being destroyed, ensuring synchronous cleanup without `std::bad_weak_ptr` crashes.
 
 ## 4. Backpressure Policy
-(To be defined in future iterations)
+To prevent memory exhaustion and manage flow control, channels implement a backpressure mechanism based on the size of the internal write queue.
+
+**Contract Rules:**
+1.  **Triggering (High Watermark):** When the size of queued write data (bytes pending transmission) reaches or exceeds the configured `backpressure_threshold`, the channel MUST invoke the `on_backpressure` callback with the current queue size. This signals the application to pause or slow down data generation.
+    
+2.  **Relieving (Low Watermark):** Once backpressure is active, when the queue size drops to or below a "Low Watermark" (typically defined as `threshold / 2` or `0` depending on implementation, but must be strictly less than the high watermark), the channel MUST invoke the `on_backpressure` callback with the new (lower) queue size. This signals the application that it can resume normal data generation.
+
+3.  **No Relief on Stop:** As per the **Stop Semantics**, clearing the queue during a `stop()` or shutdown sequence MUST NOT trigger a backpressure relief callback. The application is shutting down the channel and does not need to know that the queue is empty.
+
+**Transport-Specific Implementation Details:**
+*   **TcpClient:** Implements a high watermark at `backpressure_threshold` and a low watermark at `threshold / 2` (or 1 if threshold is small). Checks are performed after every write operation (enqueue/dequeue).
+*   **Serial:** Should follow the same logic as TcpClient.
+*   **TcpServer:** Should implement backpressure per-session. The server-level backpressure callback should be aggregated or proxied from individual sessions.
 
 ## 5. Error Handling Consistency
 (To be defined in future iterations)
