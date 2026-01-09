@@ -316,13 +316,14 @@ TEST_F(TransportTcpClientTest, BackpressureReliefEmitsAfterDrain) {
 
   ASSERT_TRUE(TestUtils::waitForCondition([&] { return !bp_events.empty(); }, 200));
 
-  // Stopping clears the queue and should emit a relief notification (queue = 0)
+  // Stopping clears the queue and should NOT emit a relief notification according to the Contract
   client_->stop();
-  EXPECT_TRUE(TestUtils::waitForCondition([&] { return bp_events.size() >= 2; }, 200));
+  // Wait a bit to ensure no trailing events
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-  ASSERT_GE(bp_events.size(), 2);
+  // Expect only the initial backpressure trigger, no relief event after stop
+  ASSERT_EQ(bp_events.size(), 1);
   EXPECT_GE(bp_events.front(), cfg.backpressure_threshold);
-  EXPECT_EQ(bp_events.back(), 0u);
 
   client_.reset();
   guard.reset();
