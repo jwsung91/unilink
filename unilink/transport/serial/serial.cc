@@ -410,7 +410,7 @@ void Serial::start_read() {
 }
 
 void Serial::do_write() {
-  if (tx_.empty()) {
+  if (stopping_.load() || tx_.empty()) {
     writing_ = false;
     return;
   }
@@ -428,6 +428,11 @@ void Serial::do_write() {
       self->queued_bytes_ = 0;
     }
     self->report_backpressure(self->queued_bytes_);
+
+    if (self->stopping_.load()) {
+      self->writing_ = false;
+      return;
+    }
 
     if (ec) {
       self->handle_error("write", ec);
@@ -533,6 +538,8 @@ void Serial::close_port() {
 }
 
 void Serial::notify_state() {
+  if (stopping_.load() || !on_state_) return;
+
   if (on_state_) {
     try {
       on_state_(state_.get_state());
@@ -548,7 +555,8 @@ void Serial::notify_state() {
 }
 
 void Serial::report_backpressure(size_t queued_bytes) {
-  if (!on_bp_) return;
+  if (stopping_.load() || !on_bp_) return;
+
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
     try {

@@ -240,7 +240,27 @@ gtest_discover_tests(run_unit_transport_udp
     TIMEOUT 30
 )
 
-# Transport layer tests removed - they require actual network/serial devices
+# Contract Compliance Tests
+add_executable(run_unit_test_contract_compliance ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_contract_compliance.cc)
+target_link_libraries(run_unit_test_contract_compliance
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_test_contract_compliance)
+target_include_directories(run_unit_test_contract_compliance
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+
+gtest_discover_tests(run_unit_test_contract_compliance
+  PROPERTIES
+    LABELS "unit;transport;contract"
+    TIMEOUT 30
+)
 
 # Create a custom target to build all unit tests
 add_custom_target(unilink_unit_tests)
@@ -261,4 +281,5 @@ add_dependencies(unilink_unit_tests
   run_unit_transport_tcp_client
   run_unit_transport_tcp_server
   run_unit_transport_serial
+  run_unit_test_contract_compliance
 )
