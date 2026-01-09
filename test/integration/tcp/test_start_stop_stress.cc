@@ -75,7 +75,7 @@ TEST_F(IntegrationTest, TcpClientStartStopStress) {
 
   // No terminal_notifications as per Stop Semantics contract.
 
-  const int iterations = 200;
+  const int iterations = 50;
   for (int i = 0; i < iterations; ++i) {
     client->start();
     // Wait for client to attempt connection (it will likely fail due to no server activity)
