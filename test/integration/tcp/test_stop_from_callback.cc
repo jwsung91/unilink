@@ -43,7 +43,7 @@ TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
   std::atomic<int> state_notifications{0};
   std::atomic<bool> stop_from_state{false};
   std::atomic<bool> stop_from_bytes{false};
-  
+
   // No terminal_notifications or terminal_reached logic as per Stop Semantics contract
 
   acceptor.async_accept(*server_socket, [&](const boost::system::error_code& ec) {
@@ -91,7 +91,7 @@ TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
   client->start();
 
   // Wait long enough for client to attempt connection and then get stopped from callback
-  TestUtils::waitFor(1000); // Give enough time for the Connected state to be reached and stop() called
+  TestUtils::waitFor(1000);  // Give enough time for the Connected state to be reached and stop() called
 
   // Explicitly stop client at the end of the test to ensure cleanup
   client->stop();

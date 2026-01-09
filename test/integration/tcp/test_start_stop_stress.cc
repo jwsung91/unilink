@@ -80,18 +80,18 @@ TEST_F(IntegrationTest, TcpClientStartStopStress) {
     client->start();
     // Wait for client to attempt connection (it will likely fail due to no server activity)
     // or to at least process some internal logic.
-    TestUtils::waitFor(100); 
+    TestUtils::waitFor(100);
 
     client->stop();
     // After stop(), client should not be connected.
     EXPECT_FALSE(client->is_connected());
-    TestUtils::waitFor(50); // Give some time for cleanup
+    TestUtils::waitFor(50);  // Give some time for cleanup
   }
 
   // Final check after all iterations
   EXPECT_FALSE(client->is_connected());
 
-  client->stop(); // Ensure client is stopped one last time
+  client->stop();  // Ensure client is stopped one last time
 
   {
     std::lock_guard<std::mutex> lock(server_mutex);
