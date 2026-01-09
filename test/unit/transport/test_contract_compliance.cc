@@ -15,11 +15,12 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <boost/asio.hpp>
 
+#include "test/utils/contract_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
-#include "test/utils/contract_utils.hpp"
 
 using namespace unilink;
 using namespace unilink::transport;
@@ -37,7 +38,7 @@ class ContractComplianceTest : public ::testing::Test {
     if (client_) {
       client_->stop();
     }
-    runner_.reset(); // Stop thread
+    runner_.reset();  // Stop thread
     ioc_.reset();
   }
 
@@ -49,14 +50,14 @@ class ContractComplianceTest : public ::testing::Test {
 
 /**
  * @brief Verify that NO callbacks are invoked after stop() returns.
- * 
+ *
  * This is the "Stop Semantics" contract.
  */
 TEST_F(ContractComplianceTest, TcpClient_StopSemantics) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
-  cfg.port = 12345; // Non-existent port to force retries
-  cfg.retry_interval_ms = 10; // Fast retry
+  cfg.port = 12345;            // Non-existent port to force retries
+  cfg.retry_interval_ms = 10;  // Fast retry
 
   client_ = TcpClient::create(cfg, *ioc_);
 
@@ -80,18 +81,21 @@ TEST_F(ContractComplianceTest, TcpClient_StopSemantics) {
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   // Verify
-  EXPECT_TRUE(recorder_.verify_no_events_after(stop_time)) 
-    << "Found events after stop()! This violates the Channel Contract.";
+  EXPECT_TRUE(recorder_.verify_no_events_after(stop_time))
+      << "Found events after stop()! This violates the Channel Contract.";
 
   // Print violations if any
   auto events = recorder_.get_events();
   for (const auto& ev : events) {
     if (ev.timestamp > stop_time) {
       std::string type_str;
-      if (ev.type == EventType::StateChange) type_str = "StateChange";
-      else if (ev.type == EventType::DataReceived) type_str = "DataReceived";
-      else type_str = "Backpressure";
-      
+      if (ev.type == EventType::StateChange)
+        type_str = "StateChange";
+      else if (ev.type == EventType::DataReceived)
+        type_str = "DataReceived";
+      else
+        type_str = "Backpressure";
+
       auto diff = std::chrono::duration_cast<std::chrono::microseconds>(ev.timestamp - stop_time).count();
       std::cout << "[Violation] Event " << type_str << " occurred " << diff << "us AFTER stop()" << std::endl;
     }
@@ -125,8 +129,8 @@ TEST_F(ContractComplianceTest, Serial_StopSemantics) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  EXPECT_TRUE(recorder.verify_no_events_after(stop_time)) 
-    << "Serial: Found events after stop()! This violates the Channel Contract.";
+  EXPECT_TRUE(recorder.verify_no_events_after(stop_time))
+      << "Serial: Found events after stop()! This violates the Channel Contract.";
 }
 
 #include "unilink/config/tcp_server_config.hpp"
@@ -134,9 +138,9 @@ TEST_F(ContractComplianceTest, Serial_StopSemantics) {
 
 TEST_F(ContractComplianceTest, TcpServer_StopSemantics) {
   config::TcpServerConfig cfg;
-  cfg.port = 12346; // Use different port
+  cfg.port = 12346;  // Use different port
 
-  auto server = TcpServer::create(cfg); // Use global context manager, but we don't pump it here... wait.
+  auto server = TcpServer::create(cfg);  // Use global context manager, but we don't pump it here... wait.
   // TcpServer uses IoContextManager by default. We should inject our ioc for control.
   // Wait, TcpServer::create overload with ioc requires acceptor unique_ptr.
   // Let's use the default create but we need to ensure IoContextManager runs?
@@ -151,18 +155,18 @@ TEST_F(ContractComplianceTest, TcpServer_StopSemantics) {
 
   CallbackRecorder recorder;
   server->on_state(recorder.get_state_callback());
-  
+
   server->start();
 
   // Wait for Listening
   ASSERT_TRUE(recorder.wait_for_state(base::LinkState::Listening, std::chrono::milliseconds(100)));
-  
+
   // --- STOP ---
   server->stop();
   auto stop_time = std::chrono::steady_clock::now();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  EXPECT_TRUE(recorder.verify_no_events_after(stop_time)) 
-    << "TcpServer: Found events after stop()! This violates the Channel Contract.";
+  EXPECT_TRUE(recorder.verify_no_events_after(stop_time))
+      << "TcpServer: Found events after stop()! This violates the Channel Contract.";
 }

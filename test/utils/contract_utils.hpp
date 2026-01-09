@@ -41,7 +41,7 @@ enum class EventType { StateChange, DataReceived, Backpressure };
 struct RecordedEvent {
   EventType type;
   std::chrono::steady_clock::time_point timestamp;
-  
+
   // Data variants
   std::variant<base::LinkState, std::string, size_t> data;
 };
@@ -83,7 +83,7 @@ class CallbackRecorder {
   }
 
   // Verification helpers
-  
+
   // Verify that no callbacks occurred after a specific time point
   bool verify_no_events_after(std::chrono::steady_clock::time_point point) {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -136,13 +136,12 @@ class CallbackRecorder {
 class IoContextRunner {
  public:
   IoContextRunner(boost::asio::io_context& ioc) : ioc_(ioc) {
-    work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(ioc_.get_executor());
+    work_guard_ =
+        std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(ioc_.get_executor());
     thread_ = std::thread([this] { ioc_.run(); });
   }
 
-  ~IoContextRunner() {
-    stop();
-  }
+  ~IoContextRunner() { stop(); }
 
   void stop() {
     if (work_guard_) {

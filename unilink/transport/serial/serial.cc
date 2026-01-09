@@ -539,7 +539,7 @@ void Serial::close_port() {
 
 void Serial::notify_state() {
   if (stopping_.load() || !on_state_) return;
-  
+
   if (on_state_) {
     try {
       on_state_(state_.get_state());
@@ -556,7 +556,7 @@ void Serial::notify_state() {
 
 void Serial::report_backpressure(size_t queued_bytes) {
   if (stopping_.load() || !on_bp_) return;
-  
+
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
     try {

@@ -654,7 +654,7 @@ void TcpClient::perform_stop_cleanup() {
     connected_.store(false);
     backpressure_active_ = false;
     // Do NOT report backpressure during stop cleanup to adhere to contract
-    
+
     if (owns_ioc_ && work_guard_) {
       work_guard_->reset();
     }
@@ -705,7 +705,7 @@ void TcpClient::join_ioc_thread(bool allow_detach) {
 void TcpClient::notify_state() {
   // Strict Contract: No callbacks if stopping or stopped
   if (stop_requested_.load() || stopping_.load() || !on_state_) return;
-  
+
   try {
     on_state_(state_.get_state());
   } catch (const std::exception& e) {

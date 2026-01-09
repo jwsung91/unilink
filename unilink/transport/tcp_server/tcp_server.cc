@@ -185,8 +185,8 @@ void TcpServer::stop() {
       // Called from destructor or object is dying; fallback to synchronous cleanup
       UNILINK_LOG_DEBUG("tcp_server", "stop", "shared_from_this() failed, performing synchronous cleanup");
     }
-  } 
-  
+  }
+
   if (!async_cleanup_done) {
     // io_context is not running or shared_from_this failed; perform best-effort cleanup synchronously
     cleanup();
