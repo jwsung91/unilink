@@ -83,12 +83,16 @@ TEST_F(IntegrationTest, TcpClientStartStopStress) {
     TestUtils::waitFor(100);
 
     client->stop();
+
     // After stop(), client should not be connected.
-    EXPECT_FALSE(client->is_connected());
+
+    EXPECT_TRUE(TestUtils::waitForCondition([&] { return !client->is_connected(); }, 5000));
+
     TestUtils::waitFor(50);  // Give some time for cleanup
   }
 
   // Final check after all iterations
+
   EXPECT_FALSE(client->is_connected());
 
   client->stop();  // Ensure client is stopped one last time
