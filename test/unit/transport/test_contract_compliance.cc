@@ -1,0 +1,168 @@
+/*
+ * Copyright 2025 Jinwoo Sung
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include <gtest/gtest.h>
+#include <boost/asio.hpp>
+
+#include "unilink/config/tcp_client_config.hpp"
+#include "unilink/transport/tcp_client/tcp_client.hpp"
+#include "test/utils/contract_utils.hpp"
+
+using namespace unilink;
+using namespace unilink::transport;
+using namespace unilink::test;
+
+class ContractComplianceTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
+    // Independent io_context for testing
+    ioc_ = std::make_shared<boost::asio::io_context>();
+    runner_ = std::make_unique<IoContextRunner>(*ioc_);
+  }
+
+  void TearDown() override {
+    if (client_) {
+      client_->stop();
+    }
+    runner_.reset(); // Stop thread
+    ioc_.reset();
+  }
+
+  std::shared_ptr<boost::asio::io_context> ioc_;
+  std::unique_ptr<IoContextRunner> runner_;
+  std::shared_ptr<TcpClient> client_;
+  CallbackRecorder recorder_;
+};
+
+/**
+ * @brief Verify that NO callbacks are invoked after stop() returns.
+ * 
+ * This is the "Stop Semantics" contract.
+ */
+TEST_F(ContractComplianceTest, TcpClient_StopSemantics) {
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = 12345; // Non-existent port to force retries
+  cfg.retry_interval_ms = 10; // Fast retry
+
+  client_ = TcpClient::create(cfg, *ioc_);
+
+  client_->on_state(recorder_.get_state_callback());
+  client_->on_bytes(recorder_.get_bytes_callback());
+  client_->on_backpressure(recorder_.get_backpressure_callback());
+
+  client_->start();
+
+  // Wait for some activity (e.g., Connecting state)
+  ASSERT_TRUE(recorder_.wait_for_state(base::LinkState::Connecting, std::chrono::milliseconds(100)));
+
+  // Let it run for a bit to generate some internal async operations (retries)
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+  // --- STOP ---
+  client_->stop();
+  auto stop_time = std::chrono::steady_clock::now();
+
+  // Wait a bit to see if any trailing callbacks occur
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  // Verify
+  EXPECT_TRUE(recorder_.verify_no_events_after(stop_time)) 
+    << "Found events after stop()! This violates the Channel Contract.";
+
+  // Print violations if any
+  auto events = recorder_.get_events();
+  for (const auto& ev : events) {
+    if (ev.timestamp > stop_time) {
+      std::string type_str;
+      if (ev.type == EventType::StateChange) type_str = "StateChange";
+      else if (ev.type == EventType::DataReceived) type_str = "DataReceived";
+      else type_str = "Backpressure";
+      
+      auto diff = std::chrono::duration_cast<std::chrono::microseconds>(ev.timestamp - stop_time).count();
+      std::cout << "[Violation] Event " << type_str << " occurred " << diff << "us AFTER stop()" << std::endl;
+    }
+  }
+}
+
+#include "unilink/config/serial_config.hpp"
+#include "unilink/transport/serial/serial.hpp"
+
+TEST_F(ContractComplianceTest, Serial_StopSemantics) {
+  config::SerialConfig cfg;
+  cfg.device = "/dev/nonexistent_device_for_test";
+  cfg.retry_interval_ms = 10;
+
+  auto serial = Serial::create(cfg, *ioc_);
+  CallbackRecorder recorder;
+
+  serial->on_state(recorder.get_state_callback());
+  serial->on_bytes(recorder.get_bytes_callback());
+  serial->on_backpressure(recorder.get_backpressure_callback());
+
+  serial->start();
+
+  // Wait for retry cycle
+  ASSERT_TRUE(recorder.wait_for_state(base::LinkState::Connecting, std::chrono::milliseconds(100)));
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+  // --- STOP ---
+  serial->stop();
+  auto stop_time = std::chrono::steady_clock::now();
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  EXPECT_TRUE(recorder.verify_no_events_after(stop_time)) 
+    << "Serial: Found events after stop()! This violates the Channel Contract.";
+}
+
+#include "unilink/config/tcp_server_config.hpp"
+#include "unilink/transport/tcp_server/tcp_server.hpp"
+
+TEST_F(ContractComplianceTest, TcpServer_StopSemantics) {
+  config::TcpServerConfig cfg;
+  cfg.port = 12346; // Use different port
+
+  auto server = TcpServer::create(cfg); // Use global context manager, but we don't pump it here... wait.
+  // TcpServer uses IoContextManager by default. We should inject our ioc for control.
+  // Wait, TcpServer::create overload with ioc requires acceptor unique_ptr.
+  // Let's use the default create but we need to ensure IoContextManager runs?
+  // Actually, TcpServer uses IoContextManager::instance().get_context() by default.
+  // Since we want to control the loop, let's use the overload if possible.
+  // Or just rely on IoContextManager's thread (it starts its own thread).
+  // But for stop semantics test, we need precise control or just observation.
+  // Observation is fine.
+
+  // Let's stick to default create. It spawns a thread.
+  server = TcpServer::create(cfg);
+
+  CallbackRecorder recorder;
+  server->on_state(recorder.get_state_callback());
+  
+  server->start();
+
+  // Wait for Listening
+  ASSERT_TRUE(recorder.wait_for_state(base::LinkState::Listening, std::chrono::milliseconds(100)));
+  
+  // --- STOP ---
+  server->stop();
+  auto stop_time = std::chrono::steady_clock::now();
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  EXPECT_TRUE(recorder.verify_no_events_after(stop_time)) 
+    << "TcpServer: Found events after stop()! This violates the Channel Contract.";
+}

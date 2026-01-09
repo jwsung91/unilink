@@ -591,7 +591,7 @@ void TcpClient::recalculate_backpressure_bounds() {
 }
 
 void TcpClient::report_backpressure(size_t queued_bytes) {
-  if (stop_requested_.load() || !on_bp_) return;
+  if (stop_requested_.load() || stopping_.load() || !on_bp_) return;
 
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
@@ -652,18 +652,9 @@ void TcpClient::perform_stop_cleanup() {
     queue_bytes_ = 0;
     writing_ = false;
     connected_.store(false);
-    const bool had_backpressure = backpressure_active_;
     backpressure_active_ = false;
-    if (had_backpressure && on_bp_) {
-      try {
-        on_bp_(queue_bytes_);
-      } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
-                          "Exception in backpressure callback: " + std::string(e.what()));
-      } catch (...) {
-        UNILINK_LOG_ERROR("tcp_client", "on_backpressure", "Unknown exception in backpressure callback");
-      }
-    }
+    // Do NOT report backpressure during stop cleanup to adhere to contract
+    
     if (owns_ioc_ && work_guard_) {
       work_guard_->reset();
     }
@@ -712,7 +703,9 @@ void TcpClient::join_ioc_thread(bool allow_detach) {
 }
 
 void TcpClient::notify_state() {
-  if (!on_state_) return;
+  // Strict Contract: No callbacks if stopping or stopped
+  if (stop_requested_.load() || stopping_.load() || !on_state_) return;
+  
   try {
     on_state_(state_.get_state());
   } catch (const std::exception& e) {

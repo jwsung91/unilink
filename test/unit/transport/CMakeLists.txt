@@ -15,6 +15,10 @@ add_executable(run_unit_test_transport_scenarios
   test_transport_scenarios.cc
 )
 
+add_executable(run_unit_test_contract_compliance
+  test_contract_compliance.cc
+)
+
 # Link libraries
 target_link_libraries(run_unit_test_transport_tcp_client_error
   PRIVATE
@@ -44,6 +48,13 @@ target_link_libraries(run_unit_test_transport_scenarios
   gtest_main
 )
 
+target_link_libraries(run_unit_test_contract_compliance
+  PRIVATE
+  unilink_shared
+  gtest
+  gtest_main
+)
+
 # Add tests to CTest
 add_test(NAME TcpClientErrorTest
   COMMAND run_unit_test_transport_tcp_client_error
@@ -65,8 +76,14 @@ add_test(NAME TransportScenarioTest
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+add_test(NAME ContractComplianceTest
+  COMMAND run_unit_test_contract_compliance
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
 # Set test labels
 set_tests_properties(TcpClientErrorTest PROPERTIES LABELS "unit;transport;tcp;error")
 set_tests_properties(TcpServerErrorTest PROPERTIES LABELS "unit;transport;tcp;error")
 set_tests_properties(SerialErrorTest PROPERTIES LABELS "unit;transport;serial;error")
 set_tests_properties(TransportScenarioTest PROPERTIES LABELS "unit;transport;scenario")
+set_tests_properties(ContractComplianceTest PROPERTIES LABELS "unit;transport;contract")

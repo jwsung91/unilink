@@ -167,19 +167,28 @@ void TcpServer::stop() {
     return;
   }
 
+  bool async_cleanup_done = false;
   if (has_active_ioc_thread) {
-    auto self = shared_from_this();
-    auto cleanup_promise = std::make_shared<std::promise<void>>();
-    auto cleanup_future = cleanup_promise->get_future();
+    try {
+      auto self = shared_from_this();
+      auto cleanup_promise = std::make_shared<std::promise<void>>();
+      auto cleanup_future = cleanup_promise->get_future();
 
-    net::post(ioc_, [self, cleanup, cleanup_promise] {
-      cleanup();
-      cleanup_promise->set_value();
-    });
+      net::post(ioc_, [self, cleanup, cleanup_promise] {
+        cleanup();
+        cleanup_promise->set_value();
+      });
 
-    cleanup_future.wait();
-  } else {
-    // io_context is not running (e.g., never started); perform best-effort cleanup synchronously
+      cleanup_future.wait();
+      async_cleanup_done = true;
+    } catch (const std::bad_weak_ptr&) {
+      // Called from destructor or object is dying; fallback to synchronous cleanup
+      UNILINK_LOG_DEBUG("tcp_server", "stop", "shared_from_this() failed, performing synchronous cleanup");
+    }
+  } 
+  
+  if (!async_cleanup_done) {
+    // io_context is not running or shared_from_this failed; perform best-effort cleanup synchronously
     cleanup();
   }
 
@@ -205,6 +214,7 @@ bool TcpServer::is_connected() const {
 }
 
 void TcpServer::async_write_copy(const uint8_t* data, size_t size) {
+  if (stopping_.load()) return;
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
@@ -218,6 +228,7 @@ void TcpServer::async_write_copy(const uint8_t* data, size_t size) {
 }
 
 void TcpServer::async_write_move(std::vector<uint8_t>&& data) {
+  if (stopping_.load()) return;
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
@@ -230,7 +241,7 @@ void TcpServer::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 void TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (!data) return;
+  if (stopping_.load() || !data) return;
   std::shared_ptr<TcpServerSession> session;
   {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
@@ -490,6 +501,7 @@ void TcpServer::do_accept() {
 }
 
 void TcpServer::notify_state() {
+  if (stopping_.load()) return;
   if (on_state_) {
     try {
       on_state_(state_.get_state());
