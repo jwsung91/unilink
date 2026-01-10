@@ -12,6 +12,7 @@ var classunilink_1_1transport_1_1TcpServer =
     [ "create", "classunilink_1_1transport_1_1TcpServer.html#ad01ed6cb06160b13f3b15ddaf0e74c84", null ],
     [ "get_client_count", "classunilink_1_1transport_1_1TcpServer.html#aa29309881c8e770de1f5fb9b6c4899a3", null ],
     [ "get_connected_clients", "classunilink_1_1transport_1_1TcpServer.html#a47970b11dfc44edd9a781de5e4196dea", null ],
+    [ "get_state", "classunilink_1_1transport_1_1TcpServer.html#a636ecdc9436ab8baaeed71f448dff333", null ],
     [ "is_connected", "classunilink_1_1transport_1_1TcpServer.html#afb43ac8461d5c61cddf4fb76a4af3f34", null ],
     [ "on_backpressure", "classunilink_1_1transport_1_1TcpServer.html#a3c53da70b5af81134dee8b8ddee79a42", null ],
     [ "on_bytes", "classunilink_1_1transport_1_1TcpServer.html#a0d8b30bf523a712a686bc66141f26b4e", null ],

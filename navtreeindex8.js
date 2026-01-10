@@ -1,5 +1,7 @@
 var NAVTREEINDEX8 =
 {
+"structunilink_1_1diagnostics_1_1ErrorInfo.html":[18,0,0,4,1],
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a02c3bdd8b32efc581ee91138fe82530a":[18,0,0,4,1,0],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a270827dd9f3bb427f7bc8ee4bf12395e":[18,0,0,4,1,4],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a317ed975223f9525e7ffb57628a25919":[18,0,0,4,1,15],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a352382947538a6b6c77ebef6a08c1f37":[18,0,0,4,1,14],

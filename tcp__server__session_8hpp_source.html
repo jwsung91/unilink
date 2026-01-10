@@ -178,9 +178,11 @@ $(document).ready(function(){initNavTree('tcp__server__session_8hpp_source.html'
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  OnBackpressure on_bp_;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  OnClose on_close_;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  std::atomic&lt;bool&gt; alive_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  std::atomic&lt;bool&gt; closing_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  std::atomic&lt;bool&gt; cleanup_done_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;};</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="achannel_8hpp_html"><div class="ttname"><a href="channel_8hpp.html">channel.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a2a34895018b104dccc9bf49143008b55"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(const uint8_t *, size_t)&gt; OnBytes</div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00029">channel.hpp:29</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_acbaa1d8f93fac54ed516ef6e1caac3a5"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">unilink::interface::Channel::OnBackpressure</a></div><div class="ttdeci">std::function&lt; void(size_t)&gt; OnBackpressure</div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00031">channel.hpp:31</a></div></div>
@@ -206,7 +208,7 @@ $(document).ready(function(){initNavTree('tcp__server__session_8hpp_source.html'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_bdae376d6a766a2d984a51161a7f5788.html">tcp_server</a></li><li class="navelem"><a class="el" href="tcp__server__session_8hpp.html">tcp_server_session.hpp</a></li>
-    <li class="footer">Generated on Sat Jan 10 2026 02:30:14 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Jan 10 2026 07:25:13 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

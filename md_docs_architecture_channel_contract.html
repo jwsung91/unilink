@@ -106,9 +106,10 @@ $(document).ready(function(){initNavTree('md_docs_architecture_channel_contract.
 <p>This rule ensures that once an application explicitly requests a channel to stop, it can safely clean up resources and assume that no more events will arrive from that channel, preventing potential use-after-free bugs or unexpected state changes.</p>
 <p><b>Implementation Details:</b></p><ul>
 <li>All asynchronous operations (reads, writes, timers, resolves, accepts) must be cancelled or aborted when <code>stop()</code> is initiated.</li>
-<li>Callback handlers must include guards (e.g., checking <code>stopping_</code> or <code>stop_requested_</code> flags) to prevent execution if <code>stop()</code> has been called.</li>
+<li>Callback handlers must include guards (e.g., checking <code>stopping_</code> or <code>alive_</code> flags) to prevent execution if <code>stop()</code> has been called.</li>
 <li>Any terminal state change (e.g., <code>LinkState::Closed</code> or <code>LinkState::Error</code>) that occurs <em>as a direct consequence of <code>stop()</code> being called</em> should typically NOT result in a final <code>on_state</code> callback, as the caller has already initiated the shutdown and implicitly knows the channel is closing.</li>
 <li>In scenarios where <code>stop()</code> fails to fully complete its asynchronous cleanup (e.g., due to <code>shared_from_this()</code> failure in destructors), synchronous cleanup is performed as a fallback, and the guarantee of no further callbacks is maintained.</li>
+<li><b>TcpServerSession</b>: <code>alive_</code> guards are used within asynchronous handlers (<code>start_read</code>, <code>do_write</code> completion) to prevent callbacks after <code>do_close()</code> has been initiated. <code>do_close()</code> no longer triggers a backpressure relief callback.</li>
 </ul>
 <p><b>Transport-Specific Implementations:</b></p>
 <ul>
@@ -124,6 +125,7 @@ $(document).ready(function(){initNavTree('md_docs_architecture_channel_contract.
 <li><b>TcpServer:</b><ul>
 <li><code>stopping_</code> flag is used to gate callbacks in <code>notify_state()</code> and asynchronous handlers.</li>
 <li><code>stop()</code> method includes a <code>try-catch</code> block around <code>shared_from_this()</code> to handle cases where the object is being destroyed, ensuring synchronous cleanup without <code>std::bad_weak_ptr</code> crashes.</li>
+<li><b>Callbacks</b>: Callback member variables (<code>on_bytes_</code>, <code>on_multi_data_</code>, etc.) are protected by a mutex to prevent data races during registration and invocation.</li>
 </ul>
 </li>
 </ul>
@@ -138,7 +140,10 @@ $(document).ready(function(){initNavTree('md_docs_architecture_channel_contract.
 <p><b>Transport-Specific Implementation Details:</b></p><ul>
 <li><b>TcpClient:</b> Implements a high watermark at <code>backpressure_threshold</code> and a low watermark at <code>threshold / 2</code> (or 1 if threshold is small). Checks are performed after every write operation (enqueue/dequeue).</li>
 <li><b>Serial:</b> Should follow the same logic as TcpClient.</li>
-<li><b>TcpServer:</b> Should implement backpressure per-session. The server-level backpressure callback should be aggregated or proxied from individual sessions.</li>
+<li><b>TcpServer:</b> Implements backpressure per-session (<code>TcpServerSession</code>).<ul>
+<li><b>Note:</b> If <code>on_backpressure</code> callback is registered on <code>TcpServer</code> after client connections have been established, existing sessions will not receive this updated callback. It is recommended to register all callbacks before calling <code>start()</code> on the <code>TcpServer</code>.</li>
+</ul>
+</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md5"></a>
 5. Error Handling Consistency</h1>
@@ -155,7 +160,7 @@ $(document).ready(function(){initNavTree('md_docs_architecture_channel_contract.
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Jan 10 2026 02:30:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Jan 10 2026 07:25:13 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
