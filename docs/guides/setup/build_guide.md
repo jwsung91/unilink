@@ -38,6 +38,15 @@ cmake --install build --prefix /opt/unilink
 
 ---
 
+## Important Build Notes
+
+To enhance build stability and reliability, `unilink`'s `CMakeLists.txt` no longer uses automatic file discovery (globbing). Source and header files are now explicitly listed.
+
+**Action Required for New Files:**
+When adding or removing `.cc` or `.hpp` files in the `unilink/` directory, you **must manually update** the `UNILINK_SOURCES` or `UNILINK_HEADERS` variables in the project's root `CMakeLists.txt` file. Failure to do so will result in build errors (e.g., missing symbols).
+
+---
+
 ## Build Configurations
 
 You can build the library with different configurations to optimize for your use case.
