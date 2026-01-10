@@ -63,7 +63,7 @@ void TcpServerSession::start() {
 }
 
 void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
-  if (!alive_) return;  // Don't queue writes if session is not alive
+  if (!alive_ || closing_) return;  // Don't queue writes if session is not alive
 
   if (size > common::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
@@ -78,7 +78,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
       common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);
 
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
-        if (!self->alive_) return;  // Double-check in case session was closed
+        if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
         if (self->queue_bytes_ + buf.size() > self->bp_limit_) {
           UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
           self->do_close();
@@ -98,7 +98,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
   std::vector<uint8_t> fallback(data, data + size);
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
-    if (!self->alive_) return;  // Double-check in case session was closed
+    if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
     if (self->queue_bytes_ + buf.size() > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
       self->do_close();
@@ -113,14 +113,14 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
 }
 
 void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
-  if (!alive_) return;
+  if (!alive_ || closing_) return;
   const auto added = data.size();
   if (added > common::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return;
   }
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
-    if (!self->alive_) return;
+    if (!self->alive_ || self->closing_) return;
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
       self->do_close();
@@ -135,14 +135,14 @@ void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (!alive_ || !data) return;
+  if (!alive_ || closing_ || !data) return;
   const auto added = data->size();
   if (added > common::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return;
   }
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
-    if (!self->alive_) return;
+    if (!self->alive_ || self->closing_) return;
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
       self->do_close();
@@ -163,7 +163,7 @@ bool TcpServerSession::alive() const { return alive_.load(); }
 
 void TcpServerSession::stop() {
   if (closing_.exchange(true)) return;
-  on_bp_ = nullptr; // Explicitly nullify backpressure callback on stop
+  // Removed unsafe on_bp_ = nullptr; here to prevent data race.
   auto self = shared_from_this();
   net::post(strand_, [self] { self->do_close(); });
 }

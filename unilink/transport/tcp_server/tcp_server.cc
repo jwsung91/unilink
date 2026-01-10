@@ -658,10 +658,7 @@ void TcpServer::set_unlimited_clients() {
   max_clients_ = 0;
 }
 
-base::LinkState TcpServer::get_state() const {
-  return state_.get_state();
-}
-
+base::LinkState TcpServer::get_state() const { return state_.get_state(); }
 
 }  // namespace transport
 }  // namespace unilink

@@ -49,7 +49,7 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
   // 1. Create Server using Transport Layer directly to access on_backpressure
   config::TcpServerConfig cfg;
   cfg.port = port;
-  cfg.max_connections = 0; // Unlimited
+  cfg.max_connections = 0;  // Unlimited
 
   auto server = transport::TcpServer::create(cfg);
 
@@ -64,7 +64,7 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
       backpressure_calls++;
     }
     if (queued >= cfg.backpressure_threshold) {
-        backpressure_triggered = true;
+      backpressure_triggered = true;
     }
   });
 
@@ -79,7 +79,7 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
 
   // 3. Trigger Backpressure
   std::string data(1024 * 1024, 'X');  // 1MB chunk
-  
+
   // Send enough data to trigger backpressure (default is 4MB high watermark)
   // Sending 5 chunks (5MB) should guarantee backpressure
   for (int i = 0; i < 5; ++i) {
@@ -97,7 +97,7 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
 
   // Wait a bit to ensure no late callbacks
   TestUtils::waitFor(200);
-  
+
   // Cleanup is handled by test fixture / shared_ptr
 }
 
@@ -153,14 +153,14 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
   // Stop sender thread
   sending = false;
   if (sender.joinable()) {
-      sender.join();
+    sender.join();
   }
-  
+
   // Stop client explicitly
   client->stop();
 
   // Wait to ensure no late callbacks
-  TestUtils::waitFor(200); // Fixed short sleep for final callback quiet period
+  TestUtils::waitFor(200);  // Fixed short sleep for final callback quiet period
 
   // Cleanup is handled by test fixture / shared_ptr
 }

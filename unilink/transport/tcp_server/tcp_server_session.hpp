@@ -90,6 +90,7 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   OnClose on_close_;
   std::atomic<bool> alive_{false};
   std::atomic<bool> closing_{false};
+  mutable std::mutex callback_mutex_;
 };
 }  // namespace transport
 }  // namespace unilink
