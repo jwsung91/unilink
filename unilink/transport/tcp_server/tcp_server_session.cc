@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2000.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,8 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_
       writing_(false),
       queue_bytes_(0),
       bp_high_(backpressure_threshold),
-      alive_(false) {
+      alive_(false),
+      cleanup_done_(false) {
   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                        common::constants::MAX_BUFFER_SIZE);
   bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
@@ -49,7 +50,8 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interfa
       writing_(false),
       queue_bytes_(0),
       bp_high_(backpressure_threshold),
-      alive_(false) {
+      alive_(false),
+      cleanup_done_(false) {
   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                        common::constants::MAX_BUFFER_SIZE);
   bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
@@ -156,16 +158,32 @@ void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
   });
 }
 
-void TcpServerSession::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
-void TcpServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
-void TcpServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }
+void TcpServerSession::on_bytes(OnBytes cb) {
+  auto self = shared_from_this();
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable { self->on_bytes_ = std::move(cb); });
+}
+void TcpServerSession::on_backpressure(OnBackpressure cb) {
+  auto self = shared_from_this();
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable { self->on_bp_ = std::move(cb); });
+}
+void TcpServerSession::on_close(OnClose cb) {
+  auto self = shared_from_this();
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable { self->on_close_ = std::move(cb); });
+}
+
 bool TcpServerSession::alive() const { return alive_.load(); }
 
 void TcpServerSession::stop() {
   if (closing_.exchange(true)) return;
-  // Removed unsafe on_bp_ = nullptr; here to prevent data race.
   auto self = shared_from_this();
-  net::post(strand_, [self] { self->do_close(); });
+  net::post(strand_, [self] {
+    // Synchronously clear callbacks on the strand to prevent any further invocations.
+    // This order ensures on_bp_ is nulled before do_close (also on strand) runs.
+    self->on_bytes_ = nullptr;
+    self->on_bp_ = nullptr;
+    self->on_close_ = nullptr;
+    self->do_close();
+  });
 }
 
 void TcpServerSession::start_read() {
@@ -230,14 +248,14 @@ void TcpServerSession::do_write() {
     auto size = shared_pooled->size();
     socket_->async_write(
         net::buffer(data, size),
-        net::bind_executor(strand_, [self, buf = shared_pooled, on_write](auto ec, auto n) { on_write(ec, n); }));
+        net::bind_executor(strand_, [self, buf = shared_pooled, on_write](auto ec, auto auto_n) { on_write(ec, auto_n); }));
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
     auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
     auto data = shared_buf->data();
     auto size = shared_buf->size();
     socket_->async_write(net::buffer(data, size),
-                         net::bind_executor(strand_, [self, buf = std::move(shared_buf), on_write](auto ec, auto n) {
-                           on_write(ec, n);
+                         net::bind_executor(strand_, [self, buf = std::move(shared_buf), on_write](auto ec, auto auto_n) {
+                           on_write(ec, auto_n);
                          }));
   } else {
     auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
@@ -246,13 +264,15 @@ void TcpServerSession::do_write() {
     auto size = shared_vec->size();
     socket_->async_write(
         net::buffer(data, size),
-        net::bind_executor(strand_, [self, buf = shared_vec, on_write](auto ec, auto n) { on_write(ec, n); }));
+        net::bind_executor(strand_, [self, buf = shared_vec, on_write](auto ec, auto auto_n) { on_write(ec, auto_n); }));
   }
 }
 
 void TcpServerSession::do_close() {
-  if (!alive_.exchange(false)) return;
-  closing_ = true;
+  if (cleanup_done_.exchange(true)) return; // Ensures cleanup runs only once
+
+  alive_.store(false);
+  closing_.store(true); // Redundant, but ensures consistency
 
   // Safely invoke on_close callback
   auto close_cb = std::move(on_close_);

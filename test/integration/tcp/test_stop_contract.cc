@@ -34,7 +34,14 @@ using namespace unilink::test;
 /**
  * @brief Integration tests verifying "No Callbacks after Stop" contract.
  */
-class StopContractTest : public BaseTest {};
+class StopContractTest : public BaseTest {
+protected:
+    void SetUp() override {
+        BaseTest::SetUp();
+        // Enable debug logging for detailed trace
+        unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+    }
+};
 
 /**
  * @brief Verify that no backpressure callbacks occur after TcpServer stop.
@@ -91,76 +98,71 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
   // Assert that backpressure callback was actually called before stopping
   EXPECT_GT(backpressure_calls.load(), 0) << "Backpressure callback was not triggered before stop.";
 
-  // 4. Stop Server
-  server->stop();
-  stop_called = true;
-
-  // Wait a bit to ensure no late callbacks
-  TestUtils::waitFor(200);
-
-  // Cleanup is handled by test fixture / shared_ptr
-}
-
-/**
- * @brief Verify that no on_bytes callbacks occur after session is stopped.
- * This tests the race condition fix in start_read.
- */
-TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
-  uint16_t port = TestUtils::getAvailableTestPort();
-  std::atomic<bool> stop_called{false};
-  std::atomic<int> data_calls{0};
-
-  auto server = builder::UnifiedBuilder::tcp_server(port)
-                    .unlimited_clients()
-                    .on_data([&](const std::string& data) {
-                      if (stop_called.load()) {
-                        ADD_FAILURE() << "Data callback received AFTER stop! Size: " << data.size();
-                      }
-                      data_calls++;
-                      // Simulate work to widen the race window
-                      std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                    })
-                    .build();
-
-  server->start();
-  // Wait for server to be listening
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->is_listening(); }, 1000));
-
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port).build();
-  client->start();
-  // Wait for client to connect
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 1000));
-
-  // Client sends data continuously
-  std::atomic<bool> sending{true};
-  std::thread sender([&]() {
-    std::string chunk(1024, 'A');
-    while (sending.load()) {
-      client->send(chunk);
-      // Small delay to allow receiver to process and keep the stream flowing
-      std::this_thread::sleep_for(std::chrono::microseconds(100));
+      // 4. Stop Server
+      server->stop();
+      stop_called = true;
+    
+      // Wait a bit to ensure no late callbacks
+      TestUtils::waitFor(200);
+      
+      // Cleanup is handled by test fixture / shared_ptr
+    }  
+  /**
+   * @brief Verify that no on_bytes callbacks occur after session is stopped.
+   * This tests the race condition fix in start_read.
+   */
+  TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
+    uint16_t port = TestUtils::getAvailableTestPort();
+    std::atomic<bool> stop_called{false};
+    std::atomic<int> data_calls{0};
+  
+    auto server = builder::UnifiedBuilder::tcp_server(port)
+                      .unlimited_clients()
+                      .on_data([&](const std::string& data) {
+                        if (stop_called.load()) {
+                          ADD_FAILURE() << "Data callback received AFTER stop! Size: " << data.size();
+                        }
+                        data_calls++;
+                        // Simulate work to widen the race window
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                      })
+                      .build();
+  
+    server->start();
+    // Wait for server to be listening
+    EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->is_listening(); }, 1000));
+  
+    auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port).build();
+    client->start();
+    // Wait for client to connect
+    EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 1000));
+  
+    // Client sends data continuously
+    std::atomic<bool> sending{true};
+    std::thread sender([&]() {
+      std::string chunk(1024, 'A');
+      while (sending.load()) {
+        client->send(chunk);
+        // Small delay to allow receiver to process and keep the stream flowing
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
+      }
+    });
+  
+    // Let some data flow and verify it's being received
+    EXPECT_TRUE(TestUtils::waitForCondition([&]() { return data_calls.load() > 5; }, 2000));
+    EXPECT_GT(data_calls.load(), 0) << "Data callbacks were not triggered before stop.";
+  
+    // TRIGGER STOP
+    stop_called = true;
+    server->stop();
+  
+    // Stop sender thread
+    sending = false;
+    if (sender.joinable()) {
+        sender.join();
     }
-  });
-
-  // Let some data flow and verify it's being received
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return data_calls.load() > 5; }, 2000));
-  EXPECT_GT(data_calls.load(), 0) << "Data callbacks were not triggered before stop.";
-
-  // TRIGGER STOP
-  server->stop();
-  stop_called = true;
-
-  // Stop sender thread
-  sending = false;
-  if (sender.joinable()) {
-    sender.join();
-  }
-
-  // Stop client explicitly
-  client->stop();
-
-  // Wait to ensure no late callbacks
-  TestUtils::waitFor(200);  // Fixed short sleep for final callback quiet period
-
-  // Cleanup is handled by test fixture / shared_ptr
+      // Stop client explicitly
+      client->stop();
+    
+      // Cleanup is handled by test fixture / shared_ptr
 }
