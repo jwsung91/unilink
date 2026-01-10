@@ -22,8 +22,8 @@
 #include <thread>
 #include <vector>
 
-#include "test_utils.hpp"
 #include "test_constants.hpp"
+#include "test_utils.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 

@@ -17,6 +17,6 @@ constexpr std::chrono::milliseconds kStressTimeout{2000};
 // Retry intervals
 constexpr std::chrono::milliseconds kRetryInterval{10};
 
-} // namespace constants
-} // namespace test
-} // namespace unilink
+}  // namespace constants
+}  // namespace test
+}  // namespace unilink
