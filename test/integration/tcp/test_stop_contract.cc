@@ -92,8 +92,8 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
   EXPECT_GT(backpressure_calls.load(), 0) << "Backpressure callback was not triggered before stop.";
 
   // 4. Stop Server
-  stop_called = true;
   server->stop();
+  stop_called = true;
 
   // Wait a bit to ensure no late callbacks
   TestUtils::waitFor(200);
@@ -147,8 +147,8 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
   EXPECT_GT(data_calls.load(), 0) << "Data callbacks were not triggered before stop.";
 
   // TRIGGER STOP
-  stop_called = true;
   server->stop();
+  stop_called = true;
 
   // Stop sender thread
   sending = false;

@@ -162,7 +162,7 @@ void TcpServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }
 bool TcpServerSession::alive() const { return alive_.load(); }
 
 void TcpServerSession::stop() {
-  if (!alive_.exchange(false)) return;
+  if (closing_.exchange(true)) return;
   on_bp_ = nullptr; // Explicitly nullify backpressure callback on stop
   auto self = shared_from_this();
   net::post(strand_, [self] { self->do_close(); });
@@ -172,7 +172,7 @@ void TcpServerSession::start_read() {
   auto self = shared_from_this();
   socket_->async_read_some(
       net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {
-        if (!self->alive_) return;
+        if (self->closing_ || !self->alive_) return;
         if (ec) {
           self->do_close();
           return;
@@ -208,7 +208,7 @@ void TcpServerSession::do_write() {
   tx_.pop_front();
 
   auto on_write = [self](const boost::system::error_code& ec, std::size_t n) {
-    if (!self->alive_) return;
+    if (self->closing_ || !self->alive_) return;
     if (self->queue_bytes_ >= n) {
       self->queue_bytes_ -= n;
     } else {
@@ -252,6 +252,10 @@ void TcpServerSession::do_write() {
 
 void TcpServerSession::do_close() {
   if (!alive_.exchange(false)) return;
+  closing_ = true;
+
+  // Safely invoke on_close callback
+  auto close_cb = std::move(on_close_);
 
   // Clear all callbacks to prevent any further invocations
   on_bytes_ = nullptr;
@@ -266,12 +270,10 @@ void TcpServerSession::do_close() {
   // Release memory immediately
   tx_.clear();
   queue_bytes_ = 0;
-  // Don't report backpressure here as we are closing.
-  // report_backpressure(queue_bytes_);
-
-  if (on_close_) {
+  
+  if (close_cb) {
     try {
-      on_close_();
+      close_cb();
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_server_session", "on_close", "Exception in on_close callback: " + std::string(e.what()));
     } catch (...) {
@@ -281,7 +283,7 @@ void TcpServerSession::do_close() {
 }
 
 void TcpServerSession::report_backpressure(size_t queued_bytes) {
-  if (!alive_ || !on_bp_) return;
+  if (closing_ || !alive_ || !on_bp_) return;
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
     try {
