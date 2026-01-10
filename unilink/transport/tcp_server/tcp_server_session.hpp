@@ -89,6 +89,8 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   OnBackpressure on_bp_;
   OnClose on_close_;
   std::atomic<bool> alive_{false};
+  std::atomic<bool> closing_{false};
+  std::atomic<bool> cleanup_done_{false};
 };
 }  // namespace transport
 }  // namespace unilink

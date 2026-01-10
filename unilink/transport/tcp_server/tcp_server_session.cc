@@ -34,7 +34,8 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_
       writing_(false),
       queue_bytes_(0),
       bp_high_(backpressure_threshold),
-      alive_(false) {
+      alive_(false),
+      cleanup_done_(false) {
   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                        common::constants::MAX_BUFFER_SIZE);
   bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
@@ -49,7 +50,8 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interfa
       writing_(false),
       queue_bytes_(0),
       bp_high_(backpressure_threshold),
-      alive_(false) {
+      alive_(false),
+      cleanup_done_(false) {
   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                        common::constants::MAX_BUFFER_SIZE);
   bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
@@ -63,7 +65,7 @@ void TcpServerSession::start() {
 }
 
 void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
-  if (!alive_) return;  // Don't queue writes if session is not alive
+  if (!alive_ || closing_) return;  // Don't queue writes if session is not alive
 
   if (size > common::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
@@ -78,7 +80,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
       common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);
 
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
-        if (!self->alive_) return;  // Double-check in case session was closed
+        if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
         if (self->queue_bytes_ + buf.size() > self->bp_limit_) {
           UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
           self->do_close();
@@ -98,7 +100,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
   std::vector<uint8_t> fallback(data, data + size);
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
-    if (!self->alive_) return;  // Double-check in case session was closed
+    if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
     if (self->queue_bytes_ + buf.size() > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
       self->do_close();
@@ -113,14 +115,14 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
 }
 
 void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
-  if (!alive_) return;
+  if (!alive_ || closing_) return;
   const auto added = data.size();
   if (added > common::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return;
   }
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
-    if (!self->alive_) return;
+    if (!self->alive_ || self->closing_) return;
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
       self->do_close();
@@ -135,14 +137,14 @@ void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
 }
 
 void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (!alive_ || !data) return;
+  if (!alive_ || closing_ || !data) return;
   const auto added = data->size();
   if (added > common::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return;
   }
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
-    if (!self->alive_) return;
+    if (!self->alive_ || self->closing_) return;
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
       self->do_close();
@@ -156,21 +158,47 @@ void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
   });
 }
 
-void TcpServerSession::on_bytes(OnBytes cb) { on_bytes_ = std::move(cb); }
-void TcpServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(cb); }
-void TcpServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }
+void TcpServerSession::on_bytes(OnBytes cb) {
+  auto self = shared_from_this();
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {
+    if (self->closing_.load() || self->cleanup_done_.load()) return;
+    self->on_bytes_ = std::move(cb);
+  });
+}
+void TcpServerSession::on_backpressure(OnBackpressure cb) {
+  auto self = shared_from_this();
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {
+    if (self->closing_.load() || self->cleanup_done_.load()) return;
+    self->on_bp_ = std::move(cb);
+  });
+}
+void TcpServerSession::on_close(OnClose cb) {
+  auto self = shared_from_this();
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {
+    if (self->closing_.load() || self->cleanup_done_.load()) return;
+    self->on_close_ = std::move(cb);
+  });
+}
+
 bool TcpServerSession::alive() const { return alive_.load(); }
 
 void TcpServerSession::stop() {
+  if (closing_.exchange(true)) return;
   auto self = shared_from_this();
-  net::post(strand_, [self] { self->do_close(); });
+  net::post(strand_, [self] {
+    // Clear callbacks on the strand to block further user callbacks after stop.
+    self->on_bytes_ = nullptr;
+    self->on_bp_ = nullptr;
+    self->on_close_ = nullptr;
+    self->do_close();
+  });
 }
 
 void TcpServerSession::start_read() {
-  alive_.store(true);
   auto self = shared_from_this();
   socket_->async_read_some(
       net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {
+        if (self->closing_ || !self->alive_) return;
         if (ec) {
           self->do_close();
           return;
@@ -206,6 +234,7 @@ void TcpServerSession::do_write() {
   tx_.pop_front();
 
   auto on_write = [self](const boost::system::error_code& ec, std::size_t n) {
+    if (self->closing_ || !self->alive_) return;
     if (self->queue_bytes_ >= n) {
       self->queue_bytes_ -= n;
     } else {
@@ -225,30 +254,43 @@ void TcpServerSession::do_write() {
     auto shared_pooled = std::make_shared<memory::PooledBuffer>(std::move(pooled_buf));
     auto data = shared_pooled->data();
     auto size = shared_pooled->size();
-    socket_->async_write(
-        net::buffer(data, size),
-        net::bind_executor(strand_, [self, buf = shared_pooled, on_write](auto ec, auto n) { on_write(ec, n); }));
+    socket_->async_write(net::buffer(data, size),
+                         net::bind_executor(strand_, [self, buf = shared_pooled, on_write](auto ec, auto auto_n) {
+                           on_write(ec, auto_n);
+                         }));
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
     auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
     auto data = shared_buf->data();
     auto size = shared_buf->size();
     socket_->async_write(net::buffer(data, size),
-                         net::bind_executor(strand_, [self, buf = std::move(shared_buf), on_write](auto ec, auto n) {
-                           on_write(ec, n);
-                         }));
+                         net::bind_executor(strand_, [self, buf = std::move(shared_buf), on_write](
+                                                         auto ec, auto auto_n) { on_write(ec, auto_n); }));
   } else {
     auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
     auto shared_vec = std::make_shared<std::vector<uint8_t>>(std::move(vec_buf));
     auto data = shared_vec->data();
     auto size = shared_vec->size();
-    socket_->async_write(
-        net::buffer(data, size),
-        net::bind_executor(strand_, [self, buf = shared_vec, on_write](auto ec, auto n) { on_write(ec, n); }));
+    socket_->async_write(net::buffer(data, size),
+                         net::bind_executor(strand_, [self, buf = shared_vec, on_write](auto ec, auto auto_n) {
+                           on_write(ec, auto_n);
+                         }));
   }
 }
 
 void TcpServerSession::do_close() {
-  if (!alive_.exchange(false)) return;
+  if (cleanup_done_.exchange(true)) return;  // Ensures cleanup runs only once
+
+  alive_.store(false);
+  closing_.store(true);  // Redundant, but ensures consistency
+
+  // Safely invoke on_close callback
+  auto close_cb = std::move(on_close_);
+
+  // Clear all callbacks to prevent any further invocations
+  on_bytes_ = nullptr;
+  on_bp_ = nullptr;
+  on_close_ = nullptr;
+
   UNILINK_LOG_INFO("tcp_server_session", "disconnect", "Client disconnected");
   boost::system::error_code ec;
   socket_->shutdown(tcp::socket::shutdown_both, ec);
@@ -257,11 +299,10 @@ void TcpServerSession::do_close() {
   // Release memory immediately
   tx_.clear();
   queue_bytes_ = 0;
-  report_backpressure(queue_bytes_);
 
-  if (on_close_) {
+  if (close_cb) {
     try {
-      on_close_();
+      close_cb();
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_server_session", "on_close", "Exception in on_close callback: " + std::string(e.what()));
     } catch (...) {
@@ -271,7 +312,7 @@ void TcpServerSession::do_close() {
 }
 
 void TcpServerSession::report_backpressure(size_t queued_bytes) {
-  if (!on_bp_) return;
+  if (closing_ || !alive_ || !on_bp_) return;
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
     try {

@@ -19,9 +19,10 @@ This rule ensures that once an application explicitly requests a channel to stop
 
 **Implementation Details:**
 *   All asynchronous operations (reads, writes, timers, resolves, accepts) must be cancelled or aborted when `stop()` is initiated.
-*   Callback handlers must include guards (e.g., checking `stopping_` or `stop_requested_` flags) to prevent execution if `stop()` has been called.
+*   Callback handlers must include guards (e.g., checking `stopping_` or `alive_` flags) to prevent execution if `stop()` has been called.
 *   Any terminal state change (e.g., `LinkState::Closed` or `LinkState::Error`) that occurs *as a direct consequence of `stop()` being called* should typically NOT result in a final `on_state` callback, as the caller has already initiated the shutdown and implicitly knows the channel is closing.
 *   In scenarios where `stop()` fails to fully complete its asynchronous cleanup (e.g., due to `shared_from_this()` failure in destructors), synchronous cleanup is performed as a fallback, and the guarantee of no further callbacks is maintained.
+*   **TcpServerSession**: `alive_` guards are used within asynchronous handlers (`start_read`, `do_write` completion) to prevent callbacks after `do_close()` has been initiated. `do_close()` no longer triggers a backpressure relief callback.
 
 **Transport-Specific Implementations:**
 
@@ -33,6 +34,7 @@ This rule ensures that once an application explicitly requests a channel to stop
 *   **TcpServer:**
     *   `stopping_` flag is used to gate callbacks in `notify_state()` and asynchronous handlers.
     *   `stop()` method includes a `try-catch` block around `shared_from_this()` to handle cases where the object is being destroyed, ensuring synchronous cleanup without `std::bad_weak_ptr` crashes.
+    *   **Callbacks**: Callback member variables (`on_bytes_`, `on_multi_data_`, etc.) are protected by a mutex to prevent data races during registration and invocation.
 
 ## 4. Backpressure Policy
 To prevent memory exhaustion and manage flow control, channels implement a backpressure mechanism based on the size of the internal write queue.
@@ -47,7 +49,8 @@ To prevent memory exhaustion and manage flow control, channels implement a backp
 **Transport-Specific Implementation Details:**
 *   **TcpClient:** Implements a high watermark at `backpressure_threshold` and a low watermark at `threshold / 2` (or 1 if threshold is small). Checks are performed after every write operation (enqueue/dequeue).
 *   **Serial:** Should follow the same logic as TcpClient.
-*   **TcpServer:** Should implement backpressure per-session. The server-level backpressure callback should be aggregated or proxied from individual sessions.
+*   **TcpServer:** Implements backpressure per-session (`TcpServerSession`).
+    *   **Note:** If `on_backpressure` callback is registered on `TcpServer` after client connections have been established, existing sessions will not receive this updated callback. It is recommended to register all callbacks before calling `start()` on the `TcpServer`.
 
 ## 5. Error Handling Consistency
 (To be defined in future iterations)
