@@ -22,6 +22,7 @@
 #include <thread>
 #include <vector>
 
+#include "test_constants.hpp"
 #include "test_utils.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
@@ -40,7 +41,7 @@ class TransportTcpServerTest : public ::testing::Test {
       server_.reset();
     }
     // Give some time for io_context to cleanup
-    TestUtils::waitFor(50);
+    TestUtils::waitFor(constants::kShortTimeout.count());
   }
 
   std::shared_ptr<TcpServer> server_;
@@ -54,7 +55,7 @@ TEST_F(TransportTcpServerTest, LifecycleStartStop) {
 
   EXPECT_NO_THROW(server_->start());
   // Wait a bit to ensure it enters listening state
-  TestUtils::waitFor(50);
+  TestUtils::waitFor(constants::kShortTimeout.count());
 
   EXPECT_NO_THROW(server_->stop());
 }
@@ -107,7 +108,7 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
 
   // Give it a moment to ensure port is occupied
 
-  TestUtils::waitFor(100);
+  TestUtils::waitFor(constants::kDefaultTimeout.count());
 
   // Verify port is actually occupied by connecting to it (with retries)
   {
@@ -123,7 +124,7 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
       if (i > 0 && i % 10 == 0) {
         std::cerr << "Probe connection retry " << i << " failed: " << probe_ec.message() << std::endl;
       }
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      std::this_thread::sleep_for(constants::kDefaultTimeout);
     }
 
     ASSERT_FALSE(probe_ec) << "Failed to connect to occupying acceptor on port " << port << ": " << probe_ec.message();
@@ -134,7 +135,7 @@ TEST_F(TransportTcpServerTest, BindFailureTriggerError) {
 
   cfg.port = port;
 
-  cfg.port_retry_interval_ms = 50;
+  cfg.port_retry_interval_ms = constants::kShortTimeout.count();
 
   cfg.max_port_retries = 0;  // Fail immediately after first attempt
 
@@ -165,7 +166,7 @@ TEST_F(TransportTcpServerTest, MaxClientsLimit) {
 
   server_ = TcpServer::create(cfg);
   server_->start();
-  TestUtils::waitFor(50);
+  TestUtils::waitFor(constants::kShortTimeout.count());
 
   // Client 1 connects
   net::io_context client_ioc;
@@ -195,7 +196,7 @@ TEST_F(TransportTcpServerTest, MaxClientsLimit) {
 
     // Run io_context to process the async read
     // Give enough time for server to accept and then close the connection
-    client_ioc.run_for(std::chrono::milliseconds(500));
+    client_ioc.run_for(constants::kLongTimeout);
 
     EXPECT_TRUE(read_completed.load());
     // Expect EOF or error
@@ -215,7 +216,7 @@ TEST_F(TransportTcpServerTest, PortBindingRetrySuccess) {
     cfg.port = port;
     cfg.enable_port_retry = true;
     cfg.max_port_retries = 15;  // Increased to 15 to allow sufficient time for port release
-    cfg.port_retry_interval_ms = 50;
+    cfg.port_retry_interval_ms = constants::kShortTimeout.count();
 
     server_ = TcpServer::create(cfg);
     server_->start();
@@ -223,7 +224,7 @@ TEST_F(TransportTcpServerTest, PortBindingRetrySuccess) {
     // Server should be in Connecting/Retry loop (or internal wait)
     // We can't easily check internal state, but we can release the port and see if it binds
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(constants::kDefaultTimeout);
   }  // acceptor closes here
 
   // Now server should succeed in binding

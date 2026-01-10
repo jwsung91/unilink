@@ -21,6 +21,7 @@
 #include <memory>
 #include <thread>
 
+#include "test_constants.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -37,7 +38,7 @@ class SimpleServerTest : public ::testing::Test {
       std::cout << "Stopping server..." << std::endl;
       server_->stop();
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    std::this_thread::sleep_for(test::constants::kShortTimeout);
   }
 
   uint16_t getTestPort() {
@@ -70,7 +71,7 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
   server_->start();
 
   // Brief wait
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  std::this_thread::sleep_for(test::constants::kDefaultTimeout);
 
   std::cout << "Server state: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
 
@@ -95,7 +96,7 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   std::cout << "Server created with auto-start" << std::endl;
 
   // Brief wait
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+  std::this_thread::sleep_for(test::constants::kMediumTimeout);
 
   std::cout << "Server state after 2s: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
 
@@ -134,7 +135,7 @@ TEST_F(SimpleServerTest, ServerWithCallbacks) {
   std::cout << "Server created with callbacks" << std::endl;
 
   // Brief wait
-  std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+  std::this_thread::sleep_for(3000ms);
 
   std::cout << "Server state after 3s: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
   std::cout << "Connect callback called: " << (connect_called->load() ? "yes" : "no") << std::endl;
@@ -177,7 +178,7 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
 
   // Check status after start (multiple times)
   for (int i = 0; i < 5; ++i) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(test::constants::kDefaultTimeout);
     std::cout << "After " << (i + 1) << "s - is_connected(): " << (server_->is_connected() ? "true" : "false")
               << std::endl;
   }
@@ -204,7 +205,7 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
 
   // Start server
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  std::this_thread::sleep_for(test::constants::kDefaultTimeout);
 
   std::cout << "Single client server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);
@@ -228,7 +229,7 @@ TEST_F(SimpleServerTest, ClientLimitMultiClient) {
 
   // Start server
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  std::this_thread::sleep_for(test::constants::kDefaultTimeout);
 
   std::cout << "Multi client server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);
@@ -252,7 +253,7 @@ TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
 
   // Start server
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  std::this_thread::sleep_for(test::constants::kDefaultTimeout);
 
   std::cout << "Unlimited clients server started" << std::endl;
   EXPECT_TRUE(server_ != nullptr);

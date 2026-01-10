@@ -538,8 +538,12 @@ TEST_F(StressTest, RealNetworkHighThroughput) {
   // Send data
   for (int i = 0; i < chunk_count; ++i) {
     client->send(chunk);
-    // Small yield to prevent flooding local loopback too fast causing dropped packets in some OS buffers
-    if (i % 10 == 0) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    // Throttle the sender to prevent overwhelming the OS network stack on slower systems (e.g., macOS CI)
+    // The library has a queue limit of 4MB. Sending 6.4MB instantly will overflow it if the OS
+    // can't drain the socket buffer fast enough.
+    // 500us delay allows for ~120MB/s theoretical max, which is plenty for stress testing
+    // but slow enough to allow drainage.
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
   }
 
   // Wait for reception
