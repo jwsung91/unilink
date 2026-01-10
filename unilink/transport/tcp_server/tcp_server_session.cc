@@ -171,6 +171,7 @@ void TcpServerSession::start_read() {
   auto self = shared_from_this();
   socket_->async_read_some(
       net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {
+        if (!self->alive_) return;
         if (ec) {
           self->do_close();
           return;
@@ -206,6 +207,7 @@ void TcpServerSession::do_write() {
   tx_.pop_front();
 
   auto on_write = [self](const boost::system::error_code& ec, std::size_t n) {
+    if (!self->alive_) return;
     if (self->queue_bytes_ >= n) {
       self->queue_bytes_ -= n;
     } else {
@@ -257,7 +259,8 @@ void TcpServerSession::do_close() {
   // Release memory immediately
   tx_.clear();
   queue_bytes_ = 0;
-  report_backpressure(queue_bytes_);
+  // Don't report backpressure here as we are closing.
+  // report_backpressure(queue_bytes_);
 
   if (on_close_) {
     try {
@@ -271,7 +274,7 @@ void TcpServerSession::do_close() {
 }
 
 void TcpServerSession::report_backpressure(size_t queued_bytes) {
-  if (!on_bp_) return;
+  if (!alive_ || !on_bp_) return;
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
     try {
