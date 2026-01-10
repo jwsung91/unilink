@@ -162,12 +162,13 @@ void TcpServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }
 bool TcpServerSession::alive() const { return alive_.load(); }
 
 void TcpServerSession::stop() {
+  if (!alive_.exchange(false)) return;
+  on_bp_ = nullptr; // Explicitly nullify backpressure callback on stop
   auto self = shared_from_this();
   net::post(strand_, [self] { self->do_close(); });
 }
 
 void TcpServerSession::start_read() {
-  alive_.store(true);
   auto self = shared_from_this();
   socket_->async_read_some(
       net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {
@@ -251,6 +252,12 @@ void TcpServerSession::do_write() {
 
 void TcpServerSession::do_close() {
   if (!alive_.exchange(false)) return;
+
+  // Clear all callbacks to prevent any further invocations
+  on_bytes_ = nullptr;
+  on_bp_ = nullptr;
+  on_close_ = nullptr;
+
   UNILINK_LOG_INFO("tcp_server_session", "disconnect", "Client disconnected");
   boost::system::error_code ec;
   socket_->shutdown(tcp::socket::shutdown_both, ec);

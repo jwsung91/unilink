@@ -93,6 +93,9 @@ class UNILINK_API TcpServer : public Channel,
   void set_client_limit(size_t max_clients);
   void set_unlimited_clients();
 
+  // Public getter for state for testing
+  base::LinkState get_state() const;
+
  private:
   explicit TcpServer(const TcpServerConfig& cfg);
   TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,

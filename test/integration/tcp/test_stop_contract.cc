@@ -49,10 +49,7 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
   // 1. Create Server using Transport Layer directly to access on_backpressure
   config::TcpServerConfig cfg;
   cfg.port = port;
-  cfg.max_connections = 0;  // Unlimited
-  // Use a low backpressure threshold to trigger it easily (if configurable)
-  // Default is 4MB. We can't change it easily via config struct unless it has a field.
-  // Assuming default.
+  cfg.max_connections = 0; // Unlimited
 
   auto server = transport::TcpServer::create(cfg);
 
@@ -62,42 +59,46 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
       // If this happens, the fix failed.
       ADD_FAILURE() << "Backpressure callback received AFTER stop! Queued: " << queued;
     }
-    backpressure_triggered = true;
-    backpressure_calls++;
+    // Only count if backpressure state changed (e.g. triggered or relieved)
+    if (queued >= cfg.backpressure_threshold || queued <= (cfg.backpressure_threshold / 2)) {
+      backpressure_calls++;
+    }
+    if (queued >= cfg.backpressure_threshold) {
+        backpressure_triggered = true;
+    }
   });
 
   server->start();
-  TestUtils::waitFor(100);
+  // Wait for server to start listening
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->get_state() == base::LinkState::Listening; }, 1000));
 
   // 2. Create Client (Builder is fine here)
   auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port).build();
   client->start();
-  TestUtils::waitFor(100);
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 1000));
 
   // 3. Trigger Backpressure
-  // Generate large data
-  std::vector<uint8_t> data(1024 * 1024, 'X');  // 1MB
-
-  // Fill the queue
-  // We broadcast to all (1) clients.
-  // Transport layer broadcast returns bool.
-  for (int i = 0; i < 10; ++i) {
+  std::string data(1024 * 1024, 'X');  // 1MB chunk
+  
+  // Send enough data to trigger backpressure (default is 4MB high watermark)
+  // Sending 5 chunks (5MB) should guarantee backpressure
+  for (int i = 0; i < 5; ++i) {
     server->broadcast(std::string(data.begin(), data.end()));
   }
 
-  // Wait a bit for backpressure to likely trigger
-  TestUtils::waitFor(100);
+  // Wait for backpressure to be triggered
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return backpressure_triggered.load(); }, 2000));
+  // Assert that backpressure callback was actually called before stopping
+  EXPECT_GT(backpressure_calls.load(), 0) << "Backpressure callback was not triggered before stop.";
 
   // 4. Stop Server
   stop_called = true;
   server->stop();
 
-  // Wait a bit to see if callback fires
+  // Wait a bit to ensure no late callbacks
   TestUtils::waitFor(200);
-
-  // Clean up
-  client->stop();
-  // server is already stopped
+  
+  // Cleanup is handled by test fixture / shared_ptr
 }
 
 /**
@@ -122,32 +123,44 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
                     .build();
 
   server->start();
+  // Wait for server to be listening
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->is_listening(); }, 1000));
 
   auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port).build();
   client->start();
-  TestUtils::waitFor(100);
+  // Wait for client to connect
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 1000));
 
   // Client sends data continuously
   std::atomic<bool> sending{true};
   std::thread sender([&]() {
     std::string chunk(1024, 'A');
-    while (sending) {
+    while (sending.load()) {
       client->send(chunk);
+      // Small delay to allow receiver to process and keep the stream flowing
       std::this_thread::sleep_for(std::chrono::microseconds(100));
     }
   });
 
-  // Let some data flow
-  TestUtils::waitFor(500);
+  // Let some data flow and verify it's being received
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return data_calls.load() > 5; }, 2000));
+  EXPECT_GT(data_calls.load(), 0) << "Data callbacks were not triggered before stop.";
 
   // TRIGGER STOP
   stop_called = true;
   server->stop();
 
-  // Stop sender
+  // Stop sender thread
   sending = false;
-  sender.join();
+  if (sender.joinable()) {
+      sender.join();
+  }
+  
+  // Stop client explicitly
+  client->stop();
 
   // Wait to ensure no late callbacks
-  TestUtils::waitFor(200);
+  TestUtils::waitFor(200); // Fixed short sleep for final callback quiet period
+
+  // Cleanup is handled by test fixture / shared_ptr
 }

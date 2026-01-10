@@ -131,6 +131,18 @@ void TcpServer::stop() {
     return;  // Already stopping/stopped
   }
 
+  // Clear all callbacks synchronously to prevent any further invocations
+  // during shutdown and to uphold the "no callbacks after stop" contract.
+  {
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
+    on_bytes_ = nullptr;
+    on_state_ = nullptr;
+    on_bp_ = nullptr;
+    on_multi_connect_ = nullptr;
+    on_multi_data_ = nullptr;
+    on_multi_disconnect_ = nullptr;
+  }
+
   auto cleanup = [this]() {
     boost::system::error_code ec;
     if (acceptor_ && acceptor_->is_open()) {
@@ -645,6 +657,11 @@ void TcpServer::set_unlimited_clients() {
   client_limit_enabled_ = false;
   max_clients_ = 0;
 }
+
+base::LinkState TcpServer::get_state() const {
+  return state_.get_state();
+}
+
 
 }  // namespace transport
 }  // namespace unilink
