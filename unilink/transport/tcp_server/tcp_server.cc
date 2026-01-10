@@ -131,6 +131,9 @@ void TcpServer::stop() {
     return;  // Already stopping/stopped
   }
 
+  // Proactively stop sessions to block callbacks as early as possible.
+  std::vector<std::shared_ptr<TcpServerSession>> sessions_pre_stop;
+
   // Clear all callbacks synchronously to prevent any further invocations
   // during shutdown and to uphold the "no callbacks after stop" contract.
   {
@@ -141,6 +144,16 @@ void TcpServer::stop() {
     on_multi_connect_ = nullptr;
     on_multi_data_ = nullptr;
     on_multi_disconnect_ = nullptr;
+    sessions_pre_stop.reserve(sessions_.size());
+    for (auto& kv : sessions_) {
+      sessions_pre_stop.push_back(kv.second);
+    }
+  }
+
+  for (auto& session : sessions_pre_stop) {
+    if (session) {
+      session->stop();
+    }
   }
 
   auto cleanup = [this]() {
