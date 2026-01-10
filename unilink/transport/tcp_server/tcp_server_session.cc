@@ -160,15 +160,24 @@ void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
 
 void TcpServerSession::on_bytes(OnBytes cb) {
   auto self = shared_from_this();
-  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable { self->on_bytes_ = std::move(cb); });
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {
+    if (self->closing_.load() || self->cleanup_done_.load()) return;
+    self->on_bytes_ = std::move(cb);
+  });
 }
 void TcpServerSession::on_backpressure(OnBackpressure cb) {
   auto self = shared_from_this();
-  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable { self->on_bp_ = std::move(cb); });
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {
+    if (self->closing_.load() || self->cleanup_done_.load()) return;
+    self->on_bp_ = std::move(cb);
+  });
 }
 void TcpServerSession::on_close(OnClose cb) {
   auto self = shared_from_this();
-  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable { self->on_close_ = std::move(cb); });
+  net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {
+    if (self->closing_.load() || self->cleanup_done_.load()) return;
+    self->on_close_ = std::move(cb);
+  });
 }
 
 bool TcpServerSession::alive() const { return alive_.load(); }
@@ -177,10 +186,10 @@ void TcpServerSession::stop() {
   if (closing_.exchange(true)) return;
   auto self = shared_from_this();
   net::post(strand_, [self] {
-    // Clear data/backpressure callbacks on the strand to block further user callbacks.
+    // Clear callbacks on the strand to block further user callbacks after stop.
     self->on_bytes_ = nullptr;
     self->on_bp_ = nullptr;
-    // Keep on_close_ so do_close can notify once.
+    self->on_close_ = nullptr;
     self->do_close();
   });
 }

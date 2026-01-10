@@ -38,9 +38,19 @@ class StopContractTest : public BaseTest {
  protected:
   void SetUp() override {
     BaseTest::SetUp();
+    auto& logger = unilink::diagnostics::Logger::instance();
+    previous_log_level_ = logger.get_level();
     // Enable debug logging for detailed trace
-    unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+    logger.set_level(unilink::diagnostics::LogLevel::DEBUG);
   }
+
+  void TearDown() override {
+    unilink::diagnostics::Logger::instance().set_level(previous_log_level_);
+    BaseTest::TearDown();
+  }
+
+ private:
+  unilink::diagnostics::LogLevel previous_log_level_{unilink::diagnostics::LogLevel::INFO};
 };
 
 /**
@@ -164,6 +174,9 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
   }
   // Stop client explicitly
   client->stop();
+
+  // Wait to ensure no late callbacks
+  TestUtils::waitFor(200);
 
   // Cleanup is handled by test fixture / shared_ptr
 }
