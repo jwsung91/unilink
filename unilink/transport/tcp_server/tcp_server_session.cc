@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2000.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -177,11 +177,10 @@ void TcpServerSession::stop() {
   if (closing_.exchange(true)) return;
   auto self = shared_from_this();
   net::post(strand_, [self] {
-    // Synchronously clear callbacks on the strand to prevent any further invocations.
-    // This order ensures on_bp_ is nulled before do_close (also on strand) runs.
+    // Clear data/backpressure callbacks on the strand to block further user callbacks.
     self->on_bytes_ = nullptr;
     self->on_bp_ = nullptr;
-    self->on_close_ = nullptr;
+    // Keep on_close_ so do_close can notify once.
     self->do_close();
   });
 }

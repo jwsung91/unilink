@@ -98,20 +98,21 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
   // Assert that backpressure callback was actually called before stopping
   EXPECT_GT(backpressure_calls.load(), 0) << "Backpressure callback was not triggered before stop.";
 
-      // 4. Stop Server
-      server->stop();
-      stop_called = true;
-    
-      // Wait a bit to ensure no late callbacks
-      TestUtils::waitFor(200);
-      
-      // Cleanup is handled by test fixture / shared_ptr
-    }  
-  /**
+  // 4. Stop Server
+  stop_called = true;
+  server->stop();
+
+  // Wait a bit to ensure no late callbacks
+  TestUtils::waitFor(200);
+
+  // Cleanup is handled by test fixture / shared_ptr
+}
+
+/**
    * @brief Verify that no on_bytes callbacks occur after session is stopped.
    * This tests the race condition fix in start_read.
    */
-  TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
+TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
     uint16_t port = TestUtils::getAvailableTestPort();
     std::atomic<bool> stop_called{false};
     std::atomic<int> data_calls{0};
