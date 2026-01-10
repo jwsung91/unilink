@@ -245,33 +245,34 @@ void TcpServerSession::do_write() {
     auto shared_pooled = std::make_shared<memory::PooledBuffer>(std::move(pooled_buf));
     auto data = shared_pooled->data();
     auto size = shared_pooled->size();
-    socket_->async_write(
-        net::buffer(data, size),
-        net::bind_executor(strand_, [self, buf = shared_pooled, on_write](auto ec, auto auto_n) { on_write(ec, auto_n); }));
+    socket_->async_write(net::buffer(data, size),
+                         net::bind_executor(strand_, [self, buf = shared_pooled, on_write](auto ec, auto auto_n) {
+                           on_write(ec, auto_n);
+                         }));
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
     auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
     auto data = shared_buf->data();
     auto size = shared_buf->size();
     socket_->async_write(net::buffer(data, size),
-                         net::bind_executor(strand_, [self, buf = std::move(shared_buf), on_write](auto ec, auto auto_n) {
-                           on_write(ec, auto_n);
-                         }));
+                         net::bind_executor(strand_, [self, buf = std::move(shared_buf), on_write](
+                                                         auto ec, auto auto_n) { on_write(ec, auto_n); }));
   } else {
     auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
     auto shared_vec = std::make_shared<std::vector<uint8_t>>(std::move(vec_buf));
     auto data = shared_vec->data();
     auto size = shared_vec->size();
-    socket_->async_write(
-        net::buffer(data, size),
-        net::bind_executor(strand_, [self, buf = shared_vec, on_write](auto ec, auto auto_n) { on_write(ec, auto_n); }));
+    socket_->async_write(net::buffer(data, size),
+                         net::bind_executor(strand_, [self, buf = shared_vec, on_write](auto ec, auto auto_n) {
+                           on_write(ec, auto_n);
+                         }));
   }
 }
 
 void TcpServerSession::do_close() {
-  if (cleanup_done_.exchange(true)) return; // Ensures cleanup runs only once
+  if (cleanup_done_.exchange(true)) return;  // Ensures cleanup runs only once
 
   alive_.store(false);
-  closing_.store(true); // Redundant, but ensures consistency
+  closing_.store(true);  // Redundant, but ensures consistency
 
   // Safely invoke on_close callback
   auto close_cb = std::move(on_close_);
@@ -289,7 +290,7 @@ void TcpServerSession::do_close() {
   // Release memory immediately
   tx_.clear();
   queue_bytes_ = 0;
-  
+
   if (close_cb) {
     try {
       close_cb();
