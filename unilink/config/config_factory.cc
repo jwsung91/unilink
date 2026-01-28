@@ -51,7 +51,7 @@ std::shared_ptr<ConfigManagerInterface> ConfigFactory::get_singleton() {
   return singleton_instance_;
 }
 
-void ConfigPresets::setup_tcp_client_defaults(std::shared_ptr<ConfigManagerInterface> config) {
+void ConfigPresets::setup_tcp_client_defaults(const std::shared_ptr<ConfigManagerInterface>& config) {
   // TCP Client default configuration
   config->set("tcp.client.host", std::string("localhost"));
   config->set("tcp.client.port", 8080);
@@ -62,7 +62,7 @@ void ConfigPresets::setup_tcp_client_defaults(std::shared_ptr<ConfigManagerInter
   config->set("tcp.client.buffer_size", 4096);
 }
 
-void ConfigPresets::setup_tcp_server_defaults(std::shared_ptr<ConfigManagerInterface> config) {
+void ConfigPresets::setup_tcp_server_defaults(const std::shared_ptr<ConfigManagerInterface>& config) {
   // TCP Server default configuration
   config->set("tcp.server.host", std::string("0.0.0.0"));
   config->set("tcp.server.port", 8080);
@@ -73,7 +73,7 @@ void ConfigPresets::setup_tcp_server_defaults(std::shared_ptr<ConfigManagerInter
   config->set("tcp.server.backlog", 128);
 }
 
-void ConfigPresets::setup_serial_defaults(std::shared_ptr<ConfigManagerInterface> config) {
+void ConfigPresets::setup_serial_defaults(const std::shared_ptr<ConfigManagerInterface>& config) {
   // Serial communication default configuration
   config->set("serial.port", std::string("/dev/ttyUSB0"));
   config->set("serial.baud_rate", 9600);
@@ -86,7 +86,7 @@ void ConfigPresets::setup_serial_defaults(std::shared_ptr<ConfigManagerInterface
   config->set("serial.max_retries", 3);
 }
 
-void ConfigPresets::setup_logging_defaults(std::shared_ptr<ConfigManagerInterface> config) {
+void ConfigPresets::setup_logging_defaults(const std::shared_ptr<ConfigManagerInterface>& config) {
   // Logging default configuration
   config->set("logging.level", std::string("info"));
   config->set("logging.enable_console", true);
@@ -97,7 +97,7 @@ void ConfigPresets::setup_logging_defaults(std::shared_ptr<ConfigManagerInterfac
   config->set("logging.format", std::string("[%Y-%m-%d %H:%M:%S] [%l] %v"));
 }
 
-void ConfigPresets::setup_all_defaults(std::shared_ptr<ConfigManagerInterface> config) {
+void ConfigPresets::setup_all_defaults(const std::shared_ptr<ConfigManagerInterface>& config) {
   setup_tcp_client_defaults(config);
   setup_tcp_server_defaults(config);
   setup_serial_defaults(config);

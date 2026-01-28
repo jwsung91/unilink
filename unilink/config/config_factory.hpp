@@ -63,27 +63,27 @@ class UNILINK_API ConfigPresets {
   /**
    * Setup default configuration for TCP client
    */
-  static void setup_tcp_client_defaults(std::shared_ptr<ConfigManagerInterface> config);
+  static void setup_tcp_client_defaults(const std::shared_ptr<ConfigManagerInterface>& config);
 
   /**
    * Setup default configuration for TCP server
    */
-  static void setup_tcp_server_defaults(std::shared_ptr<ConfigManagerInterface> config);
+  static void setup_tcp_server_defaults(const std::shared_ptr<ConfigManagerInterface>& config);
 
   /**
    * Setup default configuration for Serial communication
    */
-  static void setup_serial_defaults(std::shared_ptr<ConfigManagerInterface> config);
+  static void setup_serial_defaults(const std::shared_ptr<ConfigManagerInterface>& config);
 
   /**
    * Setup default configuration for logging
    */
-  static void setup_logging_defaults(std::shared_ptr<ConfigManagerInterface> config);
+  static void setup_logging_defaults(const std::shared_ptr<ConfigManagerInterface>& config);
 
   /**
    * Setup default configuration for all components
    */
-  static void setup_all_defaults(std::shared_ptr<ConfigManagerInterface> config);
+  static void setup_all_defaults(const std::shared_ptr<ConfigManagerInterface>& config);
 };
 
 }  // namespace config
