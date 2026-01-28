@@ -310,20 +310,40 @@ class UNILINK_API Logger {
 /**
  * @brief Convenience macros for logging
  */
-#define UNILINK_LOG_DEBUG(component, operation, message) \
-  unilink::diagnostics::Logger::instance().debug(component, operation, message)
+#define UNILINK_LOG_DEBUG(component, operation, message)                                                 \
+  do {                                                                                                   \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::DEBUG) { \
+      unilink::diagnostics::Logger::instance().debug(component, operation, message);                     \
+    }                                                                                                    \
+  } while (0)
 
-#define UNILINK_LOG_INFO(component, operation, message) \
-  unilink::diagnostics::Logger::instance().info(component, operation, message)
+#define UNILINK_LOG_INFO(component, operation, message)                                                 \
+  do {                                                                                                  \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::INFO) { \
+      unilink::diagnostics::Logger::instance().info(component, operation, message);                     \
+    }                                                                                                   \
+  } while (0)
 
-#define UNILINK_LOG_WARNING(component, operation, message) \
-  unilink::diagnostics::Logger::instance().warning(component, operation, message)
+#define UNILINK_LOG_WARNING(component, operation, message)                                                 \
+  do {                                                                                                     \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::WARNING) { \
+      unilink::diagnostics::Logger::instance().warning(component, operation, message);                     \
+    }                                                                                                      \
+  } while (0)
 
-#define UNILINK_LOG_ERROR(component, operation, message) \
-  unilink::diagnostics::Logger::instance().error(component, operation, message)
+#define UNILINK_LOG_ERROR(component, operation, message)                                                 \
+  do {                                                                                                   \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::ERROR) { \
+      unilink::diagnostics::Logger::instance().error(component, operation, message);                     \
+    }                                                                                                    \
+  } while (0)
 
-#define UNILINK_LOG_CRITICAL(component, operation, message) \
-  unilink::diagnostics::Logger::instance().critical(component, operation, message)
+#define UNILINK_LOG_CRITICAL(component, operation, message)                                                 \
+  do {                                                                                                      \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::CRITICAL) { \
+      unilink::diagnostics::Logger::instance().critical(component, operation, message);                     \
+    }                                                                                                       \
+  } while (0)
 
 /**
  * @brief Conditional logging macros (only evaluate message if level is enabled)
