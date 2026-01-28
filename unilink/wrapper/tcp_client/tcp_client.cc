@@ -83,10 +83,8 @@ void TcpClient::start() {
 
   channel_->start();
   if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
-    external_thread_ = std::thread([ioc = external_ioc_]() {
-      boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
-      ioc->run();
-    });
+    work_guard_.emplace(external_ioc_->get_executor());
+    external_thread_ = std::thread([ioc = external_ioc_]() { ioc->run(); });
   }
   started_ = true;
 }
@@ -95,19 +93,18 @@ void TcpClient::stop() {
   if (!started_ || !channel_) return;
 
   channel_->stop();
-  // Brief wait for async operations to complete
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  channel_.reset();
-  started_ = false;
 
   if (use_external_context_ && manage_external_context_) {
-    if (external_ioc_) {
-      external_ioc_->stop();
+    if (work_guard_) {
+      work_guard_.reset();
     }
     if (external_thread_.joinable()) {
       external_thread_.join();
     }
   }
+
+  channel_.reset();
+  started_ = false;
 }
 
 void TcpClient::send(const std::string& data) {
