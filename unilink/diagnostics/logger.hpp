@@ -354,7 +354,10 @@ class UNILINK_API Logger {
     auto _perf_duration_##operation =                                                                           \
         std::chrono::duration_cast<std::chrono::microseconds>(_perf_end_##operation - _perf_start_##operation)  \
             .count();                                                                                           \
-    UNILINK_LOG_DEBUG(component, operation, "Duration: " + std::to_string(_perf_duration_##operation) + " μs"); \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::DEBUG) {        \
+      UNILINK_LOG_DEBUG(component, operation,                                                                   \
+                        "Duration: " + std::to_string(_perf_duration_##operation) + " μs");                     \
+    }                                                                                                           \
   } while (0)
 
 }  // namespace diagnostics
