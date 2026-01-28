@@ -475,9 +475,7 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
   server_->start();
 
   std::atomic<bool> connected{false};
-  client_ = unilink::tcp_client("localhost", test_port_)
-                .on_connect([&]() { connected = true; })
-                .build();
+  client_ = unilink::tcp_client("localhost", test_port_).on_connect([&]() { connected = true; }).build();
 
   ASSERT_NE(client_, nullptr);
 
