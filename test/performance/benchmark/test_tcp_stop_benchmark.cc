@@ -15,27 +15,26 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <boost/asio.hpp>
 #include <chrono>
-#include <memory>
-#include <thread>
 #include <iostream>
+#include <memory>
 #include <numeric>
+#include <thread>
 #include <vector>
 
-#include "unilink/wrapper/tcp_client/tcp_client.hpp"
 #include "test_utils.hpp"
+#include "unilink/wrapper/tcp_client/tcp_client.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
 
 class TcpClientStopBenchmark : public ::testing::Test {
  protected:
-  void SetUp() override {
-  }
+  void SetUp() override {}
 
-  void TearDown() override {
-  }
+  void TearDown() override {}
 };
 
 TEST_F(TcpClientStopBenchmark, StopLatency) {
@@ -64,7 +63,7 @@ TEST_F(TcpClientStopBenchmark, StopLatency) {
     auto end = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-    latencies.push_back(duration / 1000.0); // ms
+    latencies.push_back(duration / 1000.0);  // ms
 
     std::cout << "Iteration " << i + 1 << ": " << (duration / 1000.0) << " ms" << std::endl;
   }
