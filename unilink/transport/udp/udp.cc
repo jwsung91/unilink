@@ -407,20 +407,26 @@ void UdpChannel::do_write() {
 
   if (std::holds_alternative<memory::PooledBuffer>(current)) {
     auto pooled = std::get<memory::PooledBuffer>(std::move(current));
-    auto shared_buf = std::make_shared<memory::PooledBuffer>(std::move(pooled));
-    socket_.async_send_to(net::buffer(shared_buf->data(), shared_buf->size()), *remote_endpoint_,
-                          [shared_buf, on_write = std::move(on_write)](
+    // Optimization: Move PooledBuffer directly into lambda to avoid std::make_shared allocation
+    auto data = pooled.data();
+    auto size = pooled.size();
+    socket_.async_send_to(net::buffer(data, size), *remote_endpoint_,
+                          [buf = std::move(pooled), on_write = std::move(on_write)](
                               const boost::system::error_code& ec, std::size_t bytes) mutable { on_write(ec, bytes); });
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
     auto shared_vec = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
-    socket_.async_send_to(net::buffer(shared_vec->data(), shared_vec->size()), *remote_endpoint_,
-                          [shared_vec, on_write = std::move(on_write)](
+    auto data = shared_vec->data();
+    auto size = shared_vec->size();
+    socket_.async_send_to(net::buffer(data, size), *remote_endpoint_,
+                          [shared_vec = std::move(shared_vec), on_write = std::move(on_write)](
                               const boost::system::error_code& ec, std::size_t bytes) mutable { on_write(ec, bytes); });
   } else {
     auto vec = std::get<std::vector<uint8_t>>(std::move(current));
-    auto shared_vec = std::make_shared<std::vector<uint8_t>>(std::move(vec));
-    socket_.async_send_to(net::buffer(shared_vec->data(), shared_vec->size()), *remote_endpoint_,
-                          [shared_vec, on_write = std::move(on_write)](
+    // Optimization: Move vector directly into lambda to avoid std::make_shared allocation
+    auto data = vec.data();
+    auto size = vec.size();
+    socket_.async_send_to(net::buffer(data, size), *remote_endpoint_,
+                          [buf = std::move(vec), on_write = std::move(on_write)](
                               const boost::system::error_code& ec, std::size_t bytes) mutable { on_write(ec, bytes); });
   }
 }
