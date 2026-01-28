@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-01-10 07:30:00</td>
+            <td class="headerValue">2026-01-28 13:57:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -122,23 +122,23 @@
 <a name="43"><span class="lineNum">      43 </span>                :            :   }</a>
 <a name="44"><span class="lineNum">      44 </span>                :            : </a>
 <a name="45"><span class="lineNum">      45 </span>                :            :   // Apply validation and clamp values to valid ranges</a>
-<a name="46"><span class="lineNum">      46 </span>                :<span class="lineCov">        183 :   void validate_and_clamp() {</span></a>
-<a name="47"><span class="lineNum">      47 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchCov" title="Branch 1 was taken 172 times"> + </span>]:<span class="lineCov">        183 :     if (retry_interval_ms &lt; common::constants::MIN_RETRY_INTERVAL_MS) {</span></a>
+<a name="46"><span class="lineNum">      46 </span>                :<span class="lineCov">        193 :   void validate_and_clamp() {</span></a>
+<a name="47"><span class="lineNum">      47 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchCov" title="Branch 1 was taken 182 times"> + </span>]:<span class="lineCov">        193 :     if (retry_interval_ms &lt; common::constants::MIN_RETRY_INTERVAL_MS) {</span></a>
 <a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">         11 :       retry_interval_ms = common::constants::MIN_RETRY_INTERVAL_MS;</span></a>
-<a name="49"><span class="lineNum">      49 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 172 times"> + </span>]:<span class="lineCov">        172 :     } else if (retry_interval_ms &gt; common::constants::MAX_RETRY_INTERVAL_MS) {</span></a>
+<a name="49"><span class="lineNum">      49 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 182 times"> + </span>]:<span class="lineCov">        182 :     } else if (retry_interval_ms &gt; common::constants::MAX_RETRY_INTERVAL_MS) {</span></a>
 <a name="50"><span class="lineNum">      50 </span>                :<span class="lineNoCov">          0 :       retry_interval_ms = common::constants::MAX_RETRY_INTERVAL_MS;</span></a>
 <a name="51"><span class="lineNum">      51 </span>                :            :     }</a>
 <a name="52"><span class="lineNum">      52 </span>                :            : </a>
-<a name="53"><span class="lineNum">      53 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 183 times"> + </span>]:<span class="lineCov">        183 :     if (backpressure_threshold &lt; common::constants::MIN_BACKPRESSURE_THRESHOLD) {</span></a>
+<a name="53"><span class="lineNum">      53 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 193 times"> + </span>]:<span class="lineCov">        193 :     if (backpressure_threshold &lt; common::constants::MIN_BACKPRESSURE_THRESHOLD) {</span></a>
 <a name="54"><span class="lineNum">      54 </span>                :<span class="lineNoCov">          0 :       backpressure_threshold = common::constants::MIN_BACKPRESSURE_THRESHOLD;</span></a>
-<a name="55"><span class="lineNum">      55 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 183 times"> + </span>]:<span class="lineCov">        183 :     } else if (backpressure_threshold &gt; common::constants::MAX_BACKPRESSURE_THRESHOLD) {</span></a>
+<a name="55"><span class="lineNum">      55 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 193 times"> + </span>]:<span class="lineCov">        193 :     } else if (backpressure_threshold &gt; common::constants::MAX_BACKPRESSURE_THRESHOLD) {</span></a>
 <a name="56"><span class="lineNum">      56 </span>                :<span class="lineNoCov">          0 :       backpressure_threshold = common::constants::MAX_BACKPRESSURE_THRESHOLD;</span></a>
 <a name="57"><span class="lineNum">      57 </span>                :            :     }</a>
 <a name="58"><span class="lineNum">      58 </span>                :            : </a>
-<a name="59"><span class="lineNum">      59 </span>  [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 177 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 6 times"> + </span>]:<span class="lineCov">        183 :     if (max_retries != -1 &amp;&amp; max_retries &gt; common::constants::MAX_RETRIES_LIMIT) {</span></a>
+<a name="59"><span class="lineNum">      59 </span>  [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 187 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 6 times"> + </span>]:<span class="lineCov">        193 :     if (max_retries != -1 &amp;&amp; max_retries &gt; common::constants::MAX_RETRIES_LIMIT) {</span></a>
 <a name="60"><span class="lineNum">      60 </span>                :<span class="lineNoCov">          0 :       max_retries = common::constants::MAX_RETRIES_LIMIT;</span></a>
 <a name="61"><span class="lineNum">      61 </span>                :            :     }</a>
-<a name="62"><span class="lineNum">      62 </span>                :<span class="lineCov">        183 :   }</span></a>
+<a name="62"><span class="lineNum">      62 </span>                :<span class="lineCov">        193 :   }</span></a>
 <a name="63"><span class="lineNum">      63 </span>                :            : };</a>
 <a name="64"><span class="lineNum">      64 </span>                :            : </a>
 <a name="65"><span class="lineNum">      65 </span>                :            : }  // namespace config</a>
