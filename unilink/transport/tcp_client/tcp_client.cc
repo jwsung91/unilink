@@ -529,13 +529,12 @@ void TcpClient::do_write() {
   // Handle PooledBuffer, shared_ptr buffer, or std::vector<uint8_t> (fallback)
   if (std::holds_alternative<memory::PooledBuffer>(current)) {
     auto pooled_buf = std::get<memory::PooledBuffer>(std::move(current));
-    auto shared_pooled = std::make_shared<memory::PooledBuffer>(std::move(pooled_buf));
-    auto data = shared_pooled->data();
-    auto size = shared_pooled->size();
+    // Optimization: Move PooledBuffer directly into lambda to avoid std::make_shared allocation
+    auto data = pooled_buf.data();
+    auto size = pooled_buf.size();
     net::async_write(socket_, net::buffer(data, size),
-                     [self, buf = shared_pooled, on_write = std::move(on_write)](auto ec, std::size_t n) mutable {
-                       on_write(ec, n);
-                     });
+                     [self, buf = std::move(pooled_buf), on_write = std::move(on_write)](
+                         auto ec, std::size_t n) mutable { on_write(ec, n); });
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
     auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
     auto data = shared_buf->data();
@@ -545,12 +544,13 @@ void TcpClient::do_write() {
                          auto ec, std::size_t n) mutable { on_write(ec, n); });
   } else {
     auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
-    auto shared_vec = std::make_shared<std::vector<uint8_t>>(std::move(vec_buf));
-    auto data = shared_vec->data();
-    auto size = shared_vec->size();
-    net::async_write(
-        socket_, net::buffer(data, size),
-        [self, buf = shared_vec, on_write = std::move(on_write)](auto ec, std::size_t n) mutable { on_write(ec, n); });
+    // Optimization: Move vector directly into lambda to avoid std::make_shared allocation
+    auto data = vec_buf.data();
+    auto size = vec_buf.size();
+    net::async_write(socket_, net::buffer(data, size),
+                     [self, buf = std::move(vec_buf), on_write = std::move(on_write)](auto ec, std::size_t n) mutable {
+                       on_write(ec, n);
+                     });
   }
 }
 
