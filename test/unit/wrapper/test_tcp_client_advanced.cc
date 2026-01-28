@@ -469,11 +469,22 @@ TEST_F(AdvancedTcpClientCoverageTest, ConnectionRetry) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
-  client_ = unilink::tcp_client("localhost", test_port_).build();
+  // Start a server to accept the connection
+  server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
+  ASSERT_NE(server_, nullptr);
+  server_->start();
+
+  std::atomic<bool> connected{false};
+  client_ = unilink::tcp_client("localhost", test_port_)
+                .on_connect([&]() { connected = true; })
+                .build();
 
   ASSERT_NE(client_, nullptr);
 
   client_->start();
+
+  // Wait for connection
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load(); }, 1000));
 
   // Send multiple messages
   for (int i = 0; i < 10; ++i) {
