@@ -60,7 +60,7 @@ class ConfigBenchmarkTest : public BaseTest {
 TEST_F(ConfigBenchmarkTest, ConfigPresetsPerformance) {
   std::cout << "\n=== Config Presets Performance Benchmark ===" << std::endl;
 
-  const size_t num_operations = 1000000; // 1 million operations
+  const size_t num_operations = 1000000;  // 1 million operations
   auto config = ConfigFactory::create();
 
   // Warmup
@@ -84,7 +84,7 @@ TEST_F(ConfigBenchmarkTest, ConfigPresetsPerformance) {
   std::cout << "Throughput: " << std::fixed << std::setprecision(2) << throughput << " ops/sec" << std::endl;
 
   // Performance assertions (sanity check)
-  EXPECT_GT(throughput, 1000);    // Should be at least 1K ops/sec
+  EXPECT_GT(throughput, 1000);  // Should be at least 1K ops/sec
 
   std::cout << "✓ Config presets performance benchmark completed" << std::endl;
 }
