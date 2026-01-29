@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-01-28 13:57:33</td>
+            <td class="headerValue">2026-01-29 15:58:27</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">17</td>
@@ -249,32 +249,32 @@
 <a name="171"><span class="lineNum">     171 </span>        [<span class="branchCov" title="Branch 0 was taken 392 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        392 : ThreadSafeState&lt;StateType&gt;::ThreadSafeState(const State&amp; initial_state) : state_(initial_state) {}</span></a>
 <a name="172"><span class="lineNum">     172 </span>                :            : </a>
 <a name="173"><span class="lineNum">     173 </span>                :            : template &lt;typename StateType&gt;</a>
-<a name="174"><span class="lineNum">     174 </span>                :<span class="lineCov">       1283 : StateType ThreadSafeState&lt;StateType&gt;::get_state() const {</span></a>
-<a name="175"><span class="lineNum">     175 </span>        [<span class="branchCov" title="Branch 0 was taken 1283 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1283 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
-<a name="176"><span class="lineNum">     176 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1287 :   return state_;</span></a>
-<a name="177"><span class="lineNum">     177 </span>                :<span class="lineCov">       1283 : }</span></a>
+<a name="174"><span class="lineNum">     174 </span>                :<span class="lineCov">       1280 : StateType ThreadSafeState&lt;StateType&gt;::get_state() const {</span></a>
+<a name="175"><span class="lineNum">     175 </span>        [<span class="branchCov" title="Branch 0 was taken 1280 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1280 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
+<a name="176"><span class="lineNum">     176 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1284 :   return state_;</span></a>
+<a name="177"><span class="lineNum">     177 </span>                :<span class="lineCov">       1280 : }</span></a>
 <a name="178"><span class="lineNum">     178 </span>                :            : </a>
 <a name="179"><span class="lineNum">     179 </span>                :            : template &lt;typename StateType&gt;</a>
-<a name="180"><span class="lineNum">     180 </span>                :<span class="lineCov">        547 : void ThreadSafeState&lt;StateType&gt;::set_state(const State&amp; new_state) {</span></a>
+<a name="180"><span class="lineNum">     180 </span>                :<span class="lineCov">        545 : void ThreadSafeState&lt;StateType&gt;::set_state(const State&amp; new_state) {</span></a>
 <a name="181"><span class="lineNum">     181 </span>                :            :   {</a>
-<a name="182"><span class="lineNum">     182 </span>        [<span class="branchCov" title="Branch 0 was taken 547 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        547 :     std::unique_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
-<a name="183"><span class="lineNum">     183 </span>                :<span class="lineCov">        547 :     state_ = new_state;</span></a>
-<a name="184"><span class="lineNum">     184 </span>                :<span class="lineCov">        547 :     state_changed_.store(true);</span></a>
-<a name="185"><span class="lineNum">     185 </span>                :<span class="lineCov">        547 :   }</span></a>
-<a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">        547 :   notify_callbacks(new_state);</span></a>
-<a name="187"><span class="lineNum">     187 </span>                :<span class="lineCov">        547 :   state_cv_.notify_all();</span></a>
-<a name="188"><span class="lineNum">     188 </span>                :<span class="lineCov">        547 : }</span></a>
+<a name="182"><span class="lineNum">     182 </span>        [<span class="branchCov" title="Branch 0 was taken 545 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        545 :     std::unique_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
+<a name="183"><span class="lineNum">     183 </span>                :<span class="lineCov">        545 :     state_ = new_state;</span></a>
+<a name="184"><span class="lineNum">     184 </span>                :<span class="lineCov">        545 :     state_changed_.store(true);</span></a>
+<a name="185"><span class="lineNum">     185 </span>                :<span class="lineCov">        545 :   }</span></a>
+<a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">        545 :   notify_callbacks(new_state);</span></a>
+<a name="187"><span class="lineNum">     187 </span>                :<span class="lineCov">        545 :   state_cv_.notify_all();</span></a>
+<a name="188"><span class="lineNum">     188 </span>                :<span class="lineCov">        545 : }</span></a>
 <a name="189"><span class="lineNum">     189 </span>                :            : </a>
 <a name="190"><span class="lineNum">     190 </span>                :            : template &lt;typename StateType&gt;</a>
-<a name="191"><span class="lineNum">     191 </span>                :<span class="lineCov">        501 : void ThreadSafeState&lt;StateType&gt;::set_state(State&amp;&amp; new_state) {</span></a>
+<a name="191"><span class="lineNum">     191 </span>                :<span class="lineCov">        503 : void ThreadSafeState&lt;StateType&gt;::set_state(State&amp;&amp; new_state) {</span></a>
 <a name="192"><span class="lineNum">     192 </span>                :            :   {</a>
-<a name="193"><span class="lineNum">     193 </span>        [<span class="branchCov" title="Branch 0 was taken 501 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        501 :     std::unique_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
-<a name="194"><span class="lineNum">     194 </span>                :<span class="lineCov">        501 :     state_ = std::move(new_state);</span></a>
-<a name="195"><span class="lineNum">     195 </span>                :<span class="lineCov">        501 :     state_changed_.store(true);</span></a>
-<a name="196"><span class="lineNum">     196 </span>                :<span class="lineCov">        501 :   }</span></a>
-<a name="197"><span class="lineNum">     197 </span>                :<span class="lineCov">        501 :   notify_callbacks(state_);</span></a>
-<a name="198"><span class="lineNum">     198 </span>                :<span class="lineCov">        501 :   state_cv_.notify_all();</span></a>
-<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">        501 : }</span></a>
+<a name="193"><span class="lineNum">     193 </span>        [<span class="branchCov" title="Branch 0 was taken 503 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        503 :     std::unique_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
+<a name="194"><span class="lineNum">     194 </span>                :<span class="lineCov">        503 :     state_ = std::move(new_state);</span></a>
+<a name="195"><span class="lineNum">     195 </span>                :<span class="lineCov">        503 :     state_changed_.store(true);</span></a>
+<a name="196"><span class="lineNum">     196 </span>                :<span class="lineCov">        503 :   }</span></a>
+<a name="197"><span class="lineNum">     197 </span>                :<span class="lineCov">        503 :   notify_callbacks(state_);</span></a>
+<a name="198"><span class="lineNum">     198 </span>                :<span class="lineCov">        503 :   state_cv_.notify_all();</span></a>
+<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">        503 : }</span></a>
 <a name="200"><span class="lineNum">     200 </span>                :            : </a>
 <a name="201"><span class="lineNum">     201 </span>                :            : template &lt;typename StateType&gt;</a>
 <a name="202"><span class="lineNum">     202 </span>                :<span class="lineCov">          2 : bool ThreadSafeState&lt;StateType&gt;::compare_and_set(const State&amp; expected, const State&amp; desired) {</span></a>
@@ -341,10 +341,10 @@
 <a name="263"><span class="lineNum">     263 </span>                :            : }</a>
 <a name="264"><span class="lineNum">     264 </span>                :            : </a>
 <a name="265"><span class="lineNum">     265 </span>                :            : template &lt;typename StateType&gt;</a>
-<a name="266"><span class="lineNum">     266 </span>                :<span class="lineCov">      51633 : bool ThreadSafeState&lt;StateType&gt;::is_state(const State&amp; expected_state) const {</span></a>
-<a name="267"><span class="lineNum">     267 </span>        [<span class="branchCov" title="Branch 0 was taken 51633 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      51633 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
-<a name="268"><span class="lineNum">     268 </span>                :<span class="lineCov">      51633 :   return state_ == expected_state;</span></a>
-<a name="269"><span class="lineNum">     269 </span>                :<span class="lineCov">      51633 : }</span></a>
+<a name="266"><span class="lineNum">     266 </span>                :<span class="lineCov">      62887 : bool ThreadSafeState&lt;StateType&gt;::is_state(const State&amp; expected_state) const {</span></a>
+<a name="267"><span class="lineNum">     267 </span>        [<span class="branchCov" title="Branch 0 was taken 62887 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      62887 :   std::shared_lock&lt;std::shared_mutex&gt; lock(state_mutex_);</span></a>
+<a name="268"><span class="lineNum">     268 </span>                :<span class="lineCov">      62887 :   return state_ == expected_state;</span></a>
+<a name="269"><span class="lineNum">     269 </span>                :<span class="lineCov">      62887 : }</span></a>
 <a name="270"><span class="lineNum">     270 </span>                :            : </a>
 <a name="271"><span class="lineNum">     271 </span>                :            : template &lt;typename StateType&gt;</a>
 <a name="272"><span class="lineNum">     272 </span>                :            : void ThreadSafeState&lt;StateType&gt;::notify_state_change() {</a>

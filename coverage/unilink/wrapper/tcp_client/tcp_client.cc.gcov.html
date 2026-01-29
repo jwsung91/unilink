@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-01-28 13:57:33</td>
+            <td class="headerValue">2026-01-29 15:58:27</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -187,17 +187,17 @@
 <a name="107"><span class="lineNum">     107 </span>                :<span class="lineCov">         64 :   started_ = false;</span></a>
 <a name="108"><span class="lineNum">     108 </span>                :            : }</a>
 <a name="109"><span class="lineNum">     109 </span>                :            : </a>
-<a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">        167 : void TcpClient::send(const std::string&amp; data) {</span></a>
-<a name="111"><span class="lineNum">     111 </span>  [<span class="branchCov" title="Branch 0 was taken 141 times"> + </span><span class="branchCov" title="Branch 1 was taken 26 times"> + </span><span class="branchCov" title="Branch 2 was taken 141 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        167 :   if (is_connected() &amp;&amp; channel_) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 141 times"> + </span><span class="branchCov" title="Branch 5 was taken 26 times"> + </span>]
-<a name="112"><span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 141 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        141 :     auto binary_data = common::safe_convert::string_to_uint8(data);</span></a>
-<a name="113"><span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 141 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        141 :     channel_-&gt;async_write_copy(binary_data.data(), binary_data.size());</span></a>
-<a name="114"><span class="lineNum">     114 </span>                :<span class="lineCov">        141 :   }</span></a>
-<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">        167 : }</span></a>
+<a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">        150 : void TcpClient::send(const std::string&amp; data) {</span></a>
+<a name="111"><span class="lineNum">     111 </span>  [<span class="branchCov" title="Branch 0 was taken 124 times"> + </span><span class="branchCov" title="Branch 1 was taken 26 times"> + </span><span class="branchCov" title="Branch 2 was taken 124 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        150 :   if (is_connected() &amp;&amp; channel_) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 124 times"> + </span><span class="branchCov" title="Branch 5 was taken 26 times"> + </span>]
+<a name="112"><span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 124 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        124 :     auto binary_data = common::safe_convert::string_to_uint8(data);</span></a>
+<a name="113"><span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 124 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        124 :     channel_-&gt;async_write_copy(binary_data.data(), binary_data.size());</span></a>
+<a name="114"><span class="lineNum">     114 </span>                :<span class="lineCov">        124 :   }</span></a>
+<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">        150 : }</span></a>
 <a name="116"><span class="lineNum">     116 </span>                :            : </a>
 <a name="117"><span class="lineNum">     117 </span>        [<span class="branchCov" title="Branch 0 was taken 13 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         13 : void TcpClient::send_line(const std::string&amp; line) { send(line + &quot;\n&quot;); }</span></a>
 <a name="118"><span class="lineNum">     118 </span>                :            : </a>
-<a name="119"><span class="lineNum">     119 </span>  [<span class="branchCov" title="Branch 0 was taken 182 times"> + </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span><span class="branchCov" title="Branch 2 was taken 146 times"> + </span><span class="branchCov" title="Branch 3 was taken 36 times"> + </span>]:<span class="lineCov">        190 : bool TcpClient::is_connected() const { return channel_ &amp;&amp; channel_-&gt;is_connected(); }</span></a>
+<a name="119"><span class="lineNum">     119 </span>  [<span class="branchCov" title="Branch 0 was taken 171 times"> + </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span><span class="branchCov" title="Branch 2 was taken 129 times"> + </span><span class="branchCov" title="Branch 3 was taken 42 times"> + </span>]:<span class="lineCov">        179 : bool TcpClient::is_connected() const { return channel_ &amp;&amp; channel_-&gt;is_connected(); }</span></a>
 <a name="120"><span class="lineNum">     120 </span>                :            : </a>
 <a name="121"><span class="lineNum">     121 </span>                :<span class="lineCov">         11 : ChannelInterface&amp; TcpClient::on_data(DataHandler handler) {</span></a>
 <a name="122"><span class="lineNum">     122 </span>                :<span class="lineCov">         11 :   data_handler_ = std::move(handler);</span></a>
@@ -254,11 +254,11 @@
 <a name="173"><span class="lineNum">     173 </span>                :            : </a>
 <a name="174"><span class="lineNum">     174 </span>                :            :   // Convert byte data to string and pass it</a>
 <a name="175"><span class="lineNum">     175 </span>        [<span class="branchCov" title="Branch 0 was taken 64 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         64 :   channel_-&gt;on_bytes([this](const uint8_t* p, size_t n) {</span></a>
-<a name="176"><span class="lineNum">     176 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1028 times"> + </span>]:<span class="lineCov">       1028 :     if (data_handler_) {</span></a>
+<a name="176"><span class="lineNum">     176 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1026 times"> + </span>]:<span class="lineCov">       1026 :     if (data_handler_) {</span></a>
 <a name="177"><span class="lineNum">     177 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       std::string data = common::safe_convert::uint8_to_string(p, n);</span></a>
 <a name="178"><span class="lineNum">     178 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       data_handler_(data);</span></a>
 <a name="179"><span class="lineNum">     179 </span>                :<span class="lineNoCov">          0 :     }</span></a>
-<a name="180"><span class="lineNum">     180 </span>                :<span class="lineCov">       1028 :   });</span></a>
+<a name="180"><span class="lineNum">     180 </span>                :<span class="lineCov">       1026 :   });</span></a>
 <a name="181"><span class="lineNum">     181 </span>                :            : </a>
 <a name="182"><span class="lineNum">     182 </span>                :            :   // Handle state changes</a>
 <a name="183"><span class="lineNum">     183 </span>        [<span class="branchCov" title="Branch 0 was taken 64 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        178 :   channel_-&gt;on_state([this](base::LinkState state) { notify_state_change(state); });</span></a>
