@@ -16,10 +16,12 @@
 
 #pragma once
 
+#include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 #include <thread>
 
@@ -69,6 +71,7 @@ class UNILINK_API TcpClient : public ChannelInterface {
   bool use_external_context_{false};
   bool manage_external_context_{false};
   std::thread external_thread_;
+  std::optional<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
   // Event handlers
   DataHandler data_handler_;
