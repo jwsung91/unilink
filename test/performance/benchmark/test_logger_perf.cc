@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -28,7 +29,7 @@ class LoggerPerfTest : public ::testing::Test {
   void SetUp() override {
     // Reset logger state
     Logger::instance().set_level(LogLevel::INFO);
-    Logger::instance().set_outputs(0); // Disable outputs to measure only overhead
+    Logger::instance().set_outputs(0);  // Disable outputs to measure only overhead
   }
 
   void TearDown() override {
@@ -57,8 +58,8 @@ TEST_F(LoggerPerfTest, PerfMacroOverheadDisabled) {
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-  std::cout << "Disabled Logging (1M iter): " << duration << " μs ("
-            << (double)duration / iterations << " μs/call)" << std::endl;
+  std::cout << "Disabled Logging (1M iter): " << duration << " μs (" << (double)duration / iterations << " μs/call)"
+            << std::endl;
 }
 
 TEST_F(LoggerPerfTest, PerfMacroOverheadEnabled) {
@@ -78,6 +79,6 @@ TEST_F(LoggerPerfTest, PerfMacroOverheadEnabled) {
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-  std::cout << "Enabled Logging (100k iter): " << duration << " μs ("
-            << (double)duration / iterations << " μs/call)" << std::endl;
+  std::cout << "Enabled Logging (100k iter): " << duration << " μs (" << (double)duration / iterations << " μs/call)"
+            << std::endl;
 }
