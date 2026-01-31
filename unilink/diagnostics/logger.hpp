@@ -368,16 +368,15 @@ class UNILINK_API Logger {
 #define UNILINK_LOG_PERF_START(component, operation) \
   auto _perf_start_##operation = std::chrono::high_resolution_clock::now()
 
-#define UNILINK_LOG_PERF_END(component, operation)                                                               \
-  do {                                                                                                           \
-    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::DEBUG) {         \
-      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                    \
-      auto _perf_duration_##operation =                                                                          \
-          std::chrono::duration_cast<std::chrono::microseconds>(_perf_end_##operation - _perf_start_##operation) \
-              .count();                                                                                          \
-      unilink::diagnostics::Logger::instance().debug(                                                            \
-          component, operation, "Duration: " + std::to_string(_perf_duration_##operation) + " μs");              \
-    }                                                                                                            \
+#define UNILINK_LOG_PERF_END(component, operation)                                                                \
+  do {                                                                                                            \
+    auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                       \
+    auto _perf_duration_##operation =                                                                             \
+        std::chrono::duration_cast<std::chrono::microseconds>(_perf_end_##operation - _perf_start_##operation)    \
+            .count();                                                                                             \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::DEBUG) {          \
+      UNILINK_LOG_DEBUG(component, operation, "Duration: " + std::to_string(_perf_duration_##operation) + " μs"); \
+    }                                                                                                             \
   } while (0)
 
 }  // namespace diagnostics
