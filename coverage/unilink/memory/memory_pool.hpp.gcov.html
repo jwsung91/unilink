@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-01-29 15:58:27</td>
+            <td class="headerValue">2026-01-31 01:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">5</td>
             <td class="headerCovTableEntry">10</td>
-            <td class="headerCovTableEntryLo">60.0 %</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -141,7 +141,7 @@
 <a name="63"><span class="lineNum">      63 </span>                :            :   };</a>
 <a name="64"><span class="lineNum">      64 </span>                :            : </a>
 <a name="65"><span class="lineNum">      65 </span>                :            :   explicit MemoryPool(size_t initial_pool_size = 400, size_t max_pool_size = 2000);</a>
-<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">         74 :   ~MemoryPool() = default;</span></a>
+<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">         73 :   ~MemoryPool() = default;</span></a>
 <a name="67"><span class="lineNum">      67 </span>                :            : </a>
 <a name="68"><span class="lineNum">      68 </span>                :            :   // Non-copyable, non-movable</a>
 <a name="69"><span class="lineNum">      69 </span>                :            :   MemoryPool(const MemoryPool&amp;) = delete;</a>
@@ -168,7 +168,7 @@
 <a name="90"><span class="lineNum">      90 </span>                :            :     mutable std::mutex mutex_;</a>
 <a name="91"><span class="lineNum">      91 </span>                :            :     size_t size_;</a>
 <a name="92"><span class="lineNum">      92 </span>                :            : </a>
-<a name="93"><span class="lineNum">      93 </span>        [<span class="branchCov" title="Branch 0 was taken 296 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        296 :     PoolBucket() : size_{0} {}</span></a>
+<a name="93"><span class="lineNum">      93 </span>        [<span class="branchCov" title="Branch 0 was taken 292 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        292 :     PoolBucket() : size_{0} {}</span></a>
 <a name="94"><span class="lineNum">      94 </span>                :            :     PoolBucket(PoolBucket&amp;&amp; other) noexcept;</a>
 <a name="95"><span class="lineNum">      95 </span>                :            :     PoolBucket&amp; operator=(PoolBucket&amp;&amp; other) noexcept;</a>
 <a name="96"><span class="lineNum">      96 </span>                :            :     PoolBucket(const PoolBucket&amp;) = delete;</a>
@@ -198,10 +198,10 @@
 <a name="120"><span class="lineNum">     120 </span>                :            :  */</a>
 <a name="121"><span class="lineNum">     121 </span>                :            : class UNILINK_API GlobalMemoryPool {</a>
 <a name="122"><span class="lineNum">     122 </span>                :            :  public:</a>
-<a name="123"><span class="lineNum">     123 </span>                :<span class="lineCov">      21054 :   static MemoryPool&amp; instance() {</span></a>
-<a name="124"><span class="lineNum">     124 </span>  [<span class="branchCov" title="Branch 0 was taken 72 times"> + </span><span class="branchCov" title="Branch 1 was taken 20982 times"> + </span><span class="branchCov" title="Branch 2 was taken 71 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span> :<span class="lineCov">      21054 :     static MemoryPool pool;</span></a>
-<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 71 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
-<a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">      21054 :     return pool;</span></a>
+<a name="123"><span class="lineNum">     123 </span>                :<span class="lineCov">      13391 :   static MemoryPool&amp; instance() {</span></a>
+<a name="124"><span class="lineNum">     124 </span>  [<span class="branchCov" title="Branch 0 was taken 70 times"> + </span><span class="branchCov" title="Branch 1 was taken 13321 times"> + </span><span class="branchCov" title="Branch 2 was taken 70 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">      13391 :     static MemoryPool pool;</span></a>
+<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 70 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
+<a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">      13391 :     return pool;</span></a>
 <a name="126"><span class="lineNum">     126 </span>                :            :   }</a>
 <a name="127"><span class="lineNum">     127 </span>                :            : </a>
 <a name="128"><span class="lineNum">     128 </span>                :            :   // Factory method to create optimized memory pool</a>

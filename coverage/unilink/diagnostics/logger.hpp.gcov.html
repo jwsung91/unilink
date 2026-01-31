@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-01-29 15:58:27</td>
+            <td class="headerValue">2026-01-31 01:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -166,12 +166,12 @@
 <a name="88"><span class="lineNum">      88 </span>                :            : struct AsyncLogConfig {</a>
 <a name="89"><span class="lineNum">      89 </span>                :            :   size_t max_queue_size = 10000;                     // Maximum queue size</a>
 <a name="90"><span class="lineNum">      90 </span>                :            :   size_t batch_size = 100;                           // Batch processing size</a>
-<a name="91"><span class="lineNum">      91 </span>                :<span class="lineCov">        240 :   std::chrono::milliseconds flush_interval{100};     // Flush interval</span></a>
-<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        240 :   std::chrono::milliseconds shutdown_timeout{5000};  // Shutdown timeout</span></a>
+<a name="91"><span class="lineNum">      91 </span>                :<span class="lineCov">        241 :   std::chrono::milliseconds flush_interval{100};     // Flush interval</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        241 :   std::chrono::milliseconds shutdown_timeout{5000};  // Shutdown timeout</span></a>
 <a name="93"><span class="lineNum">      93 </span>                :            :   bool enable_backpressure = true;                   // Enable backpressure handling</a>
 <a name="94"><span class="lineNum">      94 </span>                :            :   bool enable_batch_processing = true;               // Enable batch processing</a>
 <a name="95"><span class="lineNum">      95 </span>                :            : </a>
-<a name="96"><span class="lineNum">      96 </span>                :<span class="lineCov">        240 :   AsyncLogConfig() = default;</span></a>
+<a name="96"><span class="lineNum">      96 </span>                :<span class="lineCov">        241 :   AsyncLogConfig() = default;</span></a>
 <a name="97"><span class="lineNum">      97 </span>                :            : </a>
 <a name="98"><span class="lineNum">      98 </span>                :            :   AsyncLogConfig(size_t max_q, size_t batch, std::chrono::milliseconds interval)</a>
 <a name="99"><span class="lineNum">      99 </span>                :            :       : max_queue_size(max_q), batch_size(batch), flush_interval(interval) {}</a>
@@ -189,7 +189,7 @@
 <a name="111"><span class="lineNum">     111 </span>                :            :   uint64_t flush_count{0};</a>
 <a name="112"><span class="lineNum">     112 </span>                :            :   std::chrono::system_clock::time_point start_time;</a>
 <a name="113"><span class="lineNum">     113 </span>                :            : </a>
-<a name="114"><span class="lineNum">     114 </span>                :<span class="lineCov">        230 :   AsyncLogStats() : start_time(std::chrono::system_clock::now()) {}</span></a>
+<a name="114"><span class="lineNum">     114 </span>                :<span class="lineCov">        231 :   AsyncLogStats() : start_time(std::chrono::system_clock::now()) {}</span></a>
 <a name="115"><span class="lineNum">     115 </span>                :            : </a>
 <a name="116"><span class="lineNum">     116 </span>                :<span class="lineCov">          6 :   void reset() {</span></a>
 <a name="117"><span class="lineNum">     117 </span>                :<span class="lineCov">          6 :     total_logs = 0;</span></a>
@@ -446,21 +446,20 @@
 <a name="368"><span class="lineNum">     368 </span>                :            : #define UNILINK_LOG_PERF_START(component, operation) \</a>
 <a name="369"><span class="lineNum">     369 </span>                :            :   auto _perf_start_##operation = std::chrono::high_resolution_clock::now()</a>
 <a name="370"><span class="lineNum">     370 </span>                :            : </a>
-<a name="371"><span class="lineNum">     371 </span>                :            : #define UNILINK_LOG_PERF_END(component, operation)                                                               \</a>
-<a name="372"><span class="lineNum">     372 </span>                :            :   do {                                                                                                           \</a>
-<a name="373"><span class="lineNum">     373 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {         \</a>
-<a name="374"><span class="lineNum">     374 </span>                :            :       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                    \</a>
-<a name="375"><span class="lineNum">     375 </span>                :            :       auto _perf_duration_##operation =                                                                          \</a>
-<a name="376"><span class="lineNum">     376 </span>                :            :           std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(_perf_end_##operation - _perf_start_##operation) \</a>
-<a name="377"><span class="lineNum">     377 </span>                :            :               .count();                                                                                          \</a>
-<a name="378"><span class="lineNum">     378 </span>                :            :       unilink::diagnostics::Logger::instance().debug(                                                            \</a>
-<a name="379"><span class="lineNum">     379 </span>                :            :           component, operation, &quot;Duration: &quot; + std::to_string(_perf_duration_##operation) + &quot; μs&quot;);              \</a>
-<a name="380"><span class="lineNum">     380 </span>                :            :     }                                                                                                            \</a>
-<a name="381"><span class="lineNum">     381 </span>                :            :   } while (0)</a>
-<a name="382"><span class="lineNum">     382 </span>                :            : </a>
-<a name="383"><span class="lineNum">     383 </span>                :            : }  // namespace diagnostics</a>
-<a name="384"><span class="lineNum">     384 </span>                :            : </a>
-<a name="385"><span class="lineNum">     385 </span>                :            : }  // namespace unilink</a>
+<a name="371"><span class="lineNum">     371 </span>                :            : #define UNILINK_LOG_PERF_END(component, operation)                                                                \</a>
+<a name="372"><span class="lineNum">     372 </span>                :            :   do {                                                                                                            \</a>
+<a name="373"><span class="lineNum">     373 </span>                :            :     auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                       \</a>
+<a name="374"><span class="lineNum">     374 </span>                :            :     auto _perf_duration_##operation =                                                                             \</a>
+<a name="375"><span class="lineNum">     375 </span>                :            :         std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(_perf_end_##operation - _perf_start_##operation)    \</a>
+<a name="376"><span class="lineNum">     376 </span>                :            :             .count();                                                                                             \</a>
+<a name="377"><span class="lineNum">     377 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {          \</a>
+<a name="378"><span class="lineNum">     378 </span>                :            :       UNILINK_LOG_DEBUG(component, operation, &quot;Duration: &quot; + std::to_string(_perf_duration_##operation) + &quot; μs&quot;); \</a>
+<a name="379"><span class="lineNum">     379 </span>                :            :     }                                                                                                             \</a>
+<a name="380"><span class="lineNum">     380 </span>                :            :   } while (0)</a>
+<a name="381"><span class="lineNum">     381 </span>                :            : </a>
+<a name="382"><span class="lineNum">     382 </span>                :            : }  // namespace diagnostics</a>
+<a name="383"><span class="lineNum">     383 </span>                :            : </a>
+<a name="384"><span class="lineNum">     384 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
