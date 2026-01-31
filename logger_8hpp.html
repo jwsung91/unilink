@@ -461,15 +461,14 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                           \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) {         \</div>
-<div class="line">      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                    \</div>
-<div class="line">      auto _perf_duration_##operation =                                                                          \</div>
-<div class="line">          std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(_perf_end_##operation - _perf_start_##operation) \</div>
-<div class="line">              .count();                                                                                          <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
-<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a4672b49f658dd5fdc3f7a470c2d4a6f3">debug</a>(                                                            \</div>
-<div class="line">          component, operation, <span class="stringliteral">&quot;Duration: &quot;</span> + std::to_string(_perf_duration_##operation) + <span class="stringliteral">&quot; μs&quot;</span>);              \</div>
-<div class="line">    }                                                                                                            \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                            \</div>
+<div class="line">    auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                       \</div>
+<div class="line">    auto _perf_duration_##operation =                                                                             \</div>
+<div class="line">        std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(_perf_end_##operation - _perf_start_##operation)    \</div>
+<div class="line">            .count();                                                                                             \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) {          \</div>
+<div class="line">      UNILINK_LOG_DEBUG(component, operation, <span class="stringliteral">&quot;Duration: &quot;</span> + std::to_string(_perf_duration_##operation) + <span class="stringliteral">&quot; μs&quot;</span>); \</div>
+<div class="line">    }                                                                                                             \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00371">371</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
@@ -557,7 +556,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="logger_8hpp.html">logger.hpp</a></li>
-    <li class="footer">Generated on Thu Jan 29 2026 15:56:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Jan 31 2026 01:00:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
