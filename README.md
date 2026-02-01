@@ -1,5 +1,9 @@
 # unilink
 
+<p align="center">
+  <img src="docs/img/logo.png" width="300">
+</p>
+
 [![CI](https://github.com/jwsung91/unilink/actions/workflows/ci.yml/badge.svg)](https://github.com/jwsung91/unilink/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/coverage/badges/coverage.json)](https://github.com/jwsung91/unilink)
 
