@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-01-31 01:02:51</td>
+            <td class="headerValue">2026-02-01 12:03:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -443,23 +443,26 @@
 <a name="365"><span class="lineNum">     365 </span>                :            : /**</a>
 <a name="366"><span class="lineNum">     366 </span>                :            :  * @brief Performance logging macros for expensive operations</a>
 <a name="367"><span class="lineNum">     367 </span>                :            :  */</a>
-<a name="368"><span class="lineNum">     368 </span>                :            : #define UNILINK_LOG_PERF_START(component, operation) \</a>
-<a name="369"><span class="lineNum">     369 </span>                :            :   auto _perf_start_##operation = std::chrono::high_resolution_clock::now()</a>
-<a name="370"><span class="lineNum">     370 </span>                :            : </a>
-<a name="371"><span class="lineNum">     371 </span>                :            : #define UNILINK_LOG_PERF_END(component, operation)                                                                \</a>
-<a name="372"><span class="lineNum">     372 </span>                :            :   do {                                                                                                            \</a>
-<a name="373"><span class="lineNum">     373 </span>                :            :     auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                       \</a>
-<a name="374"><span class="lineNum">     374 </span>                :            :     auto _perf_duration_##operation =                                                                             \</a>
-<a name="375"><span class="lineNum">     375 </span>                :            :         std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(_perf_end_##operation - _perf_start_##operation)    \</a>
-<a name="376"><span class="lineNum">     376 </span>                :            :             .count();                                                                                             \</a>
-<a name="377"><span class="lineNum">     377 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {          \</a>
-<a name="378"><span class="lineNum">     378 </span>                :            :       UNILINK_LOG_DEBUG(component, operation, &quot;Duration: &quot; + std::to_string(_perf_duration_##operation) + &quot; μs&quot;); \</a>
-<a name="379"><span class="lineNum">     379 </span>                :            :     }                                                                                                             \</a>
-<a name="380"><span class="lineNum">     380 </span>                :            :   } while (0)</a>
-<a name="381"><span class="lineNum">     381 </span>                :            : </a>
-<a name="382"><span class="lineNum">     382 </span>                :            : }  // namespace diagnostics</a>
-<a name="383"><span class="lineNum">     383 </span>                :            : </a>
-<a name="384"><span class="lineNum">     384 </span>                :            : }  // namespace unilink</a>
+<a name="368"><span class="lineNum">     368 </span>                :            : #define UNILINK_LOG_PERF_START(component, operation)                                                  \</a>
+<a name="369"><span class="lineNum">     369 </span>                :            :   auto _perf_start_##operation =                                                                      \</a>
+<a name="370"><span class="lineNum">     370 </span>                :            :       (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) \</a>
+<a name="371"><span class="lineNum">     371 </span>                :            :           ? std::chrono::high_resolution_clock::now()                                                 \</a>
+<a name="372"><span class="lineNum">     372 </span>                :            :           : std::chrono::high_resolution_clock::time_point()</a>
+<a name="373"><span class="lineNum">     373 </span>                :            : </a>
+<a name="374"><span class="lineNum">     374 </span>                :            : #define UNILINK_LOG_PERF_END(component, operation)                                                                \</a>
+<a name="375"><span class="lineNum">     375 </span>                :            :   do {                                                                                                            \</a>
+<a name="376"><span class="lineNum">     376 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {          \</a>
+<a name="377"><span class="lineNum">     377 </span>                :            :       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \</a>
+<a name="378"><span class="lineNum">     378 </span>                :            :       using _us_t = std::chrono::microseconds;                                                                    \</a>
+<a name="379"><span class="lineNum">     379 </span>                :            :       auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \</a>
+<a name="380"><span class="lineNum">     380 </span>                :            :       auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();             \</a>
+<a name="381"><span class="lineNum">     381 </span>                :            :       UNILINK_LOG_DEBUG(component, operation, &quot;Duration: &quot; + std::to_string(_perf_duration_##operation) + &quot; μs&quot;); \</a>
+<a name="382"><span class="lineNum">     382 </span>                :            :     }                                                                                                             \</a>
+<a name="383"><span class="lineNum">     383 </span>                :            :   } while (0)</a>
+<a name="384"><span class="lineNum">     384 </span>                :            : </a>
+<a name="385"><span class="lineNum">     385 </span>                :            : }  // namespace diagnostics</a>
+<a name="386"><span class="lineNum">     386 </span>                :            : </a>
+<a name="387"><span class="lineNum">     387 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-01-31 01:02:51</td>
+            <td class="headerValue">2026-02-01 12:03:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">41</td>
@@ -114,17 +114,17 @@
 <a name="35"><span class="lineNum">      35 </span>                :<span class="lineCov">        231 :   flush();</span></a>
 <a name="36"><span class="lineNum">      36 </span>                :<span class="lineCov">        231 : }</span></a>
 <a name="37"><span class="lineNum">      37 </span>                :            : </a>
-<a name="38"><span class="lineNum">      38 </span>                :<span class="lineCov">    1304942 : Logger&amp; Logger::default_logger() {</span></a>
-<a name="39"><span class="lineNum">      39 </span>  [<span class="branchCov" title="Branch 0 was taken 272 times"> + </span><span class="branchCov" title="Branch 1 was taken 1304670 times"> + </span><span class="branchCov" title="Branch 2 was taken 231 times"> + </span><span class="branchCov" title="Branch 3 was taken 41 times"> + </span> :<span class="lineCov">    1304942 :   static Logger instance;</span></a>
+<a name="38"><span class="lineNum">      38 </span>                :<span class="lineCov">    2404912 : Logger&amp; Logger::default_logger() {</span></a>
+<a name="39"><span class="lineNum">      39 </span>  [<span class="branchCov" title="Branch 0 was taken 274 times"> + </span><span class="branchCov" title="Branch 1 was taken 2404638 times"> + </span><span class="branchCov" title="Branch 2 was taken 231 times"> + </span><span class="branchCov" title="Branch 3 was taken 43 times"> + </span> :<span class="lineCov">    2404912 :   static Logger instance;</span></a>
 <span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 231 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
-<a name="40"><span class="lineNum">      40 </span>                :<span class="lineCov">    1304942 :   return instance;</span></a>
+<a name="40"><span class="lineNum">      40 </span>                :<span class="lineCov">    2404912 :   return instance;</span></a>
 <a name="41"><span class="lineNum">      41 </span>                :            : }</a>
 <a name="42"><span class="lineNum">      42 </span>                :            : </a>
-<a name="43"><span class="lineNum">      43 </span>                :<span class="lineCov">    1304942 : Logger&amp; Logger::instance() { return default_logger(); }</span></a>
+<a name="43"><span class="lineNum">      43 </span>                :<span class="lineCov">    2404912 : Logger&amp; Logger::instance() { return default_logger(); }</span></a>
 <a name="44"><span class="lineNum">      44 </span>                :            : </a>
 <a name="45"><span class="lineNum">      45 </span>                :<span class="lineCov">         60 : void Logger::set_level(LogLevel level) { current_level_.store(level); }</span></a>
 <a name="46"><span class="lineNum">      46 </span>                :            : </a>
-<a name="47"><span class="lineNum">      47 </span>                :<span class="lineCov">    1203060 : LogLevel Logger::get_level() const { return current_level_.load(); }</span></a>
+<a name="47"><span class="lineNum">      47 </span>                :<span class="lineCov">    2303042 : LogLevel Logger::get_level() const { return current_level_.load(); }</span></a>
 <a name="48"><span class="lineNum">      48 </span>                :            : </a>
 <a name="49"><span class="lineNum">      49 </span>                :<span class="lineCov">         50 : void Logger::set_console_output(bool enable) {</span></a>
 <a name="50"><span class="lineNum">      50 </span>        [<span class="branchCov" title="Branch 0 was taken 50 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         50 :   std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
@@ -194,15 +194,15 @@
 <a name="113"><span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 258 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        258 :   std::cerr.flush();</span></a>
 <a name="114"><span class="lineNum">     114 </span>                :<span class="lineCov">        258 : }</span></a>
 <a name="115"><span class="lineNum">     115 </span>                :            : </a>
-<a name="116"><span class="lineNum">     116 </span>                :<span class="lineCov">     101672 : void Logger::log(LogLevel level, const std::string&amp; component, const std::string&amp; operation,</span></a>
+<a name="116"><span class="lineNum">     116 </span>                :<span class="lineCov">     101660 : void Logger::log(LogLevel level, const std::string&amp; component, const std::string&amp; operation,</span></a>
 <a name="117"><span class="lineNum">     117 </span>                :            :                  const std::string&amp; message) {</a>
-<a name="118"><span class="lineNum">     118 </span>  [<span class="branchCov" title="Branch 0 was taken 101671 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 101671 times"> + </span> :<span class="lineCov">     101672 :   if (!enabled_.load() || level &lt; current_level_.load()) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchCov" title="Branch 5 was taken 101671 times"> + </span>]
+<a name="118"><span class="lineNum">     118 </span>  [<span class="branchCov" title="Branch 0 was taken 101659 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 101659 times"> + </span> :<span class="lineCov">     101660 :   if (!enabled_.load() || level &lt; current_level_.load()) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchCov" title="Branch 5 was taken 101659 times"> + </span>]
 <a name="119"><span class="lineNum">     119 </span>                :<span class="lineCov">       1037 :     return;</span></a>
 <a name="120"><span class="lineNum">     120 </span>                :            :   }</a>
 <a name="121"><span class="lineNum">     121 </span>                :            : </a>
 <a name="122"><span class="lineNum">     122 </span>                :            :   // Use async logging if enabled</a>
-<a name="123"><span class="lineNum">     123 </span>        [<span class="branchCov" title="Branch 0 was taken 1036 times"> + </span><span class="branchCov" title="Branch 1 was taken 100635 times"> + </span>]:<span class="lineCov">     101671 :   if (async_enabled_.load()) {</span></a>
+<a name="123"><span class="lineNum">     123 </span>        [<span class="branchCov" title="Branch 0 was taken 1036 times"> + </span><span class="branchCov" title="Branch 1 was taken 100623 times"> + </span>]:<span class="lineCov">     101659 :   if (async_enabled_.load()) {</span></a>
 <a name="124"><span class="lineNum">     124 </span>        [<span class="branchCov" title="Branch 0 was taken 1036 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1036 :     LogEntry entry(level, component, operation, message);</span></a>
 <a name="125"><span class="lineNum">     125 </span>                :            : </a>
 <a name="126"><span class="lineNum">     126 </span>                :            :     // Always update total logs count</a>
@@ -225,30 +225,30 @@
 <a name="142"><span class="lineNum">     142 </span>                :<span class="lineCov">       1036 :   }</span></a>
 <a name="143"><span class="lineNum">     143 </span>                :            : </a>
 <a name="144"><span class="lineNum">     144 </span>                :            :   // Synchronous logging (when async is disabled)</a>
-<a name="145"><span class="lineNum">     145 </span>        [<span class="branchCov" title="Branch 0 was taken 100635 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     100635 :   std::string formatted_message = format_message(level, component, operation, message);</span></a>
-<a name="146"><span class="lineNum">     146 </span>                :<span class="lineCov">     100635 :   int current_outputs = outputs_.load();</span></a>
+<a name="145"><span class="lineNum">     145 </span>        [<span class="branchCov" title="Branch 0 was taken 100623 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     100623 :   std::string formatted_message = format_message(level, component, operation, message);</span></a>
+<a name="146"><span class="lineNum">     146 </span>                :<span class="lineCov">     100623 :   int current_outputs = outputs_.load();</span></a>
 <a name="147"><span class="lineNum">     147 </span>                :            : </a>
-<a name="148"><span class="lineNum">     148 </span>        [<span class="branchCov" title="Branch 0 was taken 549 times"> + </span><span class="branchCov" title="Branch 1 was taken 100086 times"> + </span>]:<span class="lineCov">     100635 :   if (current_outputs &amp; static_cast&lt;int&gt;(LogOutput::CONSOLE)) {</span></a>
-<a name="149"><span class="lineNum">     149 </span>        [<span class="branchCov" title="Branch 0 was taken 549 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        549 :     write_to_console(formatted_message);</span></a>
+<a name="148"><span class="lineNum">     148 </span>        [<span class="branchCov" title="Branch 0 was taken 537 times"> + </span><span class="branchCov" title="Branch 1 was taken 100086 times"> + </span>]:<span class="lineCov">     100623 :   if (current_outputs &amp; static_cast&lt;int&gt;(LogOutput::CONSOLE)) {</span></a>
+<a name="149"><span class="lineNum">     149 </span>        [<span class="branchCov" title="Branch 0 was taken 537 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        537 :     write_to_console(formatted_message);</span></a>
 <a name="150"><span class="lineNum">     150 </span>                :            :   }</a>
 <a name="151"><span class="lineNum">     151 </span>                :            : </a>
-<a name="152"><span class="lineNum">     152 </span>        [<span class="branchCov" title="Branch 0 was taken 187 times"> + </span><span class="branchCov" title="Branch 1 was taken 100448 times"> + </span>]:<span class="lineCov">     100635 :   if (current_outputs &amp; static_cast&lt;int&gt;(LogOutput::FILE)) {</span></a>
+<a name="152"><span class="lineNum">     152 </span>        [<span class="branchCov" title="Branch 0 was taken 187 times"> + </span><span class="branchCov" title="Branch 1 was taken 100436 times"> + </span>]:<span class="lineCov">     100623 :   if (current_outputs &amp; static_cast&lt;int&gt;(LogOutput::FILE)) {</span></a>
 <a name="153"><span class="lineNum">     153 </span>        [<span class="branchCov" title="Branch 0 was taken 187 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        187 :     check_and_rotate_log();</span></a>
 <a name="154"><span class="lineNum">     154 </span>        [<span class="branchCov" title="Branch 0 was taken 187 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        187 :     write_to_file(formatted_message);</span></a>
 <a name="155"><span class="lineNum">     155 </span>                :            :   }</a>
 <a name="156"><span class="lineNum">     156 </span>                :            : </a>
-<a name="157"><span class="lineNum">     157 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchCov" title="Branch 1 was taken 100630 times"> + </span>]:<span class="lineCov">     100635 :   if (current_outputs &amp; static_cast&lt;int&gt;(LogOutput::CALLBACK)) {</span></a>
+<a name="157"><span class="lineNum">     157 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchCov" title="Branch 1 was taken 100618 times"> + </span>]:<span class="lineCov">     100623 :   if (current_outputs &amp; static_cast&lt;int&gt;(LogOutput::CALLBACK)) {</span></a>
 <a name="158"><span class="lineNum">     158 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :     call_callback(level, formatted_message);</span></a>
 <a name="159"><span class="lineNum">     159 </span>                :            :   }</a>
-<a name="160"><span class="lineNum">     160 </span>                :<span class="lineCov">     100635 : }</span></a>
+<a name="160"><span class="lineNum">     160 </span>                :<span class="lineCov">     100623 : }</span></a>
 <a name="161"><span class="lineNum">     161 </span>                :            : </a>
 <a name="162"><span class="lineNum">     162 </span>                :<span class="lineCov">     101122 : void Logger::debug(const std::string&amp; component, const std::string&amp; operation, const std::string&amp; message) {</span></a>
 <a name="163"><span class="lineNum">     163 </span>                :<span class="lineCov">     101122 :   log(LogLevel::DEBUG, component, operation, message);</span></a>
 <a name="164"><span class="lineNum">     164 </span>                :<span class="lineCov">     101122 : }</span></a>
 <a name="165"><span class="lineNum">     165 </span>                :            : </a>
-<a name="166"><span class="lineNum">     166 </span>                :<span class="lineCov">        471 : void Logger::info(const std::string&amp; component, const std::string&amp; operation, const std::string&amp; message) {</span></a>
-<a name="167"><span class="lineNum">     167 </span>                :<span class="lineCov">        471 :   log(LogLevel::INFO, component, operation, message);</span></a>
-<a name="168"><span class="lineNum">     168 </span>                :<span class="lineCov">        471 : }</span></a>
+<a name="166"><span class="lineNum">     166 </span>                :<span class="lineCov">        459 : void Logger::info(const std::string&amp; component, const std::string&amp; operation, const std::string&amp; message) {</span></a>
+<a name="167"><span class="lineNum">     167 </span>                :<span class="lineCov">        459 :   log(LogLevel::INFO, component, operation, message);</span></a>
+<a name="168"><span class="lineNum">     168 </span>                :<span class="lineCov">        459 : }</span></a>
 <a name="169"><span class="lineNum">     169 </span>                :            : </a>
 <a name="170"><span class="lineNum">     170 </span>                :<span class="lineCov">         11 : void Logger::warning(const std::string&amp; component, const std::string&amp; operation, const std::string&amp; message) {</span></a>
 <a name="171"><span class="lineNum">     171 </span>                :<span class="lineCov">         11 :   log(LogLevel::WARNING, component, operation, message);</span></a>
@@ -262,55 +262,55 @@
 <a name="179"><span class="lineNum">     179 </span>                :<span class="lineCov">          2 :   log(LogLevel::CRITICAL, component, operation, message);</span></a>
 <a name="180"><span class="lineNum">     180 </span>                :<span class="lineCov">          2 : }</span></a>
 <a name="181"><span class="lineNum">     181 </span>                :            : </a>
-<a name="182"><span class="lineNum">     182 </span>                :<span class="lineCov">     101656 : std::string Logger::format_message(LogLevel level, const std::string&amp; component, const std::string&amp; operation,</span></a>
+<a name="182"><span class="lineNum">     182 </span>                :<span class="lineCov">     101644 : std::string Logger::format_message(LogLevel level, const std::string&amp; component, const std::string&amp; operation,</span></a>
 <a name="183"><span class="lineNum">     183 </span>                :            :                                    const std::string&amp; message) {</a>
-<a name="184"><span class="lineNum">     184 </span>        [<span class="branchCov" title="Branch 0 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101656 :   std::string result = format_string_;</span></a>
+<a name="184"><span class="lineNum">     184 </span>        [<span class="branchCov" title="Branch 0 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101644 :   std::string result = format_string_;</span></a>
 <a name="185"><span class="lineNum">     185 </span>                :            : </a>
 <a name="186"><span class="lineNum">     186 </span>                :            :   // Replace placeholders</a>
-<a name="187"><span class="lineNum">     187 </span>        [<span class="branchCov" title="Branch 0 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101656 :   std::string timestamp = get_timestamp();</span></a>
-<a name="188"><span class="lineNum">     188 </span>        [<span class="branchCov" title="Branch 0 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101656 :   std::string level_str = level_to_string(level);</span></a>
+<a name="187"><span class="lineNum">     187 </span>        [<span class="branchCov" title="Branch 0 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101644 :   std::string timestamp = get_timestamp();</span></a>
+<a name="188"><span class="lineNum">     188 </span>        [<span class="branchCov" title="Branch 0 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101644 :   std::string level_str = level_to_string(level);</span></a>
 <a name="189"><span class="lineNum">     189 </span>                :            : </a>
 <a name="190"><span class="lineNum">     190 </span>                :            :   // Simple string replacement</a>
-<a name="191"><span class="lineNum">     191 </span>                :<span class="lineCov">     101656 :   size_t pos = 0;</span></a>
-<a name="192"><span class="lineNum">     192 </span>        [<span class="branchCov" title="Branch 0 was taken 101654 times"> + </span><span class="branchCov" title="Branch 1 was taken 101656 times"> + </span>]:<span class="lineCov">     203310 :   while ((pos = result.find(&quot;{timestamp}&quot;, pos)) != std::string::npos) {</span></a>
-<a name="193"><span class="lineNum">     193 </span>        [<span class="branchCov" title="Branch 0 was taken 101654 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101654 :     result.replace(pos, 11, timestamp);</span></a>
-<a name="194"><span class="lineNum">     194 </span>                :<span class="lineCov">     101654 :     pos += timestamp.length();</span></a>
+<a name="191"><span class="lineNum">     191 </span>                :<span class="lineCov">     101644 :   size_t pos = 0;</span></a>
+<a name="192"><span class="lineNum">     192 </span>        [<span class="branchCov" title="Branch 0 was taken 101642 times"> + </span><span class="branchCov" title="Branch 1 was taken 101644 times"> + </span>]:<span class="lineCov">     203286 :   while ((pos = result.find(&quot;{timestamp}&quot;, pos)) != std::string::npos) {</span></a>
+<a name="193"><span class="lineNum">     193 </span>        [<span class="branchCov" title="Branch 0 was taken 101642 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101642 :     result.replace(pos, 11, timestamp);</span></a>
+<a name="194"><span class="lineNum">     194 </span>                :<span class="lineCov">     101642 :     pos += timestamp.length();</span></a>
 <a name="195"><span class="lineNum">     195 </span>                :            :   }</a>
 <a name="196"><span class="lineNum">     196 </span>                :            : </a>
-<a name="197"><span class="lineNum">     197 </span>                :<span class="lineCov">     101656 :   pos = 0;</span></a>
-<a name="198"><span class="lineNum">     198 </span>        [<span class="branchCov" title="Branch 0 was taken 101655 times"> + </span><span class="branchCov" title="Branch 1 was taken 101656 times"> + </span>]:<span class="lineCov">     203311 :   while ((pos = result.find(&quot;{level}&quot;, pos)) != std::string::npos) {</span></a>
-<a name="199"><span class="lineNum">     199 </span>        [<span class="branchCov" title="Branch 0 was taken 101655 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101655 :     result.replace(pos, 7, level_str);</span></a>
-<a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">     101655 :     pos += level_str.length();</span></a>
+<a name="197"><span class="lineNum">     197 </span>                :<span class="lineCov">     101644 :   pos = 0;</span></a>
+<a name="198"><span class="lineNum">     198 </span>        [<span class="branchCov" title="Branch 0 was taken 101643 times"> + </span><span class="branchCov" title="Branch 1 was taken 101644 times"> + </span>]:<span class="lineCov">     203287 :   while ((pos = result.find(&quot;{level}&quot;, pos)) != std::string::npos) {</span></a>
+<a name="199"><span class="lineNum">     199 </span>        [<span class="branchCov" title="Branch 0 was taken 101643 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101643 :     result.replace(pos, 7, level_str);</span></a>
+<a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">     101643 :     pos += level_str.length();</span></a>
 <a name="201"><span class="lineNum">     201 </span>                :            :   }</a>
 <a name="202"><span class="lineNum">     202 </span>                :            : </a>
-<a name="203"><span class="lineNum">     203 </span>                :<span class="lineCov">     101656 :   pos = 0;</span></a>
-<a name="204"><span class="lineNum">     204 </span>        [<span class="branchCov" title="Branch 0 was taken 101654 times"> + </span><span class="branchCov" title="Branch 1 was taken 101656 times"> + </span>]:<span class="lineCov">     203310 :   while ((pos = result.find(&quot;{component}&quot;, pos)) != std::string::npos) {</span></a>
-<a name="205"><span class="lineNum">     205 </span>        [<span class="branchCov" title="Branch 0 was taken 101654 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101654 :     result.replace(pos, 11, component);</span></a>
-<a name="206"><span class="lineNum">     206 </span>                :<span class="lineCov">     101654 :     pos += component.length();</span></a>
+<a name="203"><span class="lineNum">     203 </span>                :<span class="lineCov">     101644 :   pos = 0;</span></a>
+<a name="204"><span class="lineNum">     204 </span>        [<span class="branchCov" title="Branch 0 was taken 101642 times"> + </span><span class="branchCov" title="Branch 1 was taken 101644 times"> + </span>]:<span class="lineCov">     203286 :   while ((pos = result.find(&quot;{component}&quot;, pos)) != std::string::npos) {</span></a>
+<a name="205"><span class="lineNum">     205 </span>        [<span class="branchCov" title="Branch 0 was taken 101642 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101642 :     result.replace(pos, 11, component);</span></a>
+<a name="206"><span class="lineNum">     206 </span>                :<span class="lineCov">     101642 :     pos += component.length();</span></a>
 <a name="207"><span class="lineNum">     207 </span>                :            :   }</a>
 <a name="208"><span class="lineNum">     208 </span>                :            : </a>
-<a name="209"><span class="lineNum">     209 </span>                :<span class="lineCov">     101656 :   pos = 0;</span></a>
-<a name="210"><span class="lineNum">     210 </span>        [<span class="branchCov" title="Branch 0 was taken 101654 times"> + </span><span class="branchCov" title="Branch 1 was taken 101656 times"> + </span>]:<span class="lineCov">     203310 :   while ((pos = result.find(&quot;{operation}&quot;, pos)) != std::string::npos) {</span></a>
-<a name="211"><span class="lineNum">     211 </span>        [<span class="branchCov" title="Branch 0 was taken 101654 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101654 :     result.replace(pos, 11, operation);</span></a>
-<a name="212"><span class="lineNum">     212 </span>                :<span class="lineCov">     101654 :     pos += operation.length();</span></a>
+<a name="209"><span class="lineNum">     209 </span>                :<span class="lineCov">     101644 :   pos = 0;</span></a>
+<a name="210"><span class="lineNum">     210 </span>        [<span class="branchCov" title="Branch 0 was taken 101642 times"> + </span><span class="branchCov" title="Branch 1 was taken 101644 times"> + </span>]:<span class="lineCov">     203286 :   while ((pos = result.find(&quot;{operation}&quot;, pos)) != std::string::npos) {</span></a>
+<a name="211"><span class="lineNum">     211 </span>        [<span class="branchCov" title="Branch 0 was taken 101642 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101642 :     result.replace(pos, 11, operation);</span></a>
+<a name="212"><span class="lineNum">     212 </span>                :<span class="lineCov">     101642 :     pos += operation.length();</span></a>
 <a name="213"><span class="lineNum">     213 </span>                :            :   }</a>
 <a name="214"><span class="lineNum">     214 </span>                :            : </a>
-<a name="215"><span class="lineNum">     215 </span>                :<span class="lineCov">     101656 :   pos = 0;</span></a>
-<a name="216"><span class="lineNum">     216 </span>        [<span class="branchCov" title="Branch 0 was taken 101655 times"> + </span><span class="branchCov" title="Branch 1 was taken 101656 times"> + </span>]:<span class="lineCov">     203311 :   while ((pos = result.find(&quot;{message}&quot;, pos)) != std::string::npos) {</span></a>
-<a name="217"><span class="lineNum">     217 </span>        [<span class="branchCov" title="Branch 0 was taken 101655 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101655 :     result.replace(pos, 9, message);</span></a>
-<a name="218"><span class="lineNum">     218 </span>                :<span class="lineCov">     101655 :     pos += message.length();</span></a>
+<a name="215"><span class="lineNum">     215 </span>                :<span class="lineCov">     101644 :   pos = 0;</span></a>
+<a name="216"><span class="lineNum">     216 </span>        [<span class="branchCov" title="Branch 0 was taken 101643 times"> + </span><span class="branchCov" title="Branch 1 was taken 101644 times"> + </span>]:<span class="lineCov">     203287 :   while ((pos = result.find(&quot;{message}&quot;, pos)) != std::string::npos) {</span></a>
+<a name="217"><span class="lineNum">     217 </span>        [<span class="branchCov" title="Branch 0 was taken 101643 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101643 :     result.replace(pos, 9, message);</span></a>
+<a name="218"><span class="lineNum">     218 </span>                :<span class="lineCov">     101643 :     pos += message.length();</span></a>
 <a name="219"><span class="lineNum">     219 </span>                :            :   }</a>
 <a name="220"><span class="lineNum">     220 </span>                :            : </a>
-<a name="221"><span class="lineNum">     221 </span>                :<span class="lineCov">     203312 :   return result;</span></a>
-<a name="222"><span class="lineNum">     222 </span>                :<span class="lineCov">     101656 : }</span></a>
+<a name="221"><span class="lineNum">     221 </span>                :<span class="lineCov">     203288 :   return result;</span></a>
+<a name="222"><span class="lineNum">     222 </span>                :<span class="lineCov">     101644 : }</span></a>
 <a name="223"><span class="lineNum">     223 </span>                :            : </a>
-<a name="224"><span class="lineNum">     224 </span>                :<span class="lineCov">     101656 : std::string Logger::level_to_string(LogLevel level) {</span></a>
-<a name="225"><span class="lineNum">     225 </span>  [<span class="branchCov" title="Branch 0 was taken 101121 times"> + </span><span class="branchCov" title="Branch 1 was taken 456 times"> + </span><span class="branchCov" title="Branch 2 was taken 11 times"> + </span><span class="branchCov" title="Branch 3 was taken 66 times"> + </span> :<span class="lineCov">     101656 :   switch (level) {</span></a>
+<a name="224"><span class="lineNum">     224 </span>                :<span class="lineCov">     101644 : std::string Logger::level_to_string(LogLevel level) {</span></a>
+<a name="225"><span class="lineNum">     225 </span>  [<span class="branchCov" title="Branch 0 was taken 101121 times"> + </span><span class="branchCov" title="Branch 1 was taken 444 times"> + </span><span class="branchCov" title="Branch 2 was taken 11 times"> + </span><span class="branchCov" title="Branch 3 was taken 66 times"> + </span> :<span class="lineCov">     101644 :   switch (level) {</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="226"><span class="lineNum">     226 </span>                :<span class="lineCov">     101121 :     case LogLevel::DEBUG:</span></a>
 <a name="227"><span class="lineNum">     227 </span>        [<span class="branchCov" title="Branch 0 was taken 101121 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101121 :       return &quot;DEBUG&quot;;</span></a>
-<a name="228"><span class="lineNum">     228 </span>                :<span class="lineCov">        456 :     case LogLevel::INFO:</span></a>
-<a name="229"><span class="lineNum">     229 </span>        [<span class="branchCov" title="Branch 0 was taken 456 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        456 :       return &quot;INFO&quot;;</span></a>
+<a name="228"><span class="lineNum">     228 </span>                :<span class="lineCov">        444 :     case LogLevel::INFO:</span></a>
+<a name="229"><span class="lineNum">     229 </span>        [<span class="branchCov" title="Branch 0 was taken 444 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        444 :       return &quot;INFO&quot;;</span></a>
 <a name="230"><span class="lineNum">     230 </span>                :<span class="lineCov">         11 :     case LogLevel::WARNING:</span></a>
 <a name="231"><span class="lineNum">     231 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :       return &quot;WARNING&quot;;</span></a>
 <a name="232"><span class="lineNum">     232 </span>                :<span class="lineCov">         66 :     case LogLevel::ERROR:</span></a>
@@ -321,34 +321,34 @@
 <a name="237"><span class="lineNum">     237 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   return &quot;UNKNOWN&quot;;</span></a>
 <a name="238"><span class="lineNum">     238 </span>                :            : }</a>
 <a name="239"><span class="lineNum">     239 </span>                :            : </a>
-<a name="240"><span class="lineNum">     240 </span>                :<span class="lineCov">     101656 : std::string Logger::get_timestamp() {</span></a>
-<a name="241"><span class="lineNum">     241 </span>                :<span class="lineCov">     101656 :   auto now = std::chrono::system_clock::now();</span></a>
-<a name="242"><span class="lineNum">     242 </span>                :<span class="lineCov">     101656 :   auto time_t = std::chrono::system_clock::to_time_t(now);</span></a>
-<a name="243"><span class="lineNum">     243 </span>  [<span class="branchCov" title="Branch 0 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     101656 :   auto ms = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(now.time_since_epoch()) % 1000;</span></a>
-<a name="244"><span class="lineNum">     244 </span>                :<span class="lineCov">     101656 :   std::tm time_info{};</span></a>
+<a name="240"><span class="lineNum">     240 </span>                :<span class="lineCov">     101644 : std::string Logger::get_timestamp() {</span></a>
+<a name="241"><span class="lineNum">     241 </span>                :<span class="lineCov">     101644 :   auto now = std::chrono::system_clock::now();</span></a>
+<a name="242"><span class="lineNum">     242 </span>                :<span class="lineCov">     101644 :   auto time_t = std::chrono::system_clock::to_time_t(now);</span></a>
+<a name="243"><span class="lineNum">     243 </span>  [<span class="branchCov" title="Branch 0 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     101644 :   auto ms = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(now.time_since_epoch()) % 1000;</span></a>
+<a name="244"><span class="lineNum">     244 </span>                :<span class="lineCov">     101644 :   std::tm time_info{};</span></a>
 <a name="245"><span class="lineNum">     245 </span>                :            : </a>
 <a name="246"><span class="lineNum">     246 </span>                :            : #if defined(_WIN32)</a>
 <a name="247"><span class="lineNum">     247 </span>                :            :   ::localtime_s(&amp;time_info, &amp;time_t);</a>
 <a name="248"><span class="lineNum">     248 </span>                :            : #else</a>
-<a name="249"><span class="lineNum">     249 </span>                :<span class="lineCov">     101656 :   ::localtime_r(&amp;time_t, &amp;time_info);</span></a>
+<a name="249"><span class="lineNum">     249 </span>                :<span class="lineCov">     101644 :   ::localtime_r(&amp;time_t, &amp;time_info);</span></a>
 <a name="250"><span class="lineNum">     250 </span>                :            : #endif</a>
 <a name="251"><span class="lineNum">     251 </span>                :            : </a>
-<a name="252"><span class="lineNum">     252 </span>        [<span class="branchCov" title="Branch 0 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101656 :   std::ostringstream oss;</span></a>
-<a name="253"><span class="lineNum">     253 </span>        [<span class="branchCov" title="Branch 0 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101656 :   oss &lt;&lt; std::put_time(&amp;time_info, &quot;%Y-%m-%d %H:%M:%S&quot;);</span></a>
-<a name="254"><span class="lineNum">     254 </span>  [<span class="branchCov" title="Branch 0 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">     101656 :   oss &lt;&lt; '.' &lt;&lt; std::setfill('0') &lt;&lt; std::setw(3) &lt;&lt; ms.count();</span></a>
-<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
-<a name="255"><span class="lineNum">     255 </span>        [<span class="branchCov" title="Branch 0 was taken 101656 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     203312 :   return oss.str();</span></a>
-<a name="256"><span class="lineNum">     256 </span>                :<span class="lineCov">     101656 : }</span></a>
+<a name="252"><span class="lineNum">     252 </span>        [<span class="branchCov" title="Branch 0 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101644 :   std::ostringstream oss;</span></a>
+<a name="253"><span class="lineNum">     253 </span>        [<span class="branchCov" title="Branch 0 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     101644 :   oss &lt;&lt; std::put_time(&amp;time_info, &quot;%Y-%m-%d %H:%M:%S&quot;);</span></a>
+<a name="254"><span class="lineNum">     254 </span>  [<span class="branchCov" title="Branch 0 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">     101644 :   oss &lt;&lt; '.' &lt;&lt; std::setfill('0') &lt;&lt; std::setw(3) &lt;&lt; ms.count();</span></a>
+<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
+<a name="255"><span class="lineNum">     255 </span>        [<span class="branchCov" title="Branch 0 was taken 101644 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">     203288 :   return oss.str();</span></a>
+<a name="256"><span class="lineNum">     256 </span>                :<span class="lineCov">     101644 : }</span></a>
 <a name="257"><span class="lineNum">     257 </span>                :            : </a>
-<a name="258"><span class="lineNum">     258 </span>                :<span class="lineCov">        550 : void Logger::write_to_console(const std::string&amp; message) {</span></a>
+<a name="258"><span class="lineNum">     258 </span>                :<span class="lineCov">        538 : void Logger::write_to_console(const std::string&amp; message) {</span></a>
 <a name="259"><span class="lineNum">     259 </span>                :            :   // Use stderr for ERROR and CRITICAL levels</a>
-<a name="260"><span class="lineNum">     260 </span>  [<span class="branchCov" title="Branch 0 was taken 484 times"> + </span><span class="branchCov" title="Branch 1 was taken 66 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 482 times"> + </span> :<span class="lineCov">        550 :   if (message.find(&quot;[ERROR]&quot;) != std::string::npos || message.find(&quot;[CRITICAL]&quot;) != std::string::npos) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 68 times"> + </span><span class="branchCov" title="Branch 5 was taken 482 times"> + </span>]
+<a name="260"><span class="lineNum">     260 </span>  [<span class="branchCov" title="Branch 0 was taken 472 times"> + </span><span class="branchCov" title="Branch 1 was taken 66 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 470 times"> + </span> :<span class="lineCov">        538 :   if (message.find(&quot;[ERROR]&quot;) != std::string::npos || message.find(&quot;[CRITICAL]&quot;) != std::string::npos) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 68 times"> + </span><span class="branchCov" title="Branch 5 was taken 470 times"> + </span>]
 <a name="261"><span class="lineNum">     261 </span>                :<span class="lineCov">         68 :     std::cerr &lt;&lt; message &lt;&lt; std::endl;</span></a>
 <a name="262"><span class="lineNum">     262 </span>                :            :   } else {</a>
-<a name="263"><span class="lineNum">     263 </span>                :<span class="lineCov">        482 :     std::cout &lt;&lt; message &lt;&lt; std::endl;</span></a>
+<a name="263"><span class="lineNum">     263 </span>                :<span class="lineCov">        470 :     std::cout &lt;&lt; message &lt;&lt; std::endl;</span></a>
 <a name="264"><span class="lineNum">     264 </span>                :            :   }</a>
-<a name="265"><span class="lineNum">     265 </span>                :<span class="lineCov">        550 : }</span></a>
+<a name="265"><span class="lineNum">     265 </span>                :<span class="lineCov">        538 : }</span></a>
 <a name="266"><span class="lineNum">     266 </span>                :            : </a>
 <a name="267"><span class="lineNum">     267 </span>                :<span class="lineCov">        197 : void Logger::write_to_file(const std::string&amp; message) {</span></a>
 <a name="268"><span class="lineNum">     268 </span>        [<span class="branchCov" title="Branch 0 was taken 197 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        197 :   std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
