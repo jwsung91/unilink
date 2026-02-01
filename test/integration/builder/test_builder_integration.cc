@@ -199,7 +199,7 @@ TEST_F(BuilderIntegrationTest, TcpServerBuilderCreatesServer) {
 
   // 수동으로 시작
   server->start();
-  std::this_thread::sleep_for(100ms);  // 서버 시작 대기
+  TestUtils::waitForCondition([&] { return server->is_connected(); });  // 서버 시작 대기
 
   // 서버가 리스닝 상태인지 확인 (실제 네트워크 바인딩 테스트)
   // Note: 실제 포트 바인딩은 시스템 레벨에서 확인해야 함
@@ -235,7 +235,7 @@ TEST_F(BuilderIntegrationTest, TcpClientBuilderCreatesClient) {
 
   // 수동으로 시작 (연결 시도)
   client->start();
-  std::this_thread::sleep_for(100ms);  // 연결 시도 대기
+  TestUtils::waitFor(100);  // 연결 시도 대기
 
   // 클라이언트가 생성되었는지 확인
   EXPECT_TRUE(client != nullptr);
@@ -261,7 +261,7 @@ TEST_F(BuilderIntegrationTest, AutoStartConfiguration) {
   EXPECT_FALSE(server_manual->is_connected());
 
   server_manual->start();
-  std::this_thread::sleep_for(100ms);
+  TestUtils::waitForCondition([&] { return server_manual->is_connected(); });
   // 서버가 시작되었는지 확인
   EXPECT_TRUE(server_manual != nullptr);
 
@@ -270,7 +270,7 @@ TEST_F(BuilderIntegrationTest, AutoStartConfiguration) {
   // auto_start = true인 경우 (실제로는 build() 시점에 시작됨)
   auto server_auto = unilink::tcp_server(test_port + 1).unlimited_clients().build();
 
-  std::this_thread::sleep_for(100ms);
+  TestUtils::waitForCondition([&] { return server_auto->is_connected(); });
   // auto_start가 적용되었는지 확인
   EXPECT_TRUE(server_auto != nullptr);
 
@@ -291,7 +291,7 @@ TEST_F(BuilderIntegrationTest, AutoManageConfiguration) {
   EXPECT_TRUE(server != nullptr);
 
   server->start();
-  std::this_thread::sleep_for(100ms);
+  TestUtils::waitForCondition([&] { return server->is_connected(); });
 
   // auto_manage가 적용되어 자동 관리되는지 확인
   EXPECT_TRUE(server != nullptr);
@@ -328,7 +328,7 @@ TEST_F(BuilderIntegrationTest, CallbackRegistration) {
   EXPECT_TRUE(server != nullptr);
 
   server->start();
-  std::this_thread::sleep_for(100ms);
+  TestUtils::waitForCondition([&] { return server->is_connected(); });
 
   // 포트 충돌로 인한 에러 콜백은 허용하되, 다른 콜백은 호출되지 않아야 함
   if (error_callback_count.load() > 0) {
@@ -373,7 +373,7 @@ TEST_F(BuilderIntegrationTest, BuilderMethodChaining) {
 
   // 모든 설정이 적용되었는지 확인
   server->start();
-  std::this_thread::sleep_for(100ms);
+  TestUtils::waitForCondition([&] { return server->is_connected(); });
 
   EXPECT_TRUE(server != nullptr);
 
@@ -419,7 +419,8 @@ TEST_F(BuilderIntegrationTest, MultipleBuilderInstances) {
   client1->start();
   client2->start();
 
-  std::this_thread::sleep_for(100ms);
+  TestUtils::waitForCondition([&] { return server1->is_connected() && server2->is_connected(); });
+  TestUtils::waitFor(100);
 
   // 각 인스턴스가 독립적으로 작동하는지 확인
   EXPECT_TRUE(server1 != nullptr);
@@ -512,7 +513,7 @@ TEST_F(BuilderIntegrationTest, ErrorHandling) {
   ASSERT_NE(server, nullptr);
 
   server->start();
-  std::this_thread::sleep_for(100ms);
+  TestUtils::waitForCondition([&] { return server->is_connected(); });
 
   // 서버가 생성되었는지 확인
   EXPECT_TRUE(server != nullptr);
@@ -612,7 +613,8 @@ TEST_F(BuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
   ASSERT_NE(server_, nullptr);
 
   // 서버 시작 대기
-  std::this_thread::sleep_for(200ms);
+  server_->start();
+  TestUtils::waitForCondition([&] { return server_->is_connected(); });
 
   // 클라이언트 생성
   client_ = unilink::tcp_client("127.0.0.1", test_port)
@@ -631,8 +633,9 @@ TEST_F(BuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
 
   ASSERT_NE(client_, nullptr);
 
-  // 클라이언트 연결 시도 대기
-  std::this_thread::sleep_for(200ms);
+  // 클라이언트 시작 및 연결 시도 대기
+  client_->start();
+  TestUtils::waitForCondition([&] { return client_->is_connected(); });
 
   // 데이터 전송 테스트
   if (client_->is_connected()) {
@@ -676,7 +679,8 @@ TEST_F(BuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
   ASSERT_NE(server, nullptr);
 
   // 서버 시작 대기
-  std::this_thread::sleep_for(200ms);
+  server->start();
+  TestUtils::waitForCondition([&] { return server->is_connected(); });
 
   // 클라이언트 생성
   auto client = unilink::tcp_client("127.0.0.1", test_port)
@@ -686,8 +690,9 @@ TEST_F(BuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
 
   ASSERT_NE(client, nullptr);
 
-  // 클라이언트 연결 시도 대기
-  std::this_thread::sleep_for(200ms);
+  // 클라이언트 시작 및 연결 시도 대기
+  client->start();
+  TestUtils::waitForCondition([&] { return client->is_connected(); });
 
   // --- Verification ---
   // 빌더로 생성된 객체들이 올바르게 작동하는지 확인

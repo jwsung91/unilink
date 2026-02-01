@@ -240,6 +240,28 @@ gtest_discover_tests(run_unit_transport_udp
     TIMEOUT 30
 )
 
+# UDP transport extended tests
+add_executable(run_unit_transport_udp_extended ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_udp_extended.cc)
+target_link_libraries(run_unit_transport_udp_extended
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_transport_udp_extended)
+target_include_directories(run_unit_transport_udp_extended
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+
+gtest_discover_tests(run_unit_transport_udp_extended
+  PROPERTIES
+    LABELS "unit;transport;udp;extended"
+    TIMEOUT 30
+)
+
 # Contract Compliance Tests
 add_executable(run_unit_test_contract_compliance ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_contract_compliance.cc)
 target_link_libraries(run_unit_test_contract_compliance
@@ -281,5 +303,6 @@ add_dependencies(unilink_unit_tests
   run_unit_transport_tcp_client
   run_unit_transport_tcp_server
   run_unit_transport_serial
+  run_unit_transport_udp_extended
   run_unit_test_contract_compliance
 )
