@@ -371,16 +371,15 @@ class UNILINK_API Logger {
           ? std::chrono::high_resolution_clock::now()                                                 \
           : std::chrono::high_resolution_clock::time_point()
 
-#define UNILINK_LOG_PERF_END(component, operation)                                                               \
-  do {                                                                                                           \
-    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::DEBUG) {         \
-      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                    \
-      auto _perf_duration_##operation =                                                                          \
-          std::chrono::duration_cast<std::chrono::microseconds>(_perf_end_##operation - _perf_start_##operation) \
-              .count();                                                                                          \
-      UNILINK_LOG_DEBUG(component, operation,                                                                    \
-                        "Duration: " + std::to_string(_perf_duration_##operation) + " μs");                      \
-    }                                                                                                            \
+#define UNILINK_LOG_PERF_END(component, operation)                                                                \
+  do {                                                                                                            \
+    if (unilink::diagnostics::Logger::instance().get_level() <= unilink::diagnostics::LogLevel::DEBUG) {          \
+      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \
+      using _us_t = std::chrono::microseconds;                                                                    \
+      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \
+      auto _perf_duration_##operation = std::chrono::duration_cast<_us_t>(_diff_##operation).count();             \
+      UNILINK_LOG_DEBUG(component, operation, "Duration: " + std::to_string(_perf_duration_##operation) + " μs"); \
+    }                                                                                                             \
   } while (0)
 
 }  // namespace diagnostics
