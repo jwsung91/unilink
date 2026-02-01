@@ -9,3 +9,7 @@
 ## 2026-01-29 - Test Synchronization in Async Stop Contracts
 **Learning:** In asynchronous systems, callbacks can validly fire during the `stop()` sequence initiation. Tests asserting 'no callbacks after stop' must set their verification flags *after* the `stop()` method returns (implying the stop signal has propagated), not before.
 **Action:** Order test operations as `object->stop(); flag = true;` instead of `flag = true; object->stop();` to avoid race condition failures in CI.
+
+## 2026-01-29 - Macro Safety in Conditional Initialization
+**Learning:** Macros that expand to multiple statements (e.g. declaration + if check) are unsafe in single-statement contexts (like `if (cond) MACRO;`).
+**Action:** Use the ternary operator for conditional initialization in macros to keep the expansion as a single statement: `auto var = (check) ? val : default;`.
