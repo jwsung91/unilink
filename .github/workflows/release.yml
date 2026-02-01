@@ -97,7 +97,18 @@ jobs:
 
       - name: Build
         shell: bash
-        run: cmake --build build --config Release --parallel --verbose
+        run: |
+          BUILD_ARGS="--config Release --verbose"
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            # Explicitly use all available cores as requested for optimization
+            CORES=$(sysctl -n hw.ncpu)
+            BUILD_ARGS="$BUILD_ARGS --parallel $CORES"
+          else
+            # Rely on CMake/Generator default parallelism for other platforms
+            BUILD_ARGS="$BUILD_ARGS --parallel"
+          fi
+          echo "Building with args: $BUILD_ARGS"
+          cmake --build build $BUILD_ARGS
 
       - name: Test
         shell: bash
