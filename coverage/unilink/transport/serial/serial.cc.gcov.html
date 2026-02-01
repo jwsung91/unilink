@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-01 13:28:19</td>
+            <td class="headerValue">2026-02-01 13:30:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">36</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">321</td>
+            <td class="headerCovTableEntry">322</td>
             <td class="headerCovTableEntry">980</td>
-            <td class="headerCovTableEntryLo">32.8 %</td>
+            <td class="headerCovTableEntryLo">32.9 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -687,7 +687,7 @@
 <a name="522"><span class="lineNum">     522 </span>        [<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         25 :   auto self = shared_from_this();</span></a>
 <a name="523"><span class="lineNum">     523 </span>  [<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         25 :   retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));</span></a>
 <a name="524"><span class="lineNum">     524 </span>        [<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         25 :   retry_timer_.async_wait([self](auto e) {</span></a>
-<a name="525"><span class="lineNum">     525 </span>  [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchCov" title="Branch 1 was taken 14 times"> + </span><span class="branchCov" title="Branch 2 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         21 :     if (!e &amp;&amp; !self-&gt;stopping_.load()) self-&gt;open_and_configure();</span></a>
+<a name="525"><span class="lineNum">     525 </span>  [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 13 times"> + </span><span class="branchCov" title="Branch 2 was taken 7 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span> :<span class="lineCov">         21 :     if (!e &amp;&amp; !self-&gt;stopping_.load()) self-&gt;open_and_configure();</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 7 times"> + </span><span class="branchCov" title="Branch 5 was taken 14 times"> + </span>]
 <a name="526"><span class="lineNum">     526 </span>                :<span class="lineCov">         21 :   });</span></a>
 <a name="527"><span class="lineNum">     527 </span>                :<span class="lineCov">         25 : }</span></a>
