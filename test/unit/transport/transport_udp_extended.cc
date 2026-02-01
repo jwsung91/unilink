@@ -72,8 +72,9 @@ TEST(TransportUdpExtendedTest, AsyncWriteMove) {
   std::vector<uint8_t> rx_buf(1024);
   size_t received_bytes = 0;
   boost::asio::ip::udp::endpoint sender_ep;
-  rx_socket.async_receive_from(boost::asio::buffer(rx_buf), sender_ep,
-                               [&](auto ec, auto n) { if (!ec) received_bytes = n; });
+  rx_socket.async_receive_from(boost::asio::buffer(rx_buf), sender_ep, [&](auto ec, auto n) {
+    if (!ec) received_bytes = n;
+  });
 
   channel->start();
 
@@ -100,8 +101,9 @@ TEST(TransportUdpExtendedTest, AsyncWriteShared) {
   std::vector<uint8_t> rx_buf(1024);
   size_t received_bytes = 0;
   boost::asio::ip::udp::endpoint sender_ep;
-  rx_socket.async_receive_from(boost::asio::buffer(rx_buf), sender_ep,
-                               [&](auto ec, auto n) { if (!ec) received_bytes = n; });
+  rx_socket.async_receive_from(boost::asio::buffer(rx_buf), sender_ep, [&](auto ec, auto n) {
+    if (!ec) received_bytes = n;
+  });
 
   channel->start();
 
@@ -129,8 +131,9 @@ TEST(TransportUdpExtendedTest, PooledBufferWrite) {
   std::vector<uint8_t> rx_buf(1024);
   size_t received_bytes = 0;
   boost::asio::ip::udp::endpoint sender_ep;
-  rx_socket.async_receive_from(boost::asio::buffer(rx_buf), sender_ep,
-                               [&](auto ec, auto n) { if (!ec) received_bytes = n; });
+  rx_socket.async_receive_from(boost::asio::buffer(rx_buf), sender_ep, [&](auto ec, auto n) {
+    if (!ec) received_bytes = n;
+  });
 
   channel->start();
 
@@ -148,7 +151,7 @@ TEST(TransportUdpExtendedTest, BackpressureReporting) {
   config::UdpConfig cfg;
   cfg.local_port = next_port();
   cfg.remote_address = "127.0.0.1";
-  cfg.remote_port = cfg.local_port + 1; // Send to something that might not read fast enough?
+  cfg.remote_port = cfg.local_port + 1;  // Send to something that might not read fast enough?
   // Actually, we rely on queue filling up inside the channel before socket sends.
   cfg.backpressure_threshold = 100;
 
@@ -158,8 +161,8 @@ TEST(TransportUdpExtendedTest, BackpressureReporting) {
   std::atomic<bool> bp_cleared{false};
 
   channel->on_backpressure([&](size_t q) {
-      if (q >= 100) bp_triggered = true;
-      if (q == 0 && bp_triggered) bp_cleared = true;
+    if (q >= 100) bp_triggered = true;
+    if (q == 0 && bp_triggered) bp_cleared = true;
   });
 
   channel->start();
@@ -185,25 +188,25 @@ TEST(TransportUdpExtendedTest, BackpressureReporting) {
 }
 
 TEST(TransportUdpExtendedTest, CallbackExceptionSafety) {
-    boost::asio::io_context ioc;
-    config::UdpConfig cfg;
-    cfg.local_port = next_port();
-    cfg.stop_on_callback_exception = false; // Should not stop on exception
+  boost::asio::io_context ioc;
+  config::UdpConfig cfg;
+  cfg.local_port = next_port();
+  cfg.stop_on_callback_exception = false;  // Should not stop on exception
 
-    auto channel = transport::UdpChannel::create(cfg, ioc);
+  auto channel = transport::UdpChannel::create(cfg, ioc);
 
-    std::atomic<int> calls{0};
-    channel->on_state([&](base::LinkState) {
-        calls++;
-        throw std::runtime_error("State boom");
-    });
+  std::atomic<int> calls{0};
+  channel->on_state([&](base::LinkState) {
+    calls++;
+    throw std::runtime_error("State boom");
+  });
 
-    channel->start();
+  channel->start();
 
-    // Trigger state change
-    pump_io(ioc, 10ms);
+  // Trigger state change
+  pump_io(ioc, 10ms);
 
-    // Should still be running/usable
-    EXPECT_GT(calls, 0);
-    EXPECT_NO_THROW(channel->stop());
+  // Should still be running/usable
+  EXPECT_GT(calls, 0);
+  EXPECT_NO_THROW(channel->stop());
 }

@@ -258,7 +258,7 @@ target_include_directories(run_unit_transport_udp_extended
 
 gtest_discover_tests(run_unit_transport_udp_extended
   PROPERTIES
-    LABELS "unit;transport;udp_extended"
+    LABELS "unit"
     TIMEOUT 30
 )
 
