@@ -13,3 +13,6 @@
 ## 2026-02-05 - MemoryPool Lock Contention and Exhaustion
 **Learning:** Initializing `std::vector` with `nullptr` holes and managing `free_indices` queue caused memory pool exhaustion ("pool death") and unnecessary complexity. Allocating memory inside `lock_guard` caused high contention under load.
 **Action:** Use a simple `std::vector` as a stack for free buffers. Perform `new` allocations outside the lock. Enforce strict capacity limits (`capacity_`) to prevent unbounded growth.
+## 2026-01-29 - Macro Safety in Conditional Initialization
+**Learning:** Macros that expand to multiple statements (e.g. declaration + if check) are unsafe in single-statement contexts (like `if (cond) MACRO;`).
+**Action:** Use the ternary operator for conditional initialization in macros to keep the expansion as a single statement: `auto var = (check) ? val : default;`.
