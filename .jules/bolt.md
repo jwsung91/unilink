@@ -13,3 +13,7 @@
 ## 2026-01-29 - Macro Safety in Conditional Initialization
 **Learning:** Macros that expand to multiple statements (e.g. declaration + if check) are unsafe in single-statement contexts (like `if (cond) MACRO;`).
 **Action:** Use the ternary operator for conditional initialization in macros to keep the expansion as a single statement: `auto var = (check) ? val : default;`.
+
+## 2026-02-18 - MemoryPool Slot Leak Fix
+**Learning:** Using `std::vector` + `std::queue` + `nullptr` holes for memory pooling caused unbounded growth of the vector ("slot leak") and poor cache locality.
+**Action:** Replaced with a simple LIFO stack (`std::vector` back/pop_back). Ensure `capacity` is strictly enforced to prevent unbounded growth.
