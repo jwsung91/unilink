@@ -507,168 +507,165 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc_source.h
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;  <span class="keyword">auto</span> <span class="keyword">self</span> = shared_from_this();</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;  <span class="comment">// Move buffer out of queue immediately to ensure lifetime safety during async op</span></div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;  <span class="keyword">auto</span> current = std::move(tx_.front());</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;  current_write_buffer_ = std::move(tx_.front());</div>
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;  tx_.pop_front();</div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160; </div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;  <span class="keyword">auto</span> on_write = [<span class="keyword">self</span>](<span class="keyword">const</span> boost::system::error_code&amp; ec, std::size_t n) {</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    <span class="keywordflow">if</span> (self-&gt;queued_bytes_ &gt;= n) {</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;      <span class="keyword">self</span>-&gt;queued_bytes_ -= n;</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;      <span class="keyword">self</span>-&gt;queued_bytes_ = 0;</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    }</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    <span class="keyword">self</span>-&gt;report_backpressure(self-&gt;queued_bytes_);</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160; </div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    <span class="keywordflow">if</span> (self-&gt;stopping_.load()) {</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;      <span class="keyword">self</span>-&gt;writing_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    }</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160; </div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    <span class="keywordflow">if</span> (ec) {</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;      <span class="keyword">self</span>-&gt;handle_error(<span class="stringliteral">&quot;write&quot;</span>, ec);</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    }</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;    <span class="keyword">self</span>-&gt;do_write();</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;  };</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160; </div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;  <span class="keywordflow">if</span> (std::holds_alternative&lt;memory::PooledBuffer&gt;(current)) {</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    <span class="keyword">auto</span> pooled_buf = std::get&lt;memory::PooledBuffer&gt;(std::move(current));</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <span class="keyword">auto</span> shared_pooled = std::make_shared&lt;memory::PooledBuffer&gt;(std::move(pooled_buf));</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keyword">auto</span> data = shared_pooled-&gt;data();</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    <span class="keyword">auto</span> size = shared_pooled-&gt;size();</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    port_-&gt;async_write(net::buffer(data, size), net::bind_executor(strand_, [<span class="keyword">self</span>, buf = shared_pooled, on_write](</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;                                                                                <span class="keyword">auto</span> ec, <span class="keyword">auto</span> n) { on_write(ec, n); }));</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (std::holds_alternative&lt;std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt;&gt;(current)) {</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    <span class="keyword">auto</span> shared_buf = std::get&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(std::move(current));</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    <span class="keyword">auto</span> data = shared_buf-&gt;data();</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    <span class="keyword">auto</span> size = shared_buf-&gt;size();</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    port_-&gt;async_write(net::buffer(data, size),</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;                       net::bind_executor(strand_, [<span class="keyword">self</span>, buf = std::move(shared_buf), on_write](<span class="keyword">auto</span> ec, <span class="keyword">auto</span> n) {</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;                         on_write(ec, n);</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;                       }));</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    <span class="keyword">auto</span> vec_buf = std::get&lt;std::vector&lt;uint8_t&gt;&gt;(std::move(current));</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    <span class="keyword">auto</span> shared_vec = std::make_shared&lt;std::vector&lt;uint8_t&gt;&gt;(std::move(vec_buf));</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    <span class="keyword">auto</span> data = shared_vec-&gt;data();</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;    <span class="keyword">auto</span> size = shared_vec-&gt;size();</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    port_-&gt;async_write(net::buffer(data, size), net::bind_executor(strand_, [<span class="keyword">self</span>, buf = shared_vec, on_write](</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;                                                                                <span class="keyword">auto</span> ec, <span class="keyword">auto</span> n) { on_write(ec, n); }));</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;  }</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;}</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160; </div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;<span class="keywordtype">void</span> Serial::handle_error(<span class="keyword">const</span> <span class="keywordtype">char</span>* where, <span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;  <span class="comment">// EOF is not a real error, so restart reading</span></div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;  <span class="keywordflow">if</span> (ec == boost::asio::error::eof) {</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;    <a class="code" href="logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e">UNILINK_LOG_DEBUG</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;read&quot;</span>, <span class="stringliteral">&quot;EOF detected, restarting read&quot;</span>);</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;    start_read();</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;  }</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160; </div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;  <span class="keywordflow">if</span> (stopping_.load()) {</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    opened_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    close_port();</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    state_.set_state(base::LinkState::Closed);</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;    notify_state();</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;  }</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160; </div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;  <span class="keywordflow">if</span> (ec == boost::asio::error::operation_aborted) {</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    <span class="comment">// If we already flagged an error (e.g., queue overflow) don&#39;t override with Closed.</span></div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    <span class="keywordflow">if</span> (state_.is_state(base::LinkState::Error)) {</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    }</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    opened_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;    close_port();</div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    state_.set_state(base::LinkState::Closed);</div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;    notify_state();</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;  }</div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160; </div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;  <span class="comment">// 구조화된 에러 처리</span></div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;  <span class="keywordtype">bool</span> retryable = cfg_.reopen_on_error;</div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;  <a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a046038bdcaa398142d49721c0e403c10">diagnostics::error_reporting::report_connection_error</a>(<span class="stringliteral">&quot;serial&quot;</span>, where, ec, retryable);</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160; </div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;  <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, where, <span class="stringliteral">&quot;Error: &quot;</span> + ec.message() + <span class="stringliteral">&quot; (code: &quot;</span> + std::to_string(ec.value()) + <span class="stringliteral">&quot;)&quot;</span>);</div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160; </div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;  <span class="keywordflow">if</span> (cfg_.reopen_on_error) {</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    opened_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    close_port();</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    state_.set_state(base::LinkState::Connecting);</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    notify_state();</div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;    schedule_retry(where, ec);</div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    opened_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    close_port();</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;    state_.set_state(base::LinkState::Error);</div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;    notify_state();</div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;  }</div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;}</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160; </div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;<span class="keywordtype">void</span> Serial::schedule_retry(<span class="keyword">const</span> <span class="keywordtype">char</span>* where, <span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;  <a class="code" href="logger_8hpp.html#ab49f7375e915c38d565d7247094e3565">UNILINK_LOG_INFO</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;retry&quot;</span>,</div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;                   <span class="stringliteral">&quot;Scheduling retry after &quot;</span> + std::to_string(cfg_.retry_interval_ms / 1000.0) + <span class="stringliteral">&quot;s at &quot;</span> + where +</div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;                       <span class="stringliteral">&quot; (&quot;</span> + ec.message() + <span class="stringliteral">&quot;)&quot;</span>);</div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;  <span class="keywordflow">if</span> (stopping_.load()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;  <span class="keyword">auto</span> <span class="keyword">self</span> = shared_from_this();</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;  retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;  retry_timer_.async_wait([<span class="keyword">self</span>](<span class="keyword">auto</span> e) {</div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;    <span class="keywordflow">if</span> (!e &amp;&amp; !self-&gt;stopping_.load()) self-&gt;open_and_configure();</div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;  });</div>
-<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;}</div>
-<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160; </div>
-<div class="line"><a name="l00529"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1Serial.html#a607b934b615ba645def9e7ab27f455f8">  529</a></span>&#160;<span class="keywordtype">void</span> Serial::set_retry_interval(<span class="keywordtype">unsigned</span> interval_ms) { cfg_.retry_interval_ms = interval_ms; }</div>
-<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160; </div>
-<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;<span class="keywordtype">void</span> Serial::close_port() {</div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;  boost::system::error_code ec;</div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;  <span class="keywordflow">if</span> (port_ &amp;&amp; port_-&gt;is_open()) {</div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;    <span class="comment">// For serial_port, close() cancels pending asynchronous operations. The</span></div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;    <span class="comment">// read handler will be called with an error.</span></div>
-<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;    port_-&gt;close(ec);</div>
-<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;  }</div>
-<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;}</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;  <span class="keyword">auto</span>&amp; current = *current_write_buffer_;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160; </div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;  <span class="keyword">auto</span> on_write = [<span class="keyword">self</span>](<span class="keyword">const</span> boost::system::error_code&amp; ec, std::size_t n) {</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    <span class="keyword">self</span>-&gt;current_write_buffer_.reset();</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160; </div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    <span class="keywordflow">if</span> (self-&gt;queued_bytes_ &gt;= n) {</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;      <span class="keyword">self</span>-&gt;queued_bytes_ -= n;</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;      <span class="keyword">self</span>-&gt;queued_bytes_ = 0;</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;    }</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    <span class="keyword">self</span>-&gt;report_backpressure(self-&gt;queued_bytes_);</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160; </div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    <span class="keywordflow">if</span> (self-&gt;stopping_.load()) {</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;      <span class="keyword">self</span>-&gt;writing_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;    }</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160; </div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;    <span class="keywordflow">if</span> (ec) {</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;      <span class="keyword">self</span>-&gt;handle_error(<span class="stringliteral">&quot;write&quot;</span>, ec);</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    }</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    <span class="keyword">self</span>-&gt;do_write();</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;  };</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160; </div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;  <span class="keywordflow">if</span> (std::holds_alternative&lt;memory::PooledBuffer&gt;(current)) {</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    <span class="keyword">auto</span>&amp; pooled_buf = std::get&lt;memory::PooledBuffer&gt;(current);</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    <span class="keyword">auto</span> data = pooled_buf.data();</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    <span class="keyword">auto</span> size = pooled_buf.size();</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    port_-&gt;async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (std::holds_alternative&lt;std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt;&gt;(current)) {</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    <span class="keyword">auto</span>&amp; shared_buf = std::get&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(current);</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    <span class="keyword">auto</span> data = shared_buf-&gt;data();</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;    <span class="keyword">auto</span> size = shared_buf-&gt;size();</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    port_-&gt;async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    <span class="keyword">auto</span>&amp; vec_buf = std::get&lt;std::vector&lt;uint8_t&gt;&gt;(current);</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    <span class="keyword">auto</span> data = vec_buf.data();</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    <span class="keyword">auto</span> size = vec_buf.size();</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    port_-&gt;async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;  }</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;}</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160; </div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;<span class="keywordtype">void</span> Serial::handle_error(<span class="keyword">const</span> <span class="keywordtype">char</span>* where, <span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;  <span class="comment">// EOF is not a real error, so restart reading</span></div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;  <span class="keywordflow">if</span> (ec == boost::asio::error::eof) {</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;    <a class="code" href="logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e">UNILINK_LOG_DEBUG</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;read&quot;</span>, <span class="stringliteral">&quot;EOF detected, restarting read&quot;</span>);</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;    start_read();</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;  }</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160; </div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;  <span class="keywordflow">if</span> (stopping_.load()) {</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;    opened_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    close_port();</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;    state_.set_state(base::LinkState::Closed);</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    notify_state();</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;  }</div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160; </div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;  <span class="keywordflow">if</span> (ec == boost::asio::error::operation_aborted) {</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;    <span class="comment">// If we already flagged an error (e.g., queue overflow) don&#39;t override with Closed.</span></div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;    <span class="keywordflow">if</span> (state_.is_state(base::LinkState::Error)) {</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    }</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    opened_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    close_port();</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    state_.set_state(base::LinkState::Closed);</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    notify_state();</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;  }</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160; </div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;  <span class="comment">// 구조화된 에러 처리</span></div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;  <span class="keywordtype">bool</span> retryable = cfg_.reopen_on_error;</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;  <a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a046038bdcaa398142d49721c0e403c10">diagnostics::error_reporting::report_connection_error</a>(<span class="stringliteral">&quot;serial&quot;</span>, where, ec, retryable);</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160; </div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;  <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, where, <span class="stringliteral">&quot;Error: &quot;</span> + ec.message() + <span class="stringliteral">&quot; (code: &quot;</span> + std::to_string(ec.value()) + <span class="stringliteral">&quot;)&quot;</span>);</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160; </div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;  <span class="keywordflow">if</span> (cfg_.reopen_on_error) {</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;    opened_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;    close_port();</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;    state_.set_state(base::LinkState::Connecting);</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    notify_state();</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    schedule_retry(where, ec);</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    opened_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;    close_port();</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;    state_.set_state(base::LinkState::Error);</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    notify_state();</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;  }</div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;}</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160; </div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;<span class="keywordtype">void</span> Serial::schedule_retry(<span class="keyword">const</span> <span class="keywordtype">char</span>* where, <span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;  <a class="code" href="logger_8hpp.html#ab49f7375e915c38d565d7247094e3565">UNILINK_LOG_INFO</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;retry&quot;</span>,</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;                   <span class="stringliteral">&quot;Scheduling retry after &quot;</span> + std::to_string(cfg_.retry_interval_ms / 1000.0) + <span class="stringliteral">&quot;s at &quot;</span> + where +</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;                       <span class="stringliteral">&quot; (&quot;</span> + ec.message() + <span class="stringliteral">&quot;)&quot;</span>);</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;  <span class="keywordflow">if</span> (stopping_.load()) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;  <span class="keyword">auto</span> <span class="keyword">self</span> = shared_from_this();</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;  retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;  retry_timer_.async_wait([<span class="keyword">self</span>](<span class="keyword">auto</span> e) {</div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;    <span class="keywordflow">if</span> (!e &amp;&amp; !self-&gt;stopping_.load()) self-&gt;open_and_configure();</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;  });</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;}</div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160; </div>
+<div class="line"><a name="l00526"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1Serial.html#a607b934b615ba645def9e7ab27f455f8">  526</a></span>&#160;<span class="keywordtype">void</span> Serial::set_retry_interval(<span class="keywordtype">unsigned</span> interval_ms) { cfg_.retry_interval_ms = interval_ms; }</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160; </div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;<span class="keywordtype">void</span> Serial::close_port() {</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;  boost::system::error_code ec;</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;  <span class="keywordflow">if</span> (port_ &amp;&amp; port_-&gt;is_open()) {</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;    <span class="comment">// For serial_port, close() cancels pending asynchronous operations. The</span></div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;    <span class="comment">// read handler will be called with an error.</span></div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;    port_-&gt;close(ec);</div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;  }</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;}</div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160; </div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;<span class="keywordtype">void</span> Serial::notify_state() {</div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;  <span class="keywordflow">if</span> (stopping_.load() || !on_state_) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160; </div>
-<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;<span class="keywordtype">void</span> Serial::notify_state() {</div>
-<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;  <span class="keywordflow">if</span> (stopping_.load() || !on_state_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160; </div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;  <span class="keywordflow">if</span> (on_state_) {</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;      on_state_(state_.get_state());</div>
-<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;callback&quot;</span>, <span class="stringliteral">&quot;State callback error: &quot;</span> + std::string(e.what()));</div>
-<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;      <a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a96f11a617495c26be4fc00d797bd0804">diagnostics::error_reporting::report_system_error</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;state_callback&quot;</span>,</div>
-<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;                                                        <span class="stringliteral">&quot;Exception in state callback: &quot;</span> + std::string(e.what()));</div>
-<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;callback&quot;</span>, <span class="stringliteral">&quot;Unknown error in state callback&quot;</span>);</div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;      <a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a96f11a617495c26be4fc00d797bd0804">diagnostics::error_reporting::report_system_error</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;state_callback&quot;</span>, <span class="stringliteral">&quot;Unknown error in state callback&quot;</span>);</div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;    }</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;  }</div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;}</div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;  <span class="keywordflow">if</span> (on_state_) {</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;    <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;      on_state_(state_.get_state());</div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;callback&quot;</span>, <span class="stringliteral">&quot;State callback error: &quot;</span> + std::string(e.what()));</div>
+<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;      <a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a96f11a617495c26be4fc00d797bd0804">diagnostics::error_reporting::report_system_error</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;state_callback&quot;</span>,</div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;                                                        <span class="stringliteral">&quot;Exception in state callback: &quot;</span> + std::string(e.what()));</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;callback&quot;</span>, <span class="stringliteral">&quot;Unknown error in state callback&quot;</span>);</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;      <a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a96f11a617495c26be4fc00d797bd0804">diagnostics::error_reporting::report_system_error</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;state_callback&quot;</span>, <span class="stringliteral">&quot;Unknown error in state callback&quot;</span>);</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;    }</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;  }</div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;}</div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160; </div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;<span class="keywordtype">void</span> Serial::report_backpressure(<span class="keywordtype">size_t</span> queued_bytes) {</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;  <span class="keywordflow">if</span> (stopping_.load() || !on_bp_) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160; </div>
-<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;<span class="keywordtype">void</span> Serial::report_backpressure(<span class="keywordtype">size_t</span> queued_bytes) {</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;  <span class="keywordflow">if</span> (stopping_.load() || !on_bp_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160; </div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;  <span class="keywordflow">if</span> (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;    backpressure_active_ = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;      on_bp_(queued_bytes);</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Exception in backpressure callback: &quot;</span> + std::string(e.what()));</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    }</div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;    backpressure_active_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;      on_bp_(queued_bytes);</div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Exception in backpressure callback: &quot;</span> + std::string(e.what()));</div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;    }</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;  }</div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;}</div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160; </div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;  <span class="keywordflow">if</span> (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;    backpressure_active_ = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;    <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;      on_bp_(queued_bytes);</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Exception in backpressure callback: &quot;</span> + std::string(e.what()));</div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    }</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;    backpressure_active_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;      on_bp_(queued_bytes);</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Exception in backpressure callback: &quot;</span> + std::string(e.what()));</div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;    }</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;  }</div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;}</div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160; </div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aboost__serial__port_8hpp_html"><div class="ttname"><a href="boost__serial__port_8hpp.html">boost_serial_port.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1IoContextManager_html_af8bc9a1e74cd2b081311ae3686bbc8ba"><div class="ttname"><a href="classunilink_1_1concurrency_1_1IoContextManager.html#af8bc9a1e74cd2b081311ae3686bbc8ba">unilink::concurrency::IoContextManager::instance</a></div><div class="ttdeci">static IoContextManager &amp; instance()</div><div class="ttdef"><b>Definition:</b> <a href="io__context__manager_8cc_source.html#l00032">io_context_manager.cc:32</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a2a34895018b104dccc9bf49143008b55"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(const uint8_t *, size_t)&gt; OnBytes</div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00029">channel.hpp:29</a></div></div>
@@ -677,7 +674,7 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc_source.h
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html">unilink::memory::PooledBuffer</a></div><div class="ttdoc">RAII wrapper for memory pool buffers with enhanced safety.</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00146">memory_pool.hpp:146</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a7aa1378391f5ef5a4ddbf6abff971f81"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a7aa1378391f5ef5a4ddbf6abff971f81">unilink::memory::PooledBuffer::data</a></div><div class="ttdeci">uint8_t * data() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00247">memory_pool.cc:247</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_abf8fb1fa73f66373f96a9eb2821d6cbf"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#abf8fb1fa73f66373f96a9eb2821d6cbf">unilink::memory::PooledBuffer::valid</a></div><div class="ttdeci">bool valid() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00251">memory_pool.cc:251</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1Serial_html"><div class="ttname"><a href="classunilink_1_1transport_1_1Serial.html">unilink::transport::Serial</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2serial_2serial_8hpp_source.html#l00051">serial.hpp:51</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1Serial_html"><div class="ttname"><a href="classunilink_1_1transport_1_1Serial.html">unilink::transport::Serial</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2serial_2serial_8hpp_source.html#l00052">serial.hpp:52</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1Serial_html_a19216fb28f4a3bc7dd328f549e2c733d"><div class="ttname"><a href="classunilink_1_1transport_1_1Serial.html#a19216fb28f4a3bc7dd328f549e2c733d">unilink::transport::Serial::async_write_copy</a></div><div class="ttdeci">void async_write_copy(const uint8_t *data, size_t n) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2serial_2serial_8cc_source.html#l00176">serial.cc:176</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1Serial_html_a1c53a52c146e739a1349240a2db495fa"><div class="ttname"><a href="classunilink_1_1transport_1_1Serial.html#a1c53a52c146e739a1349240a2db495fa">unilink::transport::Serial::on_backpressure</a></div><div class="ttdeci">void on_backpressure(OnBackpressure cb) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2serial_2serial_8cc_source.html#l00300">serial.cc:300</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1Serial_html_a36c1543fbe8a209eaecbb26115c65044"><div class="ttname"><a href="classunilink_1_1transport_1_1Serial.html#a36c1543fbe8a209eaecbb26115c65044">unilink::transport::Serial::async_write_move</a></div><div class="ttdeci">void async_write_move(std::vector&lt; uint8_t &gt; &amp;&amp;data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2serial_2serial_8cc_source.html#l00239">serial.cc:239</a></div></div>
@@ -725,7 +722,7 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc_source.h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_2c4cf4388c6c65b31421f3ec6a8a630e.html">serial</a></li><li class="navelem"><a class="el" href="transport_2serial_2serial_8cc.html">serial.cc</a></li>
-    <li class="footer">Generated on Mon Feb 2 2026 14:20:32 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 2 2026 23:05:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

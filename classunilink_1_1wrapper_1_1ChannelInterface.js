@@ -1,5 +1,6 @@
 var classunilink_1_1wrapper_1_1ChannelInterface =
 [
+    [ "BytesHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583", null ],
     [ "ConnectHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d", null ],
     [ "DataHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe", null ],
     [ "DisconnectHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1", null ],
@@ -7,6 +8,7 @@ var classunilink_1_1wrapper_1_1ChannelInterface =
     [ "~ChannelInterface", "classunilink_1_1wrapper_1_1ChannelInterface.html#abddae5fa4d73b824ca5ef57c0d6bd003", null ],
     [ "auto_manage", "classunilink_1_1wrapper_1_1ChannelInterface.html#ac71f3147a23e965e84c604dba61aa202", null ],
     [ "is_connected", "classunilink_1_1wrapper_1_1ChannelInterface.html#af00a13e38e4a80728ccdc573c5d8da97", null ],
+    [ "on_bytes", "classunilink_1_1wrapper_1_1ChannelInterface.html#a200ffcd4fbc71a258c51d7ee4716637a", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1ChannelInterface.html#a9b747c0b143607fe8b686fbc67e71be6", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1ChannelInterface.html#adabfa610526528b1df33f98a9fecfce6", null ],
     [ "on_disconnect", "classunilink_1_1wrapper_1_1ChannelInterface.html#acf61b7456eb0d9b52cee87fed9511b9a", null ],

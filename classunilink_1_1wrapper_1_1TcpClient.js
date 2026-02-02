@@ -6,6 +6,7 @@ var classunilink_1_1wrapper_1_1TcpClient =
     [ "~TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html#a13df30e6120e04031d291161174ec20a", null ],
     [ "auto_manage", "classunilink_1_1wrapper_1_1TcpClient.html#a294bf48fb4459bdd0cb8e88dd6d653a9", null ],
     [ "is_connected", "classunilink_1_1wrapper_1_1TcpClient.html#acef3c0ea58810f26fca4276945430b21", null ],
+    [ "on_bytes", "classunilink_1_1wrapper_1_1TcpClient.html#acbd6074137136b33e21b6a5ccd79ccc1", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1TcpClient.html#a4724167f44afa07de9b1a431bf77a950", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1TcpClient.html#aef50c01c7b208c868af1e388a7ef0b2d", null ],
     [ "on_disconnect", "classunilink_1_1wrapper_1_1TcpClient.html#ab769b0840932e5763e77d20950a4affb", null ],

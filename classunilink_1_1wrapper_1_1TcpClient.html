@@ -124,6 +124,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acef3c0ea58810f26fca4276945430b21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef50c01c7b208c868af1e388a7ef0b2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#aef50c01c7b208c868af1e388a7ef0b2d">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">DataHandler</a> handler) override</td></tr>
 <tr class="separator:aef50c01c7b208c868af1e388a7ef0b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbd6074137136b33e21b6a5ccd79ccc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#acbd6074137136b33e21b6a5ccd79ccc1">on_bytes</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">BytesHandler</a> handler) override</td></tr>
+<tr class="separator:acbd6074137136b33e21b6a5ccd79ccc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4724167f44afa07de9b1a431bf77a950"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a4724167f44afa07de9b1a431bf77a950">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a> handler) override</td></tr>
 <tr class="separator:a4724167f44afa07de9b1a431bf77a950"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab769b0840932e5763e77d20950a4affb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#ab769b0840932e5763e77d20950a4affb">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a> handler) override</td></tr>
@@ -149,6 +151,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1wrapper_1_1ChannelInterface')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></td></tr>
 <tr class="memitem:a86572f53649987268db00b5d8414b9fe inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">DataHandler</a> = std::function&lt; void(const std::string &amp;)&gt;</td></tr>
 <tr class="separator:a86572f53649987268db00b5d8414b9fe inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81289906b7cdc6c057cc0a4631ad1583 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">BytesHandler</a> = std::function&lt; void(const uint8_t *, size_t)&gt;</td></tr>
+<tr class="separator:a81289906b7cdc6c057cc0a4631ad1583 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e452891783b39a8cf4daff9e958823d inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a> = std::function&lt; void()&gt;</td></tr>
 <tr class="separator:a1e452891783b39a8cf4daff9e958823d inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67ac18cb3330353d068c4afedf6cbec1 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a> = std::function&lt; void()&gt;</td></tr>
@@ -308,7 +312,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ac71f3147a23e965e84c604dba61aa202">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00144">144</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00152">152</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -341,6 +345,36 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="acbd6074137136b33e21b6a5ccd79ccc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbd6074137136b33e21b6a5ccd79ccc1">&#9670;&nbsp;</a></span>on_bytes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::TcpClient::on_bytes </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">BytesHandler</a>&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a200ffcd4fbc71a258c51d7ee4716637a">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00129">129</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+
+</div>
+</div>
 <a id="a4724167f44afa07de9b1a431bf77a950"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4724167f44afa07de9b1a431bf77a950">&#9670;&nbsp;</a></span>on_connect()</h2>
 
@@ -367,7 +401,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a9b747c0b143607fe8b686fbc67e71be6">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00129">129</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00137">137</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -427,7 +461,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#acf61b7456eb0d9b52cee87fed9511b9a">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00134">134</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00142">142</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -457,7 +491,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae9837f9dfd68b6db1fa62ef7078d96fe">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00139">139</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00147">147</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -537,7 +571,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00167">167</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00175">175</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -557,7 +591,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00169">169</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00177">177</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -577,7 +611,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00165">165</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00173">173</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -597,7 +631,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00152">152</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00160">160</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -669,7 +703,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a></li>
-    <li class="footer">Generated on Mon Feb 2 2026 14:20:32 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 2 2026 23:05:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

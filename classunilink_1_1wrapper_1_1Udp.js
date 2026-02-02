@@ -6,6 +6,7 @@ var classunilink_1_1wrapper_1_1Udp =
     [ "~Udp", "classunilink_1_1wrapper_1_1Udp.html#acf9d4884df80f0447b36e98bfaf09204", null ],
     [ "auto_manage", "classunilink_1_1wrapper_1_1Udp.html#a2e5849a48023bcbfc77d9fa7e7493bbe", null ],
     [ "is_connected", "classunilink_1_1wrapper_1_1Udp.html#a6a8b0ff32de37f594838d3c2ed887d90", null ],
+    [ "on_bytes", "classunilink_1_1wrapper_1_1Udp.html#ae926e396395fbcd1292e2c11dad230c8", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1Udp.html#a862fe583d906bab2fd2cdecf32ffb270", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1Udp.html#ae04b14d83e19c0f4c481f0162b5df41e", null ],
     [ "on_disconnect", "classunilink_1_1wrapper_1_1Udp.html#ad622df41aed2ff66aad957f261fbedf6", null ],

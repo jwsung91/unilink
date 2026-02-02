@@ -110,6 +110,8 @@ Inheritance diagram for unilink::wrapper::ChannelInterface:</div>
 Public Types</h2></td></tr>
 <tr class="memitem:a86572f53649987268db00b5d8414b9fe"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">DataHandler</a> = std::function&lt; void(const std::string &amp;)&gt;</td></tr>
 <tr class="separator:a86572f53649987268db00b5d8414b9fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81289906b7cdc6c057cc0a4631ad1583"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">BytesHandler</a> = std::function&lt; void(const uint8_t *, size_t)&gt;</td></tr>
+<tr class="separator:a81289906b7cdc6c057cc0a4631ad1583"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e452891783b39a8cf4daff9e958823d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a> = std::function&lt; void()&gt;</td></tr>
 <tr class="separator:a1e452891783b39a8cf4daff9e958823d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67ac18cb3330353d068c4afedf6cbec1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a> = std::function&lt; void()&gt;</td></tr>
@@ -133,6 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af00a13e38e4a80728ccdc573c5d8da97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adabfa610526528b1df33f98a9fecfce6"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adabfa610526528b1df33f98a9fecfce6">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">DataHandler</a> handler)=0</td></tr>
 <tr class="separator:adabfa610526528b1df33f98a9fecfce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a200ffcd4fbc71a258c51d7ee4716637a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a200ffcd4fbc71a258c51d7ee4716637a">on_bytes</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">BytesHandler</a> handler)=0</td></tr>
+<tr class="separator:a200ffcd4fbc71a258c51d7ee4716637a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b747c0b143607fe8b686fbc67e71be6"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a9b747c0b143607fe8b686fbc67e71be6">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a> handler)=0</td></tr>
 <tr class="separator:a9b747c0b143607fe8b686fbc67e71be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf61b7456eb0d9b52cee87fed9511b9a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#acf61b7456eb0d9b52cee87fed9511b9a">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a> handler)=0</td></tr>
@@ -146,6 +150,22 @@ Public Member Functions</h2></td></tr>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00029">29</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a81289906b7cdc6c057cc0a4631ad1583"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81289906b7cdc6c057cc0a4631ad1583">&#9670;&nbsp;</a></span>BytesHandler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">unilink::wrapper::ChannelInterface::BytesHandler</a> =  std::function&lt;void(const uint8_t*, size_t)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00032">32</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a1e452891783b39a8cf4daff9e958823d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1e452891783b39a8cf4daff9e958823d">&#9670;&nbsp;</a></span>ConnectHandler</h2>
 
@@ -158,7 +178,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00032">32</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00033">33</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -190,7 +210,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00033">33</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00034">34</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -206,7 +226,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00034">34</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00035">35</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -289,6 +309,34 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a6a8b0ff32de37f594838d3c2ed887d90">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a6a3098b0fa9d7c3e6dc84b01d7473509">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#acef3c0ea58810f26fca4276945430b21">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a19032f98db2f1cbf4382f03ad9c97730">unilink::wrapper::Serial</a>.</p>
+
+</div>
+</div>
+<a id="a200ffcd4fbc71a258c51d7ee4716637a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a200ffcd4fbc71a258c51d7ee4716637a">&#9670;&nbsp;</a></span>on_bytes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; unilink::wrapper::ChannelInterface::on_bytes </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">BytesHandler</a>&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#ae926e396395fbcd1292e2c11dad230c8">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a9fc3373629bc44d611683f10ea87b63a">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#acbd6074137136b33e21b6a5ccd79ccc1">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a334d5d27acaefd74b088eca099e8a023">unilink::wrapper::Serial</a>.</p>
 
 </div>
 </div>
@@ -523,7 +571,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Mon Feb 2 2026 14:20:32 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 2 2026 23:05:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

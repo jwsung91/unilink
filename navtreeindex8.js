@@ -1,5 +1,14 @@
 var NAVTREEINDEX8 =
 {
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a21c46e51e58b6a95af4f69fb19a34a6b":[18,0,0,4,13,2],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a5203845b7e46404a0c93565cddbe8015":[18,0,0,4,13,1],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a648eefc0925d9217bac0ac142d16c128":[18,0,0,4,13,0],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a92013e35bdfd49b85f88390c19d4cbb4":[18,0,0,4,13,6],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a9c3bbbeb7824ef5627224ed82ff4e1e9":[18,0,0,4,13,9],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#aa42fa4a7a720d5b71c0426f632f290d0":[18,0,0,4,13,10],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#aade07c7142f064ccc5de473c11f69f05":[18,0,0,4,13,3],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#ab177d7886568f0a95c08901bb2a5408c":[18,0,0,4,13,4],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#abb181f5b529e0409a5ba87c6a318646c":[18,0,0,4,13,5],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html":[18,0,0,4,1],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a02c3bdd8b32efc581ee91138fe82530a":[18,0,0,4,1,0],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a270827dd9f3bb427f7bc8ee4bf12395e":[18,0,0,4,1,4],

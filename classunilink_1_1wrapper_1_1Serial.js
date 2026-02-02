@@ -7,6 +7,7 @@ var classunilink_1_1wrapper_1_1Serial =
     [ "auto_manage", "classunilink_1_1wrapper_1_1Serial.html#a49a8f65c60fe8de6accf0dde6688dd67", null ],
     [ "build_config", "classunilink_1_1wrapper_1_1Serial.html#a187aba4ee4b20cc58f9bf6715291983b", null ],
     [ "is_connected", "classunilink_1_1wrapper_1_1Serial.html#a19032f98db2f1cbf4382f03ad9c97730", null ],
+    [ "on_bytes", "classunilink_1_1wrapper_1_1Serial.html#a334d5d27acaefd74b088eca099e8a023", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1Serial.html#a20f5732ead28cafd58542e8f5e9f5d10", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1Serial.html#a0ebffd2ae6d013f6978e47334f202a95", null ],
     [ "on_disconnect", "classunilink_1_1wrapper_1_1Serial.html#a9d8a5f09ad47b36d2d5cb128d18c36b0", null ],

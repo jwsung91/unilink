@@ -134,97 +134,100 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8hpp
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keywordtype">bool</span> is_connected() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_data(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">DataHandler</a> handler) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_connect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a> handler) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_disconnect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a> handler) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_error(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">ErrorHandler</a> handler) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; auto_manage(<span class="keywordtype">bool</span> manage = <span class="keyword">true</span>) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keywordtype">void</span> send_line(<span class="keyword">const</span> std::string&amp; line) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="comment">// Multi-client support methods</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordtype">bool</span> broadcast(<span class="keyword">const</span> std::string&amp; message);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">bool</span> send_to_client(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; message);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">size_t</span> get_client_count() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  std::vector&lt;size_t&gt; get_connected_clients() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="comment">// Multi-client callback type definitions</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">   69</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">MultiClientConnectHandler</a> = std::function&lt;void(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; client_info)&gt;;</div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">   70</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">MultiClientDataHandler</a> = std::function&lt;void(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; data)&gt;;</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">   71</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">MultiClientDisconnectHandler</a> = std::function&lt;void(<span class="keywordtype">size_t</span> client_id)&gt;;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; on_multi_connect(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">MultiClientConnectHandler</a> handler);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; on_multi_data(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">MultiClientDataHandler</a> handler);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; on_multi_disconnect(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">MultiClientDisconnectHandler</a> handler);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="comment">// 실패 시 bool 반환 외에 on_error 알림을 받을지 설정</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; notify_send_failure(<span class="keywordtype">bool</span> enable = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="comment">// Client limit configuration</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keywordtype">void</span> set_client_limit(<span class="keywordtype">size_t</span> max_clients);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keywordtype">void</span> set_unlimited_clients();</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="comment">// Port retry configuration</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; enable_port_retry(<span class="keywordtype">bool</span> enable = <span class="keyword">true</span>, <span class="keywordtype">int</span> max_retries = 3, <span class="keywordtype">int</span> retry_interval_ms = 1000);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="comment">// Server state checking</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keywordtype">bool</span> is_listening() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keywordtype">void</span> set_manage_external_context(<span class="keywordtype">bool</span> manage);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordtype">void</span> setup_internal_handlers();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keywordtype">void</span> handle_bytes(<span class="keyword">const</span> uint8_t* data, <span class="keywordtype">size_t</span> size);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keywordtype">void</span> handle_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> state);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="keyword">mutable</span> std::mutex mutex_;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  uint16_t port_;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  std::shared_ptr&lt;interface::Channel&gt; channel_;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  <span class="keywordtype">bool</span> started_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keywordtype">bool</span> auto_manage_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc_;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keywordtype">bool</span> use_external_context_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keywordtype">bool</span> manage_external_context_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  std::thread external_thread_;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="comment">// Port retry configuration</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordtype">bool</span> port_retry_enabled_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordtype">int</span> max_port_retries_{3};</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordtype">int</span> port_retry_interval_ms_{1000};</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="comment">// Client limit configuration</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordtype">bool</span> client_limit_enabled_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordtype">size_t</span> max_clients_{0};</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="comment">// Server state tracking</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  std::atomic&lt;bool&gt; is_listening_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="comment">// User callbacks</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  DataHandler on_data_;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  ConnectHandler on_connect_;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  DisconnectHandler on_disconnect_;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  ErrorHandler on_error_;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="comment">// Multi-client callbacks</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  MultiClientConnectHandler on_multi_connect_;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  MultiClientDataHandler on_multi_data_;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  MultiClientDisconnectHandler on_multi_disconnect_;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  <span class="comment">// Send/broadcast 실패 시 on_error 호출 여부</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  <span class="keywordtype">bool</span> notify_send_failure_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;};</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_bytes(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">BytesHandler</a> handler) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_connect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a> handler) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_disconnect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a> handler) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_error(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">ErrorHandler</a> handler) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; auto_manage(<span class="keywordtype">bool</span> manage = <span class="keyword">true</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keywordtype">void</span> send_line(<span class="keyword">const</span> std::string&amp; line) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="comment">// Multi-client support methods</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">bool</span> broadcast(<span class="keyword">const</span> std::string&amp; message);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">bool</span> send_to_client(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; message);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">size_t</span> get_client_count() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  std::vector&lt;size_t&gt; get_connected_clients() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="comment">// Multi-client callback type definitions</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">   70</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">MultiClientConnectHandler</a> = std::function&lt;void(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; client_info)&gt;;</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">   71</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">MultiClientDataHandler</a> = std::function&lt;void(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; data)&gt;;</div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">   72</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">MultiClientDisconnectHandler</a> = std::function&lt;void(<span class="keywordtype">size_t</span> client_id)&gt;;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; on_multi_connect(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">MultiClientConnectHandler</a> handler);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; on_multi_data(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">MultiClientDataHandler</a> handler);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; on_multi_disconnect(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">MultiClientDisconnectHandler</a> handler);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="comment">// 실패 시 bool 반환 외에 on_error 알림을 받을지 설정</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; notify_send_failure(<span class="keywordtype">bool</span> enable = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="comment">// Client limit configuration</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keywordtype">void</span> set_client_limit(<span class="keywordtype">size_t</span> max_clients);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keywordtype">void</span> set_unlimited_clients();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="comment">// Port retry configuration</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; enable_port_retry(<span class="keywordtype">bool</span> enable = <span class="keyword">true</span>, <span class="keywordtype">int</span> max_retries = 3, <span class="keywordtype">int</span> retry_interval_ms = 1000);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="comment">// Server state checking</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keywordtype">bool</span> is_listening() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keywordtype">void</span> set_manage_external_context(<span class="keywordtype">bool</span> manage);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keywordtype">void</span> setup_internal_handlers();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keywordtype">void</span> handle_bytes(<span class="keyword">const</span> uint8_t* data, <span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keywordtype">void</span> handle_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> state);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keyword">mutable</span> std::mutex mutex_;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  uint16_t port_;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  std::shared_ptr&lt;interface::Channel&gt; channel_;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keywordtype">bool</span> started_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keywordtype">bool</span> auto_manage_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc_;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keywordtype">bool</span> use_external_context_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordtype">bool</span> manage_external_context_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  std::thread external_thread_;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="comment">// Port retry configuration</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordtype">bool</span> port_retry_enabled_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordtype">int</span> max_port_retries_{3};</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keywordtype">int</span> port_retry_interval_ms_{1000};</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="comment">// Client limit configuration</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordtype">bool</span> client_limit_enabled_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keywordtype">size_t</span> max_clients_{0};</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="comment">// Server state tracking</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  std::atomic&lt;bool&gt; is_listening_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <span class="comment">// User callbacks</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  DataHandler on_data_;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  BytesHandler on_bytes_;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  ConnectHandler on_connect_;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  DisconnectHandler on_disconnect_;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  ErrorHandler on_error_;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  <span class="comment">// Multi-client callbacks</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  MultiClientConnectHandler on_multi_connect_;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  MultiClientDataHandler on_multi_data_;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  MultiClientDisconnectHandler on_multi_disconnect_;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  <span class="comment">// Send/broadcast 실패 시 on_error 호출 여부</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <span class="keywordtype">bool</span> notify_send_failure_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;};</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="achannel__factory_8hpp_html"><div class="ttname"><a href="channel__factory_8hpp.html">channel_factory.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00029">ichannel.hpp:29</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a1e452891783b39a8cf4daff9e958823d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">unilink::wrapper::ChannelInterface::ConnectHandler</a></div><div class="ttdeci">std::function&lt; void()&gt; ConnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00032">ichannel.hpp:32</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a67ac18cb3330353d068c4afedf6cbec1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">unilink::wrapper::ChannelInterface::DisconnectHandler</a></div><div class="ttdeci">std::function&lt; void()&gt; DisconnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00033">ichannel.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a1e452891783b39a8cf4daff9e958823d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">unilink::wrapper::ChannelInterface::ConnectHandler</a></div><div class="ttdeci">std::function&lt; void()&gt; ConnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00033">ichannel.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a67ac18cb3330353d068c4afedf6cbec1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">unilink::wrapper::ChannelInterface::DisconnectHandler</a></div><div class="ttdeci">std::function&lt; void()&gt; DisconnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00034">ichannel.hpp:34</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a81289906b7cdc6c057cc0a4631ad1583"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">unilink::wrapper::ChannelInterface::BytesHandler</a></div><div class="ttdeci">std::function&lt; void(const uint8_t *, size_t)&gt; BytesHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00032">ichannel.hpp:32</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a86572f53649987268db00b5d8414b9fe"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">unilink::wrapper::ChannelInterface::DataHandler</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; DataHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00031">ichannel.hpp:31</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_aef1171a7f6d2c91ccb90cb59958d9ec2"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">unilink::wrapper::ChannelInterface::ErrorHandler</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; ErrorHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00034">ichannel.hpp:34</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_aef1171a7f6d2c91ccb90cb59958d9ec2"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">unilink::wrapper::ChannelInterface::ErrorHandler</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; ErrorHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00035">ichannel.hpp:35</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html">unilink::wrapper::TcpServer</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00040">tcp_server.hpp:40</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a71ba53970105894c3d564b261c59f1c6"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">unilink::wrapper::TcpServer::MultiClientDisconnectHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id)&gt; MultiClientDisconnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00071">tcp_server.hpp:71</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a8175adae268dba5e6f34db21ee7f0240"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">unilink::wrapper::TcpServer::MultiClientConnectHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id, const std::string &amp;client_info)&gt; MultiClientConnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00069">tcp_server.hpp:69</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ae4d8e0e234a6c7f4980c20d431b1fc1d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">unilink::wrapper::TcpServer::MultiClientDataHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id, const std::string &amp;data)&gt; MultiClientDataHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00070">tcp_server.hpp:70</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a71ba53970105894c3d564b261c59f1c6"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">unilink::wrapper::TcpServer::MultiClientDisconnectHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id)&gt; MultiClientDisconnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00072">tcp_server.hpp:72</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a8175adae268dba5e6f34db21ee7f0240"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">unilink::wrapper::TcpServer::MultiClientConnectHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id, const std::string &amp;client_info)&gt; MultiClientConnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00070">tcp_server.hpp:70</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ae4d8e0e234a6c7f4980c20d431b1fc1d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">unilink::wrapper::TcpServer::MultiClientDataHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id, const std::string &amp;data)&gt; MultiClientDataHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00071">tcp_server.hpp:71</a></div></div>
 <div class="ttc" id="aichannel_8hpp_html"><div class="ttname"><a href="ichannel_8hpp.html">ichannel.hpp</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75c"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">unilink::base::LinkState</a></div><div class="ttdeci">LinkState</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00038">common.hpp:38</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00035">common.hpp:35</a></div></div>
@@ -236,7 +239,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8hpp
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_fdd6e5571e153f1d8025548436a989da.html">tcp_server</a></li><li class="navelem"><a class="el" href="wrapper_2tcp__server_2tcp__server_8hpp.html">tcp_server.hpp</a></li>
-    <li class="footer">Generated on Mon Feb 2 2026 14:20:32 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 2 2026 23:05:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

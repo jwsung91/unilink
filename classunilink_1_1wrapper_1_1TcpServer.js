@@ -15,6 +15,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "is_connected", "classunilink_1_1wrapper_1_1TcpServer.html#a6a3098b0fa9d7c3e6dc84b01d7473509", null ],
     [ "is_listening", "classunilink_1_1wrapper_1_1TcpServer.html#a8a7cc4253ac3b598bbf16232be1f926e", null ],
     [ "notify_send_failure", "classunilink_1_1wrapper_1_1TcpServer.html#a5792d6e21525f8b119c7fb6bc91a5d7a", null ],
+    [ "on_bytes", "classunilink_1_1wrapper_1_1TcpServer.html#a9fc3373629bc44d611683f10ea87b63a", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1TcpServer.html#ab86578bb7afdfc0bc10cdc07458df11a", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1TcpServer.html#a48e8f7b6f3b2f79c76fcefa45673a97a", null ],
     [ "on_disconnect", "classunilink_1_1wrapper_1_1TcpServer.html#a02c75e254da76eddf6327713f002bfcd", null ],
