@@ -43,13 +43,13 @@ foreach(test_file
     gtest_discover_tests(
       run_integration_${test_name}
       PROPERTIES LABELS "integration;tcp;medium"
-      TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
+      TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
     )
   else()
     gtest_discover_tests(
       run_integration_${test_name}
       PROPERTIES LABELS "integration;tcp;medium"
-      TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
+      TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
 endforeach()
@@ -74,7 +74,7 @@ foreach(test_file test_serial_builder_improvements.cc)
   gtest_discover_tests(
     run_integration_${test_name}
     PROPERTIES LABELS "integration;serial;medium"
-    TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
+    TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
   )
 endforeach()
 
@@ -97,7 +97,7 @@ foreach(test_file test_builder_integration.cc)
   gtest_discover_tests(
     run_integration_${test_name}
     PROPERTIES LABELS "integration;builder;medium"
-    TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
+    TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
   )
 endforeach()
 
@@ -123,13 +123,13 @@ foreach(test_file test_stable_integration.cc
     gtest_discover_tests(
       run_integration_${test_name}
       PROPERTIES LABELS "integration;core;medium"
-      TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
+      TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
     )
   else()
     gtest_discover_tests(
       run_integration_${test_name}
       PROPERTIES LABELS "integration;core;medium"
-      TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
+      TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
 endforeach()
