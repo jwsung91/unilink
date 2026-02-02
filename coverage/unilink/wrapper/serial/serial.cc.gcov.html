@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">97</td>
-            <td class="headerCovTableEntry">139</td>
-            <td class="headerCovTableEntryLo">69.8 %</td>
+            <td class="headerCovTableEntry">146</td>
+            <td class="headerCovTableEntryLo">66.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-02 14:24:23</td>
+            <td class="headerValue">2026-02-02 23:10:41</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
-            <td class="headerCovTableEntry">28</td>
-            <td class="headerCovTableEntryMed">78.6 %</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntryMed">75.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -57,8 +57,8 @@
             <td></td>
             <td class="headerItem">Branches:</td>
             <td class="headerCovTableEntry">66</td>
-            <td class="headerCovTableEntry">159</td>
-            <td class="headerCovTableEntryLo">41.5 %</td>
+            <td class="headerCovTableEntry">163</td>
+            <td class="headerCovTableEntryLo">40.5 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -212,125 +212,136 @@
 <a name="128"><span class="lineNum">     128 </span>                :<span class="lineCov">          5 :   return *this;</span></a>
 <a name="129"><span class="lineNum">     129 </span>                :            : }</a>
 <a name="130"><span class="lineNum">     130 </span>                :            : </a>
-<a name="131"><span class="lineNum">     131 </span>                :<span class="lineCov">          6 : ChannelInterface&amp; Serial::on_connect(ConnectHandler handler) {</span></a>
-<a name="132"><span class="lineNum">     132 </span>                :<span class="lineCov">          6 :   connect_handler_ = std::move(handler);</span></a>
-<a name="133"><span class="lineNum">     133 </span>                :<span class="lineCov">          6 :   return *this;</span></a>
-<a name="134"><span class="lineNum">     134 </span>                :            : }</a>
-<a name="135"><span class="lineNum">     135 </span>                :            : </a>
-<a name="136"><span class="lineNum">     136 </span>                :<span class="lineCov">          2 : ChannelInterface&amp; Serial::on_disconnect(DisconnectHandler handler) {</span></a>
-<a name="137"><span class="lineNum">     137 </span>                :<span class="lineCov">          2 :   disconnect_handler_ = std::move(handler);</span></a>
-<a name="138"><span class="lineNum">     138 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
-<a name="139"><span class="lineNum">     139 </span>                :            : }</a>
-<a name="140"><span class="lineNum">     140 </span>                :            : </a>
-<a name="141"><span class="lineNum">     141 </span>                :<span class="lineCov">          4 : ChannelInterface&amp; Serial::on_error(ErrorHandler handler) {</span></a>
-<a name="142"><span class="lineNum">     142 </span>                :<span class="lineCov">          4 :   error_handler_ = std::move(handler);</span></a>
-<a name="143"><span class="lineNum">     143 </span>                :<span class="lineCov">          4 :   return *this;</span></a>
-<a name="144"><span class="lineNum">     144 </span>                :            : }</a>
-<a name="145"><span class="lineNum">     145 </span>                :            : </a>
-<a name="146"><span class="lineNum">     146 </span>                :<span class="lineCov">         94 : ChannelInterface&amp; Serial::auto_manage(bool manage) {</span></a>
-<a name="147"><span class="lineNum">     147 </span>                :<span class="lineCov">         94 :   auto_manage_ = manage;</span></a>
-<a name="148"><span class="lineNum">     148 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 92 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         94 :   if (auto_manage_ &amp;&amp; !started_) {</span></a>
-<a name="149"><span class="lineNum">     149 </span>                :<span class="lineCov">          2 :     start();</span></a>
-<a name="150"><span class="lineNum">     150 </span>                :            :   }</a>
-<a name="151"><span class="lineNum">     151 </span>                :<span class="lineCov">         94 :   return *this;</span></a>
+<a name="131"><span class="lineNum">     131 </span>                :<span class="lineNoCov">          0 : ChannelInterface&amp; Serial::on_bytes(BytesHandler handler) {</span></a>
+<a name="132"><span class="lineNum">     132 </span>                :<span class="lineNoCov">          0 :   bytes_handler_ = std::move(handler);</span></a>
+<a name="133"><span class="lineNum">     133 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (channel_) {</span></a>
+<a name="134"><span class="lineNum">     134 </span>                :<span class="lineNoCov">          0 :     setup_internal_handlers();</span></a>
+<a name="135"><span class="lineNum">     135 </span>                :            :   }</a>
+<a name="136"><span class="lineNum">     136 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="137"><span class="lineNum">     137 </span>                :            : }</a>
+<a name="138"><span class="lineNum">     138 </span>                :            : </a>
+<a name="139"><span class="lineNum">     139 </span>                :<span class="lineCov">          6 : ChannelInterface&amp; Serial::on_connect(ConnectHandler handler) {</span></a>
+<a name="140"><span class="lineNum">     140 </span>                :<span class="lineCov">          6 :   connect_handler_ = std::move(handler);</span></a>
+<a name="141"><span class="lineNum">     141 </span>                :<span class="lineCov">          6 :   return *this;</span></a>
+<a name="142"><span class="lineNum">     142 </span>                :            : }</a>
+<a name="143"><span class="lineNum">     143 </span>                :            : </a>
+<a name="144"><span class="lineNum">     144 </span>                :<span class="lineCov">          2 : ChannelInterface&amp; Serial::on_disconnect(DisconnectHandler handler) {</span></a>
+<a name="145"><span class="lineNum">     145 </span>                :<span class="lineCov">          2 :   disconnect_handler_ = std::move(handler);</span></a>
+<a name="146"><span class="lineNum">     146 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="147"><span class="lineNum">     147 </span>                :            : }</a>
+<a name="148"><span class="lineNum">     148 </span>                :            : </a>
+<a name="149"><span class="lineNum">     149 </span>                :<span class="lineCov">          4 : ChannelInterface&amp; Serial::on_error(ErrorHandler handler) {</span></a>
+<a name="150"><span class="lineNum">     150 </span>                :<span class="lineCov">          4 :   error_handler_ = std::move(handler);</span></a>
+<a name="151"><span class="lineNum">     151 </span>                :<span class="lineCov">          4 :   return *this;</span></a>
 <a name="152"><span class="lineNum">     152 </span>                :            : }</a>
 <a name="153"><span class="lineNum">     153 </span>                :            : </a>
-<a name="154"><span class="lineNum">     154 </span>                :<span class="lineNoCov">          0 : void Serial::set_baud_rate(uint32_t baud_rate) { baud_rate_ = baud_rate; }</span></a>
-<a name="155"><span class="lineNum">     155 </span>                :            : </a>
-<a name="156"><span class="lineNum">     156 </span>                :<span class="lineCov">          3 : void Serial::set_data_bits(int data_bits) { data_bits_ = data_bits; }</span></a>
-<a name="157"><span class="lineNum">     157 </span>                :            : </a>
-<a name="158"><span class="lineNum">     158 </span>                :<span class="lineCov">          3 : void Serial::set_stop_bits(int stop_bits) { stop_bits_ = stop_bits; }</span></a>
-<a name="159"><span class="lineNum">     159 </span>                :            : </a>
-<a name="160"><span class="lineNum">     160 </span>                :<span class="lineCov">          3 : void Serial::set_parity(const std::string&amp; parity) { parity_ = parity; }</span></a>
+<a name="154"><span class="lineNum">     154 </span>                :<span class="lineCov">         94 : ChannelInterface&amp; Serial::auto_manage(bool manage) {</span></a>
+<a name="155"><span class="lineNum">     155 </span>                :<span class="lineCov">         94 :   auto_manage_ = manage;</span></a>
+<a name="156"><span class="lineNum">     156 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 92 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         94 :   if (auto_manage_ &amp;&amp; !started_) {</span></a>
+<a name="157"><span class="lineNum">     157 </span>                :<span class="lineCov">          2 :     start();</span></a>
+<a name="158"><span class="lineNum">     158 </span>                :            :   }</a>
+<a name="159"><span class="lineNum">     159 </span>                :<span class="lineCov">         94 :   return *this;</span></a>
+<a name="160"><span class="lineNum">     160 </span>                :            : }</a>
 <a name="161"><span class="lineNum">     161 </span>                :            : </a>
-<a name="162"><span class="lineNum">     162 </span>                :<span class="lineCov">          3 : void Serial::set_flow_control(const std::string&amp; flow_control) { flow_control_ = flow_control; }</span></a>
+<a name="162"><span class="lineNum">     162 </span>                :<span class="lineNoCov">          0 : void Serial::set_baud_rate(uint32_t baud_rate) { baud_rate_ = baud_rate; }</span></a>
 <a name="163"><span class="lineNum">     163 </span>                :            : </a>
-<a name="164"><span class="lineNum">     164 </span>                :<span class="lineCov">          9 : void Serial::setup_internal_handlers() {</span></a>
-<a name="165"><span class="lineNum">     165 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 9 times"> + </span>]:<span class="lineCov">          9 :   if (!channel_) return;</span></a>
-<a name="166"><span class="lineNum">     166 </span>                :            : </a>
-<a name="167"><span class="lineNum">     167 </span>                :            :   // Convert byte data to string and pass it</a>
-<a name="168"><span class="lineNum">     168 </span>        [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          9 :   channel_-&gt;on_bytes([this](const uint8_t* p, size_t n) {</span></a>
-<a name="169"><span class="lineNum">     169 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (data_handler_) {</span></a>
-<a name="170"><span class="lineNum">     170 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       std::string data = common::safe_convert::uint8_to_string(p, n);</span></a>
-<a name="171"><span class="lineNum">     171 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       data_handler_(data);</span></a>
-<a name="172"><span class="lineNum">     172 </span>                :<span class="lineNoCov">          0 :     }</span></a>
-<a name="173"><span class="lineNum">     173 </span>                :<span class="lineNoCov">          0 :   });</span></a>
+<a name="164"><span class="lineNum">     164 </span>                :<span class="lineCov">          3 : void Serial::set_data_bits(int data_bits) { data_bits_ = data_bits; }</span></a>
+<a name="165"><span class="lineNum">     165 </span>                :            : </a>
+<a name="166"><span class="lineNum">     166 </span>                :<span class="lineCov">          3 : void Serial::set_stop_bits(int stop_bits) { stop_bits_ = stop_bits; }</span></a>
+<a name="167"><span class="lineNum">     167 </span>                :            : </a>
+<a name="168"><span class="lineNum">     168 </span>                :<span class="lineCov">          3 : void Serial::set_parity(const std::string&amp; parity) { parity_ = parity; }</span></a>
+<a name="169"><span class="lineNum">     169 </span>                :            : </a>
+<a name="170"><span class="lineNum">     170 </span>                :<span class="lineCov">          3 : void Serial::set_flow_control(const std::string&amp; flow_control) { flow_control_ = flow_control; }</span></a>
+<a name="171"><span class="lineNum">     171 </span>                :            : </a>
+<a name="172"><span class="lineNum">     172 </span>                :<span class="lineCov">          9 : void Serial::setup_internal_handlers() {</span></a>
+<a name="173"><span class="lineNum">     173 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 9 times"> + </span>]:<span class="lineCov">          9 :   if (!channel_) return;</span></a>
 <a name="174"><span class="lineNum">     174 </span>                :            : </a>
-<a name="175"><span class="lineNum">     175 </span>                :            :   // Handle state changes</a>
-<a name="176"><span class="lineNum">     176 </span>        [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         27 :   channel_-&gt;on_state([this](base::LinkState state) { notify_state_change(state); });</span></a>
-<a name="177"><span class="lineNum">     177 </span>                :            : }</a>
-<a name="178"><span class="lineNum">     178 </span>                :            : </a>
-<a name="179"><span class="lineNum">     179 </span>                :<span class="lineCov">         18 : void Serial::notify_state_change(base::LinkState state) {</span></a>
-<a name="180"><span class="lineNum">     180 </span>  [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         18 :   switch (state) {</span></a>
+<a name="175"><span class="lineNum">     175 </span>                :            :   // Convert byte data to string and pass it</a>
+<a name="176"><span class="lineNum">     176 </span>        [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          9 :   channel_-&gt;on_bytes([this](const uint8_t* p, size_t n) {</span></a>
+<a name="177"><span class="lineNum">     177 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (bytes_handler_) {</span></a>
+<a name="178"><span class="lineNum">     178 </span>                :<span class="lineNoCov">          0 :       bytes_handler_(p, n);</span></a>
+<a name="179"><span class="lineNum">     179 </span>                :            :     }</a>
+<a name="180"><span class="lineNum">     180 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (data_handler_) {</span></a>
+<a name="181"><span class="lineNum">     181 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       std::string data = common::safe_convert::uint8_to_string(p, n);</span></a>
+<a name="182"><span class="lineNum">     182 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       data_handler_(data);</span></a>
+<a name="183"><span class="lineNum">     183 </span>                :<span class="lineNoCov">          0 :     }</span></a>
+<a name="184"><span class="lineNum">     184 </span>                :<span class="lineNoCov">          0 :   });</span></a>
+<a name="185"><span class="lineNum">     185 </span>                :            : </a>
+<a name="186"><span class="lineNum">     186 </span>                :            :   // Handle state changes</a>
+<a name="187"><span class="lineNum">     187 </span>        [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         27 :   channel_-&gt;on_state([this](base::LinkState state) { notify_state_change(state); });</span></a>
+<a name="188"><span class="lineNum">     188 </span>                :            : }</a>
+<a name="189"><span class="lineNum">     189 </span>                :            : </a>
+<a name="190"><span class="lineNum">     190 </span>                :<span class="lineCov">         18 : void Serial::notify_state_change(base::LinkState state) {</span></a>
+<a name="191"><span class="lineNum">     191 </span>  [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         18 :   switch (state) {</span></a>
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 4 was not taken"> - </span>]
-<a name="181"><span class="lineNum">     181 </span>                :<span class="lineCov">         16 :     case base::LinkState::Connecting:</span></a>
-<a name="182"><span class="lineNum">     182 </span>                :            :       // Connecting state - no action needed, just log</a>
-<a name="183"><span class="lineNum">     183 </span>                :<span class="lineCov">         16 :       break;</span></a>
-<a name="184"><span class="lineNum">     184 </span>                :<span class="lineCov">          1 :     case base::LinkState::Connected:</span></a>
-<a name="185"><span class="lineNum">     185 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       if (connect_handler_) connect_handler_();</span></a>
-<a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">          1 :       break;</span></a>
-<a name="187"><span class="lineNum">     187 </span>                :<span class="lineCov">          1 :     case base::LinkState::Closed:</span></a>
-<a name="188"><span class="lineNum">     188 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       if (disconnect_handler_) disconnect_handler_();</span></a>
-<a name="189"><span class="lineNum">     189 </span>                :<span class="lineCov">          1 :       break;</span></a>
-<a name="190"><span class="lineNum">     190 </span>                :<span class="lineNoCov">          0 :     case base::LinkState::Error:</span></a>
-<a name="191"><span class="lineNum">     191 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :       if (error_handler_) error_handler_(&quot;Serial connection error occurred&quot;);</span></a>
+<a name="192"><span class="lineNum">     192 </span>                :<span class="lineCov">         16 :     case base::LinkState::Connecting:</span></a>
+<a name="193"><span class="lineNum">     193 </span>                :            :       // Connecting state - no action needed, just log</a>
+<a name="194"><span class="lineNum">     194 </span>                :<span class="lineCov">         16 :       break;</span></a>
+<a name="195"><span class="lineNum">     195 </span>                :<span class="lineCov">          1 :     case base::LinkState::Connected:</span></a>
+<a name="196"><span class="lineNum">     196 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       if (connect_handler_) connect_handler_();</span></a>
+<a name="197"><span class="lineNum">     197 </span>                :<span class="lineCov">          1 :       break;</span></a>
+<a name="198"><span class="lineNum">     198 </span>                :<span class="lineCov">          1 :     case base::LinkState::Closed:</span></a>
+<a name="199"><span class="lineNum">     199 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       if (disconnect_handler_) disconnect_handler_();</span></a>
+<a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">          1 :       break;</span></a>
+<a name="201"><span class="lineNum">     201 </span>                :<span class="lineNoCov">          0 :     case base::LinkState::Error:</span></a>
+<a name="202"><span class="lineNum">     202 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :       if (error_handler_) error_handler_(&quot;Serial connection error occurred&quot;);</span></a>
 <span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]
-<a name="192"><span class="lineNum">     192 </span>                :<span class="lineNoCov">          0 :       break;</span></a>
-<a name="193"><span class="lineNum">     193 </span>                :<span class="lineNoCov">          0 :     default:</span></a>
-<a name="194"><span class="lineNum">     194 </span>                :<span class="lineNoCov">          0 :       break;</span></a>
-<a name="195"><span class="lineNum">     195 </span>                :            :   }</a>
-<a name="196"><span class="lineNum">     196 </span>                :<span class="lineCov">         18 : }</span></a>
-<a name="197"><span class="lineNum">     197 </span>                :            : </a>
-<a name="198"><span class="lineNum">     198 </span>                :<span class="lineCov">         94 : void Serial::set_retry_interval(std::chrono::milliseconds interval) {</span></a>
-<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">         94 :   retry_interval_ = interval;</span></a>
-<a name="200"><span class="lineNum">     200 </span>                :            : </a>
-<a name="201"><span class="lineNum">     201 </span>                :            :   // If channel is already created, update its retry interval</a>
-<a name="202"><span class="lineNum">     202 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 94 times"> + </span>]:<span class="lineCov">         94 :   if (channel_) {</span></a>
-<a name="203"><span class="lineNum">     203 </span>                :            :     // Cast to transport::Serial and set retry interval</a>
-<a name="204"><span class="lineNum">     204 </span>                :<span class="lineNoCov">          0 :     auto transport_serial = std::dynamic_pointer_cast&lt;transport::Serial&gt;(channel_);</span></a>
-<a name="205"><span class="lineNum">     205 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (transport_serial) {</span></a>
-<a name="206"><span class="lineNum">     206 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       transport_serial-&gt;set_retry_interval(static_cast&lt;unsigned int&gt;(interval.count()));</span></a>
-<a name="207"><span class="lineNum">     207 </span>                :            :     }</a>
-<a name="208"><span class="lineNum">     208 </span>                :<span class="lineNoCov">          0 :   }</span></a>
-<a name="209"><span class="lineNum">     209 </span>                :<span class="lineCov">         94 : }</span></a>
-<a name="210"><span class="lineNum">     210 </span>                :            : </a>
-<a name="211"><span class="lineNum">     211 </span>                :<span class="lineCov">         11 : config::SerialConfig Serial::build_config() const {</span></a>
-<a name="212"><span class="lineNum">     212 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :   config::SerialConfig config;</span></a>
-<a name="213"><span class="lineNum">     213 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :   config.device = device_;</span></a>
-<a name="214"><span class="lineNum">     214 </span>                :<span class="lineCov">         11 :   config.baud_rate = baud_rate_;</span></a>
-<a name="215"><span class="lineNum">     215 </span>                :<span class="lineCov">         11 :   config.char_size = static_cast&lt;unsigned&gt;(std::clamp(data_bits_, 5, 8));</span></a>
-<a name="216"><span class="lineNum">     216 </span>                :<span class="lineCov">         11 :   config.stop_bits = static_cast&lt;unsigned&gt;(std::clamp(stop_bits_, 1, 2));</span></a>
-<a name="217"><span class="lineNum">     217 </span>                :<span class="lineCov">         11 :   config.retry_interval_ms = static_cast&lt;unsigned int&gt;(retry_interval_.count());</span></a>
-<a name="218"><span class="lineNum">     218 </span>                :            : </a>
-<a name="219"><span class="lineNum">     219 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :   std::string parity_lower = parity_;</span></a>
-<a name="220"><span class="lineNum">     220 </span>                :<span class="lineCov">         11 :   std::transform(parity_lower.begin(), parity_lower.end(), parity_lower.begin(), ::tolower);</span></a>
-<a name="221"><span class="lineNum">     221 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 10 times"> + </span>]:<span class="lineCov">         11 :   if (parity_lower == &quot;even&quot;) {</span></a>
-<a name="222"><span class="lineNum">     222 </span>                :<span class="lineCov">          1 :     config.parity = config::SerialConfig::Parity::Even;</span></a>
-<a name="223"><span class="lineNum">     223 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 9 times"> + </span>]:<span class="lineCov">         10 :   } else if (parity_lower == &quot;odd&quot;) {</span></a>
-<a name="224"><span class="lineNum">     224 </span>                :<span class="lineCov">          1 :     config.parity = config::SerialConfig::Parity::Odd;</span></a>
-<a name="225"><span class="lineNum">     225 </span>                :            :   } else {</a>
-<a name="226"><span class="lineNum">     226 </span>                :<span class="lineCov">          9 :     config.parity = config::SerialConfig::Parity::None;</span></a>
-<a name="227"><span class="lineNum">     227 </span>                :            :   }</a>
-<a name="228"><span class="lineNum">     228 </span>                :            : </a>
-<a name="229"><span class="lineNum">     229 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :   std::string flow_lower = flow_control_;</span></a>
-<a name="230"><span class="lineNum">     230 </span>                :<span class="lineCov">         11 :   std::transform(flow_lower.begin(), flow_lower.end(), flow_lower.begin(), ::tolower);</span></a>
-<a name="231"><span class="lineNum">     231 </span>  [<span class="branchCov" title="Branch 0 was taken 10 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         11 :   if (flow_lower == &quot;software&quot; || flow_lower == &quot;xonxoff&quot; || flow_lower == &quot;soft&quot;) {</span></a>
+<a name="203"><span class="lineNum">     203 </span>                :<span class="lineNoCov">          0 :       break;</span></a>
+<a name="204"><span class="lineNum">     204 </span>                :<span class="lineNoCov">          0 :     default:</span></a>
+<a name="205"><span class="lineNum">     205 </span>                :<span class="lineNoCov">          0 :       break;</span></a>
+<a name="206"><span class="lineNum">     206 </span>                :            :   }</a>
+<a name="207"><span class="lineNum">     207 </span>                :<span class="lineCov">         18 : }</span></a>
+<a name="208"><span class="lineNum">     208 </span>                :            : </a>
+<a name="209"><span class="lineNum">     209 </span>                :<span class="lineCov">         94 : void Serial::set_retry_interval(std::chrono::milliseconds interval) {</span></a>
+<a name="210"><span class="lineNum">     210 </span>                :<span class="lineCov">         94 :   retry_interval_ = interval;</span></a>
+<a name="211"><span class="lineNum">     211 </span>                :            : </a>
+<a name="212"><span class="lineNum">     212 </span>                :            :   // If channel is already created, update its retry interval</a>
+<a name="213"><span class="lineNum">     213 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 94 times"> + </span>]:<span class="lineCov">         94 :   if (channel_) {</span></a>
+<a name="214"><span class="lineNum">     214 </span>                :            :     // Cast to transport::Serial and set retry interval</a>
+<a name="215"><span class="lineNum">     215 </span>                :<span class="lineNoCov">          0 :     auto transport_serial = std::dynamic_pointer_cast&lt;transport::Serial&gt;(channel_);</span></a>
+<a name="216"><span class="lineNum">     216 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (transport_serial) {</span></a>
+<a name="217"><span class="lineNum">     217 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       transport_serial-&gt;set_retry_interval(static_cast&lt;unsigned int&gt;(interval.count()));</span></a>
+<a name="218"><span class="lineNum">     218 </span>                :            :     }</a>
+<a name="219"><span class="lineNum">     219 </span>                :<span class="lineNoCov">          0 :   }</span></a>
+<a name="220"><span class="lineNum">     220 </span>                :<span class="lineCov">         94 : }</span></a>
+<a name="221"><span class="lineNum">     221 </span>                :            : </a>
+<a name="222"><span class="lineNum">     222 </span>                :<span class="lineCov">         11 : config::SerialConfig Serial::build_config() const {</span></a>
+<a name="223"><span class="lineNum">     223 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :   config::SerialConfig config;</span></a>
+<a name="224"><span class="lineNum">     224 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :   config.device = device_;</span></a>
+<a name="225"><span class="lineNum">     225 </span>                :<span class="lineCov">         11 :   config.baud_rate = baud_rate_;</span></a>
+<a name="226"><span class="lineNum">     226 </span>                :<span class="lineCov">         11 :   config.char_size = static_cast&lt;unsigned&gt;(std::clamp(data_bits_, 5, 8));</span></a>
+<a name="227"><span class="lineNum">     227 </span>                :<span class="lineCov">         11 :   config.stop_bits = static_cast&lt;unsigned&gt;(std::clamp(stop_bits_, 1, 2));</span></a>
+<a name="228"><span class="lineNum">     228 </span>                :<span class="lineCov">         11 :   config.retry_interval_ms = static_cast&lt;unsigned int&gt;(retry_interval_.count());</span></a>
+<a name="229"><span class="lineNum">     229 </span>                :            : </a>
+<a name="230"><span class="lineNum">     230 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :   std::string parity_lower = parity_;</span></a>
+<a name="231"><span class="lineNum">     231 </span>                :<span class="lineCov">         11 :   std::transform(parity_lower.begin(), parity_lower.end(), parity_lower.begin(), ::tolower);</span></a>
+<a name="232"><span class="lineNum">     232 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 10 times"> + </span>]:<span class="lineCov">         11 :   if (parity_lower == &quot;even&quot;) {</span></a>
+<a name="233"><span class="lineNum">     233 </span>                :<span class="lineCov">          1 :     config.parity = config::SerialConfig::Parity::Even;</span></a>
+<a name="234"><span class="lineNum">     234 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 9 times"> + </span>]:<span class="lineCov">         10 :   } else if (parity_lower == &quot;odd&quot;) {</span></a>
+<a name="235"><span class="lineNum">     235 </span>                :<span class="lineCov">          1 :     config.parity = config::SerialConfig::Parity::Odd;</span></a>
+<a name="236"><span class="lineNum">     236 </span>                :            :   } else {</a>
+<a name="237"><span class="lineNum">     237 </span>                :<span class="lineCov">          9 :     config.parity = config::SerialConfig::Parity::None;</span></a>
+<a name="238"><span class="lineNum">     238 </span>                :            :   }</a>
+<a name="239"><span class="lineNum">     239 </span>                :            : </a>
+<a name="240"><span class="lineNum">     240 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         11 :   std::string flow_lower = flow_control_;</span></a>
+<a name="241"><span class="lineNum">     241 </span>                :<span class="lineCov">         11 :   std::transform(flow_lower.begin(), flow_lower.end(), flow_lower.begin(), ::tolower);</span></a>
+<a name="242"><span class="lineNum">     242 </span>  [<span class="branchCov" title="Branch 0 was taken 10 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         11 :   if (flow_lower == &quot;software&quot; || flow_lower == &quot;xonxoff&quot; || flow_lower == &quot;soft&quot;) {</span></a>
 <span class="lineNum">         </span>   <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 10 times"> + </span><span class="branchCov" title="Branch 6 was taken 1 time"> + </span><span class="branchCov" title="Branch 7 was taken 10 times"> + </span>]
-<a name="232"><span class="lineNum">     232 </span>                :<span class="lineCov">          1 :     config.flow = config::SerialConfig::Flow::Software;</span></a>
-<a name="233"><span class="lineNum">     233 </span>  [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         10 :   } else if (flow_lower == &quot;hardware&quot; || flow_lower == &quot;rtscts&quot; || flow_lower == &quot;hard&quot;) {</span></a>
+<a name="243"><span class="lineNum">     243 </span>                :<span class="lineCov">          1 :     config.flow = config::SerialConfig::Flow::Software;</span></a>
+<a name="244"><span class="lineNum">     244 </span>  [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         10 :   } else if (flow_lower == &quot;hardware&quot; || flow_lower == &quot;rtscts&quot; || flow_lower == &quot;hard&quot;) {</span></a>
 <span class="lineNum">         </span>   <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 9 times"> + </span><span class="branchCov" title="Branch 6 was taken 1 time"> + </span><span class="branchCov" title="Branch 7 was taken 9 times"> + </span>]
-<a name="234"><span class="lineNum">     234 </span>                :<span class="lineCov">          1 :     config.flow = config::SerialConfig::Flow::Hardware;</span></a>
-<a name="235"><span class="lineNum">     235 </span>                :            :   } else {</a>
-<a name="236"><span class="lineNum">     236 </span>                :<span class="lineCov">          9 :     config.flow = config::SerialConfig::Flow::None;</span></a>
-<a name="237"><span class="lineNum">     237 </span>                :            :   }</a>
-<a name="238"><span class="lineNum">     238 </span>                :            : </a>
-<a name="239"><span class="lineNum">     239 </span>                :<span class="lineCov">         22 :   return config;</span></a>
-<a name="240"><span class="lineNum">     240 </span>                :<span class="lineCov">         11 : }</span></a>
-<a name="241"><span class="lineNum">     241 </span>                :            : </a>
-<a name="242"><span class="lineNum">     242 </span>                :<span class="lineNoCov">          0 : void Serial::set_manage_external_context(bool manage) { manage_external_context_ = manage; }</span></a>
-<a name="243"><span class="lineNum">     243 </span>                :            : </a>
-<a name="244"><span class="lineNum">     244 </span>                :            : }  // namespace wrapper</a>
-<a name="245"><span class="lineNum">     245 </span>                :            : }  // namespace unilink</a>
+<a name="245"><span class="lineNum">     245 </span>                :<span class="lineCov">          1 :     config.flow = config::SerialConfig::Flow::Hardware;</span></a>
+<a name="246"><span class="lineNum">     246 </span>                :            :   } else {</a>
+<a name="247"><span class="lineNum">     247 </span>                :<span class="lineCov">          9 :     config.flow = config::SerialConfig::Flow::None;</span></a>
+<a name="248"><span class="lineNum">     248 </span>                :            :   }</a>
+<a name="249"><span class="lineNum">     249 </span>                :            : </a>
+<a name="250"><span class="lineNum">     250 </span>                :<span class="lineCov">         22 :   return config;</span></a>
+<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">         11 : }</span></a>
+<a name="252"><span class="lineNum">     252 </span>                :            : </a>
+<a name="253"><span class="lineNum">     253 </span>                :<span class="lineNoCov">          0 : void Serial::set_manage_external_context(bool manage) { manage_external_context_ = manage; }</span></a>
+<a name="254"><span class="lineNum">     254 </span>                :            : </a>
+<a name="255"><span class="lineNum">     255 </span>                :            : }  // namespace wrapper</a>
+<a name="256"><span class="lineNum">     256 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

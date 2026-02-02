@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-02 14:24:23</td>
+            <td class="headerValue">2026-02-02 23:10:41</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -124,56 +124,58 @@
 <a name="46"><span class="lineNum">      46 </span>                :            :   bool is_connected() const override;</a>
 <a name="47"><span class="lineNum">      47 </span>                :            : </a>
 <a name="48"><span class="lineNum">      48 </span>                :            :   ChannelInterface&amp; on_data(DataHandler handler) override;</a>
-<a name="49"><span class="lineNum">      49 </span>                :            :   ChannelInterface&amp; on_connect(ConnectHandler handler) override;</a>
-<a name="50"><span class="lineNum">      50 </span>                :            :   ChannelInterface&amp; on_disconnect(DisconnectHandler handler) override;</a>
-<a name="51"><span class="lineNum">      51 </span>                :            :   ChannelInterface&amp; on_error(ErrorHandler handler) override;</a>
-<a name="52"><span class="lineNum">      52 </span>                :            : </a>
-<a name="53"><span class="lineNum">      53 </span>                :            :   ChannelInterface&amp; auto_manage(bool manage = true) override;</a>
-<a name="54"><span class="lineNum">      54 </span>                :            : </a>
-<a name="55"><span class="lineNum">      55 </span>                :            :   // Serial-specific methods</a>
-<a name="56"><span class="lineNum">      56 </span>                :            :   void set_baud_rate(uint32_t baud_rate);</a>
-<a name="57"><span class="lineNum">      57 </span>                :            :   void set_data_bits(int data_bits);</a>
-<a name="58"><span class="lineNum">      58 </span>                :            :   void set_stop_bits(int stop_bits);</a>
-<a name="59"><span class="lineNum">      59 </span>                :            :   void set_parity(const std::string&amp; parity);</a>
-<a name="60"><span class="lineNum">      60 </span>                :            :   void set_flow_control(const std::string&amp; flow_control);</a>
-<a name="61"><span class="lineNum">      61 </span>                :            :   void set_retry_interval(std::chrono::milliseconds interval);</a>
-<a name="62"><span class="lineNum">      62 </span>                :            :   // Expose mapped config for testing/inspection</a>
-<a name="63"><span class="lineNum">      63 </span>                :            :   config::SerialConfig build_config() const;</a>
-<a name="64"><span class="lineNum">      64 </span>                :            :   void set_manage_external_context(bool manage);</a>
-<a name="65"><span class="lineNum">      65 </span>                :            : </a>
-<a name="66"><span class="lineNum">      66 </span>                :            :  private:</a>
-<a name="67"><span class="lineNum">      67 </span>                :            :   void setup_internal_handlers();</a>
-<a name="68"><span class="lineNum">      68 </span>                :            :   void notify_state_change(base::LinkState state);</a>
-<a name="69"><span class="lineNum">      69 </span>                :            : </a>
-<a name="70"><span class="lineNum">      70 </span>                :            :  private:</a>
-<a name="71"><span class="lineNum">      71 </span>                :            :   std::string device_;</a>
-<a name="72"><span class="lineNum">      72 </span>                :            :   uint32_t baud_rate_;</a>
-<a name="73"><span class="lineNum">      73 </span>                :            :   std::shared_ptr&lt;interface::Channel&gt; channel_;</a>
-<a name="74"><span class="lineNum">      74 </span>                :            :   std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc_;</a>
-<a name="75"><span class="lineNum">      75 </span>                :            :   bool use_external_context_{false};</a>
-<a name="76"><span class="lineNum">      76 </span>                :            :   bool manage_external_context_{false};</a>
-<a name="77"><span class="lineNum">      77 </span>                :            :   std::thread external_thread_;</a>
-<a name="78"><span class="lineNum">      78 </span>                :            : </a>
-<a name="79"><span class="lineNum">      79 </span>                :            :   // Event handlers</a>
-<a name="80"><span class="lineNum">      80 </span>                :            :   DataHandler data_handler_;</a>
-<a name="81"><span class="lineNum">      81 </span>                :            :   ConnectHandler connect_handler_;</a>
-<a name="82"><span class="lineNum">      82 </span>                :            :   DisconnectHandler disconnect_handler_;</a>
-<a name="83"><span class="lineNum">      83 </span>                :            :   ErrorHandler error_handler_;</a>
-<a name="84"><span class="lineNum">      84 </span>                :            : </a>
-<a name="85"><span class="lineNum">      85 </span>                :            :   // Configuration</a>
-<a name="86"><span class="lineNum">      86 </span>                :            :   bool auto_manage_ = false;</a>
-<a name="87"><span class="lineNum">      87 </span>                :            :   bool started_ = false;</a>
-<a name="88"><span class="lineNum">      88 </span>                :            : </a>
-<a name="89"><span class="lineNum">      89 </span>                :            :   // Serial-specific configuration</a>
-<a name="90"><span class="lineNum">      90 </span>                :            :   int data_bits_ = 8;</a>
-<a name="91"><span class="lineNum">      91 </span>                :            :   int stop_bits_ = 1;</a>
-<a name="92"><span class="lineNum">      92 </span>                :            :   std::string parity_ = &quot;none&quot;;</a>
-<a name="93"><span class="lineNum">      93 </span>                :            :   std::string flow_control_ = &quot;none&quot;;</a>
-<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">         96 :   std::chrono::milliseconds retry_interval_{3000};  // 3 seconds default</span></a>
-<a name="95"><span class="lineNum">      95 </span>                :            : };</a>
-<a name="96"><span class="lineNum">      96 </span>                :            : </a>
-<a name="97"><span class="lineNum">      97 </span>                :            : }  // namespace wrapper</a>
-<a name="98"><span class="lineNum">      98 </span>                :            : }  // namespace unilink</a>
+<a name="49"><span class="lineNum">      49 </span>                :            :   ChannelInterface&amp; on_bytes(BytesHandler handler) override;</a>
+<a name="50"><span class="lineNum">      50 </span>                :            :   ChannelInterface&amp; on_connect(ConnectHandler handler) override;</a>
+<a name="51"><span class="lineNum">      51 </span>                :            :   ChannelInterface&amp; on_disconnect(DisconnectHandler handler) override;</a>
+<a name="52"><span class="lineNum">      52 </span>                :            :   ChannelInterface&amp; on_error(ErrorHandler handler) override;</a>
+<a name="53"><span class="lineNum">      53 </span>                :            : </a>
+<a name="54"><span class="lineNum">      54 </span>                :            :   ChannelInterface&amp; auto_manage(bool manage = true) override;</a>
+<a name="55"><span class="lineNum">      55 </span>                :            : </a>
+<a name="56"><span class="lineNum">      56 </span>                :            :   // Serial-specific methods</a>
+<a name="57"><span class="lineNum">      57 </span>                :            :   void set_baud_rate(uint32_t baud_rate);</a>
+<a name="58"><span class="lineNum">      58 </span>                :            :   void set_data_bits(int data_bits);</a>
+<a name="59"><span class="lineNum">      59 </span>                :            :   void set_stop_bits(int stop_bits);</a>
+<a name="60"><span class="lineNum">      60 </span>                :            :   void set_parity(const std::string&amp; parity);</a>
+<a name="61"><span class="lineNum">      61 </span>                :            :   void set_flow_control(const std::string&amp; flow_control);</a>
+<a name="62"><span class="lineNum">      62 </span>                :            :   void set_retry_interval(std::chrono::milliseconds interval);</a>
+<a name="63"><span class="lineNum">      63 </span>                :            :   // Expose mapped config for testing/inspection</a>
+<a name="64"><span class="lineNum">      64 </span>                :            :   config::SerialConfig build_config() const;</a>
+<a name="65"><span class="lineNum">      65 </span>                :            :   void set_manage_external_context(bool manage);</a>
+<a name="66"><span class="lineNum">      66 </span>                :            : </a>
+<a name="67"><span class="lineNum">      67 </span>                :            :  private:</a>
+<a name="68"><span class="lineNum">      68 </span>                :            :   void setup_internal_handlers();</a>
+<a name="69"><span class="lineNum">      69 </span>                :            :   void notify_state_change(base::LinkState state);</a>
+<a name="70"><span class="lineNum">      70 </span>                :            : </a>
+<a name="71"><span class="lineNum">      71 </span>                :            :  private:</a>
+<a name="72"><span class="lineNum">      72 </span>                :            :   std::string device_;</a>
+<a name="73"><span class="lineNum">      73 </span>                :            :   uint32_t baud_rate_;</a>
+<a name="74"><span class="lineNum">      74 </span>                :            :   std::shared_ptr&lt;interface::Channel&gt; channel_;</a>
+<a name="75"><span class="lineNum">      75 </span>                :            :   std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc_;</a>
+<a name="76"><span class="lineNum">      76 </span>                :            :   bool use_external_context_{false};</a>
+<a name="77"><span class="lineNum">      77 </span>                :            :   bool manage_external_context_{false};</a>
+<a name="78"><span class="lineNum">      78 </span>                :            :   std::thread external_thread_;</a>
+<a name="79"><span class="lineNum">      79 </span>                :            : </a>
+<a name="80"><span class="lineNum">      80 </span>                :            :   // Event handlers</a>
+<a name="81"><span class="lineNum">      81 </span>                :            :   DataHandler data_handler_;</a>
+<a name="82"><span class="lineNum">      82 </span>                :            :   BytesHandler bytes_handler_;</a>
+<a name="83"><span class="lineNum">      83 </span>                :            :   ConnectHandler connect_handler_;</a>
+<a name="84"><span class="lineNum">      84 </span>                :            :   DisconnectHandler disconnect_handler_;</a>
+<a name="85"><span class="lineNum">      85 </span>                :            :   ErrorHandler error_handler_;</a>
+<a name="86"><span class="lineNum">      86 </span>                :            : </a>
+<a name="87"><span class="lineNum">      87 </span>                :            :   // Configuration</a>
+<a name="88"><span class="lineNum">      88 </span>                :            :   bool auto_manage_ = false;</a>
+<a name="89"><span class="lineNum">      89 </span>                :            :   bool started_ = false;</a>
+<a name="90"><span class="lineNum">      90 </span>                :            : </a>
+<a name="91"><span class="lineNum">      91 </span>                :            :   // Serial-specific configuration</a>
+<a name="92"><span class="lineNum">      92 </span>                :            :   int data_bits_ = 8;</a>
+<a name="93"><span class="lineNum">      93 </span>                :            :   int stop_bits_ = 1;</a>
+<a name="94"><span class="lineNum">      94 </span>                :            :   std::string parity_ = &quot;none&quot;;</a>
+<a name="95"><span class="lineNum">      95 </span>                :            :   std::string flow_control_ = &quot;none&quot;;</a>
+<a name="96"><span class="lineNum">      96 </span>                :<span class="lineCov">         96 :   std::chrono::milliseconds retry_interval_{3000};  // 3 seconds default</span></a>
+<a name="97"><span class="lineNum">      97 </span>                :            : };</a>
+<a name="98"><span class="lineNum">      98 </span>                :            : </a>
+<a name="99"><span class="lineNum">      99 </span>                :            : }  // namespace wrapper</a>
+<a name="100"><span class="lineNum">     100 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
