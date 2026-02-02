@@ -418,10 +418,14 @@ void Serial::do_write() {
   auto self = shared_from_this();
 
   // Move buffer out of queue immediately to ensure lifetime safety during async op
-  auto current = std::move(tx_.front());
+  current_write_buffer_ = std::move(tx_.front());
   tx_.pop_front();
 
+  auto& current = *current_write_buffer_;
+
   auto on_write = [self](const boost::system::error_code& ec, std::size_t n) {
+    self->current_write_buffer_.reset();
+
     if (self->queued_bytes_ >= n) {
       self->queued_bytes_ -= n;
     } else {
@@ -442,27 +446,20 @@ void Serial::do_write() {
   };
 
   if (std::holds_alternative<memory::PooledBuffer>(current)) {
-    auto pooled_buf = std::get<memory::PooledBuffer>(std::move(current));
-    auto shared_pooled = std::make_shared<memory::PooledBuffer>(std::move(pooled_buf));
-    auto data = shared_pooled->data();
-    auto size = shared_pooled->size();
-    port_->async_write(net::buffer(data, size), net::bind_executor(strand_, [self, buf = shared_pooled, on_write](
-                                                                                auto ec, auto n) { on_write(ec, n); }));
+    auto& pooled_buf = std::get<memory::PooledBuffer>(current);
+    auto data = pooled_buf.data();
+    auto size = pooled_buf.size();
+    port_->async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
-    auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
+    auto& shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(current);
     auto data = shared_buf->data();
     auto size = shared_buf->size();
-    port_->async_write(net::buffer(data, size),
-                       net::bind_executor(strand_, [self, buf = std::move(shared_buf), on_write](auto ec, auto n) {
-                         on_write(ec, n);
-                       }));
+    port_->async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));
   } else {
-    auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
-    auto shared_vec = std::make_shared<std::vector<uint8_t>>(std::move(vec_buf));
-    auto data = shared_vec->data();
-    auto size = shared_vec->size();
-    port_->async_write(net::buffer(data, size), net::bind_executor(strand_, [self, buf = shared_vec, on_write](
-                                                                                auto ec, auto n) { on_write(ec, n); }));
+    auto& vec_buf = std::get<std::vector<uint8_t>>(current);
+    auto data = vec_buf.data();
+    auto size = vec_buf.size();
+    port_->async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));
   }
 }
 

@@ -489,8 +489,11 @@ void TcpClient::do_write() {
   writing_ = true;
   auto self = shared_from_this();
 
-  auto current = std::move(tx_.front());
+  current_write_buffer_ = std::move(tx_.front());
   tx_.pop_front();
+
+  auto& current = *current_write_buffer_;
+
   auto queued_bytes = std::visit(
       [](auto&& buf) -> size_t {
         using Buffer = std::decay_t<decltype(buf)>;
@@ -503,23 +506,35 @@ void TcpClient::do_write() {
       current);
 
   auto on_write = [self, queued_bytes](auto ec, std::size_t) {
-    self->queue_bytes_ = (self->queue_bytes_ > queued_bytes) ? (self->queue_bytes_ - queued_bytes) : 0;
-    self->report_backpressure(self->queue_bytes_);
-
     if (ec == net::error::operation_aborted) {
-      self->writing_ = false;
-      return;
-    }
-
-    if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
-        self->state_.is_state(LinkState::Error)) {
+      self->current_write_buffer_.reset();
+      self->queue_bytes_ = (self->queue_bytes_ > queued_bytes) ? (self->queue_bytes_ - queued_bytes) : 0;
+      self->report_backpressure(self->queue_bytes_);
       self->writing_ = false;
       return;
     }
 
     if (ec) {
+      // Recovery: Push the buffer back to the front of the queue so it's sent on retry
+      // We do NOT decrement queue_bytes_ here because the data effectively remains in the queue.
+      if (self->current_write_buffer_) {
+        self->tx_.push_front(std::move(*self->current_write_buffer_));
+      }
+      self->current_write_buffer_.reset();
+
+      UNILINK_LOG_ERROR("tcp_client", "do_write", "Write failed: " + ec.message());
       self->writing_ = false;
       self->handle_close(ec);
+      return;
+    }
+
+    self->current_write_buffer_.reset();
+    self->queue_bytes_ = (self->queue_bytes_ > queued_bytes) ? (self->queue_bytes_ - queued_bytes) : 0;
+    self->report_backpressure(self->queue_bytes_);
+
+    if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
+        self->state_.is_state(LinkState::Error)) {
+      self->writing_ = false;
       return;
     }
 
@@ -528,29 +543,20 @@ void TcpClient::do_write() {
 
   // Handle PooledBuffer, shared_ptr buffer, or std::vector<uint8_t> (fallback)
   if (std::holds_alternative<memory::PooledBuffer>(current)) {
-    auto pooled_buf = std::get<memory::PooledBuffer>(std::move(current));
-    // Optimization: Move PooledBuffer directly into lambda to avoid std::make_shared allocation
+    auto& pooled_buf = std::get<memory::PooledBuffer>(current);
     auto data = pooled_buf.data();
     auto size = pooled_buf.size();
-    net::async_write(socket_, net::buffer(data, size),
-                     [self, buf = std::move(pooled_buf), on_write = std::move(on_write)](
-                         auto ec, std::size_t n) mutable { on_write(ec, n); });
+    net::async_write(socket_, net::buffer(data, size), on_write);
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
-    auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
+    auto& shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(current);
     auto data = shared_buf->data();
     auto size = shared_buf->size();
-    net::async_write(socket_, net::buffer(data, size),
-                     [self, buf = std::move(shared_buf), on_write = std::move(on_write)](
-                         auto ec, std::size_t n) mutable { on_write(ec, n); });
+    net::async_write(socket_, net::buffer(data, size), on_write);
   } else {
-    auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
-    // Optimization: Move vector directly into lambda to avoid std::make_shared allocation
+    auto& vec_buf = std::get<std::vector<uint8_t>>(current);
     auto data = vec_buf.data();
     auto size = vec_buf.size();
-    net::async_write(socket_, net::buffer(data, size),
-                     [self, buf = std::move(vec_buf), on_write = std::move(on_write)](auto ec, std::size_t n) mutable {
-                       on_write(ec, n);
-                     });
+    net::async_write(socket_, net::buffer(data, size), on_write);
   }
 }
 
@@ -558,6 +564,7 @@ void TcpClient::handle_close(const boost::system::error_code& ec) {
   if (ec == net::error::operation_aborted) {
     return;
   }
+  UNILINK_LOG_INFO("tcp_client", "handle_close", "Closing connection. Error: " + ec.message());
   connected_.store(false);
   writing_ = false;
   connect_timer_.cancel();

@@ -23,6 +23,7 @@
 #include <deque>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <variant>
 #include <vector>
 
@@ -49,6 +50,8 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   using OnBytes = interface::Channel::OnBytes;
   using OnBackpressure = interface::Channel::OnBackpressure;
   using OnClose = std::function<void()>;
+  using BufferVariant =
+      std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>;
 
   TcpServerSession(net::io_context& ioc, tcp::socket sock,
                    size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
@@ -77,7 +80,8 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<interface::TcpSocketInterface> socket_;
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
-  std::deque<std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
+  std::deque<BufferVariant> tx_;
+  std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
   size_t bp_high_;   // Configurable backpressure threshold
