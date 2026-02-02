@@ -85,17 +85,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install Ninja (Linux/macOS)
+      - name: Install Build Dependencies (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          if command -v ninja >/dev/null 2>&1; then
-            exit 0
-          fi
           if [ "${{ runner.os }}" = "Linux" ]; then
             sudo apt-get update
-            sudo apt-get install -y ninja-build
+            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool
           else
-            brew install ninja
+            brew install ninja autoconf autoconf-archive automake libtool
           fi
 
       - name: Setup Python
