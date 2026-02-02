@@ -46,6 +46,7 @@ class UNILINK_API Serial : public ChannelInterface {
   bool is_connected() const override;
 
   ChannelInterface& on_data(DataHandler handler) override;
+  ChannelInterface& on_bytes(BytesHandler handler) override;
   ChannelInterface& on_connect(ConnectHandler handler) override;
   ChannelInterface& on_disconnect(DisconnectHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
@@ -78,6 +79,7 @@ class UNILINK_API Serial : public ChannelInterface {
 
   // Event handlers
   DataHandler data_handler_;
+  BytesHandler bytes_handler_;
   ConnectHandler connect_handler_;
   DisconnectHandler disconnect_handler_;
   ErrorHandler error_handler_;

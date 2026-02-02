@@ -171,6 +171,11 @@ ChannelInterface& TcpServer::on_data(DataHandler handler) {
   return *this;
 }
 
+ChannelInterface& TcpServer::on_bytes(BytesHandler handler) {
+  on_bytes_ = std::move(handler);
+  return *this;
+}
+
 ChannelInterface& TcpServer::on_connect(ConnectHandler handler) {
   on_connect_ = std::move(handler);
   return *this;
@@ -244,6 +249,9 @@ void TcpServer::setup_internal_handlers() {
 }
 
 void TcpServer::handle_bytes(const uint8_t* data, size_t size) {
+  if (on_bytes_) {
+    on_bytes_(data, size);
+  }
   if (on_data_) {
     std::string str_data = common::safe_convert::uint8_to_string(data, size);
     on_data_(str_data);

@@ -29,6 +29,7 @@ namespace wrapper {
 class UNILINK_API ChannelInterface {
  public:
   using DataHandler = std::function<void(const std::string&)>;
+  using BytesHandler = std::function<void(const uint8_t*, size_t)>;
   using ConnectHandler = std::function<void()>;
   using DisconnectHandler = std::function<void()>;
   using ErrorHandler = std::function<void(const std::string&)>;
@@ -44,6 +45,7 @@ class UNILINK_API ChannelInterface {
 
   // Event handler setup
   virtual ChannelInterface& on_data(DataHandler handler) = 0;
+  virtual ChannelInterface& on_bytes(BytesHandler handler) = 0;
   virtual ChannelInterface& on_connect(ConnectHandler handler) = 0;
   virtual ChannelInterface& on_disconnect(DisconnectHandler handler) = 0;
   virtual ChannelInterface& on_error(ErrorHandler handler) = 0;
