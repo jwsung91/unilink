@@ -322,6 +322,12 @@ if(UNILINK_BUILD_TESTS)
   add_subdirectory(test)
 endif()
 
+# Python bindings
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+if(BUILD_PYTHON_BINDINGS)
+  add_subdirectory(bindings/python)
+endif()
+
 # Documentation generation with Doxygen
 if(UNILINK_BUILD_DOCS AND UNILINK_DOXYGEN_AVAILABLE)
   # Create docs directory
