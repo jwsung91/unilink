@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['parity_422',['Parity',['../structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7c',1,'unilink::config::SerialConfig']]],
-  ['parity_423',['parity',['../structunilink_1_1config_1_1SerialConfig.html#aac99c4bd2145b420ba8e68861556b17e',1,'unilink::config::SerialConfig']]],
+  ['parity_422',['parity',['../structunilink_1_1config_1_1SerialConfig.html#aac99c4bd2145b420ba8e68861556b17e',1,'unilink::config::SerialConfig']]],
+  ['parity_423',['Parity',['../structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7c',1,'unilink::config::SerialConfig']]],
   ['peak_5fallocations_424',['peak_allocations',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a9cf4effa46e5eca772684b5419aedfb9',1,'unilink::memory::MemoryTracker::MemoryStats']]],
   ['peak_5fbytes_5fallocated_425',['peak_bytes_allocated',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#aba9fb1e9a6a1d7294f268804ad631d78',1,'unilink::memory::MemoryTracker::MemoryStats']]],
   ['performance_20guide_426',['Performance Guide',['../md_docs_guides_advanced_performance.html',1,'']]],
