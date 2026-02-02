@@ -105,6 +105,12 @@ ChannelInterface& Udp::on_data(DataHandler handler) {
   return *this;
 }
 
+ChannelInterface& Udp::on_bytes(BytesHandler handler) {
+  bytes_handler_ = std::move(handler);
+  if (channel_) setup_internal_handlers();
+  return *this;
+}
+
 ChannelInterface& Udp::on_connect(ConnectHandler handler) {
   connect_handler_ = std::move(handler);
   return *this;
@@ -132,6 +138,9 @@ void Udp::setup_internal_handlers() {
   if (!channel_) return;
 
   channel_->on_bytes([this](const uint8_t* p, size_t n) {
+    if (bytes_handler_) {
+      bytes_handler_(p, n);
+    }
     if (data_handler_) {
       std::string data = common::safe_convert::uint8_to_string(p, n);
       data_handler_(data);

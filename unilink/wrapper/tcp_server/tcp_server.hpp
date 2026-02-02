@@ -51,6 +51,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
   bool is_connected() const override;
 
   ChannelInterface& on_data(DataHandler handler) override;
+  ChannelInterface& on_bytes(BytesHandler handler) override;
   ChannelInterface& on_connect(ConnectHandler handler) override;
   ChannelInterface& on_disconnect(DisconnectHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
@@ -117,6 +118,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
 
   // User callbacks
   DataHandler on_data_;
+  BytesHandler on_bytes_;
   ConnectHandler on_connect_;
   DisconnectHandler on_disconnect_;
   ErrorHandler on_error_;
