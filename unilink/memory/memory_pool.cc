@@ -29,7 +29,7 @@ namespace memory {
 // SelectiveMemoryPool Implementation
 // ============================================================================
 
-MemoryPool::MemoryPool(size_t initial_pool_size, size_t /* max_pool_size */) {
+MemoryPool::MemoryPool(size_t initial_pool_size, size_t max_pool_size) {
   // Initialize 4 fixed-size pools
   static constexpr std::array<size_t, 4> BUCKET_SIZES = {
       static_cast<size_t>(BufferSize::SMALL),   // 1KB
@@ -40,7 +40,8 @@ MemoryPool::MemoryPool(size_t initial_pool_size, size_t /* max_pool_size */) {
 
   for (size_t i = 0; i < buckets_.size(); ++i) {
     buckets_[i].size_ = BUCKET_SIZES[i];
-    buckets_[i].buffers_.reserve(initial_pool_size / BUCKET_SIZES.size());
+    buckets_[i].capacity_ = max_pool_size / buckets_.size();
+    buckets_[i].buffers_.reserve(initial_pool_size / buckets_.size());
   }
 }
 
@@ -125,13 +126,10 @@ size_t MemoryPool::get_bucket_index(size_t size) const {
 std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
   std::lock_guard<std::mutex> lock(bucket.mutex_);
 
-  // Get from free list
-  if (!bucket.free_indices_.empty()) {
-    size_t index = bucket.free_indices_.front();
-    bucket.free_indices_.pop();
-
-    auto buffer = std::move(bucket.buffers_[index]);
-    bucket.buffers_[index] = nullptr;
+  // Get from stack
+  if (!bucket.buffers_.empty()) {
+    auto buffer = std::move(bucket.buffers_.back());
+    bucket.buffers_.pop_back();
 
     stats_.pool_hits++;
     stats_.total_allocations++;
@@ -142,7 +140,6 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
   // Create new buffer
   auto buffer = create_buffer(bucket.size_);
   if (buffer) {
-    bucket.buffers_.push_back(nullptr);
     stats_.total_allocations++;
   }
 
@@ -152,12 +149,9 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
 void MemoryPool::release_to_bucket(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer) {
   std::lock_guard<std::mutex> lock(bucket.mutex_);
 
-  // Add buffer back to pool and add index to free_indices
-  if (bucket.buffers_.size() < bucket.buffers_.capacity()) {
-    // Add within existing vector size
-    size_t index = bucket.buffers_.size();
+  // Add buffer back to pool (stack)
+  if (bucket.buffers_.size() < bucket.capacity_) {
     bucket.buffers_.push_back(std::move(buffer));
-    bucket.free_indices_.push(index);
   } else {
     // If pool is full, discard buffer (auto-release)
     // buffer is unique_ptr so it will be automatically deleted when out of scope
@@ -186,17 +180,19 @@ void MemoryPool::validate_size(size_t size) const {
 // ============================================================================
 
 MemoryPool::PoolBucket::PoolBucket(PoolBucket&& other) noexcept
-    : buffers_(std::move(other.buffers_)), free_indices_(std::move(other.free_indices_)), mutex_(), size_(other.size_) {
+    : buffers_(std::move(other.buffers_)), mutex_(), size_(other.size_), capacity_(other.capacity_) {
   other.size_ = 0;
+  other.capacity_ = 0;
 }
 
 MemoryPool::PoolBucket& MemoryPool::PoolBucket::operator=(PoolBucket&& other) noexcept {
   if (this != &other) {
     buffers_ = std::move(other.buffers_);
-    free_indices_ = std::move(other.free_indices_);
     size_ = other.size_;
+    capacity_ = other.capacity_;
 
     other.size_ = 0;
+    other.capacity_ = 0;
   }
   return *this;
 }

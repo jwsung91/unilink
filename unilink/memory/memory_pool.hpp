@@ -22,7 +22,6 @@
 #include <cstddef>
 #include <memory>
 #include <mutex>
-#include <queue>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -86,11 +85,11 @@ class UNILINK_API MemoryPool {
   // Simple pool bucket
   struct PoolBucket {
     std::vector<std::unique_ptr<uint8_t[]>> buffers_;
-    std::queue<size_t> free_indices_;
     mutable std::mutex mutex_;
     size_t size_;
+    size_t capacity_;
 
-    PoolBucket() : size_{0} {}
+    PoolBucket() : size_{0}, capacity_{0} {}
     PoolBucket(PoolBucket&& other) noexcept;
     PoolBucket& operator=(PoolBucket&& other) noexcept;
     PoolBucket(const PoolBucket&) = delete;
