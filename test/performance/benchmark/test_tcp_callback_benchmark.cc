@@ -69,9 +69,7 @@ TEST_F(TcpCallbackBenchmark, OnDataPerformance) {
   std::vector<uint8_t> buffer(data_size, 'A');
 
   volatile size_t bytes_received = 0;
-  client_->on_data([&](const std::string& data) {
-    bytes_received += data.size();
-  });
+  client_->on_data([&](const std::string& data) { bytes_received += data.size(); });
 
   auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -96,9 +94,7 @@ TEST_F(TcpCallbackBenchmark, OnBytesPerformance) {
   std::vector<uint8_t> buffer(data_size, 'A');
 
   volatile size_t bytes_received = 0;
-  client_->on_bytes([&](const uint8_t* data, size_t size) {
-    bytes_received += size;
-  });
+  client_->on_bytes([&](const uint8_t* data, size_t size) { bytes_received += size; });
 
   auto start_time = std::chrono::high_resolution_clock::now();
 
