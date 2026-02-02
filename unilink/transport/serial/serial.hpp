@@ -21,6 +21,7 @@
 #include <cstddef>
 #include <deque>
 #include <memory>
+#include <optional>
 #include <string>
 #include <thread>
 #include <variant>
@@ -50,6 +51,9 @@ namespace net = boost::asio;
 // Use static create() helpers to construct safely
 class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<Serial> {
  public:
+  using BufferVariant =
+      std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>;
+
   static std::shared_ptr<Serial> create(const SerialConfig& cfg);
   static std::shared_ptr<Serial> create(const SerialConfig& cfg, net::io_context& ioc);
   static std::shared_ptr<Serial> create(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port,
@@ -97,7 +101,8 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   net::steady_timer retry_timer_;
 
   std::vector<uint8_t> rx_;
-  std::deque<std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
+  std::deque<BufferVariant> tx_;
+  std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
   size_t queued_bytes_ = 0;
   size_t bp_high_;   // Configurable backpressure threshold

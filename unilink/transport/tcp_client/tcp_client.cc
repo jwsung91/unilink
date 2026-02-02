@@ -489,8 +489,11 @@ void TcpClient::do_write() {
   writing_ = true;
   auto self = shared_from_this();
 
-  auto current = std::move(tx_.front());
+  current_write_buffer_ = std::move(tx_.front());
   tx_.pop_front();
+
+  auto& current = *current_write_buffer_;
+
   auto queued_bytes = std::visit(
       [](auto&& buf) -> size_t {
         using Buffer = std::decay_t<decltype(buf)>;
@@ -503,6 +506,8 @@ void TcpClient::do_write() {
       current);
 
   auto on_write = [self, queued_bytes](auto ec, std::size_t) {
+    self->current_write_buffer_.reset();
+
     self->queue_bytes_ = (self->queue_bytes_ > queued_bytes) ? (self->queue_bytes_ - queued_bytes) : 0;
     self->report_backpressure(self->queue_bytes_);
 
@@ -528,29 +533,20 @@ void TcpClient::do_write() {
 
   // Handle PooledBuffer, shared_ptr buffer, or std::vector<uint8_t> (fallback)
   if (std::holds_alternative<memory::PooledBuffer>(current)) {
-    auto pooled_buf = std::get<memory::PooledBuffer>(std::move(current));
-    // Optimization: Move PooledBuffer directly into lambda to avoid std::make_shared allocation
+    auto& pooled_buf = std::get<memory::PooledBuffer>(current);
     auto data = pooled_buf.data();
     auto size = pooled_buf.size();
-    net::async_write(socket_, net::buffer(data, size),
-                     [self, buf = std::move(pooled_buf), on_write = std::move(on_write)](
-                         auto ec, std::size_t n) mutable { on_write(ec, n); });
+    net::async_write(socket_, net::buffer(data, size), on_write);
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
-    auto shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
+    auto& shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(current);
     auto data = shared_buf->data();
     auto size = shared_buf->size();
-    net::async_write(socket_, net::buffer(data, size),
-                     [self, buf = std::move(shared_buf), on_write = std::move(on_write)](
-                         auto ec, std::size_t n) mutable { on_write(ec, n); });
+    net::async_write(socket_, net::buffer(data, size), on_write);
   } else {
-    auto vec_buf = std::get<std::vector<uint8_t>>(std::move(current));
-    // Optimization: Move vector directly into lambda to avoid std::make_shared allocation
+    auto& vec_buf = std::get<std::vector<uint8_t>>(current);
     auto data = vec_buf.data();
     auto size = vec_buf.size();
-    net::async_write(socket_, net::buffer(data, size),
-                     [self, buf = std::move(vec_buf), on_write = std::move(on_write)](auto ec, std::size_t n) mutable {
-                       on_write(ec, n);
-                     });
+    net::async_write(socket_, net::buffer(data, size), on_write);
   }
 }
 
