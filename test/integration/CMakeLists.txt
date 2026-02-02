@@ -78,27 +78,11 @@ foreach(test_file test_serial_builder_improvements.cc)
   )
 endforeach()
 
-# Mock integration tests - DISABLED due to dependency injection issues These
-# tests require DI architecture which is not implemented in the library Real
-# integration tests provide better coverage foreach(test_file
-# test_mock_integration.cc test_mock_integrated.cc)
-# get_filename_component(test_name ${test_file} NAME_WE)
-# add_executable(run_integration_${test_name} mock/${test_file})
-# target_link_libraries(run_integration_${test_name} PRIVATE unilink_shared
-# GTest::gtest GTest::gtest_main GTest::gmock )
-# target_include_directories(run_integration_${test_name} PRIVATE
-# ${CMAKE_SOURCE_DIR}/test/utils ${CMAKE_SOURCE_DIR}/test/fixtures
-# ${CMAKE_SOURCE_DIR}/test/mocks )
-# gtest_discover_tests(run_integration_${test_name} PROPERTIES LABELS
-# "integration;mock;medium" TIMEOUT 60 ) endforeach()
-
-# General integration tests
-foreach(test_file test_builder_integration.cc test_stable_integration.cc
-                  test_core_integrated.cc test_safety_integrated.cc
-)
+# Builder integration tests
+foreach(test_file test_builder_integration.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
-    run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/${test_file}
+    run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/builder/${test_file}
   )
   target_link_libraries(
     run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
@@ -109,20 +93,42 @@ foreach(test_file test_builder_integration.cc test_stable_integration.cc
     run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
                                          ${CMAKE_SOURCE_DIR}/test/fixtures
   )
-  # Mark test_builder_integration and test_stable_integration to use resource
-  # lock to avoid port timing conflicts when running in parallel
-  if(test_name STREQUAL "test_builder_integration" OR test_name STREQUAL
-                                                      "test_stable_integration"
+  # Mark test_builder_integration to use resource lock
+  gtest_discover_tests(
+    run_integration_${test_name}
+    PROPERTIES LABELS "integration;builder;medium"
+    TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
   )
+endforeach()
+
+# Core/General integration tests
+foreach(test_file test_stable_integration.cc
+                  test_core_integrated.cc test_safety_integrated.cc
+)
+  get_filename_component(test_name ${test_file} NAME_WE)
+  add_executable(
+    run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/core/${test_file}
+  )
+  target_link_libraries(
+    run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
+                                         GTest::gtest_main GTest::gmock
+  )
+  unilink_set_test_warning_options(run_integration_${test_name})
+  target_include_directories(
+    run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
+                                         ${CMAKE_SOURCE_DIR}/test/fixtures
+  )
+  # Mark test_stable_integration to use resource lock
+  if(test_name STREQUAL "test_stable_integration")
     gtest_discover_tests(
       run_integration_${test_name}
-      PROPERTIES LABELS "integration;general;medium"
+      PROPERTIES LABELS "integration;core;medium"
       TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
     )
   else()
     gtest_discover_tests(
       run_integration_${test_name}
-      PROPERTIES LABELS "integration;general;medium"
+      PROPERTIES LABELS "integration;core;medium"
       TIMEOUT 60 RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
