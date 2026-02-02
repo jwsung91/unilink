@@ -28,6 +28,30 @@ vcpkg install jwsung91-unilink
 
 For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/guides/setup/installation.md).
 
+## 🐍 Python Bindings
+
+Unilink provides Python bindings for core functionality (`TcpClient`, `TcpServer`, `Serial`, `Udp`).
+
+### Prerequisites
+* Python 3.6+ (dev headers)
+* pybind11 (`sudo apt-get install pybind11-dev python3-pybind11` on Ubuntu)
+* Boost (`boost-system`, `boost-asio`, `boost-thread`)
+
+### Build
+Pass `-DBUILD_PYTHON_BINDINGS=ON` to CMake:
+
+```bash
+cmake -B build -S . -DBUILD_PYTHON_BINDINGS=ON
+cmake --build build
+```
+
+This generates `unilink_py.cpython-*.so` in `build/lib`. Add this directory to your `PYTHONPATH` to use it:
+
+```bash
+export PYTHONPATH=$PWD/build/lib
+python3 -c "import unilink_py; print(unilink_py.__doc__)"
+```
+
 ## 📚 Documentation
 
 The documentation is organized by learning stage, from quick start to advanced topics.

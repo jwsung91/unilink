@@ -21,7 +21,13 @@ PYBIND11_MODULE(unilink_py, m) {
         .def("send_line", &TcpClient::send_line)
         .def("is_connected", &TcpClient::is_connected)
         .def("auto_manage", &TcpClient::auto_manage, py::arg("manage") = true)
-        .def("on_data", &TcpClient::on_data)
+        .def("on_data", [](TcpClient& self, std::function<void(const std::string&)> handler) {
+             self.on_data([handler](const std::string& data) {
+                 py::gil_scoped_acquire gil;
+                 handler(data);
+             });
+             return &self;
+        })
         .def("on_bytes", [](TcpClient& self, std::function<void(const py::bytes&)> handler) {
              self.on_bytes([handler](const uint8_t* data, size_t size) {
                  py::gil_scoped_acquire gil;
@@ -29,9 +35,27 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
         })
-        .def("on_connect", &TcpClient::on_connect)
-        .def("on_disconnect", &TcpClient::on_disconnect)
-        .def("on_error", &TcpClient::on_error);
+        .def("on_connect", [](TcpClient& self, std::function<void()> handler) {
+             self.on_connect([handler]() {
+                 py::gil_scoped_acquire gil;
+                 handler();
+             });
+             return &self;
+        })
+        .def("on_disconnect", [](TcpClient& self, std::function<void()> handler) {
+             self.on_disconnect([handler]() {
+                 py::gil_scoped_acquire gil;
+                 handler();
+             });
+             return &self;
+        })
+        .def("on_error", [](TcpClient& self, std::function<void(const std::string&)> handler) {
+             self.on_error([handler](const std::string& err) {
+                 py::gil_scoped_acquire gil;
+                 handler(err);
+             });
+             return &self;
+        });
 
     // TcpServer
     py::class_<TcpServer, std::shared_ptr<TcpServer>>(m, "TcpServer")
@@ -44,7 +68,13 @@ PYBIND11_MODULE(unilink_py, m) {
         .def("broadcast", &TcpServer::broadcast)
         .def("send_to_client", &TcpServer::send_to_client)
         .def("get_client_count", &TcpServer::get_client_count)
-        .def("on_data", &TcpServer::on_data)
+        .def("on_data", [](TcpServer& self, std::function<void(const std::string&)> handler) {
+             self.on_data([handler](const std::string& data) {
+                 py::gil_scoped_acquire gil;
+                 handler(data);
+             });
+             return &self;
+        })
         .def("on_bytes", [](TcpServer& self, std::function<void(const py::bytes&)> handler) {
              self.on_bytes([handler](const uint8_t* data, size_t size) {
                  py::gil_scoped_acquire gil;
@@ -52,12 +82,48 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
         })
-        .def("on_connect", &TcpServer::on_connect)
-        .def("on_disconnect", &TcpServer::on_disconnect)
-        .def("on_error", &TcpServer::on_error)
-        .def("on_multi_connect", &TcpServer::on_multi_connect)
-        .def("on_multi_data", &TcpServer::on_multi_data)
-        .def("on_multi_disconnect", &TcpServer::on_multi_disconnect);
+        .def("on_connect", [](TcpServer& self, std::function<void()> handler) {
+             self.on_connect([handler]() {
+                 py::gil_scoped_acquire gil;
+                 handler();
+             });
+             return &self;
+        })
+        .def("on_disconnect", [](TcpServer& self, std::function<void()> handler) {
+             self.on_disconnect([handler]() {
+                 py::gil_scoped_acquire gil;
+                 handler();
+             });
+             return &self;
+        })
+        .def("on_error", [](TcpServer& self, std::function<void(const std::string&)> handler) {
+             self.on_error([handler](const std::string& err) {
+                 py::gil_scoped_acquire gil;
+                 handler(err);
+             });
+             return &self;
+        })
+        .def("on_multi_connect", [](TcpServer& self, std::function<void(size_t, const std::string&)> handler) {
+             self.on_multi_connect([handler](size_t id, const std::string& info) {
+                 py::gil_scoped_acquire gil;
+                 handler(id, info);
+             });
+             return &self;
+        })
+        .def("on_multi_data", [](TcpServer& self, std::function<void(size_t, const std::string&)> handler) {
+             self.on_multi_data([handler](size_t id, const std::string& data) {
+                 py::gil_scoped_acquire gil;
+                 handler(id, data);
+             });
+             return &self;
+        })
+        .def("on_multi_disconnect", [](TcpServer& self, std::function<void(size_t)> handler) {
+             self.on_multi_disconnect([handler](size_t id) {
+                 py::gil_scoped_acquire gil;
+                 handler(id);
+             });
+             return &self;
+        });
 
     // Serial
     py::class_<Serial, std::shared_ptr<Serial>>(m, "Serial")
@@ -72,7 +138,13 @@ PYBIND11_MODULE(unilink_py, m) {
         .def("set_stop_bits", &Serial::set_stop_bits)
         .def("set_parity", &Serial::set_parity)
         .def("set_flow_control", &Serial::set_flow_control)
-        .def("on_data", &Serial::on_data)
+        .def("on_data", [](Serial& self, std::function<void(const std::string&)> handler) {
+             self.on_data([handler](const std::string& data) {
+                 py::gil_scoped_acquire gil;
+                 handler(data);
+             });
+             return &self;
+        })
         .def("on_bytes", [](Serial& self, std::function<void(const py::bytes&)> handler) {
              self.on_bytes([handler](const uint8_t* data, size_t size) {
                  py::gil_scoped_acquire gil;
@@ -80,9 +152,27 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
         })
-        .def("on_connect", &Serial::on_connect)
-        .def("on_disconnect", &Serial::on_disconnect)
-        .def("on_error", &Serial::on_error);
+        .def("on_connect", [](Serial& self, std::function<void()> handler) {
+             self.on_connect([handler]() {
+                 py::gil_scoped_acquire gil;
+                 handler();
+             });
+             return &self;
+        })
+        .def("on_disconnect", [](Serial& self, std::function<void()> handler) {
+             self.on_disconnect([handler]() {
+                 py::gil_scoped_acquire gil;
+                 handler();
+             });
+             return &self;
+        })
+        .def("on_error", [](Serial& self, std::function<void(const std::string&)> handler) {
+             self.on_error([handler](const std::string& err) {
+                 py::gil_scoped_acquire gil;
+                 handler(err);
+             });
+             return &self;
+        });
 
     // UdpConfig
     py::class_<config::UdpConfig>(m, "UdpConfig")
@@ -103,7 +193,13 @@ PYBIND11_MODULE(unilink_py, m) {
         .def("send", &Udp::send)
         .def("send_line", &Udp::send_line)
         .def("is_connected", &Udp::is_connected)
-        .def("on_data", &Udp::on_data)
+        .def("on_data", [](Udp& self, std::function<void(const std::string&)> handler) {
+             self.on_data([handler](const std::string& data) {
+                 py::gil_scoped_acquire gil;
+                 handler(data);
+             });
+             return &self;
+        })
         .def("on_bytes", [](Udp& self, std::function<void(const py::bytes&)> handler) {
              self.on_bytes([handler](const uint8_t* data, size_t size) {
                  py::gil_scoped_acquire gil;
@@ -111,7 +207,25 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
         })
-        .def("on_connect", &Udp::on_connect)
-        .def("on_disconnect", &Udp::on_disconnect)
-        .def("on_error", &Udp::on_error);
+        .def("on_connect", [](Udp& self, std::function<void()> handler) {
+             self.on_connect([handler]() {
+                 py::gil_scoped_acquire gil;
+                 handler();
+             });
+             return &self;
+        })
+        .def("on_disconnect", [](Udp& self, std::function<void()> handler) {
+             self.on_disconnect([handler]() {
+                 py::gil_scoped_acquire gil;
+                 handler();
+             });
+             return &self;
+        })
+        .def("on_error", [](Udp& self, std::function<void(const std::string&)> handler) {
+             self.on_error([handler](const std::string& err) {
+                 py::gil_scoped_acquire gil;
+                 handler(err);
+             });
+             return &self;
+        });
 }
