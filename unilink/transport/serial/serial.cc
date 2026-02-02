@@ -449,20 +449,17 @@ void Serial::do_write() {
     auto& pooled_buf = std::get<memory::PooledBuffer>(current);
     auto data = pooled_buf.data();
     auto size = pooled_buf.size();
-    port_->async_write(net::buffer(data, size),
-                       net::bind_executor(strand_, on_write));
+    port_->async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));
   } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
     auto& shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(current);
     auto data = shared_buf->data();
     auto size = shared_buf->size();
-    port_->async_write(net::buffer(data, size),
-                       net::bind_executor(strand_, on_write));
+    port_->async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));
   } else {
     auto& vec_buf = std::get<std::vector<uint8_t>>(current);
     auto data = vec_buf.data();
     auto size = vec_buf.size();
-    port_->async_write(net::buffer(data, size),
-                       net::bind_executor(strand_, on_write));
+    port_->async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));
   }
 }
 

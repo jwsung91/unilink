@@ -506,25 +506,35 @@ void TcpClient::do_write() {
       current);
 
   auto on_write = [self, queued_bytes](auto ec, std::size_t) {
-    self->current_write_buffer_.reset();
-
-    self->queue_bytes_ = (self->queue_bytes_ > queued_bytes) ? (self->queue_bytes_ - queued_bytes) : 0;
-    self->report_backpressure(self->queue_bytes_);
-
     if (ec == net::error::operation_aborted) {
-      self->writing_ = false;
-      return;
-    }
-
-    if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
-        self->state_.is_state(LinkState::Error)) {
+      self->current_write_buffer_.reset();
+      self->queue_bytes_ = (self->queue_bytes_ > queued_bytes) ? (self->queue_bytes_ - queued_bytes) : 0;
+      self->report_backpressure(self->queue_bytes_);
       self->writing_ = false;
       return;
     }
 
     if (ec) {
+      // Recovery: Push the buffer back to the front of the queue so it's sent on retry
+      // We do NOT decrement queue_bytes_ here because the data effectively remains in the queue.
+      if (self->current_write_buffer_) {
+        self->tx_.push_front(std::move(*self->current_write_buffer_));
+      }
+      self->current_write_buffer_.reset();
+
+      UNILINK_LOG_ERROR("tcp_client", "do_write", "Write failed: " + ec.message());
       self->writing_ = false;
       self->handle_close(ec);
+      return;
+    }
+
+    self->current_write_buffer_.reset();
+    self->queue_bytes_ = (self->queue_bytes_ > queued_bytes) ? (self->queue_bytes_ - queued_bytes) : 0;
+    self->report_backpressure(self->queue_bytes_);
+
+    if (self->stop_requested_.load() || self->state_.is_state(LinkState::Closed) ||
+        self->state_.is_state(LinkState::Error)) {
+      self->writing_ = false;
       return;
     }
 
@@ -554,6 +564,7 @@ void TcpClient::handle_close(const boost::system::error_code& ec) {
   if (ec == net::error::operation_aborted) {
     return;
   }
+  UNILINK_LOG_INFO("tcp_client", "handle_close", "Closing connection. Error: " + ec.message());
   connected_.store(false);
   writing_ = false;
   connect_timer_.cancel();
