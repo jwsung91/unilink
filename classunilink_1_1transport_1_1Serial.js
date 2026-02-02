@@ -1,6 +1,5 @@
 var classunilink_1_1transport_1_1Serial =
 [
-    [ "BufferVariant", "classunilink_1_1transport_1_1Serial.html#ab37d95855b6845e966916f55ce6a7787", null ],
     [ "~Serial", "classunilink_1_1transport_1_1Serial.html#a7adb91b607dfc1dc5ee9362bf7c7f1e5", null ],
     [ "async_write_copy", "classunilink_1_1transport_1_1Serial.html#a19216fb28f4a3bc7dd328f549e2c733d", null ],
     [ "async_write_move", "classunilink_1_1transport_1_1Serial.html#a36c1543fbe8a209eaecbb26115c65044", null ],

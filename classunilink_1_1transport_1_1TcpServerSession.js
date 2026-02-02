@@ -1,6 +1,5 @@
 var classunilink_1_1transport_1_1TcpServerSession =
 [
-    [ "BufferVariant", "classunilink_1_1transport_1_1TcpServerSession.html#ae5b7df00f0f86f15ad82ecb45ae12e82", null ],
     [ "OnBackpressure", "classunilink_1_1transport_1_1TcpServerSession.html#a080302c4c4425b85d78227d90cd2f034", null ],
     [ "OnBytes", "classunilink_1_1transport_1_1TcpServerSession.html#a33002ebd873b32f644ae6cc7458d6ef4", null ],
     [ "OnClose", "classunilink_1_1transport_1_1TcpServerSession.html#a1d692982ec34bcbe037d32cb5059352b", null ],

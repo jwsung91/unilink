@@ -84,7 +84,6 @@ $(document).ready(function(){initNavTree('classunilink_1_1transport_1_1TcpClient
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classunilink_1_1transport_1_1TcpClient-members.html">List of all members</a>  </div>
@@ -104,18 +103,6 @@ Inheritance diagram for unilink::transport::TcpClient:</div>
   </map>
 </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a4118b23599d148c9346716583a177a30"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a4118b23599d148c9346716583a177a30">BufferVariant</a> = std::variant&lt; <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html">memory::PooledBuffer</a>, std::vector&lt; uint8_t &gt;, std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&gt;</td></tr>
-<tr class="separator:a4118b23599d148c9346716583a177a30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_classunilink_1_1interface_1_1Channel"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1interface_1_1Channel')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></td></tr>
-<tr class="memitem:a2a34895018b104dccc9bf49143008b55 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">OnBytes</a> = std::function&lt; void(const uint8_t *, size_t)&gt;</td></tr>
-<tr class="separator:a2a34895018b104dccc9bf49143008b55 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a>)&gt;</td></tr>
-<tr class="separator:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> = std::function&lt; void(size_t)&gt;</td></tr>
-<tr class="separator:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a691f5852b555c9a261324a00447c6683"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a691f5852b555c9a261324a00447c6683">~TcpClient</a> ()</td></tr>
@@ -150,28 +137,21 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a7c55f4d77900a63f4ff9328b85771818"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a112c07a30c9174627ad694c514ef9259"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a112c07a30c9174627ad694c514ef9259">create</a> (const <a class="el" href="structunilink_1_1config_1_1TcpClientConfig.html">TcpClientConfig</a> &amp;cfg, net::io_context &amp;ioc)</td></tr>
 <tr class="separator:a112c07a30c9174627ad694c514ef9259"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classunilink_1_1interface_1_1Channel"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1interface_1_1Channel')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></td></tr>
+<tr class="memitem:a2a34895018b104dccc9bf49143008b55 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">OnBytes</a> = std::function&lt; void(const uint8_t *, size_t)&gt;</td></tr>
+<tr class="separator:a2a34895018b104dccc9bf49143008b55 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a>)&gt;</td></tr>
+<tr class="separator:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> = std::function&lt; void(size_t)&gt;</td></tr>
+<tr class="separator:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8hpp_source.html#l00053">53</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8hpp_source.html">tcp_client.hpp</a>.</p>
-</div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a4118b23599d148c9346716583a177a30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4118b23599d148c9346716583a177a30">&#9670;&nbsp;</a></span>BufferVariant</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a4118b23599d148c9346716583a177a30">unilink::transport::TcpClient::BufferVariant</a> =  std::variant&lt;<a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html">memory::PooledBuffer</a>, std::vector&lt;uint8_t&gt;, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt; &gt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8hpp_source.html#l00055">55</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8hpp_source.html">tcp_client.hpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8hpp_source.html#l00052">52</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8hpp_source.html">tcp_client.hpp</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a691f5852b555c9a261324a00447c6683"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a691f5852b555c9a261324a00447c6683">&#9670;&nbsp;</a></span>~TcpClient()</h2>
 
@@ -565,7 +545,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a></li>
-    <li class="footer">Generated on Mon Feb 2 2026 23:05:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 2 2026 23:08:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

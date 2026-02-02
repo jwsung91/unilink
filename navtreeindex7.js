@@ -1,8 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"namespaceunilink_1_1base_1_1constants.html#a04e5af0e6b8b196e759da97e06e33442":[17,0,0,0,0,41],
-"namespaceunilink_1_1base_1_1constants.html#a05abdf71a9089b67af9c1c7f5a8c30b9":[17,0,0,0,0,14],
-"namespaceunilink_1_1base_1_1constants.html#a07d04eea5aced81131e71db03199b8f6":[17,0,0,0,0,27],
 "namespaceunilink_1_1base_1_1constants.html#a0ca441b754b7a6f40a720d0e868e2976":[17,0,0,0,0,5],
 "namespaceunilink_1_1base_1_1constants.html#a1ba8c25928a68438abbc9b3acfc3cd8f":[17,0,0,0,0,3],
 "namespaceunilink_1_1base_1_1constants.html#a260e2ed50aa6cbc7e1ab604ec8477954":[17,0,0,0,0,18],
@@ -249,5 +246,8 @@ var NAVTREEINDEX7 =
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aea700e0cd390ca0973f69aa313cf58da":[18,0,0,4,12,1],
 "structunilink_1_1diagnostics_1_1AsyncLogStats.html":[18,0,0,4,13],
 "structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e":[18,0,0,4,13,7],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc":[18,0,0,4,13,8]
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc":[18,0,0,4,13,8],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a21c46e51e58b6a95af4f69fb19a34a6b":[18,0,0,4,13,2],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a5203845b7e46404a0c93565cddbe8015":[18,0,0,4,13,1],
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a648eefc0925d9217bac0ac142d16c128":[18,0,0,4,13,0]
 };
