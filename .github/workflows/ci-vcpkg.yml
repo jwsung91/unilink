@@ -77,14 +77,14 @@ jobs:
       - name: Install dependencies via vcpkg (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          "${VCPKG_ROOT}/vcpkg" install boost-asio:${{ matrix.triplet }} boost-system:${{ matrix.triplet }} \
+          "${VCPKG_ROOT}/vcpkg" install boost-asio:${{ matrix.triplet }} boost-system:${{ matrix.triplet }} pybind11:${{ matrix.triplet }} \
             --clean-after-build
 
       - name: Install dependencies via vcpkg (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          & "${env:VCPKG_ROOT}\vcpkg.exe" install boost-asio:${{ matrix.triplet }} boost-system:${{ matrix.triplet }} `
+          & "${env:VCPKG_ROOT}\vcpkg.exe" install boost-asio:${{ matrix.triplet }} boost-system:${{ matrix.triplet }} pybind11:${{ matrix.triplet }} `
             --clean-after-build
 
       - name: Configure (Linux/macOS)
@@ -100,7 +100,8 @@ jobs:
             -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
-            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF
+            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
+            -DBUILD_PYTHON_BINDINGS=ON
 
       - name: Configure (Windows)
         if: runner.os == 'Windows'
@@ -114,7 +115,8 @@ jobs:
             -DUNILINK_BUILD_EXAMPLES=OFF `
             -DUNILINK_BUILD_DOCS=OFF `
             -DUNILINK_BUILD_TESTS=ON `
-            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF
+            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF `
+            -DBUILD_PYTHON_BINDINGS=ON
 
       - name: Build
         run: cmake --build build --config "${BUILD_TYPE}" --parallel
