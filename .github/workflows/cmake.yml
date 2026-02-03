@@ -85,6 +85,18 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Set Boost Root (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if ($env:BOOST_ROOT_1_83_0) {
+            echo "BOOST_ROOT=$env:BOOST_ROOT_1_83_0" >> $env:GITHUB_ENV
+          } elseif ($env:BOOST_ROOT_1_72_0) {
+            echo "BOOST_ROOT=$env:BOOST_ROOT_1_72_0" >> $env:GITHUB_ENV
+          } else {
+             echo "BOOST_ROOT=C:\hostedtoolcache\windows\Boost\1.83.0\x86_64" >> $env:GITHUB_ENV
+          }
+
       - name: Configure (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
