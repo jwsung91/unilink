@@ -17,7 +17,7 @@ jobs:
       matrix:
         include:
           # Matrix for Pure C++ (existing configuration)
-          - name: Pure C++ (Linux, GCC)
+          - name: C++ (Linux, GCC)
             os: ubuntu-24.04
             triplet: x64-linux
             cc: gcc
@@ -26,7 +26,7 @@ jobs:
             build_type: Release
             build_python: OFF
             vcpkg_features: ""
-          - name: Pure C++ (Windows, MSVC)
+          - name: C++ (Windows, MSVC)
             os: windows-2022
             triplet: x64-windows
             cc: cl
@@ -35,7 +35,7 @@ jobs:
             build_type: Release
             build_python: OFF
             vcpkg_features: ""
-          - name: Pure C++ (macOS, Clang)
+          - name: C++ (macOS, Clang)
             os: macos-14
             triplet: arm64-osx
             cc: clang
@@ -46,7 +46,7 @@ jobs:
             vcpkg_features: ""
 
           # Matrix for Python Enabled
-          - name: With Python (Linux, GCC)
+          - name: Python3 (Linux, GCC)
             os: ubuntu-24.04
             triplet: x64-linux
             cc: gcc
@@ -55,7 +55,7 @@ jobs:
             build_type: Release
             build_python: ON
             vcpkg_features: "python"
-          - name: With Python (Windows, MSVC)
+          - name: Python3 (Windows, MSVC)
             os: windows-2022
             triplet: x64-windows
             cc: cl
@@ -64,7 +64,7 @@ jobs:
             build_type: Release
             build_python: ON
             vcpkg_features: "python"
-          - name: With Python (macOS, Clang)
+          - name: Python3 (macOS, Clang)
             os: macos-14
             triplet: arm64-osx
             cc: clang
@@ -185,8 +185,10 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
-            export PYTHONPATH="$PWD/build/${BUILD_TYPE}:$PYTHONPATH"
+            # On Windows, artifacts (DLLs and .pyd) are in build/bin
+            export PYTHONPATH="$PWD/build/bin:$PYTHONPATH"
           else
-            export PYTHONPATH="$PWD/build:$PWD/build/lib:$PYTHONPATH"
+            # On Linux/macOS, shared libraries are in build/lib
+            export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
           fi
           python3 bindings/python/test_import.py
