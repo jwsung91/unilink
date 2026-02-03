@@ -593,7 +593,7 @@ void TcpServer::notify_state() {
 
 // Multi-client support method implementations
 bool TcpServer::broadcast(const std::string& message) {
-  auto shared_data = std::make_shared<const std::vector<uint8_t>>(common::safe_convert::string_to_uint8(message));
+  auto shared_data = std::make_shared<const std::vector<uint8_t>>(message.begin(), message.end());
 
   std::lock_guard<std::mutex> lock(sessions_mutex_);
   bool sent = false;
@@ -613,8 +613,8 @@ bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
 
   auto it = sessions_.find(client_id);
   if (it != sessions_.end() && it->second && it->second->alive()) {
-    auto data = common::safe_convert::string_to_uint8(message);
-    it->second->async_write_copy(data.data(), data.size());
+    auto binary_view = common::safe_convert::string_to_bytes(message);
+    it->second->async_write_copy(binary_view.first, binary_view.second);
     return true;
   }
   UNILINK_LOG_DEBUG("tcp_server", "send_to_client",
