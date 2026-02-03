@@ -185,8 +185,9 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
-            # On Windows, artifacts (DLLs and .pyd) are in build/bin
-            export PYTHONPATH="$PWD/build/bin:$PYTHONPATH"
+            # On Windows (MSVC), artifacts are in build/bin/Release (or Debug)
+            # We add both the config-specific dir and the base bin dir just in case
+            export PYTHONPATH="$PWD/build/bin/${BUILD_TYPE}:$PWD/build/bin:$PYTHONPATH"
           else
             # On Linux/macOS, shared libraries are in build/lib
             export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
