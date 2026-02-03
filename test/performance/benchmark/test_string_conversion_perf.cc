@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <chrono>
 #include <string>
 #include <vector>
@@ -29,7 +30,7 @@ class StringConversionPerfTest : public ::testing::Test {
  protected:
   void SetUp() override {
     // Create a reasonably large string to make allocation cost visible
-    test_string_ = std::string(1024 * 10, 'A'); // 10KB
+    test_string_ = std::string(1024 * 10, 'A');  // 10KB
   }
 
   std::string test_string_;
@@ -50,7 +51,8 @@ TEST_F(StringConversionPerfTest, OriginalVectorAllocation) {
   auto end = high_resolution_clock::now();
   auto duration = duration_cast<microseconds>(end - start).count();
 
-  std::cout << "[ PERF     ] Original (Vector): " << duration << " us for " << iterations_ << " iterations" << std::endl;
+  std::cout << "[ PERF     ] Original (Vector): " << duration << " us for " << iterations_ << " iterations"
+            << std::endl;
 }
 
 TEST_F(StringConversionPerfTest, OptimizedSpan) {
