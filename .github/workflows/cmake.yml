@@ -124,7 +124,6 @@ jobs:
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
             -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
             -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" \
-            -DVCPKG_MANIFEST_FEATURES="${{ matrix.vcpkg_features }}" \
             -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
@@ -140,7 +139,6 @@ jobs:
             -DCMAKE_BUILD_TYPE="${env:BUILD_TYPE}" `
             -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
             -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
-            -DVCPKG_MANIFEST_FEATURES="${{ matrix.vcpkg_features }}" `
             -DUNILINK_BUILD_EXAMPLES=OFF `
             -DUNILINK_BUILD_DOCS=OFF `
             -DUNILINK_BUILD_TESTS=ON `
