@@ -17,10 +17,10 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
-#include <vector>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <numeric>
+#include <vector>
 
 #include "unilink/memory/memory_pool.hpp"
 
@@ -35,7 +35,7 @@ class PooledBufferAccessBenchmark : public ::testing::Test {
 };
 
 TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
-  const size_t buffer_size = 4096; // 4KB
+  const size_t buffer_size = 4096;  // 4KB
   const size_t iterations = 100000;
 
   auto& pool = GlobalMemoryPool::instance();
@@ -44,7 +44,7 @@ TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
   ASSERT_TRUE(pooled_buf.valid());
 
   // Fill with some data
-  for(size_t i = 0; i < buffer_size; ++i) {
+  for (size_t i = 0; i < buffer_size; ++i) {
     pooled_buf[i] = static_cast<uint8_t>(i % 256);
   }
 
@@ -56,8 +56,8 @@ TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
   auto start_bracket = std::chrono::high_resolution_clock::now();
 
   volatile uint8_t sum_bracket = 0;
-  for(size_t iter = 0; iter < iterations; ++iter) {
-    for(size_t i = 0; i < buffer_size; ++i) {
+  for (size_t iter = 0; iter < iterations; ++iter) {
+    for (size_t i = 0; i < buffer_size; ++i) {
       sum_bracket += pooled_buf[i];
     }
   }
@@ -69,8 +69,8 @@ TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
   auto start_at = std::chrono::high_resolution_clock::now();
 
   volatile uint8_t sum_at = 0;
-  for(size_t iter = 0; iter < iterations; ++iter) {
-    for(size_t i = 0; i < buffer_size; ++i) {
+  for (size_t iter = 0; iter < iterations; ++iter) {
+    for (size_t i = 0; i < buffer_size; ++i) {
       sum_at += pooled_buf.at(i);
     }
   }
@@ -82,7 +82,8 @@ TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
   double ns_per_op_at = (double)duration_at.count() * 1000.0 / (iterations * buffer_size);
 
   std::cout << "operator[] Total Time: " << duration_bracket.count() / 1000.0 << " ms" << std::endl;
-  std::cout << "operator[] Time per op: " << std::fixed << std::setprecision(3) << ns_per_op_bracket << " ns" << std::endl;
+  std::cout << "operator[] Time per op: " << std::fixed << std::setprecision(3) << ns_per_op_bracket << " ns"
+            << std::endl;
 
   std::cout << "at() Total Time: " << duration_at.count() / 1000.0 << " ms" << std::endl;
   std::cout << "at() Time per op: " << std::fixed << std::setprecision(3) << ns_per_op_at << " ns" << std::endl;

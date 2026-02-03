@@ -264,13 +264,9 @@ size_t PooledBuffer::size() const { return size_; }
 
 bool PooledBuffer::valid() const { return buffer_ != nullptr; }
 
-uint8_t& PooledBuffer::operator[](size_t index) {
-  return buffer_[index];
-}
+uint8_t& PooledBuffer::operator[](size_t index) { return buffer_[index]; }
 
-const uint8_t& PooledBuffer::operator[](size_t index) const {
-  return buffer_[index];
-}
+const uint8_t& PooledBuffer::operator[](size_t index) const { return buffer_[index]; }
 
 uint8_t& PooledBuffer::at(size_t index) {
   if (!buffer_ || index >= size_) {
