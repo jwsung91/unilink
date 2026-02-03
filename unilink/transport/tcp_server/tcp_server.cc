@@ -566,14 +566,7 @@ void TcpServer::notify_state() {
   if (stopping_.load()) return;
   OnState cb;
   {
-    // on_state_ is not currently protected by sessions_mutex_ in the header/impl consistently?
-    // The header says sessions_mutex_ guards sessions_ and current_session_.
-    // Ideally we should protect all callbacks.
-    // Assuming on_state_ needs protection too if we want to be safe.
-    // But let's stick to what we promised: on_bytes, on_multi_...
-    // Just check if on_state_ modification is guarded.
-    // TcpServer::on_state implementation below does NOT lock.
-    // Let's add locking there too.
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
     cb = on_state_;
   }
   if (cb) {
