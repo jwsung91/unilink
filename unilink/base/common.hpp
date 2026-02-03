@@ -31,6 +31,7 @@
 // Include logger for log_message function
 #include "unilink/base/platform.hpp"
 #include "unilink/diagnostics/logger.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 namespace unilink {
 namespace base {
@@ -166,6 +167,15 @@ inline std::vector<uint8_t> string_to_uint8(const char* data, size_t size) {
  */
 inline std::vector<uint8_t> string_to_uint8(const std::string& str) {
   return std::vector<uint8_t>(str.begin(), str.end());
+}
+
+/**
+ * @brief Safely create a view of string data as byte span without allocation
+ * @param str The string to view
+ * @return memory::ConstByteSpan viewing the string data
+ */
+inline memory::ConstByteSpan string_to_uint8_span(const std::string& str) {
+  return memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(str.data()), str.size());
 }
 }  // namespace safe_convert
 

@@ -156,7 +156,7 @@ void TcpServer::send(const std::string& data) {
   }
 
   if (connected && channel) {
-    auto binary_data = common::safe_convert::string_to_uint8(data);
+    auto binary_data = common::safe_convert::string_to_uint8_span(data);
     channel->async_write_copy(binary_data.data(), binary_data.size());
   }
 }

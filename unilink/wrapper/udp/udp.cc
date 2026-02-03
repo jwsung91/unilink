@@ -90,7 +90,7 @@ void Udp::stop() {
 
 void Udp::send(const std::string& data) {
   if (is_connected() && channel_) {
-    auto binary_data = common::safe_convert::string_to_uint8(data);
+    auto binary_data = common::safe_convert::string_to_uint8_span(data);
     channel_->async_write_copy(binary_data.data(), binary_data.size());
   }
 }
