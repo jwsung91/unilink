@@ -1,5 +1,6 @@
 var classunilink_1_1transport_1_1TcpClient =
 [
+    [ "BufferVariant", "classunilink_1_1transport_1_1TcpClient.html#a4118b23599d148c9346716583a177a30", null ],
     [ "~TcpClient", "classunilink_1_1transport_1_1TcpClient.html#a691f5852b555c9a261324a00447c6683", null ],
     [ "async_write_copy", "classunilink_1_1transport_1_1TcpClient.html#a889fbb491f1dc3a1f9a9cc7f4c286b31", null ],
     [ "async_write_move", "classunilink_1_1transport_1_1TcpClient.html#af53cb4fa2887e8ba2d8cd5848870b8ca", null ],

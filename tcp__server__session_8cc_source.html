@@ -319,122 +319,119 @@ $(document).ready(function(){initNavTree('tcp__server__session_8cc_source.html',
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;  <span class="keyword">auto</span> <span class="keyword">self</span> = shared_from_this();</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;  <span class="comment">// Move buffer out of queue immediately to ensure lifetime safety during async op</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;  <span class="keyword">auto</span> current = std::move(tx_.front());</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;  tx_.pop_front();</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  <span class="keyword">auto</span> on_write = [<span class="keyword">self</span>](<span class="keyword">const</span> boost::system::error_code&amp; ec, std::size_t n) {</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keywordflow">if</span> (self-&gt;closing_ || !self-&gt;alive_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    <span class="keywordflow">if</span> (self-&gt;queue_bytes_ &gt;= n) {</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      <span class="keyword">self</span>-&gt;queue_bytes_ -= n;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;      <span class="keyword">self</span>-&gt;queue_bytes_ = 0;</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    }</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keyword">self</span>-&gt;report_backpressure(self-&gt;queue_bytes_);</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordflow">if</span> (ec) {</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;      <span class="keyword">self</span>-&gt;do_close();</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    }</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keyword">self</span>-&gt;do_write();</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  };</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;  <span class="comment">// Optimization: Move into current_write_buffer_ to keep it alive during async op</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;  <span class="comment">// without allocating a shared_ptr control block.</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  current_write_buffer_ = std::move(tx_.front());</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  tx_.pop_front();</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  <span class="keyword">auto</span>&amp; current = *current_write_buffer_;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;  <span class="keyword">auto</span> on_write = [<span class="keyword">self</span>](<span class="keyword">const</span> boost::system::error_code&amp; ec, std::size_t n) {</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="comment">// Release the buffer immediately</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keyword">self</span>-&gt;current_write_buffer_.reset();</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="keywordflow">if</span> (self-&gt;closing_ || !self-&gt;alive_) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordflow">if</span> (self-&gt;queue_bytes_ &gt;= n) {</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;      <span class="keyword">self</span>-&gt;queue_bytes_ -= n;</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;      <span class="keyword">self</span>-&gt;queue_bytes_ = 0;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    }</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keyword">self</span>-&gt;report_backpressure(self-&gt;queue_bytes_);</div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160; </div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;  <span class="keywordflow">if</span> (std::holds_alternative&lt;memory::PooledBuffer&gt;(current)) {</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <span class="keyword">auto</span> pooled_buf = std::get&lt;memory::PooledBuffer&gt;(std::move(current));</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keyword">auto</span> shared_pooled = std::make_shared&lt;memory::PooledBuffer&gt;(std::move(pooled_buf));</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keyword">auto</span> data = shared_pooled-&gt;data();</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keyword">auto</span> size = shared_pooled-&gt;size();</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    socket_-&gt;async_write(net::buffer(data, size),</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                         net::bind_executor(strand_, [<span class="keyword">self</span>, buf = shared_pooled, on_write](<span class="keyword">auto</span> ec, <span class="keyword">auto</span> auto_n) {</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;                           on_write(ec, auto_n);</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;                         }));</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (std::holds_alternative&lt;std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt;&gt;(current)) {</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="keyword">auto</span> shared_buf = std::get&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(std::move(current));</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keyword">auto</span> data = shared_buf-&gt;data();</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keyword">auto</span> size = shared_buf-&gt;size();</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    socket_-&gt;async_write(net::buffer(data, size),</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                         net::bind_executor(strand_, [<span class="keyword">self</span>, buf = std::move(shared_buf), on_write](</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                                                         <span class="keyword">auto</span> ec, <span class="keyword">auto</span> auto_n) { on_write(ec, auto_n); }));</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keyword">auto</span> vec_buf = std::get&lt;std::vector&lt;uint8_t&gt;&gt;(std::move(current));</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keyword">auto</span> shared_vec = std::make_shared&lt;std::vector&lt;uint8_t&gt;&gt;(std::move(vec_buf));</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keyword">auto</span> data = shared_vec-&gt;data();</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keyword">auto</span> size = shared_vec-&gt;size();</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    socket_-&gt;async_write(net::buffer(data, size),</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                         net::bind_executor(strand_, [<span class="keyword">self</span>, buf = shared_vec, on_write](<span class="keyword">auto</span> ec, <span class="keyword">auto</span> auto_n) {</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                           on_write(ec, auto_n);</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                         }));</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;  }</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;}</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keywordflow">if</span> (ec) {</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;      <span class="keyword">self</span>-&gt;do_close();</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    }</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keyword">self</span>-&gt;do_write();</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;  };</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  <span class="keywordflow">if</span> (std::holds_alternative&lt;memory::PooledBuffer&gt;(current)) {</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keyword">auto</span>&amp; pooled_buf = std::get&lt;memory::PooledBuffer&gt;(current);</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keyword">auto</span> data = pooled_buf.data();</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="keyword">auto</span> size = pooled_buf.size();</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    socket_-&gt;async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (std::holds_alternative&lt;std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt;&gt;(current)) {</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keyword">auto</span>&amp; shared_buf = std::get&lt;std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;(current);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <span class="keyword">auto</span> data = shared_buf-&gt;data();</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keyword">auto</span> size = shared_buf-&gt;size();</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    socket_-&gt;async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keyword">auto</span>&amp; vec_buf = std::get&lt;std::vector&lt;uint8_t&gt;&gt;(current);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keyword">auto</span> data = vec_buf.data();</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keyword">auto</span> size = vec_buf.size();</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    socket_-&gt;async_write(net::buffer(data, size), net::bind_executor(strand_, on_write));</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  }</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;}</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="keywordtype">void</span> TcpServerSession::do_close() {</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  <span class="keywordflow">if</span> (cleanup_done_.exchange(<span class="keyword">true</span>)) <span class="keywordflow">return</span>;  <span class="comment">// Ensures cleanup runs only once</span></div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="keywordtype">void</span> TcpServerSession::do_close() {</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  <span class="keywordflow">if</span> (cleanup_done_.exchange(<span class="keyword">true</span>)) <span class="keywordflow">return</span>;  <span class="comment">// Ensures cleanup runs only once</span></div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  alive_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  closing_.store(<span class="keyword">true</span>);  <span class="comment">// Redundant, but ensures consistency</span></div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;  alive_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  closing_.store(<span class="keyword">true</span>);  <span class="comment">// Redundant, but ensures consistency</span></div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;  <span class="comment">// Safely invoke on_close callback</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  <span class="keyword">auto</span> close_cb = std::move(on_close_);</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <span class="comment">// Safely invoke on_close callback</span></div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;  <span class="keyword">auto</span> close_cb = std::move(on_close_);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;  <span class="comment">// Clear all callbacks to prevent any further invocations</span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;  on_bytes_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;  on_bp_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;  on_close_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  <a class="code" href="logger_8hpp.html#ab49f7375e915c38d565d7247094e3565">UNILINK_LOG_INFO</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;disconnect&quot;</span>, <span class="stringliteral">&quot;Client disconnected&quot;</span>);</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;  boost::system::error_code ec;</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;  socket_-&gt;shutdown(tcp::socket::shutdown_both, ec);</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;  socket_-&gt;close(ec);</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  <span class="comment">// Release memory immediately</span></div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;  tx_.clear();</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;  queue_bytes_ = 0;</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;  <span class="keywordflow">if</span> (close_cb) {</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;      close_cb();</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_close&quot;</span>, <span class="stringliteral">&quot;Exception in on_close callback: &quot;</span> + std::string(e.what()));</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_close&quot;</span>, <span class="stringliteral">&quot;Unknown exception in on_close callback&quot;</span>);</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    }</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;  }</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;}</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="keywordtype">void</span> TcpServerSession::report_backpressure(<span class="keywordtype">size_t</span> queued_bytes) {</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;  <span class="keywordflow">if</span> (closing_ || !alive_ || !on_bp_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;  <span class="keywordflow">if</span> (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    backpressure_active_ = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;      on_bp_(queued_bytes);</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>,</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                        <span class="stringliteral">&quot;Exception in backpressure callback: &quot;</span> + std::string(e.what()));</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    }</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    backpressure_active_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      on_bp_(queued_bytes);</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>,</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;                        <span class="stringliteral">&quot;Exception in backpressure callback: &quot;</span> + std::string(e.what()));</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    }</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;  }</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;}</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <span class="comment">// Clear all callbacks to prevent any further invocations</span></div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;  on_bytes_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;  on_bp_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;  on_close_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;  <a class="code" href="logger_8hpp.html#ab49f7375e915c38d565d7247094e3565">UNILINK_LOG_INFO</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;disconnect&quot;</span>, <span class="stringliteral">&quot;Client disconnected&quot;</span>);</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;  boost::system::error_code ec;</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;  socket_-&gt;shutdown(tcp::socket::shutdown_both, ec);</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  socket_-&gt;close(ec);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;  <span class="comment">// Release memory immediately</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;  tx_.clear();</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;  queue_bytes_ = 0;</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;  <span class="keywordflow">if</span> (close_cb) {</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;      close_cb();</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_close&quot;</span>, <span class="stringliteral">&quot;Exception in on_close callback: &quot;</span> + std::string(e.what()));</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_close&quot;</span>, <span class="stringliteral">&quot;Unknown exception in on_close callback&quot;</span>);</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    }</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  }</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;}</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160; </div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="keywordtype">void</span> TcpServerSession::report_backpressure(<span class="keywordtype">size_t</span> queued_bytes) {</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;  <span class="keywordflow">if</span> (closing_ || !alive_ || !on_bp_) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;  <span class="keywordflow">if</span> (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    backpressure_active_ = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;      on_bp_(queued_bytes);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>,</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;                        <span class="stringliteral">&quot;Exception in backpressure callback: &quot;</span> + std::string(e.what()));</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    }</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    backpressure_active_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;      on_bp_(queued_bytes);</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>,</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;                        <span class="stringliteral">&quot;Exception in backpressure callback: &quot;</span> + std::string(e.what()));</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;on_backpressure&quot;</span>, <span class="stringliteral">&quot;Unknown exception in backpressure callback&quot;</span>);</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    }</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;  }</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;}</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aboost__tcp__socket_8hpp_html"><div class="ttname"><a href="boost__tcp__socket_8hpp.html">boost_tcp_socket.hpp</a></div></div>
-<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html">unilink::memory::PooledBuffer</a></div><div class="ttdoc">RAII wrapper for memory pool buffers with enhanced safety.</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00146">memory_pool.hpp:146</a></div></div>
-<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a7aa1378391f5ef5a4ddbf6abff971f81"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a7aa1378391f5ef5a4ddbf6abff971f81">unilink::memory::PooledBuffer::data</a></div><div class="ttdeci">uint8_t * data() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00247">memory_pool.cc:247</a></div></div>
-<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_abf8fb1fa73f66373f96a9eb2821d6cbf"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#abf8fb1fa73f66373f96a9eb2821d6cbf">unilink::memory::PooledBuffer::valid</a></div><div class="ttdeci">bool valid() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00251">memory_pool.cc:251</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html">unilink::memory::PooledBuffer</a></div><div class="ttdoc">RAII wrapper for memory pool buffers with enhanced safety.</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00149">memory_pool.hpp:149</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a7aa1378391f5ef5a4ddbf6abff971f81"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a7aa1378391f5ef5a4ddbf6abff971f81">unilink::memory::PooledBuffer::data</a></div><div class="ttdeci">uint8_t * data() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00261">memory_pool.cc:261</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_abf8fb1fa73f66373f96a9eb2821d6cbf"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#abf8fb1fa73f66373f96a9eb2821d6cbf">unilink::memory::PooledBuffer::valid</a></div><div class="ttdeci">bool valid() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00265">memory_pool.cc:265</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1BoostTcpSocket_html"><div class="ttname"><a href="classunilink_1_1transport_1_1BoostTcpSocket.html">unilink::transport::BoostTcpSocket</a></div><div class="ttdoc">Boost.Asio implementation of ITcpSocket interface. This is the real implementation used in production...</div><div class="ttdef"><b>Definition:</b> <a href="boost__tcp__socket_8hpp_source.html#l00036">boost_tcp_socket.hpp:36</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a080302c4c4425b85d78227d90cd2f034"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a080302c4c4425b85d78227d90cd2f034">unilink::transport::TcpServerSession::OnBackpressure</a></div><div class="ttdeci">interface::Channel::OnBackpressure OnBackpressure</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8hpp_source.html#l00050">tcp_server_session.hpp:50</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a1d692982ec34bcbe037d32cb5059352b"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a1d692982ec34bcbe037d32cb5059352b">unilink::transport::TcpServerSession::OnClose</a></div><div class="ttdeci">std::function&lt; void()&gt; OnClose</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8hpp_source.html#l00051">tcp_server_session.hpp:51</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a33002ebd873b32f644ae6cc7458d6ef4"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a33002ebd873b32f644ae6cc7458d6ef4">unilink::transport::TcpServerSession::OnBytes</a></div><div class="ttdeci">interface::Channel::OnBytes OnBytes</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8hpp_source.html#l00049">tcp_server_session.hpp:49</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a080302c4c4425b85d78227d90cd2f034"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a080302c4c4425b85d78227d90cd2f034">unilink::transport::TcpServerSession::OnBackpressure</a></div><div class="ttdeci">interface::Channel::OnBackpressure OnBackpressure</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8hpp_source.html#l00051">tcp_server_session.hpp:51</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a1d692982ec34bcbe037d32cb5059352b"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a1d692982ec34bcbe037d32cb5059352b">unilink::transport::TcpServerSession::OnClose</a></div><div class="ttdeci">std::function&lt; void()&gt; OnClose</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8hpp_source.html#l00052">tcp_server_session.hpp:52</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a33002ebd873b32f644ae6cc7458d6ef4"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a33002ebd873b32f644ae6cc7458d6ef4">unilink::transport::TcpServerSession::OnBytes</a></div><div class="ttdeci">interface::Channel::OnBytes OnBytes</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8hpp_source.html#l00050">tcp_server_session.hpp:50</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a6f2e8e32e9d48cf6e310bd2c129ac780"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a6f2e8e32e9d48cf6e310bd2c129ac780">unilink::transport::TcpServerSession::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8cc_source.html#l00185">tcp_server_session.cc:185</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a73e7017409948ac4b83c3a677efd64ad"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a73e7017409948ac4b83c3a677efd64ad">unilink::transport::TcpServerSession::async_write_copy</a></div><div class="ttdeci">void async_write_copy(const uint8_t *data, size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8cc_source.html#l00067">tcp_server_session.cc:67</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1TcpServerSession_html_a87c78bbd60aa2028cce763c82a14753e"><div class="ttname"><a href="classunilink_1_1transport_1_1TcpServerSession.html#a87c78bbd60aa2028cce763c82a14753e">unilink::transport::TcpServerSession::TcpServerSession</a></div><div class="ttdeci">TcpServerSession(net::io_context &amp;ioc, tcp::socket sock, size_t backpressure_threshold=common::constants::DEFAULT_BACKPRESSURE_THRESHOLD)</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__session_8cc_source.html#l00030">tcp_server_session.cc:30</a></div></div>
@@ -460,7 +457,7 @@ $(document).ready(function(){initNavTree('tcp__server__session_8cc_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_bdae376d6a766a2d984a51161a7f5788.html">tcp_server</a></li><li class="navelem"><a class="el" href="tcp__server__session_8cc.html">tcp_server_session.cc</a></li>
-    <li class="footer">Generated on Mon Feb 2 2026 23:08:22 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Feb 3 2026 11:26:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
