@@ -1,13 +1,13 @@
 {
   "name": "unilink",
-  "version": "0.3.3",
+  "version-string": "0.3.3",
   "dependencies": [
     "boost-system",
     "boost-asio"
   ],
   "features": {
     "python": {
-      "description": "Python bindings for unilink",
+      "description": "Python bindings",
       "dependencies": [
         "pybind11"
       ]
