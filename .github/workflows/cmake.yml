@@ -180,15 +180,18 @@ jobs:
         working-directory: build
         run: ctest --output-on-failure --parallel 2
 
-      - name: Verify Python Import
-        if: matrix.build_python == 'ON'
+      - name: Verify Python Import (Windows)
+        if: matrix.build_python == 'ON' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # On Windows, artifacts (DLLs and .pyd) are in build/bin
+          $env:PYTHONPATH = "$((Get-Location).Path)\build\bin;$env:PYTHONPATH"
+          python bindings/python/test_import.py
+
+      - name: Verify Python Import (Linux/macOS)
+        if: matrix.build_python == 'ON' && runner.os != 'Windows'
         shell: bash
         run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            # On Windows, artifacts (DLLs and .pyd) are in build/bin
-            export PYTHONPATH="$PWD/build/bin:$PYTHONPATH"
-          else
-            # On Linux/macOS, shared libraries are in build/lib
-            export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
-          fi
+          # On Linux/macOS, shared libraries are in build/lib
+          export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
           python3 bindings/python/test_import.py
