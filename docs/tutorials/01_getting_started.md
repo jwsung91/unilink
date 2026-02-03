@@ -31,11 +31,10 @@ sudo apt install -y build-essential cmake libboost-dev libboost-system-dev
 brew install cmake boost
 ```
 
-### Windows
-
-
-
-Ensure Boost is installed and `BOOST_ROOT` or `Boost_DIR` is set in your environment if CMake cannot find it automatically.
+### Windows (vcpkg)
+```bash
+vcpkg install boost
+```
 
 ---
 

@@ -142,7 +142,7 @@ jobs:
         retention-days: 7
         overwrite: true
 
-  # Windows Build (MSVC)
+  # Windows Build (MSVC + vcpkg)
   build-windows:
     name: Build (windows-2022, msvc)
     runs-on: windows-2022
@@ -157,8 +157,18 @@ jobs:
         echo "CMAKE_EXE=C:/PROGRA~1/CMake/bin/cmake.exe" >> $env:GITHUB_ENV
         echo "CTEST_EXE=C:/PROGRA~1/CMake/bin/ctest.exe" >> $env:GITHUB_ENV
 
-    - name: Configure CMake (MSVC)
+    - name: Clone vcpkg
+      run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
+
+    - name: Bootstrap vcpkg
       shell: pwsh
+      working-directory: ${{ github.workspace }}/vcpkg
+      run: .\bootstrap-vcpkg.bat
+
+    - name: Configure CMake (MSVC + vcpkg)
+      shell: pwsh
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       run: |
         & "$env:CMAKE_EXE" -S . -B build-windows `
           -G "Visual Studio 17 2022" -A x64 `
@@ -166,7 +176,9 @@ jobs:
           -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} `
           -DUNILINK_ENABLE_CONFIG=ON `
           -DUNILINK_BUILD_EXAMPLES=OFF `
-          -DUNILINK_BUILD_TESTS=ON
+          -DUNILINK_BUILD_TESTS=ON `
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+          -DVCPKG_TARGET_TRIPLET=x64-windows
 
     - name: Build (Release)
       shell: pwsh

@@ -35,7 +35,7 @@ ctest --output-on-failure
 **Suite toggles**
 - Master switch: `-DUNILINK_BUILD_TESTS=ON|OFF`
 - Performance-only toggle: `UNILINK_ENABLE_PERFORMANCE_TESTS`
-- Packaging tip: set `UNILINK_BUILD_TESTS=OFF` (and perf OFF) in packaging/air-gapped builds to skip fetching GoogleTest.
+- Packaging tip: set `UNILINK_BUILD_TESTS=OFF` (and perf OFF) in vcpkg/air-gapped builds to skip fetching GoogleTest.
 
 ---
 
@@ -54,7 +54,18 @@ cmake --build build-windows --config Debug --target ALL_BUILD
 ctest --test-dir build-windows -C Debug --output-on-failure
 ```
 
+Or, using Ninja with a vcpkg toolchain:
 
+```powershell
+Remove-Item build-windows -Recurse -Force
+cmake -S . -B build-windows -G "Ninja" `
+  -DCMAKE_TOOLCHAIN_FILE="F:/lib/vcpkg/scripts/buildsystems/vcpkg.cmake" `
+  -DVCPKG_TARGET_TRIPLET=x64-windows `
+  -DUNILINK_BUILD_SHARED=ON `
+  -DUNILINK_BUILD_TESTS=ON
+cmake --build build-windows
+ctest --test-dir build-windows --output-on-failure
+```
 
 **Windows-specific notes**
 - Re-run CMake (or create a fresh `build-windows` directory) after updating the repository so that example binaries inherit the post-build step that copies `unilink.dll` beside each executable.

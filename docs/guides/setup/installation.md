@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide covers the supported ways to install and use the **unilink** library in your project.
+This guide covers the supported ways to install and use the **unilink** library in your project. For most users, **vcpkg** is the recommended and simplest option.
 
 ## Prerequisites
 
@@ -8,11 +8,43 @@ This guide covers the supported ways to install and use the **unilink** library 
 - **C++ Compiler**: C++17 compatible (GCC 7+, Clang 5+, MSVC 2017+)
 - **Platform**: Linux, Windows, macOS
 
-> Note: Ensure dependencies such as Boost are installed and available in your environment.
+> Note: When using a package manager (vcpkg), dependencies such as Boost are handled automatically.
 
 ## Installation Methods
 
-### Method 1: Install from Source (CMake Package)
+### Method 1: vcpkg (Recommended)
+
+The easiest and most reliable way to consume **unilink** is via **vcpkg**, which provides a fully integrated CMake workflow and cross-platform builds.
+
+#### Step 1: Install via vcpkg
+
+```bash
+vcpkg install jwsung91-unilink
+```
+
+#### Step 2: Use in your project
+
+```cmake
+cmake_minimum_required(VERSION 3.12)
+project(my_app CXX)
+
+find_package(unilink CONFIG REQUIRED)
+add_executable(my_app main.cpp)
+target_link_libraries(my_app PRIVATE unilink::unilink)
+```
+
+```cpp
+#include <unilink/unilink.hpp>
+
+int main() {
+    auto client = unilink::tcp_client("127.0.0.1", 8080).build();
+    // ...
+}
+```
+
+> Note: The vcpkg port name is `jwsung91-unilink`, while the CMake package and target name remain `unilink`.
+
+### Method 2: Install from Source (CMake Package)
 
 Use this method if you prefer not to rely on a package manager or need a custom build.
 
@@ -34,7 +66,7 @@ add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
-### Method 2: Release Packages
+### Method 3: Release Packages
 
 Pre-built binary packages are available from GitHub Releases.
 
@@ -69,7 +101,7 @@ set(CMAKE_PREFIX_PATH "/opt/unilink")
 find_package(unilink CONFIG REQUIRED)
 ```
 
-### Method 3: Git Submodule Integration
+### Method 4: Git Submodule Integration
 
 For projects that want to vendor **unilink** directly.
 
@@ -89,6 +121,10 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
 ```
 
 ## Packaging Notes
+
+- **vcpkg**
+  - Official port: `jwsung91-unilink`
+  - Recommended for most users
 
 Other package managers (e.g., Conan) are planned but not yet officially supported.
 

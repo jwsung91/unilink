@@ -1,0 +1,17 @@
+{
+  "name": "unilink",
+  "version-string": "0.3.3",
+  "builtin-baseline": "cc73782a88db48af17f8bfb8328d4cab3d4c246f",
+  "dependencies": [
+    "boost-system",
+    "boost-asio"
+  ],
+  "features": {
+    "python": {
+      "description": "Python bindings",
+      "dependencies": [
+        "pybind11"
+      ]
+    }
+  }
+}

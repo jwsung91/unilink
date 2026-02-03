@@ -150,9 +150,16 @@ sudo yum install minicom screen
 
 #### Windows
 
-Ensure Boost libraries are installed (e.g., via Chocolatey or official installer).
-
 ```bash
+# Install vcpkg (package manager)
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.bat
+./vcpkg integrate install
+
+# Install Boost libraries
+./vcpkg install boost
+
 # Install socat (via WSL or Cygwin)
 # Or use PuTTY for serial communication
 ```
