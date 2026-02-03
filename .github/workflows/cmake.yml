@@ -19,65 +19,50 @@ jobs:
           # Matrix for Pure C++ (existing configuration)
           - name: Pure C++ (Linux, GCC)
             os: ubuntu-24.04
-            triplet: x64-linux
             cc: gcc
             cxx: g++
             generator: Ninja
             build_type: Release
             build_python: OFF
-            vcpkg_features: ""
           - name: Pure C++ (Windows, MSVC)
             os: windows-2022
-            triplet: x64-windows
             cc: cl
             cxx: cl
             generator: "Visual Studio 17 2022"
             build_type: Release
             build_python: OFF
-            vcpkg_features: ""
           - name: Pure C++ (macOS, Clang)
             os: macos-14
-            triplet: arm64-osx
             cc: clang
             cxx: clang++
             generator: Ninja
             build_type: Release
             build_python: OFF
-            vcpkg_features: ""
 
           # Matrix for Python Enabled
           - name: With Python (Linux, GCC)
             os: ubuntu-24.04
-            triplet: x64-linux
             cc: gcc
             cxx: g++
             generator: Ninja
             build_type: Release
             build_python: ON
-            vcpkg_features: "python"
           - name: With Python (Windows, MSVC)
             os: windows-2022
-            triplet: x64-windows
             cc: cl
             cxx: cl
             generator: "Visual Studio 17 2022"
             build_type: Release
             build_python: ON
-            vcpkg_features: "python"
           - name: With Python (macOS, Clang)
             os: macos-14
-            triplet: arm64-osx
             cc: clang
             cxx: clang++
             generator: Ninja
             build_type: Release
             build_python: ON
-            vcpkg_features: "python"
 
     env:
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      VCPKG_TARGET_TRIPLET: ${{ matrix.triplet }}
-      VCPKG_BINARY_SOURCES: "clear;default"
       BUILD_TYPE: ${{ matrix.build_type }}
 
     steps:
@@ -89,9 +74,9 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             sudo apt-get update
-            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config
+            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config libboost-all-dev
           else
-            brew install ninja autoconf autoconf-archive automake libtool pkg-config
+            brew install ninja autoconf autoconf-archive automake libtool pkg-config boost
           fi
 
       - name: Setup Python
@@ -99,19 +84,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Clone vcpkg
-        run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
-
-      - name: Bootstrap vcpkg (Linux/macOS)
-        if: runner.os != 'Windows'
-        run: "${VCPKG_ROOT}/bootstrap-vcpkg.sh"
-
-      - name: Bootstrap vcpkg (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
 
       - name: Configure (Linux/macOS)
         if: runner.os != 'Windows'
@@ -121,8 +93,6 @@ jobs:
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
             -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
             -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
-            -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
-            -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" \
             -DUNILINK_BUILD_EXAMPLES=OFF \
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
@@ -136,8 +106,6 @@ jobs:
           cmake -S . -B build `
             -G "${{ matrix.generator }}" -A x64 `
             -DCMAKE_BUILD_TYPE="${env:BUILD_TYPE}" `
-            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
-            -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
             -DUNILINK_BUILD_EXAMPLES=OFF `
             -DUNILINK_BUILD_DOCS=OFF `
             -DUNILINK_BUILD_TESTS=ON `
