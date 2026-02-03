@@ -168,7 +168,7 @@ jobs:
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
       env:
-        VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+        VCPKG_ROOT: ${{ github.workspace }}\vcpkg
       run: |
         & "$env:CMAKE_EXE" -S . -B build-windows `
           -G "Visual Studio 17 2022" -A x64 `
@@ -177,7 +177,7 @@ jobs:
           -DUNILINK_ENABLE_CONFIG=ON `
           -DUNILINK_BUILD_EXAMPLES=OFF `
           -DUNILINK_BUILD_TESTS=ON `
-          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
           -DVCPKG_TARGET_TRIPLET=x64-windows
 
     - name: Build (Release)

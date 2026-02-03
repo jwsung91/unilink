@@ -89,9 +89,9 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             sudo apt-get update
-            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config libboost-all-dev pybind11-dev
+            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config
           else
-            brew install ninja autoconf autoconf-archive automake libtool pkg-config boost pybind11
+            brew install ninja autoconf autoconf-archive automake libtool pkg-config
           fi
 
       - name: Setup Python
@@ -100,18 +100,18 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Python Dependencies
-        if: matrix.build_python == 'ON'
-        shell: bash
-        run: |
-          pip install pybind11
-          echo "pybind11_DIR=$(python -c 'import pybind11; print(pybind11.get_cmake_dir())')" >> $GITHUB_ENV
+      - name: Clone vcpkg
+        run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
 
-      - name: Install Boost (Windows)
+      - name: Bootstrap vcpkg (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: "${VCPKG_ROOT}/bootstrap-vcpkg.sh"
+
+      - name: Bootstrap vcpkg (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          choco install boost-msvc-14.3 --version=1.83.0 --allow-empty-checksums -y
+          & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
 
       - name: Configure (Linux/macOS)
         if: runner.os != 'Windows'

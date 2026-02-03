@@ -10,6 +10,12 @@ if(BUILD_PYTHON_BINDINGS)
   set(VCPKG_MANIFEST_FEATURES "python")
 endif()
 
+# Force vcpkg manifest mode and installation
+# This ensures that vcpkg installs dependencies defined in vcpkg.json
+# even if the toolchain detection is flaky or defaults are different.
+set(VCPKG_MANIFEST_MODE ON)
+set(VCPKG_MANIFEST_INSTALL ON)
+
 project(
   unilink
   VERSION 0.3.3
