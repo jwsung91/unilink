@@ -72,9 +72,13 @@ TEST_F(PooledBufferTest, AtMethodValidAccess) {
 
   // Read via at()
   for (size_t i = 0; i < size; ++i) {
-    uint8_t* ptr = buffer.at(i);
-    ASSERT_NE(ptr, nullptr);
-    EXPECT_EQ(*ptr, static_cast<uint8_t>(i));
+    EXPECT_EQ(buffer.at(i), static_cast<uint8_t>(i));
+  }
+
+  // Const access via at()
+  const PooledBuffer& const_buffer = buffer;
+  for (size_t i = 0; i < size; ++i) {
+    EXPECT_EQ(const_buffer.at(i), static_cast<uint8_t>(i));
   }
 }
 

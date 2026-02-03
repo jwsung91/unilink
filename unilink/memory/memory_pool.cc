@@ -272,11 +272,18 @@ const uint8_t& PooledBuffer::operator[](size_t index) const {
   return buffer_[index];
 }
 
-uint8_t* PooledBuffer::at(size_t offset) const {
-  if (!buffer_ || offset >= size_) {
-    throw std::out_of_range("Buffer offset out of range");
+uint8_t& PooledBuffer::at(size_t index) {
+  if (!buffer_ || index >= size_) {
+    throw std::out_of_range("Buffer index out of range");
   }
-  return static_cast<uint8_t*>(buffer_.get()) + offset;
+  return buffer_[index];
+}
+
+const uint8_t& PooledBuffer::at(size_t index) const {
+  if (!buffer_ || index >= size_) {
+    throw std::out_of_range("Buffer index out of range");
+  }
+  return buffer_[index];
 }
 
 void PooledBuffer::check_bounds(size_t index) const {

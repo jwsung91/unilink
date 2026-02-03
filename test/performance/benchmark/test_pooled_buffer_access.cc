@@ -71,8 +71,7 @@ TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
   volatile uint8_t sum_at = 0;
   for(size_t iter = 0; iter < iterations; ++iter) {
     for(size_t i = 0; i < buffer_size; ++i) {
-      // at() returns pointer, dereference it
-      sum_at += *pooled_buf.at(i);
+      sum_at += pooled_buf.at(i);
     }
   }
 
