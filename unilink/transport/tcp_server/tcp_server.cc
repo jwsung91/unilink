@@ -567,6 +567,7 @@ void TcpServer::notify_state() {
   OnState cb;
   {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
+    if (stopping_.load()) return;
     cb = on_state_;
   }
   if (cb) {
