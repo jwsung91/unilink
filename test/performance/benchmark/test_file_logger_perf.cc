@@ -1,8 +1,26 @@
+/*
+ * Copyright 2025 Jinwoo Sung
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include <gtest/gtest.h>
+
+#include <chrono>
 #include <filesystem>
 #include <fstream>
-#include <chrono>
 #include <string>
+
 #include "unilink/diagnostics/logger.hpp"
 
 using namespace unilink::diagnostics;
@@ -15,7 +33,7 @@ class FileLoggerPerfTest : public ::testing::Test {
     log_filename = "perf_test_log.txt";
     // Reset logger state
     Logger::instance().set_level(LogLevel::INFO);
-    Logger::instance().set_outputs(0); // Disable console
+    Logger::instance().set_outputs(0);  // Disable console
 
     // Clean up any existing file
     if (std::filesystem::exists(log_filename)) {
@@ -27,7 +45,7 @@ class FileLoggerPerfTest : public ::testing::Test {
 
   void TearDown() override {
     // Restore default state
-    Logger::instance().set_file_output(""); // Close file
+    Logger::instance().set_file_output("");  // Close file
     Logger::instance().set_outputs(static_cast<int>(LogOutput::CONSOLE));
 
     // Clean up file
