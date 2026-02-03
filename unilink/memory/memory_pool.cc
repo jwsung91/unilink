@@ -87,7 +87,8 @@ void MemoryPool::cleanup_old_buffers(std::chrono::milliseconds max_age) {
 
 std::pair<size_t, size_t> MemoryPool::get_memory_usage() const {
   // Simplified: return basic memory usage
-  size_t current_usage = total_allocations_.load(std::memory_order_relaxed) * 4096;  // estimate average buffer size
+  size_t total_allocs = total_allocations_.load(std::memory_order_relaxed);
+  size_t current_usage = total_allocs * 4096;  // estimate average buffer size
   return std::make_pair(current_usage, current_usage);
 }
 
