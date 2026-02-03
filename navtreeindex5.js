@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"md_docs_guides_core_best_practices.html#autotoc_md312":[5,5,1],
 "md_docs_guides_core_best_practices.html#autotoc_md314":[5,6],
 "md_docs_guides_core_best_practices.html#autotoc_md315":[5,6,0],
 "md_docs_guides_core_best_practices.html#autotoc_md316":[5,6,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "md_docs_guides_setup_requirements.html#autotoc_md651":[11,7,1],
 "md_docs_guides_setup_requirements.html#autotoc_md652":[11,7,2],
 "md_docs_guides_setup_requirements.html#autotoc_md653":[11,7,3],
-"md_docs_guides_setup_requirements.html#autotoc_md655":[11,8],
-"md_docs_guides_setup_requirements.html#autotoc_md656":[11,8,0]
+"md_docs_guides_setup_requirements.html#autotoc_md655":[11,8]
 };

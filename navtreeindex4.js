@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"index.html#autotoc_md120":[0,4,2],
 "index.html#autotoc_md121":[0,4,3],
 "index.html#autotoc_md122":[0,4,4],
 "index.html#autotoc_md123":[0,4,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "md_docs_guides_core_best_practices.html#autotoc_md307":[5,4,2],
 "md_docs_guides_core_best_practices.html#autotoc_md308":[5,4,3],
 "md_docs_guides_core_best_practices.html#autotoc_md310":[5,5],
-"md_docs_guides_core_best_practices.html#autotoc_md311":[5,5,0],
-"md_docs_guides_core_best_practices.html#autotoc_md312":[5,5,1]
+"md_docs_guides_core_best_practices.html#autotoc_md311":[5,5,0]
 };

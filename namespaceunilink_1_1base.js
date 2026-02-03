@@ -46,6 +46,7 @@ var namespaceunilink_1_1base =
       [ "MIN_THREAD_POOL_SIZE", "namespaceunilink_1_1base_1_1constants.html#af5d5b6a4d196e506acf63b9863d51a4c", null ]
     ] ],
     [ "safe_convert", "namespaceunilink_1_1base_1_1safe__convert.html", [
+      [ "string_to_bytes", "namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb", null ],
       [ "string_to_uint8", "namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92", null ],
       [ "string_to_uint8", "namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a", null ],
       [ "uint8_to_string", "namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d", null ]

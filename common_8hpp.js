@@ -17,6 +17,7 @@ var common_8hpp =
     [ "log_message", "common_8hpp.html#a96460b35caac65798f8973d5de522294", null ],
     [ "safe_memcpy", "common_8hpp.html#a2082b2fb949dd2120cf5d70598c690d8", null ],
     [ "safe_memcpy", "common_8hpp.html#a4d7e2bd9069bd2febb47c18298fe5e0d", null ],
+    [ "string_to_bytes", "common_8hpp.html#ad9420f868d8fe7956c881c8cb05c4ddb", null ],
     [ "string_to_uint8", "common_8hpp.html#a439f562cc86e942edf24d1408bcb8a92", null ],
     [ "string_to_uint8", "common_8hpp.html#a748a98e5ca3e6a83a693ac12ac51219a", null ],
     [ "to_cstr", "common_8hpp.html#ae891a72972b7893b2b357d661a993b6c", null ],

@@ -101,8 +101,48 @@ Functions</h2></td></tr>
 <tr class="memitem:a748a98e5ca3e6a83a693ac12ac51219a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a">string_to_uint8</a> (const std::string &amp;str)</td></tr>
 <tr class="memdesc:a748a98e5ca3e6a83a693ac12ac51219a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert std::string to std::vector&lt;uint8_t&gt;  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a">More...</a><br /></td></tr>
 <tr class="separator:a748a98e5ca3e6a83a693ac12ac51219a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="memItemLeft" align="right" valign="top">std::pair&lt; const uint8_t *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb">string_to_bytes</a> (const std::string &amp;str)</td></tr>
+<tr class="memdesc:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely obtain a view of std::string as byte array without allocation.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb">More...</a><br /></td></tr>
+<tr class="separator:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ad9420f868d8fe7956c881c8cb05c4ddb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9420f868d8fe7956c881c8cb05c4ddb">&#9670;&nbsp;</a></span>string_to_bytes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;const uint8_t*, size_t&gt; unilink::base::safe_convert::string_to_bytes </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>str</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Safely obtain a view of std::string as byte array without allocation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>The string to convert </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::pair&lt;const uint8_t*, size_t&gt; containing pointer and size </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00177">177</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a439f562cc86e942edf24d1408bcb8a92"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a439f562cc86e942edf24d1408bcb8a92">&#9670;&nbsp;</a></span>string_to_uint8() <span class="overload">[1/2]</span></h2>
 
@@ -147,7 +187,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; containing the data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00155">155</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00156">156</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
 
 </div>
 </div>
@@ -184,7 +224,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; containing the string data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00167">167</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00168">168</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
 
 </div>
 </div>
@@ -232,7 +272,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::string constructed from the data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00142">142</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00143">143</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
 
 </div>
 </div>
@@ -242,7 +282,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1base.html">base</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html">safe_convert</a></li>
-    <li class="footer">Generated on Tue Feb 3 2026 23:23:03 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Feb 3 2026 23:43:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

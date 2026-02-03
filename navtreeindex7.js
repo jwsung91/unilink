@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"namespaceunilink_1_1base_1_1constants.html#a00c60efa0877c10752105516017c9b45":[17,0,0,0,0,16],
 "namespaceunilink_1_1base_1_1constants.html#a04e5af0e6b8b196e759da97e06e33442":[17,0,0,0,0,41],
 "namespaceunilink_1_1base_1_1constants.html#a05abdf71a9089b67af9c1c7f5a8c30b9":[17,0,0,0,0,14],
 "namespaceunilink_1_1base_1_1constants.html#a07d04eea5aced81131e71db03199b8f6":[17,0,0,0,0,27],
@@ -43,9 +44,10 @@ var NAVTREEINDEX7 =
 "namespaceunilink_1_1base_1_1constants.html#afba16688382b58258e2ad606905dba6e":[17,0,0,0,0,29],
 "namespaceunilink_1_1base_1_1constants.html#aff3808cbb0e8456ca03fa47b71d96bb7":[17,0,0,0,0,10],
 "namespaceunilink_1_1base_1_1safe__convert.html":[17,0,0,0,1],
-"namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d":[17,0,0,0,1,2],
-"namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92":[17,0,0,0,1,0],
-"namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a":[17,0,0,0,1,1],
+"namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d":[17,0,0,0,1,3],
+"namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92":[17,0,0,0,1,1],
+"namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a":[17,0,0,0,1,2],
+"namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb":[17,0,0,0,1,0],
 "namespaceunilink_1_1base_1_1safe__memory.html":[17,0,0,0,2],
 "namespaceunilink_1_1base_1_1safe__memory.html#a2082b2fb949dd2120cf5d70598c690d8":[17,0,0,0,2,0],
 "namespaceunilink_1_1base_1_1safe__memory.html#a4d7e2bd9069bd2febb47c18298fe5e0d":[17,0,0,0,2,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX7 =
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790":[18,0,0,4,12,2],
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea":[18,0,0,4,12,5],
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aea700e0cd390ca0973f69aa313cf58da":[18,0,0,4,12,1],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html":[18,0,0,4,13],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e":[18,0,0,4,13,7],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc":[18,0,0,4,13,8]
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html":[18,0,0,4,13]
 };
