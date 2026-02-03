@@ -187,7 +187,8 @@ jobs:
           if [ "${{ runner.os }}" = "Windows" ]; then
             # On Windows (MSVC), artifacts are in build/bin/Release (or Debug)
             # We add both the config-specific dir and the base bin dir just in case
-            export PYTHONPATH="$PWD/build/bin/${BUILD_TYPE}:$PWD/build/bin:$PYTHONPATH"
+            # Also adding lib dirs because CMake MODULE targets might go there
+            export PYTHONPATH="$PWD/build/bin/${BUILD_TYPE}:$PWD/build/bin:$PWD/build/lib/${BUILD_TYPE}:$PWD/build/lib:$PYTHONPATH"
           else
             # On Linux/macOS, shared libraries are in build/lib
             export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
