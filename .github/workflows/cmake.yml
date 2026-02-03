@@ -184,8 +184,14 @@ jobs:
         if: matrix.build_python == 'ON' && runner.os == 'Windows'
         shell: pwsh
         run: |
-          # On Windows, artifacts (DLLs and .pyd) are in build/bin
-          $env:PYTHONPATH = "$((Get-Location).Path)\build\bin;$env:PYTHONPATH"
+          # Debug: List build output to verify file locations
+          echo "Listing build directory content:"
+          Get-ChildItem -Path build -Recurse | Select-Object FullName
+          
+          # Add both bin (runtime) and lib (library) to PYTHONPATH
+          # build/bin: typically contains DLLs and Runtime artifacts
+          # build/lib: might contain Module libraries if CMake classifies them differently
+          $env:PYTHONPATH = "$((Get-Location).Path)\build\bin;$((Get-Location).Path)\build\lib;$env:PYTHONPATH"
           python bindings/python/test_import.py
 
       - name: Verify Python Import (Linux/macOS)
