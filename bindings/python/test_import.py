@@ -1,6 +1,19 @@
 import sys
 import os
 
+# On Windows with Python 3.8+, DLL dependencies are not automatically loaded from PATH.
+# We need to explicitly add the directory containing dependent DLLs (unilink.dll) to the DLL search path.
+if os.name == 'nt' and hasattr(os, 'add_dll_directory'):
+    for p in sys.path:
+        # Check if the path contains the unilink DLL
+        dll_path = os.path.join(p, "unilink.dll")
+        if os.path.exists(dll_path):
+            try:
+                os.add_dll_directory(p)
+                print(f"Added DLL directory: {p}")
+            except Exception as e:
+                print(f"Failed to add DLL directory {p}: {e}")
+
 try:
     import unilink_py
     print("Successfully imported unilink_py")
