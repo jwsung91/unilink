@@ -15,9 +15,11 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <chrono>
 #include <iostream>
 #include <string>
+
 #include "unilink/diagnostics/logger.hpp"
 
 using namespace unilink::diagnostics;
@@ -44,7 +46,8 @@ TEST_F(ConsoleLoggerPerfTest, ConsoleOutputPerformance) {
   auto start = std::chrono::high_resolution_clock::now();
 
   for (int i = 0; i < iterations; ++i) {
-     Logger::instance().info("TestComponent", "TestOperation", "This is a test message to measure console output performance.");
+    Logger::instance().info("TestComponent", "TestOperation",
+                            "This is a test message to measure console output performance.");
   }
 
   auto end = std::chrono::high_resolution_clock::now();
