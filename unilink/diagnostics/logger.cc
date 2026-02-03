@@ -258,9 +258,9 @@ std::string Logger::get_timestamp() {
 void Logger::write_to_console(const std::string& message) {
   // Use stderr for ERROR and CRITICAL levels
   if (message.find("[ERROR]") != std::string::npos || message.find("[CRITICAL]") != std::string::npos) {
-    std::cerr << message << std::endl;
+    std::cerr << message << '\n';
   } else {
-    std::cout << message << std::endl;
+    std::cout << message << '\n';
   }
 }
 
