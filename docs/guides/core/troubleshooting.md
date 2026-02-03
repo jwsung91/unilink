@@ -265,10 +265,11 @@ sudo apt install libboost-all-dev
 brew install boost
 ```
 
-#### Windows (vcpkg)
-```bash
-vcpkg install boost
-```
+#### Windows
+
+
+
+Ensure Boost is installed correctly.
 
 #### Manual Boost Path
 ```cmake

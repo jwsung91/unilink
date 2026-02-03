@@ -28,7 +28,7 @@ endif()
 
 # Find required packages
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  # Windows builds: rely on recent Boost releases available via Conan/vcpkg
+  # Windows builds: rely on recent Boost releases
   find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
   message(STATUS "Using Boost 1.70+ for Windows compatibility")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -75,12 +75,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   # issues on CI. Future efforts should aim to simplify this logic and rely
   # more on standard CMake Boost discovery mechanisms, or investigate the
   # root causes of the flaky linking on CI.
-  # vcpkg builds: let the vcpkg toolchain drive Boost discovery (do not force Homebrew paths)
-  if(DEFINED VCPKG_TARGET_TRIPLET OR DEFINED ENV{VCPKG_ROOT} OR CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
-    find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
-    set(UNILINK_LINK_BOOST_SYSTEM ON)
-    message(STATUS "Using Boost from vcpkg on macOS (triplet: ${VCPKG_TARGET_TRIPLET})")
-  else()
+
     # Ensure Boost module lookup (skip BoostConfig.cmake) and point at Homebrew layout
     if(POLICY CMP0144)
       cmake_policy(SET CMP0144 NEW)
@@ -115,7 +110,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(UNILINK_BOOST_INCLUDE_DIR "${BOOST_FALLBACK_INCLUDE_DIR}")
     add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
     message(STATUS "Using header-only Boost.System on macOS; include dir: ${BOOST_FALLBACK_INCLUDE_DIR}")
-  endif()
 else()
   # Other platforms: use a recent Boost version
   find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
@@ -147,7 +141,7 @@ find_package(Threads REQUIRED)
 find_package(PkgConfig QUIET)
 
 # Google Test for testing
-# Note: Guarded so packaging environments (e.g., vcpkg with FETCHCONTENT_FULLY_DISCONNECTED)
+# Note: Guarded so packaging environments (e.g., with FETCHCONTENT_FULLY_DISCONNECTED)
 # can disable all tests and avoid downloading GoogleTest.
 if(UNILINK_BUILD_TESTS)
   include(FetchContent)

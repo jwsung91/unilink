@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-# Enable vcpkg "python" feature if Python bindings are requested
-# This must be set before project() where the toolchain is loaded
-if(BUILD_PYTHON_BINDINGS)
-  set(VCPKG_MANIFEST_FEATURES "python")
-endif()
+
 
 project(
   unilink

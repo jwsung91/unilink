@@ -8,7 +8,6 @@
 [![Coverage](https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/coverage/badges/coverage.json)](https://github.com/jwsung91/unilink)
 
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-informational)
-![vcpkg](https://img.shields.io/badge/vcpkg-jwsung91--unilink-0078D6)
 
 ## Description
 
@@ -20,13 +19,7 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 
 ## 📦 Installation
 
-### vcpkg (recommended)
 
-```bash
-vcpkg install jwsung91-unilink
-```
-
-For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/guides/setup/installation.md).
 
 ## 🐍 Python Bindings
 
