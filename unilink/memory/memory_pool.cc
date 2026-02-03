@@ -65,13 +65,18 @@ void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
   release_to_bucket(bucket, std::move(buffer));
 }
 
-MemoryPool::PoolStats MemoryPool::get_stats() const { return stats_; }
+MemoryPool::PoolStats MemoryPool::get_stats() const {
+  PoolStats stats;
+  stats.total_allocations = total_allocations_.load(std::memory_order_relaxed);
+  stats.pool_hits = pool_hits_.load(std::memory_order_relaxed);
+  return stats;
+}
 
 double MemoryPool::get_hit_rate() const {
-  size_t total = stats_.total_allocations;
+  size_t total = total_allocations_.load(std::memory_order_relaxed);
   if (total == 0) return 0.0;
 
-  size_t hits = stats_.pool_hits;
+  size_t hits = pool_hits_.load(std::memory_order_relaxed);
   return static_cast<double>(hits) / static_cast<double>(total);
 }
 
@@ -82,7 +87,8 @@ void MemoryPool::cleanup_old_buffers(std::chrono::milliseconds max_age) {
 
 std::pair<size_t, size_t> MemoryPool::get_memory_usage() const {
   // Simplified: return basic memory usage
-  size_t current_usage = stats_.total_allocations * 4096;  // estimate average buffer size
+  size_t current_usage =
+      total_allocations_.load(std::memory_order_relaxed) * 4096;  // estimate average buffer size
   return std::make_pair(current_usage, current_usage);
 }
 
@@ -124,39 +130,47 @@ size_t MemoryPool::get_bucket_index(size_t size) const {
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
-  std::lock_guard<std::mutex> lock(bucket.mutex_);
+  std::unique_ptr<uint8_t[]> buffer;
 
-  // Get from stack
-  if (!bucket.buffers_.empty()) {
-    auto buffer = std::move(bucket.buffers_.back());
-    bucket.buffers_.pop_back();
+  {
+    std::lock_guard<std::mutex> lock(bucket.mutex_);
 
-    stats_.pool_hits++;
-    stats_.total_allocations++;
+    // Get from stack
+    if (!bucket.buffers_.empty()) {
+      buffer = std::move(bucket.buffers_.back());
+      bucket.buffers_.pop_back();
+    }
+  }
 
+  if (buffer) {
+    pool_hits_.fetch_add(1, std::memory_order_relaxed);
+    total_allocations_.fetch_add(1, std::memory_order_relaxed);
     return buffer;
   }
 
-  // Create new buffer
-  auto buffer = create_buffer(bucket.size_);
+  // Create new buffer outside lock
+  buffer = create_buffer(bucket.size_);
   if (buffer) {
-    stats_.total_allocations++;
+    total_allocations_.fetch_add(1, std::memory_order_relaxed);
   }
 
   return buffer;
 }
 
 void MemoryPool::release_to_bucket(PoolBucket& bucket, std::unique_ptr<uint8_t[]> buffer) {
-  std::lock_guard<std::mutex> lock(bucket.mutex_);
+  {
+    std::lock_guard<std::mutex> lock(bucket.mutex_);
 
-  // Add buffer back to pool (stack)
-  if (bucket.buffers_.size() < bucket.capacity_) {
-    bucket.buffers_.push_back(std::move(buffer));
-  } else {
-    // If pool is full, discard buffer (auto-release)
-    // buffer is unique_ptr so it will be automatically deleted when out of scope
-    MEMORY_TRACK_DEALLOCATION(buffer.get());
+    // Add buffer back to pool (stack)
+    if (bucket.buffers_.size() < bucket.capacity_) {
+      bucket.buffers_.push_back(std::move(buffer));
+      return;
+    }
   }
+
+  // If pool is full, discard buffer (auto-release)
+  // buffer is unique_ptr so it will be automatically deleted when out of scope
+  MEMORY_TRACK_DEALLOCATION(buffer.get());
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::create_buffer(size_t size) {

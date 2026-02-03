@@ -97,7 +97,10 @@ class UNILINK_API MemoryPool {
   };
 
   std::array<PoolBucket, 4> buckets_;  // For SMALL, MEDIUM, LARGE, XLARGE
-  PoolStats stats_;                    // Basic statistics
+
+  // Internal statistics (atomic for thread safety)
+  std::atomic<size_t> total_allocations_{0};
+  std::atomic<size_t> pool_hits_{0};
 
   // Helper functions
   PoolBucket& get_bucket(size_t size);
