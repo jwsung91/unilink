@@ -265,16 +265,10 @@ size_t PooledBuffer::size() const { return size_; }
 bool PooledBuffer::valid() const { return buffer_ != nullptr; }
 
 uint8_t& PooledBuffer::operator[](size_t index) {
-  if (!buffer_ || index >= size_) {
-    throw std::out_of_range("Buffer index out of range");
-  }
   return buffer_[index];
 }
 
 const uint8_t& PooledBuffer::operator[](size_t index) const {
-  if (!buffer_ || index >= size_) {
-    throw std::out_of_range("Buffer index out of range");
-  }
   return buffer_[index];
 }
 
