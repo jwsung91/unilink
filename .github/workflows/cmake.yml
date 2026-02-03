@@ -113,6 +113,24 @@ jobs:
         run: |
           & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
 
+      - name: Install Dependencies (vcpkg)
+        shell: bash
+        run: |
+          # Use Windows-style path for vcpkg executable if on Windows
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            VCPKG_EXE="${VCPKG_ROOT}/vcpkg.exe"
+          else
+            VCPKG_EXE="${VCPKG_ROOT}/vcpkg"
+          fi
+
+          # Install base dependencies
+          "$VCPKG_EXE" install boost-system boost-asio --triplet ${{ matrix.triplet }}
+
+          # Install python bindings dependencies if requested
+          if [ "${{ matrix.build_python }}" = "ON" ]; then
+            "$VCPKG_EXE" install pybind11 --triplet ${{ matrix.triplet }}
+          fi
+
       - name: Configure (Linux/macOS)
         if: runner.os != 'Windows'
         run: |

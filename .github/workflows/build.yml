@@ -165,6 +165,13 @@ jobs:
       working-directory: ${{ github.workspace }}/vcpkg
       run: .\bootstrap-vcpkg.bat
 
+    - name: Install Dependencies (vcpkg)
+      shell: pwsh
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+      run: |
+        & "$env:VCPKG_ROOT\vcpkg.exe" install boost-system boost-asio --triplet x64-windows
+
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
       env:
