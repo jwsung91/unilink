@@ -180,24 +180,15 @@ jobs:
         working-directory: build
         run: ctest --output-on-failure --parallel 2
 
-      - name: Verify Python Import (Windows)
-        if: matrix.build_python == 'ON' && runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          # Debug: List build output to verify file locations
-          echo "Listing build directory content:"
-          Get-ChildItem -Path build -Recurse | Select-Object FullName
-          
-          # Add both bin (runtime) and lib (library) to PYTHONPATH
-          # build/bin: typically contains DLLs and Runtime artifacts
-          # build/lib: might contain Module libraries if CMake classifies them differently
-          $env:PYTHONPATH = "$((Get-Location).Path)\build\bin;$((Get-Location).Path)\build\lib;$env:PYTHONPATH"
-          python bindings/python/test_import.py
-
-      - name: Verify Python Import (Linux/macOS)
-        if: matrix.build_python == 'ON' && runner.os != 'Windows'
+      - name: Verify Python Import
+        if: matrix.build_python == 'ON'
         shell: bash
         run: |
-          # On Linux/macOS, shared libraries are in build/lib
-          export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            # On Windows, artifacts (DLLs and .pyd) are in build/bin
+            export PYTHONPATH="$PWD/build/bin:$PYTHONPATH"
+          else
+            # On Linux/macOS, shared libraries are in build/lib
+            export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
+          fi
           python3 bindings/python/test_import.py

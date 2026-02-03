@@ -119,17 +119,18 @@ foreach(test_file test_stable_integration.cc
                                          ${CMAKE_SOURCE_DIR}/test/fixtures
   )
   # Mark test_stable_integration to use resource lock
+  # Increased timeout to 600s to accommodate code coverage overhead
   if(test_name STREQUAL "test_stable_integration")
     gtest_discover_tests(
       run_integration_${test_name}
       PROPERTIES LABELS "integration;core;medium"
-      TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
+      TIMEOUT 600 RESOURCE_LOCK "tcp_port_allocation"
     )
   else()
     gtest_discover_tests(
       run_integration_${test_name}
       PROPERTIES LABELS "integration;core;medium"
-      TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
+      TIMEOUT 600 RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
 endforeach()
