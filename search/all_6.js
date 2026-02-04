@@ -1,7 +1,7 @@
 var searchData=
 [
   ['failed_5fretries_190',['failed_retries',['../structunilink_1_1diagnostics_1_1ErrorStats.html#a32393f5f43007b46ea4544f866a29efb',1,'unilink::diagnostics::ErrorStats']]],
-  ['file_191',['file',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a90ad1cbcba3b5b7c75dfdafc71b5e11e',1,'unilink::memory::MemoryTracker::AllocationInfo']]],
+  ['file_191',['file',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a2f1aa058a35127c60bccc3e97e91d169',1,'unilink::memory::MemoryTracker::AllocationInfo']]],
   ['file_192',['FILE',['../namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719',1,'unilink::diagnostics']]],
   ['file_5fpattern_193',['file_pattern',['../structunilink_1_1diagnostics_1_1LogRotationConfig.html#a2092c5692d55863699def6ebfc4a1ede',1,'unilink::diagnostics::LogRotationConfig']]],
   ['first_194',['first',['../classunilink_1_1memory_1_1SafeSpan.html#a3b0f136f697101cef0b107048c105e4f',1,'unilink::memory::SafeSpan']]],
@@ -18,5 +18,5 @@ var searchData=
   ['from_5fstring_205',['from_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad2d7304198383247e983f6b2f5b62f3e',1,'unilink::memory::safe_buffer_factory']]],
   ['from_5fvector_206',['from_vector',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a287eb0d65ad65944a76d964008609cc1',1,'unilink::memory::safe_buffer_factory']]],
   ['front_207',['front',['../classunilink_1_1memory_1_1SafeSpan.html#a30d76220be2cce507d36d12b7d893820',1,'unilink::memory::SafeSpan']]],
-  ['function_208',['function',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a5c7e9e421ac35f69c17073bbe4bb0543',1,'unilink::memory::MemoryTracker::AllocationInfo']]]
+  ['function_208',['function',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a89e87d05db0fc5d9d8166854114423ff',1,'unilink::memory::MemoryTracker::AllocationInfo']]]
 ];
