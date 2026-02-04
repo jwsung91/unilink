@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-04 00:48:19</td>
+            <td class="headerValue">2026-02-04 12:06:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">31</td>
@@ -245,11 +245,11 @@
 <a name="161"><span class="lineNum">     161 </span>                :            :   }</a>
 <a name="162"><span class="lineNum">     162 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <a name="163"><span class="lineNum">     163 </span>                :            : </a>
-<a name="164"><span class="lineNum">     164 </span>                :<span class="lineCov">      42357 : bool TcpServer::is_connected() const {</span></a>
-<a name="165"><span class="lineNum">     165 </span>        [<span class="branchCov" title="Branch 0 was taken 42357 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      42357 :   std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
-<a name="166"><span class="lineNum">     166 </span>  [<span class="branchCov" title="Branch 0 was taken 37637 times"> + </span><span class="branchCov" title="Branch 1 was taken 4720 times"> + </span><span class="branchCov" title="Branch 2 was taken 37637 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">      84714 :   return channel_ &amp;&amp; channel_-&gt;is_connected();</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchCov" title="Branch 5 was taken 37635 times"> + </span>]
-<a name="167"><span class="lineNum">     167 </span>                :<span class="lineCov">      42357 : }</span></a>
+<a name="164"><span class="lineNum">     164 </span>                :<span class="lineCov">      41396 : bool TcpServer::is_connected() const {</span></a>
+<a name="165"><span class="lineNum">     165 </span>        [<span class="branchCov" title="Branch 0 was taken 41396 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      41396 :   std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
+<a name="166"><span class="lineNum">     166 </span>  [<span class="branchCov" title="Branch 0 was taken 36806 times"> + </span><span class="branchCov" title="Branch 1 was taken 4590 times"> + </span><span class="branchCov" title="Branch 2 was taken 36806 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">      82792 :   return channel_ &amp;&amp; channel_-&gt;is_connected();</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 7 times"> + </span><span class="branchCov" title="Branch 5 was taken 36799 times"> + </span>]
+<a name="167"><span class="lineNum">     167 </span>                :<span class="lineCov">      41396 : }</span></a>
 <a name="168"><span class="lineNum">     168 </span>                :            : </a>
 <a name="169"><span class="lineNum">     169 </span>                :<span class="lineCov">         18 : ChannelInterface&amp; TcpServer::on_data(DataHandler handler) {</span></a>
 <a name="170"><span class="lineNum">     170 </span>                :<span class="lineCov">         18 :   on_data_ = std::move(handler);</span></a>
@@ -300,7 +300,7 @@
 <a name="215"><span class="lineNum">     215 </span>                :<span class="lineCov">         55 : void TcpServer::setup_internal_handlers() {</span></a>
 <a name="216"><span class="lineNum">     216 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 55 times"> + </span>]:<span class="lineCov">         55 :   if (!channel_) return;</span></a>
 <a name="217"><span class="lineNum">     217 </span>                :            : </a>
-<a name="218"><span class="lineNum">     218 </span>        [<span class="branchCov" title="Branch 0 was taken 55 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1664 :   channel_-&gt;on_bytes([this](const uint8_t* data, size_t size) { handle_bytes(data, size); });</span></a>
+<a name="218"><span class="lineNum">     218 </span>        [<span class="branchCov" title="Branch 0 was taken 55 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1685 :   channel_-&gt;on_bytes([this](const uint8_t* data, size_t size) { handle_bytes(data, size); });</span></a>
 <a name="219"><span class="lineNum">     219 </span>                :            : </a>
 <a name="220"><span class="lineNum">     220 </span>        [<span class="branchCov" title="Branch 0 was taken 55 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        139 :   channel_-&gt;on_state([this](base::LinkState state) { handle_state(state); });</span></a>
 <a name="221"><span class="lineNum">     221 </span>                :            : </a>
@@ -333,15 +333,15 @@
 <a name="248"><span class="lineNum">     248 </span>                :            :   }</a>
 <a name="249"><span class="lineNum">     249 </span>                :<span class="lineCov">         55 : }</span></a>
 <a name="250"><span class="lineNum">     250 </span>                :            : </a>
-<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">       1609 : void TcpServer::handle_bytes(const uint8_t* data, size_t size) {</span></a>
-<a name="252"><span class="lineNum">     252 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1609 times"> + </span>]:<span class="lineCov">       1609 :   if (on_bytes_) {</span></a>
+<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">       1630 : void TcpServer::handle_bytes(const uint8_t* data, size_t size) {</span></a>
+<a name="252"><span class="lineNum">     252 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1630 times"> + </span>]:<span class="lineCov">       1630 :   if (on_bytes_) {</span></a>
 <a name="253"><span class="lineNum">     253 </span>                :<span class="lineNoCov">          0 :     on_bytes_(data, size);</span></a>
 <a name="254"><span class="lineNum">     254 </span>                :            :   }</a>
-<a name="255"><span class="lineNum">     255 </span>        [<span class="branchCov" title="Branch 0 was taken 1609 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1609 :   if (on_data_) {</span></a>
-<a name="256"><span class="lineNum">     256 </span>        [<span class="branchCov" title="Branch 0 was taken 1609 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1609 :     std::string str_data = common::safe_convert::uint8_to_string(data, size);</span></a>
-<a name="257"><span class="lineNum">     257 </span>        [<span class="branchCov" title="Branch 0 was taken 1609 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1609 :     on_data_(str_data);</span></a>
-<a name="258"><span class="lineNum">     258 </span>                :<span class="lineCov">       1609 :   }</span></a>
-<a name="259"><span class="lineNum">     259 </span>                :<span class="lineCov">       1609 : }</span></a>
+<a name="255"><span class="lineNum">     255 </span>        [<span class="branchCov" title="Branch 0 was taken 1630 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1630 :   if (on_data_) {</span></a>
+<a name="256"><span class="lineNum">     256 </span>        [<span class="branchCov" title="Branch 0 was taken 1630 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1630 :     std::string str_data = common::safe_convert::uint8_to_string(data, size);</span></a>
+<a name="257"><span class="lineNum">     257 </span>        [<span class="branchCov" title="Branch 0 was taken 1630 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1630 :     on_data_(str_data);</span></a>
+<a name="258"><span class="lineNum">     258 </span>                :<span class="lineCov">       1630 :   }</span></a>
+<a name="259"><span class="lineNum">     259 </span>                :<span class="lineCov">       1630 : }</span></a>
 <a name="260"><span class="lineNum">     260 </span>                :            : </a>
 <a name="261"><span class="lineNum">     261 </span>                :<span class="lineCov">         84 : void TcpServer::handle_state(base::LinkState state) {</span></a>
 <a name="262"><span class="lineNum">     262 </span>                :            :   {</a>
@@ -495,7 +495,7 @@
 <a name="407"><span class="lineNum">     407 </span>                :<span class="lineCov">          5 :   return *this;</span></a>
 <a name="408"><span class="lineNum">     408 </span>                :            : }</a>
 <a name="409"><span class="lineNum">     409 </span>                :            : </a>
-<a name="410"><span class="lineNum">     410 </span>                :<span class="lineCov">         10 : bool TcpServer::is_listening() const { return is_listening_.load(); }</span></a>
+<a name="410"><span class="lineNum">     410 </span>                :<span class="lineCov">          9 : bool TcpServer::is_listening() const { return is_listening_.load(); }</span></a>
 <a name="411"><span class="lineNum">     411 </span>                :            : </a>
 <a name="412"><span class="lineNum">     412 </span>                :<span class="lineCov">          2 : void TcpServer::set_manage_external_context(bool manage) { manage_external_context_ = manage; }</span></a>
 <a name="413"><span class="lineNum">     413 </span>                :            : </a>
