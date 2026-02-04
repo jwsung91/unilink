@@ -19,11 +19,9 @@
 #include <array>
 #include <atomic>
 #include <boost/asio.hpp>
-#include <condition_variable>
 #include <cstddef>
 #include <deque>
 #include <memory>
-#include <mutex>
 #include <optional>
 #include <thread>
 #include <variant>
@@ -117,10 +115,6 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   bool started_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
   std::atomic<bool> terminal_state_notified_{false};
-
-  std::mutex stop_mutex_;
-  std::condition_variable stop_cv_;
-  bool stop_complete_{false};
 
   OnBytes on_bytes_;
   OnState on_state_;
