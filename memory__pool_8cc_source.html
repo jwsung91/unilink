@@ -353,35 +353,32 @@ $(document).ready(function(){initNavTree('memory__pool_8cc_source.html',''); ini
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
 <div class="line"><a name="l00265"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#abf8fb1fa73f66373f96a9eb2821d6cbf">  265</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#abf8fb1fa73f66373f96a9eb2821d6cbf">PooledBuffer::valid</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> buffer_ != <span class="keyword">nullptr</span>; }</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
-<div class="line"><a name="l00267"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#a5e365743f105fa8fc0dde10154044722">  267</a></span>&#160;uint8_t&amp; <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#a5e365743f105fa8fc0dde10154044722">PooledBuffer::operator[]</a>(<span class="keywordtype">size_t</span> index) {</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  <span class="keywordflow">if</span> (!buffer_ || index &gt;= size_) {</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Buffer index out of range&quot;</span>);</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  }</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  <span class="keywordflow">return</span> buffer_[index];</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;}</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
-<div class="line"><a name="l00274"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#abcd5e51a9b3a0849f4ed4c35f73c8343">  274</a></span>&#160;<span class="keyword">const</span> uint8_t&amp; <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#a5e365743f105fa8fc0dde10154044722">PooledBuffer::operator[]</a>(<span class="keywordtype">size_t</span> index)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  <span class="keywordflow">if</span> (!buffer_ || index &gt;= size_) {</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Buffer index out of range&quot;</span>);</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;  }</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  <span class="keywordflow">return</span> buffer_[index];</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;}</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
-<div class="line"><a name="l00281"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#ad73864c7d626225966b9d17287833af3">  281</a></span>&#160;uint8_t* <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#ad73864c7d626225966b9d17287833af3">PooledBuffer::at</a>(<span class="keywordtype">size_t</span> offset)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;  <span class="keywordflow">if</span> (!buffer_ || offset &gt;= size_) {</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Buffer offset out of range&quot;</span>);</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  }</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(buffer_.get()) + offset;</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;}</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="keywordtype">void</span> PooledBuffer::check_bounds(<span class="keywordtype">size_t</span> index)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;  <span class="keywordflow">if</span> (!buffer_ || index &gt;= size_) {</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Buffer index out of range&quot;</span>);</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;  }</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;}</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;}  <span class="comment">// namespace memory</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#a5e365743f105fa8fc0dde10154044722">  267</a></span>&#160;uint8_t&amp; <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#a5e365743f105fa8fc0dde10154044722">PooledBuffer::operator[]</a>(<span class="keywordtype">size_t</span> index) { <span class="keywordflow">return</span> buffer_[index]; }</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
+<div class="line"><a name="l00269"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#abcd5e51a9b3a0849f4ed4c35f73c8343">  269</a></span>&#160;<span class="keyword">const</span> uint8_t&amp; <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#a5e365743f105fa8fc0dde10154044722">PooledBuffer::operator[]</a>(<span class="keywordtype">size_t</span> index)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> buffer_[index]; }</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0">  271</a></span>&#160;uint8_t&amp; <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0">PooledBuffer::at</a>(<span class="keywordtype">size_t</span> index) {</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;  <span class="keywordflow">if</span> (!buffer_ || index &gt;= size_) {</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Buffer index out of range&quot;</span>);</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  }</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  <span class="keywordflow">return</span> buffer_[index];</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;}</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#a66bb837b33bf0a93b494a73abf1dfd0a">  278</a></span>&#160;<span class="keyword">const</span> uint8_t&amp; <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0">PooledBuffer::at</a>(<span class="keywordtype">size_t</span> index)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;  <span class="keywordflow">if</span> (!buffer_ || index &gt;= size_) {</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Buffer index out of range&quot;</span>);</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  }</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;  <span class="keywordflow">return</span> buffer_[index];</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;}</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="keywordtype">void</span> PooledBuffer::check_bounds(<span class="keywordtype">size_t</span> index)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  <span class="keywordflow">if</span> (!buffer_ || index &gt;= size_) {</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Buffer index out of range&quot;</span>);</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;  }</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;}  <span class="comment">// namespace memory</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1GlobalMemoryPool_html"><div class="ttname"><a href="classunilink_1_1memory_1_1GlobalMemoryPool.html">unilink::memory::GlobalMemoryPool</a></div><div class="ttdoc">Global memory pool instance.</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00123">memory_pool.hpp:123</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1MemoryPool_html_a016af6b9e9520323803c7ca1427142d5"><div class="ttname"><a href="classunilink_1_1memory_1_1MemoryPool.html#a016af6b9e9520323803c7ca1427142d5">unilink::memory::MemoryPool::get_hit_rate</a></div><div class="ttdeci">double get_hit_rate() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00075">memory_pool.cc:75</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1MemoryPool_html_a12ac59625a62a3c6729d3360d852410d"><div class="ttname"><a href="classunilink_1_1memory_1_1MemoryPool.html#a12ac59625a62a3c6729d3360d852410d">unilink::memory::MemoryPool::BufferSize</a></div><div class="ttdeci">BufferSize</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00057">memory_pool.hpp:57</a></div></div>
@@ -405,8 +402,8 @@ $(document).ready(function(){initNavTree('memory__pool_8cc_source.html',''); ini
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a773bcc65ca0b1ca1a0299118ad8e128b"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a773bcc65ca0b1ca1a0299118ad8e128b">unilink::memory::PooledBuffer::~PooledBuffer</a></div><div class="ttdeci">~PooledBuffer()</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00227">memory_pool.cc:227</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a7aa1378391f5ef5a4ddbf6abff971f81"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a7aa1378391f5ef5a4ddbf6abff971f81">unilink::memory::PooledBuffer::data</a></div><div class="ttdeci">uint8_t * data() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00261">memory_pool.cc:261</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a8f8dc11b22544f6430121b8df1310e3c"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a8f8dc11b22544f6430121b8df1310e3c">unilink::memory::PooledBuffer::operator=</a></div><div class="ttdeci">PooledBuffer &amp; operator=(const PooledBuffer &amp;)=delete</div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a94ad020d70924d2daaa865bda73d23c0"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0">unilink::memory::PooledBuffer::at</a></div><div class="ttdeci">uint8_t &amp; at(size_t index)</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00271">memory_pool.cc:271</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_abf8fb1fa73f66373f96a9eb2821d6cbf"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#abf8fb1fa73f66373f96a9eb2821d6cbf">unilink::memory::PooledBuffer::valid</a></div><div class="ttdeci">bool valid() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00265">memory_pool.cc:265</a></div></div>
-<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_ad73864c7d626225966b9d17287833af3"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#ad73864c7d626225966b9d17287833af3">unilink::memory::PooledBuffer::at</a></div><div class="ttdeci">uint8_t * at(size_t offset) const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00281">memory_pool.cc:281</a></div></div>
 <div class="ttc" id="amemory__pool_8hpp_html"><div class="ttname"><a href="memory__pool_8hpp.html">memory_pool.hpp</a></div></div>
 <div class="ttc" id="amemory__tracker_8hpp_html"><div class="ttname"><a href="memory__tracker_8hpp.html">memory_tracker.hpp</a></div></div>
 <div class="ttc" id="amemory__tracker_8hpp_html_a3568a6ec688d21c9fb3b53908cac474a"><div class="ttname"><a href="memory__tracker_8hpp.html#a3568a6ec688d21c9fb3b53908cac474a">MEMORY_TRACK_DEALLOCATION</a></div><div class="ttdeci">#define MEMORY_TRACK_DEALLOCATION(ptr)</div><div class="ttdef"><b>Definition:</b> <a href="memory__tracker_8hpp_source.html#l00131">memory_tracker.hpp:131</a></div></div>
@@ -423,7 +420,7 @@ $(document).ready(function(){initNavTree('memory__pool_8cc_source.html',''); ini
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c49fb1fe3cdea7da91949965a419900.html">memory</a></li><li class="navelem"><a class="el" href="memory__pool_8cc.html">memory_pool.cc</a></li>
-    <li class="footer">Generated on Wed Feb 4 2026 12:36:36 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Feb 4 2026 13:02:53 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

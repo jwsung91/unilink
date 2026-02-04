@@ -241,24 +241,25 @@ $(document).ready(function(){initNavTree('memory__pool_8hpp_source.html',''); in
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;  uint8_t&amp; operator[](<span class="keywordtype">size_t</span> index);</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="keyword">const</span> uint8_t&amp; operator[](<span class="keywordtype">size_t</span> index) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  <span class="comment">// Safe pointer arithmetic</span></div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  uint8_t* at(<span class="keywordtype">size_t</span> offset) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;  <span class="comment">// Explicit conversion methods (no implicit conversion)</span></div>
-<div class="line"><a name="l00174"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#a9442120383c899f117db14b84dbc0eae">  174</a></span>&#160;  uint8_t* <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#a9442120383c899f117db14b84dbc0eae">get</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data(); }</div>
-<div class="line"><a name="l00175"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#a1590fa6ec77c426c61234c158fe2230f">  175</a></span>&#160;  <span class="keyword">explicit</span> <span class="keyword">operator</span> bool()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> valid(); }</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;  std::unique_ptr&lt;uint8_t[]&gt; buffer_;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;  <span class="keywordtype">size_t</span> size_;</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  <a class="code" href="classunilink_1_1memory_1_1MemoryPool.html">MemoryPool</a>* pool_;</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  <span class="comment">// Helper for bounds checking</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  <span class="keywordtype">void</span> check_bounds(<span class="keywordtype">size_t</span> index) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;};</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;}  <span class="comment">// namespace memory</span></div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  <span class="comment">// Safe array access with bounds checking</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  uint8_t&amp; at(<span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  <span class="keyword">const</span> uint8_t&amp; at(<span class="keywordtype">size_t</span> index) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;  <span class="comment">// Explicit conversion methods (no implicit conversion)</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#a9442120383c899f117db14b84dbc0eae">  175</a></span>&#160;  uint8_t* <a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html#a9442120383c899f117db14b84dbc0eae">get</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data(); }</div>
+<div class="line"><a name="l00176"></a><span class="lineno"><a class="line" href="classunilink_1_1memory_1_1PooledBuffer.html#a1590fa6ec77c426c61234c158fe2230f">  176</a></span>&#160;  <span class="keyword">explicit</span> <span class="keyword">operator</span> bool()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> valid(); }</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;  std::unique_ptr&lt;uint8_t[]&gt; buffer_;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  <span class="keywordtype">size_t</span> size_;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;  <a class="code" href="classunilink_1_1memory_1_1MemoryPool.html">MemoryPool</a>* pool_;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  <span class="comment">// Helper for bounds checking</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  <span class="keywordtype">void</span> check_bounds(<span class="keywordtype">size_t</span> index) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;};</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;}  <span class="comment">// namespace memory</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1GlobalMemoryPool_html"><div class="ttname"><a href="classunilink_1_1memory_1_1GlobalMemoryPool.html">unilink::memory::GlobalMemoryPool</a></div><div class="ttdoc">Global memory pool instance.</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00123">memory_pool.hpp:123</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1GlobalMemoryPool_html_a0068d4d81382e7001f2a0cd530840b44"><div class="ttname"><a href="classunilink_1_1memory_1_1GlobalMemoryPool.html#a0068d4d81382e7001f2a0cd530840b44">unilink::memory::GlobalMemoryPool::GlobalMemoryPool</a></div><div class="ttdeci">GlobalMemoryPool()=delete</div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1GlobalMemoryPool_html_a32d1e6415f600116ae29113493620a20"><div class="ttname"><a href="classunilink_1_1memory_1_1GlobalMemoryPool.html#a32d1e6415f600116ae29113493620a20">unilink::memory::GlobalMemoryPool::create_optimized</a></div><div class="ttdeci">static std::unique_ptr&lt; MemoryPool &gt; create_optimized()</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00131">memory_pool.hpp:131</a></div></div>
@@ -275,7 +276,7 @@ $(document).ready(function(){initNavTree('memory__pool_8hpp_source.html',''); in
 <div class="ttc" id="aclassunilink_1_1memory_1_1MemoryPool_html_aea4e27b5406c63434f13f146ef0023a2"><div class="ttname"><a href="classunilink_1_1memory_1_1MemoryPool.html#aea4e27b5406c63434f13f146ef0023a2">unilink::memory::MemoryPool::MemoryPool</a></div><div class="ttdeci">MemoryPool(const MemoryPool &amp;)=delete</div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html">unilink::memory::PooledBuffer</a></div><div class="ttdoc">RAII wrapper for memory pool buffers with enhanced safety.</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00149">memory_pool.hpp:149</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a8f8dc11b22544f6430121b8df1310e3c"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a8f8dc11b22544f6430121b8df1310e3c">unilink::memory::PooledBuffer::operator=</a></div><div class="ttdeci">PooledBuffer &amp; operator=(const PooledBuffer &amp;)=delete</div></div>
-<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a9442120383c899f117db14b84dbc0eae"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a9442120383c899f117db14b84dbc0eae">unilink::memory::PooledBuffer::get</a></div><div class="ttdeci">uint8_t * get() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00174">memory_pool.hpp:174</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a9442120383c899f117db14b84dbc0eae"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a9442120383c899f117db14b84dbc0eae">unilink::memory::PooledBuffer::get</a></div><div class="ttdeci">uint8_t * get() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00175">memory_pool.hpp:175</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html_a96f88cf55a3d31ad4e28d08af0b0b975"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html#a96f88cf55a3d31ad4e28d08af0b0b975">unilink::memory::PooledBuffer::PooledBuffer</a></div><div class="ttdeci">PooledBuffer(const PooledBuffer &amp;)=delete</div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00036">common.hpp:36</a></div></div>
 <div class="ttc" id="astructunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics_html"><div class="ttname"><a href="structunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics.html">unilink::memory::MemoryPool::HealthMetrics</a></div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00052">memory_pool.hpp:52</a></div></div>
@@ -288,7 +289,7 @@ $(document).ready(function(){initNavTree('memory__pool_8hpp_source.html',''); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c49fb1fe3cdea7da91949965a419900.html">memory</a></li><li class="navelem"><a class="el" href="memory__pool_8hpp.html">memory_pool.hpp</a></li>
-    <li class="footer">Generated on Wed Feb 4 2026 12:36:36 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Feb 4 2026 13:02:53 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

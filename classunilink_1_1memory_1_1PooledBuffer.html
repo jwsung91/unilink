@@ -122,8 +122,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5e365743f105fa8fc0dde10154044722"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcd5e51a9b3a0849f4ed4c35f73c8343"><td class="memItemLeft" align="right" valign="top">const uint8_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#abcd5e51a9b3a0849f4ed4c35f73c8343">operator[]</a> (size_t index) const</td></tr>
 <tr class="separator:abcd5e51a9b3a0849f4ed4c35f73c8343"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad73864c7d626225966b9d17287833af3"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#ad73864c7d626225966b9d17287833af3">at</a> (size_t offset) const</td></tr>
-<tr class="separator:ad73864c7d626225966b9d17287833af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94ad020d70924d2daaa865bda73d23c0"><td class="memItemLeft" align="right" valign="top">uint8_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0">at</a> (size_t index)</td></tr>
+<tr class="separator:a94ad020d70924d2daaa865bda73d23c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66bb837b33bf0a93b494a73abf1dfd0a"><td class="memItemLeft" align="right" valign="top">const uint8_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#a66bb837b33bf0a93b494a73abf1dfd0a">at</a> (size_t index) const</td></tr>
+<tr class="separator:a66bb837b33bf0a93b494a73abf1dfd0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9442120383c899f117db14b84dbc0eae"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#a9442120383c899f117db14b84dbc0eae">get</a> () const</td></tr>
 <tr class="separator:a9442120383c899f117db14b84dbc0eae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1590fa6ec77c426c61234c158fe2230f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#a1590fa6ec77c426c61234c158fe2230f">operator bool</a> () const</td></tr>
@@ -264,23 +266,43 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad73864c7d626225966b9d17287833af3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad73864c7d626225966b9d17287833af3">&#9670;&nbsp;</a></span>at()</h2>
+<a id="a94ad020d70924d2daaa865bda73d23c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94ad020d70924d2daaa865bda73d23c0">&#9670;&nbsp;</a></span>at() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t * unilink::memory::PooledBuffer::at </td>
+          <td class="memname">uint8_t &amp; unilink::memory::PooledBuffer::at </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>offset</em></td><td>)</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="memory__pool_8cc_source.html#l00271">271</a> of file <a class="el" href="memory__pool_8cc_source.html">memory_pool.cc</a>.</p>
+
+</div>
+</div>
+<a id="a66bb837b33bf0a93b494a73abf1dfd0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66bb837b33bf0a93b494a73abf1dfd0a">&#9670;&nbsp;</a></span>at() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t &amp; unilink::memory::PooledBuffer::at </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="memory__pool_8cc_source.html#l00281">281</a> of file <a class="el" href="memory__pool_8cc_source.html">memory_pool.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="memory__pool_8cc_source.html#l00278">278</a> of file <a class="el" href="memory__pool_8cc_source.html">memory_pool.cc</a>.</p>
 
 </div>
 </div>
@@ -326,7 +348,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="memory__pool_8hpp_source.html#l00174">174</a> of file <a class="el" href="memory__pool_8hpp_source.html">memory_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="memory__pool_8hpp_source.html#l00175">175</a> of file <a class="el" href="memory__pool_8hpp_source.html">memory_pool.hpp</a>.</p>
 
 </div>
 </div>
@@ -353,7 +375,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="memory__pool_8hpp_source.html#l00175">175</a> of file <a class="el" href="memory__pool_8hpp_source.html">memory_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="memory__pool_8hpp_source.html#l00176">176</a> of file <a class="el" href="memory__pool_8hpp_source.html">memory_pool.hpp</a>.</p>
 
 </div>
 </div>
@@ -447,7 +469,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="memory__pool_8cc_source.html#l00274">274</a> of file <a class="el" href="memory__pool_8cc_source.html">memory_pool.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="memory__pool_8cc_source.html#l00269">269</a> of file <a class="el" href="memory__pool_8cc_source.html">memory_pool.cc</a>.</p>
 
 </div>
 </div>
@@ -499,7 +521,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1memory.html">memory</a></li><li class="navelem"><a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html">PooledBuffer</a></li>
-    <li class="footer">Generated on Wed Feb 4 2026 12:36:36 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Feb 4 2026 13:02:53 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
