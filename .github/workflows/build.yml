@@ -157,29 +157,25 @@ jobs:
         echo "CMAKE_EXE=C:/PROGRA~1/CMake/bin/cmake.exe" >> $env:GITHUB_ENV
         echo "CTEST_EXE=C:/PROGRA~1/CMake/bin/ctest.exe" >> $env:GITHUB_ENV
 
-    - name: Install dependencies via vcpkg
+    - name: Clone vcpkg
+      run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
+
+    - name: Bootstrap vcpkg
+      shell: pwsh
+      working-directory: ${{ github.workspace }}/vcpkg
+      run: .\bootstrap-vcpkg.bat
+
+    - name: Install Dependencies (vcpkg)
       shell: pwsh
       env:
-        VCPKG_ROOT: C:\vcpkg
-        VCPKG_BINARY_SOURCES: "clear;default" # enable binary cache on GH runners to reduce downloads/retries
+        VCPKG_ROOT: ${{ github.workspace }}\vcpkg
       run: |
-        $ErrorActionPreference = "Stop"
-        $packages = @("boost-asio", "boost-system")
-        foreach ($pkg in $packages) {
-          for ($i = 1; $i -le 3; $i++) {
-            try {
-              & "${env:VCPKG_ROOT}\vcpkg.exe" install $pkg --triplet x64-windows --clean-after-build
-              break
-            } catch {
-              if ($i -eq 3) { throw }
-              Write-Host "vcpkg install $pkg failed (attempt $i). Retrying in 10s..."
-              Start-Sleep -Seconds 10
-            }
-          }
-        }
+        & "$env:VCPKG_ROOT\vcpkg.exe" install boost-system boost-asio --triplet x64-windows
 
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}\vcpkg
       run: |
         & "$env:CMAKE_EXE" -S . -B build-windows `
           -G "Visual Studio 17 2022" -A x64 `
@@ -188,7 +184,7 @@ jobs:
           -DUNILINK_ENABLE_CONFIG=ON `
           -DUNILINK_BUILD_EXAMPLES=OFF `
           -DUNILINK_BUILD_TESTS=ON `
-          -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" `
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
           -DVCPKG_TARGET_TRIPLET=x64-windows
 
     - name: Build (Release)
