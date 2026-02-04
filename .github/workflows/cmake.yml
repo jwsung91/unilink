@@ -180,17 +180,25 @@ jobs:
         working-directory: build
         run: ctest --output-on-failure --parallel 2
 
-      - name: Verify Python Import
-        if: matrix.build_python == 'ON'
+      - name: Verify Python Import (Windows)
+        if: matrix.build_python == 'ON' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # Use PowerShell for reliable path handling on Windows
+          # Add bin/Release, bin, lib/Release, lib to PYTHONPATH with semicolon separators
+          $paths = @(
+            "$pwd\build\bin\${{ env.BUILD_TYPE }}",
+            "$pwd\build\bin",
+            "$pwd\build\lib\${{ env.BUILD_TYPE }}",
+            "$pwd\build\lib"
+          )
+          $env:PYTHONPATH = ($paths -join ";") + ";" + $env:PYTHONPATH
+          python bindings/python/test_import.py
+
+      - name: Verify Python Import (Linux/macOS)
+        if: matrix.build_python == 'ON' && runner.os != 'Windows'
         shell: bash
         run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            # On Windows (MSVC), artifacts are in build/bin/Release (or Debug)
-            # We add both the config-specific dir and the base bin dir just in case
-            # Also adding lib dirs because CMake MODULE targets might go there
-            export PYTHONPATH="$PWD/build/bin/${BUILD_TYPE}:$PWD/build/bin:$PWD/build/lib/${BUILD_TYPE}:$PWD/build/lib:$PYTHONPATH"
-          else
-            # On Linux/macOS, shared libraries are in build/lib
-            export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
-          fi
+          # On Linux/macOS, shared libraries are in build/lib
+          export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
           python3 bindings/python/test_import.py
