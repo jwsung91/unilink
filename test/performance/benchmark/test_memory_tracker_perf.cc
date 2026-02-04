@@ -34,9 +34,7 @@ class MemoryTrackerPerfTest : public ::testing::Test {
     MemoryTracker::instance().clear_tracking_data();
   }
 
-  void TearDown() override {
-    MemoryTracker::instance().clear_tracking_data();
-  }
+  void TearDown() override { MemoryTracker::instance().clear_tracking_data(); }
 };
 
 TEST_F(MemoryTrackerPerfTest, TrackAllocationOverhead) {
