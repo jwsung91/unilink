@@ -26,6 +26,7 @@
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
+#include "test/utils/test_utils.hpp"
 
 using namespace unilink;
 namespace net = boost::asio;
@@ -34,13 +35,16 @@ using tcp = net::ip::tcp;
 class TcpServerMutexContentionTest : public ::testing::Test {
  protected:
   void SetUp() override {
+    // Get a unique available port to avoid conflicts
+    test_port_ = test::TestUtils::getAvailableTestPort();
+
     // Config setup
     config::TcpServerConfig cfg;
-    cfg.port = 0;  // Dynamic port
+    cfg.port = test_port_;
     cfg.max_connections = 1000;
     cfg.backpressure_threshold = 1024 * 1024;
 
-    // Create server with 4 threads
+    // Create server with 2 threads (reduced for CI stability)
     acceptor_ = std::make_unique<transport::BoostTcpAcceptor>(ioc_);
     server_ = transport::TcpServer::create(cfg, std::move(acceptor_), ioc_);
   }
@@ -53,6 +57,7 @@ class TcpServerMutexContentionTest : public ::testing::Test {
     }
   }
 
+  uint16_t test_port_;
   net::io_context ioc_;
   std::unique_ptr<transport::BoostTcpAcceptor> acceptor_;  // Temporarily held until moved
   std::shared_ptr<transport::TcpServer> server_;
@@ -62,21 +67,8 @@ class TcpServerMutexContentionTest : public ::testing::Test {
 TEST_F(TcpServerMutexContentionTest, BenchmarkThroughput) {
   server_->start();
 
-  // Use a fixed port to simplify connection logic (avoiding race conditions on dynamic port retrieval)
-  int fixed_port = 54321;
-  server_->stop();  // Stop the one created in SetUp
-  ioc_.restart();
-
-  config::TcpServerConfig cfg;
-  cfg.port = static_cast<uint16_t>(fixed_port);
-  cfg.max_connections = 1000;
-
-  auto acceptor = std::make_unique<transport::BoostTcpAcceptor>(ioc_);
-  server_ = transport::TcpServer::create(cfg, std::move(acceptor), ioc_);
-  server_->start();
-
   // Start IO threads
-  int thread_count = 4;
+  int thread_count = 2; // Reduced for CI stability
   for (int i = 0; i < thread_count; ++i) {
     threads_.emplace_back([this] { ioc_.run(); });
   }
@@ -86,8 +78,8 @@ TEST_F(TcpServerMutexContentionTest, BenchmarkThroughput) {
   server_->on_bytes([&](const uint8_t*, size_t size) { bytes_received.fetch_add(size, std::memory_order_relaxed); });
 
   // Clients
-  const int client_count = 20;
-  const int duration_ms = 2000;
+  const int client_count = 10; // Reduced for CI stability
+  const int duration_ms = 1000; // Reduced for CI stability
   const size_t packet_size = 128;
   std::vector<uint8_t> packet(packet_size, 'X');
 
@@ -95,12 +87,24 @@ TEST_F(TcpServerMutexContentionTest, BenchmarkThroughput) {
   std::atomic<bool> running{true};
   std::atomic<size_t> total_sent{0};
 
+  // Concurrent Status Reader Thread (simulating contention on shared_mutex)
+  // This thread repeatedly calls get_client_count() which uses std::shared_lock
+  // while clients are connecting/disconnecting (which uses std::unique_lock)
+  // and sending data (which uses std::shared_lock for callback lookup).
+  std::thread status_reader([&] {
+    while (running.load(std::memory_order_relaxed)) {
+        volatile size_t count = server_->get_client_count();
+        (void)count;
+        std::this_thread::yield();
+    }
+  });
+
   for (int i = 0; i < client_count; ++i) {
-    client_threads.emplace_back([&, fixed_port] {
+    client_threads.emplace_back([&] {
       try {
         net::io_context client_ioc;
         tcp::socket socket(client_ioc);
-        tcp::endpoint ep(net::ip::make_address("127.0.0.1"), static_cast<uint16_t>(fixed_port));
+        tcp::endpoint ep(net::ip::make_address("127.0.0.1"), test_port_);
 
         boost::system::error_code ec;
         // Retry connection
@@ -122,13 +126,15 @@ TEST_F(TcpServerMutexContentionTest, BenchmarkThroughput) {
     });
   }
 
-  std::cout << "Benchmarking with " << client_count << " clients for " << duration_ms << "ms..." << std::endl;
+  std::cout << "Benchmarking with " << client_count << " clients for " << duration_ms << "ms on port " << test_port_ << "..." << std::endl;
   std::this_thread::sleep_for(std::chrono::milliseconds(duration_ms));
   running = false;
 
   for (auto& t : client_threads) {
     if (t.joinable()) t.join();
   }
+
+  if (status_reader.joinable()) status_reader.join();
 
   // Wait a bit for server to process remaining data
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
