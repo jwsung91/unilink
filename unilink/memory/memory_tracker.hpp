@@ -40,10 +40,10 @@ class UNILINK_API MemoryTracker {
   struct AllocationInfo {
     void* ptr;
     size_t size;
-    std::string file;
+    const char* file;
     int line;
     std::chrono::steady_clock::time_point timestamp;
-    std::string function;
+    const char* function;
   };
 
   struct MemoryStats {
