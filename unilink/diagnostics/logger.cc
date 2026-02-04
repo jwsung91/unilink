@@ -273,7 +273,7 @@ void Logger::write_to_console(const std::string& message) {
 void Logger::write_to_file(const std::string& message) {
   std::lock_guard<std::mutex> lock(mutex_);
   if (file_output_ && file_output_->is_open()) {
-    *file_output_ << message << std::endl;
+    *file_output_ << message << '\n';
   }
 }
 
@@ -299,7 +299,22 @@ void Logger::check_and_rotate_log() {
   // Ensure single-threaded access to file handle while rotating
   std::lock_guard<std::mutex> lock(mutex_);
 
-  if (!log_rotation_->should_rotate(current_log_file_)) {
+  bool should_rotate = false;
+  if (file_output_ && file_output_->is_open()) {
+    // Use current stream position for accurate size check with buffered writes
+    std::streampos current_pos = file_output_->tellp();
+    if (current_pos != static_cast<std::streampos>(-1) &&
+        static_cast<size_t>(current_pos) >= log_rotation_->get_config().max_file_size_bytes) {
+      should_rotate = true;
+    }
+  } else {
+    // Fallback to filesystem check if stream is not open
+    if (log_rotation_->should_rotate(current_log_file_)) {
+      should_rotate = true;
+    }
+  }
+
+  if (!should_rotate) {
     return;
   }
 
@@ -430,6 +445,8 @@ void Logger::worker_loop() {
     // Periodic flush
     auto now = std::chrono::steady_clock::now();
     if (now - last_flush >= async_config_.flush_interval) {
+      flush();
+      update_stats_on_flush();
       last_flush = now;
     }
 
