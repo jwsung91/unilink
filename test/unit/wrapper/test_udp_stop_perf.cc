@@ -1,18 +1,20 @@
 #include <gtest/gtest.h>
+
 #include <chrono>
-#include <thread>
-#include <memory>
 #include <iostream>
-#include "unilink/wrapper/udp/udp.hpp"
-#include "unilink/config/udp_config.hpp"
+#include <memory>
+#include <thread>
+
 #include "unilink/base/common.hpp"
+#include "unilink/config/udp_config.hpp"
+#include "unilink/wrapper/udp/udp.hpp"
 
 using namespace unilink;
 using namespace std::chrono_literals;
 
 TEST(UdpWrapperTest, StopPerformance) {
   config::UdpConfig cfg;
-  cfg.local_port = 19000;
+  cfg.local_port = 0;
   cfg.remote_address = "127.0.0.1";
   cfg.remote_port = 19001;
 
@@ -36,18 +38,16 @@ TEST(UdpWrapperTest, StopSafetyWithExternalIOC) {
   std::thread io_thread([ioc] { ioc->run(); });
 
   config::UdpConfig cfg;
-  cfg.local_port = 19002;
+  cfg.local_port = 0;
 
   {
-      wrapper::Udp udp(cfg, ioc);
-      std::atomic<int> callbacks{0};
-      udp.on_bytes([&](const uint8_t*, size_t){
-          callbacks++;
-      });
-      udp.start();
+    wrapper::Udp udp(cfg, ioc);
+    std::atomic<int> callbacks{0};
+    udp.on_bytes([&](const uint8_t*, size_t) { callbacks++; });
+    udp.start();
 
-      // Stop and destroy immediately
-      udp.stop();
+    // Stop and destroy immediately
+    udp.stop();
   }
 
   // Wait a bit to ensure no late callbacks cause crashes (ASAN would catch this)
