@@ -35,7 +35,6 @@ struct UdpConfig {
   bool stop_on_callback_exception = false;
 
   bool is_valid() const {
-    if (local_port == 0) return false;
     if (backpressure_threshold < common::constants::MIN_BACKPRESSURE_THRESHOLD ||
         backpressure_threshold > common::constants::MAX_BACKPRESSURE_THRESHOLD) {
       return false;
