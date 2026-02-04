@@ -1,0 +1,204 @@
+name: CMake
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Matrix for Pure C++ (existing configuration)
+          - name: C++ (Linux, GCC)
+            os: ubuntu-24.04
+            triplet: x64-linux
+            cc: gcc
+            cxx: g++
+            generator: Ninja
+            build_type: Release
+            build_python: OFF
+            vcpkg_features: ""
+          - name: C++ (Windows, MSVC)
+            os: windows-2022
+            triplet: x64-windows
+            cc: cl
+            cxx: cl
+            generator: "Visual Studio 17 2022"
+            build_type: Release
+            build_python: OFF
+            vcpkg_features: ""
+          - name: C++ (macOS, Clang)
+            os: macos-14
+            triplet: arm64-osx
+            cc: clang
+            cxx: clang++
+            generator: Ninja
+            build_type: Release
+            build_python: OFF
+            vcpkg_features: ""
+
+          # Matrix for Python Enabled
+          - name: Python3 (Linux, GCC)
+            os: ubuntu-24.04
+            triplet: x64-linux
+            cc: gcc
+            cxx: g++
+            generator: Ninja
+            build_type: Release
+            build_python: ON
+            vcpkg_features: "python"
+          - name: Python3 (Windows, MSVC)
+            os: windows-2022
+            triplet: x64-windows
+            cc: cl
+            cxx: cl
+            generator: "Visual Studio 17 2022"
+            build_type: Release
+            build_python: ON
+            vcpkg_features: "python"
+          - name: Python3 (macOS, Clang)
+            os: macos-14
+            triplet: arm64-osx
+            cc: clang
+            cxx: clang++
+            generator: Ninja
+            build_type: Release
+            build_python: ON
+            vcpkg_features: "python"
+
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_TARGET_TRIPLET: ${{ matrix.triplet }}
+      VCPKG_BINARY_SOURCES: "clear;default"
+      BUILD_TYPE: ${{ matrix.build_type }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Build Dependencies (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y ninja-build autoconf autoconf-archive automake libtool libtool-bin pkg-config
+          else
+            brew install ninja autoconf autoconf-archive automake libtool pkg-config
+          fi
+
+      - name: Setup Python
+        if: matrix.build_python == 'ON'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Clone vcpkg
+        run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
+
+      - name: Bootstrap vcpkg (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: "${VCPKG_ROOT}/bootstrap-vcpkg.sh"
+
+      - name: Bootstrap vcpkg (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          & "${env:VCPKG_ROOT}\bootstrap-vcpkg.bat"
+
+      - name: Install Dependencies (vcpkg)
+        shell: bash
+        run: |
+          # Use Windows-style path for vcpkg executable if on Windows
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            VCPKG_EXE="${VCPKG_ROOT}/vcpkg.exe"
+          else
+            VCPKG_EXE="${VCPKG_ROOT}/vcpkg"
+          fi
+
+          # Install base dependencies
+          "$VCPKG_EXE" install boost-system boost-asio --triplet ${{ matrix.triplet }}
+
+          # Install python bindings dependencies if requested
+          if [ "${{ matrix.build_python }}" = "ON" ]; then
+            "$VCPKG_EXE" install pybind11 --triplet ${{ matrix.triplet }}
+          fi
+
+      - name: Configure (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          cmake -S . -B build \
+            -G "${{ matrix.generator }}" \
+            -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
+            -DCMAKE_C_COMPILER="${{ matrix.cc }}" \
+            -DCMAKE_CXX_COMPILER="${{ matrix.cxx }}" \
+            -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
+            -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" \
+            -DUNILINK_BUILD_EXAMPLES=OFF \
+            -DUNILINK_BUILD_DOCS=OFF \
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
+            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }}
+
+      - name: Configure (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cmake -S . -B build `
+            -G "${{ matrix.generator }}" -A x64 `
+            -DCMAKE_BUILD_TYPE="${env:BUILD_TYPE}" `
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET="${{ matrix.triplet }}" `
+            -DUNILINK_BUILD_EXAMPLES=OFF `
+            -DUNILINK_BUILD_DOCS=OFF `
+            -DUNILINK_BUILD_TESTS=ON `
+            -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF `
+            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }}
+
+      - name: Build
+        run: cmake --build build --config "${BUILD_TYPE}" --parallel
+
+      - name: Build unit tests
+        if: runner.os == 'Windows'
+        run: cmake --build build --target unilink_unit_tests --config "${BUILD_TYPE}"
+
+      - name: Test (Windows)
+        if: runner.os == 'Windows'
+        working-directory: build
+        shell: pwsh
+        run: ctest -C "${env:BUILD_TYPE}" --output-on-failure
+
+      - name: Test (Linux/macOS)
+        if: runner.os != 'Windows'
+        working-directory: build
+        run: ctest --output-on-failure --parallel 2
+
+      - name: Verify Python Import (Windows)
+        if: matrix.build_python == 'ON' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # Use PowerShell for reliable path handling on Windows
+          # Add bin/Release, bin, lib/Release, lib to PYTHONPATH with semicolon separators
+          $paths = @(
+            "$pwd\build\bin\${{ env.BUILD_TYPE }}",
+            "$pwd\build\bin",
+            "$pwd\build\lib\${{ env.BUILD_TYPE }}",
+            "$pwd\build\lib"
+          )
+          $env:PYTHONPATH = ($paths -join ";") + ";" + $env:PYTHONPATH
+          python bindings/python/test_import.py
+
+      - name: Verify Python Import (Linux/macOS)
+        if: matrix.build_python == 'ON' && runner.os != 'Windows'
+        shell: bash
+        run: |
+          # On Linux/macOS, shared libraries are in build/lib
+          export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
+          python3 bindings/python/test_import.py

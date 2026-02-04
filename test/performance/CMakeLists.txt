@@ -21,7 +21,7 @@ if(BUILD_PERFORMANCE_TESTS)
   message(STATUS "Building performance tests")
 
   # Benchmark tests
-  foreach(test_file test_performance.cc test_benchmark.cc test_transport_performance.cc test_platform.cc test_logger_perf.cc test_tcp_callback_benchmark.cc test_string_conversion_perf.cc)
+  foreach(test_file test_performance.cc test_benchmark.cc test_pooled_buffer_access.cc test_transport_performance.cc test_platform.cc test_logger_perf.cc test_tcp_callback_benchmark.cc test_console_logger_perf.cc test_string_conversion_perf.cc test_tcp_server_mutex_contention.cc test_file_logger_perf.cc)
     get_filename_component(test_name ${test_file} NAME_WE)
     add_executable(run_performance_${test_name} benchmark/${test_file})
     target_link_libraries(run_performance_${test_name}

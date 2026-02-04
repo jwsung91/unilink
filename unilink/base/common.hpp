@@ -26,6 +26,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 // Include logger for log_message function
@@ -167,6 +168,15 @@ inline std::vector<uint8_t> string_to_uint8(const char* data, size_t size) {
  */
 inline std::vector<uint8_t> string_to_uint8(const std::string& str) {
   return std::vector<uint8_t>(str.begin(), str.end());
+}
+
+/**
+ * @brief Safely obtain a view of std::string as byte array without allocation
+ * @param str The string to convert
+ * @return std::pair<const uint8_t*, size_t> containing pointer and size
+ */
+inline std::pair<const uint8_t*, size_t> string_to_bytes(const std::string& str) {
+  return {reinterpret_cast<const uint8_t*>(str.data()), str.size()};
 }
 
 /**

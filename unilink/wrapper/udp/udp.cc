@@ -74,7 +74,6 @@ void Udp::stop() {
   if (!started_ || !channel_) return;
 
   channel_->stop();
-  std::this_thread::sleep_for(std::chrono::milliseconds(50));
   channel_.reset();
   started_ = false;
 

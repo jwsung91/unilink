@@ -32,10 +32,6 @@ using namespace std::chrono_literals;
 using namespace unilink;
 
 namespace {
-uint16_t next_port() {
-  static std::atomic<uint16_t> base{28000};
-  return base.fetch_add(5);
-}
 
 template <typename Pred>
 bool wait_for_condition(boost::asio::io_context& ioc, Pred pred, std::chrono::milliseconds timeout,
@@ -60,15 +56,18 @@ void pump_io(boost::asio::io_context& ioc, std::chrono::milliseconds duration, s
 
 TEST(TransportUdpExtendedTest, AsyncWriteMove) {
   boost::asio::io_context ioc;
+
+  // Setup receiver first on ephemeral port
+  boost::asio::ip::udp::socket rx_socket(ioc, {boost::asio::ip::udp::v4(), 0});
+  uint16_t rx_port = rx_socket.local_endpoint().port();
+
   config::UdpConfig cfg;
-  cfg.local_port = next_port();
+  cfg.local_port = 0;
   cfg.remote_address = "127.0.0.1";
-  cfg.remote_port = cfg.local_port + 1;
+  cfg.remote_port = rx_port;
 
   auto channel = transport::UdpChannel::create(cfg, ioc);
 
-  // Setup receiver
-  boost::asio::ip::udp::socket rx_socket(ioc, {boost::asio::ip::udp::v4(), cfg.remote_port.value()});
   std::vector<uint8_t> rx_buf(1024);
   size_t received_bytes = 0;
   boost::asio::ip::udp::endpoint sender_ep;
@@ -89,15 +88,18 @@ TEST(TransportUdpExtendedTest, AsyncWriteMove) {
 
 TEST(TransportUdpExtendedTest, AsyncWriteShared) {
   boost::asio::io_context ioc;
+
+  // Setup receiver first on ephemeral port
+  boost::asio::ip::udp::socket rx_socket(ioc, {boost::asio::ip::udp::v4(), 0});
+  uint16_t rx_port = rx_socket.local_endpoint().port();
+
   config::UdpConfig cfg;
-  cfg.local_port = next_port();
+  cfg.local_port = 0;
   cfg.remote_address = "127.0.0.1";
-  cfg.remote_port = cfg.local_port + 1;
+  cfg.remote_port = rx_port;
 
   auto channel = transport::UdpChannel::create(cfg, ioc);
 
-  // Setup receiver
-  boost::asio::ip::udp::socket rx_socket(ioc, {boost::asio::ip::udp::v4(), cfg.remote_port.value()});
   std::vector<uint8_t> rx_buf(1024);
   size_t received_bytes = 0;
   boost::asio::ip::udp::endpoint sender_ep;
@@ -118,16 +120,19 @@ TEST(TransportUdpExtendedTest, AsyncWriteShared) {
 
 TEST(TransportUdpExtendedTest, PooledBufferWrite) {
   boost::asio::io_context ioc;
+
+  // Setup receiver first on ephemeral port
+  boost::asio::ip::udp::socket rx_socket(ioc, {boost::asio::ip::udp::v4(), 0});
+  uint16_t rx_port = rx_socket.local_endpoint().port();
+
   config::UdpConfig cfg;
-  cfg.local_port = next_port();
+  cfg.local_port = 0;
   cfg.remote_address = "127.0.0.1";
-  cfg.remote_port = cfg.local_port + 1;
+  cfg.remote_port = rx_port;
   cfg.enable_memory_pool = true;
 
   auto channel = transport::UdpChannel::create(cfg, ioc);
 
-  // Setup receiver
-  boost::asio::ip::udp::socket rx_socket(ioc, {boost::asio::ip::udp::v4(), cfg.remote_port.value()});
   std::vector<uint8_t> rx_buf(1024);
   size_t received_bytes = 0;
   boost::asio::ip::udp::endpoint sender_ep;
@@ -149,10 +154,15 @@ TEST(TransportUdpExtendedTest, PooledBufferWrite) {
 TEST(TransportUdpExtendedTest, BackpressureReporting) {
   boost::asio::io_context ioc;
   config::UdpConfig cfg;
-  cfg.local_port = next_port();
+  cfg.local_port = 0;
+  // Use loopback as destination (doesn't need to be bound for this test)
   cfg.remote_address = "127.0.0.1";
-  cfg.remote_port = cfg.local_port + 1;  // Send to something that might not read fast enough?
-  // Actually, we rely on queue filling up inside the channel before socket sends.
+
+  // Use a valid but dummy remote port to ensure write attempts happen.
+  // Using an ephemeral port from a temporary socket is safest.
+  boost::asio::ip::udp::socket dummy(ioc, {boost::asio::ip::udp::v4(), 0});
+  cfg.remote_port = dummy.local_endpoint().port();
+
   cfg.backpressure_threshold = 100;
 
   auto channel = transport::UdpChannel::create(cfg, ioc);
@@ -190,7 +200,7 @@ TEST(TransportUdpExtendedTest, BackpressureReporting) {
 TEST(TransportUdpExtendedTest, CallbackExceptionSafety) {
   boost::asio::io_context ioc;
   config::UdpConfig cfg;
-  cfg.local_port = next_port();
+  cfg.local_port = 0;
   cfg.stop_on_callback_exception = false;  // Should not stop on exception
 
   auto channel = transport::UdpChannel::create(cfg, ioc);
