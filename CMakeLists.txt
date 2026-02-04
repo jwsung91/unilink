@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
+
+# Python bindings option
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+
 project(
   unilink
   VERSION 0.3.3
@@ -320,6 +324,10 @@ if(UNILINK_BUILD_TESTS)
   include(CTest)
   enable_testing()
   add_subdirectory(test)
+endif()
+
+if(BUILD_PYTHON_BINDINGS)
+  add_subdirectory(bindings/python)
 endif()
 
 # Documentation generation with Doxygen

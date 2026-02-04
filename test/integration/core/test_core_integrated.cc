@@ -376,6 +376,10 @@ TEST_F(CoreIntegratedTest, BasicCommunicationIntegration) {
 
   // Wait for connection
   EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 5000));
+
+  // Explicitly stop to prevent destructor timeouts in coverage builds
+  client->stop();
+  server->stop();
 }
 
 int main(int argc, char** argv) {

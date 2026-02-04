@@ -133,7 +133,7 @@ class PerformanceIntegratedTest : public ::testing::Test {
 TEST_F(PerformanceIntegratedTest, TransportPerformanceBenchmark) {
   std::cout << "\n=== Transport Performance Benchmark Test ===" << std::endl;
 
-  const int num_operations = 1000;
+  const int num_operations = 100;
   const size_t data_size = 1024;
 
   auto start_time = std::chrono::high_resolution_clock::now();

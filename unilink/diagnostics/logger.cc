@@ -260,7 +260,13 @@ void Logger::write_to_console(const std::string& message) {
   if (message.find("[ERROR]") != std::string::npos || message.find("[CRITICAL]") != std::string::npos) {
     std::cerr << message << std::endl;
   } else {
+#if defined(_WIN32)
+    // Windows console I/O can be problematic with buffering, causing potential deadlocks or timeouts
+    // in test runners if streams are not flushed.
     std::cout << message << std::endl;
+#else
+    std::cout << message << '\n';
+#endif
   }
 }
 
