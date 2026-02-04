@@ -30,6 +30,9 @@ namespace memory {
 // ============================================================================
 
 MemoryPool::MemoryPool(size_t initial_pool_size, size_t max_pool_size) {
+  // Suppress unused parameter warning since we reserve based on max_pool_size
+  (void)initial_pool_size;
+
   // Initialize 4 fixed-size pools
   static constexpr std::array<size_t, 4> BUCKET_SIZES = {
       static_cast<size_t>(BufferSize::SMALL),   // 1KB
@@ -41,7 +44,7 @@ MemoryPool::MemoryPool(size_t initial_pool_size, size_t max_pool_size) {
   for (size_t i = 0; i < buckets_.size(); ++i) {
     buckets_[i].size_ = BUCKET_SIZES[i];
     buckets_[i].capacity_ = max_pool_size / buckets_.size();
-    buckets_[i].buffers_.reserve(initial_pool_size / buckets_.size());
+    buckets_[i].buffers_.reserve(buckets_[i].capacity_);
   }
 }
 
