@@ -25,6 +25,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <shared_mutex>
 #include <thread>
 #include <unordered_map>
 #include <vector>
@@ -119,7 +120,7 @@ class UNILINK_API TcpServer : public Channel,
 
   // Multi-client support
   std::unordered_map<size_t, std::shared_ptr<TcpServerSession>> sessions_;
-  mutable std::mutex sessions_mutex_;  // Guards sessions_ and current_session_
+  mutable std::shared_mutex sessions_mutex_;  // Guards sessions_ and current_session_
 
   // Client limit configuration
   size_t max_clients_;
