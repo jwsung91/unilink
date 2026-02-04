@@ -133,12 +133,24 @@ void UdpChannel::stop() {
   if (!ioc_) {
     perform_stop_cleanup();
   } else if (auto self = weak.lock()) {
-    net::post(strand_, [self]() { self->perform_stop_cleanup(); });
+    net::post(strand_, [self]() {
+      self->perform_stop_cleanup();
+      {
+        std::lock_guard<std::mutex> lock(self->stop_mutex_);
+        self->stop_complete_ = true;
+      }
+      self->stop_cv_.notify_all();
+    });
   } else {
     perform_stop_cleanup();
   }
 
   join_ioc_thread(false);
+
+  if (!owns_ioc_ && !strand_.running_in_this_thread()) {
+    std::unique_lock<std::mutex> lock(stop_mutex_);
+    stop_cv_.wait_for(lock, std::chrono::milliseconds(500), [this] { return stop_complete_; });
+  }
 
   if (owns_ioc_ && owned_ioc_) {
     owned_ioc_->restart();
@@ -587,6 +599,7 @@ void UdpChannel::reset_start_state() {
   queue_bytes_ = 0;
   backpressure_active_ = false;
   state_.set_state(LinkState::Idle);
+  stop_complete_ = false;
 }
 
 void UdpChannel::join_ioc_thread(bool allow_detach) {
