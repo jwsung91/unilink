@@ -167,8 +167,9 @@ class UNILINK_API PooledBuffer {
   uint8_t& operator[](size_t index);
   const uint8_t& operator[](size_t index) const;
 
-  // Safe pointer arithmetic
-  uint8_t* at(size_t offset) const;
+  // Safe array access with bounds checking
+  uint8_t& at(size_t index);
+  const uint8_t& at(size_t index) const;
 
   // Explicit conversion methods (no implicit conversion)
   uint8_t* get() const { return data(); }
