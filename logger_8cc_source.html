@@ -362,7 +362,7 @@ $(document).ready(function(){initNavTree('logger_8cc_source.html',''); initResiz
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="keywordtype">void</span> Logger::write_to_file(<span class="keyword">const</span> std::string&amp; message) {</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  <span class="keywordflow">if</span> (file_output_ &amp;&amp; file_output_-&gt;is_open()) {</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    *file_output_ &lt;&lt; message &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    *file_output_ &lt;&lt; message &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;  }</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;}</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
@@ -388,220 +388,237 @@ $(document).ready(function(){initNavTree('logger_8cc_source.html',''); initResiz
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  <span class="comment">// Ensure single-threaded access to file handle while rotating</span></div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;  <span class="keywordflow">if</span> (!log_rotation_-&gt;should_rotate(current_log_file_)) {</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;  }</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;  <span class="comment">// Flush and close the current file handle so Windows can rename it</span></div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  <span class="keywordflow">if</span> (file_output_) {</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    file_output_-&gt;flush();</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    file_output_-&gt;close();</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    file_output_.reset();</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;  }</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;  std::string new_filepath = log_rotation_-&gt;rotate(current_log_file_);</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;  <span class="comment">// Always attempt to reopen the active log file, even if rotation failed</span></div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;  open_log_file(current_log_file_);</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;  <span class="comment">// If rotation succeeded, new_filepath will differ, but no additional action needed</span></div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;}</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;  <span class="keywordtype">bool</span> should_rotate = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;  <span class="keywordflow">if</span> (file_output_ &amp;&amp; file_output_-&gt;is_open()) {</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <span class="comment">// Use current stream position for accurate size check with buffered writes</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    std::streampos current_pos = file_output_-&gt;tellp();</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <span class="keywordflow">if</span> (current_pos != <span class="keyword">static_cast&lt;</span>std::streampos<span class="keyword">&gt;</span>(-1) &amp;&amp;</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(current_pos) &gt;= log_rotation_-&gt;get_config().max_file_size_bytes) {</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;      should_rotate = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    }</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <span class="comment">// Fallback to filesystem check if stream is not open</span></div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordflow">if</span> (log_rotation_-&gt;should_rotate(current_log_file_)) {</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;      should_rotate = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    }</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;  }</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;  <span class="keywordflow">if</span> (!should_rotate) {</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;  }</div>
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="keywordtype">void</span> Logger::open_log_file(<span class="keyword">const</span> std::string&amp; filename) {</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;  file_output_ = std::make_unique&lt;std::ofstream&gt;(filename, std::ios::app);</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;  <span class="keywordflow">if</span> (file_output_-&gt;is_open()) {</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    outputs_.fetch_or(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719">LogOutput::FILE</a>));</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    file_output_.reset();</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Failed to open log file: &quot;</span> &lt;&lt; filename &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;  }</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;}</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
-<div class="line"><a name="l00331"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">  331</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">Logger::set_async_logging</a>(<span class="keywordtype">bool</span> enable, <span class="keyword">const</span> <a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">AsyncLogConfig</a>&amp; config) {</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;  <span class="keywordflow">if</span> (enable) {</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    setup_async_logging(config);</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    teardown_async_logging();</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;  }</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;}</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
-<div class="line"><a name="l00339"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a73ad8498f1b23670d4302b470316841f">  339</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a73ad8498f1b23670d4302b470316841f">Logger::is_async_logging_enabled</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> async_enabled_.load(); }</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
-<div class="line"><a name="l00341"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a2c0d709227b861bfc4e19466af8dcfe4">  341</a></span>&#160;<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html">AsyncLogStats</a> <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2c0d709227b861bfc4e19466af8dcfe4">Logger::get_async_stats</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;  <a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html">AsyncLogStats</a> result = async_stats_;</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;  result.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc">queue_size</a> = get_queue_size();</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;  result.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e">max_queue_size_reached</a> = std::max(result.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e">max_queue_size_reached</a>, result.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc">queue_size</a>);</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;  <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;}</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="keywordtype">void</span> Logger::setup_async_logging(<span class="keyword">const</span> <a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">AsyncLogConfig</a>&amp; config) {</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;  teardown_async_logging();</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160; </div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;  {</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    async_config_ = config;</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#aade07c7142f064ccc5de473c11f69f05">reset</a>();</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    shutdown_requested_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    running_.store(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    async_enabled_.store(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;  }</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160; </div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;  worker_thread_ = std::thread(&amp;Logger::worker_loop, <span class="keyword">this</span>);</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;  <span class="comment">// Flush and close the current file handle so Windows can rename it</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;  <span class="keywordflow">if</span> (file_output_) {</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    file_output_-&gt;flush();</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    file_output_-&gt;close();</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    file_output_.reset();</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;  }</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;  std::string new_filepath = log_rotation_-&gt;rotate(current_log_file_);</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;  <span class="comment">// Always attempt to reopen the active log file, even if rotation failed</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;  open_log_file(current_log_file_);</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;  <span class="comment">// If rotation succeeded, new_filepath will differ, but no additional action needed</span></div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;}</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="keywordtype">void</span> Logger::open_log_file(<span class="keyword">const</span> std::string&amp; filename) {</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;  file_output_ = std::make_unique&lt;std::ofstream&gt;(filename, std::ios::app);</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;  <span class="keywordflow">if</span> (file_output_-&gt;is_open()) {</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    outputs_.fetch_or(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719">LogOutput::FILE</a>));</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    file_output_.reset();</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Failed to open log file: &quot;</span> &lt;&lt; filename &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;  }</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;}</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
+<div class="line"><a name="l00346"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">  346</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">Logger::set_async_logging</a>(<span class="keywordtype">bool</span> enable, <span class="keyword">const</span> <a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">AsyncLogConfig</a>&amp; config) {</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;  <span class="keywordflow">if</span> (enable) {</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    setup_async_logging(config);</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    teardown_async_logging();</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;  }</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;}</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
+<div class="line"><a name="l00354"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a73ad8498f1b23670d4302b470316841f">  354</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a73ad8498f1b23670d4302b470316841f">Logger::is_async_logging_enabled</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> async_enabled_.load(); }</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160; </div>
+<div class="line"><a name="l00356"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1Logger.html#a2c0d709227b861bfc4e19466af8dcfe4">  356</a></span>&#160;<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html">AsyncLogStats</a> <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2c0d709227b861bfc4e19466af8dcfe4">Logger::get_async_stats</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;  <a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html">AsyncLogStats</a> result = async_stats_;</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;  result.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc">queue_size</a> = get_queue_size();</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;  result.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e">max_queue_size_reached</a> = std::max(result.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e">max_queue_size_reached</a>, result.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc">queue_size</a>);</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;  <span class="keywordflow">return</span> result;</div>
 <div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;}</div>
 <div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="keywordtype">void</span> Logger::teardown_async_logging() {</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;  std::thread worker_to_join;</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;  <span class="keywordtype">bool</span> notify_worker = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="keywordtype">void</span> Logger::setup_async_logging(<span class="keyword">const</span> <a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">AsyncLogConfig</a>&amp; config) {</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;  teardown_async_logging();</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;  {</div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    async_enabled_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160; </div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    <span class="keywordflow">if</span> (running_.load()) {</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;      shutdown_requested_.store(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;      notify_worker = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    }</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    async_config_ = config;</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#aade07c7142f064ccc5de473c11f69f05">reset</a>();</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    shutdown_requested_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    running_.store(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    async_enabled_.store(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;  }</div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    <span class="keywordflow">if</span> (worker_thread_.joinable()) {</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;      worker_to_join = std::move(worker_thread_);</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    }</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;  }</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160; </div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;  <span class="keywordflow">if</span> (notify_worker) {</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    queue_cv_.notify_all();</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;  }</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160; </div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;  <span class="keywordflow">if</span> (worker_to_join.joinable()) {</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    worker_to_join.join();</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;  }</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;  running_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;  shutdown_requested_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;}</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160; </div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;<span class="keywordtype">void</span> Logger::worker_loop() {</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;  std::vector&lt;LogEntry&gt; batch;</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;  batch.reserve(async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a>);</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160; </div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;  <span class="keyword">auto</span> last_flush = std::chrono::steady_clock::now();</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160; </div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;  <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    std::unique_lock&lt;std::mutex&gt; lock(queue_mutex_);</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160; </div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;    <span class="comment">// Wait for logs or timeout</span></div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;    <span class="keywordtype">bool</span> has_logs = queue_cv_.wait_for(lock, async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">flush_interval</a>,</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;                                       [<span class="keyword">this</span>] { return !log_queue_.empty() || shutdown_requested_.load(); });</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160; </div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;    <span class="comment">// Collect logs for batch processing</span></div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    <span class="keywordflow">if</span> (has_logs &amp;&amp; !log_queue_.empty()) {</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;      <span class="keywordtype">size_t</span> batch_size =</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;          async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#a3fee041d5d2ccfa1108f969c868c9170">enable_batch_processing</a> ? std::min(async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a>, log_queue_.size()) : 1;</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160; </div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;      batch.clear();</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;      batch.reserve(batch_size);</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;  worker_thread_ = std::thread(&amp;Logger::worker_loop, <span class="keyword">this</span>);</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;}</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="keywordtype">void</span> Logger::teardown_async_logging() {</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;  std::thread worker_to_join;</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;  <span class="keywordtype">bool</span> notify_worker = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;  {</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    async_enabled_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160; </div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <span class="keywordflow">if</span> (running_.load()) {</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;      shutdown_requested_.store(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;      notify_worker = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    }</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordflow">if</span> (worker_thread_.joinable()) {</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;      worker_to_join = std::move(worker_thread_);</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    }</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;  }</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160; </div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;  <span class="keywordflow">if</span> (notify_worker) {</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;    queue_cv_.notify_all();</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;  }</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160; </div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;  <span class="keywordflow">if</span> (worker_to_join.joinable()) {</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    worker_to_join.join();</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;  }</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160; </div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;  running_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;  shutdown_requested_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;}</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160; </div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="keywordtype">void</span> Logger::worker_loop() {</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;  std::vector&lt;LogEntry&gt; batch;</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;  batch.reserve(async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a>);</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160; </div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;  <span class="keyword">auto</span> last_flush = std::chrono::steady_clock::now();</div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160; </div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; batch_size &amp;&amp; !log_queue_.empty(); ++i) {</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        batch.push_back(std::move(log_queue_.front()));</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        log_queue_.pop();</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;      }</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160; </div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;      lock.unlock();</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;  <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    std::unique_lock&lt;std::mutex&gt; lock(queue_mutex_);</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160; </div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    <span class="comment">// Wait for logs or timeout</span></div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    <span class="keywordtype">bool</span> has_logs = queue_cv_.wait_for(lock, async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">flush_interval</a>,</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;                                       [<span class="keyword">this</span>] { return !log_queue_.empty() || shutdown_requested_.load(); });</div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160; </div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;      <span class="comment">// Process batch</span></div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;      <span class="keywordflow">if</span> (!batch.empty()) {</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;        process_batch(batch);</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        update_stats_on_batch(batch.size());</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;      }</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;      lock.unlock();</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    }</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160; </div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    <span class="comment">// Periodic flush</span></div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;    <span class="keyword">auto</span> now = std::chrono::steady_clock::now();</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    <span class="keywordflow">if</span> (now - last_flush &gt;= async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">flush_interval</a>) {</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;      last_flush = now;</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    }</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;    <span class="comment">// Collect logs for batch processing</span></div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    <span class="keywordflow">if</span> (has_logs &amp;&amp; !log_queue_.empty()) {</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;      <span class="keywordtype">size_t</span> batch_size =</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;          async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#a3fee041d5d2ccfa1108f969c868c9170">enable_batch_processing</a> ? std::min(async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a>, log_queue_.size()) : 1;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160; </div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;      batch.clear();</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;      batch.reserve(batch_size);</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160; </div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; batch_size &amp;&amp; !log_queue_.empty(); ++i) {</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        batch.push_back(std::move(log_queue_.front()));</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        log_queue_.pop();</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;      }</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160; </div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;      lock.unlock();</div>
 <div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160; </div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    <span class="keywordflow">if</span> (shutdown_requested_.load() &amp;&amp; log_queue_.empty()) {</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    }</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;  }</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160; </div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;  <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#aaced1d16dd069a52e2696c020be26073">flush</a>();</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;  running_.store(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;}</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;      <span class="comment">// Process batch</span></div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;      <span class="keywordflow">if</span> (!batch.empty()) {</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;        process_batch(batch);</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        update_stats_on_batch(batch.size());</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;      }</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;      lock.unlock();</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    }</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;<span class="keywordtype">void</span> Logger::process_batch(<span class="keyword">const</span> std::vector&lt;LogEntry&gt;&amp; batch) {</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : batch) {</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    std::string formatted_message = format_message(entry.level, entry.component, entry.operation, entry.message);</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    <span class="keywordtype">int</span> current_outputs = outputs_.load();</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    <span class="keywordflow">if</span> (current_outputs &amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa4695859f52d337ca3d7020b2c8f7882a">LogOutput::CONSOLE</a>)) {</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      write_to_console(formatted_message);</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    }</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160; </div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    <span class="keywordflow">if</span> (current_outputs &amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719">LogOutput::FILE</a>)) {</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;      check_and_rotate_log();</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;      write_to_file(formatted_message);</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    }</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160; </div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    <span class="keywordflow">if</span> (current_outputs &amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209">LogOutput::CALLBACK</a>)) {</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;      call_callback(entry.level, formatted_message);</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    }</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;  }</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;}</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160; </div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;<span class="keywordtype">bool</span> Logger::should_drop_log()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;  <span class="keywordtype">size_t</span> current_size = get_queue_size();</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;  <span class="keywordflow">return</span> current_size &gt;= async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aa94c79ae427e4cf21aaaa2eafaa18247">max_queue_size</a>;</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;}</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160; </div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;<span class="keywordtype">size_t</span> Logger::get_queue_size()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(queue_mutex_);</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;  <span class="keywordflow">return</span> log_queue_.size();</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;}</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160; </div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="keywordtype">void</span> Logger::clear_queue() {</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(queue_mutex_);</div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;  std::queue&lt;LogEntry&gt; empty;</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;  log_queue_.swap(empty);</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;}</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160; </div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;<span class="keywordtype">void</span> Logger::update_stats_on_enqueue() {</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;  async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#aa42fa4a7a720d5b71c0426f632f290d0">total_logs</a>++;</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;}</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160; </div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;<span class="keywordtype">void</span> Logger::update_stats_on_drop() {</div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;  async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#abb181f5b529e0409a5ba87c6a318646c">dropped_logs</a>++;</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;}</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160; </div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;<span class="keywordtype">void</span> Logger::update_stats_on_batch(<span class="keywordtype">size_t</span> <span class="comment">/* batch_size */</span>) {</div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;  async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#ab177d7886568f0a95c08901bb2a5408c">batch_count</a>++;</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;}</div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160; </div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;<span class="keywordtype">void</span> Logger::update_stats_on_flush() {</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;  async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a92013e35bdfd49b85f88390c19d4cbb4">flush_count</a>++;</div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;}</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160; </div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;}  <span class="comment">// namespace diagnostics</span></div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    <span class="comment">// Periodic flush</span></div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <span class="keyword">auto</span> now = std::chrono::steady_clock::now();</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keywordflow">if</span> (now - last_flush &gt;= async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">flush_interval</a>) {</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#aaced1d16dd069a52e2696c020be26073">flush</a>();</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      update_stats_on_flush();</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      last_flush = now;</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    }</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160; </div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    <span class="keywordflow">if</span> (shutdown_requested_.load() &amp;&amp; log_queue_.empty()) {</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    }</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;  }</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160; </div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;  <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#aaced1d16dd069a52e2696c020be26073">flush</a>();</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;  running_.store(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;}</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160; </div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;<span class="keywordtype">void</span> Logger::process_batch(<span class="keyword">const</span> std::vector&lt;LogEntry&gt;&amp; batch) {</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : batch) {</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    std::string formatted_message = format_message(entry.level, entry.component, entry.operation, entry.message);</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;    <span class="keywordtype">int</span> current_outputs = outputs_.load();</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160; </div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;    <span class="keywordflow">if</span> (current_outputs &amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa4695859f52d337ca3d7020b2c8f7882a">LogOutput::CONSOLE</a>)) {</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;      write_to_console(formatted_message);</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;    }</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160; </div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    <span class="keywordflow">if</span> (current_outputs &amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719">LogOutput::FILE</a>)) {</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;      check_and_rotate_log();</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;      write_to_file(formatted_message);</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    }</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160; </div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    <span class="keywordflow">if</span> (current_outputs &amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209">LogOutput::CALLBACK</a>)) {</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;      call_callback(entry.level, formatted_message);</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    }</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;  }</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;}</div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160; </div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;<span class="keywordtype">bool</span> Logger::should_drop_log()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;  <span class="keywordtype">size_t</span> current_size = get_queue_size();</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;  <span class="keywordflow">return</span> current_size &gt;= async_config_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aa94c79ae427e4cf21aaaa2eafaa18247">max_queue_size</a>;</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;}</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160; </div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;<span class="keywordtype">size_t</span> Logger::get_queue_size()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(queue_mutex_);</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;  <span class="keywordflow">return</span> log_queue_.size();</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;}</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160; </div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;<span class="keywordtype">void</span> Logger::clear_queue() {</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(queue_mutex_);</div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;  std::queue&lt;LogEntry&gt; empty;</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;  log_queue_.swap(empty);</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;}</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160; </div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;<span class="keywordtype">void</span> Logger::update_stats_on_enqueue() {</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;  async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#aa42fa4a7a720d5b71c0426f632f290d0">total_logs</a>++;</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;}</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160; </div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;<span class="keywordtype">void</span> Logger::update_stats_on_drop() {</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;  async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#abb181f5b529e0409a5ba87c6a318646c">dropped_logs</a>++;</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;}</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160; </div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;<span class="keywordtype">void</span> Logger::update_stats_on_batch(<span class="keywordtype">size_t</span> <span class="comment">/* batch_size */</span>) {</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;  async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#ab177d7886568f0a95c08901bb2a5408c">batch_count</a>++;</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;}</div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160; </div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;<span class="keywordtype">void</span> Logger::update_stats_on_flush() {</div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;  async_stats_.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a92013e35bdfd49b85f88390c19d4cbb4">flush_count</a>++;</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;}</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160; </div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;}  <span class="comment">// namespace diagnostics</span></div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html">unilink::diagnostics::Logger</a></div><div class="ttdoc">Centralized logging system with async support.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8hpp_source.html#l00142">logger.hpp:142</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a0943018bf72c79971e7233be8438714c"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a0943018bf72c79971e7233be8438714c">unilink::diagnostics::Logger::set_format</a></div><div class="ttdeci">void set_format(const std::string &amp;format)</div><div class="ttdoc">Set log format.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00102">logger.cc:102</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a124de78d8aaa1591849e8c3588ef027f"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a124de78d8aaa1591849e8c3588ef027f">unilink::diagnostics::Logger::Logger</a></div><div class="ttdeci">Logger()</div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a144b6e7c317d47e2e4fb9e0109eb7a9d"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a144b6e7c317d47e2e4fb9e0109eb7a9d">unilink::diagnostics::Logger::default_logger</a></div><div class="ttdeci">static Logger &amp; default_logger()</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00038">logger.cc:38</a></div></div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2c0d709227b861bfc4e19466af8dcfe4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2c0d709227b861bfc4e19466af8dcfe4">unilink::diagnostics::Logger::get_async_stats</a></div><div class="ttdeci">AsyncLogStats get_async_stats() const</div><div class="ttdoc">Get async logging statistics.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00341">logger.cc:341</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2c0d709227b861bfc4e19466af8dcfe4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2c0d709227b861bfc4e19466af8dcfe4">unilink::diagnostics::Logger::get_async_stats</a></div><div class="ttdeci">AsyncLogStats get_async_stats() const</div><div class="ttdoc">Get async logging statistics.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00356">logger.cc:356</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2e114f7695d5aac3b9a993be97c501c9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00043">logger.cc:43</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2f634f2d64d5be96bd683f3c527a6416"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416">unilink::diagnostics::Logger::set_console_output</a></div><div class="ttdeci">void set_console_output(bool enable)</div><div class="ttdoc">Enable/disable console output.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00049">logger.cc:49</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a35f08113cfa58419da10046a3092058f"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a35f08113cfa58419da10046a3092058f">unilink::diagnostics::Logger::log</a></div><div class="ttdeci">void log(LogLevel level, const std::string &amp;component, const std::string &amp;operation, const std::string &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00116">logger.cc:116</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a3e4e4095e335cb7b4b51241300a8d7d9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a3e4e4095e335cb7b4b51241300a8d7d9">unilink::diagnostics::Logger::get_level</a></div><div class="ttdeci">LogLevel get_level() const</div><div class="ttdoc">Get current log level.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00047">logger.cc:47</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a4672b49f658dd5fdc3f7a470c2d4a6f3"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a4672b49f658dd5fdc3f7a470c2d4a6f3">unilink::diagnostics::Logger::debug</a></div><div class="ttdeci">void debug(const std::string &amp;component, const std::string &amp;operation, const std::string &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00162">logger.cc:162</a></div></div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00331">logger.cc:331</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00346">logger.cc:346</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a63d829cad8406042164538af3af28646"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a63d829cad8406042164538af3af28646">unilink::diagnostics::Logger::info</a></div><div class="ttdeci">void info(const std::string &amp;component, const std::string &amp;operation, const std::string &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00166">logger.cc:166</a></div></div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a73ad8498f1b23670d4302b470316841f"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a73ad8498f1b23670d4302b470316841f">unilink::diagnostics::Logger::is_async_logging_enabled</a></div><div class="ttdeci">bool is_async_logging_enabled() const</div><div class="ttdoc">Check if async logging is enabled.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00339">logger.cc:339</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a73ad8498f1b23670d4302b470316841f"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a73ad8498f1b23670d4302b470316841f">unilink::diagnostics::Logger::is_async_logging_enabled</a></div><div class="ttdeci">bool is_async_logging_enabled() const</div><div class="ttdoc">Check if async logging is enabled.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00354">logger.cc:354</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7c30d5ca44ef1d1dc20e5a57ad3145e3"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7c30d5ca44ef1d1dc20e5a57ad3145e3">unilink::diagnostics::Logger::is_enabled</a></div><div class="ttdeci">bool is_enabled() const</div><div class="ttdoc">Check if logging is enabled.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00100">logger.cc:100</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7e8ec37c982ad0a16b56ad33ae62932b"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b">unilink::diagnostics::Logger::set_level</a></div><div class="ttdeci">void set_level(LogLevel level)</div><div class="ttdoc">Set minimum log level.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00045">logger.cc:45</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a958b24e039c4307637afc75479f0625b"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a958b24e039c4307637afc75479f0625b">unilink::diagnostics::Logger::warning</a></div><div class="ttdeci">void warning(const std::string &amp;component, const std::string &amp;operation, const std::string &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00170">logger.cc:170</a></div></div>
@@ -648,7 +665,7 @@ $(document).ready(function(){initNavTree('logger_8cc_source.html',''); initResiz
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="logger_8cc.html">logger.cc</a></li>
-    <li class="footer">Generated on Wed Feb 4 2026 12:01:38 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Feb 4 2026 12:36:36 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
