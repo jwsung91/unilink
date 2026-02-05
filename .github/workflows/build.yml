@@ -170,7 +170,28 @@ jobs:
       env:
         VCPKG_ROOT: ${{ github.workspace }}\vcpkg
       run: |
-        & "$env:VCPKG_ROOT\vcpkg.exe" install boost-system boost-asio --triplet x64-windows
+        $retries = 3
+        $count = 0
+        $success = $false
+        do {
+          try {
+            & "$env:VCPKG_ROOT\vcpkg.exe" install boost-system boost-asio --triplet x64-windows
+            if ($LASTEXITCODE -eq 0) {
+              $success = $true
+            } else {
+              throw "vcpkg install failed with exit code $LASTEXITCODE"
+            }
+          } catch {
+            $count++
+            if ($count -lt $retries) {
+              Write-Host "Command failed. Retrying ($count/$retries) in 10s..."
+              Start-Sleep -Seconds 10
+            } else {
+              Write-Error "Command failed after $retries attempts."
+              exit 1
+            }
+          }
+        } until ($success)
 
     - name: Configure CMake (MSVC + vcpkg)
       shell: pwsh
