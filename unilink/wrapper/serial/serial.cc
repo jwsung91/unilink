@@ -94,8 +94,6 @@ void Serial::stop() {
   if (!started_ || !channel_) return;
 
   channel_->stop();
-  // Brief wait for async operations to complete
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   channel_.reset();
   started_ = false;
 
