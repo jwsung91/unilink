@@ -36,7 +36,11 @@ if(MSVC)
   endforeach()
 
   if(UNILINK_ENABLE_WARNINGS)
-    add_compile_options(/W4 /permissive- /utf-8)
+    # /W4: Warning level 4
+    # /permissive-: Standards conformance
+    # /utf-8: Set source and execution character sets to UTF-8
+    # /wd4251: Suppress 'needs to have dll-interface' warning for STL members in exported classes
+    add_compile_options(/W4 /permissive- /utf-8 /wd4251)
     if(UNILINK_ENABLE_WERROR)
       add_compile_options(/WX)
     endif()

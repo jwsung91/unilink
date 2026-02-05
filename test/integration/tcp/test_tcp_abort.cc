@@ -74,7 +74,7 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   tcp::socket socket(ioc);
   try {
     socket.connect(
-        tcp::endpoint(net::ip::address::from_string("127.0.0.1"), test_port_));
+        tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
   } catch (const std::exception& e) {
     FAIL() << "Failed to connect: " << e.what();
   }
@@ -104,7 +104,7 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   tcp::socket socket2(ioc);
   try {
     socket2.connect(
-        tcp::endpoint(net::ip::address::from_string("127.0.0.1"), test_port_));
+        tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
     EXPECT_TRUE(socket2.is_open());
   } catch (...) {
     FAIL() << "Server seems dead after RST";

@@ -70,7 +70,7 @@ TEST_F(TcpFloodTest, FloodServer) {
   tcp::socket socket(ioc);
   try {
     socket.connect(
-        tcp::endpoint(net::ip::address::from_string("127.0.0.1"), test_port_));
+        tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
   } catch (const std::exception& e) {
     FAIL() << "Failed to connect: " << e.what();
   }
