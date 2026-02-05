@@ -110,4 +110,8 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   } catch (...) {
     FAIL() << "Server seems dead after RST";
   }
+
+  // Explicitly stop server to prevent callbacks from accessing destroyed stack variables
+  // when socket2 is destroyed (triggered by scope exit)
+  server_->stop();
 }
