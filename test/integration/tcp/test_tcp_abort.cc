@@ -84,7 +84,10 @@ TEST_F(TcpAbortTest, SessionAbortion) {
       << "Server did not accept connection";
 
   // 3. Send Partial Data
-  std::string partial_data = "Partial Data...";
+  // Send a larger chunk (e.g., 1MB) to ensure the server is busy reading/processing
+  // when the connection is reset. This simulates a client promising a large payload
+  // but dying in the middle.
+  std::string partial_data(1024 * 1024, 'A');  // 1MB
   boost::system::error_code ec;
   net::write(socket, net::buffer(partial_data), ec);
   ASSERT_FALSE(ec);

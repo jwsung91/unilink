@@ -123,12 +123,30 @@ jobs:
             VCPKG_EXE="${VCPKG_ROOT}/vcpkg"
           fi
 
+          # Helper function for retrying commands
+          retry_command() {
+            local retries=3
+            local count=0
+            until "$@"; do
+              exit_code=$?
+              count=$((count + 1))
+              if [ $count -lt $retries ]; then
+                echo "Command failed with exit code $exit_code. Retrying ($count/$retries) in 10s..."
+                sleep 10
+              else
+                echo "Command failed with exit code $exit_code after $retries attempts."
+                return $exit_code
+              fi
+            done
+            return 0
+          }
+
           # Install base dependencies
-          "$VCPKG_EXE" install boost-system boost-asio --triplet ${{ matrix.triplet }}
+          retry_command "$VCPKG_EXE" install boost-system boost-asio --triplet ${{ matrix.triplet }}
 
           # Install python bindings dependencies if requested
           if [ "${{ matrix.build_python }}" = "ON" ]; then
-            "$VCPKG_EXE" install pybind11 --triplet ${{ matrix.triplet }}
+            retry_command "$VCPKG_EXE" install pybind11 --triplet ${{ matrix.triplet }}
           fi
 
       - name: Configure (Linux/macOS)
