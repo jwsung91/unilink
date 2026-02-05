@@ -85,7 +85,15 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 
     # Additional warnings for Clang
     if(UNILINK_COMPILER_CLANG)
-      add_compile_options(-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic)
+      add_compile_options(
+        -Weverything
+        -Wno-c++98-compat
+        -Wno-c++98-compat-pedantic
+        # Suppress noisy warnings from Boost headers
+        -Wno-padded
+        -Wno-suggest-override
+        -Wno-suggest-destructor-override
+      )
     endif()
 
     if(UNILINK_ENABLE_WERROR)
