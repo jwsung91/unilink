@@ -17,10 +17,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <vector>
+#include <future>
 #include <memory>
 #include <thread>
-#include <future>
+#include <vector>
 
 #include "unilink/memory/memory_pool.hpp"
 
@@ -43,7 +43,7 @@ TEST_F(MemoryPoolStressTest, ExhaustionAndRecovery) {
   MemoryPool pool(5, 20);
 
   std::vector<std::unique_ptr<uint8_t[]>> allocations;
-  size_t alloc_size = 1024; // Should fall into SMALL bucket (size 1024)
+  size_t alloc_size = 1024;  // Should fall into SMALL bucket (size 1024)
 
   // Allocate 6 items (capacity is 5)
   for (int i = 0; i < 6; ++i) {
@@ -133,6 +133,6 @@ TEST_F(MemoryPoolStressTest, PooledBufferMove) {
 }
 
 TEST_F(MemoryPoolStressTest, ZeroSizeAllocation) {
-    MemoryPool pool;
-    EXPECT_THROW(pool.acquire(0), std::invalid_argument);
+  MemoryPool pool;
+  EXPECT_THROW(pool.acquire(0), std::invalid_argument);
 }

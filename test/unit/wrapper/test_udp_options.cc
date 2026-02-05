@@ -16,11 +16,12 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+
 #include <memory>
 
-#include "unilink/wrapper/udp/udp.hpp"
-#include "unilink/config/udp_config.hpp"
 #include "test_utils.hpp"
+#include "unilink/config/udp_config.hpp"
+#include "unilink/wrapper/udp/udp.hpp"
 
 using namespace unilink::wrapper;
 using namespace unilink::config;
