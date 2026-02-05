@@ -55,25 +55,25 @@ class FakeTcpSocket : public interface::TcpSocketInterface {
   }
 
   void complete_write(const boost::system::error_code& ec = {}) {
-     if (!write_handler_) return;
-     auto handler = std::move(write_handler_);
-     auto size = write_size_;
-     net::post(ioc_, [handler = std::move(handler), ec, size]() { handler(ec, size); });
+    if (!write_handler_) return;
+    auto handler = std::move(write_handler_);
+    auto size = write_size_;
+    net::post(ioc_, [handler = std::move(handler), ec, size]() { handler(ec, size); });
   }
 
   void shutdown(tcp::socket::shutdown_type, boost::system::error_code& ec) override { ec.clear(); }
 
   void close(boost::system::error_code& ec) override {
-      ec.clear();
-      // Simulate Asio behavior: closing socket cancels pending operations
-      if (read_handler_) {
-          auto handler = std::move(read_handler_);
-          net::post(ioc_, [handler = std::move(handler)]() { handler(boost::asio::error::operation_aborted, 0); });
-      }
-      if (write_handler_) {
-          auto handler = std::move(write_handler_);
-          net::post(ioc_, [handler = std::move(handler)]() { handler(boost::asio::error::operation_aborted, 0); });
-      }
+    ec.clear();
+    // Simulate Asio behavior: closing socket cancels pending operations
+    if (read_handler_) {
+      auto handler = std::move(read_handler_);
+      net::post(ioc_, [handler = std::move(handler)]() { handler(boost::asio::error::operation_aborted, 0); });
+    }
+    if (write_handler_) {
+      auto handler = std::move(write_handler_);
+      net::post(ioc_, [handler = std::move(handler)]() { handler(boost::asio::error::operation_aborted, 0); });
+    }
   }
 
   tcp::endpoint remote_endpoint(boost::system::error_code& ec) const override {
@@ -93,7 +93,7 @@ class FakeTcpSocket : public interface::TcpSocketInterface {
 TEST(TransportTcpServerSessionTest, AbortDuringWrite) {
   net::io_context ioc;
   auto work_guard = net::make_work_guard(ioc);
-  size_t bp_threshold = 20 * 1024 * 1024; // 20MB to ensure we don't hit queue limit with 10MB
+  size_t bp_threshold = 20 * 1024 * 1024;  // 20MB to ensure we don't hit queue limit with 10MB
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
   // Keep a raw pointer to control the mock

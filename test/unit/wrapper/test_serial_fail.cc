@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <atomic>
 #include <chrono>
 #include <string>
@@ -35,9 +36,7 @@ TEST(WrapperSerialFailTest, OpenInvalidPort) {
   wrapper::Serial serial(port, 9600);
 
   std::atomic<bool> error_called{false};
-  serial.on_error([&](const std::string& msg) {
-    error_called = true;
-  });
+  serial.on_error([&](const std::string& msg) { error_called = true; });
 
   // Disable auto-retry or set a long retry to prevent infinite retries masking the initial failure?
   // Or just check that it fails initially.

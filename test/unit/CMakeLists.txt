@@ -301,7 +301,7 @@ target_include_directories(run_unit_test_tcp_abort
 )
 gtest_discover_tests(run_unit_test_tcp_abort
   PROPERTIES
-    LABELS "unit;transport;tcp;error"
+    LABELS "unit;transport;error"
     TIMEOUT 30
 )
 
@@ -321,7 +321,7 @@ target_include_directories(run_unit_test_udp_error
 )
 gtest_discover_tests(run_unit_test_udp_error
   PROPERTIES
-    LABELS "unit;transport;udp;error"
+    LABELS "unit;transport;error"
     TIMEOUT 30
 )
 
@@ -341,7 +341,7 @@ target_include_directories(run_unit_test_serial_fail
 )
 gtest_discover_tests(run_unit_test_serial_fail
   PROPERTIES
-    LABELS "unit;wrapper;serial;error"
+    LABELS "unit;wrapper;error"
     TIMEOUT 30
 )
 
