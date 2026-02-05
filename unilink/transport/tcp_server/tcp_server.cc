@@ -284,16 +284,9 @@ void TcpServer::on_bytes(OnBytes cb) {
     on_bytes_ = std::move(cb);
   }
 
-  std::shared_ptr<TcpServerSession> session;
-  {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-    session = current_session_;
-  }
-
-  // Note: This only updates current_session_. All sessions are not updated.
-  // This is a known limitation ("Medium" finding).
-  // But new sessions will pick up the new callback in do_accept.
-  if (session) session->on_bytes(on_bytes_);
+  // No need to manually update sessions.
+  // All sessions use a wrapper lambda (set in do_accept) that dynamically looks up on_bytes_.
+  // Manually updating would overwrite the wrapper and break multi-client support/dynamic updates.
 }
 void TcpServer::on_state(OnState cb) {
   // on_state_ is atomic or safe enough? No, let's lock.

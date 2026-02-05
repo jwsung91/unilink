@@ -201,7 +201,7 @@ TEST_F(TransportTcpServerTest, MaxClientsLimit) {
     EXPECT_TRUE(read_completed.load());
     // Expect EOF or error
     EXPECT_TRUE(read_ec == net::error::eof || read_ec == net::error::connection_reset);
-  }  // <--- Added this closing brace
+  }
 }
 
 TEST_F(TransportTcpServerTest, PortBindingRetrySuccess) {
@@ -254,4 +254,63 @@ TEST_F(TransportTcpServerTest, AcceptErrorHandling) {
 
   // Just ensure it doesn't crash on immediate stop
   server_->stop();
+}
+
+TEST_F(TransportTcpServerTest, CallbackUpdatePropagation) {
+  uint16_t port = TestUtils::getAvailableTestPort();
+  config::TcpServerConfig cfg;
+  cfg.port = port;
+
+  server_ = TcpServer::create(cfg);
+  server_->start();
+  TestUtils::waitFor(constants::kShortTimeout.count());
+
+  std::atomic<int> cb1_count{0};
+  std::atomic<int> cb2_count{0};
+
+  // 1. Connect Client 1
+  net::io_context client_ioc;
+  tcp::socket client1(client_ioc);
+  client1.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), port));
+  TestUtils::waitFor(50);  // Ensure accepted
+
+  // 2. Set callback 1
+  // This will overwrite client1's callback because client1 is current_session_
+  server_->on_bytes([&](const uint8_t*, size_t) { cb1_count++; });
+
+  std::string data = "test";
+  net::write(client1, net::buffer(data));
+  EXPECT_TRUE(TestUtils::waitForCondition([&] { return cb1_count == 1; }, 1000));
+  cb1_count = 0;
+
+  // 3. Connect Client 2
+  tcp::socket client2(client_ioc);
+  client2.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), port));
+  TestUtils::waitFor(50);  // Ensure accepted
+
+  // 4. Set callback 2
+  // This will overwrite client2's callback (current).
+  // client1 (not current) will NOT be updated if it lost its wrapper in step 2.
+  server_->on_bytes([&](const uint8_t*, size_t) { cb2_count++; });
+
+  // Verify client2 uses cb2
+  net::write(client2, net::buffer(data));
+  EXPECT_TRUE(TestUtils::waitForCondition([&] { return cb2_count == 1; }, 1000));
+  cb2_count = 0;
+
+  // Verify client1 behavior
+  net::write(client1, net::buffer(data));
+
+  // If bug is present, client1 calls cb1 (cb1_count increments), NOT cb2.
+  bool called_cb2 = TestUtils::waitForCondition([&] { return cb2_count == 1; }, 1000);
+
+  if (!called_cb2) {
+    // It likely called cb1
+    EXPECT_TRUE(cb1_count > 0) << "Client 1 should have called cb1 if it didn't call cb2";
+    // Fail explicitly if we want to assert the fix is needed
+    // But we are creating the test to FAIL initially.
+  }
+
+  // To assert correct behavior (once fixed):
+  EXPECT_TRUE(called_cb2) << "Client 1 should have picked up the new callback cb2";
 }
