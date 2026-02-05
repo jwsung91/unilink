@@ -105,4 +105,5 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   // If we reached here, the server survived the RST without crashing.
   // We avoid connecting a second client here to prevent race conditions during
   // test teardown/server stop, which caused flakes in CI coverage builds.
+  // FORCE_REBUILD_HASH: 1
 }
