@@ -631,6 +631,41 @@ TEST_F(ConfigTest, SaveAndLoadRoundTrip) {
   EXPECT_EQ(std::any_cast<std::string>(loaded_value), "hello");
 }
 
+TEST_F(ConfigTest, LoadEmptyFile) {
+  // Create empty file
+  std::ofstream file(test_file_path_);
+  file.close();
+
+  // Load from empty file
+  bool result = config_manager_->load_from_file(test_file_path_.string());
+  EXPECT_TRUE(result);
+  EXPECT_EQ(config_manager_->get_keys().size(), 0);
+}
+
+TEST_F(ConfigTest, LoadMalformedFile) {
+  // Create file with garbage
+  std::ofstream file(test_file_path_);
+  file << "This is not a valid config file";
+  file.close();
+
+  // Load from malformed file
+  // Current implementation skips invalid lines, so it should return true but load nothing
+  bool result = config_manager_->load_from_file(test_file_path_.string());
+  EXPECT_TRUE(result);
+  EXPECT_EQ(config_manager_->get_keys().size(), 0);
+}
+
+TEST_F(ConfigTest, TypeMismatch) {
+  // Explicitly test type mismatch as requested
+  ConfigItem item("strict_int", std::any(0), ConfigType::Integer, false);
+  config_manager_->register_item(item);
+
+  // Try to set string value
+  auto result = config_manager_->set("strict_int", std::string("invalid"));
+  EXPECT_FALSE(result.is_valid);
+  EXPECT_EQ(std::any_cast<int>(config_manager_->get("strict_int")), 0);
+}
+
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
