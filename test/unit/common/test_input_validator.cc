@@ -230,7 +230,8 @@ TEST(InputValidatorTest, DetailedHelperLogic) {
 TEST(InputValidatorTest, ValidateIPv4Overflow) {
   // Test for std::stoll overflow/exception catch
   // This string of digits is too large for long long
-  EXPECT_THROW(InputValidator::validate_ipv4_address("1.1.1.9999999999999999999999999"), diagnostics::ValidationException);
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.1.1.9999999999999999999999999"),
+               diagnostics::ValidationException);
 }
 
 TEST(InputValidatorTest, ValidateParityCaseInsensitive) {
@@ -251,9 +252,10 @@ TEST(InputValidatorTest, ValidateParityCaseInsensitive) {
 }
 
 TEST(InputValidatorTest, ValidateIPv6ExtraCases) {
-  EXPECT_THROW(InputValidator::validate_ipv6_address("[::1]:80"), diagnostics::ValidationException); // With port
+  EXPECT_THROW(InputValidator::validate_ipv6_address("[::1]:80"), diagnostics::ValidationException);  // With port
   EXPECT_NO_THROW(InputValidator::validate_ipv6_address("2001:0db8:85a3:0000:0000:8a2e:0370:7334"));
-  // EXPECT_NO_THROW(InputValidator::validate_ipv6_address("2001:db8:85a3::8a2e:370:7334")); // Shortened - Not supported by current regex
+  // EXPECT_NO_THROW(InputValidator::validate_ipv6_address("2001:db8:85a3::8a2e:370:7334")); // Shortened - Not
+  // supported by current regex
 }
 
 TEST(InputValidatorTest, ValidateIPv6WhitespaceAndPrefix) {

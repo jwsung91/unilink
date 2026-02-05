@@ -125,16 +125,16 @@ TEST_F(TcpFloodTest, FloodServer) {
       }
       // Connection reset is also possible
       if (ec == net::error::connection_reset) {
-         std::cout << "Connection reset (backpressure limit reached), read: " << total_read << std::endl;
-         disconnection_detected = true;
-         break;
+        std::cout << "Connection reset (backpressure limit reached), read: " << total_read << std::endl;
+        disconnection_detected = true;
+        break;
       }
       // On Windows, write error might be "An existing connection was forcibly closed by the remote host"
       // effectively a reset
-      if (ec.value() == 10054) { // WSAECONNRESET
-         std::cout << "WSAECONNRESET (backpressure limit reached), read: " << total_read << std::endl;
-         disconnection_detected = true;
-         break;
+      if (ec.value() == 10054) {  // WSAECONNRESET
+        std::cout << "WSAECONNRESET (backpressure limit reached), read: " << total_read << std::endl;
+        disconnection_detected = true;
+        break;
       }
 
       FAIL() << "Read error: " << ec.message();
@@ -147,10 +147,10 @@ TEST_F(TcpFloodTest, FloodServer) {
   // Partial reads without disconnection are failure (timeout).
   // Total read 0 is acceptable IF disconnected (e.g. Windows rapid RST).
   if (disconnection_detected) {
-      SUCCEED() << "Server disconnected client as expected (backpressure)";
+    SUCCEED() << "Server disconnected client as expected (backpressure)";
   } else {
-      // If we didn't disconnect, we MUST have read everything back.
-      EXPECT_EQ(total_read, flood_size) << "Did not receive all data and was not disconnected";
+    // If we didn't disconnect, we MUST have read everything back.
+    EXPECT_EQ(total_read, flood_size) << "Did not receive all data and was not disconnected";
   }
 
   // Verify server is still alive (listening for new connections)
