@@ -17,3 +17,7 @@
 ## 2026-02-18 - MemoryPool Slot Leak Fix
 **Learning:** Using `std::vector` + `std::queue` + `nullptr` holes for memory pooling caused unbounded growth of the vector ("slot leak") and poor cache locality.
 **Action:** Replaced with a simple LIFO stack (`std::vector` back/pop_back). Ensure `capacity` is strictly enforced to prevent unbounded growth.
+
+## 2026-10-24 - MemoryPool Vector Reallocation
+**Learning:** Reserving `std::vector` capacity based on initial estimate instead of maximum limit in `MemoryPool` caused frequent reallocations (copying pointers) when the pool filled up, increasing runtime latency during heavy load.
+**Action:** Reserve `capacity` (max size) in constructor to prevent reallocations during runtime. The small upfront memory cost (pointers only) is worth the stability.
