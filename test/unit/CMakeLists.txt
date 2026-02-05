@@ -284,6 +284,67 @@ gtest_discover_tests(run_unit_test_contract_compliance
     TIMEOUT 30
 )
 
+# New error handling tests
+add_executable(run_unit_test_tcp_abort ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_tcp_abort.cc)
+target_link_libraries(run_unit_test_tcp_abort
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_test_tcp_abort)
+target_include_directories(run_unit_test_tcp_abort
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+gtest_discover_tests(run_unit_test_tcp_abort
+  PROPERTIES
+    LABELS "unit;transport;tcp;error"
+    TIMEOUT 30
+)
+
+add_executable(run_unit_test_udp_error ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_udp_error.cc)
+target_link_libraries(run_unit_test_udp_error
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_test_udp_error)
+target_include_directories(run_unit_test_udp_error
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+gtest_discover_tests(run_unit_test_udp_error
+  PROPERTIES
+    LABELS "unit;transport;udp;error"
+    TIMEOUT 30
+)
+
+add_executable(run_unit_test_serial_fail ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/test_serial_fail.cc)
+target_link_libraries(run_unit_test_serial_fail
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_test_serial_fail)
+target_include_directories(run_unit_test_serial_fail
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+gtest_discover_tests(run_unit_test_serial_fail
+  PROPERTIES
+    LABELS "unit;wrapper;serial;error"
+    TIMEOUT 30
+)
+
 # Create a custom target to build all unit tests
 add_custom_target(unilink_unit_tests)
 
@@ -307,4 +368,7 @@ add_dependencies(unilink_unit_tests
   run_unit_transport_serial
   run_unit_transport_udp_extended
   run_unit_test_contract_compliance
+  run_unit_test_tcp_abort
+  run_unit_test_udp_error
+  run_unit_test_serial_fail
 )
