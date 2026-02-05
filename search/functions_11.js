@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['udp_1220',['udp',['../classunilink_1_1builder_1_1UnifiedBuilder.html#a6ff918b950bf53fe254b6bdd20e13dd0',1,'unilink::builder::UnifiedBuilder']]],
   ['udp_1221',['Udp',['../classunilink_1_1wrapper_1_1Udp.html#a966edc819bbfcddb505acca8325409a4',1,'unilink::wrapper::Udp::Udp(const config::UdpConfig &amp;cfg)'],['../classunilink_1_1wrapper_1_1Udp.html#a2b56b5e8dcc691a16ce87df69c273583',1,'unilink::wrapper::Udp::Udp(const config::UdpConfig &amp;cfg, std::shared_ptr&lt; boost::asio::io_context &gt; external_ioc)'],['../classunilink_1_1wrapper_1_1Udp.html#a8e83e46303c4cedf045f96bb22c5446b',1,'unilink::wrapper::Udp::Udp(std::shared_ptr&lt; interface::Channel &gt; channel)']]],
-  ['udp_1222',['udp',['../namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212',1,'unilink']]],
+  ['udp_1222',['udp',['../classunilink_1_1builder_1_1UnifiedBuilder.html#a6ff918b950bf53fe254b6bdd20e13dd0',1,'unilink::builder::UnifiedBuilder::udp()'],['../namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212',1,'unilink::udp()']]],
   ['udpbuilder_1223',['UdpBuilder',['../classunilink_1_1builder_1_1UdpBuilder.html#af202df90d0f8373746985d13a3a8a706',1,'unilink::builder::UdpBuilder::UdpBuilder()'],['../classunilink_1_1builder_1_1UdpBuilder.html#a5c7824dcd78363f47d5c38a801a15364',1,'unilink::builder::UdpBuilder::UdpBuilder(const UdpBuilder &amp;)=delete'],['../classunilink_1_1builder_1_1UdpBuilder.html#a5fb427bd72cff84cad6f78d632e2c793',1,'unilink::builder::UdpBuilder::UdpBuilder(UdpBuilder &amp;&amp;)=default']]],
   ['uint8_5fto_5fstring_1224',['uint8_to_string',['../namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d',1,'unilink::base::safe_convert']]],
   ['unilinkexception_1225',['UnilinkException',['../classunilink_1_1diagnostics_1_1UnilinkException.html#ab271f3394b4a011636c93a821f3e7961',1,'unilink::diagnostics::UnilinkException']]],
