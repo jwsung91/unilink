@@ -33,6 +33,22 @@ using namespace unilink;
 using namespace unilink::test;
 using namespace std::chrono_literals;
 
+namespace {
+// Mock channel for testing generic channel handling in stop()
+class MockChannel : public unilink::interface::Channel {
+ public:
+  void start() override {}
+  void stop() override {}
+  bool is_connected() const override { return true; }
+  void async_write_copy(const uint8_t*, size_t) override {}
+  void async_write_move(std::vector<uint8_t>&&) override {}
+  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {}
+  void on_bytes(OnBytes) override {}
+  void on_state(OnState) override {}
+  void on_backpressure(OnBackpressure) override {}
+};
+}  // namespace
+
 /**
  * @brief Advanced TCP Server Coverage Test
  * Tests uncovered functions in tcp_server.cc
@@ -446,6 +462,21 @@ TEST_F(AdvancedTcpServerCoverageTest, SetMessageHandler) {
   // Start server
   server_->start();
   // Server started
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, StopWithGenericChannelIsFast) {
+  auto mock = std::make_shared<MockChannel>();
+  server_ = std::make_shared<wrapper::TcpServer>(mock);
+
+  auto start = std::chrono::steady_clock::now();
+  server_->stop();
+  auto end = std::chrono::steady_clock::now();
+
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+  // Before fix: expected ~500ms
+  // After fix: expected < 100ms
+  EXPECT_LT(duration, 100) << "Stop() took too long: " << duration << "ms";
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, SetConnectionHandler) {
