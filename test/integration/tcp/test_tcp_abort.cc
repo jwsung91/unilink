@@ -52,29 +52,26 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   std::atomic<bool> disconnected{false};
 
   // 1. Start Server
-  server_ =
-      unilink::tcp_server(test_port_)
-          .unlimited_clients()
-          .on_multi_disconnect([&disconnected](size_t) { disconnected = true; })
-          .on_error([&error_reported](const std::string& err) {
-            // Depending on implementation, RST might trigger on_error or just
-            // on_disconnect Usually read error (connection reset by peer)
-            // triggers on_disconnect. But if it was unexpected during read,
-            // maybe error logged. Let's just track if it crashes or not.
-            error_reported = true;
-          })
-          .build();
+  server_ = unilink::tcp_server(test_port_)
+                .unlimited_clients()
+                .on_multi_disconnect([&disconnected](size_t) { disconnected = true; })
+                .on_error([&error_reported](const std::string& err) {
+                  // Depending on implementation, RST might trigger on_error or just
+                  // on_disconnect Usually read error (connection reset by peer)
+                  // triggers on_disconnect. But if it was unexpected during read,
+                  // maybe error logged. Let's just track if it crashes or not.
+                  error_reported = true;
+                })
+                .build();
 
   server_->start();
-  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition(
-      [this]() { return server_->is_listening(); }, 2000));
+  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([this]() { return server_->is_listening(); }, 2000));
 
   // 2. Connect Client
   net::io_context ioc;
   tcp::socket socket(ioc);
   try {
-    socket.connect(
-        tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
+    socket.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
   } catch (const std::exception& e) {
     FAIL() << "Failed to connect: " << e.what();
   }
@@ -93,18 +90,16 @@ TEST_F(TcpAbortTest, SessionAbortion) {
 
   // 5. Verify Server Handle
   // Wait for disconnect callback
-  bool closed_gracefully = unilink::test::TestUtils::waitForCondition(
-      [&disconnected]() { return disconnected.load(); }, 2000);
+  bool closed_gracefully =
+      unilink::test::TestUtils::waitForCondition([&disconnected]() { return disconnected.load(); }, 2000);
 
-  EXPECT_TRUE(closed_gracefully)
-      << "Server did not detect disconnection via callback";
+  EXPECT_TRUE(closed_gracefully) << "Server did not detect disconnection via callback";
 
   // Check if server is still running/alive (didn't crash)
   // We can try to connect again to verify it's still accepting
   tcp::socket socket2(ioc);
   try {
-    socket2.connect(
-        tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
+    socket2.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
     EXPECT_TRUE(socket2.is_open());
   } catch (...) {
     FAIL() << "Server seems dead after RST";

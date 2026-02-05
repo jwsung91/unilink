@@ -53,32 +53,27 @@ class TcpFloodTest : public unilink::test::NetworkTest {
  */
 TEST_F(TcpFloodTest, FloodServer) {
   // 1. Start Server
-  server_ =
-      unilink::tcp_server(test_port_)
-          .unlimited_clients()
-          .on_multi_data([this](size_t client_id, const std::string& data) {
-            server_->send_to_client(client_id, data);
-          })
-          .build();
+  server_ = unilink::tcp_server(test_port_)
+                .unlimited_clients()
+                .on_multi_data(
+                    [this](size_t client_id, const std::string& data) { server_->send_to_client(client_id, data); })
+                .build();
 
   server_->start();
-  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition(
-      [this]() { return server_->is_listening(); }, 2000));
+  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([this]() { return server_->is_listening(); }, 2000));
 
   // 2. Connect Client
   net::io_context ioc;
   tcp::socket socket(ioc);
   try {
-    socket.connect(
-        tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
+    socket.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
   } catch (const std::exception& e) {
     FAIL() << "Failed to connect: " << e.what();
   }
 
   // 3. Flood Data
-  const size_t flood_size =
-      3 * 1024 * 1024;  // 3MB (Under 4MB default limit to avoid forced close)
-  const size_t chunk_size = 1024 * 1024;  // 1MB chunk
+  const size_t flood_size = 3 * 1024 * 1024;  // 3MB (Under 4MB default limit to avoid forced close)
+  const size_t chunk_size = 1024 * 1024;      // 1MB chunk
   const int chunks = flood_size / chunk_size;
   std::string chunk(chunk_size, 'X');
 
