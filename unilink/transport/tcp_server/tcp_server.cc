@@ -450,8 +450,8 @@ void TcpServer::do_accept() {
           UNILINK_LOG_DEBUG("tcp_server", "accept", "Error closing rejected socket: " + close_ec.message());
         }
 
-        // 즉시 다음 연결 수락
-        self->do_accept();
+        // Pause accepting to prevent DoS tight loop
+        self->paused_accept_ = true;
         return;
       }
     }
@@ -524,6 +524,12 @@ void TcpServer::do_accept() {
       {
         std::unique_lock<std::shared_mutex> lock(self->sessions_mutex_);
         self->sessions_.erase(client_id);
+
+        if (self->paused_accept_ && (!self->client_limit_enabled_ || self->sessions_.size() < self->max_clients_)) {
+          self->paused_accept_ = false;
+          net::post(self->ioc_, [self] { self->do_accept(); });
+        }
+
         was_current = (self->current_session_ == new_session);
         if (was_current) {
           if (!self->sessions_.empty()) {
@@ -656,13 +662,25 @@ void TcpServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
 }
 
 void TcpServer::set_client_limit(size_t max_clients) {
+  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
   max_clients_ = max_clients;
   client_limit_enabled_ = true;
+
+  if (paused_accept_ && sessions_.size() < max_clients_) {
+    paused_accept_ = false;
+    net::post(ioc_, [self = shared_from_this()] { self->do_accept(); });
+  }
 }
 
 void TcpServer::set_unlimited_clients() {
+  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
   client_limit_enabled_ = false;
   max_clients_ = 0;
+
+  if (paused_accept_) {
+    paused_accept_ = false;
+    net::post(ioc_, [self = shared_from_this()] { self->do_accept(); });
+  }
 }
 
 base::LinkState TcpServer::get_state() const { return state_.get_state(); }
