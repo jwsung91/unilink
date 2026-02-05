@@ -36,16 +36,20 @@ if(MSVC)
   endforeach()
 
   if(UNILINK_ENABLE_WARNINGS)
-    add_compile_options(/W4 /permissive- /utf-8)
+    # /W4: Warning level 4
+    # /permissive-: Standards conformance
+    # /utf-8: Set source and execution character sets to UTF-8
+    # /wd4251: Suppress 'needs to have dll-interface' warning for STL members in exported classes
+    add_compile_options(/W4 /permissive- /utf-8 /wd4251)
     if(UNILINK_ENABLE_WERROR)
       add_compile_options(/WX)
     endif()
   endif()
 
   # MSVC-specific optimizations and debug information
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /Oy /GL")
-  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2")
-  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /O1 /Os")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /Oy /GL /wd4251")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2 /wd4251")
+  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /O1 /Os /wd4251")
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
   set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
 
@@ -85,7 +89,15 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 
     # Additional warnings for Clang
     if(UNILINK_COMPILER_CLANG)
-      add_compile_options(-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic)
+      add_compile_options(
+        -Weverything
+        -Wno-c++98-compat
+        -Wno-c++98-compat-pedantic
+        # Suppress noisy warnings from Boost headers
+        -Wno-padded
+        -Wno-suggest-override
+        -Wno-suggest-destructor-override
+      )
     endif()
 
     if(UNILINK_ENABLE_WERROR)
@@ -127,6 +139,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   if(UNILINK_ENABLE_COVERAGE)
     add_compile_options(--coverage)
     add_link_options(--coverage)
+    add_compile_definitions(UNILINK_COVERAGE_ENABLED=1)
   endif()
 
 else()

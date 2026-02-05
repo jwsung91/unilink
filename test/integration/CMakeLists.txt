@@ -26,6 +26,8 @@ foreach(test_file
         test_stop_contract.cc
         test_dos_protection.cc
         test_tcp_server_chaos.cc
+        test_tcp_flood.cc
+        test_tcp_abort.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(

@@ -44,15 +44,6 @@ TEST(InputValidatorTest, ValidateHost) {
   EXPECT_THROW(InputValidator::validate_host(""), diagnostics::ValidationException);
 }
 
-// ... keeping other existing tests effectively by appending new ones?
-// The user asked to "Add a Parameterized Test".
-// I should probably append the new tests to the file instead of replacing it entirely,
-// but I need to make sure I don't lose the existing ones if I use write_file.
-// I'll read the file first, then append.
-// Wait, I already read the file. I have the content.
-// The content provided in previous turn was the FULL content.
-// I will reproduce the full content with my additions.
-
 TEST(InputValidatorTest, ValidateProtocol) {
   // IPv4
   EXPECT_NO_THROW(InputValidator::validate_ipv4_address("1.1.1.1"));
@@ -140,6 +131,11 @@ TEST(InputValidatorTest, ValidateGenericHelpers) {
   EXPECT_NO_THROW(InputValidator::validate_string_length("test", 10, "string_field"));
   EXPECT_NO_THROW(InputValidator::validate_string_length("longstring", 10, "string_field"));
   EXPECT_THROW(InputValidator::validate_string_length("too long string", 10, "string_field"),
+               diagnostics::ValidationException);
+
+  // Very long string (> 256 chars)
+  std::string very_long_string(300, 'a');
+  EXPECT_THROW(InputValidator::validate_string_length(very_long_string, 256, "long_string"),
                diagnostics::ValidationException);
 
   // Positive Number
@@ -259,9 +255,40 @@ INSTANTIATE_TEST_SUITE_P(IPv4Scenarios, IPv4ParamTest,
                                            IPv4TestCase{"256.0.0.1", true, "First octet overflow"},
                                            IPv4TestCase{"192.168.1", true, "Incomplete address"},
                                            IPv4TestCase{"abc.def.ghi.jkl", true, "Non-digit characters"},
+                                           IPv4TestCase{" 127.0.0.1", true, "Leading whitespace"},
+                                           IPv4TestCase{"127.0.0.1 ", true, "Trailing whitespace"},
+                                           IPv4TestCase{"tcp://1.1.1.1", true, "Protocol prefix"},
                                            IPv4TestCase{"1.1.1.1", false, "Valid simple address"},
                                            IPv4TestCase{"255.255.255.255", false, "Valid max address"},
                                            IPv4TestCase{"0.0.0.0", false, "Valid min address"}));
+
+struct HostTestCase {
+  std::string host;
+  bool should_throw;
+  std::string description;
+};
+
+class HostParamTest : public ::testing::TestWithParam<HostTestCase> {};
+
+TEST_P(HostParamTest, ValidateHost) {
+  const auto& param = GetParam();
+  if (param.should_throw) {
+    EXPECT_THROW(InputValidator::validate_host(param.host), diagnostics::ValidationException)
+        << "Should throw for: " << param.description;
+  } else {
+    EXPECT_NO_THROW(InputValidator::validate_host(param.host)) << "Should not throw for: " << param.description;
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(HostScenarios, HostParamTest,
+                         ::testing::Values(HostTestCase{"tcp://example.com", true, "Protocol prefix"},
+                                           HostTestCase{"http://example.com", true, "Protocol prefix"},
+                                           HostTestCase{" example.com", true, "Leading whitespace"},
+                                           HostTestCase{"example.com ", true, "Trailing whitespace"},
+                                           HostTestCase{"[::1]:80", true, "IPv6 with port"},
+                                           HostTestCase{"::1", false, "IPv6 address"},
+                                           HostTestCase{"localhost", false, "Simple hostname"},
+                                           HostTestCase{"1.1.1.1", false, "IPv4 address"}));
 
 struct DevicePathTestCase {
   std::string path;
@@ -284,8 +311,7 @@ TEST_P(DevicePathParamTest, ValidatePath) {
 INSTANTIATE_TEST_SUITE_P(
     DevicePathScenarios, DevicePathParamTest,
     ::testing::Values(
-        // Windows style - Current implementation validates device paths (COM/Unix-like), not file paths.
-        // So general file paths like C:\ should be rejected.
+        // Windows style
         DevicePathTestCase{"C:\\Windows\\System32", true, "Windows absolute path (rejected as device)"},
         DevicePathTestCase{"D:\\Data\\file.txt", true, "Windows file path (rejected as device)"},
         // Linux style
@@ -294,10 +320,6 @@ INSTANTIATE_TEST_SUITE_P(
         // Invalid
         DevicePathTestCase{"", true, "Empty path"}, DevicePathTestCase{"/dev/bad?", true, "Invalid char ?"}));
 
-// Port validation (using int to cover overflow cases before casting)
-// Note: InputValidator::validate_port takes uint16_t, so passing 65536
-// usually implicitly converts to 0 unless we static_cast or the compiler warns.
-// However, we can test boundary values that fit in uint16_t and 0.
 struct PortTestCase {
   uint16_t port;
   bool should_throw;
