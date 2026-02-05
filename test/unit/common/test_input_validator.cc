@@ -5,31 +5,6 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-20.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-#include <gtest/gtest.h>
-
-#include <limits>
-
-#include "unilink/util/input_validator.hpp"
-
-using namespace unilink;
-using namespace unilink::util;
-
-/*
- * Copyright 2025 Jinwoo Sung
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -42,23 +17,24 @@ using namespace unilink::util;
 #include <gtest/gtest.h>
 
 #include <limits>
-#include <stdexcept>  // For std::invalid_argument if needed (but now using ValidationException)
+#include <string>
+#include <tuple>
+#include <vector>
 
-#include "unilink/base/constants.hpp"  // For MIN/MAX constants
 #include "unilink/util/input_validator.hpp"
 
 using namespace unilink;
 using namespace unilink::util;
 
-// Using a single test suite for organization
+// Existing tests
 TEST(InputValidatorTest, ValidatePort) {
   EXPECT_NO_THROW(InputValidator::validate_port(1));
   EXPECT_NO_THROW(InputValidator::validate_port(65535));
   EXPECT_THROW(InputValidator::validate_port(0), diagnostics::ValidationException);
-  EXPECT_THROW(InputValidator::validate_port(65536), diagnostics::ValidationException);  // uint16_t overflow to 0
-  // Negative values like -1, when cast to uint16_t, become large positive.
-  // The current validate_port only checks for 0, so -1 will pass as 65535.
-  // This is inherent to uint16_t parameter type.
+  // 65536 triggers implicit conversion warning/overflow depending on call site,
+  // but if passed as int literal to uint16_t arg, it becomes 0.
+  // We can force it to verify behavior.
+  EXPECT_THROW(InputValidator::validate_port(static_cast<uint16_t>(65536)), diagnostics::ValidationException);
 }
 
 TEST(InputValidatorTest, ValidateHost) {
@@ -67,6 +43,15 @@ TEST(InputValidatorTest, ValidateHost) {
   EXPECT_NO_THROW(InputValidator::validate_host("example.com"));
   EXPECT_THROW(InputValidator::validate_host(""), diagnostics::ValidationException);
 }
+
+// ... keeping other existing tests effectively by appending new ones?
+// The user asked to "Add a Parameterized Test".
+// I should probably append the new tests to the file instead of replacing it entirely,
+// but I need to make sure I don't lose the existing ones if I use write_file.
+// I'll read the file first, then append.
+// Wait, I already read the file. I have the content.
+// The content provided in previous turn was the FULL content.
+// I will reproduce the full content with my additions.
 
 TEST(InputValidatorTest, ValidateProtocol) {
   // IPv4
@@ -190,23 +175,17 @@ TEST(InputValidatorTest, ValidateGenericHelpers) {
       diagnostics::ValidationException);
 
   // Validate memory alignment
-  // Note: validate_memory_alignment signature is (const void* ptr, size_t alignment);
-  // Test valid aligned pointer
-  void* aligned_ptr = reinterpret_cast<void*>(0x1000);  // Dummy pointer, assuming 0x1000 is 8-byte aligned
+  void* aligned_ptr = reinterpret_cast<void*>(0x1000);  // Dummy pointer
   EXPECT_NO_THROW(InputValidator::validate_memory_alignment(aligned_ptr, 8));
-  // Test null pointer
   EXPECT_THROW(InputValidator::validate_memory_alignment(nullptr, 8), diagnostics::ValidationException);
-  // Test unaligned pointer (requires specific setup or dynamically allocated unaligned memory)
-  // For simplicity, we can simulate an unaligned pointer from a valid one.
-  void* unaligned_ptr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(aligned_ptr) + 1);  // Not 8-byte aligned
+  void* unaligned_ptr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(aligned_ptr) + 1);
   EXPECT_THROW(InputValidator::validate_memory_alignment(unaligned_ptr, 8), diagnostics::ValidationException);
 }
 
 TEST(InputValidatorTest, DetailedHelperLogic) {
   // IPv4 Edge Cases
   EXPECT_THROW(InputValidator::validate_ipv4_address("1.2.3"), diagnostics::ValidationException);  // Too few octets
-  EXPECT_THROW(InputValidator::validate_ipv4_address("1.2.3.4.5"),
-               diagnostics::ValidationException);                                                   // Too many octets
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.2.3.4.5"), diagnostics::ValidationException); // Too many octets
   EXPECT_THROW(InputValidator::validate_ipv4_address("1..3.4"), diagnostics::ValidationException);  // Empty octet
   EXPECT_THROW(InputValidator::validate_ipv4_address(".1.2.3"), diagnostics::ValidationException);  // Empty first octet
   EXPECT_THROW(InputValidator::validate_ipv4_address("1.2.3."), diagnostics::ValidationException);  // Empty last octet
@@ -214,35 +193,29 @@ TEST(InputValidatorTest, DetailedHelperLogic) {
   EXPECT_THROW(InputValidator::validate_ipv4_address("1.01.1.1"), diagnostics::ValidationException);  // Leading zero
   EXPECT_THROW(InputValidator::validate_ipv4_address("1.1.1.01"), diagnostics::ValidationException);  // Leading zero
   EXPECT_THROW(InputValidator::validate_ipv4_address("1.a.1.1"), diagnostics::ValidationException);   // Non-digit
-  EXPECT_THROW(InputValidator::validate_ipv4_address("1.1.1.256"),
-               diagnostics::ValidationException);  // Out of range > 255
-  EXPECT_THROW(InputValidator::validate_ipv4_address("256.1.1.1"),
-               diagnostics::ValidationException);  // Out of range > 255
+  EXPECT_THROW(InputValidator::validate_ipv4_address("1.1.1.256"), diagnostics::ValidationException);  // Out of range > 255
+  EXPECT_THROW(InputValidator::validate_ipv4_address("256.1.1.1"), diagnostics::ValidationException);  // Out of range > 255
 
-  // IPv6 Edge Cases (Regex based)
+  // IPv6 Edge Cases
   EXPECT_THROW(InputValidator::validate_ipv6_address("1:2"), diagnostics::ValidationException);   // Malformed
   EXPECT_THROW(InputValidator::validate_ipv6_address("g::1"), diagnostics::ValidationException);  // Invalid hex char
 
   // Hostname Edge Cases
   EXPECT_THROW(InputValidator::validate_host("-test.com"), diagnostics::ValidationException);  // Starts with hyphen
   EXPECT_THROW(InputValidator::validate_host("test.com-"), diagnostics::ValidationException);  // Ends with hyphen
-  EXPECT_THROW(InputValidator::validate_host("invalid_host.com"),
-               diagnostics::ValidationException);                                              // Underscore invalid
+  EXPECT_THROW(InputValidator::validate_host("invalid_host.com"), diagnostics::ValidationException); // Underscore invalid
   EXPECT_THROW(InputValidator::validate_host("test..com"), diagnostics::ValidationException);  // Empty label
 
   std::string long_label(64, 'a');
   EXPECT_THROW(InputValidator::validate_host(long_label + ".com"), diagnostics::ValidationException);  // Label too long
 
   // Device Path Edge Cases
-  EXPECT_THROW(InputValidator::validate_device_path("/dev/bad?"),
-               diagnostics::ValidationException);  // Invalid char in unix path
+  EXPECT_THROW(InputValidator::validate_device_path("/dev/bad?"), diagnostics::ValidationException);  // Invalid char in unix path
   EXPECT_THROW(InputValidator::validate_device_path("COM"), diagnostics::ValidationException);     // Incomplete COM
   EXPECT_THROW(InputValidator::validate_device_path("COM0"), diagnostics::ValidationException);    // COM0 invalid
   EXPECT_THROW(InputValidator::validate_device_path("COM256"), diagnostics::ValidationException);  // COM256 invalid
-  EXPECT_THROW(InputValidator::validate_device_path("COM1a"),
-               diagnostics::ValidationException);  // Invalid number format
+  EXPECT_THROW(InputValidator::validate_device_path("COM1a"), diagnostics::ValidationException);  // Invalid number format
 
-  // Valid Windows Special Names (as per code)
   EXPECT_NO_THROW(InputValidator::validate_device_path("NUL"));
   EXPECT_NO_THROW(InputValidator::validate_device_path("CON"));
   EXPECT_NO_THROW(InputValidator::validate_device_path("PRN"));
@@ -251,3 +224,104 @@ TEST(InputValidatorTest, DetailedHelperLogic) {
   EXPECT_NO_THROW(InputValidator::validate_device_path("LPT2"));
   EXPECT_NO_THROW(InputValidator::validate_device_path("LPT3"));
 }
+
+// ----------------------------------------------------------------------------
+// NEW PARAMETERIZED TESTS
+// ----------------------------------------------------------------------------
+
+struct IPv4TestCase {
+  std::string address;
+  bool should_throw;
+  std::string description;
+};
+
+class IPv4ParamTest : public ::testing::TestWithParam<IPv4TestCase> {};
+
+TEST_P(IPv4ParamTest, ValidateAddress) {
+  const auto& param = GetParam();
+  if (param.should_throw) {
+    EXPECT_THROW(InputValidator::validate_ipv4_address(param.address), diagnostics::ValidationException)
+        << "Should throw for: " << param.description;
+  } else {
+    EXPECT_NO_THROW(InputValidator::validate_ipv4_address(param.address))
+        << "Should not throw for: " << param.description;
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    IPv4Scenarios, IPv4ParamTest,
+    ::testing::Values(
+        IPv4TestCase{"1.1.1.1.1", true, "Too many octets"},
+        IPv4TestCase{"256.0.0.1", true, "First octet overflow"},
+        IPv4TestCase{"192.168.1", true, "Incomplete address"},
+        IPv4TestCase{"abc.def.ghi.jkl", true, "Non-digit characters"},
+        IPv4TestCase{"1.1.1.1", false, "Valid simple address"},
+        IPv4TestCase{"255.255.255.255", false, "Valid max address"},
+        IPv4TestCase{"0.0.0.0", false, "Valid min address"}
+    ));
+
+struct DevicePathTestCase {
+  std::string path;
+  bool should_throw;
+  std::string description;
+};
+
+class DevicePathParamTest : public ::testing::TestWithParam<DevicePathTestCase> {};
+
+TEST_P(DevicePathParamTest, ValidatePath) {
+  const auto& param = GetParam();
+  if (param.should_throw) {
+    EXPECT_THROW(InputValidator::validate_device_path(param.path), diagnostics::ValidationException)
+        << "Should throw for: " << param.description;
+  } else {
+    EXPECT_NO_THROW(InputValidator::validate_device_path(param.path))
+        << "Should not throw for: " << param.description;
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    DevicePathScenarios, DevicePathParamTest,
+    ::testing::Values(
+        // Windows style - Current implementation validates device paths (COM/Unix-like), not file paths.
+        // So general file paths like C:\ should be rejected.
+        DevicePathTestCase{"C:\\Windows\\System32", true, "Windows absolute path (rejected as device)"},
+        DevicePathTestCase{"D:\\Data\\file.txt", true, "Windows file path (rejected as device)"},
+        // Linux style
+        DevicePathTestCase{"/usr/bin/bash", false, "Linux absolute path"},
+        DevicePathTestCase{"/dev/ttyUSB0", false, "Linux device path"},
+        // Invalid
+        DevicePathTestCase{"", true, "Empty path"},
+        DevicePathTestCase{"/dev/bad?", true, "Invalid char ?"}
+    ));
+
+// Port validation (using int to cover overflow cases before casting)
+// Note: InputValidator::validate_port takes uint16_t, so passing 65536
+// usually implicitly converts to 0 unless we static_cast or the compiler warns.
+// However, we can test boundary values that fit in uint16_t and 0.
+struct PortTestCase {
+  uint16_t port;
+  bool should_throw;
+  std::string description;
+};
+
+class PortParamTest : public ::testing::TestWithParam<PortTestCase> {};
+
+TEST_P(PortParamTest, ValidatePort) {
+  const auto& param = GetParam();
+  if (param.should_throw) {
+    EXPECT_THROW(InputValidator::validate_port(param.port), diagnostics::ValidationException)
+        << "Should throw for: " << param.description;
+  } else {
+    EXPECT_NO_THROW(InputValidator::validate_port(param.port))
+        << "Should not throw for: " << param.description;
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    PortScenarios, PortParamTest,
+    ::testing::Values(
+        PortTestCase{0, true, "Port 0 (invalid)"},
+        PortTestCase{1, false, "Port 1 (min valid)"},
+        PortTestCase{65535, false, "Port 65535 (max valid)"},
+        PortTestCase{8080, false, "Standard port"}
+    ));

@@ -25,6 +25,7 @@ foreach(test_file
         test_stop_from_callback.cc test_start_stop_stress.cc
         test_stop_contract.cc
         test_dos_protection.cc
+        test_tcp_server_chaos.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -57,7 +58,7 @@ endforeach()
 
 # Serial integration tests NOTE: test_serial.cc temporarily disabled due to
 # complex variable naming issues
-foreach(test_file test_serial_builder_improvements.cc)
+foreach(test_file test_serial_builder_improvements.cc test_serial_loopback.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
     run_integration_${test_name}
