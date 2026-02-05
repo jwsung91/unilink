@@ -125,6 +125,7 @@ class UNILINK_API TcpServer : public Channel,
   // Client limit configuration
   size_t max_clients_;
   bool client_limit_enabled_;
+  bool paused_accept_ = false;  // Guards against tight accept loops when full
 
   // Current active session for existing API compatibility
   std::shared_ptr<TcpServerSession> current_session_;
