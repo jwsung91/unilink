@@ -50,8 +50,8 @@ class SerialLoopbackTest : public ::testing::Test {
     // cleanup previous runs just in case
     std::system("pkill -f 'socat -d -d pty,raw,echo=0,link=/tmp/ttyV0'");
 
-    int ret = std::system(
-        "socat -d -d pty,raw,echo=0,link=/tmp/ttyV0 pty,raw,echo=0,link=/tmp/ttyV1 > /dev/null 2>&1 &");
+    int ret =
+        std::system("socat -d -d pty,raw,echo=0,link=/tmp/ttyV0 pty,raw,echo=0,link=/tmp/ttyV1 > /dev/null 2>&1 &");
     ASSERT_EQ(ret, 0) << "Failed to start socat";
 
     // Wait for ports to be created
@@ -79,7 +79,7 @@ TEST_F(SerialLoopbackTest, LoopbackCommunication) {
   GTEST_SKIP() << "Skipping SerialLoopbackTest on non-Linux platform";
 #else
   if (!socat_available_) {
-      GTEST_SKIP() << "socat not available";
+    GTEST_SKIP() << "socat not available";
   }
 
   // Check if ports exist

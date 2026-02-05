@@ -15,12 +15,13 @@
  */
 
 #include <gtest/gtest.h>
-#include <boost/asio.hpp>
-#include <thread>
-#include <chrono>
+
 #include <atomic>
-#include <vector>
+#include <boost/asio.hpp>
+#include <chrono>
 #include <random>
+#include <thread>
+#include <vector>
 
 #include "test_utils.hpp"
 #include "unilink/unilink.hpp"
@@ -32,10 +33,8 @@ using tcp = net::ip::tcp;
 using namespace std::chrono_literals;
 
 class TcpServerChaosTest : public IntegrationTest {
-protected:
-  void SetUp() override {
-    IntegrationTest::SetUp();
-  }
+ protected:
+  void SetUp() override { IntegrationTest::SetUp(); }
 
   void TearDown() override {
     if (server_) {
@@ -55,11 +54,11 @@ TEST_F(TcpServerChaosTest, GhostClient) {
   std::atomic<int> multi_disconnect_count{0};
 
   server_ = unilink::tcp_server(test_port_)
-      .unlimited_clients()
-      .on_connect([&]() { connect_count++; })
-      .on_disconnect([&]() { disconnect_count++; })
-      .on_multi_disconnect([&](size_t) { multi_disconnect_count++; })
-      .build();
+                .unlimited_clients()
+                .on_connect([&]() { connect_count++; })
+                .on_disconnect([&]() { disconnect_count++; })
+                .on_multi_disconnect([&](size_t) { multi_disconnect_count++; })
+                .build();
 
   server_->start();
   TestUtils::waitFor(100);
@@ -80,7 +79,7 @@ TEST_F(TcpServerChaosTest, GhostClient) {
   // which might not trigger if multiple clients are involved or if logic differs.
   // But for single client, it should trigger.
   if (disconnect_count == 0) {
-      std::cerr << "Warning: Simple on_disconnect did not fire, but multi_disconnect did." << std::endl;
+    std::cerr << "Warning: Simple on_disconnect did not fire, but multi_disconnect did." << std::endl;
   }
 
   EXPECT_EQ(connect_count, 1);
@@ -94,12 +93,12 @@ TEST_F(TcpServerChaosTest, SlowLoris) {
   std::atomic<bool> done{false};
 
   server_ = unilink::tcp_server(test_port_)
-      .unlimited_clients()
-      .on_data([&](const std::string& data) {
-         received_data += data;
-         if (received_data == "Hello World") done = true;
-      })
-      .build();
+                .unlimited_clients()
+                .on_data([&](const std::string& data) {
+                  received_data += data;
+                  if (received_data == "Hello World") done = true;
+                })
+                .build();
 
   server_->start();
   TestUtils::waitFor(100);
@@ -136,28 +135,27 @@ TEST_F(TcpServerChaosTest, SlowLoris) {
 TEST_F(TcpServerChaosTest, GarbageSender) {
   size_t total_bytes = 0;
   server_ = unilink::tcp_server(test_port_)
-      .unlimited_clients()
-      .on_data([&](const std::string& data) {
-         total_bytes += data.size();
-      })
-      .build();
+                .unlimited_clients()
+                .on_data([&](const std::string& data) { total_bytes += data.size(); })
+                .build();
 
   server_->start();
   TestUtils::waitFor(100);
 
-  size_t sent_bytes = 1024 * 10; // 10KB
+  size_t sent_bytes = 1024 * 10;  // 10KB
   std::vector<uint8_t> garbage(sent_bytes);
   std::mt19937 gen(12345);
   std::uniform_int_distribution<> dis(0, 255);
-  for(auto& b : garbage) b = static_cast<uint8_t>(dis(gen));
+  for (auto& b : garbage) b = static_cast<uint8_t>(dis(gen));
 
   std::thread client_thread([&]() {
-      try {
-        net::io_context client_ioc;
-        tcp::socket socket(client_ioc);
-        socket.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
-        net::write(socket, net::buffer(garbage));
-      } catch(...) {}
+    try {
+      net::io_context client_ioc;
+      tcp::socket socket(client_ioc);
+      socket.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_));
+      net::write(socket, net::buffer(garbage));
+    } catch (...) {
+    }
   });
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return total_bytes >= sent_bytes; }, 5000));
@@ -167,9 +165,7 @@ TEST_F(TcpServerChaosTest, GarbageSender) {
 // Scenario 4: Max Connections
 // Set max connections to 2, then try to connect 3 clients.
 TEST_F(TcpServerChaosTest, MaxConnections) {
-  server_ = unilink::tcp_server(test_port_)
-      .multi_client(2)
-      .build();
+  server_ = unilink::tcp_server(test_port_).multi_client(2).build();
 
   server_->start();
   TestUtils::waitFor(100);
@@ -190,22 +186,23 @@ TEST_F(TcpServerChaosTest, MaxConnections) {
   c3->connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), test_port_), ec);
 
   if (!ec) {
-      // If connection succeeded, check if it gets closed by server
-      char data[1];
-      c3->async_read_some(net::buffer(data), [&](const boost::system::error_code& error, size_t) {
-          ec = error; // Capture error
-      });
-      client_ioc.run_for(1000ms); // Run io_context to process read
+    // If connection succeeded, check if it gets closed by server
+    char data[1];
+    c3->async_read_some(net::buffer(data), [&](const boost::system::error_code& error, size_t) {
+      ec = error;  // Capture error
+    });
+    client_ioc.run_for(1000ms);  // Run io_context to process read
 
-      // Should result in EOF or Connection Reset
-      EXPECT_TRUE(ec == net::error::eof || ec == net::error::connection_reset) << "Client 3 should be disconnected. Error: " << ec.message();
+    // Should result in EOF or Connection Reset
+    EXPECT_TRUE(ec == net::error::eof || ec == net::error::connection_reset)
+        << "Client 3 should be disconnected. Error: " << ec.message();
   } else {
-      // Connection refused is also valid if server stops accepting
-      // But typically it accepts and closes or pauses accept.
-      // Unilink implementation pauses accept, so connection might hang (timeout) or be refused depending on backlog.
-      // If it pauses accept, the client connect might succeed (if backlog allows) but not be accepted by app?
-      // No, if accept is paused, the OS backlog fills up. Eventually connect will timeout or succeed (if in backlog).
-      // But we want to test REJECTION or LIMIT enforcement.
-      // If connect returns success, we need to verify if data can be exchanged.
+    // Connection refused is also valid if server stops accepting
+    // But typically it accepts and closes or pauses accept.
+    // Unilink implementation pauses accept, so connection might hang (timeout) or be refused depending on backlog.
+    // If it pauses accept, the client connect might succeed (if backlog allows) but not be accepted by app?
+    // No, if accept is paused, the OS backlog fills up. Eventually connect will timeout or succeed (if in backlog).
+    // But we want to test REJECTION or LIMIT enforcement.
+    // If connect returns success, we need to verify if data can be exchanged.
   }
 }
