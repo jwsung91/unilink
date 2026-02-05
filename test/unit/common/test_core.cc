@@ -571,8 +571,8 @@ TEST_F(AsyncLoggingTest, AsyncLoggingWithFileOutput) {
     UNILINK_LOG_INFO("async_test", "file_output", "Async file logging test message " + std::to_string(i));
   }
 
-  // Wait for async processing
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+  // Disable async logging to clean up (flushes pending logs)
+  diagnostics::Logger::instance().set_async_logging(false);
 
   // Check that file was created and has content
   EXPECT_TRUE(std::filesystem::exists(log_filename));
@@ -583,9 +583,6 @@ TEST_F(AsyncLoggingTest, AsyncLoggingWithFileOutput) {
   auto stats = diagnostics::Logger::instance().get_async_stats();
   EXPECT_GT(stats.total_logs, 0) << "Should have processed logs";
   EXPECT_GT(stats.batch_count, 0) << "Should have processed batches";
-
-  // Disable async logging to clean up
-  diagnostics::Logger::instance().set_async_logging(false);
 }
 
 TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
@@ -608,8 +605,8 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
 
-  // Wait for async processing to complete
-  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  // Disable async logging to ensure all messages are processed
+  diagnostics::Logger::instance().set_async_logging(false);
 
   // Check performance (should be very fast since it's just queuing)
   double messages_per_second = (num_messages * 1000000.0) / static_cast<double>(duration);
@@ -628,8 +625,6 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
   EXPECT_EQ(stats.dropped_logs, 0) << "Should not have dropped any messages";
 
   std::cout << "Async logging performance: " << messages_per_second << " messages/second" << std::endl;
-
-  diagnostics::Logger::instance().set_async_logging(false);
 }
 
 TEST_F(AsyncLoggingTest, AsyncLoggingBackpressure) {
