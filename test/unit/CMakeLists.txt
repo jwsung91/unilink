@@ -20,7 +20,7 @@ get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 # Default: discover after build so test executables exist
 set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
 
-foreach(test_file test_core.cc test_memory.cc test_pooled_buffer.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_advanced.cc)
+foreach(test_file test_core.cc test_memory.cc test_pooled_buffer.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_logger_advanced.cc test_pool_stress.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/common/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -105,7 +105,7 @@ foreach(test_file test_config.cc)
 endforeach()
 
 # Wrapper tests (separate executables)
-foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_serial_advanced.cc test_udp_stop_perf.cc)
+foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_serial_advanced.cc test_udp_stop_perf.cc test_udp_options.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -291,6 +291,7 @@ add_custom_target(unilink_unit_tests)
 add_dependencies(unilink_unit_tests
   run_unit_test_core
   run_unit_test_memory
+  run_unit_test_pool_stress
   run_unit_test_boundary
   run_unit_test_error_handler
   run_unit_test_input_validator
@@ -299,6 +300,7 @@ add_dependencies(unilink_unit_tests
   run_unit_test_config
   run_unit_test_tcp_server_advanced
   run_unit_test_tcp_client_advanced
+  run_unit_test_udp_options
   run_unit_wrapper_serial_config_mapping
   run_unit_transport_tcp_client
   run_unit_transport_tcp_server
