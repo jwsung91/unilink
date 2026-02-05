@@ -86,12 +86,15 @@ TEST_F(TcpFloodTest, FloodServer) {
 
   // Send chunks
   boost::system::error_code ec;
+  bool disconnection_detected = false;
+
   for (int i = 0; i < chunks; ++i) {
     net::write(socket, net::buffer(chunk), ec);
     if (ec) {
       // If we get an error while writing (e.g. broken pipe because server closed early),
       // that is also a sign of backpressure kicking in.
       std::cout << "Write error (expected if server disconnects): " << ec.message() << std::endl;
+      disconnection_detected = true;
       break;
     }
   }
@@ -117,25 +120,38 @@ TEST_F(TcpFloodTest, FloodServer) {
     if (ec) {
       if (ec == net::error::eof) {
         std::cout << "Server disconnected (backpressure limit reached), read: " << total_read << std::endl;
+        disconnection_detected = true;
         break;
       }
       // Connection reset is also possible
       if (ec == net::error::connection_reset) {
          std::cout << "Connection reset (backpressure limit reached), read: " << total_read << std::endl;
+         disconnection_detected = true;
          break;
       }
+      // On Windows, write error might be "An existing connection was forcibly closed by the remote host"
+      // effectively a reset
+      if (ec.value() == 10054) { // WSAECONNRESET
+         std::cout << "WSAECONNRESET (backpressure limit reached), read: " << total_read << std::endl;
+         disconnection_detected = true;
+         break;
+      }
+
       FAIL() << "Read error: " << ec.message();
     }
     total_read += n;
   }
 
-  // We verify that we received *some* data, proving the server was working and echoing
-  // until it decided to protect itself.
-  EXPECT_GT(total_read, 0);
-
-  // If we didn't disconnect, we should have received everything.
-  // If we did disconnect, we received partial.
-  // Both are valid outcomes for this stress test depending on timing/buffer sizes.
+  // Verification:
+  // Either we successfully triggered backpressure (disconnection), OR we read everything (no backpressure).
+  // Partial reads without disconnection are failure (timeout).
+  // Total read 0 is acceptable IF disconnected (e.g. Windows rapid RST).
+  if (disconnection_detected) {
+      SUCCEED() << "Server disconnected client as expected (backpressure)";
+  } else {
+      // If we didn't disconnect, we MUST have read everything back.
+      EXPECT_EQ(total_read, flood_size) << "Did not receive all data and was not disconnected";
+  }
 
   // Verify server is still alive (listening for new connections)
   // It shouldn't have crashed.
