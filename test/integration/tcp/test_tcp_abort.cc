@@ -48,21 +48,22 @@ class TcpAbortTest : public unilink::test::NetworkTest {
  * pending or partial.
  */
 TEST_F(TcpAbortTest, SessionAbortion) {
-  std::atomic<bool> error_reported{false};
-  std::atomic<bool> disconnected{false};
-  std::atomic<bool> connected{false};
+  // Use shared_ptr to keep state alive if callbacks run after test exit
+  auto error_reported = std::make_shared<std::atomic<bool>>(false);
+  auto disconnected = std::make_shared<std::atomic<bool>>(false);
+  auto connected = std::make_shared<std::atomic<bool>>(false);
 
   // 1. Start Server
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()
-                .on_multi_connect([&connected](size_t, const std::string&) { connected = true; })
-                .on_multi_disconnect([&disconnected](size_t) { disconnected = true; })
-                .on_error([&error_reported](const std::string& err) {
+                .on_multi_connect([connected](size_t, const std::string&) { *connected = true; })
+                .on_multi_disconnect([disconnected](size_t) { *disconnected = true; })
+                .on_error([error_reported](const std::string& err) {
                   // Depending on implementation, RST might trigger on_error or just
                   // on_disconnect Usually read error (connection reset by peer)
                   // triggers on_disconnect. But if it was unexpected during read,
                   // maybe error logged. Let's just track if it crashes or not.
-                  error_reported = true;
+                  *error_reported = true;
                 })
                 .build();
 
@@ -79,7 +80,7 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   }
 
   // Wait for server to accept
-  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&connected]() { return connected.load(); }, 5000))
+  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([connected]() { return connected->load(); }, 5000))
       << "Server did not accept connection";
 
   // 3. Send Partial Data
@@ -97,7 +98,7 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   // 5. Verify Server Handle
   // Wait for disconnect callback
   bool closed_gracefully =
-      unilink::test::TestUtils::waitForCondition([&disconnected]() { return disconnected.load(); }, 5000);
+      unilink::test::TestUtils::waitForCondition([disconnected]() { return disconnected->load(); }, 5000);
 
   EXPECT_TRUE(closed_gracefully) << "Server did not detect disconnection via callback";
 
@@ -110,8 +111,4 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   } catch (...) {
     FAIL() << "Server seems dead after RST";
   }
-
-  // Explicitly stop server to prevent callbacks from accessing destroyed stack variables
-  // when socket2 is destroyed (triggered by scope exit)
-  server_->stop();
 }
