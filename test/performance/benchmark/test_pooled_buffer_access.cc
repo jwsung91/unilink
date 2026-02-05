@@ -36,7 +36,12 @@ class PooledBufferAccessBenchmark : public ::testing::Test {
 
 TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
   const size_t buffer_size = 4096;  // 4KB
+#ifdef NDEBUG
   const size_t iterations = 100000;
+#else
+  // Reduced iterations for Debug/Coverage builds to prevent CI timeouts
+  const size_t iterations = 5000;
+#endif
 
   auto& pool = GlobalMemoryPool::instance();
   // Ensure we get a buffer
