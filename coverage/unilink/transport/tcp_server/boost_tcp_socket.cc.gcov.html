@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-04 21:49:51</td>
+            <td class="headerValue">2026-02-05 00:44:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -102,10 +102,10 @@
 <a name="24"><span class="lineNum">      24 </span>                :            : </a>
 <a name="25"><span class="lineNum">      25 </span>                :<span class="lineCov">         50 : BoostTcpSocket::BoostTcpSocket(tcp::socket sock) : socket_(std::move(sock)) {}</span></a>
 <a name="26"><span class="lineNum">      26 </span>                :            : </a>
-<a name="27"><span class="lineNum">      27 </span>                :<span class="lineCov">      38506 : void BoostTcpSocket::async_read_some(const net::mutable_buffer&amp; buffer,</span></a>
+<a name="27"><span class="lineNum">      27 </span>                :<span class="lineCov">      38003 : void BoostTcpSocket::async_read_some(const net::mutable_buffer&amp; buffer,</span></a>
 <a name="28"><span class="lineNum">      28 </span>                :            :                                      std::function&lt;void(const boost::system::error_code&amp;, std::size_t)&gt; handler) {</a>
-<a name="29"><span class="lineNum">      29 </span>                :<span class="lineCov">      38506 :   socket_.async_read_some(buffer, std::move(handler));</span></a>
-<a name="30"><span class="lineNum">      30 </span>                :<span class="lineCov">      38506 : }</span></a>
+<a name="29"><span class="lineNum">      29 </span>                :<span class="lineCov">      38003 :   socket_.async_read_some(buffer, std::move(handler));</span></a>
+<a name="30"><span class="lineNum">      30 </span>                :<span class="lineCov">      38003 : }</span></a>
 <a name="31"><span class="lineNum">      31 </span>                :            : </a>
 <a name="32"><span class="lineNum">      32 </span>                :<span class="lineCov">          8 : void BoostTcpSocket::async_write(const net::const_buffer&amp; buffer,</span></a>
 <a name="33"><span class="lineNum">      33 </span>                :            :                                  std::function&lt;void(const boost::system::error_code&amp;, std::size_t)&gt; handler) {</a>
