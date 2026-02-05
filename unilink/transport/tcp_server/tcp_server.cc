@@ -414,8 +414,15 @@ void TcpServer::do_accept() {
         self->notify_state();
       }
       // Continue accepting only if server is not shutting down
+      // Use a timer to prevent tight loops on persistent errors (e.g. EMFILE, EINVAL)
       if (!self->state_.is_state(base::LinkState::Closed) && !self->stopping_.load()) {
-        self->do_accept();
+        auto timer = std::make_shared<net::steady_timer>(self->ioc_);
+        timer->expires_after(std::chrono::milliseconds(100));
+        timer->async_wait([self, timer](const boost::system::error_code&) {
+          if (!self->stopping_.load()) {
+            self->do_accept();
+          }
+        });
       }
       return;
     }

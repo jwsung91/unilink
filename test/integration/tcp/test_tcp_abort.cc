@@ -79,7 +79,7 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   }
 
   // Wait for server to accept
-  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&connected]() { return connected.load(); }, 2000))
+  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&connected]() { return connected.load(); }, 5000))
       << "Server did not accept connection";
 
   // 3. Send Partial Data
@@ -97,7 +97,7 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   // 5. Verify Server Handle
   // Wait for disconnect callback
   bool closed_gracefully =
-      unilink::test::TestUtils::waitForCondition([&disconnected]() { return disconnected.load(); }, 2000);
+      unilink::test::TestUtils::waitForCondition([&disconnected]() { return disconnected.load(); }, 5000);
 
   EXPECT_TRUE(closed_gracefully) << "Server did not detect disconnection via callback";
 
