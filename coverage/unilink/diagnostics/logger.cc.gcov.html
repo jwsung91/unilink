@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-05 01:01:36</td>
+            <td class="headerValue">2026-02-05 03:35:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">42</td>
@@ -114,17 +114,17 @@
 <a name="35"><span class="lineNum">      35 </span>                :<span class="lineCov">        235 :   flush();</span></a>
 <a name="36"><span class="lineNum">      36 </span>                :<span class="lineCov">        235 : }</span></a>
 <a name="37"><span class="lineNum">      37 </span>                :            : </a>
-<a name="38"><span class="lineNum">      38 </span>                :<span class="lineCov">    2510016 : Logger&amp; Logger::default_logger() {</span></a>
-<a name="39"><span class="lineNum">      39 </span>  [<span class="branchCov" title="Branch 0 was taken 280 times"> + </span><span class="branchCov" title="Branch 1 was taken 2509736 times"> + </span><span class="branchCov" title="Branch 2 was taken 235 times"> + </span><span class="branchCov" title="Branch 3 was taken 45 times"> + </span> :<span class="lineCov">    2510016 :   static Logger instance;</span></a>
+<a name="38"><span class="lineNum">      38 </span>                :<span class="lineCov">    2510005 : Logger&amp; Logger::default_logger() {</span></a>
+<a name="39"><span class="lineNum">      39 </span>  [<span class="branchCov" title="Branch 0 was taken 276 times"> + </span><span class="branchCov" title="Branch 1 was taken 2509729 times"> + </span><span class="branchCov" title="Branch 2 was taken 235 times"> + </span><span class="branchCov" title="Branch 3 was taken 41 times"> + </span> :<span class="lineCov">    2510005 :   static Logger instance;</span></a>
 <span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 235 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
-<a name="40"><span class="lineNum">      40 </span>                :<span class="lineCov">    2510016 :   return instance;</span></a>
+<a name="40"><span class="lineNum">      40 </span>                :<span class="lineCov">    2510005 :   return instance;</span></a>
 <a name="41"><span class="lineNum">      41 </span>                :            : }</a>
 <a name="42"><span class="lineNum">      42 </span>                :            : </a>
-<a name="43"><span class="lineNum">      43 </span>                :<span class="lineCov">    2510016 : Logger&amp; Logger::instance() { return default_logger(); }</span></a>
+<a name="43"><span class="lineNum">      43 </span>                :<span class="lineCov">    2510005 : Logger&amp; Logger::instance() { return default_logger(); }</span></a>
 <a name="44"><span class="lineNum">      44 </span>                :            : </a>
 <a name="45"><span class="lineNum">      45 </span>                :<span class="lineCov">         63 : void Logger::set_level(LogLevel level) { current_level_.store(level); }</span></a>
 <a name="46"><span class="lineNum">      46 </span>                :            : </a>
-<a name="47"><span class="lineNum">      47 </span>                :<span class="lineCov">    2303092 : LogLevel Logger::get_level() const { return current_level_.load(); }</span></a>
+<a name="47"><span class="lineNum">      47 </span>                :<span class="lineCov">    2303081 : LogLevel Logger::get_level() const { return current_level_.load(); }</span></a>
 <a name="48"><span class="lineNum">      48 </span>                :            : </a>
 <a name="49"><span class="lineNum">      49 </span>                :<span class="lineCov">         50 : void Logger::set_console_output(bool enable) {</span></a>
 <a name="50"><span class="lineNum">      50 </span>        [<span class="branchCov" title="Branch 0 was taken 50 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         50 :   std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
@@ -503,59 +503,59 @@
 <a name="412"><span class="lineNum">     412 </span>                :<span class="lineCov">          6 :   auto last_flush = std::chrono::steady_clock::now();</span></a>
 <a name="413"><span class="lineNum">     413 </span>                :            : </a>
 <a name="414"><span class="lineNum">     414 </span>                :            :   while (true) {</a>
-<a name="415"><span class="lineNum">     415 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         26 :     std::unique_lock&lt;std::mutex&gt; lock(queue_mutex_);</span></a>
+<a name="415"><span class="lineNum">     415 </span>        [<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         25 :     std::unique_lock&lt;std::mutex&gt; lock(queue_mutex_);</span></a>
 <a name="416"><span class="lineNum">     416 </span>                :            : </a>
 <a name="417"><span class="lineNum">     417 </span>                :            :     // Wait for logs or timeout</a>
-<a name="418"><span class="lineNum">     418 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         26 :     bool has_logs = queue_cv_.wait_for(lock, async_config_.flush_interval,</span></a>
-<a name="419"><span class="lineNum">     419 </span>  [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span><span class="branchCov" title="Branch 2 was taken 6 times"> + </span><span class="branchCov" title="Branch 3 was taken 11 times"> + </span>]:<span class="lineCov">         34 :                                        [this] { return !log_queue_.empty() || shutdown_requested_.load(); });</span></a>
+<a name="418"><span class="lineNum">     418 </span>        [<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         25 :     bool has_logs = queue_cv_.wait_for(lock, async_config_.flush_interval,</span></a>
+<a name="419"><span class="lineNum">     419 </span>  [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 16 times"> + </span><span class="branchCov" title="Branch 2 was taken 6 times"> + </span><span class="branchCov" title="Branch 3 was taken 11 times"> + </span>]:<span class="lineCov">         33 :                                        [this] { return !log_queue_.empty() || shutdown_requested_.load(); });</span></a>
 <a name="420"><span class="lineNum">     420 </span>                :            : </a>
 <a name="421"><span class="lineNum">     421 </span>                :            :     // Collect logs for batch processing</a>
-<a name="422"><span class="lineNum">     422 </span>  [<span class="branchCov" title="Branch 0 was taken 23 times"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span><span class="branchCov" title="Branch 2 was taken 17 times"> + </span><span class="branchCov" title="Branch 3 was taken 6 times"> + </span> :<span class="lineCov">         26 :     if (has_logs &amp;&amp; !log_queue_.empty()) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 17 times"> + </span><span class="branchCov" title="Branch 5 was taken 9 times"> + </span>]
+<a name="422"><span class="lineNum">     422 </span>  [<span class="branchCov" title="Branch 0 was taken 22 times"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span><span class="branchCov" title="Branch 2 was taken 16 times"> + </span><span class="branchCov" title="Branch 3 was taken 6 times"> + </span> :<span class="lineCov">         25 :     if (has_logs &amp;&amp; !log_queue_.empty()) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 16 times"> + </span><span class="branchCov" title="Branch 5 was taken 9 times"> + </span>]
 <a name="423"><span class="lineNum">     423 </span>                :            :       size_t batch_size =</a>
-<a name="424"><span class="lineNum">     424 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :           async_config_.enable_batch_processing ? std::min(async_config_.batch_size, log_queue_.size()) : 1;</span></a>
+<a name="424"><span class="lineNum">     424 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :           async_config_.enable_batch_processing ? std::min(async_config_.batch_size, log_queue_.size()) : 1;</span></a>
 <a name="425"><span class="lineNum">     425 </span>                :            : </a>
-<a name="426"><span class="lineNum">     426 </span>                :<span class="lineCov">         17 :       batch.clear();</span></a>
-<a name="427"><span class="lineNum">     427 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :       batch.reserve(batch_size);</span></a>
+<a name="426"><span class="lineNum">     426 </span>                :<span class="lineCov">         16 :       batch.clear();</span></a>
+<a name="427"><span class="lineNum">     427 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :       batch.reserve(batch_size);</span></a>
 <a name="428"><span class="lineNum">     428 </span>                :            : </a>
-<a name="429"><span class="lineNum">     429 </span>  [<span class="branchCov" title="Branch 0 was taken 1021 times"> + </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span><span class="branchCov" title="Branch 2 was taken 1021 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">       1038 :       for (size_t i = 0; i &lt; batch_size &amp;&amp; !log_queue_.empty(); ++i) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1021 times"> + </span><span class="branchCov" title="Branch 5 was taken 17 times"> + </span>]
+<a name="429"><span class="lineNum">     429 </span>  [<span class="branchCov" title="Branch 0 was taken 1021 times"> + </span><span class="branchCov" title="Branch 1 was taken 16 times"> + </span><span class="branchCov" title="Branch 2 was taken 1021 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">       1037 :       for (size_t i = 0; i &lt; batch_size &amp;&amp; !log_queue_.empty(); ++i) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1021 times"> + </span><span class="branchCov" title="Branch 5 was taken 16 times"> + </span>]
 <a name="430"><span class="lineNum">     430 </span>        [<span class="branchCov" title="Branch 0 was taken 1021 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1021 :         batch.push_back(std::move(log_queue_.front()));</span></a>
 <a name="431"><span class="lineNum">     431 </span>                :<span class="lineCov">       1021 :         log_queue_.pop();</span></a>
 <a name="432"><span class="lineNum">     432 </span>                :            :       }</a>
 <a name="433"><span class="lineNum">     433 </span>                :            : </a>
-<a name="434"><span class="lineNum">     434 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :       lock.unlock();</span></a>
+<a name="434"><span class="lineNum">     434 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :       lock.unlock();</span></a>
 <a name="435"><span class="lineNum">     435 </span>                :            : </a>
 <a name="436"><span class="lineNum">     436 </span>                :            :       // Process batch</a>
-<a name="437"><span class="lineNum">     437 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :       if (!batch.empty()) {</span></a>
-<a name="438"><span class="lineNum">     438 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :         process_batch(batch);</span></a>
-<a name="439"><span class="lineNum">     439 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :         update_stats_on_batch(batch.size());</span></a>
+<a name="437"><span class="lineNum">     437 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :       if (!batch.empty()) {</span></a>
+<a name="438"><span class="lineNum">     438 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :         process_batch(batch);</span></a>
+<a name="439"><span class="lineNum">     439 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :         update_stats_on_batch(batch.size());</span></a>
 <a name="440"><span class="lineNum">     440 </span>                :            :       }</a>
 <a name="441"><span class="lineNum">     441 </span>                :            :     } else {</a>
 <a name="442"><span class="lineNum">     442 </span>        [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          9 :       lock.unlock();</span></a>
 <a name="443"><span class="lineNum">     443 </span>                :            :     }</a>
 <a name="444"><span class="lineNum">     444 </span>                :            : </a>
 <a name="445"><span class="lineNum">     445 </span>                :            :     // Periodic flush</a>
-<a name="446"><span class="lineNum">     446 </span>                :<span class="lineCov">         26 :     auto now = std::chrono::steady_clock::now();</span></a>
-<a name="447"><span class="lineNum">     447 </span>  [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         26 :     if (now - last_flush &gt;= async_config_.flush_interval) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 4 times"> + </span><span class="branchCov" title="Branch 5 was taken 22 times"> + </span>]
+<a name="446"><span class="lineNum">     446 </span>                :<span class="lineCov">         25 :     auto now = std::chrono::steady_clock::now();</span></a>
+<a name="447"><span class="lineNum">     447 </span>  [<span class="branchCov" title="Branch 0 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 25 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         25 :     if (now - last_flush &gt;= async_config_.flush_interval) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 4 times"> + </span><span class="branchCov" title="Branch 5 was taken 21 times"> + </span>]
 <a name="448"><span class="lineNum">     448 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          4 :       flush();</span></a>
 <a name="449"><span class="lineNum">     449 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          4 :       update_stats_on_flush();</span></a>
 <a name="450"><span class="lineNum">     450 </span>                :<span class="lineCov">          4 :       last_flush = now;</span></a>
 <a name="451"><span class="lineNum">     451 </span>                :            :     }</a>
 <a name="452"><span class="lineNum">     452 </span>                :            : </a>
-<a name="453"><span class="lineNum">     453 </span>  [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 20 times"> + </span><span class="branchCov" title="Branch 2 was taken 6 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         26 :     if (shutdown_requested_.load() &amp;&amp; log_queue_.empty()) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 6 times"> + </span><span class="branchCov" title="Branch 5 was taken 20 times"> + </span>]
+<a name="453"><span class="lineNum">     453 </span>  [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 19 times"> + </span><span class="branchCov" title="Branch 2 was taken 6 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         25 :     if (shutdown_requested_.load() &amp;&amp; log_queue_.empty()) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 6 times"> + </span><span class="branchCov" title="Branch 5 was taken 19 times"> + </span>]
 <a name="454"><span class="lineNum">     454 </span>                :<span class="lineCov">          6 :       break;</span></a>
 <a name="455"><span class="lineNum">     455 </span>                :            :     }</a>
-<a name="456"><span class="lineNum">     456 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchCov" title="Branch 1 was taken 6 times"> + </span>]:<span class="lineCov">         46 :   }</span></a>
+<a name="456"><span class="lineNum">     456 </span>        [<span class="branchCov" title="Branch 0 was taken 19 times"> + </span><span class="branchCov" title="Branch 1 was taken 6 times"> + </span>]:<span class="lineCov">         44 :   }</span></a>
 <a name="457"><span class="lineNum">     457 </span>                :            : </a>
 <a name="458"><span class="lineNum">     458 </span>        [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          6 :   flush();</span></a>
 <a name="459"><span class="lineNum">     459 </span>                :<span class="lineCov">          6 :   running_.store(false);</span></a>
 <a name="460"><span class="lineNum">     460 </span>                :<span class="lineCov">          6 : }</span></a>
 <a name="461"><span class="lineNum">     461 </span>                :            : </a>
-<a name="462"><span class="lineNum">     462 </span>                :<span class="lineCov">         17 : void Logger::process_batch(const std::vector&lt;LogEntry&gt;&amp; batch) {</span></a>
-<a name="463"><span class="lineNum">     463 </span>        [<span class="branchCov" title="Branch 0 was taken 1021 times"> + </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span>]:<span class="lineCov">       1038 :   for (const auto&amp; entry : batch) {</span></a>
+<a name="462"><span class="lineNum">     462 </span>                :<span class="lineCov">         16 : void Logger::process_batch(const std::vector&lt;LogEntry&gt;&amp; batch) {</span></a>
+<a name="463"><span class="lineNum">     463 </span>        [<span class="branchCov" title="Branch 0 was taken 1021 times"> + </span><span class="branchCov" title="Branch 1 was taken 16 times"> + </span>]:<span class="lineCov">       1037 :   for (const auto&amp; entry : batch) {</span></a>
 <a name="464"><span class="lineNum">     464 </span>        [<span class="branchCov" title="Branch 0 was taken 1021 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1021 :     std::string formatted_message = format_message(entry.level, entry.component, entry.operation, entry.message);</span></a>
 <a name="465"><span class="lineNum">     465 </span>                :<span class="lineCov">       1021 :     int current_outputs = outputs_.load();</span></a>
 <a name="466"><span class="lineNum">     466 </span>                :            : </a>
@@ -572,7 +572,7 @@
 <a name="477"><span class="lineNum">     477 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       call_callback(entry.level, formatted_message);</span></a>
 <a name="478"><span class="lineNum">     478 </span>                :            :     }</a>
 <a name="479"><span class="lineNum">     479 </span>                :<span class="lineCov">       1021 :   }</span></a>
-<a name="480"><span class="lineNum">     480 </span>                :<span class="lineCov">         17 : }</span></a>
+<a name="480"><span class="lineNum">     480 </span>                :<span class="lineCov">         16 : }</span></a>
 <a name="481"><span class="lineNum">     481 </span>                :            : </a>
 <a name="482"><span class="lineNum">     482 </span>                :<span class="lineCov">       1036 : bool Logger::should_drop_log() const {</span></a>
 <a name="483"><span class="lineNum">     483 </span>                :<span class="lineCov">       1036 :   size_t current_size = get_queue_size();</span></a>
@@ -600,10 +600,10 @@
 <a name="505"><span class="lineNum">     505 </span>                :<span class="lineCov">         15 :   async_stats_.dropped_logs++;</span></a>
 <a name="506"><span class="lineNum">     506 </span>                :<span class="lineCov">         15 : }</span></a>
 <a name="507"><span class="lineNum">     507 </span>                :            : </a>
-<a name="508"><span class="lineNum">     508 </span>                :<span class="lineCov">         17 : void Logger::update_stats_on_batch(size_t /* batch_size */) {</span></a>
-<a name="509"><span class="lineNum">     509 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :   std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</span></a>
-<a name="510"><span class="lineNum">     510 </span>                :<span class="lineCov">         17 :   async_stats_.batch_count++;</span></a>
-<a name="511"><span class="lineNum">     511 </span>                :<span class="lineCov">         17 : }</span></a>
+<a name="508"><span class="lineNum">     508 </span>                :<span class="lineCov">         16 : void Logger::update_stats_on_batch(size_t /* batch_size */) {</span></a>
+<a name="509"><span class="lineNum">     509 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :   std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</span></a>
+<a name="510"><span class="lineNum">     510 </span>                :<span class="lineCov">         16 :   async_stats_.batch_count++;</span></a>
+<a name="511"><span class="lineNum">     511 </span>                :<span class="lineCov">         16 : }</span></a>
 <a name="512"><span class="lineNum">     512 </span>                :            : </a>
 <a name="513"><span class="lineNum">     513 </span>                :<span class="lineCov">          4 : void Logger::update_stats_on_flush() {</span></a>
 <a name="514"><span class="lineNum">     514 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          4 :   std::lock_guard&lt;std::mutex&gt; lock(stats_mutex_);</span></a>
