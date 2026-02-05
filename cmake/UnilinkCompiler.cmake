@@ -139,6 +139,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   if(UNILINK_ENABLE_COVERAGE)
     add_compile_options(--coverage)
     add_link_options(--coverage)
+    add_compile_definitions(UNILINK_COVERAGE_ENABLED=1)
   endif()
 
 else()

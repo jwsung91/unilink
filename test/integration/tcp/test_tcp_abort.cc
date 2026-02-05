@@ -50,10 +50,12 @@ class TcpAbortTest : public unilink::test::NetworkTest {
 TEST_F(TcpAbortTest, SessionAbortion) {
   std::atomic<bool> error_reported{false};
   std::atomic<bool> disconnected{false};
+  std::atomic<bool> connected{false};
 
   // 1. Start Server
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()
+                .on_multi_connect([&connected](size_t, const std::string&) { connected = true; })
                 .on_multi_disconnect([&disconnected](size_t) { disconnected = true; })
                 .on_error([&error_reported](const std::string& err) {
                   // Depending on implementation, RST might trigger on_error or just
@@ -75,6 +77,10 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   } catch (const std::exception& e) {
     FAIL() << "Failed to connect: " << e.what();
   }
+
+  // Wait for server to accept
+  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&connected]() { return connected.load(); }, 2000))
+      << "Server did not accept connection";
 
   // 3. Send Partial Data
   std::string partial_data = "Partial Data...";
