@@ -68,6 +68,7 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   void on_close(OnClose cb);
   bool alive() const;
   void stop();
+  void cancel();
 
  private:
   void start_read();
