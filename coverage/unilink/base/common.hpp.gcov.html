@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-06 00:49:29</td>
+            <td class="headerValue">2026-02-06 05:35:29</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -221,11 +221,11 @@
 <a name="140"><span class="lineNum">     140 </span>                :            :  * @param size Size of the data</a>
 <a name="141"><span class="lineNum">     141 </span>                :            :  * @return std::string constructed from the data</a>
 <a name="142"><span class="lineNum">     142 </span>                :            :  */</a>
-<a name="143"><span class="lineNum">     143 </span>                :<span class="lineCov">    1003321 : inline std::string uint8_to_string(const uint8_t* data, size_t size) {</span></a>
-<a name="144"><span class="lineNum">     144 </span>  [<span class="branchCov" title="Branch 0 was taken 1003321 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1003321 times"> + </span>]:<span class="lineCov">    1003321 :   if (!data || size == 0) {</span></a>
+<a name="143"><span class="lineNum">     143 </span>                :<span class="lineCov">    1003322 : inline std::string uint8_to_string(const uint8_t* data, size_t size) {</span></a>
+<a name="144"><span class="lineNum">     144 </span>  [<span class="branchCov" title="Branch 0 was taken 1003322 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1003322 times"> + </span>]:<span class="lineCov">    1003322 :   if (!data || size == 0) {</span></a>
 <a name="145"><span class="lineNum">     145 </span>                :<span class="lineNoCov">          0 :     return std::string{};</span></a>
 <a name="146"><span class="lineNum">     146 </span>                :            :   }</a>
-<a name="147"><span class="lineNum">     147 </span>        [<span class="branchCov" title="Branch 0 was taken 1003321 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    1003321 :   return std::string(data, data + size);</span></a>
+<a name="147"><span class="lineNum">     147 </span>        [<span class="branchCov" title="Branch 0 was taken 1003322 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    1003322 :   return std::string(data, data + size);</span></a>
 <a name="148"><span class="lineNum">     148 </span>                :            : }</a>
 <a name="149"><span class="lineNum">     149 </span>                :            : </a>
 <a name="150"><span class="lineNum">     150 </span>                :            : /**</a>
