@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
+
 #include <any>
-#include <fstream>
 #include <cstdio>
+#include <fstream>
+
 #include "unilink/config/config_manager.hpp"
 
 namespace unilink {
@@ -39,10 +41,10 @@ TEST(ConfigSecurityTest, LoadFromFile_TypeConfusion) {
 
   EXPECT_EQ(value.type(), typeid(int)) << "Type should remain Integer";
   if (value.type() == typeid(int)) {
-      EXPECT_EQ(std::any_cast<int>(value), 100) << "Value should not be updated with invalid type";
+    EXPECT_EQ(std::any_cast<int>(value), 100) << "Value should not be updated with invalid type";
   }
 }
 
-} // namespace test
-} // namespace config
-} // namespace unilink
+}  // namespace test
+}  // namespace config
+}  // namespace unilink
