@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -30,7 +31,8 @@ class IPv6ValidationBenchmark : public ::testing::Test {
     // Warm up
     try {
       InputValidator::validate_ipv6_address("2001:0db8:85a3:0000:0000:8a2e:0370:7334");
-    } catch (...) {}
+    } catch (...) {
+    }
   }
 };
 
@@ -39,13 +41,9 @@ TEST_F(IPv6ValidationBenchmark, Performance) {
   const int iterations = 10000;
 
   // Use mostly valid addresses to avoid exception overhead masking regex performance
-  std::vector<std::string> valid_addresses = {
-    "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
-    "fe80:0000:0000:0000:0202:b3ff:fe1e:8329",
-    "0000:0000:0000:0000:0000:0000:0000:0001",
-    "::1",
-    "::"
-  };
+  std::vector<std::string> valid_addresses = {"2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+                                              "fe80:0000:0000:0000:0202:b3ff:fe1e:8329",
+                                              "0000:0000:0000:0000:0000:0000:0000:0001", "::1", "::"};
 
   auto start = std::chrono::high_resolution_clock::now();
 
@@ -69,7 +67,7 @@ TEST_F(IPv6ValidationBenchmark, Performance) {
   std::cout << "Total validations: " << iterations * valid_addresses.size() << std::endl;
   std::cout << "Total time: " << duration << " ms" << std::endl;
 
-  double total_ops = static_cast<double>(iterations) * valid_addresses.size();
+  double total_ops = static_cast<double>(iterations) * static_cast<double>(valid_addresses.size());
   if (total_ops > 0) {
     double ns_per_op = (static_cast<double>(duration) * 1000000.0) / total_ops;
     std::cout << "Average time per validation: " << ns_per_op << " ns" << std::endl;
