@@ -639,18 +639,17 @@ TEST_F(BuilderTest, DISABLED_TcpClientBuilderExceptionSafety) {
 
 /**
  * @brief Test end-to-end exception safety
- * NOTE: Temporarily disabled due to UnifiedBuilder namespace issues
  */
-TEST_F(BuilderTest, DISABLED_EndToEndExceptionSafety) {
+TEST_F(BuilderTest, EndToEndExceptionSafety) {
   // Test that invalid configurations throw appropriate exceptions
-  // EXPECT_THROW(auto server = unilink::tcp_server(0).unlimited_clients().build(), diagnostics::BuilderException);
+  EXPECT_THROW(auto server = unilink::tcp_server(0).unlimited_clients().build(), diagnostics::BuilderException);
 
-  // EXPECT_THROW(auto client = unilink::tcp_client("invalid..hostname", 8080).build(), diagnostics::BuilderException);
+  EXPECT_THROW(auto client = unilink::tcp_client("invalid..hostname", 8080).build(), diagnostics::BuilderException);
 
   // Test that valid configurations work
-  // EXPECT_NO_THROW(auto server = unilink::tcp_server(8080).unlimited_clients().build());
+  EXPECT_NO_THROW(auto server = unilink::tcp_server(getTestPort()).unlimited_clients().build());
 
-  // EXPECT_NO_THROW(auto client = unilink::tcp_client("localhost", 8080).build());
+  EXPECT_NO_THROW(auto client = unilink::tcp_client("localhost", getTestPort()).build());
 }
 
 int main(int argc, char** argv) {
