@@ -616,25 +616,24 @@ TEST_F(BuilderCoverageTest, TcpServerOverloadedCallbacks) {
 
 /**
  * @brief Test TCP client builder exception safety
- * NOTE: Temporarily disabled due to UnifiedBuilder namespace issues
  */
-TEST_F(BuilderTest, DISABLED_TcpClientBuilderExceptionSafety) {
+TEST_F(BuilderTest, TcpClientBuilderExceptionSafety) {
   // Test invalid host
-  // EXPECT_THROW({ auto client = unilink::tcp_client("", 8080).build(); }, diagnostics::BuilderException);
+  EXPECT_THROW({ auto client = unilink::tcp_client("", 8080).build(); }, diagnostics::BuilderException);
 
   // Test invalid port
-  // EXPECT_THROW({ auto client = unilink::tcp_client("localhost", 0).build(); }, diagnostics::BuilderException);
+  EXPECT_THROW({ auto client = unilink::tcp_client("localhost", 0).build(); }, diagnostics::BuilderException);
 
   // Test invalid retry interval
-  // EXPECT_THROW(
-  //     { auto client = unilink::tcp_client("localhost", 8080).retry_interval(0).build(); },
-  //     diagnostics::BuilderException);
+  EXPECT_THROW(
+      { auto client = unilink::tcp_client("localhost", 8080).retry_interval(0).build(); },
+      diagnostics::BuilderException);
 
   // Test valid configuration
-  // EXPECT_NO_THROW({
-  //   auto client = unilink::tcp_client("localhost", 8080).build();
-  //   EXPECT_NE(client, nullptr);
-  // });
+  EXPECT_NO_THROW({
+    auto client = unilink::tcp_client("localhost", getTestPort()).build();
+    EXPECT_NE(client, nullptr);
+  });
 }
 
 /**
