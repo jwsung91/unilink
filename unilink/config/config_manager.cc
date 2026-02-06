@@ -192,22 +192,48 @@ bool ConfigManager::load_from_file(const std::string& filepath) {
         value_str.erase(0, value_str.find_first_not_of(" \t"));
         value_str.erase(value_str.find_last_not_of(" \t") + 1);
 
-        // Try to determine type and deserialize
+        // Try to determine type
         ConfigType type = ConfigType::String;
-        if (value_str == "true" || value_str == "false") {
-          type = ConfigType::Boolean;
-        } else if (std::all_of(value_str.begin(), value_str.end(),
-                               [](char c) { return std::isdigit(c) || c == '-'; })) {
-          type = ConfigType::Integer;
-        } else if (std::count(value_str.begin(), value_str.end(), '.') == 1 &&
-                   std::all_of(value_str.begin(), value_str.end(),
-                               [](char c) { return std::isdigit(c) || c == '.' || c == '-'; })) {
-          type = ConfigType::Double;
+        auto it = config_items_.find(key);
+        bool exists = (it != config_items_.end());
+
+        if (exists) {
+          // Enforce existing type for security
+          type = it->second.type;
+        } else {
+          // Infer type for new items
+          if (value_str == "true" || value_str == "false") {
+            type = ConfigType::Boolean;
+          } else if (std::all_of(value_str.begin(), value_str.end(),
+                                 [](char c) { return std::isdigit(c) || c == '-'; })) {
+            type = ConfigType::Integer;
+          } else if (std::count(value_str.begin(), value_str.end(), '.') == 1 &&
+                     std::all_of(value_str.begin(), value_str.end(),
+                                 [](char c) { return std::isdigit(c) || c == '.' || c == '-'; })) {
+            type = ConfigType::Double;
+          }
         }
 
         std::any value = deserialize_value(value_str, type);
-        ConfigItem item(key, value, type, false);
-        config_items_[key] = item;
+
+        if (exists) {
+          // Validate against existing constraints
+          auto result = validate_value(key, value);
+          if (!result.is_valid) {
+            UNILINK_LOG_ERROR("config_manager", "load",
+                              "Validation failed for key '" + key + "': " + result.error_message);
+            continue;
+          }
+
+          // Update value while preserving metadata (validators, description, etc.)
+          std::any old_value = it->second.value;
+          it->second.value = value;
+          notify_change(key, old_value, value);
+        } else {
+          // Create new item
+          ConfigItem item(key, value, type, false);
+          config_items_[key] = item;
+        }
       }
     }
 
