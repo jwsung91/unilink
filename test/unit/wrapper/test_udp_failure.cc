@@ -49,7 +49,8 @@ TEST(UdpFailureTest, TransportUninitializedAndStopped) {
   auto channel = transport::UdpChannel::create(cfg, ioc);
 
   // 1. Test write before start (Idle state)
-  // Logic might allow enqueue but do_write might check remote endpoint or socket open state
+  // Logic might allow enqueue but do_write might check remote endpoint or
+  // socket open state
   EXPECT_FALSE(channel->is_connected());
 
   std::vector<uint8_t> data = {0x01, 0x02, 0x03};
@@ -76,7 +77,8 @@ TEST(UdpFailureTest, TransportUninitializedAndStopped) {
 // Test bad config options
 TEST(UdpFailureTest, BadOptions) {
   // Test invalid config (though InputValidator handles most)
-  // This ensures we cover the "return false" or error paths if any runtime checks exist
+  // This ensures we cover the "return false" or error paths if any runtime
+  // checks exist
   config::UdpConfig cfg;
   cfg.local_port = 0;
   // Invalid remote address to trigger set_remote_from_config error or similar?

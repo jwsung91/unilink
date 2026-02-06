@@ -59,20 +59,23 @@ TEST_F(TcpCancelTest, CancelTriggersErrorHandling) {
     }
   });
 
-  client_socket.async_connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), port),
-                              [&](boost::system::error_code ec) {
-                                if (ec) {
-                                  FAIL() << "Connect failed: " << ec.message();
-                                }
-                              });
+  client_socket.async_connect(
+      tcp::endpoint(net::ip::make_address("127.0.0.1"), port),
+      [&](boost::system::error_code ec) {
+        if (ec) {
+          FAIL() << "Connect failed: " << ec.message();
+        }
+      });
 
   std::thread ioc_thread([&ioc] { ioc.run(); });
 
   // Wait for connection
-  ASSERT_EQ(accept_future.wait_for(std::chrono::seconds(5)), std::future_status::ready);
+  ASSERT_EQ(accept_future.wait_for(std::chrono::seconds(5)),
+            std::future_status::ready);
 
   // Create session with the connected server socket
-  auto session = std::make_shared<TcpServerSession>(ioc, std::move(server_socket));
+  auto session =
+      std::make_shared<TcpServerSession>(ioc, std::move(server_socket));
 
   std::promise<void> close_promise;
   auto close_future = close_promise.get_future();
@@ -84,12 +87,14 @@ TEST_F(TcpCancelTest, CancelTriggersErrorHandling) {
   // Allow read loop to start and wait for data
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  // Trigger cancel() - this should cause async_read_some to complete with operation_aborted
-  // and trigger the error handling path which calls do_close() -> on_close callback.
+  // Trigger cancel() - this should cause async_read_some to complete with
+  // operation_aborted and trigger the error handling path which calls
+  // do_close() -> on_close callback.
   session->cancel();
 
   // Verify on_close is called
-  ASSERT_EQ(close_future.wait_for(std::chrono::seconds(2)), std::future_status::ready);
+  ASSERT_EQ(close_future.wait_for(std::chrono::seconds(2)),
+            std::future_status::ready);
 
   // Clean up
   ioc.stop();

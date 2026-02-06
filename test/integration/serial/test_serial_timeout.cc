@@ -46,8 +46,9 @@ class SerialTimeoutTest : public ::testing::Test {
     std::system("pkill -f 'socat -d -d pty,raw,echo=0,link=/tmp/ttyV0'");
 
     // create virtual pair
-    int ret =
-        std::system("socat -d -d pty,raw,echo=0,link=/tmp/ttyV0 pty,raw,echo=0,link=/tmp/ttyV1 > /dev/null 2>&1 &");
+    int ret = std::system(
+        "socat -d -d pty,raw,echo=0,link=/tmp/ttyV0 "
+        "pty,raw,echo=0,link=/tmp/ttyV1 > /dev/null 2>&1 &");
     if (ret != 0) {
       std::cout << "Failed to start socat" << std::endl;
       // Don't assert here, let the test skip if ports are missing
@@ -81,7 +82,8 @@ TEST_F(SerialTimeoutTest, ReadTimeoutWhenNoData) {
     GTEST_SKIP() << "socat not available";
   }
 
-  if (!std::filesystem::exists("/tmp/ttyV0") || !std::filesystem::exists("/tmp/ttyV1")) {
+  if (!std::filesystem::exists("/tmp/ttyV0") ||
+      !std::filesystem::exists("/tmp/ttyV1")) {
     GTEST_SKIP() << "Virtual serial ports not found (socat failed?)";
   }
 
@@ -92,7 +94,8 @@ TEST_F(SerialTimeoutTest, ReadTimeoutWhenNoData) {
   auto read_future = read_promise.get_future();
 
   // Set up callback to fulfil promise if data arrives
-  serial->on_data([&](const std::string& data) { read_promise.set_value(data); });
+  serial->on_data(
+      [&](const std::string& data) { read_promise.set_value(data); });
 
   serial->start();
 
@@ -104,7 +107,8 @@ TEST_F(SerialTimeoutTest, ReadTimeoutWhenNoData) {
   auto status = read_future.wait_for(std::chrono::milliseconds(100));
 
   // Verification: It should timeout because no data was sent
-  EXPECT_EQ(status, std::future_status::timeout) << "Serial read should have timed out but received data or failed";
+  EXPECT_EQ(status, std::future_status::timeout)
+      << "Serial read should have timed out but received data or failed";
 
   serial->stop();
 #endif
