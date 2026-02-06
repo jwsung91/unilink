@@ -15,12 +15,13 @@
  */
 
 #include <gtest/gtest.h>
-#include <fstream>
+
 #include <filesystem>
+#include <fstream>
 #include <vector>
 
-#include "unilink/config/config_manager.hpp"
 #include "test_utils.hpp"
+#include "unilink/config/config_manager.hpp"
 
 using namespace unilink::config;
 using namespace unilink::test;
@@ -28,10 +29,8 @@ using namespace unilink::test;
 namespace {
 
 class ConfigFailureTest : public ::testing::Test {
-protected:
-  void SetUp() override {
-    manager_ = std::make_unique<ConfigManager>();
-  }
+ protected:
+  void SetUp() override { manager_ = std::make_unique<ConfigManager>(); }
 
   void TearDown() override {
     // Cleanup files
@@ -40,7 +39,8 @@ protected:
     }
   }
 
-  std::filesystem::path create_temp_file(const std::string& name, const std::string& content) {
+  std::filesystem::path create_temp_file(const std::string& name,
+                                         const std::string& content) {
     auto path = TestUtils::makeTempFilePath(name);
     std::ofstream ofs(path);
     ofs << content;
@@ -56,7 +56,9 @@ protected:
 TEST_F(ConfigFailureTest, MalformedInput) {
   // ConfigManager expects "key=value"
   // We give it garbage lines
-  auto path = create_temp_file("malformed.conf", "key_without_value\n=value_without_key\n   \n#comment\nkey=value");
+  auto path = create_temp_file(
+      "malformed.conf",
+      "key_without_value\n=value_without_key\n   \n#comment\nkey=value");
 
   // It should skip invalid lines and parse valid ones
   EXPECT_TRUE(manager_->load_from_file(path.string()));
@@ -83,9 +85,9 @@ TEST_F(ConfigFailureTest, TypeMismatch) {
 
 TEST_F(ConfigFailureTest, MissingFile) {
   auto path = TestUtils::makeTempFilePath("non_existent.conf");
-  TestUtils::removeFileIfExists(path); // Ensure it doesn't exist
+  TestUtils::removeFileIfExists(path);  // Ensure it doesn't exist
 
   EXPECT_FALSE(manager_->load_from_file(path.string()));
 }
 
-} // namespace
+}  // namespace

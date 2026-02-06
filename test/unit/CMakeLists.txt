@@ -124,7 +124,7 @@ foreach(test_file test_pool_limits.cpp)
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;memory"
+      LABELS "unit_memory"
       TIMEOUT 30
   )
 endforeach()

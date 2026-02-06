@@ -15,12 +15,13 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <boost/asio.hpp>
 #include <thread>
 
-#include "unilink/wrapper/udp/udp.hpp"
-#include "unilink/config/udp_config.hpp"
 #include "test_utils.hpp"
+#include "unilink/config/udp_config.hpp"
+#include "unilink/wrapper/udp/udp.hpp"
 
 using namespace unilink::wrapper;
 using namespace unilink::config;
@@ -28,8 +29,7 @@ using namespace unilink::test;
 
 namespace {
 
-class UdpStateTest : public ::testing::Test {
-};
+class UdpStateTest : public ::testing::Test {};
 
 TEST_F(UdpStateTest, BindConflict) {
   uint16_t port = TestUtils::getAvailableTestPort();
@@ -45,7 +45,7 @@ TEST_F(UdpStateTest, BindConflict) {
 
   UdpConfig cfg2;
   cfg2.local_address = "127.0.0.1";
-  cfg2.local_port = port; // Same port
+  cfg2.local_port = port;  // Same port
   Udp udp2(cfg2);
 
   // This should throw because port is in use
@@ -76,4 +76,4 @@ TEST_F(UdpStateTest, UninitializedUse) {
   EXPECT_NO_THROW(udp.send_line("test line"));
 }
 
-} // namespace
+}  // namespace

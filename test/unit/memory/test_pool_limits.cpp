@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <vector>
 
 #include "unilink/memory/memory_pool.hpp"
@@ -40,7 +41,8 @@ TEST_F(MemoryPoolLimitsTest, ReuseLogic) {
   EXPECT_NE(addr1, nullptr);
 
   // 2. Release it (should go back to pool)
-  pool_->release(std::move(buf1), static_cast<size_t>(MemoryPool::BufferSize::SMALL));
+  pool_->release(std::move(buf1),
+                 static_cast<size_t>(MemoryPool::BufferSize::SMALL));
 
   // 3. Allocate again
   auto buf2 = pool_->acquire(MemoryPool::BufferSize::SMALL);
@@ -70,27 +72,31 @@ TEST_F(MemoryPoolLimitsTest, ExpansionAndOverflow) {
   uint8_t* addr1 = buf1.get();
   // uint8_t* addr2 = buf2.get();
 
-  pool_->release(std::move(buf1), static_cast<size_t>(MemoryPool::BufferSize::SMALL));
+  pool_->release(std::move(buf1),
+                 static_cast<size_t>(MemoryPool::BufferSize::SMALL));
   // Pool now has 1 item (addr1).
 
-  pool_->release(std::move(buf2), static_cast<size_t>(MemoryPool::BufferSize::SMALL));
+  pool_->release(std::move(buf2),
+                 static_cast<size_t>(MemoryPool::BufferSize::SMALL));
   // Pool still has 1 item (addr1). buf2 was dropped.
 
   // 4. Acquire again. Should get addr1.
   auto buf3 = pool_->acquire(MemoryPool::BufferSize::SMALL);
   EXPECT_EQ(buf3.get(), addr1) << "Should get the pooled item";
 
-  // 5. Acquire again. Should get new address (not addr2, unless allocator reused it immediately, which is possible but unlikely to be same object logic)
-  // Actually system allocator might reuse addr2, so strict equality check for != addr2 might be flaky.
-  // But we can check stats if available.
+  // 5. Acquire again. Should get new address (not addr2, unless allocator
+  // reused it immediately, which is possible but unlikely to be same object
+  // logic) Actually system allocator might reuse addr2, so strict equality
+  // check for != addr2 might be flaky. But we can check stats if available.
 
   MemoryPool::PoolStats stats = pool_->get_stats();
   EXPECT_GT(stats.total_allocations, 0);
 }
 
 TEST_F(MemoryPoolLimitsTest, ValidatesSize) {
-    EXPECT_THROW(pool_->acquire(0), std::invalid_argument);
-    EXPECT_THROW(pool_->acquire(100 * 1024 * 1024), std::invalid_argument); // > 64MB
+  EXPECT_THROW(pool_->acquire(0), std::invalid_argument);
+  EXPECT_THROW(pool_->acquire(100 * 1024 * 1024),
+               std::invalid_argument);  // > 64MB
 }
 
-} // namespace
+}  // namespace
