@@ -39,8 +39,7 @@ class ConfigFailureTest : public ::testing::Test {
     }
   }
 
-  std::filesystem::path create_temp_file(const std::string& name,
-                                         const std::string& content) {
+  std::filesystem::path create_temp_file(const std::string& name, const std::string& content) {
     auto path = TestUtils::makeTempFilePath(name);
     std::ofstream ofs(path);
     ofs << content;
@@ -56,9 +55,7 @@ class ConfigFailureTest : public ::testing::Test {
 TEST_F(ConfigFailureTest, MalformedInput) {
   // ConfigManager expects "key=value"
   // We give it garbage lines
-  auto path = create_temp_file(
-      "malformed.conf",
-      "key_without_value\n=value_without_key\n   \n#comment\nkey=value");
+  auto path = create_temp_file("malformed.conf", "key_without_value\n=value_without_key\n   \n#comment\nkey=value");
 
   // It should skip invalid lines and parse valid ones
   EXPECT_TRUE(manager_->load_from_file(path.string()));

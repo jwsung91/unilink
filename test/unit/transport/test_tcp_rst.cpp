@@ -35,15 +35,12 @@ class TcpRstTest : public ::testing::Test {
     port_ = TestUtils::getAvailableTestPort();
     server_ = std::make_unique<TcpServer>(port_);
 
-    server_->on_multi_connect(
-        [this](size_t id, const std::string&) { connected_clients_++; });
+    server_->on_multi_connect([this](size_t id, const std::string&) { connected_clients_++; });
 
-    server_->on_multi_disconnect(
-        [this](size_t id) { disconnected_clients_++; });
+    server_->on_multi_disconnect([this](size_t id) { disconnected_clients_++; });
 
     server_->start();
-    ASSERT_TRUE(TestUtils::waitForCondition(
-        [this] { return server_->is_listening(); }, 2000));
+    ASSERT_TRUE(TestUtils::waitForCondition([this] { return server_->is_listening(); }, 2000));
   }
 
   void TearDown() override {
@@ -61,15 +58,13 @@ TEST_F(TcpRstTest, ConnectionReset) {
   boost::asio::ip::tcp::socket socket(ioc);
 
   // 1. Connect
-  boost::asio::ip::tcp::endpoint ep(boost::asio::ip::make_address("127.0.0.1"),
-                                    port_);
+  boost::asio::ip::tcp::endpoint ep(boost::asio::ip::make_address("127.0.0.1"), port_);
   boost::system::error_code ec;
   socket.connect(ep, ec);
   ASSERT_FALSE(ec) << "Connect failed: " << ec.message();
 
   // Wait for server to register connection
-  ASSERT_TRUE(
-      TestUtils::waitForCondition([this] { return connected_clients_ > 0; }));
+  ASSERT_TRUE(TestUtils::waitForCondition([this] { return connected_clients_ > 0; }));
 
   // 2. Set SO_LINGER to 0 to force RST on close
   boost::asio::socket_base::linger option(true, 0);
@@ -82,8 +77,7 @@ TEST_F(TcpRstTest, ConnectionReset) {
 
   // 4. Verify server handles it (should disconnect)
   // The session error handler should catch connection_reset and close session
-  ASSERT_TRUE(TestUtils::waitForCondition(
-      [this] { return disconnected_clients_ > 0; }));
+  ASSERT_TRUE(TestUtils::waitForCondition([this] { return disconnected_clients_ > 0; }));
 }
 
 }  // namespace

@@ -41,8 +41,7 @@ TEST_F(MemoryPoolLimitsTest, ReuseLogic) {
   EXPECT_NE(addr1, nullptr);
 
   // 2. Release it (should go back to pool)
-  pool_->release(std::move(buf1),
-                 static_cast<size_t>(MemoryPool::BufferSize::SMALL));
+  pool_->release(std::move(buf1), static_cast<size_t>(MemoryPool::BufferSize::SMALL));
 
   // 3. Allocate again
   auto buf2 = pool_->acquire(MemoryPool::BufferSize::SMALL);
@@ -72,12 +71,10 @@ TEST_F(MemoryPoolLimitsTest, ExpansionAndOverflow) {
   uint8_t* addr1 = buf1.get();
   // uint8_t* addr2 = buf2.get();
 
-  pool_->release(std::move(buf1),
-                 static_cast<size_t>(MemoryPool::BufferSize::SMALL));
+  pool_->release(std::move(buf1), static_cast<size_t>(MemoryPool::BufferSize::SMALL));
   // Pool now has 1 item (addr1).
 
-  pool_->release(std::move(buf2),
-                 static_cast<size_t>(MemoryPool::BufferSize::SMALL));
+  pool_->release(std::move(buf2), static_cast<size_t>(MemoryPool::BufferSize::SMALL));
   // Pool still has 1 item (addr1). buf2 was dropped.
 
   // 4. Acquire again. Should get addr1.
