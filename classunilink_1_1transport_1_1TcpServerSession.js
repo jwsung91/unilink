@@ -10,6 +10,7 @@ var classunilink_1_1transport_1_1TcpServerSession =
     [ "async_write_copy", "classunilink_1_1transport_1_1TcpServerSession.html#a73e7017409948ac4b83c3a677efd64ad", null ],
     [ "async_write_move", "classunilink_1_1transport_1_1TcpServerSession.html#aad1c05357a0c2301807ca753c0e57603", null ],
     [ "async_write_shared", "classunilink_1_1transport_1_1TcpServerSession.html#abc3f9e0fc1e4013557082d67cce91c1c", null ],
+    [ "cancel", "classunilink_1_1transport_1_1TcpServerSession.html#abe516d6e8cd53de6370b736ab031beaf", null ],
     [ "on_backpressure", "classunilink_1_1transport_1_1TcpServerSession.html#add8ff438bf1570f20b0214c822304bae", null ],
     [ "on_bytes", "classunilink_1_1transport_1_1TcpServerSession.html#a8a3a1b2fcaa3d6e679ba6ec8376ada7c", null ],
     [ "on_close", "classunilink_1_1transport_1_1TcpServerSession.html#a983ed436fee72fc93556e567c654a577", null ],

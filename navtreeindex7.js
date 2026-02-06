@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"namespaceunilink_1_1base.html#ae891a72972b7893b2b357d661a993b6c":[17,0,0,0,11],
 "namespaceunilink_1_1base_1_1constants.html":[17,0,0,0,0],
 "namespaceunilink_1_1base_1_1constants.html#a00c60efa0877c10752105516017c9b45":[17,0,0,0,0,16],
 "namespaceunilink_1_1base_1_1constants.html#a04e5af0e6b8b196e759da97e06e33442":[17,0,0,0,0,41],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#a7e273fa28543fc1475bb73079a14dc44":[18,0,0,4,12,0],
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aa94c79ae427e4cf21aaaa2eafaa18247":[18,0,0,4,12,6],
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790":[18,0,0,4,12,2],
-"structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea":[18,0,0,4,12,5],
-"structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aea700e0cd390ca0973f69aa313cf58da":[18,0,0,4,12,1]
+"structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea":[18,0,0,4,12,5]
 };

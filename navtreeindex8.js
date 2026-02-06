@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aea700e0cd390ca0973f69aa313cf58da":[18,0,0,4,12,1],
 "structunilink_1_1diagnostics_1_1AsyncLogStats.html":[18,0,0,4,13],
 "structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e":[18,0,0,4,13,7],
 "structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc":[18,0,0,4,13,8],

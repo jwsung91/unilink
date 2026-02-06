@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['cancel_958',['cancel',['../classunilink_1_1interface_1_1TimerInterface.html#a176b63ed332f5f26e417dac9ba173da9',1,'unilink::interface::TimerInterface']]],
+  ['cancel_958',['cancel',['../classunilink_1_1transport_1_1TcpServerSession.html#abe516d6e8cd53de6370b736ab031beaf',1,'unilink::transport::TcpServerSession::cancel()'],['../classunilink_1_1interface_1_1TimerInterface.html#a176b63ed332f5f26e417dac9ba173da9',1,'unilink::interface::TimerInterface::cancel()']]],
   ['cbegin_959',['cbegin',['../classunilink_1_1memory_1_1SafeSpan.html#a306789af2ed70fc94692812cd4f5559d',1,'unilink::memory::SafeSpan']]],
   ['cend_960',['cend',['../classunilink_1_1memory_1_1SafeSpan.html#a6bd8598501bbde89a99ee117f2fa5e0e',1,'unilink::memory::SafeSpan']]],
   ['check_5fbounds_961',['check_bounds',['../classunilink_1_1memory_1_1MemoryValidator.html#a7a2a0c6d8f2f1ec32b08090932427e38',1,'unilink::memory::MemoryValidator']]],
