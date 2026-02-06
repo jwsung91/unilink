@@ -24,10 +24,8 @@ using namespace unilink::diagnostics;
 TEST(InputValidatorEdgeTest, DevicePathEdges) {
   // Path not starting with / and not COM/Special (e.g. relative path or custom
   // name)
-  EXPECT_THROW(InputValidator::validate_device_path("custom_device"),
-               ValidationException);
-  EXPECT_THROW(InputValidator::validate_device_path("./dev/ttyUSB0"),
-               ValidationException);
+  EXPECT_THROW(InputValidator::validate_device_path("custom_device"), ValidationException);
+  EXPECT_THROW(InputValidator::validate_device_path("./dev/ttyUSB0"), ValidationException);
 
   // Valid complex linux path
   EXPECT_NO_THROW(InputValidator::validate_device_path("/dev/ttyUSB-1_2"));
@@ -35,10 +33,8 @@ TEST(InputValidatorEdgeTest, DevicePathEdges) {
 
 TEST(InputValidatorEdgeTest, HostnameEdges) {
   // Invalid char in label
-  EXPECT_THROW(InputValidator::validate_host("example.c$om"),
-               ValidationException);
-  EXPECT_THROW(InputValidator::validate_host("ex ample.com"),
-               ValidationException);
+  EXPECT_THROW(InputValidator::validate_host("example.c$om"), ValidationException);
+  EXPECT_THROW(InputValidator::validate_host("ex ample.com"), ValidationException);
 }
 
 TEST(InputValidatorEdgeTest, IPv6Edges) {
@@ -49,25 +45,20 @@ TEST(InputValidatorEdgeTest, IPv6Edges) {
 
 TEST(InputValidatorEdgeTest, RangeEdges) {
   // Test range boundaries explicitly
-  EXPECT_NO_THROW(InputValidator::validate_range(
-      static_cast<int64_t>(10), static_cast<int64_t>(10),
-      static_cast<int64_t>(20), "min_boundary"));
-  EXPECT_NO_THROW(InputValidator::validate_range(
-      static_cast<int64_t>(20), static_cast<int64_t>(10),
-      static_cast<int64_t>(20), "max_boundary"));
+  EXPECT_NO_THROW(InputValidator::validate_range(static_cast<int64_t>(10), static_cast<int64_t>(10),
+                                                 static_cast<int64_t>(20), "min_boundary"));
+  EXPECT_NO_THROW(InputValidator::validate_range(static_cast<int64_t>(20), static_cast<int64_t>(10),
+                                                 static_cast<int64_t>(20), "max_boundary"));
 
   // Zero range
-  EXPECT_NO_THROW(InputValidator::validate_range(
-      static_cast<int64_t>(5), static_cast<int64_t>(5), static_cast<int64_t>(5),
-      "zero_range"));
-  EXPECT_THROW(InputValidator::validate_range(
-                   static_cast<int64_t>(4), static_cast<int64_t>(5),
-                   static_cast<int64_t>(5), "zero_range_low"),
+  EXPECT_NO_THROW(InputValidator::validate_range(static_cast<int64_t>(5), static_cast<int64_t>(5),
+                                                 static_cast<int64_t>(5), "zero_range"));
+  EXPECT_THROW(InputValidator::validate_range(static_cast<int64_t>(4), static_cast<int64_t>(5), static_cast<int64_t>(5),
+                                              "zero_range_low"),
                ValidationException);
 }
 
 TEST(InputValidatorEdgeTest, PositiveNumberEdges) {
   // Max int64
-  EXPECT_NO_THROW(InputValidator::validate_positive_number(
-      std::numeric_limits<int64_t>::max(), "max_int64"));
+  EXPECT_NO_THROW(InputValidator::validate_positive_number(std::numeric_limits<int64_t>::max(), "max_int64"));
 }
