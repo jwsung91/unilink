@@ -80,7 +80,7 @@ foreach(test_file test_builder.cc)
 endforeach()
 
 # Config tests (separate executables)
-foreach(test_file test_config.cc)
+foreach(test_file test_config.cc test_config_security.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/config/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -371,4 +371,5 @@ add_dependencies(unilink_unit_tests
   run_unit_test_tcp_abort
   run_unit_test_udp_error
   run_unit_test_serial_fail
+  run_unit_test_config_security
 )
