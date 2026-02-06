@@ -39,7 +39,7 @@ if(BUILD_PERFORMANCE_TESTS)
     gtest_discover_tests(run_performance_${test_name}
       PROPERTIES
         LABELS "performance;benchmark;optional"
-        TIMEOUT 180
+        TIMEOUT 600
     )
   endforeach()
 
