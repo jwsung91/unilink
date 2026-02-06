@@ -194,6 +194,19 @@ void TcpServerSession::stop() {
   });
 }
 
+void TcpServerSession::cancel() {
+  auto self = shared_from_this();
+  net::dispatch(strand_, [self] {
+    boost::system::error_code ec;
+    // Cancelling the socket via close() causes ongoing operations to complete with operation_aborted.
+    // Unlike stop(), this does NOT set closing_ flag immediately, allowing the
+    // error handler to run normally and trigger do_close() via the error path.
+    if (self->socket_) {
+      self->socket_->close(ec);
+    }
+  });
+}
+
 void TcpServerSession::start_read() {
   auto self = shared_from_this();
   socket_->async_read_some(
