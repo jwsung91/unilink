@@ -39,6 +39,7 @@ using tcp = net::ip::tcp;
 
 TEST(TransportTcpServerSessionTest, QueueLimitClosesSession) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;  // 1KB
   // Hard cap will be 4 * 1024 = 4KB (or default min if larger, but logic respects relative size)
   // Actually implementation uses std::max(bp * 4, DEFAULT_BACKPRESSURE_THRESHOLD).
@@ -57,7 +58,7 @@ TEST(TransportTcpServerSessionTest, QueueLimitClosesSession) {
 
   // Send huge data exceeding any reasonable hard cap (e.g. 10MB)
   std::vector<uint8_t> huge(10 * 1024 * 1024, 0xAA);
-  session->async_write_copy(huge.data(), huge.size());
+  session->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
   ioc.run_for(50ms);
 
@@ -67,6 +68,7 @@ TEST(TransportTcpServerSessionTest, QueueLimitClosesSession) {
 
 TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
@@ -89,6 +91,7 @@ TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
 
 TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
@@ -111,6 +114,7 @@ TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
 
 TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
@@ -123,7 +127,7 @@ TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
   EXPECT_TRUE(session->alive());
 
   std::vector<uint8_t> payload(bp_threshold * 2, 0xDD);  // exceed threshold, far below limit
-  session->async_write_copy(payload.data(), payload.size());
+  session->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size()));
 
   ioc.run_for(50ms);
 
@@ -134,6 +138,7 @@ TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
 
 TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
@@ -142,9 +147,13 @@ TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
 
   std::atomic<bool> closed{false};
   session->on_close([&]() { closed = true; });
-  session->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+  session->on_bytes([](memory::ConstByteSpan) { throw std::runtime_error("boom"); });
 
   session->start();
+  // Allow start_read to register handler
+  while (!socket_raw->has_handler()) {
+    ioc.run_for(std::chrono::milliseconds(1));
+  }
   EXPECT_TRUE(session->alive());
 
   // Ensure start_read has been called so read_handler_ is set

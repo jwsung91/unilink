@@ -26,6 +26,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -73,11 +74,11 @@ inline std::string ts_now() {
   return oss.str();  // e.g., 2025-09-15 13:07:42.123
 }
 
-inline void log_message(const std::string& tag, const std::string& direction, const std::string& message) {
+inline void log_message(std::string_view tag, std::string_view direction, std::string_view message) {
   // Remove trailing newline from message if it exists
-  std::string clean_message = message;
+  std::string_view clean_message = message;
   if (!clean_message.empty() && clean_message.back() == '\n') {
-    clean_message.pop_back();
+    clean_message.remove_suffix(1);
   }
 
   // Use new logging system
@@ -167,7 +168,7 @@ inline std::vector<uint8_t> string_to_uint8(const char* data, size_t size) {
  * @param str The string to convert
  * @return std::vector<uint8_t> containing the string data
  */
-inline std::vector<uint8_t> string_to_uint8(const std::string& str) {
+inline std::vector<uint8_t> string_to_uint8(std::string_view str) {
   return std::vector<uint8_t>(str.begin(), str.end());
 }
 
@@ -176,7 +177,7 @@ inline std::vector<uint8_t> string_to_uint8(const std::string& str) {
  * @param str The string to convert
  * @return std::pair<const uint8_t*, size_t> containing pointer and size
  */
-inline std::pair<const uint8_t*, size_t> string_to_bytes(const std::string& str) {
+inline std::pair<const uint8_t*, size_t> string_to_bytes(std::string_view str) {
   return {reinterpret_cast<const uint8_t*>(str.data()), str.size()};
 }
 }  // namespace safe_convert

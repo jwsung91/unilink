@@ -75,7 +75,8 @@ TEST_F(TcpServerMutexContentionTest, BenchmarkThroughput) {
 
   // Setup atomic counter
   std::atomic<size_t> bytes_received{0};
-  server_->on_bytes([&](const uint8_t*, size_t size) { bytes_received.fetch_add(size, std::memory_order_relaxed); });
+  server_->on_bytes(
+      [&](memory::ConstByteSpan data) { bytes_received.fetch_add(data.size(), std::memory_order_relaxed); });
 
   // Clients
   const int client_count = 10;   // Reduced for CI stability

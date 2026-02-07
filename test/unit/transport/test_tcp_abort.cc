@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "unilink/interface/itcp_socket.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
 
 using namespace unilink;
@@ -110,7 +111,7 @@ TEST(TransportTcpServerSessionTest, AbortDuringWrite) {
 
   // Queue a large write (10MB)
   std::vector<uint8_t> large_data(10 * 1024 * 1024, 0xAB);
-  session->async_write_copy(large_data.data(), large_data.size());
+  session->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
 
   // Run io_context briefly to let async_write propagate to the socket mock
   // With FakeTcpSocket, async_write posts a task.

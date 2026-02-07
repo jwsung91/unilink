@@ -35,6 +35,7 @@
 #include "unilink/interface/channel.hpp"
 #include "unilink/interface/itcp_socket.hpp"
 #include "unilink/memory/memory_pool.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 namespace unilink {
 namespace transport {
@@ -60,7 +61,7 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
                    size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
 
   void start();
-  void async_write_copy(const uint8_t* data, size_t size);
+  void async_write_copy(memory::ConstByteSpan data);
   void async_write_move(std::vector<uint8_t>&& data);
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data);
   void on_bytes(OnBytes cb);

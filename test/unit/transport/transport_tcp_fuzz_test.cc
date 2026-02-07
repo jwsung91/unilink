@@ -47,12 +47,15 @@ TEST(TransportTcpFuzzTest, FuzzingData) {
   session->on_close([&]() { closed = true; });
 
   // Simple echo or no-op parser
-  session->on_bytes([&](const uint8_t*, size_t) {
+  session->on_bytes([&](memory::ConstByteSpan) {
     // Process data normally
   });
 
   session->start();
-  ioc.run_for(5ms);  // Process start_read
+  // Allow start_read to register handler
+  while (!socket_raw->has_handler()) {
+    ioc.run_for(1ms);
+  }
   EXPECT_TRUE(session->alive());
 
   std::mt19937 gen(12345);
@@ -88,14 +91,17 @@ TEST(TransportTcpFuzzTest, MockParserCrash) {
   session->on_close([&]() { closed = true; });
 
   // Mock parser that throws on specific "bad" length
-  session->on_bytes([&](const uint8_t*, size_t size) {
-    if (size == 13) {  // Unlucky number triggers crash
+  session->on_bytes([&](memory::ConstByteSpan span) {
+    if (span.size() == 13) {  // Unlucky number triggers crash
       throw std::runtime_error("Protocol violation");
     }
   });
 
   session->start();
-  ioc.run_for(5ms);  // Process start_read
+  // Allow start_read to register handler
+  while (!socket_raw->has_handler()) {
+    ioc.run_for(1ms);
+  }
   EXPECT_TRUE(session->alive());
 
   // Send safe data

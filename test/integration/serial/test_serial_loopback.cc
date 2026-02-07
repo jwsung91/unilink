@@ -48,7 +48,9 @@ class SerialLoopbackTest : public ::testing::Test {
     }
 
     // cleanup previous runs just in case
-    std::system("pkill -f 'socat -d -d pty,raw,echo=0,link=/tmp/ttyV0'");
+    if (std::system("pkill -f 'socat -d -d pty,raw,echo=0,link=/tmp/ttyV0'") != 0) {
+      // Ignore cleanup errors
+    }
 
     int ret =
         std::system("socat -d -d pty,raw,echo=0,link=/tmp/ttyV0 pty,raw,echo=0,link=/tmp/ttyV1 > /dev/null 2>&1 &");
@@ -63,7 +65,9 @@ class SerialLoopbackTest : public ::testing::Test {
 #ifdef __linux__
     if (socat_available_) {
       // Kill socat
-      std::system("pkill -f 'socat -d -d pty,raw,echo=0,link=/tmp/ttyV0'");
+      if (std::system("pkill -f 'socat -d -d pty,raw,echo=0,link=/tmp/ttyV0'") != 0) {
+        // Ignore errors
+      }
       // Clean up symlinks
       std::remove("/tmp/ttyV0");
       std::remove("/tmp/ttyV1");

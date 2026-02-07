@@ -42,7 +42,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
   explicit TcpServer(uint16_t port);
   TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc);
   explicit TcpServer(std::shared_ptr<interface::Channel> channel);
-  ~TcpServer();
+  ~TcpServer() override;
 
   // IChannel interface implementation
   void start() override;
@@ -91,7 +91,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
 
  private:
   void setup_internal_handlers();
-  void handle_bytes(const uint8_t* data, size_t size);
+  void handle_bytes(memory::ConstByteSpan data);
   void handle_state(base::LinkState state);
 
   mutable std::mutex mutex_;

@@ -21,6 +21,7 @@
 #include <string>
 
 #include "unilink/base/visibility.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 namespace unilink {
 namespace wrapper {
@@ -29,7 +30,7 @@ namespace wrapper {
 class UNILINK_API ChannelInterface {
  public:
   using DataHandler = std::function<void(const std::string&)>;
-  using BytesHandler = std::function<void(const uint8_t*, size_t)>;
+  using BytesHandler = std::function<void(memory::ConstByteSpan)>;
   using ConnectHandler = std::function<void()>;
   using DisconnectHandler = std::function<void()>;
   using ErrorHandler = std::function<void(const std::string&)>;

@@ -20,6 +20,7 @@
 
 #include "test/utils/contract_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
 using namespace unilink;
@@ -199,7 +200,7 @@ TEST_F(ContractComplianceTest, TcpClient_Backpressure_Contract) {
 
   std::vector<uint8_t> data(2048, 'A');  // 2KB > 1KB
 
-  client_->async_write_copy(data.data(), data.size());
+  client_->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
 
   // Wait for backpressure event
 
@@ -264,7 +265,7 @@ TEST_F(ContractComplianceTest, Serial_Backpressure_Contract) {
 
   std::vector<uint8_t> data(2048, 'B');
 
-  serial->async_write_copy(data.data(), data.size());
+  serial->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
 
   // Wait for backpressure event
 

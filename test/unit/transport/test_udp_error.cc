@@ -23,6 +23,7 @@
 
 #include "unilink/base/common.hpp"
 #include "unilink/config/udp_config.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/udp/udp.hpp"
 
 using namespace unilink;
@@ -56,7 +57,7 @@ TEST(TransportUdpErrorTest, SendOversizedPacket) {
   // 70KB is within those limits, so it will attempt async_send_to.
   // async_send_to should fail with message_size error.
   std::vector<uint8_t> huge_packet(70000, 0xDD);
-  channel->async_write_copy(huge_packet.data(), huge_packet.size());
+  channel->async_write_copy(memory::ConstByteSpan(huge_packet.data(), huge_packet.size()));
 
   // Run loop to process send
   ioc.run_for(100ms);

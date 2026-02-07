@@ -20,6 +20,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <string_view>
 
 #include "unilink/diagnostics/logger.hpp"
 
@@ -84,9 +85,9 @@ void ErrorHandler::reset_stats() {
   stats_.reset();
 }
 
-std::vector<ErrorInfo> ErrorHandler::get_errors_by_component(const std::string& component) const {
+std::vector<ErrorInfo> ErrorHandler::get_errors_by_component(std::string_view component) const {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto it = errors_by_component_.find(component);
+  auto it = errors_by_component_.find(std::string(component));
   if (it != errors_by_component_.end()) {
     return it->second;
   }
@@ -105,15 +106,15 @@ std::vector<ErrorInfo> ErrorHandler::get_recent_errors(size_t count) const {
                                 recent_errors_.end());
 }
 
-bool ErrorHandler::has_errors(const std::string& component) const {
+bool ErrorHandler::has_errors(std::string_view component) const {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto it = errors_by_component_.find(component);
+  auto it = errors_by_component_.find(std::string(component));
   return it != errors_by_component_.end() && !it->second.empty();
 }
 
-size_t ErrorHandler::get_error_count(const std::string& component, ErrorLevel level) const {
+size_t ErrorHandler::get_error_count(std::string_view component, ErrorLevel level) const {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto it = errors_by_component_.find(component);
+  auto it = errors_by_component_.find(std::string(component));
   if (it == errors_by_component_.end()) {
     return 0;
   }
@@ -179,42 +180,41 @@ void ErrorHandler::add_to_component_errors(const ErrorInfo& error) {
 // Convenience functions implementation
 namespace error_reporting {
 
-void report_connection_error(const std::string& component, const std::string& operation,
+void report_connection_error(std::string_view component, std::string_view operation,
                              const boost::system::error_code& ec, bool retryable) {
   ErrorInfo error(ErrorLevel::ERROR, ErrorCategory::CONNECTION, component, operation, ec.message(), ec, retryable);
   ErrorHandler::instance().report_error(error);
 }
 
-void report_communication_error(const std::string& component, const std::string& operation, const std::string& message,
+void report_communication_error(std::string_view component, std::string_view operation, std::string_view message,
                                 bool retryable) {
   ErrorInfo error(ErrorLevel::ERROR, ErrorCategory::COMMUNICATION, component, operation, message);
   error.retryable = retryable;
   ErrorHandler::instance().report_error(error);
 }
 
-void report_configuration_error(const std::string& component, const std::string& operation,
-                                const std::string& message) {
+void report_configuration_error(std::string_view component, std::string_view operation, std::string_view message) {
   ErrorInfo error(ErrorLevel::ERROR, ErrorCategory::CONFIGURATION, component, operation, message);
   ErrorHandler::instance().report_error(error);
 }
 
-void report_memory_error(const std::string& component, const std::string& operation, const std::string& message) {
+void report_memory_error(std::string_view component, std::string_view operation, std::string_view message) {
   ErrorInfo error(ErrorLevel::CRITICAL, ErrorCategory::MEMORY, component, operation, message);
   ErrorHandler::instance().report_error(error);
 }
 
-void report_system_error(const std::string& component, const std::string& operation, const std::string& message,
+void report_system_error(std::string_view component, std::string_view operation, std::string_view message,
                          const boost::system::error_code& ec) {
   ErrorInfo error(ErrorLevel::ERROR, ErrorCategory::SYSTEM, component, operation, message, ec);
   ErrorHandler::instance().report_error(error);
 }
 
-void report_warning(const std::string& component, const std::string& operation, const std::string& message) {
+void report_warning(std::string_view component, std::string_view operation, std::string_view message) {
   ErrorInfo error(ErrorLevel::WARNING, ErrorCategory::UNKNOWN, component, operation, message);
   ErrorHandler::instance().report_error(error);
 }
 
-void report_info(const std::string& component, const std::string& operation, const std::string& message) {
+void report_info(std::string_view component, std::string_view operation, std::string_view message) {
   ErrorInfo error(ErrorLevel::INFO, ErrorCategory::UNKNOWN, component, operation, message);
   ErrorHandler::instance().report_error(error);
 }

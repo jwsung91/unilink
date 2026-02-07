@@ -25,6 +25,7 @@
 #include "test_constants.hpp"
 #include "test_utils.hpp"
 #include "unilink/config/tcp_server_config.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
 using namespace unilink;
@@ -276,7 +277,7 @@ TEST_F(TransportTcpServerTest, CallbackUpdatePropagation) {
 
   // 2. Set callback 1
   // This will overwrite client1's callback because client1 is current_session_
-  server_->on_bytes([&](const uint8_t*, size_t) { cb1_count++; });
+  server_->on_bytes([&](memory::ConstByteSpan) { cb1_count++; });
 
   std::string data = "test";
   net::write(client1, net::buffer(data));
@@ -291,7 +292,7 @@ TEST_F(TransportTcpServerTest, CallbackUpdatePropagation) {
   // 4. Set callback 2
   // This will overwrite client2's callback (current).
   // client1 (not current) will NOT be updated if it lost its wrapper in step 2.
-  server_->on_bytes([&](const uint8_t*, size_t) { cb2_count++; });
+  server_->on_bytes([&](memory::ConstByteSpan) { cb2_count++; });
 
   // Verify client2 uses cb2
   net::write(client2, net::buffer(data));

@@ -31,6 +31,7 @@
 
 #include "unilink/base/common.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 namespace unilink {
 namespace test {
@@ -64,12 +65,12 @@ class CallbackRecorder {
   }
 
   interface::Channel::OnBytes get_bytes_callback() {
-    return [this](const uint8_t* data, size_t size) {
+    return [this](memory::ConstByteSpan span) {
       std::lock_guard<std::mutex> lock(mutex_);
       // Convert to string for storage (be careful with large data in tests)
-      std::string s(reinterpret_cast<const char*>(data), size);
+      std::string s(reinterpret_cast<const char*>(span.data()), span.size());
       events_.push_back({EventType::DataReceived, std::chrono::steady_clock::now(), s});
-      total_bytes_ += size;
+      total_bytes_ += span.size();
       cv_.notify_all();
     };
   }

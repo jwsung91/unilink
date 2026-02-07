@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "test_utils.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
 
 using namespace unilink;
@@ -97,7 +98,7 @@ TEST_F(IntegrationTest, TcpServerSessionBackpressureMultithreadedIoContext) {
 
   // Queue enough data to trigger high watermark but stay under the hard limit (1MB)
   std::vector<uint8_t> payload(512 * 1024, 0x5A);
-  session->async_write_copy(payload.data(), payload.size());
+  session->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size()));
 
   {
     std::unique_lock<std::mutex> lock(mutex);

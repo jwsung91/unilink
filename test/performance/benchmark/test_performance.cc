@@ -223,7 +223,7 @@ TEST_F(PerformanceIntegratedTest, MemoryPoolPerformanceUnderLoad) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(num_operations) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(num_operations) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Memory pool performance:" << std::endl;
   std::cout << "  Operations: " << num_operations << std::endl;
@@ -257,7 +257,7 @@ TEST_F(PerformanceIntegratedTest, MemoryPoolThroughput) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(num_operations) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(num_operations) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Memory pool throughput: " << throughput << " ops/sec" << std::endl;
   std::cout << "Operations: " << num_operations << std::endl;
@@ -304,7 +304,8 @@ TEST_F(PerformanceIntegratedTest, ScalabilityThreadCount) {
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-    double throughput = static_cast<double>(completed_operations.load()) / (duration.count() / 1000000.0);
+    double throughput =
+        static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
 
     std::cout << "Threads: " << thread_count << ", Operations: " << completed_operations.load()
               << ", Duration: " << duration.count() << " μs" << ", Throughput: " << throughput << " ops/sec"
@@ -334,8 +335,9 @@ TEST_F(PerformanceIntegratedTest, ScalabilityDataSize) {
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-    double throughput = static_cast<double>(operations) / (duration.count() / 1000000.0);
-    double data_throughput = static_cast<double>(operations * data_size) / (duration.count() / 1000000.0);
+    double throughput = static_cast<double>(operations) / (static_cast<double>(duration.count()) / 1000000.0);
+    double data_throughput =
+        static_cast<double>(operations * data_size) / (static_cast<double>(duration.count()) / 1000000.0);
 
     std::cout << "Data size: " << data_size << " bytes" << ", Operations: " << operations
               << ", Duration: " << duration.count() << " μs" << ", Throughput: " << throughput << " ops/sec"
@@ -367,8 +369,9 @@ TEST_F(PerformanceIntegratedTest, NetworkThroughputSimulation) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(num_messages) / (duration.count() / 1000000.0);
-  double data_throughput = static_cast<double>(num_messages * message_size) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(num_messages) / (static_cast<double>(duration.count()) / 1000000.0);
+  double data_throughput =
+      static_cast<double>(num_messages * message_size) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Network throughput simulation:" << std::endl;
   std::cout << "  Messages: " << num_messages << std::endl;
@@ -410,7 +413,7 @@ TEST_F(PerformanceIntegratedTest, OperationLatency) {
 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-    latencies.push_back(duration.count() / 1000.0);  // Convert to microseconds
+    latencies.push_back(static_cast<double>(duration.count()) / 1000.0);  // Convert to microseconds
   }
 
   // Calculate statistics
@@ -418,7 +421,7 @@ TEST_F(PerformanceIntegratedTest, OperationLatency) {
   double min_latency = latencies[0];
   double max_latency = latencies[latencies.size() - 1];
   double median_latency = latencies[latencies.size() / 2];
-  double avg_latency = std::accumulate(latencies.begin(), latencies.end(), 0.0) / latencies.size();
+  double avg_latency = std::accumulate(latencies.begin(), latencies.end(), 0.0) / static_cast<double>(latencies.size());
 
   std::cout << "Operation latency statistics:" << std::endl;
   std::cout << "  Min: " << min_latency << " μs" << std::endl;
@@ -451,7 +454,7 @@ TEST_F(PerformanceIntegratedTest, NetworkLatencySimulation) {
 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-    latencies.push_back(duration.count() / 1000.0);  // Convert to microseconds
+    latencies.push_back(static_cast<double>(duration.count()) / 1000.0);  // Convert to microseconds
   }
 
   // Calculate statistics
@@ -459,7 +462,7 @@ TEST_F(PerformanceIntegratedTest, NetworkLatencySimulation) {
   double min_latency = latencies[0];
   double max_latency = latencies[latencies.size() - 1];
   double median_latency = latencies[latencies.size() / 2];
-  double avg_latency = std::accumulate(latencies.begin(), latencies.end(), 0.0) / latencies.size();
+  double avg_latency = std::accumulate(latencies.begin(), latencies.end(), 0.0) / static_cast<double>(latencies.size());
 
   std::cout << "Network latency simulation statistics:" << std::endl;
   std::cout << "  Min: " << min_latency << " μs" << std::endl;
@@ -565,7 +568,8 @@ TEST_F(PerformanceIntegratedTest, CPUUsageUnderLoad) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(completed_operations.load()) / (duration.count() / 1000000.0);
+  double throughput =
+      static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "CPU usage under load:" << std::endl;
   std::cout << "  Threads: " << num_threads << std::endl;
@@ -599,7 +603,7 @@ TEST_F(PerformanceIntegratedTest, LockFreePerformance) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(num_operations) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(num_operations) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Lock-free performance:" << std::endl;
   std::cout << "  Operations: " << num_operations << std::endl;
@@ -622,7 +626,7 @@ TEST_F(PerformanceIntegratedTest, CacheFriendlyPerformance) {
 
   // Initialize data
   for (int i = 0; i < num_elements; ++i) {
-    data[i] = i;
+    data[static_cast<size_t>(i)] = i;
   }
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -630,13 +634,13 @@ TEST_F(PerformanceIntegratedTest, CacheFriendlyPerformance) {
   // Sequential access (cache-friendly)
   int sum = 0;
   for (int i = 0; i < num_elements; ++i) {
-    sum += data[i];
+    sum += data[static_cast<size_t>(i)];
   }
 
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(num_elements) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(num_elements) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Cache-friendly performance:" << std::endl;
   std::cout << "  Elements: " << num_elements << std::endl;
@@ -685,7 +689,8 @@ TEST_F(PerformanceIntegratedTest, SystemStressHighLoad) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(completed_operations.load()) / (duration.count() / 1000000.0);
+  double throughput =
+      static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "System stress high load:" << std::endl;
   std::cout << "  Threads: " << num_threads << std::endl;
@@ -729,7 +734,7 @@ TEST_F(PerformanceIntegratedTest, MemoryStressLargeAllocations) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(num_allocations) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(num_allocations) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Memory stress large allocations:" << std::endl;
   std::cout << "  Allocations: " << num_allocations << std::endl;

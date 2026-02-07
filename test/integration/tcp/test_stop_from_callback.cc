@@ -25,6 +25,7 @@
 #include <thread>
 
 #include "test_utils.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
 using namespace unilink;
@@ -81,7 +82,7 @@ TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
     }
     // No terminal state check here, as per Contract
   });
-  client->on_bytes([weak_client, &stop_from_bytes](const uint8_t*, size_t) {
+  client->on_bytes([weak_client, &stop_from_bytes](memory::ConstByteSpan) {
     stop_from_bytes.store(true);
     if (auto c = weak_client.lock()) {
       c->stop();

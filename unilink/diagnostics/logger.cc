@@ -23,6 +23,7 @@
 #include <iostream>
 #include <queue>
 #include <sstream>
+#include <string_view>
 #include <thread>
 
 namespace unilink {
@@ -113,8 +114,7 @@ void Logger::flush() {
   std::cerr.flush();
 }
 
-void Logger::log(LogLevel level, const std::string& component, const std::string& operation,
-                 const std::string& message) {
+void Logger::log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message) {
   if (!enabled_.load() || level < current_level_.load()) {
     return;
   }
@@ -159,28 +159,28 @@ void Logger::log(LogLevel level, const std::string& component, const std::string
   }
 }
 
-void Logger::debug(const std::string& component, const std::string& operation, const std::string& message) {
+void Logger::debug(std::string_view component, std::string_view operation, std::string_view message) {
   log(LogLevel::DEBUG, component, operation, message);
 }
 
-void Logger::info(const std::string& component, const std::string& operation, const std::string& message) {
+void Logger::info(std::string_view component, std::string_view operation, std::string_view message) {
   log(LogLevel::INFO, component, operation, message);
 }
 
-void Logger::warning(const std::string& component, const std::string& operation, const std::string& message) {
+void Logger::warning(std::string_view component, std::string_view operation, std::string_view message) {
   log(LogLevel::WARNING, component, operation, message);
 }
 
-void Logger::error(const std::string& component, const std::string& operation, const std::string& message) {
+void Logger::error(std::string_view component, std::string_view operation, std::string_view message) {
   log(LogLevel::ERROR, component, operation, message);
 }
 
-void Logger::critical(const std::string& component, const std::string& operation, const std::string& message) {
+void Logger::critical(std::string_view component, std::string_view operation, std::string_view message) {
   log(LogLevel::CRITICAL, component, operation, message);
 }
 
-std::string Logger::format_message(LogLevel level, const std::string& component, const std::string& operation,
-                                   const std::string& message) {
+std::string Logger::format_message(LogLevel level, std::string_view component, std::string_view operation,
+                                   std::string_view message) {
   std::string result = format_string_;
 
   // Replace placeholders

@@ -41,14 +41,14 @@ foreach(test_file test_core.cc test_memory.cc test_pooled_buffer.cc test_boundar
   if(test_name STREQUAL "test_core")
     gtest_discover_tests(run_unit_${test_name}
       PROPERTIES
-        LABELS "unit;common;fast"
+        LABELS "unit_common_fast"
         TIMEOUT 30
       RESOURCE_LOCK "log_file_io"
     )
   else()
     gtest_discover_tests(run_unit_${test_name}
       PROPERTIES
-        LABELS "unit;common;fast"
+        LABELS "unit_common_fast"
         TIMEOUT 30
     )
   endif()
@@ -74,7 +74,7 @@ foreach(test_file test_builder.cc)
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;builder;fast"
+      LABELS "unit_builder_fast"
       TIMEOUT 30
   )
 endforeach()
@@ -99,7 +99,7 @@ foreach(test_file test_config.cc test_config_security.cc test_config_failure.cpp
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;config;fast"
+      LABELS "unit_config_fast"
       TIMEOUT 30
   )
 endforeach()
@@ -148,7 +148,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_s
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;wrapper;tcp"
+      LABELS "unit_wrapper_tcp"
       TIMEOUT 120
       RESOURCE_LOCK "tcp_port_allocation"
   )
@@ -172,119 +172,35 @@ target_include_directories(run_unit_wrapper_serial_config_mapping
 
 gtest_discover_tests(run_unit_wrapper_serial_config_mapping
   PROPERTIES
-    LABELS "unit;wrapper;serial"
+    LABELS "unit_wrapper_serial"
     TIMEOUT 30
 )
 
 # Transport tests (fast, unit-level without real network dependencies)
-add_executable(run_unit_transport_tcp_client ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_client.cc)
-target_link_libraries(run_unit_transport_tcp_client
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_tcp_client)
-target_include_directories(run_unit_transport_tcp_client
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
+# Updated list to include fuzz tests, server session tests, and timeout tests
+foreach(test_file transport_tcp_client.cc transport_tcp_server.cc transport_serial.cc transport_udp.cc transport_udp_extended.cc)
+  get_filename_component(test_name ${test_file} NAME_WE)
+  add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/transport/${test_file})
+  target_link_libraries(run_unit_${test_name}
+    PRIVATE
+      ${_unilink_test_lib}
+      GTest::gtest
+      GTest::gtest_main
+      GTest::gmock
+  )
+  unilink_set_test_warning_options(run_unit_${test_name})
+  target_include_directories(run_unit_${test_name}
+    PRIVATE
+      ${CMAKE_SOURCE_DIR}/test/utils
+      ${CMAKE_SOURCE_DIR}/test/fixtures
+  )
 
-gtest_discover_tests(run_unit_transport_tcp_client
-  PROPERTIES
-    LABELS "unit;transport;fast"
-    TIMEOUT 30
-)
-
-# TcpServer transport tests (fast, unit-level without real network dependencies)
-add_executable(run_unit_transport_tcp_server ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_server.cc)
-target_link_libraries(run_unit_transport_tcp_server
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_tcp_server)
-target_include_directories(run_unit_transport_tcp_server
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(run_unit_transport_tcp_server
-  PROPERTIES
-    LABELS "unit;transport;fast"
-    TIMEOUT 30
-)
-
-# Serial lifecycle tests (fast, no real device)
-add_executable(run_unit_transport_serial ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_serial.cc)
-target_link_libraries(run_unit_transport_serial
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_serial)
-target_include_directories(run_unit_transport_serial
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(run_unit_transport_serial
-  PROPERTIES
-    LABELS "unit;transport;serial"
-    TIMEOUT 30
-)
-
-# UDP transport loopback tests
-add_executable(run_unit_transport_udp ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_udp.cc)
-target_link_libraries(run_unit_transport_udp
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_udp)
-target_include_directories(run_unit_transport_udp
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(run_unit_transport_udp
-  PROPERTIES
-    LABELS "unit;transport;udp"
-    TIMEOUT 30
-)
-
-# UDP transport extended tests
-add_executable(run_unit_transport_udp_extended ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_udp_extended.cc)
-target_link_libraries(run_unit_transport_udp_extended
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_udp_extended)
-target_include_directories(run_unit_transport_udp_extended
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(run_unit_transport_udp_extended
-  PROPERTIES
-    LABELS "unit"
-    TIMEOUT 30
-)
+  gtest_discover_tests(run_unit_${test_name}
+    PROPERTIES
+      LABELS "unit_transport_fast"
+      TIMEOUT 30
+  )
+endforeach()
 
 # Contract Compliance Tests
 add_executable(run_unit_test_contract_compliance ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_contract_compliance.cc)
@@ -304,7 +220,7 @@ target_include_directories(run_unit_test_contract_compliance
 
 gtest_discover_tests(run_unit_test_contract_compliance
   PROPERTIES
-    LABELS "unit;transport;contract"
+    LABELS "unit_transport_contract"
     TIMEOUT 30
 )
 
@@ -406,7 +322,7 @@ target_include_directories(run_unit_transport_tcp_server_session
 )
 gtest_discover_tests(run_unit_transport_tcp_server_session
   PROPERTIES
-    LABELS "unit;transport;session"
+    LABELS "unit_transport_session"
     TIMEOUT 30
 )
 
@@ -427,7 +343,7 @@ target_include_directories(run_unit_transport_tcp_fuzz_test
 )
 gtest_discover_tests(run_unit_transport_tcp_fuzz_test
   PROPERTIES
-    LABELS "unit;transport;fuzz"
+    LABELS "unit_transport_fuzz"
     TIMEOUT 30
 )
 
@@ -448,7 +364,7 @@ target_include_directories(run_unit_transport_tcp_timeout_test
 )
 gtest_discover_tests(run_unit_transport_tcp_timeout_test
   PROPERTIES
-    LABELS "unit;transport;timeout"
+    LABELS "unit_transport_timeout"
     TIMEOUT 30
 )
 
@@ -476,6 +392,9 @@ add_dependencies(unilink_unit_tests
   run_unit_transport_tcp_server
   run_unit_transport_serial
   run_unit_transport_udp_extended
+  run_unit_transport_tcp_server_session
+  run_unit_transport_tcp_fuzz_test
+  run_unit_transport_tcp_timeout_test
   run_unit_test_contract_compliance
   run_unit_test_tcp_abort
   run_unit_test_tcp_rst

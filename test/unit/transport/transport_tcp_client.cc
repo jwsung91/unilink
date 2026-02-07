@@ -26,6 +26,7 @@
 #include "test/utils/test_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
@@ -67,7 +68,7 @@ TEST_F(TransportTcpClientTest, BackpressureTriggersWithoutConnection) {
 
   // Queue data larger than threshold to trigger backpressure on the queue
   std::vector<uint8_t> payload(cfg.backpressure_threshold * 4, 0xAA);
-  client_->async_write_copy(payload.data(), payload.size());
+  client_->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size()));
 
   bool observed = TestUtils::waitForCondition(
       [&] { return triggered.load() && bytes_seen.load() >= cfg.backpressure_threshold; }, 500);
@@ -191,7 +192,7 @@ TEST_F(TransportTcpClientTest, QueueLimitMovesClientToError) {
   });
 
   std::vector<uint8_t> huge(cfg.backpressure_threshold * 2048, 0xEF);  // 2MB, exceeds queue cap
-  client_->async_write_copy(huge.data(), huge.size());
+  client_->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
   ioc.run_for(std::chrono::milliseconds(20));
 
@@ -222,7 +223,7 @@ TEST_F(TransportTcpClientTest, OnBytesExceptionTriggersReconnect) {
     if (state == base::LinkState::Error) error_events.fetch_add(1);
   });
 
-  client_->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+  client_->on_bytes([](memory::ConstByteSpan) { throw std::runtime_error("boom"); });
 
   // Accept a client and send a small payload to trigger on_bytes
   acceptor.async_accept([&](const boost::system::error_code& ec, tcp::socket sock) {
@@ -312,7 +313,7 @@ TEST_F(TransportTcpClientTest, BackpressureReliefEmitsAfterDrain) {
 
   // Queue enough bytes to trigger backpressure
   std::vector<uint8_t> payload(cfg.backpressure_threshold * 2, 0xAB);
-  client_->async_write_copy(payload.data(), payload.size());
+  client_->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size()));
 
   ASSERT_TRUE(TestUtils::waitForCondition([&] { return !bp_events.empty(); }, 200));
 

@@ -24,6 +24,7 @@
 
 #include "unilink/config/serial_config.hpp"
 #include "unilink/interface/iserial_port.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/serial/serial.hpp"
 
 using namespace unilink;
@@ -161,7 +162,7 @@ TEST(TransportSerialTest, QueueLimitMovesSerialToError) {
 
   // 2MB buffer exceeds default limit (usually 1MB)
   std::vector<uint8_t> huge(2 * 1024 * 1024, 0xEF);
-  serial->async_write_copy(huge.data(), huge.size());
+  serial->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
   ioc.run_for(50ms);
 
@@ -232,7 +233,7 @@ TEST(TransportSerialTest, CallbackExceptionStopsWhenConfigured) {
     if (state == base::LinkState::Error) error_seen = true;
   });
 
-  serial->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+  serial->on_bytes([](memory::ConstByteSpan) { throw std::runtime_error("boom"); });
 
   serial->start();
   ioc.run_for(5ms);  // allow start to set up read handler
@@ -263,7 +264,7 @@ TEST(TransportSerialTest, CallbackExceptionRetriesWhenAllowed) {
     if (state == base::LinkState::Connecting) connecting_events.fetch_add(1);
   });
 
-  serial->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+  serial->on_bytes([](memory::ConstByteSpan) { throw std::runtime_error("boom"); });
 
   serial->start();
   ioc.run_for(5ms);
@@ -292,7 +293,7 @@ TEST(TransportSerialTest, BackpressureReliefAfterDrain) {
   serial->start();
 
   std::vector<uint8_t> payload(cfg.backpressure_threshold * 2, 0x11);  // exceed high watermark, below limit
-  serial->async_write_copy(payload.data(), payload.size());
+  serial->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size()));
 
   ioc.run_for(50ms);
 

@@ -21,6 +21,7 @@
 #include <memory>
 #include <vector>
 
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/udp/udp.hpp"
 #include "unilink/unilink.hpp"
 
@@ -54,7 +55,7 @@ TEST(UdpFailureTest, TransportUninitializedAndStopped) {
   EXPECT_FALSE(channel->is_connected());
 
   std::vector<uint8_t> data = {0x01, 0x02, 0x03};
-  channel->async_write_copy(data.data(), data.size());
+  channel->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
 
   // Run ioc to process the posted write task
   ioc.run_for(std::chrono::milliseconds(10));
@@ -65,7 +66,7 @@ TEST(UdpFailureTest, TransportUninitializedAndStopped) {
   ioc.run_for(std::chrono::milliseconds(10));  // Process stop
 
   // Now write should be rejected immediately (enqueue_buffer returns false)
-  channel->async_write_copy(data.data(), data.size());
+  channel->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
 
   ioc.restart();
   ioc.run_for(std::chrono::milliseconds(10));

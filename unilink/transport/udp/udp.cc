@@ -149,8 +149,8 @@ void UdpChannel::stop() {
 
 bool UdpChannel::is_connected() const { return connected_.load(); }
 
-void UdpChannel::async_write_copy(const uint8_t* data, size_t size) {
-  if (!data || size == 0) return;
+void UdpChannel::async_write_copy(memory::ConstByteSpan data) {
+  if (data.empty()) return;
   if (stop_requested_.load()) return;
   if (stopping_.load() || state_.is_state(LinkState::Closed) || state_.is_state(LinkState::Error)) return;
   if (!remote_endpoint_) {
@@ -158,6 +158,7 @@ void UdpChannel::async_write_copy(const uint8_t* data, size_t size) {
     return;
   }
 
+  size_t size = data.size();
   if (size > common::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("udp", "write", "Write size exceeds maximum allowed");
     return;
@@ -172,7 +173,7 @@ void UdpChannel::async_write_copy(const uint8_t* data, size_t size) {
   if (cfg_.enable_memory_pool && size <= 65536) {
     memory::PooledBuffer pooled(size);
     if (pooled.valid()) {
-      common::safe_memory::safe_memcpy(pooled.data(), data, size);
+      common::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
       net::post(strand_, [self = weak_from_this(), buf = std::move(pooled), size]() mutable {
         if (auto s = self.lock()) {
           if (!s->enqueue_buffer(std::move(buf), size)) return;
@@ -183,7 +184,7 @@ void UdpChannel::async_write_copy(const uint8_t* data, size_t size) {
     }
   }
 
-  std::vector<uint8_t> copy(data, data + size);
+  std::vector<uint8_t> copy(data.begin(), data.end());
   net::post(strand_, [self = weak_from_this(), buf = std::move(copy), size]() mutable {
     if (auto s = self.lock()) {
       if (!s->enqueue_buffer(std::move(buf), size)) return;
@@ -326,7 +327,7 @@ void UdpChannel::handle_receive(const boost::system::error_code& ec, std::size_t
 
   if (bytes > 0 && on_bytes_) {
     try {
-      on_bytes_(rx_.data(), bytes);
+      on_bytes_(memory::ConstByteSpan(rx_.data(), bytes));
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("udp", "on_bytes", "Exception in bytes callback: " + std::string(e.what()));
       if (cfg_.stop_on_callback_exception) {
@@ -357,6 +358,7 @@ void UdpChannel::do_write() {
     return;
   }
   if (!remote_endpoint_) {
+    UNILINK_LOG_WARNING("udp", "write", "Remote endpoint not set; dropping write request");
     writing_ = false;
     return;
   }

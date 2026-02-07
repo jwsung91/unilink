@@ -27,6 +27,7 @@
 #include <queue>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <vector>
 
@@ -78,7 +79,7 @@ struct LogEntry {
 
   LogEntry() : level(LogLevel::INFO) {}
 
-  LogEntry(LogLevel lvl, const std::string& comp, const std::string& op, const std::string& msg)
+  LogEntry(LogLevel lvl, std::string_view comp, std::string_view op, std::string_view msg)
       : timestamp(std::chrono::system_clock::now()), level(lvl), component(comp), operation(op), message(msg) {}
 };
 
@@ -235,13 +236,13 @@ class UNILINK_API Logger {
   void flush();
 
   // Main logging functions
-  void log(LogLevel level, const std::string& component, const std::string& operation, const std::string& message);
+  void log(LogLevel level, std::string_view component, std::string_view operation, std::string_view message);
 
-  void debug(const std::string& component, const std::string& operation, const std::string& message);
-  void info(const std::string& component, const std::string& operation, const std::string& message);
-  void warning(const std::string& component, const std::string& operation, const std::string& message);
-  void error(const std::string& component, const std::string& operation, const std::string& message);
-  void critical(const std::string& component, const std::string& operation, const std::string& message);
+  void debug(std::string_view component, std::string_view operation, std::string_view message);
+  void info(std::string_view component, std::string_view operation, std::string_view message);
+  void warning(std::string_view component, std::string_view operation, std::string_view message);
+  void error(std::string_view component, std::string_view operation, std::string_view message);
+  void critical(std::string_view component, std::string_view operation, std::string_view message);
 
  private:
   // Non-copyable, non-movable
@@ -279,8 +280,8 @@ class UNILINK_API Logger {
   std::condition_variable queue_cv_;
   mutable std::mutex stats_mutex_;
 
-  std::string format_message(LogLevel level, const std::string& component, const std::string& operation,
-                             const std::string& message);
+  std::string format_message(LogLevel level, std::string_view component, std::string_view operation,
+                             std::string_view message);
   std::string level_to_string(LogLevel level);
   std::string get_timestamp();
   void write_to_console(const std::string& message);

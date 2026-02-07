@@ -47,13 +47,13 @@ foreach(test_file
   if(test_name STREQUAL "test_integration")
     gtest_discover_tests(
       run_integration_${test_name}
-      PROPERTIES LABELS "integration;tcp;medium"
+      PROPERTIES LABELS "integration_tcp_medium"
       TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
     )
   else()
     gtest_discover_tests(
       run_integration_${test_name}
-      PROPERTIES LABELS "integration;tcp;medium"
+      PROPERTIES LABELS "integration_tcp_medium"
       TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()
@@ -78,7 +78,7 @@ foreach(test_file test_serial_builder_improvements.cc test_serial_loopback.cc te
   )
   gtest_discover_tests(
     run_integration_${test_name}
-    PROPERTIES LABELS "integration;serial;medium"
+    PROPERTIES LABELS "integration_serial_medium"
     TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
   )
 endforeach()
@@ -101,7 +101,7 @@ foreach(test_file test_builder_integration.cc)
   # Mark test_builder_integration to use resource lock
   gtest_discover_tests(
     run_integration_${test_name}
-    PROPERTIES LABELS "integration;builder;medium"
+    PROPERTIES LABELS "integration_builder_medium"
     TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
   )
 endforeach()
@@ -128,13 +128,13 @@ foreach(test_file test_stable_integration.cc
   if(test_name STREQUAL "test_stable_integration")
     gtest_discover_tests(
       run_integration_${test_name}
-      PROPERTIES LABELS "integration;core;medium"
+      PROPERTIES LABELS "integration_core_medium"
       TIMEOUT 600 RESOURCE_LOCK "tcp_port_allocation"
     )
   else()
     gtest_discover_tests(
       run_integration_${test_name}
-      PROPERTIES LABELS "integration;core;medium"
+      PROPERTIES LABELS "integration_core_medium"
       TIMEOUT 600 RESOURCE_LOCK "tcp_port_allocation"
     )
   endif()

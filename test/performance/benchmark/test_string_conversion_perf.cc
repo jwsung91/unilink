@@ -48,9 +48,9 @@ class StringConversionPerfTest : public ::testing::Test {
     // Output results
     std::cout << "\nBenchmark: " << label << " (" << iterations << " iterations)\n";
     std::cout << "  Original (Alloc): " << std::fixed << std::setprecision(2) << elapsed_alloc.count() << " us ("
-              << (elapsed_alloc.count() / iterations) * 1000 << " ns/op)\n";
+              << (elapsed_alloc.count() / static_cast<double>(iterations)) * 1000 << " ns/op)\n";
     std::cout << "  Optimized (View): " << std::fixed << std::setprecision(2) << elapsed_opt.count() << " us ("
-              << (elapsed_opt.count() / iterations) * 1000 << " ns/op)\n";
+              << (elapsed_opt.count() / static_cast<double>(iterations)) * 1000 << " ns/op)\n";
 
     double speedup = elapsed_alloc.count() / elapsed_opt.count();
     std::cout << "  Speedup: " << speedup << "x\n";

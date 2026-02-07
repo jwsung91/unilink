@@ -63,7 +63,7 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   void stop() override;
   bool is_connected() const override;
 
-  void async_write_copy(const uint8_t* data, size_t size) override;
+  void async_write_copy(memory::ConstByteSpan data) override;
   void async_write_move(std::vector<uint8_t>&& data) override;
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 

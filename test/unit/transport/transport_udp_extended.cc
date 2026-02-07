@@ -26,6 +26,7 @@
 
 #include "unilink/base/common.hpp"
 #include "unilink/config/udp_config.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/udp/udp.hpp"
 
 using namespace std::chrono_literals;
@@ -144,7 +145,7 @@ TEST(TransportUdpExtendedTest, PooledBufferWrite) {
 
   // Use a size that fits in small pool buckets
   std::vector<uint8_t> payload(100, 0xCC);
-  channel->async_write_copy(payload.data(), payload.size());
+  channel->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size()));
 
   EXPECT_TRUE(wait_for_condition(ioc, [&] { return received_bytes == payload.size(); }, 200ms));
 
@@ -182,10 +183,10 @@ TEST(TransportUdpExtendedTest, BackpressureReporting) {
   std::vector<uint8_t> chunk(800, 0xFF);
 
   // First write: 800 bytes (below threshold 1024)
-  channel->async_write_copy(chunk.data(), chunk.size());
+  channel->async_write_copy(memory::ConstByteSpan(chunk.data(), chunk.size()));
 
   // Second write: 1600 bytes total (above threshold)
-  channel->async_write_copy(chunk.data(), chunk.size());
+  channel->async_write_copy(memory::ConstByteSpan(chunk.data(), chunk.size()));
 
   // Now run IO to drain. The strand ensures the writes are processed
   // before the send completion handler reduces the queue, triggering the BP callback.

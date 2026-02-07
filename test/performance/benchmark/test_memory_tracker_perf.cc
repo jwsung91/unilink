@@ -38,18 +38,18 @@ class MemoryTrackerPerfTest : public ::testing::Test {
 };
 
 TEST_F(MemoryTrackerPerfTest, TrackAllocationOverhead) {
-  const int iterations = 1000000;
+  const size_t iterations = 1000000;
   std::vector<void*> ptrs;
   ptrs.reserve(iterations);
 
   // Pre-allocate pointers to avoid measuring vector allocation time
-  for (int i = 0; i < iterations; ++i) {
+  for (size_t i = 0; i < iterations; ++i) {
     ptrs.push_back(reinterpret_cast<void*>(static_cast<uintptr_t>(i + 1)));
   }
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  for (int i = 0; i < iterations; ++i) {
+  for (size_t i = 0; i < iterations; ++i) {
     MemoryTracker::instance().track_allocation(ptrs[i], 64, __FILE__, __LINE__, __FUNCTION__);
   }
 
@@ -60,17 +60,17 @@ TEST_F(MemoryTrackerPerfTest, TrackAllocationOverhead) {
   std::cout << "Time per op: " << (double)duration * 1000000 / iterations << " ns" << std::endl;
 
   // Cleanup to avoid memory usage growth during test
-  for (int i = 0; i < iterations; ++i) {
+  for (size_t i = 0; i < iterations; ++i) {
     MemoryTracker::instance().track_deallocation(ptrs[i]);
   }
 }
 
 TEST_F(MemoryTrackerPerfTest, TrackDeallocationOverhead) {
-  const int iterations = 1000000;
+  const size_t iterations = 1000000;
   std::vector<void*> ptrs;
   ptrs.reserve(iterations);
 
-  for (int i = 0; i < iterations; ++i) {
+  for (size_t i = 0; i < iterations; ++i) {
     void* ptr = reinterpret_cast<void*>(static_cast<uintptr_t>(i + 1));
     ptrs.push_back(ptr);
     MemoryTracker::instance().track_allocation(ptr, 64, __FILE__, __LINE__, __FUNCTION__);
@@ -78,7 +78,7 @@ TEST_F(MemoryTrackerPerfTest, TrackDeallocationOverhead) {
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  for (int i = 0; i < iterations; ++i) {
+  for (size_t i = 0; i < iterations; ++i) {
     MemoryTracker::instance().track_deallocation(ptrs[i]);
   }
 

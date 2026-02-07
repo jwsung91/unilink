@@ -45,7 +45,7 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg)
       ioc_(concurrency::IoContextManager::instance().get_context()),
       acceptor_(nullptr),
       cfg_(cfg),
-      max_clients_(cfg.max_connections > 0 ? cfg.max_connections : 0),
+      max_clients_(cfg.max_connections > 0 ? static_cast<size_t>(cfg.max_connections) : 0),
       client_limit_enabled_(cfg.max_connections > 0),
       current_session_(nullptr) {
   // Create acceptor after all members are initialized
@@ -64,7 +64,7 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interfa
       ioc_(ioc),
       acceptor_(std::move(acceptor)),
       cfg_(cfg),
-      max_clients_(cfg.max_connections > 0 ? cfg.max_connections : 0),
+      max_clients_(cfg.max_connections > 0 ? static_cast<size_t>(cfg.max_connections) : 0),
       client_limit_enabled_(cfg.max_connections > 0),
       current_session_(nullptr) {
   // Ensure acceptor is properly initialized
@@ -131,9 +131,6 @@ void TcpServer::stop() {
     return;  // Already stopping/stopped
   }
 
-  // Proactively stop sessions to block callbacks as early as possible.
-  std::vector<std::shared_ptr<TcpServerSession>> sessions_pre_stop;
-
   // Clear all callbacks synchronously to prevent any further invocations
   // during shutdown and to uphold the "no callbacks after stop" contract.
   {
@@ -144,23 +141,17 @@ void TcpServer::stop() {
     on_multi_connect_ = nullptr;
     on_multi_data_ = nullptr;
     on_multi_disconnect_ = nullptr;
-    sessions_pre_stop.reserve(sessions_.size());
-    for (auto& kv : sessions_) {
-      sessions_pre_stop.push_back(kv.second);
-    }
   }
 
-  for (auto& session : sessions_pre_stop) {
-    if (session) {
-      session->stop();
-    }
-  }
-
+  // Define cleanup task to run on IO thread
   auto cleanup = [this]() {
     boost::system::error_code ec;
+    // 1. Close acceptor first to stop new connections
     if (acceptor_ && acceptor_->is_open()) {
       acceptor_->close(ec);
     }
+
+    // 2. Copy sessions and clear map
     std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
     {
       std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
@@ -171,18 +162,19 @@ void TcpServer::stop() {
       sessions_.clear();
       current_session_.reset();
     }
+
+    // 3. Stop all sessions
     for (auto& session : sessions_copy) {
       if (session) {
         session->stop();
       }
     }
+
     // Clean up all sessions
     state_.set_state(base::LinkState::Closed);
   };
 
   const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
-  const bool has_active_ioc_thread =
-      owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
 
   if (in_ioc_thread) {
     cleanup();
@@ -192,35 +184,39 @@ void TcpServer::stop() {
     return;
   }
 
-  bool async_cleanup_done = false;
+  // Attempt to dispatch cleanup to IO thread if possible
+  bool dispatched = false;
+  const bool has_active_ioc_thread =
+      owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
+
   if (has_active_ioc_thread) {
     try {
       auto self = shared_from_this();
       auto cleanup_promise = std::make_shared<std::promise<void>>();
       auto cleanup_future = cleanup_promise->get_future();
 
-      net::post(ioc_, [self, cleanup, cleanup_promise] {
+      net::dispatch(ioc_, [self, cleanup, cleanup_promise] {
         cleanup();
         cleanup_promise->set_value();
       });
 
       cleanup_future.wait();
-      async_cleanup_done = true;
+      dispatched = true;
     } catch (const std::bad_weak_ptr&) {
-      // Called from destructor or object is dying; fallback to synchronous cleanup
       UNILINK_LOG_DEBUG("tcp_server", "stop", "shared_from_this() failed, performing synchronous cleanup");
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("tcp_server", "stop", "Dispatch failed: " + std::string(e.what()));
     }
   }
 
-  if (!async_cleanup_done) {
-    // io_context is not running or shared_from_this failed; perform best-effort cleanup synchronously
+  if (!dispatched) {
+    // Fallback to synchronous cleanup
     cleanup();
   }
 
   if (owns_ioc_ && ioc_thread_.joinable()) {
     ioc_.stop();
     ioc_thread_.join();
-    // Reset io_context to clear any remaining work
     ioc_.restart();
   }
   // Don't call notify_state() in stop() as it may cause issues with callbacks
@@ -238,7 +234,7 @@ bool TcpServer::is_connected() const {
   return current_session_ && current_session_->alive();
 }
 
-void TcpServer::async_write_copy(const uint8_t* data, size_t size) {
+void TcpServer::async_write_copy(memory::ConstByteSpan data) {
   if (stopping_.load()) return;
   std::shared_ptr<TcpServerSession> session;
   {
@@ -247,7 +243,7 @@ void TcpServer::async_write_copy(const uint8_t* data, size_t size) {
   }
 
   if (session && session->alive()) {
-    session->async_write_copy(data, size);
+    session->async_write_copy(data);
   }
   // If no session or session is not alive, the write is silently dropped
 }
@@ -479,7 +475,7 @@ void TcpServer::do_accept() {
     }
 
     // Set session callbacks
-    new_session->on_bytes([self, client_id](const uint8_t* data, size_t size) {
+    new_session->on_bytes([self, client_id](memory::ConstByteSpan data) {
       OnBytes cb;
       MultiClientDataHandler multi_cb;
       {
@@ -490,12 +486,12 @@ void TcpServer::do_accept() {
 
       // Call existing callback (compatibility)
       if (cb) {
-        cb(data, size);
+        cb(data);
       }
 
       // Call multi-client callback
       if (multi_cb) {
-        std::string str_data = common::safe_convert::uint8_to_string(data, size);
+        std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
         multi_cb(client_id, str_data);
       }
     });
@@ -614,7 +610,7 @@ bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
   auto it = sessions_.find(client_id);
   if (it != sessions_.end() && it->second && it->second->alive()) {
     auto binary_view = common::safe_convert::string_to_bytes(message);
-    it->second->async_write_copy(binary_view.first, binary_view.second);
+    it->second->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     return true;
   }
   UNILINK_LOG_DEBUG("tcp_server", "send_to_client",
