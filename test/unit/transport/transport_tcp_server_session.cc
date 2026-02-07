@@ -27,6 +27,7 @@
 
 using namespace unilink;
 using namespace unilink::transport;
+using unilink::test::FakeTcpSocket;
 using namespace std::chrono_literals;
 
 namespace {
@@ -155,9 +156,13 @@ TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
   }
   EXPECT_TRUE(session->alive());
 
+  // Ensure start_read has been called so read_handler_ is set
+  ioc.run_for(5ms);
+
   // Trigger read handler to invoke throwing callback
   socket_raw->emit_read(4);
 
+  ioc.restart();
   ioc.run_for(50ms);
 
   EXPECT_TRUE(closed.load());

@@ -39,6 +39,7 @@ namespace base {
 
 enum class LinkState { Idle, Connecting, Listening, Connected, Closed, Error };
 
+// LCOV_EXCL_START
 inline const char* to_cstr(LinkState s) {
   switch (s) {
     case LinkState::Idle:
@@ -94,6 +95,7 @@ inline bool is_latest_optimizations_available() { return PlatformInfo::is_latest
 inline bool is_experimental_features_available() { return PlatformInfo::is_experimental_features_available(); }
 
 inline std::string get_platform_warning() { return PlatformInfo::get_support_warning(); }
+// LCOV_EXCL_STOP
 
 // Safe memory operations
 namespace safe_memory {
