@@ -198,7 +198,8 @@ TEST_F(BenchmarkTest, MemoryPoolConcurrentPerformance) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   double throughput = calculateThroughput(total_operations.load(), duration);
-  double success_rate = (100.0 * static_cast<double>(successful_operations.load())) / static_cast<double>(total_operations.load());
+  double success_rate =
+      (100.0 * static_cast<double>(successful_operations.load())) / static_cast<double>(total_operations.load());
 
   std::cout << "Threads: " << num_threads << std::endl;
   std::cout << "Operations per thread: " << formatNumber(operations_per_thread) << std::endl;
@@ -260,7 +261,8 @@ TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
   auto final_stats = pool.get_stats();
   size_t total_hits = final_stats.pool_hits - initial_stats.pool_hits;
   size_t total_allocations = final_stats.total_allocations - initial_stats.total_allocations;
-  double hit_rate = total_allocations > 0 ? (100.0 * static_cast<double>(total_hits)) / static_cast<double>(total_allocations) : 0.0;
+  double hit_rate =
+      total_allocations > 0 ? (100.0 * static_cast<double>(total_hits)) / static_cast<double>(total_allocations) : 0.0;
 
   double throughput = calculateThroughput(num_cycles * buffers_per_cycle * 2, duration);
 
@@ -322,7 +324,8 @@ TEST_F(BenchmarkTest, NetworkCommunicationThroughput) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   double message_throughput = calculateThroughput(messages_processed.load(), duration);
-  double data_throughput = (static_cast<double>(bytes_processed.load()) / 1024.0) / (static_cast<double>(duration.count()) / 1000.0);  // KB/s
+  double data_throughput = (static_cast<double>(bytes_processed.load()) / 1024.0) /
+                           (static_cast<double>(duration.count()) / 1000.0);  // KB/s
 
   std::cout << "Messages: " << formatNumber(messages_processed.load()) << std::endl;
   std::cout << "Message size: " << formatNumber(message_size) << " bytes" << std::endl;
@@ -451,7 +454,8 @@ TEST_F(BenchmarkTest, ConcurrentOperationsPerformance) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   double throughput = calculateThroughput(total_operations.load(), duration);
-  double success_rate = (100.0 * static_cast<double>(successful_operations.load())) / static_cast<double>(total_operations.load());
+  double success_rate =
+      (100.0 * static_cast<double>(successful_operations.load())) / static_cast<double>(total_operations.load());
 
   std::cout << "Threads: " << num_threads << std::endl;
   std::cout << "Operations per thread: " << formatNumber(operations_per_thread) << std::endl;

@@ -27,50 +27,6 @@
 
 using namespace unilink;
 using namespace unilink::transport;
-
-namespace {
-namespace net = boost::asio;
-using tcp = net::ip::tcp;
-}  // namespace
-
-TEST(TransportTcpFuzzTest, FuzzingData) {
-  net::io_context ioc;
-  auto work = net::make_work_guard(ioc);
-  auto socket = std::make_unique<FakeTcpSocket>(ioc);
-  auto* socket_raw = socket.get();
-  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), 1024);
-
-  session->start();
-  // Allow start_read to register handler
-  while (!socket_raw->has_handler()) {
-    ioc.run_for(std::chrono::milliseconds(1));
-  }
-
-  std::atomic<size_t> bytes_received{0};
-  session->on_bytes([&](memory::ConstByteSpan) {
-    // Process data normally
-  });
-
-  // Simulate fuzzy data
-  socket_raw->emit_read(1);
-  socket_raw->emit_read(10);
-  socket_raw->emit_read(100);
-
-  ioc.run_for(std::chrono::milliseconds(50));
-}
-
-TEST(TransportTcpFuzzTest, MockParserCrash) {
-  net::io_context ioc;
-  auto work = net::make_work_guard(ioc);
-  auto socket = std::make_unique<FakeTcpSocket>(ioc);
-  auto* socket_raw = socket.get();
-  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), 1024);
-
-  session->start();
-  // Allow start_read to register handler
-  while (!socket_raw->has_handler()) {
-    ioc.run_for(std::chrono::milliseconds(1));
-  }
 using unilink::test::FakeTcpSocket;
 using namespace std::chrono_literals;
 
@@ -90,15 +46,16 @@ TEST(TransportTcpFuzzTest, FuzzingData) {
   std::atomic<bool> closed{false};
   session->on_close([&]() { closed = true; });
 
-  session->on_bytes([&](memory::ConstByteSpan span) {
-    if (span.size() == 13) {  // Unlucky number triggers crash
   // Simple echo or no-op parser
-  session->on_bytes([&](const uint8_t*, size_t) {
+  session->on_bytes([&](memory::ConstByteSpan) {
     // Process data normally
   });
 
   session->start();
-  ioc.run_for(5ms);  // Process start_read
+  // Allow start_read to register handler
+  while (!socket_raw->has_handler()) {
+    ioc.run_for(1ms);
+  }
   EXPECT_TRUE(session->alive());
 
   std::mt19937 gen(12345);
@@ -134,25 +91,17 @@ TEST(TransportTcpFuzzTest, MockParserCrash) {
   session->on_close([&]() { closed = true; });
 
   // Mock parser that throws on specific "bad" length
-  session->on_bytes([&](const uint8_t*, size_t size) {
-    if (size == 13) {  // Unlucky number triggers crash
+  session->on_bytes([&](memory::ConstByteSpan span) {
+    if (span.size() == 13) {  // Unlucky number triggers crash
       throw std::runtime_error("Protocol violation");
     }
   });
 
-  // Normal data
-  socket_raw->emit_read(10);
-  ioc.run_for(std::chrono::milliseconds(10));
-  EXPECT_FALSE(closed.load());
-
-  // Malformed data triggering exception
-  socket_raw->emit_read(13);
-  ioc.run_for(std::chrono::milliseconds(10));
-
-  EXPECT_TRUE(closed.load());
-}
   session->start();
-  ioc.run_for(5ms);  // Process start_read
+  // Allow start_read to register handler
+  while (!socket_raw->has_handler()) {
+    ioc.run_for(1ms);
+  }
   EXPECT_TRUE(session->alive());
 
   // Send safe data

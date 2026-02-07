@@ -26,18 +26,6 @@
 
 using namespace unilink;
 using namespace unilink::transport;
-
-namespace {
-namespace net = boost::asio;
-}
-
-TEST(TransportTcpTimeoutTest, ReadErrorReset) {
-  net::io_context ioc;
-  auto work = net::make_work_guard(ioc);
-  auto socket = std::make_unique<FakeTcpSocket>(ioc);
-  auto* socket_raw = socket.get();
-  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), 1024);
-
 using unilink::test::FakeTcpSocket;
 using namespace std::chrono_literals;
 
@@ -48,11 +36,9 @@ namespace net = boost::asio;
 TEST(TransportTcpTimeoutTest, ReadErrorReset) {
   net::io_context ioc;
   auto work_guard = net::make_work_guard(ioc);
-  size_t bp_threshold = 1024;
-
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
   auto* socket_raw = socket.get();
-  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
+  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), 1024);
 
   std::atomic<bool> closed{false};
   session->on_close([&]() { closed = true; });
@@ -68,13 +54,6 @@ TEST(TransportTcpTimeoutTest, ReadErrorReset) {
   socket_raw->emit_read(0, boost::asio::error::connection_reset);
 
   ioc.run_for(std::chrono::milliseconds(10));
-  ioc.run_for(5ms);  // Process start_read
-  EXPECT_TRUE(session->alive());
-
-  // Simulate connection reset
-  socket_raw->emit_read(0, boost::asio::error::connection_reset);
-
-  ioc.run_for(5ms);
 
   EXPECT_TRUE(closed.load());
   EXPECT_FALSE(session->alive());
@@ -82,11 +61,19 @@ TEST(TransportTcpTimeoutTest, ReadErrorReset) {
 
 TEST(TransportTcpTimeoutTest, CancelHandling) {
   net::io_context ioc;
-  auto work = net::make_work_guard(ioc);
+  auto work_guard = net::make_work_guard(ioc);
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
+  auto* socket_raw = socket.get();
   auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), 1024);
 
+  std::atomic<bool> closed{false};
+  session->on_close([&]() { closed = true; });
+
   session->start();
+  // Allow start_read to register handler
+  while (!socket_raw->has_handler()) {
+    ioc.run_for(std::chrono::milliseconds(1));
+  }
   EXPECT_TRUE(session->alive());
 
   // Manually cancel
@@ -94,30 +81,6 @@ TEST(TransportTcpTimeoutTest, CancelHandling) {
 
   // Cancel should trigger socket closure path
   ioc.run_for(std::chrono::milliseconds(10));
-
-  EXPECT_FALSE(session->alive());
-}
-  auto work_guard = net::make_work_guard(ioc);
-  size_t bp_threshold = 1024;
-
-  auto socket = std::make_unique<FakeTcpSocket>(ioc);
-  auto* socket_raw = socket.get();
-  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
-
-  std::atomic<bool> closed{false};
-  session->on_close([&]() { closed = true; });
-
-  session->start();
-  ioc.run_for(5ms);  // Process start_read
-  EXPECT_TRUE(session->alive());
-
-  // Call cancel
-  session->cancel();
-
-  // Simulate the resulting operation_aborted error from the socket
-  socket_raw->emit_read(0, boost::asio::error::operation_aborted);
-
-  ioc.run_for(5ms);
 
   EXPECT_TRUE(closed.load());
   EXPECT_FALSE(session->alive());
