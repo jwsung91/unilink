@@ -21,6 +21,7 @@
 #include <cstdint>
 #include <regex>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "unilink/base/constants.hpp"
@@ -71,7 +72,7 @@ class UNILINK_API InputValidator {
 
  private:
   // Helper methods
-  static bool is_valid_ipv4(const std::string& address);
+  static bool is_valid_ipv4(std::string_view address);
   static bool is_valid_ipv6(const std::string& address);
   static bool is_valid_hostname(const std::string& hostname);
   static bool is_valid_device_path(const std::string& device);

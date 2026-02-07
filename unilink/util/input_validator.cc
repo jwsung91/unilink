@@ -17,8 +17,10 @@
 #include "unilink/util/input_validator.hpp"
 
 #include <algorithm>
+#include <charconv>
 #include <cstring>
 #include <sstream>
+#include <string_view>
 
 namespace unilink {
 namespace util {
@@ -82,53 +84,43 @@ void InputValidator::validate_parity(const std::string& parity) {
   }
 }
 
-bool InputValidator::is_valid_ipv4(const std::string& address) {
-  // Split the address into octets
-  std::stringstream ss(address);
-  std::string octet;
-  std::vector<std::string> octets;
+bool InputValidator::is_valid_ipv4(std::string_view address) {
+  if (address.empty()) return false;
 
-  while (std::getline(ss, octet, '.')) {
-    octets.push_back(octet);
+  int dots = 0;
+  size_t start = 0;
+  size_t end = 0;
+
+  while ((end = address.find('.', start)) != std::string_view::npos) {
+    if (end == start) return false;  // Empty octet
+    size_t len = end - start;
+    if (len > 3) return false;  // Too long (max "255")
+
+    // Check leading zero (unless single '0')
+    if (len > 1 && address[start] == '0') return false;
+
+    int octet;
+    auto res = std::from_chars(address.data() + start, address.data() + end, octet);
+    if (res.ec != std::errc() || res.ptr != address.data() + end) return false;
+    if (octet < 0 || octet > 255) return false;
+
+    dots++;
+    start = end + 1;
   }
 
-  // Must have exactly 4 octets
-  if (octets.size() != 4) {
-    return false;
-  }
+  // Last octet
+  if (start >= address.length()) return false;  // Trailing dot or empty last part
+  size_t len = address.length() - start;
+  if (len > 3) return false;
 
-  // Validate each octet
-  for (const auto& oct : octets) {
-    // Check for empty octet
-    if (oct.empty()) {
-      return false;
-    }
+  if (len > 1 && address[start] == '0') return false;
 
-    // Check for leading zeros (except for "0" itself)
-    if (oct.length() > 1 && oct[0] == '0') {
-      return false;
-    }
+  int octet;
+  auto res = std::from_chars(address.data() + start, address.data() + address.length(), octet);
+  if (res.ec != std::errc() || res.ptr != address.data() + address.length()) return false;
+  if (octet < 0 || octet > 255) return false;
 
-    // Check for non-numeric characters
-    for (char c : oct) {
-      if (!std::isdigit(c)) {
-        return false;
-      }
-    }
-
-    // Check for valid range
-    try {
-      // Use long long to handle potential overflow
-      long long value = std::stoll(oct);
-      if (value < 0 || value > 255) {
-        return false;
-      }
-    } catch (const std::exception&) {
-      return false;
-    }
-  }
-
-  return true;
+  return dots == 3;
 }
 
 bool InputValidator::is_valid_ipv6(const std::string& address) {
