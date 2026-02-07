@@ -137,7 +137,8 @@ std::shared_ptr<TcpClient> TcpClient::create(const TcpClientConfig& cfg, boost::
 }
 
 TcpClient::TcpClient(const TcpClientConfig& cfg) : impl_(std::make_unique<Impl>(cfg, nullptr)) {}
-TcpClient::TcpClient(const TcpClientConfig& cfg, boost::asio::io_context& ioc) : impl_(std::make_unique<Impl>(cfg, &ioc)) {}
+TcpClient::TcpClient(const TcpClientConfig& cfg, boost::asio::io_context& ioc)
+    : impl_(std::make_unique<Impl>(cfg, &ioc)) {}
 
 TcpClient::~TcpClient() {
   stop();
@@ -174,7 +175,8 @@ void TcpClient::start() {
   impl_->current_seq_.store(seq);
 
   if (impl_->owns_ioc_ && impl_->ioc_) {
-    impl_->work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(impl_->ioc_->get_executor());
+    impl_->work_guard_ =
+        std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(impl_->ioc_->get_executor());
     impl_->ioc_thread_ = std::thread([this]() {
       try {
         impl_->ioc_->run();
@@ -188,20 +190,20 @@ void TcpClient::start() {
 
   auto weak_self = weak_from_this();
   if (impl_->ioc_) {
-      net::dispatch(impl_->strand_, [weak_self, seq] {
-        if (auto self = weak_self.lock()) {
-          if (seq <= self->impl_->stop_seq_.load()) {
-            return;
-          }
-          self->impl_->reset_start_state();
-          self->impl_->connected_.store(false);
-          self->impl_->reset_io_objects();
-          self->impl_->transition_to(LinkState::Connecting);
-          self->impl_->do_resolve_connect(self);
+    net::dispatch(impl_->strand_, [weak_self, seq] {
+      if (auto self = weak_self.lock()) {
+        if (seq <= self->impl_->stop_seq_.load()) {
+          return;
         }
-      });
+        self->impl_->reset_start_state();
+        self->impl_->connected_.store(false);
+        self->impl_->reset_io_objects();
+        self->impl_->transition_to(LinkState::Connecting);
+        self->impl_->do_resolve_connect(self);
+      }
+    });
   } else {
-      UNILINK_LOG_ERROR("tcp_client", "start", "io_context is null");
+    UNILINK_LOG_ERROR("tcp_client", "start", "io_context is null");
   }
 }
 
@@ -421,8 +423,9 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self) {
         return;
       }
       if (!timer_ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load()) {
-        UNILINK_LOG_ERROR("tcp_client", "connect_timeout",
-                          "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
+        UNILINK_LOG_ERROR(
+            "tcp_client", "connect_timeout",
+            "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
         self->impl_->handle_close(self, boost::asio::error::timed_out);
       }
     });
@@ -480,7 +483,8 @@ void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self) {
     if (ec == net::error::operation_aborted) {
       return;
     }
-    if (!ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load()) self->impl_->do_resolve_connect(self);
+    if (!ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load())
+      self->impl_->do_resolve_connect(self);
   });
 }
 
@@ -552,7 +556,8 @@ void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self) {
   auto on_write = [self, queued_bytes](auto ec, std::size_t) {
     if (ec == net::error::operation_aborted) {
       self->impl_->current_write_buffer_.reset();
-      self->impl_->queue_bytes_ = (self->impl_->queue_bytes_ > queued_bytes) ? (self->impl_->queue_bytes_ - queued_bytes) : 0;
+      self->impl_->queue_bytes_ =
+          (self->impl_->queue_bytes_ > queued_bytes) ? (self->impl_->queue_bytes_ - queued_bytes) : 0;
       self->impl_->report_backpressure(self->impl_->queue_bytes_);
       self->impl_->writing_ = false;
       return;
@@ -571,7 +576,8 @@ void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self) {
     }
 
     self->impl_->current_write_buffer_.reset();
-    self->impl_->queue_bytes_ = (self->impl_->queue_bytes_ > queued_bytes) ? (self->impl_->queue_bytes_ - queued_bytes) : 0;
+    self->impl_->queue_bytes_ =
+        (self->impl_->queue_bytes_ > queued_bytes) ? (self->impl_->queue_bytes_ - queued_bytes) : 0;
     self->impl_->report_backpressure(self->impl_->queue_bytes_);
 
     if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
