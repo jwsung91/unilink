@@ -49,6 +49,10 @@ var hierarchy =
     [ "unilink::diagnostics::ErrorStats", "structunilink_1_1diagnostics_1_1ErrorStats.html", null ],
     [ "unilink::memory::GlobalMemoryPool", "classunilink_1_1memory_1_1GlobalMemoryPool.html", null ],
     [ "unilink::memory::MemoryPool::HealthMetrics", "structunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics.html", null ],
+    [ "unilink::framer::IFramer", "classunilink_1_1framer_1_1IFramer.html", [
+      [ "unilink::framer::LineFramer", "classunilink_1_1framer_1_1LineFramer.html", null ],
+      [ "unilink::framer::PacketFramer", "classunilink_1_1framer_1_1PacketFramer.html", null ]
+    ] ],
     [ "unilink::util::InputValidator", "classunilink_1_1util_1_1InputValidator.html", null ],
     [ "unilink::concurrency::IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", null ],
     [ "unilink::diagnostics::LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", null ],

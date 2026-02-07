@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('classunilink_1_1builder_1_1BuilderInte
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classunilink_1_1builder_1_1BuilderInterface-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">unilink::builder::BuilderInterface&lt; T, Derived &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -144,6 +145,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2072aa65a77b0c821e2a57bc989fb311"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2072aa65a77b0c821e2a57bc989fb311">on_error</a> (U *obj, F method)</td></tr>
 <tr class="memdesc:a2072aa65a77b0c821e2a57bc989fb311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2072aa65a77b0c821e2a57bc989fb311">More...</a><br /></td></tr>
 <tr class="separator:a2072aa65a77b0c821e2a57bc989fb311"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cc6b45ab72bbc5c91ce4582b159a220"><td class="memItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2cc6b45ab72bbc5c91ce4582b159a220">use_line_framer</a> (std::string_view delimiter=&quot;\n&quot;, bool include_delimiter=false, size_t max_length=65536)</td></tr>
+<tr class="memdesc:a2cc6b45ab72bbc5c91ce4582b159a220"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use LineFramer for message segmentation (e.g., newline delimited)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2cc6b45ab72bbc5c91ce4582b159a220">More...</a><br /></td></tr>
+<tr class="separator:a2cc6b45ab72bbc5c91ce4582b159a220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bbd141051bf6d5ec93d6171e48691cb"><td class="memItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb">use_packet_framer</a> (const std::vector&lt; uint8_t &gt; &amp;start_pattern, const std::vector&lt; uint8_t &gt; &amp;end_pattern, size_t max_length)</td></tr>
+<tr class="memdesc:a2bbd141051bf6d5ec93d6171e48691cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use PacketFramer for message segmentation (binary pattern matching)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb">More...</a><br /></td></tr>
+<tr class="separator:a2bbd141051bf6d5ec93d6171e48691cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acab8f9a10abf2fe0937dd3c8c8db3153"><td class="memItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acab8f9a10abf2fe0937dd3c8c8db3153">on_message</a> (std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt; handler)</td></tr>
+<tr class="memdesc:acab8f9a10abf2fe0937dd3c8c8db3153"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback (for framed messages)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#acab8f9a10abf2fe0937dd3c8c8db3153">More...</a><br /></td></tr>
+<tr class="separator:acab8f9a10abf2fe0937dd3c8c8db3153"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d69170af68815e82dcfd15a0e1e734f"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
+<tr class="memitem:a8d69170af68815e82dcfd15a0e1e734f"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a8d69170af68815e82dcfd15a0e1e734f">on_message</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:a8d69170af68815e82dcfd15a0e1e734f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a8d69170af68815e82dcfd15a0e1e734f">More...</a><br /></td></tr>
+<tr class="separator:a8d69170af68815e82dcfd15a0e1e734f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a155f893ff2b37e4e7c028fcfc523ced4"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a155f893ff2b37e4e7c028fcfc523ced4">framer_</a></td></tr>
+<tr class="separator:a155f893ff2b37e4e7c028fcfc523ced4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5716b75e47e34f725ea5c27fcc9396e2"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a5716b75e47e34f725ea5c27fcc9396e2">on_message_</a></td></tr>
+<tr class="separator:a5716b75e47e34f725ea5c27fcc9396e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename T, typename Derived&gt;<br />
@@ -159,7 +180,7 @@ class unilink::builder::BuilderInterface&lt; T, Derived &gt;</h3>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00038">38</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00044">44</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4c9007f791048f912597ccd39fa99a76"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4c9007f791048f912597ccd39fa99a76">&#9670;&nbsp;</a></span>~BuilderInterface()</h2>
@@ -437,7 +458,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00096">96</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00102">102</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -535,7 +556,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00076">76</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00082">82</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -633,7 +654,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00116">116</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00122">122</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -731,7 +752,105 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00136">136</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00142">142</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="acab8f9a10abf2fe0937dd3c8c8db3153"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acab8f9a10abf2fe0937dd3c8c8db3153">&#9670;&nbsp;</a></span>on_message() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_message </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set message handler callback (for framed messages) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>Function to handle complete messages </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00179">179</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8d69170af68815e82dcfd15a0e1e734f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d69170af68815e82dcfd15a0e1e734f">&#9670;&nbsp;</a></span>on_message() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<div class="memtemplate">
+template&lt;typename U , typename F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_message </td>
+          <td>(</td>
+          <td class="paramtype">U *&#160;</td>
+          <td class="paramname"><em>obj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">F&#160;</td>
+          <td class="paramname"><em>method</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set message handler callback using member function pointer. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">U</td><td>Class type </td></tr>
+    <tr><td class="paramname">F</td><td>Member function type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">obj</td><td>Object instance </td></tr>
+    <tr><td class="paramname">method</td><td>Member function pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00193">193</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -791,6 +910,173 @@ template&lt;typename T , typename Derived &gt; </div>
 
 </div>
 </div>
+<a id="a2cc6b45ab72bbc5c91ce4582b159a220"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cc6b45ab72bbc5c91ce4582b159a220">&#9670;&nbsp;</a></span>use_line_framer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::use_line_framer </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>delimiter</em> = <code>&quot;\n&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>include_delimiter</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>max_length</em> = <code>65536</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Use LineFramer for message segmentation (e.g., newline delimited) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delimiter</td><td>Delimiter string (default: "\n") </td></tr>
+    <tr><td class="paramname">include_delimiter</td><td>Whether to include delimiter in the message </td></tr>
+    <tr><td class="paramname">max_length</td><td>Maximum message length </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00155">155</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a2bbd141051bf6d5ec93d6171e48691cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bbd141051bf6d5ec93d6171e48691cb">&#9670;&nbsp;</a></span>use_packet_framer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::use_packet_framer </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>start_pattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>end_pattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>max_length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Use PacketFramer for message segmentation (binary pattern matching) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">start_pattern</td><td>Start pattern bytes </td></tr>
+    <tr><td class="paramname">end_pattern</td><td>End pattern bytes </td></tr>
+    <tr><td class="paramname">max_length</td><td>Maximum packet length </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00168">168</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a155f893ff2b37e4e7c028fcfc523ced4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a155f893ff2b37e4e7c028fcfc523ced4">&#9670;&nbsp;</a></span>framer_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a>&gt; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::framer_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00198">198</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a5716b75e47e34f725ea5c27fcc9396e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5716b75e47e34f725ea5c27fcc9396e2">&#9670;&nbsp;</a></span>on_message_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Derived &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt;void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_message_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00199">199</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>unilink/builder/<a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a></li>
 </ul>
@@ -800,7 +1086,7 @@ template&lt;typename T , typename Derived &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 11:59:24 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 14:19:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

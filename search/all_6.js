@@ -12,11 +12,12 @@ var searchData=
   ['flush_5fcount_199',['flush_count',['../structunilink_1_1diagnostics_1_1AsyncLogStats.html#a92013e35bdfd49b85f88390c19d4cbb4',1,'unilink::diagnostics::AsyncLogStats']]],
   ['flush_5finterval_200',['flush_interval',['../structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea',1,'unilink::diagnostics::AsyncLogConfig']]],
   ['formatted_5fmessage_201',['formatted_message',['../structunilink_1_1diagnostics_1_1LogEntry.html#a4855fbeb9ff7bf7301f5d802f433d5d0',1,'unilink::diagnostics::LogEntry']]],
-  ['from_5fc_5fstring_202',['from_c_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad47b9c31322e249f60bb70e5d71c3f5f',1,'unilink::memory::safe_buffer_factory']]],
-  ['from_5fraw_5fdata_203',['from_raw_data',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#af038015aafcb3ab44bd10eb3392752ac',1,'unilink::memory::safe_buffer_factory']]],
-  ['from_5fspan_204',['from_span',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a5ee9d29f198e862b650cdffa34f48abb',1,'unilink::memory::safe_buffer_factory']]],
-  ['from_5fstring_205',['from_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad2d7304198383247e983f6b2f5b62f3e',1,'unilink::memory::safe_buffer_factory']]],
-  ['from_5fvector_206',['from_vector',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a287eb0d65ad65944a76d964008609cc1',1,'unilink::memory::safe_buffer_factory']]],
-  ['front_207',['front',['../classunilink_1_1memory_1_1SafeSpan.html#a30d76220be2cce507d36d12b7d893820',1,'unilink::memory::SafeSpan']]],
-  ['function_208',['function',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a89e87d05db0fc5d9d8166854114423ff',1,'unilink::memory::MemoryTracker::AllocationInfo']]]
+  ['framer_5f_202',['framer_',['../classunilink_1_1builder_1_1BuilderInterface.html#a155f893ff2b37e4e7c028fcfc523ced4',1,'unilink::builder::BuilderInterface']]],
+  ['from_5fc_5fstring_203',['from_c_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad47b9c31322e249f60bb70e5d71c3f5f',1,'unilink::memory::safe_buffer_factory']]],
+  ['from_5fraw_5fdata_204',['from_raw_data',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#af038015aafcb3ab44bd10eb3392752ac',1,'unilink::memory::safe_buffer_factory']]],
+  ['from_5fspan_205',['from_span',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a5ee9d29f198e862b650cdffa34f48abb',1,'unilink::memory::safe_buffer_factory']]],
+  ['from_5fstring_206',['from_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad2d7304198383247e983f6b2f5b62f3e',1,'unilink::memory::safe_buffer_factory']]],
+  ['from_5fvector_207',['from_vector',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a287eb0d65ad65944a76d964008609cc1',1,'unilink::memory::safe_buffer_factory']]],
+  ['front_208',['front',['../classunilink_1_1memory_1_1SafeSpan.html#a30d76220be2cce507d36d12b7d893820',1,'unilink::memory::SafeSpan']]],
+  ['function_209',['function',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a89e87d05db0fc5d9d8166854114423ff',1,'unilink::memory::MemoryTracker::AllocationInfo']]]
 ];

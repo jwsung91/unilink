@@ -14,6 +14,12 @@ var classunilink_1_1builder_1_1BuilderInterface =
     [ "on_disconnect", "classunilink_1_1builder_1_1BuilderInterface.html#ac0b1f54ba0ed2e4ef41ea3e351e2f200", null ],
     [ "on_error", "classunilink_1_1builder_1_1BuilderInterface.html#a155a296ef455cc0c6c0bd98e2ba910f4", null ],
     [ "on_error", "classunilink_1_1builder_1_1BuilderInterface.html#a2072aa65a77b0c821e2a57bc989fb311", null ],
+    [ "on_message", "classunilink_1_1builder_1_1BuilderInterface.html#acab8f9a10abf2fe0937dd3c8c8db3153", null ],
+    [ "on_message", "classunilink_1_1builder_1_1BuilderInterface.html#a8d69170af68815e82dcfd15a0e1e734f", null ],
     [ "operator=", "classunilink_1_1builder_1_1BuilderInterface.html#a3ac78ea4742323ac6cf182dced1b43b9", null ],
-    [ "operator=", "classunilink_1_1builder_1_1BuilderInterface.html#a0b2378199ac802b34579cb42d61a4735", null ]
+    [ "operator=", "classunilink_1_1builder_1_1BuilderInterface.html#a0b2378199ac802b34579cb42d61a4735", null ],
+    [ "use_line_framer", "classunilink_1_1builder_1_1BuilderInterface.html#a2cc6b45ab72bbc5c91ce4582b159a220", null ],
+    [ "use_packet_framer", "classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb", null ],
+    [ "framer_", "classunilink_1_1builder_1_1BuilderInterface.html#a155f893ff2b37e4e7c028fcfc523ced4", null ],
+    [ "on_message_", "classunilink_1_1builder_1_1BuilderInterface.html#a5716b75e47e34f725ea5c27fcc9396e2", null ]
 ];

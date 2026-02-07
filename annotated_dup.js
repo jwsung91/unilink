@@ -52,6 +52,11 @@ var annotated_dup =
       [ "factory", "namespaceunilink_1_1factory.html", [
         [ "ChannelFactory", "classunilink_1_1factory_1_1ChannelFactory.html", "classunilink_1_1factory_1_1ChannelFactory" ]
       ] ],
+      [ "framer", "namespaceunilink_1_1framer.html", [
+        [ "IFramer", "classunilink_1_1framer_1_1IFramer.html", "classunilink_1_1framer_1_1IFramer" ],
+        [ "LineFramer", "classunilink_1_1framer_1_1LineFramer.html", "classunilink_1_1framer_1_1LineFramer" ],
+        [ "PacketFramer", "classunilink_1_1framer_1_1PacketFramer.html", "classunilink_1_1framer_1_1PacketFramer" ]
+      ] ],
       [ "interface", "namespaceunilink_1_1interface.html", [
         [ "Channel", "classunilink_1_1interface_1_1Channel.html", "classunilink_1_1interface_1_1Channel" ],
         [ "SerialPortInterface", "classunilink_1_1interface_1_1SerialPortInterface.html", "classunilink_1_1interface_1_1SerialPortInterface" ],

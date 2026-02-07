@@ -17,6 +17,7 @@ var namespaceunilink =
     [ "config", "namespaceunilink_1_1config.html", "namespaceunilink_1_1config" ],
     [ "diagnostics", "namespaceunilink_1_1diagnostics.html", "namespaceunilink_1_1diagnostics" ],
     [ "factory", "namespaceunilink_1_1factory.html", "namespaceunilink_1_1factory" ],
+    [ "framer", "namespaceunilink_1_1framer.html", "namespaceunilink_1_1framer" ],
     [ "interface", "namespaceunilink_1_1interface.html", "namespaceunilink_1_1interface" ],
     [ "memory", "namespaceunilink_1_1memory.html", "namespaceunilink_1_1memory" ],
     [ "transport", "namespaceunilink_1_1transport.html", "namespaceunilink_1_1transport" ],
