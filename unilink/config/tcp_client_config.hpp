@@ -33,6 +33,12 @@ struct TcpClientConfig {
   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_memory_pool = true;
 
+  TcpClientConfig() = default;
+  TcpClientConfig(const TcpClientConfig&) = default;
+  TcpClientConfig& operator=(const TcpClientConfig&) = default;
+  TcpClientConfig(TcpClientConfig&&) noexcept = default;
+  TcpClientConfig& operator=(TcpClientConfig&&) noexcept = default;
+
   // Validation methods
   bool is_valid() const {
     return !host.empty() && port > 0 && retry_interval_ms >= common::constants::MIN_RETRY_INTERVAL_MS &&

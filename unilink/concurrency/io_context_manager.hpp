@@ -62,6 +62,9 @@ class UNILINK_API IoContextManager {
   // Automatic cleanup in destructor
   ~IoContextManager();
 
+  IoContextManager(IoContextManager&& other) noexcept;
+  IoContextManager& operator=(IoContextManager&& other) noexcept;
+
  private:
   IoContextManager(const IoContextManager&) = delete;
   IoContextManager& operator=(const IoContextManager&) = delete;

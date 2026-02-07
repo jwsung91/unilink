@@ -15,6 +15,12 @@ set(UNILINK_BOOST_COMPONENTS system)
 # Control whether we must link Boost.System (off on macOS to use header-only mode)
 set(UNILINK_LINK_BOOST_SYSTEM ON)
 
+# Check if we should enforce system/vcpkg boost or allow fallback
+set(_boost_req REQUIRED)
+if(NOT DEFINED VCPKG_TARGET_TRIPLET AND NOT CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
+  set(_boost_req QUIET)
+endif()
+
 # Homebrew's BoostConfig packages on macOS (e.g., Boost 1.89) often miss
 # per-component config files such as boost_system-config.cmake, which causes
 # configure-time failures when CMake picks the config package first. Prefer the
@@ -29,26 +35,34 @@ endif()
 # Find required packages
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   # Windows builds: rely on recent Boost releases available via Conan/vcpkg
-  find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
-  message(STATUS "Using Boost 1.70+ for Windows compatibility")
+  find_package(Boost 1.70 ${_boost_req} COMPONENTS ${UNILINK_BOOST_COMPONENTS})
+  if(Boost_FOUND)
+    message(STATUS "Using Boost 1.70+ for Windows compatibility")
+  endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   # Detect Ubuntu version and set appropriate Boost version
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
     # Ubuntu 20.04: GCC 9-10, Boost 1.65+
-    find_package(Boost 1.65 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
-    message(STATUS "Using Boost 1.65+ for Ubuntu 20.04 compatibility")
+    find_package(Boost 1.65 ${_boost_req} COMPONENTS ${UNILINK_BOOST_COMPONENTS})
+    if(Boost_FOUND)
+      message(STATUS "Using Boost 1.65+ for Ubuntu 20.04 compatibility")
+    endif()
   elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "13.0")
     # Ubuntu 22.04: GCC 11-12, Boost 1.74+
-    find_package(Boost 1.74 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
-    message(STATUS "Using Boost 1.74+ for Ubuntu 22.04 compatibility")
+    find_package(Boost 1.74 ${_boost_req} COMPONENTS ${UNILINK_BOOST_COMPONENTS})
+    if(Boost_FOUND)
+      message(STATUS "Using Boost 1.74+ for Ubuntu 22.04 compatibility")
+    endif()
   else()
     # Ubuntu 24.04+: GCC 13+, try Boost 1.83+ first, fallback to 1.74+
     find_package(Boost 1.83 QUIET COMPONENTS ${UNILINK_BOOST_COMPONENTS})
     if(Boost_FOUND)
       message(STATUS "Using Boost 1.83+ for Ubuntu 24.04+ compatibility")
     else()
-      find_package(Boost 1.74 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
-      message(STATUS "Using Boost 1.74+ for Ubuntu 24.04+ compatibility (1.83 not available)")
+      find_package(Boost 1.74 ${_boost_req} COMPONENTS ${UNILINK_BOOST_COMPONENTS})
+      if(Boost_FOUND)
+        message(STATUS "Using Boost 1.74+ for Ubuntu 24.04+ compatibility (1.83 not available)")
+      endif()
     endif()
   endif()
   if(NOT Boost_FOUND)
@@ -69,17 +83,13 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     endif()
   endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  # This section contains complex logic to handle Boost discovery on macOS,
-  # especially concerning Homebrew installations and potential conflicts with
-  # BoostConfig. It also uses header-only Boost.System to avoid flaky linking
-  # issues on CI. Future efforts should aim to simplify this logic and rely
-  # more on standard CMake Boost discovery mechanisms, or investigate the
-  # root causes of the flaky linking on CI.
   # vcpkg builds: let the vcpkg toolchain drive Boost discovery (do not force Homebrew paths)
   if(DEFINED VCPKG_TARGET_TRIPLET OR DEFINED ENV{VCPKG_ROOT} OR CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
-    find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
+    find_package(Boost 1.70 ${_boost_req} COMPONENTS ${UNILINK_BOOST_COMPONENTS})
     set(UNILINK_LINK_BOOST_SYSTEM ON)
-    message(STATUS "Using Boost from vcpkg on macOS (triplet: ${VCPKG_TARGET_TRIPLET})")
+    if(Boost_FOUND)
+      message(STATUS "Using Boost from vcpkg on macOS (triplet: ${VCPKG_TARGET_TRIPLET})")
+    endif()
   else()
     # Ensure Boost module lookup (skip BoostConfig.cmake) and point at Homebrew layout
     if(POLICY CMP0144)
@@ -108,17 +118,55 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         /usr/local/Cellar/boost
       PATH_SUFFIXES include)
     if(NOT BOOST_FALLBACK_INCLUDE_DIR OR NOT EXISTS "${BOOST_FALLBACK_INCLUDE_DIR}/boost/asio.hpp")
-      message(FATAL_ERROR "Boost headers not found on macOS (looked in Homebrew paths)")
+      if("${_boost_req}" STREQUAL "REQUIRED")
+        message(FATAL_ERROR "Boost headers not found on macOS (looked in Homebrew paths)")
+      endif()
+    else()
+      set(UNILINK_LINK_BOOST_SYSTEM OFF)
+      set(UNILINK_BOOST_INCLUDE_DIR "${BOOST_FALLBACK_INCLUDE_DIR}")
+      add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
+      set(Boost_FOUND TRUE)
+      message(STATUS "Using header-only Boost.System on macOS; include dir: ${BOOST_FALLBACK_INCLUDE_DIR}")
     endif()
-
-    set(UNILINK_LINK_BOOST_SYSTEM OFF)
-    set(UNILINK_BOOST_INCLUDE_DIR "${BOOST_FALLBACK_INCLUDE_DIR}")
-    add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
-    message(STATUS "Using header-only Boost.System on macOS; include dir: ${BOOST_FALLBACK_INCLUDE_DIR}")
   endif()
 else()
   # Other platforms: use a recent Boost version
-  find_package(Boost 1.70 REQUIRED COMPONENTS ${UNILINK_BOOST_COMPONENTS})
+  find_package(Boost 1.70 ${_boost_req} COMPONENTS ${UNILINK_BOOST_COMPONENTS})
+endif()
+
+# Fallback using FetchContent
+if(NOT Boost_FOUND AND "${_boost_req}" STREQUAL "QUIET")
+  message(STATUS "Boost not found. Attempting to fetch Boost via FetchContent...")
+  include(FetchContent)
+
+  FetchContent_Declare(
+    Boost
+    URL https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+  )
+
+  set(BOOST_ENABLE_CMAKE ON)
+  set(BOOST_INCLUDE_LIBRARIES system)
+
+  FetchContent_MakeAvailable(Boost)
+
+  if(TARGET Boost::system)
+     set(Boost_FOUND TRUE)
+     set(UNILINK_LINK_BOOST_SYSTEM ON)
+     message(STATUS "Boost fetched and built successfully via FetchContent.")
+  else()
+     # If Boost::system target is missing, fallback to headers + header-only libs
+     # Note: boost_SOURCE_DIR is set by FetchContent_MakeAvailable
+     set(Boost_FOUND TRUE)
+     set(UNILINK_LINK_BOOST_SYSTEM OFF)
+     set(UNILINK_BOOST_INCLUDE_DIR ${boost_SOURCE_DIR})
+     add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
+     message(STATUS "Boost::system target not created. Using header-only mode from fetched source.")
+  endif()
+endif()
+
+if(NOT Boost_FOUND)
+  message(FATAL_ERROR "Boost not found. Please install Boost or use vcpkg.")
 endif()
 
 # Ensure Boost.Asio headers are present even when BoostConfig packages omit an asio component

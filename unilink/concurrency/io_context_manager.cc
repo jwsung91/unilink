@@ -182,6 +182,42 @@ std::unique_ptr<boost::asio::io_context> IoContextManager::create_independent_co
   return std::make_unique<IoContext>();
 }
 
+IoContextManager::IoContextManager(IoContextManager&& other) noexcept
+    : owns_context_(other.owns_context_),
+      ioc_(std::move(other.ioc_)),
+      work_guard_(std::move(other.work_guard_)),
+      io_thread_(std::move(other.io_thread_)),
+      running_(other.running_.load()),
+      stopping_(other.stopping_) {
+  other.owns_context_ = false;
+  other.running_.store(false);
+  other.stopping_ = false;
+}
+
+IoContextManager& IoContextManager::operator=(IoContextManager&& other) noexcept {
+  if (this != &other) {
+    try {
+      stop();
+      if (io_thread_.joinable() && io_thread_.get_id() != std::this_thread::get_id()) {
+        io_thread_.join();
+      }
+    } catch (...) {
+    }
+
+    owns_context_ = other.owns_context_;
+    ioc_ = std::move(other.ioc_);
+    work_guard_ = std::move(other.work_guard_);
+    io_thread_ = std::move(other.io_thread_);
+    running_.store(other.running_.load());
+    stopping_ = other.stopping_;
+
+    other.owns_context_ = false;
+    other.running_.store(false);
+    other.stopping_ = false;
+  }
+  return *this;
+}
+
 IoContextManager::~IoContextManager() {
   try {
     stop();
