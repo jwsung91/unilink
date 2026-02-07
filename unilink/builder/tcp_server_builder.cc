@@ -74,8 +74,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   // Apply framing if configured
   if (framer_) {
     if (max_clients_ != 1) {
-      throw std::runtime_error(
-          "Framing is only supported in single-client mode (use single_client()) for TcpServer");
+      throw std::runtime_error("Framing is only supported in single-client mode (use single_client()) for TcpServer");
     }
 
     std::shared_ptr<framer::IFramer> shared_framer = std::move(framer_);

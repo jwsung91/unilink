@@ -24,8 +24,7 @@ namespace framer {
 
 PacketFramer::PacketFramer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
                            size_t max_length)
-    : start_pattern_(start_pattern), end_pattern_(end_pattern), max_length_(max_length), state_(State::Sync) {
-}
+    : start_pattern_(start_pattern), end_pattern_(end_pattern), max_length_(max_length), state_(State::Sync) {}
 
 void PacketFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
@@ -116,9 +115,7 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
   }
 }
 
-void PacketFramer::set_on_message(MessageCallback cb) {
-  on_message_ = std::move(cb);
-}
+void PacketFramer::set_on_message(MessageCallback cb) { on_message_ = std::move(cb); }
 
 void PacketFramer::reset() {
   buffer_.clear();

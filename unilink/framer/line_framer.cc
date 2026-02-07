@@ -83,13 +83,9 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
   }
 }
 
-void LineFramer::set_on_message(MessageCallback cb) {
-  on_message_ = std::move(cb);
-}
+void LineFramer::set_on_message(MessageCallback cb) { on_message_ = std::move(cb); }
 
-void LineFramer::reset() {
-  buffer_.clear();
-}
+void LineFramer::reset() { buffer_.clear(); }
 
 }  // namespace framer
 }  // namespace unilink
