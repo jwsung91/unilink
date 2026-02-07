@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['key_312',['key',['../structunilink_1_1config_1_1ConfigItem.html#a2822009a964c93c23880c6de3949ddf6',1,'unilink::config::ConfigItem']]]
+  ['join_5fioc_5fthread_332',['join_ioc_thread',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a263e07f81a463e0a1db134a5f97afd19',1,'unilink::transport::TcpClient::Impl']]]
 ];

@@ -53,6 +53,7 @@ var hierarchy =
       [ "unilink::framer::LineFramer", "classunilink_1_1framer_1_1LineFramer.html", null ],
       [ "unilink::framer::PacketFramer", "classunilink_1_1framer_1_1PacketFramer.html", null ]
     ] ],
+    [ "unilink::transport::TcpClient::Impl", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html", null ],
     [ "unilink::util::InputValidator", "classunilink_1_1util_1_1InputValidator.html", null ],
     [ "unilink::concurrency::IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", null ],
     [ "unilink::diagnostics::LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", null ],

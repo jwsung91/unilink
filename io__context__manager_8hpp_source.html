@@ -146,32 +146,35 @@ $(document).ready(function(){initNavTree('io__context__manager_8hpp_source.html'
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="comment">// Automatic cleanup in destructor</span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  ~<a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>();</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <a class="code" href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">IoContextManager</a>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordtype">bool</span> owns_context_{<span class="keyword">true</span>};</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  std::shared_ptr&lt;IoContext&gt; ioc_;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  std::unique_ptr&lt;WorkGuard&gt; work_guard_;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  std::thread io_thread_;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  std::atomic&lt;bool&gt; running_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keyword">mutable</span> std::mutex mutex_;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  std::condition_variable cv_;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keywordtype">bool</span> stopping_{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;};</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}  <span class="comment">// namespace concurrency</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">// Compatibility alias while transitioning from legacy `common` namespace.</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">namespace </span>common {</div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">   83</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a> = <a class="code" href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">concurrency::IoContextManager</a>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}  <span class="comment">// namespace common</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <a class="code" href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">IoContextManager</a>(<a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp; operator=(<a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <a class="code" href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">IoContextManager</a>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordtype">bool</span> owns_context_{<span class="keyword">true</span>};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  std::shared_ptr&lt;IoContext&gt; ioc_;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  std::unique_ptr&lt;WorkGuard&gt; work_guard_;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  std::thread io_thread_;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  std::atomic&lt;bool&gt; running_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keyword">mutable</span> std::mutex mutex_;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  std::condition_variable cv_;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keywordtype">bool</span> stopping_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;};</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}  <span class="comment">// namespace concurrency</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">// Compatibility alias while transitioning from legacy `common` namespace.</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">namespace </span>common {</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">   86</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classunilink_1_1concurrency_1_1IoContextManager.html">IoContextManager</a> = <a class="code" href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">concurrency::IoContextManager</a>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}  <span class="comment">// namespace common</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1IoContextManager_html"><div class="ttname"><a href="classunilink_1_1concurrency_1_1IoContextManager.html">unilink::concurrency::IoContextManager</a></div><div class="ttdef"><b>Definition:</b> <a href="io__context__manager_8hpp_source.html#l00037">io_context_manager.hpp:37</a></div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1IoContextManager_html_a61c95a11c25f28acf3baf2aa39d38146"><div class="ttname"><a href="classunilink_1_1concurrency_1_1IoContextManager.html#a61c95a11c25f28acf3baf2aa39d38146">unilink::concurrency::IoContextManager::WorkGuard</a></div><div class="ttdeci">boost::asio::executor_work_guard&lt; IoContext::executor_type &gt; WorkGuard</div><div class="ttdef"><b>Definition:</b> <a href="io__context__manager_8hpp_source.html#l00040">io_context_manager.hpp:40</a></div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1IoContextManager_html_a9191142e76ce990859590213b01e947b"><div class="ttname"><a href="classunilink_1_1concurrency_1_1IoContextManager.html#a9191142e76ce990859590213b01e947b">unilink::concurrency::IoContextManager::IoContextManager</a></div><div class="ttdeci">IoContextManager()</div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1IoContextManager_html_aa3fbc4eb7af5de9caff4f34217638673"><div class="ttname"><a href="classunilink_1_1concurrency_1_1IoContextManager.html#aa3fbc4eb7af5de9caff4f34217638673">unilink::concurrency::IoContextManager::IoContext</a></div><div class="ttdeci">boost::asio::io_context IoContext</div><div class="ttdef"><b>Definition:</b> <a href="io__context__manager_8hpp_source.html#l00039">io_context_manager.hpp:39</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1common_html_a7b43f5afbe1d3f1147ac6c60c32b770d"><div class="ttname"><a href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">unilink::common::IoContextManager</a></div><div class="ttdeci">concurrency::IoContextManager IoContextManager</div><div class="ttdef"><b>Definition:</b> <a href="io__context__manager_8hpp_source.html#l00083">io_context_manager.hpp:83</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1common_html_a7b43f5afbe1d3f1147ac6c60c32b770d"><div class="ttname"><a href="namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d">unilink::common::IoContextManager</a></div><div class="ttdeci">concurrency::IoContextManager IoContextManager</div><div class="ttdef"><b>Definition:</b> <a href="io__context__manager_8hpp_source.html#l00086">io_context_manager.hpp:86</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
 <div class="ttc" id="aplatform_8hpp_html"><div class="ttname"><a href="platform_8hpp.html">platform.hpp</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="visibility_8hpp.html">visibility.hpp</a></div></div>
@@ -182,7 +185,7 @@ $(document).ready(function(){initNavTree('io__context__manager_8hpp_source.html'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_10a04bdc26b9bc63fc33802b95b375a9.html">concurrency</a></li><li class="navelem"><a class="el" href="io__context__manager_8hpp.html">io_context_manager.hpp</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 14:19:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 22:15:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

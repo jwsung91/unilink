@@ -96,6 +96,9 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 : <a class="el" href="classunilink_1_1config_1_1ConfigManager.html#a70626fcb00ca3730960118b4766d3820">unilink::config::ConfigManager</a>
 , <a class="el" href="classunilink_1_1config_1_1ConfigManagerInterface.html#af7d2eaa644358e7af3e8a4e19788e783">unilink::config::ConfigManagerInterface</a>
 </li>
+<li>schedule_retry()
+: <a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a0d1c74685278544430f6428865d582d4">unilink::transport::TcpClient::Impl</a>
+</li>
 <li>ScopedMemoryTracker()
 : <a class="el" href="classunilink_1_1memory_1_1ScopedMemoryTracker.html#a09bd6a3bb6fb1fd350d701b63be86c16">unilink::memory::ScopedMemoryTracker</a>
 </li>
@@ -198,7 +201,7 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 </li>
 <li>set_option()
 : <a class="el" href="classunilink_1_1interface_1_1SerialPortInterface.html#a7cd9d8e2e029b0850c1c7c9f99412be6">unilink::interface::SerialPortInterface</a>
-, <a class="el" href="classunilink_1_1transport_1_1BoostSerialPort.html#a3f5a40f4a663e41409c160806225e206">unilink::transport::BoostSerialPort</a>
+, <a class="el" href="classunilink_1_1transport_1_1BoostSerialPort.html#ab8c7bd1635335429759eff6596b8da26">unilink::transport::BoostSerialPort</a>
 </li>
 <li>set_outputs()
 : <a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#aeed67807bc170affe354d4110c4439a2">unilink::diagnostics::Logger</a>
@@ -266,6 +269,9 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>size_type
 : <a class="el" href="classunilink_1_1memory_1_1SafeSpan.html#a6ee274522125eea443c57cd6ccaf8bce">unilink::memory::SafeSpan&lt; T &gt;</a>
 </li>
+<li>socket_
+: <a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a142369ad3d9b0e96053192f7eab5c457">unilink::transport::TcpClient::Impl</a>
+</li>
 <li>start()
 : <a class="el" href="classunilink_1_1concurrency_1_1IoContextManager.html#a6b6c2d79b786fc49c259b6f2125a1ab6">unilink::concurrency::IoContextManager</a>
 , <a class="el" href="classunilink_1_1interface_1_1Channel.html#a0e33349d34d5aa72709307ed52500a4e">unilink::interface::Channel</a>
@@ -280,12 +286,18 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ac0be454c5f568d855b48d1fb4dd161dd">unilink::wrapper::TcpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a4e3c099d9286452f5c4edf7d98e93aee">unilink::wrapper::Udp</a>
 </li>
+<li>start_read()
+: <a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a058430ea39c20558e2f8f97cb4fcb665">unilink::transport::TcpClient::Impl</a>
+</li>
 <li>start_time
 : <a class="el" href="structunilink_1_1diagnostics_1_1AsyncLogStats.html#a9c3bbbeb7824ef5627224ed82ff4e1e9">unilink::diagnostics::AsyncLogStats</a>
 </li>
 <li>State
 : <a class="el" href="classunilink_1_1concurrency_1_1AtomicState.html#a71c0084af08e110dd52386ec7d151cd4">unilink::concurrency::AtomicState&lt; StateType &gt;</a>
 , <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a04390997b93863b05dbb1a8fce304484">unilink::concurrency::ThreadSafeState&lt; StateType &gt;</a>
+</li>
+<li>state_
+: <a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a6963cba1abd5bd3fca883c9e49f1b0e7">unilink::transport::TcpClient::Impl</a>
 </li>
 <li>StateCallback
 : <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17">unilink::concurrency::ThreadSafeState&lt; StateType &gt;</a>
@@ -314,6 +326,18 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 : <a class="el" href="structunilink_1_1config_1_1SerialConfig.html#a2a9446231ccba59c4f3efe82fe6e10f5">unilink::config::SerialConfig</a>
 , <a class="el" href="structunilink_1_1config_1_1UdpConfig.html#ab327ddb43d604ec5b21f119fd868493f">unilink::config::UdpConfig</a>
 </li>
+<li>stop_requested_
+: <a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a463b01095f92ec5aa250eb52499a4cf9">unilink::transport::TcpClient::Impl</a>
+</li>
+<li>stop_seq_
+: <a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ac203a6c601bc3fd4609c1b8081ce4e33">unilink::transport::TcpClient::Impl</a>
+</li>
+<li>stopping_
+: <a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a5f49593c2d5cfaa564d4e5c403c03209">unilink::transport::TcpClient::Impl</a>
+</li>
+<li>strand_
+: <a class="el" href="structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a99e20e64663a53f97c119332fd6319ea">unilink::transport::TcpClient::Impl</a>
+</li>
 <li>subspan()
 : <a class="el" href="classunilink_1_1memory_1_1SafeSpan.html#a8d5082b8dc5b9ccf4d9c0d07e4380985">unilink::memory::SafeSpan&lt; T &gt;</a>
 </li>
@@ -332,7 +356,7 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Feb 7 2026 14:19:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 22:15:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

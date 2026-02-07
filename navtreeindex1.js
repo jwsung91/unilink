@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496":[18,0,0,3,2,7],
+"classunilink_1_1config_1_1ConfigManagerInterface.html":[18,0,0,3,5],
 "classunilink_1_1config_1_1ConfigManagerInterface.html#a05b64d9c6e4c9f582506974c925badcb":[18,0,0,3,5,9],
 "classunilink_1_1config_1_1ConfigManagerInterface.html#a1b2968078681cfe1ddbc80ae64b46c1b":[18,0,0,3,5,12],
 "classunilink_1_1config_1_1ConfigManagerInterface.html#a23fd2ad2ed72aa51f4d43585705dabd6":[18,0,0,3,5,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX1 =
 "classunilink_1_1memory_1_1PooledBuffer.html#a8a612c37b1d80ade5f92d38494ed19cf":[18,0,0,8,2,1],
 "classunilink_1_1memory_1_1PooledBuffer.html#a8f8dc11b22544f6430121b8df1310e3c":[18,0,0,8,2,10],
 "classunilink_1_1memory_1_1PooledBuffer.html#a9442120383c899f117db14b84dbc0eae":[18,0,0,8,2,8],
-"classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0":[18,0,0,8,2,5],
-"classunilink_1_1memory_1_1PooledBuffer.html#a96f88cf55a3d31ad4e28d08af0b0b975":[18,0,0,8,2,3],
-"classunilink_1_1memory_1_1PooledBuffer.html#abcd5e51a9b3a0849f4ed4c35f73c8343":[18,0,0,8,2,13]
+"classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0":[18,0,0,8,2,5]
 };
