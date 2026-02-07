@@ -542,22 +542,16 @@ void TcpClient::do_write() {
   };
 
   // Handle PooledBuffer, shared_ptr buffer, or std::vector<uint8_t> (fallback)
-  if (std::holds_alternative<memory::PooledBuffer>(current)) {
-    auto& pooled_buf = std::get<memory::PooledBuffer>(current);
-    auto data = pooled_buf.data();
-    auto size = pooled_buf.size();
-    net::async_write(socket_, net::buffer(data, size), on_write);
-  } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
-    auto& shared_buf = std::get<std::shared_ptr<const std::vector<uint8_t>>>(current);
-    auto data = shared_buf->data();
-    auto size = shared_buf->size();
-    net::async_write(socket_, net::buffer(data, size), on_write);
-  } else {
-    auto& vec_buf = std::get<std::vector<uint8_t>>(current);
-    auto data = vec_buf.data();
-    auto size = vec_buf.size();
-    net::async_write(socket_, net::buffer(data, size), on_write);
-  }
+  std::visit(
+      [&](const auto& buf) {
+        using T = std::decay_t<decltype(buf)>;
+        if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+          net::async_write(socket_, net::buffer(buf->data(), buf->size()), on_write);
+        } else {
+          net::async_write(socket_, net::buffer(buf.data(), buf.size()), on_write);
+        }
+      },
+      current);
 }
 
 void TcpClient::handle_close(const boost::system::error_code& ec) {

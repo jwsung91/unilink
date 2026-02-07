@@ -405,30 +405,34 @@ void UdpChannel::do_write() {
     self->do_write();
   };
 
-  if (std::holds_alternative<memory::PooledBuffer>(current)) {
-    auto pooled = std::get<memory::PooledBuffer>(std::move(current));
-    // Optimization: Move PooledBuffer directly into lambda to avoid std::make_shared allocation
-    auto data = pooled.data();
-    auto size = pooled.size();
-    socket_.async_send_to(net::buffer(data, size), *remote_endpoint_,
-                          [buf = std::move(pooled), on_write = std::move(on_write)](
-                              const boost::system::error_code& ec, std::size_t bytes) mutable { on_write(ec, bytes); });
-  } else if (std::holds_alternative<std::shared_ptr<const std::vector<uint8_t>>>(current)) {
-    auto shared_vec = std::get<std::shared_ptr<const std::vector<uint8_t>>>(std::move(current));
-    auto data = shared_vec->data();
-    auto size = shared_vec->size();
-    socket_.async_send_to(net::buffer(data, size), *remote_endpoint_,
-                          [shared_vec = std::move(shared_vec), on_write = std::move(on_write)](
-                              const boost::system::error_code& ec, std::size_t bytes) mutable { on_write(ec, bytes); });
-  } else {
-    auto vec = std::get<std::vector<uint8_t>>(std::move(current));
-    // Optimization: Move vector directly into lambda to avoid std::make_shared allocation
-    auto data = vec.data();
-    auto size = vec.size();
-    socket_.async_send_to(net::buffer(data, size), *remote_endpoint_,
-                          [buf = std::move(vec), on_write = std::move(on_write)](
-                              const boost::system::error_code& ec, std::size_t bytes) mutable { on_write(ec, bytes); });
-  }
+  std::visit(
+      [&](auto&& buf) {
+        using T = std::decay_t<decltype(buf)>;
+
+        auto* data_ptr = [&]() {
+          if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+            return buf->data();
+          } else {
+            return buf.data();
+          }
+        }();
+
+        auto size = [&]() {
+          if constexpr (std::is_same_v<T, std::shared_ptr<const std::vector<uint8_t>>>) {
+            return buf->size();
+          } else {
+            return buf.size();
+          }
+        }();
+
+        // Optimization: Move buffer directly into lambda to avoid additional allocation
+        // 'buf' is an rvalue reference to the variant content here because we visit std::move(current)
+        socket_.async_send_to(
+            net::buffer(data_ptr, size), *remote_endpoint_,
+            [buf_captured = std::move(buf), on_write = std::move(on_write)](
+                const boost::system::error_code& ec, std::size_t bytes) mutable { on_write(ec, bytes); });
+      },
+      std::move(current));
 }
 
 void UdpChannel::close_socket() {
