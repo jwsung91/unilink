@@ -21,54 +21,19 @@
 #include <memory>
 #include <vector>
 
+#include "fake_tcp_socket.hpp"
 #include "unilink/interface/itcp_socket.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
 
 using namespace unilink;
 using namespace unilink::transport;
+using unilink::test::FakeTcpSocket;
 using namespace std::chrono_literals;
 
 namespace {
 
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
-
-class FakeTcpSocket : public interface::TcpSocketInterface {
- public:
-  explicit FakeTcpSocket(net::io_context& ioc) : ioc_(ioc) {}
-
-  void async_read_some(const net::mutable_buffer&,
-                       std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
-    // Keep read pending to simulate active connection
-    read_handler_ = std::move(handler);
-  }
-
-  void async_write(const net::const_buffer& buffer,
-                   std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
-    // Simulate successful write
-    auto size = buffer.size();
-    net::post(ioc_, [handler = std::move(handler), size]() { handler({}, size); });
-  }
-
-  void emit_read(std::size_t n = 1, const boost::system::error_code& ec = {}) {
-    if (!read_handler_) return;
-    auto handler = std::move(read_handler_);
-    net::post(ioc_, [handler = std::move(handler), ec, n]() { handler(ec, n); });
-  }
-
-  void shutdown(tcp::socket::shutdown_type, boost::system::error_code& ec) override { ec.clear(); }
-
-  void close(boost::system::error_code& ec) override { ec.clear(); }
-
-  tcp::endpoint remote_endpoint(boost::system::error_code& ec) const override {
-    ec.clear();
-    return tcp::endpoint(net::ip::make_address("127.0.0.1"), 12345);
-  }
-
- private:
-  net::io_context& ioc_;
-  std::function<void(const boost::system::error_code&, std::size_t)> read_handler_;
-};
 
 }  // namespace
 
@@ -182,9 +147,13 @@ TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
   session->start();
   EXPECT_TRUE(session->alive());
 
+  // Ensure start_read has been called so read_handler_ is set
+  ioc.run_for(5ms);
+
   // Trigger read handler to invoke throwing callback
   socket_raw->emit_read(4);
 
+  ioc.restart();
   ioc.run_for(50ms);
 
   EXPECT_TRUE(closed.load());

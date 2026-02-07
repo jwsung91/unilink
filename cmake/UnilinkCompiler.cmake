@@ -40,16 +40,17 @@ if(MSVC)
     # /permissive-: Standards conformance
     # /utf-8: Set source and execution character sets to UTF-8
     # /wd4251: Suppress 'needs to have dll-interface' warning for STL members in exported classes
-    add_compile_options(/W4 /permissive- /utf-8 /wd4251)
+    # /wd4275: Suppress 'non dll-interface class used as base for dll-interface class' (safe for std::runtime_error)
+    add_compile_options(/W4 /permissive- /utf-8 /wd4251 /wd4275)
     if(UNILINK_ENABLE_WERROR)
       add_compile_options(/WX)
     endif()
   endif()
 
   # MSVC-specific optimizations and debug information
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /Oy /GL /wd4251")
-  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2 /wd4251")
-  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /O1 /Os /wd4251")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /Oy /GL /wd4251 /wd4275")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2 /wd4251 /wd4275")
+  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /O1 /Os /wd4251 /wd4275")
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
   set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
 
