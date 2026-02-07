@@ -18,6 +18,17 @@ Simple, cross-platform async C++ communication library for Serial, TCP, and UDP
 
 The project prioritizes **API clarity, predictable runtime behavior, and stability** over rapid feature expansion.
 
+## Feature Highlights
+
+*   **Zero-copy memory safety via SafeSpan**: Efficient data handling without unnecessary copies.
+*   **Fluent API with CRTP Builders**: Type-safe configuration with improved method chaining.
+*   **Unified Async Interface**: Consistent API across TCP, UDP, and Serial transports.
+
+## Requirements
+
+*   **C++17 compliant compiler** (required)
+*   CMake 3.10 or later
+
 ## 📦 Installation
 
 ### vcpkg (recommended)

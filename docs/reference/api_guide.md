@@ -20,6 +20,7 @@ Comprehensive API reference for the unilink library.
 ## Builder API
 
 The Builder API is the recommended way to use unilink. It provides a fluent, chainable interface for creating communication channels.
+It utilizes the **Curiously Recurring Template Pattern (CRTP)** to ensure that method chaining returns the correct derived builder type, eliminating the need for casting.
 
 ### Core Concept
 
@@ -35,7 +36,8 @@ auto channel = unilink::{type}(params)
 
 | Method                           | Description                                                       | Default |
 | -------------------------------- | ----------------------------------------------------------------- | ------- |
-| `.on_data(callback)`             | Handle incoming data                                              | None    |
+| `.on_data(callback)`             | Handle incoming data (`std::string`)                              | None    |
+| `.on_bytes(callback)`            | Handle incoming raw data (`ConstByteSpan`)                        | None    |
 | `.on_connect(callback)`          | Handle connection events                                          | None    |
 | `.on_disconnect(callback)`       | Handle disconnection                                              | None    |
 | `.on_error(callback)`            | Handle errors                                                     | None    |
@@ -48,7 +50,27 @@ auto channel = unilink::{type}(params)
 - `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
 - `TcpServerBuilder`: `.enable_port_retry(enable, max_retries, retry_interval_ms)`
 - `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` **(must choose one before `build()`)**
-- TCP server callbacks also accept multi-client signatures: `.on_connect(size_t, std::string)`, `.on_data(size_t, std::string)`, `.on_disconnect(size_t)`
+- TCP server callbacks also accept multi-client signatures: `.on_connect(size_t, std::string)`, `.on_data(size_t, std::string)`, `.on_bytes(size_t, ConstByteSpan)`, `.on_disconnect(size_t)`
+
+### Efficient Data Handling with SafeSpan
+
+The `.on_bytes()` callback uses `unilink::memory::ConstByteSpan` (a C++17 compatible view) to provide zero-copy access to the receive buffer.
+
+**Benefits:**
+- **Performance**: Avoids `std::string` allocation overhead.
+- **Safety**: Bounds-checked access preventing buffer overflows.
+
+**Example:**
+```cpp
+.on_bytes([](unilink::memory::ConstByteSpan data) {
+    // Access metadata
+    size_t len = data.size();
+    const uint8_t* ptr = data.data();
+
+    // Convert to string using helper
+    std::string s = unilink::common::safe_convert::uint8_to_string(ptr, len);
+})
+```
 
 **Lifecycle Methods:**
 | Method | Description |

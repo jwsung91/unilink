@@ -27,7 +27,12 @@ namespace memory {
  * @brief A C++17 compatible span-like class for safe array access
  *
  * This provides a lightweight, non-owning view over a contiguous sequence of objects.
- * Similar to std::span but compatible with C++17.
+ * Similar to std::span (C++20) but fully compatible with C++17 environments.
+ *
+ * Design Intent:
+ * - Zero-copy memory safety: Avoids unnecessary data copying.
+ * - Bounds safety: Provides safe access to underlying memory.
+ * - Interface compatibility: Mimics std::span for future upgradability.
  */
 template <typename T>
 class SafeSpan {
