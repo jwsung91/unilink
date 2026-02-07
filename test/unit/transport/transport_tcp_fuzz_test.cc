@@ -52,7 +52,7 @@ TEST(TransportTcpFuzzTest, FuzzingData) {
   });
 
   session->start();
-  ioc.run_for(5ms); // Process start_read
+  ioc.run_for(5ms);  // Process start_read
   EXPECT_TRUE(session->alive());
 
   std::mt19937 gen(12345);
@@ -90,13 +90,13 @@ TEST(TransportTcpFuzzTest, MockParserCrash) {
 
   // Mock parser that throws on specific "bad" length
   session->on_bytes([&](const uint8_t*, size_t size) {
-    if (size == 13) { // Unlucky number triggers crash
+    if (size == 13) {  // Unlucky number triggers crash
       throw std::runtime_error("Protocol violation");
     }
   });
 
   session->start();
-  ioc.run_for(5ms); // Process start_read
+  ioc.run_for(5ms);  // Process start_read
   EXPECT_TRUE(session->alive());
 
   // Send safe data

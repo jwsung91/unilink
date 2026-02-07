@@ -46,7 +46,7 @@ TEST(TransportTcpTimeoutTest, ReadErrorReset) {
   session->on_close([&]() { closed = true; });
 
   session->start();
-  ioc.run_for(5ms); // Process start_read
+  ioc.run_for(5ms);  // Process start_read
   EXPECT_TRUE(session->alive());
 
   // Simulate connection reset
@@ -59,31 +59,31 @@ TEST(TransportTcpTimeoutTest, ReadErrorReset) {
 }
 
 TEST(TransportTcpTimeoutTest, CancelHandling) {
-    net::io_context ioc;
-    auto work_guard = net::make_work_guard(ioc);
-    size_t bp_threshold = 1024;
+  net::io_context ioc;
+  auto work_guard = net::make_work_guard(ioc);
+  size_t bp_threshold = 1024;
 
-    auto socket = std::make_unique<FakeTcpSocket>(ioc);
-    auto* socket_raw = socket.get();
-    auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
+  auto socket = std::make_unique<FakeTcpSocket>(ioc);
+  auto* socket_raw = socket.get();
+  auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
 
-    std::atomic<bool> closed{false};
-    session->on_close([&]() { closed = true; });
+  std::atomic<bool> closed{false};
+  session->on_close([&]() { closed = true; });
 
-    session->start();
-    ioc.run_for(5ms); // Process start_read
-    EXPECT_TRUE(session->alive());
+  session->start();
+  ioc.run_for(5ms);  // Process start_read
+  EXPECT_TRUE(session->alive());
 
-    // Call cancel
-    session->cancel();
+  // Call cancel
+  session->cancel();
 
-    // Simulate the resulting operation_aborted error from the socket
-    socket_raw->emit_read(0, boost::asio::error::operation_aborted);
+  // Simulate the resulting operation_aborted error from the socket
+  socket_raw->emit_read(0, boost::asio::error::operation_aborted);
 
-    ioc.run_for(5ms);
+  ioc.run_for(5ms);
 
-    EXPECT_TRUE(closed.load());
-    EXPECT_FALSE(session->alive());
+  EXPECT_TRUE(closed.load());
+  EXPECT_FALSE(session->alive());
 }
 
 }  // namespace
