@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-07 00:44:01</td>
+            <td class="headerValue">2026-02-07 01:58:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
@@ -266,15 +266,15 @@
 <a name="182"><span class="lineNum">     182 </span>                :<span class="lineNoCov">          0 :   });</span></a>
 <a name="183"><span class="lineNum">     183 </span>                :            : </a>
 <a name="184"><span class="lineNum">     184 </span>                :            :   // Handle state changes</a>
-<a name="185"><span class="lineNum">     185 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         32 :   channel_-&gt;on_state([this](base::LinkState state) { notify_state_change(state); });</span></a>
+<a name="185"><span class="lineNum">     185 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         33 :   channel_-&gt;on_state([this](base::LinkState state) { notify_state_change(state); });</span></a>
 <a name="186"><span class="lineNum">     186 </span>                :            : }</a>
 <a name="187"><span class="lineNum">     187 </span>                :            : </a>
-<a name="188"><span class="lineNum">     188 </span>                :<span class="lineCov">         21 : void Serial::notify_state_change(base::LinkState state) {</span></a>
-<a name="189"><span class="lineNum">     189 </span>  [<span class="branchCov" title="Branch 0 was taken 19 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         21 :   switch (state) {</span></a>
+<a name="188"><span class="lineNum">     188 </span>                :<span class="lineCov">         22 : void Serial::notify_state_change(base::LinkState state) {</span></a>
+<a name="189"><span class="lineNum">     189 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         22 :   switch (state) {</span></a>
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 4 was not taken"> - </span>]
-<a name="190"><span class="lineNum">     190 </span>                :<span class="lineCov">         19 :     case base::LinkState::Connecting:</span></a>
+<a name="190"><span class="lineNum">     190 </span>                :<span class="lineCov">         20 :     case base::LinkState::Connecting:</span></a>
 <a name="191"><span class="lineNum">     191 </span>                :            :       // Connecting state - no action needed, just log</a>
-<a name="192"><span class="lineNum">     192 </span>                :<span class="lineCov">         19 :       break;</span></a>
+<a name="192"><span class="lineNum">     192 </span>                :<span class="lineCov">         20 :       break;</span></a>
 <a name="193"><span class="lineNum">     193 </span>                :<span class="lineCov">          1 :     case base::LinkState::Connected:</span></a>
 <a name="194"><span class="lineNum">     194 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       if (connect_handler_) connect_handler_();</span></a>
 <a name="195"><span class="lineNum">     195 </span>                :<span class="lineCov">          1 :       break;</span></a>
@@ -288,7 +288,7 @@
 <a name="202"><span class="lineNum">     202 </span>                :<span class="lineNoCov">          0 :     default:</span></a>
 <a name="203"><span class="lineNum">     203 </span>                :<span class="lineNoCov">          0 :       break;</span></a>
 <a name="204"><span class="lineNum">     204 </span>                :            :   }</a>
-<a name="205"><span class="lineNum">     205 </span>                :<span class="lineCov">         21 : }</span></a>
+<a name="205"><span class="lineNum">     205 </span>                :<span class="lineCov">         22 : }</span></a>
 <a name="206"><span class="lineNum">     206 </span>                :            : </a>
 <a name="207"><span class="lineNum">     207 </span>                :<span class="lineCov">         95 : void Serial::set_retry_interval(std::chrono::milliseconds interval) {</span></a>
 <a name="208"><span class="lineNum">     208 </span>                :<span class="lineCov">         95 :   retry_interval_ = interval;</span></a>
