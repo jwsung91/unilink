@@ -79,6 +79,7 @@ jobs:
       VCPKG_TARGET_TRIPLET: ${{ matrix.triplet }}
       VCPKG_BINARY_SOURCES: "clear;default"
       BUILD_TYPE: ${{ matrix.build_type }}
+      VCPKG_USE_SYSTEM_BINARIES: "1"
 
     steps:
       - name: Checkout
