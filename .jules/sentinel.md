@@ -2,3 +2,8 @@
 **Vulnerability:** A Denial of Service (DoS) vulnerability where the TCP server would enter a tight loop consuming 100% CPU when the client limit was reached. The server would reject a connection (close socket) and immediately restart the async accept operation, processing the pending OS backlog as fast as possible without backoff.
 **Learning:** In Boost.Asio (and async IO in general), rejecting a connection and immediately re-issuing an accept call creates a spin loop if the backlog is full. The OS is ready to hand over the next connection instantly.
 **Prevention:** Implement a "pause" mechanism. When the server is full (or overloaded), stop issuing new `async_accept` calls. Resume accepting only when resources become available (e.g., a client disconnects). This allows the OS backlog to fill up naturally, eventually causing the OS to drop SYN packets, which is the correct backpressure behavior for a saturated server.
+
+## 2026-02-06 - [Path Traversal: Insecure Device Path Validation]
+**Vulnerability:** The `InputValidator::is_valid_device_path` function allowed any Unix path starting with `/` to be considered a valid "device path" if it contained alphanumeric characters, `_`, and `-`. This could allow an application to interact with arbitrary files (e.g., `/etc/passwd`) as if they were serial devices.
+**Learning:** Checking only for "safe characters" in a path is insufficient to prevent path traversal or accessing sensitive files when the intent is to restrict access to device nodes. Validating the prefix (e.g., `/dev/`) is crucial for security in this context.
+**Prevention:** Enforce strict prefix validation for device paths (e.g., must start with `/dev/` on Unix). Reject general file system paths unless explicitly allowed.

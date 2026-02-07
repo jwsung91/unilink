@@ -186,7 +186,8 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
   }
 
   // Unix-style device path (e.g., /dev/ttyUSB0, /dev/ttyACM0)
-  if (device.front() == '/') {
+  // Must start with "/dev/" for security
+  if (device.length() >= 5 && device.substr(0, 5) == "/dev/") {
     // Check for valid Unix device path characters
     for (char c : device) {
       if (!std::isalnum(c) && c != '/' && c != '_' && c != '-') {

@@ -356,7 +356,8 @@ INSTANTIATE_TEST_SUITE_P(
         DevicePathTestCase{"C:\\Windows\\System32", true, "Windows absolute path (rejected as device)"},
         DevicePathTestCase{"D:\\Data\\file.txt", true, "Windows file path (rejected as device)"},
         // Linux style
-        DevicePathTestCase{"/usr/bin/bash", false, "Linux absolute path"},
+        DevicePathTestCase{"/usr/bin/bash", true, "Linux absolute path (rejected as not /dev/)"},
+        DevicePathTestCase{"/etc/passwd", true, "Non-device path (rejected)"},
         DevicePathTestCase{"/dev/ttyUSB0", false, "Linux device path"},
         // Invalid
         DevicePathTestCase{"", true, "Empty path"}, DevicePathTestCase{"/dev/bad?", true, "Invalid char ?"}));

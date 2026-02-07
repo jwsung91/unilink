@@ -509,7 +509,8 @@ TEST_F(PlatformTest, PlatformSpecificErrorHandling) {
   std::vector<std::string> invalid_paths;
 
   if (is_linux()) {
-    invalid_paths = {"/dev/nonexistent", "/dev/ttyINVALID", "/tmp/nonexistent/file"};
+    // Only use paths that satisfy validation (start with /dev/) but don't exist
+    invalid_paths = {"/dev/nonexistent", "/dev/ttyINVALID"};
   } else if (is_windows()) {
     invalid_paths = {"COM999", "LPT999", "C:\\nonexistent\\file"};
   } else {
