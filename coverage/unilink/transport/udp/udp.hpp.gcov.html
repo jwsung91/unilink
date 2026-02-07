@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-07 01:58:32</td>
+            <td class="headerValue">2026-02-07 10:30:09</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -132,7 +132,7 @@
 <a name="54"><span class="lineNum">      54 </span>                :            :   void stop() override;</a>
 <a name="55"><span class="lineNum">      55 </span>                :            :   bool is_connected() const override;</a>
 <a name="56"><span class="lineNum">      56 </span>                :            : </a>
-<a name="57"><span class="lineNum">      57 </span>                :            :   void async_write_copy(const uint8_t* data, size_t size) override;</a>
+<a name="57"><span class="lineNum">      57 </span>                :            :   void async_write_copy(memory::ConstByteSpan data) override;</a>
 <a name="58"><span class="lineNum">      58 </span>                :            :   void async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) override;</a>
 <a name="59"><span class="lineNum">      59 </span>                :            :   void async_write_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) override;</a>
 <a name="60"><span class="lineNum">      60 </span>                :            : </a>
@@ -191,7 +191,7 @@
 <a name="113"><span class="lineNum">     113 </span>                :            :   std::atomic&lt;bool&gt; opened_{false};</a>
 <a name="114"><span class="lineNum">     114 </span>                :            :   std::atomic&lt;bool&gt; connected_{false};</a>
 <a name="115"><span class="lineNum">     115 </span>                :            :   bool started_{false};</a>
-<a name="116"><span class="lineNum">     116 </span>  [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         21 :   ThreadSafeLinkState state_{LinkState::Idle};</span></a>
+<a name="116"><span class="lineNum">     116 </span>  [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 12 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         21 :   ThreadSafeLinkState state_{LinkState::Idle};</span></a>
 <a name="117"><span class="lineNum">     117 </span>                :            :   std::atomic&lt;bool&gt; terminal_state_notified_{false};</a>
 <a name="118"><span class="lineNum">     118 </span>                :            : </a>
 <a name="119"><span class="lineNum">     119 </span>                :            :   OnBytes on_bytes_;</a>

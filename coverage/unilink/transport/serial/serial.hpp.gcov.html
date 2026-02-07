@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-07 01:58:32</td>
+            <td class="headerValue">2026-02-07 10:30:09</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -142,7 +142,7 @@
 <a name="64"><span class="lineNum">      64 </span>                :            :   void stop() override;</a>
 <a name="65"><span class="lineNum">      65 </span>                :            :   bool is_connected() const override;</a>
 <a name="66"><span class="lineNum">      66 </span>                :            : </a>
-<a name="67"><span class="lineNum">      67 </span>                :            :   void async_write_copy(const uint8_t* data, size_t n) override;</a>
+<a name="67"><span class="lineNum">      67 </span>                :            :   void async_write_copy(memory::ConstByteSpan data) override;</a>
 <a name="68"><span class="lineNum">      68 </span>                :            :   void async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) override;</a>
 <a name="69"><span class="lineNum">      69 </span>                :            :   void async_write_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) override;</a>
 <a name="70"><span class="lineNum">      70 </span>                :            : </a>
