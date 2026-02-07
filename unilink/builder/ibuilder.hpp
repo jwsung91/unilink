@@ -19,8 +19,14 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <string_view>
+#include <vector>
 
 #include "unilink/base/visibility.hpp"
+#include "unilink/framer/iframer.hpp"
+#include "unilink/framer/line_framer.hpp"
+#include "unilink/framer/packet_framer.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 namespace unilink {
 namespace builder {
@@ -136,6 +142,61 @@ class BuilderInterface {
   Derived& on_error(U* obj, F method) {
     return on_error([obj, method](const std::string& error) { (obj->*method)(error); });
   }
+
+  // Framing Support
+
+  /**
+   * @brief Use LineFramer for message segmentation (e.g., newline delimited)
+   * @param delimiter Delimiter string (default: "\n")
+   * @param include_delimiter Whether to include delimiter in the message
+   * @param max_length Maximum message length
+   * @return Derived& Reference to this builder
+   */
+  Derived& use_line_framer(std::string_view delimiter = "\n", bool include_delimiter = false,
+                           size_t max_length = 65536) {
+    framer_ = std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length);
+    return static_cast<Derived&>(*this);
+  }
+
+  /**
+   * @brief Use PacketFramer for message segmentation (binary pattern matching)
+   * @param start_pattern Start pattern bytes
+   * @param end_pattern End pattern bytes
+   * @param max_length Maximum packet length
+   * @return Derived& Reference to this builder
+   */
+  Derived& use_packet_framer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
+                             size_t max_length) {
+    framer_ = std::make_unique<framer::PacketFramer>(start_pattern, end_pattern, max_length);
+    return static_cast<Derived&>(*this);
+  }
+
+  /**
+   * @brief Set message handler callback (for framed messages)
+   * @param handler Function to handle complete messages
+   * @return Derived& Reference to this builder
+   */
+  Derived& on_message(std::function<void(memory::ConstByteSpan)> handler) {
+    on_message_ = std::move(handler);
+    return static_cast<Derived&>(*this);
+  }
+
+  /**
+   * @brief Set message handler callback using member function pointer
+   * @tparam U Class type
+   * @tparam F Member function type
+   * @param obj Object instance
+   * @param method Member function pointer
+   * @return Derived& Reference to this builder
+   */
+  template <typename U, typename F>
+  Derived& on_message(U* obj, F method) {
+    return on_message([obj, method](memory::ConstByteSpan msg) { (obj->*method)(msg); });
+  }
+
+ protected:
+  std::unique_ptr<framer::IFramer> framer_;
+  std::function<void(memory::ConstByteSpan)> on_message_;
 };
 
 }  // namespace builder

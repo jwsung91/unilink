@@ -69,6 +69,15 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
         serial->set_manage_external_context(use_independent_context_);
       }
 
+      // Apply framing if configured
+      if (framer_) {
+        std::shared_ptr<framer::IFramer> shared_framer = std::move(framer_);
+        if (on_message_) {
+          shared_framer->set_on_message(on_message_);
+        }
+        serial->on_bytes([shared_framer](memory::ConstByteSpan data) { shared_framer->push_bytes(data); });
+      }
+
       // Set callbacks with exception safety
       if (on_data_) {
         serial->on_data(on_data_);

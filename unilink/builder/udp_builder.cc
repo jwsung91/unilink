@@ -41,6 +41,15 @@ std::unique_ptr<wrapper::Udp> UdpBuilder::build() {
     udp = std::make_unique<wrapper::Udp>(cfg_);
   }
 
+  // Apply framing if configured
+  if (framer_) {
+    std::shared_ptr<framer::IFramer> shared_framer = std::move(framer_);
+    if (on_message_) {
+      shared_framer->set_on_message(on_message_);
+    }
+    udp->on_bytes([shared_framer](memory::ConstByteSpan data) { shared_framer->push_bytes(data); });
+  }
+
   if (on_data_) udp->on_data(on_data_);
   if (on_connect_) udp->on_connect(on_connect_);
   if (on_disconnect_) udp->on_disconnect(on_disconnect_);
