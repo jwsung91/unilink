@@ -41,14 +41,14 @@ foreach(test_file test_core.cc test_memory.cc test_pooled_buffer.cc test_boundar
   if(test_name STREQUAL "test_core")
     gtest_discover_tests(run_unit_${test_name}
       PROPERTIES
-        LABELS "unit;common;fast"
+        LABELS "unit_common_fast"
         TIMEOUT 30
       RESOURCE_LOCK "log_file_io"
     )
   else()
     gtest_discover_tests(run_unit_${test_name}
       PROPERTIES
-        LABELS "unit;common;fast"
+        LABELS "unit_common_fast"
         TIMEOUT 30
     )
   endif()
@@ -74,7 +74,7 @@ foreach(test_file test_builder.cc)
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;builder;fast"
+      LABELS "unit_builder_fast"
       TIMEOUT 30
   )
 endforeach()
@@ -99,7 +99,7 @@ foreach(test_file test_config.cc test_config_security.cc test_config_failure.cpp
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;config;fast"
+      LABELS "unit_config_fast"
       TIMEOUT 30
   )
 endforeach()
@@ -148,7 +148,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_s
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;wrapper;tcp"
+      LABELS "unit_wrapper_tcp"
       TIMEOUT 120
       RESOURCE_LOCK "tcp_port_allocation"
   )
@@ -172,7 +172,7 @@ target_include_directories(run_unit_wrapper_serial_config_mapping
 
 gtest_discover_tests(run_unit_wrapper_serial_config_mapping
   PROPERTIES
-    LABELS "unit;wrapper;serial"
+    LABELS "unit_wrapper_serial"
     TIMEOUT 30
 )
 
@@ -197,7 +197,7 @@ foreach(test_file transport_tcp_client.cc transport_tcp_server.cc transport_seri
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit;transport;fast"
+      LABELS "unit_transport_fast"
       TIMEOUT 30
   )
 endforeach()
@@ -220,7 +220,7 @@ target_include_directories(run_unit_test_contract_compliance
 
 gtest_discover_tests(run_unit_test_contract_compliance
   PROPERTIES
-    LABELS "unit;transport;contract"
+    LABELS "unit_transport_contract"
     TIMEOUT 30
 )
 
@@ -322,7 +322,7 @@ target_include_directories(run_unit_transport_tcp_server_session
 )
 gtest_discover_tests(run_unit_transport_tcp_server_session
   PROPERTIES
-    LABELS "unit;transport;session"
+    LABELS "unit_transport_session"
     TIMEOUT 30
 )
 
@@ -343,7 +343,7 @@ target_include_directories(run_unit_transport_tcp_fuzz_test
 )
 gtest_discover_tests(run_unit_transport_tcp_fuzz_test
   PROPERTIES
-    LABELS "unit;transport;fuzz"
+    LABELS "unit_transport_fuzz"
     TIMEOUT 30
 )
 
@@ -364,7 +364,7 @@ target_include_directories(run_unit_transport_tcp_timeout_test
 )
 gtest_discover_tests(run_unit_transport_tcp_timeout_test
   PROPERTIES
-    LABELS "unit;transport;timeout"
+    LABELS "unit_transport_timeout"
     TIMEOUT 30
 )
 
