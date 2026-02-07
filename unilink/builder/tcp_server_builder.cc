@@ -71,6 +71,20 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     server->set_manage_external_context(use_independent_context_);
   }
 
+  // Apply framing if configured
+  if (framer_) {
+    if (max_clients_ != 1) {
+      throw std::runtime_error(
+          "Framing is only supported in single-client mode (use single_client()) for TcpServer");
+    }
+
+    std::shared_ptr<framer::IFramer> shared_framer = std::move(framer_);
+    if (on_message_) {
+      shared_framer->set_on_message(on_message_);
+    }
+    server->on_bytes([shared_framer](memory::ConstByteSpan data) { shared_framer->push_bytes(data); });
+  }
+
   // Apply client limit configuration
   UNILINK_LOG_DEBUG(
       "tcp_server_builder", "build",

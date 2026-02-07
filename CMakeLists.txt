@@ -51,6 +51,8 @@ set(UNILINK_SOURCES
   unilink/wrapper/tcp_client/tcp_client.cc
   unilink/wrapper/tcp_server/tcp_server.cc
   unilink/wrapper/udp/udp.cc
+  unilink/framer/line_framer.cc
+  unilink/framer/packet_framer.cc
 )
 
 # Public headers (explicitly listed, no globbing)
@@ -59,6 +61,9 @@ set(UNILINK_HEADERS
   unilink/base/constants.hpp
   unilink/base/platform.hpp
   unilink/base/visibility.hpp
+  unilink/framer/iframer.hpp
+  unilink/framer/line_framer.hpp
+  unilink/framer/packet_framer.hpp
   unilink/builder/auto_initializer.hpp
   unilink/builder/ibuilder.hpp
   unilink/builder/serial_builder.hpp

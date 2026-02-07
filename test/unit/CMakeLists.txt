@@ -368,6 +368,31 @@ gtest_discover_tests(run_unit_transport_tcp_timeout_test
     TIMEOUT 30
 )
 
+# Framer tests (separate executables)
+foreach(test_file line_framer_test.cc packet_framer_test.cc)
+  get_filename_component(test_name ${test_file} NAME_WE)
+  add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/framer/${test_file})
+  target_link_libraries(run_unit_${test_name}
+    PRIVATE
+      ${_unilink_test_lib}
+      GTest::gtest
+      GTest::gtest_main
+      GTest::gmock
+  )
+  unilink_set_test_warning_options(run_unit_${test_name})
+  target_include_directories(run_unit_${test_name}
+    PRIVATE
+      ${CMAKE_SOURCE_DIR}/test/utils
+      ${CMAKE_SOURCE_DIR}/test/fixtures
+  )
+
+  gtest_discover_tests(run_unit_${test_name}
+    PROPERTIES
+      LABELS "unit_framer"
+      TIMEOUT 30
+  )
+endforeach()
+
 # Create a custom target to build all unit tests
 add_custom_target(unilink_unit_tests)
 
@@ -405,4 +430,6 @@ add_dependencies(unilink_unit_tests
   run_unit_transport_tcp_server_session
   run_unit_transport_tcp_fuzz_test
   run_unit_transport_tcp_timeout_test
+  run_unit_line_framer_test
+  run_unit_packet_framer_test
 )
