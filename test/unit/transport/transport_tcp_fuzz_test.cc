@@ -19,10 +19,7 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <memory>
-<<<<<<< HEAD
-=======
 #include <random>
->>>>>>> origin/main
 #include <vector>
 
 #include "fake_tcp_socket.hpp"
@@ -30,7 +27,6 @@
 
 using namespace unilink;
 using namespace unilink::transport;
-<<<<<<< HEAD
 
 namespace {
 namespace net = boost::asio;
@@ -75,7 +71,6 @@ TEST(TransportTcpFuzzTest, MockParserCrash) {
   while (!socket_raw->has_handler()) {
     ioc.run_for(std::chrono::milliseconds(1));
   }
-=======
 using unilink::test::FakeTcpSocket;
 using namespace std::chrono_literals;
 
@@ -91,15 +86,12 @@ TEST(TransportTcpFuzzTest, FuzzingData) {
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
   auto* socket_raw = socket.get();
   auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
->>>>>>> origin/main
 
   std::atomic<bool> closed{false};
   session->on_close([&]() { closed = true; });
 
-<<<<<<< HEAD
   session->on_bytes([&](memory::ConstByteSpan span) {
     if (span.size() == 13) {  // Unlucky number triggers crash
-=======
   // Simple echo or no-op parser
   session->on_bytes([&](const uint8_t*, size_t) {
     // Process data normally
@@ -144,12 +136,10 @@ TEST(TransportTcpFuzzTest, MockParserCrash) {
   // Mock parser that throws on specific "bad" length
   session->on_bytes([&](const uint8_t*, size_t size) {
     if (size == 13) {  // Unlucky number triggers crash
->>>>>>> origin/main
       throw std::runtime_error("Protocol violation");
     }
   });
 
-<<<<<<< HEAD
   // Normal data
   socket_raw->emit_read(10);
   ioc.run_for(std::chrono::milliseconds(10));
@@ -161,7 +151,6 @@ TEST(TransportTcpFuzzTest, MockParserCrash) {
 
   EXPECT_TRUE(closed.load());
 }
-=======
   session->start();
   ioc.run_for(5ms);  // Process start_read
   EXPECT_TRUE(session->alive());
@@ -180,4 +169,3 @@ TEST(TransportTcpFuzzTest, MockParserCrash) {
 }
 
 }  // namespace
->>>>>>> origin/main
