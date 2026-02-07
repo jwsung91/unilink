@@ -155,7 +155,7 @@ void TcpServer::send(const std::string& data) {
 
   if (connected && channel) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
-    channel->async_write_copy(binary_view.first, binary_view.second);
+    channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
 
@@ -204,16 +204,10 @@ ChannelInterface& TcpServer::auto_manage(bool manage) {
 
 void TcpServer::send_line(const std::string& line) { send(line + "\n"); }
 
-// void ImprovedTcpServer::send_binary(const std::vector<uint8_t>& data) {
-//     if (is_connected() && channel_) {
-//         channel_->async_write_copy(data.data(), data.size());
-//     }
-// }
-
 void TcpServer::setup_internal_handlers() {
   if (!channel_) return;
 
-  channel_->on_bytes([this](const uint8_t* data, size_t size) { handle_bytes(data, size); });
+  channel_->on_bytes([this](memory::ConstByteSpan data) { handle_bytes(data); });
 
   channel_->on_state([this](base::LinkState state) { handle_state(state); });
 
@@ -246,12 +240,12 @@ void TcpServer::setup_internal_handlers() {
   }
 }
 
-void TcpServer::handle_bytes(const uint8_t* data, size_t size) {
+void TcpServer::handle_bytes(memory::ConstByteSpan data) {
   if (on_bytes_) {
-    on_bytes_(data, size);
+    on_bytes_(data);
   }
   if (on_data_) {
-    std::string str_data = common::safe_convert::uint8_to_string(data, size);
+    std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
     on_data_(str_data);
   }
 }

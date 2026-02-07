@@ -64,9 +64,10 @@ void TcpServerSession::start() {
   net::dispatch(strand_, [self] { self->start_read(); });
 }
 
-void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
+void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
   if (!alive_ || closing_) return;  // Don't queue writes if session is not alive
 
+  size_t size = data.size();
   if (size > common::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return;
@@ -77,7 +78,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
     memory::PooledBuffer pooled_buffer(size);
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely
-      common::safe_memory::safe_memcpy(pooled_buffer.data(), data, size);
+      common::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
 
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
@@ -97,7 +98,7 @@ void TcpServerSession::async_write_copy(const uint8_t* data, size_t size) {
   }
 
   // Fallback to regular allocation for large buffers or pool exhaustion
-  std::vector<uint8_t> fallback(data, data + size);
+  std::vector<uint8_t> fallback(data.begin(), data.end());
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
@@ -218,7 +219,7 @@ void TcpServerSession::start_read() {
         }
         if (self->on_bytes_) {
           try {
-            self->on_bytes_(self->rx_.data(), n);
+            self->on_bytes_(memory::ConstByteSpan(self->rx_.data(), n));
           } catch (const std::exception& e) {
             UNILINK_LOG_ERROR("tcp_server_session", "on_bytes",
                               "Exception in on_bytes callback: " + std::string(e.what()));

@@ -36,7 +36,7 @@ namespace builder {
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial> {
+class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, SerialBuilder> {
  public:
   /**
    * @brief Construct a new SerialBuilder
@@ -50,6 +50,11 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial> {
   SerialBuilder& operator=(const SerialBuilder&) = delete;
   SerialBuilder(SerialBuilder&&) = default;
   SerialBuilder& operator=(SerialBuilder&&) = default;
+
+  using BuilderInterface::on_connect;
+  using BuilderInterface::on_data;
+  using BuilderInterface::on_disconnect;
+  using BuilderInterface::on_error;
 
   /**
    * @brief Build and return the configured Serial
@@ -72,37 +77,11 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial> {
   SerialBuilder& on_data(std::function<void(const std::string&)> handler) override;
 
   /**
-   * @brief Set data handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
-  template <typename U, typename F>
-  SerialBuilder& on_data(U* obj, F method) {
-    return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_data(obj, method));
-  }
-
-  /**
    * @brief Set connection handler callback
    * @param handler Function to handle connection events
    * @return SerialBuilder& Reference to this builder for method chaining
    */
   SerialBuilder& on_connect(std::function<void()> handler) override;
-
-  /**
-   * @brief Set connection handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
-  template <typename U, typename F>
-  SerialBuilder& on_connect(U* obj, F method) {
-    return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_connect(obj, method));
-  }
 
   /**
    * @brief Set disconnection handler callback
@@ -112,37 +91,11 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial> {
   SerialBuilder& on_disconnect(std::function<void()> handler) override;
 
   /**
-   * @brief Set disconnection handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
-  template <typename U, typename F>
-  SerialBuilder& on_disconnect(U* obj, F method) {
-    return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_disconnect(obj, method));
-  }
-
-  /**
    * @brief Set error handler callback
    * @param handler Function to handle error events
    * @return SerialBuilder& Reference to this builder for method chaining
    */
   SerialBuilder& on_error(std::function<void(const std::string&)> handler) override;
-
-  /**
-   * @brief Set error handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
-  template <typename U, typename F>
-  SerialBuilder& on_error(U* obj, F method) {
-    return static_cast<SerialBuilder&>(BuilderInterface<wrapper::Serial>::on_error(obj, method));
-  }
 
   /**
    * @brief Use independent IoContext for this serial (for testing isolation)

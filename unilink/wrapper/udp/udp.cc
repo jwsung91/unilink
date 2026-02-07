@@ -17,29 +17,30 @@
 #include "unilink/wrapper/udp/udp.hpp"
 
 #include <boost/asio/executor_work_guard.hpp>
-#include <chrono>
+#include <iostream>
 #include <stdexcept>
 
-#include "unilink/base/common.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/transport/udp/udp.hpp"
 
 namespace unilink {
 namespace wrapper {
 
-Udp::Udp(const config::UdpConfig& cfg) : cfg_(cfg) {}
+Udp::Udp(const config::UdpConfig& cfg) : cfg_(cfg), channel_(nullptr) {
+  // Channel will be created later
+}
 
 Udp::Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc)
-    : cfg_(cfg), external_ioc_(std::move(external_ioc)), use_external_context_(external_ioc_ != nullptr) {}
+    : cfg_(cfg),
+      channel_(nullptr),
+      external_ioc_(std::move(external_ioc)),
+      use_external_context_(external_ioc_ != nullptr) {}
 
-Udp::Udp(std::shared_ptr<interface::Channel> channel) : channel_(std::move(channel)) { setup_internal_handlers(); }
+Udp::Udp(std::shared_ptr<interface::Channel> channel) : channel_(channel) { setup_internal_handlers(); }
 
 Udp::~Udp() {
   if (started_) {
     stop();
-  }
-  if (channel_) {
-    channel_.reset();
   }
 }
 
@@ -50,8 +51,10 @@ void Udp::start() {
     if (!external_ioc_) {
       throw std::runtime_error("External io_context is not set");
     }
-    if (manage_external_context_ && external_ioc_->stopped()) {
-      external_ioc_->restart();
+    if (manage_external_context_) {
+      if (external_ioc_->stopped()) {
+        external_ioc_->restart();
+      }
     }
   }
 
@@ -74,8 +77,6 @@ void Udp::stop() {
   if (!started_ || !channel_) return;
 
   channel_->stop();
-  channel_.reset();
-  started_ = false;
 
   if (use_external_context_ && manage_external_context_) {
     if (external_ioc_) {
@@ -85,12 +86,14 @@ void Udp::stop() {
       external_thread_.join();
     }
   }
+
+  started_ = false;
 }
 
 void Udp::send(const std::string& data) {
   if (is_connected() && channel_) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
-    channel_->async_write_copy(binary_view.first, binary_view.second);
+    channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
 
@@ -127,7 +130,9 @@ ChannelInterface& Udp::on_error(ErrorHandler handler) {
 
 ChannelInterface& Udp::auto_manage(bool manage) {
   auto_manage_ = manage;
-  if (auto_manage_ && !started_) start();
+  if (auto_manage_ && !started_) {
+    start();
+  }
   return *this;
 }
 
@@ -136,13 +141,13 @@ void Udp::set_manage_external_context(bool manage) { manage_external_context_ = 
 void Udp::setup_internal_handlers() {
   if (!channel_) return;
 
-  channel_->on_bytes([this](const uint8_t* p, size_t n) {
+  channel_->on_bytes([this](memory::ConstByteSpan data) {
     if (bytes_handler_) {
-      bytes_handler_(p, n);
+      bytes_handler_(data);
     }
     if (data_handler_) {
-      std::string data = common::safe_convert::uint8_to_string(p, n);
-      data_handler_(data);
+      std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
+      data_handler_(str_data);
     }
   });
 
@@ -158,7 +163,7 @@ void Udp::notify_state_change(base::LinkState state) {
       if (disconnect_handler_) disconnect_handler_();
       break;
     case base::LinkState::Error:
-      if (error_handler_) error_handler_("UDP channel error occurred");
+      if (error_handler_) error_handler_("Connection error");
       break;
     default:
       break;

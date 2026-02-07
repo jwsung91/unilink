@@ -33,7 +33,7 @@ namespace builder {
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_API UdpBuilder : public BuilderInterface<wrapper::Udp> {
+class UNILINK_API UdpBuilder : public BuilderInterface<wrapper::Udp, UdpBuilder> {
  public:
   UdpBuilder();
 
@@ -41,6 +41,11 @@ class UNILINK_API UdpBuilder : public BuilderInterface<wrapper::Udp> {
   UdpBuilder& operator=(const UdpBuilder&) = delete;
   UdpBuilder(UdpBuilder&&) = default;
   UdpBuilder& operator=(UdpBuilder&&) = default;
+
+  using BuilderInterface::on_connect;
+  using BuilderInterface::on_data;
+  using BuilderInterface::on_disconnect;
+  using BuilderInterface::on_error;
 
   std::unique_ptr<wrapper::Udp> build() override;
 
@@ -54,26 +59,6 @@ class UNILINK_API UdpBuilder : public BuilderInterface<wrapper::Udp> {
   UdpBuilder& set_local_address(const std::string& address);
   UdpBuilder& set_remote(const std::string& address, uint16_t port);
   UdpBuilder& use_independent_context(bool use_independent = true);
-
-  template <typename U, typename F>
-  UdpBuilder& on_data(U* obj, F method) {
-    return static_cast<UdpBuilder&>(BuilderInterface<wrapper::Udp>::on_data(obj, method));
-  }
-
-  template <typename U, typename F>
-  UdpBuilder& on_connect(U* obj, F method) {
-    return static_cast<UdpBuilder&>(BuilderInterface<wrapper::Udp>::on_connect(obj, method));
-  }
-
-  template <typename U, typename F>
-  UdpBuilder& on_disconnect(U* obj, F method) {
-    return static_cast<UdpBuilder&>(BuilderInterface<wrapper::Udp>::on_disconnect(obj, method));
-  }
-
-  template <typename U, typename F>
-  UdpBuilder& on_error(U* obj, F method) {
-    return static_cast<UdpBuilder&>(BuilderInterface<wrapper::Udp>::on_error(obj, method));
-  }
 
  private:
   config::UdpConfig cfg_;

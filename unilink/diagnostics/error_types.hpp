@@ -24,6 +24,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <string_view>
 
 namespace unilink {
 namespace diagnostics {
@@ -75,7 +76,7 @@ struct ErrorInfo {
   /**
    * @brief Constructor for basic error info
    */
-  ErrorInfo(ErrorLevel l, ErrorCategory c, const std::string& comp, const std::string& op, const std::string& msg)
+  ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg)
       : level(l),
         category(c),
         component(comp),
@@ -88,7 +89,7 @@ struct ErrorInfo {
   /**
    * @brief Constructor with Boost error code
    */
-  ErrorInfo(ErrorLevel l, ErrorCategory c, const std::string& comp, const std::string& op, const std::string& msg,
+  ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,
             const boost::system::error_code& ec, bool retry = false)
       : level(l),
         category(c),

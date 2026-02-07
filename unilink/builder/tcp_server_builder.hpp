@@ -35,7 +35,7 @@ namespace builder {
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer> {
+class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer, TcpServerBuilder> {
  public:
   /**
    * @brief Construct a new TcpServerBuilder
@@ -48,6 +48,11 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer>
   TcpServerBuilder& operator=(const TcpServerBuilder&) = delete;
   TcpServerBuilder(TcpServerBuilder&&) = default;
   TcpServerBuilder& operator=(TcpServerBuilder&&) = default;
+
+  using BuilderInterface::on_connect;
+  using BuilderInterface::on_data;
+  using BuilderInterface::on_disconnect;
+  using BuilderInterface::on_error;
 
   /**
    * @brief Build and return the configured TcpServer
@@ -77,19 +82,6 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer>
   TcpServerBuilder& on_data(std::function<void(size_t, const std::string&)> handler);
 
   /**
-   * @brief Set data handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return TcpServerBuilder& Reference to this builder for method chaining
-   */
-  template <typename U, typename F>
-  TcpServerBuilder& on_data(U* obj, F method) {
-    return static_cast<TcpServerBuilder&>(BuilderInterface<wrapper::TcpServer>::on_data(obj, method));
-  }
-
-  /**
    * @brief Set connection handler callback (simple version)
    * @param handler Function to handle connection events
    * @return TcpServerBuilder& Reference to this builder for method chaining
@@ -102,19 +94,6 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer>
    * @return TcpServerBuilder& Reference to this builder for method chaining
    */
   TcpServerBuilder& on_connect(std::function<void(size_t, const std::string&)> handler);
-
-  /**
-   * @brief Set connection handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return TcpServerBuilder& Reference to this builder for method chaining
-   */
-  template <typename U, typename F>
-  TcpServerBuilder& on_connect(U* obj, F method) {
-    return static_cast<TcpServerBuilder&>(BuilderInterface<wrapper::TcpServer>::on_connect(obj, method));
-  }
 
   /**
    * @brief Set disconnection handler callback (simple version)
@@ -131,37 +110,11 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer>
   TcpServerBuilder& on_disconnect(std::function<void(size_t)> handler);
 
   /**
-   * @brief Set disconnection handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return TcpServerBuilder& Reference to this builder for method chaining
-   */
-  template <typename U, typename F>
-  TcpServerBuilder& on_disconnect(U* obj, F method) {
-    return static_cast<TcpServerBuilder&>(BuilderInterface<wrapper::TcpServer>::on_disconnect(obj, method));
-  }
-
-  /**
    * @brief Set error handler callback
    * @param handler Function to handle error events
    * @return TcpServerBuilder& Reference to this builder for method chaining
    */
   TcpServerBuilder& on_error(std::function<void(const std::string&)> handler) override;
-
-  /**
-   * @brief Set error handler callback using member function pointer
-   * @tparam U Class type
-   * @tparam F Member function type
-   * @param obj Object instance
-   * @param method Member function pointer
-   * @return TcpServerBuilder& Reference to this builder for method chaining
-   */
-  template <typename U, typename F>
-  TcpServerBuilder& on_error(U* obj, F method) {
-    return static_cast<TcpServerBuilder&>(BuilderInterface<wrapper::TcpServer>::on_error(obj, method));
-  }
 
   /**
    * @brief Use independent IoContext for this server (for testing isolation)

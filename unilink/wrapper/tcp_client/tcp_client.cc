@@ -110,7 +110,7 @@ void TcpClient::stop() {
 void TcpClient::send(const std::string& data) {
   if (is_connected() && channel_) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
-    channel_->async_write_copy(binary_view.first, binary_view.second);
+    channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
 
@@ -180,13 +180,13 @@ void TcpClient::setup_internal_handlers() {
   if (!channel_) return;
 
   // Convert byte data to string and pass it
-  channel_->on_bytes([this](const uint8_t* p, size_t n) {
+  channel_->on_bytes([this](memory::ConstByteSpan data) {
     if (bytes_handler_) {
-      bytes_handler_(p, n);
+      bytes_handler_(data);
     }
     if (data_handler_) {
-      std::string data = common::safe_convert::uint8_to_string(p, n);
-      data_handler_(data);
+      std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
+      data_handler_(str_data);
     }
   });
 

@@ -40,7 +40,7 @@ class MockChannel : public unilink::interface::Channel {
   void start() override {}
   void stop() override {}
   bool is_connected() const override { return true; }
-  void async_write_copy(const uint8_t*, size_t) override {}
+  void async_write_copy(unilink::memory::ConstByteSpan) override {}
   void async_write_move(std::vector<uint8_t>&&) override {}
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {}
   void on_bytes(OnBytes) override {}

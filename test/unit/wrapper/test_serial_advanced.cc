@@ -23,6 +23,7 @@
 
 #include "test/utils/test_utils.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/wrapper/serial/serial.hpp"
 
 using namespace unilink;
@@ -44,7 +45,7 @@ class DummyChannel : public interface::Channel {
 
   bool is_connected() const override { return started_ && !stopped_; }
 
-  void async_write_copy(const uint8_t* /*data*/, size_t /*size*/) override {}
+  void async_write_copy(unilink::memory::ConstByteSpan /*data*/) override {}
   void async_write_move(std::vector<uint8_t>&& /*data*/) override {}
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> /*data*/) override {}
 

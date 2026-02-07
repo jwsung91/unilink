@@ -7,6 +7,7 @@
 
 #include "unilink/base/common.hpp"
 #include "unilink/config/udp_config.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
 
 using namespace unilink;
@@ -43,7 +44,7 @@ TEST(UdpWrapperTest, StopSafetyWithExternalIOC) {
   {
     wrapper::Udp udp(cfg, ioc);
     std::atomic<int> callbacks{0};
-    udp.on_bytes([&](const uint8_t*, size_t) { callbacks++; });
+    udp.on_bytes([&](memory::ConstByteSpan) { callbacks++; });
     udp.start();
 
     // Stop and destroy immediately

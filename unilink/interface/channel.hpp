@@ -21,12 +21,13 @@
 
 #include "unilink/base/common.hpp"
 #include "unilink/base/visibility.hpp"
+#include "unilink/memory/safe_span.hpp"
 
 namespace unilink {
 namespace interface {
 class UNILINK_API Channel {
  public:
-  using OnBytes = std::function<void(const uint8_t*, size_t)>;
+  using OnBytes = std::function<void(memory::ConstByteSpan)>;
   using OnState = std::function<void(base::LinkState)>;
   using OnBackpressure = std::function<void(size_t /*queued_bytes*/)>;
 
@@ -37,7 +38,7 @@ class UNILINK_API Channel {
   virtual bool is_connected() const = 0;
 
   // Single send API (copies into internal queue)
-  virtual void async_write_copy(const uint8_t* data, size_t size) = 0;
+  virtual void async_write_copy(memory::ConstByteSpan data) = 0;
   // Zero-copy APIs (ownership transfer or shared ownership)
   virtual void async_write_move(std::vector<uint8_t>&& data) = 0;
   virtual void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) = 0;
