@@ -44,8 +44,9 @@ public:
             .on_connect([this](size_t client_id, const std::string& ip) {
                 handle_connect(client_id, ip);
             })
-            .on_data([this](size_t client_id, const std::string& data) {
-                handle_data(client_id, data);
+            .on_bytes([this](size_t client_id, unilink::memory::ConstByteSpan data) {
+                std::string str = unilink::common::safe_convert::uint8_to_string(data.data(), data.size());
+                handle_data(client_id, str);
             })
             .on_disconnect([this](size_t client_id) {
                 handle_disconnect(client_id);
@@ -185,7 +186,7 @@ public:
                 server_->send_to_client(id, "Welcome! You are client #" + 
                                        std::to_string(id) + "\n");
             })
-            .on_data([this](size_t id, const std::string& data) {
+            .on_bytes([this](size_t id, unilink::memory::ConstByteSpan data) {
                 {
                     std::lock_guard<std::mutex> lock(clients_mutex_);
                     if (clients_.count(id)) {
@@ -193,14 +194,16 @@ public:
                     }
                 }
                 
+                std::string str = unilink::common::safe_convert::uint8_to_string(data.data(), data.size());
+
                 // Handle commands
-                if (data == "/stats\n") {
+                if (str == "/stats\n") {
                     send_statistics(id);
-                } else if (data == "/clients\n") {
+                } else if (str == "/clients\n") {
                     send_client_list(id);
                 } else {
                     // Echo normally
-                    server_->send_to_client(id, "Echo: " + data);
+                    server_->send_to_client(id, "Echo: " + str);
                 }
             })
             .on_disconnect([this](size_t id) {
@@ -270,8 +273,9 @@ auto server = unilink::tcp_server(8080)
         std::cout << "Client connected: " << ip << std::endl;
         // Previous client is automatically disconnected
     })
-    .on_data([](size_t id, const std::string& data) {
-        std::cout << "Received: " << data << std::endl;
+    .on_bytes([](size_t id, unilink::memory::ConstByteSpan data) {
+        std::string str = unilink::common::safe_convert::uint8_to_string(data.data(), data.size());
+        std::cout << "Received: " << str << std::endl;
     })
     .build();
 
@@ -325,9 +329,11 @@ private:
 public:
     void start() {
         server_ = unilink::tcp_server(8080)
-            .on_data([this](size_t sender_id, const std::string& data) {
+            .on_bytes([this](size_t sender_id, unilink::memory::ConstByteSpan data) {
+                std::string str = unilink::common::safe_convert::uint8_to_string(data.data(), data.size());
+
                 // Broadcast to all clients
-                std::string msg = "[Client " + std::to_string(sender_id) + "]: " + data;
+                std::string msg = "[Client " + std::to_string(sender_id) + "]: " + str;
                 server_->send(msg);  // Send to ALL clients
                 
                 std::cout << "Broadcasted: " << msg << std::endl;
@@ -368,8 +374,9 @@ public:
                 
                 server_->send_to_client(id, "Welcome! Type /nick <name> to set your nickname\n");
             })
-            .on_data([this](size_t id, const std::string& data) {
-                handle_message(id, data);
+            .on_bytes([this](size_t id, unilink::memory::ConstByteSpan data) {
+                std::string str = unilink::common::safe_convert::uint8_to_string(data.data(), data.size());
+                handle_message(id, str);
             })
             .on_disconnect([this](size_t id) {
                 std::lock_guard<std::mutex> lock(mutex_);

@@ -169,6 +169,7 @@ jobs:
       shell: pwsh
       env:
         VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+        VCPKG_USE_SYSTEM_BINARIES: "1"
       run: |
         $retries = 3
         $count = 0
@@ -197,6 +198,7 @@ jobs:
       shell: pwsh
       env:
         VCPKG_ROOT: ${{ github.workspace }}\vcpkg
+        VCPKG_USE_SYSTEM_BINARIES: "1"
       run: |
         & "$env:CMAKE_EXE" -S . -B build-windows `
           -G "Visual Studio 17 2022" -A x64 `

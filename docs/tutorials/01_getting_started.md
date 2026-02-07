@@ -79,9 +79,11 @@ int main() {
             std::cout << "✓ Connected to server!" << std::endl;
         })
         
-        // Step 3: Handle incoming data
-        .on_data([](const std::string& data) {
-            std::cout << "✓ Received: " << data << std::endl;
+        // Step 3: Handle incoming data (Zero-copy with ConstByteSpan)
+        .on_bytes([](unilink::memory::ConstByteSpan data) {
+            // Convert to string safely
+            std::string str = unilink::common::safe_convert::uint8_to_string(data.data(), data.size());
+            std::cout << "✓ Received: " << str << std::endl;
         })
         
         // Step 4: Handle disconnection
@@ -226,9 +228,9 @@ The builder pattern provides a fluent, chainable API for configuration.
 ### 2. Callbacks
 ```cpp
 .on_connect([]() { /* called when connected */ })
-.on_data([](const std::string& data) { /* called when data received */ })
+.on_bytes([](unilink::memory::ConstByteSpan data) { /* zero-copy data access */ })
 ```
-Callbacks are invoked automatically by the library.
+Callbacks are invoked automatically by the library. The `.on_bytes` callback provides high-performance access to data.
 
 ### 3. Automatic Reconnection
 ```cpp
