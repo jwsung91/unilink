@@ -56,7 +56,6 @@ TEST(TransportTcpFuzzTest, FuzzingData) {
   EXPECT_TRUE(session->alive());
 
   std::mt19937 gen(12345);
-  std::uniform_int_distribution<uint8_t> byte_dist(0, 255);
   std::uniform_int_distribution<size_t> size_dist(1, 4096);
 
   // Send 100 random packets
