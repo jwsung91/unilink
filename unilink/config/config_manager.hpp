@@ -33,7 +33,7 @@ namespace config {
 class UNILINK_API ConfigManager : public ConfigManagerInterface {
  public:
   ConfigManager() = default;
-  ~ConfigManager() = default;
+  ~ConfigManager() override = default;
 
   // Configuration access
   std::any get(const std::string& key) const override;

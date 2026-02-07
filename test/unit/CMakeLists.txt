@@ -177,114 +177,30 @@ gtest_discover_tests(run_unit_wrapper_serial_config_mapping
 )
 
 # Transport tests (fast, unit-level without real network dependencies)
-add_executable(run_unit_transport_tcp_client ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_client.cc)
-target_link_libraries(run_unit_transport_tcp_client
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_tcp_client)
-target_include_directories(run_unit_transport_tcp_client
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
+# Updated list to include fuzz tests, server session tests, and timeout tests
+foreach(test_file transport_tcp_client.cc transport_tcp_server.cc transport_serial.cc transport_udp.cc transport_udp_extended.cc transport_tcp_server_session.cc transport_tcp_fuzz_test.cc transport_tcp_timeout_test.cc)
+  get_filename_component(test_name ${test_file} NAME_WE)
+  add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/transport/${test_file})
+  target_link_libraries(run_unit_${test_name}
+    PRIVATE
+      ${_unilink_test_lib}
+      GTest::gtest
+      GTest::gtest_main
+      GTest::gmock
+  )
+  unilink_set_test_warning_options(run_unit_${test_name})
+  target_include_directories(run_unit_${test_name}
+    PRIVATE
+      ${CMAKE_SOURCE_DIR}/test/utils
+      ${CMAKE_SOURCE_DIR}/test/fixtures
+  )
 
-gtest_discover_tests(run_unit_transport_tcp_client
-  PROPERTIES
-    LABELS "unit;transport;fast"
-    TIMEOUT 30
-)
-
-# TcpServer transport tests (fast, unit-level without real network dependencies)
-add_executable(run_unit_transport_tcp_server ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_server.cc)
-target_link_libraries(run_unit_transport_tcp_server
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_tcp_server)
-target_include_directories(run_unit_transport_tcp_server
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(run_unit_transport_tcp_server
-  PROPERTIES
-    LABELS "unit;transport;fast"
-    TIMEOUT 30
-)
-
-# Serial lifecycle tests (fast, no real device)
-add_executable(run_unit_transport_serial ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_serial.cc)
-target_link_libraries(run_unit_transport_serial
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_serial)
-target_include_directories(run_unit_transport_serial
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(run_unit_transport_serial
-  PROPERTIES
-    LABELS "unit;transport;serial"
-    TIMEOUT 30
-)
-
-# UDP transport loopback tests
-add_executable(run_unit_transport_udp ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_udp.cc)
-target_link_libraries(run_unit_transport_udp
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_udp)
-target_include_directories(run_unit_transport_udp
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(run_unit_transport_udp
-  PROPERTIES
-    LABELS "unit;transport;udp"
-    TIMEOUT 30
-)
-
-# UDP transport extended tests
-add_executable(run_unit_transport_udp_extended ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_udp_extended.cc)
-target_link_libraries(run_unit_transport_udp_extended
-  PRIVATE
-    ${_unilink_test_lib}
-    GTest::gtest
-    GTest::gtest_main
-    GTest::gmock
-)
-unilink_set_test_warning_options(run_unit_transport_udp_extended)
-target_include_directories(run_unit_transport_udp_extended
-  PRIVATE
-    ${CMAKE_SOURCE_DIR}/test/utils
-    ${CMAKE_SOURCE_DIR}/test/fixtures
-)
-
-gtest_discover_tests(run_unit_transport_udp_extended
-  PROPERTIES
-    LABELS "unit"
-    TIMEOUT 30
-)
+  gtest_discover_tests(run_unit_${test_name}
+    PROPERTIES
+      LABELS "unit;transport;fast"
+      TIMEOUT 30
+  )
+endforeach()
 
 # Contract Compliance Tests
 add_executable(run_unit_test_contract_compliance ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_contract_compliance.cc)
@@ -413,6 +329,9 @@ add_dependencies(unilink_unit_tests
   run_unit_transport_tcp_server
   run_unit_transport_serial
   run_unit_transport_udp_extended
+  run_unit_transport_tcp_server_session
+  run_unit_transport_tcp_fuzz_test
+  run_unit_transport_tcp_timeout_test
   run_unit_test_contract_compliance
   run_unit_test_tcp_abort
   run_unit_test_tcp_rst

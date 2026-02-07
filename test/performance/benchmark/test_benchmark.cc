@@ -75,13 +75,13 @@ class BenchmarkTest : public BaseTest {
     if (duration.count() < 1000) {
       return std::to_string(duration.count()) + "ms";
     } else {
-      return std::to_string(duration.count() / 1000.0) + "s";
+      return std::to_string(static_cast<double>(duration.count()) / 1000.0) + "s";
     }
   }
 
   // Helper function to calculate throughput
   double calculateThroughput(size_t operations, std::chrono::milliseconds duration) {
-    return static_cast<double>(operations) / (duration.count() / 1000.0);
+    return static_cast<double>(operations) / (static_cast<double>(duration.count()) / 1000.0);
   }
 };
 
@@ -198,7 +198,7 @@ TEST_F(BenchmarkTest, MemoryPoolConcurrentPerformance) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   double throughput = calculateThroughput(total_operations.load(), duration);
-  double success_rate = (100.0 * successful_operations.load()) / total_operations.load();
+  double success_rate = (100.0 * static_cast<double>(successful_operations.load())) / static_cast<double>(total_operations.load());
 
   std::cout << "Threads: " << num_threads << std::endl;
   std::cout << "Operations per thread: " << formatNumber(operations_per_thread) << std::endl;
@@ -260,7 +260,7 @@ TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
   auto final_stats = pool.get_stats();
   size_t total_hits = final_stats.pool_hits - initial_stats.pool_hits;
   size_t total_allocations = final_stats.total_allocations - initial_stats.total_allocations;
-  double hit_rate = total_allocations > 0 ? (100.0 * total_hits) / total_allocations : 0.0;
+  double hit_rate = total_allocations > 0 ? (100.0 * static_cast<double>(total_hits)) / static_cast<double>(total_allocations) : 0.0;
 
   double throughput = calculateThroughput(num_cycles * buffers_per_cycle * 2, duration);
 
@@ -307,7 +307,7 @@ TEST_F(BenchmarkTest, NetworkCommunicationThroughput) {
     auto buffer = pool.acquire(message_size);
     if (buffer) {
       // Simulate message processing
-      memset(buffer.get(), 'A' + (i % 26), message_size);
+      memset(buffer.get(), static_cast<int>('A' + (i % 26)), message_size);
 
       // Simulate network delay
       std::this_thread::sleep_for(std::chrono::microseconds(10));
@@ -322,7 +322,7 @@ TEST_F(BenchmarkTest, NetworkCommunicationThroughput) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   double message_throughput = calculateThroughput(messages_processed.load(), duration);
-  double data_throughput = (bytes_processed.load() / 1024.0) / (duration.count() / 1000.0);  // KB/s
+  double data_throughput = (static_cast<double>(bytes_processed.load()) / 1024.0) / (static_cast<double>(duration.count()) / 1000.0);  // KB/s
 
   std::cout << "Messages: " << formatNumber(messages_processed.load()) << std::endl;
   std::cout << "Message size: " << formatNumber(message_size) << " bytes" << std::endl;
@@ -451,7 +451,7 @@ TEST_F(BenchmarkTest, ConcurrentOperationsPerformance) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   double throughput = calculateThroughput(total_operations.load(), duration);
-  double success_rate = (100.0 * successful_operations.load()) / total_operations.load();
+  double success_rate = (100.0 * static_cast<double>(successful_operations.load())) / static_cast<double>(total_operations.load());
 
   std::cout << "Threads: " << num_threads << std::endl;
   std::cout << "Operations per thread: " << formatNumber(operations_per_thread) << std::endl;
@@ -592,7 +592,7 @@ TEST_F(BenchmarkTest, PerformanceRegressionDetection) {
     auto iteration_end = std::chrono::high_resolution_clock::now();
     auto iteration_duration = std::chrono::duration_cast<std::chrono::microseconds>(iteration_end - iteration_start);
 
-    iteration_times.push_back(iteration_duration.count() / 1000.0);  // Convert to ms
+    iteration_times.push_back(static_cast<double>(iteration_duration.count()) / 1000.0);  // Convert to ms
   }
 
   // Calculate statistics
@@ -602,14 +602,14 @@ TEST_F(BenchmarkTest, PerformanceRegressionDetection) {
   double median_time = iteration_times[iteration_times.size() / 2];
 
   double total_time = std::accumulate(iteration_times.begin(), iteration_times.end(), 0.0);
-  double avg_time = total_time / iteration_times.size();
+  double avg_time = total_time / static_cast<double>(iteration_times.size());
 
   // Calculate coefficient of variation (stability measure)
   double variance = 0.0;
   for (double time : iteration_times) {
     variance += (time - avg_time) * (time - avg_time);
   }
-  variance /= iteration_times.size();
+  variance /= static_cast<double>(iteration_times.size());
   double std_dev = std::sqrt(variance);
   double coefficient_of_variation = (avg_time > 0.0) ? (std_dev / avg_time) * 100.0 : 0.0;
 

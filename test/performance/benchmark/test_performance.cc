@@ -304,7 +304,8 @@ TEST_F(PerformanceIntegratedTest, ScalabilityThreadCount) {
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-    double throughput = static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
+    double throughput =
+        static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
 
     std::cout << "Threads: " << thread_count << ", Operations: " << completed_operations.load()
               << ", Duration: " << duration.count() << " μs" << ", Throughput: " << throughput << " ops/sec"
@@ -335,7 +336,8 @@ TEST_F(PerformanceIntegratedTest, ScalabilityDataSize) {
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
     double throughput = static_cast<double>(operations) / (static_cast<double>(duration.count()) / 1000000.0);
-    double data_throughput = static_cast<double>(operations * data_size) / (static_cast<double>(duration.count()) / 1000000.0);
+    double data_throughput =
+        static_cast<double>(operations * data_size) / (static_cast<double>(duration.count()) / 1000000.0);
 
     std::cout << "Data size: " << data_size << " bytes" << ", Operations: " << operations
               << ", Duration: " << duration.count() << " μs" << ", Throughput: " << throughput << " ops/sec"
@@ -368,7 +370,8 @@ TEST_F(PerformanceIntegratedTest, NetworkThroughputSimulation) {
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
   double throughput = static_cast<double>(num_messages) / (static_cast<double>(duration.count()) / 1000000.0);
-  double data_throughput = static_cast<double>(num_messages * message_size) / (static_cast<double>(duration.count()) / 1000000.0);
+  double data_throughput =
+      static_cast<double>(num_messages * message_size) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Network throughput simulation:" << std::endl;
   std::cout << "  Messages: " << num_messages << std::endl;
@@ -565,7 +568,8 @@ TEST_F(PerformanceIntegratedTest, CPUUsageUnderLoad) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
+  double throughput =
+      static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "CPU usage under load:" << std::endl;
   std::cout << "  Threads: " << num_threads << std::endl;
@@ -685,7 +689,8 @@ TEST_F(PerformanceIntegratedTest, SystemStressHighLoad) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
+  double throughput =
+      static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "System stress high load:" << std::endl;
   std::cout << "  Threads: " << num_threads << std::endl;

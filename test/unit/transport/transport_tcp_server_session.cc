@@ -21,6 +21,7 @@
 #include <memory>
 #include <vector>
 
+#include "fake_tcp_socket.hpp"
 #include "unilink/interface/itcp_socket.hpp"
 #include "unilink/transport/tcp_server/tcp_server_session.hpp"
 
@@ -33,47 +34,11 @@ namespace {
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-class FakeTcpSocket : public interface::TcpSocketInterface {
- public:
-  explicit FakeTcpSocket(net::io_context& ioc) : ioc_(ioc) {}
-
-  void async_read_some(const net::mutable_buffer&,
-                       std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
-    // Keep read pending to simulate active connection
-    read_handler_ = std::move(handler);
-  }
-
-  void async_write(const net::const_buffer& buffer,
-                   std::function<void(const boost::system::error_code&, std::size_t)> handler) override {
-    // Simulate successful write
-    auto size = buffer.size();
-    net::post(ioc_, [handler = std::move(handler), size]() { handler({}, size); });
-  }
-
-  void emit_read(std::size_t n = 1, const boost::system::error_code& ec = {}) {
-    if (!read_handler_) return;
-    auto handler = std::move(read_handler_);
-    net::post(ioc_, [handler = std::move(handler), ec, n]() { handler(ec, n); });
-  }
-
-  void shutdown(tcp::socket::shutdown_type, boost::system::error_code& ec) override { ec.clear(); }
-
-  void close(boost::system::error_code& ec) override { ec.clear(); }
-
-  tcp::endpoint remote_endpoint(boost::system::error_code& ec) const override {
-    ec.clear();
-    return tcp::endpoint(net::ip::make_address("127.0.0.1"), 12345);
-  }
-
- private:
-  net::io_context& ioc_;
-  std::function<void(const boost::system::error_code&, std::size_t)> read_handler_;
-};
-
 }  // namespace
 
 TEST(TransportTcpServerSessionTest, QueueLimitClosesSession) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;  // 1KB
   // Hard cap will be 4 * 1024 = 4KB (or default min if larger, but logic respects relative size)
   // Actually implementation uses std::max(bp * 4, DEFAULT_BACKPRESSURE_THRESHOLD).
@@ -102,6 +67,7 @@ TEST(TransportTcpServerSessionTest, QueueLimitClosesSession) {
 
 TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
@@ -124,6 +90,7 @@ TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
 
 TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
@@ -146,6 +113,7 @@ TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
 
 TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
@@ -169,6 +137,7 @@ TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
 
 TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
   net::io_context ioc;
+  auto work = net::make_work_guard(ioc);
   size_t bp_threshold = 1024;
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
@@ -180,6 +149,10 @@ TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
   session->on_bytes([](memory::ConstByteSpan) { throw std::runtime_error("boom"); });
 
   session->start();
+  // Allow start_read to register handler
+  while (!socket_raw->has_handler()) {
+    ioc.run_for(std::chrono::milliseconds(1));
+  }
   EXPECT_TRUE(session->alive());
 
   // Trigger read handler to invoke throwing callback

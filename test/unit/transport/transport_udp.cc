@@ -81,8 +81,7 @@ TEST_F(TransportUdpTest, LoopbackSendReceive) {
   EXPECT_TRUE(TestUtils::waitForCondition([&] { return sender_ready.load() && receiver_ready.load(); }, 1000));
 
   std::string data = "hello udp";
-  sender->async_write_copy(
-      memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
+  sender->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
 
   EXPECT_TRUE(TestUtils::waitForCondition([&] { return done.load(); }, 1000));
   EXPECT_EQ(received, data);
@@ -150,23 +149,24 @@ TEST_F(TransportUdpTest, LearnsRemoteFromFirstPacket) {
   // The issue might be that async_write_copy uses `safe_memcpy` with potentially invalid source/dest
   // OR the `PooledBuffer` logic is flawed.
   // Let's ensure data is valid.
-  channel->async_write_copy(
-      memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(out.data()), out.size()));
+  channel->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(out.data()), out.size()));
 
   // Read reply on external socket with timeout
   char buf[1024];
   udp::endpoint sender_ep;
   ext_sock.non_blocking(true);
 
-  bool reply_received = TestUtils::waitForCondition([&] {
-      boost::system::error_code ec;
-      size_t n = ext_sock.receive_from(net::buffer(buf), sender_ep, 0, ec);
-      if (!ec && n > 0) {
+  bool reply_received = TestUtils::waitForCondition(
+      [&] {
+        boost::system::error_code ec;
+        size_t n = ext_sock.receive_from(net::buffer(buf), sender_ep, 0, ec);
+        if (!ec && n > 0) {
           std::string reply(buf, n);
           return reply == "pong";
-      }
-      return false;
-  }, 2000);
+        }
+        return false;
+      },
+      2000);
 
   EXPECT_TRUE(reply_received);
 
@@ -215,34 +215,36 @@ TEST_F(TransportUdpTest, RemoteStaysFirstPeer) {
 
   // Channel sends data -> should go to peer1
   std::string reply = "reply";
-  channel->async_write_copy(
-      memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(reply.data()), reply.size()));
+  channel->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(reply.data()), reply.size()));
 
   char buf[100];
   udp::endpoint ep;
 
   // Verify peer1 receives reply
   peer1.non_blocking(true);
-  bool peer1_got_reply = TestUtils::waitForCondition([&] {
-      boost::system::error_code ec;
-      size_t n = peer1.receive_from(net::buffer(buf), ep, 0, ec);
-      return !ec && n > 0 && std::string(buf, n) == reply;
-  }, 2000);
+  bool peer1_got_reply = TestUtils::waitForCondition(
+      [&] {
+        boost::system::error_code ec;
+        size_t n = peer1.receive_from(net::buffer(buf), ep, 0, ec);
+        return !ec && n > 0 && std::string(buf, n) == reply;
+      },
+      2000);
   EXPECT_TRUE(peer1_got_reply);
 
   // peer2 sends data -> channel receives, but remote endpoint should NOT switch to peer2
   peer2.send_to(net::buffer("peer2"), udp::endpoint(net::ip::make_address("127.0.0.1"), port));
   TestUtils::waitFor(100);
 
-  channel->async_write_copy(
-      memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(reply.data()), reply.size()));
+  channel->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(reply.data()), reply.size()));
 
   // Verify peer1 receives again (not peer2)
-  peer1_got_reply = TestUtils::waitForCondition([&] {
-      boost::system::error_code ec;
-      size_t n = peer1.receive_from(net::buffer(buf), ep, 0, ec);
-      return !ec && n > 0 && std::string(buf, n) == reply;
-  }, 2000);
+  peer1_got_reply = TestUtils::waitForCondition(
+      [&] {
+        boost::system::error_code ec;
+        size_t n = peer1.receive_from(net::buffer(buf), ep, 0, ec);
+        return !ec && n > 0 && std::string(buf, n) == reply;
+      },
+      2000);
   EXPECT_TRUE(peer1_got_reply);
 
   // Check peer2 has nothing
@@ -271,7 +273,7 @@ TEST_F(TransportUdpTest, QueueLimitMovesToError) {
 
   // Queue huge data multiple times to overflow backpressure buffer
   // Note: UdpChannel enforces a minimum limit of DEFAULT_BACKPRESSURE_THRESHOLD (1MB)
-  std::vector<uint8_t> huge(350 * 1024, 0x00); // 350KB
+  std::vector<uint8_t> huge(350 * 1024, 0x00);  // 350KB
 
   // Need to push enough to exceed limit (> 1MB)
   // 4 writes of 350KB = 1.4MB

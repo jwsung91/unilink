@@ -683,7 +683,8 @@ TEST_F(TransportPerformanceTest, TcpServerSessionDataTransmission) {
 
   // 테스트 데이터 전송
   const std::string test_data = "test_data_for_session";
-  session->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(test_data.c_str()), test_data.size()));
+  session->async_write_copy(
+      memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(test_data.c_str()), test_data.size()));
 
   // --- Verification ---
   EXPECT_TRUE(session->alive());
