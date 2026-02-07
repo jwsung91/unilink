@@ -1,10 +1,10 @@
 var classunilink_1_1interface_1_1Channel =
 [
     [ "OnBackpressure", "classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5", null ],
-    [ "OnBytes", "classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55", null ],
+    [ "OnBytes", "classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9", null ],
     [ "OnState", "classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d", null ],
     [ "~Channel", "classunilink_1_1interface_1_1Channel.html#a2c3cac3c076f640761003abffc15b3e0", null ],
-    [ "async_write_copy", "classunilink_1_1interface_1_1Channel.html#a77068c3759acd3355ffeecf652661505", null ],
+    [ "async_write_copy", "classunilink_1_1interface_1_1Channel.html#a02927701793911d1942102248864d614", null ],
     [ "async_write_move", "classunilink_1_1interface_1_1Channel.html#a9e73efa207faca2b8f4a5d07b4c95268", null ],
     [ "async_write_shared", "classunilink_1_1interface_1_1Channel.html#ab39232bbd9a76bca4b07af5094fcaed9", null ],
     [ "is_connected", "classunilink_1_1interface_1_1Channel.html#a4b6549386c1be6c9768fbf882dac6b29", null ],

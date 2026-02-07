@@ -1,7 +1,7 @@
 var classunilink_1_1config_1_1ConfigManager =
 [
     [ "ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#a86c992b1deea065fda4f0f6003bcfc13", null ],
-    [ "~ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#a6c0c268a0b83a05d8ff58711e2bdf27b", null ],
+    [ "~ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#a8e2eabd60ada3db8ac5386ac7c1622af", null ],
     [ "clear", "classunilink_1_1config_1_1ConfigManager.html#a3856481d25a75bf4e58776c702b19ef8", null ],
     [ "get", "classunilink_1_1config_1_1ConfigManager.html#a5121a76fcdde495e2f88fde0621aadd3", null ],
     [ "get", "classunilink_1_1config_1_1ConfigManager.html#a908fe65c768e1a1f571857806a768218", null ],

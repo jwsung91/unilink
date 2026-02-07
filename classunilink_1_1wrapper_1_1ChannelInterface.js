@@ -1,6 +1,6 @@
 var classunilink_1_1wrapper_1_1ChannelInterface =
 [
-    [ "BytesHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583", null ],
+    [ "BytesHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a763856cfc616f497a2ab8f4c8f9330bd", null ],
     [ "ConnectHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d", null ],
     [ "DataHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe", null ],
     [ "DisconnectHandler", "classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1", null ],

@@ -102,7 +102,7 @@ Inheritance diagram for unilink::transport::TcpServerSession:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a33002ebd873b32f644ae6cc7458d6ef4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a33002ebd873b32f644ae6cc7458d6ef4">OnBytes</a> = <a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">interface::Channel::OnBytes</a></td></tr>
+<tr class="memitem:a33002ebd873b32f644ae6cc7458d6ef4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a33002ebd873b32f644ae6cc7458d6ef4">OnBytes</a> = <a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">interface::Channel::OnBytes</a></td></tr>
 <tr class="separator:a33002ebd873b32f644ae6cc7458d6ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a080302c4c4425b85d78227d90cd2f034"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a080302c4c4425b85d78227d90cd2f034">OnBackpressure</a> = <a class="el" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">interface::Channel::OnBackpressure</a></td></tr>
 <tr class="separator:a080302c4c4425b85d78227d90cd2f034"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,8 +119,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9e8a18527ff6d6ca5244b9c7bda5d5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af06c5ae133e8ee9a040d75f1eefccd90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#af06c5ae133e8ee9a040d75f1eefccd90">start</a> ()</td></tr>
 <tr class="separator:af06c5ae133e8ee9a040d75f1eefccd90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73e7017409948ac4b83c3a677efd64ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a73e7017409948ac4b83c3a677efd64ad">async_write_copy</a> (const uint8_t *data, size_t size)</td></tr>
-<tr class="separator:a73e7017409948ac4b83c3a677efd64ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4924971969eccb5008bd42ccb302cb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#af4924971969eccb5008bd42ccb302cb9">async_write_copy</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
+<tr class="separator:af4924971969eccb5008bd42ccb302cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad1c05357a0c2301807ca753c0e57603"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#aad1c05357a0c2301807ca753c0e57603">async_write_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data)</td></tr>
 <tr class="separator:aad1c05357a0c2301807ca753c0e57603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc3f9e0fc1e4013557082d67cce91c1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#abc3f9e0fc1e4013557082d67cce91c1c">async_write_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt;&gt; data)</td></tr>
@@ -140,7 +140,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00048">48</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00049">49</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ae5b7df00f0f86f15ad82ecb45ae12e82"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae5b7df00f0f86f15ad82ecb45ae12e82">&#9670;&nbsp;</a></span>BufferVariant</h2>
@@ -154,7 +154,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00053">53</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00054">54</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
 
 </div>
 </div>
@@ -170,7 +170,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00051">51</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00052">52</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
 
 </div>
 </div>
@@ -181,12 +181,12 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a33002ebd873b32f644ae6cc7458d6ef4">unilink::transport::TcpServerSession::OnBytes</a> =  <a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">interface::Channel::OnBytes</a></td>
+          <td class="memname">using <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a33002ebd873b32f644ae6cc7458d6ef4">unilink::transport::TcpServerSession::OnBytes</a> =  <a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">interface::Channel::OnBytes</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00050">50</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00051">51</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
 
 </div>
 </div>
@@ -202,7 +202,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00052">52</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8hpp_source.html#l00053">53</a> of file <a class="el" href="tcp__server__session_8hpp_source.html">tcp_server_session.hpp</a>.</p>
 
 </div>
 </div>
@@ -295,12 +295,12 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00183">183</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00184">184</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
-<a id="a73e7017409948ac4b83c3a677efd64ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73e7017409948ac4b83c3a677efd64ad">&#9670;&nbsp;</a></span>async_write_copy()</h2>
+<a id="af4924971969eccb5008bd42ccb302cb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4924971969eccb5008bd42ccb302cb9">&#9670;&nbsp;</a></span>async_write_copy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -308,19 +308,9 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::TcpServerSession::async_write_copy </td>
           <td>(</td>
-          <td class="paramtype">const uint8_t *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -345,7 +335,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00117">117</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00118">118</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -365,7 +355,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00139">139</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00140">140</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -384,7 +374,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00197">197</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00198">198</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -404,7 +394,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00168">168</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00169">169</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -424,7 +414,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00161">161</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00162">162</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -444,7 +434,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00175">175</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00176">176</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -482,7 +472,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00185">185</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00186">186</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -496,7 +486,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -46,9 +46,9 @@ var namespaceunilink_1_1base =
       [ "MIN_THREAD_POOL_SIZE", "namespaceunilink_1_1base_1_1constants.html#af5d5b6a4d196e506acf63b9863d51a4c", null ]
     ] ],
     [ "safe_convert", "namespaceunilink_1_1base_1_1safe__convert.html", [
-      [ "string_to_bytes", "namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb", null ],
+      [ "string_to_bytes", "namespaceunilink_1_1base_1_1safe__convert.html#a853a1e8b21339030dc0176b78ffe75ac", null ],
       [ "string_to_uint8", "namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92", null ],
-      [ "string_to_uint8", "namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a", null ],
+      [ "string_to_uint8", "namespaceunilink_1_1base_1_1safe__convert.html#afe2a169e3dc23db0749352a92123ab35", null ],
       [ "uint8_to_string", "namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d", null ]
     ] ],
     [ "safe_memory", "namespaceunilink_1_1base_1_1safe__memory.html", [
@@ -69,7 +69,7 @@ var namespaceunilink_1_1base =
     [ "is_experimental_features_available", "namespaceunilink_1_1base.html#a0f77a227090a94bc1af4d332e02b57ee", null ],
     [ "is_latest_optimizations_available", "namespaceunilink_1_1base.html#ac1e34784f82457b606120d7988b787df", null ],
     [ "is_performance_monitoring_available", "namespaceunilink_1_1base.html#a6bfe0d74314577e9537832a986691f22", null ],
-    [ "log_message", "namespaceunilink_1_1base.html#a96460b35caac65798f8973d5de522294", null ],
+    [ "log_message", "namespaceunilink_1_1base.html#a07399b407f151a0fb40ac854476a40c5", null ],
     [ "to_cstr", "namespaceunilink_1_1base.html#ae891a72972b7893b2b357d661a993b6c", null ],
     [ "ts_now", "namespaceunilink_1_1base.html#a75098fc6310384d9e2ffdcdb499a2fa6", null ]
 ];

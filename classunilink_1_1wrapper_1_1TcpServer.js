@@ -6,7 +6,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#af1dc28050ac533e03d8c494b7b8c97ca", null ],
     [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#a5bc41fee48262f0cbb58a5c4566b889b", null ],
     [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#ac1f14d6b223187382defc3a6b9ec454b", null ],
-    [ "~TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#a8e6f61603de2ec5c4e5a0fd38122cb9d", null ],
+    [ "~TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#a9836ef31e1f4c1531528ee252ea69d25", null ],
     [ "auto_manage", "classunilink_1_1wrapper_1_1TcpServer.html#a11fdc0cce6369ec7ec8d31d5b64a15b3", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1TcpServer.html#acf787454bf9276e2cf6224e9473e77e8", null ],
     [ "enable_port_retry", "classunilink_1_1wrapper_1_1TcpServer.html#a7feb0465a5329983630fe6e353b2ddf5", null ],

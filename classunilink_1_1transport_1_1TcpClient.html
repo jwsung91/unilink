@@ -109,8 +109,8 @@ Public Types</h2></td></tr>
 <tr class="memitem:a4118b23599d148c9346716583a177a30"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a4118b23599d148c9346716583a177a30">BufferVariant</a> = std::variant&lt; <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html">memory::PooledBuffer</a>, std::vector&lt; uint8_t &gt;, std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&gt;</td></tr>
 <tr class="separator:a4118b23599d148c9346716583a177a30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classunilink_1_1interface_1_1Channel"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1interface_1_1Channel')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></td></tr>
-<tr class="memitem:a2a34895018b104dccc9bf49143008b55 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">OnBytes</a> = std::function&lt; void(const uint8_t *, size_t)&gt;</td></tr>
-<tr class="separator:a2a34895018b104dccc9bf49143008b55 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;</td></tr>
+<tr class="separator:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a>)&gt;</td></tr>
 <tr class="separator:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> = std::function&lt; void(size_t)&gt;</td></tr>
@@ -126,13 +126,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a92598b6c47040e1648976e8eade3c5e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b8730362847982e2b9b58eedd1d6f8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a4b8730362847982e2b9b58eedd1d6f8c">is_connected</a> () const override</td></tr>
 <tr class="separator:a4b8730362847982e2b9b58eedd1d6f8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a889fbb491f1dc3a1f9a9cc7f4c286b31"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a889fbb491f1dc3a1f9a9cc7f4c286b31">async_write_copy</a> (const uint8_t *data, size_t size) override</td></tr>
-<tr class="separator:a889fbb491f1dc3a1f9a9cc7f4c286b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a996369a17ecad069edd0c20c19689e9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a996369a17ecad069edd0c20c19689e9d">async_write_copy</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data) override</td></tr>
+<tr class="separator:a996369a17ecad069edd0c20c19689e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af53cb4fa2887e8ba2d8cd5848870b8ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#af53cb4fa2887e8ba2d8cd5848870b8ca">async_write_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data) override</td></tr>
 <tr class="separator:af53cb4fa2887e8ba2d8cd5848870b8ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a866b00815ebd682165260ecbe1a4d137"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a866b00815ebd682165260ecbe1a4d137">async_write_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt;&gt; data) override</td></tr>
 <tr class="separator:a866b00815ebd682165260ecbe1a4d137"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a172fb40352ae942e668ed40b85774cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a172fb40352ae942e668ed40b85774cdc">on_bytes</a> (<a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">OnBytes</a> cb) override</td></tr>
+<tr class="memitem:a172fb40352ae942e668ed40b85774cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a172fb40352ae942e668ed40b85774cdc">on_bytes</a> (<a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb) override</td></tr>
 <tr class="separator:a172fb40352ae942e668ed40b85774cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57bf60016f4a10576a3a04ddb039e6f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a57bf60016f4a10576a3a04ddb039e6f1">on_state</a> (<a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb) override</td></tr>
 <tr class="separator:a57bf60016f4a10576a3a04ddb039e6f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,8 +192,8 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a889fbb491f1dc3a1f9a9cc7f4c286b31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a889fbb491f1dc3a1f9a9cc7f4c286b31">&#9670;&nbsp;</a></span>async_write_copy()</h2>
+<a id="a996369a17ecad069edd0c20c19689e9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a996369a17ecad069edd0c20c19689e9d">&#9670;&nbsp;</a></span>async_write_copy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -204,19 +204,9 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::TcpClient::async_write_copy </td>
           <td>(</td>
-          <td class="paramtype">const uint8_t *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -226,7 +216,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a77068c3759acd3355ffeecf652661505">unilink::interface::Channel</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a02927701793911d1942102248864d614">unilink::interface::Channel</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00175">175</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
@@ -258,7 +248,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a9e73efa207faca2b8f4a5d07b4c95268">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00264">264</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00265">265</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -288,7 +278,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ab39232bbd9a76bca4b07af5094fcaed9">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00306">306</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00307">307</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -413,7 +403,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a4b311bb483fedf3c5ae93508e4e54d8b">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00350">350</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00351">351</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -429,7 +419,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::TcpClient::on_bytes </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">OnBytes</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a>&#160;</td>
           <td class="paramname"><em>cb</em></td><td>)</td>
           <td></td>
         </tr>
@@ -443,7 +433,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ac1ea9493e29fb865a26ab2964a59904a">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00348">348</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00349">349</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -473,7 +463,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#aa4462e2992427c466d6e12fa492e1b80">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00349">349</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00350">350</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -493,7 +483,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00437">437</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html#l00438">438</a> of file <a class="el" href="transport_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -565,7 +555,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -2,7 +2,7 @@ var searchData=
 [
   ['data_132',['data',['../classunilink_1_1memory_1_1MemoryValidator.html#aad922cc62359f2b0082c124fcbab5124',1,'unilink::memory::MemoryValidator::data()'],['../classunilink_1_1memory_1_1SafeDataBuffer.html#aca37b8c40359695418d5c250606f8aa3',1,'unilink::memory::SafeDataBuffer::data()'],['../classunilink_1_1memory_1_1SafeSpan.html#a203851d86025e579f73f04da0828e2bd',1,'unilink::memory::SafeSpan::data()'],['../classunilink_1_1memory_1_1PooledBuffer.html#a7aa1378391f5ef5a4ddbf6abff971f81',1,'unilink::memory::PooledBuffer::data()']]],
   ['datahandler_133',['DataHandler',['../classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe',1,'unilink::wrapper::ChannelInterface']]],
-  ['debug_134',['debug',['../classunilink_1_1diagnostics_1_1Logger.html#a4672b49f658dd5fdc3f7a470c2d4a6f3',1,'unilink::diagnostics::Logger']]],
+  ['debug_134',['debug',['../classunilink_1_1diagnostics_1_1Logger.html#ace307c5e28ee9971be657e431f31a8e5',1,'unilink::diagnostics::Logger']]],
   ['debug_135',['DEBUG',['../namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15',1,'unilink::diagnostics']]],
   ['decrement_136',['decrement',['../classunilink_1_1concurrency_1_1ThreadSafeCounter.html#aae639040c032849ee12e21a3e6c74259',1,'unilink::concurrency::ThreadSafeCounter']]],
   ['default_5fbackpressure_5fthreshold_137',['DEFAULT_BACKPRESSURE_THRESHOLD',['../namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81',1,'unilink::base::constants']]],

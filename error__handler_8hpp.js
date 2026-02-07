@@ -1,11 +1,11 @@
 var error__handler_8hpp =
 [
     [ "ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", "classunilink_1_1diagnostics_1_1ErrorHandler" ],
-    [ "report_communication_error", "error__handler_8hpp.html#a2fa08a133c6eac21df5ffa36a0cbb152", null ],
-    [ "report_configuration_error", "error__handler_8hpp.html#a1fbfa717bb9e42bd0495a283cb279b96", null ],
-    [ "report_connection_error", "error__handler_8hpp.html#a046038bdcaa398142d49721c0e403c10", null ],
-    [ "report_info", "error__handler_8hpp.html#a683b02d7d0cbd3aa96b228f85c3d4878", null ],
-    [ "report_memory_error", "error__handler_8hpp.html#a6128106705fecaa4ab418975b46f6d69", null ],
-    [ "report_system_error", "error__handler_8hpp.html#a96f11a617495c26be4fc00d797bd0804", null ],
-    [ "report_warning", "error__handler_8hpp.html#a5f5155bd8b2c7c6191de46a47dfb01f1", null ]
+    [ "report_communication_error", "error__handler_8hpp.html#a5b7a4963a80bfaa872fd54ff9744c05a", null ],
+    [ "report_configuration_error", "error__handler_8hpp.html#a3c203bfeff57e2f08d7a29383e05d367", null ],
+    [ "report_connection_error", "error__handler_8hpp.html#a7f2b308de562edc3c4c1d821b9a65f5e", null ],
+    [ "report_info", "error__handler_8hpp.html#aec3a25238bc1d00b9f7f509b9f6c0616", null ],
+    [ "report_memory_error", "error__handler_8hpp.html#a3afe71d736336fb74d5882a148c87fd2", null ],
+    [ "report_system_error", "error__handler_8hpp.html#a95bf341a9495f4cc97de408b5b02fd3f", null ],
+    [ "report_warning", "error__handler_8hpp.html#a09062defd8d7c3c8b916320c34338040", null ]
 ];

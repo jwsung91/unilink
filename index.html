@@ -273,7 +273,7 @@ Core Components</h1>
 <div class="line">    <span class="comment">// Error handling</span></div>
 <div class="line">    <span class="keyword">class </span>ErrorHandler;</div>
 <div class="line">}</div>
-<div class="ttc" id="anamespaceunilink_1_1common_html"><div class="ttname"><a href="namespaceunilink_1_1common.html">unilink::common</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00188">common.hpp:188</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1common_html"><div class="ttname"><a href="namespaceunilink_1_1common.html">unilink::common</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00189">common.hpp:189</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md117"></a>
 Design Patterns</h1>
@@ -472,7 +472,7 @@ Memory Management</h1>
 <div class="line"><span class="keywordflow">if</span> (pooled.valid()) {</div>
 <div class="line">    <a class="code" href="namespaceunilink_1_1base_1_1safe__memory.html#a4d7e2bd9069bd2febb47c18298fe5e0d">common::safe_memory::safe_memcpy</a>(pooled.data(), src, pooled.size());</div>
 <div class="line">}</div>
-<div class="ttc" id="anamespaceunilink_1_1base_1_1safe__memory_html_a4d7e2bd9069bd2febb47c18298fe5e0d"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__memory.html#a4d7e2bd9069bd2febb47c18298fe5e0d">unilink::base::safe_memory::safe_memcpy</a></div><div class="ttdeci">void safe_memcpy(uint8_t *dest, const uint8_t *src, size_t size)</div><div class="ttdoc">Safely copy memory with bounds checking.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00108">common.hpp:108</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1base_1_1safe__memory_html_a4d7e2bd9069bd2febb47c18298fe5e0d"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__memory.html#a4d7e2bd9069bd2febb47c18298fe5e0d">unilink::base::safe_memory::safe_memcpy</a></div><div class="ttdeci">void safe_memcpy(uint8_t *dest, const uint8_t *src, size_t size)</div><div class="ttdoc">Safely copy memory with bounds checking.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00109">common.hpp:109</a></div></div>
 </div><!-- fragment --><p><b>Notes:</b></p>
 <ul>
 <li>Pool applies to moderate sizes (&lt;=64KB); larger buffers fall back to regular allocations.</li>
@@ -530,11 +530,11 @@ Error Categories</h2>
 <div class="line">    <a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">ERROR</a>,          <span class="comment">// Serious error</span></div>
 <div class="line">    <a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a99cd1c61610c76a57cb8d10d6df6b870">CRITICAL</a>        <span class="comment">// Fatal error</span></div>
 <div class="line">};</div>
-<div class="ttc" id="anamespaceunilink_1_1diagnostics_html_aa5303c584c1adabc81d70a0498a263e7"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">unilink::diagnostics::ErrorCategory</a></div><div class="ttdeci">ErrorCategory</div><div class="ttdoc">Error categories for classification.</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00051">error_types.hpp:51</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1diagnostics_html_aa5303c584c1adabc81d70a0498a263e7"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">unilink::diagnostics::ErrorCategory</a></div><div class="ttdeci">ErrorCategory</div><div class="ttdoc">Error categories for classification.</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00052">error_types.hpp:52</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_aa5303c584c1adabc81d70a0498a263e7a7014705458ee3cf0192f6aa52cfddea5"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a7014705458ee3cf0192f6aa52cfddea5">unilink::diagnostics::ErrorCategory::MEMORY</a></div><div class="ttdeci">@ MEMORY</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900">unilink::diagnostics::ErrorCategory::CONFIGURATION</a></div><div class="ttdeci">@ CONFIGURATION</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_aa5303c584c1adabc81d70a0498a263e7afa177138f94a7ea01f549b1aa7893d03"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7afa177138f94a7ea01f549b1aa7893d03">unilink::diagnostics::ErrorCategory::SYSTEM</a></div><div class="ttdeci">@ SYSTEM</div></div>
-<div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab22d3e2cb33951afa9b3ec53950e5cc7"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">unilink::diagnostics::ErrorLevel</a></div><div class="ttdeci">ErrorLevel</div><div class="ttdoc">Error severity levels.</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00041">error_types.hpp:41</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab22d3e2cb33951afa9b3ec53950e5cc7"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">unilink::diagnostics::ErrorLevel</a></div><div class="ttdeci">ErrorLevel</div><div class="ttdoc">Error severity levels.</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00042">error_types.hpp:42</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab22d3e2cb33951afa9b3ec53950e5cc7a059e9861e0400dfbe05c98a841f3f96b"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a059e9861e0400dfbe05c98a841f3f96b">unilink::diagnostics::ErrorLevel::WARNING</a></div><div class="ttdeci">@ WARNING</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::ErrorLevel::INFO</a></div><div class="ttdeci">@ INFO</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab22d3e2cb33951afa9b3ec53950e5cc7a99cd1c61610c76a57cb8d10d6df6b870"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a99cd1c61610c76a57cb8d10d6df6b870">unilink::diagnostics::ErrorLevel::CRITICAL</a></div><div class="ttdeci">@ CRITICAL</div></div>
@@ -728,7 +728,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

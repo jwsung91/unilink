@@ -66,7 +66,7 @@ var searchData=
   ['create_5fsize_5foptimized_125',['create_size_optimized',['../classunilink_1_1memory_1_1GlobalMemoryPool.html#a56086ba7ccde4cd2d0261ffe6c631904',1,'unilink::memory::GlobalMemoryPool']]],
   ['create_5fwith_5fdefaults_126',['create_with_defaults',['../classunilink_1_1config_1_1ConfigFactory.html#a4edec9716691c78976092f69d6810ae5',1,'unilink::config::ConfigFactory']]],
   ['crend_127',['crend',['../classunilink_1_1memory_1_1SafeSpan.html#a56b071274e9ae2e872ee0188ba7e6c19',1,'unilink::memory::SafeSpan']]],
-  ['critical_128',['critical',['../classunilink_1_1diagnostics_1_1Logger.html#ae57adea617a2a66ecfeb7f1fd824cea2',1,'unilink::diagnostics::Logger']]],
+  ['critical_128',['critical',['../classunilink_1_1diagnostics_1_1Logger.html#a286630c83e07db4633e3f9a9f1f1c115',1,'unilink::diagnostics::Logger']]],
   ['critical_129',['CRITICAL',['../namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a99cd1c61610c76a57cb8d10d6df6b870',1,'unilink::diagnostics::CRITICAL()'],['../namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a99cd1c61610c76a57cb8d10d6df6b870',1,'unilink::diagnostics::CRITICAL()']]],
   ['current_5fallocations_130',['current_allocations',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#abf60064e70400d72150c48732e5ed75f',1,'unilink::memory::MemoryTracker::MemoryStats']]],
   ['current_5fbytes_5fallocated_131',['current_bytes_allocated',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a2bfa2675319600bed9098ff053a1be53',1,'unilink::memory::MemoryTracker::MemoryStats']]]

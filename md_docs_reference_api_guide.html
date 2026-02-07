@@ -112,7 +112,7 @@ Core Concept</h2>
 <div class="line">    .option2(value2)</div>
 <div class="line">    .on_event(callback)</div>
 <div class="line">    .build();</div>
-<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00036">common.hpp:36</a></div></div>
+<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md739"></a>
 Common Methods (All Builders)</h2>
 <table class="markdownTable">
@@ -622,7 +622,7 @@ Setup Error Handler</h2>
 <div class="line"><span class="comment">// Set minimum error level</span></div>
 <div class="line">ErrorHandler::instance().set_min_error_level(ErrorLevel::WARNING);</div>
 <div class="ttc" id="aerror__handler_8hpp_html"><div class="ttname"><a href="error__handler_8hpp.html">error_handler.hpp</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1common_html"><div class="ttname"><a href="namespaceunilink_1_1common.html">unilink::common</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00188">common.hpp:188</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1common_html"><div class="ttname"><a href="namespaceunilink_1_1common.html">unilink::common</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00189">common.hpp:189</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md787"></a>
 Error Levels</h2>
 <table class="markdownTable">
@@ -648,20 +648,20 @@ Error Categories</h2>
 <div class="fragment"><div class="line"><span class="keyword">namespace </span>error_reporting = unilink::common::error_reporting;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Connection errors</span></div>
-<div class="line"><a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a046038bdcaa398142d49721c0e403c10">error_reporting::report_connection_error</a>(<span class="stringliteral">&quot;tcp_client&quot;</span>, <span class="stringliteral">&quot;connect&quot;</span>, ec, <span class="keyword">true</span>);</div>
+<div class="line"><a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a7f2b308de562edc3c4c1d821b9a65f5e">error_reporting::report_connection_error</a>(<span class="stringliteral">&quot;tcp_client&quot;</span>, <span class="stringliteral">&quot;connect&quot;</span>, ec, <span class="keyword">true</span>);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Communication errors</span></div>
-<div class="line"><a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a2fa08a133c6eac21df5ffa36a0cbb152">error_reporting::report_communication_error</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;read&quot;</span>, <span class="stringliteral">&quot;Timeout&quot;</span>, <span class="keyword">false</span>);</div>
+<div class="line"><a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a5b7a4963a80bfaa872fd54ff9744c05a">error_reporting::report_communication_error</a>(<span class="stringliteral">&quot;serial&quot;</span>, <span class="stringliteral">&quot;read&quot;</span>, <span class="stringliteral">&quot;Timeout&quot;</span>, <span class="keyword">false</span>);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Configuration errors</span></div>
-<div class="line"><a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a1fbfa717bb9e42bd0495a283cb279b96">error_reporting::report_configuration_error</a>(<span class="stringliteral">&quot;builder&quot;</span>, <span class="stringliteral">&quot;validate&quot;</span>, <span class="stringliteral">&quot;Invalid port&quot;</span>);</div>
+<div class="line"><a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3c203bfeff57e2f08d7a29383e05d367">error_reporting::report_configuration_error</a>(<span class="stringliteral">&quot;builder&quot;</span>, <span class="stringliteral">&quot;validate&quot;</span>, <span class="stringliteral">&quot;Invalid port&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Memory errors</span></div>
-<div class="line"><a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a6128106705fecaa4ab418975b46f6d69">error_reporting::report_memory_error</a>(<span class="stringliteral">&quot;buffer&quot;</span>, <span class="stringliteral">&quot;allocate&quot;</span>, <span class="stringliteral">&quot;Out of memory&quot;</span>);</div>
-<div class="ttc" id="anamespaceunilink_1_1diagnostics_1_1error__reporting_html_a046038bdcaa398142d49721c0e403c10"><div class="ttname"><a href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a046038bdcaa398142d49721c0e403c10">unilink::diagnostics::error_reporting::report_connection_error</a></div><div class="ttdeci">void report_connection_error(const std::string &amp;component, const std::string &amp;operation, const boost::system::error_code &amp;ec, bool retryable)</div><div class="ttdoc">Report connection-related error.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00182">error_handler.cc:182</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1diagnostics_1_1error__reporting_html_a1fbfa717bb9e42bd0495a283cb279b96"><div class="ttname"><a href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a1fbfa717bb9e42bd0495a283cb279b96">unilink::diagnostics::error_reporting::report_configuration_error</a></div><div class="ttdeci">void report_configuration_error(const std::string &amp;component, const std::string &amp;operation, const std::string &amp;message)</div><div class="ttdoc">Report configuration error.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00195">error_handler.cc:195</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1diagnostics_1_1error__reporting_html_a2fa08a133c6eac21df5ffa36a0cbb152"><div class="ttname"><a href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a2fa08a133c6eac21df5ffa36a0cbb152">unilink::diagnostics::error_reporting::report_communication_error</a></div><div class="ttdeci">void report_communication_error(const std::string &amp;component, const std::string &amp;operation, const std::string &amp;message, bool retryable)</div><div class="ttdoc">Report communication-related error.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00188">error_handler.cc:188</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1diagnostics_1_1error__reporting_html_a6128106705fecaa4ab418975b46f6d69"><div class="ttname"><a href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a6128106705fecaa4ab418975b46f6d69">unilink::diagnostics::error_reporting::report_memory_error</a></div><div class="ttdeci">void report_memory_error(const std::string &amp;component, const std::string &amp;operation, const std::string &amp;message)</div><div class="ttdoc">Report memory-related error.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00201">error_handler.cc:201</a></div></div>
+<div class="line"><a class="code" href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3afe71d736336fb74d5882a148c87fd2">error_reporting::report_memory_error</a>(<span class="stringliteral">&quot;buffer&quot;</span>, <span class="stringliteral">&quot;allocate&quot;</span>, <span class="stringliteral">&quot;Out of memory&quot;</span>);</div>
+<div class="ttc" id="anamespaceunilink_1_1diagnostics_1_1error__reporting_html_a3afe71d736336fb74d5882a148c87fd2"><div class="ttname"><a href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3afe71d736336fb74d5882a148c87fd2">unilink::diagnostics::error_reporting::report_memory_error</a></div><div class="ttdeci">void report_memory_error(std::string_view component, std::string_view operation, std::string_view message)</div><div class="ttdoc">Report memory-related error.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00201">error_handler.cc:201</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1diagnostics_1_1error__reporting_html_a3c203bfeff57e2f08d7a29383e05d367"><div class="ttname"><a href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3c203bfeff57e2f08d7a29383e05d367">unilink::diagnostics::error_reporting::report_configuration_error</a></div><div class="ttdeci">void report_configuration_error(std::string_view component, std::string_view operation, std::string_view message)</div><div class="ttdoc">Report configuration error.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00196">error_handler.cc:196</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1diagnostics_1_1error__reporting_html_a5b7a4963a80bfaa872fd54ff9744c05a"><div class="ttname"><a href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a5b7a4963a80bfaa872fd54ff9744c05a">unilink::diagnostics::error_reporting::report_communication_error</a></div><div class="ttdeci">void report_communication_error(std::string_view component, std::string_view operation, std::string_view message, bool retryable)</div><div class="ttdoc">Report communication-related error.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00189">error_handler.cc:189</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1diagnostics_1_1error__reporting_html_a7f2b308de562edc3c4c1d821b9a65f5e"><div class="ttname"><a href="namespaceunilink_1_1diagnostics_1_1error__reporting.html#a7f2b308de562edc3c4c1d821b9a65f5e">unilink::diagnostics::error_reporting::report_connection_error</a></div><div class="ttdeci">void report_connection_error(std::string_view component, std::string_view operation, const boost::system::error_code &amp;ec, bool retryable)</div><div class="ttdoc">Report connection-related error.</div><div class="ttdef"><b>Definition:</b> <a href="error__handler_8cc_source.html#l00183">error_handler.cc:183</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md791"></a>
 Logging System</h1>
@@ -899,7 +899,7 @@ Performance Tips</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

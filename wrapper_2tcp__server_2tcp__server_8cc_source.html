@@ -132,7 +132,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8cc_
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  setup_internal_handlers();</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a8e6f61603de2ec5c4e5a0fd38122cb9d">   46</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8e6f61603de2ec5c4e5a0fd38122cb9d">TcpServer::~TcpServer</a>() {</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a9836ef31e1f4c1531528ee252ea69d25">   46</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a9836ef31e1f4c1531528ee252ea69d25">TcpServer::~TcpServer</a>() {</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordflow">try</span> {</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a41196195d706a2409f1bc3273e31d5be">stop</a>();</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  } <span class="keywordflow">catch</span> (...) {</div>
@@ -243,8 +243,8 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8cc_
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;  }</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;  <span class="keywordflow">if</span> (connected &amp;&amp; channel) {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keyword">auto</span> binary_view = <a class="code" href="namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb">common::safe_convert::string_to_bytes</a>(data);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    channel-&gt;async_write_copy(binary_view.first, binary_view.second);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keyword">auto</span> binary_view = <a class="code" href="namespaceunilink_1_1base_1_1safe__convert.html#a853a1e8b21339030dc0176b78ffe75ac">common::safe_convert::string_to_bytes</a>(data);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    channel-&gt;async_write_copy(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(binary_view.first, binary_view.second));</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  }</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;}</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
@@ -258,7 +258,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8cc_
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;}</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a9fc3373629bc44d611683f10ea87b63a">  172</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a9fc3373629bc44d611683f10ea87b63a">TcpServer::on_bytes</a>(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">BytesHandler</a> handler) {</div>
+<div class="line"><a name="l00172"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a9fc3373629bc44d611683f10ea87b63a">  172</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a9fc3373629bc44d611683f10ea87b63a">TcpServer::on_bytes</a>(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a763856cfc616f497a2ab8f4c8f9330bd">BytesHandler</a> handler) {</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;  on_bytes_ = std::move(handler);</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;}</div>
@@ -293,283 +293,279 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8cc_
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
 <div class="line"><a name="l00205"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a3545734f69545eac14fe2b63ebab465d">  205</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a3545734f69545eac14fe2b63ebab465d">TcpServer::send_line</a>(<span class="keyword">const</span> std::string&amp; line) { <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ab060c8630dbb5b9e820170fb4b1bd4f6">send</a>(line + <span class="stringliteral">&quot;\n&quot;</span>); }</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="comment">// void ImprovedTcpServer::send_binary(const std::vector&lt;uint8_t&gt;&amp; data) {</span></div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="comment">//     if (is_connected() &amp;&amp; channel_) {</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="comment">//         channel_-&gt;async_write_copy(data.data(), data.size());</span></div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="comment">//     }</span></div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="comment">// }</span></div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="keywordtype">void</span> TcpServer::setup_internal_handlers() {</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;  <span class="keywordflow">if</span> (!channel_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  channel_-&gt;on_bytes([<span class="keyword">this</span>](<span class="keyword">const</span> uint8_t* data, <span class="keywordtype">size_t</span> size) { handle_bytes(data, size); });</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  channel_-&gt;on_state([<span class="keyword">this</span>](<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> state) { handle_state(state); });</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  <span class="comment">// Set multi-client callbacks</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;  <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordflow">if</span> (on_multi_connect_) {</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;      transport_server-&gt;on_multi_connect([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; client_info) {</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        <span class="keywordflow">if</span> (on_multi_connect_) {</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;          on_multi_connect_(client_id, client_info);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        }</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;      });</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    }</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">if</span> (on_multi_data_) {</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      transport_server-&gt;on_multi_data([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; data) {</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        <span class="keywordflow">if</span> (on_multi_data_) {</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;          on_multi_data_(client_id, data);</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        }</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      });</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    }</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keywordflow">if</span> (on_multi_disconnect_) {</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;      transport_server-&gt;on_multi_disconnect([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id) {</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        <span class="keywordflow">if</span> (on_multi_disconnect_) {</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;          on_multi_disconnect_(client_id);</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        }</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;      });</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    }</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="keywordtype">void</span> TcpServer::setup_internal_handlers() {</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  <span class="keywordflow">if</span> (!channel_) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;  channel_-&gt;on_bytes([<span class="keyword">this</span>](<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) { handle_bytes(data); });</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;  channel_-&gt;on_state([<span class="keyword">this</span>](<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> state) { handle_state(state); });</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;  <span class="comment">// Set multi-client callbacks</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;  <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keywordflow">if</span> (on_multi_connect_) {</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;      transport_server-&gt;on_multi_connect([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; client_info) {</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        <span class="keywordflow">if</span> (on_multi_connect_) {</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;          on_multi_connect_(client_id, client_info);</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        }</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;      });</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    }</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keywordflow">if</span> (on_multi_data_) {</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;      transport_server-&gt;on_multi_data([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        <span class="keywordflow">if</span> (on_multi_data_) {</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;          on_multi_data_(client_id, data);</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        }</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;      });</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    }</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160; </div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordflow">if</span> (on_multi_disconnect_) {</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      transport_server-&gt;on_multi_disconnect([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id) {</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        <span class="keywordflow">if</span> (on_multi_disconnect_) {</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;          on_multi_disconnect_(client_id);</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        }</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      });</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    }</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;  }</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;}</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="keywordtype">void</span> TcpServer::handle_bytes(<a class="code" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data) {</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;  <span class="keywordflow">if</span> (on_bytes_) {</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    on_bytes_(data);</div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;  }</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;}</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="keywordtype">void</span> TcpServer::handle_bytes(<span class="keyword">const</span> uint8_t* data, <span class="keywordtype">size_t</span> size) {</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  <span class="keywordflow">if</span> (on_bytes_) {</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    on_bytes_(data, size);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;  }</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;  <span class="keywordflow">if</span> (on_data_) {</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    std::string str_data = <a class="code" href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">common::safe_convert::uint8_to_string</a>(data, size);</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    on_data_(str_data);</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  }</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;}</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="keywordtype">void</span> TcpServer::handle_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> state) {</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;  {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="comment">// Update listening state based on server state</span></div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keywordflow">if</span> (state == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>) {</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;      is_listening_ = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a> || state == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e">base::LinkState::Closed</a>) {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      is_listening_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    }</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  <span class="keywordflow">switch</span> (state) {</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca2ec0d16e4ca169baedb9b2d50ec5c6d7">base::LinkState::Connected</a>:</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;      <span class="comment">// For TCP server, Connected state means a client connected</span></div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;      <span class="comment">// This should only be called when a client actually connects, not when server starts listening</span></div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;      <span class="keywordflow">if</span> (on_connect_) {</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;        on_connect_();</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;      }</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e">base::LinkState::Closed</a>:</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;      <span class="keywordflow">if</span> (on_disconnect_) {</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        on_disconnect_();</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;      }</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>:</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;      <span class="keywordflow">if</span> (on_error_) {</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        on_error_(<span class="stringliteral">&quot;Connection error&quot;</span>);</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;      }</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;  <span class="keywordflow">if</span> (on_data_) {</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    std::string str_data = <a class="code" href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">common::safe_convert::uint8_to_string</a>(data.data(), data.size());</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    on_data_(str_data);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  }</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;}</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="keywordtype">void</span> TcpServer::handle_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> state) {</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;  {</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="comment">// Update listening state based on server state</span></div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="keywordflow">if</span> (state == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>) {</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;      is_listening_ = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a> || state == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e">base::LinkState::Closed</a>) {</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      is_listening_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    }</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;  }</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160; </div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  <span class="keywordflow">switch</span> (state) {</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca2ec0d16e4ca169baedb9b2d50ec5c6d7">base::LinkState::Connected</a>:</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      <span class="comment">// For TCP server, Connected state means a client connected</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      <span class="comment">// This should only be called when a client actually connects, not when server starts listening</span></div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;      <span class="keywordflow">if</span> (on_connect_) {</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        on_connect_();</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;      }</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e">base::LinkState::Closed</a>:</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;      <span class="keywordflow">if</span> (on_disconnect_) {</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        on_disconnect_();</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;      }</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>:</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;      <span class="keywordflow">if</span> (on_error_) {</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;        on_error_(<span class="stringliteral">&quot;Connection error&quot;</span>);</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;      }</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>:</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;      <span class="comment">// Server is now listening - this is not a connection event</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;      <span class="comment">// Do not call on_connect_ here</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    <span class="keywordflow">default</span>:</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>:</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;      <span class="comment">// Server is now listening - this is not a connection event</span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;      <span class="comment">// Do not call on_connect_ here</span></div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  }</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;}</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160; </div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="comment">// Multi-client support method implementations</span></div>
-<div class="line"><a name="l00298"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#acf787454bf9276e2cf6224e9473e77e8">  298</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#acf787454bf9276e2cf6224e9473e77e8">TcpServer::broadcast</a>(<span class="keyword">const</span> std::string&amp; message) {</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;      <span class="keywordtype">bool</span> ok = transport_server-&gt;broadcast(message);</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;      <span class="keywordflow">if</span> (!ok &amp;&amp; notify_send_failure_ &amp;&amp; on_error_) {</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        on_error_(<span class="stringliteral">&quot;Broadcast failed: no active clients&quot;</span>);</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;      }</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;      <span class="keywordflow">return</span> ok;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    }</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  }</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;}</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#af21aa186b919c9e279974bbc295af9a8">  312</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#af21aa186b919c9e279974bbc295af9a8">TcpServer::send_to_client</a>(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; message) {</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;      <span class="keywordtype">bool</span> ok = transport_server-&gt;send_to_client(client_id, message);</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;      <span class="keywordflow">if</span> (!ok &amp;&amp; notify_send_failure_ &amp;&amp; on_error_) {</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        on_error_(<span class="stringliteral">&quot;Send failed: client not found or disconnected&quot;</span>);</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;      }</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;      <span class="keywordflow">return</span> ok;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    }</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;  }</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;}</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
-<div class="line"><a name="l00326"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#ae3de1712be0c23e4bb2d68d1fe4d075b">  326</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ae3de1712be0c23e4bb2d68d1fe4d075b">TcpServer::get_client_count</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;      <span class="keywordflow">return</span> transport_server-&gt;get_client_count();</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    }</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;  }</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;  <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;}</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
-<div class="line"><a name="l00336"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#ad9cb7027f9e2aef03847e5d5cc21a5c6">  336</a></span>&#160;std::vector&lt;size_t&gt; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ad9cb7027f9e2aef03847e5d5cc21a5c6">TcpServer::get_connected_clients</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;      <span class="keywordflow">return</span> transport_server-&gt;get_connected_clients();</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    }</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;  }</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;  <span class="keywordflow">return</span> {};</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;}</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
-<div class="line"><a name="l00346"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a606a24055abc929cee6a9cf42a214fe3">  346</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a606a24055abc929cee6a9cf42a214fe3">TcpServer::on_multi_connect</a>(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">MultiClientConnectHandler</a> handler) {</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;  on_multi_connect_ = std::move(handler);</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;      transport_server-&gt;on_multi_connect([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; client_info) {</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;        <span class="keywordflow">if</span> (on_multi_connect_) {</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;          on_multi_connect_(client_id, client_info);</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;        }</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;      });</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    }</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;  }</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;}</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160; </div>
-<div class="line"><a name="l00361"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#ad315add7025b91afcbce12df0d5a338f">  361</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ad315add7025b91afcbce12df0d5a338f">TcpServer::on_multi_data</a>(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">MultiClientDataHandler</a> handler) {</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;  on_multi_data_ = std::move(handler);</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;      transport_server-&gt;on_multi_data([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; data) {</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        <span class="keywordflow">if</span> (on_multi_data_) {</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;          on_multi_data_(client_id, data);</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;        }</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;      });</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    }</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;  }</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;}</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
-<div class="line"><a name="l00376"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#abf3fc29cd04d90607101d3db10a5c6ea">  376</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#abf3fc29cd04d90607101d3db10a5c6ea">TcpServer::on_multi_disconnect</a>(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">MultiClientDisconnectHandler</a> handler) {</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;  on_multi_disconnect_ = std::move(handler);</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;      transport_server-&gt;on_multi_disconnect([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id) {</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;        <span class="keywordflow">if</span> (on_multi_disconnect_) {</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;          on_multi_disconnect_(client_id);</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        }</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;      });</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    }</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;  }</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;}</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;  }</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="comment">// Multi-client support method implementations</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#acf787454bf9276e2cf6224e9473e77e8">  292</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#acf787454bf9276e2cf6224e9473e77e8">TcpServer::broadcast</a>(<span class="keyword">const</span> std::string&amp; message) {</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      <span class="keywordtype">bool</span> ok = transport_server-&gt;broadcast(message);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;      <span class="keywordflow">if</span> (!ok &amp;&amp; notify_send_failure_ &amp;&amp; on_error_) {</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        on_error_(<span class="stringliteral">&quot;Broadcast failed: no active clients&quot;</span>);</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;      }</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;      <span class="keywordflow">return</span> ok;</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    }</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;  }</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;}</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#af21aa186b919c9e279974bbc295af9a8">  306</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#af21aa186b919c9e279974bbc295af9a8">TcpServer::send_to_client</a>(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; message) {</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;      <span class="keywordtype">bool</span> ok = transport_server-&gt;send_to_client(client_id, message);</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;      <span class="keywordflow">if</span> (!ok &amp;&amp; notify_send_failure_ &amp;&amp; on_error_) {</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        on_error_(<span class="stringliteral">&quot;Send failed: client not found or disconnected&quot;</span>);</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;      }</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;      <span class="keywordflow">return</span> ok;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    }</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;  }</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;}</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160; </div>
+<div class="line"><a name="l00320"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#ae3de1712be0c23e4bb2d68d1fe4d075b">  320</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ae3de1712be0c23e4bb2d68d1fe4d075b">TcpServer::get_client_count</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      <span class="keywordflow">return</span> transport_server-&gt;get_client_count();</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    }</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;  }</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;  <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;}</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#ad9cb7027f9e2aef03847e5d5cc21a5c6">  330</a></span>&#160;std::vector&lt;size_t&gt; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ad9cb7027f9e2aef03847e5d5cc21a5c6">TcpServer::get_connected_clients</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;      <span class="keywordflow">return</span> transport_server-&gt;get_connected_clients();</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    }</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;  }</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;  <span class="keywordflow">return</span> {};</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;}</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
+<div class="line"><a name="l00340"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a606a24055abc929cee6a9cf42a214fe3">  340</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a606a24055abc929cee6a9cf42a214fe3">TcpServer::on_multi_connect</a>(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">MultiClientConnectHandler</a> handler) {</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;  on_multi_connect_ = std::move(handler);</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;      transport_server-&gt;on_multi_connect([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; client_info) {</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;        <span class="keywordflow">if</span> (on_multi_connect_) {</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;          on_multi_connect_(client_id, client_info);</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        }</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;      });</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    }</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;  }</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;}</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
+<div class="line"><a name="l00355"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#ad315add7025b91afcbce12df0d5a338f">  355</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ad315add7025b91afcbce12df0d5a338f">TcpServer::on_multi_data</a>(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">MultiClientDataHandler</a> handler) {</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;  on_multi_data_ = std::move(handler);</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;      transport_server-&gt;on_multi_data([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;        <span class="keywordflow">if</span> (on_multi_data_) {</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;          on_multi_data_(client_id, data);</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        }</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;      });</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    }</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;  }</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;}</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
+<div class="line"><a name="l00370"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#abf3fc29cd04d90607101d3db10a5c6ea">  370</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#abf3fc29cd04d90607101d3db10a5c6ea">TcpServer::on_multi_disconnect</a>(<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">MultiClientDisconnectHandler</a> handler) {</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;  on_multi_disconnect_ = std::move(handler);</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;      transport_server-&gt;on_multi_disconnect([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id) {</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;        <span class="keywordflow">if</span> (on_multi_disconnect_) {</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;          on_multi_disconnect_(client_id);</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;        }</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;      });</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    }</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;  }</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;}</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160; </div>
+<div class="line"><a name="l00385"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a7feb0465a5329983630fe6e353b2ddf5">  385</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a7feb0465a5329983630fe6e353b2ddf5">TcpServer::enable_port_retry</a>(<span class="keywordtype">bool</span> enable, <span class="keywordtype">int</span> max_retries, <span class="keywordtype">int</span> retry_interval_ms) {</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;  <span class="comment">// Store retry configuration for use when creating the channel</span></div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;  port_retry_enabled_ = enable;</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;  max_port_retries_ = max_retries;</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;  port_retry_interval_ms_ = retry_interval_ms;</div>
 <div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
-<div class="line"><a name="l00391"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a7feb0465a5329983630fe6e353b2ddf5">  391</a></span>&#160;<a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a7feb0465a5329983630fe6e353b2ddf5">TcpServer::enable_port_retry</a>(<span class="keywordtype">bool</span> enable, <span class="keywordtype">int</span> max_retries, <span class="keywordtype">int</span> retry_interval_ms) {</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;  <span class="comment">// Store retry configuration for use when creating the channel</span></div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;  port_retry_enabled_ = enable;</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;  max_port_retries_ = max_retries;</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;  port_retry_interval_ms_ = retry_interval_ms;</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160; </div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;      <span class="comment">// If channel already exists, we need to recreate it with new config</span></div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;      <span class="comment">// This is a limitation - retry settings should be set before start()</span></div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;      <span class="comment">// For now, we&#39;ll just store the settings</span></div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;    }</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;  }</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;}</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160; </div>
-<div class="line"><a name="l00408"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a8a7cc4253ac3b598bbf16232be1f926e">  408</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8a7cc4253ac3b598bbf16232be1f926e">TcpServer::is_listening</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_listening_.load(); }</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;      <span class="comment">// If channel already exists, we need to recreate it with new config</span></div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;      <span class="comment">// This is a limitation - retry settings should be set before start()</span></div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;      <span class="comment">// For now, we&#39;ll just store the settings</span></div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;    }</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;  }</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;  <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;}</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160; </div>
+<div class="line"><a name="l00402"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a8a7cc4253ac3b598bbf16232be1f926e">  402</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8a7cc4253ac3b598bbf16232be1f926e">TcpServer::is_listening</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_listening_.load(); }</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160; </div>
+<div class="line"><a name="l00404"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a18d359e5cb9c9ec774581406493c5d54">  404</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a18d359e5cb9c9ec774581406493c5d54">TcpServer::set_manage_external_context</a>(<span class="keywordtype">bool</span> manage) { manage_external_context_ = manage; }</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160; </div>
+<div class="line"><a name="l00406"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a8b51047762007f3fcec8ce1194196f45">  406</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8b51047762007f3fcec8ce1194196f45">TcpServer::set_client_limit</a>(<span class="keywordtype">size_t</span> max_clients) {</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;  max_clients_ = max_clients;</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;  client_limit_enabled_ = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160; </div>
-<div class="line"><a name="l00410"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a18d359e5cb9c9ec774581406493c5d54">  410</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a18d359e5cb9c9ec774581406493c5d54">TcpServer::set_manage_external_context</a>(<span class="keywordtype">bool</span> manage) { manage_external_context_ = manage; }</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160; </div>
-<div class="line"><a name="l00412"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a8b51047762007f3fcec8ce1194196f45">  412</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a8b51047762007f3fcec8ce1194196f45">TcpServer::set_client_limit</a>(<span class="keywordtype">size_t</span> max_clients) {</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;  max_clients_ = max_clients;</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;  client_limit_enabled_ = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160; </div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;      transport_server-&gt;set_client_limit(max_clients);</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;    }</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;  }</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;}</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160; </div>
-<div class="line"><a name="l00424"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a72d6d3f9975e4a5f6f28b111385b48a7">  424</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a72d6d3f9975e4a5f6f28b111385b48a7">TcpServer::set_unlimited_clients</a>() {</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;  client_limit_enabled_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;  max_clients_ = 0;</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;      transport_server-&gt;set_unlimited_clients();</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    }</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;  }</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;}</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160; </div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;      transport_server-&gt;set_client_limit(max_clients);</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;    }</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;  }</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;}</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160; </div>
+<div class="line"><a name="l00418"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1TcpServer.html#a72d6d3f9975e4a5f6f28b111385b48a7">  418</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html#a72d6d3f9975e4a5f6f28b111385b48a7">TcpServer::set_unlimited_clients</a>() {</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;  client_limit_enabled_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;  max_clients_ = 0;</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160; </div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;  <span class="keywordflow">if</span> (channel_) {</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    <span class="keyword">auto</span> transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(channel_);</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;    <span class="keywordflow">if</span> (transport_server) {</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;      transport_server-&gt;set_unlimited_clients();</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    }</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;  }</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;}</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160; </div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="achannel__factory_8hpp_html"><div class="ttname"><a href="channel__factory_8hpp.html">channel_factory.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1factory_1_1ChannelFactory_html_ab3a1a57092352b627809138adadb34a6"><div class="ttname"><a href="classunilink_1_1factory_1_1ChannelFactory.html#ab3a1a57092352b627809138adadb34a6">unilink::factory::ChannelFactory::create</a></div><div class="ttdeci">static std::shared_ptr&lt; interface::Channel &gt; create(const ChannelOptions &amp;options, std::shared_ptr&lt; boost::asio::io_context &gt; external_ioc=nullptr)</div><div class="ttdef"><b>Definition:</b> <a href="channel__factory_8cc_source.html#l00029">channel_factory.cc:29</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00029">ichannel.hpp:29</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a1e452891783b39a8cf4daff9e958823d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">unilink::wrapper::ChannelInterface::ConnectHandler</a></div><div class="ttdeci">std::function&lt; void()&gt; ConnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00033">ichannel.hpp:33</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a67ac18cb3330353d068c4afedf6cbec1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">unilink::wrapper::ChannelInterface::DisconnectHandler</a></div><div class="ttdeci">std::function&lt; void()&gt; DisconnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00034">ichannel.hpp:34</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a81289906b7cdc6c057cc0a4631ad1583"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a81289906b7cdc6c057cc0a4631ad1583">unilink::wrapper::ChannelInterface::BytesHandler</a></div><div class="ttdeci">std::function&lt; void(const uint8_t *, size_t)&gt; BytesHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00032">ichannel.hpp:32</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a86572f53649987268db00b5d8414b9fe"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">unilink::wrapper::ChannelInterface::DataHandler</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; DataHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00031">ichannel.hpp:31</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_aef1171a7f6d2c91ccb90cb59958d9ec2"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">unilink::wrapper::ChannelInterface::ErrorHandler</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; ErrorHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00035">ichannel.hpp:35</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">A C++17 compatible span-like class for safe array access.</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00033">safe_span.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00030">ichannel.hpp:30</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a1e452891783b39a8cf4daff9e958823d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">unilink::wrapper::ChannelInterface::ConnectHandler</a></div><div class="ttdeci">std::function&lt; void()&gt; ConnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00034">ichannel.hpp:34</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a67ac18cb3330353d068c4afedf6cbec1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">unilink::wrapper::ChannelInterface::DisconnectHandler</a></div><div class="ttdeci">std::function&lt; void()&gt; DisconnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00035">ichannel.hpp:35</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a763856cfc616f497a2ab8f4c8f9330bd"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a763856cfc616f497a2ab8f4c8f9330bd">unilink::wrapper::ChannelInterface::BytesHandler</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; BytesHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00033">ichannel.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a86572f53649987268db00b5d8414b9fe"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">unilink::wrapper::ChannelInterface::DataHandler</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; DataHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00032">ichannel.hpp:32</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_aef1171a7f6d2c91ccb90cb59958d9ec2"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">unilink::wrapper::ChannelInterface::ErrorHandler</a></div><div class="ttdeci">std::function&lt; void(const std::string &amp;)&gt; ErrorHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00036">ichannel.hpp:36</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html">unilink::wrapper::TcpServer</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00040">tcp_server.hpp:40</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a02c75e254da76eddf6327713f002bfcd"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a02c75e254da76eddf6327713f002bfcd">unilink::wrapper::TcpServer::on_disconnect</a></div><div class="ttdeci">ChannelInterface &amp; on_disconnect(DisconnectHandler handler) override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00182">tcp_server.cc:182</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a0bff2f9f4f6b853b74da9732ed1ea027"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a0bff2f9f4f6b853b74da9732ed1ea027">unilink::wrapper::TcpServer::on_error</a></div><div class="ttdeci">ChannelInterface &amp; on_error(ErrorHandler handler) override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00187">tcp_server.cc:187</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a11fdc0cce6369ec7ec8d31d5b64a15b3"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a11fdc0cce6369ec7ec8d31d5b64a15b3">unilink::wrapper::TcpServer::auto_manage</a></div><div class="ttdeci">ChannelInterface &amp; auto_manage(bool manage=true) override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00197">tcp_server.cc:197</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a18d359e5cb9c9ec774581406493c5d54"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a18d359e5cb9c9ec774581406493c5d54">unilink::wrapper::TcpServer::set_manage_external_context</a></div><div class="ttdeci">void set_manage_external_context(bool manage)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00410">tcp_server.cc:410</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a18d359e5cb9c9ec774581406493c5d54"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a18d359e5cb9c9ec774581406493c5d54">unilink::wrapper::TcpServer::set_manage_external_context</a></div><div class="ttdeci">void set_manage_external_context(bool manage)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00404">tcp_server.cc:404</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a3545734f69545eac14fe2b63ebab465d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a3545734f69545eac14fe2b63ebab465d">unilink::wrapper::TcpServer::send_line</a></div><div class="ttdeci">void send_line(const std::string &amp;line) override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00205">tcp_server.cc:205</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a41196195d706a2409f1bc3273e31d5be"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a41196195d706a2409f1bc3273e31d5be">unilink::wrapper::TcpServer::stop</a></div><div class="ttdeci">void stop() override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00103">tcp_server.cc:103</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a48e8f7b6f3b2f79c76fcefa45673a97a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a48e8f7b6f3b2f79c76fcefa45673a97a">unilink::wrapper::TcpServer::on_data</a></div><div class="ttdeci">ChannelInterface &amp; on_data(DataHandler handler) override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00167">tcp_server.cc:167</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a5792d6e21525f8b119c7fb6bc91a5d7a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a5792d6e21525f8b119c7fb6bc91a5d7a">unilink::wrapper::TcpServer::notify_send_failure</a></div><div class="ttdeci">TcpServer &amp; notify_send_failure(bool enable=true)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00192">tcp_server.cc:192</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a606a24055abc929cee6a9cf42a214fe3"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a606a24055abc929cee6a9cf42a214fe3">unilink::wrapper::TcpServer::on_multi_connect</a></div><div class="ttdeci">TcpServer &amp; on_multi_connect(MultiClientConnectHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00346">tcp_server.cc:346</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a606a24055abc929cee6a9cf42a214fe3"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a606a24055abc929cee6a9cf42a214fe3">unilink::wrapper::TcpServer::on_multi_connect</a></div><div class="ttdeci">TcpServer &amp; on_multi_connect(MultiClientConnectHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00340">tcp_server.cc:340</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a6a3098b0fa9d7c3e6dc84b01d7473509"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a6a3098b0fa9d7c3e6dc84b01d7473509">unilink::wrapper::TcpServer::is_connected</a></div><div class="ttdeci">bool is_connected() const override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00162">tcp_server.cc:162</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a71ba53970105894c3d564b261c59f1c6"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">unilink::wrapper::TcpServer::MultiClientDisconnectHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id)&gt; MultiClientDisconnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00072">tcp_server.hpp:72</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a72d6d3f9975e4a5f6f28b111385b48a7"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a72d6d3f9975e4a5f6f28b111385b48a7">unilink::wrapper::TcpServer::set_unlimited_clients</a></div><div class="ttdeci">void set_unlimited_clients()</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00424">tcp_server.cc:424</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a7feb0465a5329983630fe6e353b2ddf5"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a7feb0465a5329983630fe6e353b2ddf5">unilink::wrapper::TcpServer::enable_port_retry</a></div><div class="ttdeci">TcpServer &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00391">tcp_server.cc:391</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a72d6d3f9975e4a5f6f28b111385b48a7"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a72d6d3f9975e4a5f6f28b111385b48a7">unilink::wrapper::TcpServer::set_unlimited_clients</a></div><div class="ttdeci">void set_unlimited_clients()</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00418">tcp_server.cc:418</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a7feb0465a5329983630fe6e353b2ddf5"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a7feb0465a5329983630fe6e353b2ddf5">unilink::wrapper::TcpServer::enable_port_retry</a></div><div class="ttdeci">TcpServer &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00385">tcp_server.cc:385</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a8175adae268dba5e6f34db21ee7f0240"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">unilink::wrapper::TcpServer::MultiClientConnectHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id, const std::string &amp;client_info)&gt; MultiClientConnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00070">tcp_server.hpp:70</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a8a7cc4253ac3b598bbf16232be1f926e"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a8a7cc4253ac3b598bbf16232be1f926e">unilink::wrapper::TcpServer::is_listening</a></div><div class="ttdeci">bool is_listening() const</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00408">tcp_server.cc:408</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a8b51047762007f3fcec8ce1194196f45"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a8b51047762007f3fcec8ce1194196f45">unilink::wrapper::TcpServer::set_client_limit</a></div><div class="ttdeci">void set_client_limit(size_t max_clients)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00412">tcp_server.cc:412</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a8e6f61603de2ec5c4e5a0fd38122cb9d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a8e6f61603de2ec5c4e5a0fd38122cb9d">unilink::wrapper::TcpServer::~TcpServer</a></div><div class="ttdeci">~TcpServer()</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00046">tcp_server.cc:46</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a8a7cc4253ac3b598bbf16232be1f926e"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a8a7cc4253ac3b598bbf16232be1f926e">unilink::wrapper::TcpServer::is_listening</a></div><div class="ttdeci">bool is_listening() const</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00402">tcp_server.cc:402</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a8b51047762007f3fcec8ce1194196f45"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a8b51047762007f3fcec8ce1194196f45">unilink::wrapper::TcpServer::set_client_limit</a></div><div class="ttdeci">void set_client_limit(size_t max_clients)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00406">tcp_server.cc:406</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a9836ef31e1f4c1531528ee252ea69d25"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a9836ef31e1f4c1531528ee252ea69d25">unilink::wrapper::TcpServer::~TcpServer</a></div><div class="ttdeci">~TcpServer() override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00046">tcp_server.cc:46</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_a9fc3373629bc44d611683f10ea87b63a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#a9fc3373629bc44d611683f10ea87b63a">unilink::wrapper::TcpServer::on_bytes</a></div><div class="ttdeci">ChannelInterface &amp; on_bytes(BytesHandler handler) override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00172">tcp_server.cc:172</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ab060c8630dbb5b9e820170fb4b1bd4f6"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ab060c8630dbb5b9e820170fb4b1bd4f6">unilink::wrapper::TcpServer::send</a></div><div class="ttdeci">void send(const std::string &amp;data) override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00147">tcp_server.cc:147</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ab86578bb7afdfc0bc10cdc07458df11a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ab86578bb7afdfc0bc10cdc07458df11a">unilink::wrapper::TcpServer::on_connect</a></div><div class="ttdeci">ChannelInterface &amp; on_connect(ConnectHandler handler) override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00177">tcp_server.cc:177</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_abf3fc29cd04d90607101d3db10a5c6ea"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#abf3fc29cd04d90607101d3db10a5c6ea">unilink::wrapper::TcpServer::on_multi_disconnect</a></div><div class="ttdeci">TcpServer &amp; on_multi_disconnect(MultiClientDisconnectHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00376">tcp_server.cc:376</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_abf3fc29cd04d90607101d3db10a5c6ea"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#abf3fc29cd04d90607101d3db10a5c6ea">unilink::wrapper::TcpServer::on_multi_disconnect</a></div><div class="ttdeci">TcpServer &amp; on_multi_disconnect(MultiClientDisconnectHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00370">tcp_server.cc:370</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ac0be454c5f568d855b48d1fb4dd161dd"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ac0be454c5f568d855b48d1fb4dd161dd">unilink::wrapper::TcpServer::start</a></div><div class="ttdeci">void start() override</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00054">tcp_server.cc:54</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_acf787454bf9276e2cf6224e9473e77e8"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#acf787454bf9276e2cf6224e9473e77e8">unilink::wrapper::TcpServer::broadcast</a></div><div class="ttdeci">bool broadcast(const std::string &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00298">tcp_server.cc:298</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ad315add7025b91afcbce12df0d5a338f"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ad315add7025b91afcbce12df0d5a338f">unilink::wrapper::TcpServer::on_multi_data</a></div><div class="ttdeci">TcpServer &amp; on_multi_data(MultiClientDataHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00361">tcp_server.cc:361</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ad9cb7027f9e2aef03847e5d5cc21a5c6"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ad9cb7027f9e2aef03847e5d5cc21a5c6">unilink::wrapper::TcpServer::get_connected_clients</a></div><div class="ttdeci">std::vector&lt; size_t &gt; get_connected_clients() const</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00336">tcp_server.cc:336</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ae3de1712be0c23e4bb2d68d1fe4d075b"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ae3de1712be0c23e4bb2d68d1fe4d075b">unilink::wrapper::TcpServer::get_client_count</a></div><div class="ttdeci">size_t get_client_count() const</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00326">tcp_server.cc:326</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_acf787454bf9276e2cf6224e9473e77e8"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#acf787454bf9276e2cf6224e9473e77e8">unilink::wrapper::TcpServer::broadcast</a></div><div class="ttdeci">bool broadcast(const std::string &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00292">tcp_server.cc:292</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ad315add7025b91afcbce12df0d5a338f"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ad315add7025b91afcbce12df0d5a338f">unilink::wrapper::TcpServer::on_multi_data</a></div><div class="ttdeci">TcpServer &amp; on_multi_data(MultiClientDataHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00355">tcp_server.cc:355</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ad9cb7027f9e2aef03847e5d5cc21a5c6"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ad9cb7027f9e2aef03847e5d5cc21a5c6">unilink::wrapper::TcpServer::get_connected_clients</a></div><div class="ttdeci">std::vector&lt; size_t &gt; get_connected_clients() const</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00330">tcp_server.cc:330</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ae3de1712be0c23e4bb2d68d1fe4d075b"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ae3de1712be0c23e4bb2d68d1fe4d075b">unilink::wrapper::TcpServer::get_client_count</a></div><div class="ttdeci">size_t get_client_count() const</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00320">tcp_server.cc:320</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_ae4d8e0e234a6c7f4980c20d431b1fc1d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">unilink::wrapper::TcpServer::MultiClientDataHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id, const std::string &amp;data)&gt; MultiClientDataHandler</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00071">tcp_server.hpp:71</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_af1dc28050ac533e03d8c494b7b8c97ca"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#af1dc28050ac533e03d8c494b7b8c97ca">unilink::wrapper::TcpServer::TcpServer</a></div><div class="ttdeci">TcpServer(uint16_t port)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00032">tcp_server.cc:32</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_af21aa186b919c9e279974bbc295af9a8"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#af21aa186b919c9e279974bbc295af9a8">unilink::wrapper::TcpServer::send_to_client</a></div><div class="ttdeci">bool send_to_client(size_t client_id, const std::string &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00312">tcp_server.cc:312</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1base_1_1safe__convert_html_a3c41d9c6266428458c97891710ac2f0d"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">unilink::base::safe_convert::uint8_to_string</a></div><div class="ttdeci">std::string uint8_to_string(const uint8_t *data, size_t size)</div><div class="ttdoc">Safely convert uint8_t* to const char* for string operations.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00145">common.hpp:145</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1base_1_1safe__convert_html_ad9420f868d8fe7956c881c8cb05c4ddb"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb">unilink::base::safe_convert::string_to_bytes</a></div><div class="ttdeci">std::pair&lt; const uint8_t *, size_t &gt; string_to_bytes(const std::string &amp;str)</div><div class="ttdoc">Safely obtain a view of std::string as byte array without allocation.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00179">common.hpp:179</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75c"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">unilink::base::LinkState</a></div><div class="ttdeci">LinkState</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00039">common.hpp:39</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html_af21aa186b919c9e279974bbc295af9a8"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html#af21aa186b919c9e279974bbc295af9a8">unilink::wrapper::TcpServer::send_to_client</a></div><div class="ttdeci">bool send_to_client(size_t client_id, const std::string &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00306">tcp_server.cc:306</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1base_1_1safe__convert_html_a3c41d9c6266428458c97891710ac2f0d"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">unilink::base::safe_convert::uint8_to_string</a></div><div class="ttdeci">std::string uint8_to_string(const uint8_t *data, size_t size)</div><div class="ttdoc">Safely convert uint8_t* to const char* for string operations.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00146">common.hpp:146</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1base_1_1safe__convert_html_a853a1e8b21339030dc0176b78ffe75ac"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__convert.html#a853a1e8b21339030dc0176b78ffe75ac">unilink::base::safe_convert::string_to_bytes</a></div><div class="ttdeci">std::pair&lt; const uint8_t *, size_t &gt; string_to_bytes(std::string_view str)</div><div class="ttdoc">Safely obtain a view of std::string as byte array without allocation.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00180">common.hpp:180</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75c"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">unilink::base::LinkState</a></div><div class="ttdeci">LinkState</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00040">common.hpp:40</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e">unilink::base::LinkState::Closed</a></div><div class="ttdeci">@ Closed</div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75ca2ec0d16e4ca169baedb9b2d50ec5c6d7"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca2ec0d16e4ca169baedb9b2d50ec5c6d7">unilink::base::LinkState::Connected</a></div><div class="ttdeci">@ Connected</div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">unilink::base::LinkState::Error</a></div><div class="ttdeci">@ Error</div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">unilink::base::LinkState::Listening</a></div><div class="ttdeci">@ Listening</div></div>
-<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00036">common.hpp:36</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1memory_html_a2d1a0f5fc24b0827600737d46d94f6b0"><div class="ttname"><a href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">unilink::memory::ConstByteSpan</a></div><div class="ttdeci">SafeSpan&lt; const uint8_t &gt; ConstByteSpan</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00122">safe_span.hpp:122</a></div></div>
+<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
 <div class="ttc" id="astructunilink_1_1config_1_1TcpServerConfig_html"><div class="ttname"><a href="structunilink_1_1config_1_1TcpServerConfig.html">unilink::config::TcpServerConfig</a></div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__config_8hpp_source.html#l00026">tcp_server_config.hpp:26</a></div></div>
 <div class="ttc" id="astructunilink_1_1config_1_1TcpServerConfig_html_ad4a94a582a7659cc4caf2c2c28e2f43b"><div class="ttname"><a href="structunilink_1_1config_1_1TcpServerConfig.html#ad4a94a582a7659cc4caf2c2c28e2f43b">unilink::config::TcpServerConfig::max_port_retries</a></div><div class="ttdeci">int max_port_retries</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__config_8hpp_source.html#l00034">tcp_server_config.hpp:34</a></div></div>
 <div class="ttc" id="astructunilink_1_1config_1_1TcpServerConfig_html_adce24401c84899b16320f528185f6636"><div class="ttname"><a href="structunilink_1_1config_1_1TcpServerConfig.html#adce24401c84899b16320f528185f6636">unilink::config::TcpServerConfig::port</a></div><div class="ttdeci">uint16_t port</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__config_8hpp_source.html#l00027">tcp_server_config.hpp:27</a></div></div>
@@ -584,7 +580,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8cc_
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_fdd6e5571e153f1d8025548436a989da.html">tcp_server</a></li><li class="navelem"><a class="el" href="wrapper_2tcp__server_2tcp__server_8cc.html">tcp_server.cc</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -102,6 +102,7 @@ $(document).ready(function(){initNavTree('common_8hpp.html',''); initResizable()
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
+<code>#include &lt;string_view&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="platform_8hpp_source.html">unilink/base/platform.hpp</a>&quot;</code><br />
@@ -147,8 +148,8 @@ Functions</h2></td></tr>
 <tr class="separator:ae891a72972b7893b2b357d661a993b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75098fc6310384d9e2ffdcdb499a2fa6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a75098fc6310384d9e2ffdcdb499a2fa6">unilink::base::ts_now</a> ()</td></tr>
 <tr class="separator:a75098fc6310384d9e2ffdcdb499a2fa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96460b35caac65798f8973d5de522294"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a96460b35caac65798f8973d5de522294">unilink::base::log_message</a> (const std::string &amp;tag, const std::string &amp;direction, const std::string &amp;message)</td></tr>
-<tr class="separator:a96460b35caac65798f8973d5de522294"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07399b407f151a0fb40ac854476a40c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a07399b407f151a0fb40ac854476a40c5">unilink::base::log_message</a> (std::string_view tag, std::string_view direction, std::string_view message)</td></tr>
+<tr class="separator:a07399b407f151a0fb40ac854476a40c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac773dc00985343d2bdc81d0491a144c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#ac773dc00985343d2bdc81d0491a144c0">unilink::base::is_advanced_logging_available</a> ()</td></tr>
 <tr class="separator:ac773dc00985343d2bdc81d0491a144c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bfe0d74314577e9537832a986691f22"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base.html#a6bfe0d74314577e9537832a986691f22">unilink::base::is_performance_monitoring_available</a> ()</td></tr>
@@ -171,12 +172,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a439f562cc86e942edf24d1408bcb8a92"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92">unilink::base::safe_convert::string_to_uint8</a> (const char *data, size_t size)</td></tr>
 <tr class="memdesc:a439f562cc86e942edf24d1408bcb8a92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert const char* to const uint8_t* for binary operations.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92">More...</a><br /></td></tr>
 <tr class="separator:a439f562cc86e942edf24d1408bcb8a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a748a98e5ca3e6a83a693ac12ac51219a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a">unilink::base::safe_convert::string_to_uint8</a> (const std::string &amp;str)</td></tr>
-<tr class="memdesc:a748a98e5ca3e6a83a693ac12ac51219a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert std::string to std::vector&lt;uint8_t&gt;  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a">More...</a><br /></td></tr>
-<tr class="separator:a748a98e5ca3e6a83a693ac12ac51219a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="memItemLeft" align="right" valign="top">std::pair&lt; const uint8_t *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb">unilink::base::safe_convert::string_to_bytes</a> (const std::string &amp;str)</td></tr>
-<tr class="memdesc:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely obtain a view of std::string as byte array without allocation.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb">More...</a><br /></td></tr>
-<tr class="separator:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe2a169e3dc23db0749352a92123ab35"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#afe2a169e3dc23db0749352a92123ab35">unilink::base::safe_convert::string_to_uint8</a> (std::string_view str)</td></tr>
+<tr class="memdesc:afe2a169e3dc23db0749352a92123ab35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert std::string to std::vector&lt;uint8_t&gt;  <a href="namespaceunilink_1_1base_1_1safe__convert.html#afe2a169e3dc23db0749352a92123ab35">More...</a><br /></td></tr>
+<tr class="separator:afe2a169e3dc23db0749352a92123ab35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a853a1e8b21339030dc0176b78ffe75ac"><td class="memItemLeft" align="right" valign="top">std::pair&lt; const uint8_t *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a853a1e8b21339030dc0176b78ffe75ac">unilink::base::safe_convert::string_to_bytes</a> (std::string_view str)</td></tr>
+<tr class="memdesc:a853a1e8b21339030dc0176b78ffe75ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely obtain a view of std::string as byte array without allocation.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a853a1e8b21339030dc0176b78ffe75ac">More...</a><br /></td></tr>
+<tr class="separator:a853a1e8b21339030dc0176b78ffe75ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -184,7 +185,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_1b267b6cbe170e06255a29a9b0340896.html">base</a></li><li class="navelem"><a class="el" href="common_8hpp.html">common.hpp</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

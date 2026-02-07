@@ -98,16 +98,16 @@ Functions</h2></td></tr>
 <tr class="memitem:a439f562cc86e942edf24d1408bcb8a92"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92">string_to_uint8</a> (const char *data, size_t size)</td></tr>
 <tr class="memdesc:a439f562cc86e942edf24d1408bcb8a92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert const char* to const uint8_t* for binary operations.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a439f562cc86e942edf24d1408bcb8a92">More...</a><br /></td></tr>
 <tr class="separator:a439f562cc86e942edf24d1408bcb8a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a748a98e5ca3e6a83a693ac12ac51219a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a">string_to_uint8</a> (const std::string &amp;str)</td></tr>
-<tr class="memdesc:a748a98e5ca3e6a83a693ac12ac51219a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert std::string to std::vector&lt;uint8_t&gt;  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a748a98e5ca3e6a83a693ac12ac51219a">More...</a><br /></td></tr>
-<tr class="separator:a748a98e5ca3e6a83a693ac12ac51219a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="memItemLeft" align="right" valign="top">std::pair&lt; const uint8_t *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb">string_to_bytes</a> (const std::string &amp;str)</td></tr>
-<tr class="memdesc:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely obtain a view of std::string as byte array without allocation.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#ad9420f868d8fe7956c881c8cb05c4ddb">More...</a><br /></td></tr>
-<tr class="separator:ad9420f868d8fe7956c881c8cb05c4ddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe2a169e3dc23db0749352a92123ab35"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#afe2a169e3dc23db0749352a92123ab35">string_to_uint8</a> (std::string_view str)</td></tr>
+<tr class="memdesc:afe2a169e3dc23db0749352a92123ab35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely convert std::string to std::vector&lt;uint8_t&gt;  <a href="namespaceunilink_1_1base_1_1safe__convert.html#afe2a169e3dc23db0749352a92123ab35">More...</a><br /></td></tr>
+<tr class="separator:afe2a169e3dc23db0749352a92123ab35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a853a1e8b21339030dc0176b78ffe75ac"><td class="memItemLeft" align="right" valign="top">std::pair&lt; const uint8_t *, size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html#a853a1e8b21339030dc0176b78ffe75ac">string_to_bytes</a> (std::string_view str)</td></tr>
+<tr class="memdesc:a853a1e8b21339030dc0176b78ffe75ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safely obtain a view of std::string as byte array without allocation.  <a href="namespaceunilink_1_1base_1_1safe__convert.html#a853a1e8b21339030dc0176b78ffe75ac">More...</a><br /></td></tr>
+<tr class="separator:a853a1e8b21339030dc0176b78ffe75ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ad9420f868d8fe7956c881c8cb05c4ddb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9420f868d8fe7956c881c8cb05c4ddb">&#9670;&nbsp;</a></span>string_to_bytes()</h2>
+<a id="a853a1e8b21339030dc0176b78ffe75ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a853a1e8b21339030dc0176b78ffe75ac">&#9670;&nbsp;</a></span>string_to_bytes()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -118,7 +118,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">std::pair&lt;const uint8_t*, size_t&gt; unilink::base::safe_convert::string_to_bytes </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>str</em></td><td>)</td>
           <td></td>
         </tr>
@@ -139,7 +139,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;const uint8_t*, size_t&gt; containing pointer and size </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00179">179</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00180">180</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
 
 </div>
 </div>
@@ -187,12 +187,12 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; containing the data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00158">158</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00159">159</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a748a98e5ca3e6a83a693ac12ac51219a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a748a98e5ca3e6a83a693ac12ac51219a">&#9670;&nbsp;</a></span>string_to_uint8() <span class="overload">[2/2]</span></h2>
+<a id="afe2a169e3dc23db0749352a92123ab35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe2a169e3dc23db0749352a92123ab35">&#9670;&nbsp;</a></span>string_to_uint8() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -203,7 +203,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">std::vector&lt;uint8_t&gt; unilink::base::safe_convert::string_to_uint8 </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>str</em></td><td>)</td>
           <td></td>
         </tr>
@@ -224,7 +224,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector&lt;uint8_t&gt; containing the string data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00170">170</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00171">171</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
 
 </div>
 </div>
@@ -272,7 +272,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::string constructed from the data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00145">145</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="common_8hpp_source.html#l00146">146</a> of file <a class="el" href="common_8hpp_source.html">common.hpp</a>.</p>
 
 </div>
 </div>
@@ -282,7 +282,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1base.html">base</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1base_1_1safe__convert.html">safe_convert</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -5,17 +5,17 @@ var hierarchy =
     [ "unilink::diagnostics::AsyncLogStats", "structunilink_1_1diagnostics_1_1AsyncLogStats.html", null ],
     [ "unilink::concurrency::AtomicState< StateType >", "classunilink_1_1concurrency_1_1AtomicState.html", null ],
     [ "unilink::builder::AutoInitializer", "classunilink_1_1builder_1_1AutoInitializer.html", null ],
-    [ "unilink::builder::BuilderInterface< T >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
-    [ "unilink::builder::BuilderInterface< wrapper::Serial >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+    [ "unilink::builder::BuilderInterface< T, Derived >", "classunilink_1_1builder_1_1BuilderInterface.html", null ],
+    [ "unilink::builder::BuilderInterface< wrapper::Serial, SerialBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html", null ]
     ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::TcpClient >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+    [ "unilink::builder::BuilderInterface< wrapper::TcpClient, TcpClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::TcpClientBuilder", "classunilink_1_1builder_1_1TcpClientBuilder.html", null ]
     ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::TcpServer >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+    [ "unilink::builder::BuilderInterface< wrapper::TcpServer, TcpServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html", null ]
     ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::Udp >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+    [ "unilink::builder::BuilderInterface< wrapper::Udp, UdpBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", null ]
     ] ],
     [ "unilink::interface::Channel", "classunilink_1_1interface_1_1Channel.html", [

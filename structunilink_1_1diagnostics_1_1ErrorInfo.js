@@ -1,7 +1,7 @@
 var structunilink_1_1diagnostics_1_1ErrorInfo =
 [
-    [ "ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html#a02c3bdd8b32efc581ee91138fe82530a", null ],
-    [ "ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html#acb633693636282a73ef043afdc08185f", null ],
+    [ "ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html#a286e6ccfc50ec89824ba31b67da616ce", null ],
+    [ "ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html#a48bdf1d2850c935cd787d2ae86bf2833", null ],
     [ "get_category_string", "structunilink_1_1diagnostics_1_1ErrorInfo.html#ab14db65466ad4c19708ba36813d49236", null ],
     [ "get_level_string", "structunilink_1_1diagnostics_1_1ErrorInfo.html#a8fa68489fc95d06793652536800ad066", null ],
     [ "get_summary", "structunilink_1_1diagnostics_1_1ErrorInfo.html#a270827dd9f3bb427f7bc8ee4bf12395e", null ],

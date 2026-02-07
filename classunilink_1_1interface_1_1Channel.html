@@ -108,8 +108,8 @@ Inheritance diagram for unilink::interface::Channel:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a2a34895018b104dccc9bf49143008b55"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">OnBytes</a> = std::function&lt; void(const uint8_t *, size_t)&gt;</td></tr>
-<tr class="separator:a2a34895018b104dccc9bf49143008b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ff1ba3581a10632471f991e9910a3f9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;</td></tr>
+<tr class="separator:a0ff1ba3581a10632471f991e9910a3f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2fe2bd2caca7544431ff59e0c8a111d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a>)&gt;</td></tr>
 <tr class="separator:aa2fe2bd2caca7544431ff59e0c8a111d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbaa1d8f93fac54ed516ef6e1caac3a5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> = std::function&lt; void(size_t)&gt;</td></tr>
@@ -125,13 +125,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a98ff6856a5ebd04adc7a9760437c9cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b6549386c1be6c9768fbf882dac6b29"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a4b6549386c1be6c9768fbf882dac6b29">is_connected</a> () const =0</td></tr>
 <tr class="separator:a4b6549386c1be6c9768fbf882dac6b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77068c3759acd3355ffeecf652661505"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a77068c3759acd3355ffeecf652661505">async_write_copy</a> (const uint8_t *data, size_t size)=0</td></tr>
-<tr class="separator:a77068c3759acd3355ffeecf652661505"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02927701793911d1942102248864d614"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a02927701793911d1942102248864d614">async_write_copy</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)=0</td></tr>
+<tr class="separator:a02927701793911d1942102248864d614"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e73efa207faca2b8f4a5d07b4c95268"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a9e73efa207faca2b8f4a5d07b4c95268">async_write_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data)=0</td></tr>
 <tr class="separator:a9e73efa207faca2b8f4a5d07b4c95268"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab39232bbd9a76bca4b07af5094fcaed9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#ab39232bbd9a76bca4b07af5094fcaed9">async_write_shared</a> (std::shared_ptr&lt; const std::vector&lt; uint8_t &gt;&gt; data)=0</td></tr>
 <tr class="separator:ab39232bbd9a76bca4b07af5094fcaed9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1ea9493e29fb865a26ab2964a59904a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#ac1ea9493e29fb865a26ab2964a59904a">on_bytes</a> (<a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">OnBytes</a> cb)=0</td></tr>
+<tr class="memitem:ac1ea9493e29fb865a26ab2964a59904a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#ac1ea9493e29fb865a26ab2964a59904a">on_bytes</a> (<a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb)=0</td></tr>
 <tr class="separator:ac1ea9493e29fb865a26ab2964a59904a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4462e2992427c466d6e12fa492e1b80"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa4462e2992427c466d6e12fa492e1b80">on_state</a> (<a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb)=0</td></tr>
 <tr class="separator:aa4462e2992427c466d6e12fa492e1b80"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,7 +140,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="channel_8hpp_source.html#l00027">27</a> of file <a class="el" href="channel_8hpp_source.html">channel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="channel_8hpp_source.html#l00028">28</a> of file <a class="el" href="channel_8hpp_source.html">channel.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="acbaa1d8f93fac54ed516ef6e1caac3a5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acbaa1d8f93fac54ed516ef6e1caac3a5">&#9670;&nbsp;</a></span>OnBackpressure</h2>
@@ -154,23 +154,23 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="channel_8hpp_source.html#l00031">31</a> of file <a class="el" href="channel_8hpp_source.html">channel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="channel_8hpp_source.html#l00032">32</a> of file <a class="el" href="channel_8hpp_source.html">channel.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a2a34895018b104dccc9bf49143008b55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a34895018b104dccc9bf49143008b55">&#9670;&nbsp;</a></span>OnBytes</h2>
+<a id="a0ff1ba3581a10632471f991e9910a3f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ff1ba3581a10632471f991e9910a3f9">&#9670;&nbsp;</a></span>OnBytes</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">unilink::interface::Channel::OnBytes</a> =  std::function&lt;void(const uint8_t*, size_t)&gt;</td>
+          <td class="memname">using <a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">unilink::interface::Channel::OnBytes</a> =  std::function&lt;void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="channel_8hpp_source.html#l00029">29</a> of file <a class="el" href="channel_8hpp_source.html">channel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="channel_8hpp_source.html#l00030">30</a> of file <a class="el" href="channel_8hpp_source.html">channel.hpp</a>.</p>
 
 </div>
 </div>
@@ -186,7 +186,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="channel_8hpp_source.html#l00030">30</a> of file <a class="el" href="channel_8hpp_source.html">channel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="channel_8hpp_source.html#l00031">31</a> of file <a class="el" href="channel_8hpp_source.html">channel.hpp</a>.</p>
 
 </div>
 </div>
@@ -217,8 +217,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a77068c3759acd3355ffeecf652661505"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77068c3759acd3355ffeecf652661505">&#9670;&nbsp;</a></span>async_write_copy()</h2>
+<a id="a02927701793911d1942102248864d614"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02927701793911d1942102248864d614">&#9670;&nbsp;</a></span>async_write_copy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,19 +229,9 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void unilink::interface::Channel::async_write_copy </td>
           <td>(</td>
-          <td class="paramtype">const uint8_t *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -251,7 +241,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#ab69361f584931e5e2e056c300ec4d48a">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ad9fb79e1510abc6a7d47b3eb7b6173bd">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a889fbb491f1dc3a1f9a9cc7f4c286b31">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a19216fb28f4a3bc7dd328f549e2c733d">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a753af71ad739e467588e3d6c3af9c5ef">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a0fcd07ee0c01d113f98d89e2b16966dc">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a996369a17ecad069edd0c20c19689e9d">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a66dcdee06d54ec2370dcdcbafef40875">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -378,7 +368,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void unilink::interface::Channel::on_bytes </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a2a34895018b104dccc9bf49143008b55">OnBytes</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a>&#160;</td>
           <td class="paramname"><em>cb</em></td><td>)</td>
           <td></td>
         </tr>
@@ -485,7 +475,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1interface.html">interface</a></li><li class="navelem"><a class="el" href="classunilink_1_1interface_1_1Channel.html">Channel</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

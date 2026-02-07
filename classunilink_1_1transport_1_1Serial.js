@@ -2,7 +2,7 @@ var classunilink_1_1transport_1_1Serial =
 [
     [ "BufferVariant", "classunilink_1_1transport_1_1Serial.html#ab37d95855b6845e966916f55ce6a7787", null ],
     [ "~Serial", "classunilink_1_1transport_1_1Serial.html#a7adb91b607dfc1dc5ee9362bf7c7f1e5", null ],
-    [ "async_write_copy", "classunilink_1_1transport_1_1Serial.html#a19216fb28f4a3bc7dd328f549e2c733d", null ],
+    [ "async_write_copy", "classunilink_1_1transport_1_1Serial.html#a66dcdee06d54ec2370dcdcbafef40875", null ],
     [ "async_write_move", "classunilink_1_1transport_1_1Serial.html#a36c1543fbe8a209eaecbb26115c65044", null ],
     [ "async_write_shared", "classunilink_1_1transport_1_1Serial.html#a89f17458c5b88c599ed6d7c11f0a8c17", null ],
     [ "create", "classunilink_1_1transport_1_1Serial.html#abe3fe3951b0242c2c431cb8d99bf7657", null ],

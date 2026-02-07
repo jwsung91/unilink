@@ -101,7 +101,7 @@ Inheritance diagram for unilink::builder::TcpClientBuilder:</div>
  <div class="center">
   <img src="classunilink_1_1builder_1_1TcpClientBuilder.png" usemap="#unilink::builder::TcpClientBuilder_map" alt=""/>
   <map id="unilink::builder::TcpClientBuilder_map" name="unilink::builder::TcpClientBuilder_map">
-<area href="classunilink_1_1builder_1_1BuilderInterface.html" alt="unilink::builder::BuilderInterface&lt; wrapper::TcpClient &gt;" shape="rect" coords="0,0,319,24"/>
+<area href="classunilink_1_1builder_1_1BuilderInterface.html" alt="unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;" shape="rect" coords="0,0,421,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -127,52 +127,74 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af0f78cdc2328bf0d06ef3789b3e4e41d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#af0f78cdc2328bf0d06ef3789b3e4e41d">on_data</a> (std::function&lt; void(const std::string &amp;)&gt; handler) override</td></tr>
 <tr class="memdesc:af0f78cdc2328bf0d06ef3789b3e4e41d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#af0f78cdc2328bf0d06ef3789b3e4e41d">More...</a><br /></td></tr>
 <tr class="separator:af0f78cdc2328bf0d06ef3789b3e4e41d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a328a5b631c480885d6b6a47515726199"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
-<tr class="memitem:a328a5b631c480885d6b6a47515726199"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a328a5b631c480885d6b6a47515726199">on_data</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:a328a5b631c480885d6b6a47515726199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a328a5b631c480885d6b6a47515726199">More...</a><br /></td></tr>
-<tr class="separator:a328a5b631c480885d6b6a47515726199"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ae0c7b5b6f6c02066844fcb5a71ad9a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a4ae0c7b5b6f6c02066844fcb5a71ad9a">on_connect</a> (std::function&lt; void()&gt; handler) override</td></tr>
 <tr class="memdesc:a4ae0c7b5b6f6c02066844fcb5a71ad9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a4ae0c7b5b6f6c02066844fcb5a71ad9a">More...</a><br /></td></tr>
 <tr class="separator:a4ae0c7b5b6f6c02066844fcb5a71ad9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4ff33b7737201009f920a170509c0bf"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
-<tr class="memitem:ad4ff33b7737201009f920a170509c0bf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#ad4ff33b7737201009f920a170509c0bf">on_connect</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:ad4ff33b7737201009f920a170509c0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#ad4ff33b7737201009f920a170509c0bf">More...</a><br /></td></tr>
-<tr class="separator:ad4ff33b7737201009f920a170509c0bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a218af94b28e588485b61be951ab8f6f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a218af94b28e588485b61be951ab8f6f6">on_disconnect</a> (std::function&lt; void()&gt; handler) override</td></tr>
 <tr class="memdesc:a218af94b28e588485b61be951ab8f6f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a218af94b28e588485b61be951ab8f6f6">More...</a><br /></td></tr>
 <tr class="separator:a218af94b28e588485b61be951ab8f6f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cf57c77aba73572d86e9f8d925d213e"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
-<tr class="memitem:a9cf57c77aba73572d86e9f8d925d213e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a9cf57c77aba73572d86e9f8d925d213e">on_disconnect</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:a9cf57c77aba73572d86e9f8d925d213e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a9cf57c77aba73572d86e9f8d925d213e">More...</a><br /></td></tr>
-<tr class="separator:a9cf57c77aba73572d86e9f8d925d213e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13494649fcb5f8f8f4fbf8909a1e2e71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a13494649fcb5f8f8f4fbf8909a1e2e71">on_error</a> (std::function&lt; void(const std::string &amp;)&gt; handler) override</td></tr>
 <tr class="memdesc:a13494649fcb5f8f8f4fbf8909a1e2e71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a13494649fcb5f8f8f4fbf8909a1e2e71">More...</a><br /></td></tr>
 <tr class="separator:a13494649fcb5f8f8f4fbf8909a1e2e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adce38aaab31f75973188a16c677701b7"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
-<tr class="memitem:adce38aaab31f75973188a16c677701b7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#adce38aaab31f75973188a16c677701b7">on_error</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:adce38aaab31f75973188a16c677701b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#adce38aaab31f75973188a16c677701b7">More...</a><br /></td></tr>
-<tr class="separator:adce38aaab31f75973188a16c677701b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a567fa16a7c094edee54a0ea2fec74fcd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a567fa16a7c094edee54a0ea2fec74fcd">use_independent_context</a> (bool use_independent=true)</td></tr>
 <tr class="memdesc:a567fa16a7c094edee54a0ea2fec74fcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use independent IoContext for this client (for testing isolation)  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a567fa16a7c094edee54a0ea2fec74fcd">More...</a><br /></td></tr>
 <tr class="separator:a567fa16a7c094edee54a0ea2fec74fcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61c44f9311cd798efac3449fdd2034d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a61c44f9311cd798efac3449fdd2034d5">retry_interval</a> (unsigned interval_ms)</td></tr>
 <tr class="memdesc:a61c44f9311cd798efac3449fdd2034d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set retry interval for automatic reconnection.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a61c44f9311cd798efac3449fdd2034d5">More...</a><br /></td></tr>
 <tr class="separator:a61c44f9311cd798efac3449fdd2034d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classunilink_1_1builder_1_1BuilderInterface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface&lt; wrapper::TcpClient &gt;</a></td></tr>
-<tr class="memitem:a1e68960b2ab20879023eb8e4f02bb2a3 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a1e68960b2ab20879023eb8e4f02bb2a3">~BuilderInterface</a> ()=default</td></tr>
-<tr class="separator:a1e68960b2ab20879023eb8e4f02bb2a3 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbc4ef5ce1576ac1dd680193adfe9db1 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#afbc4ef5ce1576ac1dd680193adfe9db1">on_data</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:afbc4ef5ce1576ac1dd680193adfe9db1 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#afbc4ef5ce1576ac1dd680193adfe9db1">More...</a><br /></td></tr>
-<tr class="separator:afbc4ef5ce1576ac1dd680193adfe9db1 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc6a0098e39502b9fd9759007264a74e inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#afc6a0098e39502b9fd9759007264a74e">on_connect</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:afc6a0098e39502b9fd9759007264a74e inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#afc6a0098e39502b9fd9759007264a74e">More...</a><br /></td></tr>
-<tr class="separator:afc6a0098e39502b9fd9759007264a74e inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ff8e894a003be9ba74de7354b5b9141 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a3ff8e894a003be9ba74de7354b5b9141">on_disconnect</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:a3ff8e894a003be9ba74de7354b5b9141 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a3ff8e894a003be9ba74de7354b5b9141">More...</a><br /></td></tr>
-<tr class="separator:a3ff8e894a003be9ba74de7354b5b9141 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afebc2246026de2eae00a2b8373c88be1 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#afebc2246026de2eae00a2b8373c88be1">on_error</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:afebc2246026de2eae00a2b8373c88be1 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#afebc2246026de2eae00a2b8373c88be1">More...</a><br /></td></tr>
-<tr class="separator:afebc2246026de2eae00a2b8373c88be1 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f7f9a9e305b4846b8a077c20045b9f9"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a1f7f9a9e305b4846b8a077c20045b9f9">on_connect</a> (std::function&lt; void()&gt; handler)=0</td></tr>
+<tr class="memdesc:a1f7f9a9e305b4846b8a077c20045b9f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a1f7f9a9e305b4846b8a077c20045b9f9">More...</a><br /></td></tr>
+<tr class="separator:a1f7f9a9e305b4846b8a077c20045b9f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12542ad87746758d44a9c8934b67b757"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
+<tr class="memitem:a12542ad87746758d44a9c8934b67b757"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a12542ad87746758d44a9c8934b67b757">on_connect</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:a12542ad87746758d44a9c8934b67b757"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a12542ad87746758d44a9c8934b67b757">More...</a><br /></td></tr>
+<tr class="separator:a12542ad87746758d44a9c8934b67b757"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7288c24734f5a4c1469a617cbea5e29a"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a7288c24734f5a4c1469a617cbea5e29a">on_data</a> (std::function&lt; void(const std::string &amp;)&gt; handler)=0</td></tr>
+<tr class="memdesc:a7288c24734f5a4c1469a617cbea5e29a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a7288c24734f5a4c1469a617cbea5e29a">More...</a><br /></td></tr>
+<tr class="separator:a7288c24734f5a4c1469a617cbea5e29a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8de9b4e0b156ad2085fbb3141d390bbc"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
+<tr class="memitem:a8de9b4e0b156ad2085fbb3141d390bbc"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8de9b4e0b156ad2085fbb3141d390bbc">on_data</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:a8de9b4e0b156ad2085fbb3141d390bbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8de9b4e0b156ad2085fbb3141d390bbc">More...</a><br /></td></tr>
+<tr class="separator:a8de9b4e0b156ad2085fbb3141d390bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaff39a9706c874c0f9a711fb67dd5a75"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaff39a9706c874c0f9a711fb67dd5a75">on_disconnect</a> (std::function&lt; void()&gt; handler)=0</td></tr>
+<tr class="memdesc:aaff39a9706c874c0f9a711fb67dd5a75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaff39a9706c874c0f9a711fb67dd5a75">More...</a><br /></td></tr>
+<tr class="separator:aaff39a9706c874c0f9a711fb67dd5a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0b1f54ba0ed2e4ef41ea3e351e2f200"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
+<tr class="memitem:ac0b1f54ba0ed2e4ef41ea3e351e2f200"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#ac0b1f54ba0ed2e4ef41ea3e351e2f200">on_disconnect</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:ac0b1f54ba0ed2e4ef41ea3e351e2f200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#ac0b1f54ba0ed2e4ef41ea3e351e2f200">More...</a><br /></td></tr>
+<tr class="separator:ac0b1f54ba0ed2e4ef41ea3e351e2f200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a155a296ef455cc0c6c0bd98e2ba910f4"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a155a296ef455cc0c6c0bd98e2ba910f4">on_error</a> (std::function&lt; void(const std::string &amp;)&gt; handler)=0</td></tr>
+<tr class="memdesc:a155a296ef455cc0c6c0bd98e2ba910f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a155a296ef455cc0c6c0bd98e2ba910f4">More...</a><br /></td></tr>
+<tr class="separator:a155a296ef455cc0c6c0bd98e2ba910f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2072aa65a77b0c821e2a57bc989fb311"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
+<tr class="memitem:a2072aa65a77b0c821e2a57bc989fb311"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2072aa65a77b0c821e2a57bc989fb311">on_error</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:a2072aa65a77b0c821e2a57bc989fb311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2072aa65a77b0c821e2a57bc989fb311">More...</a><br /></td></tr>
+<tr class="separator:a2072aa65a77b0c821e2a57bc989fb311"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classunilink_1_1builder_1_1BuilderInterface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a></td></tr>
+<tr class="memitem:a4c9007f791048f912597ccd39fa99a76 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a4c9007f791048f912597ccd39fa99a76">~BuilderInterface</a> ()=default</td></tr>
+<tr class="separator:a4c9007f791048f912597ccd39fa99a76 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76f9844b7f7f403bf6b249320d179f83 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a76f9844b7f7f403bf6b249320d179f83">BuilderInterface</a> ()=default</td></tr>
+<tr class="separator:a76f9844b7f7f403bf6b249320d179f83 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae294b6646d6b6d8b5ad2d7a9b6d4d215 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#ae294b6646d6b6d8b5ad2d7a9b6d4d215">BuilderInterface</a> (const <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;)=default</td></tr>
+<tr class="separator:ae294b6646d6b6d8b5ad2d7a9b6d4d215 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a095effb21b4bf72caf61843da49f0dec inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a095effb21b4bf72caf61843da49f0dec">BuilderInterface</a> (<a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a095effb21b4bf72caf61843da49f0dec inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b2378199ac802b34579cb42d61a4735 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a0b2378199ac802b34579cb42d61a4735">operator=</a> (const <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;)=default</td></tr>
+<tr class="separator:a0b2378199ac802b34579cb42d61a4735 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ac78ea4742323ac6cf182dced1b43b9 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a3ac78ea4742323ac6cf182dced1b43b9">operator=</a> (<a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a3ac78ea4742323ac6cf182dced1b43b9 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8de9b4e0b156ad2085fbb3141d390bbc inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a8de9b4e0b156ad2085fbb3141d390bbc">on_data</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:a8de9b4e0b156ad2085fbb3141d390bbc inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a8de9b4e0b156ad2085fbb3141d390bbc">More...</a><br /></td></tr>
+<tr class="separator:a8de9b4e0b156ad2085fbb3141d390bbc inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12542ad87746758d44a9c8934b67b757 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a12542ad87746758d44a9c8934b67b757">on_connect</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:a12542ad87746758d44a9c8934b67b757 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a12542ad87746758d44a9c8934b67b757">More...</a><br /></td></tr>
+<tr class="separator:a12542ad87746758d44a9c8934b67b757 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0b1f54ba0ed2e4ef41ea3e351e2f200 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#ac0b1f54ba0ed2e4ef41ea3e351e2f200">on_disconnect</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:ac0b1f54ba0ed2e4ef41ea3e351e2f200 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#ac0b1f54ba0ed2e4ef41ea3e351e2f200">More...</a><br /></td></tr>
+<tr class="separator:ac0b1f54ba0ed2e4ef41ea3e351e2f200 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2072aa65a77b0c821e2a57bc989fb311 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2072aa65a77b0c821e2a57bc989fb311">on_error</a> (U *obj, F method)</td></tr>
+<tr class="memdesc:a2072aa65a77b0c821e2a57bc989fb311 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2072aa65a77b0c821e2a57bc989fb311">More...</a><br /></td></tr>
+<tr class="separator:a2072aa65a77b0c821e2a57bc989fb311 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Builder for TcpClient wrapper. </p>
@@ -305,7 +327,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a8a09e661aea230560be2b4fbd02d0c07">unilink::builder::BuilderInterface&lt; wrapper::TcpClient &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__client__builder_8cc_source.html#l00116">116</a> of file <a class="el" href="tcp__client__builder_8cc_source.html">tcp_client_builder.cc</a>.</p>
 
@@ -337,14 +359,14 @@ Public Member Functions</h2></td></tr>
 <p>Build and return the configured TcpClient. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;wrapper::TcpClient&gt; The configured client instance </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#abb48b5d144a2c609a85ce84f3372b4c3">unilink::builder::BuilderInterface&lt; wrapper::TcpClient &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__client__builder_8cc_source.html#l00046">46</a> of file <a class="el" href="tcp__client__builder_8cc_source.html">tcp_client_builder.cc</a>.</p>
 
 </div>
 </div>
 <a id="a4ae0c7b5b6f6c02066844fcb5a71ad9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ae0c7b5b6f6c02066844fcb5a71ad9a">&#9670;&nbsp;</a></span>on_connect() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ae0c7b5b6f6c02066844fcb5a71ad9a">&#9670;&nbsp;</a></span>on_connect() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -376,14 +398,37 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a9fcecdb9af384740b351a3fc6625ec7a">unilink::builder::BuilderInterface&lt; wrapper::TcpClient &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a1f7f9a9e305b4846b8a077c20045b9f9">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__client__builder_8cc_source.html#l00126">126</a> of file <a class="el" href="tcp__client__builder_8cc_source.html">tcp_client_builder.cc</a>.</p>
 
 </div>
 </div>
-<a id="ad4ff33b7737201009f920a170509c0bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4ff33b7737201009f920a170509c0bf">&#9670;&nbsp;</a></span>on_connect() <span class="overload">[2/2]</span></h2>
+<a id="a1f7f9a9e305b4846b8a077c20045b9f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f7f9a9e305b4846b8a077c20045b9f9">&#9670;&nbsp;</a></span>on_connect() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_connect</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set connection handler callback. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>Function to handle connection events </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
+
+</div>
+</div>
+<a id="a12542ad87746758d44a9c8934b67b757"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12542ad87746758d44a9c8934b67b757">&#9670;&nbsp;</a></span>on_connect() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -394,16 +439,16 @@ template&lt;typename U , typename F &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a>&amp; unilink::builder::TcpClientBuilder::on_connect </td>
+          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_connect </td>
           <td>(</td>
-          <td class="paramtype">U *&#160;</td>
-          <td class="paramname"><em>obj</em>, </td>
+          <td class="paramtype">typename U&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">F&#160;</td>
-          <td class="paramname"><em>method</em>&#160;</td>
+          <td class="paramtype">typename F&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -433,14 +478,14 @@ template&lt;typename U , typename F &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__client__builder_8hpp_source.html#l00103">103</a> of file <a class="el" href="tcp__client__builder_8hpp_source.html">tcp_client_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00096">96</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
 <a id="af0f78cdc2328bf0d06ef3789b3e4e41d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0f78cdc2328bf0d06ef3789b3e4e41d">&#9670;&nbsp;</a></span>on_data() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af0f78cdc2328bf0d06ef3789b3e4e41d">&#9670;&nbsp;</a></span>on_data() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -472,14 +517,37 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a973e23ec71cc52ce740e4bc6dd1e5ca7">unilink::builder::BuilderInterface&lt; wrapper::TcpClient &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a7288c24734f5a4c1469a617cbea5e29a">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__client__builder_8cc_source.html#l00121">121</a> of file <a class="el" href="tcp__client__builder_8cc_source.html">tcp_client_builder.cc</a>.</p>
 
 </div>
 </div>
-<a id="a328a5b631c480885d6b6a47515726199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a328a5b631c480885d6b6a47515726199">&#9670;&nbsp;</a></span>on_data() <span class="overload">[2/2]</span></h2>
+<a id="a7288c24734f5a4c1469a617cbea5e29a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7288c24734f5a4c1469a617cbea5e29a">&#9670;&nbsp;</a></span>on_data() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set data handler callback. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>Function to handle incoming data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
+
+</div>
+</div>
+<a id="a8de9b4e0b156ad2085fbb3141d390bbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8de9b4e0b156ad2085fbb3141d390bbc">&#9670;&nbsp;</a></span>on_data() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -490,16 +558,16 @@ template&lt;typename U , typename F &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a>&amp; unilink::builder::TcpClientBuilder::on_data </td>
+          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_data </td>
           <td>(</td>
-          <td class="paramtype">U *&#160;</td>
-          <td class="paramname"><em>obj</em>, </td>
+          <td class="paramtype">typename U&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">F&#160;</td>
-          <td class="paramname"><em>method</em>&#160;</td>
+          <td class="paramtype">typename F&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -529,14 +597,14 @@ template&lt;typename U , typename F &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__client__builder_8hpp_source.html#l00083">83</a> of file <a class="el" href="tcp__client__builder_8hpp_source.html">tcp_client_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00076">76</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a218af94b28e588485b61be951ab8f6f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a218af94b28e588485b61be951ab8f6f6">&#9670;&nbsp;</a></span>on_disconnect() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a218af94b28e588485b61be951ab8f6f6">&#9670;&nbsp;</a></span>on_disconnect() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -568,14 +636,37 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#abe3fab698c8e0a4b4431d66f6499e5dc">unilink::builder::BuilderInterface&lt; wrapper::TcpClient &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#aaff39a9706c874c0f9a711fb67dd5a75">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__client__builder_8cc_source.html#l00131">131</a> of file <a class="el" href="tcp__client__builder_8cc_source.html">tcp_client_builder.cc</a>.</p>
 
 </div>
 </div>
-<a id="a9cf57c77aba73572d86e9f8d925d213e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cf57c77aba73572d86e9f8d925d213e">&#9670;&nbsp;</a></span>on_disconnect() <span class="overload">[2/2]</span></h2>
+<a id="aaff39a9706c874c0f9a711fb67dd5a75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaff39a9706c874c0f9a711fb67dd5a75">&#9670;&nbsp;</a></span>on_disconnect() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_disconnect</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set disconnection handler callback. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>Function to handle disconnection events </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
+
+</div>
+</div>
+<a id="ac0b1f54ba0ed2e4ef41ea3e351e2f200"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0b1f54ba0ed2e4ef41ea3e351e2f200">&#9670;&nbsp;</a></span>on_disconnect() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -586,16 +677,16 @@ template&lt;typename U , typename F &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a>&amp; unilink::builder::TcpClientBuilder::on_disconnect </td>
+          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_disconnect </td>
           <td>(</td>
-          <td class="paramtype">U *&#160;</td>
-          <td class="paramname"><em>obj</em>, </td>
+          <td class="paramtype">typename U&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">F&#160;</td>
-          <td class="paramname"><em>method</em>&#160;</td>
+          <td class="paramtype">typename F&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -625,14 +716,14 @@ template&lt;typename U , typename F &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__client__builder_8hpp_source.html#l00123">123</a> of file <a class="el" href="tcp__client__builder_8hpp_source.html">tcp_client_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00116">116</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a13494649fcb5f8f8f4fbf8909a1e2e71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13494649fcb5f8f8f4fbf8909a1e2e71">&#9670;&nbsp;</a></span>on_error() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a13494649fcb5f8f8f4fbf8909a1e2e71">&#9670;&nbsp;</a></span>on_error() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -664,14 +755,37 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a63604fdae0941bd6d70d0bcbe57733d7">unilink::builder::BuilderInterface&lt; wrapper::TcpClient &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a155a296ef455cc0c6c0bd98e2ba910f4">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__client__builder_8cc_source.html#l00136">136</a> of file <a class="el" href="tcp__client__builder_8cc_source.html">tcp_client_builder.cc</a>.</p>
 
 </div>
 </div>
-<a id="adce38aaab31f75973188a16c677701b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adce38aaab31f75973188a16c677701b7">&#9670;&nbsp;</a></span>on_error() <span class="overload">[2/2]</span></h2>
+<a id="a155a296ef455cc0c6c0bd98e2ba910f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a155a296ef455cc0c6c0bd98e2ba910f4">&#9670;&nbsp;</a></span>on_error() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_error</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set error handler callback. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>Function to handle error events </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
+
+</div>
+</div>
+<a id="a2072aa65a77b0c821e2a57bc989fb311"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2072aa65a77b0c821e2a57bc989fb311">&#9670;&nbsp;</a></span>on_error() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -682,16 +796,16 @@ template&lt;typename U , typename F &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a>&amp; unilink::builder::TcpClientBuilder::on_error </td>
+          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_error </td>
           <td>(</td>
-          <td class="paramtype">U *&#160;</td>
-          <td class="paramname"><em>obj</em>, </td>
+          <td class="paramtype">typename U&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">F&#160;</td>
-          <td class="paramname"><em>method</em>&#160;</td>
+          <td class="paramtype">typename F&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -721,9 +835,9 @@ template&lt;typename U , typename F &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html" title="Builder for TcpClient wrapper.">TcpClientBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__client__builder_8hpp_source.html#l00143">143</a> of file <a class="el" href="tcp__client__builder_8hpp_source.html">tcp_client_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00136">136</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
 
 </div>
 </div>
@@ -847,7 +961,7 @@ template&lt;typename U , typename F &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a></li>
-    <li class="footer">Generated on Sat Feb 7 2026 01:50:48 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 7 2026 10:21:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
