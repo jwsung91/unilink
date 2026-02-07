@@ -92,7 +92,7 @@ TEST(TransportTcpServerSessionTest, QueueLimitClosesSession) {
 
   // Send huge data exceeding any reasonable hard cap (e.g. 10MB)
   std::vector<uint8_t> huge(10 * 1024 * 1024, 0xAA);
-  session->async_write_copy(huge.data(), huge.size());
+  session->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
   ioc.run_for(50ms);
 
@@ -158,7 +158,7 @@ TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {
   EXPECT_TRUE(session->alive());
 
   std::vector<uint8_t> payload(bp_threshold * 2, 0xDD);  // exceed threshold, far below limit
-  session->async_write_copy(payload.data(), payload.size());
+  session->async_write_copy(memory::ConstByteSpan(payload.data(), payload.size()));
 
   ioc.run_for(50ms);
 
@@ -177,7 +177,7 @@ TEST(TransportTcpServerSessionTest, OnBytesExceptionClosesSession) {
 
   std::atomic<bool> closed{false};
   session->on_close([&]() { closed = true; });
-  session->on_bytes([](const uint8_t*, size_t) { throw std::runtime_error("boom"); });
+  session->on_bytes([](memory::ConstByteSpan) { throw std::runtime_error("boom"); });
 
   session->start();
   EXPECT_TRUE(session->alive());

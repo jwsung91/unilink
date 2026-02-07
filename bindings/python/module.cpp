@@ -31,9 +31,9 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("on_bytes",
            [](TcpClient& self, std::function<void(const py::bytes&)> handler) {
-             self.on_bytes([handler](const uint8_t* data, size_t size) {
+             self.on_bytes([handler](memory::ConstByteSpan data) {
                py::gil_scoped_acquire gil;
-               handler(py::bytes((const char*)data, size));
+               handler(py::bytes((const char*)data.data(), data.size()));
              });
              return &self;
            })
@@ -82,9 +82,9 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("on_bytes",
            [](TcpServer& self, std::function<void(const py::bytes&)> handler) {
-             self.on_bytes([handler](const uint8_t* data, size_t size) {
+             self.on_bytes([handler](memory::ConstByteSpan data) {
                py::gil_scoped_acquire gil;
-               handler(py::bytes((const char*)data, size));
+               handler(py::bytes((const char*)data.data(), data.size()));
              });
              return &self;
            })
@@ -159,9 +159,9 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("on_bytes",
            [](Serial& self, std::function<void(const py::bytes&)> handler) {
-             self.on_bytes([handler](const uint8_t* data, size_t size) {
+             self.on_bytes([handler](memory::ConstByteSpan data) {
                py::gil_scoped_acquire gil;
-               handler(py::bytes((const char*)data, size));
+               handler(py::bytes((const char*)data.data(), data.size()));
              });
              return &self;
            })
@@ -218,9 +218,9 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("on_bytes",
            [](Udp& self, std::function<void(const py::bytes&)> handler) {
-             self.on_bytes([handler](const uint8_t* data, size_t size) {
+             self.on_bytes([handler](memory::ConstByteSpan data) {
                py::gil_scoped_acquire gil;
-               handler(py::bytes((const char*)data, size));
+               handler(py::bytes((const char*)data.data(), data.size()));
              });
              return &self;
            })

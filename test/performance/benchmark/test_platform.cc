@@ -386,7 +386,7 @@ TEST_F(PlatformTest, MemoryAlignmentPlatformSpecific) {
 TEST_F(PlatformTest, ThreadingBehaviorPlatformSpecific) {
   std::cout << "\n=== Threading Behavior Platform-Specific Test ===" << std::endl;
 
-  const int num_threads = std::thread::hardware_concurrency();
+  const int num_threads = static_cast<int>(std::thread::hardware_concurrency());
   std::cout << "Hardware concurrency: " << num_threads << std::endl;
 
   std::atomic<int> counter{0};
@@ -443,7 +443,7 @@ TEST_F(PlatformTest, PerformanceCharacteristicsPlatformSpecific) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(num_operations) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(num_operations) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Performance test:" << std::endl;
   std::cout << "  Operations: " << num_operations << std::endl;

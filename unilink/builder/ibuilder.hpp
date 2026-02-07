@@ -38,6 +38,11 @@ template <typename T, typename Derived>
 class BuilderInterface {
  public:
   virtual ~BuilderInterface() = default;
+  BuilderInterface() = default;
+  BuilderInterface(const BuilderInterface&) = default;
+  BuilderInterface(BuilderInterface&&) = default;
+  BuilderInterface& operator=(const BuilderInterface&) = default;
+  BuilderInterface& operator=(BuilderInterface&&) = default;
 
   /**
    * @brief Build and return the configured product

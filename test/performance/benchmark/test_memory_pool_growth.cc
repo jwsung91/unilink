@@ -80,7 +80,7 @@ TEST_F(MemoryPoolGrowthBenchmark, GrowthPerformance) {
     buffers.clear();
   }
 
-  double ms_total = total_duration.count() / 1000000.0;
+  double ms_total = static_cast<double>(total_duration.count()) / 1000000.0;
   double us_per_iter = (double)total_duration.count() / 1000.0 / iterations;
 
   std::cout << "Total Time: " << std::fixed << std::setprecision(3) << ms_total << " ms" << std::endl;

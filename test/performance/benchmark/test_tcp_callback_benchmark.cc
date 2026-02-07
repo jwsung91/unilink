@@ -33,17 +33,17 @@ class MockChannel : public interface::Channel {
   void stop() override {}
   bool is_connected() const override { return true; }
 
-  void async_write_copy(const uint8_t* data, size_t size) override {}
-  void async_write_move(std::vector<uint8_t>&& data) override {}
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override {}
+  void async_write_copy(memory::ConstByteSpan) override {}
+  void async_write_move(std::vector<uint8_t>&&) override {}
+  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {}
 
   void on_bytes(OnBytes cb) override { on_bytes_ = cb; }
-  void on_state(OnState cb) override {}
-  void on_backpressure(OnBackpressure cb) override {}
+  void on_state(OnState) override {}
+  void on_backpressure(OnBackpressure) override {}
 
   void trigger_bytes(const uint8_t* data, size_t size) {
     if (on_bytes_) {
-      on_bytes_(data, size);
+      on_bytes_(memory::ConstByteSpan(data, size));
     }
   }
 
@@ -69,7 +69,7 @@ TEST_F(TcpCallbackBenchmark, OnDataPerformance) {
   std::vector<uint8_t> buffer(data_size, 'A');
 
   volatile size_t bytes_received = 0;
-  client_->on_data([&](const std::string& data) { bytes_received += data.size(); });
+  client_->on_bytes([&](memory::ConstByteSpan data) { bytes_received += data.size(); });
 
   auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -80,7 +80,7 @@ TEST_F(TcpCallbackBenchmark, OnDataPerformance) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(iterations) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(iterations) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "OnData (String Conversion) Performance:" << std::endl;
   std::cout << "  Iterations: " << iterations << std::endl;
@@ -94,7 +94,7 @@ TEST_F(TcpCallbackBenchmark, OnBytesPerformance) {
   std::vector<uint8_t> buffer(data_size, 'A');
 
   volatile size_t bytes_received = 0;
-  client_->on_bytes([&](const uint8_t* data, size_t size) { bytes_received += size; });
+  client_->on_bytes([&](memory::ConstByteSpan data) { bytes_received += data.size(); });
 
   auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -105,7 +105,7 @@ TEST_F(TcpCallbackBenchmark, OnBytesPerformance) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(iterations) / (duration.count() / 1000000.0);
+  double throughput = static_cast<double>(iterations) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "OnBytes (Zero Copy) Performance:" << std::endl;
   std::cout << "  Iterations: " << iterations << std::endl;

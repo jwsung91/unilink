@@ -173,8 +173,8 @@ config::SerialConfig Serial::build_config() const {
   config::SerialConfig config;
   config.device = device_;
   config.baud_rate = baud_rate_;
-  config.char_size = data_bits_;
-  config.stop_bits = stop_bits_;
+  config.char_size = static_cast<unsigned int>(data_bits_);
+  config.stop_bits = static_cast<unsigned int>(stop_bits_);
 
   std::string parity_lower = to_lower(parity_);
   if (parity_lower == "none")

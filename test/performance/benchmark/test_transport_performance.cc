@@ -26,8 +26,12 @@
 #include "unilink/config/serial_config.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
+#include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/serial/serial.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
+
+using namespace unilink;
+using namespace unilink::memory;
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/boost_tcp_socket.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
@@ -130,7 +134,7 @@ TEST_F(TransportPerformanceTest, TcpClientBackpressureThreshold) {
   // Send large amount of data exceeding 1MB (queued even without connection)
   const size_t large_data_size = 2 * (1 << 20);  // 2MB
   std::vector<uint8_t> large_data(large_data_size, 0xAA);
-  client_->async_write_copy(large_data.data(), large_data.size());
+  client_->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
 
   // --- Verification ---
   // Check if backpressure was triggered (tolerate slower CI runners)
@@ -176,7 +180,7 @@ TEST_F(TransportPerformanceTest, TcpServerBackpressureThreshold) {
   // Send large amount of data (queued even without connection)
   const size_t large_data_size = 2 * (1 << 20);  // 2MB
   std::vector<uint8_t> large_data(large_data_size, 0xCC);
-  server_->async_write_copy(large_data.data(), large_data.size());
+  server_->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
 
   // --- Verification ---
   std::this_thread::sleep_for(100ms);
@@ -213,7 +217,7 @@ TEST_F(TransportPerformanceTest, SerialBackpressureThreshold) {
   // Send large amount of data (queued even without connection)
   const size_t large_data_size = 2 * (1 << 20);  // 2MB
   std::vector<uint8_t> large_data(large_data_size, 0xEE);
-  serial_->async_write_copy(large_data.data(), large_data.size());
+  serial_->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
 
   // --- Verification ---
   std::this_thread::sleep_for(100ms);
@@ -313,7 +317,7 @@ TEST_F(TransportPerformanceTest, TcpClientQueueManagement) {
 
   for (int i = 0; i < num_messages; ++i) {
     std::vector<uint8_t> data(message_size, static_cast<uint8_t>(i % 256));
-    client_->async_write_copy(data.data(), data.size());
+    client_->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
   }
 
   // --- Verification ---
@@ -342,7 +346,7 @@ TEST_F(TransportPerformanceTest, TcpServerQueueManagement) {
 
   for (int i = 0; i < num_messages; ++i) {
     std::vector<uint8_t> data(message_size, static_cast<uint8_t>(i % 256));
-    server_->async_write_copy(data.data(), data.size());
+    server_->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
   }
 
   // --- Verification ---
@@ -381,7 +385,7 @@ TEST_F(TransportPerformanceTest, TcpClientConcurrentAccess) {
       for (int i = 0; i < messages_per_thread; ++i) {
         std::string data = "thread_" + std::to_string(t) + "_msg_" + std::to_string(i);
         std::vector<uint8_t> binary_data(data.begin(), data.end());
-        client_->async_write_copy(binary_data.data(), binary_data.size());
+        client_->async_write_copy(memory::ConstByteSpan(binary_data.data(), binary_data.size()));
       }
     });
   }
@@ -419,7 +423,7 @@ TEST_F(TransportPerformanceTest, TcpServerConcurrentAccess) {
       for (int i = 0; i < messages_per_thread; ++i) {
         std::string data = "thread_" + std::to_string(t) + "_msg_" + std::to_string(i);
         std::vector<uint8_t> binary_data(data.begin(), data.end());
-        server_->async_write_copy(binary_data.data(), binary_data.size());
+        server_->async_write_copy(memory::ConstByteSpan(binary_data.data(), binary_data.size()));
       }
     });
   }
@@ -462,7 +466,7 @@ TEST_F(TransportPerformanceTest, TcpClientThroughput) {
 
   for (int i = 0; i < num_messages; ++i) {
     std::vector<uint8_t> data(message_size, static_cast<uint8_t>(i % 256));
-    client_->async_write_copy(data.data(), data.size());
+    client_->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
   }
 
   auto end_time = std::chrono::high_resolution_clock::now();
@@ -496,7 +500,7 @@ TEST_F(TransportPerformanceTest, TcpServerThroughput) {
 
   for (int i = 0; i < num_messages; ++i) {
     std::vector<uint8_t> data(message_size, static_cast<uint8_t>(i % 256));
-    server_->async_write_copy(data.data(), data.size());
+    server_->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
   }
 
   auto end_time = std::chrono::high_resolution_clock::now();
@@ -535,7 +539,7 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
     // 데이터 전송
     std::string data = "memory_test_" + std::to_string(cycle);
     std::vector<uint8_t> binary_data(data.begin(), data.end());
-    client->async_write_copy(binary_data.data(), binary_data.size());
+    client->async_write_copy(memory::ConstByteSpan(binary_data.data(), binary_data.size()));
 
     client->stop();
     // client가 스코프를 벗어나면 자동으로 소멸
@@ -564,7 +568,7 @@ TEST_F(TransportPerformanceTest, TcpServerMemoryLeak) {
     // 데이터 전송
     std::string data = "memory_test_" + std::to_string(cycle);
     std::vector<uint8_t> binary_data(data.begin(), data.end());
-    server->async_write_copy(binary_data.data(), binary_data.size());
+    server->async_write_copy(memory::ConstByteSpan(binary_data.data(), binary_data.size()));
 
     server->stop();
     // server가 스코프를 벗어나면 자동으로 소멸
@@ -679,7 +683,7 @@ TEST_F(TransportPerformanceTest, TcpServerSessionDataTransmission) {
 
   // 테스트 데이터 전송
   const std::string test_data = "test_data_for_session";
-  session->async_write_copy(reinterpret_cast<const uint8_t*>(test_data.c_str()), test_data.size());
+  session->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(test_data.c_str()), test_data.size()));
 
   // --- Verification ---
   EXPECT_TRUE(session->alive());
@@ -715,7 +719,7 @@ TEST_F(TransportPerformanceTest, TcpServerSessionBackpressure) {
   // 백프레셔 임계값을 넘는 대량의 데이터 전송
   const size_t large_data_size = 2048;  // 2KB
   std::vector<uint8_t> large_data(large_data_size, 0xAA);
-  session->async_write_copy(large_data.data(), large_data.size());
+  session->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
 
   // --- Verification ---
   std::this_thread::sleep_for(100ms);
@@ -749,7 +753,7 @@ TEST_F(TransportPerformanceTest, TcpServerSessionConcurrentAccess) {
     threads.emplace_back([session, t, messages_per_thread]() {
       for (int i = 0; i < messages_per_thread; ++i) {
         std::string data = "thread_" + std::to_string(t) + "_msg_" + std::to_string(i);
-        session->async_write_copy(reinterpret_cast<const uint8_t*>(data.c_str()), data.size());
+        session->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.c_str()), data.size()));
       }
     });
   }
@@ -789,7 +793,7 @@ TEST_F(TransportPerformanceTest, TransportLayerMemoryPoolUsage) {
 
   for (int i = 0; i < num_small_messages; ++i) {
     std::vector<uint8_t> data(message_size, static_cast<uint8_t>(i % 256));
-    client_->async_write_copy(data.data(), data.size());
+    client_->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
   }
 
   // --- Verification ---
@@ -820,7 +824,7 @@ TEST_F(TransportPerformanceTest, TransportLayerLargeDataHandling) {
   // 메모리 풀 범위를 넘는 대용량 데이터 전송
   const size_t large_data_size = 128 * 1024;  // 128KB - 메모리 풀 범위 초과
   std::vector<uint8_t> large_data(large_data_size, 0xCC);
-  client_->async_write_copy(large_data.data(), large_data.size());
+  client_->async_write_copy(memory::ConstByteSpan(large_data.data(), large_data.size()));
 
   // --- Verification ---
   // 대용량 데이터가 큐에 올바르게 추가되었는지 확인
@@ -883,7 +887,7 @@ TEST_F(TransportPerformanceTest, TransportLayerResourceCleanup) {
     // 데이터 전송
     std::string test_data = "resource_cleanup_test";
     std::vector<uint8_t> data(test_data.begin(), test_data.end());
-    client->async_write_copy(data.data(), data.size());
+    client->async_write_copy(memory::ConstByteSpan(data.data(), data.size()));
 
     // 클라이언트 정지
     client->stop();
