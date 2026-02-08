@@ -329,7 +329,7 @@ TEST_F(AdvancedTcpClientCoverageTest, RapidStartStop) {
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, MultipleClients) {
-  std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
+  std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
   const int num_clients = 5;
 
   // Create multiple clients

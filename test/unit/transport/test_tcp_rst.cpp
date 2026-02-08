@@ -33,7 +33,7 @@ class TcpRstTest : public ::testing::Test {
  protected:
   void SetUp() override {
     port_ = TestUtils::getAvailableTestPort();
-    server_ = std::make_unique<TcpServer>(port_);
+    server_ = std::make_shared<TcpServer>(port_);
 
     server_->on_multi_connect([this](size_t id, const std::string&) { connected_clients_++; });
 
@@ -48,7 +48,7 @@ class TcpRstTest : public ::testing::Test {
   }
 
   uint16_t port_;
-  std::unique_ptr<TcpServer> server_;
+  std::shared_ptr<TcpServer> server_;
   std::atomic<int> connected_clients_{0};
   std::atomic<int> disconnected_clients_{0};
 };

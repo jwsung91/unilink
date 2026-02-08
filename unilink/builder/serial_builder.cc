@@ -43,7 +43,7 @@ SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
   }
 }
 
-std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
+std::shared_ptr<wrapper::Serial> SerialBuilder::build() {
   try {
     // Final validation before building
     util::InputValidator::validate_device_path(device_);
@@ -60,8 +60,8 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
       AutoInitializer::ensure_io_context_running();
     }
 
-    auto serial = external_ioc ? std::make_unique<wrapper::Serial>(device_, baud_rate_, external_ioc)
-                               : std::make_unique<wrapper::Serial>(device_, baud_rate_);
+    auto serial = external_ioc ? std::make_shared<wrapper::Serial>(device_, baud_rate_, external_ioc)
+                               : std::make_shared<wrapper::Serial>(device_, baud_rate_);
 
     // Apply configuration with exception safety
     try {

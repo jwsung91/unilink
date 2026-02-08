@@ -40,7 +40,7 @@ TcpServer::TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> ext
       use_external_context_(external_ioc_ != nullptr) {}
 
 TcpServer::TcpServer(std::shared_ptr<interface::Channel> channel) : port_(0), channel_(channel) {
-  setup_internal_handlers();
+  // Cannot call setup_internal_handlers() here because shared_from_this() is not yet available
 }
 
 TcpServer::~TcpServer() {
@@ -52,52 +52,66 @@ TcpServer::~TcpServer() {
 }
 
 void TcpServer::start() {
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (started_) return;
+  std::shared_ptr<interface::Channel> local_channel;
 
-  if (use_external_context_) {
-    if (!external_ioc_) {
-      throw std::runtime_error("External io_context is not set");
-    }
-    if (manage_external_context_) {
-      if (external_ioc_->stopped()) {
-        external_ioc_->restart();
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (started_) return;
+
+    if (use_external_context_) {
+      if (!external_ioc_) {
+        throw std::runtime_error("External io_context is not set");
       }
-    }
-  }
-
-  if (!channel_) {
-    // Use improved Factory
-    config::TcpServerConfig config;
-    config.port = port_;
-    config.enable_port_retry = port_retry_enabled_;
-    config.max_port_retries = max_port_retries_;
-    config.port_retry_interval_ms = port_retry_interval_ms_;
-
-    channel_ = factory::ChannelFactory::create(config, external_ioc_);
-    setup_internal_handlers();
-
-    // Apply stored client limit configuration
-    if (client_limit_enabled_) {
-      auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
-      if (transport_server) {
-        if (max_clients_ == 0) {
-          transport_server->set_unlimited_clients();
-        } else {
-          transport_server->set_client_limit(max_clients_);
+      if (manage_external_context_) {
+        if (external_ioc_->stopped()) {
+          external_ioc_->restart();
         }
       }
     }
+
+    if (!channel_) {
+      // Use improved Factory
+      config::TcpServerConfig config;
+      config.port = port_;
+      config.enable_port_retry = port_retry_enabled_;
+      config.max_port_retries = max_port_retries_;
+      config.port_retry_interval_ms = port_retry_interval_ms_;
+
+      channel_ = factory::ChannelFactory::create(config, external_ioc_);
+
+      // Apply stored client limit configuration
+      if (client_limit_enabled_) {
+        auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+        if (transport_server) {
+          if (max_clients_ == 0) {
+            transport_server->set_unlimited_clients();
+          } else {
+            transport_server->set_client_limit(max_clients_);
+          }
+        }
+      }
+    }
+
+    // Ensure handlers are set up (safe to call multiple times)
+    // We call this under lock to ensure channel_ is stable
+    setup_internal_handlers();
+
+    local_channel = channel_;
+
+    if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+      external_thread_ = std::thread([ioc = external_ioc_]() {
+        boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
+        ioc->run();
+      });
+    }
+
+    started_ = true;
   }
 
-  channel_->start();
-  if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
-    external_thread_ = std::thread([ioc = external_ioc_]() {
-      boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
-      ioc->run();
-    });
+  // Start channel outside the lock to avoid potential deadlocks with callbacks
+  if (local_channel) {
+    local_channel->start();
   }
-  started_ = true;
 }
 
 void TcpServer::stop() {
@@ -215,33 +229,49 @@ void TcpServer::send_line(const std::string& line) { send(line + "\n"); }
 void TcpServer::setup_internal_handlers() {
   if (!channel_) return;
 
-  channel_->on_bytes([this](memory::ConstByteSpan data) { handle_bytes(data); });
+  auto self = weak_from_this();
 
-  channel_->on_state([this](base::LinkState state) { handle_state(state); });
+  channel_->on_bytes([self](memory::ConstByteSpan data) {
+    if (auto s = self.lock()) {
+      s->handle_bytes(data);
+    }
+  });
+
+  channel_->on_state([self](base::LinkState state) {
+    if (auto s = self.lock()) {
+      s->handle_state(state);
+    }
+  });
 
   // Set multi-client callbacks
   auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
   if (transport_server) {
     if (on_multi_connect_) {
-      transport_server->on_multi_connect([this](size_t client_id, const std::string& client_info) {
-        if (on_multi_connect_) {
-          on_multi_connect_(client_id, client_info);
+      transport_server->on_multi_connect([self](size_t client_id, const std::string& client_info) {
+        if (auto s = self.lock()) {
+          if (s->on_multi_connect_) {
+            s->on_multi_connect_(client_id, client_info);
+          }
         }
       });
     }
 
     if (on_multi_data_) {
-      transport_server->on_multi_data([this](size_t client_id, const std::string& data) {
-        if (on_multi_data_) {
-          on_multi_data_(client_id, data);
+      transport_server->on_multi_data([self](size_t client_id, const std::string& data) {
+        if (auto s = self.lock()) {
+          if (s->on_multi_data_) {
+            s->on_multi_data_(client_id, data);
+          }
         }
       });
     }
 
     if (on_multi_disconnect_) {
-      transport_server->on_multi_disconnect([this](size_t client_id) {
-        if (on_multi_disconnect_) {
-          on_multi_disconnect_(client_id);
+      transport_server->on_multi_disconnect([self](size_t client_id) {
+        if (auto s = self.lock()) {
+          if (s->on_multi_disconnect_) {
+            s->on_multi_disconnect_(client_id);
+          }
         }
       });
     }
@@ -350,9 +380,12 @@ TcpServer& TcpServer::on_multi_connect(MultiClientConnectHandler handler) {
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->on_multi_connect([this](size_t client_id, const std::string& client_info) {
-        if (on_multi_connect_) {
-          on_multi_connect_(client_id, client_info);
+      auto self = weak_from_this();
+      transport_server->on_multi_connect([self](size_t client_id, const std::string& client_info) {
+        if (auto s = self.lock()) {
+          if (s->on_multi_connect_) {
+            s->on_multi_connect_(client_id, client_info);
+          }
         }
       });
     }
@@ -365,9 +398,12 @@ TcpServer& TcpServer::on_multi_data(MultiClientDataHandler handler) {
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->on_multi_data([this](size_t client_id, const std::string& data) {
-        if (on_multi_data_) {
-          on_multi_data_(client_id, data);
+      auto self = weak_from_this();
+      transport_server->on_multi_data([self](size_t client_id, const std::string& data) {
+        if (auto s = self.lock()) {
+          if (s->on_multi_data_) {
+            s->on_multi_data_(client_id, data);
+          }
         }
       });
     }
@@ -380,9 +416,12 @@ TcpServer& TcpServer::on_multi_disconnect(MultiClientDisconnectHandler handler) 
   if (channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->on_multi_disconnect([this](size_t client_id) {
-        if (on_multi_disconnect_) {
-          on_multi_disconnect_(client_id);
+      auto self = weak_from_this();
+      transport_server->on_multi_disconnect([self](size_t client_id) {
+        if (auto s = self.lock()) {
+          if (s->on_multi_disconnect_) {
+            s->on_multi_disconnect_(client_id);
+          }
         }
       });
     }

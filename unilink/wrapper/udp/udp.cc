@@ -36,7 +36,9 @@ Udp::Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> 
       external_ioc_(std::move(external_ioc)),
       use_external_context_(external_ioc_ != nullptr) {}
 
-Udp::Udp(std::shared_ptr<interface::Channel> channel) : channel_(channel) { setup_internal_handlers(); }
+Udp::Udp(std::shared_ptr<interface::Channel> channel) : channel_(channel) {
+  // Cannot call setup_internal_handlers() here because shared_from_this() is not yet available
+}
 
 Udp::~Udp() {
   if (started_) {
@@ -60,8 +62,10 @@ void Udp::start() {
 
   if (!channel_) {
     channel_ = factory::ChannelFactory::create(cfg_, external_ioc_);
-    setup_internal_handlers();
   }
+
+  // Ensure handlers are set up (safe to call multiple times)
+  setup_internal_handlers();
 
   channel_->start();
   if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
@@ -149,17 +153,25 @@ void Udp::set_manage_external_context(bool manage) { manage_external_context_ = 
 void Udp::setup_internal_handlers() {
   if (!channel_) return;
 
-  channel_->on_bytes([this](memory::ConstByteSpan data) {
-    if (bytes_handler_) {
-      bytes_handler_(data);
-    }
-    if (data_handler_) {
-      std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
-      data_handler_(str_data);
+  auto self = weak_from_this();
+
+  channel_->on_bytes([self](memory::ConstByteSpan data) {
+    if (auto s = self.lock()) {
+      if (s->bytes_handler_) {
+        s->bytes_handler_(data);
+      }
+      if (s->data_handler_) {
+        std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
+        s->data_handler_(str_data);
+      }
     }
   });
 
-  channel_->on_state([this](base::LinkState state) { notify_state_change(state); });
+  channel_->on_state([self](base::LinkState state) {
+    if (auto s = self.lock()) {
+      s->notify_state_change(state);
+    }
+  });
 }
 
 void Udp::notify_state_change(base::LinkState state) {
