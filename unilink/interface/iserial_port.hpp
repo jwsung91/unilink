@@ -50,7 +50,8 @@ class UNILINK_API SerialPortInterface {
   virtual void close(boost::system::error_code& ec) = 0;
 
   virtual void set_option(const boost::asio::serial_port_base::baud_rate& option, boost::system::error_code& ec) = 0;
-  virtual void set_option(const boost::asio::serial_port_base::character_size& option, boost::system::error_code& ec) = 0;
+  virtual void set_option(const boost::asio::serial_port_base::character_size& option,
+                          boost::system::error_code& ec) = 0;
   virtual void set_option(const boost::asio::serial_port_base::stop_bits& option, boost::system::error_code& ec) = 0;
   virtual void set_option(const boost::asio::serial_port_base::parity& option, boost::system::error_code& ec) = 0;
   virtual void set_option(const boost::asio::serial_port_base::flow_control& option, boost::system::error_code& ec) = 0;

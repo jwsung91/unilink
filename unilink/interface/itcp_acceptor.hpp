@@ -27,9 +27,9 @@ namespace asio {
 namespace ip {
 class tcp;
 class address;
-}
+}  // namespace ip
 class io_context;
-}
+}  // namespace asio
 namespace system {
 class error_code;
 }
@@ -52,7 +52,8 @@ class UNILINK_API TcpAcceptorInterface {
   virtual bool is_open() const = 0;
   virtual void close(boost::system::error_code& ec) = 0;
 
-  virtual void async_accept(std::function<void(const boost::system::error_code&, boost::asio::ip::tcp::socket)> handler) = 0;
+  virtual void async_accept(
+      std::function<void(const boost::system::error_code&, boost::asio::ip::tcp::socket)> handler) = 0;
 };
 
 }  // namespace interface

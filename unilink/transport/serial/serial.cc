@@ -237,44 +237,41 @@ struct Serial::Impl {
   }
 
   void start_read(std::shared_ptr<Serial> self) {
-    port_->async_read_some(net::buffer(rx_.data(), rx_.size()),
-                           net::bind_executor(strand_, [this, self](auto ec, std::size_t n) {
-                             if (ec) {
-                               handle_error(self, "read", ec);
-                               return;
-                             }
-                             if (on_bytes_) {
-                               try {
-                                 on_bytes_(memory::ConstByteSpan(rx_.data(), n));
-                               } catch (const std::exception& e) {
-                                 UNILINK_LOG_ERROR("serial", "on_bytes",
-                                                   "Exception in on_bytes callback: " + std::string(e.what()));
-                                 if (cfg_.stop_on_callback_exception) {
-                                   opened_.store(false);
-                                   close_port();
-                                   state_.set_state(base::LinkState::Error);
-                                   notify_state();
-                                   return;
-                                 }
-                                 handle_error(self, "on_bytes_callback",
-                                              make_error_code(boost::system::errc::io_error));
-                                 return;
-                               } catch (...) {
-                                 UNILINK_LOG_ERROR("serial", "on_bytes", "Unknown exception in on_bytes callback");
-                                 if (cfg_.stop_on_callback_exception) {
-                                   opened_.store(false);
-                                   close_port();
-                                   state_.set_state(base::LinkState::Error);
-                                   notify_state();
-                                   return;
-                                 }
-                                 handle_error(self, "on_bytes_callback",
-                                              make_error_code(boost::system::errc::io_error));
-                                 return;
-                               }
-                             }
-                             start_read(self);
-                           }));
+    port_->async_read_some(
+        net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [this, self](auto ec, std::size_t n) {
+          if (ec) {
+            handle_error(self, "read", ec);
+            return;
+          }
+          if (on_bytes_) {
+            try {
+              on_bytes_(memory::ConstByteSpan(rx_.data(), n));
+            } catch (const std::exception& e) {
+              UNILINK_LOG_ERROR("serial", "on_bytes", "Exception in on_bytes callback: " + std::string(e.what()));
+              if (cfg_.stop_on_callback_exception) {
+                opened_.store(false);
+                close_port();
+                state_.set_state(base::LinkState::Error);
+                notify_state();
+                return;
+              }
+              handle_error(self, "on_bytes_callback", make_error_code(boost::system::errc::io_error));
+              return;
+            } catch (...) {
+              UNILINK_LOG_ERROR("serial", "on_bytes", "Unknown exception in on_bytes callback");
+              if (cfg_.stop_on_callback_exception) {
+                opened_.store(false);
+                close_port();
+                state_.set_state(base::LinkState::Error);
+                notify_state();
+                return;
+              }
+              handle_error(self, "on_bytes_callback", make_error_code(boost::system::errc::io_error));
+              return;
+            }
+          }
+          start_read(self);
+        }));
   }
 
   void do_write(std::shared_ptr<Serial> self) {
@@ -470,25 +467,24 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
     memory::PooledBuffer pooled_buffer(n);
     if (pooled_buffer.valid()) {
       common::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), n);
-      net::post(impl_->strand_,
-                [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
-                  if (self->impl_->queued_bytes_ + buf.size() > self->impl_->bp_limit_) {
-                    UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
-                    self->impl_->tx_.clear();
-                    self->impl_->queued_bytes_ = 0;
-                    self->impl_->writing_ = false;
-                    self->impl_->report_backpressure(self->impl_->queued_bytes_);
-                    self->impl_->state_.set_state(base::LinkState::Error);
-                    self->impl_->notify_state();
-                    self->impl_->handle_error(self, "write_queue_overflow",
-                                              make_error_code(boost::system::errc::no_buffer_space));
-                    return;
-                  }
-                  self->impl_->queued_bytes_ += buf.size();
-                  self->impl_->tx_.emplace_back(std::move(buf));
-                  self->impl_->report_backpressure(self->impl_->queued_bytes_);
-                  if (!self->impl_->writing_) self->impl_->do_write(self);
-                });
+      net::post(impl_->strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
+        if (self->impl_->queued_bytes_ + buf.size() > self->impl_->bp_limit_) {
+          UNILINK_LOG_ERROR("serial", "write", "Queue limit exceeded");
+          self->impl_->tx_.clear();
+          self->impl_->queued_bytes_ = 0;
+          self->impl_->writing_ = false;
+          self->impl_->report_backpressure(self->impl_->queued_bytes_);
+          self->impl_->state_.set_state(base::LinkState::Error);
+          self->impl_->notify_state();
+          self->impl_->handle_error(self, "write_queue_overflow",
+                                    make_error_code(boost::system::errc::no_buffer_space));
+          return;
+        }
+        self->impl_->queued_bytes_ += buf.size();
+        self->impl_->tx_.emplace_back(std::move(buf));
+        self->impl_->report_backpressure(self->impl_->queued_bytes_);
+        if (!self->impl_->writing_) self->impl_->do_write(self);
+      });
       return;
     }
   }

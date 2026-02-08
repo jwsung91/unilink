@@ -460,7 +460,8 @@ void TcpServer::Impl::stop(std::shared_ptr<TcpServer> self) {
   }
 
   if (owns_ioc_ && ioc_thread_.joinable()) {
-    ioc_.stop();
+    // Avoid calling ioc_.stop() to allow handlers to complete normally (prevents
+    // socket destruction during io_context destruction)
     ioc_thread_.join();
     ioc_.restart();
   }
@@ -605,8 +606,8 @@ void TcpServer::Impl::do_accept(std::shared_ptr<TcpServer> self) {
       UNILINK_LOG_INFO("tcp_server", "accept", "Client connected (endpoint unknown)");
     }
 
-    auto new_session =
-        std::make_shared<TcpServerSession>(self->impl_->ioc_, std::move(sock), self->impl_->cfg_.backpressure_threshold);
+    auto new_session = std::make_shared<TcpServerSession>(self->impl_->ioc_, std::move(sock),
+                                                          self->impl_->cfg_.backpressure_threshold);
 
     size_t client_id;
     {

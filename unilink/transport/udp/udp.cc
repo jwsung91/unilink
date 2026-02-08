@@ -167,9 +167,9 @@ struct UdpChannel::Impl {
     if (!ioc_) {
       perform_stop_cleanup();
     } else if (self) {
-       net::post(strand_, cleanup_task);
+      net::post(strand_, cleanup_task);
     } else {
-       perform_stop_cleanup();
+      perform_stop_cleanup();
     }
 
     join_ioc_thread(false);
@@ -531,12 +531,9 @@ std::shared_ptr<UdpChannel> UdpChannel::create(const config::UdpConfig& cfg, net
 
 UdpChannel::UdpChannel(const config::UdpConfig& cfg) : impl_(std::make_unique<Impl>(cfg, nullptr)) {}
 
-UdpChannel::UdpChannel(const config::UdpConfig& cfg, net::io_context& ioc)
-    : impl_(std::make_unique<Impl>(cfg, &ioc)) {}
+UdpChannel::UdpChannel(const config::UdpConfig& cfg, net::io_context& ioc) : impl_(std::make_unique<Impl>(cfg, &ioc)) {}
 
-UdpChannel::~UdpChannel() {
-  stop();
-}
+UdpChannel::~UdpChannel() { stop(); }
 
 void UdpChannel::start() { impl_->start(shared_from_this()); }
 
@@ -564,7 +561,7 @@ void UdpChannel::async_write_copy(memory::ConstByteSpan data) {
       common::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
       net::post(impl_->strand_, [self = shared_from_this(), buf = std::move(pooled), size]() mutable {
         if (self->impl_->enqueue_buffer(std::move(buf), size)) {
-           self->impl_->do_write(self);
+          self->impl_->do_write(self);
         }
       });
       return;
@@ -574,7 +571,7 @@ void UdpChannel::async_write_copy(memory::ConstByteSpan data) {
   std::vector<uint8_t> copy(data.begin(), data.end());
   net::post(impl_->strand_, [self = shared_from_this(), buf = std::move(copy), size]() mutable {
     if (self->impl_->enqueue_buffer(std::move(buf), size)) {
-       self->impl_->do_write(self);
+      self->impl_->do_write(self);
     }
   });
 }
@@ -584,7 +581,7 @@ void UdpChannel::async_write_move(std::vector<uint8_t>&& data) {
   if (size == 0) return;
   net::post(impl_->strand_, [self = shared_from_this(), buf = std::move(data), size]() mutable {
     if (self->impl_->enqueue_buffer(std::move(buf), size)) {
-       self->impl_->do_write(self);
+      self->impl_->do_write(self);
     }
   });
 }
@@ -594,7 +591,7 @@ void UdpChannel::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> 
   size_t size = data->size();
   net::post(impl_->strand_, [self = shared_from_this(), buf = std::move(data), size]() mutable {
     if (self->impl_->enqueue_buffer(std::move(buf), size)) {
-       self->impl_->do_write(self);
+      self->impl_->do_write(self);
     }
   });
 }
