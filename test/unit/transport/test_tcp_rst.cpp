@@ -44,7 +44,11 @@ class TcpRstTest : public ::testing::Test {
   }
 
   void TearDown() override {
-    if (server_) server_->stop();
+    if (server_) {
+      server_->stop();
+      // Ensure wrapper is destroyed before atomics are destroyed to prevent use-after-free in pending callbacks
+      server_.reset();
+    }
   }
 
   uint16_t port_;
