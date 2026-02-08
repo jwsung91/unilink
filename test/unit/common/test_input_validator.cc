@@ -209,6 +209,13 @@ TEST(InputValidatorTest, DetailedHelperLogic) {
   std::string long_label(64, 'a');
   EXPECT_THROW(InputValidator::validate_host(long_label + ".com"), diagnostics::ValidationException);  // Label too long
 
+  // Hyphen in label edge cases
+  EXPECT_THROW(InputValidator::validate_host("example.-com"),
+               diagnostics::ValidationException);  // Label starts with hyphen
+  EXPECT_THROW(InputValidator::validate_host("example.com-"),
+               diagnostics::ValidationException);                  // Ends with hyphen (caught by back() check too)
+  EXPECT_NO_THROW(InputValidator::validate_host("example.c-om"));  // Middle hyphen is valid
+
   // Device Path Edge Cases
   EXPECT_THROW(InputValidator::validate_device_path("/dev/bad?"),
                diagnostics::ValidationException);  // Invalid char in unix path
