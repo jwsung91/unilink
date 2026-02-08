@@ -16,51 +16,44 @@
 
 #pragma once
 
-#include <algorithm>
-#include <array>
-#include <atomic>
-#include <boost/asio.hpp>
-#include <cstdint>
-#include <deque>
+#include <cstddef>
 #include <functional>
 #include <memory>
-#include <mutex>
-#include <shared_mutex>
-#include <thread>
-#include <unordered_map>
+#include <string>
+#include <string_view>
 #include <vector>
 
-#include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/config/tcp_server_config.hpp"
-#include "unilink/diagnostics/error_handler.hpp"
-#include "unilink/diagnostics/logger.hpp"
 #include "unilink/interface/channel.hpp"
-#include "unilink/interface/itcp_acceptor.hpp"
-#include "unilink/transport/tcp_server/tcp_server_session.hpp"
+#include "unilink/memory/memory_pool.hpp"
+
+// Forward declarations to avoid Boost dependency in header
+namespace boost {
+namespace asio {
+class io_context;
+}
+}  // namespace boost
 
 namespace unilink {
+namespace interface {
+class TcpAcceptorInterface;
+}
 namespace transport {
 
-namespace net = boost::asio;
-
 using base::LinkState;
-using concurrency::ThreadSafeLinkState;
 using config::TcpServerConfig;
 using interface::Channel;
-using interface::TcpAcceptorInterface;
-using tcp = net::ip::tcp;
 
-// Use static create() helpers to construct safely
 class UNILINK_API TcpServer : public Channel,
                               public std::enable_shared_from_this<TcpServer> {  // NOLINT
  public:
   static std::shared_ptr<TcpServer> create(const TcpServerConfig& cfg);
   static std::shared_ptr<TcpServer> create(const TcpServerConfig& cfg,
                                            std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
-                                           net::io_context& ioc);
-  ~TcpServer();
+                                           boost::asio::io_context& ioc);
+  ~TcpServer() override;
 
   void start() override;
   void stop() override;
@@ -73,8 +66,8 @@ class UNILINK_API TcpServer : public Channel,
   void on_backpressure(OnBackpressure cb) override;
 
   // Multi-client support methods
-  bool broadcast(const std::string& message);
-  bool send_to_client(size_t client_id, const std::string& message);
+  bool broadcast(std::string_view message);
+  bool send_to_client(size_t client_id, std::string_view message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 
@@ -98,48 +91,14 @@ class UNILINK_API TcpServer : public Channel,
   base::LinkState get_state() const;
 
  private:
+  struct Impl;
+  std::unique_ptr<Impl> impl_;
+
+  // Private constructors
   explicit TcpServer(const TcpServerConfig& cfg);
   TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
-            net::io_context& ioc);
-  void do_accept();
-  void notify_state();
-  void attempt_port_binding(int retry_count);
-
- private:
-  std::atomic<bool> stopping_{false};
-  std::atomic<size_t> next_client_id_{0};
-
-  std::unique_ptr<net::io_context> owned_ioc_;
-  bool owns_ioc_;
-  bool uses_global_ioc_;
-  net::io_context& ioc_;
-  std::thread ioc_thread_;
-
-  std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
-  TcpServerConfig cfg_;
-
-  // Multi-client support
-  std::unordered_map<size_t, std::shared_ptr<TcpServerSession>> sessions_;
-  mutable std::shared_mutex sessions_mutex_;  // Guards sessions_ and current_session_
-
-  // Client limit configuration
-  size_t max_clients_;
-  bool client_limit_enabled_;
-  bool paused_accept_ = false;  // Guards against tight accept loops when full
-
-  // Current active session for existing API compatibility
-  std::shared_ptr<TcpServerSession> current_session_;
-
-  // Multi-client callbacks
-  MultiClientConnectHandler on_multi_connect_;
-  MultiClientDataHandler on_multi_data_;
-  MultiClientDisconnectHandler on_multi_disconnect_;
-
-  // Existing members (compatibility maintained)
-  OnBytes on_bytes_;
-  OnState on_state_;
-  OnBackpressure on_bp_;
-  ThreadSafeLinkState state_{LinkState::Idle};
+            boost::asio::io_context& ioc);
 };
+
 }  // namespace transport
 }  // namespace unilink

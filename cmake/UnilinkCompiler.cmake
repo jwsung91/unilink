@@ -79,7 +79,8 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 
   # Common flags for GCC and Clang
   if(UNILINK_ENABLE_WARNINGS)
-    add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion)
+    # Note: -Wsign-conversion and -Wconversion disabled to accommodate Boost.Asio header warnings
+    add_compile_options(-Wall -Wextra -Wpedantic -Wno-conversion -Wno-sign-conversion)
 
     # Suppress warnings for older GCC versions (equivalent to Ubuntu 20.04 era compilers)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
