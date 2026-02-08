@@ -25,6 +25,8 @@
 #include <system_error>
 #include <thread>
 
+#include <boost/asio.hpp>
+
 #include "test_utils.hpp"
 #include "unilink/base/common.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"

@@ -16,11 +16,31 @@
 
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
+#include <algorithm>
+#include <array>
+#include <atomic>
+#include <boost/asio.hpp>
+#include <cstdint>
+#include <deque>
+#include <functional>
 #include <future>
 #include <iostream>
+#include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <string_view>
+#include <thread>
+#include <unordered_map>
+#include <vector>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/concurrency/thread_safe_state.hpp"
+#include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/logger.hpp"
+#include "unilink/interface/itcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
+#include "unilink/transport/tcp_server/tcp_server_session.hpp"
 
 namespace unilink {
 namespace transport {
@@ -28,62 +48,300 @@ namespace transport {
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-std::shared_ptr<TcpServer> TcpServer::create(const config::TcpServerConfig& cfg) {
+using base::LinkState;
+using concurrency::ThreadSafeLinkState;
+using config::TcpServerConfig;
+using interface::Channel;
+using interface::TcpAcceptorInterface;
+
+struct TcpServer::Impl {
+  std::unique_ptr<net::io_context> owned_ioc_;
+  bool owns_ioc_;
+  bool uses_global_ioc_;
+  net::io_context& ioc_;
+  std::thread ioc_thread_;
+
+  std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
+  TcpServerConfig cfg_;
+
+  std::unordered_map<size_t, std::shared_ptr<TcpServerSession>> sessions_;
+  mutable std::shared_mutex sessions_mutex_;
+
+  size_t max_clients_;
+  bool client_limit_enabled_;
+  bool paused_accept_ = false;
+
+  std::shared_ptr<TcpServerSession> current_session_;
+
+  MultiClientConnectHandler on_multi_connect_;
+  MultiClientDataHandler on_multi_data_;
+  MultiClientDisconnectHandler on_multi_disconnect_;
+
+  OnBytes on_bytes_;
+  OnState on_state_;
+  OnBackpressure on_bp_;
+  ThreadSafeLinkState state_{LinkState::Idle};
+
+  std::atomic<bool> stopping_{false};
+  std::atomic<size_t> next_client_id_{0};
+
+  Impl(const TcpServerConfig& cfg, net::io_context* ioc_ptr)
+      : owned_ioc_(nullptr),
+        owns_ioc_(false),
+        uses_global_ioc_(!ioc_ptr),
+        ioc_(ioc_ptr ? *ioc_ptr : concurrency::IoContextManager::instance().get_context()),
+        acceptor_(nullptr),
+        cfg_(cfg),
+        max_clients_(cfg.max_connections > 0 ? static_cast<size_t>(cfg.max_connections) : 0),
+        client_limit_enabled_(cfg.max_connections > 0),
+        current_session_(nullptr) {
+    // Create acceptor after all members are initialized
+    if (!ioc_ptr) {
+      // Using global IOC or null
+    }
+  }
+
+  // Helper to initialize acceptor
+  void init_acceptor(std::unique_ptr<interface::TcpAcceptorInterface> acceptor = nullptr) {
+    if (acceptor) {
+      acceptor_ = std::move(acceptor);
+    } else {
+      try {
+        acceptor_ = std::make_unique<BoostTcpAcceptor>(ioc_);
+      } catch (const std::exception& e) {
+        throw std::runtime_error("Failed to create TCP acceptor: " + std::string(e.what()));
+      }
+    }
+  }
+
+  void start(std::shared_ptr<TcpServer> self);
+  void stop(std::shared_ptr<TcpServer> self);
+  void request_stop(std::shared_ptr<TcpServer> self);
+  void do_accept(std::shared_ptr<TcpServer> self);
+  void notify_state();
+  void attempt_port_binding(std::shared_ptr<TcpServer> self, int retry_count);
+};
+
+// ============================================================================
+// TcpServer Implementation
+// ============================================================================
+
+std::shared_ptr<TcpServer> TcpServer::create(const TcpServerConfig& cfg) {
   return std::shared_ptr<TcpServer>(new TcpServer(cfg));
 }
 
-std::shared_ptr<TcpServer> TcpServer::create(const config::TcpServerConfig& cfg,
+std::shared_ptr<TcpServer> TcpServer::create(const TcpServerConfig& cfg,
                                              std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
-                                             net::io_context& ioc) {
+                                             boost::asio::io_context& ioc) {
   return std::shared_ptr<TcpServer>(new TcpServer(cfg, std::move(acceptor), ioc));
 }
 
-TcpServer::TcpServer(const config::TcpServerConfig& cfg)
-    : owned_ioc_(nullptr),
-      owns_ioc_(false),
-      uses_global_ioc_(true),
-      ioc_(concurrency::IoContextManager::instance().get_context()),
-      acceptor_(nullptr),
-      cfg_(cfg),
-      max_clients_(cfg.max_connections > 0 ? static_cast<size_t>(cfg.max_connections) : 0),
-      client_limit_enabled_(cfg.max_connections > 0),
-      current_session_(nullptr) {
-  // Create acceptor after all members are initialized
-  try {
-    acceptor_ = std::make_unique<BoostTcpAcceptor>(ioc_);
-  } catch (const std::exception& e) {
-    throw std::runtime_error("Failed to create TCP acceptor: " + std::string(e.what()));
-  }
+TcpServer::TcpServer(const TcpServerConfig& cfg) : impl_(std::make_unique<Impl>(cfg, nullptr)) {
+  impl_->init_acceptor();
 }
 
-TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
-                     net::io_context& ioc)
-    : owned_ioc_(nullptr),
-      owns_ioc_(false),
-      uses_global_ioc_(false),
-      ioc_(ioc),
-      acceptor_(std::move(acceptor)),
-      cfg_(cfg),
-      max_clients_(cfg.max_connections > 0 ? static_cast<size_t>(cfg.max_connections) : 0),
-      client_limit_enabled_(cfg.max_connections > 0),
-      current_session_(nullptr) {
+TcpServer::TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
+                     boost::asio::io_context& ioc)
+    : impl_(std::make_unique<Impl>(cfg, &ioc)) {
+  impl_->init_acceptor(std::move(acceptor));
   // Ensure acceptor is properly initialized
-  if (!acceptor_) {
+  if (!impl_->acceptor_) {
     throw std::runtime_error("Failed to create TCP acceptor");
   }
 }
 
 TcpServer::~TcpServer() {
-  // Ensure proper cleanup even if stop() wasn't called explicitly
-  if (!state_.is_state(base::LinkState::Closed)) {
+  if (!impl_->state_.is_state(base::LinkState::Closed)) {
     stop();
   }
-
-  // No need to clean up io_context as it's shared and managed by IoContextManager
 }
 
-void TcpServer::start() {
-  // Prevent duplicate start calls when already running or in-progress
+void TcpServer::start() { impl_->start(shared_from_this()); }
+
+void TcpServer::stop() {
+  std::shared_ptr<TcpServer> self;
+  try {
+    self = shared_from_this();
+  } catch (const std::bad_weak_ptr&) {
+    // Destructor or not managed by shared_ptr
+  }
+  impl_->stop(self);
+}
+
+bool TcpServer::is_connected() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  return impl_->current_session_ && impl_->current_session_->alive();
+}
+
+void TcpServer::async_write_copy(memory::ConstByteSpan data) {
+  if (impl_->stopping_.load()) return;
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+    session = impl_->current_session_;
+  }
+
+  if (session && session->alive()) {
+    session->async_write_copy(data);
+  }
+}
+
+void TcpServer::async_write_move(std::vector<uint8_t>&& data) {
+  if (impl_->stopping_.load()) return;
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+    session = impl_->current_session_;
+  }
+
+  if (session && session->alive()) {
+    session->async_write_move(std::move(data));
+  }
+}
+
+void TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (impl_->stopping_.load() || !data) return;
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+    session = impl_->current_session_;
+  }
+
+  if (session && session->alive()) {
+    session->async_write_shared(std::move(data));
+  }
+}
+
+void TcpServer::on_bytes(OnBytes cb) {
+  std::unique_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  impl_->on_bytes_ = std::move(cb);
+}
+
+void TcpServer::on_state(OnState cb) {
+  std::unique_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  impl_->on_state_ = std::move(cb);
+}
+
+void TcpServer::on_backpressure(OnBackpressure cb) {
+  {
+    std::unique_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+    impl_->on_bp_ = std::move(cb);
+  }
+  std::shared_ptr<TcpServerSession> session;
+  {
+    std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+    session = impl_->current_session_;
+  }
+
+  if (session) session->on_backpressure(impl_->on_bp_);
+}
+
+bool TcpServer::broadcast(std::string_view message) {
+  // Safe copy: create shared_ptr<vector> *before* async calls.
+  // This ensures the data persists even if the string_view source dies.
+  auto shared_data = std::make_shared<const std::vector<uint8_t>>(message.begin(), message.end());
+
+  std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  bool sent = false;
+  for (auto& entry : impl_->sessions_) {
+    auto& session = entry.second;
+    if (session && session->alive()) {
+      session->async_write_shared(shared_data);
+      sent = true;
+    }
+  }
+
+  return sent;
+}
+
+bool TcpServer::send_to_client(size_t client_id, std::string_view message) {
+  // Safe copy: Convert string_view to a vector *synchronously* here.
+  // We can use async_write_move to transfer ownership.
+  std::vector<uint8_t> data(message.begin(), message.end());
+
+  std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+
+  auto it = impl_->sessions_.find(client_id);
+  if (it != impl_->sessions_.end() && it->second && it->second->alive()) {
+    // async_write_move takes rvalue ref and will move it into its internal queue
+    it->second->async_write_move(std::move(data));
+    return true;
+  }
+  UNILINK_LOG_DEBUG("tcp_server", "send_to_client",
+                    "Send failed: client_id " + std::to_string(client_id) + " not found");
+  return false;
+}
+
+size_t TcpServer::get_client_count() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  size_t alive = 0;
+  for (const auto& entry : impl_->sessions_) {
+    if (entry.second && entry.second->alive()) {
+      ++alive;
+    }
+  }
+  return alive;
+}
+
+std::vector<size_t> TcpServer::get_connected_clients() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  std::vector<size_t> connected_clients;
+
+  for (const auto& entry : impl_->sessions_) {
+    if (entry.second && entry.second->alive()) {
+      connected_clients.push_back(entry.first);
+    }
+  }
+
+  return connected_clients;
+}
+
+void TcpServer::request_stop() { impl_->request_stop(shared_from_this()); }
+
+void TcpServer::on_multi_connect(MultiClientConnectHandler handler) {
+  std::unique_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  impl_->on_multi_connect_ = std::move(handler);
+}
+
+void TcpServer::on_multi_data(MultiClientDataHandler handler) {
+  std::unique_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  impl_->on_multi_data_ = std::move(handler);
+}
+
+void TcpServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
+  std::unique_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  impl_->on_multi_disconnect_ = std::move(handler);
+}
+
+void TcpServer::set_client_limit(size_t max_clients) {
+  std::unique_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  impl_->max_clients_ = max_clients;
+  impl_->client_limit_enabled_ = true;
+
+  if (impl_->paused_accept_ && impl_->sessions_.size() < impl_->max_clients_) {
+    impl_->paused_accept_ = false;
+    net::post(impl_->ioc_, [self = shared_from_this()] { self->impl_->do_accept(self); });
+  }
+}
+
+void TcpServer::set_unlimited_clients() {
+  std::unique_lock<std::shared_mutex> lock(impl_->sessions_mutex_);
+  impl_->client_limit_enabled_ = false;
+  impl_->max_clients_ = 0;
+
+  if (impl_->paused_accept_) {
+    impl_->paused_accept_ = false;
+    net::post(impl_->ioc_, [self = shared_from_this()] { self->impl_->do_accept(self); });
+  }
+}
+
+base::LinkState TcpServer::get_state() const { return impl_->state_.get_state(); }
+
+// ============================================================================
+// TcpServer::Impl Implementation
+// ============================================================================
+
+void TcpServer::Impl::start(std::shared_ptr<TcpServer> self) {
   auto current = state_.get_state();
   if (current == base::LinkState::Listening || current == base::LinkState::Connected ||
       current == base::LinkState::Connecting) {
@@ -92,7 +350,6 @@ void TcpServer::start() {
   }
   stopping_.store(false);
 
-  // Ensure the shared io_context is running when we rely on the global manager.
   if (uses_global_ioc_) {
     auto& manager = concurrency::IoContextManager::instance();
     if (!manager.is_running()) {
@@ -111,28 +368,24 @@ void TcpServer::start() {
   if (owns_ioc_) {
     ioc_thread_ = std::thread([this] { ioc_.run(); });
   }
-  auto self = shared_from_this();
+
   if (ioc_.get_executor().running_in_this_thread()) {
-    // If start is invoked from the IO thread, bind immediately to avoid race with early clients
-    if (!self->stopping_.load()) {
-      self->attempt_port_binding(0);
+    if (!stopping_.load()) {
+      attempt_port_binding(self, 0);
     }
   } else {
-    // dispatch allows immediate execution if the IO thread is already running
     net::dispatch(ioc_, [self] {
-      if (self->stopping_.load()) return;
-      self->attempt_port_binding(0);
+      if (self->impl_->stopping_.load()) return;
+      self->impl_->attempt_port_binding(self, 0);
     });
   }
 }
 
-void TcpServer::stop() {
+void TcpServer::Impl::stop(std::shared_ptr<TcpServer> self) {
   if (stopping_.exchange(true)) {
-    return;  // Already stopping/stopped
+    return;
   }
 
-  // Clear all callbacks synchronously to prevent any further invocations
-  // during shutdown and to uphold the "no callbacks after stop" contract.
   {
     std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
     on_bytes_ = nullptr;
@@ -143,15 +396,12 @@ void TcpServer::stop() {
     on_multi_disconnect_ = nullptr;
   }
 
-  // Define cleanup task to run on IO thread
-  auto cleanup = [this]() {
+  auto cleanup = [this, self]() {
     boost::system::error_code ec;
-    // 1. Close acceptor first to stop new connections
     if (acceptor_ && acceptor_->is_open()) {
       acceptor_->close(ec);
     }
 
-    // 2. Copy sessions and clear map
     std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
     {
       std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
@@ -163,14 +413,12 @@ void TcpServer::stop() {
       current_session_.reset();
     }
 
-    // 3. Stop all sessions
     for (auto& session : sessions_copy) {
       if (session) {
         session->stop();
       }
     }
 
-    // Clean up all sessions
     state_.set_state(base::LinkState::Closed);
   };
 
@@ -184,14 +432,12 @@ void TcpServer::stop() {
     return;
   }
 
-  // Attempt to dispatch cleanup to IO thread if possible
   bool dispatched = false;
   const bool has_active_ioc_thread =
       owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
 
-  if (has_active_ioc_thread) {
+  if (has_active_ioc_thread && self) {
     try {
-      auto self = shared_from_this();
       auto cleanup_promise = std::make_shared<std::promise<void>>();
       auto cleanup_future = cleanup_promise->get_future();
 
@@ -210,7 +456,6 @@ void TcpServer::stop() {
   }
 
   if (!dispatched) {
-    // Fallback to synchronous cleanup
     cleanup();
   }
 
@@ -219,100 +464,17 @@ void TcpServer::stop() {
     ioc_thread_.join();
     ioc_.restart();
   }
-  // Don't call notify_state() in stop() as it may cause issues with callbacks
-  // during destruction
 }
 
-void TcpServer::request_stop() {
+void TcpServer::Impl::request_stop(std::shared_ptr<TcpServer> self) {
   if (stopping_.load()) return;
-  auto self = shared_from_this();
   net::post(ioc_, [self] { self->stop(); });
 }
 
-bool TcpServer::is_connected() const {
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-  return current_session_ && current_session_->alive();
-}
-
-void TcpServer::async_write_copy(memory::ConstByteSpan data) {
-  if (stopping_.load()) return;
-  std::shared_ptr<TcpServerSession> session;
-  {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-    session = current_session_;
-  }
-
-  if (session && session->alive()) {
-    session->async_write_copy(data);
-  }
-  // If no session or session is not alive, the write is silently dropped
-}
-
-void TcpServer::async_write_move(std::vector<uint8_t>&& data) {
-  if (stopping_.load()) return;
-  std::shared_ptr<TcpServerSession> session;
-  {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-    session = current_session_;
-  }
-
-  if (session && session->alive()) {
-    session->async_write_move(std::move(data));
-  }
-}
-
-void TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (stopping_.load() || !data) return;
-  std::shared_ptr<TcpServerSession> session;
-  {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-    session = current_session_;
-  }
-
-  if (session && session->alive()) {
-    session->async_write_shared(std::move(data));
-  }
-}
-
-void TcpServer::on_bytes(OnBytes cb) {
-  {
-    std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-    on_bytes_ = std::move(cb);
-  }
-
-  // No need to manually update sessions.
-  // All sessions use a wrapper lambda (set in do_accept) that dynamically looks up on_bytes_.
-  // Manually updating would overwrite the wrapper and break multi-client support/dynamic updates.
-}
-void TcpServer::on_state(OnState cb) {
-  // on_state_ is atomic or safe enough? No, let's lock.
-  // The header doesn't say sessions_mutex_ protects on_state_, but consistent locking is better.
-  // Actually on_state_ is called from notify_state which we just patched to copy it.
-  // We should lock here too.
-  // But wait, sessions_mutex_ is for sessions.
-  // Let's use sessions_mutex_ for callbacks too as established convention.
-  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-  on_state_ = std::move(cb);
-}
-void TcpServer::on_backpressure(OnBackpressure cb) {
-  {
-    std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-    on_bp_ = std::move(cb);
-  }
-  std::shared_ptr<TcpServerSession> session;
-  {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-    session = current_session_;
-  }
-
-  if (session) session->on_backpressure(on_bp_);
-}
-
-void TcpServer::attempt_port_binding(int retry_count) {
+void TcpServer::Impl::attempt_port_binding(std::shared_ptr<TcpServer> self, int retry_count) {
   if (stopping_.load()) return;
   boost::system::error_code ec;
 
-  // Log retry configuration for debugging
   if (retry_count > 0) {
     UNILINK_LOG_DEBUG("tcp_server", "bind",
                       "Attempting port binding - retry enabled: " + std::to_string(cfg_.enable_port_retry) +
@@ -320,7 +482,6 @@ void TcpServer::attempt_port_binding(int retry_count) {
                           ", retry count: " + std::to_string(retry_count));
   }
 
-  // Open acceptor (only if not already open)
   if (!acceptor_->is_open()) {
     acceptor_->open(tcp::v4(), ec);
     if (ec) {
@@ -332,28 +493,23 @@ void TcpServer::attempt_port_binding(int retry_count) {
     }
   }
 
-  // Bind to port
   acceptor_->bind(tcp::endpoint(tcp::v4(), cfg_.port), ec);
   if (ec) {
-    // Check if retry is enabled and we haven't exceeded max retries
     if (cfg_.enable_port_retry && retry_count < cfg_.max_port_retries) {
       UNILINK_LOG_WARNING("tcp_server", "bind",
                           "Failed to bind to port " + std::to_string(cfg_.port) + " (attempt " +
                               std::to_string(retry_count + 1) + "/" + std::to_string(cfg_.max_port_retries) + "): " +
                               ec.message() + ". Retrying in " + std::to_string(cfg_.port_retry_interval_ms) + "ms...");
 
-      // Schedule retry
-      auto self = shared_from_this();
       auto timer = std::make_shared<net::steady_timer>(ioc_);
       timer->expires_after(std::chrono::milliseconds(cfg_.port_retry_interval_ms));
       timer->async_wait([self, retry_count, timer](const boost::system::error_code& timer_ec) {
         if (!timer_ec) {
-          self->attempt_port_binding(retry_count + 1);
+          self->impl_->attempt_port_binding(self, retry_count + 1);
         }
       });
       return;
     } else {
-      // No retry enabled or max retries exceeded
       std::string error_msg = "Failed to bind to port: " + std::to_string(cfg_.port) + " - " + ec.message();
       if (cfg_.enable_port_retry) {
         error_msg += " (after " + std::to_string(retry_count) + " retries)";
@@ -366,7 +522,6 @@ void TcpServer::attempt_port_binding(int retry_count) {
     }
   }
 
-  // Listen for connections
   acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
   if (ec) {
     UNILINK_LOG_ERROR("tcp_server", "listen",
@@ -377,7 +532,6 @@ void TcpServer::attempt_port_binding(int retry_count) {
     return;
   }
 
-  // Success
   if (retry_count > 0) {
     UNILINK_LOG_INFO("tcp_server", "bind",
                      "Successfully bound to port " + std::to_string(cfg_.port) + " after " +
@@ -388,35 +542,31 @@ void TcpServer::attempt_port_binding(int retry_count) {
 
   state_.set_state(base::LinkState::Listening);
   notify_state();
-  do_accept();
+  do_accept(self);
 }
 
-void TcpServer::do_accept() {
+void TcpServer::Impl::do_accept(std::shared_ptr<TcpServer> self) {
   if (stopping_.load() || !acceptor_ || !acceptor_->is_open()) return;
 
-  auto self = shared_from_this();
   acceptor_->async_accept([self](auto ec, tcp::socket sock) {
-    if (self->stopping_.load()) {
+    if (self->impl_->stopping_.load()) {
       return;
     }
     if (ec) {
-      // "Operation canceled"는 정상적인 종료 과정에서 발생하는 에러이므로 로그 레벨을 낮춤
       if (ec == boost::asio::error::operation_aborted) {
         UNILINK_LOG_DEBUG("tcp_server", "accept", "Accept canceled (server shutting down)");
       } else {
         UNILINK_LOG_ERROR("tcp_server", "accept", "Accept error: " + ec.message());
         diagnostics::error_reporting::report_connection_error("tcp_server", "accept", ec, true);
-        self->state_.set_state(base::LinkState::Error);
-        self->notify_state();
+        self->impl_->state_.set_state(base::LinkState::Error);
+        self->impl_->notify_state();
       }
-      // Continue accepting only if server is not shutting down
-      // Use a timer to prevent tight loops on persistent errors (e.g. EMFILE, EINVAL)
-      if (!self->state_.is_state(base::LinkState::Closed) && !self->stopping_.load()) {
-        auto timer = std::make_shared<net::steady_timer>(self->ioc_);
+      if (!self->impl_->state_.is_state(base::LinkState::Closed) && !self->impl_->stopping_.load()) {
+        auto timer = std::make_shared<net::steady_timer>(self->impl_->ioc_);
         timer->expires_after(std::chrono::milliseconds(100));
         timer->async_wait([self, timer](const boost::system::error_code&) {
-          if (!self->stopping_.load()) {
-            self->do_accept();
+          if (!self->impl_->stopping_.load()) {
+            self->impl_->do_accept(self);
           }
         });
       }
@@ -430,24 +580,21 @@ void TcpServer::do_accept() {
       client_info = rep.address().to_string() + ":" + std::to_string(rep.port());
     }
 
-    // Client limit check (after connection acceptance, before session creation)
-    if (self->client_limit_enabled_) {
-      std::unique_lock<std::shared_mutex> lock(self->sessions_mutex_);
-      if (self->sessions_.size() >= self->max_clients_) {
+    if (self->impl_->client_limit_enabled_) {
+      std::unique_lock<std::shared_mutex> lock(self->impl_->sessions_mutex_);
+      if (self->impl_->sessions_.size() >= self->impl_->max_clients_) {
         UNILINK_LOG_WARNING("tcp_server", "accept",
                             "Client connection rejected - server at capacity (" +
-                                std::to_string(self->sessions_.size()) + "/" + std::to_string(self->max_clients_) +
-                                "): " + client_info);
+                                std::to_string(self->impl_->sessions_.size()) + "/" +
+                                std::to_string(self->impl_->max_clients_) + "): " + client_info);
 
-        // 소켓을 즉시 닫아서 연결 거부
         boost::system::error_code close_ec;
         sock.close(close_ec);
         if (close_ec) {
           UNILINK_LOG_DEBUG("tcp_server", "accept", "Error closing rejected socket: " + close_ec.message());
         }
 
-        // Pause accepting to prevent DoS tight loop
-        self->paused_accept_ = true;
+        self->impl_->paused_accept_ = true;
         return;
       }
     }
@@ -458,113 +605,100 @@ void TcpServer::do_accept() {
       UNILINK_LOG_INFO("tcp_server", "accept", "Client connected (endpoint unknown)");
     }
 
-    // Create new session
     auto new_session =
-        std::make_shared<TcpServerSession>(self->ioc_, std::move(sock), self->cfg_.backpressure_threshold);
+        std::make_shared<TcpServerSession>(self->impl_->ioc_, std::move(sock), self->impl_->cfg_.backpressure_threshold);
 
-    // Add session to list
     size_t client_id;
     {
-      std::unique_lock<std::shared_mutex> lock(self->sessions_mutex_);
+      std::unique_lock<std::shared_mutex> lock(self->impl_->sessions_mutex_);
 
-      client_id = self->next_client_id_.fetch_add(1);
-      self->sessions_.emplace(client_id, new_session);
-
-      // Update current active session (existing API compatibility)
-      self->current_session_ = new_session;
+      client_id = self->impl_->next_client_id_.fetch_add(1);
+      self->impl_->sessions_.emplace(client_id, new_session);
+      self->impl_->current_session_ = new_session;
     }
 
-    // Set session callbacks
     new_session->on_bytes([self, client_id](memory::ConstByteSpan data) {
       OnBytes cb;
       MultiClientDataHandler multi_cb;
       {
-        std::shared_lock<std::shared_mutex> lock(self->sessions_mutex_);
-        cb = self->on_bytes_;
-        multi_cb = self->on_multi_data_;
+        std::shared_lock<std::shared_mutex> lock(self->impl_->sessions_mutex_);
+        cb = self->impl_->on_bytes_;
+        multi_cb = self->impl_->on_multi_data_;
       }
 
-      // Call existing callback (compatibility)
       if (cb) {
         cb(data);
       }
 
-      // Call multi-client callback
       if (multi_cb) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
         multi_cb(client_id, str_data);
       }
     });
 
-    if (self->on_bp_) new_session->on_backpressure(self->on_bp_);
+    if (self->impl_->on_bp_) new_session->on_backpressure(self->impl_->on_bp_);
 
-    // Handle session termination
     new_session->on_close([self, client_id, new_session] {
-      if (self->stopping_.load()) {
+      if (self->impl_->stopping_.load()) {
         return;
       }
 
       MultiClientDisconnectHandler disconnect_cb;
       {
-        std::shared_lock<std::shared_mutex> lock(self->sessions_mutex_);
-        disconnect_cb = self->on_multi_disconnect_;
+        std::shared_lock<std::shared_mutex> lock(self->impl_->sessions_mutex_);
+        disconnect_cb = self->impl_->on_multi_disconnect_;
       }
 
-      // Call multi-client callback
       if (disconnect_cb) {
         disconnect_cb(client_id);
       }
 
       bool was_current = false;
-      // Remove from session list
       {
-        std::unique_lock<std::shared_mutex> lock(self->sessions_mutex_);
-        self->sessions_.erase(client_id);
+        std::unique_lock<std::shared_mutex> lock(self->impl_->sessions_mutex_);
+        self->impl_->sessions_.erase(client_id);
 
-        if (self->paused_accept_ && (!self->client_limit_enabled_ || self->sessions_.size() < self->max_clients_)) {
-          self->paused_accept_ = false;
-          net::post(self->ioc_, [self] { self->do_accept(); });
+        if (self->impl_->paused_accept_ &&
+            (!self->impl_->client_limit_enabled_ || self->impl_->sessions_.size() < self->impl_->max_clients_)) {
+          self->impl_->paused_accept_ = false;
+          net::post(self->impl_->ioc_, [self] { self->impl_->do_accept(self); });
         }
 
-        was_current = (self->current_session_ == new_session);
+        was_current = (self->impl_->current_session_ == new_session);
         if (was_current) {
-          if (!self->sessions_.empty()) {
-            self->current_session_ = self->sessions_.begin()->second;
+          if (!self->impl_->sessions_.empty()) {
+            self->impl_->current_session_ = self->impl_->sessions_.begin()->second;
           } else {
-            self->current_session_.reset();
+            self->impl_->current_session_.reset();
           }
         }
       }
 
-      // Clean up if current session is the terminated session
       if (was_current) {
-        self->state_.set_state(base::LinkState::Listening);
-        self->notify_state();
+        self->impl_->state_.set_state(base::LinkState::Listening);
+        self->impl_->notify_state();
       }
     });
 
-    // Call multi-client connection callback
     MultiClientConnectHandler connect_cb;
     {
-      std::shared_lock<std::shared_mutex> lock(self->sessions_mutex_);
-      connect_cb = self->on_multi_connect_;
+      std::shared_lock<std::shared_mutex> lock(self->impl_->sessions_mutex_);
+      connect_cb = self->impl_->on_multi_connect_;
     }
     if (connect_cb) {
       connect_cb(client_id, client_info);
     }
 
-    // Update state for existing API compatibility
-    self->state_.set_state(base::LinkState::Connected);
-    self->notify_state();
+    self->impl_->state_.set_state(base::LinkState::Connected);
+    self->impl_->notify_state();
 
     new_session->start();
 
-    // Immediately accept next connection (multi-client support)
-    self->do_accept();
+    self->impl_->do_accept(self);
   });
 }
 
-void TcpServer::notify_state() {
+void TcpServer::Impl::notify_state() {
   if (stopping_.load()) return;
   OnState cb;
   {
@@ -577,109 +711,11 @@ void TcpServer::notify_state() {
       cb(state_.get_state());
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_server", "callback", "State callback error: " + std::string(e.what()));
-      diagnostics::error_reporting::report_system_error("tcp_server", "state_callback",
-                                                        "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
       UNILINK_LOG_ERROR("tcp_server", "callback", "Unknown error in state callback");
-      diagnostics::error_reporting::report_system_error("tcp_server", "state_callback",
-                                                        "Unknown error in state callback");
     }
   }
 }
-
-// Multi-client support method implementations
-bool TcpServer::broadcast(const std::string& message) {
-  auto shared_data = std::make_shared<const std::vector<uint8_t>>(message.begin(), message.end());
-
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-  bool sent = false;
-  for (auto& entry : sessions_) {
-    auto& session = entry.second;
-    if (session && session->alive()) {
-      session->async_write_shared(shared_data);
-      sent = true;
-    }
-  }
-
-  return sent;
-}
-
-bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-
-  auto it = sessions_.find(client_id);
-  if (it != sessions_.end() && it->second && it->second->alive()) {
-    auto binary_view = common::safe_convert::string_to_bytes(message);
-    it->second->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-    return true;
-  }
-  UNILINK_LOG_DEBUG("tcp_server", "send_to_client",
-                    "Send failed: client_id " + std::to_string(client_id) + " not found");
-  return false;
-}
-
-size_t TcpServer::get_client_count() const {
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-  size_t alive = 0;
-  for (const auto& entry : sessions_) {
-    if (entry.second && entry.second->alive()) {
-      ++alive;
-    }
-  }
-  return alive;
-}
-
-std::vector<size_t> TcpServer::get_connected_clients() const {
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-  std::vector<size_t> connected_clients;
-
-  for (const auto& entry : sessions_) {
-    if (entry.second && entry.second->alive()) {
-      connected_clients.push_back(entry.first);
-    }
-  }
-
-  return connected_clients;
-}
-
-void TcpServer::on_multi_connect(MultiClientConnectHandler handler) {
-  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-  on_multi_connect_ = std::move(handler);
-}
-
-void TcpServer::on_multi_data(MultiClientDataHandler handler) {
-  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-  on_multi_data_ = std::move(handler);
-}
-
-void TcpServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
-  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-  on_multi_disconnect_ = std::move(handler);
-}
-
-void TcpServer::set_client_limit(size_t max_clients) {
-  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-  max_clients_ = max_clients;
-  client_limit_enabled_ = true;
-
-  if (paused_accept_ && sessions_.size() < max_clients_) {
-    paused_accept_ = false;
-    net::post(ioc_, [self = shared_from_this()] { self->do_accept(); });
-  }
-}
-
-void TcpServer::set_unlimited_clients() {
-  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-  client_limit_enabled_ = false;
-  max_clients_ = 0;
-
-  if (paused_accept_) {
-    paused_accept_ = false;
-    net::post(ioc_, [self = shared_from_this()] { self->do_accept(); });
-  }
-}
-
-base::LinkState TcpServer::get_state() const { return state_.get_state(); }
 
 }  // namespace transport
 }  // namespace unilink
