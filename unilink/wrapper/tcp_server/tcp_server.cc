@@ -118,6 +118,11 @@ void TcpServer::stop() {
       // If underlying transport is TcpServer, prefer async stop to avoid callback reentrancy issues
       auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
       if (transport_server) {
+        // Clear multi-client callbacks to prevent use-after-free
+        transport_server->on_multi_connect({});
+        transport_server->on_multi_data({});
+        transport_server->on_multi_disconnect({});
+
         transport_server->request_stop();
         posted_transport_stop = true;
       }
@@ -133,6 +138,9 @@ void TcpServer::stop() {
   if (local_channel) {
     local_channel->stop();
   }
+
+  // Manually notify closed state since we detached callbacks
+  handle_state(base::LinkState::Closed);
 
   if (use_external_context_) {
     if (manage_external_context_ && external_ioc_) {

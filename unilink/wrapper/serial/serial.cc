@@ -89,7 +89,15 @@ void Serial::start() {
 void Serial::stop() {
   if (!started_ || !channel_) return;
 
+  // Clear callbacks to prevent use-after-free
+  channel_->on_bytes({});
+  channel_->on_state({});
+  channel_->on_backpressure({});
+
   channel_->stop();
+
+  // Manually notify closed state since we detached callbacks
+  notify_state_change(base::LinkState::Closed);
 
   if (use_external_context_ && manage_external_context_) {
     if (external_ioc_) {
