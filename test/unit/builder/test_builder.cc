@@ -327,6 +327,9 @@ TEST_F(BuilderTest, CallbackRegistration) {
     EXPECT_EQ(callback_count.load(), 0);
     EXPECT_EQ(error_callback_count.load(), 0);
   }
+
+  // Manually stop server to avoid race condition with local atomic variables destruction
+  server_->stop();
 }
 
 // 빌더 재사용 테스트
