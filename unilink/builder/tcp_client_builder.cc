@@ -43,7 +43,7 @@ TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
   }
 }
 
-std::shared_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
+std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   try {
     // Final validation before building
     util::InputValidator::validate_host(host_);
@@ -61,8 +61,8 @@ std::shared_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
       AutoInitializer::ensure_io_context_running();
     }
 
-    auto client = external_ioc ? std::make_shared<wrapper::TcpClient>(host_, port_, external_ioc)
-                               : std::make_shared<wrapper::TcpClient>(host_, port_);
+    auto client = external_ioc ? std::make_unique<wrapper::TcpClient>(host_, port_, external_ioc)
+                               : std::make_unique<wrapper::TcpClient>(host_, port_);
 
     // Apply configuration with exception safety
     try {

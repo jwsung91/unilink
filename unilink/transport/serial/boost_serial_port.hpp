@@ -16,9 +16,6 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
-#include <string>
-
 #include "unilink/base/visibility.hpp"
 #include "unilink/interface/iserial_port.hpp"
 

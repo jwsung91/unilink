@@ -283,9 +283,6 @@ void TcpServerSession::do_write() {
 }
 
 void TcpServerSession::do_close() {
-  // Hold a shared_ptr to self to ensure we stay alive during cleanup logic
-  auto self = shared_from_this();
-
   if (cleanup_done_.exchange(true)) return;  // Ensures cleanup runs only once
 
   alive_.store(false);
@@ -301,10 +298,8 @@ void TcpServerSession::do_close() {
 
   UNILINK_LOG_INFO("tcp_server_session", "disconnect", "Client disconnected");
   boost::system::error_code ec;
-  if (socket_) {
-    socket_->shutdown(tcp::socket::shutdown_both, ec);
-    socket_->close(ec);
-  }
+  socket_->shutdown(tcp::socket::shutdown_both, ec);
+  socket_->close(ec);
 
   // Release memory immediately
   tx_.clear();

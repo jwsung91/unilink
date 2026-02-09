@@ -198,7 +198,7 @@ TEST_F(IntegrationTest, ErrorHandling) {
  */
 TEST_F(IntegrationTest, ResourceSharing) {
   // Test resource sharing between multiple clients
-  std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
+  std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
 
   for (int i = 0; i < 3; ++i) {
     auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
@@ -272,7 +272,7 @@ TEST_F(IntegrationTest, MultipleClientConnections) {
   uint16_t comm_port = TestUtils::getAvailableTestPort();
 
   std::atomic<int> connection_count{0};
-  std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
+  std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
 
   // Create server
   auto server = unilink::tcp_server(comm_port)

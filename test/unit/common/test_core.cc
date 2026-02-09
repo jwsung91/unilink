@@ -17,7 +17,6 @@
 #include <gtest/gtest.h>
 
 #include <atomic>
-#include <boost/asio.hpp>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -115,8 +114,7 @@ TEST_F(BaseTest, IoContextManagerThreadSafety) {
   auto& manager = unilink::concurrency::IoContextManager::instance();
 
   // Reduce concurrency load for Windows/CI stability
-  // Further reduced to prevent timeouts on slow CI runners
-  const int num_threads = 2;
+  const int num_threads = 4;
   const int num_iterations = 5;
 
   std::vector<std::thread> threads;

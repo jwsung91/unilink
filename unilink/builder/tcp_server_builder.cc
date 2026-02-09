@@ -45,7 +45,7 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
   }
 }
 
-std::shared_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
+std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   // Client limit validation
   if (!client_limit_set_) {
     throw std::runtime_error(
@@ -64,8 +64,8 @@ std::shared_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     AutoInitializer::ensure_io_context_running();
   }
 
-  auto server = external_ioc ? std::make_shared<wrapper::TcpServer>(port_, external_ioc)
-                             : std::make_shared<wrapper::TcpServer>(port_);
+  auto server = external_ioc ? std::make_unique<wrapper::TcpServer>(port_, external_ioc)
+                             : std::make_unique<wrapper::TcpServer>(port_);
 
   if (external_ioc) {
     server->set_manage_external_context(use_independent_context_);
