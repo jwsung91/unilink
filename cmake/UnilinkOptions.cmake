@@ -11,7 +11,7 @@ option(UNILINK_ENABLE_PERFORMANCE_TESTS "Enable performance/benchmark tests" OFF
 
 # Feature options
 option(UNILINK_ENABLE_CONFIG "Enable configuration management API" ON)
-option(UNILINK_ENABLE_MEMORY_TRACKING "Enable memory tracking for debugging" ON)
+option(UNILINK_ENABLE_MEMORY_TRACKING "Enable memory tracking for debugging" OFF)
 option(UNILINK_ENABLE_SANITIZERS "Enable sanitizers in Debug builds" OFF)
 
 # Installation options
