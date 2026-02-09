@@ -156,6 +156,10 @@ bool InputValidator::is_valid_hostname(const std::string& hostname) {
       return false;
     }
 
+    if (label.front() == '-' || label.back() == '-') {
+      return false;
+    }
+
     // Check if label contains only valid characters
     for (char c : label) {
       if (!std::isalnum(c) && c != '-') {
