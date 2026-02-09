@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['ioc_5f_1452',['ioc_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#aa3b125f455628b08a52ec7a3d090ab64',1,'unilink::transport::TcpClient::Impl']]],
-  ['ioc_5fthread_5f_1453',['ioc_thread_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a02db9f3b066df618ab3cd4b306ddbca4',1,'unilink::transport::TcpClient::Impl']]],
-  ['is_5fvalid_1454',['is_valid',['../structunilink_1_1config_1_1ValidationResult.html#a1235dc887edcf7c6dfd3c34ddca37370',1,'unilink::config::ValidationResult']]]
+  ['hit_5frate_1519',['hit_rate',['../structunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics.html#a9859b5bec4cc554ca09b24df25ebde0b',1,'unilink::memory::MemoryPool::HealthMetrics']]],
+  ['host_1520',['host',['../structunilink_1_1config_1_1TcpClientConfig.html#aecccc8d45e82211ae924cae8b3d16540',1,'unilink::config::TcpClientConfig']]]
 ];

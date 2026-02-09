@@ -84,7 +84,7 @@ $(document).ready(function(){initNavTree('classunilink_1_1transport_1_1Serial.ht
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classunilink_1_1transport_1_1Serial-members.html">List of all members</a>  </div>
@@ -104,17 +104,10 @@ Inheritance diagram for unilink::transport::Serial:</div>
   </map>
 </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:ab37d95855b6845e966916f55ce6a7787"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1Serial.html#ab37d95855b6845e966916f55ce6a7787">BufferVariant</a> = std::variant&lt; <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html">memory::PooledBuffer</a>, std::vector&lt; uint8_t &gt;, std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&gt;</td></tr>
-<tr class="separator:ab37d95855b6845e966916f55ce6a7787"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_classunilink_1_1interface_1_1Channel"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1interface_1_1Channel')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></td></tr>
-<tr class="memitem:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;</td></tr>
-<tr class="separator:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a>)&gt;</td></tr>
-<tr class="separator:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> = std::function&lt; void(size_t)&gt;</td></tr>
-<tr class="separator:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html">Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -148,32 +141,25 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:abe3fe3951b0242c2c431cb8d99bf7657"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1Serial.html#abe3fe3951b0242c2c431cb8d99bf7657">create</a> (const <a class="el" href="structunilink_1_1config_1_1SerialConfig.html">SerialConfig</a> &amp;cfg)</td></tr>
 <tr class="separator:abe3fe3951b0242c2c431cb8d99bf7657"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a537e38e886a28758b0d0d1a6f840c319"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1Serial.html#a537e38e886a28758b0d0d1a6f840c319">create</a> (const <a class="el" href="structunilink_1_1config_1_1SerialConfig.html">SerialConfig</a> &amp;cfg, net::io_context &amp;ioc)</td></tr>
-<tr class="separator:a537e38e886a28758b0d0d1a6f840c319"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83aadcbc8be272ca813741f1818b76ce"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1Serial.html#a83aadcbc8be272ca813741f1818b76ce">create</a> (const <a class="el" href="structunilink_1_1config_1_1SerialConfig.html">SerialConfig</a> &amp;cfg, std::unique_ptr&lt; <a class="el" href="classunilink_1_1interface_1_1SerialPortInterface.html">interface::SerialPortInterface</a> &gt; port, net::io_context &amp;ioc)</td></tr>
-<tr class="separator:a83aadcbc8be272ca813741f1818b76ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a662030d8542011fde7849d19527efff1"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1Serial.html#a662030d8542011fde7849d19527efff1">create</a> (const <a class="el" href="structunilink_1_1config_1_1SerialConfig.html">SerialConfig</a> &amp;cfg, boost::asio::io_context &amp;ioc)</td></tr>
+<tr class="separator:a662030d8542011fde7849d19527efff1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dde008681bad43405a7ca2c29373024"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1Serial.html#a9dde008681bad43405a7ca2c29373024">create</a> (const <a class="el" href="structunilink_1_1config_1_1SerialConfig.html">SerialConfig</a> &amp;cfg, std::unique_ptr&lt; <a class="el" href="classunilink_1_1interface_1_1SerialPortInterface.html">interface::SerialPortInterface</a> &gt; port, boost::asio::io_context &amp;ioc)</td></tr>
+<tr class="separator:a9dde008681bad43405a7ca2c29373024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classunilink_1_1interface_1_1Channel"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1interface_1_1Channel')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></td></tr>
+<tr class="memitem:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;</td></tr>
+<tr class="separator:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a>)&gt;</td></tr>
+<tr class="separator:aa2fe2bd2caca7544431ff59e0c8a111d inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> = std::function&lt; void(size_t)&gt;</td></tr>
+<tr class="separator:acbaa1d8f93fac54ed516ef6e1caac3a5 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8hpp_source.html#l00052">52</a> of file <a class="el" href="transport_2serial_2serial_8hpp_source.html">serial.hpp</a>.</p>
-</div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="ab37d95855b6845e966916f55ce6a7787"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab37d95855b6845e966916f55ce6a7787">&#9670;&nbsp;</a></span>BufferVariant</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classunilink_1_1transport_1_1Serial.html#ab37d95855b6845e966916f55ce6a7787">unilink::transport::Serial::BufferVariant</a> =  std::variant&lt;<a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html">memory::PooledBuffer</a>, std::vector&lt;uint8_t&gt;, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt; &gt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8hpp_source.html#l00054">54</a> of file <a class="el" href="transport_2serial_2serial_8hpp_source.html">serial.hpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8hpp_source.html#l00046">46</a> of file <a class="el" href="transport_2serial_2serial_8hpp_source.html">serial.hpp</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7adb91b607dfc1dc5ee9362bf7c7f1e5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7adb91b607dfc1dc5ee9362bf7c7f1e5">&#9670;&nbsp;</a></span>~Serial()</h2>
 
@@ -192,12 +178,10 @@ Static Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00096">96</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -228,7 +212,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a02927701793911d1942102248864d614">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00176">176</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00454">454</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -258,7 +242,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a9e73efa207faca2b8f4a5d07b4c95268">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00240">240</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00512">512</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -288,7 +272,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ab39232bbd9a76bca4b07af5094fcaed9">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00269">269</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00541">541</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -316,12 +300,12 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00044">44</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00418">418</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
-<a id="a537e38e886a28758b0d0d1a6f840c319"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a537e38e886a28758b0d0d1a6f840c319">&#9670;&nbsp;</a></span>create() <span class="overload">[2/3]</span></h2>
+<a id="a662030d8542011fde7849d19527efff1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a662030d8542011fde7849d19527efff1">&#9670;&nbsp;</a></span>create() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -338,7 +322,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">net::io_context &amp;&#160;</td>
+          <td class="paramtype">boost::asio::io_context &amp;&#160;</td>
           <td class="paramname"><em>ioc</em>&#160;</td>
         </tr>
         <tr>
@@ -354,12 +338,12 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00048">48</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00422">422</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
-<a id="a83aadcbc8be272ca813741f1818b76ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83aadcbc8be272ca813741f1818b76ce">&#9670;&nbsp;</a></span>create() <span class="overload">[3/3]</span></h2>
+<a id="a9dde008681bad43405a7ca2c29373024"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dde008681bad43405a7ca2c29373024">&#9670;&nbsp;</a></span>create() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -382,7 +366,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">net::io_context &amp;&#160;</td>
+          <td class="paramtype">boost::asio::io_context &amp;&#160;</td>
           <td class="paramname"><em>ioc</em>&#160;</td>
         </tr>
         <tr>
@@ -398,7 +382,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00052">52</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00426">426</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -427,7 +411,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a4b6549386c1be6c9768fbf882dac6b29">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00174">174</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00444">444</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -457,7 +441,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a4b311bb483fedf3c5ae93508e4e54d8b">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00301">301</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00450">450</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -487,7 +471,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ac1ea9493e29fb865a26ab2964a59904a">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00299">299</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00446">446</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -517,7 +501,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#aa4462e2992427c466d6e12fa492e1b80">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00300">300</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00448">448</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -537,7 +521,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00527">527</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00452">452</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -566,7 +550,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a0e33349d34d5aa72709307ed52500a4e">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00104">104</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00440">440</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -595,7 +579,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a98ff6856a5ebd04adc7a9760437c9cf1">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00133">133</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00442">442</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -609,7 +593,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a></li>
-    <li class="footer">Generated on Mon Feb 9 2026 00:14:46 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 08:06:09 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

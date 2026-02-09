@@ -116,9 +116,9 @@ Error Handling</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// BAD - No error handling</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();  <span class="comment">// Errors will be silently ignored!</span></div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();  <span class="comment">// Errors will be silently ignored!</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a13494649fcb5f8f8f4fbf8909a1e2e71"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a13494649fcb5f8f8f4fbf8909a1e2e71">unilink::builder::TcpClientBuilder::on_error</a></div><div class="ttdeci">TcpClientBuilder &amp; on_error(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00145">tcp_client_builder.cc:145</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured TcpClient.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00046">tcp_client_builder.cc:46</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aa504b7d8bfbaa3783d73cba30958e2d8"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::shared_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured TcpClient.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00046">tcp_client_builder.cc:46</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00095">unilink.hpp:95</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md290"></a>
 ✅ DO: Check Connection Status Before Sending</h2>
@@ -146,7 +146,7 @@ Error Handling</h1>
 <div class="line">        }</div>
 <div class="line">    })</div>
 <div class="line">    .retry_interval(5000)  <span class="comment">// Auto-retry</span></div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// BAD - No recovery strategy</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -174,8 +174,8 @@ Error Handling</h1>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Use in multiple components</span></div>
-<div class="line"><span class="keyword">auto</span> client1 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server1.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
-<div class="line"><span class="keyword">auto</span> client2 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server2.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line"><span class="keyword">auto</span> client1 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server1.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
+<div class="line"><span class="keyword">auto</span> client2 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server2.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
 <div class="line"><span class="comment">// Both use the same error handler</span></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md294"></a>
@@ -186,7 +186,7 @@ Resource Management</h1>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
 <div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">auto_manage</a>(<span class="keyword">true</span>)  <span class="comment">// Auto cleanup</span></div>
-<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Use client...</span></div>
 <div class="line">    </div>
@@ -249,7 +249,7 @@ Resource Management</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// BAD - Create new connection each time</span></div>
 <div class="line"><span class="keywordtype">void</span> send_message(<span class="keyword">const</span> std::string&amp; msg) {</div>
-<div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
 <div class="line">    client-&gt;start();</div>
 <div class="line">    client-&gt;send(msg);</div>
 <div class="line">    client-&gt;stop();  <span class="comment">// Wasteful!</span></div>
@@ -351,14 +351,14 @@ Performance Optimization</h1>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md307"></a>
 ✅ DO: Use Shared IO Context (Default)</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Shared context (efficient)</span></div>
-<div class="line"><span class="keyword">auto</span> client1 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server1.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
-<div class="line"><span class="keyword">auto</span> client2 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server2.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line"><span class="keyword">auto</span> client1 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server1.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
+<div class="line"><span class="keyword">auto</span> client2 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server2.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
 <div class="line"><span class="comment">// Both share one I/O thread - efficient</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Only use independent context when needed for testing</span></div>
 <div class="line"><span class="keyword">auto</span> test_client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;test.com&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a567fa16a7c094edee54a0ea2fec74fcd">use_independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Only for tests</span></div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a567fa16a7c094edee54a0ea2fec74fcd"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a567fa16a7c094edee54a0ea2fec74fcd">unilink::builder::TcpClientBuilder::use_independent_context</a></div><div class="ttdeci">TcpClientBuilder &amp; use_independent_context(bool use_independent=true)</div><div class="ttdoc">Use independent IoContext for this client (for testing isolation)</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00150">tcp_client_builder.cc:150</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md308"></a>
 ✅ DO: Batch Small Messages</h2>
@@ -480,7 +480,7 @@ Testing</h1>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// In production</span></div>
-<div class="line"><span class="keyword">auto</span> real_client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line"><span class="keyword">auto</span> real_client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
 <div class="line">MessageProcessor processor(real_client);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// In tests</span></div>
@@ -510,7 +510,7 @@ Testing</h1>
 <div class="line">TEST(ClientTest, SendReceive) {</div>
 <div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, test_port)</div>
 <div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a567fa16a7c094edee54a0ea2fec74fcd">use_independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Isolated I/O thread</span></div>
-<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a>();</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Test won&#39;t interfere with other tests</span></div>
 <div class="line">}</div>
@@ -637,7 +637,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 9 2026 00:14:46 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 08:06:08 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

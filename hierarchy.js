@@ -42,7 +42,11 @@ var hierarchy =
       [ "unilink::transport::TcpClient", "classunilink_1_1transport_1_1TcpClient.html", null ],
       [ "unilink::transport::TcpServer", "classunilink_1_1transport_1_1TcpServer.html", null ],
       [ "unilink::transport::TcpServerSession", "classunilink_1_1transport_1_1TcpServerSession.html", null ],
-      [ "unilink::transport::UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", null ]
+      [ "unilink::transport::UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", null ],
+      [ "unilink::wrapper::Serial", "classunilink_1_1wrapper_1_1Serial.html", null ],
+      [ "unilink::wrapper::TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", null ],
+      [ "unilink::wrapper::TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", null ],
+      [ "unilink::wrapper::Udp", "classunilink_1_1wrapper_1_1Udp.html", null ]
     ] ],
     [ "unilink::diagnostics::ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", null ],
     [ "unilink::diagnostics::ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html", null ],
@@ -53,7 +57,11 @@ var hierarchy =
       [ "unilink::framer::LineFramer", "classunilink_1_1framer_1_1LineFramer.html", null ],
       [ "unilink::framer::PacketFramer", "classunilink_1_1framer_1_1PacketFramer.html", null ]
     ] ],
+    [ "unilink::concurrency::IoContextManager::Impl", "structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html", null ],
+    [ "unilink::transport::Serial::Impl", "structunilink_1_1transport_1_1Serial_1_1Impl.html", null ],
     [ "unilink::transport::TcpClient::Impl", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html", null ],
+    [ "unilink::transport::TcpServer::Impl", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html", null ],
+    [ "unilink::transport::UdpChannel::Impl", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html", null ],
     [ "unilink::util::InputValidator", "classunilink_1_1util_1_1InputValidator.html", null ],
     [ "unilink::concurrency::IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", null ],
     [ "unilink::diagnostics::LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", null ],
@@ -96,6 +104,7 @@ var hierarchy =
     [ "unilink::concurrency::ThreadSafeCounter", "classunilink_1_1concurrency_1_1ThreadSafeCounter.html", null ],
     [ "unilink::concurrency::ThreadSafeFlag", "classunilink_1_1concurrency_1_1ThreadSafeFlag.html", null ],
     [ "unilink::concurrency::ThreadSafeState< StateType >", "classunilink_1_1concurrency_1_1ThreadSafeState.html", null ],
+    [ "unilink::concurrency::ThreadSafeState< base::LinkState >", "classunilink_1_1concurrency_1_1ThreadSafeState.html", null ],
     [ "unilink::interface::TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", null ],
     [ "unilink::config::UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", null ],
     [ "unilink::builder::UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", null ],

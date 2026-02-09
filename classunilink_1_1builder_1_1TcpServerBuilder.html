@@ -118,9 +118,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1e2b7356bca7899f9a3e23a78501c1e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4a1786275a24a42a80fb8e7b51cf247"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#af4a1786275a24a42a80fb8e7b51cf247">operator=</a> (<a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:af4a1786275a24a42a80fb8e7b51cf247"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c74b1d7730ee134044b4fcc111191ec"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">wrapper::TcpServer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">build</a> () override</td></tr>
-<tr class="memdesc:a9c74b1d7730ee134044b4fcc111191ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured TcpServer.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">More...</a><br /></td></tr>
-<tr class="separator:a9c74b1d7730ee134044b4fcc111191ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51364541ce4f063c91424b6e05d09043"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">wrapper::TcpServer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a51364541ce4f063c91424b6e05d09043">build</a> () override</td></tr>
+<tr class="memdesc:a51364541ce4f063c91424b6e05d09043"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured TcpServer.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a51364541ce4f063c91424b6e05d09043">More...</a><br /></td></tr>
+<tr class="separator:a51364541ce4f063c91424b6e05d09043"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb48d2eaa65409712fc8559e48460e91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#acb48d2eaa65409712fc8559e48460e91">auto_manage</a> (bool auto_manage=true) override</td></tr>
 <tr class="memdesc:acb48d2eaa65409712fc8559e48460e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#acb48d2eaa65409712fc8559e48460e91">More...</a><br /></td></tr>
 <tr class="separator:acb48d2eaa65409712fc8559e48460e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -380,8 +380,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c74b1d7730ee134044b4fcc111191ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c74b1d7730ee134044b4fcc111191ec">&#9670;&nbsp;</a></span>build()</h2>
+<a id="a51364541ce4f063c91424b6e05d09043"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51364541ce4f063c91424b6e05d09043">&#9670;&nbsp;</a></span>build()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -390,7 +390,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">wrapper::TcpServer</a> &gt; unilink::builder::TcpServerBuilder::build </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">wrapper::TcpServer</a> &gt; unilink::builder::TcpServerBuilder::build </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -404,9 +404,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Build and return the configured TcpServer. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;wrapper::TcpServer&gt; The configured server instance </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;wrapper::TcpServer&gt; The configured server instance </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a82045ad5b07e7d84eb9b03f2cfb54d25">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00048">48</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
@@ -1314,7 +1314,7 @@ template&lt;typename U , typename F &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a></li>
-    <li class="footer">Generated on Mon Feb 9 2026 00:14:46 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 08:06:09 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

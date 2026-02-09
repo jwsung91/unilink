@@ -109,23 +109,23 @@ Inheritance diagram for unilink::interface::TcpAcceptorInterface:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a85aefbbc0f87f4573be852971fa8e4b8"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#a85aefbbc0f87f4573be852971fa8e4b8">~TcpAcceptorInterface</a> ()=default</td></tr>
 <tr class="separator:a85aefbbc0f87f4573be852971fa8e4b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae91798f86dac3405143b93ef0c4f6f59"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#ae91798f86dac3405143b93ef0c4f6f59">open</a> (const net::ip::tcp &amp;protocol, boost::system::error_code &amp;ec)=0</td></tr>
-<tr class="separator:ae91798f86dac3405143b93ef0c4f6f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac72be30ebd996fa2c585bdaee3d1b88a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#ac72be30ebd996fa2c585bdaee3d1b88a">bind</a> (const net::ip::tcp::endpoint &amp;endpoint, boost::system::error_code &amp;ec)=0</td></tr>
-<tr class="separator:ac72be30ebd996fa2c585bdaee3d1b88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afac55f21ece68063acc3e4d44468b693"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#afac55f21ece68063acc3e4d44468b693">open</a> (const boost::asio::ip::tcp &amp;protocol, boost::system::error_code &amp;ec)=0</td></tr>
+<tr class="separator:afac55f21ece68063acc3e4d44468b693"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a396e41108eea58ecc102fd14927e8815"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#a396e41108eea58ecc102fd14927e8815">bind</a> (const boost::asio::ip::tcp::endpoint &amp;endpoint, boost::system::error_code &amp;ec)=0</td></tr>
+<tr class="separator:a396e41108eea58ecc102fd14927e8815"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58605f7df2a0252a33ed88ddc930e2c7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#a58605f7df2a0252a33ed88ddc930e2c7">listen</a> (int backlog, boost::system::error_code &amp;ec)=0</td></tr>
 <tr class="separator:a58605f7df2a0252a33ed88ddc930e2c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1747c93e168fbab942f7ad6bd92519a0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#a1747c93e168fbab942f7ad6bd92519a0">is_open</a> () const =0</td></tr>
 <tr class="separator:a1747c93e168fbab942f7ad6bd92519a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add3efd78a80c156f864dc7c3ccf0a612"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#add3efd78a80c156f864dc7c3ccf0a612">close</a> (boost::system::error_code &amp;ec)=0</td></tr>
 <tr class="separator:add3efd78a80c156f864dc7c3ccf0a612"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7982ef01954f97b8dc0a961c333605b1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#a7982ef01954f97b8dc0a961c333605b1">async_accept</a> (std::function&lt; void(const boost::system::error_code &amp;, net::ip::tcp::socket)&gt; handler)=0</td></tr>
-<tr class="separator:a7982ef01954f97b8dc0a961c333605b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af55d112656331419ea0fb5aec33c9a89"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html#af55d112656331419ea0fb5aec33c9a89">async_accept</a> (std::function&lt; void(const boost::system::error_code &amp;, boost::asio::ip::tcp::socket)&gt; handler)=0</td></tr>
+<tr class="separator:af55d112656331419ea0fb5aec33c9a89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>An interface abstracting Boost.Asio's tcp::acceptor for testability. This is an internal interface used for dependency injection and mocking. </p>
 
-<p class="definition">Definition at line <a class="el" href="itcp__acceptor_8hpp_source.html#l00034">34</a> of file <a class="el" href="itcp__acceptor_8hpp_source.html">itcp_acceptor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="itcp__acceptor_8hpp_source.html#l00045">45</a> of file <a class="el" href="itcp__acceptor_8hpp_source.html">itcp_acceptor.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a85aefbbc0f87f4573be852971fa8e4b8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a85aefbbc0f87f4573be852971fa8e4b8">&#9670;&nbsp;</a></span>~TcpAcceptorInterface()</h2>
@@ -153,8 +153,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7982ef01954f97b8dc0a961c333605b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7982ef01954f97b8dc0a961c333605b1">&#9670;&nbsp;</a></span>async_accept()</h2>
+<a id="af55d112656331419ea0fb5aec33c9a89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af55d112656331419ea0fb5aec33c9a89">&#9670;&nbsp;</a></span>async_accept()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -165,7 +165,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void unilink::interface::TcpAcceptorInterface::async_accept </td>
           <td>(</td>
-          <td class="paramtype">std::function&lt; void(const boost::system::error_code &amp;, net::ip::tcp::socket)&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(const boost::system::error_code &amp;, boost::asio::ip::tcp::socket)&gt;&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -179,8 +179,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac72be30ebd996fa2c585bdaee3d1b88a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac72be30ebd996fa2c585bdaee3d1b88a">&#9670;&nbsp;</a></span>bind()</h2>
+<a id="a396e41108eea58ecc102fd14927e8815"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a396e41108eea58ecc102fd14927e8815">&#9670;&nbsp;</a></span>bind()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,7 +191,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void unilink::interface::TcpAcceptorInterface::bind </td>
           <td>(</td>
-          <td class="paramtype">const net::ip::tcp::endpoint &amp;&#160;</td>
+          <td class="paramtype">const boost::asio::ip::tcp::endpoint &amp;&#160;</td>
           <td class="paramname"><em>endpoint</em>, </td>
         </tr>
         <tr>
@@ -212,8 +212,6 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1BoostTcpAcceptor.html#aa584020740b874c3a19994c87b13a32c">unilink::transport::BoostTcpAcceptor</a>.</p>
 
 </div>
 </div>
@@ -310,8 +308,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae91798f86dac3405143b93ef0c4f6f59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae91798f86dac3405143b93ef0c4f6f59">&#9670;&nbsp;</a></span>open()</h2>
+<a id="afac55f21ece68063acc3e4d44468b693"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afac55f21ece68063acc3e4d44468b693">&#9670;&nbsp;</a></span>open()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +320,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void unilink::interface::TcpAcceptorInterface::open </td>
           <td>(</td>
-          <td class="paramtype">const net::ip::tcp &amp;&#160;</td>
+          <td class="paramtype">const boost::asio::ip::tcp &amp;&#160;</td>
           <td class="paramname"><em>protocol</em>, </td>
         </tr>
         <tr>
@@ -344,8 +342,6 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1BoostTcpAcceptor.html#a6d31a003b772797013ea4ceea58848f4">unilink::transport::BoostTcpAcceptor</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -357,7 +353,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1interface.html">interface</a></li><li class="navelem"><a class="el" href="classunilink_1_1interface_1_1TcpAcceptorInterface.html">TcpAcceptorInterface</a></li>
-    <li class="footer">Generated on Mon Feb 9 2026 00:14:46 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 08:06:09 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

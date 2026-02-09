@@ -1,6 +1,12 @@
 var structunilink_1_1config_1_1UdpConfig =
 [
+    [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html#a8da49b0e6d23f888c91915af1d22e54c", null ],
+    [ "~UdpConfig", "structunilink_1_1config_1_1UdpConfig.html#ac4bd410ef0f5038b1b88029095e4fc9c", null ],
+    [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html#aa8625c58f73aee7bd04f87a1ab640096", null ],
+    [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html#a38fb3f29773e05d556328276974a09a5", null ],
     [ "is_valid", "structunilink_1_1config_1_1UdpConfig.html#a03ba1c83d5358384dcc85821a73fa034", null ],
+    [ "operator=", "structunilink_1_1config_1_1UdpConfig.html#a6fb7a7fbe07bd9d0877358c9b1d91d5c", null ],
+    [ "operator=", "structunilink_1_1config_1_1UdpConfig.html#ac638854d53aaf3a543767adca08b9123", null ],
     [ "validate_and_clamp", "structunilink_1_1config_1_1UdpConfig.html#a9836f973d6a7ce2c75ea9300e9b0eeaa", null ],
     [ "backpressure_threshold", "structunilink_1_1config_1_1UdpConfig.html#a44eecdf153fbb4e1a797935db3c1245b", null ],
     [ "enable_memory_pool", "structunilink_1_1config_1_1UdpConfig.html#ab93ae1c28796650ab9ceebcb57be3447", null ],

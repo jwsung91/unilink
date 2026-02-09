@@ -84,21 +84,37 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc.html',''
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
 <div class="title">serial.cc File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="transport_2serial_2serial_8hpp_source.html">unilink/transport/serial/serial.hpp</a>&quot;</code><br />
+<code>#include &lt;boost/asio.hpp&gt;</code><br />
 <code>#include &lt;boost/system/error_code.hpp&gt;</code><br />
-<code>#include &lt;cstring&gt;</code><br />
+<code>#include &lt;deque&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;thread&gt;</code><br />
+<code>#include &lt;variant&gt;</code><br />
+<code>#include &quot;<a class="el" href="constants_8hpp_source.html">unilink/base/constants.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="io__context__manager_8hpp_source.html">unilink/concurrency/io_context_manager.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="thread__safe__state_8hpp_source.html">unilink/concurrency/thread_safe_state.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="error__handler_8hpp_source.html">unilink/diagnostics/error_handler.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="logger_8hpp_source.html">unilink/diagnostics/logger.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="memory__pool_8hpp_source.html">unilink/memory/memory_pool.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="boost__serial__port_8hpp_source.html">unilink/transport/serial/boost_serial_port.hpp</a>&quot;</code><br />
 </div>
 <p><a href="transport_2serial_2serial_8cc_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1Serial_1_1Impl.html">unilink::transport::Serial::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html">unilink</a></td></tr>
@@ -112,7 +128,7 @@ Namespaces</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_2c4cf4388c6c65b31421f3ec6a8a630e.html">serial</a></li><li class="navelem"><a class="el" href="transport_2serial_2serial_8cc.html">serial.cc</a></li>
-    <li class="footer">Generated on Mon Feb 9 2026 00:14:46 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 08:06:08 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
