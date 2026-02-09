@@ -45,6 +45,10 @@ class TcpRstTest : public ::testing::Test {
 
   void TearDown() override {
     if (server_) {
+      // Explicitly clear callbacks to prevent them from firing after this fixture is destroyed
+      server_->on_multi_connect(nullptr);
+      server_->on_multi_disconnect(nullptr);
+
       server_->stop();
       // Ensure wrapper is destroyed before atomics are destroyed to prevent use-after-free in pending callbacks
       server_.reset();

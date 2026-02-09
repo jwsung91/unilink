@@ -161,7 +161,11 @@ void IoContextManager::stop() {
 
   if (worker.joinable()) {
     UNILINK_LOG_DEBUG("io_context_manager", "stop", "Joining IoContext thread.");
-    worker.join();
+    try {
+      worker.join();
+    } catch (const std::system_error& e) {
+      UNILINK_LOG_ERROR("io_context_manager", "stop", "Failed to join thread: " + std::string(e.what()));
+    }
     UNILINK_LOG_DEBUG("io_context_manager", "stop", "IoContext thread joined.");
   }
 
@@ -169,9 +173,8 @@ void IoContextManager::stop() {
     std::lock_guard<std::mutex> lock(impl_->mutex_);
     impl_->stopping_ = false;
 
-    if (!worker.joinable() && !impl_->io_thread_.joinable()) {
-      impl_->running_.store(false);
-    }
+    // Explicitly update running state
+    impl_->running_.store(false);
   }
   impl_->cv_.notify_all();
 }
