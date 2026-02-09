@@ -284,6 +284,8 @@ if(UNILINK_BOOST_INCLUDE_DIR)
   target_include_directories(unilink_dependencies SYSTEM INTERFACE
     $<BUILD_INTERFACE:${UNILINK_BOOST_INCLUDE_DIR}>
   )
+elseif(UNILINK_BOOST_INCLUDE_DIR)
+  target_include_directories(unilink_dependencies INTERFACE "${UNILINK_BOOST_INCLUDE_DIR}")
 endif()
 if(WIN32)
   target_link_libraries(unilink_dependencies INTERFACE

@@ -56,9 +56,9 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
 
   /**
    * @brief Build and return the configured TcpServer
-   * @return std::shared_ptr<wrapper::TcpServer> The configured server instance
+   * @return std::unique_ptr<wrapper::TcpServer> The configured server instance
    */
-  std::shared_ptr<wrapper::TcpServer> build() override;
+  std::unique_ptr<wrapper::TcpServer> build() override;
 
   /**
    * @brief Enable auto-manage functionality
