@@ -90,8 +90,21 @@ void Logger::set_callback(LogCallback callback) {
   if (callback_) {
     outputs_.fetch_or(static_cast<int>(LogOutput::CALLBACK));
   } else {
+    // Only disable CALLBACK output if log_handler is also unset,
+    // as they share the CALLBACK flag conceptually or we should introduce a new flag.
+    // For simplicity, we reuse CALLBACK flag for both or treat log_handler separately.
+    // Let's assume CALLBACK flag is for the formatted string callback.
+    // The log handler is always called if set, regardless of outputs flags, or we can reuse the flag.
+    // To match user expectation "add pluggable handler", it usually implies it runs alongside others.
+    // We will run it unconditionally if set, or we can use the same flag.
+    // Let's keep outputs_ as is for formatted outputs.
     outputs_.fetch_and(~static_cast<int>(LogOutput::CALLBACK));
   }
+}
+
+void Logger::set_log_handler(LogHandler handler) {
+  std::lock_guard<std::mutex> lock(mutex_);
+  log_handler_ = std::move(handler);
 }
 
 void Logger::set_outputs(int outputs) { outputs_.store(outputs); }
@@ -142,6 +155,10 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
   }
 
   // Synchronous logging (when async is disabled)
+  // Construct entry for handler
+  LogEntry entry(level, component, operation, message);
+  call_log_handler(entry);
+
   std::string formatted_message = format_message(level, component, operation, message);
   int current_outputs = outputs_.load();
 
@@ -287,6 +304,19 @@ void Logger::call_callback(LogLevel level, const std::string& message) {
       std::cerr << "Error in log callback: " << e.what() << std::endl;
     } catch (...) {
       std::cerr << "Unknown error in log callback" << std::endl;
+    }
+  }
+}
+
+void Logger::call_log_handler(const LogEntry& entry) {
+  std::lock_guard<std::mutex> lock(mutex_);
+  if (log_handler_) {
+    try {
+      log_handler_(entry);
+    } catch (const std::exception& e) {
+      std::cerr << "Error in log handler: " << e.what() << std::endl;
+    } catch (...) {
+      std::cerr << "Unknown error in log handler" << std::endl;
     }
   }
 }
@@ -461,6 +491,8 @@ void Logger::worker_loop() {
 
 void Logger::process_batch(const std::vector<LogEntry>& batch) {
   for (const auto& entry : batch) {
+    call_log_handler(entry);
+
     std::string formatted_message = format_message(entry.level, entry.component, entry.operation, entry.message);
     int current_outputs = outputs_.load();
 

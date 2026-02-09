@@ -16,39 +16,32 @@
 
 #pragma once
 
-#include <array>
-#include <atomic>
-#include <boost/asio.hpp>
-#include <cstddef>
-#include <deque>
 #include <memory>
-#include <optional>
-#include <thread>
-#include <variant>
 #include <vector>
 
-#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
-#include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/config/udp_config.hpp"
-#include "unilink/diagnostics/error_handler.hpp"
-#include "unilink/diagnostics/logger.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/memory/memory_pool.hpp"
+
+// Forward declarations to avoid Boost dependency in header
+namespace boost {
+namespace asio {
+class io_context;
+}
+}  // namespace boost
 
 namespace unilink {
 namespace transport {
 
-namespace net = boost::asio;
-using udp = net::ip::udp;
-using base::LinkState;
-using concurrency::ThreadSafeLinkState;
+using config::UdpConfig;
+using interface::Channel;
 
-class UNILINK_API UdpChannel : public interface::Channel, public std::enable_shared_from_this<UdpChannel> {
+class UNILINK_API UdpChannel : public Channel, public std::enable_shared_from_this<UdpChannel> {
  public:
-  static std::shared_ptr<UdpChannel> create(const config::UdpConfig& cfg);
-  static std::shared_ptr<UdpChannel> create(const config::UdpConfig& cfg, net::io_context& ioc);
-  ~UdpChannel();
+  static std::shared_ptr<UdpChannel> create(const UdpConfig& cfg);
+  static std::shared_ptr<UdpChannel> create(const UdpConfig& cfg, boost::asio::io_context& ioc);
+  ~UdpChannel() override;
 
   void start() override;
   void stop() override;
@@ -58,67 +51,17 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   void async_write_move(std::vector<uint8_t>&& data) override;
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 
-  // Callbacks must be configured before start() is invoked to avoid setter races.
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
 
  private:
-  explicit UdpChannel(const config::UdpConfig& cfg);
-  UdpChannel(const config::UdpConfig& cfg, net::io_context& ioc);
+  struct Impl;
+  std::unique_ptr<Impl> impl_;
 
-  void open_socket();
-  void start_receive();
-  void handle_receive(const boost::system::error_code& ec, std::size_t bytes);
-  void do_write();
-  void close_socket();
-  void notify_state();
-  void report_backpressure(size_t queued_bytes);
-  size_t queued_bytes_front() const;
-  bool enqueue_buffer(
-      std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>&& buffer,
-      size_t size);
-  void set_remote_from_config();
-  void transition_to(LinkState target, const boost::system::error_code& ec = {});
-  void clear_callbacks();
-  void perform_stop_cleanup();
-  void reset_start_state();
-  void join_ioc_thread(bool allow_detach);
-
- private:
-  std::unique_ptr<net::io_context> owned_ioc_;
-  net::io_context* ioc_;
-  bool owns_ioc_{true};
-  net::strand<net::io_context::executor_type> strand_;
-  std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
-  std::thread ioc_thread_;
-
-  udp::socket socket_;
-  udp::endpoint local_endpoint_;
-  udp::endpoint recv_endpoint_;
-  std::optional<udp::endpoint> remote_endpoint_;
-
-  std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
-  std::deque<std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>> tx_;
-  bool writing_{false};
-  size_t queue_bytes_{0};
-  config::UdpConfig cfg_;
-  size_t bp_high_;
-  size_t bp_low_;
-  size_t bp_limit_;
-  bool backpressure_active_{false};
-
-  std::atomic<bool> stop_requested_{false};
-  std::atomic<bool> stopping_{false};
-  std::atomic<bool> opened_{false};
-  std::atomic<bool> connected_{false};
-  bool started_{false};
-  ThreadSafeLinkState state_{LinkState::Idle};
-  std::atomic<bool> terminal_state_notified_{false};
-
-  OnBytes on_bytes_;
-  OnState on_state_;
-  OnBackpressure on_bp_;
+  // Private constructors
+  explicit UdpChannel(const UdpConfig& cfg);
+  UdpChannel(const UdpConfig& cfg, boost::asio::io_context& ioc);
 };
 
 }  // namespace transport

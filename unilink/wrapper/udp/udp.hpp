@@ -16,23 +16,23 @@
 
 #pragma once
 
+#include <atomic>
 #include <boost/asio/io_context.hpp>
-#include <chrono>
-#include <functional>
 #include <memory>
-#include <optional>
 #include <string>
 #include <thread>
 
 #include "unilink/base/visibility.hpp"
-#include "unilink/config/udp_config.hpp"
-#include "unilink/interface/channel.hpp"
+#include "unilink/factory/channel_factory.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
 namespace unilink {
 namespace wrapper {
 
-class UNILINK_API Udp : public ChannelInterface {
+/**
+ * UDP Wrapper
+ */
+class UNILINK_API Udp : public ChannelInterface, public std::enable_shared_from_this<Udp> {
  public:
   explicit Udp(const config::UdpConfig& cfg);
   Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc);
@@ -59,9 +59,10 @@ class UNILINK_API Udp : public ChannelInterface {
   void setup_internal_handlers();
   void notify_state_change(base::LinkState state);
 
- private:
   config::UdpConfig cfg_;
   std::shared_ptr<interface::Channel> channel_;
+  bool started_{false};
+  bool auto_manage_{false};
   std::shared_ptr<boost::asio::io_context> external_ioc_;
   bool use_external_context_{false};
   bool manage_external_context_{false};
@@ -72,9 +73,6 @@ class UNILINK_API Udp : public ChannelInterface {
   ConnectHandler connect_handler_;
   DisconnectHandler disconnect_handler_;
   ErrorHandler error_handler_;
-
-  bool auto_manage_{false};
-  bool started_{false};
 };
 
 }  // namespace wrapper

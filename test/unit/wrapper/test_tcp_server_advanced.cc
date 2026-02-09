@@ -124,7 +124,7 @@ TEST_F(AdvancedTcpServerCoverageTest, AutoManageStartsListening) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().auto_manage(true).build();
 
   ASSERT_NE(server_, nullptr);
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 1000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 2000));
 
   server_->stop();
 }

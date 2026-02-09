@@ -546,8 +546,8 @@ TEST_F(BuilderIntegrationTest, FastObjectCreation) {
 
     auto client = unilink::tcp_client("127.0.0.1", port).build();
 
-    servers.push_back(std::shared_ptr<wrapper::TcpServer>(server.release()));
-    clients.push_back(std::shared_ptr<wrapper::TcpClient>(client.release()));
+    servers.push_back(server);
+    clients.push_back(client);
   }
 
   auto end_time = std::chrono::high_resolution_clock::now();
@@ -901,7 +901,7 @@ TEST_F(BuilderIntegrationTest, SerialBuilderPerformance) {
 
     auto serial = unilink::serial(device, baud_rate).build();
 
-    serials.push_back(std::shared_ptr<wrapper::Serial>(serial.release()));
+    serials.push_back(serial);
   }
 
   auto end_time = std::chrono::high_resolution_clock::now();

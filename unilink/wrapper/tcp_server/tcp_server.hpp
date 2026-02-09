@@ -37,7 +37,7 @@ namespace wrapper {
  * - Prevents memory leaks
  * - Automatic resource management
  */
-class UNILINK_API TcpServer : public ChannelInterface {
+class UNILINK_API TcpServer : public ChannelInterface, public std::enable_shared_from_this<TcpServer> {
  public:
   explicit TcpServer(uint16_t port);
   TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc);

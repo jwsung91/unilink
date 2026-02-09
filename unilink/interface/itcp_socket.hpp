@@ -16,16 +16,27 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/socket_base.hpp>
+#include <cstddef>
 #include <functional>
 
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
 
+// Forward declarations
+namespace boost {
+namespace asio {
+class mutable_buffer;
+class const_buffer;
+}  // namespace asio
+namespace system {
+class error_code;
+}
+}  // namespace boost
+
 namespace unilink {
 namespace interface {
-
-namespace net = boost::asio;
 
 /**
  * @brief An interface abstracting Boost.Asio's tcp::socket for testability.
@@ -35,13 +46,13 @@ class UNILINK_API TcpSocketInterface {
  public:
   virtual ~TcpSocketInterface() = default;
 
-  virtual void async_read_some(const net::mutable_buffer& buffer,
+  virtual void async_read_some(const boost::asio::mutable_buffer& buffer,
                                std::function<void(const boost::system::error_code&, std::size_t)> handler) = 0;
-  virtual void async_write(const net::const_buffer& buffer,
+  virtual void async_write(const boost::asio::const_buffer& buffer,
                            std::function<void(const boost::system::error_code&, std::size_t)> handler) = 0;
-  virtual void shutdown(net::ip::tcp::socket::shutdown_type what, boost::system::error_code& ec) = 0;
+  virtual void shutdown(boost::asio::socket_base::shutdown_type what, boost::system::error_code& ec) = 0;
   virtual void close(boost::system::error_code& ec) = 0;
-  virtual net::ip::tcp::endpoint remote_endpoint(boost::system::error_code& ec) const = 0;
+  virtual boost::asio::ip::tcp::endpoint remote_endpoint(boost::system::error_code& ec) const = 0;
 };
 
 }  // namespace interface

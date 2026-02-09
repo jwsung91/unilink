@@ -261,8 +261,10 @@ if(UNILINK_LINK_BOOST_SYSTEM)
   if(TARGET Boost::asio)
     target_link_libraries(unilink_dependencies INTERFACE Boost::asio)
   endif()
-elseif(UNILINK_BOOST_INCLUDE_DIR)
-  target_include_directories(unilink_dependencies INTERFACE "${UNILINK_BOOST_INCLUDE_DIR}")
+endif()
+
+if(UNILINK_BOOST_INCLUDE_DIR)
+  target_include_directories(unilink_dependencies SYSTEM INTERFACE "${UNILINK_BOOST_INCLUDE_DIR}")
 endif()
 if(WIN32)
   target_link_libraries(unilink_dependencies INTERFACE

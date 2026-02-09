@@ -34,6 +34,13 @@ struct UdpConfig {
   bool enable_memory_pool = true;
   bool stop_on_callback_exception = false;
 
+  UdpConfig() = default;
+  ~UdpConfig() = default;
+  UdpConfig(const UdpConfig&) = default;
+  UdpConfig& operator=(const UdpConfig&) = default;
+  UdpConfig(UdpConfig&&) noexcept = default;
+  UdpConfig& operator=(UdpConfig&&) noexcept = default;
+
   bool is_valid() const {
     if (backpressure_threshold < common::constants::MIN_BACKPRESSURE_THRESHOLD ||
         backpressure_threshold > common::constants::MAX_BACKPRESSURE_THRESHOLD) {

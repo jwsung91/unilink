@@ -47,7 +47,7 @@ class UNILINK_API UdpBuilder : public BuilderInterface<wrapper::Udp, UdpBuilder>
   using BuilderInterface::on_disconnect;
   using BuilderInterface::on_error;
 
-  std::unique_ptr<wrapper::Udp> build() override;
+  std::shared_ptr<wrapper::Udp> build() override;
 
   UdpBuilder& auto_manage(bool auto_manage = true) override;
   UdpBuilder& on_data(std::function<void(const std::string&)> handler) override;
