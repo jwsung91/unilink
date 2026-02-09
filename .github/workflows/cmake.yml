@@ -97,7 +97,7 @@ jobs:
 
       - name: Setup Python
         if: matrix.build_python == 'ON'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
