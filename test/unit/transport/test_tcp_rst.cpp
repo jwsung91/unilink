@@ -31,13 +31,22 @@ namespace {
 
 class TcpRstTest : public ::testing::Test {
  protected:
+  struct SharedState {
+    std::atomic<int> connected_clients{0};
+    std::atomic<int> disconnected_clients{0};
+  };
+
   void SetUp() override {
     port_ = TestUtils::getAvailableTestPort();
     server_ = std::make_shared<TcpServer>(port_);
+    state_ = std::make_shared<SharedState>();
 
-    server_->on_multi_connect([this](size_t id, const std::string&) { connected_clients_++; });
+    // Use a weak pointer to the state or just capture the shared pointer directly.
+    // Capturing shared_ptr ensures the state lives as long as the callback.
+    auto state = state_;
+    server_->on_multi_connect([state](size_t id, const std::string&) { state->connected_clients++; });
 
-    server_->on_multi_disconnect([this](size_t id) { disconnected_clients_++; });
+    server_->on_multi_disconnect([state](size_t id) { state->disconnected_clients++; });
 
     server_->start();
     ASSERT_TRUE(TestUtils::waitForCondition([this] { return server_->is_listening(); }, 2000));
@@ -57,8 +66,7 @@ class TcpRstTest : public ::testing::Test {
 
   uint16_t port_;
   std::shared_ptr<TcpServer> server_;
-  std::atomic<int> connected_clients_{0};
-  std::atomic<int> disconnected_clients_{0};
+  std::shared_ptr<SharedState> state_;
 };
 
 TEST_F(TcpRstTest, ConnectionReset) {
@@ -72,7 +80,7 @@ TEST_F(TcpRstTest, ConnectionReset) {
   ASSERT_FALSE(ec) << "Connect failed: " << ec.message();
 
   // Wait for server to register connection
-  ASSERT_TRUE(TestUtils::waitForCondition([this] { return connected_clients_ > 0; }));
+  ASSERT_TRUE(TestUtils::waitForCondition([this] { return state_->connected_clients > 0; }));
 
   // 2. Set SO_LINGER to 0 to force RST on close
   boost::asio::socket_base::linger option(true, 0);
@@ -85,7 +93,7 @@ TEST_F(TcpRstTest, ConnectionReset) {
 
   // 4. Verify server handles it (should disconnect)
   // The session error handler should catch connection_reset and close session
-  ASSERT_TRUE(TestUtils::waitForCondition([this] { return disconnected_clients_ > 0; }));
+  ASSERT_TRUE(TestUtils::waitForCondition([this] { return state_->disconnected_clients > 0; }));
 }
 
 }  // namespace
