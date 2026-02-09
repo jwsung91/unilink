@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-09 00:18:53</td>
+            <td class="headerValue">2026-02-09 08:14:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -130,9 +130,9 @@
 <a name="52"><span class="lineNum">      52 </span>                :            : </a>
 <a name="53"><span class="lineNum">      53 </span>                :            :   /**</a>
 <a name="54"><span class="lineNum">      54 </span>                :            :    * @brief Build and return the configured product</a>
-<a name="55"><span class="lineNum">      55 </span>                :            :    * @return std::unique_ptr&lt;T&gt; The configured wrapper instance</a>
+<a name="55"><span class="lineNum">      55 </span>                :            :    * @return std::shared_ptr&lt;T&gt; The configured wrapper instance</a>
 <a name="56"><span class="lineNum">      56 </span>                :            :    */</a>
-<a name="57"><span class="lineNum">      57 </span>                :            :   virtual std::unique_ptr&lt;T&gt; build() = 0;</a>
+<a name="57"><span class="lineNum">      57 </span>                :            :   virtual std::shared_ptr&lt;T&gt; build() = 0;</a>
 <a name="58"><span class="lineNum">      58 </span>                :            : </a>
 <a name="59"><span class="lineNum">      59 </span>                :            :   /**</a>
 <a name="60"><span class="lineNum">      60 </span>                :            :    * @brief Enable auto-manage functionality</a>
