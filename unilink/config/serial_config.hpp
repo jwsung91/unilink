@@ -45,6 +45,13 @@ struct SerialConfig {
   unsigned retry_interval_ms = common::constants::DEFAULT_RETRY_INTERVAL_MS;
   int max_retries = common::constants::DEFAULT_MAX_RETRIES;
 
+  SerialConfig() = default;
+  ~SerialConfig() = default;
+  SerialConfig(const SerialConfig&) = default;
+  SerialConfig& operator=(const SerialConfig&) = default;
+  SerialConfig(SerialConfig&&) noexcept = default;
+  SerialConfig& operator=(SerialConfig&&) noexcept = default;
+
   // Validation methods
   bool is_valid() const {
     return !device.empty() && baud_rate > 0 && char_size >= 5 && char_size <= 8 && (stop_bits == 1 || stop_bits == 2) &&

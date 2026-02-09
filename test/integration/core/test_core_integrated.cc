@@ -18,6 +18,7 @@
 #include <gtest/gtest.h>
 
 #include <atomic>
+#include <boost/asio.hpp>
 #include <chrono>
 #include <memory>
 #include <stdexcept>

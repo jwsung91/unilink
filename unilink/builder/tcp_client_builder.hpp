@@ -58,9 +58,9 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
 
   /**
    * @brief Build and return the configured TcpClient
-   * @return std::unique_ptr<wrapper::TcpClient> The configured client instance
+   * @return std::shared_ptr<wrapper::TcpClient> The configured client instance
    */
-  std::unique_ptr<wrapper::TcpClient> build() override;
+  std::shared_ptr<wrapper::TcpClient> build() override;
 
   /**
    * @brief Enable auto-manage functionality

@@ -275,7 +275,7 @@ TEST_F(StressTest, ConcurrentConnections) {
 
   ASSERT_NE(server, nullptr);
 
-  std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
+  std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
   std::atomic<int> created_count{0};
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -287,7 +287,7 @@ TEST_F(StressTest, ConcurrentConnections) {
                       .build();
 
     if (client) {
-      clients.push_back(std::move(client));
+      clients.push_back(client);
       created_count++;
     }
   }

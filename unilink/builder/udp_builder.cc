@@ -27,18 +27,18 @@ UdpBuilder::UdpBuilder() {
   cfg_.local_port = 0;
 }
 
-std::unique_ptr<wrapper::Udp> UdpBuilder::build() {
+std::shared_ptr<wrapper::Udp> UdpBuilder::build() {
   if (!cfg_.is_valid()) {
     throw std::runtime_error("UDP configuration is invalid. Local port and remote pair must be set correctly.");
   }
 
-  std::unique_ptr<wrapper::Udp> udp;
+  std::shared_ptr<wrapper::Udp> udp;
   if (use_independent_context_) {
     auto ioc = std::make_shared<boost::asio::io_context>();
-    udp = std::make_unique<wrapper::Udp>(cfg_, ioc);
+    udp = std::make_shared<wrapper::Udp>(cfg_, ioc);
     udp->set_manage_external_context(true);
   } else {
-    udp = std::make_unique<wrapper::Udp>(cfg_);
+    udp = std::make_shared<wrapper::Udp>(cfg_);
   }
 
   // Apply framing if configured
