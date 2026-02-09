@@ -63,6 +63,13 @@ TEST_F(TcpRstTest, ConnectionReset) {
   socket.connect(ep, ec);
   ASSERT_FALSE(ec) << "Connect failed: " << ec.message();
 
+  // On macOS/BSD, writing to a closed socket raises SIGPIPE if not suppressed.
+  // Boost.Asio basic_stream_socket usually handles this, but explicit setting ensures it.
+#if defined(__APPLE__) || defined(__FreeBSD__)
+  int val = 1;
+  setsockopt(socket.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &val, sizeof(val));
+#endif
+
   // Wait for server to register connection
   ASSERT_TRUE(TestUtils::waitForCondition([this] { return connected_clients_ > 0; }));
 

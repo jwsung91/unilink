@@ -154,6 +154,7 @@ if(NOT Boost_FOUND AND "${_boost_req}" STREQUAL "QUIET")
      set(Boost_FOUND TRUE)
      set(UNILINK_LINK_BOOST_SYSTEM ON)
      set(UNILINK_BOOST_INCLUDE_DIR ${boost_SOURCE_DIR})
+     set(UNILINK_BOOST_FETCHED ON)
      message(STATUS "Boost fetched and built successfully via FetchContent.")
   else()
      # If Boost::system target is missing, fallback to headers + header-only libs
@@ -161,6 +162,7 @@ if(NOT Boost_FOUND AND "${_boost_req}" STREQUAL "QUIET")
      set(Boost_FOUND TRUE)
      set(UNILINK_LINK_BOOST_SYSTEM OFF)
      set(UNILINK_BOOST_INCLUDE_DIR ${boost_SOURCE_DIR})
+     set(UNILINK_BOOST_FETCHED ON)
      add_compile_definitions(BOOST_ERROR_CODE_HEADER_ONLY BOOST_SYSTEM_NO_LIB)
      message(STATUS "Boost::system target not created. Using header-only mode from fetched source.")
   endif()
@@ -257,10 +259,31 @@ target_link_libraries(unilink_dependencies INTERFACE
   Threads::Threads
 )
 if(UNILINK_LINK_BOOST_SYSTEM)
-  target_link_libraries(unilink_dependencies INTERFACE Boost::system)
-  if(TARGET Boost::asio)
-    target_link_libraries(unilink_dependencies INTERFACE Boost::asio)
+  if(UNILINK_BOOST_FETCHED)
+    # For local targets (FetchContent), use BUILD_INTERFACE to avoid export errors
+    # and INSTALL_INTERFACE with a proxy target to avoid conflicts with the local target
+    target_link_libraries(unilink_dependencies INTERFACE
+      $<BUILD_INTERFACE:Boost::system>
+      $<INSTALL_INTERFACE:unilink_boost_system_proxy>
+    )
+    if(TARGET Boost::asio)
+      target_link_libraries(unilink_dependencies INTERFACE
+        $<BUILD_INTERFACE:Boost::asio>
+        $<INSTALL_INTERFACE:unilink_boost_asio_proxy>
+      )
+    endif()
+  else()
+    target_link_libraries(unilink_dependencies INTERFACE Boost::system)
+    if(TARGET Boost::asio)
+      target_link_libraries(unilink_dependencies INTERFACE Boost::asio)
+    endif()
   endif()
+endif()
+
+if(UNILINK_BOOST_INCLUDE_DIR)
+  target_include_directories(unilink_dependencies SYSTEM INTERFACE
+    $<BUILD_INTERFACE:${UNILINK_BOOST_INCLUDE_DIR}>
+  )
 elseif(UNILINK_BOOST_INCLUDE_DIR)
   target_include_directories(unilink_dependencies INTERFACE "${UNILINK_BOOST_INCLUDE_DIR}")
 endif()

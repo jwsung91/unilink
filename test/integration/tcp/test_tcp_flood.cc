@@ -53,11 +53,25 @@ class TcpFloodTest : public unilink::test::NetworkTest {
  */
 TEST_F(TcpFloodTest, FloodServer) {
   // 1. Start Server
+  // We use a separate context struct to hold the weak_ptr to the server.
+  // This allows the callback to be independent of 'this' (TcpFloodTest instance)
+  // and avoids use-after-free if the test fixture is destroyed while callbacks are pending.
+  struct TestContext {
+    std::weak_ptr<wrapper::TcpServer> server_weak;
+  };
+  auto ctx = std::make_shared<TestContext>();
+
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()
-                .on_multi_data(
-                    [this](size_t client_id, const std::string& data) { server_->send_to_client(client_id, data); })
+                .on_multi_data([ctx](size_t client_id, const std::string& data) {
+                  if (auto server = ctx->server_weak.lock()) {
+                    server->send_to_client(client_id, data);
+                  }
+                })
                 .build();
+
+  // Assign the weak pointer now that server_ is created
+  ctx->server_weak = server_;
 
   server_->start();
   ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([this]() { return server_->is_listening(); }, 2000));

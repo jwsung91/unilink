@@ -5,6 +5,25 @@ include(CMakeFindDependencyMacro)
 # Find required dependencies
 # Use more flexible Boost version detection for Conan compatibility
 find_dependency(Boost REQUIRED COMPONENTS system)
+
+# Define proxy targets for compatibility with FetchContent builds
+if(NOT TARGET unilink_boost_system_proxy)
+  add_library(unilink_boost_system_proxy INTERFACE IMPORTED)
+  if(TARGET Boost::system)
+    target_link_libraries(unilink_boost_system_proxy INTERFACE Boost::system)
+  endif()
+endif()
+
+if(NOT TARGET unilink_boost_asio_proxy)
+  add_library(unilink_boost_asio_proxy INTERFACE IMPORTED)
+  if(TARGET Boost::asio)
+    target_link_libraries(unilink_boost_asio_proxy INTERFACE Boost::asio)
+  elseif(TARGET Boost::system)
+    # Fallback: link to system to get include directories
+    target_link_libraries(unilink_boost_asio_proxy INTERFACE Boost::system)
+  endif()
+endif()
+
 find_dependency(Threads REQUIRED)
 
 # Include the targets file
