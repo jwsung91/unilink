@@ -21,3 +21,7 @@
 ## 2026-10-24 - MemoryPool Vector Reallocation
 **Learning:** Reserving `std::vector` capacity based on initial estimate instead of maximum limit in `MemoryPool` caused frequent reallocations (copying pointers) when the pool filled up, increasing runtime latency during heavy load.
 **Action:** Reserve `capacity` (max size) in constructor to prevent reallocations during runtime. The small upfront memory cost (pointers only) is worth the stability.
+
+## 2026-02-09 - [Hidden Overhead in Default Configuration]
+**Learning:** The `UNILINK_ENABLE_MEMORY_TRACKING` option was enabled by default (even in Release builds), introducing significant mutex locking overhead on every allocation/deallocation in the memory pool.
+**Action:** Always audit `CMakeLists.txt` and `options.cmake` files for debug features enabled by default in production-oriented libraries, as these can drastically impact performance without code changes.
