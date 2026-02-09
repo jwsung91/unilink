@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <string_view>
 
 namespace unilink {
 namespace framer {
@@ -32,54 +33,107 @@ LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_
 void LineFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
 
-  // Append new data to buffer
-  buffer_.insert(buffer_.end(), data.begin(), data.end());
+  size_t offset = 0;
+  while (offset < data.size()) {
+    // If buffer has data, check for split delimiter at the boundary first
+    if (!buffer_.empty()) {
+      // Append a small chunk to check for completion
+      // We take enough bytes to potentially complete a delimiter starting in buffer
+      size_t peek_len = std::min(data.size() - offset, delimiter_.length());
 
-  size_t processed_offset = 0;
+      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(offset),
+                     data.begin() + static_cast<std::ptrdiff_t>(offset + peek_len));
+      offset += peek_len;
 
-  while (processed_offset < buffer_.size()) {
-    auto it_start = buffer_.begin() + static_cast<std::ptrdiff_t>(processed_offset);
-    auto delimiter_pos = std::search(it_start, buffer_.end(), delimiter_.begin(), delimiter_.end());
+      auto it_delim = std::search(buffer_.begin(), buffer_.end(), delimiter_.begin(), delimiter_.end());
+      if (it_delim != buffer_.end()) {
+        // Found delimiter!
+        size_t msg_total_len = static_cast<size_t>(std::distance(buffer_.begin(), it_delim)) + delimiter_.length();
+        if (on_message_) {
+          size_t extract_len = include_delimiter_ ? msg_total_len : (msg_total_len - delimiter_.length());
+          on_message_(memory::ConstByteSpan(buffer_.data(), extract_len));
+        }
+        buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(msg_total_len));
+        continue;
+      }
 
-    if (delimiter_pos == buffer_.end()) {
-      break;
-    }
-
-    size_t msg_len = static_cast<size_t>(std::distance(it_start, delimiter_pos));
-    size_t total_len = msg_len + delimiter_.length();
-
-    if (on_message_) {
-      size_t extract_len = include_delimiter_ ? total_len : msg_len;
-      if (extract_len > 0) {
-        // Address of element is safe as long as buffer is not reallocated
-        on_message_(memory::ConstByteSpan(&(*it_start), extract_len));
-      } else {
-        // Empty message (only if msg_len=0 and !include_delimiter_)
-        on_message_(memory::ConstByteSpan());
+      // Not found. Check overflow.
+      if (buffer_.size() > max_length_) {
+        buffer_.clear();
+        // We consumed peek_len.
+        // Continue loop to process remaining data
+        continue;
       }
     }
 
-    // Check if reset was called during callback (buffer cleared)
-    if (buffer_.empty()) {
-      return;
-    }
+    // Now search in rest of data
+    std::string_view data_view(reinterpret_cast<const char*>(data.data()), data.size());
+    size_t pos = data_view.find(delimiter_, offset);
 
-    processed_offset += total_len;
-  }
+    if (pos != std::string_view::npos) {
+      // Found a delimiter at pos
+      size_t chunk_len = pos - offset + delimiter_.length();
 
-  // Remove processed data
-  if (processed_offset > 0) {
-    if (processed_offset >= buffer_.size()) {
+      // Check if appending this chunk would exceed max_length
+      if (buffer_.size() + chunk_len > max_length_) {
+        // Overflow - message too long
+        buffer_.clear();
+        offset += chunk_len;
+        continue;
+      }
+
+      // Append the chunk (up to and including delimiter)
+      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(offset),
+                     data.begin() + static_cast<std::ptrdiff_t>(offset + chunk_len));
+
+      // Trigger callback
+      if (on_message_) {
+        size_t msg_len = buffer_.size() - (include_delimiter_ ? 0 : delimiter_.length());
+        on_message_(memory::ConstByteSpan(buffer_.data(), msg_len));
+      }
+
+      // Clear buffer as we processed the message
       buffer_.clear();
-    } else {
-      buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(processed_offset));
-    }
-  }
+      offset += chunk_len;
 
-  // Check max length on remaining buffer
-  if (buffer_.size() > max_length_) {
-    // Buffer overflow - clear buffer to prevent attack/leak
-    buffer_.clear();
+    } else {
+      // No delimiter found in the rest of data
+      size_t remaining = data.size() - offset;
+
+      if (buffer_.size() + remaining > max_length_) {
+        // Overflow - partial message already too long
+        buffer_.clear();
+        // Discard remaining data
+        return;
+      }
+
+      // Append remaining data
+      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(offset), data.end());
+
+      // Check for split delimiter formed at the boundary (again, for the final chunk)
+      // Only need to search if buffer has enough data
+      if (buffer_.size() >= delimiter_.length()) {
+        auto it_delim = std::search(buffer_.begin(), buffer_.end(), delimiter_.begin(), delimiter_.end());
+        if (it_delim != buffer_.end()) {
+          // Found split delimiter!
+          size_t msg_total_len = static_cast<size_t>(std::distance(buffer_.begin(), it_delim)) + delimiter_.length();
+
+          if (on_message_) {
+            size_t extract_len = include_delimiter_ ? msg_total_len : (msg_total_len - delimiter_.length());
+            on_message_(memory::ConstByteSpan(buffer_.data(), extract_len));
+          }
+
+          // Remove processed part
+          if (msg_total_len >= buffer_.size()) {
+            buffer_.clear();
+          } else {
+            buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(msg_total_len));
+          }
+        }
+      }
+
+      return;  // Done with data
+    }
   }
 }
 

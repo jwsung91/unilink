@@ -32,7 +32,7 @@
 namespace unilink {
 namespace wrapper {
 
-class UNILINK_API TcpClient : public ChannelInterface, public std::enable_shared_from_this<TcpClient> {
+class UNILINK_API TcpClient : public ChannelInterface {
  public:
   TcpClient(const std::string& host, uint16_t port);
   TcpClient(const std::string& host, uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc);

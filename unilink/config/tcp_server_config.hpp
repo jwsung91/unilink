@@ -34,13 +34,6 @@ struct TcpServerConfig {
   int max_port_retries = 3;           // Maximum number of retry attempts
   int port_retry_interval_ms = 1000;  // Retry interval in milliseconds
 
-  TcpServerConfig() = default;
-  ~TcpServerConfig() = default;
-  TcpServerConfig(const TcpServerConfig&) = default;
-  TcpServerConfig& operator=(const TcpServerConfig&) = default;
-  TcpServerConfig(TcpServerConfig&&) noexcept = default;
-  TcpServerConfig& operator=(TcpServerConfig&&) noexcept = default;
-
   // Validation methods
   bool is_valid() const {
     return port > 0 && backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&

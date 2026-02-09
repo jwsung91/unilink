@@ -52,9 +52,9 @@ class BuilderInterface {
 
   /**
    * @brief Build and return the configured product
-   * @return std::shared_ptr<T> The configured wrapper instance
+   * @return std::unique_ptr<T> The configured wrapper instance
    */
-  virtual std::shared_ptr<T> build() = 0;
+  virtual std::unique_ptr<T> build() = 0;
 
   /**
    * @brief Enable auto-manage functionality

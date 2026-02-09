@@ -17,6 +17,7 @@
 #pragma once
 
 #include <atomic>
+#include <boost/asio.hpp>
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -24,13 +25,6 @@
 
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
-
-// Forward declare boost components
-namespace boost {
-namespace asio {
-class io_context;
-}  // namespace asio
-}  // namespace boost
 
 namespace unilink {
 namespace concurrency {
@@ -43,6 +37,7 @@ namespace concurrency {
 class UNILINK_API IoContextManager {
  public:
   using IoContext = boost::asio::io_context;
+  using WorkGuard = boost::asio::executor_work_guard<IoContext::executor_type>;
 
   // Singleton instance access
   static IoContextManager& instance();
@@ -74,8 +69,14 @@ class UNILINK_API IoContextManager {
   IoContextManager(const IoContextManager&) = delete;
   IoContextManager& operator=(const IoContextManager&) = delete;
 
-  struct Impl;
-  std::unique_ptr<Impl> impl_;
+  bool owns_context_{true};
+  std::shared_ptr<IoContext> ioc_;
+  std::unique_ptr<WorkGuard> work_guard_;
+  std::thread io_thread_;
+  std::atomic<bool> running_{false};
+  mutable std::mutex mutex_;
+  std::condition_variable cv_;
+  bool stopping_{false};
 };
 
 }  // namespace concurrency

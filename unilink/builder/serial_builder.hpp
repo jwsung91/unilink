@@ -58,9 +58,9 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
 
   /**
    * @brief Build and return the configured Serial
-   * @return std::shared_ptr<wrapper::Serial> The configured serial instance
+   * @return std::unique_ptr<wrapper::Serial> The configured serial instance
    */
-  std::shared_ptr<wrapper::Serial> build() override;
+  std::unique_ptr<wrapper::Serial> build() override;
 
   /**
    * @brief Enable auto-manage functionality

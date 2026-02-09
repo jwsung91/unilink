@@ -143,7 +143,6 @@ struct AsyncLogStats {
 class UNILINK_API Logger {
  public:
   using LogCallback = std::function<void(LogLevel level, const std::string& formatted_message)>;
-  using LogHandler = std::function<void(const LogEntry& entry)>;
 
   /**
    * @brief Get singleton instance
@@ -209,13 +208,6 @@ class UNILINK_API Logger {
   void set_callback(LogCallback callback);
 
   /**
-   * @brief Set a pluggable log handler for full control over log processing
-   * @param handler Function that receives the raw LogEntry
-   * @note This handler is called in addition to standard outputs
-   */
-  void set_log_handler(LogHandler handler);
-
-  /**
    * @brief Set output destinations
    * @param outputs Bitwise OR of LogOutput flags
    */
@@ -267,7 +259,6 @@ class UNILINK_API Logger {
   std::string format_string_{"{timestamp} [{level}] [{component}] [{operation}] {message}"};
   std::unique_ptr<std::ofstream> file_output_;
   LogCallback callback_;
-  LogHandler log_handler_;
 
   // Log rotation support
   std::unique_ptr<LogRotation> log_rotation_;
@@ -296,7 +287,6 @@ class UNILINK_API Logger {
   void write_to_console(const std::string& message);
   void write_to_file(const std::string& message);
   void call_callback(LogLevel level, const std::string& message);
-  void call_log_handler(const LogEntry& entry);
 
   // Log rotation helper methods
   void check_and_rotate_log();

@@ -141,7 +141,7 @@ class UdpReceiverApp {
   void handle_error(const std::string& err) { common::log_message("udp-recv", "ERROR", err); }
 
   ReceiverOptions opts_;
-  std::shared_ptr<wrapper::Udp> udp_;
+  std::unique_ptr<wrapper::Udp> udp_;
   std::atomic<bool> running_;
 
   static UdpReceiverApp* instance_;

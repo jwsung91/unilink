@@ -173,7 +173,7 @@ class UdpSenderApp {
   void handle_error(const std::string& err) { common::log_message("udp-send", "ERROR", err); }
 
   SenderOptions opts_;
-  std::shared_ptr<wrapper::Udp> udp_;
+  std::unique_ptr<wrapper::Udp> udp_;
   std::atomic<bool> running_;
   std::atomic<uint64_t> sent_;
 
