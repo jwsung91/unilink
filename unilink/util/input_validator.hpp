@@ -74,7 +74,7 @@ class UNILINK_API InputValidator {
   // Helper methods
   static bool is_valid_ipv4(std::string_view address);
   static bool is_valid_ipv6(const std::string& address);
-  static bool is_valid_hostname(const std::string& hostname);
+  static bool is_valid_hostname(std::string_view hostname);
   static bool is_valid_device_path(const std::string& device);
 
   // Constants for retry count
