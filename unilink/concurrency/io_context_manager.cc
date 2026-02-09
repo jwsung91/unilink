@@ -107,17 +107,22 @@ void IoContextManager::start() {
       impl_->io_thread_.join();
     }
 
-    impl_->io_thread_ = std::thread([this, context]() {
-      try {
-        UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread started.");
-        context->run();
-        UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread finished running.");
-      } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
-      }
-      impl_->running_.store(false);
-    });
     impl_->running_.store(true);
+    try {
+      impl_->io_thread_ = std::thread([this, context]() {
+        try {
+          UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread started.");
+          context->run();
+          UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread finished running.");
+        } catch (const std::exception& e) {
+          UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
+        }
+        impl_->running_.store(false);
+      });
+    } catch (...) {
+      impl_->running_.store(false);
+      throw;
+    }
   }
 }
 
