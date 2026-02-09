@@ -124,7 +124,11 @@ void IoContextManager::start() {
 void IoContextManager::stop() {
   std::thread worker;
   {
-    std::lock_guard<std::mutex> lock(impl_->mutex_);
+    std::unique_lock<std::mutex> lock(impl_->mutex_);
+
+    // Serialize stop operations to prevent race conditions where a newer start()
+    // could be interrupted by an older stop() finishing its join.
+    impl_->cv_.wait(lock, [this] { return !impl_->stopping_; });
 
     if (!impl_->owns_context_ && impl_->ioc_) {
       return;
