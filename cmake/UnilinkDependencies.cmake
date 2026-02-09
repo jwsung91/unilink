@@ -146,13 +146,14 @@ if(NOT Boost_FOUND AND "${_boost_req}" STREQUAL "QUIET")
   )
 
   set(BOOST_ENABLE_CMAKE ON)
-  set(BOOST_INCLUDE_LIBRARIES system)
+  set(BOOST_INCLUDE_LIBRARIES system asio)
 
   FetchContent_MakeAvailable(Boost)
 
   if(TARGET Boost::system)
      set(Boost_FOUND TRUE)
      set(UNILINK_LINK_BOOST_SYSTEM ON)
+     set(UNILINK_BOOST_INCLUDE_DIR ${boost_SOURCE_DIR})
      message(STATUS "Boost fetched and built successfully via FetchContent.")
   else()
      # If Boost::system target is missing, fallback to headers + header-only libs
@@ -257,6 +258,9 @@ target_link_libraries(unilink_dependencies INTERFACE
 )
 if(UNILINK_LINK_BOOST_SYSTEM)
   target_link_libraries(unilink_dependencies INTERFACE Boost::system)
+  if(TARGET Boost::asio)
+    target_link_libraries(unilink_dependencies INTERFACE Boost::asio)
+  endif()
 elseif(UNILINK_BOOST_INCLUDE_DIR)
   target_include_directories(unilink_dependencies INTERFACE "${UNILINK_BOOST_INCLUDE_DIR}")
 endif()
