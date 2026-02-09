@@ -34,6 +34,10 @@ class TcpAbortTest : public unilink::test::NetworkTest {
   void TearDown() override {
     if (server_) {
       server_->stop();
+      // Allow brief time for async cleanup on global io_context to complete
+      // before destroying the server wrapper. This prevents race conditions
+      // where internal handlers might run during destruction.
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
       server_.reset();
     }
     unilink::test::NetworkTest::TearDown();

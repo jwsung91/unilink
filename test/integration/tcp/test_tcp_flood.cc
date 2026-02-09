@@ -53,23 +53,25 @@ class TcpFloodTest : public unilink::test::NetworkTest {
  */
 TEST_F(TcpFloodTest, FloodServer) {
   // 1. Start Server
-  // Use a weak_ptr to the server in the callback if possible, but the builder pattern makes it hard.
-  // Instead, we ensure the callback is safe by checking if server_ is valid,
-  // although server_->stop() in TearDown should prevent callbacks from running after reset.
-  // However, on some platforms/configs, a race might occur.
-  // To be absolutely safe, we capture a shared_ptr to a context object or use the server pointer safely.
-  // Since server_ is a member, capturing 'this' is necessary.
-  // We can add a check inside the lambda.
+  // We use a separate context struct to hold the weak_ptr to the server.
+  // This allows the callback to be independent of 'this' (TcpFloodTest instance)
+  // and avoids use-after-free if the test fixture is destroyed while callbacks are pending.
+  struct TestContext {
+    std::weak_ptr<wrapper::TcpServer> server_weak;
+  };
+  auto ctx = std::make_shared<TestContext>();
 
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()
-                .on_multi_data([this](size_t client_id, const std::string& data) {
-                  // Guard against use-after-free if callback fires during destruction
-                  if (server_) {
-                    server_->send_to_client(client_id, data);
+                .on_multi_data([ctx](size_t client_id, const std::string& data) {
+                  if (auto server = ctx->server_weak.lock()) {
+                    server->send_to_client(client_id, data);
                   }
                 })
                 .build();
+
+  // Assign the weak pointer now that server_ is created
+  ctx->server_weak = server_;
 
   server_->start();
   ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([this]() { return server_->is_listening(); }, 2000));
