@@ -1,5 +1,4 @@
 var namespaceboost =
 [
-    [ "asio", "namespaceboost_1_1asio.html", "namespaceboost_1_1asio" ],
-    [ "system", "namespaceboost_1_1system.html", null ]
+    [ "asio", "namespaceboost_1_1asio.html", null ]
 ];

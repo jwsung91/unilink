@@ -1,19 +1,13 @@
 var searchData=
 [
-  ['read_5fchunk_1596',['read_chunk',['../structunilink_1_1config_1_1SerialConfig.html#aa93fec717b98438e20efe4a6c7bf6b54',1,'unilink::config::SerialConfig']]],
-  ['recv_5fendpoint_5f_1597',['recv_endpoint_',['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#aee456bfec314b0b3bdef5ddcc3857354',1,'unilink::transport::UdpChannel::Impl']]],
-  ['remote_5faddress_1598',['remote_address',['../structunilink_1_1config_1_1UdpConfig.html#a8f48eb6ccf26e799e0b8fb408cfb1ad5',1,'unilink::config::UdpConfig']]],
-  ['remote_5fendpoint_5f_1599',['remote_endpoint_',['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a2fdbf202799862cbc7847402022fbea0',1,'unilink::transport::UdpChannel::Impl']]],
-  ['remote_5fport_1600',['remote_port',['../structunilink_1_1config_1_1UdpConfig.html#af8909d030ce8eda3215dd5c7a8e40340',1,'unilink::config::UdpConfig']]],
-  ['reopen_5fon_5ferror_1601',['reopen_on_error',['../structunilink_1_1config_1_1SerialConfig.html#ac766f5f8409765f6ab65980ff84aaf31',1,'unilink::config::SerialConfig']]],
-  ['required_1602',['required',['../structunilink_1_1config_1_1ConfigItem.html#a2c10df409e6a65dc82c6a287df990ccb',1,'unilink::config::ConfigItem']]],
-  ['resolver_5f_1603',['resolver_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ac7c0ef6846db06a83475c96e19c04c22',1,'unilink::transport::TcpClient::Impl']]],
-  ['retry_5fattempts_5f_1604',['retry_attempts_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a8147cb223df03045cf875906cacc63bf',1,'unilink::transport::TcpClient::Impl']]],
-  ['retry_5fcount_1605',['retry_count',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a39c79e4468881a7e1ea504434119bc50',1,'unilink::diagnostics::ErrorInfo']]],
-  ['retry_5finterval_5fms_1606',['retry_interval_ms',['../structunilink_1_1config_1_1SerialConfig.html#a876b0fc84c46b0775969e2449b5383e5',1,'unilink::config::SerialConfig::retry_interval_ms()'],['../structunilink_1_1config_1_1TcpClientConfig.html#a866a6dcc13f55b167edd31308bbbed7a',1,'unilink::config::TcpClientConfig::retry_interval_ms()']]],
-  ['retry_5ftimer_5f_1607',['retry_timer_',['../structunilink_1_1transport_1_1Serial_1_1Impl.html#ac3b58158bcb3223db8a6503755b5e5da',1,'unilink::transport::Serial::Impl::retry_timer_()'],['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a90c00f8a77eddaa200774e652365befd',1,'unilink::transport::TcpClient::Impl::retry_timer_()']]],
-  ['retryable_1608',['retryable',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a352382947538a6b6c77ebef6a08c1f37',1,'unilink::diagnostics::ErrorInfo']]],
-  ['retryable_5ferrors_1609',['retryable_errors',['../structunilink_1_1diagnostics_1_1ErrorStats.html#ae8f4b7c56716afcdd8fef640ec14b76d',1,'unilink::diagnostics::ErrorStats']]],
-  ['running_5f_1610',['running_',['../structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html#ae2481e984e685514d97a3be5fcbe9e67',1,'unilink::concurrency::IoContextManager::Impl']]],
-  ['rx_5f_1611',['rx_',['../structunilink_1_1transport_1_1Serial_1_1Impl.html#a96318b061ff1919f2e18cae9b9a2cebc',1,'unilink::transport::Serial::Impl::rx_()'],['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a38c54fbbedb4e949ebd5188f4642fb66',1,'unilink::transport::TcpClient::Impl::rx_()'],['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ac4f56a3831b3fce5c491980796fc2dad',1,'unilink::transport::UdpChannel::Impl::rx_()']]]
+  ['terminal_5fstate_5fnotified_5f_1539',['terminal_state_notified_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a4b473b588060a6017093ecf35b227ef1',1,'unilink::transport::TcpClient::Impl']]],
+  ['timestamp_1540',['timestamp',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a317ed975223f9525e7ffb57628a25919',1,'unilink::diagnostics::ErrorInfo::timestamp()'],['../structunilink_1_1diagnostics_1_1LogEntry.html#a036f9470e4e9ae264043f6204007cb3b',1,'unilink::diagnostics::LogEntry::timestamp()'],['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#aed0ae5d1773f710ead38525077a956ea',1,'unilink::memory::MemoryTracker::AllocationInfo::timestamp()']]],
+  ['total_5fallocations_1541',['total_allocations',['../structunilink_1_1memory_1_1MemoryPool_1_1PoolStats.html#a72d08b268f3e99f2ec1518326721fe52',1,'unilink::memory::MemoryPool::PoolStats::total_allocations()'],['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#ad409f7734701fed0bcafbc6a6c2f75c5',1,'unilink::memory::MemoryTracker::MemoryStats::total_allocations()']]],
+  ['total_5fbytes_5fallocated_1542',['total_bytes_allocated',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a54087b205e55fb2660dae2e8fdbb0695',1,'unilink::memory::MemoryTracker::MemoryStats']]],
+  ['total_5fbytes_5fdeallocated_1543',['total_bytes_deallocated',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a81440fac6e99a5bf1b4ab72e81313422',1,'unilink::memory::MemoryTracker::MemoryStats']]],
+  ['total_5fdeallocations_1544',['total_deallocations',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a3dcc668a77ad8d45bee3d43cad5d5c67',1,'unilink::memory::MemoryTracker::MemoryStats']]],
+  ['total_5ferrors_1545',['total_errors',['../structunilink_1_1diagnostics_1_1ErrorStats.html#ab3db65551f9dc2881f30c5e685193607',1,'unilink::diagnostics::ErrorStats']]],
+  ['total_5flogs_1546',['total_logs',['../structunilink_1_1diagnostics_1_1AsyncLogStats.html#aa42fa4a7a720d5b71c0426f632f290d0',1,'unilink::diagnostics::AsyncLogStats']]],
+  ['tx_5f_1547',['tx_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a10a94c3d8d2947dd026b3292cf0d6f4d',1,'unilink::transport::TcpClient::Impl']]],
+  ['type_1548',['type',['../structunilink_1_1config_1_1ConfigItem.html#a74a54b9e37822c764497c802fc941cd9',1,'unilink::config::ConfigItem']]]
 ];

@@ -1,7 +1,6 @@
 var classunilink_1_1diagnostics_1_1Logger =
 [
     [ "LogCallback", "classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122", null ],
-    [ "LogHandler", "classunilink_1_1diagnostics_1_1Logger.html#acbdace2fdf4afa1a672e2ffb0bcb23f1", null ],
     [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html#a124de78d8aaa1591849e8c3588ef027f", null ],
     [ "~Logger", "classunilink_1_1diagnostics_1_1Logger.html#aec9b6e07aab5229a4077b58410a94d78", null ],
     [ "critical", "classunilink_1_1diagnostics_1_1Logger.html#a286630c83e07db4633e3f9a9f1f1c115", null ],
@@ -24,7 +23,6 @@ var classunilink_1_1diagnostics_1_1Logger =
     [ "set_file_output_with_rotation", "classunilink_1_1diagnostics_1_1Logger.html#ada26b971ae75266aff644f17ecb670e8", null ],
     [ "set_format", "classunilink_1_1diagnostics_1_1Logger.html#a0943018bf72c79971e7233be8438714c", null ],
     [ "set_level", "classunilink_1_1diagnostics_1_1Logger.html#a7e8ec37c982ad0a16b56ad33ae62932b", null ],
-    [ "set_log_handler", "classunilink_1_1diagnostics_1_1Logger.html#ae52070854f694d3a060105c4804f39f4", null ],
     [ "set_outputs", "classunilink_1_1diagnostics_1_1Logger.html#aeed67807bc170affe354d4110c4439a2", null ],
     [ "warning", "classunilink_1_1diagnostics_1_1Logger.html#ad60664c997885ffc6326d8c299189116", null ]
 ];

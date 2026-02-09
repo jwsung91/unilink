@@ -10,13 +10,7 @@ var structunilink_1_1config_1_1SerialConfig =
       [ "Even", "structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7ca35537fbc25d87ffe59e4f35fefcd34b7", null ],
       [ "Odd", "structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7ca37b6bd7fe61d651735cec3d3b0356c66", null ]
     ] ],
-    [ "SerialConfig", "structunilink_1_1config_1_1SerialConfig.html#a06bd1a2abfec80ce66c0053fc30a6cf2", null ],
-    [ "~SerialConfig", "structunilink_1_1config_1_1SerialConfig.html#a9340fc91bc598a0856eaed9c5d71f169", null ],
-    [ "SerialConfig", "structunilink_1_1config_1_1SerialConfig.html#af971eceff7a2c48c9ff86b7738b8c125", null ],
-    [ "SerialConfig", "structunilink_1_1config_1_1SerialConfig.html#aa3b02d8c2663e732b5c9703cea914053", null ],
     [ "is_valid", "structunilink_1_1config_1_1SerialConfig.html#a369d2ba7701a1d0900da15933bba736c", null ],
-    [ "operator=", "structunilink_1_1config_1_1SerialConfig.html#a9e4a221cd90ee7724d1e54d957c89be4", null ],
-    [ "operator=", "structunilink_1_1config_1_1SerialConfig.html#a4ff55b0406608504d6c98411f4fee12c", null ],
     [ "validate_and_clamp", "structunilink_1_1config_1_1SerialConfig.html#a1199a6c938896ea632aad1cb719af356", null ],
     [ "backpressure_threshold", "structunilink_1_1config_1_1SerialConfig.html#ab809d4a5d5c68cee486757c900eb80c8", null ],
     [ "baud_rate", "structunilink_1_1config_1_1SerialConfig.html#afce9cf7f09c90afddb18fcc6eaa5fb28", null ],

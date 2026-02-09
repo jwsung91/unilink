@@ -1,7 +1,7 @@
 var classunilink_1_1concurrency_1_1IoContextManager =
 [
-    [ "Impl", "structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html", "structunilink_1_1concurrency_1_1IoContextManager_1_1Impl" ],
     [ "IoContext", "classunilink_1_1concurrency_1_1IoContextManager.html#aa3fbc4eb7af5de9caff4f34217638673", null ],
+    [ "WorkGuard", "classunilink_1_1concurrency_1_1IoContextManager.html#a61c95a11c25f28acf3baf2aa39d38146", null ],
     [ "IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html#a9191142e76ce990859590213b01e947b", null ],
     [ "IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html#a110636c8162f2e9d51597bb22fda5ba8", null ],
     [ "IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html#a854e633ede2c4d041aff5d2caafc7439", null ],

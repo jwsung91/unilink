@@ -4,7 +4,7 @@ var classunilink_1_1builder_1_1TcpServerBuilder =
     [ "TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html#a5a61d49ae913ce98e6d6d8450ec8e506", null ],
     [ "TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html#a1e2b7356bca7899f9a3e23a78501c1e2", null ],
     [ "auto_manage", "classunilink_1_1builder_1_1TcpServerBuilder.html#acb48d2eaa65409712fc8559e48460e91", null ],
-    [ "build", "classunilink_1_1builder_1_1TcpServerBuilder.html#a51364541ce4f063c91424b6e05d09043", null ],
+    [ "build", "classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec", null ],
     [ "enable_port_retry", "classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d", null ],
     [ "max_clients", "classunilink_1_1builder_1_1TcpServerBuilder.html#a4de3178841f4d383fbaa9761b55e7a1f", null ],
     [ "multi_client", "classunilink_1_1builder_1_1TcpServerBuilder.html#a69b66ca3b486d1241d517c7b3ebbcfa0", null ],

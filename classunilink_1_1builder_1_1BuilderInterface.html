@@ -111,9 +111,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0b2378199ac802b34579cb42d61a4735"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ac78ea4742323ac6cf182dced1b43b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a3ac78ea4742323ac6cf182dced1b43b9">operator=</a> (<a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a3ac78ea4742323ac6cf182dced1b43b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82045ad5b07e7d84eb9b03f2cfb54d25"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a82045ad5b07e7d84eb9b03f2cfb54d25">build</a> ()=0</td></tr>
-<tr class="memdesc:a82045ad5b07e7d84eb9b03f2cfb54d25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured product.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a82045ad5b07e7d84eb9b03f2cfb54d25">More...</a><br /></td></tr>
-<tr class="separator:a82045ad5b07e7d84eb9b03f2cfb54d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf4b2bb47357ab87cf8bafb43002e649"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">build</a> ()=0</td></tr>
+<tr class="memdesc:acf4b2bb47357ab87cf8bafb43002e649"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured product.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">More...</a><br /></td></tr>
+<tr class="separator:acf4b2bb47357ab87cf8bafb43002e649"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af381e181ebf10649085ebd0d14ac81cd"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">auto_manage</a> (bool auto_manage=true)=0</td></tr>
 <tr class="memdesc:af381e181ebf10649085ebd0d14ac81cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">More...</a><br /></td></tr>
 <tr class="separator:af381e181ebf10649085ebd0d14ac81cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -332,8 +332,8 @@ template&lt;typename T , typename Derived &gt; </div>
 
 </div>
 </div>
-<a id="a82045ad5b07e7d84eb9b03f2cfb54d25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82045ad5b07e7d84eb9b03f2cfb54d25">&#9670;&nbsp;</a></span>build()</h2>
+<a id="acf4b2bb47357ab87cf8bafb43002e649"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf4b2bb47357ab87cf8bafb43002e649">&#9670;&nbsp;</a></span>build()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -344,7 +344,7 @@ template&lt;typename T , typename Derived &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::shared_ptr&lt;T&gt; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::build </td>
+          <td class="memname">virtual std::unique_ptr&lt;T&gt; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::build </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -358,9 +358,9 @@ template&lt;typename T , typename Derived &gt; </div>
 </div><div class="memdoc">
 
 <p>Build and return the configured product. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;T&gt; The configured wrapper instance </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;T&gt; The configured wrapper instance </dd></dl>
 
-<p>Implemented in <a class="el" href="classunilink_1_1builder_1_1UdpBuilder.html#a6b37456d9d8462e4dc2571e376ea69e9">unilink::builder::UdpBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a51364541ce4f063c91424b6e05d09043">unilink::builder::TcpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">unilink::builder::TcpClientBuilder</a>, and <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a928976dde16d8453c4303e5385a79142">unilink::builder::SerialBuilder</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1builder_1_1UdpBuilder.html#a34a3284a0210b03739bbf9d0d3a30079">unilink::builder::UdpBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">unilink::builder::TcpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder</a>, and <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">unilink::builder::SerialBuilder</a>.</p>
 
 </div>
 </div>
@@ -1086,7 +1086,7 @@ template&lt;typename T , typename Derived &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a></li>
-    <li class="footer">Generated on Mon Feb 9 2026 08:14:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 14:07:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

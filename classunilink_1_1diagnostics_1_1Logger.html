@@ -102,8 +102,6 @@ $(document).ready(function(){initNavTree('classunilink_1_1diagnostics_1_1Logger.
 Public Types</h2></td></tr>
 <tr class="memitem:aab6b65a72d045195df582a6c5c00f122"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122">LogCallback</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0">LogLevel</a> level, const std::string &amp;formatted_message)&gt;</td></tr>
 <tr class="separator:aab6b65a72d045195df582a6c5c00f122"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbdace2fdf4afa1a672e2ffb0bcb23f1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#acbdace2fdf4afa1a672e2ffb0bcb23f1">LogHandler</a> = std::function&lt; void(const <a class="el" href="structunilink_1_1diagnostics_1_1LogEntry.html">LogEntry</a> &amp;entry)&gt;</td></tr>
-<tr class="separator:acbdace2fdf4afa1a672e2ffb0bcb23f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -138,9 +136,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af2ba283a30ba91bc5cb75959e2f61eb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#af2ba283a30ba91bc5cb75959e2f61eb0">set_callback</a> (<a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122">LogCallback</a> callback)</td></tr>
 <tr class="memdesc:af2ba283a30ba91bc5cb75959e2f61eb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set log callback.  <a href="classunilink_1_1diagnostics_1_1Logger.html#af2ba283a30ba91bc5cb75959e2f61eb0">More...</a><br /></td></tr>
 <tr class="separator:af2ba283a30ba91bc5cb75959e2f61eb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae52070854f694d3a060105c4804f39f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#ae52070854f694d3a060105c4804f39f4">set_log_handler</a> (<a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#acbdace2fdf4afa1a672e2ffb0bcb23f1">LogHandler</a> handler)</td></tr>
-<tr class="memdesc:ae52070854f694d3a060105c4804f39f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a pluggable log handler for full control over log processing.  <a href="classunilink_1_1diagnostics_1_1Logger.html#ae52070854f694d3a060105c4804f39f4">More...</a><br /></td></tr>
-<tr class="separator:ae52070854f694d3a060105c4804f39f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeed67807bc170affe354d4110c4439a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#aeed67807bc170affe354d4110c4439a2">set_outputs</a> (int outputs)</td></tr>
 <tr class="memdesc:aeed67807bc170affe354d4110c4439a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set output destinations.  <a href="classunilink_1_1diagnostics_1_1Logger.html#aeed67807bc170affe354d4110c4439a2">More...</a><br /></td></tr>
 <tr class="separator:aeed67807bc170affe354d4110c4439a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,22 +191,6 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00145">145</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
-
-</div>
-</div>
-<a id="acbdace2fdf4afa1a672e2ffb0bcb23f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbdace2fdf4afa1a672e2ffb0bcb23f1">&#9670;&nbsp;</a></span>LogHandler</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#acbdace2fdf4afa1a672e2ffb0bcb23f1">unilink::diagnostics::Logger::LogHandler</a> =  std::function&lt;void(const <a class="el" href="structunilink_1_1diagnostics_1_1LogEntry.html">LogEntry</a>&amp; entry)&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00146">146</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -293,7 +272,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00195">195</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00178">178</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -329,7 +308,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00179">179</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00162">162</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -392,7 +371,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00191">191</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00174">174</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -413,7 +392,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Flush all outputs. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00121">121</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00108">108</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -434,7 +413,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Get async logging statistics. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00386">386</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00356">356</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -491,7 +470,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00183">183</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00166">166</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -541,7 +520,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Check if async logging is enabled. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00384">384</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00354">354</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -562,7 +541,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Check if logging is enabled. </p>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00114">114</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00101">101</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -604,7 +583,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00130">130</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00117">117</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -643,7 +622,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00376">376</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00346">346</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -727,7 +706,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00112">112</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00099">99</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -822,7 +801,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00116">116</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00103">103</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -854,35 +833,6 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae52070854f694d3a060105c4804f39f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae52070854f694d3a060105c4804f39f4">&#9670;&nbsp;</a></span>set_log_handler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void unilink::diagnostics::Logger::set_log_handler </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#acbdace2fdf4afa1a672e2ffb0bcb23f1">LogHandler</a>&#160;</td>
-          <td class="paramname"><em>handler</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set a pluggable log handler for full control over log processing. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">handler</td><td>Function that receives the raw <a class="el" href="structunilink_1_1diagnostics_1_1LogEntry.html" title="Log entry structure for async processing.">LogEntry</a> </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>This handler is called in addition to standard outputs </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00105">105</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
-
-</div>
-</div>
 <a id="aeed67807bc170affe354d4110c4439a2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeed67807bc170affe354d4110c4439a2">&#9670;&nbsp;</a></span>set_outputs()</h2>
 
@@ -907,7 +857,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00110">110</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00097">97</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -943,7 +893,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00187">187</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logger_8cc_source.html#l00170">170</a> of file <a class="el" href="logger_8cc_source.html">logger.cc</a>.</p>
 
 </div>
 </div>
@@ -957,7 +907,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1diagnostics.html">diagnostics</a></li><li class="navelem"><a class="el" href="classunilink_1_1diagnostics_1_1Logger.html">Logger</a></li>
-    <li class="footer">Generated on Mon Feb 9 2026 08:14:36 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 14:07:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

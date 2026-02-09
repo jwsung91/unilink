@@ -105,69 +105,132 @@ $(document).ready(function(){initNavTree('transport_2udp_2udp_8hpp_source.html',
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="visibility_8hpp.html">unilink/base/visibility.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="udp__config_8hpp.html">unilink/config/udp_config.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="channel_8hpp.html">unilink/interface/channel.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="memory__pool_8hpp.html">unilink/memory/memory_pool.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// Forward declarations to avoid Boost dependency in header</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceboost.html">boost</a> {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>asio {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">class </span>io_context;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}  <span class="comment">// namespace boost</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceunilink.html">unilink</a> {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>transport {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">using</span> config::UdpConfig;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">using</span> interface::Channel;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdpChannel.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361">UNILINK_API</a> <a class="code" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a> : <span class="keyword">public</span> <a class="code" href="classunilink_1_1interface_1_1Channel.html">Channel</a>, <span class="keyword">public</span> std::enable_shared_from_this&lt;UdpChannel&gt; {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="keyword">static</span> std::shared_ptr&lt;UdpChannel&gt; create(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">UdpConfig</a>&amp; cfg);</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdpChannel.html#a7fb7d23b74ea086a747d2c28db7ffbd8">   43</a></span>&#160;  <span class="keyword">static</span> std::shared_ptr&lt;UdpChannel&gt; <a class="code" href="classunilink_1_1transport_1_1UdpChannel.html#a7fb7d23b74ea086a747d2c28db7ffbd8">create</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">UdpConfig</a>&amp; cfg, boost::asio::io_context&amp; ioc);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  ~<a class="code" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordtype">void</span> start() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordtype">void</span> stop() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordtype">bool</span> is_connected() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordtype">void</span> async_write_copy(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keywordtype">void</span> async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordtype">void</span> async_write_shared(std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt; data) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordtype">void</span> on_bytes(<a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keywordtype">void</span> on_state(<a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keywordtype">void</span> on_backpressure(<a class="code" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> cb) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">struct </span><a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html">Impl</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  std::unique_ptr&lt;Impl&gt; impl_;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="comment">// Private constructors</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">UdpConfig</a>&amp; cfg);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <a class="code" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">UdpConfig</a>&amp; cfg, boost::asio::io_context&amp; ioc);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;};</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;boost/asio.hpp&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;deque&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;thread&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;variant&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="constants_8hpp.html">unilink/base/constants.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="visibility_8hpp.html">unilink/base/visibility.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="thread__safe__state_8hpp.html">unilink/concurrency/thread_safe_state.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="udp__config_8hpp.html">unilink/config/udp_config.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="error__handler_8hpp.html">unilink/diagnostics/error_handler.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="logger_8hpp.html">unilink/diagnostics/logger.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="channel_8hpp.html">unilink/interface/channel.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="memory__pool_8hpp.html">unilink/memory/memory_pool.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceunilink.html">unilink</a> {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">namespace </span>transport {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceboost_1_1asio.html">net</a> = <a class="code" href="namespaceboost_1_1asio.html">boost::asio</a>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1transport.html#a9f33fafb245304040e53375c3eb6f30d">   43</a></span>&#160;<span class="keyword">using</span> <a class="code" href="namespaceunilink_1_1transport.html#a9f33fafb245304040e53375c3eb6f30d">udp</a> = <a class="code" href="namespaceunilink_1_1transport.html#a9f33fafb245304040e53375c3eb6f30d">net::ip::udp</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">using</span> <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">using</span> <a class="code" href="namespaceunilink_1_1concurrency.html#ac0964c4a3d030d1e14a45079d9aaec44">concurrency::ThreadSafeLinkState</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdpChannel.html">   47</a></span>&#160;<span class="keyword">class </span><a class="code" href="visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361">UNILINK_API</a> <a class="code" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a> : <span class="keyword">public</span> <a class="code" href="classunilink_1_1interface_1_1Channel.html">interface::Channel</a>, <span class="keyword">public</span> std::enable_shared_from_this&lt;UdpChannel&gt; {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keyword">static</span> std::shared_ptr&lt;UdpChannel&gt; create(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">config::UdpConfig</a>&amp; cfg);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">static</span> std::shared_ptr&lt;UdpChannel&gt; create(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">config::UdpConfig</a>&amp; cfg, net::io_context&amp; ioc);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  ~<a class="code" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a>();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keywordtype">void</span> start() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordtype">void</span> stop() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keywordtype">bool</span> is_connected() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keywordtype">void</span> async_write_copy(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keywordtype">void</span> async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keywordtype">void</span> async_write_shared(std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt; data) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="comment">// Callbacks must be configured before start() is invoked to avoid setter races.</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordtype">void</span> on_bytes(<a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordtype">void</span> on_state(<a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">void</span> on_backpressure(<a class="code" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> cb) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">config::UdpConfig</a>&amp; cfg);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <a class="code" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">config::UdpConfig</a>&amp; cfg, net::io_context&amp; ioc);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keywordtype">void</span> open_socket();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keywordtype">void</span> start_receive();</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordtype">void</span> handle_receive(<span class="keyword">const</span> boost::system::error_code&amp; ec, std::size_t bytes);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keywordtype">void</span> do_write();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordtype">void</span> close_socket();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keywordtype">void</span> notify_state();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keywordtype">void</span> report_backpressure(<span class="keywordtype">size_t</span> queued_bytes);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keywordtype">size_t</span> queued_bytes_front() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keywordtype">bool</span> enqueue_buffer(</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      std::variant&lt;<a class="code" href="classunilink_1_1memory_1_1PooledBuffer.html">memory::PooledBuffer</a>, std::vector&lt;uint8_t&gt;, std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt;&gt;&amp;&amp; buffer,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      <span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keywordtype">void</span> set_remote_from_config();</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keywordtype">void</span> transition_to(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">LinkState</a> target, <span class="keyword">const</span> boost::system::error_code&amp; ec = {});</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keywordtype">void</span> clear_callbacks();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keywordtype">void</span> perform_stop_cleanup();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keywordtype">void</span> reset_start_state();</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordtype">void</span> join_ioc_thread(<span class="keywordtype">bool</span> allow_detach);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  std::unique_ptr&lt;net::io_context&gt; owned_ioc_;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  net::io_context* ioc_;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordtype">bool</span> owns_ioc_{<span class="keyword">true</span>};</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  net::strand&lt;net::io_context::executor_type&gt; strand_;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  std::unique_ptr&lt;net::executor_work_guard&lt;net::io_context::executor_type&gt;&gt; work_guard_;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  std::thread ioc_thread_;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  udp::socket socket_;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  udp::endpoint local_endpoint_;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  udp::endpoint recv_endpoint_;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  std::optional&lt;udp::endpoint&gt; remote_endpoint_;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  std::array&lt;uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE&gt; rx_{};</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  std::deque&lt;std::variant&lt;memory::PooledBuffer, std::vector&lt;uint8_t&gt;, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;&gt; tx_;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keywordtype">bool</span> writing_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordtype">size_t</span> queue_bytes_{0};</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <a class="code" href="structunilink_1_1config_1_1UdpConfig.html">config::UdpConfig</a> cfg_;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordtype">size_t</span> bp_high_;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordtype">size_t</span> bp_low_;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordtype">size_t</span> bp_limit_;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordtype">bool</span> backpressure_active_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  std::atomic&lt;bool&gt; stop_requested_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  std::atomic&lt;bool&gt; stopping_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  std::atomic&lt;bool&gt; opened_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  std::atomic&lt;bool&gt; connected_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="keywordtype">bool</span> started_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <a class="code" href="namespaceunilink_1_1concurrency.html#ac0964c4a3d030d1e14a45079d9aaec44">ThreadSafeLinkState</a> state_{LinkState::Idle};</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  std::atomic&lt;bool&gt; terminal_state_notified_{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> on_bytes_;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> on_state_;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> on_bp_;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;};</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="achannel_8hpp_html"><div class="ttname"><a href="channel_8hpp.html">channel.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00028">channel.hpp:28</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a0ff1ba3581a10632471f991e9910a3f9"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; OnBytes</div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00030">channel.hpp:30</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_aa2fe2bd2caca7544431ff59e0c8a111d"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">unilink::interface::Channel::OnState</a></div><div class="ttdeci">std::function&lt; void(base::LinkState)&gt; OnState</div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00031">channel.hpp:31</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_acbaa1d8f93fac54ed516ef6e1caac3a5"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">unilink::interface::Channel::OnBackpressure</a></div><div class="ttdeci">std::function&lt; void(size_t)&gt; OnBackpressure</div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00032">channel.hpp:32</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1PooledBuffer_html"><div class="ttname"><a href="classunilink_1_1memory_1_1PooledBuffer.html">unilink::memory::PooledBuffer</a></div><div class="ttdoc">RAII wrapper for memory pool buffers with enhanced safety.</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00149">memory_pool.hpp:149</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">A C++17 compatible span-like class for safe array access.</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00038">safe_span.hpp:38</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdpChannel_html"><div class="ttname"><a href="classunilink_1_1transport_1_1UdpChannel.html">unilink::transport::UdpChannel</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2udp_2udp_8hpp_source.html#l00040">udp.hpp:40</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdpChannel_html_a7fb7d23b74ea086a747d2c28db7ffbd8"><div class="ttname"><a href="classunilink_1_1transport_1_1UdpChannel.html#a7fb7d23b74ea086a747d2c28db7ffbd8">unilink::transport::UdpChannel::create</a></div><div class="ttdeci">static std::shared_ptr&lt; UdpChannel &gt; create(const UdpConfig &amp;cfg, boost::asio::io_context &amp;ioc)</div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdpChannel_html"><div class="ttname"><a href="classunilink_1_1transport_1_1UdpChannel.html">unilink::transport::UdpChannel</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2udp_2udp_8hpp_source.html#l00047">udp.hpp:47</a></div></div>
+<div class="ttc" id="aconstants_8hpp_html"><div class="ttname"><a href="constants_8hpp.html">constants.hpp</a></div></div>
+<div class="ttc" id="aerror__handler_8hpp_html"><div class="ttname"><a href="error__handler_8hpp.html">error_handler.hpp</a></div></div>
+<div class="ttc" id="alogger_8hpp_html"><div class="ttname"><a href="logger_8hpp.html">logger.hpp</a></div></div>
 <div class="ttc" id="amemory__pool_8hpp_html"><div class="ttname"><a href="memory__pool_8hpp.html">memory_pool.hpp</a></div></div>
-<div class="ttc" id="anamespaceboost_html"><div class="ttname"><a href="namespaceboost.html">boost</a></div><div class="ttdef"><b>Definition:</b> <a href="io__context__manager_8hpp_source.html#l00029">io_context_manager.hpp:29</a></div></div>
+<div class="ttc" id="anamespaceboost_1_1asio_html"><div class="ttname"><a href="namespaceboost_1_1asio.html">boost::asio</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2tcp__client_2tcp__client_8hpp_source.html#l00033">tcp_client.hpp:33</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75c"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">unilink::base::LinkState</a></div><div class="ttdeci">LinkState</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00040">common.hpp:40</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1concurrency_html_ac0964c4a3d030d1e14a45079d9aaec44"><div class="ttname"><a href="namespaceunilink_1_1concurrency.html#ac0964c4a3d030d1e14a45079d9aaec44">unilink::concurrency::ThreadSafeLinkState</a></div><div class="ttdeci">ThreadSafeState&lt; base::LinkState &gt; ThreadSafeLinkState</div><div class="ttdef"><b>Definition:</b> <a href="thread__safe__state_8hpp_source.html#l00166">thread_safe_state.hpp:166</a></div></div>
+<div class="ttc" id="anamespaceunilink_1_1transport_html_a9f33fafb245304040e53375c3eb6f30d"><div class="ttname"><a href="namespaceunilink_1_1transport.html#a9f33fafb245304040e53375c3eb6f30d">unilink::transport::udp</a></div><div class="ttdeci">net::ip::udp udp</div><div class="ttdef"><b>Definition:</b> <a href="transport_2udp_2udp_8hpp_source.html#l00043">udp.hpp:43</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
 <div class="ttc" id="astructunilink_1_1config_1_1UdpConfig_html"><div class="ttname"><a href="structunilink_1_1config_1_1UdpConfig.html">unilink::config::UdpConfig</a></div><div class="ttdef"><b>Definition:</b> <a href="udp__config_8hpp_source.html#l00028">udp_config.hpp:28</a></div></div>
-<div class="ttc" id="astructunilink_1_1transport_1_1UdpChannel_1_1Impl_html"><div class="ttname"><a href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html">unilink::transport::UdpChannel::Impl</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2udp_2udp_8cc_source.html#l00049">udp.cc:49</a></div></div>
+<div class="ttc" id="athread__safe__state_8hpp_html"><div class="ttname"><a href="thread__safe__state_8hpp.html">thread_safe_state.hpp</a></div></div>
 <div class="ttc" id="audp__config_8hpp_html"><div class="ttname"><a href="udp__config_8hpp.html">udp_config.hpp</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="visibility_8hpp.html">visibility.hpp</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html_acdf44665d6deacb60ead833c4a5b0361"><div class="ttname"><a href="visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361">UNILINK_API</a></div><div class="ttdeci">#define UNILINK_API</div><div class="ttdef"><b>Definition:</b> <a href="visibility_8hpp_source.html#l00037">visibility.hpp:37</a></div></div>
@@ -177,7 +240,7 @@ $(document).ready(function(){initNavTree('transport_2udp_2udp_8hpp_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_dac7fe981bea2b1272d5c5897c0768dd.html">udp</a></li><li class="navelem"><a class="el" href="transport_2udp_2udp_8hpp.html">udp.hpp</a></li>
-    <li class="footer">Generated on Mon Feb 9 2026 08:14:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 14:07:14 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

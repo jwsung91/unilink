@@ -4,7 +4,7 @@ var classunilink_1_1builder_1_1SerialBuilder =
     [ "SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html#a0b078ec345ce72d5c8297539a24909bf", null ],
     [ "SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html#a6a5dd6eae378bfe35987ad524ce56142", null ],
     [ "auto_manage", "classunilink_1_1builder_1_1SerialBuilder.html#ac99053dbeb43bebbf4f56177b4c88f4c", null ],
-    [ "build", "classunilink_1_1builder_1_1SerialBuilder.html#a928976dde16d8453c4303e5385a79142", null ],
+    [ "build", "classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda", null ],
     [ "on_connect", "classunilink_1_1builder_1_1SerialBuilder.html#aa6a55e7be7663feca150b95e076b095a", null ],
     [ "on_connect", "classunilink_1_1builder_1_1SerialBuilder.html#a1f7f9a9e305b4846b8a077c20045b9f9", null ],
     [ "on_connect", "classunilink_1_1builder_1_1SerialBuilder.html#a12542ad87746758d44a9c8934b67b757", null ],

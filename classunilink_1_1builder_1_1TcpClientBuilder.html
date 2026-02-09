@@ -118,9 +118,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa15d51897b3006946bb20b263845ec2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8449e8f7a6f6f14c380ec2b2b9af3d2f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8449e8f7a6f6f14c380ec2b2b9af3d2f">operator=</a> (<a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a8449e8f7a6f6f14c380ec2b2b9af3d2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa504b7d8bfbaa3783d73cba30958e2d8"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">wrapper::TcpClient</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">build</a> () override</td></tr>
-<tr class="memdesc:aa504b7d8bfbaa3783d73cba30958e2d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured TcpClient.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aa504b7d8bfbaa3783d73cba30958e2d8">More...</a><br /></td></tr>
-<tr class="separator:aa504b7d8bfbaa3783d73cba30958e2d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a4af5b627ffc15c727cba9fa2fa1d93"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">wrapper::TcpClient</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a> () override</td></tr>
+<tr class="memdesc:a5a4af5b627ffc15c727cba9fa2fa1d93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured TcpClient.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">More...</a><br /></td></tr>
+<tr class="separator:a5a4af5b627ffc15c727cba9fa2fa1d93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b5c3a4512e9c13dba24b8adb4aaf0de"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">auto_manage</a> (bool auto_manage=true) override</td></tr>
 <tr class="memdesc:a2b5c3a4512e9c13dba24b8adb4aaf0de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">More...</a><br /></td></tr>
 <tr class="separator:a2b5c3a4512e9c13dba24b8adb4aaf0de"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -353,8 +353,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aa504b7d8bfbaa3783d73cba30958e2d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa504b7d8bfbaa3783d73cba30958e2d8">&#9670;&nbsp;</a></span>build()</h2>
+<a id="a5a4af5b627ffc15c727cba9fa2fa1d93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a4af5b627ffc15c727cba9fa2fa1d93">&#9670;&nbsp;</a></span>build()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -363,7 +363,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">wrapper::TcpClient</a> &gt; unilink::builder::TcpClientBuilder::build </td>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">wrapper::TcpClient</a> &gt; unilink::builder::TcpClientBuilder::build </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -377,9 +377,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Build and return the configured TcpClient. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;wrapper::TcpClient&gt; The configured client instance </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;wrapper::TcpClient&gt; The configured client instance </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a82045ad5b07e7d84eb9b03f2cfb54d25">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__client__builder_8cc_source.html#l00046">46</a> of file <a class="el" href="tcp__client__builder_8cc_source.html">tcp_client_builder.cc</a>.</p>
 
@@ -981,7 +981,7 @@ template&lt;typename U , typename F &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a></li>
-    <li class="footer">Generated on Mon Feb 9 2026 08:14:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 9 2026 14:07:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

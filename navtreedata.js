@@ -892,7 +892,7 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", "functions_vars" ],
+        [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ]
       ] ]
@@ -910,15 +910,15 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classunilink_1_1config_1_1ConfigManagerInterface.html",
-"classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0",
+"classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496",
+"classunilink_1_1memory_1_1PooledBuffer.html#a96f88cf55a3d31ad4e28d08af0b0b975",
 "classunilink_1_1wrapper_1_1TcpClient.html",
 "functions_j.html",
-"md_docs_architecture_runtime_behavior.html#autotoc_md203",
-"md_docs_guides_setup_build_guide.html#autotoc_md559",
-"md_docs_tutorials_01_getting_started.html#autotoc_md898",
-"safe__span_8hpp.html#a8a257d2835d49bad73c5759a0f201341",
-"structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a263e07f81a463e0a1db134a5f97afd19"
+"md_docs_architecture_runtime_behavior.html#autotoc_md237",
+"md_docs_guides_setup_build_guide.html#autotoc_md587",
+"md_docs_tutorials_02_tcp_server.html#autotoc_md932",
+"structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7c",
+"unilink_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
