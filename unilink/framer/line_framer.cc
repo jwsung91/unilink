@@ -24,7 +24,7 @@ namespace unilink {
 namespace framer {
 
 LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_t max_length)
-    : delimiter_(delimiter), include_delimiter_(include_delimiter), max_length_(max_length) {
+    : delimiter_(delimiter), include_delimiter_(include_delimiter), max_length_(max_length), scanned_index_(0) {
   if (delimiter_.empty()) {
     delimiter_ = "\n";
   }
@@ -33,113 +33,86 @@ LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_
 void LineFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
 
-  size_t offset = 0;
-  while (offset < data.size()) {
-    // If buffer has data, check for split delimiter at the boundary first
-    if (!buffer_.empty()) {
-      // Append a small chunk to check for completion
-      // We take enough bytes to potentially complete a delimiter starting in buffer
-      size_t peek_len = std::min(data.size() - offset, delimiter_.length());
+  // Append new data to buffer
+  buffer_.insert(buffer_.end(), data.begin(), data.end());
 
-      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(offset),
-                     data.begin() + static_cast<std::ptrdiff_t>(offset + peek_len));
-      offset += peek_len;
+  // Determine where to start searching.
+  // We need to backtrack by (delimiter_.length() - 1) to catch split delimiters.
+  // But we must not go below 0.
+  // scanned_index_ points to where we finished scanning last time (or 0).
+  size_t search_start = scanned_index_;
+  if (search_start >= delimiter_.length() - 1) {
+    search_start -= (delimiter_.length() - 1);
+  } else {
+    search_start = 0;
+  }
 
-      auto it_delim = std::search(buffer_.begin(), buffer_.end(), delimiter_.begin(), delimiter_.end());
-      if (it_delim != buffer_.end()) {
-        // Found delimiter!
-        size_t msg_total_len = static_cast<size_t>(std::distance(buffer_.begin(), it_delim)) + delimiter_.length();
-        if (on_message_) {
-          size_t extract_len = include_delimiter_ ? msg_total_len : (msg_total_len - delimiter_.length());
-          on_message_(memory::ConstByteSpan(buffer_.data(), extract_len));
-        }
-        buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(msg_total_len));
-        continue;
-      }
+  // To avoid erasing from the beginning of the vector repeatedly (which is O(N) per erase),
+  // we will process all messages in the buffer first, and erase only once at the end.
+  // We track the end of the last processed message.
+  size_t last_processed_end = 0;
 
-      // Not found. Check overflow.
-      if (buffer_.size() > max_length_) {
-        buffer_.clear();
-        // We consumed peek_len.
-        // Continue loop to process remaining data
-        continue;
-      }
+  // Search range starts from search_start
+  auto search_begin = buffer_.begin() + static_cast<std::ptrdiff_t>(search_start);
+
+  while (true) {
+    auto it = std::search(search_begin, buffer_.end(), delimiter_.begin(), delimiter_.end());
+
+    if (it == buffer_.end()) {
+      // No more delimiters found.
+      // Update scanned_index_ to the end of the buffer, so next time we start searching from here.
+      scanned_index_ = buffer_.size();
+      break;
     }
 
-    // Now search in rest of data
-    std::string_view data_view(reinterpret_cast<const char*>(data.data()), data.size());
-    size_t pos = data_view.find(delimiter_, offset);
+    // Found a delimiter.
+    size_t found_pos = static_cast<size_t>(std::distance(buffer_.begin(), it));
+    size_t msg_end = found_pos + delimiter_.length();
 
-    if (pos != std::string_view::npos) {
-      // Found a delimiter at pos
-      size_t chunk_len = pos - offset + delimiter_.length();
+    // Calculate message length (including delimiter)
+    // The message starts at 'last_processed_end' (start of unprocessed buffer)
+    // Wait, last_processed_end is relative to original buffer_.begin().
+    size_t msg_total_len = msg_end - last_processed_end;
 
-      // Check if appending this chunk would exceed max_length
-      if (buffer_.size() + chunk_len > max_length_) {
-        // Overflow - message too long
-        buffer_.clear();
-        offset += chunk_len;
-        continue;
-      }
-
-      // Append the chunk (up to and including delimiter)
-      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(offset),
-                     data.begin() + static_cast<std::ptrdiff_t>(offset + chunk_len));
-
-      // Trigger callback
-      if (on_message_) {
-        size_t msg_len = buffer_.size() - (include_delimiter_ ? 0 : delimiter_.length());
-        on_message_(memory::ConstByteSpan(buffer_.data(), msg_len));
-      }
-
-      // Clear buffer as we processed the message
-      buffer_.clear();
-      offset += chunk_len;
-
+    // Check individual message length constraint
+    if (msg_total_len > max_length_) {
+      // Message too long. We must reset/skip.
+      // We effectively drop this message by advancing last_processed_end.
+      last_processed_end = msg_end;
     } else {
-      // No delimiter found in the rest of data
-      size_t remaining = data.size() - offset;
-
-      if (buffer_.size() + remaining > max_length_) {
-        // Overflow - partial message already too long
-        buffer_.clear();
-        // Discard remaining data
-        return;
+      // Valid message. Emit it.
+      if (on_message_) {
+        size_t extract_len = include_delimiter_ ? msg_total_len : (msg_total_len - delimiter_.length());
+        on_message_(memory::ConstByteSpan(buffer_.data() + last_processed_end, extract_len));
       }
-
-      // Append remaining data
-      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(offset), data.end());
-
-      // Check for split delimiter formed at the boundary (again, for the final chunk)
-      // Only need to search if buffer has enough data
-      if (buffer_.size() >= delimiter_.length()) {
-        auto it_delim = std::search(buffer_.begin(), buffer_.end(), delimiter_.begin(), delimiter_.end());
-        if (it_delim != buffer_.end()) {
-          // Found split delimiter!
-          size_t msg_total_len = static_cast<size_t>(std::distance(buffer_.begin(), it_delim)) + delimiter_.length();
-
-          if (on_message_) {
-            size_t extract_len = include_delimiter_ ? msg_total_len : (msg_total_len - delimiter_.length());
-            on_message_(memory::ConstByteSpan(buffer_.data(), extract_len));
-          }
-
-          // Remove processed part
-          if (msg_total_len >= buffer_.size()) {
-            buffer_.clear();
-          } else {
-            buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(msg_total_len));
-          }
-        }
-      }
-
-      return;  // Done with data
+      last_processed_end = msg_end;
     }
+
+    // Advance search to start after this message
+    search_begin = buffer_.begin() + static_cast<std::ptrdiff_t>(last_processed_end);
+  }
+
+  // Remove processed messages from the buffer
+  if (last_processed_end > 0) {
+    buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(last_processed_end));
+    // Reset scanned_index_ to reflect the new buffer size (since we scanned everything)
+    scanned_index_ = buffer_.size();
+  }
+
+  // Check if remaining partial buffer exceeds max_length
+  if (buffer_.size() > max_length_) {
+    // If we have accumulated too much without finding a delimiter, reset.
+    buffer_.clear();
+    scanned_index_ = 0;
   }
 }
 
 void LineFramer::set_on_message(MessageCallback cb) { on_message_ = std::move(cb); }
 
-void LineFramer::reset() { buffer_.clear(); }
+void LineFramer::reset() {
+  buffer_.clear();
+  scanned_index_ = 0;
+}
 
 }  // namespace framer
 }  // namespace unilink
