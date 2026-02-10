@@ -19,7 +19,6 @@
 #include <algorithm>
 #include <charconv>
 #include <cstring>
-#include <sstream>
 #include <string_view>
 
 namespace unilink {
@@ -131,7 +130,7 @@ bool InputValidator::is_valid_ipv6(const std::string& address) {
   return std::regex_match(address, ipv6_pattern);
 }
 
-bool InputValidator::is_valid_hostname(const std::string& hostname) {
+bool InputValidator::is_valid_hostname(std::string_view hostname) {
   // Hostname validation according to RFC 1123
   // - Must not be empty
   // - Must not start or end with hyphen
@@ -148,10 +147,12 @@ bool InputValidator::is_valid_hostname(const std::string& hostname) {
   }
 
   // Check each label (separated by dots)
-  std::stringstream ss(hostname);
-  std::string label;
+  size_t start = 0;
+  size_t end = 0;
 
-  while (std::getline(ss, label, '.')) {
+  while ((end = hostname.find('.', start)) != std::string_view::npos) {
+    std::string_view label = hostname.substr(start, end - start);
+
     if (label.empty() || label.length() > 63) {
       return false;
     }
@@ -162,9 +163,26 @@ bool InputValidator::is_valid_hostname(const std::string& hostname) {
 
     // Check if label contains only valid characters
     for (char c : label) {
-      if (!std::isalnum(c) && c != '-') {
+      if (!std::isalnum(static_cast<unsigned char>(c)) && c != '-') {
         return false;
       }
+    }
+    start = end + 1;
+  }
+
+  // Check last label
+  std::string_view label = hostname.substr(start);
+  if (label.empty() || label.length() > 63) {
+    return false;
+  }
+
+  if (label.front() == '-' || label.back() == '-') {
+    return false;
+  }
+
+  for (char c : label) {
+    if (!std::isalnum(static_cast<unsigned char>(c)) && c != '-') {
+      return false;
     }
   }
 
