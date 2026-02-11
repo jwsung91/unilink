@@ -34,7 +34,8 @@ std::any ConfigManager::get(const std::string& key) const {
   throw std::runtime_error("Configuration key not found: " + key);
 }
 
-std::any ConfigManager::get(const std::string& key, const std::any& default_value) const {
+std::any ConfigManager::get(const std::string& key,
+                            const std::any& default_value) const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto it = config_items_.find(key);
   if (it != config_items_.end()) {
@@ -48,7 +49,8 @@ bool ConfigManager::has(const std::string& key) const {
   return config_items_.find(key) != config_items_.end();
 }
 
-ValidationResult ConfigManager::set(const std::string& key, const std::any& value) {
+ValidationResult ConfigManager::set(const std::string& key,
+                                    const std::any& value) {
   std::lock_guard<std::mutex> lock(mutex_);
 
   // Validate the value
@@ -122,8 +124,9 @@ void ConfigManager::register_item(const ConfigItem& item) {
   config_items_[item.key] = item;
 }
 
-void ConfigManager::register_validator(const std::string& key,
-                                       std::function<ValidationResult(const std::any&)> validator) {
+void ConfigManager::register_validator(
+    const std::string& key,
+    std::function<ValidationResult(const std::any&)> validator) {
   std::lock_guard<std::mutex> lock(mutex_);
   auto it = config_items_.find(key);
   if (it != config_items_.end()) {
@@ -131,7 +134,8 @@ void ConfigManager::register_validator(const std::string& key,
   }
 }
 
-void ConfigManager::on_change(const std::string& key, ConfigChangeCallback callback) {
+void ConfigManager::on_change(const std::string& key,
+                              ConfigChangeCallback callback) {
   std::lock_guard<std::mutex> lock(mutex_);
   change_callbacks_[key] = callback;
 }
@@ -160,7 +164,8 @@ bool ConfigManager::save_to_file(const std::string& filepath) const {
 
     return true;
   } catch (const std::exception& e) {
-    UNILINK_LOG_ERROR("config_manager", "save", "Error saving configuration: " + std::string(e.what()));
+    UNILINK_LOG_ERROR("config_manager", "save",
+                      "Error saving configuration: " + std::string(e.what()));
     return false;
   }
 }
@@ -205,14 +210,18 @@ bool ConfigManager::load_from_file(const std::string& filepath) {
           // Infer type for new items
           if (value_str == "true" || value_str == "false") {
             type = ConfigType::Boolean;
-          } else if (std::all_of(value_str.begin(), value_str.end(), [](char c) {
-                       return std::isdigit(static_cast<unsigned char>(c)) || c == '-';
-                     })) {
+          } else if (std::all_of(
+                         value_str.begin(), value_str.end(), [](char c) {
+                           return std::isdigit(static_cast<unsigned char>(c)) ||
+                                  c == '-';
+                         })) {
             type = ConfigType::Integer;
           } else if (std::count(value_str.begin(), value_str.end(), '.') == 1 &&
-                     std::all_of(value_str.begin(), value_str.end(), [](char c) {
-                       return std::isdigit(static_cast<unsigned char>(c)) || c == '.' || c == '-';
-                     })) {
+                     std::all_of(
+                         value_str.begin(), value_str.end(), [](char c) {
+                           return std::isdigit(static_cast<unsigned char>(c)) ||
+                                  c == '.' || c == '-';
+                         })) {
             type = ConfigType::Double;
           }
         }
@@ -224,11 +233,13 @@ bool ConfigManager::load_from_file(const std::string& filepath) {
           auto result = validate_value(key, value);
           if (!result.is_valid) {
             UNILINK_LOG_ERROR("config_manager", "load",
-                              "Validation failed for key '" + key + "': " + result.error_message);
+                              "Validation failed for key '" + key +
+                                  "': " + result.error_message);
             continue;
           }
 
-          // Update value while preserving metadata (validators, description, etc.)
+          // Update value while preserving metadata (validators, description,
+          // etc.)
           std::any old_value = it->second.value;
           it->second.value = value;
           notify_change(key, old_value, value);
@@ -242,7 +253,8 @@ bool ConfigManager::load_from_file(const std::string& filepath) {
 
     return true;
   } catch (const std::exception& e) {
-    UNILINK_LOG_ERROR("config_manager", "load", "Error loading configuration: " + std::string(e.what()));
+    UNILINK_LOG_ERROR("config_manager", "load",
+                      "Error loading configuration: " + std::string(e.what()));
     return false;
   }
 }
@@ -286,7 +298,8 @@ bool ConfigManager::is_required(const std::string& key) const {
   return false;
 }
 
-ValidationResult ConfigManager::validate_value(const std::string& key, const std::any& value) const {
+ValidationResult ConfigManager::validate_value(const std::string& key,
+                                               const std::any& value) const {
   auto it = config_items_.find(key);
   if (it != config_items_.end()) {
     // Check if there's a custom validator
@@ -316,19 +329,23 @@ ValidationResult ConfigManager::validate_value(const std::string& key, const std
   return ValidationResult::success();
 }
 
-void ConfigManager::notify_change(const std::string& key, const std::any& old_value, const std::any& new_value) {
+void ConfigManager::notify_change(const std::string& key,
+                                  const std::any& old_value,
+                                  const std::any& new_value) {
   auto it = change_callbacks_.find(key);
   if (it != change_callbacks_.end()) {
     try {
       it->second(key, old_value, new_value);
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("config_manager", "callback",
-                        "Error in change callback for key '" + key + "': " + std::string(e.what()));
+                        "Error in change callback for key '" + key +
+                            "': " + std::string(e.what()));
     }
   }
 }
 
-std::string ConfigManager::serialize_value(const std::any& value, ConfigType type) const {
+std::string ConfigManager::serialize_value(const std::any& value,
+                                           ConfigType type) const {
   try {
     switch (type) {
       case ConfigType::String:
@@ -348,7 +365,8 @@ std::string ConfigManager::serialize_value(const std::any& value, ConfigType typ
   }
 }
 
-std::any ConfigManager::deserialize_value(const std::string& value_str, ConfigType type) const {
+std::any ConfigManager::deserialize_value(const std::string& value_str,
+                                          ConfigType type) const {
   try {
     switch (type) {
       case ConfigType::String:

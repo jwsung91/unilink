@@ -44,14 +44,16 @@ void InputValidator::validate_host(const std::string& host) {
     return;
   }
 
-  throw diagnostics::ValidationException("invalid host format", "host", "valid IPv4, IPv6, or hostname");
+  throw diagnostics::ValidationException("invalid host format", "host",
+                                         "valid IPv4, IPv6, or hostname");
 }
 
 void InputValidator::validate_ipv4_address(const std::string& address) {
   validate_non_empty_string(address, "ipv4_address");
 
   if (!is_valid_ipv4(address)) {
-    throw diagnostics::ValidationException("invalid IPv4 address format", "ipv4_address", "valid IPv4 address");
+    throw diagnostics::ValidationException(
+        "invalid IPv4 address format", "ipv4_address", "valid IPv4 address");
   }
 }
 
@@ -59,16 +61,19 @@ void InputValidator::validate_ipv6_address(const std::string& address) {
   validate_non_empty_string(address, "ipv6_address");
 
   if (!is_valid_ipv6(address)) {
-    throw diagnostics::ValidationException("invalid IPv6 address format", "ipv6_address", "valid IPv6 address");
+    throw diagnostics::ValidationException(
+        "invalid IPv6 address format", "ipv6_address", "valid IPv6 address");
   }
 }
 
 void InputValidator::validate_device_path(const std::string& device) {
   validate_non_empty_string(device, "device_path");
-  validate_string_length(device, base::constants::MAX_DEVICE_PATH_LENGTH, "device_path");
+  validate_string_length(device, base::constants::MAX_DEVICE_PATH_LENGTH,
+                         "device_path");
 
   if (!is_valid_device_path(device)) {
-    throw diagnostics::ValidationException("invalid device path format", "device_path", "valid device path");
+    throw diagnostics::ValidationException("invalid device path format",
+                                           "device_path", "valid device path");
   }
 }
 
@@ -77,10 +82,13 @@ void InputValidator::validate_parity(const std::string& parity) {
 
   // Convert to lowercase for case-insensitive comparison
   std::string lower_parity = parity;
-  std::transform(lower_parity.begin(), lower_parity.end(), lower_parity.begin(), ::tolower);
+  std::transform(lower_parity.begin(), lower_parity.end(), lower_parity.begin(),
+                 ::tolower);
 
-  if (lower_parity != "none" && lower_parity != "odd" && lower_parity != "even") {
-    throw diagnostics::ValidationException("invalid parity value", "parity", "none, odd, or even");
+  if (lower_parity != "none" && lower_parity != "odd" &&
+      lower_parity != "even") {
+    throw diagnostics::ValidationException("invalid parity value", "parity",
+                                           "none, odd, or even");
   }
 }
 
@@ -100,7 +108,8 @@ bool InputValidator::is_valid_ipv4(std::string_view address) {
     if (len > 1 && address[start] == '0') return false;
 
     int octet;
-    auto res = std::from_chars(address.data() + start, address.data() + end, octet);
+    auto res =
+        std::from_chars(address.data() + start, address.data() + end, octet);
     if (res.ec != std::errc() || res.ptr != address.data() + end) return false;
     if (octet < 0 || octet > 255) return false;
 
@@ -109,15 +118,18 @@ bool InputValidator::is_valid_ipv4(std::string_view address) {
   }
 
   // Last octet
-  if (start >= address.length()) return false;  // Trailing dot or empty last part
+  if (start >= address.length())
+    return false;  // Trailing dot or empty last part
   size_t len = address.length() - start;
   if (len > 3) return false;
 
   if (len > 1 && address[start] == '0') return false;
 
   int octet;
-  auto res = std::from_chars(address.data() + start, address.data() + address.length(), octet);
-  if (res.ec != std::errc() || res.ptr != address.data() + address.length()) return false;
+  auto res = std::from_chars(address.data() + start,
+                             address.data() + address.length(), octet);
+  if (res.ec != std::errc() || res.ptr != address.data() + address.length())
+    return false;
   if (octet < 0 || octet > 255) return false;
 
   return dots == 3;
@@ -125,9 +137,11 @@ bool InputValidator::is_valid_ipv4(std::string_view address) {
 
 bool InputValidator::is_valid_ipv6(const std::string& address) {
   // Simplified IPv6 validation - this is a basic check
-  // Full IPv6 validation is complex and would require more sophisticated parsing
-  // Optimization: Make regex static to avoid recompilation on every call (~80x speedup)
-  static const std::regex ipv6_pattern(R"(^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::1$|^::$)");
+  // Full IPv6 validation is complex and would require more sophisticated
+  // parsing Optimization: Make regex static to avoid recompilation on every
+  // call (~80x speedup)
+  static const std::regex ipv6_pattern(
+      R"(^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::1$|^::$)");
   return std::regex_match(address, ipv6_pattern);
 }
 
@@ -139,7 +153,8 @@ bool InputValidator::is_valid_hostname(std::string_view hostname) {
   // - Each label must be 1-63 characters
   // - Total length must not exceed 253 characters
 
-  if (hostname.empty() || hostname.length() > base::constants::MAX_HOSTNAME_LENGTH) {
+  if (hostname.empty() ||
+      hostname.length() > base::constants::MAX_HOSTNAME_LENGTH) {
     return false;
   }
 
@@ -205,7 +220,8 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
   if (device.length() >= 5 && device.substr(0, 5) == "/dev/") {
     // Check for valid Unix device path characters
     for (char c : device) {
-      if (!std::isalnum(static_cast<unsigned char>(c)) && c != '/' && c != '_' && c != '-') {
+      if (!std::isalnum(static_cast<unsigned char>(c)) && c != '/' &&
+          c != '_' && c != '-') {
         return false;
       }
     }
@@ -217,7 +233,8 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
     std::string port_num = device.substr(3);
 
     // Check if port_num contains only digits
-    if (port_num.empty() || !std::all_of(port_num.begin(), port_num.end(), [](char c) {
+    if (port_num.empty() ||
+        !std::all_of(port_num.begin(), port_num.end(), [](char c) {
           return std::isdigit(static_cast<unsigned char>(c));
         })) {
       return false;
@@ -232,8 +249,9 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
   }
 
   // Windows special device names
-  if (device == "NUL" || device == "CON" || device == "PRN" || device == "AUX" || device == "LPT1" ||
-      device == "LPT2" || device == "LPT3") {
+  if (device == "NUL" || device == "CON" || device == "PRN" ||
+      device == "AUX" || device == "LPT1" || device == "LPT2" ||
+      device == "LPT3") {
     return true;
   }
 
