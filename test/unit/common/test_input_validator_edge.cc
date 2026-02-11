@@ -29,6 +29,10 @@ TEST(InputValidatorEdgeTest, DevicePathEdges) {
 
   // Valid complex linux path
   EXPECT_NO_THROW(InputValidator::validate_device_path("/dev/ttyUSB-1_2"));
+
+  // Negative char (Undefined Behavior check)
+  // '\x80' is -128 in signed char. std::isalnum(c) where c is negative is UB.
+  EXPECT_THROW(InputValidator::validate_device_path("/dev/tty\x80"), ValidationException);
 }
 
 TEST(InputValidatorEdgeTest, HostnameEdges) {

@@ -45,6 +45,30 @@ TEST(ConfigSecurityTest, LoadFromFile_TypeConfusion) {
   }
 }
 
+TEST(ConfigSecurityTest, LoadFromFile_MalformedChars) {
+  ConfigManager manager;
+
+  // Create a config file with a negative character (Undefined Behavior check)
+  // "key=value\x80"
+  std::string filename = "malicious_chars_config.txt";
+  std::ofstream out(filename);
+  out << "key=val\x80" << std::endl;
+  out.close();
+
+  // Load the configuration
+  // This triggers type inference logic which uses std::isdigit(c).
+  // If char is signed and c is negative, this is UB.
+  bool load_result = manager.load_from_file(filename);
+  EXPECT_TRUE(load_result);
+
+  // The value should be treated as a string because it's not a valid number
+  EXPECT_EQ(manager.get_type("key"), ConfigType::String);
+  EXPECT_EQ(std::any_cast<std::string>(manager.get("key")), "val\x80");
+
+  // Clean up
+  std::remove(filename.c_str());
+}
+
 }  // namespace test
 }  // namespace config
 }  // namespace unilink

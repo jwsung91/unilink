@@ -17,6 +17,7 @@
 #include "unilink/util/input_validator.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <charconv>
 #include <cstring>
 #include <string_view>
@@ -204,7 +205,7 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
   if (device.length() >= 5 && device.substr(0, 5) == "/dev/") {
     // Check for valid Unix device path characters
     for (char c : device) {
-      if (!std::isalnum(c) && c != '/' && c != '_' && c != '-') {
+      if (!std::isalnum(static_cast<unsigned char>(c)) && c != '/' && c != '_' && c != '-') {
         return false;
       }
     }
@@ -216,7 +217,9 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
     std::string port_num = device.substr(3);
 
     // Check if port_num contains only digits
-    if (port_num.empty() || !std::all_of(port_num.begin(), port_num.end(), ::isdigit)) {
+    if (port_num.empty() || !std::all_of(port_num.begin(), port_num.end(), [](char c) {
+          return std::isdigit(static_cast<unsigned char>(c));
+        })) {
       return false;
     }
 

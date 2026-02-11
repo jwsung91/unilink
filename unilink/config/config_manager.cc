@@ -17,6 +17,7 @@
 #include "config_manager.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <stdexcept>
 
 #include "unilink/diagnostics/logger.hpp"
@@ -204,12 +205,14 @@ bool ConfigManager::load_from_file(const std::string& filepath) {
           // Infer type for new items
           if (value_str == "true" || value_str == "false") {
             type = ConfigType::Boolean;
-          } else if (std::all_of(value_str.begin(), value_str.end(),
-                                 [](char c) { return std::isdigit(c) || c == '-'; })) {
+          } else if (std::all_of(value_str.begin(), value_str.end(), [](char c) {
+                       return std::isdigit(static_cast<unsigned char>(c)) || c == '-';
+                     })) {
             type = ConfigType::Integer;
           } else if (std::count(value_str.begin(), value_str.end(), '.') == 1 &&
-                     std::all_of(value_str.begin(), value_str.end(),
-                                 [](char c) { return std::isdigit(c) || c == '.' || c == '-'; })) {
+                     std::all_of(value_str.begin(), value_str.end(), [](char c) {
+                       return std::isdigit(static_cast<unsigned char>(c)) || c == '.' || c == '-';
+                     })) {
             type = ConfigType::Double;
           }
         }
