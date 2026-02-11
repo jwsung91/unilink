@@ -24,7 +24,7 @@ namespace unilink {
 namespace framer {
 
 LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_t max_length)
-    : delimiter_(delimiter), include_delimiter_(include_delimiter), max_length_(max_length) {
+    : delimiter_(delimiter), include_delimiter_(include_delimiter), max_length_(max_length), scanned_index_(0) {
   if (delimiter_.empty()) {
     delimiter_ = "\n";
   }

@@ -369,7 +369,7 @@ gtest_discover_tests(run_unit_transport_tcp_timeout_test
 )
 
 # Framer tests (separate executables)
-foreach(test_file line_framer_test.cc packet_framer_test.cc line_framer_security_test.cc)
+foreach(test_file line_framer_test.cc packet_framer_test.cc line_framer_security_test.cc line_framer_performance_test.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/framer/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -433,4 +433,5 @@ add_dependencies(unilink_unit_tests
   run_unit_line_framer_test
   run_unit_packet_framer_test
   run_unit_line_framer_security_test
+  run_unit_line_framer_performance_test
 )
