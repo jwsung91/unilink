@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -55,6 +56,7 @@ class UNILINK_API LineFramer : public IFramer {
 
   std::vector<uint8_t> buffer_;
   MessageCallback on_message_;
+  size_t scanned_index_ = 0;
 };
 
 }  // namespace framer
