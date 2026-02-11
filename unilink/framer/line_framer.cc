@@ -54,15 +54,9 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
 
       // Check for overflow
       if (total_len > max_length_) {
-        // Message too long. Reset state (effectively no-op for empty buffer, but we skip this message)
-        // Since buffer is empty, we just skip this message and any potential partial data?
-        // Usually reset clears buffer. Here we just consume the data and continue?
-        // Or stop processing?
-        // Consistent behavior: clear buffer and stop.
-        // Since buffer is empty, we just return.
-        // But we should consume the data?
-        // If we reset, we lose the stream context.
-        return;
+        // Message too long. Skip this message and continue processing the rest of the data.
+        current_pos += total_len;
+        continue;
       }
 
       // Emit message
@@ -81,8 +75,6 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
   }
 
   // Buffered path: append remaining data
-  // Note: We append all remaining data to avoid complex chunking logic.
-  // This assumes data chunks are reasonably sized or max_length_ checks will catch overflows eventually.
   buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(data_offset), data.end());
 
   // Prepare for search in buffer
@@ -94,45 +86,49 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
     search_start = 0;
   }
 
-  // Ensure search_start is valid
   if (search_start > buffer_.size()) {
     search_start = buffer_.size();
   }
 
   auto search_it = buffer_.begin() + static_cast<std::ptrdiff_t>(search_start);
+
+  // processed_count marks the end of the last processed message (or skipped message).
+  // Everything before processed_count is considered "done" and will be erased.
   size_t processed_count = 0;
 
   while (true) {
+    // Search for delimiter starting from search_it
     auto it = std::search(search_it, buffer_.end(), delimiter_.begin(), delimiter_.end());
 
     if (it == buffer_.end()) {
-      // No delimiter found
+      // No more delimiters found
       break;
+    }
+
+    // Found delimiter
+    size_t match_start_idx = static_cast<size_t>(std::distance(buffer_.begin(), it));
+    size_t match_end_idx = match_start_idx + delimiter_.length();
+
+    // The message is from processed_count to match_end_idx
+    size_t current_msg_total_len = match_end_idx - processed_count;
+
+    // Check max_length_
+    if (current_msg_total_len > max_length_) {
+      // Message too long. Skip it.
+      // We advance processed_count to skip this invalid message.
     } else {
-      // Found delimiter
-      size_t msg_end_index = static_cast<size_t>(std::distance(buffer_.begin(), it));
-      // Length of this specific message (from processed_count to delimiter end)
-      size_t current_msg_total_len = (msg_end_index - processed_count) + delimiter_.length();
-
-      // Check max_length_
-      if (current_msg_total_len > max_length_) {
-        // Message too long. Reset.
-        buffer_.clear();
-        scanned_index_ = 0;
-        return;
-      }
-
+      // Valid message
       if (on_message_) {
         size_t payload_len = include_delimiter_ ? current_msg_total_len : (current_msg_total_len - delimiter_.length());
         on_message_(memory::ConstByteSpan(buffer_.data() + processed_count, payload_len));
       }
-
-      // Advance processed_count
-      processed_count += current_msg_total_len;
-
-      // Advance search_it (strictly after the current message)
-      search_it = buffer_.begin() + static_cast<std::ptrdiff_t>(processed_count);
     }
+
+    // Mark as processed
+    processed_count = match_end_idx;
+
+    // Update search iterator to start after this message
+    search_it = buffer_.begin() + static_cast<std::ptrdiff_t>(processed_count);
   }
 
   // Remove processed messages in one go (delayed erase)
@@ -141,11 +137,13 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
   }
 
   // Update scanned_index_
-  // We searched up to the end of the buffer (which is now smaller)
+  // We have searched everything remaining in the buffer.
   scanned_index_ = buffer_.size();
 
-  // Check max_length_ for the remaining partial message
+  // Check if remaining partial message exceeds max length
   if (buffer_.size() > max_length_) {
+    // Overflow on partial message.
+    // We must clear it to enforce safety.
     buffer_.clear();
     scanned_index_ = 0;
   }
