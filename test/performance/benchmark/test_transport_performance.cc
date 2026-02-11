@@ -878,7 +878,7 @@ TEST_F(TransportPerformanceTest, TransportLayerResourceCleanup) {
   TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
   cfg.port = getTestPort();
-  cfg.retry_interval_ms = 100;
+  cfg.retry_interval_ms = 1000;
 
   // --- Test Logic ---
   {

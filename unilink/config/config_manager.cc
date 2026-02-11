@@ -207,21 +207,24 @@ bool ConfigManager::load_from_file(const std::string& filepath) {
           // Enforce existing type for security
           type = it->second.type;
         } else {
+          // Helper lambdas for type checking
+          auto is_integer_char = [](char c) {
+            return std::isdigit(static_cast<unsigned char>(c)) || c == '-';
+          };
+          auto is_double_char = [](char c) {
+            return std::isdigit(static_cast<unsigned char>(c)) || c == '.' ||
+                   c == '-';
+          };
+
           // Infer type for new items
           if (value_str == "true" || value_str == "false") {
             type = ConfigType::Boolean;
-          } else if (std::all_of(
-                         value_str.begin(), value_str.end(), [](char c) {
-                           return std::isdigit(static_cast<unsigned char>(c)) ||
-                                  c == '-';
-                         })) {
+          } else if (std::all_of(value_str.begin(), value_str.end(),
+                                 is_integer_char)) {
             type = ConfigType::Integer;
           } else if (std::count(value_str.begin(), value_str.end(), '.') == 1 &&
-                     std::all_of(
-                         value_str.begin(), value_str.end(), [](char c) {
-                           return std::isdigit(static_cast<unsigned char>(c)) ||
-                                  c == '.' || c == '-';
-                         })) {
+                     std::all_of(value_str.begin(), value_str.end(),
+                                 is_double_char)) {
             type = ConfigType::Double;
           }
         }
