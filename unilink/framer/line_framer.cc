@@ -34,13 +34,13 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
 
   // Append new data to buffer
-  // We utilize a single buffered path to ensure O(N) complexity via the scanned_index_ optimization.
+  // We utilize a single buffered path to ensure O(N) complexity via the scanned_idx_ optimization.
   // The 'Fast Path' (zero-copy) optimization was removed to ensure strict correctness and simplify overflow handling.
   buffer_.insert(buffer_.end(), data.begin(), data.end());
 
   // Determine where to start searching to avoid re-scanning
   // We back up by delimiter length - 1 to catch split delimiters
-  size_t search_start_idx = scanned_index_;
+  size_t search_start_idx = scanned_idx_;
   if (search_start_idx >= delimiter_.length()) {
     search_start_idx -= (delimiter_.length() - 1);
   } else {
@@ -60,6 +60,7 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
   // Search cursor
   size_t search_cursor = search_start_idx;
 
+  // O(N) scan loop: resumes from search_start_idx
   while (true) {
     if (search_cursor > buffer_.size()) break;
 
@@ -69,7 +70,7 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
 
     if (it == buffer_.end()) {
       // No more delimiters found.
-      // Update scanned_index_ to the current buffer size, so next time we start searching from here.
+      // Update scanned_idx_ to the current buffer size, so next time we start searching from here.
       // Note: We effectively scanned everything remaining in the buffer.
       break;
     }
@@ -106,15 +107,15 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
     buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(processed_count));
   }
 
-  // Update scanned_index_ for the next call.
+  // Update scanned_idx_ for the next call.
   // The buffer size is now reduced. We have scanned everything that remains.
-  scanned_index_ = buffer_.size();
+  scanned_idx_ = buffer_.size();
 
   // Final check: if the *remaining* partial message in the buffer already exceeds max_length_,
   // we must reset to prevent unbound growth (DoS protection).
   if (buffer_.size() > max_length_) {
     buffer_.clear();
-    scanned_index_ = 0;
+    scanned_idx_ = 0;
   }
 }
 
@@ -122,7 +123,7 @@ void LineFramer::set_on_message(MessageCallback cb) { on_message_ = std::move(cb
 
 void LineFramer::reset() {
   buffer_.clear();
-  scanned_index_ = 0;
+  scanned_idx_ = 0;
 }
 
 }  // namespace framer
