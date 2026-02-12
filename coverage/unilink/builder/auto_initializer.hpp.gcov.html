@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-12 05:45:54</td>
+            <td class="headerValue">2026-02-12 14:57:48</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">10</td>
             <td class="headerCovTableEntry">16</td>
-            <td class="headerCovTableEntryLo">56.2 %</td>
+            <td class="headerCovTableEntryLo">62.5 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -117,14 +117,14 @@
 <a name="39"><span class="lineNum">      39 </span>                :            :    * If already running, it does nothing.</a>
 <a name="40"><span class="lineNum">      40 </span>                :            :    */</a>
 <a name="41"><span class="lineNum">      41 </span>                :<span class="lineCov">        573 :   static void ensure_io_context_running() {</span></a>
-<a name="42"><span class="lineNum">      42 </span>        [<span class="branchCov" title="Branch 0 was taken 140 times"> + </span><span class="branchCov" title="Branch 1 was taken 433 times"> + </span>]:<span class="lineCov">        573 :     if (!concurrency::IoContextManager::instance().is_running()) {</span></a>
-<a name="43"><span class="lineNum">      43 </span>  [<span class="branchCov" title="Branch 0 was taken 140 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 140 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        140 :       std::lock_guard&lt;std::mutex&gt; lock(init_mutex());</span></a>
+<a name="42"><span class="lineNum">      42 </span>        [<span class="branchCov" title="Branch 0 was taken 141 times"> + </span><span class="branchCov" title="Branch 1 was taken 432 times"> + </span>]:<span class="lineCov">        573 :     if (!concurrency::IoContextManager::instance().is_running()) {</span></a>
+<a name="43"><span class="lineNum">      43 </span>  [<span class="branchCov" title="Branch 0 was taken 141 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 141 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        141 :       std::lock_guard&lt;std::mutex&gt; lock(init_mutex());</span></a>
 <a name="44"><span class="lineNum">      44 </span>                :            :       // Double-check locking</a>
-<a name="45"><span class="lineNum">      45 </span>  [<span class="branchCov" title="Branch 0 was taken 140 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 140 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        140 :       if (!concurrency::IoContextManager::instance().is_running()) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 140 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="45"><span class="lineNum">      45 </span>  [<span class="branchCov" title="Branch 0 was taken 141 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 141 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        141 :       if (!concurrency::IoContextManager::instance().is_running()) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 140 times"> + </span><span class="branchCov" title="Branch 5 was taken 1 time"> + </span>]
 <a name="46"><span class="lineNum">      46 </span>  [<span class="branchCov" title="Branch 0 was taken 140 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 140 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        140 :         concurrency::IoContextManager::instance().start();</span></a>
 <a name="47"><span class="lineNum">      47 </span>                :            :       }</a>
-<a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">        140 :     }</span></a>
+<a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">        141 :     }</span></a>
 <a name="49"><span class="lineNum">      49 </span>                :<span class="lineCov">        573 :   }</span></a>
 <a name="50"><span class="lineNum">      50 </span>                :            : </a>
 <a name="51"><span class="lineNum">      51 </span>                :            :   /**</a>

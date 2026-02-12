@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-12 05:45:54</td>
+            <td class="headerValue">2026-02-12 14:57:48</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -110,9 +110,9 @@
 <a name="32"><span class="lineNum">      32 </span>                :            :  */</a>
 <a name="33"><span class="lineNum">      33 </span>                :            : class UNILINK_API UnilinkException : public std::runtime_error {</a>
 <a name="34"><span class="lineNum">      34 </span>                :            :  public:</a>
-<a name="35"><span class="lineNum">      35 </span>                :<span class="lineCov">        130 :   explicit UnilinkException(const std::string&amp; message, const std::string&amp; component = &quot;&quot;,</span></a>
+<a name="35"><span class="lineNum">      35 </span>                :<span class="lineCov">        134 :   explicit UnilinkException(const std::string&amp; message, const std::string&amp; component = &quot;&quot;,</span></a>
 <a name="36"><span class="lineNum">      36 </span>                :            :                             const std::string&amp; operation = &quot;&quot;)</a>
-<a name="37"><span class="lineNum">      37 </span>  [<span class="branchCov" title="Branch 0 was taken 130 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 130 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        130 :       : std::runtime_error(message), component_(component), operation_(operation) {}</span></a>
+<a name="37"><span class="lineNum">      37 </span>  [<span class="branchCov" title="Branch 0 was taken 134 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 134 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        134 :       : std::runtime_error(message), component_(component), operation_(operation) {}</span></a>
 <a name="38"><span class="lineNum">      38 </span>                :            : </a>
 <a name="39"><span class="lineNum">      39 </span>                :            :   const std::string&amp; get_component() const noexcept { return component_; }</a>
 <a name="40"><span class="lineNum">      40 </span>                :            :   const std::string&amp; get_operation() const noexcept { return operation_; }</a>
@@ -170,10 +170,10 @@
 <a name="89"><span class="lineNum">      89 </span>                :            :  */</a>
 <a name="90"><span class="lineNum">      90 </span>                :            : class UNILINK_API ValidationException : public UnilinkException {</a>
 <a name="91"><span class="lineNum">      91 </span>                :            :  public:</a>
-<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        110 :   explicit ValidationException(const std::string&amp; message, const std::string&amp; parameter = &quot;&quot;,</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        114 :   explicit ValidationException(const std::string&amp; message, const std::string&amp; parameter = &quot;&quot;,</span></a>
 <a name="93"><span class="lineNum">      93 </span>                :            :                                const std::string&amp; expected = &quot;&quot;)</a>
-<a name="94"><span class="lineNum">      94 </span>  [<span class="branchCov" title="Branch 0 was taken 110 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 110 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        110 :       : UnilinkException(message, &quot;validation&quot;, &quot;validate&quot;), parameter_(parameter), expected_(expected) {}</span></a>
-<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 110 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 110 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 110 times"> + </span> 
+<a name="94"><span class="lineNum">      94 </span>  [<span class="branchCov" title="Branch 0 was taken 114 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 114 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        114 :       : UnilinkException(message, &quot;validation&quot;, &quot;validate&quot;), parameter_(parameter), expected_(expected) {}</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 114 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 114 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 114 times"> + </span> 
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 9 was not taken"> - </span>]
 <a name="95"><span class="lineNum">      95 </span>                :            : </a>
 <a name="96"><span class="lineNum">      96 </span>                :            :   const std::string&amp; get_parameter() const noexcept { return parameter_; }</a>
