@@ -217,8 +217,8 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
     std::string port_num = device.substr(3);
 
     // Check if port_num contains only digits
-    if (port_num.empty() || !std::all_of(port_num.begin(), port_num.end(),
-                                         [](unsigned char c) { return std::isdigit(c); })) {
+    if (port_num.empty() ||
+        !std::all_of(port_num.begin(), port_num.end(), [](unsigned char c) { return std::isdigit(c); })) {
       return false;
     }
 
