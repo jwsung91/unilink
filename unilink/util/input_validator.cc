@@ -76,7 +76,8 @@ void InputValidator::validate_parity(const std::string& parity) {
 
   // Convert to lowercase for case-insensitive comparison
   std::string lower_parity = parity;
-  std::transform(lower_parity.begin(), lower_parity.end(), lower_parity.begin(), ::tolower);
+  std::transform(lower_parity.begin(), lower_parity.end(), lower_parity.begin(),
+                 [](unsigned char c) { return std::tolower(c); });
 
   if (lower_parity != "none" && lower_parity != "odd" && lower_parity != "even") {
     throw diagnostics::ValidationException("invalid parity value", "parity", "none, odd, or even");
@@ -204,7 +205,7 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
   if (device.length() >= 5 && device.substr(0, 5) == "/dev/") {
     // Check for valid Unix device path characters
     for (char c : device) {
-      if (!std::isalnum(c) && c != '/' && c != '_' && c != '-') {
+      if (!std::isalnum(static_cast<unsigned char>(c)) && c != '/' && c != '_' && c != '-') {
         return false;
       }
     }
@@ -216,7 +217,8 @@ bool InputValidator::is_valid_device_path(const std::string& device) {
     std::string port_num = device.substr(3);
 
     // Check if port_num contains only digits
-    if (port_num.empty() || !std::all_of(port_num.begin(), port_num.end(), ::isdigit)) {
+    if (port_num.empty() || !std::all_of(port_num.begin(), port_num.end(),
+                                         [](unsigned char c) { return std::isdigit(c); })) {
       return false;
     }
 
