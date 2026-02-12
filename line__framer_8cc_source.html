@@ -155,71 +155,78 @@ $(document).ready(function(){initNavTree('line__framer_8cc_source.html',''); ini
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">// Perform search using iterators derived from current buffer state</span></div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">auto</span> search_begin = buffer_.begin() + <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(search_cursor);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">auto</span> it = std::search(search_begin, buffer_.end(), delimiter_.begin(), delimiter_.end());</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    decltype(buffer_.begin()) it;</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">if</span> (it == buffer_.end()) {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="comment">// No more delimiters found.</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      <span class="comment">// Update scanned_idx_ to the current buffer size, so next time we start searching from here.</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="comment">// Note: We effectively scanned everything remaining in the buffer.</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">if</span> (delimiter_.size() == 1) {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="comment">// Optimization: Use std::find for single-byte delimiter (often maps to memchr)</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      it = std::find(search_begin, buffer_.end(), <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(delimiter_[0]));</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      it = std::search(search_begin, buffer_.end(), delimiter_.begin(), delimiter_.end());</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Found a delimiter</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">size_t</span> match_start_idx = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(std::distance(buffer_.begin(), it));</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">size_t</span> match_end_idx = match_start_idx + delimiter_.length();</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Calculate message length (from end of previous processed data to end of current delimiter)</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">size_t</span> current_msg_total_len = match_end_idx - processed_count;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">if</span> (it == buffer_.end()) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="comment">// No more delimiters found.</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      <span class="comment">// Update scanned_idx_ to the current buffer size, so next time we start searching from here.</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      <span class="comment">// Note: We effectively scanned everything remaining in the buffer.</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// Check strict max_length constraint</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span> (current_msg_total_len &gt; max_length_) {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      <span class="comment">// Message exceeds limit. Skip it.</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="comment">// We do NOT emit this message.</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      <span class="comment">// We essentially &quot;consume&quot; it by advancing processed_count.</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      <span class="comment">// Valid message</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      <span class="keywordflow">if</span> (on_message_) {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordtype">size_t</span> payload_len = include_delimiter_ ? current_msg_total_len : (current_msg_total_len - delimiter_.length());</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        on_message_(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(buffer_.data() + processed_count, payload_len));</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// Mark these bytes as processed</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    processed_count = match_end_idx;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">// Advance search cursor to start strictly after the current delimiter</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    search_cursor = processed_count;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// Found a delimiter</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">size_t</span> match_start_idx = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(std::distance(buffer_.begin(), it));</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">size_t</span> match_end_idx = match_start_idx + delimiter_.length();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">// Calculate message length (from end of previous processed data to end of current delimiter)</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">size_t</span> current_msg_total_len = match_end_idx - processed_count;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Check strict max_length constraint</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">if</span> (current_msg_total_len &gt; max_length_) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      <span class="comment">// Message exceeds limit. Skip it.</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <span class="comment">// We do NOT emit this message.</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      <span class="comment">// We essentially &quot;consume&quot; it by advancing processed_count.</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      <span class="comment">// Valid message</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="keywordflow">if</span> (on_message_) {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordtype">size_t</span> payload_len = include_delimiter_ ? current_msg_total_len : (current_msg_total_len - delimiter_.length());</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        on_message_(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(buffer_.data() + processed_count, payload_len));</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    }</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="comment">// Batch erase all processed data to ensure O(N) erase complexity</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordflow">if</span> (processed_count &gt; 0) {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    buffer_.erase(buffer_.begin(), buffer_.begin() + <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(processed_count));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="comment">// Update scanned_idx_ for the next call.</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="comment">// The buffer size is now reduced. We have scanned everything that remains.</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  scanned_idx_ = buffer_.size();</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="comment">// Final check: if the *remaining* partial message in the buffer already exceeds max_length_,</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="comment">// we must reset to prevent unbound growth (DoS protection).</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="keywordflow">if</span> (buffer_.size() &gt; max_length_) {</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    buffer_.clear();</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    scanned_idx_ = 0;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  }</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="classunilink_1_1framer_1_1LineFramer.html#a2813b9b12f6331bce2aabb20aefc20ba">  122</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1framer_1_1LineFramer.html#a2813b9b12f6331bce2aabb20aefc20ba">LineFramer::set_on_message</a>(<a class="code" href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">MessageCallback</a> cb) { on_message_ = std::move(cb); }</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="classunilink_1_1framer_1_1LineFramer.html#a0d7d8cead7df0c4f2d771d7fe99fe3a3">  124</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1framer_1_1LineFramer.html#a0d7d8cead7df0c4f2d771d7fe99fe3a3">LineFramer::reset</a>() {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  buffer_.clear();</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  scanned_idx_ = 0;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="comment">// Mark these bytes as processed</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    processed_count = match_end_idx;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="comment">// Advance search cursor to start strictly after the current delimiter</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    search_cursor = processed_count;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="comment">// Batch erase all processed data to ensure O(N) erase complexity</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordflow">if</span> (processed_count &gt; 0) {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    buffer_.erase(buffer_.begin(), buffer_.begin() + <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(processed_count));</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="comment">// Update scanned_idx_ for the next call.</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="comment">// The buffer size is now reduced. We have scanned everything that remains.</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  scanned_idx_ = buffer_.size();</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="comment">// Final check: if the *remaining* partial message in the buffer already exceeds max_length_,</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  <span class="comment">// we must reset to prevent unbound growth (DoS protection).</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keywordflow">if</span> (buffer_.size() &gt; max_length_) {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    buffer_.clear();</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    scanned_idx_ = 0;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  }</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}  <span class="comment">// namespace framer</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="classunilink_1_1framer_1_1LineFramer.html#a2813b9b12f6331bce2aabb20aefc20ba">  129</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1framer_1_1LineFramer.html#a2813b9b12f6331bce2aabb20aefc20ba">LineFramer::set_on_message</a>(<a class="code" href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">MessageCallback</a> cb) { on_message_ = std::move(cb); }</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="classunilink_1_1framer_1_1LineFramer.html#a0d7d8cead7df0c4f2d771d7fe99fe3a3">  131</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1framer_1_1LineFramer.html#a0d7d8cead7df0c4f2d771d7fe99fe3a3">LineFramer::reset</a>() {</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  buffer_.clear();</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  scanned_idx_ = 0;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}  <span class="comment">// namespace framer</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1IFramer_html_ae5ee86cbd7ded1a4f845f3889b4189ad"><div class="ttname"><a href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">unilink::framer::IFramer::MessageCallback</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; MessageCallback</div><div class="ttdoc">Register a callback to be invoked when a complete message is extracted.</div><div class="ttdef"><b>Definition:</b> <a href="iframer_8hpp_source.html#l00054">iframer.hpp:54</a></div></div>
-<div class="ttc" id="aclassunilink_1_1framer_1_1LineFramer_html_a0d7d8cead7df0c4f2d771d7fe99fe3a3"><div class="ttname"><a href="classunilink_1_1framer_1_1LineFramer.html#a0d7d8cead7df0c4f2d771d7fe99fe3a3">unilink::framer::LineFramer::reset</a></div><div class="ttdeci">void reset() override</div><div class="ttdoc">Reset internal state/buffer.</div><div class="ttdef"><b>Definition:</b> <a href="line__framer_8cc_source.html#l00124">line_framer.cc:124</a></div></div>
-<div class="ttc" id="aclassunilink_1_1framer_1_1LineFramer_html_a2813b9b12f6331bce2aabb20aefc20ba"><div class="ttname"><a href="classunilink_1_1framer_1_1LineFramer.html#a2813b9b12f6331bce2aabb20aefc20ba">unilink::framer::LineFramer::set_on_message</a></div><div class="ttdeci">void set_on_message(MessageCallback cb) override</div><div class="ttdef"><b>Definition:</b> <a href="line__framer_8cc_source.html#l00122">line_framer.cc:122</a></div></div>
+<div class="ttc" id="aclassunilink_1_1framer_1_1LineFramer_html_a0d7d8cead7df0c4f2d771d7fe99fe3a3"><div class="ttname"><a href="classunilink_1_1framer_1_1LineFramer.html#a0d7d8cead7df0c4f2d771d7fe99fe3a3">unilink::framer::LineFramer::reset</a></div><div class="ttdeci">void reset() override</div><div class="ttdoc">Reset internal state/buffer.</div><div class="ttdef"><b>Definition:</b> <a href="line__framer_8cc_source.html#l00131">line_framer.cc:131</a></div></div>
+<div class="ttc" id="aclassunilink_1_1framer_1_1LineFramer_html_a2813b9b12f6331bce2aabb20aefc20ba"><div class="ttname"><a href="classunilink_1_1framer_1_1LineFramer.html#a2813b9b12f6331bce2aabb20aefc20ba">unilink::framer::LineFramer::set_on_message</a></div><div class="ttdeci">void set_on_message(MessageCallback cb) override</div><div class="ttdef"><b>Definition:</b> <a href="line__framer_8cc_source.html#l00129">line_framer.cc:129</a></div></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1LineFramer_html_a5d2f38f248590d01685c302819a5c717"><div class="ttname"><a href="classunilink_1_1framer_1_1LineFramer.html#a5d2f38f248590d01685c302819a5c717">unilink::framer::LineFramer::push_bytes</a></div><div class="ttdeci">void push_bytes(memory::ConstByteSpan data) override</div><div class="ttdoc">Push raw bytes into the framer's internal buffer.</div><div class="ttdef"><b>Definition:</b> <a href="line__framer_8cc_source.html#l00033">line_framer.cc:33</a></div></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1LineFramer_html_adf5081f5c209b43f81ffdf9c8efdd37d"><div class="ttname"><a href="classunilink_1_1framer_1_1LineFramer.html#adf5081f5c209b43f81ffdf9c8efdd37d">unilink::framer::LineFramer::LineFramer</a></div><div class="ttdeci">LineFramer(std::string_view delimiter=&quot;\n&quot;, bool include_delimiter=false, size_t max_length=65536)</div><div class="ttdoc">Construct a new Line Framer.</div><div class="ttdef"><b>Definition:</b> <a href="line__framer_8cc_source.html#l00026">line_framer.cc:26</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">A C++17 compatible span-like class for safe array access.</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00038">safe_span.hpp:38</a></div></div>
@@ -234,7 +241,7 @@ $(document).ready(function(){initNavTree('line__framer_8cc_source.html',''); ini
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_b00f3e277c8b8a573b84ad405cb4170d.html">framer</a></li><li class="navelem"><a class="el" href="line__framer_8cc.html">line_framer.cc</a></li>
-    <li class="footer">Generated on Wed Feb 11 2026 02:19:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 12 2026 05:34:06 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
