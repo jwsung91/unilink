@@ -257,6 +257,15 @@ class UNILINK_API Logger {
   std::atomic<int> outputs_{static_cast<int>(LogOutput::CONSOLE)};
 
   std::string format_string_{"{timestamp} [{level}] [{component}] [{operation}] {message}"};
+
+  struct FormatPart {
+    enum Type { LITERAL, TIMESTAMP, LEVEL, COMPONENT, OPERATION, MESSAGE };
+    Type type;
+    std::string value;  // Only used for LITERAL
+  };
+  std::vector<FormatPart> parsed_format_;
+  void parse_format(const std::string& format);
+
   std::unique_ptr<std::ofstream> file_output_;
   LogCallback callback_;
 
