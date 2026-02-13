@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-13 13:18:43</td>
+            <td class="headerValue">2026-02-13 13:46:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -273,9 +273,9 @@
 <a name="183"><span class="lineNum">     183 </span>                :<span class="lineCov">         40 : void LogRotation::sort_files_by_time(std::vector&lt;std::string&gt;&amp; files) const {</span></a>
 <a name="184"><span class="lineNum">     184 </span>                :<span class="lineCov">         40 :   std::sort(files.begin(), files.end(), [](const std::string&amp; a, const std::string&amp; b) {</span></a>
 <a name="185"><span class="lineNum">     185 </span>                :            :     try {</a>
-<a name="186"><span class="lineNum">     186 </span>  [<span class="branchCov" title="Branch 0 was taken 124 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 124 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        124 :       auto time_a = std::filesystem::last_write_time(a);</span></a>
-<a name="187"><span class="lineNum">     187 </span>  [<span class="branchCov" title="Branch 0 was taken 124 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 124 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        124 :       auto time_b = std::filesystem::last_write_time(b);</span></a>
-<a name="188"><span class="lineNum">     188 </span>        [<span class="branchCov" title="Branch 0 was taken 124 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        124 :       return time_a &gt; time_b;  // Newest first</span></a>
+<a name="186"><span class="lineNum">     186 </span>  [<span class="branchCov" title="Branch 0 was taken 122 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 122 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        122 :       auto time_a = std::filesystem::last_write_time(a);</span></a>
+<a name="187"><span class="lineNum">     187 </span>  [<span class="branchCov" title="Branch 0 was taken 122 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 122 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        122 :       auto time_b = std::filesystem::last_write_time(b);</span></a>
+<a name="188"><span class="lineNum">     188 </span>        [<span class="branchCov" title="Branch 0 was taken 122 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        122 :       return time_a &gt; time_b;  // Newest first</span></a>
 <a name="189"><span class="lineNum">     189 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineNoCov">          0 :     } catch (const std::filesystem::filesystem_error&amp;) {</span></a>
 <a name="190"><span class="lineNum">     190 </span>                :<span class="lineNoCov">          0 :       return false;</span></a>
 <a name="191"><span class="lineNum">     191 </span>                :<span class="lineNoCov">          0 :     }</span></a>
