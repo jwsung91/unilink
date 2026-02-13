@@ -392,3 +392,20 @@ INSTANTIATE_TEST_SUITE_P(PortScenarios, PortParamTest,
                                            PortTestCase{1, false, "Port 1 (min valid)"},
                                            PortTestCase{65535, false, "Port 65535 (max valid)"},
                                            PortTestCase{8080, false, "Standard port"}));
+
+TEST(InputValidatorTest, ValidateSecurityExtendedAscii) {
+  // Extended ASCII chars (negative when char is signed)
+  // \x80 is -128, \xFF is -1
+
+  // Test Device Path with extended ASCII
+  // Should reject because it's not alphanumeric (unless it hits UB and misbehaves)
+  // Explicitly casting to std::string to ensure null termination isn't an issue if implicitly constructed
+  EXPECT_THROW(InputValidator::validate_device_path(std::string("/dev/tty\x80")), diagnostics::ValidationException);
+  EXPECT_THROW(InputValidator::validate_device_path(std::string("/dev/tty\xFF")), diagnostics::ValidationException);
+
+  // Test Parity with extended ASCII
+  // Should reject because it's not "none", "odd", "even"
+  // And it calls ::tolower which might be UB
+  EXPECT_THROW(InputValidator::validate_parity(std::string("od\x80")), diagnostics::ValidationException);
+  EXPECT_THROW(InputValidator::validate_parity(std::string("\xFFven")), diagnostics::ValidationException);
+}

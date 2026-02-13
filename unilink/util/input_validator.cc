@@ -77,7 +77,8 @@ void InputValidator::validate_parity(const std::string& parity) {
 
   // Convert to lowercase for case-insensitive comparison
   std::string lower_parity = parity;
-  std::transform(lower_parity.begin(), lower_parity.end(), lower_parity.begin(), ::tolower);
+  std::transform(lower_parity.begin(), lower_parity.end(), lower_parity.begin(),
+                 [](unsigned char c) { return std::tolower(c); });
 
   if (lower_parity != "none" && lower_parity != "odd" && lower_parity != "even") {
     throw diagnostics::ValidationException("invalid parity value", "parity", "none, odd, or even");
