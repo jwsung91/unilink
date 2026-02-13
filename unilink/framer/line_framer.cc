@@ -66,14 +66,7 @@ void LineFramer::push_bytes(memory::ConstByteSpan data) {
 
     // Perform search using iterators derived from current buffer state
     auto search_begin = buffer_.begin() + static_cast<std::ptrdiff_t>(search_cursor);
-    decltype(buffer_.begin()) it;
-
-    if (delimiter_.size() == 1) {
-      // Optimization: Use std::find for single-byte delimiter (often maps to memchr)
-      it = std::find(search_begin, buffer_.end(), static_cast<uint8_t>(delimiter_[0]));
-    } else {
-      it = std::search(search_begin, buffer_.end(), delimiter_.begin(), delimiter_.end());
-    }
+    auto it = std::search(search_begin, buffer_.end(), delimiter_.begin(), delimiter_.end());
 
     if (it == buffer_.end()) {
       // No more delimiters found.

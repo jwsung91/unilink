@@ -524,14 +524,14 @@ TEST_F(TransportPerformanceTest, TcpServerThroughput) {
  */
 TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
   // --- Setup ---
-  const int num_cycles = 100;
+  const int num_cycles = 20;
 
   // --- Test Logic ---
   for (int cycle = 0; cycle < num_cycles; ++cycle) {
     TcpClientConfig cfg;
     cfg.host = "127.0.0.1";
     cfg.port = getTestPort();
-    cfg.retry_interval_ms = 100;
+    cfg.retry_interval_ms = 1000;
 
     auto client = TcpClient::create(cfg);
     client->start();

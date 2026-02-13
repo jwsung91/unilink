@@ -29,7 +29,7 @@
 namespace unilink {
 namespace diagnostics {
 
-Logger::Logger() { parse_format(format_string_); }
+Logger::Logger() = default;
 
 Logger::~Logger() {
   teardown_async_logging();
@@ -103,49 +103,6 @@ bool Logger::is_enabled() const { return enabled_.load(); }
 void Logger::set_format(const std::string& format) {
   std::lock_guard<std::mutex> lock(mutex_);
   format_string_ = format;
-  parse_format(format);
-}
-
-void Logger::parse_format(const std::string& format) {
-  parsed_format_.clear();
-  size_t start = 0;
-  size_t pos = 0;
-
-  while ((pos = format.find('{', start)) != std::string::npos) {
-    if (pos > start) {
-      parsed_format_.push_back({FormatPart::LITERAL, format.substr(start, pos - start)});
-    }
-
-    size_t end = format.find('}', pos);
-    if (end == std::string::npos) {
-      // Unclosed placeholder, treat as literal
-      parsed_format_.push_back({FormatPart::LITERAL, format.substr(pos)});
-      start = format.length();
-      break;
-    }
-
-    std::string placeholder = format.substr(pos + 1, end - pos - 1);
-    if (placeholder == "timestamp") {
-      parsed_format_.push_back({FormatPart::TIMESTAMP, ""});
-    } else if (placeholder == "level") {
-      parsed_format_.push_back({FormatPart::LEVEL, ""});
-    } else if (placeholder == "component") {
-      parsed_format_.push_back({FormatPart::COMPONENT, ""});
-    } else if (placeholder == "operation") {
-      parsed_format_.push_back({FormatPart::OPERATION, ""});
-    } else if (placeholder == "message") {
-      parsed_format_.push_back({FormatPart::MESSAGE, ""});
-    } else {
-      // Unknown placeholder, treat as literal
-      parsed_format_.push_back({FormatPart::LITERAL, format.substr(pos, end - pos + 1)});
-    }
-
-    start = end + 1;
-  }
-
-  if (start < format.length()) {
-    parsed_format_.push_back({FormatPart::LITERAL, format.substr(start)});
-  }
 }
 
 void Logger::flush() {
@@ -224,38 +181,41 @@ void Logger::critical(std::string_view component, std::string_view operation, st
 
 std::string Logger::format_message(LogLevel level, std::string_view component, std::string_view operation,
                                    std::string_view message) {
-  // Pre-generate common parts to minimize time under lock
+  std::string result = format_string_;
+
+  // Replace placeholders
   std::string timestamp = get_timestamp();
   std::string level_str = level_to_string(level);
 
-  std::lock_guard<std::mutex> lock(mutex_);
+  // Simple string replacement
+  size_t pos = 0;
+  while ((pos = result.find("{timestamp}", pos)) != std::string::npos) {
+    result.replace(pos, 11, timestamp);
+    pos += timestamp.length();
+  }
 
-  std::string result;
-  // Reserve a reasonable size to avoid reallocations
-  // Base size + message length + estimated timestamp/level overhead
-  result.reserve(format_string_.length() + message.length() + 32);
+  pos = 0;
+  while ((pos = result.find("{level}", pos)) != std::string::npos) {
+    result.replace(pos, 7, level_str);
+    pos += level_str.length();
+  }
 
-  for (const auto& part : parsed_format_) {
-    switch (part.type) {
-      case FormatPart::LITERAL:
-        result.append(part.value);
-        break;
-      case FormatPart::TIMESTAMP:
-        result.append(timestamp);
-        break;
-      case FormatPart::LEVEL:
-        result.append(level_str);
-        break;
-      case FormatPart::COMPONENT:
-        result.append(component);
-        break;
-      case FormatPart::OPERATION:
-        result.append(operation);
-        break;
-      case FormatPart::MESSAGE:
-        result.append(message);
-        break;
-    }
+  pos = 0;
+  while ((pos = result.find("{component}", pos)) != std::string::npos) {
+    result.replace(pos, 11, component);
+    pos += component.length();
+  }
+
+  pos = 0;
+  while ((pos = result.find("{operation}", pos)) != std::string::npos) {
+    result.replace(pos, 11, operation);
+    pos += operation.length();
+  }
+
+  pos = 0;
+  while ((pos = result.find("{message}", pos)) != std::string::npos) {
+    result.replace(pos, 9, message);
+    pos += message.length();
   }
 
   return result;
