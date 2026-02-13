@@ -23,7 +23,7 @@ jobs:
     - name: Run clang-format style check
       uses: jidicula/clang-format-action@v4.16.0
       with:
-        clang-format-version: '18'  # Use latest clang-format version
+        clang-format-version: '17'  # Fallback to 17 due to missing 18 image
         check-path: '.'             # Check current directory
         fallback-style: 'Google'    # Fallback style if .clang-format not found
         exclude-regex: '^build'     # Exclude build directories
