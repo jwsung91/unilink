@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-12 14:57:48</td>
+            <td class="headerValue">2026-02-13 13:18:43</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -336,135 +336,144 @@
 <a name="257"><span class="lineNum">     257 </span>                :            :   std::atomic&lt;int&gt; outputs_{static_cast&lt;int&gt;(LogOutput::CONSOLE)};</a>
 <a name="258"><span class="lineNum">     258 </span>                :            : </a>
 <a name="259"><span class="lineNum">     259 </span>                :            :   std::string format_string_{&quot;{timestamp} [{level}] [{component}] [{operation}] {message}&quot;};</a>
-<a name="260"><span class="lineNum">     260 </span>                :            :   std::unique_ptr&lt;std::ofstream&gt; file_output_;</a>
-<a name="261"><span class="lineNum">     261 </span>                :            :   LogCallback callback_;</a>
-<a name="262"><span class="lineNum">     262 </span>                :            : </a>
-<a name="263"><span class="lineNum">     263 </span>                :            :   // Log rotation support</a>
-<a name="264"><span class="lineNum">     264 </span>                :            :   std::unique_ptr&lt;LogRotation&gt; log_rotation_;</a>
-<a name="265"><span class="lineNum">     265 </span>                :            :   std::string current_log_file_;</a>
-<a name="266"><span class="lineNum">     266 </span>                :            : </a>
-<a name="267"><span class="lineNum">     267 </span>                :            :   // Async logging support</a>
-<a name="268"><span class="lineNum">     268 </span>                :            :   std::atomic&lt;bool&gt; async_enabled_{false};</a>
-<a name="269"><span class="lineNum">     269 </span>                :            :   AsyncLogConfig async_config_;</a>
-<a name="270"><span class="lineNum">     270 </span>                :            :   AsyncLogStats async_stats_;</a>
+<a name="260"><span class="lineNum">     260 </span>                :            : </a>
+<a name="261"><span class="lineNum">     261 </span>                :            :   struct FormatPart {</a>
+<a name="262"><span class="lineNum">     262 </span>                :            :     enum Type { LITERAL, TIMESTAMP, LEVEL, COMPONENT, OPERATION, MESSAGE };</a>
+<a name="263"><span class="lineNum">     263 </span>                :            :     Type type;</a>
+<a name="264"><span class="lineNum">     264 </span>                :            :     std::string value;  // Only used for LITERAL</a>
+<a name="265"><span class="lineNum">     265 </span>                :            :   };</a>
+<a name="266"><span class="lineNum">     266 </span>                :            :   std::vector&lt;FormatPart&gt; parsed_format_;</a>
+<a name="267"><span class="lineNum">     267 </span>                :            :   void parse_format(const std::string&amp; format);</a>
+<a name="268"><span class="lineNum">     268 </span>                :            : </a>
+<a name="269"><span class="lineNum">     269 </span>                :            :   std::unique_ptr&lt;std::ofstream&gt; file_output_;</a>
+<a name="270"><span class="lineNum">     270 </span>                :            :   LogCallback callback_;</a>
 <a name="271"><span class="lineNum">     271 </span>                :            : </a>
-<a name="272"><span class="lineNum">     272 </span>                :            :   // Threading for async logging</a>
-<a name="273"><span class="lineNum">     273 </span>                :            :   std::thread worker_thread_;</a>
-<a name="274"><span class="lineNum">     274 </span>                :            :   std::atomic&lt;bool&gt; running_{false};</a>
-<a name="275"><span class="lineNum">     275 </span>                :            :   std::atomic&lt;bool&gt; shutdown_requested_{false};</a>
-<a name="276"><span class="lineNum">     276 </span>                :            : </a>
-<a name="277"><span class="lineNum">     277 </span>                :            :   // Queue management</a>
-<a name="278"><span class="lineNum">     278 </span>                :            :   std::queue&lt;LogEntry&gt; log_queue_;</a>
-<a name="279"><span class="lineNum">     279 </span>                :            :   mutable std::mutex queue_mutex_;</a>
-<a name="280"><span class="lineNum">     280 </span>                :            :   std::condition_variable queue_cv_;</a>
-<a name="281"><span class="lineNum">     281 </span>                :            :   mutable std::mutex stats_mutex_;</a>
-<a name="282"><span class="lineNum">     282 </span>                :            : </a>
-<a name="283"><span class="lineNum">     283 </span>                :            :   std::string format_message(LogLevel level, std::string_view component, std::string_view operation,</a>
-<a name="284"><span class="lineNum">     284 </span>                :            :                              std::string_view message);</a>
-<a name="285"><span class="lineNum">     285 </span>                :            :   std::string level_to_string(LogLevel level);</a>
-<a name="286"><span class="lineNum">     286 </span>                :            :   std::string get_timestamp();</a>
-<a name="287"><span class="lineNum">     287 </span>                :            :   void write_to_console(const std::string&amp; message);</a>
-<a name="288"><span class="lineNum">     288 </span>                :            :   void write_to_file(const std::string&amp; message);</a>
-<a name="289"><span class="lineNum">     289 </span>                :            :   void call_callback(LogLevel level, const std::string&amp; message);</a>
-<a name="290"><span class="lineNum">     290 </span>                :            : </a>
-<a name="291"><span class="lineNum">     291 </span>                :            :   // Log rotation helper methods</a>
-<a name="292"><span class="lineNum">     292 </span>                :            :   void check_and_rotate_log();</a>
-<a name="293"><span class="lineNum">     293 </span>                :            :   void open_log_file(const std::string&amp; filename);</a>
-<a name="294"><span class="lineNum">     294 </span>                :            : </a>
-<a name="295"><span class="lineNum">     295 </span>                :            :   // Async logging helper methods</a>
-<a name="296"><span class="lineNum">     296 </span>                :            :   void setup_async_logging(const AsyncLogConfig&amp; config);</a>
-<a name="297"><span class="lineNum">     297 </span>                :            :   void teardown_async_logging();</a>
-<a name="298"><span class="lineNum">     298 </span>                :            :   void worker_loop();</a>
-<a name="299"><span class="lineNum">     299 </span>                :            :   void process_batch(const std::vector&lt;LogEntry&gt;&amp; batch);</a>
-<a name="300"><span class="lineNum">     300 </span>                :            :   bool should_drop_log() const;</a>
-<a name="301"><span class="lineNum">     301 </span>                :            :   size_t get_queue_size() const;</a>
-<a name="302"><span class="lineNum">     302 </span>                :            :   void clear_queue();</a>
+<a name="272"><span class="lineNum">     272 </span>                :            :   // Log rotation support</a>
+<a name="273"><span class="lineNum">     273 </span>                :            :   std::unique_ptr&lt;LogRotation&gt; log_rotation_;</a>
+<a name="274"><span class="lineNum">     274 </span>                :            :   std::string current_log_file_;</a>
+<a name="275"><span class="lineNum">     275 </span>                :            : </a>
+<a name="276"><span class="lineNum">     276 </span>                :            :   // Async logging support</a>
+<a name="277"><span class="lineNum">     277 </span>                :            :   std::atomic&lt;bool&gt; async_enabled_{false};</a>
+<a name="278"><span class="lineNum">     278 </span>                :            :   AsyncLogConfig async_config_;</a>
+<a name="279"><span class="lineNum">     279 </span>                :            :   AsyncLogStats async_stats_;</a>
+<a name="280"><span class="lineNum">     280 </span>                :            : </a>
+<a name="281"><span class="lineNum">     281 </span>                :            :   // Threading for async logging</a>
+<a name="282"><span class="lineNum">     282 </span>                :            :   std::thread worker_thread_;</a>
+<a name="283"><span class="lineNum">     283 </span>                :            :   std::atomic&lt;bool&gt; running_{false};</a>
+<a name="284"><span class="lineNum">     284 </span>                :            :   std::atomic&lt;bool&gt; shutdown_requested_{false};</a>
+<a name="285"><span class="lineNum">     285 </span>                :            : </a>
+<a name="286"><span class="lineNum">     286 </span>                :            :   // Queue management</a>
+<a name="287"><span class="lineNum">     287 </span>                :            :   std::queue&lt;LogEntry&gt; log_queue_;</a>
+<a name="288"><span class="lineNum">     288 </span>                :            :   mutable std::mutex queue_mutex_;</a>
+<a name="289"><span class="lineNum">     289 </span>                :            :   std::condition_variable queue_cv_;</a>
+<a name="290"><span class="lineNum">     290 </span>                :            :   mutable std::mutex stats_mutex_;</a>
+<a name="291"><span class="lineNum">     291 </span>                :            : </a>
+<a name="292"><span class="lineNum">     292 </span>                :            :   std::string format_message(LogLevel level, std::string_view component, std::string_view operation,</a>
+<a name="293"><span class="lineNum">     293 </span>                :            :                              std::string_view message);</a>
+<a name="294"><span class="lineNum">     294 </span>                :            :   std::string level_to_string(LogLevel level);</a>
+<a name="295"><span class="lineNum">     295 </span>                :            :   std::string get_timestamp();</a>
+<a name="296"><span class="lineNum">     296 </span>                :            :   void write_to_console(const std::string&amp; message);</a>
+<a name="297"><span class="lineNum">     297 </span>                :            :   void write_to_file(const std::string&amp; message);</a>
+<a name="298"><span class="lineNum">     298 </span>                :            :   void call_callback(LogLevel level, const std::string&amp; message);</a>
+<a name="299"><span class="lineNum">     299 </span>                :            : </a>
+<a name="300"><span class="lineNum">     300 </span>                :            :   // Log rotation helper methods</a>
+<a name="301"><span class="lineNum">     301 </span>                :            :   void check_and_rotate_log();</a>
+<a name="302"><span class="lineNum">     302 </span>                :            :   void open_log_file(const std::string&amp; filename);</a>
 <a name="303"><span class="lineNum">     303 </span>                :            : </a>
-<a name="304"><span class="lineNum">     304 </span>                :            :   // Statistics helpers</a>
-<a name="305"><span class="lineNum">     305 </span>                :            :   void update_stats_on_enqueue();</a>
-<a name="306"><span class="lineNum">     306 </span>                :            :   void update_stats_on_drop();</a>
-<a name="307"><span class="lineNum">     307 </span>                :            :   void update_stats_on_batch(size_t batch_size);</a>
-<a name="308"><span class="lineNum">     308 </span>                :            :   void update_stats_on_flush();</a>
-<a name="309"><span class="lineNum">     309 </span>                :            : };</a>
-<a name="310"><span class="lineNum">     310 </span>                :            : </a>
-<a name="311"><span class="lineNum">     311 </span>                :            : /**</a>
-<a name="312"><span class="lineNum">     312 </span>                :            :  * @brief Convenience macros for logging</a>
-<a name="313"><span class="lineNum">     313 </span>                :            :  */</a>
-<a name="314"><span class="lineNum">     314 </span>                :            : #define UNILINK_LOG_DEBUG(component, operation, message)                                                 \</a>
-<a name="315"><span class="lineNum">     315 </span>                :            :   do {                                                                                                   \</a>
-<a name="316"><span class="lineNum">     316 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) { \</a>
-<a name="317"><span class="lineNum">     317 </span>                :            :       unilink::diagnostics::Logger::instance().debug(component, operation, message);                     \</a>
-<a name="318"><span class="lineNum">     318 </span>                :            :     }                                                                                                    \</a>
-<a name="319"><span class="lineNum">     319 </span>                :            :   } while (0)</a>
-<a name="320"><span class="lineNum">     320 </span>                :            : </a>
-<a name="321"><span class="lineNum">     321 </span>                :            : #define UNILINK_LOG_INFO(component, operation, message)                                                 \</a>
-<a name="322"><span class="lineNum">     322 </span>                :            :   do {                                                                                                  \</a>
-<a name="323"><span class="lineNum">     323 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::INFO) { \</a>
-<a name="324"><span class="lineNum">     324 </span>                :            :       unilink::diagnostics::Logger::instance().info(component, operation, message);                     \</a>
-<a name="325"><span class="lineNum">     325 </span>                :            :     }                                                                                                   \</a>
-<a name="326"><span class="lineNum">     326 </span>                :            :   } while (0)</a>
-<a name="327"><span class="lineNum">     327 </span>                :            : </a>
-<a name="328"><span class="lineNum">     328 </span>                :            : #define UNILINK_LOG_WARNING(component, operation, message)                                                 \</a>
-<a name="329"><span class="lineNum">     329 </span>                :            :   do {                                                                                                     \</a>
-<a name="330"><span class="lineNum">     330 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::WARNING) { \</a>
-<a name="331"><span class="lineNum">     331 </span>                :            :       unilink::diagnostics::Logger::instance().warning(component, operation, message);                     \</a>
-<a name="332"><span class="lineNum">     332 </span>                :            :     }                                                                                                      \</a>
-<a name="333"><span class="lineNum">     333 </span>                :            :   } while (0)</a>
-<a name="334"><span class="lineNum">     334 </span>                :            : </a>
-<a name="335"><span class="lineNum">     335 </span>                :            : #define UNILINK_LOG_ERROR(component, operation, message)                                                 \</a>
-<a name="336"><span class="lineNum">     336 </span>                :            :   do {                                                                                                   \</a>
-<a name="337"><span class="lineNum">     337 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::ERROR) { \</a>
-<a name="338"><span class="lineNum">     338 </span>                :            :       unilink::diagnostics::Logger::instance().error(component, operation, message);                     \</a>
-<a name="339"><span class="lineNum">     339 </span>                :            :     }                                                                                                    \</a>
-<a name="340"><span class="lineNum">     340 </span>                :            :   } while (0)</a>
-<a name="341"><span class="lineNum">     341 </span>                :            : </a>
-<a name="342"><span class="lineNum">     342 </span>                :            : #define UNILINK_LOG_CRITICAL(component, operation, message)                                                 \</a>
-<a name="343"><span class="lineNum">     343 </span>                :            :   do {                                                                                                      \</a>
-<a name="344"><span class="lineNum">     344 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::CRITICAL) { \</a>
-<a name="345"><span class="lineNum">     345 </span>                :            :       unilink::diagnostics::Logger::instance().critical(component, operation, message);                     \</a>
-<a name="346"><span class="lineNum">     346 </span>                :            :     }                                                                                                       \</a>
-<a name="347"><span class="lineNum">     347 </span>                :            :   } while (0)</a>
-<a name="348"><span class="lineNum">     348 </span>                :            : </a>
-<a name="349"><span class="lineNum">     349 </span>                :            : /**</a>
-<a name="350"><span class="lineNum">     350 </span>                :            :  * @brief Conditional logging macros (only evaluate message if level is enabled)</a>
-<a name="351"><span class="lineNum">     351 </span>                :            :  */</a>
-<a name="352"><span class="lineNum">     352 </span>                :            : #define UNILINK_LOG_DEBUG_IF(component, operation, message)                                              \</a>
-<a name="353"><span class="lineNum">     353 </span>                :            :   do {                                                                                                   \</a>
-<a name="354"><span class="lineNum">     354 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) { \</a>
-<a name="355"><span class="lineNum">     355 </span>                :            :       UNILINK_LOG_DEBUG(component, operation, message);                                                  \</a>
-<a name="356"><span class="lineNum">     356 </span>                :            :     }                                                                                                    \</a>
-<a name="357"><span class="lineNum">     357 </span>                :            :   } while (0)</a>
-<a name="358"><span class="lineNum">     358 </span>                :            : </a>
-<a name="359"><span class="lineNum">     359 </span>                :            : #define UNILINK_LOG_INFO_IF(component, operation, message)                                              \</a>
-<a name="360"><span class="lineNum">     360 </span>                :            :   do {                                                                                                  \</a>
-<a name="361"><span class="lineNum">     361 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::INFO) { \</a>
-<a name="362"><span class="lineNum">     362 </span>                :            :       UNILINK_LOG_INFO(component, operation, message);                                                  \</a>
-<a name="363"><span class="lineNum">     363 </span>                :            :     }                                                                                                   \</a>
-<a name="364"><span class="lineNum">     364 </span>                :            :   } while (0)</a>
-<a name="365"><span class="lineNum">     365 </span>                :            : </a>
-<a name="366"><span class="lineNum">     366 </span>                :            : /**</a>
-<a name="367"><span class="lineNum">     367 </span>                :            :  * @brief Performance logging macros for expensive operations</a>
-<a name="368"><span class="lineNum">     368 </span>                :            :  */</a>
-<a name="369"><span class="lineNum">     369 </span>                :            : #define UNILINK_LOG_PERF_START(component, operation)                                                  \</a>
-<a name="370"><span class="lineNum">     370 </span>                :            :   auto _perf_start_##operation =                                                                      \</a>
-<a name="371"><span class="lineNum">     371 </span>                :            :       (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) \</a>
-<a name="372"><span class="lineNum">     372 </span>                :            :           ? std::chrono::high_resolution_clock::now()                                                 \</a>
-<a name="373"><span class="lineNum">     373 </span>                :            :           : std::chrono::high_resolution_clock::time_point()</a>
+<a name="304"><span class="lineNum">     304 </span>                :            :   // Async logging helper methods</a>
+<a name="305"><span class="lineNum">     305 </span>                :            :   void setup_async_logging(const AsyncLogConfig&amp; config);</a>
+<a name="306"><span class="lineNum">     306 </span>                :            :   void teardown_async_logging();</a>
+<a name="307"><span class="lineNum">     307 </span>                :            :   void worker_loop();</a>
+<a name="308"><span class="lineNum">     308 </span>                :            :   void process_batch(const std::vector&lt;LogEntry&gt;&amp; batch);</a>
+<a name="309"><span class="lineNum">     309 </span>                :            :   bool should_drop_log() const;</a>
+<a name="310"><span class="lineNum">     310 </span>                :            :   size_t get_queue_size() const;</a>
+<a name="311"><span class="lineNum">     311 </span>                :            :   void clear_queue();</a>
+<a name="312"><span class="lineNum">     312 </span>                :            : </a>
+<a name="313"><span class="lineNum">     313 </span>                :            :   // Statistics helpers</a>
+<a name="314"><span class="lineNum">     314 </span>                :            :   void update_stats_on_enqueue();</a>
+<a name="315"><span class="lineNum">     315 </span>                :            :   void update_stats_on_drop();</a>
+<a name="316"><span class="lineNum">     316 </span>                :            :   void update_stats_on_batch(size_t batch_size);</a>
+<a name="317"><span class="lineNum">     317 </span>                :            :   void update_stats_on_flush();</a>
+<a name="318"><span class="lineNum">     318 </span>                :            : };</a>
+<a name="319"><span class="lineNum">     319 </span>                :            : </a>
+<a name="320"><span class="lineNum">     320 </span>                :            : /**</a>
+<a name="321"><span class="lineNum">     321 </span>                :            :  * @brief Convenience macros for logging</a>
+<a name="322"><span class="lineNum">     322 </span>                :            :  */</a>
+<a name="323"><span class="lineNum">     323 </span>                :            : #define UNILINK_LOG_DEBUG(component, operation, message)                                                 \</a>
+<a name="324"><span class="lineNum">     324 </span>                :            :   do {                                                                                                   \</a>
+<a name="325"><span class="lineNum">     325 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) { \</a>
+<a name="326"><span class="lineNum">     326 </span>                :            :       unilink::diagnostics::Logger::instance().debug(component, operation, message);                     \</a>
+<a name="327"><span class="lineNum">     327 </span>                :            :     }                                                                                                    \</a>
+<a name="328"><span class="lineNum">     328 </span>                :            :   } while (0)</a>
+<a name="329"><span class="lineNum">     329 </span>                :            : </a>
+<a name="330"><span class="lineNum">     330 </span>                :            : #define UNILINK_LOG_INFO(component, operation, message)                                                 \</a>
+<a name="331"><span class="lineNum">     331 </span>                :            :   do {                                                                                                  \</a>
+<a name="332"><span class="lineNum">     332 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::INFO) { \</a>
+<a name="333"><span class="lineNum">     333 </span>                :            :       unilink::diagnostics::Logger::instance().info(component, operation, message);                     \</a>
+<a name="334"><span class="lineNum">     334 </span>                :            :     }                                                                                                   \</a>
+<a name="335"><span class="lineNum">     335 </span>                :            :   } while (0)</a>
+<a name="336"><span class="lineNum">     336 </span>                :            : </a>
+<a name="337"><span class="lineNum">     337 </span>                :            : #define UNILINK_LOG_WARNING(component, operation, message)                                                 \</a>
+<a name="338"><span class="lineNum">     338 </span>                :            :   do {                                                                                                     \</a>
+<a name="339"><span class="lineNum">     339 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::WARNING) { \</a>
+<a name="340"><span class="lineNum">     340 </span>                :            :       unilink::diagnostics::Logger::instance().warning(component, operation, message);                     \</a>
+<a name="341"><span class="lineNum">     341 </span>                :            :     }                                                                                                      \</a>
+<a name="342"><span class="lineNum">     342 </span>                :            :   } while (0)</a>
+<a name="343"><span class="lineNum">     343 </span>                :            : </a>
+<a name="344"><span class="lineNum">     344 </span>                :            : #define UNILINK_LOG_ERROR(component, operation, message)                                                 \</a>
+<a name="345"><span class="lineNum">     345 </span>                :            :   do {                                                                                                   \</a>
+<a name="346"><span class="lineNum">     346 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::ERROR) { \</a>
+<a name="347"><span class="lineNum">     347 </span>                :            :       unilink::diagnostics::Logger::instance().error(component, operation, message);                     \</a>
+<a name="348"><span class="lineNum">     348 </span>                :            :     }                                                                                                    \</a>
+<a name="349"><span class="lineNum">     349 </span>                :            :   } while (0)</a>
+<a name="350"><span class="lineNum">     350 </span>                :            : </a>
+<a name="351"><span class="lineNum">     351 </span>                :            : #define UNILINK_LOG_CRITICAL(component, operation, message)                                                 \</a>
+<a name="352"><span class="lineNum">     352 </span>                :            :   do {                                                                                                      \</a>
+<a name="353"><span class="lineNum">     353 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::CRITICAL) { \</a>
+<a name="354"><span class="lineNum">     354 </span>                :            :       unilink::diagnostics::Logger::instance().critical(component, operation, message);                     \</a>
+<a name="355"><span class="lineNum">     355 </span>                :            :     }                                                                                                       \</a>
+<a name="356"><span class="lineNum">     356 </span>                :            :   } while (0)</a>
+<a name="357"><span class="lineNum">     357 </span>                :            : </a>
+<a name="358"><span class="lineNum">     358 </span>                :            : /**</a>
+<a name="359"><span class="lineNum">     359 </span>                :            :  * @brief Conditional logging macros (only evaluate message if level is enabled)</a>
+<a name="360"><span class="lineNum">     360 </span>                :            :  */</a>
+<a name="361"><span class="lineNum">     361 </span>                :            : #define UNILINK_LOG_DEBUG_IF(component, operation, message)                                              \</a>
+<a name="362"><span class="lineNum">     362 </span>                :            :   do {                                                                                                   \</a>
+<a name="363"><span class="lineNum">     363 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) { \</a>
+<a name="364"><span class="lineNum">     364 </span>                :            :       UNILINK_LOG_DEBUG(component, operation, message);                                                  \</a>
+<a name="365"><span class="lineNum">     365 </span>                :            :     }                                                                                                    \</a>
+<a name="366"><span class="lineNum">     366 </span>                :            :   } while (0)</a>
+<a name="367"><span class="lineNum">     367 </span>                :            : </a>
+<a name="368"><span class="lineNum">     368 </span>                :            : #define UNILINK_LOG_INFO_IF(component, operation, message)                                              \</a>
+<a name="369"><span class="lineNum">     369 </span>                :            :   do {                                                                                                  \</a>
+<a name="370"><span class="lineNum">     370 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::INFO) { \</a>
+<a name="371"><span class="lineNum">     371 </span>                :            :       UNILINK_LOG_INFO(component, operation, message);                                                  \</a>
+<a name="372"><span class="lineNum">     372 </span>                :            :     }                                                                                                   \</a>
+<a name="373"><span class="lineNum">     373 </span>                :            :   } while (0)</a>
 <a name="374"><span class="lineNum">     374 </span>                :            : </a>
-<a name="375"><span class="lineNum">     375 </span>                :            : #define UNILINK_LOG_PERF_END(component, operation)                                                                \</a>
-<a name="376"><span class="lineNum">     376 </span>                :            :   do {                                                                                                            \</a>
-<a name="377"><span class="lineNum">     377 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {          \</a>
-<a name="378"><span class="lineNum">     378 </span>                :            :       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \</a>
-<a name="379"><span class="lineNum">     379 </span>                :            :       using _us_t = std::chrono::microseconds;                                                                    \</a>
-<a name="380"><span class="lineNum">     380 </span>                :            :       auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \</a>
-<a name="381"><span class="lineNum">     381 </span>                :            :       auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();             \</a>
-<a name="382"><span class="lineNum">     382 </span>                :            :       UNILINK_LOG_DEBUG(component, operation, &quot;Duration: &quot; + std::to_string(_perf_duration_##operation) + &quot; μs&quot;); \</a>
-<a name="383"><span class="lineNum">     383 </span>                :            :     }                                                                                                             \</a>
-<a name="384"><span class="lineNum">     384 </span>                :            :   } while (0)</a>
-<a name="385"><span class="lineNum">     385 </span>                :            : </a>
-<a name="386"><span class="lineNum">     386 </span>                :            : }  // namespace diagnostics</a>
-<a name="387"><span class="lineNum">     387 </span>                :            : </a>
-<a name="388"><span class="lineNum">     388 </span>                :            : }  // namespace unilink</a>
+<a name="375"><span class="lineNum">     375 </span>                :            : /**</a>
+<a name="376"><span class="lineNum">     376 </span>                :            :  * @brief Performance logging macros for expensive operations</a>
+<a name="377"><span class="lineNum">     377 </span>                :            :  */</a>
+<a name="378"><span class="lineNum">     378 </span>                :            : #define UNILINK_LOG_PERF_START(component, operation)                                                  \</a>
+<a name="379"><span class="lineNum">     379 </span>                :            :   auto _perf_start_##operation =                                                                      \</a>
+<a name="380"><span class="lineNum">     380 </span>                :            :       (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) \</a>
+<a name="381"><span class="lineNum">     381 </span>                :            :           ? std::chrono::high_resolution_clock::now()                                                 \</a>
+<a name="382"><span class="lineNum">     382 </span>                :            :           : std::chrono::high_resolution_clock::time_point()</a>
+<a name="383"><span class="lineNum">     383 </span>                :            : </a>
+<a name="384"><span class="lineNum">     384 </span>                :            : #define UNILINK_LOG_PERF_END(component, operation)                                                                \</a>
+<a name="385"><span class="lineNum">     385 </span>                :            :   do {                                                                                                            \</a>
+<a name="386"><span class="lineNum">     386 </span>                :            :     if (unilink::diagnostics::Logger::instance().get_level() &lt;= unilink::diagnostics::LogLevel::DEBUG) {          \</a>
+<a name="387"><span class="lineNum">     387 </span>                :            :       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \</a>
+<a name="388"><span class="lineNum">     388 </span>                :            :       using _us_t = std::chrono::microseconds;                                                                    \</a>
+<a name="389"><span class="lineNum">     389 </span>                :            :       auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \</a>
+<a name="390"><span class="lineNum">     390 </span>                :            :       auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();             \</a>
+<a name="391"><span class="lineNum">     391 </span>                :            :       UNILINK_LOG_DEBUG(component, operation, &quot;Duration: &quot; + std::to_string(_perf_duration_##operation) + &quot; μs&quot;); \</a>
+<a name="392"><span class="lineNum">     392 </span>                :            :     }                                                                                                             \</a>
+<a name="393"><span class="lineNum">     393 </span>                :            :   } while (0)</a>
+<a name="394"><span class="lineNum">     394 </span>                :            : </a>
+<a name="395"><span class="lineNum">     395 </span>                :            : }  // namespace diagnostics</a>
+<a name="396"><span class="lineNum">     396 </span>                :            : </a>
+<a name="397"><span class="lineNum">     397 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
