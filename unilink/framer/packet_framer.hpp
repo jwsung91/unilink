@@ -60,6 +60,7 @@ class UNILINK_API PacketFramer : public IFramer {
   State state_;
   std::vector<uint8_t> buffer_;
   MessageCallback on_message_;
+  size_t scanned_idx_{0};
 };
 
 }  // namespace framer
