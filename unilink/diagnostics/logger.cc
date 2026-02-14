@@ -17,6 +17,8 @@
 #include "logger.hpp"
 
 #include <condition_variable>
+#include <cstdio>
+#include <cstring>
 #include <ctime>
 #include <filesystem>
 #include <iomanip>
@@ -288,6 +290,17 @@ std::string Logger::get_timestamp() {
 #else
   ::localtime_r(&time_t, &time_info);
 #endif
+
+  // Optimization: Use fixed buffer and strftime to avoid ostringstream overhead
+  char buffer[64];
+  // Format: YYYY-MM-DD HH:MM:SS
+  size_t len = std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &time_info);
+  if (len > 0) {
+    if (len < sizeof(buffer)) {
+      std::snprintf(buffer + len, sizeof(buffer) - len, ".%03d", static_cast<int>(ms.count()));
+    }
+    return std::string(buffer);
+  }
 
   std::ostringstream oss;
   oss << std::put_time(&time_info, "%Y-%m-%d %H:%M:%S");
