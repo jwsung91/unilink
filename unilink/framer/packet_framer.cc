@@ -46,6 +46,8 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
           buffer_.erase(buffer_.begin(), it);
         }
         state_ = State::Collect;
+        // Start scanning for end pattern after the start pattern we just found
+        scanned_idx_ = start_pattern_.size();
         // Continue to check for end pattern immediately
       } else {
         // Start pattern not found.
@@ -76,7 +78,24 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
       }
 
       // Search for end pattern *after* start pattern
-      size_t search_offset = start_pattern_.size();
+      // Optimization: use scanned_idx_ to avoid re-scanning
+      size_t search_offset = std::max(start_pattern_.size(), scanned_idx_);
+
+      // Back up slightly to catch split end pattern if we are resuming search
+      if (search_offset > start_pattern_.size()) {
+        size_t overlap = (end_pattern_.size() > 1) ? (end_pattern_.size() - 1) : 0;
+        if (search_offset >= overlap) {
+          search_offset -= overlap;
+        } else {
+          search_offset = 0;
+        }
+      }
+
+      // Safety clamp to ensure we don't search inside start pattern
+      if (search_offset < start_pattern_.size()) {
+        search_offset = start_pattern_.size();
+      }
+
       if (buffer_.size() < search_offset) {
         // Should not happen if Sync worked correctly
         break;
@@ -97,17 +116,21 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
 
           buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(packet_len));
           state_ = State::Sync;
+          scanned_idx_ = 0;
         } else {
           // Exceeded max length, discard packet
           buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(packet_len));
           state_ = State::Sync;
+          scanned_idx_ = 0;
         }
       } else {
         // End pattern not found.
+        scanned_idx_ = buffer_.size();
         if (buffer_.size() > max_length_) {
           // Exceeded limit while collecting. Reset.
           buffer_.clear();
           state_ = State::Sync;
+          scanned_idx_ = 0;
         }
         break;  // Need more data
       }
@@ -120,6 +143,7 @@ void PacketFramer::set_on_message(MessageCallback cb) { on_message_ = std::move(
 void PacketFramer::reset() {
   buffer_.clear();
   state_ = State::Sync;
+  scanned_idx_ = 0;
 }
 
 }  // namespace framer
