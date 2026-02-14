@@ -136,6 +136,14 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a916c2974db54fded555dbfe4615d6239"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdda8cb7ab84e3ee3c9a8b3110683333"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1util_1_1InputValidator.html#acdda8cb7ab84e3ee3c9a8b3110683333">validate_range</a> (size_t value, size_t min, size_t max, const std::string &amp;field_name)</td></tr>
 <tr class="separator:acdda8cb7ab84e3ee3c9a8b3110683333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4805041301f350197f4cd4f61258106"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1util_1_1InputValidator.html#af4805041301f350197f4cd4f61258106">is_valid_host</a> (const std::string &amp;host)</td></tr>
+<tr class="separator:af4805041301f350197f4cd4f61258106"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a174cc017bb418ea82a6c42ecdde04c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1util_1_1InputValidator.html#a9a174cc017bb418ea82a6c42ecdde04c">is_valid_ipv4</a> (std::string_view address)</td></tr>
+<tr class="separator:a9a174cc017bb418ea82a6c42ecdde04c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bbf5901f38eff733e30d233ac9ba431"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1util_1_1InputValidator.html#a7bbf5901f38eff733e30d233ac9ba431">is_valid_ipv6</a> (const std::string &amp;address)</td></tr>
+<tr class="separator:a7bbf5901f38eff733e30d233ac9ba431"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23535e3c86d42f6527152317ddc91036"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1util_1_1InputValidator.html#a23535e3c86d42f6527152317ddc91036">is_valid_hostname</a> (std::string_view hostname)</td></tr>
+<tr class="separator:a23535e3c86d42f6527152317ddc91036"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Input validation utility class. </p>
@@ -143,6 +151,118 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00040">40</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="af4805041301f350197f4cd4f61258106"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4805041301f350197f4cd4f61258106">&#9670;&nbsp;</a></span>is_valid_host()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::util::InputValidator::is_valid_host </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>host</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00076">76</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
+
+</div>
+</div>
+<a id="a23535e3c86d42f6527152317ddc91036"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23535e3c86d42f6527152317ddc91036">&#9670;&nbsp;</a></span>is_valid_hostname()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::util::InputValidator::is_valid_hostname </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>hostname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00142">142</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
+
+</div>
+</div>
+<a id="a9a174cc017bb418ea82a6c42ecdde04c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a174cc017bb418ea82a6c42ecdde04c">&#9670;&nbsp;</a></span>is_valid_ipv4()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::util::InputValidator::is_valid_ipv4 </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>address</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00095">95</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
+
+</div>
+</div>
+<a id="a7bbf5901f38eff733e30d233ac9ba431"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bbf5901f38eff733e30d233ac9ba431">&#9670;&nbsp;</a></span>is_valid_ipv6()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::util::InputValidator::is_valid_ipv6 </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>address</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00134">134</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
+
+</div>
+</div>
 <a id="a0bba2f5dbc1991c39b40f1d682d4436c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0bba2f5dbc1991c39b40f1d682d4436c">&#9670;&nbsp;</a></span>validate_baud_rate()</h2>
 
@@ -167,7 +287,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00153">153</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00156">156</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -195,7 +315,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00120">120</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00123">123</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -223,7 +343,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00158">158</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00161">161</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -251,7 +371,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00065">65</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00054">54</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
 
 </div>
 </div>
@@ -307,7 +427,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00049">49</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00038">38</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
 
 </div>
 </div>
@@ -335,7 +455,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00057">57</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00046">46</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
 
 </div>
 </div>
@@ -373,7 +493,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00168">168</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00171">171</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -411,7 +531,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00086">86</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00089">89</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -439,7 +559,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00074">74</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8cc_source.html#l00063">63</a> of file <a class="el" href="input__validator_8cc_source.html">input_validator.cc</a>.</p>
 
 </div>
 </div>
@@ -467,7 +587,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00146">146</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00149">149</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -505,7 +625,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00100">100</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00103">103</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -555,7 +675,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00106">106</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00109">109</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -605,7 +725,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00113">113</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00116">116</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -633,7 +753,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00135">135</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00138">138</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -661,7 +781,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00130">130</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00133">133</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -689,7 +809,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00163">163</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00166">166</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -733,7 +853,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00092">92</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00095">95</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -761,7 +881,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00125">125</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="input__validator_8hpp_source.html#l00128">128</a> of file <a class="el" href="input__validator_8hpp_source.html">input_validator.hpp</a>.</p>
 
 </div>
 </div>
@@ -775,7 +895,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1util.html">util</a></li><li class="navelem"><a class="el" href="classunilink_1_1util_1_1InputValidator.html">InputValidator</a></li>
-    <li class="footer">Generated on Sat Feb 14 2026 02:28:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 14 2026 14:05:26 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

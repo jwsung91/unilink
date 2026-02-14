@@ -912,13 +912,13 @@ var NAVTREEINDEX =
 "annotated.html",
 "classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496",
 "classunilink_1_1memory_1_1PooledBuffer.html#a96f88cf55a3d31ad4e28d08af0b0b975",
-"classunilink_1_1wrapper_1_1TcpClient.html",
-"functions_j.html",
-"md_docs_architecture_runtime_behavior.html#autotoc_md237",
-"md_docs_guides_setup_build_guide.html#autotoc_md587",
-"md_docs_tutorials_02_tcp_server.html#autotoc_md932",
-"structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7c",
-"unilink_8hpp_source.html"
+"classunilink_1_1wrapper_1_1Serial.html#ab8896db9d9979af19b3ef575a8cc8cc3",
+"functions_func_~.html",
+"md_docs_architecture_runtime_behavior.html#autotoc_md232",
+"md_docs_guides_setup_build_guide.html#autotoc_md582",
+"md_docs_tutorials_02_tcp_server.html#autotoc_md927",
+"structunilink_1_1config_1_1SerialConfig.html",
+"unilink_8hpp.html#a14c0a21a3c09f578b71455e31cf47956"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

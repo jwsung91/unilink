@@ -1,5 +1,9 @@
 var NAVTREEINDEX8 =
 {
+"structunilink_1_1config_1_1SerialConfig.html":[18,0,0,3,6],
+"structunilink_1_1config_1_1SerialConfig.html#a1093e80914febebe9b1a0b01f6d694c6":[18,0,0,3,6,9],
+"structunilink_1_1config_1_1SerialConfig.html#a1199a6c938896ea632aad1cb719af356":[18,0,0,3,6,3],
+"structunilink_1_1config_1_1SerialConfig.html#a2a9446231ccba59c4f3efe82fe6e10f5":[18,0,0,3,6,16],
 "structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7c":[18,0,0,3,6,1],
 "structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7ca35537fbc25d87ffe59e4f35fefcd34b7":[18,0,0,3,6,1,1],
 "structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7ca37b6bd7fe61d651735cec3d3b0356c66":[18,0,0,3,6,1,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX8 =
 "unified__builder_8cc_source.html":[19,0,1,1,11],
 "unified__builder_8hpp.html":[19,0,1,1,12],
 "unified__builder_8hpp_source.html":[19,0,1,1,12],
-"unilink_8hpp.html":[19,0,1,12],
-"unilink_8hpp.html#a14c0a21a3c09f578b71455e31cf47956":[19,0,1,12,2],
-"unilink_8hpp.html#a6e965071daa5a68d914844bfbf79daac":[19,0,1,12,1],
-"unilink_8hpp.html#a9f2227aea1475c0655cf8cf4a99e55e9":[19,0,1,12,0],
-"unilink_8hpp.html#ab000e6359a7c6a9ead41fb57c52c2212":[19,0,1,12,3]
+"unilink_8hpp.html":[19,0,1,12]
 };

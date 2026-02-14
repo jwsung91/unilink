@@ -1,5 +1,9 @@
 var NAVTREEINDEX7 =
 {
+"md_docs_tutorials_02_tcp_server.html#autotoc_md927":[16,8,1],
+"md_docs_tutorials_02_tcp_server.html#autotoc_md928":[16,8,2],
+"md_docs_tutorials_02_tcp_server.html#autotoc_md930":[16,9],
+"md_docs_tutorials_02_tcp_server.html#autotoc_md931":[16,9,0],
 "md_docs_tutorials_02_tcp_server.html#autotoc_md932":[16,9,1],
 "md_docs_tutorials_02_tcp_server.html#autotoc_md933":[16,9,2],
 "md_docs_tutorials_02_tcp_server.html#autotoc_md934":[16,9,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX7 =
 "structunilink_1_1config_1_1ConfigItem.html#a45cc42063fe0c4a10ce1e7afc5e048c9":[18,0,0,3,4,6],
 "structunilink_1_1config_1_1ConfigItem.html#a5d42b01ee9135405a2c2070cdafa1160":[18,0,0,3,4,1],
 "structunilink_1_1config_1_1ConfigItem.html#a74a54b9e37822c764497c802fc941cd9":[18,0,0,3,4,5],
-"structunilink_1_1config_1_1ConfigItem.html#abdc2949355ed072427cad2c826c3b771":[18,0,0,3,4,7],
-"structunilink_1_1config_1_1SerialConfig.html":[18,0,0,3,6],
-"structunilink_1_1config_1_1SerialConfig.html#a1093e80914febebe9b1a0b01f6d694c6":[18,0,0,3,6,9],
-"structunilink_1_1config_1_1SerialConfig.html#a1199a6c938896ea632aad1cb719af356":[18,0,0,3,6,3],
-"structunilink_1_1config_1_1SerialConfig.html#a2a9446231ccba59c4f3efe82fe6e10f5":[18,0,0,3,6,16]
+"structunilink_1_1config_1_1ConfigItem.html#abdc2949355ed072427cad2c826c3b771":[18,0,0,3,4,7]
 };

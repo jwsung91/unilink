@@ -1,5 +1,9 @@
 var classunilink_1_1util_1_1InputValidator =
 [
+    [ "is_valid_host", "classunilink_1_1util_1_1InputValidator.html#af4805041301f350197f4cd4f61258106", null ],
+    [ "is_valid_hostname", "classunilink_1_1util_1_1InputValidator.html#a23535e3c86d42f6527152317ddc91036", null ],
+    [ "is_valid_ipv4", "classunilink_1_1util_1_1InputValidator.html#a9a174cc017bb418ea82a6c42ecdde04c", null ],
+    [ "is_valid_ipv6", "classunilink_1_1util_1_1InputValidator.html#a7bbf5901f38eff733e30d233ac9ba431", null ],
     [ "validate_baud_rate", "classunilink_1_1util_1_1InputValidator.html#a0bba2f5dbc1991c39b40f1d682d4436c", null ],
     [ "validate_buffer_size", "classunilink_1_1util_1_1InputValidator.html#ade59397099a8e6f0077f75376eb65325", null ],
     [ "validate_data_bits", "classunilink_1_1util_1_1InputValidator.html#aaf1398c1116806a5fa2aa394b088c320", null ],
