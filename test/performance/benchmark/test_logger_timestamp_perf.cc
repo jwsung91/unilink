@@ -30,8 +30,8 @@ class LoggerTimestampPerfTest : public ::testing::Test {
   void SetUp() override {
     // Reset logger state
     Logger::instance().set_level(LogLevel::INFO);
-    Logger::instance().set_outputs(0);  // Disable outputs to measure formatting overhead
-    Logger::instance().set_async_logging(false); // Ensure sync logging to force formatting
+    Logger::instance().set_outputs(0);            // Disable outputs to measure formatting overhead
+    Logger::instance().set_async_logging(false);  // Ensure sync logging to force formatting
   }
 
   void TearDown() override {
@@ -56,7 +56,6 @@ TEST_F(LoggerTimestampPerfTest, TimestampFormattingOverhead) {
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-  std::cout << "Logger Timestamp formatting (100k iter): " << duration << " μs ("
-            << (double)duration / iterations << " μs/call)"
-            << std::endl;
+  std::cout << "Logger Timestamp formatting (100k iter): " << duration << " μs (" << (double)duration / iterations
+            << " μs/call)" << std::endl;
 }
