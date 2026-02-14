@@ -70,11 +70,14 @@ class UNILINK_API InputValidator {
   static void validate_range(int64_t value, int64_t min, int64_t max, const std::string& field_name);
   static void validate_range(size_t value, size_t min, size_t max, const std::string& field_name);
 
- private:
-  // Helper methods
+  // Validation helpers (exposed for public use)
+  static bool is_valid_host(const std::string& host);
   static bool is_valid_ipv4(std::string_view address);
   static bool is_valid_ipv6(const std::string& address);
   static bool is_valid_hostname(std::string_view hostname);
+
+ private:
+  // Helper methods
   static bool is_valid_device_path(const std::string& device);
 
   // Constants for retry count
