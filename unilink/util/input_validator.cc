@@ -28,18 +28,7 @@ void InputValidator::validate_host(const std::string& host) {
   validate_non_empty_string(host, "host");
   validate_string_length(host, base::constants::MAX_HOSTNAME_LENGTH, "host");
 
-  // Check if it's an IPv4 address
-  if (is_valid_ipv4(host)) {
-    return;
-  }
-
-  // Check if it's an IPv6 address
-  if (is_valid_ipv6(host)) {
-    return;
-  }
-
-  // Check if it's a valid hostname
-  if (is_valid_hostname(host)) {
+  if (is_valid_host(host)) {
     return;
   }
 
@@ -82,6 +71,25 @@ void InputValidator::validate_parity(const std::string& parity) {
   if (lower_parity != "none" && lower_parity != "odd" && lower_parity != "even") {
     throw diagnostics::ValidationException("invalid parity value", "parity", "none, odd, or even");
   }
+}
+
+bool InputValidator::is_valid_host(const std::string& host) {
+  // Check if it's an IPv4 address
+  if (is_valid_ipv4(host)) {
+    return true;
+  }
+
+  // Check if it's an IPv6 address
+  if (is_valid_ipv6(host)) {
+    return true;
+  }
+
+  // Check if it's a valid hostname
+  if (is_valid_hostname(host)) {
+    return true;
+  }
+
+  return false;
 }
 
 bool InputValidator::is_valid_ipv4(std::string_view address) {

@@ -7,3 +7,8 @@
 **Vulnerability:** The `InputValidator::is_valid_device_path` function allowed any Unix path starting with `/` to be considered a valid "device path" if it contained alphanumeric characters, `_`, and `-`. This could allow an application to interact with arbitrary files (e.g., `/etc/passwd`) as if they were serial devices.
 **Learning:** Checking only for "safe characters" in a path is insufficient to prevent path traversal or accessing sensitive files when the intent is to restrict access to device nodes. Validating the prefix (e.g., `/dev/`) is crucial for security in this context.
 **Prevention:** Enforce strict prefix validation for device paths (e.g., must start with `/dev/` on Unix). Reject general file system paths unless explicitly allowed.
+
+## 2026-02-07 - [Input Validation: Config Objects Should Validate Types, Not Just Non-Empty]
+**Vulnerability:** `TcpClientConfig` relied on `!host.empty()` for validation, allowing invalid strings (like URLs or command injection payloads) to be passed down to the network layer.
+**Learning:** Configuration objects are often the first line of defense. Relying on "it will fail later" (e.g., in `asio::resolver`) misses an opportunity to catch malicious or malformed input early and provide clear feedback.
+**Prevention:** Expose granular validation logic (like `is_valid_host`, `is_valid_ipv4`) in utility classes and use them directly in configuration object `is_valid()` checks.
