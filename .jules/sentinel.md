@@ -12,8 +12,3 @@
 **Vulnerability:** `TcpClientConfig` relied on `!host.empty()` for validation, allowing invalid strings (like URLs or command injection payloads) to be passed down to the network layer.
 **Learning:** Configuration objects are often the first line of defense. Relying on "it will fail later" (e.g., in `asio::resolver`) misses an opportunity to catch malicious or malformed input early and provide clear feedback.
 **Prevention:** Expose granular validation logic (like `is_valid_host`, `is_valid_ipv4`) in utility classes and use them directly in configuration object `is_valid()` checks.
-
-## 2026-02-14 - [Algorithmic Complexity DoS: Quadratic Search in Packet Framer]
-**Vulnerability:** `PacketFramer::push_bytes` performed a full buffer scan for the end pattern on every new data chunk, leading to $O(N^2)$ complexity when data arrives byte-by-byte. This allowed an attacker to consume excessive CPU by slowly sending large packets.
-**Learning:** Re-scanning data that has already been checked is a common source of algorithmic complexity vulnerabilities in parsers and framers. Even if the maximum buffer size is bounded, repeated scans can be catastrophic.
-**Prevention:** Maintain state (e.g., `scanned_idx_`) to track the progress of the search and only scan new data (plus a small overlap for split patterns). Ensure linear $O(N)$ complexity for streaming data processing.
