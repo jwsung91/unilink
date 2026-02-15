@@ -24,7 +24,11 @@ namespace framer {
 
 PacketFramer::PacketFramer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
                            size_t max_length)
-    : start_pattern_(start_pattern), end_pattern_(end_pattern), max_length_(max_length), state_(State::Sync) {}
+    : start_pattern_(start_pattern),
+      end_pattern_(end_pattern),
+      max_length_(max_length),
+      state_(State::Sync),
+      scanned_idx_(0) {}
 
 void PacketFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
@@ -46,7 +50,6 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
           buffer_.erase(buffer_.begin(), it);
         }
         state_ = State::Collect;
-        // Start scanning for end pattern after the start pattern we just found
         scanned_idx_ = start_pattern_.size();
         // Continue to check for end pattern immediately
       } else {
@@ -74,31 +77,33 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
 
         buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(packet_len));
         state_ = State::Sync;
+        scanned_idx_ = 0;
         continue;
       }
 
       // Search for end pattern *after* start pattern
-      // Optimization: use scanned_idx_ to avoid re-scanning
-      size_t search_offset = std::max(start_pattern_.size(), scanned_idx_);
-
-      // Back up slightly to catch split end pattern if we are resuming search
-      if (search_offset > start_pattern_.size()) {
-        size_t overlap = (end_pattern_.size() > 1) ? (end_pattern_.size() - 1) : 0;
-        if (search_offset >= overlap) {
-          search_offset -= overlap;
-        } else {
-          search_offset = 0;
-        }
-      }
-
-      // Safety clamp to ensure we don't search inside start pattern
+      size_t search_offset = scanned_idx_;
       if (search_offset < start_pattern_.size()) {
         search_offset = start_pattern_.size();
       }
 
-      if (buffer_.size() < search_offset) {
-        // Should not happen if Sync worked correctly
-        break;
+      // Ensure we don't start beyond buffer size
+      if (search_offset > buffer_.size()) {
+        search_offset = buffer_.size();
+      }
+
+      // Backtrack for split pattern
+      if (search_offset > start_pattern_.size() && end_pattern_.size() > 1) {
+        if (search_offset >= end_pattern_.size() - 1) {
+          search_offset -= (end_pattern_.size() - 1);
+        } else {
+          search_offset = start_pattern_.size();
+        }
+      }
+
+      // Clamp again to be sure
+      if (search_offset < start_pattern_.size()) {
+        search_offset = start_pattern_.size();
       }
 
       auto search_start = buffer_.begin() + static_cast<std::ptrdiff_t>(search_offset);
@@ -112,7 +117,11 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
           if (on_message_) {
             on_message_(memory::ConstByteSpan(buffer_.data(), packet_len));
           }
-          if (buffer_.empty()) return;
+          // The buffer might be empty if callback cleared it (unlikely but possible)
+          if (buffer_.empty()) {
+            scanned_idx_ = 0;
+            return;
+          }
 
           buffer_.erase(buffer_.begin(), buffer_.begin() + static_cast<std::ptrdiff_t>(packet_len));
           state_ = State::Sync;
@@ -125,7 +134,9 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
         }
       } else {
         // End pattern not found.
+        // Update scanned_idx_ to current end so we don't re-scan next time
         scanned_idx_ = buffer_.size();
+
         if (buffer_.size() > max_length_) {
           // Exceeded limit while collecting. Reset.
           buffer_.clear();
