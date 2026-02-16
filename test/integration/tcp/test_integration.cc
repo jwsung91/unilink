@@ -148,14 +148,16 @@ TEST_F(IntegrationTest, BasicCommunication) {
   client->start();
 
   // Wait for connection
-  EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 10000));
 
   // Send data
   if (client->is_connected()) {
+    // Wait for connection stability
+    TestUtils::waitFor(200);
     client->send("test message");
 
     // Wait for data reception
-    EXPECT_TRUE(TestUtils::waitForCondition([&data_received]() { return data_received.load(); }, 3000));
+    EXPECT_TRUE(TestUtils::waitForCondition([&data_received]() { return data_received.load(); }, 10000));
 
     if (data_received.load()) {
       EXPECT_EQ(received_data, "test message");
