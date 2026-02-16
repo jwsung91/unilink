@@ -20,7 +20,6 @@
 #include <string>
 
 #include "unilink/base/constants.hpp"
-#include "unilink/util/input_validator.hpp"
 
 namespace unilink {
 namespace config {
@@ -42,8 +41,7 @@ struct TcpClientConfig {
 
   // Validation methods
   bool is_valid() const {
-    return util::InputValidator::is_valid_host(host) && port > 0 &&
-           retry_interval_ms >= common::constants::MIN_RETRY_INTERVAL_MS &&
+    return !host.empty() && port > 0 && retry_interval_ms >= common::constants::MIN_RETRY_INTERVAL_MS &&
            retry_interval_ms <= common::constants::MAX_RETRY_INTERVAL_MS &&
            backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD &&

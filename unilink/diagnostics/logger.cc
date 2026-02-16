@@ -17,8 +17,6 @@
 #include "logger.hpp"
 
 #include <condition_variable>
-#include <cstdio>
-#include <cstring>
 #include <ctime>
 #include <filesystem>
 #include <iomanip>
@@ -144,8 +142,7 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
   }
 
   // Synchronous logging (when async is disabled)
-  std::string formatted_message =
-      format_message(std::chrono::system_clock::now(), level, component, operation, message);
+  std::string formatted_message = format_message(level, component, operation, message);
   int current_outputs = outputs_.load();
 
   if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
@@ -182,10 +179,13 @@ void Logger::critical(std::string_view component, std::string_view operation, st
   log(LogLevel::CRITICAL, component, operation, message);
 }
 
-std::string Logger::format_message(std::chrono::system_clock::time_point timestamp_val, LogLevel level,
-                                   std::string_view component, std::string_view operation, std::string_view message) {
-  // Pre-generate common parts to minimize time under lock
-  std::string timestamp = get_timestamp(timestamp_val);
+std::string Logger::format_message(LogLevel level, std::string_view component, std::string_view operation,
+                                   std::string_view message) {
+  // Ensure result is initialized from the format string template
+  std::string result = format_string_;
+
+  // Replace placeholders
+  std::string timestamp = get_timestamp();
   std::string level_str = level_to_string(level);
 
   // Simple string replacement
@@ -238,30 +238,22 @@ std::string Logger::level_to_string(LogLevel level) {
   return "UNKNOWN";
 }
 
-std::string Logger::get_timestamp(std::chrono::system_clock::time_point timestamp) {
-  auto time_t = std::chrono::system_clock::to_time_t(timestamp);
-  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
+std::string Logger::get_timestamp() {
+  auto now = std::chrono::system_clock::now();
+  auto time_t = std::chrono::system_clock::to_time_t(now);
+  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+  std::tm time_info{};
 
-  // Thread-local cache to avoid expensive localtime calls
-  static thread_local std::time_t last_t = -1;
-  static thread_local char date_buf[32] = {0};
-
-  if (time_t != last_t) {
-    std::tm time_info{};
 #if defined(_WIN32)
-    ::localtime_s(&time_info, &time_t);
+  ::localtime_s(&time_info, &time_t);
 #else
-    ::localtime_r(&time_t, &time_info);
+  ::localtime_r(&time_t, &time_info);
 #endif
-    // Format: YYYY-MM-DD HH:MM:SS
-    std::strftime(date_buf, sizeof(date_buf), "%Y-%m-%d %H:%M:%S", &time_info);
-    last_t = time_t;
-  }
 
-  // Combine cached date with current milliseconds
-  char buffer[64];
-  std::snprintf(buffer, sizeof(buffer), "%s.%03d", date_buf, static_cast<int>(ms.count()));
-  return std::string(buffer);
+  std::ostringstream oss;
+  oss << std::put_time(&time_info, "%Y-%m-%d %H:%M:%S");
+  oss << '.' << std::setfill('0') << std::setw(3) << ms.count();
+  return oss.str();
 }
 
 void Logger::write_to_console(const std::string& message) {
@@ -470,8 +462,7 @@ void Logger::worker_loop() {
 
 void Logger::process_batch(const std::vector<LogEntry>& batch) {
   for (const auto& entry : batch) {
-    std::string formatted_message =
-        format_message(entry.timestamp, entry.level, entry.component, entry.operation, entry.message);
+    std::string formatted_message = format_message(entry.level, entry.component, entry.operation, entry.message);
     int current_outputs = outputs_.load();
 
     if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {

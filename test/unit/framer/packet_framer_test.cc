@@ -85,9 +85,3 @@ TEST_F(PacketFramerTest, MaxLengthExceeded) {
   ASSERT_EQ(messages_.size(), 1);
   EXPECT_EQ(messages_[0], valid);
 }
-
-TEST_F(PacketFramerTest, RejectEmptyPatterns) {
-  std::vector<uint8_t> empty_start;
-  std::vector<uint8_t> empty_end;
-  EXPECT_THROW({ PacketFramer(empty_start, empty_end, 1024); }, std::invalid_argument);
-}

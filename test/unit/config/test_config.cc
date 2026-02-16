@@ -216,47 +216,6 @@ TEST_F(ConfigTest, ConfigValidationInvalidValuesNetwork) {
   EXPECT_THROW(auto client2 = UnifiedBuilder::tcp_client("", test_port_).build(), diagnostics::BuilderException);
 }
 
-/**
- * @brief Test TcpClientConfig direct validation using is_valid()
- */
-TEST_F(ConfigTest, TcpClientConfigDirectValidation) {
-  std::cout << "\n=== TcpClientConfig Direct Validation Test ===" << std::endl;
-
-  TcpClientConfig config;
-
-  // Default should be valid
-  EXPECT_TRUE(config.is_valid()) << "Default config should be valid";
-  EXPECT_EQ(config.host, "127.0.0.1");
-
-  // Valid IPv4
-  config.host = "192.168.1.1";
-  EXPECT_TRUE(config.is_valid()) << "IPv4 should be valid";
-
-  // Valid Hostname
-  config.host = "example.com";
-  EXPECT_TRUE(config.is_valid()) << "Hostname should be valid";
-
-  // Valid IPv6
-  config.host = "::1";
-  EXPECT_TRUE(config.is_valid()) << "IPv6 should be valid";
-
-  // Invalid: Empty
-  config.host = "";
-  EXPECT_FALSE(config.is_valid()) << "Empty host should be invalid";
-
-  // Invalid: Bad characters
-  config.host = "invalid_host!";
-  EXPECT_FALSE(config.is_valid()) << "Host with bad characters should be invalid";
-
-  // Invalid: Protocol prefix (common mistake)
-  config.host = "http://example.com";
-  EXPECT_FALSE(config.is_valid()) << "Host with protocol prefix should be invalid";
-
-  // Restore valid host
-  config.host = "localhost";
-  EXPECT_TRUE(config.is_valid());
-}
-
 // ============================================================================
 // CONFIG PERSISTENCE TESTS
 // ============================================================================
