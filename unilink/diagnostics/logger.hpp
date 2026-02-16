@@ -289,10 +289,10 @@ class UNILINK_API Logger {
   std::condition_variable queue_cv_;
   mutable std::mutex stats_mutex_;
 
-  std::string format_message(LogLevel level, std::string_view component, std::string_view operation,
-                             std::string_view message);
+  std::string format_message(std::chrono::system_clock::time_point timestamp, LogLevel level,
+                             std::string_view component, std::string_view operation, std::string_view message);
   std::string level_to_string(LogLevel level);
-  std::string get_timestamp();
+  std::string get_timestamp(std::chrono::system_clock::time_point timestamp);
   void write_to_console(const std::string& message);
   void write_to_file(const std::string& message);
   void call_callback(LogLevel level, const std::string& message);
