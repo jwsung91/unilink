@@ -135,12 +135,15 @@ $(document).ready(function(){initNavTree('packet__framer_8hpp_source.html',''); 
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  State state_;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  std::vector&lt;uint8_t&gt; buffer_;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordtype">size_t</span> scanned_idx_ = 0;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  MessageCallback on_message_;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}  <span class="comment">// namespace framer</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  MessageCallback on_message_;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="comment">// Optimization: Track where we stopped scanning for end pattern</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="comment">// to avoid re-scanning the entire buffer on each push.</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">size_t</span> scanned_idx_ = 0;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;};</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}  <span class="comment">// namespace framer</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1IFramer_html"><div class="ttname"><a href="classunilink_1_1framer_1_1IFramer.html">unilink::framer::IFramer</a></div><div class="ttdoc">Abstract base class for message framing strategies.</div><div class="ttdef"><b>Definition:</b> <a href="iframer_8hpp_source.html#l00035">iframer.hpp:35</a></div></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1IFramer_html_ae5ee86cbd7ded1a4f845f3889b4189ad"><div class="ttname"><a href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">unilink::framer::IFramer::MessageCallback</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; MessageCallback</div><div class="ttdoc">Register a callback to be invoked when a complete message is extracted.</div><div class="ttdef"><b>Definition:</b> <a href="iframer_8hpp_source.html#l00054">iframer.hpp:54</a></div></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1PacketFramer_html"><div class="ttname"><a href="classunilink_1_1framer_1_1PacketFramer.html">unilink::framer::PacketFramer</a></div><div class="ttdoc">Framer for binary packet protocols.</div><div class="ttdef"><b>Definition:</b> <a href="packet__framer_8hpp_source.html#l00033">packet_framer.hpp:33</a></div></div>
@@ -156,7 +159,7 @@ $(document).ready(function(){initNavTree('packet__framer_8hpp_source.html',''); 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_b00f3e277c8b8a573b84ad405cb4170d.html">framer</a></li><li class="navelem"><a class="el" href="packet__framer_8hpp.html">packet_framer.hpp</a></li>
-    <li class="footer">Generated on Mon Feb 16 2026 02:45:17 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 16 2026 02:53:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
