@@ -228,8 +228,8 @@ void Logger::critical(std::string_view component, std::string_view operation, st
 std::string Logger::format_message(std::chrono::system_clock::time_point timestamp_val, LogLevel level,
                                    std::string_view component, std::string_view operation, std::string_view message) {
   // Pre-generate common parts to minimize time under lock
-  std::string timestamp = get_timestamp(timestamp_val);
-  std::string level_str = level_to_string(level);
+  TimestampBuffer timestamp = get_timestamp(timestamp_val);
+  std::string_view level_str = level_to_string(level);
 
   std::lock_guard<std::mutex> lock(mutex_);
 
@@ -244,7 +244,7 @@ std::string Logger::format_message(std::chrono::system_clock::time_point timesta
         result.append(part.value);
         break;
       case FormatPart::TIMESTAMP:
-        result.append(timestamp);
+        result.append(timestamp.view());
         break;
       case FormatPart::LEVEL:
         result.append(level_str);
@@ -264,7 +264,7 @@ std::string Logger::format_message(std::chrono::system_clock::time_point timesta
   return result;
 }
 
-std::string Logger::level_to_string(LogLevel level) {
+std::string_view Logger::level_to_string(LogLevel level) {
   switch (level) {
     case LogLevel::DEBUG:
       return "DEBUG";
@@ -280,7 +280,7 @@ std::string Logger::level_to_string(LogLevel level) {
   return "UNKNOWN";
 }
 
-std::string Logger::get_timestamp(std::chrono::system_clock::time_point timestamp) {
+Logger::TimestampBuffer Logger::get_timestamp(std::chrono::system_clock::time_point timestamp) {
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
   auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
 
@@ -301,9 +301,19 @@ std::string Logger::get_timestamp(std::chrono::system_clock::time_point timestam
   }
 
   // Combine cached date with current milliseconds
-  char buffer[64];
-  std::snprintf(buffer, sizeof(buffer), "%s.%03d", date_buf, static_cast<int>(ms.count()));
-  return std::string(buffer);
+  TimestampBuffer result;
+  int len = std::snprintf(result.data, sizeof(result.data), "%s.%03d", date_buf, static_cast<int>(ms.count()));
+  if (len > 0) {
+    // Check for buffer overflow/truncation
+    if (static_cast<size_t>(len) >= sizeof(result.data)) {
+      result.length = sizeof(result.data) - 1;
+    } else {
+      result.length = static_cast<size_t>(len);
+    }
+  } else {
+    result.length = 0;
+  }
+  return result;
 }
 
 void Logger::write_to_console(const std::string& message) {
