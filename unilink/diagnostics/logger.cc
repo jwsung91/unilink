@@ -181,8 +181,7 @@ void Logger::critical(std::string_view component, std::string_view operation, st
 
 std::string Logger::format_message(LogLevel level, std::string_view component, std::string_view operation,
                                    std::string_view message) {
-  // Ensure result is initialized from the format string template
-  std::string result = format_string_;
+  std::string fmt_copy = format_string_;
 
   // Replace placeholders
   std::string timestamp = get_timestamp();
@@ -190,36 +189,36 @@ std::string Logger::format_message(LogLevel level, std::string_view component, s
 
   // Simple string replacement
   size_t pos = 0;
-  while ((pos = result.find("{timestamp}", pos)) != std::string::npos) {
-    result.replace(pos, 11, timestamp);
+  while ((pos = fmt_copy.find("{timestamp}", pos)) != std::string::npos) {
+    fmt_copy.replace(pos, 11, timestamp);
     pos += timestamp.length();
   }
 
   pos = 0;
-  while ((pos = result.find("{level}", pos)) != std::string::npos) {
-    result.replace(pos, 7, level_str);
+  while ((pos = fmt_copy.find("{level}", pos)) != std::string::npos) {
+    fmt_copy.replace(pos, 7, level_str);
     pos += level_str.length();
   }
 
   pos = 0;
-  while ((pos = result.find("{component}", pos)) != std::string::npos) {
-    result.replace(pos, 11, component);
+  while ((pos = fmt_copy.find("{component}", pos)) != std::string::npos) {
+    fmt_copy.replace(pos, 11, component);
     pos += component.length();
   }
 
   pos = 0;
-  while ((pos = result.find("{operation}", pos)) != std::string::npos) {
-    result.replace(pos, 11, operation);
+  while ((pos = fmt_copy.find("{operation}", pos)) != std::string::npos) {
+    fmt_copy.replace(pos, 11, operation);
     pos += operation.length();
   }
 
   pos = 0;
-  while ((pos = result.find("{message}", pos)) != std::string::npos) {
-    result.replace(pos, 9, message);
+  while ((pos = fmt_copy.find("{message}", pos)) != std::string::npos) {
+    fmt_copy.replace(pos, 9, message);
     pos += message.length();
   }
 
-  return result;
+  return fmt_copy;
 }
 
 std::string Logger::level_to_string(LogLevel level) {
