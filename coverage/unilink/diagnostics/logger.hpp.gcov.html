@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-15 07:24:48</td>
+            <td class="headerValue">2026-02-16 02:47:30</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -368,10 +368,10 @@
 <a name="289"><span class="lineNum">     289 </span>                :            :   std::condition_variable queue_cv_;</a>
 <a name="290"><span class="lineNum">     290 </span>                :            :   mutable std::mutex stats_mutex_;</a>
 <a name="291"><span class="lineNum">     291 </span>                :            : </a>
-<a name="292"><span class="lineNum">     292 </span>                :            :   std::string format_message(LogLevel level, std::string_view component, std::string_view operation,</a>
-<a name="293"><span class="lineNum">     293 </span>                :            :                              std::string_view message);</a>
+<a name="292"><span class="lineNum">     292 </span>                :            :   std::string format_message(std::chrono::system_clock::time_point timestamp, LogLevel level,</a>
+<a name="293"><span class="lineNum">     293 </span>                :            :                              std::string_view component, std::string_view operation, std::string_view message);</a>
 <a name="294"><span class="lineNum">     294 </span>                :            :   std::string level_to_string(LogLevel level);</a>
-<a name="295"><span class="lineNum">     295 </span>                :            :   std::string get_timestamp();</a>
+<a name="295"><span class="lineNum">     295 </span>                :            :   std::string get_timestamp(std::chrono::system_clock::time_point timestamp);</a>
 <a name="296"><span class="lineNum">     296 </span>                :            :   void write_to_console(const std::string&amp; message);</a>
 <a name="297"><span class="lineNum">     297 </span>                :            :   void write_to_file(const std::string&amp; message);</a>
 <a name="298"><span class="lineNum">     298 </span>                :            :   void call_callback(LogLevel level, const std::string&amp; message);</a>
