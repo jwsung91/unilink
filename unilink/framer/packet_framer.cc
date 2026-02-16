@@ -18,13 +18,18 @@
 
 #include <algorithm>
 #include <iterator>
+#include <stdexcept>
 
 namespace unilink {
 namespace framer {
 
 PacketFramer::PacketFramer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
                            size_t max_length)
-    : start_pattern_(start_pattern), end_pattern_(end_pattern), max_length_(max_length), state_(State::Sync) {}
+    : start_pattern_(start_pattern), end_pattern_(end_pattern), max_length_(max_length), state_(State::Sync) {
+  if (start_pattern_.empty() && end_pattern_.empty()) {
+    throw std::invalid_argument("PacketFramer: start_pattern and end_pattern cannot both be empty.");
+  }
+}
 
 void PacketFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
