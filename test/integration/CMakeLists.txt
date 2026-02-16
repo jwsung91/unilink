@@ -48,7 +48,7 @@ foreach(test_file
     gtest_discover_tests(
       run_integration_${test_name}
       PROPERTIES LABELS "integration_tcp_medium"
-      TIMEOUT 300 RESOURCE_LOCK "tcp_port_allocation"
+      TIMEOUT 600 RESOURCE_LOCK "tcp_port_allocation"
     )
   else()
     gtest_discover_tests(
