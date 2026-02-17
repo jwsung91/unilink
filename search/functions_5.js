@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['first_1088',['first',['../classunilink_1_1memory_1_1SafeSpan.html#a3b0f136f697101cef0b107048c105e4f',1,'unilink::memory::SafeSpan']]],
-  ['flush_1089',['flush',['../classunilink_1_1diagnostics_1_1Logger.html#aaced1d16dd069a52e2696c020be26073',1,'unilink::diagnostics::Logger']]],
-  ['from_5fc_5fstring_1090',['from_c_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad47b9c31322e249f60bb70e5d71c3f5f',1,'unilink::memory::safe_buffer_factory']]],
-  ['from_5fraw_5fdata_1091',['from_raw_data',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#af038015aafcb3ab44bd10eb3392752ac',1,'unilink::memory::safe_buffer_factory']]],
-  ['from_5fspan_1092',['from_span',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a5ee9d29f198e862b650cdffa34f48abb',1,'unilink::memory::safe_buffer_factory']]],
-  ['from_5fstring_1093',['from_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad2d7304198383247e983f6b2f5b62f3e',1,'unilink::memory::safe_buffer_factory']]],
-  ['from_5fvector_1094',['from_vector',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a287eb0d65ad65944a76d964008609cc1',1,'unilink::memory::safe_buffer_factory']]],
-  ['front_1095',['front',['../classunilink_1_1memory_1_1SafeSpan.html#a30d76220be2cce507d36d12b7d893820',1,'unilink::memory::SafeSpan']]]
+  ['first_1091',['first',['../classunilink_1_1memory_1_1SafeSpan.html#a3b0f136f697101cef0b107048c105e4f',1,'unilink::memory::SafeSpan']]],
+  ['flush_1092',['flush',['../classunilink_1_1diagnostics_1_1Logger.html#aaced1d16dd069a52e2696c020be26073',1,'unilink::diagnostics::Logger']]],
+  ['from_5fc_5fstring_1093',['from_c_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad47b9c31322e249f60bb70e5d71c3f5f',1,'unilink::memory::safe_buffer_factory']]],
+  ['from_5fraw_5fdata_1094',['from_raw_data',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#af038015aafcb3ab44bd10eb3392752ac',1,'unilink::memory::safe_buffer_factory']]],
+  ['from_5fspan_1095',['from_span',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a5ee9d29f198e862b650cdffa34f48abb',1,'unilink::memory::safe_buffer_factory']]],
+  ['from_5fstring_1096',['from_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad2d7304198383247e983f6b2f5b62f3e',1,'unilink::memory::safe_buffer_factory']]],
+  ['from_5fvector_1097',['from_vector',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a287eb0d65ad65944a76d964008609cc1',1,'unilink::memory::safe_buffer_factory']]],
+  ['front_1098',['front',['../classunilink_1_1memory_1_1SafeSpan.html#a30d76220be2cce507d36d12b7d893820',1,'unilink::memory::SafeSpan']]]
 ];

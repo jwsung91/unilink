@@ -160,6 +160,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5361cef3aa804d32cba0b73c02e6492d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">enable_port_retry</a> (bool enable=true, int max_retries=3, int retry_interval_ms=1000)</td></tr>
 <tr class="memdesc:a5361cef3aa804d32cba0b73c02e6492d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable port binding retry on failure.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">More...</a><br /></td></tr>
 <tr class="separator:a5361cef3aa804d32cba0b73c02e6492d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66699fd0aabee319d7f68ac88916ef3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a66699fd0aabee319d7f68ac88916ef3e">idle_timeout</a> (int timeout_ms)</td></tr>
+<tr class="memdesc:a66699fd0aabee319d7f68ac88916ef3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set idle connection timeout.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a66699fd0aabee319d7f68ac88916ef3e">More...</a><br /></td></tr>
+<tr class="separator:a66699fd0aabee319d7f68ac88916ef3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4de3178841f4d383fbaa9761b55e7a1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a4de3178841f4d383fbaa9761b55e7a1f">max_clients</a> (size_t max)</td></tr>
 <tr class="memdesc:a4de3178841f4d383fbaa9761b55e7a1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set maximum number of clients (2 or more)  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a4de3178841f4d383fbaa9761b55e7a1f">More...</a><br /></td></tr>
 <tr class="separator:a4de3178841f4d383fbaa9761b55e7a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -376,7 +379,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00150">150</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00158">158</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -408,7 +411,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00048">48</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00049">49</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -455,7 +458,36 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00211">211</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00219">219</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+
+</div>
+</div>
+<a id="a66699fd0aabee319d7f68ac88916ef3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66699fd0aabee319d7f68ac88916ef3e">&#9670;&nbsp;</a></span>idle_timeout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp; unilink::builder::TcpServerBuilder::idle_timeout </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timeout_ms</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set idle connection timeout. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timeout_ms</td><td>Timeout in milliseconds (0 = disabled) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00226">226</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -490,7 +522,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00218">218</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00231">231</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -525,7 +557,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00236">236</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00249">249</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -564,7 +596,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a1f7f9a9e305b4846b8a077c20045b9f9">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00165">165</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00173">173</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -616,7 +648,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00170">170</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00178">178</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -712,7 +744,7 @@ template&lt;typename U , typename F &gt; </div>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a7288c24734f5a4c1469a617cbea5e29a">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00155">155</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00163">163</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -764,7 +796,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00160">160</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00168">168</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -860,7 +892,7 @@ template&lt;typename U , typename F &gt; </div>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#aaff39a9706c874c0f9a711fb67dd5a75">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00175">175</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00183">183</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -912,7 +944,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00180">180</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00188">188</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -1008,7 +1040,7 @@ template&lt;typename U , typename F &gt; </div>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a155a296ef455cc0c6c0bd98e2ba910f4">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00185">185</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00193">193</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -1117,7 +1149,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00196">196</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00204">204</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -1146,7 +1178,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00201">201</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00209">209</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -1175,7 +1207,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00206">206</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00214">214</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -1249,7 +1281,7 @@ template&lt;typename U , typename F &gt; </div>
 <p>Configure server for single client mode. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00230">230</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00243">243</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -1271,7 +1303,7 @@ template&lt;typename U , typename F &gt; </div>
 <p>Configure server for unlimited multi-client mode. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00248">248</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00261">261</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -1300,7 +1332,7 @@ template&lt;typename U , typename F &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html" title="Builder for TcpServer wrapper.">TcpServerBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00190">190</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00198">198</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -1314,7 +1346,7 @@ template&lt;typename U , typename F &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a></li>
-    <li class="footer">Generated on Tue Feb 17 2026 01:23:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Feb 17 2026 13:10:36 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

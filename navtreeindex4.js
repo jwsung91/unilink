@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"functions_func_v.html":[18,3,1,19],
+"functions_func_w.html":[18,3,1,20],
 "functions_func_~.html":[18,3,1,21],
 "functions_g.html":[18,3,0,6],
 "functions_h.html":[18,3,0,7],
@@ -40,8 +42,8 @@ var NAVTREEINDEX4 =
 "iconfig__manager_8hpp_source.html":[19,0,1,3,4],
 "iframer_8hpp.html":[19,0,1,6,0],
 "iframer_8hpp_source.html":[19,0,1,6,0],
-"index.html":[],
 "index.html":[0],
+"index.html":[],
 "index.html#autotoc_md101":[0,1],
 "index.html#autotoc_md102":[0,1,0],
 "index.html#autotoc_md104":[0,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX4 =
 "md_docs_architecture_runtime_behavior.html#autotoc_md222":[3,3,2,1],
 "md_docs_architecture_runtime_behavior.html#autotoc_md224":[3,3,2,2],
 "md_docs_architecture_runtime_behavior.html#autotoc_md226":[3,3,3],
-"md_docs_architecture_runtime_behavior.html#autotoc_md228":[3,3,4],
-"md_docs_architecture_runtime_behavior.html#autotoc_md230":[3,4],
-"md_docs_architecture_runtime_behavior.html#autotoc_md231":[3,4,0]
+"md_docs_architecture_runtime_behavior.html#autotoc_md228":[3,3,4]
 };

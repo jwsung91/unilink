@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"md_docs_guides_setup_build_guide.html#autotoc_md580":[9,11,0],
+"md_docs_guides_setup_build_guide.html#autotoc_md581":[9,11,1],
 "md_docs_guides_setup_build_guide.html#autotoc_md582":[9,11,2],
 "md_docs_guides_setup_build_guide.html#autotoc_md584":[9,12],
 "md_docs_guides_setup_build_guide.html#autotoc_md585":[9,12,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX6 =
 "md_docs_tutorials_02_tcp_server.html#autotoc_md917":[16,4],
 "md_docs_tutorials_02_tcp_server.html#autotoc_md919":[16,5],
 "md_docs_tutorials_02_tcp_server.html#autotoc_md921":[16,6],
-"md_docs_tutorials_02_tcp_server.html#autotoc_md923":[16,7],
-"md_docs_tutorials_02_tcp_server.html#autotoc_md925":[16,8],
-"md_docs_tutorials_02_tcp_server.html#autotoc_md926":[16,8,0]
+"md_docs_tutorials_02_tcp_server.html#autotoc_md923":[16,7]
 };

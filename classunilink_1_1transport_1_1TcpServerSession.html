@@ -113,10 +113,10 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a87c78bbd60aa2028cce763c82a14753e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a87c78bbd60aa2028cce763c82a14753e">TcpServerSession</a> (net::io_context &amp;ioc, tcp::socket sock, size_t backpressure_threshold=common::constants::DEFAULT_BACKPRESSURE_THRESHOLD)</td></tr>
-<tr class="separator:a87c78bbd60aa2028cce763c82a14753e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e8a18527ff6d6ca5244b9c7bda5d5e0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a9e8a18527ff6d6ca5244b9c7bda5d5e0">TcpServerSession</a> (net::io_context &amp;ioc, std::unique_ptr&lt; <a class="el" href="classunilink_1_1interface_1_1TcpSocketInterface.html">interface::TcpSocketInterface</a> &gt; socket, size_t backpressure_threshold=common::constants::DEFAULT_BACKPRESSURE_THRESHOLD)</td></tr>
-<tr class="separator:a9e8a18527ff6d6ca5244b9c7bda5d5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a639a46b25203b289c21abed5f6398114"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a639a46b25203b289c21abed5f6398114">TcpServerSession</a> (net::io_context &amp;ioc, tcp::socket sock, size_t backpressure_threshold=common::constants::DEFAULT_BACKPRESSURE_THRESHOLD, int idle_timeout_ms=0)</td></tr>
+<tr class="separator:a639a46b25203b289c21abed5f6398114"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70d7fc9602c73dbf79ebe6702c56413d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a70d7fc9602c73dbf79ebe6702c56413d">TcpServerSession</a> (net::io_context &amp;ioc, std::unique_ptr&lt; <a class="el" href="classunilink_1_1interface_1_1TcpSocketInterface.html">interface::TcpSocketInterface</a> &gt; socket, size_t backpressure_threshold=common::constants::DEFAULT_BACKPRESSURE_THRESHOLD, int idle_timeout_ms=0)</td></tr>
+<tr class="separator:a70d7fc9602c73dbf79ebe6702c56413d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af06c5ae133e8ee9a040d75f1eefccd90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#af06c5ae133e8ee9a040d75f1eefccd90">start</a> ()</td></tr>
 <tr class="separator:af06c5ae133e8ee9a040d75f1eefccd90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4924971969eccb5008bd42ccb302cb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#af4924971969eccb5008bd42ccb302cb9">async_write_copy</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
@@ -207,8 +207,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a87c78bbd60aa2028cce763c82a14753e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87c78bbd60aa2028cce763c82a14753e">&#9670;&nbsp;</a></span>TcpServerSession() <span class="overload">[1/2]</span></h2>
+<a id="a639a46b25203b289c21abed5f6398114"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a639a46b25203b289c21abed5f6398114">&#9670;&nbsp;</a></span>TcpServerSession() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,7 +229,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>backpressure_threshold</em> = <code>common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</code>&#160;</td>
+          <td class="paramname"><em>backpressure_threshold</em> = <code>common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idle_timeout_ms</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -243,8 +249,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9e8a18527ff6d6ca5244b9c7bda5d5e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e8a18527ff6d6ca5244b9c7bda5d5e0">&#9670;&nbsp;</a></span>TcpServerSession() <span class="overload">[2/2]</span></h2>
+<a id="a70d7fc9602c73dbf79ebe6702c56413d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70d7fc9602c73dbf79ebe6702c56413d">&#9670;&nbsp;</a></span>TcpServerSession() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,7 +271,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>backpressure_threshold</em> = <code>common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</code>&#160;</td>
+          <td class="paramname"><em>backpressure_threshold</em> = <code>common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idle_timeout_ms</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -275,7 +287,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00045">45</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00048">48</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -295,7 +307,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00184">184</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00192">192</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -315,7 +327,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00067">67</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00075">75</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -335,7 +347,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00118">118</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00126">126</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -355,7 +367,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00140">140</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00148">148</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -374,7 +386,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00198">198</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00207">207</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -394,7 +406,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00169">169</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00177">177</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -414,7 +426,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00162">162</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00170">170</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -434,7 +446,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00176">176</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00184">184</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -453,7 +465,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00061">61</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00066">66</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -472,7 +484,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00186">186</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__session_8cc_source.html#l00194">194</a> of file <a class="el" href="tcp__server__session_8cc_source.html">tcp_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -486,7 +498,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a></li>
-    <li class="footer">Generated on Tue Feb 17 2026 01:23:35 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Feb 17 2026 13:10:36 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
