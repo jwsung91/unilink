@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-16 11:05:17</td>
+            <td class="headerValue">2026-02-17 01:32:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -187,17 +187,17 @@
 <a name="107"><span class="lineNum">     107 </span>                :<span class="lineCov">         58 :   started_ = false;</span></a>
 <a name="108"><span class="lineNum">     108 </span>                :            : }</a>
 <a name="109"><span class="lineNum">     109 </span>                :            : </a>
-<a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">        182 : void TcpClient::send(const std::string&amp; data) {</span></a>
-<a name="111"><span class="lineNum">     111 </span>  [<span class="branchCov" title="Branch 0 was taken 156 times"> + </span><span class="branchCov" title="Branch 1 was taken 26 times"> + </span><span class="branchCov" title="Branch 2 was taken 156 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        182 :   if (is_connected() &amp;&amp; channel_) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 156 times"> + </span><span class="branchCov" title="Branch 5 was taken 26 times"> + </span>]
-<a name="112"><span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 156 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        156 :     auto binary_view = common::safe_convert::string_to_bytes(data);</span></a>
-<a name="113"><span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 156 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        156 :     channel_-&gt;async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));</span></a>
+<a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">        178 : void TcpClient::send(const std::string&amp; data) {</span></a>
+<a name="111"><span class="lineNum">     111 </span>  [<span class="branchCov" title="Branch 0 was taken 152 times"> + </span><span class="branchCov" title="Branch 1 was taken 26 times"> + </span><span class="branchCov" title="Branch 2 was taken 152 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        178 :   if (is_connected() &amp;&amp; channel_) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 152 times"> + </span><span class="branchCov" title="Branch 5 was taken 26 times"> + </span>]
+<a name="112"><span class="lineNum">     112 </span>        [<span class="branchCov" title="Branch 0 was taken 152 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        152 :     auto binary_view = common::safe_convert::string_to_bytes(data);</span></a>
+<a name="113"><span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 152 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        152 :     channel_-&gt;async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));</span></a>
 <a name="114"><span class="lineNum">     114 </span>                :            :   }</a>
-<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">        182 : }</span></a>
+<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">        178 : }</span></a>
 <a name="116"><span class="lineNum">     116 </span>                :            : </a>
 <a name="117"><span class="lineNum">     117 </span>        [<span class="branchCov" title="Branch 0 was taken 13 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         13 : void TcpClient::send_line(const std::string&amp; line) { send(line + &quot;\n&quot;); }</span></a>
 <a name="118"><span class="lineNum">     118 </span>                :            : </a>
-<a name="119"><span class="lineNum">     119 </span>  [<span class="branchCov" title="Branch 0 was taken 215 times"> + </span><span class="branchCov" title="Branch 1 was taken 6 times"> + </span><span class="branchCov" title="Branch 2 was taken 169 times"> + </span><span class="branchCov" title="Branch 3 was taken 46 times"> + </span>]:<span class="lineCov">        221 : bool TcpClient::is_connected() const { return channel_ &amp;&amp; channel_-&gt;is_connected(); }</span></a>
+<a name="119"><span class="lineNum">     119 </span>  [<span class="branchCov" title="Branch 0 was taken 210 times"> + </span><span class="branchCov" title="Branch 1 was taken 6 times"> + </span><span class="branchCov" title="Branch 2 was taken 165 times"> + </span><span class="branchCov" title="Branch 3 was taken 45 times"> + </span>]:<span class="lineCov">        216 : bool TcpClient::is_connected() const { return channel_ &amp;&amp; channel_-&gt;is_connected(); }</span></a>
 <a name="120"><span class="lineNum">     120 </span>                :            : </a>
 <a name="121"><span class="lineNum">     121 </span>                :<span class="lineCov">         11 : ChannelInterface&amp; TcpClient::on_data(DataHandler handler) {</span></a>
 <a name="122"><span class="lineNum">     122 </span>                :<span class="lineCov">         11 :   data_handler_ = std::move(handler);</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-16 11:05:17</td>
+            <td class="headerValue">2026-02-17 01:32:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -184,21 +184,21 @@
 <a name="106"><span class="lineNum">     106 </span>                :            :  * @param size Number of bytes to copy</a>
 <a name="107"><span class="lineNum">     107 </span>                :            :  * @throws std::invalid_argument if parameters are invalid</a>
 <a name="108"><span class="lineNum">     108 </span>                :            :  */</a>
-<a name="109"><span class="lineNum">     109 </span>                :<span class="lineCov">      14965 : inline void safe_memcpy(uint8_t* dest, const uint8_t* src, size_t size) {</span></a>
-<a name="110"><span class="lineNum">     110 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14965 times"> + </span>]:<span class="lineCov">      14965 :   if (!dest) {</span></a>
+<a name="109"><span class="lineNum">     109 </span>                :<span class="lineCov">      14975 : inline void safe_memcpy(uint8_t* dest, const uint8_t* src, size_t size) {</span></a>
+<a name="110"><span class="lineNum">     110 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14975 times"> + </span>]:<span class="lineCov">      14975 :   if (!dest) {</span></a>
 <a name="111"><span class="lineNum">     111 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     throw std::invalid_argument(&quot;Destination pointer is null&quot;);</span></a>
 <a name="112"><span class="lineNum">     112 </span>                :            :   }</a>
-<a name="113"><span class="lineNum">     113 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14965 times"> + </span>]:<span class="lineCov">      14965 :   if (!src) {</span></a>
+<a name="113"><span class="lineNum">     113 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14975 times"> + </span>]:<span class="lineCov">      14975 :   if (!src) {</span></a>
 <a name="114"><span class="lineNum">     114 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     throw std::invalid_argument(&quot;Source pointer is null&quot;);</span></a>
 <a name="115"><span class="lineNum">     115 </span>                :            :   }</a>
-<a name="116"><span class="lineNum">     116 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14965 times"> + </span>]:<span class="lineCov">      14965 :   if (size == 0) {</span></a>
+<a name="116"><span class="lineNum">     116 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14975 times"> + </span>]:<span class="lineCov">      14975 :   if (size == 0) {</span></a>
 <a name="117"><span class="lineNum">     117 </span>                :<span class="lineNoCov">          0 :     return;  // Nothing to copy</span></a>
 <a name="118"><span class="lineNum">     118 </span>                :            :   }</a>
-<a name="119"><span class="lineNum">     119 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14965 times"> + </span>]:<span class="lineCov">      14965 :   if (size &gt; 1024 * 1024) {  // 1MB limit</span></a>
+<a name="119"><span class="lineNum">     119 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14975 times"> + </span>]:<span class="lineCov">      14975 :   if (size &gt; 1024 * 1024) {  // 1MB limit</span></a>
 <a name="120"><span class="lineNum">     120 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     throw std::invalid_argument(&quot;Copy size too large (max 1MB)&quot;);</span></a>
 <a name="121"><span class="lineNum">     121 </span>                :            :   }</a>
 <a name="122"><span class="lineNum">     122 </span>                :            : </a>
-<a name="123"><span class="lineNum">     123 </span>                :<span class="lineCov">      14965 :   std::memcpy(dest, src, size);</span></a>
+<a name="123"><span class="lineNum">     123 </span>                :<span class="lineCov">      14975 :   std::memcpy(dest, src, size);</span></a>
 <a name="124"><span class="lineNum">     124 </span>                :            : }</a>
 <a name="125"><span class="lineNum">     125 </span>                :            : </a>
 <a name="126"><span class="lineNum">     126 </span>                :            : /**</a>
@@ -221,11 +221,11 @@
 <a name="143"><span class="lineNum">     143 </span>                :            :  * @param size Size of the data</a>
 <a name="144"><span class="lineNum">     144 </span>                :            :  * @return std::string constructed from the data</a>
 <a name="145"><span class="lineNum">     145 </span>                :            :  */</a>
-<a name="146"><span class="lineNum">     146 </span>                :<span class="lineCov">       3306 : inline std::string uint8_to_string(const uint8_t* data, size_t size) {</span></a>
-<a name="147"><span class="lineNum">     147 </span>  [<span class="branchCov" title="Branch 0 was taken 3306 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 3306 times"> + </span>]:<span class="lineCov">       3306 :   if (!data || size == 0) {</span></a>
+<a name="146"><span class="lineNum">     146 </span>                :<span class="lineCov">       3320 : inline std::string uint8_to_string(const uint8_t* data, size_t size) {</span></a>
+<a name="147"><span class="lineNum">     147 </span>  [<span class="branchCov" title="Branch 0 was taken 3320 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 3320 times"> + </span>]:<span class="lineCov">       3320 :   if (!data || size == 0) {</span></a>
 <a name="148"><span class="lineNum">     148 </span>                :<span class="lineNoCov">          0 :     return std::string{};</span></a>
 <a name="149"><span class="lineNum">     149 </span>                :            :   }</a>
-<a name="150"><span class="lineNum">     150 </span>        [<span class="branchCov" title="Branch 0 was taken 3306 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       3306 :   return std::string(data, data + size);</span></a>
+<a name="150"><span class="lineNum">     150 </span>        [<span class="branchCov" title="Branch 0 was taken 3320 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       3320 :   return std::string(data, data + size);</span></a>
 <a name="151"><span class="lineNum">     151 </span>                :            : }</a>
 <a name="152"><span class="lineNum">     152 </span>                :            : </a>
 <a name="153"><span class="lineNum">     153 </span>                :            : /**</a>
@@ -255,8 +255,8 @@
 <a name="177"><span class="lineNum">     177 </span>                :            :  * @param str The string to convert</a>
 <a name="178"><span class="lineNum">     178 </span>                :            :  * @return std::pair&lt;const uint8_t*, size_t&gt; containing pointer and size</a>
 <a name="179"><span class="lineNum">     179 </span>                :            :  */</a>
-<a name="180"><span class="lineNum">     180 </span>                :<span class="lineCov">       1849 : inline std::pair&lt;const uint8_t*, size_t&gt; string_to_bytes(std::string_view str) {</span></a>
-<a name="181"><span class="lineNum">     181 </span>                :<span class="lineCov">       1849 :   return {reinterpret_cast&lt;const uint8_t*&gt;(str.data()), str.size()};</span></a>
+<a name="180"><span class="lineNum">     180 </span>                :<span class="lineCov">       1859 : inline std::pair&lt;const uint8_t*, size_t&gt; string_to_bytes(std::string_view str) {</span></a>
+<a name="181"><span class="lineNum">     181 </span>                :<span class="lineCov">       1859 :   return {reinterpret_cast&lt;const uint8_t*&gt;(str.data()), str.size()};</span></a>
 <a name="182"><span class="lineNum">     182 </span>                :            : }</a>
 <a name="183"><span class="lineNum">     183 </span>                :            : }  // namespace safe_convert</a>
 <a name="184"><span class="lineNum">     184 </span>                :            : </a>
