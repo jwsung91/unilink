@@ -179,13 +179,11 @@ void Logger::critical(std::string_view component, std::string_view operation, st
   log(LogLevel::CRITICAL, component, operation, message);
 }
 
-std::string Logger::format_message(LogLevel level, std::string_view component, std::string_view operation,
-                                   std::string_view message) {
-  std::string fmt_copy = format_string_;
-
-  // Replace placeholders
-  std::string timestamp = get_timestamp();
-  std::string level_str = level_to_string(level);
+std::string Logger::format_message(std::chrono::system_clock::time_point timestamp_val, LogLevel level,
+                                   std::string_view component, std::string_view operation, std::string_view message) {
+  // Pre-generate common parts to minimize time under lock
+  TimestampBuffer timestamp = get_timestamp(timestamp_val);
+  std::string_view level_str = level_to_string(level);
 
   // Simple string replacement
   size_t pos = 0;
@@ -194,10 +192,32 @@ std::string Logger::format_message(LogLevel level, std::string_view component, s
     pos += timestamp.length();
   }
 
-  pos = 0;
-  while ((pos = fmt_copy.find("{level}", pos)) != std::string::npos) {
-    fmt_copy.replace(pos, 7, level_str);
-    pos += level_str.length();
+  std::string result;
+  // Reserve a reasonable size to avoid reallocations
+  // Base size + message length + estimated timestamp/level overhead
+  result.reserve(format_string_.length() + message.length() + 32);
+
+  for (const auto& part : parsed_format_) {
+    switch (part.type) {
+      case FormatPart::LITERAL:
+        result.append(part.value);
+        break;
+      case FormatPart::TIMESTAMP:
+        result.append(timestamp.view());
+        break;
+      case FormatPart::LEVEL:
+        result.append(level_str);
+        break;
+      case FormatPart::COMPONENT:
+        result.append(component);
+        break;
+      case FormatPart::OPERATION:
+        result.append(operation);
+        break;
+      case FormatPart::MESSAGE:
+        result.append(message);
+        break;
+    }
   }
 
   pos = 0;
@@ -221,7 +241,7 @@ std::string Logger::format_message(LogLevel level, std::string_view component, s
   return fmt_copy;
 }
 
-std::string Logger::level_to_string(LogLevel level) {
+std::string_view Logger::level_to_string(LogLevel level) {
   switch (level) {
     case LogLevel::DEBUG:
       return "DEBUG";
@@ -237,11 +257,13 @@ std::string Logger::level_to_string(LogLevel level) {
   return "UNKNOWN";
 }
 
-std::string Logger::get_timestamp() {
-  auto now = std::chrono::system_clock::now();
-  auto time_t = std::chrono::system_clock::to_time_t(now);
-  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-  std::tm time_info{};
+Logger::TimestampBuffer Logger::get_timestamp(std::chrono::system_clock::time_point timestamp) {
+  auto time_t = std::chrono::system_clock::to_time_t(timestamp);
+  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
+
+  // Thread-local cache to avoid expensive localtime calls
+  static thread_local std::time_t last_t = -1;
+  static thread_local char date_buf[32] = {0};
 
 #if defined(_WIN32)
   ::localtime_s(&time_info, &time_t);
@@ -249,10 +271,20 @@ std::string Logger::get_timestamp() {
   ::localtime_r(&time_t, &time_info);
 #endif
 
-  std::ostringstream oss;
-  oss << std::put_time(&time_info, "%Y-%m-%d %H:%M:%S");
-  oss << '.' << std::setfill('0') << std::setw(3) << ms.count();
-  return oss.str();
+  // Combine cached date with current milliseconds
+  TimestampBuffer result;
+  int len = std::snprintf(result.data, sizeof(result.data), "%s.%03d", date_buf, static_cast<int>(ms.count()));
+  if (len > 0) {
+    // Check for buffer overflow/truncation
+    if (static_cast<size_t>(len) >= sizeof(result.data)) {
+      result.length = sizeof(result.data) - 1;
+    } else {
+      result.length = static_cast<size_t>(len);
+    }
+  } else {
+    result.length = 0;
+  }
+  return result;
 }
 
 void Logger::write_to_console(const std::string& message) {
