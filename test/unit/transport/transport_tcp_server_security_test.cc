@@ -44,8 +44,13 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
 
   // Retry connect logic (increased retry for slow CI)
   for (int i = 0; i < 50; ++i) {
+    client = tcp::socket(client_ioc);
     client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), cfg.port), ec);
     if (!ec) break;
+    // Log failure for debugging
+    if (i % 10 == 0) {
+      std::cerr << "Connect attempt " << i << " failed: " << ec.message() << std::endl;
+    }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   ASSERT_FALSE(ec) << "Failed to connect to server";
@@ -78,8 +83,13 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
 
   // Retry connect logic (increased retry for slow CI)
   for (int i = 0; i < 50; ++i) {
+    client = tcp::socket(client_ioc);
     client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), cfg.port), ec);
     if (!ec) break;
+    // Log failure for debugging
+    if (i % 10 == 0) {
+      std::cerr << "Connect attempt " << i << " failed: " << ec.message() << std::endl;
+    }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   ASSERT_FALSE(ec) << "Failed to connect to server";
