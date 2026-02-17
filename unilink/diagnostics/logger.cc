@@ -17,6 +17,8 @@
 #include "logger.hpp"
 
 #include <condition_variable>
+#include <cstdio>
+#include <cstring>
 #include <ctime>
 #include <filesystem>
 #include <iomanip>
@@ -29,7 +31,9 @@
 namespace unilink {
 namespace diagnostics {
 
-Logger::Logger() = default;
+Logger::Logger() {
+  set_format(format_string_);
+}
 
 Logger::~Logger() {
   teardown_async_logging();
@@ -103,6 +107,47 @@ bool Logger::is_enabled() const { return enabled_.load(); }
 void Logger::set_format(const std::string& format) {
   std::lock_guard<std::mutex> lock(mutex_);
   format_string_ = format;
+  parsed_format_.clear();
+
+  size_t pos = 0;
+  while (pos < format.length()) {
+    size_t open_brace = format.find('{', pos);
+    if (open_brace == std::string::npos) {
+      if (pos < format.length()) {
+        parsed_format_.push_back({FormatPart::LITERAL, format.substr(pos)});
+      }
+      break;
+    }
+
+    if (open_brace > pos) {
+      parsed_format_.push_back({FormatPart::LITERAL, format.substr(pos, open_brace - pos)});
+    }
+
+    size_t close_brace = format.find('}', open_brace);
+    if (close_brace == std::string::npos) {
+      // Malformed, treat remainder as literal
+      parsed_format_.push_back({FormatPart::LITERAL, format.substr(open_brace)});
+      break;
+    }
+
+    std::string tag = format.substr(open_brace + 1, close_brace - open_brace - 1);
+    if (tag == "timestamp") {
+      parsed_format_.push_back({FormatPart::TIMESTAMP, ""});
+    } else if (tag == "level") {
+      parsed_format_.push_back({FormatPart::LEVEL, ""});
+    } else if (tag == "component") {
+      parsed_format_.push_back({FormatPart::COMPONENT, ""});
+    } else if (tag == "operation") {
+      parsed_format_.push_back({FormatPart::OPERATION, ""});
+    } else if (tag == "message") {
+      parsed_format_.push_back({FormatPart::MESSAGE, ""});
+    } else {
+      // Unknown tag, treat as literal
+      parsed_format_.push_back({FormatPart::LITERAL, "{" + tag + "}"});
+    }
+
+    pos = close_brace + 1;
+  }
 }
 
 void Logger::flush() {
@@ -142,7 +187,8 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
   }
 
   // Synchronous logging (when async is disabled)
-  std::string formatted_message = format_message(level, component, operation, message);
+  std::string formatted_message =
+      format_message(std::chrono::system_clock::now(), level, component, operation, message);
   int current_outputs = outputs_.load();
 
   if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
@@ -179,69 +225,40 @@ void Logger::critical(std::string_view component, std::string_view operation, st
   log(LogLevel::CRITICAL, component, operation, message);
 }
 
-std::string Logger::format_message(std::chrono::system_clock::time_point timestamp_val, LogLevel level,
+std::string Logger::format_message(std::chrono::system_clock::time_point timestamp, LogLevel level,
                                    std::string_view component, std::string_view operation, std::string_view message) {
-  // Pre-generate common parts to minimize time under lock
-  TimestampBuffer timestamp = get_timestamp(timestamp_val);
-  std::string_view level_str = level_to_string(level);
-
-  // Simple string replacement
-  size_t pos = 0;
-  while ((pos = fmt_copy.find("{timestamp}", pos)) != std::string::npos) {
-    fmt_copy.replace(pos, 11, timestamp);
-    pos += timestamp.length();
-  }
-
   std::string result;
-  // Reserve a reasonable size to avoid reallocations
-  // Base size + message length + estimated timestamp/level overhead
-  result.reserve(format_string_.length() + message.length() + 32);
+  // Reserve a reasonable amount of space to minimize allocations
+  result.reserve(128);
 
   for (const auto& part : parsed_format_) {
     switch (part.type) {
       case FormatPart::LITERAL:
-        result.append(part.value);
+        result += part.value;
         break;
-      case FormatPart::TIMESTAMP:
-        result.append(timestamp.view());
+      case FormatPart::TIMESTAMP: {
+        auto buffer = get_timestamp(timestamp);
+        result += buffer.data();
         break;
+      }
       case FormatPart::LEVEL:
-        result.append(level_str);
+        result += level_to_string(level);
         break;
       case FormatPart::COMPONENT:
-        result.append(component);
+        result += component;
         break;
       case FormatPart::OPERATION:
-        result.append(operation);
+        result += operation;
         break;
       case FormatPart::MESSAGE:
-        result.append(message);
+        result += message;
         break;
     }
   }
-
-  pos = 0;
-  while ((pos = fmt_copy.find("{component}", pos)) != std::string::npos) {
-    fmt_copy.replace(pos, 11, component);
-    pos += component.length();
-  }
-
-  pos = 0;
-  while ((pos = fmt_copy.find("{operation}", pos)) != std::string::npos) {
-    fmt_copy.replace(pos, 11, operation);
-    pos += operation.length();
-  }
-
-  pos = 0;
-  while ((pos = fmt_copy.find("{message}", pos)) != std::string::npos) {
-    fmt_copy.replace(pos, 9, message);
-    pos += message.length();
-  }
-
-  return fmt_copy;
+  return result;
 }
 
-std::string_view Logger::level_to_string(LogLevel level) {
+std::string Logger::level_to_string(LogLevel level) {
   switch (level) {
     case LogLevel::DEBUG:
       return "DEBUG";
@@ -258,12 +275,13 @@ std::string_view Logger::level_to_string(LogLevel level) {
 }
 
 Logger::TimestampBuffer Logger::get_timestamp(std::chrono::system_clock::time_point timestamp) {
+  TimestampBuffer buffer;
+  // Initialize buffer with null terminator
+  buffer[0] = '\0';
+
   auto time_t = std::chrono::system_clock::to_time_t(timestamp);
   auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
-
-  // Thread-local cache to avoid expensive localtime calls
-  static thread_local std::time_t last_t = -1;
-  static thread_local char date_buf[32] = {0};
+  struct tm time_info;
 
 #if defined(_WIN32)
   ::localtime_s(&time_info, &time_t);
@@ -271,20 +289,14 @@ Logger::TimestampBuffer Logger::get_timestamp(std::chrono::system_clock::time_po
   ::localtime_r(&time_t, &time_info);
 #endif
 
-  // Combine cached date with current milliseconds
-  TimestampBuffer result;
-  int len = std::snprintf(result.data, sizeof(result.data), "%s.%03d", date_buf, static_cast<int>(ms.count()));
-  if (len > 0) {
-    // Check for buffer overflow/truncation
-    if (static_cast<size_t>(len) >= sizeof(result.data)) {
-      result.length = sizeof(result.data) - 1;
-    } else {
-      result.length = static_cast<size_t>(len);
-    }
-  } else {
-    result.length = 0;
+  // Format: YYYY-MM-DD HH:MM:SS
+  size_t len = std::strftime(buffer.data(), buffer.size(), "%Y-%m-%d %H:%M:%S", &time_info);
+
+  // Append milliseconds if space allows
+  if (len > 0 && len < buffer.size() - 4) {
+    std::snprintf(buffer.data() + len, buffer.size() - len, ".%03d", static_cast<int>(ms.count()));
   }
-  return result;
+  return buffer;
 }
 
 void Logger::write_to_console(const std::string& message) {
@@ -493,7 +505,8 @@ void Logger::worker_loop() {
 
 void Logger::process_batch(const std::vector<LogEntry>& batch) {
   for (const auto& entry : batch) {
-    std::string formatted_message = format_message(entry.level, entry.component, entry.operation, entry.message);
+    std::string formatted_message =
+        format_message(entry.timestamp, entry.level, entry.component, entry.operation, entry.message);
     int current_outputs = outputs_.load();
 
     if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {

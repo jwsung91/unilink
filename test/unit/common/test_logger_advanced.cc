@@ -59,6 +59,7 @@ class AdvancedLoggerCoverageTest : public ::testing::Test {
     Logger::instance().set_level(LogLevel::DEBUG);
     Logger::instance().set_console_output(false);
     Logger::instance().set_file_output("");
+    Logger::instance().set_callback(nullptr);
   }
 
   std::filesystem::path test_log_file_;
