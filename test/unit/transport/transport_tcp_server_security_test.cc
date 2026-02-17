@@ -2,6 +2,7 @@
 
 #include <boost/asio.hpp>
 #include <chrono>
+#include <csignal>
 #include <memory>
 #include <thread>
 
@@ -16,6 +17,12 @@ using tcp = net::ip::tcp;
 
 class TransportTcpServerSecurityTest : public ::testing::Test {
  protected:
+  void SetUp() override {
+#ifdef SIGPIPE
+    std::signal(SIGPIPE, SIG_IGN);
+#endif
+  }
+
   void TearDown() override {
     if (server_) {
       server_->stop();
