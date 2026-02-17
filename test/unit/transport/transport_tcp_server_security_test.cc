@@ -29,6 +29,7 @@ class TransportTcpServerSecurityTest : public ::testing::Test {
 TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
   config::TcpServerConfig cfg;
   cfg.port = test::TestUtils::getAvailableTestPort();
+  cfg.enable_port_retry = true;  // Enhance robustness
 
   server_ = TcpServer::create(cfg);
   server_->start();
@@ -68,6 +69,7 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
   config::TcpServerConfig cfg;
   cfg.port = test::TestUtils::getAvailableTestPort();
   cfg.idle_timeout_ms = 1000;  // 1 second timeout
+  cfg.enable_port_retry = true;  // Enhance robustness
 
   server_ = TcpServer::create(cfg);
   server_->start();
