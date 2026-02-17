@@ -34,10 +34,13 @@ struct TcpServerConfig {
   int max_port_retries = 3;           // Maximum number of retry attempts
   int port_retry_interval_ms = 1000;  // Retry interval in milliseconds
 
+  int idle_timeout_ms = 0;  // Idle connection timeout in milliseconds (0 = disabled)
+
   // Validation methods
   bool is_valid() const {
     return port > 0 && backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
-           backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0;
+           backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0 &&
+           idle_timeout_ms >= 0;
   }
 
   // Apply validation and clamp values to valid ranges
@@ -50,6 +53,10 @@ struct TcpServerConfig {
 
     if (max_connections <= 0) {
       max_connections = 1;
+    }
+
+    if (idle_timeout_ms < 0) {
+      idle_timeout_ms = 0;
     }
   }
 };

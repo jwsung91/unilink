@@ -368,6 +368,27 @@ gtest_discover_tests(run_unit_transport_tcp_timeout_test
     TIMEOUT 30
 )
 
+# Transport TCP Server Security Test
+add_executable(run_unit_transport_tcp_server_security_test ${CMAKE_CURRENT_SOURCE_DIR}/transport/transport_tcp_server_security_test.cc)
+target_link_libraries(run_unit_transport_tcp_server_security_test
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_transport_tcp_server_security_test)
+target_include_directories(run_unit_transport_tcp_server_security_test
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+gtest_discover_tests(run_unit_transport_tcp_server_security_test
+  PROPERTIES
+    LABELS "unit_transport_security"
+    TIMEOUT 30
+)
+
 # Framer tests (separate executables)
 foreach(test_file line_framer_test.cc packet_framer_test.cc line_framer_security_test.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
@@ -430,6 +451,7 @@ add_dependencies(unilink_unit_tests
   run_unit_transport_tcp_server_session
   run_unit_transport_tcp_fuzz_test
   run_unit_transport_tcp_timeout_test
+  run_unit_transport_tcp_server_security_test
   run_unit_line_framer_test
   run_unit_packet_framer_test
   run_unit_line_framer_security_test
