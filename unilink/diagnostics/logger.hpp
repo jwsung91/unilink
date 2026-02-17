@@ -291,8 +291,14 @@ class UNILINK_API Logger {
 
   std::string format_message(std::chrono::system_clock::time_point timestamp, LogLevel level,
                              std::string_view component, std::string_view operation, std::string_view message);
-  std::string level_to_string(LogLevel level);
-  std::string get_timestamp(std::chrono::system_clock::time_point timestamp);
+  std::string_view level_to_string(LogLevel level);
+
+  struct TimestampBuffer {
+    char data[64];
+    size_t length;
+    std::string_view view() const { return {data, length}; }
+  };
+  TimestampBuffer get_timestamp(std::chrono::system_clock::time_point timestamp);
   void write_to_console(const std::string& message);
   void write_to_file(const std::string& message);
   void call_callback(LogLevel level, const std::string& message);
