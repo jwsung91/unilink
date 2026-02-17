@@ -463,8 +463,8 @@ void TcpServer::do_accept() {
     }
 
     // Create new session
-    auto new_session = std::make_shared<TcpServerSession>(self->ioc_, std::move(sock),
-                                                          self->cfg_.backpressure_threshold, self->cfg_.idle_timeout_ms);
+    auto new_session = std::make_shared<TcpServerSession>(
+        self->ioc_, std::move(sock), self->cfg_.backpressure_threshold, self->cfg_.idle_timeout_ms);
 
     // Add session to list
     size_t client_id;

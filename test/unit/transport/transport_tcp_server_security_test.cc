@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
+
 #include <boost/asio.hpp>
 #include <chrono>
 #include <memory>
 #include <thread>
 
+#include "test/utils/test_utils.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
-#include "test/utils/test_utils.hpp"
 
 using namespace unilink;
 using namespace unilink::transport;
@@ -32,15 +33,20 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
   server_ = TcpServer::create(cfg);
   server_->start();
 
+  // Wait for server to start listening (up to 5 seconds)
+  ASSERT_TRUE(test::TestUtils::waitForCondition(
+      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      << "Server failed to enter listening state";
+
   net::io_context client_ioc;
   tcp::socket client(client_ioc);
   boost::system::error_code ec;
 
-  // Retry connect logic
-  for (int i=0; i<10; ++i) {
-      client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), cfg.port), ec);
-      if (!ec) break;
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  // Retry connect logic (increased retry for slow CI)
+  for (int i = 0; i < 50; ++i) {
+    client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), cfg.port), ec);
+    if (!ec) break;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   ASSERT_FALSE(ec) << "Failed to connect to server";
 
@@ -56,20 +62,25 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
 TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
   config::TcpServerConfig cfg;
   cfg.port = test::TestUtils::getAvailableTestPort();
-  cfg.idle_timeout_ms = 1000; // 1 second timeout
+  cfg.idle_timeout_ms = 1000;  // 1 second timeout
 
   server_ = TcpServer::create(cfg);
   server_->start();
+
+  // Wait for server to start listening (up to 5 seconds)
+  ASSERT_TRUE(test::TestUtils::waitForCondition(
+      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      << "Server failed to enter listening state";
 
   net::io_context client_ioc;
   tcp::socket client(client_ioc);
   boost::system::error_code ec;
 
-  // Retry connect logic
-  for (int i=0; i<10; ++i) {
-      client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), cfg.port), ec);
-      if (!ec) break;
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  // Retry connect logic (increased retry for slow CI)
+  for (int i = 0; i < 50; ++i) {
+    client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), cfg.port), ec);
+    if (!ec) break;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   ASSERT_FALSE(ec) << "Failed to connect to server";
 
