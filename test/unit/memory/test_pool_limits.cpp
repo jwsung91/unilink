@@ -96,4 +96,22 @@ TEST_F(MemoryPoolLimitsTest, ValidatesSize) {
                std::invalid_argument);  // > 64MB
 }
 
+TEST_F(MemoryPoolLimitsTest, LargeAllocation) {
+  // Allocate a buffer larger than the largest bucket (64KB)
+  size_t large_size = 100000;
+  auto buf = pool_->acquire(large_size);
+  EXPECT_NE(buf.get(), nullptr);
+
+  // Write to the end to ensure we own the memory
+  // If the buffer was truncated to 64KB, this write is out of bounds
+  // and might cause a crash or be detected by tools.
+  // Note: Depending on page alignment, this might not crash immediately
+  // if the next page is mapped, but it's invalid access.
+  buf[large_size - 1] = 0xAA;
+  EXPECT_EQ(buf[large_size - 1], 0xAA);
+
+  // Release it
+  pool_->release(std::move(buf), large_size);
+}
+
 }  // namespace
