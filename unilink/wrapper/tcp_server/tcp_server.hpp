@@ -85,6 +85,9 @@ class UNILINK_API TcpServer : public ChannelInterface {
   // Port retry configuration
   TcpServer& enable_port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
 
+  // Idle timeout configuration
+  TcpServer& idle_timeout(int timeout_ms);
+
   // Server state checking
   bool is_listening() const;
   void set_manage_external_context(bool manage);
@@ -108,6 +111,9 @@ class UNILINK_API TcpServer : public ChannelInterface {
   bool port_retry_enabled_{false};
   int max_port_retries_{3};
   int port_retry_interval_ms_{1000};
+
+  // Idle timeout configuration
+  int idle_timeout_ms_{0};
 
   // Client limit configuration
   bool client_limit_enabled_{false};

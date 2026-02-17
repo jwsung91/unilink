@@ -27,13 +27,16 @@ namespace transport {
 
 using namespace common;
 
-TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_t backpressure_threshold)
+TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_t backpressure_threshold,
+                                   int idle_timeout_ms)
     : ioc_(ioc),
       strand_(ioc.get_executor()),
+      idle_timer_(ioc),
       socket_(std::make_unique<BoostTcpSocket>(std::move(sock))),
       writing_(false),
       queue_bytes_(0),
       bp_high_(backpressure_threshold),
+      idle_timeout_ms_(idle_timeout_ms),
       alive_(false),
       cleanup_done_(false) {
   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
@@ -43,13 +46,15 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_
 }
 
 TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket,
-                                   size_t backpressure_threshold)
+                                   size_t backpressure_threshold, int idle_timeout_ms)
     : ioc_(ioc),
       strand_(ioc.get_executor()),
+      idle_timer_(ioc),
       socket_(std::move(socket)),
       writing_(false),
       queue_bytes_(0),
       bp_high_(backpressure_threshold),
+      idle_timeout_ms_(idle_timeout_ms),
       alive_(false),
       cleanup_done_(false) {
   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
@@ -61,7 +66,10 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interfa
 void TcpServerSession::start() {
   if (alive_.exchange(true)) return;
   auto self = shared_from_this();
-  net::dispatch(strand_, [self] { self->start_read(); });
+  net::dispatch(strand_, [self] {
+    self->reset_idle_timer();
+    self->start_read();
+  });
 }
 
 void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
@@ -191,6 +199,7 @@ void TcpServerSession::stop() {
     self->on_bytes_ = nullptr;
     self->on_bp_ = nullptr;
     self->on_close_ = nullptr;
+    self->idle_timer_.cancel();
     self->do_close();
   });
 }
@@ -198,6 +207,7 @@ void TcpServerSession::stop() {
 void TcpServerSession::cancel() {
   auto self = shared_from_this();
   net::dispatch(strand_, [self] {
+    self->idle_timer_.cancel();
     boost::system::error_code ec;
     // Cancelling the socket via close() causes ongoing operations to complete with operation_aborted.
     // Unlike stop(), this does NOT set closing_ flag immediately, allowing the
@@ -217,6 +227,7 @@ void TcpServerSession::start_read() {
           self->do_close();
           return;
         }
+        self->reset_idle_timer();
         if (self->on_bytes_) {
           try {
             self->on_bytes_(memory::ConstByteSpan(self->rx_.data(), n));
@@ -267,6 +278,7 @@ void TcpServerSession::do_write() {
       self->do_close();
       return;
     }
+    self->reset_idle_timer();
     self->do_write();
   };
 
@@ -295,6 +307,7 @@ void TcpServerSession::do_close() {
   on_bytes_ = nullptr;
   on_bp_ = nullptr;
   on_close_ = nullptr;
+  idle_timer_.cancel();
 
   UNILINK_LOG_INFO("tcp_server_session", "disconnect", "Client disconnected");
   boost::system::error_code ec;
@@ -339,6 +352,25 @@ void TcpServerSession::report_backpressure(size_t queued_bytes) {
       UNILINK_LOG_ERROR("tcp_server_session", "on_backpressure", "Unknown exception in backpressure callback");
     }
   }
+}
+
+void TcpServerSession::reset_idle_timer() {
+  if (idle_timeout_ms_ <= 0) return;
+
+  // Cancel any existing timer
+  idle_timer_.cancel();
+
+  // Reset timer
+  idle_timer_.expires_after(std::chrono::milliseconds(idle_timeout_ms_));
+
+  auto self = shared_from_this();
+  idle_timer_.async_wait(net::bind_executor(strand_, [self](const boost::system::error_code& ec) {
+    if (ec == boost::asio::error::operation_aborted) return;
+    if (!self->alive_ || self->closing_) return;
+
+    UNILINK_LOG_WARNING("tcp_server_session", "timeout", "Connection idle timeout expired, closing session");
+    self->do_close();
+  }));
 }
 
 }  // namespace transport

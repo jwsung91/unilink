@@ -155,6 +155,13 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder& enable_port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
 
   /**
+   * @brief Set idle connection timeout
+   * @param timeout_ms Timeout in milliseconds (0 = disabled)
+   * @return TcpServerBuilder& Reference to this builder for method chaining
+   */
+  TcpServerBuilder& idle_timeout(int timeout_ms);
+
+  /**
    * @brief Set maximum number of clients (2 or more)
    * @param max Maximum number of clients (must be 2 or more)
    * @return TcpServerBuilder& Reference to this builder for method chaining
@@ -191,6 +198,9 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   bool enable_port_retry_;
   int max_port_retries_;
   int port_retry_interval_ms_;
+
+  // Idle timeout configuration
+  int idle_timeout_ms_;
 
   // Client limit configuration
   size_t max_clients_;

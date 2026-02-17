@@ -73,6 +73,7 @@ void TcpServer::start() {
     config.enable_port_retry = port_retry_enabled_;
     config.max_port_retries = max_port_retries_;
     config.port_retry_interval_ms = port_retry_interval_ms_;
+    config.idle_timeout_ms = idle_timeout_ms_;
 
     channel_ = factory::ChannelFactory::create(config, external_ioc_);
     setup_internal_handlers();
@@ -199,6 +200,13 @@ ChannelInterface& TcpServer::auto_manage(bool manage) {
   if (auto_manage_ && !started_) {
     start();
   }
+  return *this;
+}
+
+TcpServer& TcpServer::idle_timeout(int timeout_ms) {
+  idle_timeout_ms_ = timeout_ms;
+  // Note: timeout applies only to new connections or requires channel recreation
+  // Currently we only store it for start()
   return *this;
 }
 

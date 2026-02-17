@@ -34,6 +34,7 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
       enable_port_retry_(false),
       max_port_retries_(3),
       port_retry_interval_ms_(base::constants::DEFAULT_RETRY_INTERVAL_MS / 2),
+      idle_timeout_ms_(0),
       max_clients_(SIZE_MAX),
       client_limit_set_(false) {
   // Validate input parameters
@@ -141,6 +142,13 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
   }
 
+  // Idle timeout configuration
+  if (idle_timeout_ms_ > 0) {
+    UNILINK_LOG_DEBUG("tcp_server_builder", "build",
+                      "Setting idle timeout: " + std::to_string(idle_timeout_ms_) + "ms");
+    server->idle_timeout(idle_timeout_ms_);
+  }
+
   // Apply configuration and auto-start if requested
   server->auto_manage(auto_manage_);
 
@@ -212,6 +220,11 @@ TcpServerBuilder& TcpServerBuilder::enable_port_retry(bool enable, int max_retri
   enable_port_retry_ = enable;
   max_port_retries_ = max_retries;
   port_retry_interval_ms_ = retry_interval_ms;
+  return *this;
+}
+
+TcpServerBuilder& TcpServerBuilder::idle_timeout(int timeout_ms) {
+  idle_timeout_ms_ = timeout_ms;
   return *this;
 }
 
