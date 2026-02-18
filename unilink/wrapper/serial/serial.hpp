@@ -16,20 +16,28 @@
 
 #pragma once
 
-#include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
 #include <string_view>
-#include <thread>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/serial_config.hpp"
-#include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
+namespace boost {
+namespace asio {
+class io_context;
+}
+}  // namespace boost
+
 namespace unilink {
+
+namespace interface {
+class Channel;
+}
+
 namespace wrapper {
 
 class UNILINK_API Serial : public ChannelInterface {
@@ -66,35 +74,8 @@ class UNILINK_API Serial : public ChannelInterface {
   void set_manage_external_context(bool manage);
 
  private:
-  void setup_internal_handlers();
-  void notify_state_change(base::LinkState state);
-
- private:
-  std::string device_;
-  uint32_t baud_rate_;
-  std::shared_ptr<interface::Channel> channel_;
-  std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
-  std::thread external_thread_;
-
-  // Event handlers
-  DataHandler data_handler_;
-  BytesHandler bytes_handler_;
-  ConnectHandler connect_handler_;
-  DisconnectHandler disconnect_handler_;
-  ErrorHandler error_handler_;
-
-  // Configuration
-  bool auto_manage_ = false;
-  bool started_ = false;
-
-  // Serial-specific configuration
-  int data_bits_ = 8;
-  int stop_bits_ = 1;
-  std::string parity_ = "none";
-  std::string flow_control_ = "none";
-  std::chrono::milliseconds retry_interval_{3000};  // 3 seconds default
+  struct Impl;
+  std::unique_ptr<Impl> pimpl_;
 };
 
 }  // namespace wrapper

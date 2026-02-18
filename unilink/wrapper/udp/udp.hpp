@@ -16,21 +16,28 @@
 
 #pragma once
 
-#include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <functional>
 #include <memory>
-#include <optional>
 #include <string>
 #include <string_view>
-#include <thread>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/udp_config.hpp"
-#include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
+namespace boost {
+namespace asio {
+class io_context;
+}
+}  // namespace boost
+
 namespace unilink {
+
+namespace interface {
+class Channel;
+}
+
 namespace wrapper {
 
 class UNILINK_API Udp : public ChannelInterface {
@@ -57,25 +64,8 @@ class UNILINK_API Udp : public ChannelInterface {
   void set_manage_external_context(bool manage);
 
  private:
-  void setup_internal_handlers();
-  void notify_state_change(base::LinkState state);
-
- private:
-  config::UdpConfig cfg_;
-  std::shared_ptr<interface::Channel> channel_;
-  std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
-  std::thread external_thread_;
-
-  DataHandler data_handler_;
-  BytesHandler bytes_handler_;
-  ConnectHandler connect_handler_;
-  DisconnectHandler disconnect_handler_;
-  ErrorHandler error_handler_;
-
-  bool auto_manage_{false};
-  bool started_{false};
+  struct Impl;
+  std::unique_ptr<Impl> pimpl_;
 };
 
 }  // namespace wrapper
