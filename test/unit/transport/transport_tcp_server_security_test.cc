@@ -63,6 +63,11 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
   }
   ASSERT_FALSE(ec) << "Failed to connect to server";
 
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+  int yes = 1;
+  setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+#endif
+
   // Wait for 2 seconds (simulating idle)
   std::this_thread::sleep_for(std::chrono::seconds(2));
 
@@ -102,6 +107,11 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   ASSERT_FALSE(ec) << "Failed to connect to server";
+
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+  int yes = 1;
+  setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+#endif
 
   // Wait for 0.5 seconds (should stay connected)
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
