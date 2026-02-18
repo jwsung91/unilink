@@ -153,8 +153,7 @@ struct Serial::Impl {
   }
 };
 
-Serial::Serial(const std::string& device, uint32_t baud_rate)
-    : pimpl_(std::make_unique<Impl>(device, baud_rate)) {}
+Serial::Serial(const std::string& device, uint32_t baud_rate) : pimpl_(std::make_unique<Impl>(device, baud_rate)) {}
 
 Serial::Serial(const std::string& device, uint32_t baud_rate, std::shared_ptr<boost::asio::io_context> external_ioc)
     : pimpl_(std::make_unique<Impl>(device, baud_rate, std::move(external_ioc))) {}
