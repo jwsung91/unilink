@@ -16,10 +16,9 @@
 
 #include "unilink/util/input_validator.hpp"
 
+#include <algorithm>
 #include <boost/asio/ip/address.hpp>
 #include <boost/system/error_code.hpp>
-
-#include <algorithm>
 #include <charconv>
 #include <cstring>
 #include <string_view>
@@ -135,6 +134,9 @@ bool InputValidator::is_valid_ipv4(std::string_view address) {
 }
 
 bool InputValidator::is_valid_ipv6(const std::string& address) {
+  if (address.find('[') != std::string::npos || address.find(']') != std::string::npos) {
+    return false;
+  }
   boost::system::error_code ec;
   boost::asio::ip::make_address_v6(address, ec);
   return !ec;
