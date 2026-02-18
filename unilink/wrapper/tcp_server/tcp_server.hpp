@@ -16,19 +16,27 @@
 
 #pragma once
 
-#include <atomic>
-#include <boost/asio/io_context.hpp>
 #include <functional>
 #include <memory>
-#include <mutex>
 #include <string>
-#include <thread>
+#include <string_view>
+#include <vector>
 
 #include "unilink/base/visibility.hpp"
-#include "unilink/factory/channel_factory.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
+namespace boost {
+namespace asio {
+class io_context;
+}
+}  // namespace boost
+
 namespace unilink {
+
+namespace interface {
+class Channel;
+}
+
 namespace wrapper {
 
 /**
@@ -47,7 +55,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
   // IChannel interface implementation
   void start() override;
   void stop() override;
-  void send(const std::string& data) override;
+  void send(std::string_view data) override;
   bool is_connected() const override;
 
   ChannelInterface& on_data(DataHandler handler) override;
@@ -58,7 +66,7 @@ class UNILINK_API TcpServer : public ChannelInterface {
 
   ChannelInterface& auto_manage(bool manage = true) override;
 
-  void send_line(const std::string& line) override;
+  void send_line(std::string_view line) override;
 
   // Multi-client support methods
   bool broadcast(const std::string& message);
@@ -93,49 +101,8 @@ class UNILINK_API TcpServer : public ChannelInterface {
   void set_manage_external_context(bool manage);
 
  private:
-  void setup_internal_handlers();
-  void handle_bytes(memory::ConstByteSpan data);
-  void handle_state(base::LinkState state);
-
-  mutable std::mutex mutex_;
-  uint16_t port_;
-  std::shared_ptr<interface::Channel> channel_;
-  bool started_{false};
-  bool auto_manage_{false};
-  std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
-  std::thread external_thread_;
-
-  // Port retry configuration
-  bool port_retry_enabled_{false};
-  int max_port_retries_{3};
-  int port_retry_interval_ms_{1000};
-
-  // Idle timeout configuration
-  int idle_timeout_ms_{0};
-
-  // Client limit configuration
-  bool client_limit_enabled_{false};
-  size_t max_clients_{0};
-
-  // Server state tracking
-  std::atomic<bool> is_listening_{false};
-
-  // User callbacks
-  DataHandler on_data_;
-  BytesHandler on_bytes_;
-  ConnectHandler on_connect_;
-  DisconnectHandler on_disconnect_;
-  ErrorHandler on_error_;
-
-  // Multi-client callbacks
-  MultiClientConnectHandler on_multi_connect_;
-  MultiClientDataHandler on_multi_data_;
-  MultiClientDisconnectHandler on_multi_disconnect_;
-
-  // Send/broadcast 실패 시 on_error 호출 여부
-  bool notify_send_failure_{false};
+  struct Impl;
+  std::unique_ptr<Impl> pimpl_;
 };
 
 }  // namespace wrapper
