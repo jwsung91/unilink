@@ -137,7 +137,10 @@ struct TcpClient::Impl {
     }
   }
 
-  bool is_connected() const { return channel_ && channel_->is_connected(); }
+  bool is_connected() const {
+    if (!channel_) return false;
+    return channel_->is_connected();
+  }
 
   void setup_internal_handlers() {
     if (!channel_) return;

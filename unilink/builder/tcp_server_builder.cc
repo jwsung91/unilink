@@ -18,7 +18,9 @@
 
 #include <stdexcept>
 
+#include "unilink/builder/auto_initializer.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 
 namespace unilink {
 namespace builder {
@@ -32,7 +34,12 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
       port_retry_interval_ms_(1000),
       idle_timeout_ms_(0),
       max_clients_(0),
-      client_limit_set_(false) {}
+      client_limit_set_(false) {
+  if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
+  
+  // Ensure background IO service is running
+  AutoInitializer::ensure_io_context_running();
+}
 
 std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   std::unique_ptr<wrapper::TcpServer> server;
@@ -111,7 +118,8 @@ TcpServerBuilder& TcpServerBuilder::idle_timeout(int timeout_ms) {
 }
 
 TcpServerBuilder& TcpServerBuilder::max_clients(size_t max) {
-  if (max == 1) throw std::invalid_argument("Use single_client() for 1 client");
+  if (max == 0) throw diagnostics::BuilderException("Client limit cannot be 0. Use unlimited_clients() instead.");
+  if (max == 1) throw diagnostics::BuilderException("Use single_client() for 1 client limit.");
   max_clients_ = max;
   client_limit_set_ = true;
   return *this;

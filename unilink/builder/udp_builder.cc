@@ -17,11 +17,15 @@
 #include "unilink/builder/udp_builder.hpp"
 
 #include <boost/asio/io_context.hpp>
+#include "unilink/builder/auto_initializer.hpp"
 
 namespace unilink {
 namespace builder {
 
-UdpBuilder::UdpBuilder() : auto_manage_(false), use_independent_context_(false) {}
+UdpBuilder::UdpBuilder() : auto_manage_(false), use_independent_context_(false) {
+  // Ensure background IO service is running
+  AutoInitializer::ensure_io_context_running();
+}
 
 std::unique_ptr<wrapper::Udp> UdpBuilder::build() {
   std::unique_ptr<wrapper::Udp> udp;

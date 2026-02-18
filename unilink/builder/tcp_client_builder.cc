@@ -17,6 +17,8 @@
 #include "unilink/builder/tcp_client_builder.hpp"
 
 #include <boost/asio/io_context.hpp>
+#include "unilink/builder/auto_initializer.hpp"
+#include "unilink/diagnostics/exceptions.hpp"
 
 namespace unilink {
 namespace builder {
@@ -28,7 +30,13 @@ TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
       use_independent_context_(false),
       retry_interval_(3000),
       max_retries_(-1),
-      connection_timeout_(5000) {}
+      connection_timeout_(5000) {
+  if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
+  if (host.empty()) throw diagnostics::BuilderException("Host cannot be empty");
+
+  // Ensure background IO service is running
+  AutoInitializer::ensure_io_context_running();
+}
 
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   std::unique_ptr<wrapper::TcpClient> client;

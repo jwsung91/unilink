@@ -203,11 +203,12 @@ std::future<bool> TcpServer::start() { return pimpl_->start(); }
 void TcpServer::stop() { pimpl_->stop(); }
 bool TcpServer::is_listening() const { return pimpl_->is_listening_.load(); }
 
-void TcpServer::broadcast(std::string_view data) {
+bool TcpServer::broadcast(std::string_view data) {
   if (pimpl_->channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
-    if (transport_server) transport_server->broadcast(std::string(data));
+    if (transport_server) return transport_server->broadcast(std::string(data));
   }
+  return false;
 }
 
 bool TcpServer::send_to(size_t client_id, std::string_view data) {
@@ -224,11 +225,13 @@ ServerInterface& TcpServer::on_data(MessageHandler h) { pimpl_->on_data_ = std::
 ServerInterface& TcpServer::on_error(ErrorHandler h) { pimpl_->on_error_ = std::move(h); return *this; }
 
 size_t TcpServer::get_client_count() const {
+  if (!pimpl_->channel_) return 0;
   auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
   return transport_server ? transport_server->get_client_count() : 0;
 }
 
 std::vector<size_t> TcpServer::get_connected_clients() const {
+  if (!pimpl_->channel_) return std::vector<size_t>();
   auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
   return transport_server ? transport_server->get_connected_clients() : std::vector<size_t>();
 }

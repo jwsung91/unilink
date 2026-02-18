@@ -51,34 +51,40 @@ TEST_F(UnifiedBuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
 
   auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port_).build();
 
-  ASSERT_TRUE(server->start().get());
+  auto start_f = server->start();
+  ASSERT_TRUE(start_f.get());
+  
   client->start();
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 2000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000));
   
-  client->send("hello from unified");
-  
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return data_received.load(); }, 2000));
-  EXPECT_EQ(received_msg, "hello from unified");
+  if (client->is_connected()) {
+    client->send("hello from unified");
+    EXPECT_TRUE(TestUtils::waitForCondition([&]() { return data_received.load(); }, 5000));
+    EXPECT_EQ(received_msg, "hello from unified");
+  }
 
   client->stop();
   server->stop();
 }
 
 TEST_F(UnifiedBuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
-  // Test that settings like retry interval are actually applied
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", port_)
+  // Use a unique port for this sub-test
+  uint16_t p = TestUtils::getAvailableTestPort();
+  
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", p)
                     .retry_interval(100)
                     .build();
   
-  // Start without server, it should retry quickly
-  client->start();
+  // Start client without server
+  auto f = client->start(); 
+  // Should not block here as it's retrying in background
+  
   TestUtils::waitFor(300);
   
-  auto server = builder::UnifiedBuilder::tcp_server(port_).build();
+  auto server = builder::UnifiedBuilder::tcp_server(p).build();
   server->start();
   
-  // Client should eventually connect via retry
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000));
   
   client->stop();

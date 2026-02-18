@@ -17,6 +17,7 @@
 #include "unilink/builder/serial_builder.hpp"
 
 #include <boost/asio/io_context.hpp>
+#include "unilink/builder/auto_initializer.hpp"
 
 namespace unilink {
 namespace builder {
@@ -30,7 +31,10 @@ SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
       stop_bits_(1),
       parity_("none"),
       flow_control_("none"),
-      retry_interval_(3000) {}
+      retry_interval_(3000) {
+  // Ensure background IO service is running
+  AutoInitializer::ensure_io_context_running();
+}
 
 std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   std::unique_ptr<wrapper::Serial> serial;

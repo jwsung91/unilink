@@ -56,7 +56,7 @@ class UNILINK_API TcpServer : public ServerInterface {
   bool is_listening() const override;
 
   // Transmission
-  void broadcast(std::string_view data) override;
+  bool broadcast(std::string_view data) override;
   bool send_to(size_t client_id, std::string_view data) override;
 
   // Event handlers
