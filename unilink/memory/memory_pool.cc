@@ -51,6 +51,15 @@ MemoryPool::MemoryPool(size_t initial_pool_size, size_t max_pool_size) {
 std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
   validate_size(size);
 
+  // Optimization: Bypass pool for large allocations > 64KB (XLARGE)
+  // This avoids mutex contention and fixes truncation bug for sizes > 64KB.
+  if (size > static_cast<size_t>(BufferSize::XLARGE)) {
+    auto buffer = create_buffer(size);
+    // create_buffer throws on failure, so if we are here, we succeeded.
+    total_allocations_.fetch_add(1, std::memory_order_relaxed);
+    return buffer;
+  }
+
   auto& bucket = get_bucket(size);
   return acquire_from_bucket(bucket);
 }
@@ -63,6 +72,11 @@ void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
   if (!buffer) return;
 
   validate_size(size);
+
+  if (size > static_cast<size_t>(BufferSize::XLARGE)) {
+    MEMORY_TRACK_DEALLOCATION(buffer.get());
+    return;  // unique_ptr destructor handles cleanup
+  }
 
   auto& bucket = get_bucket(size);
   release_to_bucket(bucket, std::move(buffer));
@@ -117,19 +131,11 @@ MemoryPool::HealthMetrics MemoryPool::get_health_metrics() const {
 MemoryPool::PoolBucket& MemoryPool::get_bucket(size_t size) { return buckets_[get_bucket_index(size)]; }
 
 size_t MemoryPool::get_bucket_index(size_t size) const {
-  static constexpr std::array<size_t, 4> BUCKET_SIZES = {
-      static_cast<size_t>(BufferSize::SMALL),   // 1KB
-      static_cast<size_t>(BufferSize::MEDIUM),  // 4KB
-      static_cast<size_t>(BufferSize::LARGE),   // 16KB
-      static_cast<size_t>(BufferSize::XLARGE)   // 64KB
-  };
-
-  for (size_t i = 0; i < BUCKET_SIZES.size(); ++i) {
-    if (size <= BUCKET_SIZES[i]) {
-      return i;
-    }
-  }
-  return BUCKET_SIZES.size() - 1;  // use largest size
+  // Optimized: Unrolled checks for faster lookup
+  if (size <= static_cast<size_t>(BufferSize::SMALL)) return 0;
+  if (size <= static_cast<size_t>(BufferSize::MEDIUM)) return 1;
+  if (size <= static_cast<size_t>(BufferSize::LARGE)) return 2;
+  return 3;  // XLARGE
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::acquire_from_bucket(PoolBucket& bucket) {
