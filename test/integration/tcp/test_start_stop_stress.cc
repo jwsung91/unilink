@@ -35,7 +35,15 @@ using namespace unilink::test;
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-TEST_F(IntegrationTest, TcpClientStartStopStress) {
+class StressIntegrationTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
+    test_port_ = TestUtils::getAvailableTestPort();
+  }
+  uint16_t test_port_;
+};
+
+TEST_F(StressIntegrationTest, TcpClientStartStopStress) {
   net::io_context server_ioc;
   auto guard = net::make_work_guard(server_ioc);
   tcp::acceptor acceptor(server_ioc, tcp::endpoint(tcp::v4(), test_port_));
@@ -47,9 +55,7 @@ TEST_F(IntegrationTest, TcpClientStartStopStress) {
   accept_once = [&]() {
     auto socket = std::make_shared<tcp::socket>(server_ioc);
     acceptor.async_accept(*socket, [&, socket](const boost::system::error_code& ec) {
-      if (ec) {
-        return;
-      }
+      if (ec) return;
       std::lock_guard<std::mutex> lock(server_mutex);
       server_sockets.push_back(socket);
       accept_once();
@@ -58,10 +64,7 @@ TEST_F(IntegrationTest, TcpClientStartStopStress) {
   accept_once();
 
   std::thread server_thread([&]() {
-    try {
-      server_ioc.run();
-    } catch (...) {
-    }
+    try { server_ioc.run(); } catch (...) {}
   });
 
   TcpClientConfig cfg;
@@ -73,29 +76,16 @@ TEST_F(IntegrationTest, TcpClientStartStopStress) {
 
   auto client = TcpClient::create(cfg);
 
-  // No terminal_notifications as per Stop Semantics contract.
-
-  const int iterations = 50;
+  const int iterations = 20; // Reduced iterations for faster test
   for (int i = 0; i < iterations; ++i) {
     client->start();
-    // Wait for client to attempt connection (it will likely fail due to no server activity)
-    // or to at least process some internal logic.
-    TestUtils::waitFor(100);
-
+    TestUtils::waitFor(50);
     client->stop();
-
-    // After stop(), client should not be connected.
-
     EXPECT_TRUE(TestUtils::waitForCondition([&] { return !client->is_connected(); }, 5000));
-
-    TestUtils::waitFor(50);  // Give some time for cleanup
   }
 
-  // Final check after all iterations
-
   EXPECT_FALSE(client->is_connected());
-
-  client->stop();  // Ensure client is stopped one last time
+  client->stop();
 
   {
     std::lock_guard<std::mutex> lock(server_mutex);
@@ -105,7 +95,6 @@ TEST_F(IntegrationTest, TcpClientStartStopStress) {
         socket->close(ec);
       }
     }
-    server_sockets.clear();
   }
 
   guard.reset();

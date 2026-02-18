@@ -14,128 +14,56 @@
  * limitations under the License.
  */
 
-#include <chrono>
 #include <iostream>
-#include <thread>
+#include <string>
 
 #include "unilink/unilink.hpp"
 
-// Example namespace usage - using namespace for simplicity in examples
+/**
+ * Error Handling Example
+ * 
+ * Demonstrates the modern programmatic error handling using ErrorContext and ErrorCode.
+ */
+
 using namespace unilink;
 
 int main() {
-  std::cout << "=== Unilink Error Handling System Usage Example ===" << std::endl;
+  std::cout << "--- Unilink Error Handling Example ---" << std::endl;
 
-  // 1. Error handler setup
-  std::cout << "\n1. Error handler setup" << std::endl;
+  // Attempt to start a server on an invalid port
+  auto server = tcp_server(0)
+                    .on_error([](const wrapper::ErrorContext& ctx) {
+                      std::cout << "Server Error Detected!" << std::endl;
+                      std::cout << "Code: " << static_cast<int>(ctx.code()) << std::endl;
+                      std::cout << "Message: " << ctx.message() << std::endl;
+                      
+                      if (ctx.code() == ErrorCode::StartFailed) {
+                        std::cout << "-> Handling specific start failure..." << std::endl;
+                      }
+                    })
+                    .build();
 
-  // Set minimum error level
-  diagnostics::ErrorHandler::instance().set_min_error_level(diagnostics::ErrorLevel::INFO);
-
-  // Register error callback
-  diagnostics::ErrorHandler::instance().register_callback([](const diagnostics::ErrorInfo& error) {
-    std::cout << "🚨 Error occurred: " << error.get_summary() << std::endl;
-
-    if (error.level == diagnostics::ErrorLevel::CRITICAL) {
-      std::cout << "   ⚠️  Critical error - immediate action required!" << std::endl;
-    }
-  });
-
-  // 2. Various error type tests
-  std::cout << "\n2. Various error type tests" << std::endl;
-
-  // Connection error
-  boost::system::error_code ec(boost::system::errc::connection_refused, boost::system::system_category());
-  diagnostics::error_reporting::report_connection_error("tcp_client", "connect", ec, true);
-
-  // Communication error
-  diagnostics::error_reporting::report_communication_error("tcp_server", "read", "Data read failure", false);
-
-  // Configuration error
-  diagnostics::error_reporting::report_configuration_error("serial", "validate", "Invalid baud rate setting");
-
-  // Memory error
-  diagnostics::error_reporting::report_memory_error("buffer", "allocate", "Memory allocation failed");
-
-  // System error
-  diagnostics::error_reporting::report_system_error("io_context", "run", "IO context execution failed", ec);
-
-  // Warning
-  diagnostics::error_reporting::report_warning("config", "load", "Configuration file not found, using defaults");
-
-  // Info
-  diagnostics::error_reporting::report_info("startup", "init", "Application initialization completed");
-
-  // 3. Error statistics check
-  std::cout << "\n3. Error statistics check" << std::endl;
-
-  auto stats = diagnostics::ErrorHandler::instance().get_error_stats();
-  std::cout << "Total errors: " << stats.total_errors << std::endl;
-  std::cout << "INFO: " << stats.errors_by_level[0] << std::endl;
-  std::cout << "WARNING: " << stats.errors_by_level[1] << std::endl;
-  std::cout << "ERROR: " << stats.errors_by_level[2] << std::endl;
-  std::cout << "CRITICAL: " << stats.errors_by_level[3] << std::endl;
-
-  std::cout << "Connection errors: " << stats.errors_by_category[0] << std::endl;
-  std::cout << "Communication errors: " << stats.errors_by_category[1] << std::endl;
-  std::cout << "Configuration errors: " << stats.errors_by_category[2] << std::endl;
-  std::cout << "Memory errors: " << stats.errors_by_category[3] << std::endl;
-  std::cout << "System errors: " << stats.errors_by_category[4] << std::endl;
-
-  // 4. Component-specific error queries
-  std::cout << "\n4. Component-specific error queries" << std::endl;
-
-  auto tcp_errors = diagnostics::ErrorHandler::instance().get_errors_by_component("tcp_client");
-  std::cout << "TCP client error count: " << tcp_errors.size() << std::endl;
-
-  auto serial_errors = diagnostics::ErrorHandler::instance().get_errors_by_component("serial");
-  std::cout << "Serial error count: " << serial_errors.size() << std::endl;
-
-  // 5. Recent error queries
-  std::cout << "\n5. Recent error queries" << std::endl;
-
-  auto recent_errors = diagnostics::ErrorHandler::instance().get_recent_errors(3);
-  std::cout << "Recent 3 errors:" << std::endl;
-  for (const auto& error : recent_errors) {
-    std::cout << "  - " << error.get_summary() << std::endl;
+  // start() returns a future, so we can wait for the error
+  auto start_future = server->start();
+  if (!start_future.get()) {
+    std::cout << "Server start failed as expected." << std::endl;
   }
 
-  // 6. Real TCP server/client error testing
-  std::cout << "\n6. Real TCP server/client error testing" << std::endl;
+  // Attempt to connect to a non-existent server
+  auto client = tcp_client("127.0.0.1", 1)
+                    .on_error([](const wrapper::ErrorContext& ctx) {
+                      std::cout << "\nClient Error Detected!" << std::endl;
+                      std::cout << "Code: " << static_cast<int>(ctx.code()) << std::endl;
+                      std::cout << "Message: " << ctx.message() << std::endl;
+                    })
+                    .build();
 
-  // Try connecting to invalid port (will cause error)
-  auto bad_client =
-      tcp_client("127.0.0.1", 1)  // Invalid port
-          .on_error([](const std::string& error) { std::cout << "Client error callback: " << error << std::endl; })
-          .build();
-
-  if (bad_client) {
-    bad_client->start();
+  std::cout << "Starting client connection attempt..." << std::endl;
+  auto connected = client->start();
+  
+  if (!connected.get()) {
+    std::cout << "Client connection failed as expected." << std::endl;
   }
-
-  if (bad_client) {
-    UNILINK_LOG_INFO("example", "test", "Attempting connection to invalid port...");
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    bad_client->stop();
-  }
-
-  // 7. Error handler disable/enable
-  std::cout << "\n7. Error handler disable/enable" << std::endl;
-
-  diagnostics::ErrorHandler::instance().set_enabled(false);
-  diagnostics::error_reporting::report_info("test", "disabled", "This message is not visible");
-
-  diagnostics::ErrorHandler::instance().set_enabled(true);
-  diagnostics::error_reporting::report_info("test", "enabled", "Error handler re-enabled");
-
-  // 8. Error statistics reset
-  std::cout << "\n8. Error statistics reset" << std::endl;
-
-  diagnostics::ErrorHandler::instance().reset_stats();
-  auto reset_stats = diagnostics::ErrorHandler::instance().get_error_stats();
-  std::cout << "Total errors after reset: " << reset_stats.total_errors << std::endl;
-
-  std::cout << "\n=== Error handling example completed ===" << std::endl;
 
   return 0;
 }

@@ -14,74 +14,47 @@
  * limitations under the License.
  */
 
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <atomic>
 #include <chrono>
 #include <memory>
-#include <random>
-#include <string>
 #include <thread>
-#include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/diagnostics/exceptions.hpp"
-#include "unilink/memory/safe_data_buffer.hpp"
 #include "unilink/unilink.hpp"
-#include "unilink/util/input_validator.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
-using namespace unilink::memory;
-using namespace unilink::diagnostics;
-using namespace unilink::builder;
 using namespace std::chrono_literals;
 
-/**
- * @brief Integrated safety-related tests
- */
 class SafetyIntegratedTest : public ::testing::Test {
  protected:
-  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
-
-  void TearDown() override { TestUtils::waitFor(1000); }
-
-  uint16_t test_port_;
+  void SetUp() override {
+    port_ = TestUtils::getAvailableTestPort();
+  }
+  uint16_t port_;
 };
 
-TEST_F(SafetyIntegratedTest, ApiSafetyNullPointers) {
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
-  EXPECT_NE(client, nullptr);
-
-  auto server = unilink::tcp_server(test_port_).unlimited_clients().build();
-  EXPECT_NE(server, nullptr);
-}
-
-TEST_F(SafetyIntegratedTest, ApiSafetyInvalidParameters) {
-  EXPECT_THROW(auto client = unilink::tcp_client("127.0.0.1", 0).build(), BuilderException);
-}
-
-TEST_F(SafetyIntegratedTest, ConcurrencySafetyClientCreation) {
-  const int num_threads = 4;
-  const int clients_per_thread = 10;
-  std::atomic<int> success_count{0};
-  std::vector<std::thread> threads;
-
-  for (int t = 0; t < num_threads; ++t) {
-    threads.emplace_back([&, t]() {
-      for (int i = 0; i < clients_per_thread; ++i) {
-        auto client = unilink::tcp_client("127.0.0.1", test_port_ + i).build();
-        if (client) success_count++;
-      }
-    });
+TEST_F(SafetyIntegratedTest, RapidDestruction) {
+  for (int i = 0; i < 5; ++i) {
+    auto server = tcp_server(port_).build();
+    server->start();
+    // Destroy immediately
   }
-
-  for (auto& thread : threads) thread.join();
-  EXPECT_EQ(success_count.load(), num_threads * clients_per_thread);
+  SUCCEED();
 }
 
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+TEST_F(SafetyIntegratedTest, NullCallbackSafety) {
+  auto server = tcp_server(port_).build();
+  server->start();
+  
+  // These should not crash
+  server->on_data(nullptr);
+  server->on_client_connect(nullptr);
+  server->on_client_disconnect(nullptr);
+  server->on_error(nullptr);
+  
+  server->stop();
+  SUCCEED();
 }

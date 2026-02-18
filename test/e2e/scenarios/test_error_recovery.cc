@@ -26,27 +26,12 @@
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/base/constants.hpp"
-#include "unilink/builder/unified_builder.hpp"
-#include "unilink/config/serial_config.hpp"
-#include "unilink/config/tcp_client_config.hpp"
-#include "unilink/config/tcp_server_config.hpp"
-#include "unilink/diagnostics/exceptions.hpp"
-#include "unilink/transport/serial/serial.hpp"
-#include "unilink/transport/tcp_client/tcp_client.hpp"
-#include "unilink/transport/tcp_server/tcp_server.hpp"
-#include "unilink/util/input_validator.hpp"
+#include "unilink/unilink.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
-using namespace unilink::transport;
-using namespace unilink::config;
-using namespace unilink::diagnostics;
 using namespace std::chrono_literals;
 
-/**
- * @brief Error recovery and resilience tests
- */
 class ErrorRecoveryTest : public BaseTest {
  protected:
   void SetUp() override {
@@ -57,8 +42,8 @@ class ErrorRecoveryTest : public BaseTest {
 };
 
 TEST_F(ErrorRecoveryTest, NetworkConnectionErrors) {
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", 1)
-                    .on_error([this](const std::string& error) { error_count_++; })
+  auto client = tcp_client("127.0.0.1", 1)
+                    .on_error([this](const wrapper::ErrorContext&) { error_count_++; })
                     .build();
   ASSERT_NE(client, nullptr);
   client->start();

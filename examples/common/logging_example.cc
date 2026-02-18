@@ -14,125 +14,47 @@
  * limitations under the License.
  */
 
-#include <chrono>
-#include <iostream>
-#include <thread>
-
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/unilink.hpp"
 
-// Example namespace usage - using namespace for simplicity in examples
+/**
+ * Logging Example
+ * 
+ * Demonstrates how to use the Unilink logging system with the modern API.
+ */
+
 using namespace unilink;
 
 int main() {
-  std::cout << "=== Unilink Logging System Usage Example ===" << std::endl;
+  auto& logger = diagnostics::Logger::instance();
+  logger.set_level(diagnostics::LogLevel::DEBUG);
+  logger.set_console_output(true);
 
-  // 1. Logging system setup
-  std::cout << "\n1. Logging system setup" << std::endl;
+  UNILINK_LOG_INFO("main", "setup", "Starting logging example...");
 
-  // Set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-  diagnostics::Logger::instance().set_level(diagnostics::LogLevel::DEBUG);
+  // TCP Server with logging
+  auto server = tcp_server(8080)
+                    .on_connect([](const wrapper::ConnectionContext& ctx) { 
+                      UNILINK_LOG_INFO("tcp_server", "connect", "Client " + std::to_string(ctx.client_id()) + " connected"); 
+                    })
+                    .build();
 
-  // Set file output
-  diagnostics::Logger::instance().set_file_output("unilink_example.log");
+  // TCP Client with logging
+  auto client = tcp_client("127.0.0.1", 8080)
+                    .on_connect([](const wrapper::ConnectionContext& ctx) { 
+                      UNILINK_LOG_INFO("tcp_client", "connect", "Connected to server"); 
+                    })
+                    .build();
 
-  // Enable console output
-  diagnostics::Logger::instance().set_console_output(true);
+  // Serial with logging
+#ifndef _WIN32
+  auto serial_dev = unilink::serial("/dev/ttyUSB0", 115200)
+                    .on_connect([](const wrapper::ConnectionContext& ctx) { 
+                      UNILINK_LOG_INFO("serial", "connect", "Serial device connected"); 
+                    })
+                    .build();
+#endif
 
-  // 2. Basic logging usage
-  std::cout << "\n2. Basic logging usage" << std::endl;
-
-  UNILINK_LOG_INFO("example", "startup", "Application started");
-  UNILINK_LOG_DEBUG("example", "config", "Loading configuration...");
-  UNILINK_LOG_WARNING("example", "config", "Some settings using default values");
-
-  // 3. TCP server creation and logging
-  std::cout << "\n3. TCP server creation and logging" << std::endl;
-
-  auto server =
-      tcp_server(8080)
-          .on_connect([]() { UNILINK_LOG_INFO("tcp_server", "connect", "Client connected"); })
-          .on_data([](const std::string& data) { UNILINK_LOG_DEBUG("tcp_server", "data", "Data received: " + data); })
-          .on_error(
-              [](const std::string& error) { UNILINK_LOG_ERROR("tcp_server", "error", "Server error: " + error); })
-          .build();
-
-  if (server) {
-    server->start();
-    UNILINK_LOG_INFO("example", "server", "TCP server started on port 8080");
-  }
-
-  // 4. TCP client creation and logging
-  std::cout << "\n4. TCP client creation and logging" << std::endl;
-
-  auto client =
-      tcp_client("127.0.0.1", 8080)
-          .on_connect([]() { UNILINK_LOG_INFO("tcp_client", "connect", "Connected to server"); })
-          .on_data([](const std::string& data) { UNILINK_LOG_DEBUG("tcp_client", "data", "Data received: " + data); })
-          .on_error(
-              [](const std::string& error) { UNILINK_LOG_ERROR("tcp_client", "error", "Client error: " + error); })
-          .build();
-
-  if (client) {
-    client->start();
-    UNILINK_LOG_INFO("example", "client", "TCP client created");
-  }
-
-  // 5. Serial communication logging
-  std::cout << "\n5. Serial communication logging" << std::endl;
-
-  auto serial_device =
-      serial("/dev/ttyUSB0", 115200)
-          .on_connect([]() { UNILINK_LOG_INFO("serial", "connect", "Serial device connected"); })
-          .on_data(
-              [](const std::string& data) { UNILINK_LOG_DEBUG("serial", "data", "Serial data received: " + data); })
-          .on_error([](const std::string& error) { UNILINK_LOG_ERROR("serial", "error", "Serial error: " + error); })
-          .build();
-
-  if (serial_device) {
-    UNILINK_LOG_INFO("example", "serial", "Serial device created");
-  }
-
-  // 6. Performance logging
-  std::cout << "\n6. Performance logging" << std::endl;
-
-  auto start_time = std::chrono::high_resolution_clock::now();
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Simulation
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-  UNILINK_LOG_DEBUG("example", "data_processing", "Duration: " + std::to_string(duration) + " μs");
-
-  // 7. Log level change test
-  std::cout << "\n7. Log level change test" << std::endl;
-
-  UNILINK_LOG_DEBUG("example", "test", "This message is DEBUG level");
-
-  // Change to INFO level
-  diagnostics::Logger::instance().set_level(diagnostics::LogLevel::INFO);
-  UNILINK_LOG_DEBUG("example", "test", "This message is not visible (DEBUG level)");
-  UNILINK_LOG_INFO("example", "test", "This message is visible (INFO level)");
-
-  // 8. Disable log output
-  std::cout << "\n8. Disable log output" << std::endl;
-
-  diagnostics::Logger::instance().set_enabled(false);
-  UNILINK_LOG_INFO("example", "test", "This message is not visible (logging disabled)");
-
-  diagnostics::Logger::instance().set_enabled(true);
-  UNILINK_LOG_INFO("example", "test", "Logging re-enabled");
-
-  // 9. Cleanup
-  std::cout << "\n9. Cleanup" << std::endl;
-
-  if (client) client->stop();
-  if (server) server->stop();
-
-  UNILINK_LOG_INFO("example", "shutdown", "Application shutdown");
-
-  // Flush log file
-  diagnostics::Logger::instance().flush();
-
-  std::cout << "\n=== Logging example completed ===" << std::endl;
-  std::cout << "Log file: unilink_example.log" << std::endl;
-
+  UNILINK_LOG_INFO("main", "cleanup", "Example finished.");
   return 0;
 }

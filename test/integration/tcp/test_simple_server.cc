@@ -60,20 +60,16 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
   // Create server
   server_ = unilink::tcp_server(test_port)
                 .unlimited_clients()  // No client limit
-
                 .build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   std::cout << "Server created successfully" << std::endl;
 
-  // Start server
+  // Start server and wait for result
   std::cout << "Starting server..." << std::endl;
-  server_->start();
+  EXPECT_TRUE(server_->start().get());
 
-  // Brief wait
-  std::this_thread::sleep_for(test::constants::kDefaultTimeout);
-
-  std::cout << "Server state: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
+  std::cout << "Server state: " << (server_->is_listening() ? "listening" : "not listening") << std::endl;
 
   // Check if server was created
   EXPECT_TRUE(server_ != nullptr);
@@ -86,22 +82,21 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing auto-start server with port: " << test_port << std::endl;
 
-  // Create server (자동 시작)
+  // Create server (auto-manage triggers start)
   server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()  // No client limit
-
+                .unlimited_clients()
+                .auto_manage(true)
                 .build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   std::cout << "Server created with auto-start" << std::endl;
 
-  // Brief wait
+  // Brief wait for auto-manage to kick in
   std::this_thread::sleep_for(test::constants::kMediumTimeout);
 
-  std::cout << "Server state after 2s: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
+  std::cout << "Server state: " << (server_->is_listening() ? "listening" : "not listening") << std::endl;
 
-  // Check if server was created
-  EXPECT_TRUE(server_ != nullptr);
+  EXPECT_TRUE(server_->is_listening());
 }
 
 /**
@@ -111,46 +106,28 @@ TEST_F(SimpleServerTest, ServerWithCallbacks) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing server with callbacks, port: " << test_port << std::endl;
 
-  // Use shared_ptr to ensure variables live long enough
   auto connect_called = std::make_shared<std::atomic<bool>>(false);
   auto error_called = std::make_shared<std::atomic<bool>>(false);
   auto last_error = std::make_shared<std::string>();
 
-  // Create server (콜백 포함)
+  // Create server
   server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()  // No client limit
-
-                .on_connect([connect_called]() {
-                  std::cout << "Connect callback called!" << std::endl;
+                .unlimited_clients()
+                .on_connect([connect_called](const wrapper::ConnectionContext& ctx) {
+                  std::cout << "Connect callback called for client: " << ctx.client_id() << std::endl;
                   connect_called->store(true);
                 })
-                .on_error([error_called, last_error](const std::string& error) {
-                  std::cout << "Error callback called: " << error << std::endl;
+                .on_error([error_called, last_error](const wrapper::ErrorContext& ctx) {
+                  std::cout << "Error callback called: " << ctx.message() << std::endl;
                   error_called->store(true);
-                  *last_error = error;
+                  *last_error = std::string(ctx.message());
                 })
                 .build();
 
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
-  std::cout << "Server created with callbacks" << std::endl;
+  ASSERT_NE(server_, nullptr);
+  EXPECT_TRUE(server_->start().get());
 
-  // Brief wait
-  std::this_thread::sleep_for(3000ms);
-
-  std::cout << "Server state after 3s: " << (server_->is_connected() ? "connected" : "not connected") << std::endl;
-  std::cout << "Connect callback called: " << (connect_called->load() ? "yes" : "no") << std::endl;
-  std::cout << "Error callback called: " << (error_called->load() ? "yes" : "no") << std::endl;
-  if (error_called->load()) {
-    std::cout << "Last error: " << *last_error << std::endl;
-  }
-
-  // Check if server was created
-  EXPECT_TRUE(server_ != nullptr);
-
-  // Print if error occurred
-  if (error_called->load()) {
-    std::cout << "Server encountered error: " << *last_error << std::endl;
-  }
+  std::cout << "Server is now listening" << std::endl;
 }
 
 /**
@@ -160,31 +137,21 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
   uint16_t test_port = getTestPort();
   std::cout << "Testing server state check, port: " << test_port << std::endl;
 
-  // Create server
   server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()  // No client limit
-
+                .unlimited_clients()
                 .build();
 
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
+  ASSERT_NE(server_, nullptr);
 
   // Status before start
-  std::cout << "Before start - is_connected(): " << (server_->is_connected() ? "true" : "false") << std::endl;
-  EXPECT_FALSE(server_->is_connected()) << "Server should not be connected before start";
+  EXPECT_FALSE(server_->is_listening()) << "Server should not be listening before start";
 
   // Start server
-  std::cout << "Starting server..." << std::endl;
-  server_->start();
+  EXPECT_TRUE(server_->start().get());
+  EXPECT_TRUE(server_->is_listening());
 
-  // Check status after start (multiple times)
-  for (int i = 0; i < 5; ++i) {
-    std::this_thread::sleep_for(test::constants::kDefaultTimeout);
-    std::cout << "After " << (i + 1) << "s - is_connected(): " << (server_->is_connected() ? "true" : "false")
-              << std::endl;
-  }
-
-  // Check if server was created
-  EXPECT_TRUE(server_ != nullptr);
+  server_->stop();
+  EXPECT_FALSE(server_->is_listening());
 }
 
 /**
@@ -192,23 +159,13 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
  */
 TEST_F(SimpleServerTest, ClientLimitSingleClient) {
   uint16_t test_port = getTestPort();
-  std::cout << "Testing single client limit, port: " << test_port << std::endl;
-
-  // Create single client server
   server_ = unilink::tcp_server(test_port)
-                .single_client()  // Allow only 1 client
-
+                .single_client()
                 .build();
 
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
-  std::cout << "Single client server created" << std::endl;
-
-  // Start server
-  server_->start();
-  std::this_thread::sleep_for(test::constants::kDefaultTimeout);
-
-  std::cout << "Single client server started" << std::endl;
-  EXPECT_TRUE(server_ != nullptr);
+  ASSERT_NE(server_, nullptr);
+  EXPECT_TRUE(server_->start().get());
+  EXPECT_TRUE(server_->is_listening());
 }
 
 /**
@@ -216,23 +173,12 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
  */
 TEST_F(SimpleServerTest, ClientLimitMultiClient) {
   uint16_t test_port = getTestPort();
-  std::cout << "Testing multi client limit (3 clients), port: " << test_port << std::endl;
-
-  // Create multi client server (limit 3 clients)
   server_ = unilink::tcp_server(test_port)
-                .multi_client(3)  // Allow only 3 clients
-
+                .multi_client(3)
                 .build();
 
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
-  std::cout << "Multi client server (limit 3) created" << std::endl;
-
-  // Start server
-  server_->start();
-  std::this_thread::sleep_for(test::constants::kDefaultTimeout);
-
-  std::cout << "Multi client server started" << std::endl;
-  EXPECT_TRUE(server_ != nullptr);
+  ASSERT_NE(server_, nullptr);
+  EXPECT_TRUE(server_->start().get());
 }
 
 /**
@@ -240,23 +186,12 @@ TEST_F(SimpleServerTest, ClientLimitMultiClient) {
  */
 TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
   uint16_t test_port = getTestPort();
-  std::cout << "Testing unlimited clients, port: " << test_port << std::endl;
-
-  // Create unlimited clients server
   server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()  // No client limit
-
+                .unlimited_clients()
                 .build();
 
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
-  std::cout << "Unlimited clients server created" << std::endl;
-
-  // Start server
-  server_->start();
-  std::this_thread::sleep_for(test::constants::kDefaultTimeout);
-
-  std::cout << "Unlimited clients server started" << std::endl;
-  EXPECT_TRUE(server_ != nullptr);
+  ASSERT_NE(server_, nullptr);
+  EXPECT_TRUE(server_->start().get());
 }
 
 /**
@@ -264,20 +199,13 @@ TEST_F(SimpleServerTest, ClientLimitUnlimitedClients) {
  */
 TEST_F(SimpleServerTest, ClientLimitBuilderValidation) {
   uint16_t test_port = getTestPort();
-  std::cout << "Testing client limit builder validation, port: " << test_port << std::endl;
-
-  // Attempt to create server with invalid settings (0 clients)
   EXPECT_THROW(
       {
         server_ = unilink::tcp_server(test_port)
-                      .multi_client(0)  // 0 is invalid
-
+                      .multi_client(0)
                       .build();
       },
-      std::invalid_argument)
-      << "Should throw exception for 0 client limit";
-
-  std::cout << "Builder validation test passed" << std::endl;
+      std::invalid_argument);
 }
 
 int main(int argc, char** argv) {
