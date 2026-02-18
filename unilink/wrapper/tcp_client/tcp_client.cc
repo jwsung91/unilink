@@ -73,13 +73,10 @@ struct TcpClient::Impl {
   }
 
   ~Impl() {
-    // Force cleanup - regardless of auto_manage setting
-    if (started_) {
+    try {
       stop();
-    }
-    // Explicit cleanup of Channel resources
-    if (channel_) {
-      channel_.reset();
+    } catch (...) {
+      // Suppress exceptions in destructor
     }
   }
 
@@ -118,16 +115,27 @@ struct TcpClient::Impl {
   }
 
   void stop() {
-    if (!started_ || !channel_) return;
+    if (!started_) return;
 
-    channel_->stop();
+    if (channel_) {
+      // Clear handlers first
+      channel_->on_bytes(nullptr);
+      channel_->on_state(nullptr);
+      channel_->stop();
+    }
 
     if (use_external_context_ && manage_external_context_) {
       if (work_guard_) {
         work_guard_.reset();
       }
+      if (external_ioc_) {
+        external_ioc_->stop();
+      }
       if (external_thread_.joinable()) {
-        external_thread_.join();
+        try {
+          external_thread_.join();
+        } catch (...) {
+        }
       }
     }
 

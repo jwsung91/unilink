@@ -60,29 +60,68 @@ struct TcpServer::Impl {
   std::atomic<bool> is_listening_{false};
 
   // User callbacks
-  DataHandler on_data_;
-  BytesHandler on_bytes_;
-  ConnectHandler on_connect_;
-  DisconnectHandler on_disconnect_;
-  ErrorHandler on_error_;
+  DataHandler on_data_{nullptr};
+  BytesHandler on_bytes_{nullptr};
+  ConnectHandler on_connect_{nullptr};
+  DisconnectHandler on_disconnect_{nullptr};
+  ErrorHandler on_error_{nullptr};
 
   // Multi-client callbacks
-  MultiClientConnectHandler on_multi_connect_;
-  MultiClientDataHandler on_multi_data_;
-  MultiClientDisconnectHandler on_multi_disconnect_;
+  MultiClientConnectHandler on_multi_connect_{nullptr};
+  MultiClientDataHandler on_multi_data_{nullptr};
+  MultiClientDisconnectHandler on_multi_disconnect_{nullptr};
 
   // Send/broadcast 실패 시 on_error 호출 여부
   bool notify_send_failure_{false};
 
-  explicit Impl(uint16_t port) : port_(port), channel_(nullptr) {}
+  explicit Impl(uint16_t port)
+      : port_(port),
+        channel_(nullptr),
+        started_(false),
+        auto_manage_(false),
+        use_external_context_(false),
+        manage_external_context_(false),
+        port_retry_enabled_(false),
+        max_port_retries_(3),
+        port_retry_interval_ms_(1000),
+        idle_timeout_ms_(0),
+        client_limit_enabled_(false),
+        max_clients_(0),
+        is_listening_(false),
+        notify_send_failure_(false) {}
 
   Impl(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
       : port_(port),
         channel_(nullptr),
+        started_(false),
+        auto_manage_(false),
         external_ioc_(std::move(external_ioc)),
-        use_external_context_(external_ioc_ != nullptr) {}
+        use_external_context_(external_ioc_ != nullptr),
+        manage_external_context_(false),
+        port_retry_enabled_(false),
+        max_port_retries_(3),
+        port_retry_interval_ms_(1000),
+        idle_timeout_ms_(0),
+        client_limit_enabled_(false),
+        max_clients_(0),
+        is_listening_(false),
+        notify_send_failure_(false) {}
 
-  explicit Impl(std::shared_ptr<interface::Channel> channel) : port_(0), channel_(channel) {
+  explicit Impl(std::shared_ptr<interface::Channel> channel)
+      : port_(0),
+        channel_(std::move(channel)),
+        started_(false),
+        auto_manage_(false),
+        use_external_context_(false),
+        manage_external_context_(false),
+        port_retry_enabled_(false),
+        max_port_retries_(3),
+        port_retry_interval_ms_(1000),
+        idle_timeout_ms_(0),
+        client_limit_enabled_(false),
+        max_clients_(0),
+        is_listening_(false),
+        notify_send_failure_(false) {
     setup_internal_handlers();
   }
 

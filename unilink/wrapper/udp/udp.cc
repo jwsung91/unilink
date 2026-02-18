@@ -52,22 +52,31 @@ struct Udp::Impl {
   explicit Impl(std::shared_ptr<interface::Channel> ch) : channel(std::move(ch)) {}
 
   ~Impl() {
-    if (started) {
+    try {
       stop();
+    } catch (...) {
     }
   }
 
   void stop() {
-    if (!started || !channel) return;
+    if (!started) return;
 
-    channel->stop();
+    if (channel) {
+      // Clear handlers first to prevent callbacks during shutdown
+      channel->on_bytes(nullptr);
+      channel->on_state(nullptr);
+      channel->stop();
+    }
 
     if (use_external_context && manage_external_context) {
       if (external_ioc) {
         external_ioc->stop();
       }
       if (external_thread.joinable()) {
-        external_thread.join();
+        try {
+          external_thread.join();
+        } catch (...) {
+        }
       }
     }
 
