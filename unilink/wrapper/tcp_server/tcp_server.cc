@@ -65,14 +65,68 @@ struct TcpServer::Impl {
   MessageHandler on_data_{nullptr};
   ErrorHandler on_error_{nullptr};
 
-  explicit Impl(uint16_t port) : port_(port) {}
+  explicit Impl(uint16_t port)
+      : port_(port),
+        channel_(nullptr),
+        started_(false),
+        auto_manage_(false),
+        external_ioc_(nullptr),
+        use_external_context_(false),
+        manage_external_context_(false),
+        port_retry_enabled_(false),
+        max_port_retries_(3),
+        port_retry_interval_ms_(1000),
+        idle_timeout_ms_(0),
+        client_limit_enabled_(false),
+        max_clients_(0),
+        notify_send_failure_(false),
+        is_listening_(false),
+        on_client_connect_(nullptr),
+        on_client_disconnect_(nullptr),
+        on_data_(nullptr),
+        on_error_(nullptr) {}
 
   Impl(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
       : port_(port),
+        channel_(nullptr),
+        started_(false),
+        auto_manage_(false),
         external_ioc_(std::move(external_ioc)),
-        use_external_context_(external_ioc_ != nullptr) {}
+        use_external_context_(external_ioc_ != nullptr),
+        manage_external_context_(false),
+        port_retry_enabled_(false),
+        max_port_retries_(3),
+        port_retry_interval_ms_(1000),
+        idle_timeout_ms_(0),
+        client_limit_enabled_(false),
+        max_clients_(0),
+        notify_send_failure_(false),
+        is_listening_(false),
+        on_client_connect_(nullptr),
+        on_client_disconnect_(nullptr),
+        on_data_(nullptr),
+        on_error_(nullptr) {}
 
-  explicit Impl(std::shared_ptr<interface::Channel> channel) : port_(0), channel_(std::move(channel)) {
+  explicit Impl(std::shared_ptr<interface::Channel> channel)
+      : port_(0),
+        channel_(std::move(channel)),
+        started_(false),
+        auto_manage_(false),
+        external_ioc_(nullptr),
+        use_external_context_(false),
+        manage_external_context_(false),
+        port_retry_enabled_(false),
+        max_port_retries_(3),
+        port_retry_interval_ms_(1000),
+        idle_timeout_ms_(0),
+        client_limit_enabled_(false),
+        max_clients_(0),
+        notify_send_failure_(false),
+        is_listening_(false),
+        on_client_connect_(nullptr),
+        on_client_disconnect_(nullptr),
+        on_data_(nullptr),
+        on_error_(nullptr) {
     setup_internal_handlers();
   }
 
@@ -84,13 +138,13 @@ struct TcpServer::Impl {
 
   std::future<bool> start() {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (started_) {
+    
+    if (is_listening_) {
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
     }
 
-    // Reset promise for new start attempt
     start_promise_ = std::promise<bool>();
     start_promise_fulfilled_ = false;
 
@@ -118,8 +172,10 @@ struct TcpServer::Impl {
     
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
       external_thread_ = std::thread([ioc = external_ioc_]() {
-        boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
-        ioc->run();
+        try {
+          boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
+          ioc->run();
+        } catch(...) {}
       });
     }
     
@@ -129,8 +185,7 @@ struct TcpServer::Impl {
 
   void stop() {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (!started_) return;
-
+    
     if (channel_) {
       channel_->on_bytes(nullptr);
       channel_->on_state(nullptr);
@@ -144,7 +199,7 @@ struct TcpServer::Impl {
 
     if (use_external_context_ && manage_external_context_ && external_thread_.joinable()) {
       if (external_ioc_) external_ioc_->stop();
-      external_thread_.join();
+      try { external_thread_.join(); } catch(...) {}
     }
 
     is_listening_ = false;
@@ -159,7 +214,6 @@ struct TcpServer::Impl {
   void setup_internal_handlers() {
     if (!channel_) return;
 
-    // Use transport specific handlers for multi-client support
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
       transport_server->on_multi_connect([this](size_t id, const std::string& info) {
@@ -178,17 +232,21 @@ struct TcpServer::Impl {
     channel_->on_state([this](base::LinkState state) {
       if (state == base::LinkState::Listening) {
         is_listening_ = true;
+        std::lock_guard<std::mutex> lock(mutex_);
         if (!start_promise_fulfilled_) {
           start_promise_.set_value(true);
           start_promise_fulfilled_ = true;
         }
-      } else if (state == base::LinkState::Error) {
+      } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
         is_listening_ = false;
+        std::lock_guard<std::mutex> lock(mutex_);
         if (!start_promise_fulfilled_) {
           start_promise_.set_value(false);
           start_promise_fulfilled_ = true;
         }
-        if (on_error_) on_error_(ErrorContext(ErrorCode::StartFailed, "Server failed to start or encountered an error"));
+        if (state == base::LinkState::Error && on_error_) {
+          on_error_(ErrorContext(ErrorCode::IoError, "Server state error"));
+        }
       }
     });
   }

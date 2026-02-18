@@ -33,6 +33,7 @@ namespace unilink {
 namespace wrapper {
 
 struct TcpClient::Impl {
+  mutable std::mutex mutex_;
   std::string host_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
@@ -76,7 +77,9 @@ struct TcpClient::Impl {
   }
 
   std::future<bool> start() {
-    if (started_) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    
+    if (is_connected()) {
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
@@ -99,7 +102,9 @@ struct TcpClient::Impl {
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
       work_guard_.emplace(external_ioc_->get_executor());
-      external_thread_ = std::thread([ioc = external_ioc_]() { ioc->run(); });
+      external_thread_ = std::thread([ioc = external_ioc_]() {
+        try { ioc->run(); } catch(...) {}
+      });
     }
     
     started_ = true;
@@ -107,6 +112,7 @@ struct TcpClient::Impl {
   }
 
   void stop() {
+    std::lock_guard<std::mutex> lock(mutex_);
     if (!started_) return;
 
     if (channel_) {
@@ -118,7 +124,7 @@ struct TcpClient::Impl {
     if (use_external_context_ && manage_external_context_ && external_thread_.joinable()) {
       if (work_guard_) work_guard_.reset();
       if (external_ioc_) external_ioc_->stop();
-      external_thread_.join();
+      try { external_thread_.join(); } catch(...) {}
     }
 
     channel_.reset();
@@ -153,25 +159,24 @@ struct TcpClient::Impl {
     });
 
     channel_->on_state([this](base::LinkState state) {
-      switch (state) {
-        case base::LinkState::Connected:
-          if (!start_promise_fulfilled_) {
-            start_promise_.set_value(true);
-            start_promise_fulfilled_ = true;
-          }
-          if (connect_handler_) connect_handler_(ConnectionContext(0));
-          break;
-        case base::LinkState::Closed:
-          if (disconnect_handler_) disconnect_handler_(ConnectionContext(0));
-          break;
-        case base::LinkState::Error:
-          if (!start_promise_fulfilled_) {
-            start_promise_.set_value(false);
-            start_promise_fulfilled_ = true;
-          }
-          if (error_handler_) error_handler_(ErrorContext(ErrorCode::IoError, "Connection error occurred"));
-          break;
-        default: break;
+      if (state == base::LinkState::Connected) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (!start_promise_fulfilled_) {
+          start_promise_.set_value(true);
+          start_promise_fulfilled_ = true;
+        }
+        if (connect_handler_) connect_handler_(ConnectionContext(0));
+      } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (!start_promise_fulfilled_) {
+          start_promise_.set_value(false);
+          start_promise_fulfilled_ = true;
+        }
+        if (state == base::LinkState::Closed && disconnect_handler_) {
+          disconnect_handler_(ConnectionContext(0));
+        } else if (state == base::LinkState::Error && error_handler_) {
+          error_handler_(ErrorContext(ErrorCode::IoError, "Connection error occurred"));
+        }
       }
     });
   }
