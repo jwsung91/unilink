@@ -69,6 +69,7 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
   ASSERT_FALSE(ec) << "Failed to connect to server";
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+  // Fix for macOS/BSD SIGPIPE on write to closed socket
   int yes = 1;
   int result = setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
   if (result < 0) {
@@ -117,6 +118,7 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
   ASSERT_FALSE(ec) << "Failed to connect to server";
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+  // Fix for macOS/BSD SIGPIPE on write to closed socket
   int yes = 1;
   int result = setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
   if (result < 0) {
