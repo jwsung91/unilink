@@ -1,5 +1,10 @@
 #include <gtest/gtest.h>
 
+#ifdef __APPLE__
+#include <sys/socket.h>
+#include <sys/types.h>
+#endif
+
 #include <boost/asio.hpp>
 #include <chrono>
 #include <csignal>
@@ -65,7 +70,14 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
   int yes = 1;
-  setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+  int result = setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+  if (result < 0) {
+    std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
+  }
+  int result = setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+  if (result < 0) {
+    std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
+  }
 #endif
 
   // Wait for 2 seconds (simulating idle)
