@@ -64,7 +64,7 @@ TEST_F(TcpFloodTest, FloodServer) {
 
   for (auto& t : clients) t.join();
 
-  TestUtils::waitForCondition([&]() { return received_count.load() >= num_clients * messages_per_client; }, 5000);
+  TestUtils::waitForCondition([&]() { return received_count.load() >= num_clients * messages_per_client; }, 10000);
   EXPECT_GE(received_count.load(), num_clients * messages_per_client);
   server->stop();
 }

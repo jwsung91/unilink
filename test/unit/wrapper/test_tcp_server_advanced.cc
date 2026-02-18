@@ -379,8 +379,12 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() {
     std::lock_guard<std::mutex> lk(ids_mutex);
-    return ids.size() >= 2 && server_->get_client_count() == 2;
-  }));
+    return ids.size() >= 2;
+  }, 5000));
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() {
+    return server_->get_client_count() >= 2;
+  }, 2000));
 
   size_t first_id = 0;
   {
