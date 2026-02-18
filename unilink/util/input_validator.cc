@@ -16,6 +16,9 @@
 
 #include "unilink/util/input_validator.hpp"
 
+#include <boost/asio/ip/address.hpp>
+#include <boost/system/error_code.hpp>
+
 #include <algorithm>
 #include <charconv>
 #include <cstring>
@@ -132,11 +135,9 @@ bool InputValidator::is_valid_ipv4(std::string_view address) {
 }
 
 bool InputValidator::is_valid_ipv6(const std::string& address) {
-  // Simplified IPv6 validation - this is a basic check
-  // Full IPv6 validation is complex and would require more sophisticated parsing
-  // Optimization: Make regex static to avoid recompilation on every call (~80x speedup)
-  static const std::regex ipv6_pattern(R"(^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::1$|^::$)");
-  return std::regex_match(address, ipv6_pattern);
+  boost::system::error_code ec;
+  boost::asio::ip::make_address_v6(address, ec);
+  return !ec;
 }
 
 bool InputValidator::is_valid_hostname(std::string_view hostname) {
