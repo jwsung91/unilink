@@ -134,9 +134,13 @@ bool InputValidator::is_valid_ipv4(std::string_view address) {
 }
 
 bool InputValidator::is_valid_ipv6(const std::string& address) {
+  // Reject addresses containing brackets (e.g. [::1]:80) or port numbers
+  // boost::asio::ip::make_address_v6 behavior on Windows regarding this might be permissive
+  // or platform-dependent, so we explicitly reject them for consistency.
   if (address.find('[') != std::string::npos || address.find(']') != std::string::npos) {
     return false;
   }
+
   boost::system::error_code ec;
   boost::asio::ip::make_address_v6(address, ec);
   return !ec;
