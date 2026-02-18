@@ -36,9 +36,10 @@ class TcpCallbackBenchmark : public ::testing::Test {
     port_ = TestUtils::getAvailableTestPort();
     server_ = tcp_server(port_).build();
     client_ = tcp_client("127.0.0.1", port_).build();
-    server_->start();
-    client_->start();
-    TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 2000);
+    auto f1 = server_->start();
+    auto f2 = client_->start();
+    f1.get(); f2.get(); // Wait for full startup
+    TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000);
   }
 
   void TearDown() override {
