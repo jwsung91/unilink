@@ -20,6 +20,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "unilink/base/common.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/transport/udp/udp.hpp"
 
@@ -90,14 +91,14 @@ void Udp::stop() {
   started_ = false;
 }
 
-void Udp::send(const std::string& data) {
+void Udp::send(std::string_view data) {
   if (is_connected() && channel_) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
     channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
 
-void Udp::send_line(const std::string& line) { send(line + "\n"); }
+void Udp::send_line(std::string_view line) { send(std::string(line) + "\n"); }
 
 bool Udp::is_connected() const { return channel_ && channel_->is_connected(); }
 

@@ -16,18 +16,21 @@
 
 #pragma once
 
-#include <boost/asio/executor_work_guard.hpp>
-#include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <functional>
 #include <memory>
-#include <optional>
 #include <string>
-#include <thread>
+#include <string_view>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
+
+namespace boost {
+namespace asio {
+class io_context;
+}
+}  // namespace boost
 
 namespace unilink {
 namespace wrapper {
@@ -42,8 +45,8 @@ class UNILINK_API TcpClient : public ChannelInterface {
   // IChannel implementation
   void start() override;
   void stop() override;
-  void send(const std::string& data) override;
-  void send_line(const std::string& line) override;
+  void send(std::string_view data) override;
+  void send_line(std::string_view line) override;
   bool is_connected() const override;
 
   ChannelInterface& on_data(DataHandler handler) override;
@@ -61,34 +64,8 @@ class UNILINK_API TcpClient : public ChannelInterface {
   void set_manage_external_context(bool manage);
 
  private:
-  void setup_internal_handlers();
-  void notify_state_change(base::LinkState state);
-
- private:
-  std::string host_;
-  uint16_t port_;
-  std::shared_ptr<interface::Channel> channel_;
-  std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
-  std::thread external_thread_;
-  std::optional<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
-
-  // Event handlers
-  DataHandler data_handler_;
-  BytesHandler bytes_handler_;
-  ConnectHandler connect_handler_;
-  DisconnectHandler disconnect_handler_;
-  ErrorHandler error_handler_;
-
-  // Configuration
-  bool auto_manage_ = false;
-  bool started_ = false;
-
-  // TCP client specific configuration
-  std::chrono::milliseconds retry_interval_{3000};  // 3 seconds default
-  int max_retries_ = -1;                            // -1 means unlimited
-  std::chrono::milliseconds connection_timeout_{5000};
+  struct Impl;
+  std::unique_ptr<Impl> pimpl_;
 };
 
 }  // namespace wrapper

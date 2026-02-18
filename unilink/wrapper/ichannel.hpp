@@ -19,6 +19,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <string_view>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/memory/safe_span.hpp"
@@ -40,8 +41,8 @@ class UNILINK_API ChannelInterface {
   // Common methods
   virtual void start() = 0;
   virtual void stop() = 0;
-  virtual void send(const std::string& data) = 0;
-  virtual void send_line(const std::string& line) = 0;
+  virtual void send(std::string_view data) = 0;
+  virtual void send_line(std::string_view line) = 0;
   virtual bool is_connected() const = 0;
 
   // Event handler setup

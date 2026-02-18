@@ -22,6 +22,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "unilink/base/common.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/transport/serial/serial.hpp"
 
@@ -103,14 +104,14 @@ void Serial::stop() {
   started_ = false;
 }
 
-void Serial::send(const std::string& data) {
+void Serial::send(std::string_view data) {
   if (is_connected() && channel_) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
     channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
 
-void Serial::send_line(const std::string& line) { send(line + "\n"); }
+void Serial::send_line(std::string_view line) { send(std::string(line) + "\n"); }
 
 bool Serial::is_connected() const { return channel_ && channel_->is_connected(); }
 

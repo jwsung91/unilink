@@ -22,6 +22,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <thread>
 
 #include "unilink/base/visibility.hpp"
@@ -41,8 +42,8 @@ class UNILINK_API Udp : public ChannelInterface {
 
   void start() override;
   void stop() override;
-  void send(const std::string& data) override;
-  void send_line(const std::string& line) override;
+  void send(std::string_view data) override;
+  void send_line(std::string_view line) override;
   bool is_connected() const override;
 
   ChannelInterface& on_data(DataHandler handler) override;

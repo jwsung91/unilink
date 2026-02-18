@@ -32,6 +32,7 @@
 #include "unilink/builder/unified_builder.hpp"
 #include "unilink/config/config_factory.hpp"
 #include "unilink/config/config_manager.hpp"
+#include "unilink/config/tcp_client_config.hpp"
 #include "unilink/diagnostics/exceptions.hpp"
 
 using namespace unilink;
