@@ -118,7 +118,10 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
   int yes = 1;
-  setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+  int result = setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+  if (result < 0) {
+    std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
+  }
 #endif
 
   // Wait for 0.5 seconds (should stay connected)
