@@ -17,37 +17,19 @@
 #include "unilink/builder/udp_builder.hpp"
 
 #include <boost/asio/io_context.hpp>
-#include <stdexcept>
 
 namespace unilink {
 namespace builder {
 
-UdpBuilder::UdpBuilder() {
-  cfg_.local_address = "0.0.0.0";
-  cfg_.local_port = 0;
-}
+UdpBuilder::UdpBuilder() : auto_manage_(false), use_independent_context_(false) {}
 
 std::unique_ptr<wrapper::Udp> UdpBuilder::build() {
-  if (!cfg_.is_valid()) {
-    throw std::runtime_error("UDP configuration is invalid. Local port and remote pair must be set correctly.");
-  }
-
   std::unique_ptr<wrapper::Udp> udp;
   if (use_independent_context_) {
-    auto ioc = std::make_shared<boost::asio::io_context>();
-    udp = std::make_unique<wrapper::Udp>(cfg_, ioc);
+    udp = std::make_unique<wrapper::Udp>(cfg_, std::make_shared<boost::asio::io_context>());
     udp->set_manage_external_context(true);
   } else {
     udp = std::make_unique<wrapper::Udp>(cfg_);
-  }
-
-  // Apply framing if configured
-  if (framer_) {
-    std::shared_ptr<framer::IFramer> shared_framer = std::move(framer_);
-    if (on_message_) {
-      shared_framer->set_on_message(on_message_);
-    }
-    udp->on_bytes([shared_framer](memory::ConstByteSpan data) { shared_framer->push_bytes(data); });
   }
 
   if (on_data_) udp->on_data(on_data_);
@@ -67,33 +49,28 @@ UdpBuilder& UdpBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-UdpBuilder& UdpBuilder::on_data(std::function<void(const std::string&)> handler) {
+UdpBuilder& UdpBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
   on_data_ = std::move(handler);
   return *this;
 }
 
-UdpBuilder& UdpBuilder::on_connect(std::function<void()> handler) {
+UdpBuilder& UdpBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_connect_ = std::move(handler);
   return *this;
 }
 
-UdpBuilder& UdpBuilder::on_disconnect(std::function<void()> handler) {
+UdpBuilder& UdpBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_disconnect_ = std::move(handler);
   return *this;
 }
 
-UdpBuilder& UdpBuilder::on_error(std::function<void(const std::string&)> handler) {
+UdpBuilder& UdpBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
   on_error_ = std::move(handler);
   return *this;
 }
 
 UdpBuilder& UdpBuilder::set_local_port(uint16_t port) {
   cfg_.local_port = port;
-  return *this;
-}
-
-UdpBuilder& UdpBuilder::set_local_address(const std::string& address) {
-  cfg_.local_address = address;
   return *this;
 }
 

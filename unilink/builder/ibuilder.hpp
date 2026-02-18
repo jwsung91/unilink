@@ -27,6 +27,7 @@
 #include "unilink/framer/line_framer.hpp"
 #include "unilink/framer/packet_framer.hpp"
 #include "unilink/memory/safe_span.hpp"
+#include "unilink/wrapper/context.hpp"
 
 namespace unilink {
 namespace builder {
@@ -65,10 +66,10 @@ class BuilderInterface {
 
   /**
    * @brief Set data handler callback
-   * @param handler Function to handle incoming data
+   * @param handler Function to handle incoming data with context
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& on_data(std::function<void(const std::string&)> handler) = 0;
+  virtual Derived& on_data(std::function<void(const wrapper::MessageContext&)> handler) = 0;
 
   /**
    * @brief Set data handler callback using member function pointer
@@ -80,15 +81,15 @@ class BuilderInterface {
    */
   template <typename U, typename F>
   Derived& on_data(U* obj, F method) {
-    return on_data([obj, method](const std::string& data) { (obj->*method)(data); });
+    return on_data([obj, method](const wrapper::MessageContext& ctx) { (obj->*method)(ctx); });
   }
 
   /**
    * @brief Set connection handler callback
-   * @param handler Function to handle connection events
+   * @param handler Function to handle connection events with context
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& on_connect(std::function<void()> handler) = 0;
+  virtual Derived& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) = 0;
 
   /**
    * @brief Set connection handler callback using member function pointer
@@ -100,15 +101,15 @@ class BuilderInterface {
    */
   template <typename U, typename F>
   Derived& on_connect(U* obj, F method) {
-    return on_connect([obj, method]() { (obj->*method)(); });
+    return on_connect([obj, method](const wrapper::ConnectionContext& ctx) { (obj->*method)(ctx); });
   }
 
   /**
    * @brief Set disconnection handler callback
-   * @param handler Function to handle disconnection events
+   * @param handler Function to handle disconnection events with context
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& on_disconnect(std::function<void()> handler) = 0;
+  virtual Derived& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) = 0;
 
   /**
    * @brief Set disconnection handler callback using member function pointer
@@ -120,15 +121,15 @@ class BuilderInterface {
    */
   template <typename U, typename F>
   Derived& on_disconnect(U* obj, F method) {
-    return on_disconnect([obj, method]() { (obj->*method)(); });
+    return on_disconnect([obj, method](const wrapper::ConnectionContext& ctx) { (obj->*method)(ctx); });
   }
 
   /**
    * @brief Set error handler callback
-   * @param handler Function to handle error events
+   * @param handler Function to handle error events with context
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& on_error(std::function<void(const std::string&)> handler) = 0;
+  virtual Derived& on_error(std::function<void(const wrapper::ErrorContext&)> handler) = 0;
 
   /**
    * @brief Set error handler callback using member function pointer
@@ -140,11 +141,11 @@ class BuilderInterface {
    */
   template <typename U, typename F>
   Derived& on_error(U* obj, F method) {
-    return on_error([obj, method](const std::string& error) { (obj->*method)(error); });
+    return on_error([obj, method](const wrapper::ErrorContext& ctx) { (obj->*method)(ctx); });
   }
 
-  // Framing Support
-
+  // Framing Support (remains focused on raw data for now, can be evolved)
+  
   /**
    * @brief Use LineFramer for message segmentation (e.g., newline delimited)
    * @param delimiter Delimiter string (default: "\n")

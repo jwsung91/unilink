@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <cstdint>
 #include <string>
 
@@ -27,10 +28,7 @@ namespace unilink {
 namespace builder {
 
 /**
- * @brief Builder for Serial wrapper
- *
- * Provides a fluent API for configuring and creating Serial instances.
- * Supports method chaining for easy configuration.
+ * @brief Modernized Builder for Serial
  */
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -38,11 +36,6 @@ namespace builder {
 #endif
 class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, SerialBuilder> {
  public:
-  /**
-   * @brief Construct a new SerialBuilder
-   * @param device The serial device path (e.g., "/dev/ttyUSB0")
-   * @param baud_rate The baud rate for serial communication
-   */
   SerialBuilder(const std::string& device, uint32_t baud_rate);
 
   // Delete copy, allow move
@@ -51,77 +44,64 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
   SerialBuilder(SerialBuilder&&) = default;
   SerialBuilder& operator=(SerialBuilder&&) = default;
 
-  using BuilderInterface::on_connect;
-  using BuilderInterface::on_data;
-  using BuilderInterface::on_disconnect;
-  using BuilderInterface::on_error;
-
-  /**
-   * @brief Build and return the configured Serial
-   * @return std::unique_ptr<wrapper::Serial> The configured serial instance
-   */
   std::unique_ptr<wrapper::Serial> build() override;
 
-  /**
-   * @brief Enable auto-manage functionality
-   * @param auto_manage Whether to automatically manage the serial lifecycle
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
   SerialBuilder& auto_manage(bool auto_manage = true) override;
 
-  /**
-   * @brief Set data handler callback
-   * @param handler Function to handle incoming data
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
-  SerialBuilder& on_data(std::function<void(const std::string&)> handler) override;
+  // Modernized event handlers
+  SerialBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
+  SerialBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
+  SerialBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
+  SerialBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
 
   /**
-   * @brief Set connection handler callback
-   * @param handler Function to handle connection events
-   * @return SerialBuilder& Reference to this builder for method chaining
+   * @brief Set number of data bits
    */
-  SerialBuilder& on_connect(std::function<void()> handler) override;
+  SerialBuilder& data_bits(int bits);
 
   /**
-   * @brief Set disconnection handler callback
-   * @param handler Function to handle disconnection events
-   * @return SerialBuilder& Reference to this builder for method chaining
+   * @brief Set number of stop bits
    */
-  SerialBuilder& on_disconnect(std::function<void()> handler) override;
+  SerialBuilder& stop_bits(int bits);
 
   /**
-   * @brief Set error handler callback
-   * @param handler Function to handle error events
-   * @return SerialBuilder& Reference to this builder for method chaining
+   * @brief Set parity
    */
-  SerialBuilder& on_error(std::function<void(const std::string&)> handler) override;
+  SerialBuilder& parity(const std::string& p);
 
   /**
-   * @brief Use independent IoContext for this serial (for testing isolation)
-   * @param use_independent true to use independent context, false for shared context
-   * @return SerialBuilder& Reference to this builder for method chaining
+   * @brief Set flow control
+   */
+  SerialBuilder& flow_control(const std::string& flow);
+
+  /**
+   * @brief Set reconnection retry interval
+   */
+  SerialBuilder& retry_interval(uint32_t milliseconds);
+
+  /**
+   * @brief Use independent IoContext
    */
   SerialBuilder& use_independent_context(bool use_independent = true);
-
-  /**
-   * @brief Set retry interval for automatic reconnection
-   * @param interval_ms Retry interval in milliseconds
-   * @return SerialBuilder& Reference to this builder for method chaining
-   */
-  SerialBuilder& retry_interval(unsigned interval_ms);
 
  private:
   std::string device_;
   uint32_t baud_rate_;
   bool auto_manage_;
   bool use_independent_context_;
-  unsigned retry_interval_ms_;
 
-  std::function<void(const std::string&)> on_data_;
-  std::function<void()> on_connect_;
-  std::function<void()> on_disconnect_;
-  std::function<void(const std::string&)> on_error_;
+  // Configuration
+  int data_bits_;
+  int stop_bits_;
+  std::string parity_;
+  std::string flow_control_;
+  std::chrono::milliseconds retry_interval_;
+
+  // Callbacks
+  std::function<void(const wrapper::MessageContext&)> on_data_;
+  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
+  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
+  std::function<void(const wrapper::ErrorContext&)> on_error_;
 };
 
 #ifdef _MSC_VER
