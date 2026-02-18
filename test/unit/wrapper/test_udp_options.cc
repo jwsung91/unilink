@@ -17,6 +17,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <boost/asio.hpp>
 #include <memory>
 
 #include "test_utils.hpp"

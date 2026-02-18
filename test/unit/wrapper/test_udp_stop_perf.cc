@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <boost/asio.hpp>
 #include <chrono>
 #include <iostream>
 #include <memory>
