@@ -41,6 +41,11 @@ TEST(InputValidatorEdgeTest, IPv6Edges) {
   // Boundary cases for regex
   EXPECT_NO_THROW(InputValidator::validate_ipv6_address("::"));
   EXPECT_NO_THROW(InputValidator::validate_ipv6_address("::1"));
+
+  // Valid compressed IPv6 addresses (previously failed with regex)
+  EXPECT_NO_THROW(InputValidator::validate_ipv6_address("2001:db8::1"));
+  EXPECT_NO_THROW(InputValidator::validate_ipv6_address("fe80::1"));
+  EXPECT_NO_THROW(InputValidator::validate_ipv6_address("::ffff:192.168.1.1"));
 }
 
 TEST(InputValidatorEdgeTest, RangeEdges) {

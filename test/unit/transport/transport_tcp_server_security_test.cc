@@ -1,5 +1,10 @@
 #include <gtest/gtest.h>
 
+#ifdef __APPLE__
+#include <sys/socket.h>
+#include <sys/types.h>
+#endif
+
 #include <boost/asio.hpp>
 #include <chrono>
 #include <csignal>
@@ -63,6 +68,15 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
   }
   ASSERT_FALSE(ec) << "Failed to connect to server";
 
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+  // Fix for macOS/BSD SIGPIPE on write to closed socket
+  int yes = 1;
+  int result = setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+  if (result < 0) {
+    std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
+  }
+#endif
+
   // Wait for 2 seconds (simulating idle)
   std::this_thread::sleep_for(std::chrono::seconds(2));
 
@@ -102,6 +116,15 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   ASSERT_FALSE(ec) << "Failed to connect to server";
+
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+  // Fix for macOS/BSD SIGPIPE on write to closed socket
+  int yes = 1;
+  int result = setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+  if (result < 0) {
+    std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
+  }
+#endif
 
   // Wait for 0.5 seconds (should stay connected)
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
