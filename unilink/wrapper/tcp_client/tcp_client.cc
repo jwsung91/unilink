@@ -23,6 +23,7 @@
 #include <optional>
 #include <stdexcept>
 #include <thread>
+#include <vector>
 
 #include "unilink/base/common.hpp"
 #include "unilink/config/tcp_client_config.hpp"
@@ -41,116 +42,123 @@ struct TcpClient::Impl {
   bool use_external_context_{false};
   bool manage_external_context_{false};
   std::thread external_thread_;
-  std::optional<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
+  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
-  // Start notification
-  std::promise<bool> start_promise_;
-  bool start_promise_fulfilled_{false};
+  std::vector<std::promise<bool>> pending_promises_;
+  std::atomic<bool> started_{false};
 
-  // Event handlers (Context based)
   MessageHandler data_handler_{nullptr};
   ConnectionHandler connect_handler_{nullptr};
   ConnectionHandler disconnect_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
 
-  // Configuration
   bool auto_manage_ = false;
-  bool started_ = false;
   std::chrono::milliseconds retry_interval_{3000};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
 
-  Impl(const std::string& host, uint16_t port) : host_(host), port_(port) {}
+  Impl(const std::string& host, uint16_t port) : host_(host), port_(port), started_(false) {}
 
   Impl(const std::string& host, uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
       : host_(host),
         port_(port),
         external_ioc_(std::move(external_ioc)),
-        use_external_context_(external_ioc_ != nullptr) {}
+        use_external_context_(external_ioc_ != nullptr),
+        manage_external_context_(false),
+        started_(false) {}
 
-  explicit Impl(std::shared_ptr<interface::Channel> channel) : host_(""), port_(0), channel_(std::move(channel)) {
+  explicit Impl(std::shared_ptr<interface::Channel> channel) : host_(""), port_(0), channel_(std::move(channel)), started_(false) {
     setup_internal_handlers();
   }
 
-  ~Impl() {
-    try { stop(); } catch (...) {}
+  ~Impl() { try { stop(); } catch (...) {} }
+
+  void fulfill_all(bool value) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    for (auto& p : pending_promises_) { try { p.set_value(value); } catch (...) {} }
+    pending_promises_.clear();
   }
 
   std::future<bool> start() {
     std::lock_guard<std::mutex> lock(mutex_);
-    
-    if (is_connected()) {
-      std::promise<bool> p;
-      p.set_value(true);
-      return p.get_future();
+    if (channel_ && channel_->is_connected()) {
+      std::promise<bool> p; p.set_value(true); return p.get_future();
     }
-
-    start_promise_ = std::promise<bool>();
-    start_promise_fulfilled_ = false;
+    std::promise<bool> p;
+    auto f = p.get_future();
+    pending_promises_.push_back(std::move(p));
+    if (started_) return f;
 
     if (!channel_) {
       config::TcpClientConfig config;
-      config.host = host_;
-      config.port = port_;
+      config.host = host_; config.port = port_;
       config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
       config.max_retries = max_retries_;
       config.connection_timeout_ms = static_cast<unsigned>(connection_timeout_.count());
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
     }
-
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
-      work_guard_.emplace(external_ioc_->get_executor());
-      external_thread_ = std::thread([ioc = external_ioc_]() {
-        try { ioc->run(); } catch(...) {}
+      work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(external_ioc_->get_executor());
+      external_thread_ = std::thread([this, ioc = external_ioc_]() {
+        try { 
+          while (started_.load() && !ioc->stopped()) {
+            if (ioc->run_one_for(std::chrono::milliseconds(50)) == 0) {
+              std::this_thread::yield();
+            }
+          }
+        } catch(...) {}
       });
     }
-    
     started_ = true;
-    return start_promise_.get_future();
+    return f;
   }
 
   void stop() {
-    std::lock_guard<std::mutex> lock(mutex_);
-    if (!started_) return;
-
-    if (channel_) {
-      channel_->on_bytes(nullptr);
-      channel_->on_state(nullptr);
-      channel_->stop();
+    bool should_join = false;
+    {
+      std::unique_lock<std::mutex> lock(mutex_);
+      if (!started_.load()) {
+        for (auto& p : pending_promises_) { try { p.set_value(false); } catch(...) {} }
+        pending_promises_.clear();
+        return;
+      }
+      started_ = false;
+      if (channel_) {
+        channel_->on_bytes(nullptr);
+        channel_->on_state(nullptr);
+        channel_->stop();
+      }
+      if (use_external_context_ && manage_external_context_) {
+        if (work_guard_) work_guard_.reset();
+        if (external_ioc_) external_ioc_->stop();
+        should_join = true;
+      }
+      for (auto& p : pending_promises_) { try { p.set_value(false); } catch(...) {} }
+      pending_promises_.clear();
     }
-
-    if (use_external_context_ && manage_external_context_ && external_thread_.joinable()) {
-      if (work_guard_) work_guard_.reset();
-      if (external_ioc_) external_ioc_->stop();
+    if (should_join && external_thread_.joinable()) {
       try { external_thread_.join(); } catch(...) {}
     }
-
+    std::lock_guard<std::mutex> lock(mutex_);
     channel_.reset();
-    started_ = false;
-
-    if (!start_promise_fulfilled_) {
-      try { start_promise_.set_value(false); } catch (...) {}
-      start_promise_fulfilled_ = true;
-    }
   }
 
   void send(std::string_view data) {
-    if (is_connected() && channel_) {
+    if (channel_ && channel_->is_connected()) {
       auto binary_view = common::safe_convert::string_to_bytes(data);
       channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     }
   }
 
-  bool is_connected() const {
-    if (!channel_) return false;
-    return channel_->is_connected();
-  }
+  bool is_connected() const { return channel_ && channel_->is_connected(); }
 
   void setup_internal_handlers() {
     if (!channel_) return;
-
+    
+    // Explicitly do not use try-catch here to allow exceptions from handlers 
+    // to propagate to transport layer for error handling (e.g., auto-reconnect)
     channel_->on_bytes([this](memory::ConstByteSpan data) {
       if (data_handler_) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
@@ -160,22 +168,14 @@ struct TcpClient::Impl {
 
     channel_->on_state([this](base::LinkState state) {
       if (state == base::LinkState::Connected) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (!start_promise_fulfilled_) {
-          start_promise_.set_value(true);
-          start_promise_fulfilled_ = true;
-        }
+        fulfill_all(true);
         if (connect_handler_) connect_handler_(ConnectionContext(0));
       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (!start_promise_fulfilled_) {
-          start_promise_.set_value(false);
-          start_promise_fulfilled_ = true;
-        }
+        fulfill_all(false);
         if (state == base::LinkState::Closed && disconnect_handler_) {
           disconnect_handler_(ConnectionContext(0));
         } else if (state == base::LinkState::Error && error_handler_) {
-          error_handler_(ErrorContext(ErrorCode::IoError, "Connection error occurred"));
+          error_handler_(ErrorContext(ErrorCode::IoError, "Connection state error"));
         }
       }
     });
@@ -200,7 +200,7 @@ ChannelInterface& TcpClient::on_error(ErrorHandler h) { pimpl_->error_handler_ =
 
 ChannelInterface& TcpClient::auto_manage(bool m) {
   pimpl_->auto_manage_ = m;
-  if (pimpl_->auto_manage_ && !pimpl_->started_) start();
+  if (pimpl_->auto_manage_ && !pimpl_->started_.load()) start();
   return *this;
 }
 

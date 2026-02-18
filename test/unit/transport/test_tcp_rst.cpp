@@ -22,20 +22,23 @@
 #include <memory>
 #include <thread>
 
+#include "test_utils.hpp"
 #include "unilink/unilink.hpp"
 
 namespace {
 
 using namespace unilink;
+using namespace unilink::test;
 
 class TcpRstTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    port_ = 8080;
+    port_ = TestUtils::getAvailableTestPort();
     server_ = std::make_shared<wrapper::TcpServer>(port_);
     server_->on_client_connect([this](const wrapper::ConnectionContext&) { connected_clients_++; });
     server_->on_client_disconnect([this](const wrapper::ConnectionContext&) { disconnected_clients_++; });
-    server_->start();
+    auto f = server_->start();
+    f.get(); // Ensure listening starts
   }
 
   void TearDown() override {
@@ -51,7 +54,6 @@ class TcpRstTest : public ::testing::Test {
 };
 
 TEST_F(TcpRstTest, BasicServerConnectivity) {
-  // Simple connectivity check to ensure server starts correctly
   EXPECT_TRUE(server_->is_listening());
 }
 

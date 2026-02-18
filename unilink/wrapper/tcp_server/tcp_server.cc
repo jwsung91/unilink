@@ -23,6 +23,7 @@
 #include <mutex>
 #include <stdexcept>
 #include <thread>
+#include <vector>
 
 #include "unilink/base/common.hpp"
 #include "unilink/config/tcp_server_config.hpp"
@@ -36,18 +37,17 @@ struct TcpServer::Impl {
   mutable std::mutex mutex_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
-  bool started_{false};
-  bool auto_manage_{false};
   std::shared_ptr<boost::asio::io_context> external_ioc_;
   bool use_external_context_{false};
   bool manage_external_context_{false};
   std::thread external_thread_;
+  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
-  // Start status notification
-  std::promise<bool> start_promise_;
-  bool start_promise_fulfilled_{false};
+  std::vector<std::promise<bool>> pending_promises_;
+  bool started_{false};
+  std::atomic<bool> is_listening_{false};
 
-  // Configuration
+  bool auto_manage_{false};
   bool port_retry_enabled_{false};
   int max_port_retries_{3};
   int port_retry_interval_ms_{1000};
@@ -56,97 +56,43 @@ struct TcpServer::Impl {
   size_t max_clients_{0};
   bool notify_send_failure_{false};
 
-  // State
-  std::atomic<bool> is_listening_{false};
-
-  // Callbacks (Context based)
   ConnectionHandler on_client_connect_{nullptr};
   ConnectionHandler on_client_disconnect_{nullptr};
   MessageHandler on_data_{nullptr};
   ErrorHandler on_error_{nullptr};
 
-  explicit Impl(uint16_t port)
-      : port_(port),
-        channel_(nullptr),
-        started_(false),
-        auto_manage_(false),
-        external_ioc_(nullptr),
-        use_external_context_(false),
-        manage_external_context_(false),
-        port_retry_enabled_(false),
-        max_port_retries_(3),
-        port_retry_interval_ms_(1000),
-        idle_timeout_ms_(0),
-        client_limit_enabled_(false),
-        max_clients_(0),
-        notify_send_failure_(false),
-        is_listening_(false),
-        on_client_connect_(nullptr),
-        on_client_disconnect_(nullptr),
-        on_data_(nullptr),
-        on_error_(nullptr) {}
+  explicit Impl(uint16_t port) : port_(port), started_(false), is_listening_(false) {}
 
   Impl(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
       : port_(port),
-        channel_(nullptr),
-        started_(false),
-        auto_manage_(false),
         external_ioc_(std::move(external_ioc)),
         use_external_context_(external_ioc_ != nullptr),
         manage_external_context_(false),
-        port_retry_enabled_(false),
-        max_port_retries_(3),
-        port_retry_interval_ms_(1000),
-        idle_timeout_ms_(0),
-        client_limit_enabled_(false),
-        max_clients_(0),
-        notify_send_failure_(false),
-        is_listening_(false),
-        on_client_connect_(nullptr),
-        on_client_disconnect_(nullptr),
-        on_data_(nullptr),
-        on_error_(nullptr) {}
+        started_(false),
+        is_listening_(false) {}
 
   explicit Impl(std::shared_ptr<interface::Channel> channel)
-      : port_(0),
-        channel_(std::move(channel)),
-        started_(false),
-        auto_manage_(false),
-        external_ioc_(nullptr),
-        use_external_context_(false),
-        manage_external_context_(false),
-        port_retry_enabled_(false),
-        max_port_retries_(3),
-        port_retry_interval_ms_(1000),
-        idle_timeout_ms_(0),
-        client_limit_enabled_(false),
-        max_clients_(0),
-        notify_send_failure_(false),
-        is_listening_(false),
-        on_client_connect_(nullptr),
-        on_client_disconnect_(nullptr),
-        on_data_(nullptr),
-        on_error_(nullptr) {
+      : port_(0), channel_(std::move(channel)), started_(false), is_listening_(false) {
     setup_internal_handlers();
   }
 
-  ~Impl() {
-    try {
-      stop();
-    } catch (...) {}
+  ~Impl() { try { stop(); } catch (...) {} }
+
+  void fulfill_all(bool value) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    for (auto& p : pending_promises_) { try { p.set_value(value); } catch (...) {} }
+    pending_promises_.clear();
   }
 
   std::future<bool> start() {
     std::lock_guard<std::mutex> lock(mutex_);
-    
     if (is_listening_) {
-      std::promise<bool> p;
-      p.set_value(true);
-      return p.get_future();
+      std::promise<bool> p; p.set_value(true); return p.get_future();
     }
-
-    start_promise_ = std::promise<bool>();
-    start_promise_fulfilled_ = false;
+    std::promise<bool> p;
+    auto f = p.get_future();
+    pending_promises_.push_back(std::move(p));
+    if (started_) return f;
 
     if (!channel_) {
       config::TcpServerConfig config;
@@ -155,97 +101,81 @@ struct TcpServer::Impl {
       config.max_port_retries = max_port_retries_;
       config.port_retry_interval_ms = port_retry_interval_ms_;
       config.idle_timeout_ms = idle_timeout_ms_;
-
+      
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
-
-      if (client_limit_enabled_) {
-        auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
-        if (transport_server) {
-          if (max_clients_ == 0) transport_server->set_unlimited_clients();
-          else transport_server->set_client_limit(max_clients_);
-        }
+      
+      auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+      if (transport_server && client_limit_enabled_) {
+        if (max_clients_ == 0) transport_server->set_unlimited_clients();
+        else transport_server->set_client_limit(max_clients_);
       }
     }
-
     channel_->start();
-    
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
-      external_thread_ = std::thread([ioc = external_ioc_]() {
-        try {
-          boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
-          ioc->run();
-        } catch(...) {}
-      });
+      work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(external_ioc_->get_executor());
+      external_thread_ = std::thread([ioc = external_ioc_]() { try { ioc->run(); } catch(...) {} });
     }
-    
     started_ = true;
-    return start_promise_.get_future();
+    return f;
   }
 
   void stop() {
-    std::lock_guard<std::mutex> lock(mutex_);
-    
-    if (channel_) {
-      channel_->on_bytes(nullptr);
-      channel_->on_state(nullptr);
-      
-      auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
-      if (transport_server) {
-        transport_server->request_stop();
+    bool should_join = false;
+    {
+      std::unique_lock<std::mutex> lock(mutex_);
+      if (!started_) {
+        for (auto& p : pending_promises_) { try { p.set_value(false); } catch(...) {} }
+        pending_promises_.clear();
+        return;
       }
-      channel_->stop();
+      if (channel_) {
+        channel_->on_bytes(nullptr);
+        channel_->on_state(nullptr);
+        auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
+        if (transport_server) transport_server->request_stop();
+        channel_->stop();
+      }
+      if (use_external_context_ && manage_external_context_) {
+        if (work_guard_) work_guard_.reset();
+        if (external_ioc_) external_ioc_->stop();
+        should_join = true;
+      }
+      for (auto& p : pending_promises_) { try { p.set_value(false); } catch(...) {} }
+      pending_promises_.clear();
+      started_ = false;
+      is_listening_ = false;
     }
-
-    if (use_external_context_ && manage_external_context_ && external_thread_.joinable()) {
-      if (external_ioc_) external_ioc_->stop();
+    if (should_join && external_thread_.joinable()) {
       try { external_thread_.join(); } catch(...) {}
     }
-
-    is_listening_ = false;
-    started_ = false;
-    
-    if (!start_promise_fulfilled_) {
-      try { start_promise_.set_value(false); } catch(...) {}
-      start_promise_fulfilled_ = true;
-    }
+    std::lock_guard<std::mutex> lock(mutex_);
+    channel_.reset();
   }
 
   void setup_internal_handlers() {
     if (!channel_) return;
-
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
       transport_server->on_multi_connect([this](size_t id, const std::string& info) {
         if (on_client_connect_) on_client_connect_(ConnectionContext(id, info));
       });
-
       transport_server->on_multi_data([this](size_t id, const std::string& data) {
         if (on_data_) on_data_(MessageContext(id, data));
       });
-
       transport_server->on_multi_disconnect([this](size_t id) {
         if (on_client_disconnect_) on_client_disconnect_(ConnectionContext(id));
       });
     }
-
     channel_->on_state([this](base::LinkState state) {
       if (state == base::LinkState::Listening) {
         is_listening_ = true;
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (!start_promise_fulfilled_) {
-          start_promise_.set_value(true);
-          start_promise_fulfilled_ = true;
-        }
+        fulfill_all(true);
       } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
         is_listening_ = false;
-        std::lock_guard<std::mutex> lock(mutex_);
-        if (!start_promise_fulfilled_) {
-          start_promise_.set_value(false);
-          start_promise_fulfilled_ = true;
-        }
+        fulfill_all(false);
         if (state == base::LinkState::Error && on_error_) {
-          on_error_(ErrorContext(ErrorCode::IoError, "Server state error"));
+          on_error_(ErrorContext(ErrorCode::IoError, "Server disconnected"));
         }
       }
     });

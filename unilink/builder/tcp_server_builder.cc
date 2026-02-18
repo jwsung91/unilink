@@ -118,8 +118,8 @@ TcpServerBuilder& TcpServerBuilder::idle_timeout(int timeout_ms) {
 }
 
 TcpServerBuilder& TcpServerBuilder::max_clients(size_t max) {
-  if (max == 0) throw diagnostics::BuilderException("Invalid client limit: 0");
-  if (max == 1) throw diagnostics::BuilderException("Invalid client limit: 1. Use single_client() instead.");
+  if (max == 0) throw std::invalid_argument("Client limit cannot be 0");
+  if (max == 1) throw std::invalid_argument("Use single_client() for 1 client limit");
   max_clients_ = max;
   client_limit_set_ = true;
   return *this;

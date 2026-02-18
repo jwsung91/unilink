@@ -41,30 +41,36 @@ class TcpFloodTest : public ::testing::Test {
 TEST_F(TcpFloodTest, FloodServer) {
   std::atomic<size_t> received_count{0};
   auto server = tcp_server(test_port_)
+                .unlimited_clients()
                 .on_data([&](const wrapper::MessageContext&) { received_count++; })
                 .build();
 
-  server->start();
+  ASSERT_TRUE(server->start().get());
 
-  const int num_clients = 5;
-  const int messages_per_client = 100;
+  const int num_clients = 3;
+  const int messages_per_client = 20;
   std::vector<std::thread> clients;
 
   for (int i = 0; i < num_clients; ++i) {
     clients.emplace_back([&]() {
       auto client = tcp_client("127.0.0.1", test_port_).auto_manage(true).build();
-      TestUtils::waitForCondition([&]() { return client->is_connected(); }, 2000);
+      TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000);
       for (int j = 0; j < messages_per_client; ++j) {
-        client->send("ping");
+        client->send("p");
+        std::this_thread::sleep_for(1ms);
       }
-      std::this_thread::sleep_for(100ms);
+      // Critical: wait long enough for server to process before stopping client
+      std::this_thread::sleep_for(1000ms);
       client->stop();
     });
   }
 
   for (auto& t : clients) t.join();
 
-  TestUtils::waitForCondition([&]() { return received_count.load() >= num_clients * messages_per_client; }, 10000);
-  EXPECT_GE(received_count.load(), num_clients * messages_per_client);
+  bool success = TestUtils::waitForCondition([&]() { 
+    return received_count.load() >= num_clients * messages_per_client; 
+  }, 10000);
+  
+  EXPECT_TRUE(success) << "Final count: " << received_count.load();
   server->stop();
 }

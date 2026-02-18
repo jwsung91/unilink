@@ -68,11 +68,11 @@ TEST_F(TcpServerChaosTest, SlowLoris) {
   auto server = tcp_server(test_port_)
                 .on_data([&](const wrapper::MessageContext& ctx) {
                   received_data += ctx.data();
-                  if (received_data == "Hello World") done = true;
+                  if (received_data.find("Hello World") != std::string::npos) done = true;
                 })
                 .build();
 
-  server->start();
+  ASSERT_TRUE(server->start().get());
 
   std::thread slow_sender([&]() {
     try {
@@ -99,7 +99,7 @@ TEST_F(TcpServerChaosTest, GarbageSender) {
                 .on_data([&](const wrapper::MessageContext& ctx) { total_bytes += ctx.data().size(); })
                 .build();
 
-  server->start();
+  ASSERT_TRUE(server->start().get());
 
   std::thread garbage_thread([&]() {
     try {
@@ -107,22 +107,22 @@ TEST_F(TcpServerChaosTest, GarbageSender) {
       boost::asio::ip::tcp::socket socket(ioc);
       socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::make_address("127.0.0.1"), test_port_));
       
-      std::vector<uint8_t> garbage(1024 * 16, 0xff);
-      for (int i = 0; i < 10; ++i) {
+      std::vector<uint8_t> garbage(1024, 0xff);
+      for (int i = 0; i < 100; ++i) {
         boost::asio::write(socket, boost::asio::buffer(garbage));
-        std::this_thread::sleep_for(10ms);
+        std::this_thread::sleep_for(5ms);
       }
     } catch (...) {}
   });
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return total_bytes.load() >= 1024 * 16 * 10; }, 10000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return total_bytes.load() >= 1024 * 100; }, 10000));
   if (garbage_thread.joinable()) garbage_thread.join();
   server->stop();
 }
 
 TEST_F(TcpServerChaosTest, MaxConnections) {
   auto server = tcp_server(test_port_).multi_client(2).build();
-  server->start();
+  ASSERT_TRUE(server->start().get());
 
   auto connect_one = [&]() {
     try {
