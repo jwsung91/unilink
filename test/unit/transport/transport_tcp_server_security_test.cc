@@ -74,10 +74,6 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
   if (result < 0) {
     std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
   }
-  int result = setsockopt(client.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
-  if (result < 0) {
-    std::cerr << "setsockopt(SO_NOSIGPIPE) failed: " << errno << std::endl;
-  }
 #endif
 
   // Wait for 2 seconds (simulating idle)
