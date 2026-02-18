@@ -31,9 +31,7 @@
 namespace unilink {
 namespace diagnostics {
 
-Logger::Logger() {
-  set_format(format_string_);
-}
+Logger::Logger() { set_format(format_string_); }
 
 Logger::~Logger() {
   teardown_async_logging();
