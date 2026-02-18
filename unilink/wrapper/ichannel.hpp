@@ -17,42 +17,44 @@
 #pragma once
 
 #include <functional>
+#include <future>
 #include <memory>
 #include <string>
 #include <string_view>
 
 #include "unilink/base/visibility.hpp"
-#include "unilink/memory/safe_span.hpp"
+#include "unilink/wrapper/context.hpp"
 
 namespace unilink {
 namespace wrapper {
 
-// Common interface for all Wrapper communication classes
+/**
+ * @brief Common interface for 1:1 point-to-point communication (e.g., TcpClient, Serial, Udp)
+ */
 class UNILINK_API ChannelInterface {
  public:
-  using DataHandler = std::function<void(const std::string&)>;
-  using BytesHandler = std::function<void(memory::ConstByteSpan)>;
-  using ConnectHandler = std::function<void()>;
-  using DisconnectHandler = std::function<void()>;
-  using ErrorHandler = std::function<void(const std::string&)>;
+  using MessageHandler = std::function<void(const MessageContext&)>;
+  using ConnectionHandler = std::function<void(const ConnectionContext&)>;
+  using ErrorHandler = std::function<void(const ErrorContext&)>;
 
   virtual ~ChannelInterface() = default;
 
-  // Common methods
-  virtual void start() = 0;
+  // Lifecycle
+  virtual std::future<bool> start() = 0;
   virtual void stop() = 0;
-  virtual void send(std::string_view data) = 0;
-  virtual void send_line(std::string_view line) = 0;
   virtual bool is_connected() const = 0;
 
-  // Event handler setup
-  virtual ChannelInterface& on_data(DataHandler handler) = 0;
-  virtual ChannelInterface& on_bytes(BytesHandler handler) = 0;
-  virtual ChannelInterface& on_connect(ConnectHandler handler) = 0;
-  virtual ChannelInterface& on_disconnect(DisconnectHandler handler) = 0;
+  // Transmission
+  virtual void send(std::string_view data) = 0;
+  virtual void send_line(std::string_view line) = 0;
+
+  // Event handlers
+  virtual ChannelInterface& on_data(MessageHandler handler) = 0;
+  virtual ChannelInterface& on_connect(ConnectionHandler handler) = 0;
+  virtual ChannelInterface& on_disconnect(ConnectionHandler handler) = 0;
   virtual ChannelInterface& on_error(ErrorHandler handler) = 0;
 
-  // Convenience methods
+  // Management
   virtual ChannelInterface& auto_manage(bool manage = true) = 0;
 };
 
