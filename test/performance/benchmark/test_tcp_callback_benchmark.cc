@@ -38,7 +38,8 @@ class TcpCallbackBenchmark : public ::testing::Test {
     client_ = tcp_client("127.0.0.1", port_).build();
     auto f1 = server_->start();
     auto f2 = client_->start();
-    f1.get(); f2.get(); // Wait for full startup
+    f1.get();
+    f2.get();  // Wait for full startup
     TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000);
   }
 

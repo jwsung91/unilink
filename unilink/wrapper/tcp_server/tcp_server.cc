@@ -107,18 +107,30 @@ struct TcpServer::Impl {
     setup_internal_handlers();
   }
 
-  ~Impl() { try { stop(); } catch (...) {} }
+  ~Impl() {
+    try {
+      stop();
+    } catch (...) {
+    }
+  }
 
   void fulfill_all(bool value) {
     std::lock_guard<std::mutex> lock(mutex_);
-    for (auto& p : pending_promises_) { try { p.set_value(value); } catch (...) {} }
+    for (auto& p : pending_promises_) {
+      try {
+        p.set_value(value);
+      } catch (...) {
+      }
+    }
     pending_promises_.clear();
   }
 
   std::future<bool> start() {
     std::lock_guard<std::mutex> lock(mutex_);
     if (is_listening_) {
-      std::promise<bool> p; p.set_value(true); return p.get_future();
+      std::promise<bool> p;
+      p.set_value(true);
+      return p.get_future();
     }
     std::promise<bool> p;
     auto f = p.get_future();
@@ -132,22 +144,30 @@ struct TcpServer::Impl {
       config.max_port_retries = max_port_retries_;
       config.port_retry_interval_ms = port_retry_interval_ms_;
       config.idle_timeout_ms = idle_timeout_ms_;
-      
+
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
-      
+
       if (client_limit_enabled_) {
         auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
         if (transport_server) {
-          if (max_clients_ == 0) transport_server->set_unlimited_clients();
-          else transport_server->set_client_limit(max_clients_);
+          if (max_clients_ == 0)
+            transport_server->set_unlimited_clients();
+          else
+            transport_server->set_client_limit(max_clients_);
         }
       }
     }
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
-      work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(external_ioc_->get_executor());
-      external_thread_ = std::thread([ioc = external_ioc_]() { try { ioc->run(); } catch(...) {} });
+      work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+          external_ioc_->get_executor());
+      external_thread_ = std::thread([ioc = external_ioc_]() {
+        try {
+          ioc->run();
+        } catch (...) {
+        }
+      });
     }
     started_ = true;
     return f;
@@ -158,7 +178,12 @@ struct TcpServer::Impl {
     {
       std::unique_lock<std::mutex> lock(mutex_);
       if (!started_) {
-        for (auto& p : pending_promises_) { try { p.set_value(false); } catch(...) {} }
+        for (auto& p : pending_promises_) {
+          try {
+            p.set_value(false);
+          } catch (...) {
+          }
+        }
         pending_promises_.clear();
         return;
       }
@@ -174,13 +199,21 @@ struct TcpServer::Impl {
         if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
-      for (auto& p : pending_promises_) { try { p.set_value(false); } catch(...) {} }
+      for (auto& p : pending_promises_) {
+        try {
+          p.set_value(false);
+        } catch (...) {
+        }
+      }
       pending_promises_.clear();
       started_ = false;
       is_listening_ = false;
     }
     if (should_join && external_thread_.joinable()) {
-      try { external_thread_.join(); } catch(...) {}
+      try {
+        external_thread_.join();
+      } catch (...) {
+      }
     }
     std::lock_guard<std::mutex> lock(mutex_);
     channel_.reset();
@@ -216,7 +249,8 @@ struct TcpServer::Impl {
 };
 
 TcpServer::TcpServer(uint16_t port) : pimpl_(std::make_unique<Impl>(port)) {}
-TcpServer::TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> ioc) : pimpl_(std::make_unique<Impl>(port, ioc)) {}
+TcpServer::TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> ioc)
+    : pimpl_(std::make_unique<Impl>(port, ioc)) {}
 TcpServer::TcpServer(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {}
 TcpServer::~TcpServer() = default;
 
@@ -240,10 +274,22 @@ bool TcpServer::send_to(size_t client_id, std::string_view data) {
   return false;
 }
 
-ServerInterface& TcpServer::on_client_connect(ConnectionHandler h) { pimpl_->on_client_connect_ = std::move(h); return *this; }
-ServerInterface& TcpServer::on_client_disconnect(ConnectionHandler h) { pimpl_->on_client_disconnect_ = std::move(h); return *this; }
-ServerInterface& TcpServer::on_data(MessageHandler h) { pimpl_->on_data_ = std::move(h); return *this; }
-ServerInterface& TcpServer::on_error(ErrorHandler h) { pimpl_->on_error_ = std::move(h); return *this; }
+ServerInterface& TcpServer::on_client_connect(ConnectionHandler h) {
+  pimpl_->on_client_connect_ = std::move(h);
+  return *this;
+}
+ServerInterface& TcpServer::on_client_disconnect(ConnectionHandler h) {
+  pimpl_->on_client_disconnect_ = std::move(h);
+  return *this;
+}
+ServerInterface& TcpServer::on_data(MessageHandler h) {
+  pimpl_->on_data_ = std::move(h);
+  return *this;
+}
+ServerInterface& TcpServer::on_error(ErrorHandler h) {
+  pimpl_->on_error_ = std::move(h);
+  return *this;
+}
 
 size_t TcpServer::get_client_count() const {
   if (!pimpl_->channel_) return 0;
@@ -264,37 +310,46 @@ TcpServer& TcpServer::auto_manage(bool m) {
 }
 
 TcpServer& TcpServer::enable_port_retry(bool e, int m, int i) {
-  pimpl_->port_retry_enabled_ = e; pimpl_->max_port_retries_ = m; pimpl_->port_retry_interval_ms_ = i;
+  pimpl_->port_retry_enabled_ = e;
+  pimpl_->max_port_retries_ = m;
+  pimpl_->port_retry_interval_ms_ = i;
   return *this;
 }
 
-TcpServer& TcpServer::idle_timeout(int ms) { 
-  pimpl_->idle_timeout_ms_ = ms; 
+TcpServer& TcpServer::idle_timeout(int ms) {
+  pimpl_->idle_timeout_ms_ = ms;
   // Note: Runtime change of idle_timeout is not supported by current transport.
   // Must be set via Builder before start().
-  return *this; 
+  return *this;
 }
 
-TcpServer& TcpServer::set_client_limit(size_t max) { 
-  pimpl_->max_clients_ = max; pimpl_->client_limit_enabled_ = true; 
+TcpServer& TcpServer::set_client_limit(size_t max) {
+  pimpl_->max_clients_ = max;
+  pimpl_->client_limit_enabled_ = true;
   if (pimpl_->channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
     if (transport_server) transport_server->set_client_limit(max);
   }
-  return *this; 
+  return *this;
 }
 
-TcpServer& TcpServer::set_unlimited_clients() { 
-  pimpl_->client_limit_enabled_ = false; 
+TcpServer& TcpServer::set_unlimited_clients() {
+  pimpl_->client_limit_enabled_ = false;
   if (pimpl_->channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
     if (transport_server) transport_server->set_unlimited_clients();
   }
-  return *this; 
+  return *this;
 }
 
-TcpServer& TcpServer::notify_send_failure(bool e) { pimpl_->notify_send_failure_ = e; return *this; }
-TcpServer& TcpServer::set_manage_external_context(bool m) { pimpl_->manage_external_context_ = m; return *this; }
+TcpServer& TcpServer::notify_send_failure(bool e) {
+  pimpl_->notify_send_failure_ = e;
+  return *this;
+}
+TcpServer& TcpServer::set_manage_external_context(bool m) {
+  pimpl_->manage_external_context_ = m;
+  return *this;
+}
 
 }  // namespace wrapper
 }  // namespace unilink

@@ -100,20 +100,21 @@ TEST_F(TcpServerChaosTest, GarbageSender) {
 
   ASSERT_TRUE(server->start().get());
 
-    std::thread garbage_thread([&]() {
-      try {
-        boost::asio::io_context ioc;
-        boost::asio::ip::tcp::socket socket(ioc);
-        socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::make_address("127.0.0.1"), test_port_));
-        
-        std::vector<uint8_t> garbage(1024 * 8, 0xff); // 8KB chunks
-        for (int i = 0; i < 20; ++i) { // Total 160KB
-          boost::asio::write(socket, boost::asio::buffer(garbage));
-        }
-      } catch (...) {}
-    });
-  
-    EXPECT_TRUE(TestUtils::waitForCondition([&]() { return total_bytes.load() >= 1024 * 8 * 20; }, 10000));
+  std::thread garbage_thread([&]() {
+    try {
+      boost::asio::io_context ioc;
+      boost::asio::ip::tcp::socket socket(ioc);
+      socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::make_address("127.0.0.1"), test_port_));
+
+      std::vector<uint8_t> garbage(1024 * 8, 0xff);  // 8KB chunks
+      for (int i = 0; i < 20; ++i) {                 // Total 160KB
+        boost::asio::write(socket, boost::asio::buffer(garbage));
+      }
+    } catch (...) {
+    }
+  });
+
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return total_bytes.load() >= 1024 * 8 * 20; }, 10000));
   if (garbage_thread.joinable()) garbage_thread.join();
   server->stop();
 }

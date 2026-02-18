@@ -21,9 +21,7 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("client_id", &ConnectionContext::client_id)
       .def("info", &ConnectionContext::info);
 
-  py::class_<ErrorContext>(m, "ErrorContext")
-      .def("code", &ErrorContext::code)
-      .def("message", &ErrorContext::message);
+  py::class_<ErrorContext>(m, "ErrorContext").def("code", &ErrorContext::code).def("message", &ErrorContext::message);
 
   // TcpClient
   py::class_<TcpClient, std::shared_ptr<TcpClient>>(m, "TcpClient")
@@ -98,14 +96,13 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
-      .def("on_error",
-           [](TcpServer& self, std::function<void(const ErrorContext&)> handler) {
-             self.on_error([handler](const ErrorContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           });
+      .def("on_error", [](TcpServer& self, std::function<void(const ErrorContext&)> handler) {
+        self.on_error([handler](const ErrorContext& ctx) {
+          py::gil_scoped_acquire gil;
+          handler(ctx);
+        });
+        return &self;
+      });
 
   // Serial
   py::class_<Serial, std::shared_ptr<Serial>>(m, "Serial")
@@ -155,12 +152,11 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send", &Udp::send)
       .def("send_line", &Udp::send_line)
       .def("is_connected", &Udp::is_connected)
-      .def("on_data",
-           [](Udp& self, std::function<void(const MessageContext&)> handler) {
-             self.on_data([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           });
+      .def("on_data", [](Udp& self, std::function<void(const MessageContext&)> handler) {
+        self.on_data([handler](const MessageContext& ctx) {
+          py::gil_scoped_acquire gil;
+          handler(ctx);
+        });
+        return &self;
+      });
 }
