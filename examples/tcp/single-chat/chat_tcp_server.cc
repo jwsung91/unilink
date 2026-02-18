@@ -26,8 +26,7 @@ using namespace unilink;
 
 class TcpChatServer {
  public:
-  TcpChatServer(uint16_t port)
-      : port_(port), logger_(diagnostics::Logger::instance()) {
+  TcpChatServer(uint16_t port) : port_(port), logger_(diagnostics::Logger::instance()) {
     logger_.set_console_output(true);
   }
 
@@ -60,9 +59,7 @@ class TcpChatServer {
     logger_.info("server", "STATE", "Client connected: " + ctx.client_info());
   }
 
-  void handle_data(const wrapper::MessageContext& ctx) {
-    std::cout << "\n[Client] " << ctx.data() << std::endl;
-  }
+  void handle_data(const wrapper::MessageContext& ctx) { std::cout << "\n[Client] " << ctx.data() << std::endl; }
 
   uint16_t port_;
   diagnostics::Logger& logger_;

@@ -19,7 +19,7 @@
 
 /**
  * Logging Example
- * 
+ *
  * Demonstrates how to use the Unilink logging system with the modern API.
  */
 
@@ -33,26 +33,27 @@ int main() {
   UNILINK_LOG_INFO("main", "setup", "Starting logging example...");
 
   // TCP Server with logging
-  auto server = tcp_server(8080)
-                    .on_connect([](const wrapper::ConnectionContext& ctx) { 
-                      UNILINK_LOG_INFO("tcp_server", "connect", "Client " + std::to_string(ctx.client_id()) + " connected"); 
-                    })
-                    .build();
+  auto server =
+      tcp_server(8080)
+          .on_connect([](const wrapper::ConnectionContext& ctx) {
+            UNILINK_LOG_INFO("tcp_server", "connect", "Client " + std::to_string(ctx.client_id()) + " connected");
+          })
+          .build();
 
   // TCP Client with logging
   auto client = tcp_client("127.0.0.1", 8080)
-                    .on_connect([](const wrapper::ConnectionContext& ctx) { 
-                      UNILINK_LOG_INFO("tcp_client", "connect", "Connected to server"); 
+                    .on_connect([](const wrapper::ConnectionContext& ctx) {
+                      UNILINK_LOG_INFO("tcp_client", "connect", "Connected to server");
                     })
                     .build();
 
   // Serial with logging
 #ifndef _WIN32
   auto serial_dev = unilink::serial("/dev/ttyUSB0", 115200)
-                    .on_connect([](const wrapper::ConnectionContext& ctx) { 
-                      UNILINK_LOG_INFO("serial", "connect", "Serial device connected"); 
-                    })
-                    .build();
+                        .on_connect([](const wrapper::ConnectionContext& ctx) {
+                          UNILINK_LOG_INFO("serial", "connect", "Serial device connected");
+                        })
+                        .build();
 #endif
 
   UNILINK_LOG_INFO("main", "cleanup", "Example finished.");

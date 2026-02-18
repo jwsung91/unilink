@@ -145,7 +145,7 @@ class BuilderInterface {
   }
 
   // Framing Support (remains focused on raw data for now, can be evolved)
-  
+
   /**
    * @brief Use LineFramer for message segmentation (e.g., newline delimited)
    * @param delimiter Delimiter string (default: "\n")

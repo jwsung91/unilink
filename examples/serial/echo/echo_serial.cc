@@ -53,21 +53,13 @@ class SerialEchoApp {
   }
 
  private:
-  void handle_connect() {
-    logger_.info("serial", "STATE", "Serial device connected");
-  }
+  void handle_connect() { logger_.info("serial", "STATE", "Serial device connected"); }
 
-  void handle_disconnect() {
-    logger_.info("serial", "STATE", "Serial device disconnected");
-  }
+  void handle_disconnect() { logger_.info("serial", "STATE", "Serial device disconnected"); }
 
-  void handle_data(const std::string& data) {
-    logger_.info("serial", "RX", data);
-  }
+  void handle_data(const std::string& data) { logger_.info("serial", "RX", data); }
 
-  void handle_error(const std::string& error) {
-    logger_.error("serial", "ERROR", error);
-  }
+  void handle_error(const std::string& error) { logger_.error("serial", "ERROR", error); }
 
   void sender_loop(unilink::wrapper::Serial* ul) {
     std::string line;

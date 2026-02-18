@@ -29,7 +29,7 @@ enum class ErrorCode {
   InvalidConfiguration,
   InternalError,
   IoError,
-  
+
   // Connection related
   ConnectionRefused,
   ConnectionReset,
@@ -37,11 +37,11 @@ enum class ErrorCode {
   TimedOut,
   NotConnected,
   AlreadyConnected,
-  
+
   // Server related
   PortInUse,
   AccessDenied,
-  
+
   // Lifecycle
   Stopped,
   StartFailed
@@ -52,15 +52,24 @@ enum class ErrorCode {
  */
 inline std::string to_string(ErrorCode code) {
   switch (code) {
-    case ErrorCode::Success: return "Success";
-    case ErrorCode::InvalidConfiguration: return "Invalid Configuration";
-    case ErrorCode::ConnectionRefused: return "Connection Refused";
-    case ErrorCode::ConnectionReset: return "Connection Reset";
-    case ErrorCode::PortInUse: return "Port Already In Use";
-    case ErrorCode::AccessDenied: return "Access Denied";
-    case ErrorCode::TimedOut: return "Operation Timed Out";
-    case ErrorCode::StartFailed: return "Failed to Start";
-    default: return "Unknown Error";
+    case ErrorCode::Success:
+      return "Success";
+    case ErrorCode::InvalidConfiguration:
+      return "Invalid Configuration";
+    case ErrorCode::ConnectionRefused:
+      return "Connection Refused";
+    case ErrorCode::ConnectionReset:
+      return "Connection Reset";
+    case ErrorCode::PortInUse:
+      return "Port Already In Use";
+    case ErrorCode::AccessDenied:
+      return "Access Denied";
+    case ErrorCode::TimedOut:
+      return "Operation Timed Out";
+    case ErrorCode::StartFailed:
+      return "Failed to Start";
+    default:
+      return "Unknown Error";
   }
 }
 

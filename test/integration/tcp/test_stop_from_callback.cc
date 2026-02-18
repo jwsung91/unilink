@@ -37,9 +37,7 @@ using tcp = net::ip::tcp;
 
 class StopCallbackIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    test_port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
   uint16_t test_port_;
 };
 
@@ -61,7 +59,10 @@ TEST_F(StopCallbackIntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
   });
 
   std::thread server_thread([&]() {
-    try { server_ioc.run(); } catch (...) {}
+    try {
+      server_ioc.run();
+    } catch (...) {
+    }
   });
 
   TcpClientConfig cfg;

@@ -66,7 +66,12 @@ TEST_F(TcpCancelIntegrationTest, CancelTriggersErrorHandling) {
   std::promise<void> close_promise;
   auto close_future = close_promise.get_future();
 
-  session->on_close([&]() { try { close_promise.set_value(); } catch(...) {} });
+  session->on_close([&]() {
+    try {
+      close_promise.set_value();
+    } catch (...) {
+    }
+  });
   session->start();
 
   TestUtils::waitFor(100);

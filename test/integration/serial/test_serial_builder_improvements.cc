@@ -42,12 +42,7 @@ class SerialBuilderIntegrationTest : public ::testing::Test {
 };
 
 TEST_F(SerialBuilderIntegrationTest, BuilderWithInputValidation) {
-  auto serial_ptr = serial(device_, 115200)
-                     .data_bits(8)
-                     .stop_bits(1)
-                     .parity("none")
-                     .flow_control("none")
-                     .build();
+  auto serial_ptr = serial(device_, 115200).data_bits(8).stop_bits(1).parity("none").flow_control("none").build();
 
   ASSERT_NE(serial_ptr, nullptr);
 }

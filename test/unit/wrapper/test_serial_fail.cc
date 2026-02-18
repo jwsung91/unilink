@@ -37,9 +37,7 @@ TEST(WrapperSerialFailTest, OpenInvalidPort) {
   wrapper::Serial serial(invalid_device, 9600);
   std::atomic<bool> error_called{false};
 
-  serial.on_error([&](const wrapper::ErrorContext& err) {
-    error_called = true;
-  });
+  serial.on_error([&](const wrapper::ErrorContext& err) { error_called = true; });
 
   // Try to start - should trigger error or at least not be connected
   serial.start();

@@ -38,7 +38,7 @@ class TcpRstTest : public ::testing::Test {
     server_->on_client_connect([this](const wrapper::ConnectionContext&) { connected_clients_++; });
     server_->on_client_disconnect([this](const wrapper::ConnectionContext&) { disconnected_clients_++; });
     auto f = server_->start();
-    f.get(); // Ensure listening starts
+    f.get();  // Ensure listening starts
   }
 
   void TearDown() override {
@@ -53,8 +53,6 @@ class TcpRstTest : public ::testing::Test {
   std::atomic<int> disconnected_clients_{0};
 };
 
-TEST_F(TcpRstTest, BasicServerConnectivity) {
-  EXPECT_TRUE(server_->is_listening());
-}
+TEST_F(TcpRstTest, BasicServerConnectivity) { EXPECT_TRUE(server_->is_listening()); }
 
 }  // namespace

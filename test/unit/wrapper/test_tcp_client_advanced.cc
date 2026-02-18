@@ -65,17 +65,17 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStartStopMultipleTimes) {
 TEST_F(AdvancedTcpClientCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   auto work = boost::asio::make_work_guard(*ioc);
-  
+
   client_ = std::make_shared<wrapper::TcpClient>("127.0.0.1", test_port_, ioc);
   client_->start();
-  
+
   std::thread t([&]() { ioc->run(); });
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
-  
+
   client_->stop();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
   EXPECT_FALSE(ioc->stopped());
-  
+
   work.reset();
   ioc->stop();
   if (t.joinable()) t.join();
@@ -86,7 +86,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
   client_ = std::make_shared<wrapper::TcpClient>("127.0.0.1", test_port_, ioc);
   client_->set_manage_external_context(true);
   client_->start();
-  
+
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000));
   client_->stop();
   EXPECT_TRUE(ioc->stopped());
@@ -95,10 +95,10 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
 TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) {
   std::atomic<bool> connected{false};
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-            .auto_manage(true)
-            .on_connect([&](const wrapper::ConnectionContext&) { connected = true; })
-            .build();
-            
+                .auto_manage(true)
+                .on_connect([&](const wrapper::ConnectionContext&) { connected = true; })
+                .build();
+
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load(); }, 10000));
 }
 
@@ -106,20 +106,20 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
   std::atomic<int> received{0};
   // Ensure handler is registered BEFORE anything starts
   server_->on_data([&](const wrapper::MessageContext&) { received++; });
-  
+
   client_ = unilink::tcp_client("127.0.0.1", test_port_).build();
   client_->start();
-  
+
   ASSERT_TRUE(TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000));
-  
+
   // Give a small stabilization delay
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  
+
   for (int i = 0; i < 5; ++i) {
     client_->send("msg");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Safe interval
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));  // Safe interval
   }
-  
+
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return received.load() >= 5; }, 5000));
 }
 

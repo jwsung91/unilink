@@ -31,9 +31,7 @@ using namespace std::chrono_literals;
 
 class CoreIntegratedTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { port_ = TestUtils::getAvailableTestPort(); }
   uint16_t port_;
 };
 
@@ -53,10 +51,10 @@ TEST_F(CoreIntegratedTest, ExternalIoContextSharing) {
   server->start();
 
   boost::asio::post(*ioc, [&task_executed]() { task_executed = true; });
-  
+
   // Run manually or via thread
   std::thread t([&]() { ioc->run(); });
-  
+
   TestUtils::waitForCondition([&]() { return task_executed; }, 1000);
   EXPECT_TRUE(task_executed);
 

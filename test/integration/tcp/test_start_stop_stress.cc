@@ -37,9 +37,7 @@ using tcp = net::ip::tcp;
 
 class StressIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    test_port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
   uint16_t test_port_;
 };
 
@@ -64,7 +62,10 @@ TEST_F(StressIntegrationTest, TcpClientStartStopStress) {
   accept_once();
 
   std::thread server_thread([&]() {
-    try { server_ioc.run(); } catch (...) {}
+    try {
+      server_ioc.run();
+    } catch (...) {
+    }
   });
 
   TcpClientConfig cfg;
@@ -76,7 +77,7 @@ TEST_F(StressIntegrationTest, TcpClientStartStopStress) {
 
   auto client = TcpClient::create(cfg);
 
-  const int iterations = 20; // Reduced iterations for faster test
+  const int iterations = 20;  // Reduced iterations for faster test
   for (int i = 0; i < iterations; ++i) {
     client->start();
     TestUtils::waitFor(50);

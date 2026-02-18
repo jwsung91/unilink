@@ -67,22 +67,35 @@ struct TcpClient::Impl {
         manage_external_context_(false),
         started_(false) {}
 
-  explicit Impl(std::shared_ptr<interface::Channel> channel) : host_(""), port_(0), channel_(std::move(channel)), started_(false) {
+  explicit Impl(std::shared_ptr<interface::Channel> channel)
+      : host_(""), port_(0), channel_(std::move(channel)), started_(false) {
     setup_internal_handlers();
   }
 
-  ~Impl() { try { stop(); } catch (...) {} }
+  ~Impl() {
+    try {
+      stop();
+    } catch (...) {
+    }
+  }
 
   void fulfill_all(bool value) {
     std::lock_guard<std::mutex> lock(mutex_);
-    for (auto& p : pending_promises_) { try { p.set_value(value); } catch (...) {} }
+    for (auto& p : pending_promises_) {
+      try {
+        p.set_value(value);
+      } catch (...) {
+      }
+    }
     pending_promises_.clear();
   }
 
   std::future<bool> start() {
     std::lock_guard<std::mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
-      std::promise<bool> p; p.set_value(true); return p.get_future();
+      std::promise<bool> p;
+      p.set_value(true);
+      return p.get_future();
     }
     std::promise<bool> p;
     auto f = p.get_future();
@@ -91,7 +104,8 @@ struct TcpClient::Impl {
 
     if (!channel_) {
       config::TcpClientConfig config;
-      config.host = host_; config.port = port_;
+      config.host = host_;
+      config.port = port_;
       config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
       config.max_retries = max_retries_;
       config.connection_timeout_ms = static_cast<unsigned>(connection_timeout_.count());
@@ -100,15 +114,17 @@ struct TcpClient::Impl {
     }
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
-      work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(external_ioc_->get_executor());
+      work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+          external_ioc_->get_executor());
       external_thread_ = std::thread([this, ioc = external_ioc_]() {
-        try { 
+        try {
           while (started_.load() && !ioc->stopped()) {
             if (ioc->run_one_for(std::chrono::milliseconds(50)) == 0) {
               std::this_thread::yield();
             }
           }
-        } catch(...) {}
+        } catch (...) {
+        }
       });
     }
     started_ = true;
@@ -120,7 +136,12 @@ struct TcpClient::Impl {
     {
       std::unique_lock<std::mutex> lock(mutex_);
       if (!started_.load()) {
-        for (auto& p : pending_promises_) { try { p.set_value(false); } catch(...) {} }
+        for (auto& p : pending_promises_) {
+          try {
+            p.set_value(false);
+          } catch (...) {
+          }
+        }
         pending_promises_.clear();
         return;
       }
@@ -135,11 +156,19 @@ struct TcpClient::Impl {
         if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
-      for (auto& p : pending_promises_) { try { p.set_value(false); } catch(...) {} }
+      for (auto& p : pending_promises_) {
+        try {
+          p.set_value(false);
+        } catch (...) {
+        }
+      }
       pending_promises_.clear();
     }
     if (should_join && external_thread_.joinable()) {
-      try { external_thread_.join(); } catch(...) {}
+      try {
+        external_thread_.join();
+      } catch (...) {
+      }
     }
     std::lock_guard<std::mutex> lock(mutex_);
     channel_.reset();
@@ -156,8 +185,8 @@ struct TcpClient::Impl {
 
   void setup_internal_handlers() {
     if (!channel_) return;
-    
-    // Explicitly do not use try-catch here to allow exceptions from handlers 
+
+    // Explicitly do not use try-catch here to allow exceptions from handlers
     // to propagate to transport layer for error handling (e.g., auto-reconnect)
     channel_->on_bytes([this](memory::ConstByteSpan data) {
       if (data_handler_) {
@@ -183,7 +212,8 @@ struct TcpClient::Impl {
 };
 
 TcpClient::TcpClient(const std::string& h, uint16_t p) : pimpl_(std::make_unique<Impl>(h, p)) {}
-TcpClient::TcpClient(const std::string& h, uint16_t p, std::shared_ptr<boost::asio::io_context> ioc) : pimpl_(std::make_unique<Impl>(h, p, ioc)) {}
+TcpClient::TcpClient(const std::string& h, uint16_t p, std::shared_ptr<boost::asio::io_context> ioc)
+    : pimpl_(std::make_unique<Impl>(h, p, ioc)) {}
 TcpClient::TcpClient(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {}
 TcpClient::~TcpClient() = default;
 
@@ -193,10 +223,22 @@ void TcpClient::send(std::string_view data) { pimpl_->send(data); }
 void TcpClient::send_line(std::string_view line) { pimpl_->send(std::string(line) + "\n"); }
 bool TcpClient::is_connected() const { return pimpl_->is_connected(); }
 
-ChannelInterface& TcpClient::on_data(MessageHandler h) { pimpl_->data_handler_ = std::move(h); return *this; }
-ChannelInterface& TcpClient::on_connect(ConnectionHandler h) { pimpl_->connect_handler_ = std::move(h); return *this; }
-ChannelInterface& TcpClient::on_disconnect(ConnectionHandler h) { pimpl_->disconnect_handler_ = std::move(h); return *this; }
-ChannelInterface& TcpClient::on_error(ErrorHandler h) { pimpl_->error_handler_ = std::move(h); return *this; }
+ChannelInterface& TcpClient::on_data(MessageHandler h) {
+  pimpl_->data_handler_ = std::move(h);
+  return *this;
+}
+ChannelInterface& TcpClient::on_connect(ConnectionHandler h) {
+  pimpl_->connect_handler_ = std::move(h);
+  return *this;
+}
+ChannelInterface& TcpClient::on_disconnect(ConnectionHandler h) {
+  pimpl_->disconnect_handler_ = std::move(h);
+  return *this;
+}
+ChannelInterface& TcpClient::on_error(ErrorHandler h) {
+  pimpl_->error_handler_ = std::move(h);
+  return *this;
+}
 
 ChannelInterface& TcpClient::auto_manage(bool m) {
   pimpl_->auto_manage_ = m;
@@ -213,9 +255,18 @@ TcpClient& TcpClient::set_retry_interval(std::chrono::milliseconds i) {
   return *this;
 }
 
-TcpClient& TcpClient::set_max_retries(int m) { pimpl_->max_retries_ = m; return *this; }
-TcpClient& TcpClient::set_connection_timeout(std::chrono::milliseconds t) { pimpl_->connection_timeout_ = t; return *this; }
-TcpClient& TcpClient::set_manage_external_context(bool m) { pimpl_->manage_external_context_ = m; return *this; }
+TcpClient& TcpClient::set_max_retries(int m) {
+  pimpl_->max_retries_ = m;
+  return *this;
+}
+TcpClient& TcpClient::set_connection_timeout(std::chrono::milliseconds t) {
+  pimpl_->connection_timeout_ = t;
+  return *this;
+}
+TcpClient& TcpClient::set_manage_external_context(bool m) {
+  pimpl_->manage_external_context_ = m;
+  return *this;
+}
 
 }  // namespace wrapper
 }  // namespace unilink

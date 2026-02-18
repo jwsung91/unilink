@@ -32,18 +32,16 @@ using namespace std::chrono_literals;
 
 class TcpFloodTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    test_port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
   uint16_t test_port_;
 };
 
 TEST_F(TcpFloodTest, FloodServer) {
   std::atomic<size_t> received_count{0};
   auto server = tcp_server(test_port_)
-                .unlimited_clients()
-                .on_data([&](const wrapper::MessageContext&) { received_count++; })
-                .build();
+                    .unlimited_clients()
+                    .on_data([&](const wrapper::MessageContext&) { received_count++; })
+                    .build();
 
   ASSERT_TRUE(server->start().get());
 
@@ -67,10 +65,9 @@ TEST_F(TcpFloodTest, FloodServer) {
 
   for (auto& t : clients) t.join();
 
-  bool success = TestUtils::waitForCondition([&]() { 
-    return received_count.load() >= num_clients * messages_per_client; 
-  }, 10000);
-  
+  bool success =
+      TestUtils::waitForCondition([&]() { return received_count.load() >= num_clients * messages_per_client; }, 10000);
+
   EXPECT_TRUE(success) << "Final count: " << received_count.load();
   server->stop();
 }

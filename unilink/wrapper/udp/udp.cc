@@ -56,7 +56,10 @@ struct Udp::Impl {
   explicit Impl(std::shared_ptr<interface::Channel> ch) : channel(std::move(ch)) {}
 
   ~Impl() {
-    try { stop(); } catch (...) {}
+    try {
+      stop();
+    } catch (...) {
+    }
   }
 
   std::future<bool> start() {
@@ -81,7 +84,7 @@ struct Udp::Impl {
         ioc->run();
       });
     }
-    
+
     started = true;
     return start_promise_.get_future();
   }
@@ -103,7 +106,10 @@ struct Udp::Impl {
     started = false;
 
     if (!start_promise_fulfilled_) {
-      try { start_promise_.set_value(false); } catch (...) {}
+      try {
+        start_promise_.set_value(false);
+      } catch (...) {
+      }
       start_promise_fulfilled_ = true;
     }
   }
@@ -137,15 +143,19 @@ struct Udp::Impl {
           }
           if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, "Connection error"));
           break;
-        default: break;
+        default:
+          break;
       }
     });
   }
 };
 
 Udp::Udp(const config::UdpConfig& cfg) : pimpl_(std::make_unique<Impl>(cfg)) {}
-Udp::Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> ioc) : pimpl_(std::make_unique<Impl>(cfg, ioc)) {}
-Udp::Udp(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) { pimpl_->setup_internal_handlers(); }
+Udp::Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> ioc)
+    : pimpl_(std::make_unique<Impl>(cfg, ioc)) {}
+Udp::Udp(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {
+  pimpl_->setup_internal_handlers();
+}
 Udp::~Udp() = default;
 
 std::future<bool> Udp::start() { return pimpl_->start(); }
@@ -159,10 +169,22 @@ void Udp::send(std::string_view data) {
 void Udp::send_line(std::string_view line) { send(std::string(line) + "\n"); }
 bool Udp::is_connected() const { return pimpl_->channel && pimpl_->channel->is_connected(); }
 
-ChannelInterface& Udp::on_data(MessageHandler h) { pimpl_->data_handler = std::move(h); return *this; }
-ChannelInterface& Udp::on_connect(ConnectionHandler h) { pimpl_->connect_handler = std::move(h); return *this; }
-ChannelInterface& Udp::on_disconnect(ConnectionHandler h) { pimpl_->disconnect_handler = std::move(h); return *this; }
-ChannelInterface& Udp::on_error(ErrorHandler h) { pimpl_->error_handler = std::move(h); return *this; }
+ChannelInterface& Udp::on_data(MessageHandler h) {
+  pimpl_->data_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Udp::on_connect(ConnectionHandler h) {
+  pimpl_->connect_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Udp::on_disconnect(ConnectionHandler h) {
+  pimpl_->disconnect_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Udp::on_error(ErrorHandler h) {
+  pimpl_->error_handler = std::move(h);
+  return *this;
+}
 
 ChannelInterface& Udp::auto_manage(bool m) {
   pimpl_->auto_manage = m;

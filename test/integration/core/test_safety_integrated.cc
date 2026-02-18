@@ -30,9 +30,7 @@ using namespace std::chrono_literals;
 
 class SafetyIntegratedTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { port_ = TestUtils::getAvailableTestPort(); }
   uint16_t port_;
 };
 
@@ -48,13 +46,13 @@ TEST_F(SafetyIntegratedTest, RapidDestruction) {
 TEST_F(SafetyIntegratedTest, NullCallbackSafety) {
   auto server = tcp_server(port_).build();
   server->start();
-  
+
   // These should not crash
   server->on_data(nullptr);
   server->on_client_connect(nullptr);
   server->on_client_disconnect(nullptr);
   server->on_error(nullptr);
-  
+
   server->stop();
   SUCCEED();
 }

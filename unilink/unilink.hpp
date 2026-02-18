@@ -19,9 +19,9 @@
 #include <memory>
 #include <variant>
 
+#include "unilink/base/error_codes.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
-#include "unilink/base/error_codes.hpp"
 
 // Public API Context and Interface headers
 #include "unilink/wrapper/context.hpp"

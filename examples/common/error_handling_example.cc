@@ -21,7 +21,7 @@
 
 /**
  * Error Handling Example
- * 
+ *
  * Demonstrates the modern programmatic error handling using ErrorContext and ErrorCode.
  */
 
@@ -36,7 +36,7 @@ int main() {
                       std::cout << "Server Error Detected!" << std::endl;
                       std::cout << "Code: " << static_cast<int>(ctx.code()) << std::endl;
                       std::cout << "Message: " << ctx.message() << std::endl;
-                      
+
                       if (ctx.code() == ErrorCode::StartFailed) {
                         std::cout << "-> Handling specific start failure..." << std::endl;
                       }
@@ -60,7 +60,7 @@ int main() {
 
   std::cout << "Starting client connection attempt..." << std::endl;
   auto connected = client->start();
-  
+
   if (!connected.get()) {
     std::cout << "Client connection failed as expected." << std::endl;
   }

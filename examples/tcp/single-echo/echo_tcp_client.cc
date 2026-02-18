@@ -47,7 +47,8 @@ class EchoClient {
     if (client_) {
       try {
         client_->stop();
-      } catch (...) {}
+      } catch (...) {
+      }
     }
   }
 
@@ -57,9 +58,7 @@ class EchoClient {
     }
   }
 
-  void on_connect(const wrapper::ConnectionContext& ctx) {
-    logger_.info("client", "connect", "Connected to server");
-  }
+  void on_connect(const wrapper::ConnectionContext& ctx) { logger_.info("client", "connect", "Connected to server"); }
 
   void on_data(const wrapper::MessageContext& ctx) {
     logger_.info("client", "data", "Received: " + std::string(ctx.data()));
@@ -90,7 +89,7 @@ class EchoClient {
     }
 
     logger_.info("client", "startup", "Connecting to " + host_ + ":" + std::to_string(port_) + "...");
-    
+
     // Future API wait
     if (client_->start().get()) {
       logger_.info("client", "startup", "Started and connected.");
@@ -161,9 +160,9 @@ int main(int argc, char** argv) {
 
   std::cout << "=== TCP Echo Client (Phase 2) ===" << std::endl;
   std::cout << "Commands: <message>, /quit" << std::endl;
-  
+
   echo_client->run();
   echo_client->shutdown();
-  
+
   return 0;
 }

@@ -43,15 +43,13 @@ class SerialLoopbackTest : public ::testing::Test {
 
 TEST_F(SerialLoopbackTest, LoopbackCommunication) {
   std::atomic<bool> data_received{false};
-  auto ul = serial(device_, 9600)
-                .on_data([&](const wrapper::MessageContext& ctx) { data_received = true; })
-                .build();
+  auto ul = serial(device_, 9600).on_data([&](const wrapper::MessageContext& ctx) { data_received = true; }).build();
 
   ul->start();
-  
+
   // Sending to null device won't loop back, but tests the API
   ul->send("ping");
-  
+
   TestUtils::waitFor(100);
   ul->stop();
   SUCCEED();

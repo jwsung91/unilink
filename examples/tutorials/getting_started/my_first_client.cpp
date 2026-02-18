@@ -23,7 +23,7 @@
 
 /**
  * My First Unilink Client
- * 
+ *
  * A comprehensive example showing how to use the modern Phase 2 API
  * with Context objects and Future-based flow control.
  */
@@ -38,23 +38,21 @@ int main(int argc, char** argv) {
   std::cout << "Target: " << host << ":" << port << std::endl;
 
   // 1. Configure the client using the fluent Builder API
-  auto client = tcp_client(host, port)
-                    .retry_interval(2000)
-                    .max_retries(3)
-                    .on_connect([](const wrapper::ConnectionContext& ctx) {
-                      std::cout << "✓ Connected to server!" << std::endl;
-                    })
-                    .on_disconnect([](const wrapper::ConnectionContext& ctx) {
-                      std::cout << "✗ Disconnected from server." << std::endl;
-                    })
-                    .on_data([](const wrapper::MessageContext& ctx) {
-                      std::cout << "\n[Server] " << ctx.data() << std::endl;
-                      std::cout << "Enter message: " << std::flush;
-                    })
-                    .on_error([](const wrapper::ErrorContext& ctx) {
-                      std::cerr << "⚠ Error: " << ctx.message() << " (Code: " << static_cast<int>(ctx.code()) << ")" << std::endl;
-                    })
-                    .build();
+  auto client =
+      tcp_client(host, port)
+          .retry_interval(2000)
+          .max_retries(3)
+          .on_connect([](const wrapper::ConnectionContext& ctx) { std::cout << "✓ Connected to server!" << std::endl; })
+          .on_disconnect(
+              [](const wrapper::ConnectionContext& ctx) { std::cout << "✗ Disconnected from server." << std::endl; })
+          .on_data([](const wrapper::MessageContext& ctx) {
+            std::cout << "\n[Server] " << ctx.data() << std::endl;
+            std::cout << "Enter message: " << std::flush;
+          })
+          .on_error([](const wrapper::ErrorContext& ctx) {
+            std::cerr << "⚠ Error: " << ctx.message() << " (Code: " << static_cast<int>(ctx.code()) << ")" << std::endl;
+          })
+          .build();
 
   // 2. Start the client and wait for the result
   std::cout << "Connecting..." << std::endl;
@@ -62,7 +60,7 @@ int main(int argc, char** argv) {
 
   if (connected.get()) {
     std::cout << "Ready! Type your message and press Enter. Type '/quit' to exit." << std::endl;
-    
+
     std::string line;
     while (std::getline(std::cin, line)) {
       if (line == "/quit") break;

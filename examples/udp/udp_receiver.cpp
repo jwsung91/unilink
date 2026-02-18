@@ -23,11 +23,10 @@ using namespace unilink;
 
 int main() {
   // Setup UDP receiver on port 9000
-  auto receiver = udp(9000)
-                      .on_data([](const wrapper::MessageContext& ctx) {
-                        std::cout << "Received UDP: " << ctx.data() << std::endl;
-                      })
-                      .build();
+  auto receiver =
+      udp(9000)
+          .on_data([](const wrapper::MessageContext& ctx) { std::cout << "Received UDP: " << ctx.data() << std::endl; })
+          .build();
 
   if (receiver->start().get()) {
     std::cout << "UDP Receiver listening on port 9000. Press Enter to stop..." << std::endl;

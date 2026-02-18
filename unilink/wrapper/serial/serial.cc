@@ -72,7 +72,10 @@ struct Serial::Impl {
   explicit Impl(std::shared_ptr<interface::Channel> ch) : channel(std::move(ch)) {}
 
   ~Impl() {
-    try { stop(); } catch (...) {}
+    try {
+      stop();
+    } catch (...) {
+    }
   }
 
   std::future<bool> start() {
@@ -97,7 +100,7 @@ struct Serial::Impl {
         ioc->run();
       });
     }
-    
+
     started = true;
     return start_promise_.get_future();
   }
@@ -119,7 +122,10 @@ struct Serial::Impl {
     started = false;
 
     if (!start_promise_fulfilled_) {
-      try { start_promise_.set_value(false); } catch (...) {}
+      try {
+        start_promise_.set_value(false);
+      } catch (...) {
+      }
       start_promise_fulfilled_ = true;
     }
   }
@@ -153,7 +159,8 @@ struct Serial::Impl {
           }
           if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, "Connection error"));
           break;
-        default: break;
+        default:
+          break;
       }
     });
   }
@@ -165,23 +172,32 @@ struct Serial::Impl {
     config.char_size = static_cast<unsigned int>(data_bits);
     config.stop_bits = static_cast<unsigned int>(stop_bits);
     std::string p = to_lower(parity);
-    if (p == "even") config.parity = config::SerialConfig::Parity::Even;
-    else if (p == "odd") config.parity = config::SerialConfig::Parity::Odd;
-    else config.parity = config::SerialConfig::Parity::None;
-    
+    if (p == "even")
+      config.parity = config::SerialConfig::Parity::Even;
+    else if (p == "odd")
+      config.parity = config::SerialConfig::Parity::Odd;
+    else
+      config.parity = config::SerialConfig::Parity::None;
+
     std::string f = to_lower(flow_control);
-    if (f == "software") config.flow = config::SerialConfig::Flow::Software;
-    else if (f == "hardware") config.flow = config::SerialConfig::Flow::Hardware;
-    else config.flow = config::SerialConfig::Flow::None;
-    
+    if (f == "software")
+      config.flow = config::SerialConfig::Flow::Software;
+    else if (f == "hardware")
+      config.flow = config::SerialConfig::Flow::Hardware;
+    else
+      config.flow = config::SerialConfig::Flow::None;
+
     config.retry_interval_ms = static_cast<unsigned int>(retry_interval.count());
     return config;
   }
 };
 
 Serial::Serial(const std::string& d, uint32_t b) : pimpl_(std::make_unique<Impl>(d, b)) {}
-Serial::Serial(const std::string& d, uint32_t b, std::shared_ptr<boost::asio::io_context> i) : pimpl_(std::make_unique<Impl>(d, b, i)) {}
-Serial::Serial(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) { pimpl_->setup_internal_handlers(); }
+Serial::Serial(const std::string& d, uint32_t b, std::shared_ptr<boost::asio::io_context> i)
+    : pimpl_(std::make_unique<Impl>(d, b, i)) {}
+Serial::Serial(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {
+  pimpl_->setup_internal_handlers();
+}
 Serial::~Serial() = default;
 
 std::future<bool> Serial::start() { return pimpl_->start(); }
@@ -195,10 +211,22 @@ void Serial::send(std::string_view data) {
 void Serial::send_line(std::string_view line) { send(std::string(line) + "\n"); }
 bool Serial::is_connected() const { return pimpl_->channel && pimpl_->channel->is_connected(); }
 
-ChannelInterface& Serial::on_data(MessageHandler h) { pimpl_->data_handler = std::move(h); return *this; }
-ChannelInterface& Serial::on_connect(ConnectionHandler h) { pimpl_->connect_handler = std::move(h); return *this; }
-ChannelInterface& Serial::on_disconnect(ConnectionHandler h) { pimpl_->disconnect_handler = std::move(h); return *this; }
-ChannelInterface& Serial::on_error(ErrorHandler h) { pimpl_->error_handler = std::move(h); return *this; }
+ChannelInterface& Serial::on_data(MessageHandler h) {
+  pimpl_->data_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Serial::on_connect(ConnectionHandler h) {
+  pimpl_->connect_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Serial::on_disconnect(ConnectionHandler h) {
+  pimpl_->disconnect_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Serial::on_error(ErrorHandler h) {
+  pimpl_->error_handler = std::move(h);
+  return *this;
+}
 
 ChannelInterface& Serial::auto_manage(bool m) {
   pimpl_->auto_manage = m;
@@ -219,9 +247,7 @@ void Serial::set_retry_interval(std::chrono::milliseconds i) {
   }
 }
 
-config::SerialConfig Serial::build_config() const {
-  return pimpl_->build_config();
-}
+config::SerialConfig Serial::build_config() const { return pimpl_->build_config(); }
 
 void Serial::set_manage_external_context(bool m) { pimpl_->manage_external_context = m; }
 

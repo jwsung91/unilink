@@ -31,9 +31,7 @@ using namespace std::chrono_literals;
 
 class UnifiedBuilderIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { port_ = TestUtils::getAvailableTestPort(); }
   uint16_t port_;
 };
 
@@ -53,11 +51,11 @@ TEST_F(UnifiedBuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
 
   auto start_f = server->start();
   ASSERT_TRUE(start_f.get());
-  
+
   client->start();
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000));
-  
+
   if (client->is_connected()) {
     client->send("hello from unified");
     EXPECT_TRUE(TestUtils::waitForCondition([&]() { return data_received.load(); }, 5000));
@@ -71,22 +69,20 @@ TEST_F(UnifiedBuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
 TEST_F(UnifiedBuilderIntegrationTest, BuilderConfigurationAffectsCommunication) {
   // Use a unique port for this sub-test
   uint16_t p = TestUtils::getAvailableTestPort();
-  
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", p)
-                    .retry_interval(100)
-                    .build();
-  
+
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", p).retry_interval(100).build();
+
   // Start client without server
-  auto f = client->start(); 
+  auto f = client->start();
   // Should not block here as it's retrying in background
-  
+
   TestUtils::waitFor(300);
-  
+
   auto server = builder::UnifiedBuilder::tcp_server(p).build();
   server->start();
-  
+
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000));
-  
+
   client->stop();
   server->stop();
 }

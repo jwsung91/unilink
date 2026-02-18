@@ -23,7 +23,7 @@
 
 /**
  * Echo Server Tutorial
- * 
+ *
  * Shows how to use ServerInterface, Context objects, and Future-based initialization.
  */
 
@@ -40,7 +40,7 @@ class EchoServer {
                   .build();
 
     std::cout << "Starting server on port " << port << "..." << std::endl;
-    
+
     // Future-based result check
     if (server_->start().get()) {
       std::cout << "✓ Server is now listening." << std::endl;

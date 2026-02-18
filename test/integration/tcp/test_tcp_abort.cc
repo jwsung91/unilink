@@ -34,9 +34,7 @@ using tcp = net::ip::tcp;
 
 class TcpAbortTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    test_port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
   uint16_t test_port_;
 };
 
@@ -53,27 +51,27 @@ TEST_F(TcpAbortTest, SessionAbortion) {
   cfg.connection_timeout_ms = 500;
 
   auto client = TcpClient::create(cfg);
-  
+
   std::atomic<bool> aborted{false};
   client->on_state([&](LinkState state) {
     if (state == LinkState::Error) aborted = true;
   });
 
   client->start();
-  
+
   // Connect and then force close socket to simulate reset/abort
   tcp::socket server_side(ioc);
   acceptor.accept(server_side);
-  
+
   server_side.set_option(tcp::no_delay(true));
   server_side.close();
 
   TestUtils::waitForCondition([&]() { return aborted.load() || !client->is_connected(); }, 2000);
-  
+
   client->stop();
   guard.reset();
   ioc.stop();
   if (ioc_thread.joinable()) ioc_thread.join();
-  
+
   SUCCEED();
 }

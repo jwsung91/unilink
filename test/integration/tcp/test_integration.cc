@@ -35,9 +35,7 @@ using namespace std::chrono_literals;
 // Helper fixture for Integration Tests
 class TcpIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    test_port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
   uint16_t test_port_;
 };
 
@@ -60,13 +58,14 @@ TEST_F(TcpIntegrationTest, AutoInitialization) {
 }
 
 TEST_F(TcpIntegrationTest, MethodChaining) {
-  auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .auto_manage(false)
-                    .on_connect([](const wrapper::ConnectionContext&) { std::cout << "Connected!" << std::endl; })
-                    .on_disconnect([](const wrapper::ConnectionContext&) { std::cout << "Disconnected!" << std::endl; })
-                    .on_data([](const wrapper::MessageContext& ctx) { std::cout << "Data: " << ctx.data() << std::endl; })
-                    .on_error([](const wrapper::ErrorContext& ctx) { std::cout << "Error: " << ctx.message() << std::endl; })
-                    .build();
+  auto client =
+      unilink::tcp_client("127.0.0.1", test_port_)
+          .auto_manage(false)
+          .on_connect([](const wrapper::ConnectionContext&) { std::cout << "Connected!" << std::endl; })
+          .on_disconnect([](const wrapper::ConnectionContext&) { std::cout << "Disconnected!" << std::endl; })
+          .on_data([](const wrapper::MessageContext& ctx) { std::cout << "Data: " << ctx.data() << std::endl; })
+          .on_error([](const wrapper::ErrorContext& ctx) { std::cout << "Error: " << ctx.message() << std::endl; })
+          .build();
 
   EXPECT_NE(client, nullptr);
 }
@@ -110,7 +109,7 @@ TEST_F(TcpIntegrationTest, BasicCommunication) {
   ASSERT_NE(client, nullptr);
   client->start();
 
-  EXPECT_TRUE(TestUtils::waitForCondition([& client_connected]() { return client_connected.load(); }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 5000));
 
   if (client->is_connected()) {
     TestUtils::waitFor(100);
@@ -129,13 +128,12 @@ TEST_F(TcpIntegrationTest, ErrorHandling) {
   try {
     auto server = unilink::tcp_server(0).build();
     if (server) server->start();
-  } catch(...) {}
+  } catch (...) {
+  }
 
   std::atomic<bool> error_occurred{false};
   auto client = unilink::tcp_client("127.0.0.1", 1)
-                    .on_error([&error_occurred](const wrapper::ErrorContext&) {
-                      error_occurred = true;
-                    })
+                    .on_error([&error_occurred](const wrapper::ErrorContext&) { error_occurred = true; })
                     .build();
 
   EXPECT_NE(client, nullptr);
@@ -161,7 +159,7 @@ TEST_F(TcpIntegrationTest, ResourceSharing) {
 TEST_F(TcpIntegrationTest, MultipleClientConnections) {
   uint16_t comm_port = TestUtils::getAvailableTestPort();
   std::atomic<int> connection_count{0};
-  
+
   auto server = unilink::tcp_server(comm_port)
                     .unlimited_clients()
                     .on_connect([&connection_count](const wrapper::ConnectionContext&) { connection_count++; })

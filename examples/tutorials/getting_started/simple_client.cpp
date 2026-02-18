@@ -23,18 +23,15 @@ using namespace unilink;
 
 int main() {
   // Create a TCP client and connect to localhost:8080
-  auto client = tcp_client("127.0.0.1", 8080)
-                    .on_connect([](const wrapper::ConnectionContext& ctx) { 
-                      std::cout << "Connected to server!" << std::endl; 
-                    })
-                    .on_data([](const wrapper::MessageContext& ctx) { 
-                      std::cout << "Received: " << ctx.data() << std::endl; 
-                    })
-                    .build();
+  auto client =
+      tcp_client("127.0.0.1", 8080)
+          .on_connect([](const wrapper::ConnectionContext& ctx) { std::cout << "Connected to server!" << std::endl; })
+          .on_data([](const wrapper::MessageContext& ctx) { std::cout << "Received: " << ctx.data() << std::endl; })
+          .build();
 
   // Start the client (returns a future)
   auto start_result = client->start();
-  
+
   // You can wait for the result if needed
   if (start_result.get()) {
     client->send("Hello, Unilink!");

@@ -35,18 +35,14 @@ class BuilderTest : public ::testing::Test {
   }
 
   void setupDataHandler() {
-    auto data_cb = [this](const wrapper::MessageContext& ctx) { 
-      data_received_.push_back(std::string(ctx.data())); 
-    };
+    auto data_cb = [this](const wrapper::MessageContext& ctx) { data_received_.push_back(std::string(ctx.data())); };
     if (server_) server_->on_data(data_cb);
     if (client_) client_->on_data(data_cb);
     if (serial_) serial_->on_data(data_cb);
   }
 
   void setupConnectionHandler() {
-    auto conn_cb = [this](const wrapper::ConnectionContext&) { 
-      connection_established_ = true; 
-    };
+    auto conn_cb = [this](const wrapper::ConnectionContext&) { connection_established_ = true; };
     if (server_) server_->on_client_connect(conn_cb);
     if (client_) client_->on_connect(conn_cb);
     if (serial_) serial_->on_connect(conn_cb);
@@ -119,21 +115,18 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
 }
 
 TEST_F(BuilderTest, UdpBuilderBasic) {
-  udp_ = udp(test_port_)
-             .set_remote("127.0.0.1", 9000)
-             .build();
+  udp_ = udp(test_port_).set_remote("127.0.0.1", 9000).build();
 
   ASSERT_NE(udp_, nullptr);
 }
 
 TEST_F(BuilderTest, BuilderChaining) {
-  server_ = tcp_server(test_port_)
-                .unlimited_clients()
-                .enable_port_retry(true, 5, 500)
-                .on_data([this](const wrapper::MessageContext& ctx) { 
-                  data_received_.push_back(std::string(ctx.data())); 
-                })
-                .build();
+  server_ =
+      tcp_server(test_port_)
+          .unlimited_clients()
+          .enable_port_retry(true, 5, 500)
+          .on_data([this](const wrapper::MessageContext& ctx) { data_received_.push_back(std::string(ctx.data())); })
+          .build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_FALSE(server_->is_listening());
@@ -151,10 +144,7 @@ TEST_F(BuilderTest, MultipleBuilders) {
 }
 
 TEST_F(BuilderTest, BuilderConfiguration) {
-  server_ = tcp_server(test_port_)
-                .idle_timeout(5000)
-                .max_clients(10)
-                .build();
+  server_ = tcp_server(test_port_).idle_timeout(5000).max_clients(10).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_FALSE(server_->is_listening());
@@ -180,20 +170,21 @@ TEST_F(BuilderTest, BuilderReuse) {
 }
 
 TEST_F(BuilderTest, ConvenienceFunctions) {
-  auto server = unilink::tcp_server(test_port_)
-                    .on_connect([](const wrapper::ConnectionContext& ctx) {})
-                    .build();
+  auto server = unilink::tcp_server(test_port_).on_connect([](const wrapper::ConnectionContext& ctx) {}).build();
   EXPECT_NE(server, nullptr);
 
-  auto client =
-      unilink::tcp_client("127.0.0.1", test_port_).on_connect([](const wrapper::ConnectionContext& ctx) {}).on_data([](const wrapper::MessageContext& ctx) {}).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_)
+                    .on_connect([](const wrapper::ConnectionContext& ctx) {})
+                    .on_data([](const wrapper::MessageContext& ctx) {})
+                    .build();
   EXPECT_NE(client, nullptr);
 
-  auto serial = unilink::serial(nullDevice(), 9600).on_connect([](const wrapper::ConnectionContext& ctx) {}).on_data([](const wrapper::MessageContext& ctx) {}).build();
+  auto serial = unilink::serial(nullDevice(), 9600)
+                    .on_connect([](const wrapper::ConnectionContext& ctx) {})
+                    .on_data([](const wrapper::MessageContext& ctx) {})
+                    .build();
   EXPECT_NE(serial, nullptr);
 
-  auto udp = unilink::udp(test_port_)
-                 .on_connect([](const wrapper::ConnectionContext& ctx) {})
-                 .build();
+  auto udp = unilink::udp(test_port_).on_connect([](const wrapper::ConnectionContext& ctx) {}).build();
   EXPECT_NE(udp, nullptr);
 }

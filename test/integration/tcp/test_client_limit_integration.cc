@@ -35,9 +35,7 @@ using namespace std::chrono_literals;
 
 class ClientLimitIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
+  void SetUp() override { std::this_thread::sleep_for(std::chrono::milliseconds(100)); }
 
   void TearDown() override {
     if (server_) {
@@ -75,10 +73,7 @@ class ClientLimitIntegrationTest : public ::testing::Test {
 
 TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port)
-                .single_client()
-                .enable_port_retry(true, 3, 1000)
-                .build();
+  server_ = unilink::tcp_server(test_port).single_client().enable_port_retry(true, 3, 1000).build();
 
   ASSERT_NE(server_, nullptr);
   if (!server_->start().get()) return;
@@ -93,10 +88,7 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
 
 TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port)
-                .multi_client(3)
-                .enable_port_retry(true, 3, 1000)
-                .build();
+  server_ = unilink::tcp_server(test_port).multi_client(3).enable_port_retry(true, 3, 1000).build();
 
   ASSERT_NE(server_, nullptr);
   if (!server_->start().get()) return;
@@ -111,10 +103,7 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
 
 TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
   uint16_t test_port = getTestPort();
-  server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()
-                .enable_port_retry(true, 3, 1000)
-                .build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().enable_port_retry(true, 3, 1000).build();
 
   ASSERT_NE(server_, nullptr);
   if (!server_->start().get()) return;
@@ -129,13 +118,7 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
 
 TEST_F(ClientLimitIntegrationTest, ClientLimitErrorHandlingTest) {
   uint16_t test_port = getTestPort();
-  EXPECT_THROW(
-      {
-        server_ = unilink::tcp_server(test_port)
-                      .multi_client(0)
-                      .build();
-      },
-      std::invalid_argument);
+  EXPECT_THROW({ server_ = unilink::tcp_server(test_port).multi_client(0).build(); }, std::invalid_argument);
 }
 
 int main(int argc, char** argv) {

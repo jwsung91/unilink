@@ -53,15 +53,13 @@ class TcpCallbackBenchmark : public ::testing::Test {
 
 TEST_F(TcpCallbackBenchmark, OnDataPerformance) {
   std::atomic<size_t> bytes_received{0};
-  const size_t target_bytes = 10 * 1024 * 1024; // 10MB
-  
-  client_->on_data([&](const wrapper::MessageContext& ctx) { 
-    bytes_received += ctx.data().size(); 
-  });
+  const size_t target_bytes = 10 * 1024 * 1024;  // 10MB
+
+  client_->on_data([&](const wrapper::MessageContext& ctx) { bytes_received += ctx.data().size(); });
 
   std::string chunk(64 * 1024, 'X');
   auto start = std::chrono::high_resolution_clock::now();
-  
+
   while (bytes_received < target_bytes) {
     server_->broadcast(chunk);
     std::this_thread::yield();
@@ -69,6 +67,6 @@ TEST_F(TcpCallbackBenchmark, OnDataPerformance) {
 
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-  
+
   std::cout << "10MB processed in " << duration << "ms" << std::endl;
 }

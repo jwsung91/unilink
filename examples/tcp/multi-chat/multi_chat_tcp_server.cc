@@ -26,32 +26,32 @@ using namespace unilink;
 
 class MultiChatServer {
  public:
-  MultiChatServer(uint16_t port)
-      : port_(port), logger_(diagnostics::Logger::instance()) {
+  MultiChatServer(uint16_t port) : port_(port), logger_(diagnostics::Logger::instance()) {
     logger_.set_console_output(true);
   }
 
   void run() {
-    auto server = unilink::tcp_server(port_)
-                      .unlimited_clients()
-                      .on_connect([this](const wrapper::ConnectionContext& ctx) {
-                        std::string msg = "Client " + std::to_string(ctx.client_id()) + " joined (IP: " + ctx.client_info() + ")";
-                        logger_.info("server", "STATE", msg);
-                        if (server_) server_->broadcast("*** " + msg + " ***");
-                      })
-                      .on_disconnect([this](const wrapper::ConnectionContext& ctx) {
-                        std::string msg = "Client " + std::to_string(ctx.client_id()) + " left";
-                        logger_.info("server", "STATE", msg);
-                        if (server_) server_->broadcast("*** " + msg + " ***");
-                      })
-                      .on_data([this](const wrapper::MessageContext& ctx) {
-                        std::string broadcast = "[Client " + std::to_string(ctx.client_id()) + "]: " + std::string(ctx.data());
-                        logger_.info("server", "CHAT", broadcast);
-                        if (server_) server_->broadcast(broadcast);
-                      })
-                      .build();
+    auto server =
+        unilink::tcp_server(port_)
+            .unlimited_clients()
+            .on_connect([this](const wrapper::ConnectionContext& ctx) {
+              std::string msg = "Client " + std::to_string(ctx.client_id()) + " joined (IP: " + ctx.client_info() + ")";
+              logger_.info("server", "STATE", msg);
+              if (server_) server_->broadcast("*** " + msg + " ***");
+            })
+            .on_disconnect([this](const wrapper::ConnectionContext& ctx) {
+              std::string msg = "Client " + std::to_string(ctx.client_id()) + " left";
+              logger_.info("server", "STATE", msg);
+              if (server_) server_->broadcast("*** " + msg + " ***");
+            })
+            .on_data([this](const wrapper::MessageContext& ctx) {
+              std::string broadcast = "[Client " + std::to_string(ctx.client_id()) + "]: " + std::string(ctx.data());
+              logger_.info("server", "CHAT", broadcast);
+              if (server_) server_->broadcast(broadcast);
+            })
+            .build();
 
-    server_ = std::move(server); // Use std::move to convert unique_ptr to shared_ptr
+    server_ = std::move(server);  // Use std::move to convert unique_ptr to shared_ptr
 
     if (server->start().get()) {
       logger_.info("server", "main", "Multi-Chat Server started on port " + std::to_string(port_));

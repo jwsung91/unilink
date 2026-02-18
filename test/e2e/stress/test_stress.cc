@@ -69,10 +69,9 @@ TEST_F(StressTest, RealNetworkHighThroughput) {
   TestUtils::waitFor(100);
 
   std::atomic<bool> client_connected{false};
-  auto client =
-      tcp_client("127.0.0.1", port)
-          .on_connect([&](const wrapper::ConnectionContext&) { client_connected = true; })
-          .build();
+  auto client = tcp_client("127.0.0.1", port)
+                    .on_connect([&](const wrapper::ConnectionContext&) { client_connected = true; })
+                    .build();
 
   ASSERT_NE(client, nullptr);
   client->start();

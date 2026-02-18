@@ -52,21 +52,13 @@ class TcpClientChatApp {
   }
 
  private:
-  void handle_connect() {
-    logger_.info("client", "STATE", "Connected");
-  }
+  void handle_connect() { logger_.info("client", "STATE", "Connected"); }
 
-  void handle_disconnect() {
-    logger_.info("client", "STATE", "Disconnected");
-  }
+  void handle_disconnect() { logger_.info("client", "STATE", "Disconnected"); }
 
-  void handle_data(const std::string& data) { 
-    std::cout << "\n[Server] " << data << "\n> " << std::flush; 
-  }
+  void handle_data(const std::string& data) { std::cout << "\n[Server] " << data << "\n> " << std::flush; }
 
-  void handle_error(const std::string& error) { 
-    logger_.error("client", "ERROR", error); 
-  }
+  void handle_error(const std::string& error) { logger_.error("client", "ERROR", error); }
 
   void input_loop(unilink::wrapper::TcpClient* ul) {
     std::string line;

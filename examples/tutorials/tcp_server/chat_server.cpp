@@ -25,7 +25,7 @@
 
 /**
  * Chat Server Tutorial
- * 
+ *
  * A more complex example managing client state (nicknames)
  * and using broadcast functionality.
  */
@@ -48,16 +48,16 @@ class ChatServer {
 
                     // Send welcome and help to the new client
                     server_->send_to(id,
-                                            "Welcome to Chat Server!\n"
-                                            "Your nickname: " +
-                                                nicknames_[id] +
-                                                "\n"
-                                                "Commands:\n"
-                                                "  /nick <name> - Change your nickname\n"
-                                                "  /list        - List all users\n"
-                                                "  /help        - Show this help\n"
-                                                "  /quit        - Disconnect\n"
-                                                "\n");
+                                     "Welcome to Chat Server!\n"
+                                     "Your nickname: " +
+                                         nicknames_[id] +
+                                         "\n"
+                                         "Commands:\n"
+                                         "  /nick <name> - Change your nickname\n"
+                                         "  /list        - List all users\n"
+                                         "  /help        - Show this help\n"
+                                         "  /quit        - Disconnect\n"
+                                         "\n");
                   })
                   .on_disconnect([this](const wrapper::ConnectionContext& ctx) {
                     std::lock_guard<std::mutex> lock(mutex_);

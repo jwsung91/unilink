@@ -53,21 +53,13 @@ class SerialChatApp {
   }
 
  private:
-  void handle_connect() {
-    logger_.info("serial", "STATE", "Serial device connected");
-  }
+  void handle_connect() { logger_.info("serial", "STATE", "Serial device connected"); }
 
-  void handle_disconnect() {
-    logger_.info("serial", "STATE", "Serial device disconnected");
-  }
+  void handle_disconnect() { logger_.info("serial", "STATE", "Serial device disconnected"); }
 
-  void handle_data(const std::string& data) {
-    std::cout << "\n[RX] " << data << "\n> " << std::flush;
-  }
+  void handle_data(const std::string& data) { std::cout << "\n[RX] " << data << "\n> " << std::flush; }
 
-  void handle_error(const std::string& error) {
-    logger_.error("serial", "ERROR", error);
-  }
+  void handle_error(const std::string& error) { logger_.error("serial", "ERROR", error); }
 
   void input_loop(unilink::wrapper::Serial* ul) {
     std::string line;

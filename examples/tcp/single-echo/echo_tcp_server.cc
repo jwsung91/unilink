@@ -82,12 +82,12 @@ class EchoServer {
       return;
     }
     client_connected_.store(true);
-    logger_.info("server", "connect",
-                 "Client " + std::to_string(ctx.client_id()) + " connected: " + ctx.client_info());
+    logger_.info("server", "connect", "Client " + std::to_string(ctx.client_id()) + " connected: " + ctx.client_info());
   }
 
   void on_data(const wrapper::MessageContext& ctx) {
-    logger_.info("server", "data", "Client " + std::to_string(ctx.client_id()) + " message: " + std::string(ctx.data()));
+    logger_.info("server", "data",
+                 "Client " + std::to_string(ctx.client_id()) + " message: " + std::string(ctx.data()));
 
     // Echo back the received data
     if (server_) {
@@ -101,8 +101,9 @@ class EchoServer {
     logger_.info("server", "disconnect", "Client " + std::to_string(ctx.client_id()) + " disconnected");
   }
 
-  void on_error(const wrapper::ErrorContext& ctx) { 
-    logger_.error("server", "error", "Error [" + std::to_string(static_cast<int>(ctx.code())) + "]: " + std::string(ctx.message())); 
+  void on_error(const wrapper::ErrorContext& ctx) {
+    logger_.error("server", "error",
+                  "Error [" + std::to_string(static_cast<int>(ctx.code())) + "]: " + std::string(ctx.message()));
   }
 
   bool start() {
@@ -124,8 +125,8 @@ class EchoServer {
     // Start server and WAIT for result using Future API
     logger_.info("server", "startup", "Starting server on port " + std::to_string(port_) + "...");
     auto start_future = server_->start();
-    
-    if (!start_future.get()) { // Blocking wait for start result
+
+    if (!start_future.get()) {  // Blocking wait for start result
       logger_.error("server", "startup", "Failed to start server - port may be in use or other IO error");
       return false;
     }
@@ -205,6 +206,6 @@ int main(int argc, char** argv) {
   echo_server->print_info();
   echo_server->run();
   echo_server->shutdown();
-  
+
   return 0;
 }

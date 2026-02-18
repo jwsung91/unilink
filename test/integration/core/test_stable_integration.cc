@@ -31,22 +31,18 @@ using namespace std::chrono_literals;
 
 class StableCoreIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    port_ = TestUtils::getAvailableTestPort();
-  }
+  void SetUp() override { port_ = TestUtils::getAvailableTestPort(); }
   uint16_t port_;
 };
 
 TEST_F(StableCoreIntegrationTest, ServerClientStability) {
   std::atomic<int> msg_count{0};
-  auto server = tcp_server(port_)
-                .on_data([&](const wrapper::MessageContext&) { msg_count++; })
-                .build();
+  auto server = tcp_server(port_).on_data([&](const wrapper::MessageContext&) { msg_count++; }).build();
 
   ASSERT_TRUE(server->start().get());
 
   auto client = tcp_client("127.0.0.1", port_).auto_manage(true).build();
-  
+
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 2000));
 
   for (int i = 0; i < 10; ++i) {

@@ -36,7 +36,7 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
       max_clients_(0),
       client_limit_set_(false) {
   if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
-  
+
   // Ensure background IO service is running
   AutoInitializer::ensure_io_context_running();
 }
@@ -64,8 +64,10 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   }
 
   if (client_limit_set_) {
-    if (max_clients_ == 0) server->set_unlimited_clients();
-    else server->set_client_limit(max_clients_);
+    if (max_clients_ == 0)
+      server->set_unlimited_clients();
+    else
+      server->set_client_limit(max_clients_);
   }
 
   if (auto_manage_) {
@@ -126,14 +128,12 @@ TcpServerBuilder& TcpServerBuilder::max_clients(size_t max) {
 }
 
 TcpServerBuilder& TcpServerBuilder::single_client() {
-  max_clients_ = 1; // Simplified: actually handled by TcpServer's set_client_limit(1)
+  max_clients_ = 1;  // Simplified: actually handled by TcpServer's set_client_limit(1)
   client_limit_set_ = true;
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::multi_client(size_t max) {
-  return max_clients(max);
-}
+TcpServerBuilder& TcpServerBuilder::multi_client(size_t max) { return max_clients(max); }
 
 TcpServerBuilder& TcpServerBuilder::unlimited_clients() {
   max_clients_ = 0;
