@@ -1,5 +1,6 @@
 var classunilink_1_1wrapper_1_1Serial =
 [
+    [ "Impl", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html", "structunilink_1_1wrapper_1_1Serial_1_1Impl" ],
     [ "Serial", "classunilink_1_1wrapper_1_1Serial.html#aa0f2fccb8e5d86b5e35b4cc0adebb66d", null ],
     [ "Serial", "classunilink_1_1wrapper_1_1Serial.html#a9d16f32df3b73a11fbc8db75d51db03d", null ],
     [ "Serial", "classunilink_1_1wrapper_1_1Serial.html#a81629c8bfaf3220c128f37ca9de2858d", null ],
