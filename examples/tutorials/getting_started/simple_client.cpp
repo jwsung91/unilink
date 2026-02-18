@@ -14,39 +14,33 @@
  * limitations under the License.
  */
 
-/**
- * @file simple_client.cpp
- * @brief Minimal TCP client example - simplest possible code!
- *
- * This demonstrates the absolute minimum code needed to create
- * a functional TCP client with unilink.
- *
- * Usage:
- *   ./simple_client
- */
-
 #include <iostream>
-#include <thread>
+#include <string>
 
 #include "unilink/unilink.hpp"
 
+using namespace unilink;
+
 int main() {
-  // Step 1: Create and configure a TCP client
-  auto client = unilink::tcp_client("127.0.0.1", 8080)
-                    .on_data([](const std::string& data) { std::cout << "Received: " << data << std::endl; })
+  // Create a TCP client and connect to localhost:8080
+  auto client = tcp_client("127.0.0.1", 8080)
+                    .on_connect([](const wrapper::ConnectionContext& ctx) { 
+                      std::cout << "Connected to server!" << std::endl; 
+                    })
+                    .on_data([](const wrapper::MessageContext& ctx) { 
+                      std::cout << "Received: " << ctx.data() << std::endl; 
+                    })
                     .build();
 
-  // Step 2: Start the connection
-  client->start();
+  // Start the client (returns a future)
+  auto start_result = client->start();
+  
+  // You can wait for the result if needed
+  if (start_result.get()) {
+    client->send("Hello, Unilink!");
+  } else {
+    std::cerr << "Failed to connect to server." << std::endl;
+  }
 
-  // Step 3: Send data (when connected)
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-  client->send("Hello, Server!");
-
-  // Step 4: Keep running
-  std::this_thread::sleep_for(std::chrono::seconds(5));
-
-  // Step 5: Clean shutdown
-  client->stop();
   return 0;
 }

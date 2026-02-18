@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "test/utils/test_utils.hpp"
+#include "unilink/interface/channel.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -43,9 +44,9 @@ class MockChannel : public unilink::interface::Channel {
   void async_write_copy(unilink::memory::ConstByteSpan) override {}
   void async_write_move(std::vector<uint8_t>&&) override {}
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {}
-  void on_bytes(OnBytes) override {}
-  void on_state(OnState) override {}
-  void on_backpressure(OnBackpressure) override {}
+  void on_bytes(unilink::interface::Channel::OnBytes) override {}
+  void on_state(unilink::interface::Channel::OnState) override {}
+  void on_backpressure(unilink::interface::Channel::OnBackpressure) override {}
 };
 }  // namespace
 
@@ -87,7 +88,6 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
 
   // Start server
   server_->start();
-  // Note: is_running() method might not be available
 
   // Stop server
   server_->stop();
@@ -178,26 +178,23 @@ TEST_F(AdvancedTcpServerCoverageTest, BindingConflictTriggersErrorCallback) {
   // First server binds successfully
   auto server1 = unilink::tcp_server(port)
                      .unlimited_clients()
-                     .on_error([&](const std::string& err) {
-                       (void)err;
+                     .on_error([&](const wrapper::ErrorContext& ctx) {
                        error_called = true;
                      })
                      .build();
   ASSERT_NE(server1, nullptr);
-  server1->start();
-  TestUtils::waitFor(200);  // allow bind
+  server1->start().get(); // Wait for bind
 
   // Second server attempts same port (no retry)
   server_ = unilink::tcp_server(port)
                 .unlimited_clients()
                 .enable_port_retry(false)
-                .on_error([&](const std::string& err) {
-                  (void)err;
+                .on_error([&](const wrapper::ErrorContext& ctx) {
                   error_called = true;
                 })
                 .build();
   ASSERT_NE(server_, nullptr);
-  server_->start();
+  server_->start(); // Don't wait, it should fail
 
   // We expect bind to fail and error callback to fire (or at least not listen)
   TestUtils::waitFor(200);
@@ -209,16 +206,16 @@ TEST_F(AdvancedTcpServerCoverageTest, BindingConflictTriggersErrorCallback) {
 
 TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsConnectedClients) {
   server_ =
-      unilink::tcp_server(test_port_).unlimited_clients().on_multi_connect([](size_t, const std::string&) {}).build();
+      unilink::tcp_server(test_port_).unlimited_clients().on_connect([](const wrapper::ConnectionContext&) {}).build();
   ASSERT_NE(server_, nullptr);
-  server_->start();
+  server_->start().get();
 
   std::atomic<bool> connected{false};
   std::atomic<bool> disconnected_or_down{false};
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .on_connect([&]() { connected = true; })
-                    .on_disconnect([&]() { disconnected_or_down = true; })
-                    .on_error([&](const std::string&) { disconnected_or_down = true; })
+                    .on_connect([&](const wrapper::ConnectionContext&) { connected = true; })
+                    .on_disconnect([&](const wrapper::ConnectionContext&) { disconnected_or_down = true; })
+                    .on_error([&](const wrapper::ErrorContext&) { disconnected_or_down = true; })
                     .auto_manage(true)
                     .build();
 
@@ -236,21 +233,21 @@ TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsConnectedClients) {
 
 TEST_F(AdvancedTcpServerCoverageTest, StopDisconnectsAllConnectedClients) {
   server_ =
-      unilink::tcp_server(test_port_).unlimited_clients().on_multi_connect([](size_t, const std::string&) {}).build();
+      unilink::tcp_server(test_port_).unlimited_clients().on_connect([](const wrapper::ConnectionContext&) {}).build();
   ASSERT_NE(server_, nullptr);
-  server_->start();
+  server_->start().get();
 
   std::atomic<int> connected{0};
   std::atomic<int> disconnected{0};
 
   auto make_client = [&](int id) {
     return unilink::tcp_client("127.0.0.1", test_port_)
-        .on_connect([&, id]() {
+        .on_connect([&, id](const wrapper::ConnectionContext&) {
           (void)id;
           connected.fetch_add(1);
         })
-        .on_disconnect([&]() { disconnected.fetch_add(1); })
-        .on_error([&](const std::string&) { disconnected.fetch_add(1); })
+        .on_disconnect([&](const wrapper::ConnectionContext&) { disconnected.fetch_add(1); })
+        .on_error([&](const wrapper::ErrorContext&) { disconnected.fetch_add(1); })
         .auto_manage(true)
         .build();
   };
@@ -277,13 +274,13 @@ TEST_F(AdvancedTcpServerCoverageTest, StableClientIdsAreMonotonicAndNotReused) {
 
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()
-                .on_multi_connect([&](size_t client_id, const std::string&) {
+                .on_connect([&](const wrapper::ConnectionContext& ctx) {
                   std::lock_guard<std::mutex> lk(ids_mutex);
-                  ids.push_back(client_id);
+                  ids.push_back(ctx.client_id());
                 })
                 .build();
   ASSERT_NE(server_, nullptr);
-  server_->start();
+  server_->start().get();
   TestUtils::waitFor(50);
 
   auto make_client = [&]() { return unilink::tcp_client("127.0.0.1", test_port_).auto_manage(true).build(); };
@@ -338,13 +335,13 @@ TEST_F(AdvancedTcpServerCoverageTest, StopFromCallbackDoesNotDeadlock) {
 
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()
-                .on_multi_connect([&](size_t, const std::string&) {
+                .on_connect([&](const wrapper::ConnectionContext&) {
                   stop_called = true;
                   server_->stop();
                 })
                 .build();
   ASSERT_NE(server_, nullptr);
-  server_->start();
+  server_->start().get();
 
   auto client = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
   ASSERT_NE(client, nullptr);
@@ -363,14 +360,14 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
 
   server_ = unilink::tcp_server(test_port_)
                 .unlimited_clients()
-                .on_multi_connect([&](size_t client_id, const std::string&) {
+                .on_connect([&](const wrapper::ConnectionContext& ctx) {
                   std::lock_guard<std::mutex> lk(ids_mutex);
-                  ids.push_back(client_id);
+                  ids.push_back(ctx.client_id());
                 })
                 .build();
   ASSERT_NE(server_, nullptr);
-  server_->notify_send_failure(true).on_error([&](const std::string&) { error_called = true; });
-  server_->start();
+  server_->notify_send_failure(true).on_error([&](const wrapper::ErrorContext&) { error_called = true; });
+  server_->start().get();
 
   auto client1 = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
   auto client2 = unilink::tcp_client("127.0.0.1", test_port_).auto_manage(false).build();
@@ -391,15 +388,15 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
     first_id = ids.front();
   }
 
-  EXPECT_TRUE(server_->send_to_client(first_id, "ping"));
-  EXPECT_TRUE(server_->broadcast("hello"));
+  EXPECT_TRUE(server_->send_to(first_id, "ping"));
+  server_->broadcast("hello");
 
-  EXPECT_FALSE(server_->send_to_client(999999, "invalid"));
+  EXPECT_FALSE(server_->send_to(999999, "invalid"));
 
   server_->stop();
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() == 0; }, 2000));
-  EXPECT_FALSE(server_->send_to_client(first_id, "should fail"));
-  EXPECT_FALSE(server_->broadcast("down"));
+  EXPECT_FALSE(server_->send_to(first_id, "should fail"));
+  server_->broadcast("down");
 
   client1->stop();
   client2->stop();
@@ -415,21 +412,18 @@ TEST_F(AdvancedTcpServerCoverageTest, UnlimitedClientsConfiguration) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-  // Server not started yet
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, SingleClientConfiguration) {
   server_ = unilink::tcp_server(test_port_).single_client().build();
 
   ASSERT_NE(server_, nullptr);
-  // Server not started yet
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, MultiClientConfiguration) {
   server_ = unilink::tcp_server(test_port_).multi_client(5).build();
 
   ASSERT_NE(server_, nullptr);
-  // Server not started yet
 }
 
 // ============================================================================
@@ -440,7 +434,6 @@ TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-  // Server not started yet
 }
 
 // ============================================================================
@@ -451,17 +444,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SetMessageHandler) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-
-  // Note: set_message_handler might not be available in this API
-  // server_->set_message_handler([&handler_called, &received_message](
-  //     const std::string& message, std::shared_ptr<interface::Channel> channel) {
-  //   handler_called = true;
-  //   received_message = message;
-  // });
-
-  // Start server
   server_->start();
-  // Server started
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, StopWithGenericChannelIsFast) {
@@ -474,8 +457,6 @@ TEST_F(AdvancedTcpServerCoverageTest, StopWithGenericChannelIsFast) {
 
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-  // Before fix: expected ~500ms
-  // After fix: expected < 100ms
   EXPECT_LT(duration, 100) << "Stop() took too long: " << duration << "ms";
 }
 
@@ -483,22 +464,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SetConnectionHandler) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-
-  // Note: set_connection_handler might not be available in this API
-  // server_->set_connection_handler([&connection_handler_called](
-  //     std::shared_ptr<interface::Channel> channel) {
-  //   connection_handler_called = true;
-  // });
-
-  // Note: set_disconnection_handler might not be available
-  // server_->set_disconnection_handler([&disconnection_handler_called](
-  //     std::shared_ptr<interface::Channel> channel) {
-  //   disconnection_handler_called = true;
-  // });
-
-  // Start server
   server_->start();
-  // Server started
 }
 
 // ============================================================================
@@ -511,9 +477,6 @@ TEST_F(AdvancedTcpServerCoverageTest, BroadcastToAllClients) {
   ASSERT_NE(server_, nullptr);
 
   server_->start();
-  // Server started
-
-  // Try to broadcast (no clients connected, should be safe)
   server_->broadcast("Test broadcast message");
 }
 
@@ -523,9 +486,6 @@ TEST_F(AdvancedTcpServerCoverageTest, BroadcastToSpecificClient) {
   ASSERT_NE(server_, nullptr);
 
   server_->start();
-  // Server started
-
-  // Try to broadcast (no clients connected, should be safe)
   server_->broadcast("Test message");
 }
 
@@ -537,28 +497,14 @@ TEST_F(AdvancedTcpServerCoverageTest, GetServerInfo) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-
-  // Note: get_server_info might not be available
-  // auto info = server_->get_server_info();
-  // EXPECT_EQ(info.port, test_port_);
-  // EXPECT_FALSE(info.is_running);  // Not started yet
-
   server_->start();
-  // info = server_->get_server_info();
-  // EXPECT_EQ(info.port, test_port_);
-  // EXPECT_TRUE(info.is_running);
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, GetConnectedClientsCount) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-
-  // Note: get_connected_clients_count might not be available
-  // EXPECT_EQ(server_->get_connected_clients_count(), 0);
-
   server_->start();
-  // EXPECT_EQ(server_->get_connected_clients_count(), 0);  // Still 0, no clients connected
 }
 
 // ============================================================================
@@ -566,30 +512,23 @@ TEST_F(AdvancedTcpServerCoverageTest, GetConnectedClientsCount) {
 // ============================================================================
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerWithInvalidPort) {
-  // Try to create server with port 0 (invalid)
   try {
     server_ = unilink::tcp_server(0).unlimited_clients().build();
-
-    // If creation succeeds, try to start
     if (server_) {
       server_->start();
     }
   } catch (...) {
-    // Expected for invalid port
   }
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, ServerWithHighPort) {
-  // Try to create server with very high port
   server_ = unilink::tcp_server(65535).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
 
-  // Try to start (might fail due to permissions)
   try {
     server_->start();
   } catch (...) {
-    // Expected for high port numbers
   }
 }
 
@@ -605,7 +544,6 @@ TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
   std::vector<std::thread> threads;
   const int num_threads = 4;
 
-  // Start multiple threads trying to start/stop server
   for (int i = 0; i < num_threads; ++i) {
     threads.emplace_back([this, i]() {
       if (i % 2 == 0) {
@@ -616,15 +554,9 @@ TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
     });
   }
 
-  // Wait for all threads
   for (auto& thread : threads) {
     thread.join();
   }
-
-  // Server should be in some consistent state
-  // Note: is_running() might not be available
-  // bool is_running = server_->is_running();
-  // EXPECT_TRUE(is_running || !is_running);  // Should be either running or not
 }
 
 // ============================================================================
@@ -636,7 +568,6 @@ TEST_F(AdvancedTcpServerCoverageTest, RapidStartStop) {
 
   ASSERT_NE(server_, nullptr);
 
-  // Rapid start/stop cycles
   for (int i = 0; i < 10; ++i) {
     server_->start();
     std::this_thread::sleep_for(10ms);
@@ -649,17 +580,5 @@ TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
   server_ = unilink::tcp_server(test_port_).unlimited_clients().build();
 
   ASSERT_NE(server_, nullptr);
-
-  // Note: Handler methods might not be available in this API
-  // Set initial handlers
-  // server_->set_message_handler([](const std::string&, std::shared_ptr<interface::Channel>) {});
-  // server_->set_connection_handler([](std::shared_ptr<interface::Channel>) {});
-
-  // Replace handlers
-  // server_->set_message_handler([](const std::string&, std::shared_ptr<interface::Channel>) {});
-  // server_->set_connection_handler([](std::shared_ptr<interface::Channel>) {});
-
-  // Start server
   server_->start();
-  // Server started
 }

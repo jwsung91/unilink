@@ -14,126 +14,74 @@
  * limitations under the License.
  */
 
-/**
- * @file echo_server.cpp
- * @brief Tutorial 2: Basic echo server
- *
- * This example demonstrates:
- * - Creating a TCP server
- * - Accepting client connections
- * - Echoing received data back to clients
- * - Tracking connected clients
- *
- * Usage:
- *   ./echo_server [port]
- *
- * Example:
- *   ./echo_server 8080
- *
- * Test with:
- *   telnet localhost 8080
- *   or
- *   nc localhost 8080
- */
-
-#include <atomic>
-#include <csignal>
 #include <iostream>
-#include <thread>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "unilink/unilink.hpp"
 
-// Global flag for graceful shutdown
-std::atomic<bool> g_running{true};
+/**
+ * Echo Server Tutorial
+ * 
+ * Shows how to use ServerInterface, Context objects, and Future-based initialization.
+ */
 
-void signal_handler(int signal) {
-  if (signal == SIGINT || signal == SIGTERM) {
-    std::cout << "\nReceived shutdown signal..." << std::endl;
-    g_running.store(false);
-  }
-}
+using namespace unilink;
 
 class EchoServer {
- private:
-  std::shared_ptr<unilink::wrapper::TcpServer> server_;
-  std::atomic<int> client_count_{0};
-  uint16_t port_;
-
  public:
-  EchoServer(uint16_t port) : port_(port) {}
-
-  void start() {
-    std::cout << "Starting echo server on port " << port_ << std::endl;
-
-    server_ = unilink::tcp_server(port_)
-                  .on_connect([this](size_t client_id, const std::string& ip) { handle_connect(client_id, ip); })
-                  .on_data([this](size_t client_id, const std::string& data) { handle_data(client_id, data); })
-                  .on_disconnect([this](size_t client_id) { handle_disconnect(client_id); })
-                  .on_error([this](const std::string& error) { handle_error(error); })
+  void start(uint16_t port) {
+    server_ = tcp_server(port)
+                  .unlimited_clients()
+                  .enable_port_retry(true)
+                  .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(ctx); })
+                  .on_data([this](const wrapper::MessageContext& ctx) { handle_data(ctx); })
                   .build();
 
-    server_->start();
-
-    std::cout << "Server started! Waiting for connections..." << std::endl;
-    std::cout << "Press Ctrl+C to stop" << std::endl;
+    std::cout << "Starting server on port " << port << "..." << std::endl;
+    
+    // Future-based result check
+    if (server_->start().get()) {
+      std::cout << "✓ Server is now listening." << std::endl;
+    } else {
+      std::cerr << "✗ Server failed to start." << std::endl;
+    }
   }
 
-  void handle_connect(size_t client_id, const std::string& ip) {
-    client_count_++;
-    std::cout << "[Client " << client_id << "] Connected from " << ip << " (Total clients: " << client_count_ << ")"
-              << std::endl;
-
-    // Send welcome message
-    server_->send_to_client(client_id, "Welcome to Echo Server!\n");
+  void handle_connect(const wrapper::ConnectionContext& ctx) {
+    std::cout << "[Connect] Client ID: " << ctx.client_id() << " Info: " << ctx.client_info() << std::endl;
+    if (server_) {
+      server_->send_to(ctx.client_id(), "Welcome to Echo Server!\n");
+    }
   }
 
-  void handle_data(size_t client_id, const std::string& data) {
-    std::cout << "[Client " << client_id << "] Received: " << data;
-
-    // Echo back the data
-    server_->send_to_client(client_id, "Echo: " + data);
+  void handle_data(const wrapper::MessageContext& ctx) {
+    std::cout << "[Data] ID " << ctx.client_id() << ": " << ctx.data() << std::endl;
+    if (server_) {
+      // Echo back to the specific client
+      server_->send_to(ctx.client_id(), "Echo: " + std::string(ctx.data()));
+    }
   }
-
-  void handle_disconnect(size_t client_id) {
-    client_count_--;
-    std::cout << "[Client " << client_id << "] Disconnected " << "(Remaining clients: " << client_count_ << ")"
-              << std::endl;
-  }
-
-  void handle_error(const std::string& error) { std::cerr << "[Error] " << error << std::endl; }
 
   void stop() {
     if (server_) {
-      std::cout << "Stopping server..." << std::endl;
-      server_->send("Server shutting down. Goodbye!\n");
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      server_->broadcast("Server shutting down. Goodbye!\n");
       server_->stop();
     }
   }
 
-  bool is_running() const { return server_ && server_->is_listening(); }
+ private:
+  std::shared_ptr<wrapper::TcpServer> server_;
 };
 
-int main(int argc, char** argv) {
-  // Set up signal handler
-  std::signal(SIGINT, signal_handler);
-  std::signal(SIGTERM, signal_handler);
+int main() {
+  EchoServer app;
+  app.start(8080);
 
-  // Parse port
-  uint16_t port = (argc > 1) ? static_cast<uint16_t>(std::stoi(argv[1])) : 8080;
+  std::cout << "Press Enter to stop the server..." << std::endl;
+  std::cin.get();
 
-  // Create and start server
-  EchoServer server(port);
-  server.start();
-
-  // Wait for shutdown signal
-  while (g_running.load() && server.is_running()) {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
-
-  // Cleanup
-  server.stop();
-  std::cout << "Server stopped." << std::endl;
-
+  app.stop();
   return 0;
 }

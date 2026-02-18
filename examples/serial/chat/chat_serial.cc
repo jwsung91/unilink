@@ -14,93 +14,86 @@
  * limitations under the License.
  */
 
-#include <atomic>
-#include <functional>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <thread>
-#include <vector>
 
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/unilink.hpp"
 
-// Example namespace usage - using namespace for simplicity in examples
 using namespace unilink;
 
-/**
- * @brief Chat application class for serial communication
- *
- * This class demonstrates member function binding for serial chat functionality.
- */
 class SerialChatApp {
  public:
   SerialChatApp(const std::string& device, uint32_t baud_rate)
-      : device_(device), baud_rate_(baud_rate), connected_(false) {}
+      : device_(device), baud_rate_(baud_rate), logger_(diagnostics::Logger::instance()) {
+    logger_.set_console_output(true);
+  }
 
   void run() {
-    // Using convenience function with member function pointers
     auto ul = unilink::serial(device_, baud_rate_)
-                  .on_connect(this, &SerialChatApp::handle_connect)
-                  .on_disconnect(this, &SerialChatApp::handle_disconnect)
-                  .on_data(this, &SerialChatApp::handle_data)
-                  .on_error(this, &SerialChatApp::handle_error)
+                  .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(); })
+                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) { handle_disconnect(); })
+                  .on_data([this](const wrapper::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
+                  .on_error([this](const wrapper::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
                   .build();
 
-    // Start input thread
-    std::thread input_thread([this, &ul] { this->input_loop(ul.get()); });
-
-    // Start the serial connection
     ul->start();
 
-    // Wait for input thread to finish
+    // Use a shared pointer to ensure the 'ul' object stays alive for the thread
+    auto shared_ul = std::shared_ptr<wrapper::Serial>(std::move(ul));
+    std::thread input_thread([this, shared_ul] { this->input_loop(shared_ul.get()); });
+
+    std::cout << "Serial Chat started. Type messages to send." << std::endl;
+    std::cout << "Type '/quit' to exit." << std::endl;
+
     input_thread.join();
-    ul->stop();
+    shared_ul->stop();
   }
 
  private:
-  // Member function callbacks - these can be bound directly to the builder
   void handle_connect() {
-    common::log_message("serial", "STATE", "Serial device connected");
-    connected_ = true;
+    logger_.info("serial", "STATE", "Serial device connected");
   }
 
   void handle_disconnect() {
-    common::log_message("serial", "STATE", "Serial device disconnected");
-    connected_ = false;
+    logger_.info("serial", "STATE", "Serial device disconnected");
   }
 
-  void handle_data(const std::string& data) { common::log_message("serial", "RX", data); }
+  void handle_data(const std::string& data) {
+    std::cout << "\n[RX] " << data << "\n> " << std::flush;
+  }
 
-  void handle_error(const std::string& error) { common::log_message("serial", "ERROR", error); }
+  void handle_error(const std::string& error) {
+    logger_.error("serial", "ERROR", error);
+  }
 
-  void input_loop(unilink::wrapper::Serial* serial) {
+  void input_loop(unilink::wrapper::Serial* ul) {
     std::string line;
+    std::cout << "> " << std::flush;
     while (std::getline(std::cin, line)) {
-      if (!connected_.load()) {
-        common::log_message("serial", "INFO", "(not connected)");
-        continue;
+      if (line == "/quit") break;
+      if (ul && ul->is_connected()) {
+        ul->send(line);
+        std::cout << "> " << std::flush;
+      } else {
+        logger_.warning("serial", "INFO", "(not connected)");
+        std::cout << "> " << std::flush;
       }
-      common::log_message("serial", "TX", line);
-      serial->send_line(line);
     }
   }
 
   std::string device_;
   uint32_t baud_rate_;
-  std::atomic<bool> connected_;
+  diagnostics::Logger& logger_;
 };
 
 int main(int argc, char** argv) {
-  if (argc < 3) {
-    std::cout << "Usage: " << argv[0] << " <device> <baud_rate>" << std::endl;
-    std::cout << "Example: " << argv[0] << " /dev/ttyUSB0 115200" << std::endl;
-    std::cout << "Example: " << argv[0] << " COM3 9600" << std::endl;
-    return 1;
-  }
+  std::string device = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
+  uint32_t baud = (argc > 2) ? static_cast<uint32_t>(std::stoul(argv[2])) : 115200;
 
-  std::string dev = argv[1];
-  uint32_t baud_rate = static_cast<uint32_t>(std::stoi(argv[2]));
-
-  SerialChatApp app(dev, baud_rate);
+  SerialChatApp app(device, baud);
   app.run();
 
   return 0;

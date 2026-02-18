@@ -14,102 +14,84 @@
  * limitations under the License.
  */
 
-#include <atomic>
-#include <chrono>
-#include <future>
 #include <iostream>
+#include <memory>
+#include <string>
 #include <thread>
-#include <vector>
 
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/unilink.hpp"
 
-// Example namespace usage - using namespace for simplicity in examples
 using namespace unilink;
 
-/**
- * @brief Example application class that demonstrates member function binding
- *
- * This class shows how to use the new member function pointer overloads
- * in the builder pattern to bind callback methods directly to class methods.
- */
 class SerialEchoApp {
  public:
   SerialEchoApp(const std::string& device, uint32_t baud_rate)
-      : device_(device), baud_rate_(baud_rate), connected_(false), stop_sending_(false) {}
+      : device_(device), baud_rate_(baud_rate), logger_(diagnostics::Logger::instance()) {
+    logger_.set_console_output(true);
+  }
 
   void run() {
-    // Using convenience function with member function pointers
     auto ul = unilink::serial(device_, baud_rate_)
-                  .on_connect(this, &SerialEchoApp::handle_connect)
-                  .on_disconnect(this, &SerialEchoApp::handle_disconnect)
-                  .on_data(this, &SerialEchoApp::handle_data)
-                  .on_error(this, &SerialEchoApp::handle_error)
-                  .retry_interval(5000)
+                  .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(); })
+                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) { handle_disconnect(); })
+                  .on_data([this](const wrapper::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
+                  .on_error([this](const wrapper::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
                   .build();
 
-    // Start sender thread
+    if (ul->start().get()) {
+      logger_.info("serial", "main", "Serial started successfully");
+    }
+
     std::thread sender_thread([this, &ul] { this->sender_loop(ul.get()); });
 
-    // Start the serial connection
-    ul->start();
+    std::cout << "Serial Echo started. Type something..." << std::endl;
+    std::cout << "Press Enter with empty message to exit." << std::endl;
 
-    // Wait for program termination
-    std::promise<void>().get_future().wait();
-
-    // Cleanup
-    stop_sending_ = true;
-    ul->stop();
     sender_thread.join();
+    ul->stop();
   }
 
  private:
-  // Member function callbacks - these can be bound directly to the builder
   void handle_connect() {
-    common::log_message("serial", "STATE", "Serial device connected");
-    connected_ = true;
+    logger_.info("serial", "STATE", "Serial device connected");
   }
 
   void handle_disconnect() {
-    common::log_message("serial", "STATE", "Serial device disconnected");
-    connected_ = false;
+    logger_.info("serial", "STATE", "Serial device disconnected");
   }
 
-  void handle_data(const std::string& data) { common::log_message("serial", "RX", data); }
+  void handle_data(const std::string& data) {
+    logger_.info("serial", "RX", data);
+  }
 
-  void handle_error(const std::string& error) { common::log_message("serial", "ERROR", error); }
+  void handle_error(const std::string& error) {
+    logger_.error("serial", "ERROR", error);
+  }
 
-  void sender_loop(unilink::wrapper::Serial* serial) {
-    uint64_t seq = 0;
-    const auto interval = std::chrono::milliseconds(500);
-
-    while (!stop_sending_) {
-      if (connected_) {
-        std::string msg = "SER " + std::to_string(seq++);
-        common::log_message("serial", "TX", msg);
-        serial->send_line(msg);
+  void sender_loop(unilink::wrapper::Serial* ul) {
+    std::string line;
+    while (std::getline(std::cin, line)) {
+      if (line.empty()) break;
+      if (ul && ul->is_connected()) {
+        ul->send(line);
+        logger_.info("serial", "TX", line);
+      } else {
+        std::cout << "(Not connected)" << std::endl;
       }
-      std::this_thread::sleep_for(interval);
     }
   }
 
   std::string device_;
   uint32_t baud_rate_;
-  std::atomic<bool> connected_;
-  std::atomic<bool> stop_sending_;
+  diagnostics::Logger& logger_;
 };
 
 int main(int argc, char** argv) {
-  if (argc < 3) {
-    std::cout << "Usage: " << argv[0] << " <device> <baud_rate>" << std::endl;
-    std::cout << "Example: " << argv[0] << " /dev/ttyUSB0 115200" << std::endl;
-    std::cout << "Example: " << argv[0] << " COM3 9600" << std::endl;
-    return 1;
-  }
+  std::string device = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
+  uint32_t baud = (argc > 2) ? static_cast<uint32_t>(std::stoul(argv[2])) : 115200;
 
-  std::string dev = argv[1];
-  uint32_t baud_rate = static_cast<uint32_t>(std::stoi(argv[2]));
-
-  SerialEchoApp app(dev, baud_rate);
+  SerialEchoApp app(device, baud);
   app.run();
 
   return 0;

@@ -80,7 +80,6 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStartStopMultipleTimes) {
 
   // Start client
   client_->start();
-  // Note: is_connected() might not be available
 
   // Stop client
   client_->stop();
@@ -116,8 +115,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStopWhenNotStarted) {
 TEST_F(AdvancedTcpClientCoverageTest, InvalidHostTriggersErrorCallback) {
   std::atomic<bool> error_called{false};
   client_ = unilink::tcp_client("256.256.256.256", test_port_)
-
-                .on_error([&error_called](const std::string&) { error_called = true; })
+                .on_error([&error_called](const wrapper::ErrorContext&) { error_called = true; })
                 .build();
 
   ASSERT_NE(client_, nullptr);
@@ -134,21 +132,18 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientWithHostAndPort) {
   client_ = unilink::tcp_client("127.0.0.1", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
-  // Client not started yet
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithLocalhost) {
   client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
-  // Client not started yet
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithIPv6Address) {
   client_ = unilink::tcp_client("::1", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
-  // Client not started yet
 }
 
 // ============================================================================
@@ -159,14 +154,12 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientWithRetryConfiguration) {
   client_ = unilink::tcp_client("localhost", test_port_).retry_interval(100).build();
 
   ASSERT_NE(client_, nullptr);
-  // Client not started yet
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithConnectionTimeout) {
   client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
-  // Client not started yet
 }
 
 // ============================================================================
@@ -217,9 +210,6 @@ TEST_F(AdvancedTcpClientCoverageTest, IsConnectedWhenStarted) {
 
   // Start client
   client_->start();
-
-  // Note: is_connected() behavior depends on implementation
-  // EXPECT_FALSE(client_->is_connected());  // No server running
 }
 
 // ============================================================================
@@ -227,44 +217,33 @@ TEST_F(AdvancedTcpClientCoverageTest, IsConnectedWhenStarted) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithInvalidHost) {
-  // Try to create client with invalid host
   try {
     client_ = unilink::tcp_client("invalid_host_that_does_not_exist", test_port_).build();
-
-    // If creation succeeds, try to start
     if (client_) {
       client_->start();
     }
   } catch (...) {
-    // Expected for invalid host
   }
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithInvalidPort) {
-  // Try to create client with port 0 (invalid)
   try {
     client_ = unilink::tcp_client("localhost", 0).build();
-
-    // If creation succeeds, try to start
     if (client_) {
       client_->start();
     }
   } catch (...) {
-    // Expected for invalid port
   }
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, ClientWithHighPort) {
-  // Try to create client with very high port
   client_ = unilink::tcp_client("localhost", 65535).build();
 
   ASSERT_NE(client_, nullptr);
 
-  // Try to start (might fail due to no server)
   try {
     client_->start();
   } catch (...) {
-    // Expected for high port numbers
   }
 }
 
@@ -278,9 +257,8 @@ TEST_F(AdvancedTcpClientCoverageTest, ConcurrentStartStop) {
   ASSERT_NE(client_, nullptr);
 
   std::vector<std::thread> threads;
-  const int num_threads = 2;  // Reduced number of threads to avoid race conditions
+  const int num_threads = 2;
 
-  // Start multiple threads trying to start/stop client
   for (int i = 0; i < num_threads; ++i) {
     threads.emplace_back([this, i]() {
       try {
@@ -292,22 +270,15 @@ TEST_F(AdvancedTcpClientCoverageTest, ConcurrentStartStop) {
           std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
       } catch (...) {
-        // Ignore exceptions in concurrent operations
       }
     });
   }
 
-  // Wait for all threads
   for (auto& thread : threads) {
     if (thread.joinable()) {
       thread.join();
     }
   }
-
-  // Client should be in some consistent state
-  // Note: is_connected() might not be available
-  // bool is_connected = client_->is_connected();
-  // EXPECT_TRUE(is_connected || !is_connected);  // Should be either connected or not
 }
 
 // ============================================================================
@@ -319,7 +290,6 @@ TEST_F(AdvancedTcpClientCoverageTest, RapidStartStop) {
 
   ASSERT_NE(client_, nullptr);
 
-  // Rapid start/stop cycles
   for (int i = 0; i < 10; ++i) {
     client_->start();
     std::this_thread::sleep_for(10ms);
@@ -332,18 +302,15 @@ TEST_F(AdvancedTcpClientCoverageTest, MultipleClients) {
   std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
   const int num_clients = 5;
 
-  // Create multiple clients
   for (int i = 0; i < num_clients; ++i) {
     auto client = unilink::tcp_client("localhost", static_cast<uint16_t>(test_port_ + i)).build();
     clients.push_back(std::move(client));
   }
 
-  // Start all clients
   for (auto& client : clients) {
     client->start();
   }
 
-  // Stop all clients
   for (auto& client : clients) {
     client->stop();
   }
@@ -354,24 +321,16 @@ TEST_F(AdvancedTcpClientCoverageTest, MultipleClients) {
 // ============================================================================
 
 TEST_F(AdvancedTcpClientCoverageTest, DestructorWithStartedClient) {
-  // Create client and start it
   auto client = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client, nullptr);
   client->start();
-
-  // Let destructor handle cleanup
-  // This tests the destructor logic
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, DestructorWithStoppedClient) {
-  // Create client but don't start it
   auto client = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client, nullptr);
-
-  // Let destructor handle cleanup
-  // This tests the destructor logic
 }
 
 // ============================================================================
@@ -382,25 +341,26 @@ TEST_F(AdvancedTcpClientCoverageTest, AutoStartEnabled) {
   client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
-  // Client should be started automatically
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, AutoStartDisabled) {
   client_ = unilink::tcp_client("localhost", test_port_).build();
 
   ASSERT_NE(client_, nullptr);
-  // Client should not be started automatically
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) {
   server_ =
-      unilink::tcp_server(test_port_).unlimited_clients().on_multi_connect([](size_t, const std::string&) {}).build();
+      unilink::tcp_server(test_port_).unlimited_clients().on_connect([](const wrapper::ConnectionContext&) {}).build();
   ASSERT_NE(server_, nullptr);
-  server_->start();
+  server_->start().get();
 
   std::atomic<bool> connected{false};
   client_ =
-      unilink::tcp_client("127.0.0.1", test_port_).on_connect([&]() { connected = true; }).auto_manage(true).build();
+      unilink::tcp_client("127.0.0.1", test_port_)
+          .on_connect([&](const wrapper::ConnectionContext&) { connected = true; })
+          .auto_manage(true)
+          .build();
   ASSERT_NE(client_, nullptr);
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return connected.load(); }, 1000));
@@ -418,7 +378,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
   auto client = std::make_shared<wrapper::TcpClient>("127.0.0.1", test_port_, external_ioc);
   ASSERT_NE(client, nullptr);
 
-  client->start();
+  client->start().get();
   client->stop();
 
   EXPECT_FALSE(external_ioc->stopped());
@@ -456,11 +416,9 @@ TEST_F(AdvancedTcpClientCoverageTest, ConnectionRetry) {
 
   ASSERT_NE(client_, nullptr);
 
-  // Try to start (will fail due to no server, but should retry)
   try {
     client_->start();
   } catch (...) {
-    // Expected due to no server
   }
 }
 
@@ -475,7 +433,6 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
 
   client_->start();
 
-  // Send multiple messages
   for (int i = 0; i < 10; ++i) {
     client_->send("Message " + std::to_string(i));
     client_->send_line("Line " + std::to_string(i));
@@ -489,7 +446,6 @@ TEST_F(AdvancedTcpClientCoverageTest, SendEmptyMessage) {
 
   client_->start();
 
-  // Send empty message
   client_->send("");
   client_->send_line("");
 }
@@ -501,7 +457,6 @@ TEST_F(AdvancedTcpClientCoverageTest, SendLongMessage) {
 
   client_->start();
 
-  // Send long message
   std::string long_message(1000, 'x');
   client_->send(long_message);
   client_->send_line(long_message);
