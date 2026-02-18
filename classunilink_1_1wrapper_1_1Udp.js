@@ -11,8 +11,8 @@ var classunilink_1_1wrapper_1_1Udp =
     [ "on_data", "classunilink_1_1wrapper_1_1Udp.html#ae04b14d83e19c0f4c481f0162b5df41e", null ],
     [ "on_disconnect", "classunilink_1_1wrapper_1_1Udp.html#ad622df41aed2ff66aad957f261fbedf6", null ],
     [ "on_error", "classunilink_1_1wrapper_1_1Udp.html#a9bda9ed81d4ae9336cb6ece7c5881f1f", null ],
-    [ "send", "classunilink_1_1wrapper_1_1Udp.html#aaf9600867b574c320ba08498efaba1dd", null ],
-    [ "send_line", "classunilink_1_1wrapper_1_1Udp.html#ae1f3d2c2c3039a9c6986cbcea4b37ffd", null ],
+    [ "send", "classunilink_1_1wrapper_1_1Udp.html#a5b3a62797f4769f5ac05a78248903526", null ],
+    [ "send_line", "classunilink_1_1wrapper_1_1Udp.html#a3eda877fe6128011222ba22f6752c13a", null ],
     [ "set_manage_external_context", "classunilink_1_1wrapper_1_1Udp.html#a088a216802fc71dac5fc0fb5d67b341d", null ],
     [ "start", "classunilink_1_1wrapper_1_1Udp.html#a4e3c099d9286452f5c4edf7d98e93aee", null ],
     [ "stop", "classunilink_1_1wrapper_1_1Udp.html#af859c7698df73fb8d6d1b6b96d96d91f", null ]

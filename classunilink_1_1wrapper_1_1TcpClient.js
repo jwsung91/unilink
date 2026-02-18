@@ -1,5 +1,6 @@
 var classunilink_1_1wrapper_1_1TcpClient =
 [
+    [ "Impl", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl" ],
     [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html#aec847c6eccf13b2568ef4fa4ef391957", null ],
     [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html#ae2f10b837856790c52402ec7384fc85b", null ],
     [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html#aa145ecb85f9256cb4e355da06fb6a35b", null ],
@@ -11,8 +12,8 @@ var classunilink_1_1wrapper_1_1TcpClient =
     [ "on_data", "classunilink_1_1wrapper_1_1TcpClient.html#aef50c01c7b208c868af1e388a7ef0b2d", null ],
     [ "on_disconnect", "classunilink_1_1wrapper_1_1TcpClient.html#ab769b0840932e5763e77d20950a4affb", null ],
     [ "on_error", "classunilink_1_1wrapper_1_1TcpClient.html#a0a9e954a14b22cef576b6b04162c31dc", null ],
-    [ "send", "classunilink_1_1wrapper_1_1TcpClient.html#a712721858fb0053356f606ca92ecc98d", null ],
-    [ "send_line", "classunilink_1_1wrapper_1_1TcpClient.html#a29e10ce7aa7f43e4a8a46aa5511678be", null ],
+    [ "send", "classunilink_1_1wrapper_1_1TcpClient.html#a3d9622d7f1df687cd59cfdddf24e9db3", null ],
+    [ "send_line", "classunilink_1_1wrapper_1_1TcpClient.html#a52896506c78724fc303b9268ddda5a69", null ],
     [ "set_connection_timeout", "classunilink_1_1wrapper_1_1TcpClient.html#ac296a4fd6c43e91a8b1c5fb9897670c5", null ],
     [ "set_manage_external_context", "classunilink_1_1wrapper_1_1TcpClient.html#a1b55f3c7212aaa1a2b80d056961f9cf5", null ],
     [ "set_max_retries", "classunilink_1_1wrapper_1_1TcpClient.html#a7ba268c95af87b158f0922d2c4eb40c6", null ],

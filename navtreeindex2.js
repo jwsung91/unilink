@@ -214,10 +214,10 @@ var NAVTREEINDEX2 =
 "classunilink_1_1util_1_1InputValidator.html#af4805041301f350197f4cd4f61258106":[18,0,0,10,0,0],
 "classunilink_1_1util_1_1InputValidator.html#afadfdcb51a842ac054a0bda6e47a4bb4":[18,0,0,10,0,15],
 "classunilink_1_1wrapper_1_1ChannelInterface.html":[18,0,0,11,0],
+"classunilink_1_1wrapper_1_1ChannelInterface.html#a14fb9222ca699358ee4e818bb977890c":[18,0,0,11,0,14],
 "classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d":[18,0,0,11,0,1],
 "classunilink_1_1wrapper_1_1ChannelInterface.html#a200ffcd4fbc71a258c51d7ee4716637a":[18,0,0,11,0,8],
-"classunilink_1_1wrapper_1_1ChannelInterface.html#a302fc617bc68410dba03b5c1a3b9bf05":[18,0,0,11,0,14],
-"classunilink_1_1wrapper_1_1ChannelInterface.html#a5333262b7e85dc9c68ef2ec90f710906":[18,0,0,11,0,13],
+"classunilink_1_1wrapper_1_1ChannelInterface.html#a457bd3d0e566402a8b620714840e5e85":[18,0,0,11,0,13],
 "classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1":[18,0,0,11,0,3],
 "classunilink_1_1wrapper_1_1ChannelInterface.html#a763856cfc616f497a2ab8f4c8f9330bd":[18,0,0,11,0,0],
 "classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe":[18,0,0,11,0,2],
@@ -243,11 +243,11 @@ var NAVTREEINDEX2 =
 "classunilink_1_1wrapper_1_1Serial.html#a334d5d27acaefd74b088eca099e8a023":[18,0,0,11,1,7],
 "classunilink_1_1wrapper_1_1Serial.html#a49a8f65c60fe8de6accf0dde6688dd67":[18,0,0,11,1,4],
 "classunilink_1_1wrapper_1_1Serial.html#a4a81c653e5af8fb52a62df82ff5a309f":[18,0,0,11,1,15],
-"classunilink_1_1wrapper_1_1Serial.html#a509451154ccdbc54e5d19f4ac886f275":[18,0,0,11,1,12],
 "classunilink_1_1wrapper_1_1Serial.html#a75d92342feb50976937067a8472cbdb3":[18,0,0,11,1,16],
 "classunilink_1_1wrapper_1_1Serial.html#a81629c8bfaf3220c128f37ca9de2858d":[18,0,0,11,1,2],
 "classunilink_1_1wrapper_1_1Serial.html#a976dc35b1bf360fcb28f0d3056d30bad":[18,0,0,11,1,17],
 "classunilink_1_1wrapper_1_1Serial.html#a9c7f8154cf8fa1f00053308eb116ba1a":[18,0,0,11,1,11],
 "classunilink_1_1wrapper_1_1Serial.html#a9d16f32df3b73a11fbc8db75d51db03d":[18,0,0,11,1,1],
-"classunilink_1_1wrapper_1_1Serial.html#a9d8a5f09ad47b36d2d5cb128d18c36b0":[18,0,0,11,1,10]
+"classunilink_1_1wrapper_1_1Serial.html#a9d8a5f09ad47b36d2d5cb128d18c36b0":[18,0,0,11,1,10],
+"classunilink_1_1wrapper_1_1Serial.html#aa0f2fccb8e5d86b5e35b4cc0adebb66d":[18,0,0,11,1,0]
 };

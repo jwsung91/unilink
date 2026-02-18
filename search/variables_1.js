@@ -1,15 +1,13 @@
 var searchData=
 [
-  ['category_1415',['category',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#af4e2266aac1e309b00df03e1e7d629de',1,'unilink::diagnostics::ErrorInfo']]],
-  ['cfg_5f_1416',['cfg_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a37dd574ee9a28e69e23d624f068b99c7',1,'unilink::transport::TcpClient::Impl']]],
-  ['char_5fsize_1417',['char_size',['../structunilink_1_1config_1_1SerialConfig.html#a417cbb35de0bacf99b3d89f5c1d8309b',1,'unilink::config::SerialConfig']]],
-  ['component_1418',['component',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#add67e4b87d957bd9eaf36117982d781a',1,'unilink::diagnostics::ErrorInfo::component()'],['../structunilink_1_1diagnostics_1_1LogEntry.html#a0d20055613a7903cab2fafa8da315c5f',1,'unilink::diagnostics::LogEntry::component()']]],
-  ['connect_5ftimer_5f_1419',['connect_timer_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a32fa47fa6b8f24a720f55ce2a93a7f59',1,'unilink::transport::TcpClient::Impl']]],
-  ['connected_5f_1420',['connected_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a0b188fcb25640d4526b041e684151860',1,'unilink::transport::TcpClient::Impl']]],
-  ['connection_5ftimeout_5fms_1421',['connection_timeout_ms',['../structunilink_1_1config_1_1TcpClientConfig.html#a80c0b70306072d8ab86307fb634303fe',1,'unilink::config::TcpClientConfig']]],
-  ['context_1422',['context',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a608b6682be93f01bdb4a22c99d0f4368',1,'unilink::diagnostics::ErrorInfo']]],
-  ['current_5fallocations_1423',['current_allocations',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#abf60064e70400d72150c48732e5ed75f',1,'unilink::memory::MemoryTracker::MemoryStats']]],
-  ['current_5fbytes_5fallocated_1424',['current_bytes_allocated',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a2bfa2675319600bed9098ff053a1be53',1,'unilink::memory::MemoryTracker::MemoryStats']]],
-  ['current_5fseq_5f_1425',['current_seq_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a11d7d58c126340a3656576a27d95dd73',1,'unilink::transport::TcpClient::Impl']]],
-  ['current_5fwrite_5fbuffer_5f_1426',['current_write_buffer_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#aa9c12044ed25332be94e2c5516d6458f',1,'unilink::transport::TcpClient::Impl']]]
+  ['backpressure_5factive_5f_1448',['backpressure_active_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ab4132fc18ca34fcf357d041291601427',1,'unilink::transport::TcpClient::Impl']]],
+  ['backpressure_5fthreshold_1449',['backpressure_threshold',['../structunilink_1_1config_1_1SerialConfig.html#ab809d4a5d5c68cee486757c900eb80c8',1,'unilink::config::SerialConfig::backpressure_threshold()'],['../structunilink_1_1config_1_1TcpClientConfig.html#a8bbb9f6a516d635eb4742f8234ce3c17',1,'unilink::config::TcpClientConfig::backpressure_threshold()'],['../structunilink_1_1config_1_1TcpServerConfig.html#ac14f4e2fbe1bea99a2b9ed92925d6039',1,'unilink::config::TcpServerConfig::backpressure_threshold()'],['../structunilink_1_1config_1_1UdpConfig.html#a44eecdf153fbb4e1a797935db3c1245b',1,'unilink::config::UdpConfig::backpressure_threshold()']]],
+  ['batch_5fcount_1450',['batch_count',['../structunilink_1_1diagnostics_1_1AsyncLogStats.html#ab177d7886568f0a95c08901bb2a5408c',1,'unilink::diagnostics::AsyncLogStats']]],
+  ['batch_5fsize_1451',['batch_size',['../structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790',1,'unilink::diagnostics::AsyncLogConfig']]],
+  ['baud_5frate_1452',['baud_rate',['../structunilink_1_1config_1_1SerialConfig.html#afce9cf7f09c90afddb18fcc6eaa5fb28',1,'unilink::config::SerialConfig']]],
+  ['boost_5ferror_1453',['boost_error',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a3efcff2a0c308001d6075cf9695decc6',1,'unilink::diagnostics::ErrorInfo']]],
+  ['bp_5fhigh_5f_1454',['bp_high_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#aba907a38ed02e723bc2309dcb3990987',1,'unilink::transport::TcpClient::Impl']]],
+  ['bp_5flimit_5f_1455',['bp_limit_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a239679fd5ae98cea3f10f834095f5f87',1,'unilink::transport::TcpClient::Impl']]],
+  ['bp_5flow_5f_1456',['bp_low_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ab4342b17199bb243efb7cf6eb1666229',1,'unilink::transport::TcpClient::Impl']]],
+  ['bytes_5fhandler_5f_1457',['bytes_handler_',['../structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a385dddc34098f18df6b2292739ec79a3',1,'unilink::wrapper::TcpClient::Impl']]]
 ];

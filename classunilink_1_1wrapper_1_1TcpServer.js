@@ -1,5 +1,6 @@
 var classunilink_1_1wrapper_1_1TcpServer =
 [
+    [ "Impl", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl" ],
     [ "MultiClientConnectHandler", "classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240", null ],
     [ "MultiClientDataHandler", "classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d", null ],
     [ "MultiClientDisconnectHandler", "classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6", null ],
@@ -24,8 +25,8 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "on_multi_connect", "classunilink_1_1wrapper_1_1TcpServer.html#a606a24055abc929cee6a9cf42a214fe3", null ],
     [ "on_multi_data", "classunilink_1_1wrapper_1_1TcpServer.html#ad315add7025b91afcbce12df0d5a338f", null ],
     [ "on_multi_disconnect", "classunilink_1_1wrapper_1_1TcpServer.html#abf3fc29cd04d90607101d3db10a5c6ea", null ],
-    [ "send", "classunilink_1_1wrapper_1_1TcpServer.html#ab060c8630dbb5b9e820170fb4b1bd4f6", null ],
-    [ "send_line", "classunilink_1_1wrapper_1_1TcpServer.html#a3545734f69545eac14fe2b63ebab465d", null ],
+    [ "send", "classunilink_1_1wrapper_1_1TcpServer.html#a22cd3ba8f87339042eab29d936017bff", null ],
+    [ "send_line", "classunilink_1_1wrapper_1_1TcpServer.html#a9c5e7000807e74dd2ecdafdd54ee1908", null ],
     [ "send_to_client", "classunilink_1_1wrapper_1_1TcpServer.html#af21aa186b919c9e279974bbc295af9a8", null ],
     [ "set_client_limit", "classunilink_1_1wrapper_1_1TcpServer.html#a8b51047762007f3fcec8ce1194196f45", null ],
     [ "set_manage_external_context", "classunilink_1_1wrapper_1_1TcpServer.html#a18d359e5cb9c9ec774581406493c5d54", null ],

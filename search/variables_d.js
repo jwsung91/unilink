@@ -1,16 +1,13 @@
 var searchData=
 [
-  ['read_5fchunk_1529',['read_chunk',['../structunilink_1_1config_1_1SerialConfig.html#aa93fec717b98438e20efe4a6c7bf6b54',1,'unilink::config::SerialConfig']]],
-  ['remote_5faddress_1530',['remote_address',['../structunilink_1_1config_1_1UdpConfig.html#a8f48eb6ccf26e799e0b8fb408cfb1ad5',1,'unilink::config::UdpConfig']]],
-  ['remote_5fport_1531',['remote_port',['../structunilink_1_1config_1_1UdpConfig.html#af8909d030ce8eda3215dd5c7a8e40340',1,'unilink::config::UdpConfig']]],
-  ['reopen_5fon_5ferror_1532',['reopen_on_error',['../structunilink_1_1config_1_1SerialConfig.html#ac766f5f8409765f6ab65980ff84aaf31',1,'unilink::config::SerialConfig']]],
-  ['required_1533',['required',['../structunilink_1_1config_1_1ConfigItem.html#a2c10df409e6a65dc82c6a287df990ccb',1,'unilink::config::ConfigItem']]],
-  ['resolver_5f_1534',['resolver_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ac7c0ef6846db06a83475c96e19c04c22',1,'unilink::transport::TcpClient::Impl']]],
-  ['retry_5fattempts_5f_1535',['retry_attempts_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a8147cb223df03045cf875906cacc63bf',1,'unilink::transport::TcpClient::Impl']]],
-  ['retry_5fcount_1536',['retry_count',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a39c79e4468881a7e1ea504434119bc50',1,'unilink::diagnostics::ErrorInfo']]],
-  ['retry_5finterval_5fms_1537',['retry_interval_ms',['../structunilink_1_1config_1_1SerialConfig.html#a876b0fc84c46b0775969e2449b5383e5',1,'unilink::config::SerialConfig::retry_interval_ms()'],['../structunilink_1_1config_1_1TcpClientConfig.html#a866a6dcc13f55b167edd31308bbbed7a',1,'unilink::config::TcpClientConfig::retry_interval_ms()']]],
-  ['retry_5ftimer_5f_1538',['retry_timer_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a90c00f8a77eddaa200774e652365befd',1,'unilink::transport::TcpClient::Impl']]],
-  ['retryable_1539',['retryable',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a352382947538a6b6c77ebef6a08c1f37',1,'unilink::diagnostics::ErrorInfo']]],
-  ['retryable_5ferrors_1540',['retryable_errors',['../structunilink_1_1diagnostics_1_1ErrorStats.html#ae8f4b7c56716afcdd8fef640ec14b76d',1,'unilink::diagnostics::ErrorStats']]],
-  ['rx_5f_1541',['rx_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a38c54fbbedb4e949ebd5188f4642fb66',1,'unilink::transport::TcpClient::Impl']]]
+  ['parity_1588',['parity',['../structunilink_1_1config_1_1SerialConfig.html#aac99c4bd2145b420ba8e68861556b17e',1,'unilink::config::SerialConfig']]],
+  ['peak_5fallocations_1589',['peak_allocations',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a9cf4effa46e5eca772684b5419aedfb9',1,'unilink::memory::MemoryTracker::MemoryStats']]],
+  ['peak_5fbytes_5fallocated_1590',['peak_bytes_allocated',['../structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#aba9fb1e9a6a1d7294f268804ad631d78',1,'unilink::memory::MemoryTracker::MemoryStats']]],
+  ['pool_5fhits_1591',['pool_hits',['../structunilink_1_1memory_1_1MemoryPool_1_1PoolStats.html#a8589efcc55efb864e1a8b8ccbfb8d602',1,'unilink::memory::MemoryPool::PoolStats']]],
+  ['port_1592',['port',['../structunilink_1_1config_1_1TcpClientConfig.html#acba30b670711d398bb87ba94c3eb56f3',1,'unilink::config::TcpClientConfig::port()'],['../structunilink_1_1config_1_1TcpServerConfig.html#adce24401c84899b16320f528185f6636',1,'unilink::config::TcpServerConfig::port()']]],
+  ['port_5f_1593',['port_',['../structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ac340a7423e8b0e2d4010066223195502',1,'unilink::wrapper::TcpClient::Impl::port_()'],['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10e97ab04797fc1bfcf6f1d785cd634c',1,'unilink::wrapper::TcpServer::Impl::port_()']]],
+  ['port_5fretry_5fenabled_5f_1594',['port_retry_enabled_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#acc754b1bedbc5426ba62ecf552b9ee27',1,'unilink::wrapper::TcpServer::Impl']]],
+  ['port_5fretry_5finterval_5fms_1595',['port_retry_interval_ms',['../structunilink_1_1config_1_1TcpServerConfig.html#af01c976217548c39bb297fd76b3298d0',1,'unilink::config::TcpServerConfig']]],
+  ['port_5fretry_5finterval_5fms_5f_1596',['port_retry_interval_ms_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a8f3477df42b1fcbe0f6321fe5598189d',1,'unilink::wrapper::TcpServer::Impl']]],
+  ['ptr_1597',['ptr',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a0a25de20740ac76652b0e07d1b514e9c',1,'unilink::memory::MemoryTracker::AllocationInfo']]]
 ];
