@@ -31,17 +31,17 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">20</td>
-            <td class="headerCovTableEntry">22</td>
-            <td class="headerCovTableEntryHi">90.9 %</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-18 12:13:28</td>
+            <td class="headerValue">2026-02-19 02:40:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
@@ -56,8 +56,8 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">27</td>
-            <td class="headerCovTableEntry">54</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">20</td>
             <td class="headerCovTableEntryLo">50.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -110,25 +110,23 @@
 <a name="32"><span class="lineNum">      32 </span>                :            :  */</a>
 <a name="33"><span class="lineNum">      33 </span>                :            : class UNILINK_API UnilinkException : public std::runtime_error {</a>
 <a name="34"><span class="lineNum">      34 </span>                :            :  public:</a>
-<a name="35"><span class="lineNum">      35 </span>                :<span class="lineCov">        134 :   explicit UnilinkException(const std::string&amp; message, const std::string&amp; component = &quot;&quot;,</span></a>
+<a name="35"><span class="lineNum">      35 </span>                :<span class="lineCov">         97 :   explicit UnilinkException(const std::string&amp; message, const std::string&amp; component = &quot;&quot;,</span></a>
 <a name="36"><span class="lineNum">      36 </span>                :            :                             const std::string&amp; operation = &quot;&quot;)</a>
-<a name="37"><span class="lineNum">      37 </span>  [<span class="branchCov" title="Branch 0 was taken 134 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 134 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">        134 :       : std::runtime_error(message), component_(component), operation_(operation) {}</span></a>
+<a name="37"><span class="lineNum">      37 </span>  [<span class="branchCov" title="Branch 0 was taken 97 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 97 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         97 :       : std::runtime_error(message), component_(component), operation_(operation) {}</span></a>
 <a name="38"><span class="lineNum">      38 </span>                :            : </a>
 <a name="39"><span class="lineNum">      39 </span>                :            :   const std::string&amp; get_component() const noexcept { return component_; }</a>
 <a name="40"><span class="lineNum">      40 </span>                :            :   const std::string&amp; get_operation() const noexcept { return operation_; }</a>
 <a name="41"><span class="lineNum">      41 </span>                :            : </a>
-<a name="42"><span class="lineNum">      42 </span>                :<span class="lineCov">         20 :   std::string get_full_message() const {</span></a>
-<a name="43"><span class="lineNum">      43 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         20 :     std::string full_msg = what();</span></a>
-<a name="44"><span class="lineNum">      44 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         20 :     if (!component_.empty()) {</span></a>
-<a name="45"><span class="lineNum">      45 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         20 :       full_msg = &quot;[&quot; + component_ + &quot;] &quot; + full_msg;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="42"><span class="lineNum">      42 </span>                :            :   std::string get_full_message() const {</a>
+<a name="43"><span class="lineNum">      43 </span>                :            :     std::string full_msg = what();</a>
+<a name="44"><span class="lineNum">      44 </span>                :            :     if (!component_.empty()) {</a>
+<a name="45"><span class="lineNum">      45 </span>                :            :       full_msg = &quot;[&quot; + component_ + &quot;] &quot; + full_msg;</a>
 <a name="46"><span class="lineNum">      46 </span>                :            :     }</a>
-<a name="47"><span class="lineNum">      47 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         20 :     if (!operation_.empty()) {</span></a>
-<a name="48"><span class="lineNum">      48 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         20 :       full_msg += &quot; (operation: &quot; + operation_ + &quot;)&quot;;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="47"><span class="lineNum">      47 </span>                :            :     if (!operation_.empty()) {</a>
+<a name="48"><span class="lineNum">      48 </span>                :            :       full_msg += &quot; (operation: &quot; + operation_ + &quot;)&quot;;</a>
 <a name="49"><span class="lineNum">      49 </span>                :            :     }</a>
-<a name="50"><span class="lineNum">      50 </span>                :<span class="lineCov">         20 :     return full_msg;</span></a>
-<a name="51"><span class="lineNum">      51 </span>                :<span class="lineNoCov">          0 :   }</span></a>
+<a name="50"><span class="lineNum">      50 </span>                :            :     return full_msg;</a>
+<a name="51"><span class="lineNum">      51 </span>                :            :   }</a>
 <a name="52"><span class="lineNum">      52 </span>                :            : </a>
 <a name="53"><span class="lineNum">      53 </span>                :            :  private:</a>
 <a name="54"><span class="lineNum">      54 </span>                :            :   std::string component_;</a>
@@ -143,10 +141,10 @@
 <a name="63"><span class="lineNum">      63 </span>                :            :  */</a>
 <a name="64"><span class="lineNum">      64 </span>                :            : class UNILINK_API BuilderException : public UnilinkException {</a>
 <a name="65"><span class="lineNum">      65 </span>                :            :  public:</a>
-<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">         20 :   explicit BuilderException(const std::string&amp; message, const std::string&amp; builder_type = &quot;&quot;,</span></a>
+<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">          3 :   explicit BuilderException(const std::string&amp; message, const std::string&amp; builder_type = &quot;&quot;,</span></a>
 <a name="67"><span class="lineNum">      67 </span>                :            :                             const std::string&amp; operation = &quot;&quot;)</a>
-<a name="68"><span class="lineNum">      68 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         20 :       : UnilinkException(message, &quot;builder&quot;, operation), builder_type_(builder_type) {}</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="68"><span class="lineNum">      68 </span>  [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          3 :       : UnilinkException(message, &quot;builder&quot;, operation), builder_type_(builder_type) {}</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="69"><span class="lineNum">      69 </span>                :            : </a>
 <a name="70"><span class="lineNum">      70 </span>                :            :   const std::string&amp; get_builder_type() const noexcept { return builder_type_; }</a>
 <a name="71"><span class="lineNum">      71 </span>                :            : </a>
@@ -170,27 +168,25 @@
 <a name="89"><span class="lineNum">      89 </span>                :            :  */</a>
 <a name="90"><span class="lineNum">      90 </span>                :            : class UNILINK_API ValidationException : public UnilinkException {</a>
 <a name="91"><span class="lineNum">      91 </span>                :            :  public:</a>
-<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        114 :   explicit ValidationException(const std::string&amp; message, const std::string&amp; parameter = &quot;&quot;,</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">         94 :   explicit ValidationException(const std::string&amp; message, const std::string&amp; parameter = &quot;&quot;,</span></a>
 <a name="93"><span class="lineNum">      93 </span>                :            :                                const std::string&amp; expected = &quot;&quot;)</a>
-<a name="94"><span class="lineNum">      94 </span>  [<span class="branchCov" title="Branch 0 was taken 114 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 114 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        114 :       : UnilinkException(message, &quot;validation&quot;, &quot;validate&quot;), parameter_(parameter), expected_(expected) {}</span></a>
-<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 114 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 114 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 114 times"> + </span> 
+<a name="94"><span class="lineNum">      94 </span>  [<span class="branchCov" title="Branch 0 was taken 94 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 94 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         94 :       : UnilinkException(message, &quot;validation&quot;, &quot;validate&quot;), parameter_(parameter), expected_(expected) {}</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 94 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 94 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 94 times"> + </span> 
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 9 was not taken"> - </span>]
 <a name="95"><span class="lineNum">      95 </span>                :            : </a>
 <a name="96"><span class="lineNum">      96 </span>                :            :   const std::string&amp; get_parameter() const noexcept { return parameter_; }</a>
 <a name="97"><span class="lineNum">      97 </span>                :            :   const std::string&amp; get_expected() const noexcept { return expected_; }</a>
 <a name="98"><span class="lineNum">      98 </span>                :            : </a>
-<a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">         20 :   std::string get_full_message() const {</span></a>
-<a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">         20 :     std::string full_msg = UnilinkException::get_full_message();</span></a>
-<a name="101"><span class="lineNum">     101 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         20 :     if (!parameter_.empty()) {</span></a>
-<a name="102"><span class="lineNum">     102 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         20 :       full_msg += &quot; (parameter: &quot; + parameter_ + &quot;)&quot;;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="99"><span class="lineNum">      99 </span>                :            :   std::string get_full_message() const {</a>
+<a name="100"><span class="lineNum">     100 </span>                :            :     std::string full_msg = UnilinkException::get_full_message();</a>
+<a name="101"><span class="lineNum">     101 </span>                :            :     if (!parameter_.empty()) {</a>
+<a name="102"><span class="lineNum">     102 </span>                :            :       full_msg += &quot; (parameter: &quot; + parameter_ + &quot;)&quot;;</a>
 <a name="103"><span class="lineNum">     103 </span>                :            :     }</a>
-<a name="104"><span class="lineNum">     104 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         20 :     if (!expected_.empty()) {</span></a>
-<a name="105"><span class="lineNum">     105 </span>  [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         20 :       full_msg += &quot; (expected: &quot; + expected_ + &quot;)&quot;;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="104"><span class="lineNum">     104 </span>                :            :     if (!expected_.empty()) {</a>
+<a name="105"><span class="lineNum">     105 </span>                :            :       full_msg += &quot; (expected: &quot; + expected_ + &quot;)&quot;;</a>
 <a name="106"><span class="lineNum">     106 </span>                :            :     }</a>
-<a name="107"><span class="lineNum">     107 </span>                :<span class="lineCov">         20 :     return full_msg;</span></a>
-<a name="108"><span class="lineNum">     108 </span>                :<span class="lineNoCov">          0 :   }</span></a>
+<a name="107"><span class="lineNum">     107 </span>                :            :     return full_msg;</a>
+<a name="108"><span class="lineNum">     108 </span>                :            :   }</a>
 <a name="109"><span class="lineNum">     109 </span>                :            : </a>
 <a name="110"><span class="lineNum">     110 </span>                :            :  private:</a>
 <a name="111"><span class="lineNum">     111 </span>                :            :   std::string parameter_;</a>

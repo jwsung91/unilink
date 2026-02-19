@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">279</td>
+            <td class="headerCovTableEntry">284</td>
             <td class="headerCovTableEntry">387</td>
-            <td class="headerCovTableEntryLo">72.1 %</td>
+            <td class="headerCovTableEntryLo">73.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-18 12:13:28</td>
+            <td class="headerValue">2026-02-19 02:40:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">34</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">296</td>
+            <td class="headerCovTableEntry">298</td>
             <td class="headerCovTableEntry">830</td>
-            <td class="headerCovTableEntryLo">35.7 %</td>
+            <td class="headerCovTableEntryLo">35.9 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -104,10 +104,6 @@
               <td class="coverFnHi">2</td>
             </tr>
     <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#172">_ZNK7unilink9transport6Serial12is_connectedEv</a></td>
-              <td class="coverFnHi">2</td>
-            </tr>
-    <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#375">_ZZN7unilink9transport6Serial10start_readEvENKUlT_mE_clIN5boost6system10error_codeEEEDaS2_m</a></td>
               <td class="coverFnHi">2</td>
             </tr>
@@ -118,6 +114,10 @@
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#192">_ZZN7unilink9transport6Serial16async_write_copyENS_6memory8SafeSpanIKhEEENUlvE_clEv</a></td>
               <td class="coverFnHi">2</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="serial.cc.gcov.html#172">_ZNK7unilink9transport6Serial12is_connectedEv</a></td>
+              <td class="coverFnHi">3</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#425">_ZZN7unilink9transport6Serial8do_writeEvENKUlRKN5boost6system10error_codeEmE_clES6_m</a></td>
@@ -132,7 +132,23 @@
               <td class="coverFnHi">4</td>
             </tr>
     <tr>
+              <td class="coverFn"><a href="serial.cc.gcov.html#35">_ZN7unilink9transport12_GLOBAL__N_129acquire_shared_serial_contextEv</a></td>
+              <td class="coverFnHi">6</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="serial.cc.gcov.html#42">_ZN7unilink9transport6Serial6createERKNS_6config12SerialConfigE</a></td>
+              <td class="coverFnHi">6</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="serial.cc.gcov.html#55">_ZN7unilink9transport6SerialC2ERKNS_6config12SerialConfigE</a></td>
+              <td class="coverFnHi">6</td>
+            </tr>
+    <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#372">_ZN7unilink9transport6Serial10start_readEv</a></td>
+              <td class="coverFnHi">7</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="serial.cc.gcov.html#141">_ZZN7unilink9transport6Serial4stopEvENKUlvE_clEv</a></td>
               <td class="coverFnHi">7</td>
             </tr>
     <tr>
@@ -140,19 +156,11 @@
               <td class="coverFnHi">9</td>
             </tr>
     <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#35">_ZN7unilink9transport12_GLOBAL__N_129acquire_shared_serial_contextEv</a></td>
-              <td class="coverFnHi">11</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#42">_ZN7unilink9transport6Serial6createERKNS_6config12SerialConfigE</a></td>
-              <td class="coverFnHi">11</td>
-            </tr>
-    <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#411">_ZN7unilink9transport6Serial8do_writeEv</a></td>
               <td class="coverFnHi">11</td>
             </tr>
     <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#55">_ZN7unilink9transport6SerialC2ERKNS_6config12SerialConfigE</a></td>
+              <td class="coverFn"><a href="serial.cc.gcov.html#297">_ZN7unilink9transport6Serial8on_bytesESt8functionIFvNS_6memory8SafeSpanIKhEEEE</a></td>
               <td class="coverFnHi">11</td>
             </tr>
     <tr>
@@ -160,64 +168,56 @@
               <td class="coverFnHi">11</td>
             </tr>
     <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#297">_ZN7unilink9transport6Serial8on_bytesESt8functionIFvNS_6memory8SafeSpanIKhEEEE</a></td>
-              <td class="coverFnHi">12</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#141">_ZZN7unilink9transport6Serial4stopEvENKUlvE_clEv</a></td>
+              <td class="coverFn"><a href="serial.cc.gcov.html#94">_ZN7unilink9transport6SerialD0Ev</a></td>
               <td class="coverFnHi">13</td>
             </tr>
     <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#298">_ZN7unilink9transport6Serial8on_stateESt8functionIFvNS_4base9LinkStateEEE</a></td>
-              <td class="coverFnHi">17</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#94">_ZN7unilink9transport6SerialD0Ev</a></td>
-              <td class="coverFnHi">18</td>
-            </tr>
-    <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#94">_ZN7unilink9transport6SerialD2Ev</a></td>
-              <td class="coverFnHi">18</td>
+              <td class="coverFnHi">13</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#102">_ZN7unilink9transport6Serial5startEv</a></td>
-              <td class="coverFnHi">20</td>
+              <td class="coverFnHi">15</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#120">_ZZN7unilink9transport6Serial5startEvENKUlvE0_clEv</a></td>
-              <td class="coverFnHi">20</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#131">_ZN7unilink9transport6Serial4stopEv</a></td>
-              <td class="coverFnHi">21</td>
+              <td class="coverFnHi">15</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#553">_ZN7unilink9transport6Serial19report_backpressureEm</a></td>
-              <td class="coverFnHi">22</td>
+              <td class="coverFnHi">16</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="serial.cc.gcov.html#131">_ZN7unilink9transport6Serial4stopEv</a></td>
+              <td class="coverFnHi">16</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="serial.cc.gcov.html#298">_ZN7unilink9transport6Serial8on_stateESt8functionIFvNS_4base9LinkStateEEE</a></td>
+              <td class="coverFnHi">16</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#520">_ZZN7unilink9transport6Serial14schedule_retryEPKcRKN5boost6system10error_codeEENKUlT_E_clIS6_EEDaS9_</a></td>
-              <td class="coverFnHi">23</td>
-            </tr>
-    <tr>
-              <td class="coverFn"><a href="serial.cc.gcov.html#465">_ZN7unilink9transport6Serial12handle_errorEPKcRKN5boost6system10error_codeE</a></td>
-              <td class="coverFnHi">27</td>
+              <td class="coverFnHi">16</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#513">_ZN7unilink9transport6Serial14schedule_retryEPKcRKN5boost6system10error_codeE</a></td>
-              <td class="coverFnHi">27</td>
+              <td class="coverFnHi">20</td>
+            </tr>
+    <tr>
+              <td class="coverFn"><a href="serial.cc.gcov.html#465">_ZN7unilink9transport6Serial12handle_errorEPKcRKN5boost6system10error_codeE</a></td>
+              <td class="coverFnHi">21</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#301">_ZN7unilink9transport6Serial18open_and_configureEv</a></td>
-              <td class="coverFnHi">28</td>
+              <td class="coverFnHi">22</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#527">_ZN7unilink9transport6Serial10close_portEv</a></td>
-              <td class="coverFnHi">41</td>
+              <td class="coverFnHi">29</td>
             </tr>
     <tr>
               <td class="coverFn"><a href="serial.cc.gcov.html#536">_ZN7unilink9transport6Serial12notify_stateEv</a></td>
-              <td class="coverFnHi">78</td>
+              <td class="coverFnHi">62</td>
             </tr>
   </table>
   <br>
