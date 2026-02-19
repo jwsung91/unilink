@@ -46,20 +46,21 @@ class ClientLimitIntegrationTest : public ::testing::Test {
   uint16_t getTestPort() { return TestUtils::getAvailableTestPort(); }
 
   // Simulation that keeps connections alive for a fixed duration
-  std::vector<std::future<bool>> simulateClients(const std::string& host, uint16_t port, int count, int hold_ms = 2000) {
+  std::vector<std::future<bool>> simulateClients(const std::string& host, uint16_t port, int count,
+                                                 int hold_ms = 2000) {
     std::vector<std::future<bool>> futures;
     for (int i = 0; i < count; ++i) {
       futures.push_back(std::async(std::launch::async, [host, port, i, hold_ms]() {
         try {
-          std::this_thread::sleep_for(std::chrono::milliseconds(i * 10)); // Jitter
-          
+          std::this_thread::sleep_for(std::chrono::milliseconds(i * 10));  // Jitter
+
           boost::asio::io_context ioc;
           boost::asio::ip::tcp::socket socket(ioc);
           boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::make_address(host), port);
-          
+
           boost::system::error_code ec;
           socket.connect(endpoint, ec);
-          
+
           if (!ec) {
             // Keep the connection alive so the server can count it
             std::this_thread::sleep_for(std::chrono::milliseconds(hold_ms));
@@ -86,14 +87,14 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
 
   // Start 3 clients, they will try to hold connection for 2s
   auto client_futures = simulateClients("127.0.0.1", test_port, 3);
-  
+
   // Wait for at least one to be established
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 1; }, 5000));
-  
+
   // Verify it never exceeds 1
   std::this_thread::sleep_for(500ms);
   EXPECT_LE(server_->get_client_count(), 1);
-  
+
   for (auto& f : client_futures) f.wait();
 }
 
@@ -104,14 +105,14 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   ASSERT_TRUE(server_->start().get());
 
   auto client_futures = simulateClients("127.0.0.1", test_port, 4);
-  
+
   // Wait for connections to reach limit
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 2; }, 5000));
-  
+
   // Verify it never exceeds 2
   std::this_thread::sleep_for(500ms);
   EXPECT_LE(server_->get_client_count(), 2);
-  
+
   for (auto& f : client_futures) f.wait();
 }
 
@@ -123,10 +124,10 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
 
   // Hold connections for 3 seconds to ensure they overlap
   auto client_futures = simulateClients("127.0.0.1", test_port, 5, 3000);
-  
+
   // Verify server sees all 5 simultaneous connections
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() == 5; }, 10000));
-  
+
   for (auto& f : client_futures) f.wait();
 }
 
