@@ -19,8 +19,6 @@
 #include <algorithm>
 #include <boost/asio/ip/address.hpp>
 #include <boost/system/error_code.hpp>
-#include <charconv>
-#include <cstring>
 #include <string_view>
 
 namespace unilink {
@@ -95,42 +93,16 @@ bool InputValidator::is_valid_host(const std::string& host) {
 }
 
 bool InputValidator::is_valid_ipv4(std::string_view address) {
-  if (address.empty()) return false;
+  boost::system::error_code ec;
+  // Create string copy for compatibility with older Boost versions that don't support string_view
+  std::string addr_str(address);
+  auto addr = boost::asio::ip::make_address_v4(addr_str, ec);
 
-  int dots = 0;
-  size_t start = 0;
-  size_t end = 0;
+  if (ec) return false;
 
-  while ((end = address.find('.', start)) != std::string_view::npos) {
-    if (end == start) return false;  // Empty octet
-    size_t len = end - start;
-    if (len > 3) return false;  // Too long (max "255")
-
-    // Check leading zero (unless single '0')
-    if (len > 1 && address[start] == '0') return false;
-
-    int octet;
-    auto res = std::from_chars(address.data() + start, address.data() + end, octet);
-    if (res.ec != std::errc() || res.ptr != address.data() + end) return false;
-    if (octet < 0 || octet > 255) return false;
-
-    dots++;
-    start = end + 1;
-  }
-
-  // Last octet
-  if (start >= address.length()) return false;  // Trailing dot or empty last part
-  size_t len = address.length() - start;
-  if (len > 3) return false;
-
-  if (len > 1 && address[start] == '0') return false;
-
-  int octet;
-  auto res = std::from_chars(address.data() + start, address.data() + address.length(), octet);
-  if (res.ec != std::errc() || res.ptr != address.data() + address.length()) return false;
-  if (octet < 0 || octet > 255) return false;
-
-  return dots == 3;
+  // Enforce canonical format (rejects leading zeros, octal, hex, etc.)
+  // This ensures strict compliance and prevents ambiguity.
+  return addr.to_string() == addr_str;
 }
 
 bool InputValidator::is_valid_ipv6(const std::string& address) {
