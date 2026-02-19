@@ -185,7 +185,7 @@ void TcpServer::stop() {
     const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
 
     if (in_ioc_thread) {
-      cleanup(nullptr);
+      cleanup();
       if (owns_ioc_) {
         ioc_.stop();
       }
