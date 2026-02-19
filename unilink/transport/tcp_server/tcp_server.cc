@@ -140,7 +140,7 @@ void TcpServer::stop() {
   }
 
   auto cleanup_flag = std::make_shared<std::atomic<bool>>(false);
-  auto cleanup = [this, cleanup_flag]() {
+  auto cleanup = [this, cleanup_flag](std::shared_ptr<TcpServer> keep_alive) {
     if (cleanup_flag->exchange(true)) return;
 
     boost::system::error_code ec;
@@ -172,7 +172,7 @@ void TcpServer::stop() {
   const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
 
   if (in_ioc_thread) {
-    cleanup();
+    cleanup(nullptr);
     if (owns_ioc_) {
       ioc_.stop();
     }
@@ -190,7 +190,7 @@ void TcpServer::stop() {
       auto cleanup_future = cleanup_promise->get_future();
 
       net::dispatch(ioc_, [self, cleanup, cleanup_promise] {
-        cleanup();
+        cleanup(self);
         cleanup_promise->set_value();
       });
 
@@ -202,7 +202,7 @@ void TcpServer::stop() {
   }
 
   if (!dispatched) {
-    cleanup();
+    cleanup(nullptr);
   }
 
   if (owns_ioc_ && ioc_thread_.joinable()) {
