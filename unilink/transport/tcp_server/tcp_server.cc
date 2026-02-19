@@ -129,92 +129,98 @@ void TcpServer::stop() {
     return;
   }
 
-  {
-    std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-    on_bytes_ = nullptr;
-    on_state_ = nullptr;
-    on_bp_ = nullptr;
-    on_multi_connect_ = nullptr;
-    on_multi_data_ = nullptr;
-    on_multi_disconnect_ = nullptr;
-  }
+  try {
+    {
+      std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
+      on_bytes_ = nullptr;
+      on_state_ = nullptr;
+      on_bp_ = nullptr;
+      on_multi_connect_ = nullptr;
+      on_multi_data_ = nullptr;
+      on_multi_disconnect_ = nullptr;
+    }
 
-  auto cleanup_flag = std::make_shared<std::atomic<bool>>(false);
-  auto cleanup = [this, cleanup_flag](std::shared_ptr<TcpServer> keep_alive) {
-    if (cleanup_flag->exchange(true)) return;
+    auto cleanup_flag = std::make_shared<std::atomic<bool>>(false);
+    auto cleanup = [this, cleanup_flag](std::shared_ptr<TcpServer> keep_alive) {
+      if (cleanup_flag->exchange(true)) return;
 
-    try {
-      boost::system::error_code ec;
-      if (acceptor_ && acceptor_->is_open()) {
-        acceptor_->close(ec);
-      }
-
-      std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
-      {
-        std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-        sessions_copy.reserve(sessions_.size());
-        for (auto& kv : sessions_) {
-          sessions_copy.push_back(kv.second);
+      try {
+        boost::system::error_code ec;
+        if (acceptor_ && acceptor_->is_open()) {
+          acceptor_->close(ec);
         }
-        sessions_.clear();
-        current_session_.reset();
-      }
 
-      for (auto& session : sessions_copy) {
-        if (session) {
-          session->stop();
+        std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
+        {
+          std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
+          sessions_copy.reserve(sessions_.size());
+          for (auto& kv : sessions_) {
+            sessions_copy.push_back(kv.second);
+          }
+          sessions_.clear();
+          current_session_.reset();
         }
+
+        for (auto& session : sessions_copy) {
+          if (session) {
+            session->stop();
+          }
+        }
+
+        state_.set_state(base::LinkState::Closed);
+        notify_state();
+      } catch (const std::exception& e) {
+        // Prevent exceptions from escaping cleanup, especially when called from destructor
+        std::cerr << "TcpServer cleanup failed: " << e.what() << std::endl;
+      } catch (...) {
+        std::cerr << "TcpServer cleanup failed with unknown error" << std::endl;
       }
+    };
 
-      state_.set_state(base::LinkState::Closed);
-      notify_state();
-    } catch (const std::exception& e) {
-      // Prevent exceptions from escaping cleanup, especially when called from destructor
-      std::cerr << "TcpServer cleanup failed: " << e.what() << std::endl;
-    } catch (...) {
-      std::cerr << "TcpServer cleanup failed with unknown error" << std::endl;
-    }
-  };
+    const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
 
-  const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
-
-  if (in_ioc_thread) {
-    cleanup(nullptr);
-    if (owns_ioc_) {
-      ioc_.stop();
-    }
-    return;
-  }
-
-  bool dispatched = false;
-  const bool has_active_ioc_thread =
-      owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
-
-  if (has_active_ioc_thread) {
-    try {
-      auto self = shared_from_this();
-      auto cleanup_promise = std::make_shared<std::promise<void>>();
-      auto cleanup_future = cleanup_promise->get_future();
-
-      net::dispatch(ioc_, [self, cleanup, cleanup_promise] {
-        cleanup(self);
-        cleanup_promise->set_value();
-      });
-
-      if (cleanup_future.wait_for(std::chrono::seconds(2)) == std::future_status::ready) {
-        dispatched = true;
+    if (in_ioc_thread) {
+      cleanup(nullptr);
+      if (owns_ioc_) {
+        ioc_.stop();
       }
-    } catch (...) {
+      return;
     }
-  }
 
-  if (!dispatched) {
-    cleanup(nullptr);
-  }
+    bool dispatched = false;
+    const bool has_active_ioc_thread =
+        owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
 
-  if (owns_ioc_ && ioc_thread_.joinable()) {
-    ioc_thread_.join();
-    ioc_.restart();
+    if (has_active_ioc_thread) {
+      try {
+        auto self = shared_from_this();
+        auto cleanup_promise = std::make_shared<std::promise<void>>();
+        auto cleanup_future = cleanup_promise->get_future();
+
+        net::dispatch(ioc_, [self, cleanup, cleanup_promise] {
+          cleanup(self);
+          cleanup_promise->set_value();
+        });
+
+        if (cleanup_future.wait_for(std::chrono::seconds(2)) == std::future_status::ready) {
+          dispatched = true;
+        }
+      } catch (...) {
+      }
+    }
+
+    if (!dispatched) {
+      cleanup(nullptr);
+    }
+
+    if (owns_ioc_ && ioc_thread_.joinable()) {
+      ioc_thread_.join();
+      ioc_.restart();
+    }
+  } catch (const std::exception& e) {
+    std::cerr << "TcpServer::stop failed: " << e.what() << std::endl;
+  } catch (...) {
+    std::cerr << "TcpServer::stop failed with unknown error" << std::endl;
   }
 }
 
@@ -452,15 +458,15 @@ void TcpServer::do_accept() {
 void TcpServer::notify_state() {
   if (stopping_.load()) return;
   OnState cb;
-  {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
-    cb = on_state_;
-  }
-  if (cb) {
-    try {
-      cb(state_.get_state());
-    } catch (...) {
+  try {
+    {
+      std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+      cb = on_state_;
     }
+    if (cb) {
+      cb(state_.get_state());
+    }
+  } catch (...) {
   }
 }
 
