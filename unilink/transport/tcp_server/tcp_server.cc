@@ -146,7 +146,7 @@ void TcpServer::stop() {
     }
 
     auto cleanup_flag = std::make_shared<std::atomic<bool>>(false);
-    auto cleanup = [this, cleanup_flag](std::shared_ptr<TcpServer> keep_alive) {
+    auto cleanup = [this, cleanup_flag]() {
       if (cleanup_flag->exchange(true)) return;
 
       try {
@@ -198,16 +198,19 @@ void TcpServer::stop() {
 
     if (has_active_ioc_thread) {
       try {
-        // If we can get shared_from_this(), we are not in the destructor.
-        // We MUST use async cleanup to avoid racing with pending handlers (like async_accept).
         auto self = shared_from_this();
         use_sync_cleanup = false;
 
         auto cleanup_promise = std::make_shared<std::promise<void>>();
         auto cleanup_future = cleanup_promise->get_future();
 
-        net::dispatch(ioc_, [self, cleanup, cleanup_promise] {
-          cleanup(self);
+        // Dispatch with WEAK pointer to avoid keeping IoContext alive during static destruction
+        std::weak_ptr<TcpServer> weak_self = self;
+        net::dispatch(ioc_, [weak_self, cleanup, cleanup_promise]() {
+          // Only run cleanup if TcpServer is still alive
+          if (auto shared_self = weak_self.lock()) {
+            cleanup();
+          }
           cleanup_promise->set_value();
         });
 
@@ -215,16 +218,14 @@ void TcpServer::stop() {
           UNILINK_LOG_WARNING("tcp_server", "stop", "Async stop timed out, continuing in background");
         }
       } catch (const std::bad_weak_ptr&) {
-        // We are in the destructor (or object is not shared), must use sync cleanup.
         use_sync_cleanup = true;
       } catch (...) {
-        // On other errors (e.g. dispatch failure), fallback to sync cleanup.
         use_sync_cleanup = true;
       }
     }
 
     if (use_sync_cleanup) {
-      cleanup(nullptr);
+      cleanup();
     }
 
     if (owns_ioc_ && ioc_thread_.joinable()) {
