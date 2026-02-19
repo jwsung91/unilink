@@ -50,6 +50,14 @@ class UNILINK_API TcpClient : public ChannelInterface {
   explicit TcpClient(std::shared_ptr<interface::Channel> channel);
   ~TcpClient() override;
 
+  // Move semantics
+  TcpClient(TcpClient&&) noexcept;
+  TcpClient& operator=(TcpClient&&) noexcept;
+
+  // Disable copy
+  TcpClient(const TcpClient&) = delete;
+  TcpClient& operator=(const TcpClient&) = delete;
+
   // ChannelInterface implementation
   std::future<bool> start() override;
   void stop() override;
@@ -72,7 +80,9 @@ class UNILINK_API TcpClient : public ChannelInterface {
 
  private:
   struct Impl;
-  std::unique_ptr<Impl> pimpl_;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
 };
 
 }  // namespace wrapper

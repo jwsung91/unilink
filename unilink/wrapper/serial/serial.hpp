@@ -50,6 +50,14 @@ class UNILINK_API Serial : public ChannelInterface {
   explicit Serial(std::shared_ptr<interface::Channel> channel);
   ~Serial() override;
 
+  // Move semantics
+  Serial(Serial&&) noexcept;
+  Serial& operator=(Serial&&) noexcept;
+
+  // Disable copy
+  Serial(const Serial&) = delete;
+  Serial& operator=(const Serial&) = delete;
+
   // ChannelInterface implementation
   std::future<bool> start() override;
   void stop() override;
@@ -78,7 +86,9 @@ class UNILINK_API Serial : public ChannelInterface {
 
  private:
   struct Impl;
-  std::unique_ptr<Impl> pimpl_;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
 };
 
 }  // namespace wrapper

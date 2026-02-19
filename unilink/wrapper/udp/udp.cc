@@ -150,49 +150,52 @@ struct Udp::Impl {
   }
 };
 
-Udp::Udp(const config::UdpConfig& cfg) : pimpl_(std::make_unique<Impl>(cfg)) {}
+Udp::Udp(const config::UdpConfig& cfg) : impl_(std::make_unique<Impl>(cfg)) {}
 Udp::Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> ioc)
-    : pimpl_(std::make_unique<Impl>(cfg, ioc)) {}
-Udp::Udp(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {
-  pimpl_->setup_internal_handlers();
+    : impl_(std::make_unique<Impl>(cfg, ioc)) {}
+Udp::Udp(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {
+  impl_->setup_internal_handlers();
 }
 Udp::~Udp() = default;
 
-std::future<bool> Udp::start() { return pimpl_->start(); }
-void Udp::stop() { pimpl_->stop(); }
+Udp::Udp(Udp&&) noexcept = default;
+Udp& Udp::operator=(Udp&&) noexcept = default;
+
+std::future<bool> Udp::start() { return impl_->start(); }
+void Udp::stop() { impl_->stop(); }
 void Udp::send(std::string_view data) {
-  if (is_connected() && pimpl_->channel) {
+  if (is_connected() && get_impl()->channel) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
-    pimpl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    get_impl()->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
 void Udp::send_line(std::string_view line) { send(std::string(line) + "\n"); }
-bool Udp::is_connected() const { return pimpl_->channel && pimpl_->channel->is_connected(); }
+bool Udp::is_connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
 
 ChannelInterface& Udp::on_data(MessageHandler h) {
-  pimpl_->data_handler = std::move(h);
+  impl_->data_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Udp::on_connect(ConnectionHandler h) {
-  pimpl_->connect_handler = std::move(h);
+  impl_->connect_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Udp::on_disconnect(ConnectionHandler h) {
-  pimpl_->disconnect_handler = std::move(h);
+  impl_->disconnect_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Udp::on_error(ErrorHandler h) {
-  pimpl_->error_handler = std::move(h);
+  impl_->error_handler = std::move(h);
   return *this;
 }
 
 ChannelInterface& Udp::auto_manage(bool m) {
-  pimpl_->auto_manage = m;
-  if (pimpl_->auto_manage && !pimpl_->started) start();
+  impl_->auto_manage = m;
+  if (impl_->auto_manage && !impl_->started) start();
   return *this;
 }
 
-void Udp::set_manage_external_context(bool manage) { pimpl_->manage_external_context = manage; }
+void Udp::set_manage_external_context(bool manage) { impl_->manage_external_context = manage; }
 
 }  // namespace wrapper
 }  // namespace unilink

@@ -216,60 +216,63 @@ struct TcpClient::Impl {
   }
 };
 
-TcpClient::TcpClient(const std::string& h, uint16_t p) : pimpl_(std::make_unique<Impl>(h, p)) {}
+TcpClient::TcpClient(const std::string& h, uint16_t p) : impl_(std::make_unique<Impl>(h, p)) {}
 TcpClient::TcpClient(const std::string& h, uint16_t p, std::shared_ptr<boost::asio::io_context> ioc)
-    : pimpl_(std::make_unique<Impl>(h, p, ioc)) {}
-TcpClient::TcpClient(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {}
+    : impl_(std::make_unique<Impl>(h, p, ioc)) {}
+TcpClient::TcpClient(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {}
 TcpClient::~TcpClient() = default;
 
-std::future<bool> TcpClient::start() { return pimpl_->start(); }
-void TcpClient::stop() { pimpl_->stop(); }
-void TcpClient::send(std::string_view data) { pimpl_->send(data); }
-void TcpClient::send_line(std::string_view line) { pimpl_->send(std::string(line) + "\n"); }
-bool TcpClient::is_connected() const { return pimpl_->is_connected(); }
+TcpClient::TcpClient(TcpClient&&) noexcept = default;
+TcpClient& TcpClient::operator=(TcpClient&&) noexcept = default;
+
+std::future<bool> TcpClient::start() { return impl_->start(); }
+void TcpClient::stop() { impl_->stop(); }
+void TcpClient::send(std::string_view data) { impl_->send(data); }
+void TcpClient::send_line(std::string_view line) { impl_->send(std::string(line) + "\n"); }
+bool TcpClient::is_connected() const { return get_impl()->is_connected(); }
 
 ChannelInterface& TcpClient::on_data(MessageHandler h) {
-  pimpl_->data_handler_ = std::move(h);
+  impl_->data_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_connect(ConnectionHandler h) {
-  pimpl_->connect_handler_ = std::move(h);
+  impl_->connect_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_disconnect(ConnectionHandler h) {
-  pimpl_->disconnect_handler_ = std::move(h);
+  impl_->disconnect_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_error(ErrorHandler h) {
-  pimpl_->error_handler_ = std::move(h);
+  impl_->error_handler_ = std::move(h);
   return *this;
 }
 
 ChannelInterface& TcpClient::auto_manage(bool m) {
-  pimpl_->auto_manage_ = m;
-  if (pimpl_->auto_manage_ && !pimpl_->started_.load()) start();
+  impl_->auto_manage_ = m;
+  if (impl_->auto_manage_ && !impl_->started_.load()) start();
   return *this;
 }
 
 TcpClient& TcpClient::set_retry_interval(std::chrono::milliseconds i) {
-  pimpl_->retry_interval_ = i;
-  if (pimpl_->channel_) {
-    auto transport_client = std::dynamic_pointer_cast<transport::TcpClient>(pimpl_->channel_);
+  impl_->retry_interval_ = i;
+  if (impl_->channel_) {
+    auto transport_client = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
     if (transport_client) transport_client->set_retry_interval(static_cast<unsigned int>(i.count()));
   }
   return *this;
 }
 
 TcpClient& TcpClient::set_max_retries(int m) {
-  pimpl_->max_retries_ = m;
+  impl_->max_retries_ = m;
   return *this;
 }
 TcpClient& TcpClient::set_connection_timeout(std::chrono::milliseconds t) {
-  pimpl_->connection_timeout_ = t;
+  impl_->connection_timeout_ = t;
   return *this;
 }
 TcpClient& TcpClient::set_manage_external_context(bool m) {
-  pimpl_->manage_external_context_ = m;
+  impl_->manage_external_context_ = m;
   return *this;
 }
 
