@@ -193,7 +193,8 @@ void TcpServer::stop() {
       if (cleanup_future.wait_for(std::chrono::seconds(2)) == std::future_status::ready) {
         dispatched = true;
       }
-    } catch (...) {}
+    } catch (...) {
+    }
   }
 
   if (!dispatched) {
@@ -411,8 +412,10 @@ void TcpServer::do_accept() {
         }
         was_current = (self->current_session_ == new_session);
         if (was_current) {
-          if (!self->sessions_.empty()) self->current_session_ = self->sessions_.begin()->second;
-          else self->current_session_.reset();
+          if (!self->sessions_.empty())
+            self->current_session_ = self->sessions_.begin()->second;
+          else
+            self->current_session_.reset();
         }
       }
       if (was_current) {
@@ -443,7 +446,10 @@ void TcpServer::notify_state() {
     cb = on_state_;
   }
   if (cb) {
-    try { cb(state_.get_state()); } catch (...) {}
+    try {
+      cb(state_.get_state());
+    } catch (...) {
+    }
   }
 }
 
@@ -475,20 +481,31 @@ bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
 size_t TcpServer::get_client_count() const {
   std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
   size_t alive = 0;
-  for (const auto& entry : sessions_) if (entry.second && entry.second->alive()) ++alive;
+  for (const auto& entry : sessions_)
+    if (entry.second && entry.second->alive()) ++alive;
   return alive;
 }
 
 std::vector<size_t> TcpServer::get_connected_clients() const {
   std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
   std::vector<size_t> connected_clients;
-  for (const auto& entry : sessions_) if (entry.second && entry.second->alive()) connected_clients.push_back(entry.first);
+  for (const auto& entry : sessions_)
+    if (entry.second && entry.second->alive()) connected_clients.push_back(entry.first);
   return connected_clients;
 }
 
-void TcpServer::on_multi_connect(MultiClientConnectHandler h) { std::unique_lock<std::shared_mutex> l(sessions_mutex_); on_multi_connect_ = std::move(h); }
-void TcpServer::on_multi_data(MultiClientDataHandler h) { std::unique_lock<std::shared_mutex> l(sessions_mutex_); on_multi_data_ = std::move(h); }
-void TcpServer::on_multi_disconnect(MultiClientDisconnectHandler h) { std::unique_lock<std::shared_mutex> l(sessions_mutex_); on_multi_disconnect_ = std::move(h); }
+void TcpServer::on_multi_connect(MultiClientConnectHandler h) {
+  std::unique_lock<std::shared_mutex> l(sessions_mutex_);
+  on_multi_connect_ = std::move(h);
+}
+void TcpServer::on_multi_data(MultiClientDataHandler h) {
+  std::unique_lock<std::shared_mutex> l(sessions_mutex_);
+  on_multi_data_ = std::move(h);
+}
+void TcpServer::on_multi_disconnect(MultiClientDisconnectHandler h) {
+  std::unique_lock<std::shared_mutex> l(sessions_mutex_);
+  on_multi_disconnect_ = std::move(h);
+}
 
 void TcpServer::set_client_limit(size_t max) {
   std::unique_lock<std::shared_mutex> l(sessions_mutex_);
