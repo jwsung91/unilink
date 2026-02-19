@@ -192,13 +192,17 @@ void TcpServer::stop() {
       return;
     }
 
-    bool dispatched = false;
+    bool use_sync_cleanup = true;
     const bool has_active_ioc_thread =
         owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
 
     if (has_active_ioc_thread) {
       try {
+        // If we can get shared_from_this(), we are not in the destructor.
+        // We MUST use async cleanup to avoid racing with pending handlers (like async_accept).
         auto self = shared_from_this();
+        use_sync_cleanup = false;
+
         auto cleanup_promise = std::make_shared<std::promise<void>>();
         auto cleanup_future = cleanup_promise->get_future();
 
@@ -207,14 +211,19 @@ void TcpServer::stop() {
           cleanup_promise->set_value();
         });
 
-        if (cleanup_future.wait_for(std::chrono::seconds(5)) == std::future_status::ready) {
-          dispatched = true;
+        if (cleanup_future.wait_for(std::chrono::seconds(5)) != std::future_status::ready) {
+          UNILINK_LOG_WARNING("tcp_server", "stop", "Async stop timed out, continuing in background");
         }
+      } catch (const std::bad_weak_ptr&) {
+        // We are in the destructor (or object is not shared), must use sync cleanup.
+        use_sync_cleanup = true;
       } catch (...) {
+        // On other errors (e.g. dispatch failure), fallback to sync cleanup.
+        use_sync_cleanup = true;
       }
     }
 
-    if (!dispatched) {
+    if (use_sync_cleanup) {
       cleanup(nullptr);
     }
 
