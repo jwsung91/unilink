@@ -49,10 +49,11 @@ PYBIND11_MODULE(unilink_py, m) {
   // TcpClient
   py::class_<TcpClient, std::shared_ptr<TcpClient>>(m, "TcpClient")
       .def(py::init<const std::string&, uint16_t>())
-      .def("start", [](TcpClient& self) { 
-          py::gil_scoped_release release;
-          return self.start().get(); 
-      })
+      .def("start",
+           [](TcpClient& self) {
+             py::gil_scoped_release release;
+             return self.start().get();
+           })
       .def("stop", &TcpClient::stop)
       .def("send", &TcpClient::send)
       .def("send_line", &TcpClient::send_line)
@@ -93,10 +94,11 @@ PYBIND11_MODULE(unilink_py, m) {
   // TcpServer
   py::class_<TcpServer, std::shared_ptr<TcpServer>>(m, "TcpServer")
       .def(py::init<uint16_t>())
-      .def("start", [](TcpServer& self) { 
-          py::gil_scoped_release release;
-          return self.start().get(); 
-      })
+      .def("start",
+           [](TcpServer& self) {
+             py::gil_scoped_release release;
+             return self.start().get();
+           })
       .def("stop", &TcpServer::stop)
       .def("broadcast", &TcpServer::broadcast)
       .def("send_to", &TcpServer::send_to)
@@ -125,22 +127,22 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
-      .def("on_error",
-           [](TcpServer& self, std::function<void(const ErrorContext&)> handler) {
-             self.on_error([handler](const ErrorContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           });
+      .def("on_error", [](TcpServer& self, std::function<void(const ErrorContext&)> handler) {
+        self.on_error([handler](const ErrorContext& ctx) {
+          py::gil_scoped_acquire gil;
+          handler(ctx);
+        });
+        return &self;
+      });
 
   // Serial
   py::class_<Serial, std::shared_ptr<Serial>>(m, "Serial")
       .def(py::init<const std::string&, uint32_t>())
-      .def("start", [](Serial& self) { 
-          py::gil_scoped_release release;
-          return self.start().get(); 
-      })
+      .def("start",
+           [](Serial& self) {
+             py::gil_scoped_release release;
+             return self.start().get();
+           })
       .def("stop", &Serial::stop)
       .def("send", &Serial::send)
       .def("send_line", &Serial::send_line)
@@ -180,20 +182,20 @@ PYBIND11_MODULE(unilink_py, m) {
   // Udp
   py::class_<Udp, std::shared_ptr<Udp>>(m, "Udp")
       .def(py::init<const config::UdpConfig&>())
-      .def("start", [](Udp& self) { 
-          py::gil_scoped_release release;
-          return self.start().get(); 
-      })
+      .def("start",
+           [](Udp& self) {
+             py::gil_scoped_release release;
+             return self.start().get();
+           })
       .def("stop", &Udp::stop)
       .def("send", &Udp::send)
       .def("send_line", &Udp::send_line)
       .def("is_connected", &Udp::is_connected)
-      .def("on_data",
-           [](Udp& self, std::function<void(const MessageContext&)> handler) {
-             self.on_data([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           });
+      .def("on_data", [](Udp& self, std::function<void(const MessageContext&)> handler) {
+        self.on_data([handler](const MessageContext& ctx) {
+          py::gil_scoped_acquire gil;
+          handler(ctx);
+        });
+        return &self;
+      });
 }

@@ -38,7 +38,8 @@ class TcpCallbackBenchmark : public ::testing::Test {
     client_ = tcp_client("127.0.0.1", port_).build();
     auto f1 = server_->start();
     auto f2 = client_->start();
-    f1.get(); f2.get(); 
+    f1.get();
+    f2.get();
     TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000);
   }
 
@@ -56,17 +57,15 @@ TEST_F(TcpCallbackBenchmark, OnDataPerformance) {
   std::atomic<size_t> bytes_received{0};
   const size_t target_bytes = 5 * 1024 * 1024;  // Reduced to 5MB for stable CI performance
 
-  client_->on_data([&](const wrapper::MessageContext& ctx) { 
-    bytes_received += ctx.data().size(); 
-  });
+  client_->on_data([&](const wrapper::MessageContext& ctx) { bytes_received += ctx.data().size(); });
 
-  std::string chunk(32 * 1024, 'X'); // 32KB chunks
+  std::string chunk(32 * 1024, 'X');  // 32KB chunks
   auto start = std::chrono::high_resolution_clock::now();
 
   int safety_counter = 0;
   while (bytes_received < target_bytes && safety_counter++ < 10000) {
     server_->broadcast(chunk);
-    std::this_thread::sleep_for(1ms); // Throttle to prevent overwhelming internal queues and SEGFAULT
+    std::this_thread::sleep_for(1ms);  // Throttle to prevent overwhelming internal queues and SEGFAULT
   }
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return bytes_received >= target_bytes; }, 5000));
