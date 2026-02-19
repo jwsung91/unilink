@@ -35,17 +35,20 @@ using namespace unilink::test;
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
+class StopCallbackIntegrationTest : public ::testing::Test {
+ protected:
+  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
+  uint16_t test_port_;
+};
+
+TEST_F(StopCallbackIntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
   net::io_context server_ioc;
   auto guard = net::make_work_guard(server_ioc);
   tcp::acceptor acceptor(server_ioc, tcp::endpoint(tcp::v4(), test_port_));
   auto server_socket = std::make_shared<tcp::socket>(server_ioc);
 
-  std::atomic<int> state_notifications{0};
   std::atomic<bool> stop_from_state{false};
   std::atomic<bool> stop_from_bytes{false};
-
-  // No terminal_notifications or terminal_reached logic as per Stop Semantics contract
 
   acceptor.async_accept(*server_socket, [&](const boost::system::error_code& ec) {
     if (ec) return;
@@ -72,34 +75,22 @@ TEST_F(IntegrationTest, TcpClientStopFromCallbackDoesNotDeadlock) {
   auto client = TcpClient::create(cfg);
   std::weak_ptr<TcpClient> weak_client = client;
 
-  client->on_state([weak_client, &state_notifications, &stop_from_state](LinkState state) {
-    state_notifications.fetch_add(1);
+  client->on_state([weak_client, &stop_from_state](LinkState state) {
     if (state == LinkState::Connected) {
       stop_from_state.store(true);
-      if (auto c = weak_client.lock()) {
-        c->stop();
-      }
+      if (auto c = weak_client.lock()) c->stop();
     }
-    // No terminal state check here, as per Contract
   });
   client->on_bytes([weak_client, &stop_from_bytes](memory::ConstByteSpan) {
     stop_from_bytes.store(true);
-    if (auto c = weak_client.lock()) {
-      c->stop();
-    }
+    if (auto c = weak_client.lock()) c->stop();
   });
 
   client->start();
-
-  // Wait long enough for client to attempt connection and then get stopped from callback
-  TestUtils::waitFor(1000);  // Give enough time for the Connected state to be reached and stop() called
-
-  // Explicitly stop client at the end of the test to ensure cleanup
+  TestUtils::waitFor(1000);
   client->stop();
 
-  // Verify that the client is no longer connected (or attempts to connect)
   EXPECT_FALSE(client->is_connected());
-  // Also, check that stop was indeed called from one of the callbacks
   EXPECT_TRUE(stop_from_state.load() || stop_from_bytes.load());
 
   guard.reset();

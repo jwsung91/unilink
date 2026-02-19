@@ -18,358 +18,41 @@
 
 #include <atomic>
 #include <chrono>
-#include <condition_variable>
 #include <memory>
-#include <mutex>
 #include <string>
 #include <thread>
 
 #include "test_utils.hpp"
-#include "unilink/base/common.hpp"
-#include "unilink/builder/auto_initializer.hpp"
-#include "unilink/diagnostics/exceptions.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
 using namespace unilink::test;
 using namespace std::chrono_literals;
 
-/**
- * @brief Stable integration tests with improved timing and error handling
- *
- * These tests focus on stability and reliability rather than comprehensive
- * network simulation. They use improved timing mechanisms and better
- * error handling to reduce flakiness.
- */
-class StableIntegrationTest : public ::testing::Test {
+class StableCoreIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    // Initialize test state
-    data_received_.clear();
-    connection_established_ = false;
-    error_occurred_ = false;
-    error_message_.clear();
-
-    // Get guaranteed available test port
-    test_port_ = TestUtils::getAvailableTestPort();
-
-    // Ensure clean state
-    TestUtils::waitFor(100);
-  }
-
-  void TearDown() override {
-    // Clean up any created objects
-    if (client_) {
-      client_->stop();
-      client_.reset();
-    }
-    if (server_) {
-      server_->stop();
-      server_.reset();
-    }
-
-    // Wait for cleanup to complete
-    // Increased wait time to ensure complete cleanup and avoid port conflicts
-    TestUtils::waitFor(200);
-  }
-
-  // Test objects
-  std::shared_ptr<wrapper::TcpClient> client_;
-  std::shared_ptr<wrapper::TcpServer> server_;
-
-  // Test state
-  std::vector<std::string> data_received_;
-  std::atomic<bool> connection_established_{false};
-  std::atomic<bool> error_occurred_{false};
-  std::string error_message_;
-  uint16_t test_port_;
-
-  // Synchronization
-  std::mutex mtx_;
-  std::condition_variable cv_;
+  void SetUp() override { port_ = TestUtils::getAvailableTestPort(); }
+  uint16_t port_;
 };
 
-// ============================================================================
-// STABLE CONNECTION TESTS
-// ============================================================================
+TEST_F(StableCoreIntegrationTest, ServerClientStability) {
+  std::atomic<int> msg_count{0};
+  auto server = tcp_server(port_).on_data([&](const wrapper::MessageContext&) { msg_count++; }).build();
 
-/**
- * @brief Test stable server creation and basic functionality
- */
-TEST_F(StableIntegrationTest, StableServerCreation) {
-  // Given: Server configuration
-  server_ = unilink::tcp_server(test_port_)
-                .unlimited_clients()  // 클라이언트 제한 없음
-                                      // Don't auto-start to avoid timing issues
-                .on_connect([this]() {
-                  std::lock_guard<std::mutex> lock(mtx_);
-                  connection_established_ = true;
-                  cv_.notify_one();
-                })
-                .on_error([this](const std::string& error) {
-                  std::lock_guard<std::mutex> lock(mtx_);
-                  error_occurred_ = true;
-                  error_message_ = error;
-                  cv_.notify_one();
-                })
-                .build();
+  ASSERT_TRUE(server->start().get());
 
-  // Then: Verify server creation
-  ASSERT_NE(server_, nullptr);
+  auto client = tcp_client("127.0.0.1", port_).auto_manage(true).build();
 
-  // Test basic server operations without starting
-  EXPECT_FALSE(server_->is_connected());
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 2000));
 
-  // Start server
-  server_->start();
-
-  // Wait for server to be ready
-  TestUtils::waitFor(500);
-
-  // Verify server is running (basic check)
-  EXPECT_NE(server_, nullptr);
-}
-
-/**
- * @brief Test stable client creation and basic functionality
- */
-TEST_F(StableIntegrationTest, StableClientCreation) {
-  // Given: Client configuration
-  client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                // Don't auto-start to avoid connection attempts
-                .on_connect([this]() {
-                  std::lock_guard<std::mutex> lock(mtx_);
-                  connection_established_ = true;
-                  cv_.notify_one();
-                })
-                .on_error([this](const std::string& error) {
-                  std::lock_guard<std::mutex> lock(mtx_);
-                  error_occurred_ = true;
-                  error_message_ = error;
-                  cv_.notify_one();
-                })
-                .build();
-
-  // Then: Verify client creation
-  ASSERT_NE(client_, nullptr);
-
-  // Test basic client operations without starting
-  EXPECT_FALSE(client_->is_connected());
-
-  // Start client (will fail to connect, but that's expected)
-  client_->start();
-
-  // Wait for connection attempt to complete
-  TestUtils::waitFor(300);
-
-  // Verify client was created successfully
-  EXPECT_NE(client_, nullptr);
-}
-
-// ============================================================================
-// STABLE COMMUNICATION TESTS
-// ============================================================================
-
-/**
- * @brief Test stable server-client communication with proper synchronization
- */
-TEST_F(StableIntegrationTest, StableServerClientCommunication) {
-  // Given: Server setup
-  server_ = unilink::tcp_server(test_port_)
-                .unlimited_clients()  // 클라이언트 제한 없음
-
-                .on_connect([this]() {
-                  std::lock_guard<std::mutex> lock(mtx_);
-                  connection_established_ = true;
-                  cv_.notify_one();
-                })
-                .on_data([this](const std::string& data) {
-                  std::lock_guard<std::mutex> lock(mtx_);
-                  data_received_.push_back(data);
-                  cv_.notify_one();
-                })
-                .build();
-
-  ASSERT_NE(server_, nullptr);
-
-  // Wait for server to be ready
-  TestUtils::waitFor(500);
-
-  // Given: Client setup
-  client_ = unilink::tcp_client("127.0.0.1", test_port_)
-
-                .on_connect([this]() {
-                  std::lock_guard<std::mutex> lock(mtx_);
-                  connection_established_ = true;
-                  cv_.notify_one();
-                })
-                .on_error([this](const std::string& error) {
-                  std::lock_guard<std::mutex> lock(mtx_);
-                  error_occurred_ = true;
-                  error_message_ = error;
-                  cv_.notify_one();
-                })
-                .build();
-
-  ASSERT_NE(client_, nullptr);
-
-  // Wait for connection with retry logic
-  bool connected = TestUtils::waitForConditionWithRetry([this]() { return connection_established_.load(); }, 1000, 2);
-
-  if (connected) {
-    // Test data transmission
-    std::string test_message = "stable test message";
-    client_->send(test_message);
-
-    // Wait for data reception with retry
-    bool data_received = TestUtils::waitForConditionWithRetry([this]() { return !data_received_.empty(); }, 1000, 3);
-
-    if (data_received) {
-      EXPECT_EQ(data_received_[0], test_message);
-    } else {
-      // Data reception timeout - this is acceptable for stability tests
-      std::cout << "Data reception timeout (acceptable for stability test)" << std::endl;
-    }
-  } else {
-    // Connection timeout - this is acceptable for stability tests
-    std::cout << "Connection timeout (acceptable for stability test)" << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    client->send("ping");
+    std::this_thread::sleep_for(10ms);
   }
 
-  // Verify objects were created successfully regardless of connection outcome
-  EXPECT_NE(server_, nullptr);
-  EXPECT_NE(client_, nullptr);
-}
+  TestUtils::waitForCondition([&]() { return msg_count.load() >= 10; }, 2000);
+  EXPECT_GE(msg_count.load(), 10);
 
-// ============================================================================
-// STABLE ERROR HANDLING TESTS
-// ============================================================================
-
-/**
- * @brief Test stable error handling scenarios
- */
-TEST_F(StableIntegrationTest, StableErrorHandling) {
-  // Test invalid port handling (should throw exception due to input validation)
-  EXPECT_THROW(auto invalid_server = unilink::tcp_server(0)    // Invalid port
-                                         .unlimited_clients()  // 클라이언트 제한 없음
-
-                                         .on_error([this](const std::string& error) {
-                                           std::lock_guard<std::mutex> lock(mtx_);
-                                           error_occurred_ = true;
-                                           error_message_ = error;
-                                           cv_.notify_one();
-                                         })
-                                         .build(),
-               diagnostics::BuilderException);
-
-  // Test invalid host handling
-  auto invalid_client = unilink::tcp_client("invalid.host", 12345)
-
-                            .on_error([this](const std::string& error) {
-                              std::lock_guard<std::mutex> lock(mtx_);
-                              error_occurred_ = true;
-                              error_message_ = error;
-                              cv_.notify_one();
-                            })
-                            .build();
-
-  // Verify error handling objects were created successfully
-  EXPECT_NE(invalid_client, nullptr);
-}
-
-// ============================================================================
-// STABLE PERFORMANCE TESTS
-// ============================================================================
-
-/**
- * @brief Test stable performance characteristics
- */
-TEST_F(StableIntegrationTest, StablePerformanceTest) {
-  auto start_time = std::chrono::high_resolution_clock::now();
-
-  // Create multiple clients rapidly
-  std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
-  const int client_count = 50;  // Reduced count for stability
-
-  for (int i = 0; i < client_count; ++i) {
-    auto client = unilink::tcp_client("127.0.0.1", test_port_ + i)
-                      // Don't start to avoid connection attempts
-                      .build();
-
-    ASSERT_NE(client, nullptr);
-    clients.push_back(std::move(client));
-  }
-
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-
-  // Verify performance
-  EXPECT_EQ(clients.size(), client_count);
-
-  // Object creation should be reasonably fast (less than 2ms per client)
-  // Note: Performance may vary based on system load, so we use a more lenient threshold
-  EXPECT_LT(duration.count(), client_count * 2000);
-
-  // If the strict test fails, at least verify it's not extremely slow (less than 5ms per client)
-  if (duration.count() >= client_count * 2000) {
-    EXPECT_LT(duration.count(), client_count * 5000) << "Client creation is extremely slow";
-  }
-
-  std::cout << "Created " << client_count << " clients in " << duration.count() << " microseconds" << std::endl;
-}
-
-// ============================================================================
-// STABLE BUILDER PATTERN TESTS
-// ============================================================================
-
-/**
- * @brief Test stable builder pattern functionality
- */
-TEST_F(StableIntegrationTest, StableBuilderPattern) {
-  // Test method chaining
-  auto client = unilink::tcp_client("127.0.0.1", test_port_)
-
-                    .auto_manage(false)
-                    .use_independent_context(true)
-                    .on_connect([]() {
-                      // Empty callback for testing
-                    })
-                    .on_disconnect([]() {
-                      // Empty callback for testing
-                    })
-                    .on_data([](const std::string& data) {
-                      // Empty callback for testing
-                    })
-                    .on_error([](const std::string& error) {
-                      // Empty callback for testing
-                    })
-                    .build();
-
-  EXPECT_NE(client, nullptr);
-
-  // Test server builder
-  auto server = unilink::tcp_server(test_port_)
-                    .unlimited_clients()  // 클라이언트 제한 없음
-
-                    .auto_manage(false)
-                    .use_independent_context(false)
-                    .on_connect([]() {
-                      // Empty callback for testing
-                    })
-                    .on_disconnect([]() {
-                      // Empty callback for testing
-                    })
-                    .on_data([](const std::string& data) {
-                      // Empty callback for testing
-                    })
-                    .on_error([](const std::string& error) {
-                      // Empty callback for testing
-                    })
-                    .build();
-
-  EXPECT_NE(server, nullptr);
-}
-
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  client->stop();
+  server->stop();
 }

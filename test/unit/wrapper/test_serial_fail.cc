@@ -18,47 +18,36 @@
 
 #include <atomic>
 #include <chrono>
+#include <memory>
 #include <string>
 #include <thread>
 
-#include "unilink/wrapper/serial/serial.hpp"
+#include "unilink/unilink.hpp"
 
 using namespace unilink;
-using namespace std::chrono_literals;
 
+// Test wrapper behavior when open fails
 TEST(WrapperSerialFailTest, OpenInvalidPort) {
-#if defined(_WIN32)
-  std::string port = "COM999";
-#else
-  std::string port = "/dev/ttyInvalid999";
+  // Use a device name that is guaranteed to not exist or fail
+  std::string invalid_device = "/dev/non_existent_device_unilink_test";
+#ifdef _WIN32
+  invalid_device = "COM999";
 #endif
 
-  wrapper::Serial serial(port, 9600);
-
+  wrapper::Serial serial(invalid_device, 9600);
   std::atomic<bool> error_called{false};
-  serial.on_error([&](const std::string& msg) { error_called = true; });
 
-  // Disable auto-retry or set a long retry to prevent infinite retries masking the initial failure?
-  // Or just check that it fails initially.
-  // wrapper::Serial doesn't expose set_retry easily?
-  // Ah, set_retry_interval is there.
-  serial.set_retry_interval(100ms);
+  serial.on_error([&](const wrapper::ErrorContext& err) { error_called = true; });
 
+  // Try to start - should trigger error or at least not be connected
   serial.start();
 
-  // Wait for the attempt
-  std::this_thread::sleep_for(200ms);
+  // Wait a bit for async operations
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   EXPECT_FALSE(serial.is_connected());
+  // Note: whether error callback is called depends on implementation details
+  // but it should not crash.
 
-  // We expect at least one error notification or just not connected.
-  // Depending on implementation, it might retry silently in "Connecting" state without transitioning to "Error".
-  // But usually, open failure logs error and might trigger state change.
-  // Wrapper Serial on_state:
-  // case base::LinkState::Error: if (error_handler_) error_handler_("Serial connection error occurred");
-
-  // If transport layer transitions to Error, we get called.
-  // Let's assume it does.
-
-  // However, is_connected() being false is the primary check.
+  serial.stop();
 }

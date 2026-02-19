@@ -14,182 +14,126 @@
  * limitations under the License.
  */
 
-/**
- * @file chat_server.cpp
- * @brief Tutorial 2: Complete chat server example
- *
- * This example demonstrates:
- * - Multi-client chat server
- * - Nickname management
- * - Broadcasting messages
- * - Command handling (/nick, /list, /help)
- *
- * Usage:
- *   ./chat_server [port]
- *
- * Example:
- *   ./chat_server 8080
- *
- * Test with multiple clients:
- *   telnet localhost 8080
- */
-
-#include <atomic>
-#include <csignal>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <mutex>
+#include <string>
+#include <vector>
 
 #include "unilink/unilink.hpp"
 
-// Global flag for graceful shutdown
-std::atomic<bool> g_running{true};
+/**
+ * Chat Server Tutorial
+ *
+ * A more complex example managing client state (nicknames)
+ * and using broadcast functionality.
+ */
 
-void signal_handler(int signal) {
-  if (signal == SIGINT || signal == SIGTERM) {
-    std::cout << "\nReceived shutdown signal..." << std::endl;
-    g_running.store(false);
-  }
-}
+using namespace unilink;
 
 class ChatServer {
- private:
-  std::shared_ptr<unilink::wrapper::TcpServer> server_;
-  std::map<size_t, std::string> nicknames_;
-  std::mutex mutex_;
-
  public:
   void start(uint16_t port) {
-    server_ = unilink::tcp_server(port)
-                  .on_connect([this](size_t id, const std::string& /* ip */) {
+    server_ = tcp_server(port)
+                  .unlimited_clients()
+                  .on_connect([this](const wrapper::ConnectionContext& ctx) {
                     std::lock_guard<std::mutex> lock(mutex_);
+                    size_t id = ctx.client_id();
                     nicknames_[id] = "User" + std::to_string(id);
 
                     std::string msg = "*** " + nicknames_[id] + " joined the chat! ***\n";
-                    server_->send(msg);
+                    server_->broadcast(msg);
                     std::cout << msg;
 
-                    // Send welcome and help
-                    server_->send_to_client(id,
-                                            "Welcome to Chat Server!\n"
-                                            "Your nickname: " +
-                                                nicknames_[id] +
-                                                "\n"
-                                                "Commands:\n"
-                                                "  /nick <name> - Change your nickname\n"
-                                                "  /list        - List all users\n"
-                                                "  /help        - Show this help\n"
-                                                "  /quit        - Disconnect\n"
-                                                "\n");
+                    // Send welcome and help to the new client
+                    server_->send_to(id,
+                                     "Welcome to Chat Server!\n"
+                                     "Your nickname: " +
+                                         nicknames_[id] +
+                                         "\n"
+                                         "Commands:\n"
+                                         "  /nick <name> - Change your nickname\n"
+                                         "  /list        - List all users\n"
+                                         "  /help        - Show this help\n"
+                                         "  /quit        - Disconnect\n"
+                                         "\n");
                   })
-                  .on_data([this](size_t id, const std::string& data) { handle_message(id, data); })
-                  .on_disconnect([this](size_t id) {
+                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) {
                     std::lock_guard<std::mutex> lock(mutex_);
-                    if (nicknames_.count(id)) {
-                      std::string msg = "*** " + nicknames_[id] + " left the chat. ***\n";
-                      server_->send(msg);
-                      std::cout << msg;
-                      nicknames_.erase(id);
+                    size_t id = ctx.client_id();
+                    std::string name = nicknames_[id];
+                    nicknames_.erase(id);
+
+                    std::string msg = "*** " + name + " left the chat ***\n";
+                    server_->broadcast(msg);
+                    std::cout << msg;
+                  })
+                  .on_data([this](const wrapper::MessageContext& ctx) {
+                    std::string data = std::string(ctx.data());
+                    if (data.empty()) return;
+                    if (data[0] == '/') {
+                      handle_command(ctx.client_id(), data);
+                    } else {
+                      handle_message(ctx.client_id(), data);
                     }
                   })
                   .build();
 
-    server_->start();
-
-    std::cout << "Chat server started on port " << port << std::endl;
-    std::cout << "Press Ctrl+C to stop" << std::endl;
+    if (server_->start().get()) {
+      std::cout << "Chat Server started on port " << port << std::endl;
+    }
   }
 
   void handle_message(size_t id, const std::string& data) {
-    // Remove trailing whitespace
-    std::string msg = data;
-    msg.erase(msg.find_last_not_of(" \n\r\t") + 1);
-
-    if (msg.empty()) return;
-
-    // Handle commands
-    if (msg[0] == '/') {
-      handle_command(id, msg);
-      return;
-    }
-
-    // Broadcast message
     std::lock_guard<std::mutex> lock(mutex_);
-    std::string broadcast = nicknames_[id] + ": " + msg + "\n";
-    server_->send(broadcast);
-    std::cout << broadcast;
+    std::string broadcast = "[" + nicknames_[id] + "]: " + data;
+    server_->broadcast(broadcast);
   }
 
   void handle_command(size_t id, const std::string& cmd) {
     if (cmd == "/help") {
-      server_->send_to_client(id,
-                              "Available commands:\n"
-                              "  /nick <name> - Change your nickname\n"
-                              "  /list        - List all users\n"
-                              "  /help        - Show this help\n"
-                              "  /quit        - Disconnect\n");
+      server_->send_to(id, "Help: Use /nick <name>, /list, /quit\n");
     } else if (cmd == "/list") {
       std::lock_guard<std::mutex> lock(mutex_);
-      std::string list = "=== Connected Users ===\n";
-      for (const auto& [user_id, nick] : nicknames_) {
-        list += "  " + nick;
-        if (user_id == id) list += " (you)";
-        list += "\n";
-      }
-      list += "Total: " + std::to_string(nicknames_.size()) + " users\n";
-      list += "======================\n";
-      server_->send_to_client(id, list);
-    } else if (cmd.substr(0, 6) == "/nick ") {
-      std::string new_nick = cmd.substr(6);
-      if (new_nick.empty()) {
-        server_->send_to_client(id, "Usage: /nick <new_name>\n");
+      std::string list = "Users: ";
+      for (const auto& entry : nicknames_) list += entry.second + " ";
+      list += "\n";
+      server_->send_to(id, list);
+    } else if (cmd.substr(0, 5) == "/nick") {
+      if (cmd.length() <= 6) {
+        server_->send_to(id, "Usage: /nick <new_name>\n");
         return;
       }
-
       std::lock_guard<std::mutex> lock(mutex_);
-      std::string old_nick = nicknames_[id];
-      nicknames_[id] = new_nick;
-
-      std::string msg = "*** " + old_nick + " is now known as " + new_nick + " ***\n";
-      server_->send(msg);
-      std::cout << msg;
-    } else if (cmd == "/quit") {
-      server_->send_to_client(id, "Goodbye!\n");
-      // Client will disconnect
+      std::string old_name = nicknames_[id];
+      std::string new_name = cmd.substr(6);
+      nicknames_[id] = new_name;
+      std::string msg = "*** " + old_name + " is now known as " + new_name + " ***\n";
+      server_->broadcast(msg);
     } else {
-      server_->send_to_client(id, "Unknown command. Type /help for help.\n");
+      server_->send_to(id, "Unknown command. Type /help for help.\n");
     }
   }
 
   void stop() {
     if (server_) {
-      server_->send("*** Server is shutting down. Goodbye! ***\n");
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      server_->broadcast("*** Server is shutting down. Goodbye! ***\n");
       server_->stop();
     }
   }
+
+ private:
+  std::shared_ptr<wrapper::TcpServer> server_;
+  std::map<size_t, std::string> nicknames_;
+  std::mutex mutex_;
 };
 
-int main(int argc, char** argv) {
-  // Set up signal handler
-  std::signal(SIGINT, signal_handler);
-  std::signal(SIGTERM, signal_handler);
-
-  // Parse port
-  uint16_t port = (argc > 1) ? static_cast<uint16_t>(std::stoi(argv[1])) : 8080;
-
-  // Create and start server
-  ChatServer server;
-  server.start(port);
-
-  // Wait for shutdown signal
-  while (g_running.load()) {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
-
-  // Cleanup
-  server.stop();
-  std::cout << "Chat server stopped." << std::endl;
-
+int main() {
+  ChatServer app;
+  app.start(8080);
+  std::cout << "Press Enter to stop chat server..." << std::endl;
+  std::cin.get();
+  app.stop();
   return 0;
 }

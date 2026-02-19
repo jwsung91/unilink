@@ -18,11 +18,7 @@
 
 #include <boost/asio/io_context.hpp>
 
-#include "unilink/base/constants.hpp"
 #include "unilink/builder/auto_initializer.hpp"
-#include "unilink/concurrency/io_context_manager.hpp"
-#include "unilink/diagnostics/exceptions.hpp"
-#include "unilink/util/input_validator.hpp"
 
 namespace unilink {
 namespace builder {
@@ -32,93 +28,40 @@ SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
       baud_rate_(baud_rate),
       auto_manage_(false),
       use_independent_context_(false),
-      retry_interval_ms_(base::constants::DEFAULT_RETRY_INTERVAL_MS) {
-  // Validate input parameters
-  try {
-    util::InputValidator::validate_device_path(device_);
-    util::InputValidator::validate_baud_rate(baud_rate_);
-  } catch (const diagnostics::ValidationException& e) {
-    throw diagnostics::BuilderException("Invalid Serial parameters: " + e.get_full_message(), "SerialBuilder",
-                                        "constructor");
-  }
+      data_bits_(8),
+      stop_bits_(1),
+      parity_("none"),
+      flow_control_("none"),
+      retry_interval_(3000) {
+  // Ensure background IO service is running
+  AutoInitializer::ensure_io_context_running();
 }
 
 std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
-  try {
-    // Final validation before building
-    util::InputValidator::validate_device_path(device_);
-    util::InputValidator::validate_baud_rate(baud_rate_);
-    util::InputValidator::validate_retry_interval(retry_interval_ms_);
-
-    std::shared_ptr<boost::asio::io_context> external_ioc;
-    if (use_independent_context_) {
-      // Use independent IoContext (for test isolation)
-      auto independent_context = concurrency::IoContextManager::instance().create_independent_context();
-      external_ioc = std::shared_ptr<boost::asio::io_context>(std::move(independent_context));
-    } else {
-      // Default behavior uses shared IoContextManager - ensure it is running
-      AutoInitializer::ensure_io_context_running();
-    }
-
-    auto serial = external_ioc ? std::make_unique<wrapper::Serial>(device_, baud_rate_, external_ioc)
-                               : std::make_unique<wrapper::Serial>(device_, baud_rate_);
-
-    // Apply configuration with exception safety
-    try {
-      if (external_ioc) {
-        serial->set_manage_external_context(use_independent_context_);
-      }
-
-      // Apply framing if configured
-      if (framer_) {
-        std::shared_ptr<framer::IFramer> shared_framer = std::move(framer_);
-        if (on_message_) {
-          shared_framer->set_on_message(on_message_);
-        }
-        serial->on_bytes([shared_framer](memory::ConstByteSpan data) { shared_framer->push_bytes(data); });
-      }
-
-      // Set callbacks with exception safety
-      if (on_data_) {
-        serial->on_data(on_data_);
-      }
-
-      if (on_connect_) {
-        serial->on_connect(on_connect_);
-      }
-
-      if (on_disconnect_) {
-        serial->on_disconnect(on_disconnect_);
-      }
-
-      if (on_error_) {
-        serial->on_error(on_error_);
-      }
-
-      // Set retry interval
-      serial->set_retry_interval(std::chrono::milliseconds(retry_interval_ms_));
-
-      serial->auto_manage(auto_manage_);
-
-    } catch (const std::exception& e) {
-      // If configuration fails, ensure serial is properly cleaned up
-      serial.reset();
-      throw diagnostics::BuilderException("Failed to configure Serial: " + std::string(e.what()), "SerialBuilder",
-                                          "build");
-    }
-
-    return serial;
-
-  } catch (const diagnostics::ValidationException& e) {
-    throw diagnostics::BuilderException("Validation failed during Serial build: " + e.get_full_message(),
-                                        "SerialBuilder", "build");
-  } catch (const std::bad_alloc& e) {
-    throw diagnostics::BuilderException("Memory allocation failed during Serial build: " + std::string(e.what()),
-                                        "SerialBuilder", "build");
-  } catch (const std::exception& e) {
-    throw diagnostics::BuilderException("Unexpected error during Serial build: " + std::string(e.what()),
-                                        "SerialBuilder", "build");
+  std::unique_ptr<wrapper::Serial> serial;
+  if (use_independent_context_) {
+    serial = std::make_unique<wrapper::Serial>(device_, baud_rate_, std::make_shared<boost::asio::io_context>());
+    serial->set_manage_external_context(true);
+  } else {
+    serial = std::make_unique<wrapper::Serial>(device_, baud_rate_);
   }
+
+  if (on_data_) serial->on_data(on_data_);
+  if (on_connect_) serial->on_connect(on_connect_);
+  if (on_disconnect_) serial->on_disconnect(on_disconnect_);
+  if (on_error_) serial->on_error(on_error_);
+
+  serial->set_data_bits(data_bits_);
+  serial->set_stop_bits(stop_bits_);
+  serial->set_parity(parity_);
+  serial->set_flow_control(flow_control_);
+  serial->set_retry_interval(retry_interval_);
+
+  if (auto_manage_) {
+    serial->auto_manage(true);
+  }
+
+  return serial;
 }
 
 SerialBuilder& SerialBuilder::auto_manage(bool auto_manage) {
@@ -126,39 +69,53 @@ SerialBuilder& SerialBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-SerialBuilder& SerialBuilder::on_data(std::function<void(const std::string&)> handler) {
+SerialBuilder& SerialBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
   on_data_ = std::move(handler);
   return *this;
 }
 
-SerialBuilder& SerialBuilder::on_connect(std::function<void()> handler) {
+SerialBuilder& SerialBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_connect_ = std::move(handler);
   return *this;
 }
 
-SerialBuilder& SerialBuilder::on_disconnect(std::function<void()> handler) {
+SerialBuilder& SerialBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_disconnect_ = std::move(handler);
   return *this;
 }
 
-SerialBuilder& SerialBuilder::on_error(std::function<void(const std::string&)> handler) {
+SerialBuilder& SerialBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
   on_error_ = std::move(handler);
+  return *this;
+}
+
+SerialBuilder& SerialBuilder::data_bits(int bits) {
+  data_bits_ = bits;
+  return *this;
+}
+
+SerialBuilder& SerialBuilder::stop_bits(int bits) {
+  stop_bits_ = bits;
+  return *this;
+}
+
+SerialBuilder& SerialBuilder::parity(const std::string& p) {
+  parity_ = p;
+  return *this;
+}
+
+SerialBuilder& SerialBuilder::flow_control(const std::string& flow) {
+  flow_control_ = flow;
+  return *this;
+}
+
+SerialBuilder& SerialBuilder::retry_interval(uint32_t milliseconds) {
+  retry_interval_ = std::chrono::milliseconds(milliseconds);
   return *this;
 }
 
 SerialBuilder& SerialBuilder::use_independent_context(bool use_independent) {
   use_independent_context_ = use_independent;
-  return *this;
-}
-
-SerialBuilder& SerialBuilder::retry_interval(unsigned interval_ms) {
-  try {
-    util::InputValidator::validate_retry_interval(interval_ms);
-    retry_interval_ms_ = interval_ms;
-  } catch (const diagnostics::ValidationException& e) {
-    throw diagnostics::BuilderException("Invalid retry interval: " + e.get_full_message(), "SerialBuilder",
-                                        "retry_interval");
-  }
   return *this;
 }
 

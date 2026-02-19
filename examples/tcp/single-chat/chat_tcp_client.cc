@@ -14,80 +14,75 @@
  * limitations under the License.
  */
 
-#include <atomic>
-#include <functional>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <thread>
-#include <vector>
 
+#include "unilink/diagnostics/logger.hpp"
 #include "unilink/unilink.hpp"
 
-// Example namespace usage - using namespace for simplicity in examples
 using namespace unilink;
 
-/**
- * @brief Chat application class for TCP client
- *
- * This class demonstrates member function binding for TCP client chat functionality.
- */
 class TcpClientChatApp {
  public:
-  TcpClientChatApp(const std::string& host, unsigned short port) : host_(host), port_(port), connected_(false) {}
+  TcpClientChatApp(const std::string& host, uint16_t port)
+      : host_(host), port_(port), logger_(diagnostics::Logger::instance()) {
+    logger_.set_console_output(true);
+  }
 
   void run() {
-    // Using convenience function with member function pointers
     auto ul = unilink::tcp_client(host_, port_)
-                  .on_connect(this, &TcpClientChatApp::handle_connect)
-                  .on_disconnect(this, &TcpClientChatApp::handle_disconnect)
-                  .on_data(this, &TcpClientChatApp::handle_data)
+                  .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(); })
+                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) { handle_disconnect(); })
+                  .on_data([this](const wrapper::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
+                  .on_error([this](const wrapper::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
                   .build();
 
-    // Start input thread
-    std::thread input_thread([this, &ul] { this->input_loop(ul.get()); });
-
-    // Start the client connection
     ul->start();
 
-    // Wait for input thread to finish
+    auto shared_ul = std::shared_ptr<wrapper::TcpClient>(std::move(ul));
+    std::thread input_thread([this, shared_ul] { this->input_loop(shared_ul.get()); });
+
+    std::cout << "TCP Chat Client started. Type messages to send." << std::endl;
+    std::cout << "Type '/quit' to exit." << std::endl;
+
     input_thread.join();
-    ul->stop();
+    shared_ul->stop();
   }
 
  private:
-  // Member function callbacks - these can be bound directly to the builder
-  void handle_connect() {
-    common::log_message("client", "STATE", "Connected");
-    connected_ = true;
-  }
+  void handle_connect() { logger_.info("client", "STATE", "Connected"); }
 
-  void handle_disconnect() {
-    common::log_message("client", "STATE", "Disconnected");
-    connected_ = false;
-  }
+  void handle_disconnect() { logger_.info("client", "STATE", "Disconnected"); }
 
-  void handle_data(const std::string& data) { common::log_message("client", "RX", data); }
+  void handle_data(const std::string& data) { std::cout << "\n[Server] " << data << "\n> " << std::flush; }
 
-  void input_loop(unilink::wrapper::TcpClient* client) {
+  void handle_error(const std::string& error) { logger_.error("client", "ERROR", error); }
+
+  void input_loop(unilink::wrapper::TcpClient* ul) {
     std::string line;
+    std::cout << "> " << std::flush;
     while (std::getline(std::cin, line)) {
-      if (!connected_.load()) {
-        common::log_message("client", "INFO", "(not connected)");
-        continue;
+      if (line == "/quit") break;
+      if (ul && ul->is_connected()) {
+        ul->send(line);
+        std::cout << "> " << std::flush;
+      } else {
+        logger_.warning("client", "INFO", "(not connected)");
+        std::cout << "> " << std::flush;
       }
-      common::log_message("client", "TX", line);
-      client->send_line(line);
     }
   }
 
   std::string host_;
-  unsigned short port_;
-  std::atomic<bool> connected_;
+  uint16_t port_;
+  diagnostics::Logger& logger_;
 };
 
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : "127.0.0.1";
-  unsigned short port = (argc > 2) ? static_cast<unsigned short>(std::stoi(argv[2])) : 9000;
+  uint16_t port = (argc > 2) ? static_cast<uint16_t>(std::stoi(argv[2])) : 8080;
 
   TcpClientChatApp app(host, port);
   app.run();

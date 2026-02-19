@@ -19,17 +19,22 @@
 #include <memory>
 #include <variant>
 
+#include "unilink/base/error_codes.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
 
-// Internal includes for Builder API (not exposed to users)
+// Public API Context and Interface headers
+#include "unilink/wrapper/context.hpp"
 #include "unilink/wrapper/ichannel.hpp"
+#include "unilink/wrapper/iserver.hpp"
+
+// Wrapper implementations
 #include "unilink/wrapper/serial/serial.hpp"
 #include "unilink/wrapper/tcp_client/tcp_client.hpp"
 #include "unilink/wrapper/tcp_server/tcp_server.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
 
-// New high-level Builder API includes
+// High-level Builder API includes
 #include "unilink/builder/ibuilder.hpp"
 #include "unilink/builder/serial_builder.hpp"
 #include "unilink/builder/tcp_client_builder.hpp"
@@ -51,11 +56,9 @@
 namespace unilink {
 
 // === Public API Namespaces ===
-// Clean namespace structure without redundant aliases
 
 // Builder API namespace
 namespace builder {
-// Forward declarations for cleaner includes
 class TcpServerBuilder;
 class TcpClientBuilder;
 class SerialBuilder;
@@ -65,19 +68,18 @@ class UnifiedBuilder;
 
 // Wrapper API namespace
 namespace wrapper {
-// Forward declarations for cleaner includes
 class TcpServer;
 class TcpClient;
 class Serial;
 class Udp;
 class ChannelInterface;
+class ServerInterface;
+class MessageContext;
+class ConnectionContext;
+class ErrorContext;
 }  // namespace wrapper
 
 // === Public Builder API Convenience Functions ===
-// Convenience functions to make Builder pattern easier to use
-
-// === Convenience Functions ===
-// Simplified API for common use cases
 
 /**
  * @brief Create a TCP server builder
@@ -116,19 +118,5 @@ inline builder::UdpBuilder udp(uint16_t local_port) {
   b.set_local_port(local_port);
   return b;
 }
-
-// === Configuration Management API (optional) ===
-#ifdef UNILINK_ENABLE_CONFIG
-namespace config {
-// Forward declarations for configuration management
-class ConfigManager;
-class ConfigFactory;
-class ConfigManagerInterface;
-}  // namespace config
-#endif
-
-// === Common Utilities ===
-// Utility functions and error handling are provided via unilink/base/common.hpp
-// included by other modules.
 
 }  // namespace unilink

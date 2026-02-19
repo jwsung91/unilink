@@ -19,8 +19,8 @@
 #include <functional>
 #include <future>
 #include <memory>
-#include <string>
 #include <string_view>
+#include <vector>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/wrapper/context.hpp"
@@ -29,33 +29,34 @@ namespace unilink {
 namespace wrapper {
 
 /**
- * @brief Common interface for 1:1 point-to-point communication (e.g., TcpClient, Serial, Udp)
+ * @brief Interface for 1:N server communication (e.g., TcpServer)
  */
-class UNILINK_API ChannelInterface {
+class UNILINK_API ServerInterface {
  public:
   using MessageHandler = std::function<void(const MessageContext&)>;
   using ConnectionHandler = std::function<void(const ConnectionContext&)>;
   using ErrorHandler = std::function<void(const ErrorContext&)>;
 
-  virtual ~ChannelInterface() = default;
+  virtual ~ServerInterface() = default;
 
   // Lifecycle
   virtual std::future<bool> start() = 0;
   virtual void stop() = 0;
-  virtual bool is_connected() const = 0;
+  virtual bool is_listening() const = 0;
 
   // Transmission
-  virtual void send(std::string_view data) = 0;
-  virtual void send_line(std::string_view line) = 0;
+  virtual bool broadcast(std::string_view data) = 0;
+  virtual bool send_to(size_t client_id, std::string_view data) = 0;
 
   // Event handlers
-  virtual ChannelInterface& on_data(MessageHandler handler) = 0;
-  virtual ChannelInterface& on_connect(ConnectionHandler handler) = 0;
-  virtual ChannelInterface& on_disconnect(ConnectionHandler handler) = 0;
-  virtual ChannelInterface& on_error(ErrorHandler handler) = 0;
+  virtual ServerInterface& on_client_connect(ConnectionHandler handler) = 0;
+  virtual ServerInterface& on_client_disconnect(ConnectionHandler handler) = 0;
+  virtual ServerInterface& on_data(MessageHandler handler) = 0;
+  virtual ServerInterface& on_error(ErrorHandler handler) = 0;
 
   // Management
-  virtual ChannelInterface& auto_manage(bool manage = true) = 0;
+  virtual size_t get_client_count() const = 0;
+  virtual std::vector<size_t> get_connected_clients() const = 0;
 };
 
 }  // namespace wrapper

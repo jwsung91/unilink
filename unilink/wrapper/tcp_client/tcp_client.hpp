@@ -18,12 +18,12 @@
 
 #include <chrono>
 #include <functional>
+#include <future>
 #include <memory>
 #include <string>
 #include <string_view>
 
 #include "unilink/base/visibility.hpp"
-#include "unilink/interface/channel.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
 namespace boost {
@@ -33,8 +33,16 @@ class io_context;
 }  // namespace boost
 
 namespace unilink {
+
+namespace interface {
+class Channel;
+}
+
 namespace wrapper {
 
+/**
+ * @brief Modernized TCP Client Wrapper
+ */
 class UNILINK_API TcpClient : public ChannelInterface {
  public:
   TcpClient(const std::string& host, uint16_t port);
@@ -42,26 +50,25 @@ class UNILINK_API TcpClient : public ChannelInterface {
   explicit TcpClient(std::shared_ptr<interface::Channel> channel);
   ~TcpClient() override;
 
-  // IChannel implementation
-  void start() override;
+  // ChannelInterface implementation
+  std::future<bool> start() override;
   void stop() override;
   void send(std::string_view data) override;
   void send_line(std::string_view line) override;
   bool is_connected() const override;
 
-  ChannelInterface& on_data(DataHandler handler) override;
-  ChannelInterface& on_bytes(BytesHandler handler) override;
-  ChannelInterface& on_connect(ConnectHandler handler) override;
-  ChannelInterface& on_disconnect(DisconnectHandler handler) override;
+  ChannelInterface& on_data(MessageHandler handler) override;
+  ChannelInterface& on_connect(ConnectionHandler handler) override;
+  ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
   ChannelInterface& auto_manage(bool manage = true) override;
 
-  // TCP client specific methods
-  void set_retry_interval(std::chrono::milliseconds interval);
-  void set_max_retries(int max_retries);
-  void set_connection_timeout(std::chrono::milliseconds timeout);
-  void set_manage_external_context(bool manage);
+  // Configuration
+  TcpClient& set_retry_interval(std::chrono::milliseconds interval);
+  TcpClient& set_max_retries(int max_retries);
+  TcpClient& set_connection_timeout(std::chrono::milliseconds timeout);
+  TcpClient& set_manage_external_context(bool manage);
 
  private:
   struct Impl;

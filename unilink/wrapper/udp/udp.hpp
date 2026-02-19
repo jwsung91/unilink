@@ -18,6 +18,7 @@
 
 #include <chrono>
 #include <functional>
+#include <future>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -33,13 +34,15 @@ class io_context;
 }  // namespace boost
 
 namespace unilink {
-
 namespace interface {
 class Channel;
 }
 
 namespace wrapper {
 
+/**
+ * @brief Modernized UDP Wrapper
+ */
 class UNILINK_API Udp : public ChannelInterface {
  public:
   explicit Udp(const config::UdpConfig& cfg);
@@ -47,16 +50,16 @@ class UNILINK_API Udp : public ChannelInterface {
   explicit Udp(std::shared_ptr<interface::Channel> channel);
   ~Udp() override;
 
-  void start() override;
+  // ChannelInterface implementation
+  std::future<bool> start() override;
   void stop() override;
   void send(std::string_view data) override;
   void send_line(std::string_view line) override;
   bool is_connected() const override;
 
-  ChannelInterface& on_data(DataHandler handler) override;
-  ChannelInterface& on_bytes(BytesHandler handler) override;
-  ChannelInterface& on_connect(ConnectHandler handler) override;
-  ChannelInterface& on_disconnect(DisconnectHandler handler) override;
+  ChannelInterface& on_data(MessageHandler handler) override;
+  ChannelInterface& on_connect(ConnectionHandler handler) override;
+  ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
   ChannelInterface& auto_manage(bool manage = true) override;

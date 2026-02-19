@@ -22,12 +22,10 @@
 #include <future>
 #include <iostream>
 #include <memory>
-#include <random>
 #include <thread>
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/base/platform.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -36,48 +34,44 @@ using namespace std::chrono_literals;
 
 class ClientLimitIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override {
-    // Initialize before test
-    // Add small delay to ensure previous test cleanup is complete
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
+  void SetUp() override { std::this_thread::sleep_for(std::chrono::milliseconds(100)); }
 
   void TearDown() override {
     if (server_) {
-      std::cout << "Stopping server..." << std::endl;
       server_->stop();
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Wait longer for cleanup
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
   uint16_t getTestPort() { return TestUtils::getAvailableTestPort(); }
 
-  // Helper function to simulate client connections
-  std::vector<std::future<bool>> simulateClients(const std::string& host, uint16_t port, int count) {
+  // Simulation that keeps connections alive for a fixed duration
+  std::vector<std::future<bool>> simulateClients(const std::string& host, uint16_t port, int count,
+                                                 int hold_ms = 2000) {
     std::vector<std::future<bool>> futures;
-
     for (int i = 0; i < count; ++i) {
-      futures.push_back(std::async(std::launch::async, [host, port, i]() {
+      futures.push_back(std::async(std::launch::async, [host, port, i, hold_ms]() {
         try {
-          // Simple TCP client connection simulation
+          std::this_thread::sleep_for(std::chrono::milliseconds(i * 10));  // Jitter
+
           boost::asio::io_context ioc;
           boost::asio::ip::tcp::socket socket(ioc);
-          boost::asio::ip::tcp::resolver resolver(ioc);
+          boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::make_address(host), port);
 
-          auto endpoints = resolver.resolve(host, std::to_string(port));
-          boost::asio::connect(socket, endpoints);
+          boost::system::error_code ec;
+          socket.connect(endpoint, ec);
 
-          // Connection successful - keep it longer
-          std::this_thread::sleep_for(std::chrono::milliseconds(50));
-          socket.close();
-          return true;
-        } catch (const std::exception& e) {
-          // Connection failed (expected case)
+          if (!ec) {
+            // Keep the connection alive so the server can count it
+            std::this_thread::sleep_for(std::chrono::milliseconds(hold_ms));
+            return true;
+          }
+          return false;
+        } catch (...) {
           return false;
         }
       }));
     }
-
     return futures;
   }
 
@@ -85,209 +79,59 @@ class ClientLimitIntegrationTest : public ::testing::Test {
   std::shared_ptr<wrapper::TcpServer> server_;
 };
 
-/**
- * @brief Single Client Limit Test - Allow only 1 client
- */
 TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
   uint16_t test_port = getTestPort();
-  std::cout << "Testing single client limit integration, port: " << test_port << std::endl;
+  server_ = unilink::tcp_server(test_port).single_client().build();
+  ASSERT_NE(server_, nullptr);
+  ASSERT_TRUE(server_->start().get());
 
-  // Create single client server
-  server_ = unilink::tcp_server(test_port)
-                .single_client()
-
-                .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
-                .build();
-
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
-
-  // Start server
-  server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait for port retry
-
-  // Check if server is actually listening
-  if (!server_->is_listening()) {
-    std::cout << "Server failed to start - skipping test" << std::endl;
-    return;
-  }
-
-  // Check if server is actually listening
-  if (!server_->is_listening()) {
-    std::cout << "Server failed to start - skipping test" << std::endl;
-    return;
-  }
-
-  std::cout << "Server started, testing client connections..." << std::endl;
-
-  // Attempt to connect 3 clients
+  // Start 3 clients, they will try to hold connection for 2s
   auto client_futures = simulateClients("127.0.0.1", test_port, 3);
 
-  // Collect results
-  std::vector<bool> results;
-  for (auto& future : client_futures) {
-    results.push_back(future.get());
-  }
+  // Wait for at least one to be established
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 1; }, 5000));
 
-  // First client should succeed, others should fail
-  int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
-  std::cout << "Successful connections: " << success_count << "/3" << std::endl;
+  // Verify it never exceeds 1
+  std::this_thread::sleep_for(500ms);
+  EXPECT_LE(server_->get_client_count(), 1);
 
-  // Due to single client limit, only 1 should succeed
-  // In reality, clients disconnect immediately after connection, so limit check may not work properly
-  // Therefore, at least 1 should succeed
-  EXPECT_GE(success_count, 1) << "At least 1 client should connect with single client limit";
+  for (auto& f : client_futures) f.wait();
 }
 
-/**
- * @brief Multi Client Limit Test - Limit to 3 clients
- */
 TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   uint16_t test_port = getTestPort();
-  std::cout << "Testing multi client limit integration (limit 3), port: " << test_port << std::endl;
+  server_ = unilink::tcp_server(test_port).multi_client(2).build();
+  ASSERT_NE(server_, nullptr);
+  ASSERT_TRUE(server_->start().get());
 
-  // Create multi client server (limit 3)
-  server_ = unilink::tcp_server(test_port)
-                .multi_client(3)
-
-                .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
-                .build();
-
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
-
-  // Start server
-  server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait for port retry
-
-  // Check if server is actually listening
-  if (!server_->is_listening()) {
-    std::cout << "Server failed to start - skipping test" << std::endl;
-    return;
-  }
-
-  std::cout << "Server started, testing client connections..." << std::endl;
-
-  // Attempt to connect 5 clients
-  auto client_futures = simulateClients("127.0.0.1", test_port, 5);
-
-  // Collect results
-  std::vector<bool> results;
-  for (auto& future : client_futures) {
-    results.push_back(future.get());
-  }
-
-  // First 3 clients should succeed, others should fail
-  int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
-  std::cout << "Successful connections: " << success_count << "/5" << std::endl;
-
-  // Due to multi client limit, at least 3 should succeed
-  EXPECT_GE(success_count, 3) << "At least 3 clients should connect with multi client limit of 3";
-}
-
-/**
- * @brief Unlimited Clients Test - No limit
- */
-TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
-  uint16_t test_port = getTestPort();
-  std::cout << "Testing unlimited clients integration, port: " << test_port << std::endl;
-
-  // Create unlimited clients server
-  server_ = unilink::tcp_server(test_port)
-                .unlimited_clients()
-
-                .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
-                .build();
-
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
-
-  // Start server
-  server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait for port retry
-
-  // Check if server is actually listening
-  if (!server_->is_listening()) {
-    std::cout << "Server failed to start - skipping test" << std::endl;
-    return;
-  }
-
-  std::cout << "Server started, testing client connections..." << std::endl;
-
-  // Attempt to connect 5 clients
-  auto client_futures = simulateClients("127.0.0.1", test_port, 5);
-
-  // Collect results
-  std::vector<bool> results;
-  for (auto& future : client_futures) {
-    results.push_back(future.get());
-  }
-
-  // All clients should succeed
-  int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
-  std::cout << "Successful connections: " << success_count << "/5" << std::endl;
-
-  // All clients should succeed due to unlimited clients
-  EXPECT_EQ(success_count, 5) << "All clients should connect with unlimited clients";
-}
-
-/**
- * @brief Dynamic Client Limit Change Test
- */
-TEST_F(ClientLimitIntegrationTest, DynamicClientLimitChangeTest) {
-  uint16_t test_port = getTestPort();
-  std::cout << "Testing dynamic client limit change, port: " << test_port << std::endl;
-
-  // Initially limit to 2 clients
-  server_ = unilink::tcp_server(test_port)
-                .multi_client(2)
-
-                .enable_port_retry(true, 3, 1000)  // 3 retries, 1 second interval
-                .build();
-
-  ASSERT_NE(server_, nullptr) << "Server creation failed";
-
-  // Start server
-  server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // Wait for port retry
-
-  std::cout << "Server started with limit 2, testing connections..." << std::endl;
-
-  // Attempt to connect 4 clients
   auto client_futures = simulateClients("127.0.0.1", test_port, 4);
 
-  // Collect results
-  std::vector<bool> results;
-  for (auto& future : client_futures) {
-    results.push_back(future.get());
-  }
+  // Wait for connections to reach limit
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 2; }, 5000));
 
-  // Only first 2 clients should succeed
-  int success_count = static_cast<int>(std::count(results.begin(), results.end(), true));
-  std::cout << "Successful connections with limit 2: " << success_count << "/4" << std::endl;
+  // Verify it never exceeds 2
+  std::this_thread::sleep_for(500ms);
+  EXPECT_LE(server_->get_client_count(), 2);
 
-  EXPECT_GE(success_count, 2) << "At least 2 clients should connect with limit of 2";
+  for (auto& f : client_futures) f.wait();
 }
 
-/**
- * @brief Client Limit Error Handling Test
- */
+TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
+  uint16_t test_port = getTestPort();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().build();
+  ASSERT_NE(server_, nullptr);
+  ASSERT_TRUE(server_->start().get());
+
+  // Hold connections for 3 seconds to ensure they overlap
+  auto client_futures = simulateClients("127.0.0.1", test_port, 5, 3000);
+
+  // Verify server sees all 5 simultaneous connections
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() == 5; }, 10000));
+
+  for (auto& f : client_futures) f.wait();
+}
+
 TEST_F(ClientLimitIntegrationTest, ClientLimitErrorHandlingTest) {
   uint16_t test_port = getTestPort();
-  std::cout << "Testing client limit error handling, port: " << test_port << std::endl;
-
-  // Attempt invalid client limit configuration
-  EXPECT_THROW(
-      {
-        server_ = unilink::tcp_server(test_port)
-                      .multi_client(0)  // 0 is invalid
-
-                      .build();
-      },
-      std::invalid_argument)
-      << "Should throw exception for invalid client limit";
-
-  std::cout << "Error handling test passed" << std::endl;
-}
-
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  EXPECT_THROW({ server_ = unilink::tcp_server(test_port).multi_client(0).build(); }, std::invalid_argument);
 }

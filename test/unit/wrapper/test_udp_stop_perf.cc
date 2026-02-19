@@ -29,9 +29,6 @@ TEST(UdpWrapperTest, StopPerformance) {
 
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
   std::cout << "[PERF] Stop duration: " << duration.count() << "ms" << std::endl;
-
-  // Baseline expectation: ~50ms
-  // Optimized expectation: < 5ms
 }
 
 TEST(UdpWrapperTest, StopSafetyWithExternalIOC) {
@@ -45,17 +42,17 @@ TEST(UdpWrapperTest, StopSafetyWithExternalIOC) {
   {
     wrapper::Udp udp(cfg, ioc);
     std::atomic<int> callbacks{0};
-    udp.on_bytes([&](memory::ConstByteSpan) { callbacks++; });
+    udp.on_data([&](const wrapper::MessageContext&) { callbacks++; });
     udp.start();
 
     // Stop and destroy immediately
     udp.stop();
   }
 
-  // Wait a bit to ensure no late callbacks cause crashes (ASAN would catch this)
+  // Wait a bit to ensure no late callbacks cause crashes
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   work_guard.reset();
   ioc->stop();
-  io_thread.join();
+  if (io_thread.joinable()) io_thread.join();
 }

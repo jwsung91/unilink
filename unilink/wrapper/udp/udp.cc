@@ -37,11 +37,15 @@ struct Udp::Impl {
   bool manage_external_context{false};
   std::thread external_thread;
 
-  DataHandler data_handler;
-  BytesHandler bytes_handler;
-  ConnectHandler connect_handler;
-  DisconnectHandler disconnect_handler;
-  ErrorHandler error_handler;
+  // Start status notification
+  std::promise<bool> start_promise_;
+  bool start_promise_fulfilled_{false};
+
+  // Event handlers (Context based)
+  MessageHandler data_handler{nullptr};
+  ConnectionHandler connect_handler{nullptr};
+  ConnectionHandler disconnect_handler{nullptr};
+  ErrorHandler error_handler{nullptr};
 
   bool auto_manage{false};
   bool started{false};
@@ -58,149 +62,133 @@ struct Udp::Impl {
     }
   }
 
+  std::future<bool> start() {
+    if (started) {
+      std::promise<bool> p;
+      p.set_value(true);
+      return p.get_future();
+    }
+
+    start_promise_ = std::promise<bool>();
+    start_promise_fulfilled_ = false;
+
+    if (!channel) {
+      channel = factory::ChannelFactory::create(cfg, external_ioc);
+      setup_internal_handlers();
+    }
+
+    channel->start();
+    if (use_external_context && manage_external_context && !external_thread.joinable()) {
+      external_thread = std::thread([ioc = external_ioc]() {
+        boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
+        ioc->run();
+      });
+    }
+
+    started = true;
+    return start_promise_.get_future();
+  }
+
   void stop() {
     if (!started) return;
 
     if (channel) {
-      // Clear handlers first to prevent callbacks during shutdown
       channel->on_bytes(nullptr);
       channel->on_state(nullptr);
       channel->stop();
     }
 
-    if (use_external_context && manage_external_context) {
-      if (external_ioc) {
-        external_ioc->stop();
-      }
-      if (external_thread.joinable()) {
-        try {
-          external_thread.join();
-        } catch (...) {
-        }
-      }
+    if (use_external_context && manage_external_context && external_thread.joinable()) {
+      if (external_ioc) external_ioc->stop();
+      external_thread.join();
     }
 
     started = false;
+
+    if (!start_promise_fulfilled_) {
+      try {
+        start_promise_.set_value(false);
+      } catch (...) {
+      }
+      start_promise_fulfilled_ = true;
+    }
   }
 
-  void setup_internal_handlers(Udp* parent) {
+  void setup_internal_handlers() {
     if (!channel) return;
 
     channel->on_bytes([this](memory::ConstByteSpan data) {
-      if (bytes_handler) {
-        bytes_handler(data);
-      }
       if (data_handler) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
-        data_handler(str_data);
+        data_handler(MessageContext(0, str_data));
       }
     });
 
-    channel->on_state([this](base::LinkState state) { notify_state_change(state); });
-  }
-
-  void notify_state_change(base::LinkState state) {
-    switch (state) {
-      case base::LinkState::Connected:
-        if (connect_handler) connect_handler();
-        break;
-      case base::LinkState::Closed:
-        if (disconnect_handler) disconnect_handler();
-        break;
-      case base::LinkState::Error:
-        if (error_handler) error_handler("Connection error");
-        break;
-      default:
-        break;
-    }
+    channel->on_state([this](base::LinkState state) {
+      switch (state) {
+        case base::LinkState::Connected:
+          if (!start_promise_fulfilled_) {
+            start_promise_.set_value(true);
+            start_promise_fulfilled_ = true;
+          }
+          if (connect_handler) connect_handler(ConnectionContext(0));
+          break;
+        case base::LinkState::Closed:
+          if (disconnect_handler) disconnect_handler(ConnectionContext(0));
+          break;
+        case base::LinkState::Error:
+          if (!start_promise_fulfilled_) {
+            start_promise_.set_value(false);
+            start_promise_fulfilled_ = true;
+          }
+          if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+          break;
+        default:
+          break;
+      }
+    });
   }
 };
 
 Udp::Udp(const config::UdpConfig& cfg) : pimpl_(std::make_unique<Impl>(cfg)) {}
-
-Udp::Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc)
-    : pimpl_(std::make_unique<Impl>(cfg, std::move(external_ioc))) {}
-
-Udp::Udp(std::shared_ptr<interface::Channel> channel) : pimpl_(std::make_unique<Impl>(std::move(channel))) {
-  pimpl_->setup_internal_handlers(this);
+Udp::Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> ioc)
+    : pimpl_(std::make_unique<Impl>(cfg, ioc)) {}
+Udp::Udp(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {
+  pimpl_->setup_internal_handlers();
 }
-
 Udp::~Udp() = default;
 
-void Udp::start() {
-  if (pimpl_->started) return;
-
-  if (pimpl_->use_external_context) {
-    if (!pimpl_->external_ioc) {
-      throw std::runtime_error("External io_context is not set");
-    }
-    if (pimpl_->manage_external_context) {
-      if (pimpl_->external_ioc->stopped()) {
-        pimpl_->external_ioc->restart();
-      }
-    }
-  }
-
-  if (!pimpl_->channel) {
-    pimpl_->channel = factory::ChannelFactory::create(pimpl_->cfg, pimpl_->external_ioc);
-    pimpl_->setup_internal_handlers(this);
-  }
-
-  pimpl_->channel->start();
-  if (pimpl_->use_external_context && pimpl_->manage_external_context && !pimpl_->external_thread.joinable()) {
-    pimpl_->external_thread = std::thread([ioc = pimpl_->external_ioc]() {
-      boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
-      ioc->run();
-    });
-  }
-  pimpl_->started = true;
-}
-
+std::future<bool> Udp::start() { return pimpl_->start(); }
 void Udp::stop() { pimpl_->stop(); }
-
 void Udp::send(std::string_view data) {
   if (is_connected() && pimpl_->channel) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
     pimpl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
-
 void Udp::send_line(std::string_view line) { send(std::string(line) + "\n"); }
-
 bool Udp::is_connected() const { return pimpl_->channel && pimpl_->channel->is_connected(); }
 
-ChannelInterface& Udp::on_data(DataHandler handler) {
-  pimpl_->data_handler = std::move(handler);
-  if (pimpl_->channel) pimpl_->setup_internal_handlers(this);
+ChannelInterface& Udp::on_data(MessageHandler h) {
+  pimpl_->data_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Udp::on_connect(ConnectionHandler h) {
+  pimpl_->connect_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Udp::on_disconnect(ConnectionHandler h) {
+  pimpl_->disconnect_handler = std::move(h);
+  return *this;
+}
+ChannelInterface& Udp::on_error(ErrorHandler h) {
+  pimpl_->error_handler = std::move(h);
   return *this;
 }
 
-ChannelInterface& Udp::on_bytes(BytesHandler handler) {
-  pimpl_->bytes_handler = std::move(handler);
-  if (pimpl_->channel) pimpl_->setup_internal_handlers(this);
-  return *this;
-}
-
-ChannelInterface& Udp::on_connect(ConnectHandler handler) {
-  pimpl_->connect_handler = std::move(handler);
-  return *this;
-}
-
-ChannelInterface& Udp::on_disconnect(DisconnectHandler handler) {
-  pimpl_->disconnect_handler = std::move(handler);
-  return *this;
-}
-
-ChannelInterface& Udp::on_error(ErrorHandler handler) {
-  pimpl_->error_handler = std::move(handler);
-  return *this;
-}
-
-ChannelInterface& Udp::auto_manage(bool manage) {
-  pimpl_->auto_manage = manage;
-  if (pimpl_->auto_manage && !pimpl_->started) {
-    start();
-  }
+ChannelInterface& Udp::auto_manage(bool m) {
+  pimpl_->auto_manage = m;
+  if (pimpl_->auto_manage && !pimpl_->started) start();
   return *this;
 }
 

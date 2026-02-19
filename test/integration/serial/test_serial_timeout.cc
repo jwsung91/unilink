@@ -97,7 +97,7 @@ TEST_F(SerialTimeoutTest, ReadTimeoutWhenNoData) {
   auto read_future = read_promise.get_future();
 
   // Set up callback to fulfil promise if data arrives
-  serial->on_data([&](const std::string& data) { read_promise.set_value(data); });
+  serial->on_data([&](const wrapper::MessageContext& ctx) { read_promise.set_value(std::string(ctx.data())); });
 
   serial->start();
 

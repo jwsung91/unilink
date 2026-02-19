@@ -17,8 +17,6 @@
 #pragma once
 
 #include <cstdint>
-#include <functional>
-#include <optional>
 #include <string>
 
 #include "unilink/base/visibility.hpp"
@@ -29,6 +27,9 @@
 namespace unilink {
 namespace builder {
 
+/**
+ * @brief Modernized Builder for Udp
+ */
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4251)
@@ -37,38 +38,47 @@ class UNILINK_API UdpBuilder : public BuilderInterface<wrapper::Udp, UdpBuilder>
  public:
   UdpBuilder();
 
+  // Delete copy, allow move
   UdpBuilder(const UdpBuilder&) = delete;
   UdpBuilder& operator=(const UdpBuilder&) = delete;
   UdpBuilder(UdpBuilder&&) = default;
   UdpBuilder& operator=(UdpBuilder&&) = default;
 
-  using BuilderInterface::on_connect;
-  using BuilderInterface::on_data;
-  using BuilderInterface::on_disconnect;
-  using BuilderInterface::on_error;
-
   std::unique_ptr<wrapper::Udp> build() override;
 
   UdpBuilder& auto_manage(bool auto_manage = true) override;
-  UdpBuilder& on_data(std::function<void(const std::string&)> handler) override;
-  UdpBuilder& on_connect(std::function<void()> handler) override;
-  UdpBuilder& on_disconnect(std::function<void()> handler) override;
-  UdpBuilder& on_error(std::function<void(const std::string&)> handler) override;
 
+  // Modernized event handlers
+  UdpBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
+  UdpBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
+  UdpBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
+  UdpBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
+
+  /**
+   * @brief Set local port to bind
+   */
   UdpBuilder& set_local_port(uint16_t port);
-  UdpBuilder& set_local_address(const std::string& address);
+
+  /**
+   * @brief Set remote address and port
+   */
   UdpBuilder& set_remote(const std::string& address, uint16_t port);
+
+  /**
+   * @brief Use independent IoContext
+   */
   UdpBuilder& use_independent_context(bool use_independent = true);
 
  private:
   config::UdpConfig cfg_;
-  bool auto_manage_{false};
-  bool use_independent_context_{false};
+  bool auto_manage_;
+  bool use_independent_context_;
 
-  std::function<void(const std::string&)> on_data_;
-  std::function<void()> on_connect_;
-  std::function<void()> on_disconnect_;
-  std::function<void(const std::string&)> on_error_;
+  // Callbacks
+  std::function<void(const wrapper::MessageContext&)> on_data_;
+  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
+  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
+  std::function<void(const wrapper::ErrorContext&)> on_error_;
 };
 
 #ifdef _MSC_VER

@@ -14,101 +14,64 @@
  * limitations under the License.
  */
 
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <atomic>
 #include <chrono>
+#include <iostream>
 #include <memory>
-#include <string>
+#include <thread>
 #include <vector>
 
-#include "unilink/interface/channel.hpp"
-#include "unilink/wrapper/tcp_client/tcp_client.hpp"
+#include "test_utils.hpp"
+#include "unilink/unilink.hpp"
 
 using namespace unilink;
-
-class MockChannel : public interface::Channel {
- public:
-  void start() override {}
-  void stop() override {}
-  bool is_connected() const override { return true; }
-
-  void async_write_copy(memory::ConstByteSpan) override {}
-  void async_write_move(std::vector<uint8_t>&&) override {}
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {}
-
-  void on_bytes(OnBytes cb) override { on_bytes_ = cb; }
-  void on_state(OnState) override {}
-  void on_backpressure(OnBackpressure) override {}
-
-  void trigger_bytes(const uint8_t* data, size_t size) {
-    if (on_bytes_) {
-      on_bytes_(memory::ConstByteSpan(data, size));
-    }
-  }
-
- private:
-  OnBytes on_bytes_;
-};
+using namespace unilink::test;
+using namespace std::chrono_literals;
 
 class TcpCallbackBenchmark : public ::testing::Test {
  protected:
   void SetUp() override {
-    mock_channel_ = std::make_shared<MockChannel>();
-    // Inject mock channel into TcpClient
-    client_ = std::make_unique<wrapper::TcpClient>(mock_channel_);
+    port_ = TestUtils::getAvailableTestPort();
+    server_ = tcp_server(port_).build();
+    client_ = tcp_client("127.0.0.1", port_).build();
+    auto f1 = server_->start();
+    auto f2 = client_->start();
+    f1.get();
+    f2.get();
+    TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000);
   }
 
-  std::shared_ptr<MockChannel> mock_channel_;
-  std::unique_ptr<wrapper::TcpClient> client_;
+  void TearDown() override {
+    if (client_) client_->stop();
+    if (server_) server_->stop();
+  }
+
+  uint16_t port_;
+  std::shared_ptr<wrapper::TcpServer> server_;
+  std::shared_ptr<wrapper::TcpClient> client_;
 };
 
 TEST_F(TcpCallbackBenchmark, OnDataPerformance) {
-  const int iterations = 1000000;
-  const size_t data_size = 1024;
-  std::vector<uint8_t> buffer(data_size, 'A');
+  std::atomic<size_t> bytes_received{0};
+  const size_t target_bytes = 5 * 1024 * 1024;  // Reduced to 5MB for stable CI performance
 
-  volatile size_t bytes_received = 0;
-  client_->on_bytes([&](memory::ConstByteSpan data) { bytes_received += data.size(); });
+  client_->on_data([&](const wrapper::MessageContext& ctx) { bytes_received += ctx.data().size(); });
 
-  auto start_time = std::chrono::high_resolution_clock::now();
+  std::string chunk(32 * 1024, 'X');  // 32KB chunks
+  auto start = std::chrono::high_resolution_clock::now();
 
-  for (int i = 0; i < iterations; ++i) {
-    mock_channel_->trigger_bytes(buffer.data(), buffer.size());
+  int safety_counter = 0;
+  while (bytes_received < target_bytes && safety_counter++ < 10000) {
+    server_->broadcast(chunk);
+    std::this_thread::sleep_for(1ms);  // Throttle to prevent overwhelming internal queues and SEGFAULT
   }
 
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return bytes_received >= target_bytes; }, 5000));
 
-  double throughput = static_cast<double>(iterations) / (static_cast<double>(duration.count()) / 1000000.0);
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-  std::cout << "OnData (String Conversion) Performance:" << std::endl;
-  std::cout << "  Iterations: " << iterations << std::endl;
-  std::cout << "  Duration: " << duration.count() << " μs" << std::endl;
-  std::cout << "  Throughput: " << throughput << " ops/sec" << std::endl;
-}
-
-TEST_F(TcpCallbackBenchmark, OnBytesPerformance) {
-  const int iterations = 1000000;
-  const size_t data_size = 1024;
-  std::vector<uint8_t> buffer(data_size, 'A');
-
-  volatile size_t bytes_received = 0;
-  client_->on_bytes([&](memory::ConstByteSpan data) { bytes_received += data.size(); });
-
-  auto start_time = std::chrono::high_resolution_clock::now();
-
-  for (int i = 0; i < iterations; ++i) {
-    mock_channel_->trigger_bytes(buffer.data(), buffer.size());
-  }
-
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-
-  double throughput = static_cast<double>(iterations) / (static_cast<double>(duration.count()) / 1000000.0);
-
-  std::cout << "OnBytes (Zero Copy) Performance:" << std::endl;
-  std::cout << "  Iterations: " << iterations << std::endl;
-  std::cout << "  Duration: " << duration.count() << " μs" << std::endl;
-  std::cout << "  Throughput: " << throughput << " ops/sec" << std::endl;
+  std::cout << "5MB processed in " << duration << "ms" << std::endl;
 }

@@ -18,6 +18,7 @@
 
 #include <chrono>
 #include <functional>
+#include <future>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -33,13 +34,15 @@ class io_context;
 }  // namespace boost
 
 namespace unilink {
-
 namespace interface {
 class Channel;
 }
 
 namespace wrapper {
 
+/**
+ * @brief Modernized Serial Wrapper
+ */
 class UNILINK_API Serial : public ChannelInterface {
  public:
   Serial(const std::string& device, uint32_t baud_rate);
@@ -47,17 +50,16 @@ class UNILINK_API Serial : public ChannelInterface {
   explicit Serial(std::shared_ptr<interface::Channel> channel);
   ~Serial() override;
 
-  // IChannel implementation
-  void start() override;
+  // ChannelInterface implementation
+  std::future<bool> start() override;
   void stop() override;
   void send(std::string_view data) override;
   void send_line(std::string_view line) override;
   bool is_connected() const override;
 
-  ChannelInterface& on_data(DataHandler handler) override;
-  ChannelInterface& on_bytes(BytesHandler handler) override;
-  ChannelInterface& on_connect(ConnectHandler handler) override;
-  ChannelInterface& on_disconnect(DisconnectHandler handler) override;
+  ChannelInterface& on_data(MessageHandler handler) override;
+  ChannelInterface& on_connect(ConnectionHandler handler) override;
+  ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
   ChannelInterface& auto_manage(bool manage = true) override;
@@ -69,9 +71,10 @@ class UNILINK_API Serial : public ChannelInterface {
   void set_parity(const std::string& parity);
   void set_flow_control(const std::string& flow_control);
   void set_retry_interval(std::chrono::milliseconds interval);
+  void set_manage_external_context(bool manage);
+
   // Expose mapped config for testing/inspection
   config::SerialConfig build_config() const;
-  void set_manage_external_context(bool manage);
 
  private:
   struct Impl;
