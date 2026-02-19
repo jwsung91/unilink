@@ -143,30 +143,37 @@ void TcpServer::stop() {
   auto cleanup = [this, cleanup_flag](std::shared_ptr<TcpServer> keep_alive) {
     if (cleanup_flag->exchange(true)) return;
 
-    boost::system::error_code ec;
-    if (acceptor_ && acceptor_->is_open()) {
-      acceptor_->close(ec);
-    }
-
-    std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
-    {
-      std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
-      sessions_copy.reserve(sessions_.size());
-      for (auto& kv : sessions_) {
-        sessions_copy.push_back(kv.second);
+    try {
+      boost::system::error_code ec;
+      if (acceptor_ && acceptor_->is_open()) {
+        acceptor_->close(ec);
       }
-      sessions_.clear();
-      current_session_.reset();
-    }
 
-    for (auto& session : sessions_copy) {
-      if (session) {
-        session->stop();
+      std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
+      {
+        std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
+        sessions_copy.reserve(sessions_.size());
+        for (auto& kv : sessions_) {
+          sessions_copy.push_back(kv.second);
+        }
+        sessions_.clear();
+        current_session_.reset();
       }
-    }
 
-    state_.set_state(base::LinkState::Closed);
-    notify_state();
+      for (auto& session : sessions_copy) {
+        if (session) {
+          session->stop();
+        }
+      }
+
+      state_.set_state(base::LinkState::Closed);
+      notify_state();
+    } catch (const std::exception& e) {
+      // Prevent exceptions from escaping cleanup, especially when called from destructor
+      std::cerr << "TcpServer cleanup failed: " << e.what() << std::endl;
+    } catch (...) {
+      std::cerr << "TcpServer cleanup failed with unknown error" << std::endl;
+    }
   };
 
   const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
