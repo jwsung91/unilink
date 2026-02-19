@@ -81,9 +81,14 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interfa
 }
 
 TcpServer::~TcpServer() {
-  // Ensure proper cleanup even if stop() wasn't called explicitly
-  if (!state_.is_state(base::LinkState::Closed)) {
-    stop();
+  try {
+    // Ensure proper cleanup even if stop() wasn't called explicitly
+    if (!state_.is_state(base::LinkState::Closed)) {
+      stop();
+    }
+  } catch (...) {
+    // Prevent exceptions from escaping destructor
+    std::cerr << "TcpServer destructor failed" << std::endl;
   }
 }
 
@@ -202,7 +207,7 @@ void TcpServer::stop() {
           cleanup_promise->set_value();
         });
 
-        if (cleanup_future.wait_for(std::chrono::seconds(2)) == std::future_status::ready) {
+        if (cleanup_future.wait_for(std::chrono::seconds(5)) == std::future_status::ready) {
           dispatched = true;
         }
       } catch (...) {
