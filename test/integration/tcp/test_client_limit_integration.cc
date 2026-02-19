@@ -52,21 +52,21 @@ class ClientLimitIntegrationTest : public ::testing::Test {
         try {
           // Add small jitter to avoid perfect collision
           std::this_thread::sleep_for(std::chrono::milliseconds(i * 10));
-          
+
           boost::asio::io_context ioc;
           boost::asio::ip::tcp::socket socket(ioc);
           boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::make_address(host), port);
-          
+
           boost::system::error_code ec;
           socket.open(boost::asio::ip::tcp::v4());
           socket.non_blocking(true);
           socket.connect(endpoint, ec);
-          
+
           if (ec == boost::asio::error::would_block || ec == boost::asio::error::in_progress) {
             fd_set write_fds;
             FD_ZERO(&write_fds);
             FD_SET(socket.native_handle(), &write_fds);
-            timeval tv{3, 0}; // Increased to 3 seconds for CI stability
+            timeval tv{3, 0};  // Increased to 3 seconds for CI stability
             if (select(static_cast<int>(socket.native_handle() + 1), nullptr, &write_fds, nullptr, &tv) > 0) {
               return true;
             }
@@ -97,7 +97,7 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
 
   auto client_futures = simulateClients("127.0.0.1", test_port, 2);
   for (auto& f : client_futures) f.wait_for(2s);
-  
+
   EXPECT_LE(server_->get_client_count(), 1);
 }
 
@@ -109,7 +109,7 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
 
   auto client_futures = simulateClients("127.0.0.1", test_port, 4);
   for (auto& f : client_futures) f.wait_for(2s);
-  
+
   EXPECT_LE(server_->get_client_count(), 2);
 }
 
@@ -121,8 +121,9 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
 
   auto client_futures = simulateClients("127.0.0.1", test_port, 5);
   int success_count = 0;
-  for (auto& f : client_futures) if (f.get()) success_count++;
-  
+  for (auto& f : client_futures)
+    if (f.get()) success_count++;
+
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() == 5; }, 5000));
 }
 
