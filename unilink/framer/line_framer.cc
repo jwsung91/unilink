@@ -130,8 +130,7 @@ size_t LineFramer::scan_and_process(memory::ConstByteSpan data, size_t search_st
     } else {
       // Valid message
       if (on_message_) {
-        size_t payload_len =
-            include_delimiter_ ? current_msg_total_len : (current_msg_total_len - delimiter_.length());
+        size_t payload_len = include_delimiter_ ? current_msg_total_len : (current_msg_total_len - delimiter_.length());
         on_message_(memory::ConstByteSpan(data.data() + processed_count, payload_len));
       }
     }
