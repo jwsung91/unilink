@@ -21,10 +21,16 @@
 namespace unilink {
 namespace concurrency {
 
-IoContextManager::IoContextManager() = default;
+IoContextManager::IoContextManager() {
+  // Ensure Logger is initialized before IoContextManager finishes construction.
+  // This guarantees Logger is destroyed AFTER IoContextManager.
+  diagnostics::Logger::instance();
+}
 
 IoContextManager::IoContextManager(std::shared_ptr<IoContext> external_context)
-    : owns_context_(false), ioc_(std::move(external_context)) {}
+    : owns_context_(false), ioc_(std::move(external_context)) {
+  diagnostics::Logger::instance();
+}
 
 IoContextManager::IoContextManager(IoContext& external_context)
     : owns_context_(false), ioc_(std::shared_ptr<IoContext>(&external_context, [](IoContext*) {})) {}
@@ -94,11 +100,21 @@ void IoContextManager::start() {
     // Launch the io_context run in a new thread
     io_thread_ = std::thread([this, context]() {
       try {
-        UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread started.");
+        try {
+          UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread started.");
+        } catch (...) {
+        }
         context->run();
-        UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread finished running.");
+        try {
+          UNILINK_LOG_DEBUG("io_context_manager", "start", "IoContext thread finished running.");
+        } catch (...) {
+        }
       } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
+        try {
+          UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
+        } catch (...) {
+        }
+      } catch (...) {
       }
       running_.store(false);  // Mark as not running when thread exits
     });
@@ -156,9 +172,18 @@ void IoContextManager::stop() {
 
   // Join the thread outside the lock to prevent deadlocks
   if (worker.joinable()) {
-    UNILINK_LOG_DEBUG("io_context_manager", "stop", "Joining IoContext thread.");
-    worker.join();
-    UNILINK_LOG_DEBUG("io_context_manager", "stop", "IoContext thread joined.");
+    try {
+      UNILINK_LOG_DEBUG("io_context_manager", "stop", "Joining IoContext thread.");
+    } catch (...) {
+    }
+    try {
+      worker.join();
+    } catch (...) {
+    }
+    try {
+      UNILINK_LOG_DEBUG("io_context_manager", "stop", "IoContext thread joined.");
+    } catch (...) {
+    }
   }
 
   // After the thread has joined, perform final cleanup that might require the mutex again
