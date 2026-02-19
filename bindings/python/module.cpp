@@ -3,6 +3,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#include "unilink/config/udp_config.hpp"
 #include "unilink/unilink.hpp"
 
 namespace py = pybind11;
@@ -45,6 +46,17 @@ PYBIND11_MODULE(unilink_py, m) {
       .def_property_readonly("code", &ErrorContext::code)
       .def_property_readonly("message", [](const ErrorContext& self) { return std::string(self.message()); })
       .def_property_readonly("client_id", &ErrorContext::client_id);
+
+  // Configuration objects
+  py::class_<config::UdpConfig>(m, "UdpConfig")
+      .def(py::init<>())
+      .def_readwrite("local_address", &config::UdpConfig::local_address)
+      .def_readwrite("local_port", &config::UdpConfig::local_port)
+      .def_readwrite("remote_address", &config::UdpConfig::remote_address)
+      .def_readwrite("remote_port", &config::UdpConfig::remote_port)
+      .def_readwrite("backpressure_threshold", &config::UdpConfig::backpressure_threshold)
+      .def_readwrite("enable_memory_pool", &config::UdpConfig::enable_memory_pool)
+      .def_readwrite("stop_on_callback_exception", &config::UdpConfig::stop_on_callback_exception);
 
   // TcpClient
   py::class_<TcpClient, std::shared_ptr<TcpClient>>(m, "TcpClient")
@@ -147,6 +159,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send", &Serial::send)
       .def("send_line", &Serial::send_line)
       .def("is_connected", &Serial::is_connected)
+      .def("set_baud_rate", &Serial::set_baud_rate)
+      .def("set_data_bits", &Serial::set_data_bits)
+      .def("set_stop_bits", &Serial::set_stop_bits)
+      .def("set_parity", &Serial::set_parity)
+      .def("set_flow_control", &Serial::set_flow_control)
+      .def("set_retry_interval", &Serial::set_retry_interval)
+      .def("set_manage_external_context", &Serial::set_manage_external_context)
       .def("on_data",
            [](Serial& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
