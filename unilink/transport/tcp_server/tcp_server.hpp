@@ -118,9 +118,18 @@ class UNILINK_API TcpServer : public Channel,
   std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
   TcpServerConfig cfg_;
 
+  // State and Callbacks (Must outlive sessions_ because session destruction can trigger callbacks)
+  ThreadSafeLinkState state_{LinkState::Idle};
+  OnBytes on_bytes_;
+  OnState on_state_;
+  OnBackpressure on_bp_;
+  MultiClientConnectHandler on_multi_connect_;
+  MultiClientDataHandler on_multi_data_;
+  MultiClientDisconnectHandler on_multi_disconnect_;
+
   // Multi-client support
+  mutable std::mutex sessions_mutex_;  // Guards sessions_ and current_session_
   std::unordered_map<size_t, std::shared_ptr<TcpServerSession>> sessions_;
-  mutable std::shared_mutex sessions_mutex_;  // Guards sessions_ and current_session_
 
   // Client limit configuration
   size_t max_clients_;
@@ -129,17 +138,6 @@ class UNILINK_API TcpServer : public Channel,
 
   // Current active session for existing API compatibility
   std::shared_ptr<TcpServerSession> current_session_;
-
-  // Multi-client callbacks
-  MultiClientConnectHandler on_multi_connect_;
-  MultiClientDataHandler on_multi_data_;
-  MultiClientDisconnectHandler on_multi_disconnect_;
-
-  // Existing members (compatibility maintained)
-  OnBytes on_bytes_;
-  OnState on_state_;
-  OnBackpressure on_bp_;
-  ThreadSafeLinkState state_{LinkState::Idle};
 };
 }  // namespace transport
 }  // namespace unilink

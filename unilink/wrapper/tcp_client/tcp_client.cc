@@ -46,6 +46,7 @@ struct TcpClient::Impl {
 
   std::vector<std::promise<bool>> pending_promises_;
   std::atomic<bool> started_{false};
+  std::shared_ptr<bool> alive_marker_{std::make_shared<bool>(true)};
 
   MessageHandler data_handler_{nullptr};
   ConnectionHandler connect_handler_{nullptr};
@@ -186,16 +187,20 @@ struct TcpClient::Impl {
   void setup_internal_handlers() {
     if (!channel_) return;
 
+    std::weak_ptr<bool> weak_alive = alive_marker_;
+
     // Explicitly do not use try-catch here to allow exceptions from handlers
     // to propagate to transport layer for error handling (e.g., auto-reconnect)
-    channel_->on_bytes([this](memory::ConstByteSpan data) {
+    channel_->on_bytes([this, weak_alive](memory::ConstByteSpan data) {
+      if (weak_alive.expired()) return;
       if (data_handler_) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
         data_handler_(MessageContext(0, str_data));
       }
     });
 
-    channel_->on_state([this](base::LinkState state) {
+    channel_->on_state([this, weak_alive](base::LinkState state) {
+      if (weak_alive.expired()) return;
       if (state == base::LinkState::Connected) {
         fulfill_all(true);
         if (connect_handler_) connect_handler_(ConnectionContext(0));

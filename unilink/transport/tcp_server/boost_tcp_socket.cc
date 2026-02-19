@@ -16,13 +16,23 @@
 
 #include "unilink/transport/tcp_server/boost_tcp_socket.hpp"
 
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+#include <sys/socket.h>
+#include <sys/types.h>
+#endif
+
 namespace unilink {
 namespace transport {
 
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
-BoostTcpSocket::BoostTcpSocket(tcp::socket sock) : socket_(std::move(sock)) {}
+BoostTcpSocket::BoostTcpSocket(tcp::socket sock) : socket_(std::move(sock)) {
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+  int yes = 1;
+  (void)::setsockopt(socket_.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+#endif
+}
 
 void BoostTcpSocket::async_read_some(const net::mutable_buffer& buffer,
                                      std::function<void(const boost::system::error_code&, std::size_t)> handler) {

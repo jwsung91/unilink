@@ -147,6 +147,11 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send", &Serial::send)
       .def("send_line", &Serial::send_line)
       .def("is_connected", &Serial::is_connected)
+      .def("set_baud_rate", &Serial::set_baud_rate)
+      .def("set_data_bits", &Serial::set_data_bits)
+      .def("set_stop_bits", &Serial::set_stop_bits)
+      .def("set_parity", &Serial::set_parity)
+      .def("set_flow_control", &Serial::set_flow_control)
       .def("on_data",
            [](Serial& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
@@ -178,6 +183,17 @@ PYBIND11_MODULE(unilink_py, m) {
         });
         return &self;
       });
+
+  // UdpConfig
+  py::class_<config::UdpConfig>(m, "UdpConfig")
+      .def(py::init<>())
+      .def_readwrite("local_address", &config::UdpConfig::local_address)
+      .def_readwrite("local_port", &config::UdpConfig::local_port)
+      .def_readwrite("remote_address", &config::UdpConfig::remote_address)
+      .def_readwrite("remote_port", &config::UdpConfig::remote_port)
+      .def_readwrite("backpressure_threshold", &config::UdpConfig::backpressure_threshold)
+      .def_readwrite("enable_memory_pool", &config::UdpConfig::enable_memory_pool)
+      .def_readwrite("stop_on_callback_exception", &config::UdpConfig::stop_on_callback_exception);
 
   // Udp
   py::class_<Udp, std::shared_ptr<Udp>>(m, "Udp")

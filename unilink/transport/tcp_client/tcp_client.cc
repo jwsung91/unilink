@@ -32,6 +32,11 @@
 #include <variant>
 #include <vector>
 
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+#include <sys/socket.h>
+#include <sys/types.h>
+#endif
+
 #include "unilink/base/constants.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/concurrency/thread_safe_state.hpp"
@@ -112,11 +117,11 @@ struct TcpClient::Impl {
     first_retry_interval_ms_ = std::min(first_retry_interval_ms_, cfg_.retry_interval_ms);
   }
 
-  void do_resolve_connect(std::shared_ptr<TcpClient> self);
-  void schedule_retry(std::shared_ptr<TcpClient> self);
-  void start_read(std::shared_ptr<TcpClient> self);
-  void do_write(std::shared_ptr<TcpClient> self);
-  void handle_close(std::shared_ptr<TcpClient> self, const boost::system::error_code& ec = {});
+  void do_resolve_connect(std::shared_ptr<TcpClient> self, uint64_t seq);
+  void schedule_retry(std::shared_ptr<TcpClient> self, uint64_t seq);
+  void start_read(std::shared_ptr<TcpClient> self, uint64_t seq);
+  void do_write(std::shared_ptr<TcpClient> self, uint64_t seq);
+  void handle_close(std::shared_ptr<TcpClient> self, uint64_t seq, const boost::system::error_code& ec = {});
   void transition_to(LinkState next, const boost::system::error_code& ec = {});
   void perform_stop_cleanup();
   void reset_start_state();
@@ -199,7 +204,7 @@ void TcpClient::start() {
         self->impl_->connected_.store(false);
         self->impl_->reset_io_objects();
         self->impl_->transition_to(LinkState::Connecting);
-        self->impl_->do_resolve_connect(self);
+        self->impl_->do_resolve_connect(self, seq);
       }
     });
   } else {
@@ -274,7 +279,7 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
           self->impl_->queue_bytes_ += added;
           self->impl_->tx_.emplace_back(std::move(buf));
           self->impl_->report_backpressure(self->impl_->queue_bytes_);
-          if (!self->impl_->writing_) self->impl_->do_write(self);
+          if (!self->impl_->writing_) self->impl_->do_write(self, self->impl_->current_seq_.load());
         });
         return;
       }
@@ -308,7 +313,7 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
     self->impl_->queue_bytes_ += added;
     self->impl_->tx_.emplace_back(std::move(buf));
     self->impl_->report_backpressure(self->impl_->queue_bytes_);
-    if (!self->impl_->writing_) self->impl_->do_write(self);
+    if (!self->impl_->writing_) self->impl_->do_write(self, self->impl_->current_seq_.load());
   });
 }
 
@@ -351,7 +356,7 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
     self->impl_->queue_bytes_ += added;
     self->impl_->tx_.emplace_back(std::move(buf));
     self->impl_->report_backpressure(self->impl_->queue_bytes_);
-    if (!self->impl_->writing_) self->impl_->do_write(self);
+    if (!self->impl_->writing_) self->impl_->do_write(self, self->impl_->current_seq_.load());
   });
 }
 
@@ -394,7 +399,7 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     self->impl_->queue_bytes_ += added;
     self->impl_->tx_.emplace_back(std::move(buf));
     self->impl_->report_backpressure(self->impl_->queue_bytes_);
-    if (!self->impl_->writing_) self->impl_->do_write(self);
+    if (!self->impl_->writing_) self->impl_->do_write(self, self->impl_->current_seq_.load());
   });
 }
 
@@ -405,62 +410,69 @@ void TcpClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_int
 
 // Impl methods implementation
 
-void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self) {
-  resolver_.async_resolve(cfg_.host, std::to_string(cfg_.port), [self](auto ec, tcp::resolver::results_type results) {
-    if (ec == net::error::operation_aborted) {
-      return;
-    }
-    if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
-      return;
-    }
-    if (ec) {
-      self->impl_->schedule_retry(self);
-      return;
-    }
-    self->impl_->connect_timer_.expires_after(std::chrono::milliseconds(self->impl_->cfg_.connection_timeout_ms));
-    self->impl_->connect_timer_.async_wait([self](const boost::system::error_code& timer_ec) {
-      if (timer_ec == net::error::operation_aborted) {
-        return;
-      }
-      if (!timer_ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load()) {
-        UNILINK_LOG_ERROR(
-            "tcp_client", "connect_timeout",
-            "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
-        self->impl_->handle_close(self, boost::asio::error::timed_out);
-      }
-    });
+void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64_t seq) {
+  resolver_.async_resolve(
+      cfg_.host, std::to_string(cfg_.port), [self, seq](auto ec, tcp::resolver::results_type results) {
+        if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
+          return;
+        }
+        if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
+          return;
+        }
+        if (ec) {
+          self->impl_->schedule_retry(self, seq);
+          return;
+        }
+        self->impl_->connect_timer_.expires_after(std::chrono::milliseconds(self->impl_->cfg_.connection_timeout_ms));
+        self->impl_->connect_timer_.async_wait([self, seq](const boost::system::error_code& timer_ec) {
+          if (timer_ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
+            return;
+          }
+          if (!timer_ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load()) {
+            UNILINK_LOG_ERROR(
+                "tcp_client", "connect_timeout",
+                "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
+            self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
+          }
+        });
 
-    net::async_connect(self->impl_->socket_, results, [self](auto ec2, const auto&) {
-      if (ec2 == net::error::operation_aborted) {
-        return;
-      }
-      if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
-        self->impl_->close_socket();
-        self->impl_->connect_timer_.cancel();
-        return;
-      }
-      if (ec2) {
-        self->impl_->connect_timer_.cancel();
-        self->impl_->schedule_retry(self);
-        return;
-      }
-      self->impl_->connect_timer_.cancel();
-      self->impl_->retry_attempts_ = 0;
-      self->impl_->connected_.store(true);
-      self->impl_->transition_to(LinkState::Connected);
-      boost::system::error_code ep_ec;
-      auto rep = self->impl_->socket_.remote_endpoint(ep_ec);
-      if (!ep_ec) {
-        UNILINK_LOG_INFO("tcp_client", "connect",
-                         "Connected to " + rep.address().to_string() + ":" + std::to_string(rep.port()));
-      }
-      self->impl_->start_read(self);
-      self->impl_->do_write(self);
-    });
-  });
+        net::async_connect(self->impl_->socket_, results, [self, seq](auto ec2, const auto&) {
+          if (ec2 == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
+            return;
+          }
+          if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
+            self->impl_->close_socket();
+            self->impl_->connect_timer_.cancel();
+            return;
+          }
+          if (ec2) {
+            self->impl_->connect_timer_.cancel();
+            self->impl_->schedule_retry(self, seq);
+            return;
+          }
+          self->impl_->connect_timer_.cancel();
+          self->impl_->retry_attempts_ = 0;
+          self->impl_->connected_.store(true);
+
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+          int yes = 1;
+          (void)::setsockopt(self->impl_->socket_.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+#endif
+
+          self->impl_->transition_to(LinkState::Connected);
+          boost::system::error_code ep_ec;
+          auto rep = self->impl_->socket_.remote_endpoint(ep_ec);
+          if (!ep_ec) {
+            UNILINK_LOG_INFO("tcp_client", "connect",
+                             "Connected to " + rep.address().to_string() + ":" + std::to_string(rep.port()));
+          }
+          self->impl_->start_read(self, seq);
+          self->impl_->do_write(self, seq);
+        });
+      });
 }
 
-void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self) {
+void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self, uint64_t seq) {
   connected_.store(false);
   if (stop_requested_.load() || stopping_.load()) {
     return;
@@ -479,25 +491,25 @@ void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self) {
 
   const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;
   retry_timer_.expires_after(std::chrono::milliseconds(interval));
-  retry_timer_.async_wait([self](const boost::system::error_code& ec) {
-    if (ec == net::error::operation_aborted) {
+  retry_timer_.async_wait([self, seq](const boost::system::error_code& ec) {
+    if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
       return;
     }
     if (!ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load())
-      self->impl_->do_resolve_connect(self);
+      self->impl_->do_resolve_connect(self, seq);
   });
 }
 
-void TcpClient::Impl::start_read(std::shared_ptr<TcpClient> self) {
-  socket_.async_read_some(net::buffer(rx_.data(), rx_.size()), [self](auto ec, std::size_t n) {
-    if (ec == net::error::operation_aborted) {
+void TcpClient::Impl::start_read(std::shared_ptr<TcpClient> self, uint64_t seq) {
+  socket_.async_read_some(net::buffer(rx_.data(), rx_.size()), [self, seq](auto ec, std::size_t n) {
+    if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
       return;
     }
     if (self->impl_->stop_requested_.load()) {
       return;
     }
     if (ec) {
-      self->impl_->handle_close(self, ec);
+      self->impl_->handle_close(self, seq, ec);
       return;
     }
     if (self->impl_->on_bytes_) {
@@ -505,19 +517,19 @@ void TcpClient::Impl::start_read(std::shared_ptr<TcpClient> self) {
         self->impl_->on_bytes_(memory::ConstByteSpan(self->impl_->rx_.data(), n));
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("tcp_client", "on_bytes", "Exception in on_bytes callback: " + std::string(e.what()));
-        self->impl_->handle_close(self, make_error_code(boost::asio::error::connection_aborted));
+        self->impl_->handle_close(self, seq, make_error_code(boost::asio::error::connection_aborted));
         return;
       } catch (...) {
         UNILINK_LOG_ERROR("tcp_client", "on_bytes", "Unknown exception in on_bytes callback");
-        self->impl_->handle_close(self, make_error_code(boost::asio::error::connection_aborted));
+        self->impl_->handle_close(self, seq, make_error_code(boost::asio::error::connection_aborted));
         return;
       }
     }
-    self->impl_->start_read(self);
+    self->impl_->start_read(self, seq);
   });
 }
 
-void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self) {
+void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self, uint64_t seq) {
   if (stop_requested_.load()) {
     tx_.clear();
     queue_bytes_ = 0;
@@ -553,8 +565,8 @@ void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self) {
       },
       current);
 
-  auto on_write = [self, queued_bytes](auto ec, std::size_t) {
-    if (ec == net::error::operation_aborted) {
+  auto on_write = [self, queued_bytes, seq](auto ec, std::size_t) {
+    if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
       self->impl_->current_write_buffer_.reset();
       self->impl_->queue_bytes_ =
           (self->impl_->queue_bytes_ > queued_bytes) ? (self->impl_->queue_bytes_ - queued_bytes) : 0;
@@ -571,7 +583,7 @@ void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self) {
 
       UNILINK_LOG_ERROR("tcp_client", "do_write", "Write failed: " + ec.message());
       self->impl_->writing_ = false;
-      self->impl_->handle_close(self, ec);
+      self->impl_->handle_close(self, seq, ec);
       return;
     }
 
@@ -586,7 +598,7 @@ void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self) {
       return;
     }
 
-    self->impl_->do_write(self);
+    self->impl_->do_write(self, seq);
   };
 
   std::visit(
@@ -601,8 +613,8 @@ void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self) {
       current);
 }
 
-void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, const boost::system::error_code& ec) {
-  if (ec == net::error::operation_aborted) {
+void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, uint64_t seq, const boost::system::error_code& ec) {
+  if (ec == net::error::operation_aborted || seq != current_seq_.load()) {
     return;
   }
   UNILINK_LOG_INFO("tcp_client", "handle_close", "Closing connection. Error: " + ec.message());
@@ -615,7 +627,7 @@ void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, const boost:
     return;
   }
   transition_to(LinkState::Connecting, ec);
-  schedule_retry(self);
+  schedule_retry(self, seq);
 }
 
 void TcpClient::Impl::close_socket() {

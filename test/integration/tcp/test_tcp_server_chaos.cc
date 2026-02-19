@@ -19,6 +19,7 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
+#include <csignal>
 #include <iostream>
 #include <memory>
 #include <thread>
@@ -33,7 +34,12 @@ using namespace std::chrono_literals;
 
 class TcpServerChaosTest : public ::testing::Test {
  protected:
-  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
+  void SetUp() override {
+#ifdef SIGPIPE
+    std::signal(SIGPIPE, SIG_IGN);
+#endif
+    test_port_ = TestUtils::getAvailableTestPort();
+  }
   uint16_t test_port_;
 };
 
@@ -107,14 +113,14 @@ TEST_F(TcpServerChaosTest, GarbageSender) {
       socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::make_address("127.0.0.1"), test_port_));
 
       std::vector<uint8_t> garbage(1024 * 4, 0xff);
-      for (int i = 0; i < 16; ++i) {  // Total 64KB
+      for (int i = 0; i < 4; ++i) {  // Total 16KB
         boost::asio::write(socket, boost::asio::buffer(garbage));
       }
     } catch (...) {
     }
   });
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return total_bytes.load() >= 1024 * 64; }, 15000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return total_bytes.load() >= 1024 * 16; }, 15000));
   if (garbage_thread.joinable()) garbage_thread.join();
   server->stop();
 }

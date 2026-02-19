@@ -4,15 +4,46 @@ import os
 # On Windows with Python 3.8+, DLL dependencies are not automatically loaded from PATH.
 # We need to explicitly add the directory containing dependent DLLs (unilink.dll) to the DLL search path.
 if os.name == 'nt' and hasattr(os, 'add_dll_directory'):
+    found_dll = False
+
+    # 1. Search in sys.path
     for p in sys.path:
         # Check if the path contains the unilink DLL
         dll_path = os.path.join(p, "unilink.dll")
         if os.path.exists(dll_path):
             try:
                 os.add_dll_directory(p)
-                print(f"Added DLL directory: {p}")
+                print(f"Added DLL directory from sys.path: {p}")
+                found_dll = True
             except Exception as e:
                 print(f"Failed to add DLL directory {p}: {e}")
+
+    # 2. Search relative to this script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates = [
+        script_dir,
+        os.path.join(script_dir, "..", "..", "bin"),
+        os.path.join(script_dir, "..", "..", "bin", "Release"),
+        os.path.join(script_dir, "..", "..", "bin", "Debug"),
+        os.path.join(script_dir, "..", "..", "bin", "RelWithDebInfo"),
+        os.path.join(script_dir, "..", "..", "lib"),
+        os.path.join(script_dir, "..", "..", "lib", "Release"),
+        os.path.join(script_dir, "..", "..", "lib", "Debug"),
+        os.path.join(script_dir, "..", "..", "lib", "RelWithDebInfo"),
+    ]
+
+    for p in candidates:
+        abs_p = os.path.abspath(p)
+        if os.path.exists(os.path.join(abs_p, "unilink.dll")):
+            try:
+                os.add_dll_directory(abs_p)
+                print(f"Added DLL directory from candidates: {abs_p}")
+                found_dll = True
+            except Exception as e:
+                print(f"Failed to add DLL directory {abs_p}: {e}")
+
+    if not found_dll:
+        print("WARNING: unilink.dll not found in standard search paths. Import may fail.")
 
 try:
     import unilink_py
