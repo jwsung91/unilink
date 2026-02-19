@@ -91,7 +91,7 @@ $(document).ready(function(){initNavTree('classunilink_1_1builder_1_1SerialBuild
 </div><!--header-->
 <div class="contents">
 
-<p>Builder for Serial wrapper.  
+<p>Modernized Builder for Serial.  
  <a href="classunilink_1_1builder_1_1SerialBuilder.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="serial__builder_8hpp_source.html">serial_builder.hpp</a>&gt;</code></p>
@@ -108,7 +108,6 @@ Inheritance diagram for unilink::builder::SerialBuilder:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad2fa923cd592bd38ad08c1a05cac7b32"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#ad2fa923cd592bd38ad08c1a05cac7b32">SerialBuilder</a> (const std::string &amp;device, uint32_t baud_rate)</td></tr>
-<tr class="memdesc:ad2fa923cd592bd38ad08c1a05cac7b32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#ad2fa923cd592bd38ad08c1a05cac7b32">More...</a><br /></td></tr>
 <tr class="separator:ad2fa923cd592bd38ad08c1a05cac7b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b078ec345ce72d5c8297539a24909bf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a0b078ec345ce72d5c8297539a24909bf">SerialBuilder</a> (const <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;)=delete</td></tr>
 <tr class="separator:a0b078ec345ce72d5c8297539a24909bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,57 +118,41 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abc65a097f5be99bd11575a2e2c64a853"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#abc65a097f5be99bd11575a2e2c64a853">operator=</a> (<a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:abc65a097f5be99bd11575a2e2c64a853"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea59bfd17313e2607a96ea9f01c2dcda"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1Serial.html">wrapper::Serial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">build</a> () override</td></tr>
-<tr class="memdesc:aea59bfd17313e2607a96ea9f01c2dcda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured Serial.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">More...</a><br /></td></tr>
+<tr class="memdesc:aea59bfd17313e2607a96ea9f01c2dcda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured product.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">More...</a><br /></td></tr>
 <tr class="separator:aea59bfd17313e2607a96ea9f01c2dcda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac99053dbeb43bebbf4f56177b4c88f4c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#ac99053dbeb43bebbf4f56177b4c88f4c">auto_manage</a> (bool auto_manage=true) override</td></tr>
 <tr class="memdesc:ac99053dbeb43bebbf4f56177b4c88f4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#ac99053dbeb43bebbf4f56177b4c88f4c">More...</a><br /></td></tr>
 <tr class="separator:ac99053dbeb43bebbf4f56177b4c88f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5e9f13a58e6f4b5e20ec5d5a031e4bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#ad5e9f13a58e6f4b5e20ec5d5a031e4bb">on_data</a> (std::function&lt; void(const std::string &amp;)&gt; handler) override</td></tr>
-<tr class="memdesc:ad5e9f13a58e6f4b5e20ec5d5a031e4bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#ad5e9f13a58e6f4b5e20ec5d5a031e4bb">More...</a><br /></td></tr>
-<tr class="separator:ad5e9f13a58e6f4b5e20ec5d5a031e4bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6a55e7be7663feca150b95e076b095a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aa6a55e7be7663feca150b95e076b095a">on_connect</a> (std::function&lt; void()&gt; handler) override</td></tr>
-<tr class="memdesc:aa6a55e7be7663feca150b95e076b095a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#aa6a55e7be7663feca150b95e076b095a">More...</a><br /></td></tr>
-<tr class="separator:aa6a55e7be7663feca150b95e076b095a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade273145a3750c043c81aa437e06e5cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#ade273145a3750c043c81aa437e06e5cf">on_disconnect</a> (std::function&lt; void()&gt; handler) override</td></tr>
-<tr class="memdesc:ade273145a3750c043c81aa437e06e5cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#ade273145a3750c043c81aa437e06e5cf">More...</a><br /></td></tr>
-<tr class="separator:ade273145a3750c043c81aa437e06e5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee8743355583ce29510bd0342eaa9ec3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aee8743355583ce29510bd0342eaa9ec3">on_error</a> (std::function&lt; void(const std::string &amp;)&gt; handler) override</td></tr>
-<tr class="memdesc:aee8743355583ce29510bd0342eaa9ec3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#aee8743355583ce29510bd0342eaa9ec3">More...</a><br /></td></tr>
-<tr class="separator:aee8743355583ce29510bd0342eaa9ec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19f2f48e6d0fb18e8bb020866d2cd6a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a19f2f48e6d0fb18e8bb020866d2cd6a5">on_data</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a> &amp;)&gt; handler) override</td></tr>
+<tr class="memdesc:a19f2f48e6d0fb18e8bb020866d2cd6a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a19f2f48e6d0fb18e8bb020866d2cd6a5">More...</a><br /></td></tr>
+<tr class="separator:a19f2f48e6d0fb18e8bb020866d2cd6a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96d737e91f16e3fd669e03ad18f19c36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a96d737e91f16e3fd669e03ad18f19c36">on_connect</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt; handler) override</td></tr>
+<tr class="memdesc:a96d737e91f16e3fd669e03ad18f19c36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a96d737e91f16e3fd669e03ad18f19c36">More...</a><br /></td></tr>
+<tr class="separator:a96d737e91f16e3fd669e03ad18f19c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a068a1027c7c6a243cd81d17ddcf000f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a068a1027c7c6a243cd81d17ddcf000f1">on_disconnect</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt; handler) override</td></tr>
+<tr class="memdesc:a068a1027c7c6a243cd81d17ddcf000f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a068a1027c7c6a243cd81d17ddcf000f1">More...</a><br /></td></tr>
+<tr class="separator:a068a1027c7c6a243cd81d17ddcf000f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabdd31229583cbc907720b336eb91254"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aabdd31229583cbc907720b336eb91254">on_error</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html">wrapper::ErrorContext</a> &amp;)&gt; handler) override</td></tr>
+<tr class="memdesc:aabdd31229583cbc907720b336eb91254"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#aabdd31229583cbc907720b336eb91254">More...</a><br /></td></tr>
+<tr class="separator:aabdd31229583cbc907720b336eb91254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a806f98817d3b066f93f9ea5b8d159c15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a806f98817d3b066f93f9ea5b8d159c15">data_bits</a> (int bits)</td></tr>
+<tr class="memdesc:a806f98817d3b066f93f9ea5b8d159c15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set number of data bits.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a806f98817d3b066f93f9ea5b8d159c15">More...</a><br /></td></tr>
+<tr class="separator:a806f98817d3b066f93f9ea5b8d159c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b1bd5fbbb3503e306a3b008c8c9cd74"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a5b1bd5fbbb3503e306a3b008c8c9cd74">stop_bits</a> (int bits)</td></tr>
+<tr class="memdesc:a5b1bd5fbbb3503e306a3b008c8c9cd74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set number of stop bits.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a5b1bd5fbbb3503e306a3b008c8c9cd74">More...</a><br /></td></tr>
+<tr class="separator:a5b1bd5fbbb3503e306a3b008c8c9cd74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4126f76a8f94c12b466f886baa8f5191"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a4126f76a8f94c12b466f886baa8f5191">parity</a> (const std::string &amp;p)</td></tr>
+<tr class="memdesc:a4126f76a8f94c12b466f886baa8f5191"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set parity.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a4126f76a8f94c12b466f886baa8f5191">More...</a><br /></td></tr>
+<tr class="separator:a4126f76a8f94c12b466f886baa8f5191"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a963f3798eed15b91ec0342d7792e1d97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a963f3798eed15b91ec0342d7792e1d97">flow_control</a> (const std::string &amp;flow)</td></tr>
+<tr class="memdesc:a963f3798eed15b91ec0342d7792e1d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set flow control.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a963f3798eed15b91ec0342d7792e1d97">More...</a><br /></td></tr>
+<tr class="separator:a963f3798eed15b91ec0342d7792e1d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a677ff4d357c9ffdb9102acfb3ccf5859"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a677ff4d357c9ffdb9102acfb3ccf5859">retry_interval</a> (uint32_t milliseconds)</td></tr>
+<tr class="memdesc:a677ff4d357c9ffdb9102acfb3ccf5859"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set reconnection retry interval.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a677ff4d357c9ffdb9102acfb3ccf5859">More...</a><br /></td></tr>
+<tr class="separator:a677ff4d357c9ffdb9102acfb3ccf5859"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c42a7d9e91a16e473d7dcf806f7144f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a4c42a7d9e91a16e473d7dcf806f7144f">use_independent_context</a> (bool use_independent=true)</td></tr>
-<tr class="memdesc:a4c42a7d9e91a16e473d7dcf806f7144f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use independent IoContext for this serial (for testing isolation)  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a4c42a7d9e91a16e473d7dcf806f7144f">More...</a><br /></td></tr>
+<tr class="memdesc:a4c42a7d9e91a16e473d7dcf806f7144f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use independent IoContext.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a4c42a7d9e91a16e473d7dcf806f7144f">More...</a><br /></td></tr>
 <tr class="separator:a4c42a7d9e91a16e473d7dcf806f7144f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95d5b815b14935428f276ccea645e1ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a95d5b815b14935428f276ccea645e1ef">retry_interval</a> (unsigned interval_ms)</td></tr>
-<tr class="memdesc:a95d5b815b14935428f276ccea645e1ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set retry interval for automatic reconnection.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a95d5b815b14935428f276ccea645e1ef">More...</a><br /></td></tr>
-<tr class="separator:a95d5b815b14935428f276ccea645e1ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f7f9a9e305b4846b8a077c20045b9f9"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a1f7f9a9e305b4846b8a077c20045b9f9">on_connect</a> (std::function&lt; void()&gt; handler)=0</td></tr>
-<tr class="memdesc:a1f7f9a9e305b4846b8a077c20045b9f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a1f7f9a9e305b4846b8a077c20045b9f9">More...</a><br /></td></tr>
-<tr class="separator:a1f7f9a9e305b4846b8a077c20045b9f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12542ad87746758d44a9c8934b67b757"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
-<tr class="memitem:a12542ad87746758d44a9c8934b67b757"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a12542ad87746758d44a9c8934b67b757">on_connect</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:a12542ad87746758d44a9c8934b67b757"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a12542ad87746758d44a9c8934b67b757">More...</a><br /></td></tr>
-<tr class="separator:a12542ad87746758d44a9c8934b67b757"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7288c24734f5a4c1469a617cbea5e29a"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a7288c24734f5a4c1469a617cbea5e29a">on_data</a> (std::function&lt; void(const std::string &amp;)&gt; handler)=0</td></tr>
-<tr class="memdesc:a7288c24734f5a4c1469a617cbea5e29a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a7288c24734f5a4c1469a617cbea5e29a">More...</a><br /></td></tr>
-<tr class="separator:a7288c24734f5a4c1469a617cbea5e29a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8de9b4e0b156ad2085fbb3141d390bbc"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
-<tr class="memitem:a8de9b4e0b156ad2085fbb3141d390bbc"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a8de9b4e0b156ad2085fbb3141d390bbc">on_data</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:a8de9b4e0b156ad2085fbb3141d390bbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a8de9b4e0b156ad2085fbb3141d390bbc">More...</a><br /></td></tr>
-<tr class="separator:a8de9b4e0b156ad2085fbb3141d390bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaff39a9706c874c0f9a711fb67dd5a75"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aaff39a9706c874c0f9a711fb67dd5a75">on_disconnect</a> (std::function&lt; void()&gt; handler)=0</td></tr>
-<tr class="memdesc:aaff39a9706c874c0f9a711fb67dd5a75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#aaff39a9706c874c0f9a711fb67dd5a75">More...</a><br /></td></tr>
-<tr class="separator:aaff39a9706c874c0f9a711fb67dd5a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0b1f54ba0ed2e4ef41ea3e351e2f200"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
-<tr class="memitem:ac0b1f54ba0ed2e4ef41ea3e351e2f200"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#ac0b1f54ba0ed2e4ef41ea3e351e2f200">on_disconnect</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:ac0b1f54ba0ed2e4ef41ea3e351e2f200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set disconnection handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#ac0b1f54ba0ed2e4ef41ea3e351e2f200">More...</a><br /></td></tr>
-<tr class="separator:ac0b1f54ba0ed2e4ef41ea3e351e2f200"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a155a296ef455cc0c6c0bd98e2ba910f4"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a155a296ef455cc0c6c0bd98e2ba910f4">on_error</a> (std::function&lt; void(const std::string &amp;)&gt; handler)=0</td></tr>
-<tr class="memdesc:a155a296ef455cc0c6c0bd98e2ba910f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a155a296ef455cc0c6c0bd98e2ba910f4">More...</a><br /></td></tr>
-<tr class="separator:a155a296ef455cc0c6c0bd98e2ba910f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2072aa65a77b0c821e2a57bc989fb311"><td class="memTemplParams" colspan="2">template&lt;typename U , typename F &gt; </td></tr>
-<tr class="memitem:a2072aa65a77b0c821e2a57bc989fb311"><td class="memTemplItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a2072aa65a77b0c821e2a57bc989fb311">on_error</a> (U *obj, F method)</td></tr>
-<tr class="memdesc:a2072aa65a77b0c821e2a57bc989fb311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a2072aa65a77b0c821e2a57bc989fb311">More...</a><br /></td></tr>
-<tr class="separator:a2072aa65a77b0c821e2a57bc989fb311"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classunilink_1_1builder_1_1BuilderInterface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a></td></tr>
 <tr class="memitem:a4c9007f791048f912597ccd39fa99a76 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a4c9007f791048f912597ccd39fa99a76">~BuilderInterface</a> ()=default</td></tr>
 <tr class="separator:a4c9007f791048f912597ccd39fa99a76 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -217,10 +200,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a5716b75e47e34f725ea5c27fcc9396e2 inherit pro_attribs_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Builder for Serial wrapper. </p>
-<p>Provides a fluent API for configuring and creating Serial instances. Supports method chaining for easy configuration. </p>
+<div class="textblock"><p>Modernized Builder for Serial. </p>
 
-<p class="definition">Definition at line <a class="el" href="serial__builder_8hpp_source.html#l00039">39</a> of file <a class="el" href="serial__builder_8hpp_source.html">serial_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8hpp_source.html#l00037">37</a> of file <a class="el" href="serial__builder_8hpp_source.html">serial_builder.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad2fa923cd592bd38ad08c1a05cac7b32"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad2fa923cd592bd38ad08c1a05cac7b32">&#9670;&nbsp;</a></span>SerialBuilder() <span class="overload">[1/3]</span></h2>
@@ -248,16 +230,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Construct a new <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">device</td><td>The serial device path (e.g., "/dev/ttyUSB0") </td></tr>
-    <tr><td class="paramname">baud_rate</td><td>The baud rate for serial communication </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00030">30</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00026">26</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -341,15 +314,15 @@ Additional Inherited Members</h2></td></tr>
 <p>Enable auto-manage functionality. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">auto_manage</td><td>Whether to automatically manage the serial lifecycle </td></tr>
+    <tr><td class="paramname">auto_manage</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00124">124</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00067">67</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -376,17 +349,61 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Build and return the configured Serial. </p>
-<dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;wrapper::Serial&gt; The configured serial instance </dd></dl>
+<p>Build and return the configured product. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;T&gt; The configured wrapper instance </dd></dl>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00046">46</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00040">40</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
-<a id="aa6a55e7be7663feca150b95e076b095a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6a55e7be7663feca150b95e076b095a">&#9670;&nbsp;</a></span>on_connect() <span class="overload">[1/3]</span></h2>
+<a id="a806f98817d3b066f93f9ea5b8d159c15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a806f98817d3b066f93f9ea5b8d159c15">&#9670;&nbsp;</a></span>data_bits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::data_bits </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bits</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set number of data bits. </p>
+
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00092">92</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+
+</div>
+</div>
+<a id="a963f3798eed15b91ec0342d7792e1d97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a963f3798eed15b91ec0342d7792e1d97">&#9670;&nbsp;</a></span>flow_control()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::flow_control </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>flow</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set flow control. </p>
+
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00107">107</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+
+</div>
+</div>
+<a id="a96d737e91f16e3fd669e03ad18f19c36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96d737e91f16e3fd669e03ad18f19c36">&#9670;&nbsp;</a></span>on_connect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -397,7 +414,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::on_connect </td>
           <td>(</td>
-          <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt;&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -412,100 +429,20 @@ Additional Inherited Members</h2></td></tr>
 <p>Set connection handler callback. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Function to handle connection events </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
-
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a1f7f9a9e305b4846b8a077c20045b9f9">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00134">134</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
-
-</div>
-</div>
-<a id="a1f7f9a9e305b4846b8a077c20045b9f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f7f9a9e305b4846b8a077c20045b9f9">&#9670;&nbsp;</a></span>on_connect() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_connect</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set connection handler callback. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">handler</td><td>Function to handle connection events </td></tr>
+    <tr><td class="paramname">handler</td><td>Function to handle connection events with context </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-</div>
-</div>
-<a id="a12542ad87746758d44a9c8934b67b757"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12542ad87746758d44a9c8934b67b757">&#9670;&nbsp;</a></span>on_connect() <span class="overload">[3/3]</span></h2>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#ac566a7264c6a7d0722aefa9424db2433">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
 
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename U , typename F &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_connect </td>
-          <td>(</td>
-          <td class="paramtype">typename U&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">typename F&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set connection handler callback using member function pointer. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">U</td><td>Class type </td></tr>
-    <tr><td class="paramname">F</td><td>Member function type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">obj</td><td>Object instance </td></tr>
-    <tr><td class="paramname">method</td><td>Member function pointer </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00102">102</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00077">77</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
-<a id="ad5e9f13a58e6f4b5e20ec5d5a031e4bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5e9f13a58e6f4b5e20ec5d5a031e4bb">&#9670;&nbsp;</a></span>on_data() <span class="overload">[1/3]</span></h2>
+<a id="a19f2f48e6d0fb18e8bb020866d2cd6a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19f2f48e6d0fb18e8bb020866d2cd6a5">&#9670;&nbsp;</a></span>on_data()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -516,7 +453,7 @@ template&lt;typename U , typename F &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::on_data </td>
           <td>(</td>
-          <td class="paramtype">std::function&lt; void(const std::string &amp;)&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a> &amp;)&gt;&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -531,100 +468,20 @@ template&lt;typename U , typename F &gt; </div>
 <p>Set data handler callback. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Function to handle incoming data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
-
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a7288c24734f5a4c1469a617cbea5e29a">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00129">129</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
-
-</div>
-</div>
-<a id="a7288c24734f5a4c1469a617cbea5e29a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7288c24734f5a4c1469a617cbea5e29a">&#9670;&nbsp;</a></span>on_data() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_data</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set data handler callback. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">handler</td><td>Function to handle incoming data </td></tr>
+    <tr><td class="paramname">handler</td><td>Function to handle incoming data with context </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-</div>
-</div>
-<a id="a8de9b4e0b156ad2085fbb3141d390bbc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8de9b4e0b156ad2085fbb3141d390bbc">&#9670;&nbsp;</a></span>on_data() <span class="overload">[3/3]</span></h2>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a66e7f72117f82c78aa7fc451395cbb8f">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
 
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename U , typename F &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_data </td>
-          <td>(</td>
-          <td class="paramtype">typename U&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">typename F&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set data handler callback using member function pointer. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">U</td><td>Class type </td></tr>
-    <tr><td class="paramname">F</td><td>Member function type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">obj</td><td>Object instance </td></tr>
-    <tr><td class="paramname">method</td><td>Member function pointer </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00082">82</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00072">72</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
-<a id="ade273145a3750c043c81aa437e06e5cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade273145a3750c043c81aa437e06e5cf">&#9670;&nbsp;</a></span>on_disconnect() <span class="overload">[1/3]</span></h2>
+<a id="a068a1027c7c6a243cd81d17ddcf000f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a068a1027c7c6a243cd81d17ddcf000f1">&#9670;&nbsp;</a></span>on_disconnect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -635,7 +492,7 @@ template&lt;typename U , typename F &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::on_disconnect </td>
           <td>(</td>
-          <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt;&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -650,100 +507,20 @@ template&lt;typename U , typename F &gt; </div>
 <p>Set disconnection handler callback. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Function to handle disconnection events </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
-
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#aaff39a9706c874c0f9a711fb67dd5a75">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00139">139</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
-
-</div>
-</div>
-<a id="aaff39a9706c874c0f9a711fb67dd5a75"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaff39a9706c874c0f9a711fb67dd5a75">&#9670;&nbsp;</a></span>on_disconnect() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_disconnect</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set disconnection handler callback. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">handler</td><td>Function to handle disconnection events </td></tr>
+    <tr><td class="paramname">handler</td><td>Function to handle disconnection events with context </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-</div>
-</div>
-<a id="ac0b1f54ba0ed2e4ef41ea3e351e2f200"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0b1f54ba0ed2e4ef41ea3e351e2f200">&#9670;&nbsp;</a></span>on_disconnect() <span class="overload">[3/3]</span></h2>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a37595682d57b9b28c499d9b8b1b0b029">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
 
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename U , typename F &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_disconnect </td>
-          <td>(</td>
-          <td class="paramtype">typename U&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">typename F&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set disconnection handler callback using member function pointer. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">U</td><td>Class type </td></tr>
-    <tr><td class="paramname">F</td><td>Member function type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">obj</td><td>Object instance </td></tr>
-    <tr><td class="paramname">method</td><td>Member function pointer </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00122">122</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00082">82</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
-<a id="aee8743355583ce29510bd0342eaa9ec3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee8743355583ce29510bd0342eaa9ec3">&#9670;&nbsp;</a></span>on_error() <span class="overload">[1/3]</span></h2>
+<a id="aabdd31229583cbc907720b336eb91254"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabdd31229583cbc907720b336eb91254">&#9670;&nbsp;</a></span>on_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -754,7 +531,7 @@ template&lt;typename U , typename F &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::on_error </td>
           <td>(</td>
-          <td class="paramtype">std::function&lt; void(const std::string &amp;)&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html">wrapper::ErrorContext</a> &amp;)&gt;&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -769,95 +546,15 @@ template&lt;typename U , typename F &gt; </div>
 <p>Set error handler callback. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">handler</td><td>Function to handle error events </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
-
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a155a296ef455cc0c6c0bd98e2ba910f4">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00144">144</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
-
-</div>
-</div>
-<a id="a155a296ef455cc0c6c0bd98e2ba910f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a155a296ef455cc0c6c0bd98e2ba910f4">&#9670;&nbsp;</a></span>on_error() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_error</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set error handler callback. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">handler</td><td>Function to handle error events </td></tr>
+    <tr><td class="paramname">handler</td><td>Function to handle error events with context </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-</div>
-</div>
-<a id="a2072aa65a77b0c821e2a57bc989fb311"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2072aa65a77b0c821e2a57bc989fb311">&#9670;&nbsp;</a></span>on_error() <span class="overload">[3/3]</span></h2>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2bb9f6f024eb186245db88420e5d2da2">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
 
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename U , typename F &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::on_error </td>
-          <td>(</td>
-          <td class="paramtype">typename U&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">typename F&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set error handler callback using member function pointer. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">U</td><td>Class type </td></tr>
-    <tr><td class="paramname">F</td><td>Member function type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">obj</td><td>Object instance </td></tr>
-    <tr><td class="paramname">method</td><td>Member function pointer </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ibuilder_8hpp_source.html#l00142">142</a> of file <a class="el" href="ibuilder_8hpp_source.html">ibuilder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00087">87</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -913,8 +610,30 @@ template&lt;typename U , typename F &gt; </div>
 
 </div>
 </div>
-<a id="a95d5b815b14935428f276ccea645e1ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95d5b815b14935428f276ccea645e1ef">&#9670;&nbsp;</a></span>retry_interval()</h2>
+<a id="a4126f76a8f94c12b466f886baa8f5191"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4126f76a8f94c12b466f886baa8f5191">&#9670;&nbsp;</a></span>parity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::parity </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set parity. </p>
+
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00102">102</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+
+</div>
+</div>
+<a id="a677ff4d357c9ffdb9102acfb3ccf5859"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a677ff4d357c9ffdb9102acfb3ccf5859">&#9670;&nbsp;</a></span>retry_interval()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -922,23 +641,38 @@ template&lt;typename U , typename F &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::retry_interval </td>
           <td>(</td>
-          <td class="paramtype">unsigned&#160;</td>
-          <td class="paramname"><em>interval_ms</em></td><td>)</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>milliseconds</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set retry interval for automatic reconnection. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interval_ms</td><td>Retry interval in milliseconds </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
+<p>Set reconnection retry interval. </p>
 
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00154">154</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00112">112</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+
+</div>
+</div>
+<a id="a5b1bd5fbbb3503e306a3b008c8c9cd74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b1bd5fbbb3503e306a3b008c8c9cd74">&#9670;&nbsp;</a></span>stop_bits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::stop_bits </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bits</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set number of stop bits. </p>
+
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00097">97</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -958,16 +692,9 @@ template&lt;typename U , typename F &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Use independent IoContext for this serial (for testing isolation) </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">use_independent</td><td>true to use independent context, false for shared context </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html" title="Builder for Serial wrapper.">SerialBuilder</a>&amp; Reference to this builder for method chaining </dd></dl>
+<p>Use independent IoContext. </p>
 
-<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00149">149</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00117">117</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -981,7 +708,7 @@ template&lt;typename U , typename F &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a></li>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

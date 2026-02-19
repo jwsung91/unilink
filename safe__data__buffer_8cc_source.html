@@ -194,8 +194,8 @@ $(document).ready(function(){initNavTree('safe__data__buffer_8cc_source.html',''
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">// Private helper methods</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keywordtype">void</span> SafeDataBuffer::validate_index(<span class="keywordtype">size_t</span> index)<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordflow">if</span> (index &gt;= data_.size()) {</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Index &quot;</span> + std::to_string(index) + <span class="stringliteral">&quot; is out of range for buffer of size &quot;</span> +</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                            std::to_string(data_.size()));</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Index &quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(index) + <span class="stringliteral">&quot; is out of range for buffer of size &quot;</span> +</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                            <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(data_.size()));</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  }</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
@@ -258,6 +258,7 @@ $(document).ready(function(){initNavTree('safe__data__buffer_8cc_source.html',''
 <div class="ttc" id="anamespaceunilink_1_1memory_1_1safe__buffer__factory_html_af038015aafcb3ab44bd10eb3392752ac"><div class="ttname"><a href="namespaceunilink_1_1memory_1_1safe__buffer__factory.html#af038015aafcb3ab44bd10eb3392752ac">unilink::memory::safe_buffer_factory::from_raw_data</a></div><div class="ttdeci">SafeDataBuffer from_raw_data(const uint8_t *data, size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="safe__data__buffer_8cc_source.html#l00136">safe_data_buffer.cc:136</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1memory_html_a2d1a0f5fc24b0827600737d46d94f6b0"><div class="ttname"><a href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">unilink::memory::ConstByteSpan</a></div><div class="ttdeci">SafeSpan&lt; const uint8_t &gt; ConstByteSpan</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00127">safe_span.hpp:127</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a945182ee4d2e3137a6c39f60501f5355"><div class="ttname"><a href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">unilink::to_string</a></div><div class="ttdeci">std::string to_string(ErrorCode code)</div><div class="ttdoc">Convert ErrorCode to human-readable string.</div><div class="ttdef"><b>Definition:</b> <a href="error__codes_8hpp_source.html#l00053">error_codes.hpp:53</a></div></div>
 <div class="ttc" id="asafe__data__buffer_8hpp_html"><div class="ttname"><a href="safe__data__buffer_8hpp.html">safe_data_buffer.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -265,7 +266,7 @@ $(document).ready(function(){initNavTree('safe__data__buffer_8cc_source.html',''
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c49fb1fe3cdea7da91949965a419900.html">memory</a></li><li class="navelem"><a class="el" href="safe__data__buffer_8cc.html">safe_data_buffer.cc</a></li>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

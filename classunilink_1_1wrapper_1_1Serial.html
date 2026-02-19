@@ -92,6 +92,9 @@ $(document).ready(function(){initNavTree('classunilink_1_1wrapper_1_1Serial.html
 </div><!--header-->
 <div class="contents">
 
+<p>Modernized <a class="el" href="classunilink_1_1wrapper_1_1Serial.html" title="Modernized Serial Wrapper.">Serial</a> Wrapper.  
+ <a href="classunilink_1_1wrapper_1_1Serial.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="wrapper_2serial_2serial_8hpp_source.html">serial.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for unilink::wrapper::Serial:</div>
@@ -99,7 +102,7 @@ Inheritance diagram for unilink::wrapper::Serial:</div>
  <div class="center">
   <img src="classunilink_1_1wrapper_1_1Serial.png" usemap="#unilink::wrapper::Serial_map" alt=""/>
   <map id="unilink::wrapper::Serial_map" name="unilink::wrapper::Serial_map">
-<area href="classunilink_1_1wrapper_1_1ChannelInterface.html" alt="unilink::wrapper::ChannelInterface" shape="rect" coords="0,0,204,24"/>
+<area href="classunilink_1_1wrapper_1_1ChannelInterface.html" title="Common interface for 1:1 point-to-point communication (e.g., TcpClient, Serial, Udp)" alt="unilink::wrapper::ChannelInterface" shape="rect" coords="0,0,204,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -118,8 +121,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a81629c8bfaf3220c128f37ca9de2858d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac777f965de97bd0f6aa6b4ee3002a70d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ac777f965de97bd0f6aa6b4ee3002a70d">~Serial</a> () override</td></tr>
 <tr class="separator:ac777f965de97bd0f6aa6b4ee3002a70d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a107677371e75bc12350ea4f078a53074"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a107677371e75bc12350ea4f078a53074">start</a> () override</td></tr>
-<tr class="separator:a107677371e75bc12350ea4f078a53074"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d0c46c79487050268065fedda5fec4a"><td class="memItemLeft" align="right" valign="top">std::future&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a1d0c46c79487050268065fedda5fec4a">start</a> () override</td></tr>
+<tr class="separator:a1d0c46c79487050268065fedda5fec4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad65a699425f67b86cfc2e55ca3c455ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad65a699425f67b86cfc2e55ca3c455ca">stop</a> () override</td></tr>
 <tr class="separator:ad65a699425f67b86cfc2e55ca3c455ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac24bfcd3b30eecf8d45c163ad3c73cd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ac24bfcd3b30eecf8d45c163ad3c73cd4">send</a> (std::string_view data) override</td></tr>
@@ -128,15 +131,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af356b51850ae355e85938b6ff0c59d8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19032f98db2f1cbf4382f03ad9c97730"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a19032f98db2f1cbf4382f03ad9c97730">is_connected</a> () const override</td></tr>
 <tr class="separator:a19032f98db2f1cbf4382f03ad9c97730"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ebffd2ae6d013f6978e47334f202a95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a0ebffd2ae6d013f6978e47334f202a95">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">DataHandler</a> handler) override</td></tr>
-<tr class="separator:a0ebffd2ae6d013f6978e47334f202a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a334d5d27acaefd74b088eca099e8a023"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a334d5d27acaefd74b088eca099e8a023">on_bytes</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a763856cfc616f497a2ab8f4c8f9330bd">BytesHandler</a> handler) override</td></tr>
-<tr class="separator:a334d5d27acaefd74b088eca099e8a023"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20f5732ead28cafd58542e8f5e9f5d10"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a20f5732ead28cafd58542e8f5e9f5d10">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a> handler) override</td></tr>
-<tr class="separator:a20f5732ead28cafd58542e8f5e9f5d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d8a5f09ad47b36d2d5cb128d18c36b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a9d8a5f09ad47b36d2d5cb128d18c36b0">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a> handler) override</td></tr>
-<tr class="separator:a9d8a5f09ad47b36d2d5cb128d18c36b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c7f8154cf8fa1f00053308eb116ba1a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a9c7f8154cf8fa1f00053308eb116ba1a">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">ErrorHandler</a> handler) override</td></tr>
+<tr class="memitem:ad1714ffd59053ecc5d6764748fc896dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad1714ffd59053ecc5d6764748fc896dd">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
+<tr class="separator:ad1714ffd59053ecc5d6764748fc896dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a328cb1216bcced4cb7fa75c9c659a7af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a328cb1216bcced4cb7fa75c9c659a7af">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
+<tr class="separator:a328cb1216bcced4cb7fa75c9c659a7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25e05819e04bdc27957ed698b95b39fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a25e05819e04bdc27957ed698b95b39fa">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
+<tr class="separator:a25e05819e04bdc27957ed698b95b39fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c7f8154cf8fa1f00053308eb116ba1a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a9c7f8154cf8fa1f00053308eb116ba1a">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler) override</td></tr>
 <tr class="separator:a9c7f8154cf8fa1f00053308eb116ba1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49a8f65c60fe8de6accf0dde6688dd67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a49a8f65c60fe8de6accf0dde6688dd67">auto_manage</a> (bool manage=true) override</td></tr>
 <tr class="separator:a49a8f65c60fe8de6accf0dde6688dd67"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,10 +153,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a75d92342feb50976937067a8472cbdb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a118a73d96c0a7426ffee945aba05a74b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a118a73d96c0a7426ffee945aba05a74b">set_retry_interval</a> (std::chrono::milliseconds interval)</td></tr>
 <tr class="separator:a118a73d96c0a7426ffee945aba05a74b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a187aba4ee4b20cc58f9bf6715291983b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1config_1_1SerialConfig.html">config::SerialConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a187aba4ee4b20cc58f9bf6715291983b">build_config</a> () const</td></tr>
-<tr class="separator:a187aba4ee4b20cc58f9bf6715291983b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a976dc35b1bf360fcb28f0d3056d30bad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a976dc35b1bf360fcb28f0d3056d30bad">set_manage_external_context</a> (bool manage)</td></tr>
 <tr class="separator:a976dc35b1bf360fcb28f0d3056d30bad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a187aba4ee4b20cc58f9bf6715291983b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1config_1_1SerialConfig.html">config::SerialConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a187aba4ee4b20cc58f9bf6715291983b">build_config</a> () const</td></tr>
+<tr class="separator:a187aba4ee4b20cc58f9bf6715291983b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classunilink_1_1wrapper_1_1ChannelInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classunilink_1_1wrapper_1_1ChannelInterface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></td></tr>
 <tr class="memitem:abddae5fa4d73b824ca5ef57c0d6bd003 inherit pub_methods_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abddae5fa4d73b824ca5ef57c0d6bd003">~ChannelInterface</a> ()=default</td></tr>
 <tr class="separator:abddae5fa4d73b824ca5ef57c0d6bd003 inherit pub_methods_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,20 +164,17 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1wrapper_1_1ChannelInterface')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></td></tr>
-<tr class="memitem:a86572f53649987268db00b5d8414b9fe inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">DataHandler</a> = std::function&lt; void(const std::string &amp;)&gt;</td></tr>
-<tr class="separator:a86572f53649987268db00b5d8414b9fe inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a763856cfc616f497a2ab8f4c8f9330bd inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a763856cfc616f497a2ab8f4c8f9330bd">BytesHandler</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;</td></tr>
-<tr class="separator:a763856cfc616f497a2ab8f4c8f9330bd inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e452891783b39a8cf4daff9e958823d inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a> = std::function&lt; void()&gt;</td></tr>
-<tr class="separator:a1e452891783b39a8cf4daff9e958823d inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67ac18cb3330353d068c4afedf6cbec1 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a> = std::function&lt; void()&gt;</td></tr>
-<tr class="separator:a67ac18cb3330353d068c4afedf6cbec1 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef1171a7f6d2c91ccb90cb59958d9ec2 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">ErrorHandler</a> = std::function&lt; void(const std::string &amp;)&gt;</td></tr>
-<tr class="separator:aef1171a7f6d2c91ccb90cb59958d9ec2 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf0f967343eb3953342a9d762fd9c206 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> = std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a> &amp;)&gt;</td></tr>
+<tr class="separator:abf0f967343eb3953342a9d762fd9c206 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfd8af3a95f4bce355e1106ff43fa22f inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> = std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">ConnectionContext</a> &amp;)&gt;</td></tr>
+<tr class="separator:adfd8af3a95f4bce355e1106ff43fa22f inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4647fb8450701859f5d4263a228ba8e9 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> = std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html">ErrorContext</a> &amp;)&gt;</td></tr>
+<tr class="separator:a4647fb8450701859f5d4263a228ba8e9 inherit pub_types_classunilink_1_1wrapper_1_1ChannelInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8hpp_source.html#l00043">43</a> of file <a class="el" href="wrapper_2serial_2serial_8hpp_source.html">serial.hpp</a>.</p>
+<div class="textblock"><p>Modernized <a class="el" href="classunilink_1_1wrapper_1_1Serial.html" title="Modernized Serial Wrapper.">Serial</a> Wrapper. </p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8hpp_source.html#l00046">46</a> of file <a class="el" href="wrapper_2serial_2serial_8hpp_source.html">serial.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa0f2fccb8e5d86b5e35b4cc0adebb66d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa0f2fccb8e5d86b5e35b4cc0adebb66d">&#9670;&nbsp;</a></span>Serial() <span class="overload">[1/3]</span></h2>
@@ -204,7 +202,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00156">156</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00195">195</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -240,7 +238,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00158">158</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00196">196</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -268,7 +266,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00161">161</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00198">198</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -324,7 +322,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ac71f3147a23e965e84c604dba61aa202">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00236">236</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00231">231</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -343,7 +341,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00264">264</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00250">250</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -372,42 +370,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af00a13e38e4a80728ccdc573c5d8da97">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00207">207</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00212">212</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
-<a id="a334d5d27acaefd74b088eca099e8a023"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a334d5d27acaefd74b088eca099e8a023">&#9670;&nbsp;</a></span>on_bytes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_bytes </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a763856cfc616f497a2ab8f4c8f9330bd">BytesHandler</a>&#160;</td>
-          <td class="paramname"><em>handler</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a200ffcd4fbc71a258c51d7ee4716637a">unilink::wrapper::ChannelInterface</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00215">215</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
-
-</div>
-</div>
-<a id="a20f5732ead28cafd58542e8f5e9f5d10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20f5732ead28cafd58542e8f5e9f5d10">&#9670;&nbsp;</a></span>on_connect()</h2>
+<a id="a328cb1216bcced4cb7fa75c9c659a7af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a328cb1216bcced4cb7fa75c9c659a7af">&#9670;&nbsp;</a></span>on_connect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -418,7 +386,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_connect </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">ConnectHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -430,14 +398,14 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a9b747c0b143607fe8b686fbc67e71be6">unilink::wrapper::ChannelInterface</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aed78ec545128d674f7bb9e2d6bd9497e">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00221">221</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00218">218</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
-<a id="a0ebffd2ae6d013f6978e47334f202a95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ebffd2ae6d013f6978e47334f202a95">&#9670;&nbsp;</a></span>on_data()</h2>
+<a id="ad1714ffd59053ecc5d6764748fc896dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1714ffd59053ecc5d6764748fc896dd">&#9670;&nbsp;</a></span>on_data()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -448,7 +416,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_data </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">DataHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -460,14 +428,14 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adabfa610526528b1df33f98a9fecfce6">unilink::wrapper::ChannelInterface</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abdbf994959370c616311474dfc7a199f">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00209">209</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00214">214</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
-<a id="a9d8a5f09ad47b36d2d5cb128d18c36b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d8a5f09ad47b36d2d5cb128d18c36b0">&#9670;&nbsp;</a></span>on_disconnect()</h2>
+<a id="a25e05819e04bdc27957ed698b95b39fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25e05819e04bdc27957ed698b95b39fa">&#9670;&nbsp;</a></span>on_disconnect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -478,7 +446,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_disconnect </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">DisconnectHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -490,9 +458,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#acf61b7456eb0d9b52cee87fed9511b9a">unilink::wrapper::ChannelInterface</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ab2fc21ba4b82738e71cc68370680715a">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00226">226</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00222">222</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -508,7 +476,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::Serial::on_error </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">ErrorHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
@@ -522,7 +490,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae9837f9dfd68b6db1fa62ef7078d96fe">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00231">231</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00226">226</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -552,7 +520,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a457bd3d0e566402a8b620714840e5e85">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00198">198</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00205">205</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -582,7 +550,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a14fb9222ca699358ee4e818bb977890c">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00205">205</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00211">211</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -602,7 +570,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00244">244</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00237">237</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -622,7 +590,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00246">246</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00238">238</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -642,7 +610,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00252">252</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00241">241</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -662,7 +630,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00266">266</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00252">252</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -682,7 +650,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00250">250</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00240">240</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -702,7 +670,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00254">254</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00242">242</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -722,12 +690,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00248">248</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00239">239</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
-<a id="a107677371e75bc12350ea4f078a53074"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a107677371e75bc12350ea4f078a53074">&#9670;&nbsp;</a></span>start()</h2>
+<a id="a1d0c46c79487050268065fedda5fec4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d0c46c79487050268065fedda5fec4a">&#9670;&nbsp;</a></span>start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -736,7 +704,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void unilink::wrapper::Serial::start </td>
+          <td class="memname">std::future&lt; bool &gt; unilink::wrapper::Serial::start </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -749,9 +717,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad5e16340e92a38cc6016e81c4325acfa">unilink::wrapper::ChannelInterface</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a015554265152c7601cbff20480afeb43">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00167">167</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00203">203</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -780,7 +748,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">unilink::wrapper::ChannelInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00196">196</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00204">204</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -794,7 +762,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a></li>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

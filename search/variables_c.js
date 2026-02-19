@@ -1,17 +1,14 @@
 var searchData=
 [
-  ['on_5fbp_5f_1603',['on_bp_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#acb7d1e1f6b7470dd05759ec8a23c8db8',1,'unilink::transport::TcpClient::Impl']]],
-  ['on_5fbytes_5f_1604',['on_bytes_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#acb00cc79cdf20863ccd14da7ae339c74',1,'unilink::transport::TcpClient::Impl::on_bytes_()'],['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#abfbc820e7a769d5c5ee85d548e12c6b4',1,'unilink::wrapper::TcpServer::Impl::on_bytes_()']]],
-  ['on_5fconnect_5f_1605',['on_connect_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a3df4f564c8fb57bff1093a322b494aec',1,'unilink::wrapper::TcpServer::Impl']]],
-  ['on_5fdata_5f_1606',['on_data_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ae5af3320b410ba99acd9fa71377438f4',1,'unilink::wrapper::TcpServer::Impl']]],
-  ['on_5fdisconnect_5f_1607',['on_disconnect_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a6e7d54250d53b3ba6966c18a086dff53',1,'unilink::wrapper::TcpServer::Impl']]],
-  ['on_5ferror_5f_1608',['on_error_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10e13cecb8abba84705b61aac61b3c51',1,'unilink::wrapper::TcpServer::Impl']]],
-  ['on_5fmessage_5f_1609',['on_message_',['../classunilink_1_1builder_1_1BuilderInterface.html#a5716b75e47e34f725ea5c27fcc9396e2',1,'unilink::builder::BuilderInterface']]],
-  ['on_5fmulti_5fconnect_5f_1610',['on_multi_connect_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a08528f3dd16feb883345099fdf16ea4c',1,'unilink::wrapper::TcpServer::Impl']]],
-  ['on_5fmulti_5fdata_5f_1611',['on_multi_data_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#afb143517776f869df4fe6d61588bcf4b',1,'unilink::wrapper::TcpServer::Impl']]],
-  ['on_5fmulti_5fdisconnect_5f_1612',['on_multi_disconnect_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#aaf829f995b9fd7a7018e598001f4403f',1,'unilink::wrapper::TcpServer::Impl']]],
-  ['on_5fstate_5f_1613',['on_state_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a6dfca9938049c0d6138c21d9d9e6e6bd',1,'unilink::transport::TcpClient::Impl']]],
-  ['operation_1614',['operation',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a6a559451ca42b7c1c1830c29eacb98a8',1,'unilink::diagnostics::ErrorInfo::operation()'],['../structunilink_1_1diagnostics_1_1LogEntry.html#a2179681d8f79db0705453d858814019b',1,'unilink::diagnostics::LogEntry::operation()']]],
-  ['owned_5fioc_5f_1615',['owned_ioc_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#af4cdbc2e63247f6c62e070ebe65799e8',1,'unilink::transport::TcpClient::Impl']]],
-  ['owns_5fioc_5f_1616',['owns_ioc_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a6b3f01251d08cf19a8ad644e3572857e',1,'unilink::transport::TcpClient::Impl']]]
+  ['on_5fbp_5f_1650',['on_bp_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#acb7d1e1f6b7470dd05759ec8a23c8db8',1,'unilink::transport::TcpClient::Impl']]],
+  ['on_5fbytes_5f_1651',['on_bytes_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#acb00cc79cdf20863ccd14da7ae339c74',1,'unilink::transport::TcpClient::Impl']]],
+  ['on_5fclient_5fconnect_5f_1652',['on_client_connect_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10defb582fb338ff5d688e929e793a57',1,'unilink::wrapper::TcpServer::Impl']]],
+  ['on_5fclient_5fdisconnect_5f_1653',['on_client_disconnect_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a132e8d75878579382aa6337aa79fac65',1,'unilink::wrapper::TcpServer::Impl']]],
+  ['on_5fdata_5f_1654',['on_data_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ad23799728d1a8e808982031d7b010bf4',1,'unilink::wrapper::TcpServer::Impl']]],
+  ['on_5ferror_5f_1655',['on_error_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10e13cecb8abba84705b61aac61b3c51',1,'unilink::wrapper::TcpServer::Impl']]],
+  ['on_5fmessage_5f_1656',['on_message_',['../classunilink_1_1builder_1_1BuilderInterface.html#a5716b75e47e34f725ea5c27fcc9396e2',1,'unilink::builder::BuilderInterface']]],
+  ['on_5fstate_5f_1657',['on_state_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a6dfca9938049c0d6138c21d9d9e6e6bd',1,'unilink::transport::TcpClient::Impl']]],
+  ['operation_1658',['operation',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a6a559451ca42b7c1c1830c29eacb98a8',1,'unilink::diagnostics::ErrorInfo::operation()'],['../structunilink_1_1diagnostics_1_1LogEntry.html#a2179681d8f79db0705453d858814019b',1,'unilink::diagnostics::LogEntry::operation()']]],
+  ['owned_5fioc_5f_1659',['owned_ioc_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#af4cdbc2e63247f6c62e070ebe65799e8',1,'unilink::transport::TcpClient::Impl']]],
+  ['owns_5fioc_5f_1660',['owns_ioc_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a6b3f01251d08cf19a8ad644e3572857e',1,'unilink::transport::TcpClient::Impl']]]
 ];

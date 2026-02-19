@@ -1,5 +1,10 @@
 var NAVTREEINDEX6 =
 {
+"md_docs_guides_setup_build_guide.html#autotoc_md540":[9,6,1],
+"md_docs_guides_setup_build_guide.html#autotoc_md542":[9,6,2],
+"md_docs_guides_setup_build_guide.html#autotoc_md544":[9,7],
+"md_docs_guides_setup_build_guide.html#autotoc_md545":[9,7,0],
+"md_docs_guides_setup_build_guide.html#autotoc_md547":[9,7,1],
 "md_docs_guides_setup_build_guide.html#autotoc_md549":[9,7,2],
 "md_docs_guides_setup_build_guide.html#autotoc_md551":[9,7,3],
 "md_docs_guides_setup_build_guide.html#autotoc_md553":[9,7,4],
@@ -244,10 +249,5 @@ var NAVTREEINDEX6 =
 "md_docs_tutorials_01_getting_started.html#autotoc_md877":[15,2,1],
 "md_docs_tutorials_01_getting_started.html#autotoc_md879":[15,3],
 "md_docs_tutorials_01_getting_started.html#autotoc_md881":[15,4],
-"md_docs_tutorials_01_getting_started.html#autotoc_md883":[15,5],
-"md_docs_tutorials_01_getting_started.html#autotoc_md885":[15,6],
-"md_docs_tutorials_01_getting_started.html#autotoc_md886":[15,6,0],
-"md_docs_tutorials_01_getting_started.html#autotoc_md887":[15,6,1],
-"md_docs_tutorials_01_getting_started.html#autotoc_md889":[15,7],
-"md_docs_tutorials_01_getting_started.html#autotoc_md890":[15,7,0]
+"md_docs_tutorials_01_getting_started.html#autotoc_md883":[15,5]
 };

@@ -468,9 +468,10 @@ Enumerations</h2></td></tr>
 <div class="line">      using _us_t = std::chrono::microseconds;                                                                    \</div>
 <div class="line">      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \</div>
 <div class="line">      auto _perf_duration_##operation = std::chrono::duration_cast&lt;_us_t&gt;(_diff_##operation).count();             \</div>
-<div class="line">      UNILINK_LOG_DEBUG(component, operation, <span class="stringliteral">&quot;Duration: &quot;</span> + std::to_string(_perf_duration_##operation) + <span class="stringliteral">&quot; μs&quot;</span>); \</div>
+<div class="line">      UNILINK_LOG_DEBUG(component, operation, <span class="stringliteral">&quot;Duration: &quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(_perf_duration_##operation) + <span class="stringliteral">&quot; μs&quot;</span>); \</div>
 <div class="line">    }                                                                                                             \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="anamespaceunilink_html_a945182ee4d2e3137a6c39f60501f5355"><div class="ttname"><a href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">unilink::to_string</a></div><div class="ttdeci">std::string to_string(ErrorCode code)</div><div class="ttdoc">Convert ErrorCode to human-readable string.</div><div class="ttdef"><b>Definition:</b> <a href="error__codes_8hpp_source.html#l00053">error_codes.hpp:53</a></div></div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00390">390</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
 
@@ -562,7 +563,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="logger_8hpp.html">logger.hpp</a></li>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

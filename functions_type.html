@@ -91,9 +91,6 @@ $(document).ready(function(){initNavTree('functions_type.html',''); initResizabl
 , <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a4118b23599d148c9346716583a177a30">unilink::transport::TcpClient</a>
 , <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#ae5b7df00f0f86f15ad82ecb45ae12e82">unilink::transport::TcpServerSession</a>
 </li>
-<li>BytesHandler
-: <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a763856cfc616f497a2ab8f4c8f9330bd">unilink::wrapper::ChannelInterface</a>
-</li>
 </ul>
 
 
@@ -101,8 +98,9 @@ $(document).ready(function(){initNavTree('functions_type.html',''); initResizabl
 <li>ChannelOptions
 : <a class="el" href="classunilink_1_1factory_1_1ChannelFactory.html#a807125b3c1806948cc1e69e15aea63ca">unilink::factory::ChannelFactory</a>
 </li>
-<li>ConnectHandler
-: <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a1e452891783b39a8cf4daff9e958823d">unilink::wrapper::ChannelInterface</a>
+<li>ConnectionHandler
+: <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">unilink::wrapper::ChannelInterface</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">unilink::wrapper::ServerInterface</a>
 </li>
 <li>const_iterator
 : <a class="el" href="classunilink_1_1memory_1_1SafeSpan.html#a67101303be13272d2a5f1bd2fb6812ac">unilink::memory::SafeSpan&lt; T &gt;</a>
@@ -120,14 +118,8 @@ $(document).ready(function(){initNavTree('functions_type.html',''); initResizabl
 
 
 <h3><a id="index_d"></a>- d -</h3><ul>
-<li>DataHandler
-: <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a86572f53649987268db00b5d8414b9fe">unilink::wrapper::ChannelInterface</a>
-</li>
 <li>difference_type
 : <a class="el" href="classunilink_1_1memory_1_1SafeSpan.html#a84bfba6342dcf570de709fb672d30492">unilink::memory::SafeSpan&lt; T &gt;</a>
-</li>
-<li>DisconnectHandler
-: <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a67ac18cb3330353d068c4afedf6cbec1">unilink::wrapper::ChannelInterface</a>
 </li>
 </ul>
 
@@ -140,7 +132,8 @@ $(document).ready(function(){initNavTree('functions_type.html',''); initResizabl
 : <a class="el" href="classunilink_1_1diagnostics_1_1ErrorHandler.html#a9666e6db9c1f36d9b559a109b6fd6e6f">unilink::diagnostics::ErrorHandler</a>
 </li>
 <li>ErrorHandler
-: <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aef1171a7f6d2c91ccb90cb59958d9ec2">unilink::wrapper::ChannelInterface</a>
+: <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">unilink::wrapper::ChannelInterface</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">unilink::wrapper::ServerInterface</a>
 </li>
 </ul>
 
@@ -166,17 +159,18 @@ $(document).ready(function(){initNavTree('functions_type.html',''); initResizabl
 <li>MessageCallback
 : <a class="el" href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">unilink::framer::IFramer</a>
 </li>
+<li>MessageHandler
+: <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">unilink::wrapper::ChannelInterface</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">unilink::wrapper::ServerInterface</a>
+</li>
 <li>MultiClientConnectHandler
 : <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ad90ed82ab725073a4f691c7100667352">unilink::transport::TcpServer</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a8175adae268dba5e6f34db21ee7f0240">unilink::wrapper::TcpServer</a>
 </li>
 <li>MultiClientDataHandler
 : <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a2da555520638f4d97bab972b0e3e3014">unilink::transport::TcpServer</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ae4d8e0e234a6c7f4980c20d431b1fc1d">unilink::wrapper::TcpServer</a>
 </li>
 <li>MultiClientDisconnectHandler
 : <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#aaa9095088caef6466a937bf488a2a90e">unilink::transport::TcpServer</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a71ba53970105894c3d564b261c59f1c6">unilink::wrapper::TcpServer</a>
 </li>
 </ul>
 
@@ -250,7 +244,7 @@ $(document).ready(function(){initNavTree('functions_type.html',''); initResizabl
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

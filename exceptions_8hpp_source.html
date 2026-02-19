@@ -193,7 +193,7 @@ $(document).ready(function(){initNavTree('exceptions_8hpp_source.html',''); init
 <div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="classunilink_1_1diagnostics_1_1MemoryException.html#a17d72d60ac14d90faa8cecbe3623053c">  128</a></span>&#160;  std::string <a class="code" href="classunilink_1_1diagnostics_1_1MemoryException.html#a17d72d60ac14d90faa8cecbe3623053c">get_full_message</a>()<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    std::string full_msg = <a class="code" href="classunilink_1_1diagnostics_1_1UnilinkException.html#aa9aba73e59edca9483b29e0613f1bb57">UnilinkException::get_full_message</a>();</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">if</span> (size_ &gt; 0) {</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      full_msg += <span class="stringliteral">&quot; (size: &quot;</span> + std::to_string(size_) + <span class="stringliteral">&quot; bytes)&quot;</span>;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      full_msg += <span class="stringliteral">&quot; (size: &quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(size_) + <span class="stringliteral">&quot; bytes)&quot;</span>;</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    }</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">return</span> full_msg;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;  }</div>
@@ -287,6 +287,7 @@ $(document).ready(function(){initNavTree('exceptions_8hpp_source.html',''); init
 <div class="ttc" id="anamespaceunilink_1_1common_html_ac53bea10e6c0431bf16c02b246ffbb07"><div class="ttname"><a href="namespaceunilink_1_1common.html#ac53bea10e6c0431bf16c02b246ffbb07">unilink::common::ConnectionException</a></div><div class="ttdeci">diagnostics::ConnectionException ConnectionException</div><div class="ttdef"><b>Definition:</b> <a href="exceptions_8hpp_source.html#l00200">exceptions.hpp:200</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1common_html_aebd52022731114dbccbf21ffbf5654d2"><div class="ttname"><a href="namespaceunilink_1_1common.html#aebd52022731114dbccbf21ffbf5654d2">unilink::common::UnilinkException</a></div><div class="ttdeci">diagnostics::UnilinkException UnilinkException</div><div class="ttdef"><b>Definition:</b> <a href="exceptions_8hpp_source.html#l00196">exceptions.hpp:196</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a945182ee4d2e3137a6c39f60501f5355"><div class="ttname"><a href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">unilink::to_string</a></div><div class="ttdeci">std::string to_string(ErrorCode code)</div><div class="ttdoc">Convert ErrorCode to human-readable string.</div><div class="ttdef"><b>Definition:</b> <a href="error__codes_8hpp_source.html#l00053">error_codes.hpp:53</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="visibility_8hpp.html">visibility.hpp</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html_acdf44665d6deacb60ead833c4a5b0361"><div class="ttname"><a href="visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361">UNILINK_API</a></div><div class="ttdeci">#define UNILINK_API</div><div class="ttdef"><b>Definition:</b> <a href="visibility_8hpp_source.html#l00037">visibility.hpp:37</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -295,7 +296,7 @@ $(document).ready(function(){initNavTree('exceptions_8hpp_source.html',''); init
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="exceptions_8hpp.html">exceptions.hpp</a></li>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

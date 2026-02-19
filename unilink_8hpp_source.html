@@ -108,119 +108,114 @@ $(document).ready(function(){initNavTree('unilink_8hpp_source.html',''); initRes
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;variant&gt;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="platform_8hpp.html">unilink/base/platform.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="visibility_8hpp.html">unilink/base/visibility.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// Internal includes for Builder API (not exposed to users)</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ichannel_8hpp.html">unilink/wrapper/ichannel.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="wrapper_2serial_2serial_8hpp.html">unilink/wrapper/serial/serial.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="wrapper_2tcp__client_2tcp__client_8hpp.html">unilink/wrapper/tcp_client/tcp_client.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="wrapper_2tcp__server_2tcp__server_8hpp.html">unilink/wrapper/tcp_server/tcp_server.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="wrapper_2udp_2udp_8hpp.html">unilink/wrapper/udp/udp.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// New high-level Builder API includes</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ibuilder_8hpp.html">unilink/builder/ibuilder.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="serial__builder_8hpp.html">unilink/builder/serial_builder.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tcp__client__builder_8hpp.html">unilink/builder/tcp_client_builder.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tcp__server__builder_8hpp.html">unilink/builder/tcp_server_builder.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="udp__builder_8hpp.html">unilink/builder/udp_builder.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="unified__builder_8hpp.html">unilink/builder/unified_builder.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// Configuration Management API includes (optional)</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#ifdef UNILINK_ENABLE_CONFIG</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config__factory_8hpp.html">unilink/config/config_factory.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config__manager_8hpp.html">unilink/config/config_manager.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="iconfig__manager_8hpp.html">unilink/config/iconfig_manager.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// Error handling and logging system includes</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="error__handler_8hpp.html">unilink/diagnostics/error_handler.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="logger_8hpp.html">unilink/diagnostics/logger.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceunilink.html">unilink</a> {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// === Public API Namespaces ===</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// Clean namespace structure without redundant aliases</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="error__codes_8hpp.html">unilink/base/error_codes.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="platform_8hpp.html">unilink/base/platform.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="visibility_8hpp.html">unilink/base/visibility.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// Public API Context and Interface headers</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="context_8hpp.html">unilink/wrapper/context.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ichannel_8hpp.html">unilink/wrapper/ichannel.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="iserver_8hpp.html">unilink/wrapper/iserver.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// Wrapper implementations</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="wrapper_2serial_2serial_8hpp.html">unilink/wrapper/serial/serial.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="wrapper_2tcp__client_2tcp__client_8hpp.html">unilink/wrapper/tcp_client/tcp_client.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="wrapper_2tcp__server_2tcp__server_8hpp.html">unilink/wrapper/tcp_server/tcp_server.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="wrapper_2udp_2udp_8hpp.html">unilink/wrapper/udp/udp.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// High-level Builder API includes</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ibuilder_8hpp.html">unilink/builder/ibuilder.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="serial__builder_8hpp.html">unilink/builder/serial_builder.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tcp__client__builder_8hpp.html">unilink/builder/tcp_client_builder.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tcp__server__builder_8hpp.html">unilink/builder/tcp_server_builder.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="udp__builder_8hpp.html">unilink/builder/udp_builder.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="unified__builder_8hpp.html">unilink/builder/unified_builder.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// Configuration Management API includes (optional)</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#ifdef UNILINK_ENABLE_CONFIG</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config__factory_8hpp.html">unilink/config/config_factory.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config__manager_8hpp.html">unilink/config/config_manager.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="iconfig__manager_8hpp.html">unilink/config/iconfig_manager.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// Error handling and logging system includes</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="error__handler_8hpp.html">unilink/diagnostics/error_handler.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="logger_8hpp.html">unilink/diagnostics/logger.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">// Builder API namespace</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">namespace </span>builder {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// Forward declarations for cleaner includes</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">class </span>TcpServerBuilder;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">class </span>TcpClientBuilder;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">class </span>SerialBuilder;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">class </span>UdpBuilder;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">class </span>UnifiedBuilder;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}  <span class="comment">// namespace builder</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// Wrapper API namespace</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1wrapper.html">   67</a></span>&#160;<span class="keyword">namespace </span>wrapper {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">// Forward declarations for cleaner includes</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1Udp.html">Udp</a>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">// === Public Builder API Convenience Functions ===</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">// Convenience functions to make Builder pattern easier to use</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">// === Convenience Functions ===</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">// Simplified API for common use cases</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceunilink.html">unilink</a> {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// === Public API Namespaces ===</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// Builder API namespace</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">namespace </span>builder {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">class </span>TcpServerBuilder;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">class </span>TcpClientBuilder;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">class </span>SerialBuilder;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">class </span>UdpBuilder;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">class </span>UnifiedBuilder;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}  <span class="comment">// namespace builder</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">// Wrapper API namespace</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1wrapper.html">   70</a></span>&#160;<span class="keyword">namespace </span>wrapper {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1Udp.html">Udp</a>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">ConnectionContext</a>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">class </span><a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html">ErrorContext</a>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">   87</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">builder::TcpServerBuilder</a> <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">tcp_server</a>(uint16_t port) { <span class="keywordflow">return</span> <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">builder::TcpServerBuilder</a>(port); }</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">   95</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html">builder::TcpClientBuilder</a> <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="keyword">const</span> std::string&amp; host, uint16_t port) {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html">builder::TcpClientBuilder</a>(host, port);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">  105</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html">builder::SerialBuilder</a> <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>(<span class="keyword">const</span> std::string&amp; device, uint32_t baud_rate) {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html">builder::SerialBuilder</a>(device, baud_rate);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">  114</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html">builder::UdpBuilder</a> <a class="code" href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">udp</a>(uint16_t local_port) {</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html">builder::UdpBuilder</a> b;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  b.<a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html#ac01c2de43acd0887440ff5c4bf1e6e2b">set_local_port</a>(local_port);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="keywordflow">return</span> b;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;}</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">// === Configuration Management API (optional) ===</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#ifdef UNILINK_ENABLE_CONFIG</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">namespace </span>config {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment">// Forward declarations for configuration management</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">class </span>ConfigManager;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="keyword">class </span>ConfigFactory;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keyword">class </span>ConfigManagerInterface;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}  <span class="comment">// namespace config</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">// === Common Utilities ===</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">// Utility functions and error handling are provided via unilink/base/common.hpp</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment">// included by other modules.</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}  <span class="comment">// namespace unilink</span></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html">unilink::builder::SerialBuilder</a></div><div class="ttdoc">Builder for Serial wrapper.</div><div class="ttdef"><b>Definition:</b> <a href="serial__builder_8hpp_source.html#l00039">serial_builder.hpp:39</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html">unilink::builder::TcpClientBuilder</a></div><div class="ttdoc">Builder for TcpClient wrapper.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8hpp_source.html#l00039">tcp_client_builder.hpp:39</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html">unilink::builder::TcpServerBuilder</a></div><div class="ttdoc">Builder for TcpServer wrapper.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8hpp_source.html#l00038">tcp_server_builder.hpp:38</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html">unilink::builder::UdpBuilder</a></div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8hpp_source.html#l00036">udp_builder.hpp:36</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_ac01c2de43acd0887440ff5c4bf1e6e2b"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#ac01c2de43acd0887440ff5c4bf1e6e2b">unilink::builder::UdpBuilder::set_local_port</a></div><div class="ttdeci">UdpBuilder &amp; set_local_port(uint16_t port)</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00090">udp_builder.cc:90</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00031">ichannel.hpp:31</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1Serial_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1Serial.html">unilink::wrapper::Serial</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2serial_2serial_8hpp_source.html#l00043">serial.hpp:43</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpClient_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpClient.html">unilink::wrapper::TcpClient</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__client_2tcp__client_8hpp_source.html#l00038">tcp_client.hpp:38</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html">unilink::wrapper::TcpServer</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00048">tcp_server.hpp:48</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1Udp_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1Udp.html">unilink::wrapper::Udp</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2udp_2udp_8hpp_source.html#l00043">udp.hpp:43</a></div></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">// === Public Builder API Convenience Functions ===</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">   89</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">builder::TcpServerBuilder</a> <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">tcp_server</a>(uint16_t port) { <span class="keywordflow">return</span> <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">builder::TcpServerBuilder</a>(port); }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">   97</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html">builder::TcpClientBuilder</a> <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="keyword">const</span> std::string&amp; host, uint16_t port) {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html">builder::TcpClientBuilder</a>(host, port);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">  107</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html">builder::SerialBuilder</a> <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>(<span class="keyword">const</span> std::string&amp; device, uint32_t baud_rate) {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordflow">return</span> <a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html">builder::SerialBuilder</a>(device, baud_rate);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">  116</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html">builder::UdpBuilder</a> <a class="code" href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">udp</a>(uint16_t local_port) {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html">builder::UdpBuilder</a> b;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  b.<a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html#ac01c2de43acd0887440ff5c4bf1e6e2b">set_local_port</a>(local_port);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <span class="keywordflow">return</span> b;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html">unilink::builder::SerialBuilder</a></div><div class="ttdoc">Modernized Builder for Serial.</div><div class="ttdef"><b>Definition:</b> <a href="serial__builder_8hpp_source.html#l00037">serial_builder.hpp:37</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html">unilink::builder::TcpClientBuilder</a></div><div class="ttdoc">Modernized Builder for TcpClient.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8hpp_source.html#l00037">tcp_client_builder.hpp:37</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html">unilink::builder::TcpServerBuilder</a></div><div class="ttdoc">Modernized Builder for TcpServer.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8hpp_source.html#l00035">tcp_server_builder.hpp:35</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html">unilink::builder::UdpBuilder</a></div><div class="ttdoc">Modernized Builder for Udp.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8hpp_source.html#l00037">udp_builder.hpp:37</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_ac01c2de43acd0887440ff5c4bf1e6e2b"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#ac01c2de43acd0887440ff5c4bf1e6e2b">unilink::builder::UdpBuilder::set_local_port</a></div><div class="ttdeci">UdpBuilder &amp; set_local_port(uint16_t port)</div><div class="ttdoc">Set local port to bind.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00077">udp_builder.cc:77</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></div><div class="ttdoc">Common interface for 1:1 point-to-point communication (e.g., TcpClient, Serial, Udp)</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00034">ichannel.hpp:34</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00054">context.hpp:54</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::wrapper::ErrorContext</a></div><div class="ttdoc">Context for error events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00070">context.hpp:70</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::wrapper::MessageContext</a></div><div class="ttdoc">Context for data/message related events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00033">context.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1Serial_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1Serial.html">unilink::wrapper::Serial</a></div><div class="ttdoc">Modernized Serial Wrapper.</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2serial_2serial_8hpp_source.html#l00046">serial.hpp:46</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html">unilink::wrapper::ServerInterface</a></div><div class="ttdoc">Interface for 1:N server communication (e.g., TcpServer)</div><div class="ttdef"><b>Definition:</b> <a href="iserver_8hpp_source.html#l00034">iserver.hpp:34</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpClient_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpClient.html">unilink::wrapper::TcpClient</a></div><div class="ttdoc">Modernized TCP Client Wrapper.</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__client_2tcp__client_8hpp_source.html#l00046">tcp_client.hpp:46</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1TcpServer_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1TcpServer.html">unilink::wrapper::TcpServer</a></div><div class="ttdoc">Modernized TCP Server Wrapper.</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8hpp_source.html#l00046">tcp_server.hpp:46</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1Udp_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1Udp.html">unilink::wrapper::Udp</a></div><div class="ttdoc">Modernized UDP Wrapper.</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2udp_2udp_8hpp_source.html#l00046">udp.hpp:46</a></div></div>
 <div class="ttc" id="aconfig__factory_8hpp_html"><div class="ttname"><a href="config__factory_8hpp.html">config_factory.hpp</a></div></div>
 <div class="ttc" id="aconfig__manager_8hpp_html"><div class="ttname"><a href="config__manager_8hpp.html">config_manager.hpp</a></div></div>
+<div class="ttc" id="acontext_8hpp_html"><div class="ttname"><a href="context_8hpp.html">context.hpp</a></div></div>
+<div class="ttc" id="aerror__codes_8hpp_html"><div class="ttname"><a href="error__codes_8hpp.html">error_codes.hpp</a></div></div>
 <div class="ttc" id="aerror__handler_8hpp_html"><div class="ttname"><a href="error__handler_8hpp.html">error_handler.hpp</a></div></div>
 <div class="ttc" id="aibuilder_8hpp_html"><div class="ttname"><a href="ibuilder_8hpp.html">ibuilder.hpp</a></div></div>
 <div class="ttc" id="aichannel_8hpp_html"><div class="ttname"><a href="ichannel_8hpp.html">ichannel.hpp</a></div></div>
 <div class="ttc" id="aiconfig__manager_8hpp_html"><div class="ttname"><a href="iconfig__manager_8hpp.html">iconfig_manager.hpp</a></div></div>
+<div class="ttc" id="aiserver_8hpp_html"><div class="ttname"><a href="iserver_8hpp.html">iserver.hpp</a></div></div>
 <div class="ttc" id="alogger_8hpp_html"><div class="ttname"><a href="logger_8hpp.html">logger.hpp</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00087">unilink.hpp:87</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00095">unilink.hpp:95</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a9f2227aea1475c0655cf8cf4a99e55e9"><div class="ttname"><a href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilder serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00105">unilink.hpp:105</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_ab000e6359a7c6a9ead41fb57c52c2212"><div class="ttname"><a href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">unilink::udp</a></div><div class="ttdeci">builder::UdpBuilder udp(uint16_t local_port)</div><div class="ttdoc">Create a UDP builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00114">unilink.hpp:114</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00089">unilink.hpp:89</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00097">unilink.hpp:97</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a9f2227aea1475c0655cf8cf4a99e55e9"><div class="ttname"><a href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilder serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00107">unilink.hpp:107</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_ab000e6359a7c6a9ead41fb57c52c2212"><div class="ttname"><a href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">unilink::udp</a></div><div class="ttdeci">builder::UdpBuilder udp(uint16_t local_port)</div><div class="ttdoc">Create a UDP builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00116">unilink.hpp:116</a></div></div>
 <div class="ttc" id="aplatform_8hpp_html"><div class="ttname"><a href="platform_8hpp.html">platform.hpp</a></div></div>
 <div class="ttc" id="aserial__builder_8hpp_html"><div class="ttname"><a href="serial__builder_8hpp.html">serial_builder.hpp</a></div></div>
 <div class="ttc" id="atcp__client__builder_8hpp_html"><div class="ttname"><a href="tcp__client__builder_8hpp.html">tcp_client_builder.hpp</a></div></div>
@@ -238,7 +233,7 @@ $(document).ready(function(){initNavTree('unilink_8hpp_source.html',''); initRes
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="unilink_8hpp.html">unilink.hpp</a></li>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"functions_func_s.html":[18,3,1,16],
+"functions_func_t.html":[18,3,1,17],
+"functions_func_u.html":[18,3,1,18],
 "functions_func_v.html":[18,3,1,19],
 "functions_func_w.html":[18,3,1,20],
 "functions_func_~.html":[18,3,1,21],
@@ -49,8 +52,8 @@ var NAVTREEINDEX4 =
 "hierarchy.html":[18,2],
 "ibuilder_8hpp.html":[19,0,1,1,2],
 "ibuilder_8hpp_source.html":[19,0,1,1,2],
-"ichannel_8hpp.html":[19,0,1,11,4],
-"ichannel_8hpp_source.html":[19,0,1,11,4],
+"ichannel_8hpp.html":[19,0,1,11,5],
+"ichannel_8hpp_source.html":[19,0,1,11,5],
 "iconfig__manager_8hpp.html":[19,0,1,3,4],
 "iconfig__manager_8hpp.html#a4aafa42155321e016da3f7a8c290f1d5":[19,0,1,3,4,3],
 "iconfig__manager_8hpp.html#a51570eeec2be34fa91656b2f81898577":[19,0,1,3,4,4],
@@ -137,6 +140,8 @@ var NAVTREEINDEX4 =
 "io__context__manager_8hpp_source.html":[19,0,1,2,1],
 "iserial__port_8hpp.html":[19,0,1,7,1],
 "iserial__port_8hpp_source.html":[19,0,1,7,1],
+"iserver_8hpp.html":[19,0,1,11,6],
+"iserver_8hpp_source.html":[19,0,1,11,6],
 "itcp__acceptor_8hpp.html":[19,0,1,7,2],
 "itcp__acceptor_8hpp_source.html":[19,0,1,7,2],
 "itcp__resolver_8hpp.html":[19,0,1,7,3],
@@ -244,10 +249,5 @@ var NAVTREEINDEX4 =
 "md_docs_architecture_runtime_behavior.html#autotoc_md178":[3,1],
 "md_docs_architecture_runtime_behavior.html#autotoc_md179":[3,1,0],
 "md_docs_architecture_runtime_behavior.html#autotoc_md181":[3,1,1],
-"md_docs_architecture_runtime_behavior.html#autotoc_md182":[3,1,1,0],
-"md_docs_architecture_runtime_behavior.html#autotoc_md184":[3,1,1,1],
-"md_docs_architecture_runtime_behavior.html#autotoc_md186":[3,1,1,2],
-"md_docs_architecture_runtime_behavior.html#autotoc_md188":[3,1,1,3],
-"md_docs_architecture_runtime_behavior.html#autotoc_md190":[3,1,2],
-"md_docs_architecture_runtime_behavior.html#autotoc_md192":[3,2]
+"md_docs_architecture_runtime_behavior.html#autotoc_md182":[3,1,1,0]
 };

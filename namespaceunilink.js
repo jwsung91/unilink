@@ -23,8 +23,26 @@ var namespaceunilink =
     [ "transport", "namespaceunilink_1_1transport.html", "namespaceunilink_1_1transport" ],
     [ "util", "namespaceunilink_1_1util.html", "namespaceunilink_1_1util" ],
     [ "wrapper", "namespaceunilink_1_1wrapper.html", "namespaceunilink_1_1wrapper" ],
+    [ "ErrorCode", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84a", [
+      [ "Success", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa505a83f220c02df2f85c3810cd9ceb38", null ],
+      [ "Unknown", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa88183b946cc5f0e8c96b2e66e1c74a7e", null ],
+      [ "InvalidConfiguration", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aaf237deac1e85c65673a7bba9093bca7e", null ],
+      [ "InternalError", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa8462b58246e70e5c83e5b939a9332cb5", null ],
+      [ "IoError", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aaf05cfcbf5123775f7c73e520a8d861e1", null ],
+      [ "ConnectionRefused", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aaa41e9791d8a1b6a003deb6c6a7bfb4c0", null ],
+      [ "ConnectionReset", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aaa6157935f33a07a4f46d0d07faf00213", null ],
+      [ "ConnectionAborted", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aae7ffa1ad11394c9b6a572db273494e99", null ],
+      [ "TimedOut", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa9541eb2348d883dd8e32ae0420274c4c", null ],
+      [ "NotConnected", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa4075072d219e061ca0f3124f8fbef463", null ],
+      [ "AlreadyConnected", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa026d4490386eaf538cd104d5b3cb5b34", null ],
+      [ "PortInUse", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aae04f77652129aed8ed07cc57e63b6297", null ],
+      [ "AccessDenied", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aacbcc0759909213e7cdba1f0cbf253126", null ],
+      [ "Stopped", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aac23e2b09ebe6bf4cb5e2a9abe85c0be2", null ],
+      [ "StartFailed", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa65004ae0dc2e9512cfa7d0e6dbcdab1e", null ]
+    ] ],
     [ "serial", "namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9", null ],
     [ "tcp_client", "namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac", null ],
     [ "tcp_server", "namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956", null ],
+    [ "to_string", "namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355", null ],
     [ "udp", "namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212", null ]
 ];

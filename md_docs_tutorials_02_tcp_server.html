@@ -122,7 +122,7 @@ Step 1: Basic Server Setup</h1>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Starting echo server on port &quot;</span> &lt;&lt; port_ &lt;&lt; std::endl;</div>
 <div class="line">        </div>
 <div class="line">        server_ = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(port_)</div>
-<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#add017de8e374447379b357729bf4cfdf">on_connect</a>([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; ip) {</div>
+<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">on_connect</a>([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; ip) {</div>
 <div class="line">                handle_connect(client_id, ip);</div>
 <div class="line">            })</div>
 <div class="line">            .on_bytes([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> client_id, <a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::ConstByteSpan</a> data) {</div>
@@ -196,12 +196,12 @@ Step 1: Basic Server Setup</h1>
 <div class="line">    server.stop();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_add017de8e374447379b357729bf4cfdf"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#add017de8e374447379b357729bf4cfdf">unilink::builder::TcpServerBuilder::on_connect</a></div><div class="ttdeci">TcpServerBuilder &amp; on_connect(std::function&lt; void()&gt; handler) override</div><div class="ttdoc">Set connection handler callback (simple version)</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00173">tcp_server_builder.cc:173</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a78022f0940452ae0b5fe115baca2e409"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">unilink::builder::TcpServerBuilder::on_connect</a></div><div class="ttdeci">TcpServerBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00090">tcp_server_builder.cc:90</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">A C++17 compatible span-like class for safe array access.</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00038">safe_span.hpp:38</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a0e63f52083142fa895b98ea38f51dc73"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73">unilink::memory::SafeSpan::size</a></div><div class="ttdeci">constexpr size_type size() const noexcept</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00081">safe_span.hpp:81</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a203851d86025e579f73f04da0828e2bd"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a203851d86025e579f73f04da0828e2bd">unilink::memory::SafeSpan::data</a></div><div class="ttdeci">constexpr pointer data() const noexcept</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00079">safe_span.hpp:79</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_1_1safe__convert_html_a3c41d9c6266428458c97891710ac2f0d"><div class="ttname"><a href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">unilink::base::safe_convert::uint8_to_string</a></div><div class="ttdeci">std::string uint8_to_string(const uint8_t *data, size_t size)</div><div class="ttdoc">Safely convert uint8_t* to const char* for string operations.</div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00146">common.hpp:146</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00087">unilink.hpp:87</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00089">unilink.hpp:89</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md910"></a>
@@ -243,13 +243,13 @@ Step 3: Add Client Management</h1>
 <div class="line">    </div>
 <div class="line">    <span class="keywordtype">void</span> start() {</div>
 <div class="line">        server_ = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(port_)</div>
-<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#add017de8e374447379b357729bf4cfdf">on_connect</a>([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; ip) {</div>
+<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">on_connect</a>([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; ip) {</div>
 <div class="line">                std::lock_guard&lt;std::mutex&gt; lock(clients_mutex_);</div>
 <div class="line">                clients_[id] = {ip, std::chrono::system_clock::now(), 0};</div>
 <div class="line">                </div>
 <div class="line">                std::cout &lt;&lt; <span class="stringliteral">&quot;[Client &quot;</span> &lt;&lt; <span class="keywordtype">id</span> &lt;&lt; <span class="stringliteral">&quot;] Connected from &quot;</span> &lt;&lt; ip &lt;&lt; std::endl;</div>
 <div class="line">                server_-&gt;send_to_client(<span class="keywordtype">id</span>, <span class="stringliteral">&quot;Welcome! You are client #&quot;</span> + </div>
-<div class="line">                                       std::to_string(<span class="keywordtype">id</span>) + <span class="stringliteral">&quot;\n&quot;</span>);</div>
+<div class="line">                                       <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(<span class="keywordtype">id</span>) + <span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line">            })</div>
 <div class="line">            .on_bytes([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::ConstByteSpan</a> data) {</div>
 <div class="line">                {</div>
@@ -293,8 +293,8 @@ Step 3: Add Client Management</h1>
 <div class="line">        </div>
 <div class="line">        std::string stats = <span class="stringliteral">&quot;=== Your Statistics ===\n&quot;</span>;</div>
 <div class="line">        stats += <span class="stringliteral">&quot;IP: &quot;</span> + info.ip + <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">        stats += <span class="stringliteral">&quot;Connected for: &quot;</span> + std::to_string(seconds) + <span class="stringliteral">&quot; seconds\n&quot;</span>;</div>
-<div class="line">        stats += <span class="stringliteral">&quot;Messages sent: &quot;</span> + std::to_string(info.messages_sent) + <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line">        stats += <span class="stringliteral">&quot;Connected for: &quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(seconds) + <span class="stringliteral">&quot; seconds\n&quot;</span>;</div>
+<div class="line">        stats += <span class="stringliteral">&quot;Messages sent: &quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(info.messages_sent) + <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">        stats += <span class="stringliteral">&quot;======================\n&quot;</span>;</div>
 <div class="line">        </div>
 <div class="line">        server_-&gt;send_to_client(client_id, stats);</div>
@@ -305,11 +305,11 @@ Step 3: Add Client Management</h1>
 <div class="line">        </div>
 <div class="line">        std::string list = <span class="stringliteral">&quot;=== Connected Clients ===\n&quot;</span>;</div>
 <div class="line">        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [<span class="keywordtype">id</span>, info] : clients_) {</div>
-<div class="line">            list += <span class="stringliteral">&quot;Client &quot;</span> + std::to_string(<span class="keywordtype">id</span>) + <span class="stringliteral">&quot;: &quot;</span> + info.ip;</div>
+<div class="line">            list += <span class="stringliteral">&quot;Client &quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(<span class="keywordtype">id</span>) + <span class="stringliteral">&quot;: &quot;</span> + info.ip;</div>
 <div class="line">            <span class="keywordflow">if</span> (<span class="keywordtype">id</span> == client_id) list += <span class="stringliteral">&quot; (you)&quot;</span>;</div>
 <div class="line">            list += <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">        }</div>
-<div class="line">        list += <span class="stringliteral">&quot;Total: &quot;</span> + std::to_string(clients_.size()) + <span class="stringliteral">&quot; clients\n&quot;</span>;</div>
+<div class="line">        list += <span class="stringliteral">&quot;Total: &quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(clients_.size()) + <span class="stringliteral">&quot; clients\n&quot;</span>;</div>
 <div class="line">        list += <span class="stringliteral">&quot;========================\n&quot;</span>;</div>
 <div class="line">        </div>
 <div class="line">        server_-&gt;send_to_client(client_id, list);</div>
@@ -323,13 +323,14 @@ Step 3: Add Client Management</h1>
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line">};</div>
+<div class="ttc" id="anamespaceunilink_html_a945182ee4d2e3137a6c39f60501f5355"><div class="ttname"><a href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">unilink::to_string</a></div><div class="ttdeci">std::string to_string(ErrorCode code)</div><div class="ttdoc">Convert ErrorCode to human-readable string.</div><div class="ttdef"><b>Definition:</b> <a href="error__codes_8hpp_source.html#l00053">error_codes.hpp:53</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md917"></a>
 Step 4: Single Client Mode</h1>
 <p>For applications that only need one client at a time:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">single_client</a>()  <span class="comment">// Only accept one client</span></div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#add017de8e374447379b357729bf4cfdf">on_connect</a>([](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; ip) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">on_connect</a>([](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; ip) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Client connected: &quot;</span> &lt;&lt; ip &lt;&lt; std::endl;</div>
 <div class="line">        <span class="comment">// Previous client is automatically disconnected</span></div>
 <div class="line">    })</div>
@@ -342,7 +343,7 @@ Step 4: Single Client Mode</h1>
 <div class="line">server-&gt;start();</div>
 <div class="line"><span class="comment">// ... do work ...</span></div>
 <div class="line">server-&gt;stop();  <span class="comment">// Clean shutdown when done</span></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9349e7963408c74d2dac92fae288cddc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder &amp; single_client()</div><div class="ttdoc">Configure server for single client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00243">tcp_server_builder.cc:243</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9349e7963408c74d2dac92fae288cddc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder &amp; single_client()</div><div class="ttdoc">Configure server for single client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00130">tcp_server_builder.cc:130</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md919"></a>
 Step 5: Port Retry Logic</h1>
@@ -353,7 +354,7 @@ Step 5: Port Retry Logic</h1>
 <div class="line">        5,      <span class="comment">// Try 5 times</span></div>
 <div class="line">        1000    <span class="comment">// Wait 1 second between attempts</span></div>
 <div class="line">    )</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a56c7eb778bed9c2b217704a081d59fea">on_error</a>([](<span class="keyword">const</span> std::string&amp; error) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc">on_error</a>([](<span class="keyword">const</span> std::string&amp; error) {</div>
 <div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;Server error: &quot;</span> &lt;&lt; error &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
@@ -369,8 +370,8 @@ Step 5: Port Retry Logic</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ... do work ...</span></div>
 <div class="line">server-&gt;stop();  <span class="comment">// Clean shutdown</span></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5361cef3aa804d32cba0b73c02e6492d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">unilink::builder::TcpServerBuilder::enable_port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00219">tcp_server_builder.cc:219</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a56c7eb778bed9c2b217704a081d59fea"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a56c7eb778bed9c2b217704a081d59fea">unilink::builder::TcpServerBuilder::on_error</a></div><div class="ttdeci">TcpServerBuilder &amp; on_error(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00193">tcp_server_builder.cc:193</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5361cef3aa804d32cba0b73c02e6492d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">unilink::builder::TcpServerBuilder::enable_port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00110">tcp_server_builder.cc:110</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_ae853d94713e747d53006c5f086f472bc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc">unilink::builder::TcpServerBuilder::on_error</a></div><div class="ttdeci">TcpServerBuilder &amp; on_error(std::function&lt; void(const wrapper::ErrorContext &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00100">tcp_server_builder.cc:100</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md921"></a>
 Step 6: Broadcasting to All Clients</h1>
@@ -386,7 +387,7 @@ Step 6: Broadcasting to All Clients</h1>
 <div class="line">                std::string str = <a class="code" href="namespaceunilink_1_1base_1_1safe__convert.html#a3c41d9c6266428458c97891710ac2f0d">unilink::common::safe_convert::uint8_to_string</a>(data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a203851d86025e579f73f04da0828e2bd">data</a>(), data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73">size</a>());</div>
 <div class="line"> </div>
 <div class="line">                <span class="comment">// Broadcast to all clients</span></div>
-<div class="line">                std::string msg = <span class="stringliteral">&quot;[Client &quot;</span> + std::to_string(sender_id) + <span class="stringliteral">&quot;]: &quot;</span> + str;</div>
+<div class="line">                std::string msg = <span class="stringliteral">&quot;[Client &quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(sender_id) + <span class="stringliteral">&quot;]: &quot;</span> + str;</div>
 <div class="line">                server_-&gt;send(msg);  <span class="comment">// Send to ALL clients</span></div>
 <div class="line">                </div>
 <div class="line">                std::cout &lt;&lt; <span class="stringliteral">&quot;Broadcasted: &quot;</span> &lt;&lt; msg &lt;&lt; std::endl;</div>
@@ -413,9 +414,9 @@ Complete Example: Chat Server</h1>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    <span class="keywordtype">void</span> start(uint16_t port) {</div>
 <div class="line">        server_ = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(port)</div>
-<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#add017de8e374447379b357729bf4cfdf">on_connect</a>([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; ip) {</div>
+<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">on_connect</a>([<span class="keyword">this</span>](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; ip) {</div>
 <div class="line">                std::lock_guard&lt;std::mutex&gt; lock(mutex_);</div>
-<div class="line">                nicknames_[id] = <span class="stringliteral">&quot;User&quot;</span> + std::to_string(<span class="keywordtype">id</span>);</div>
+<div class="line">                nicknames_[id] = <span class="stringliteral">&quot;User&quot;</span> + <a class="code" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">std::to_string</a>(<span class="keywordtype">id</span>);</div>
 <div class="line">                </div>
 <div class="line">                std::string msg = nicknames_[id] + <span class="stringliteral">&quot; joined the chat!\n&quot;</span>;</div>
 <div class="line">                server_-&gt;send(msg);</div>
@@ -618,7 +619,7 @@ Full Example Code</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -910,15 +910,15 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classunilink_1_1config_1_1ConfigManager.html#ae4a737ef35225ae0de347f09d558d8ec",
-"classunilink_1_1memory_1_1PooledBuffer.html#a94ad020d70924d2daaa865bda73d23c0",
-"classunilink_1_1wrapper_1_1Serial.html#ab8896db9d9979af19b3ef575a8cc8cc3",
-"functions_func_v.html",
-"md_docs_architecture_runtime_behavior.html#autotoc_md193",
-"md_docs_guides_setup_build_guide.html#autotoc_md549",
-"md_docs_tutorials_01_getting_started.html#autotoc_md891",
-"safe__data__buffer_8hpp.html#af038015aafcb3ab44bd10eb3392752ac",
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ae5feffd3d53798b983262f33a86bddb7"
+"classunilink_1_1diagnostics_1_1ConfigurationException.html#a192126dfce64447d2dc7633a07e0226f",
+"classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73",
+"classunilink_1_1wrapper_1_1TcpClient.html#a0a9e954a14b22cef576b6b04162c31dc",
+"functions_func_s.html",
+"md_docs_architecture_runtime_behavior.html#autotoc_md184",
+"md_docs_guides_setup_build_guide.html#autotoc_md540",
+"md_docs_tutorials_01_getting_started.html#autotoc_md885",
+"pages.html",
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0932ad2d58a5900901d237e52b18a735"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

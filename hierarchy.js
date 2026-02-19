@@ -28,7 +28,6 @@ var hierarchy =
     [ "unilink::wrapper::ChannelInterface", "classunilink_1_1wrapper_1_1ChannelInterface.html", [
       [ "unilink::wrapper::Serial", "classunilink_1_1wrapper_1_1Serial.html", null ],
       [ "unilink::wrapper::TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", null ],
-      [ "unilink::wrapper::TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", null ],
       [ "unilink::wrapper::Udp", "classunilink_1_1wrapper_1_1Udp.html", null ]
     ] ],
     [ "unilink::config::ConfigFactory", "classunilink_1_1config_1_1ConfigFactory.html", null ],
@@ -37,6 +36,7 @@ var hierarchy =
       [ "unilink::config::ConfigManager", "classunilink_1_1config_1_1ConfigManager.html", null ]
     ] ],
     [ "unilink::config::ConfigPresets", "classunilink_1_1config_1_1ConfigPresets.html", null ],
+    [ "unilink::wrapper::ConnectionContext", "classunilink_1_1wrapper_1_1ConnectionContext.html", null ],
     [ "std::enable_shared_from_this", null, [
       [ "unilink::transport::Serial", "classunilink_1_1transport_1_1Serial.html", null ],
       [ "unilink::transport::TcpClient", "classunilink_1_1transport_1_1TcpClient.html", null ],
@@ -44,6 +44,7 @@ var hierarchy =
       [ "unilink::transport::TcpServerSession", "classunilink_1_1transport_1_1TcpServerSession.html", null ],
       [ "unilink::transport::UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", null ]
     ] ],
+    [ "unilink::wrapper::ErrorContext", "classunilink_1_1wrapper_1_1ErrorContext.html", null ],
     [ "unilink::diagnostics::ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", null ],
     [ "unilink::diagnostics::ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html", null ],
     [ "unilink::diagnostics::ErrorStats", "structunilink_1_1diagnostics_1_1ErrorStats.html", null ],
@@ -69,6 +70,7 @@ var hierarchy =
     [ "unilink::memory::MemoryTracker::MemoryStats", "structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html", null ],
     [ "unilink::memory::MemoryTracker", "classunilink_1_1memory_1_1MemoryTracker.html", null ],
     [ "unilink::memory::MemoryValidator", "classunilink_1_1memory_1_1MemoryValidator.html", null ],
+    [ "unilink::wrapper::MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html", null ],
     [ "unilink::base::PlatformInfo", "classunilink_1_1base_1_1PlatformInfo.html", null ],
     [ "unilink::memory::PooledBuffer", "classunilink_1_1memory_1_1PooledBuffer.html", null ],
     [ "unilink::memory::MemoryPool::PoolStats", "structunilink_1_1memory_1_1MemoryPool_1_1PoolStats.html", null ],
@@ -87,6 +89,9 @@ var hierarchy =
     [ "unilink::config::SerialConfig", "structunilink_1_1config_1_1SerialConfig.html", null ],
     [ "unilink::interface::SerialPortInterface", "classunilink_1_1interface_1_1SerialPortInterface.html", [
       [ "unilink::transport::BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", null ]
+    ] ],
+    [ "unilink::wrapper::ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html", [
+      [ "unilink::wrapper::TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", null ]
     ] ],
     [ "unilink::interface::TcpAcceptorInterface", "classunilink_1_1interface_1_1TcpAcceptorInterface.html", [
       [ "unilink::transport::BoostTcpAcceptor", "classunilink_1_1transport_1_1BoostTcpAcceptor.html", null ]

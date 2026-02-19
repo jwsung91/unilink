@@ -198,7 +198,7 @@ Basic Usage</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;192.168.1.100&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a4ae0c7b5b6f6c02066844fcb5a71ad9a">on_connect</a>([]() {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">on_connect</a>([]() {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Connected!&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .on_data([](<span class="keyword">const</span> std::string&amp; data) {</div>
@@ -223,9 +223,9 @@ Basic Usage</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Stop when done</span></div>
 <div class="line">client-&gt;stop();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a4ae0c7b5b6f6c02066844fcb5a71ad9a"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a4ae0c7b5b6f6c02066844fcb5a71ad9a">unilink::builder::TcpClientBuilder::on_connect</a></div><div class="ttdeci">TcpClientBuilder &amp; on_connect(std::function&lt; void()&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00135">tcp_client_builder.cc:135</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured TcpClient.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00046">tcp_client_builder.cc:46</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00095">unilink.hpp:95</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a3ea4ef6983359f12490d6b2e679a0b1f"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">unilink::builder::TcpClientBuilder::on_connect</a></div><div class="ttdeci">TcpClientBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00077">tcp_client_builder.cc:77</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00042">tcp_client_builder.cc:42</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00097">unilink.hpp:97</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md745"></a>
 API Reference</h2>
@@ -280,17 +280,17 @@ With Member Functions</h3>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">void</span> connect() {</div>
 <div class="line">        client_ = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#af0f78cdc2328bf0d06ef3789b3e4e41d">on_data</a>(<span class="keyword">this</span>, &amp;MyClient::on_data)  <span class="comment">// Member function!</span></div>
-<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a4ae0c7b5b6f6c02066844fcb5a71ad9a">on_connect</a>(<span class="keyword">this</span>, &amp;MyClient::on_connect)</div>
+<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">on_data</a>(<span class="keyword">this</span>, &amp;MyClient::on_data)  <span class="comment">// Member function!</span></div>
+<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">on_connect</a>(<span class="keyword">this</span>, &amp;MyClient::on_connect)</div>
 <div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line">    }</div>
 <div class="line">};</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_af0f78cdc2328bf0d06ef3789b3e4e41d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#af0f78cdc2328bf0d06ef3789b3e4e41d">unilink::builder::TcpClientBuilder::on_data</a></div><div class="ttdeci">TcpClientBuilder &amp; on_data(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00130">tcp_client_builder.cc:130</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aaddf0fcbc64fa9a79d0a4f523d5b3fc7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">unilink::builder::TcpClientBuilder::on_data</a></div><div class="ttdeci">TcpClientBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00072">tcp_client_builder.cc:72</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md751"></a>
 With Lambda Capture</h3>
 <div class="fragment"><div class="line">std::string device_id = <span class="stringliteral">&quot;sensor_001&quot;</span>;</div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#af0f78cdc2328bf0d06ef3789b3e4e41d">on_data</a>([device_id](<span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">on_data</a>([device_id](<span class="keyword">const</span> std::string&amp; data) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; device_id &lt;&lt; <span class="stringliteral">&quot;] &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
@@ -303,7 +303,7 @@ Basic Usage</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#add017de8e374447379b357729bf4cfdf">on_connect</a>([](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; ip) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">on_connect</a>([](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; ip) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Client &quot;</span> &lt;&lt; client_id &lt;&lt; <span class="stringliteral">&quot; connected from &quot;</span> &lt;&lt; ip &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .on_data([](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; data) {</div>
@@ -330,8 +330,8 @@ Basic Usage</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Clean shutdown</span></div>
 <div class="line">server-&gt;stop();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_add017de8e374447379b357729bf4cfdf"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#add017de8e374447379b357729bf4cfdf">unilink::builder::TcpServerBuilder::on_connect</a></div><div class="ttdeci">TcpServerBuilder &amp; on_connect(std::function&lt; void()&gt; handler) override</div><div class="ttdoc">Set connection handler callback (simple version)</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00173">tcp_server_builder.cc:173</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00087">unilink.hpp:87</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a78022f0940452ae0b5fe115baca2e409"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">unilink::builder::TcpServerBuilder::on_connect</a></div><div class="ttdeci">TcpServerBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00090">tcp_server_builder.cc:90</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00089">unilink.hpp:89</a></div></div>
 </div><!-- fragment --><blockquote class="doxtable">
 <p>Note: <code>TcpServerBuilder</code> requires an explicit client limit before <code>build()</code> is called. Choose one of <code>.single_client()</code>, <code>.multi_client(max)</code>, or <code>.unlimited_clients()</code> during construction. </p>
 </blockquote>
@@ -391,21 +391,21 @@ Advanced Examples</h2>
 Single Client Mode</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">single_client</a>()  <span class="comment">// Only one client allowed</span></div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#add017de8e374447379b357729bf4cfdf">on_connect</a>([](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; ip) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">on_connect</a>([](<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::string&amp; ip) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Client connected: &quot;</span> &lt;&lt; ip &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9349e7963408c74d2dac92fae288cddc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder &amp; single_client()</div><div class="ttdoc">Configure server for single client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00243">tcp_server_builder.cc:243</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9349e7963408c74d2dac92fae288cddc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder &amp; single_client()</div><div class="ttdoc">Configure server for single client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00130">tcp_server_builder.cc:130</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md761"></a>
 Port Retry</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">enable_port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// 5 retries, 1 second each</span></div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a56c7eb778bed9c2b217704a081d59fea">on_error</a>([](<span class="keyword">const</span> std::string&amp; error) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc">on_error</a>([](<span class="keyword">const</span> std::string&amp; error) {</div>
 <div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;Server error: &quot;</span> &lt;&lt; error &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5361cef3aa804d32cba0b73c02e6492d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">unilink::builder::TcpServerBuilder::enable_port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00219">tcp_server_builder.cc:219</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a56c7eb778bed9c2b217704a081d59fea"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a56c7eb778bed9c2b217704a081d59fea">unilink::builder::TcpServerBuilder::on_error</a></div><div class="ttdeci">TcpServerBuilder &amp; on_error(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00193">tcp_server_builder.cc:193</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5361cef3aa804d32cba0b73c02e6492d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">unilink::builder::TcpServerBuilder::enable_port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00110">tcp_server_builder.cc:110</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_ae853d94713e747d53006c5f086f472bc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc">unilink::builder::TcpServerBuilder::on_error</a></div><div class="ttdeci">TcpServerBuilder &amp; on_error(std::function&lt; void(const wrapper::ErrorContext &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00100">tcp_server_builder.cc:100</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md762"></a>
 Echo Server Pattern</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
@@ -417,8 +417,8 @@ Echo Server Pattern</h3>
 <div class="line">});</div>
 <div class="line"> </div>
 <div class="line">server-&gt;start();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a94c1f68d31130820c5c2bd20b906fba5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unilink::builder::TcpServerBuilder::unlimited_clients</a></div><div class="ttdeci">TcpServerBuilder &amp; unlimited_clients()</div><div class="ttdoc">Configure server for unlimited multi-client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00261">tcp_server_builder.cc:261</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9c74b1d7730ee134044b4fcc111191ec"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">unilink::builder::TcpServerBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpServer &gt; build() override</div><div class="ttdoc">Build and return the configured TcpServer.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00049">tcp_server_builder.cc:49</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a94c1f68d31130820c5c2bd20b906fba5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unilink::builder::TcpServerBuilder::unlimited_clients</a></div><div class="ttdeci">TcpServerBuilder &amp; unlimited_clients()</div><div class="ttdoc">Configure server for unlimited multi-client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00138">tcp_server_builder.cc:138</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9c74b1d7730ee134044b4fcc111191ec"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">unilink::builder::TcpServerBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpServer &gt; build() override</div><div class="ttdoc">Build and return the configured TcpServer.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00044">tcp_server_builder.cc:44</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md764"></a>
 Serial Communication</h1>
@@ -428,7 +428,7 @@ Basic Usage</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">auto</span> <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a> = <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyUSB0&quot;</span>, 115200)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html#aa6a55e7be7663feca150b95e076b095a">on_connect</a>([]() {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html#a96d737e91f16e3fd669e03ad18f19c36">on_connect</a>([]() {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Serial port opened&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .on_data([](<span class="keyword">const</span> std::string&amp; data) {</div>
@@ -445,8 +445,8 @@ Basic Usage</h2>
 <div class="line"><span class="comment">// Send binary data</span></div>
 <div class="line">std::vector&lt;uint8_t&gt; binary = {0x01, 0x02, 0x03};</div>
 <div class="line"><a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;send(binary);</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html_aa6a55e7be7663feca150b95e076b095a"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html#aa6a55e7be7663feca150b95e076b095a">unilink::builder::SerialBuilder::on_connect</a></div><div class="ttdeci">SerialBuilder &amp; on_connect(std::function&lt; void()&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="serial__builder_8cc_source.html#l00134">serial_builder.cc:134</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a9f2227aea1475c0655cf8cf4a99e55e9"><div class="ttname"><a href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilder serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00105">unilink.hpp:105</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html_a96d737e91f16e3fd669e03ad18f19c36"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html#a96d737e91f16e3fd669e03ad18f19c36">unilink::builder::SerialBuilder::on_connect</a></div><div class="ttdeci">SerialBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="serial__builder_8cc_source.html#l00077">serial_builder.cc:77</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a9f2227aea1475c0655cf8cf4a99e55e9"><div class="ttname"><a href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilder serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00107">unilink.hpp:107</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md766"></a>
 API Reference</h2>
 <h3><a class="anchor" id="autotoc_md767"></a>
@@ -512,7 +512,7 @@ Advanced Examples</h2>
 <h3><a class="anchor" id="autotoc_md772"></a>
 Arduino Communication</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> arduino = <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyACM0&quot;</span>, 9600)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html#aa6a55e7be7663feca150b95e076b095a">on_connect</a>([]() {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html#a96d737e91f16e3fd669e03ad18f19c36">on_connect</a>([]() {</div>
 <div class="line">        std::this_thread::sleep_for(std::chrono::seconds(2));  <span class="comment">// Arduino reset delay</span></div>
 <div class="line">    })</div>
 <div class="line">    .on_data([](<span class="keyword">const</span> std::string&amp; data) {</div>
@@ -526,14 +526,14 @@ Arduino Communication</h3>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md773"></a>
 GPS Module</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> gps = <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a>(<span class="stringliteral">&quot;/dev/ttyUSB0&quot;</span>, 9600)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html#ad5e9f13a58e6f4b5e20ec5d5a031e4bb">on_data</a>([](<span class="keyword">const</span> std::string&amp; nmea) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1SerialBuilder.html#a19f2f48e6d0fb18e8bb020866d2cd6a5">on_data</a>([](<span class="keyword">const</span> std::string&amp; nmea) {</div>
 <div class="line">        <span class="comment">// Parse NMEA sentences</span></div>
 <div class="line">        <span class="keywordflow">if</span> (nmea.find(<span class="stringliteral">&quot;$GPGGA&quot;</span>) == 0) {</div>
 <div class="line">            <span class="comment">// Parse GPS fix data</span></div>
 <div class="line">        }</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html_ad5e9f13a58e6f4b5e20ec5d5a031e4bb"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html#ad5e9f13a58e6f4b5e20ec5d5a031e4bb">unilink::builder::SerialBuilder::on_data</a></div><div class="ttdeci">SerialBuilder &amp; on_data(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="serial__builder_8cc_source.html#l00129">serial_builder.cc:129</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html_a19f2f48e6d0fb18e8bb020866d2cd6a5"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html#a19f2f48e6d0fb18e8bb020866d2cd6a5">unilink::builder::SerialBuilder::on_data</a></div><div class="ttdeci">SerialBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="serial__builder_8cc_source.html#l00072">serial_builder.cc:72</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md775"></a>
 UDP Communication</h1>
@@ -546,7 +546,7 @@ UDP Receiver (Server)</h3>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Create a UDP socket bound to port 8080</span></div>
 <div class="line"><span class="keyword">auto</span> receiver = <a class="code" href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">unilink::udp</a>(8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html#a8c58aea49b1ad051bc6295391735f475">on_data</a>([](<span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html#a57489c2617e0c904f2126c17f692a26d">on_data</a>([](<span class="keyword">const</span> std::string&amp; data) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
@@ -556,8 +556,8 @@ UDP Receiver (Server)</h3>
 <div class="line"><span class="comment">// Keep running...</span></div>
 <div class="line">std::this_thread::sleep_for(std::chrono::seconds(60));</div>
 <div class="line">receiver-&gt;stop();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a8c58aea49b1ad051bc6295391735f475"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a8c58aea49b1ad051bc6295391735f475">unilink::builder::UdpBuilder::on_data</a></div><div class="ttdeci">UdpBuilder &amp; on_data(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00070">udp_builder.cc:70</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_ab000e6359a7c6a9ead41fb57c52c2212"><div class="ttname"><a href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">unilink::udp</a></div><div class="ttdeci">builder::UdpBuilder udp(uint16_t local_port)</div><div class="ttdoc">Create a UDP builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00114">unilink.hpp:114</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a57489c2617e0c904f2126c17f692a26d"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a57489c2617e0c904f2126c17f692a26d">unilink::builder::UdpBuilder::on_data</a></div><div class="ttdeci">UdpBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00057">udp_builder.cc:57</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_ab000e6359a7c6a9ead41fb57c52c2212"><div class="ttname"><a href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">unilink::udp</a></div><div class="ttdeci">builder::UdpBuilder udp(uint16_t local_port)</div><div class="ttdoc">Create a UDP builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00116">unilink.hpp:116</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md778"></a>
 UDP Sender (Client)</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
@@ -569,8 +569,8 @@ UDP Sender (Client)</h3>
 <div class="line"> </div>
 <div class="line">sender-&gt;start();</div>
 <div class="line">sender-&gt;send(<span class="stringliteral">&quot;Hello UDP!&quot;</span>);</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a34a3284a0210b03739bbf9d0d3a30079"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a34a3284a0210b03739bbf9d0d3a30079">unilink::builder::UdpBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::Udp &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00030">udp_builder.cc:30</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a3f3bdfca13cf1d0eb0c87f59c170472f"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a3f3bdfca13cf1d0eb0c87f59c170472f">unilink::builder::UdpBuilder::set_remote</a></div><div class="ttdeci">UdpBuilder &amp; set_remote(const std::string &amp;address, uint16_t port)</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00100">udp_builder.cc:100</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a34a3284a0210b03739bbf9d0d3a30079"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a34a3284a0210b03739bbf9d0d3a30079">unilink::builder::UdpBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::Udp &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00031">udp_builder.cc:31</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a3f3bdfca13cf1d0eb0c87f59c170472f"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a3f3bdfca13cf1d0eb0c87f59c170472f">unilink::builder::UdpBuilder::set_remote</a></div><div class="ttdeci">UdpBuilder &amp; set_remote(const std::string &amp;address, uint16_t port)</div><div class="ttdoc">Set remote address and port.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00082">udp_builder.cc:82</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md779"></a>
 API Reference</h2>
 <h3><a class="anchor" id="autotoc_md780"></a>
@@ -612,7 +612,7 @@ Advanced Examples</h2>
 <h3><a class="anchor" id="autotoc_md784"></a>
 Echo Reply (Receiver)</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> socket = <a class="code" href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">unilink::udp</a>(8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html#a8c58aea49b1ad051bc6295391735f475">on_data</a>([&amp;](<span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html#a57489c2617e0c904f2126c17f692a26d">on_data</a>([&amp;](<span class="keyword">const</span> std::string&amp; data) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</div>
 <div class="line">        <span class="comment">// Reply to the sender (automatically tracks last sender)</span></div>
 <div class="line">        <span class="comment">// Note: Full symmetric echo requires manual address handling</span></div>
@@ -760,9 +760,9 @@ Load Configuration from File</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Create client from config</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(host, port)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a61c44f9311cd798efac3449fdd2034d5">retry_interval</a>(config-&gt;get_tcp_client_config(<span class="stringliteral">&quot;main_client&quot;</span>).retry_interval_ms)</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8c1e4e8c618ce01445313f3062eeb2fb">retry_interval</a>(config-&gt;get_tcp_client_config(<span class="stringliteral">&quot;main_client&quot;</span>).retry_interval_ms)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a61c44f9311cd798efac3449fdd2034d5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a61c44f9311cd798efac3449fdd2034d5">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder &amp; retry_interval(unsigned interval_ms)</div><div class="ttdoc">Set retry interval for automatic reconnection.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00155">tcp_client_builder.cc:155</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a8c1e4e8c618ce01445313f3062eeb2fb"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8c1e4e8c618ce01445313f3062eeb2fb">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder &amp; retry_interval(uint32_t milliseconds)</div><div class="ttdoc">Set connection retry interval.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00092">tcp_client_builder.cc:92</a></div></div>
 <div class="ttc" id="aclassunilink_1_1config_1_1ConfigManager_html_a690c0f4d402787e898fba1b6bbb3f151"><div class="ttname"><a href="classunilink_1_1config_1_1ConfigManager.html#a690c0f4d402787e898fba1b6bbb3f151">unilink::config::ConfigManager::load_from_file</a></div><div class="ttdeci">bool load_from_file(const std::string &amp;filepath) override</div><div class="ttdef"><b>Definition:</b> <a href="config__manager_8cc_source.html#l00167">config_manager.cc:167</a></div></div>
 <div class="ttc" id="aconfig__manager_8hpp_html"><div class="ttname"><a href="config__manager_8hpp.html">config_manager.hpp</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1config_html"><div class="ttname"><a href="namespaceunilink_1_1config.html">unilink::config</a></div><div class="ttdef"><b>Definition:</b> <a href="config__factory_8cc_source.html#l00024">config_factory.cc:24</a></div></div>
@@ -831,7 +831,7 @@ Thread-Safe State</h2>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceunilink_1_1common.html">unilink::common</a>;</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">enum class</span> State { <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae599161956d626eda4cb0a5ffb85271c">Idle</a>, Running, Stopped };</div>
+<div class="line"><span class="keyword">enum class</span> State { <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae599161956d626eda4cb0a5ffb85271c">Idle</a>, Running, <a class="code" href="namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aac23e2b09ebe6bf4cb5e2a9abe85c0be2">Stopped</a> };</div>
 <div class="line"> </div>
 <div class="line">ThreadSafeState&lt;State&gt; state(State::Idle);</div>
 <div class="line"> </div>
@@ -844,6 +844,7 @@ Thread-Safe State</h2>
 <div class="line"><span class="comment">// Atomic compare-and-swap</span></div>
 <div class="line">state.compare_exchange(State::Idle, State::Running);</div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75cae599161956d626eda4cb0a5ffb85271c"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae599161956d626eda4cb0a5ffb85271c">unilink::base::LinkState::Idle</a></div><div class="ttdeci">@ Idle</div></div>
+<div class="ttc" id="anamespaceunilink_html_a718d86a87600ed5b3b4e597324c5d84aac23e2b09ebe6bf4cb5e2a9abe85c0be2"><div class="ttname"><a href="namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aac23e2b09ebe6bf4cb5e2a9abe85c0be2">unilink::ErrorCode::Stopped</a></div><div class="ttdeci">@ Stopped</div></div>
 <div class="ttc" id="athread__safe__state_8hpp_html"><div class="ttname"><a href="thread__safe__state_8hpp.html">thread_safe_state.hpp</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md807"></a>
@@ -851,16 +852,16 @@ Best Practices</h1>
 <h2><a class="anchor" id="autotoc_md808"></a>
 1. Always Handle Errors</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a13494649fcb5f8f8f4fbf8909a1e2e71">on_error</a>([](<span class="keyword">const</span> std::string&amp; error) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8fcc7d822c1a43646e29d24c236e9823">on_error</a>([](<span class="keyword">const</span> std::string&amp; error) {</div>
 <div class="line">        <span class="comment">// Log error, notify user, etc.</span></div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a13494649fcb5f8f8f4fbf8909a1e2e71"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a13494649fcb5f8f8f4fbf8909a1e2e71">unilink::builder::TcpClientBuilder::on_error</a></div><div class="ttdeci">TcpClientBuilder &amp; on_error(std::function&lt; void(const std::string &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00145">tcp_client_builder.cc:145</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a8fcc7d822c1a43646e29d24c236e9823"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8fcc7d822c1a43646e29d24c236e9823">unilink::builder::TcpClientBuilder::on_error</a></div><div class="ttdeci">TcpClientBuilder &amp; on_error(std::function&lt; void(const wrapper::ErrorContext &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00087">tcp_client_builder.cc:87</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md809"></a>
 2. Use Explicit Lifecycle Control</h2>
 <div class="fragment"><div class="line"><span class="comment">// Always use explicit start/stop for clarity</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#af0f78cdc2328bf0d06ef3789b3e4e41d">on_data</a>(handler)</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">on_data</a>(handler)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line"> </div>
 <div class="line">client-&gt;start();  <span class="comment">// Start when ready</span></div>
@@ -870,12 +871,12 @@ Best Practices</h1>
 3. Set Appropriate Retry Intervals</h2>
 <div class="fragment"><div class="line"><span class="comment">// Fast retry for local connections</span></div>
 <div class="line"><span class="keyword">auto</span> local_client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a61c44f9311cd798efac3449fdd2034d5">retry_interval</a>(1000)  <span class="comment">// 1 second</span></div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8c1e4e8c618ce01445313f3062eeb2fb">retry_interval</a>(1000)  <span class="comment">// 1 second</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Slower retry for remote connections</span></div>
 <div class="line"><span class="keyword">auto</span> remote_client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;remote.com&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a61c44f9311cd798efac3449fdd2034d5">retry_interval</a>(10000)  <span class="comment">// 10 seconds</span></div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8c1e4e8c618ce01445313f3062eeb2fb">retry_interval</a>(10000)  <span class="comment">// 10 seconds</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md811"></a>
 4. Enable Logging for Debugging</h2>
@@ -890,7 +891,7 @@ Best Practices</h1>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">void</span> start() {</div>
 <div class="line">        client_ = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#af0f78cdc2328bf0d06ef3789b3e4e41d">on_data</a>(<span class="keyword">this</span>, &amp;MyApplication::on_data)</div>
+<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">on_data</a>(<span class="keyword">this</span>, &amp;MyApplication::on_data)</div>
 <div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line">    }</div>
 <div class="line">};</div>
@@ -920,7 +921,7 @@ Performance Tips</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Feb 18 2026 12:04:54 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Feb 19 2026 02:31:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
