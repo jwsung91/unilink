@@ -10,6 +10,7 @@ var structunilink_1_1wrapper_1_1TcpClient_1_1Impl =
     [ "setup_internal_handlers", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a71ca6976f08b07bfb8fdc6c17d84aae5", null ],
     [ "start", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ad28d0b43728cdfd96c5fb9563d585b56", null ],
     [ "stop", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a1a8b8b9a961dffd4e71d5d64d570c8e2", null ],
+    [ "alive_marker_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a7d47e630947c5d4ed22aad7bbdcd206f", null ],
     [ "auto_manage_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ac676ad1d3f6362efdbb8486b540ea49b", null ],
     [ "channel_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#af217d88931fc25b893bf7a92c171cefa", null ],
     [ "connect_handler_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a906f92001903fba11176a1475dc5b8ab", null ],
