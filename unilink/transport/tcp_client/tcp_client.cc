@@ -406,62 +406,59 @@ void TcpClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_int
 // Impl methods implementation
 
 void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64_t seq) {
-  resolver_.async_resolve(cfg_.host, std::to_string(cfg_.port),
-                          [self, seq](auto ec, tcp::resolver::results_type results) {
-                            if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
-                              return;
-                            }
-                            if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
-                              return;
-                            }
-                            if (ec) {
-                              self->impl_->schedule_retry(self, seq);
-                              return;
-                            }
-                            self->impl_->connect_timer_.expires_after(
-                                std::chrono::milliseconds(self->impl_->cfg_.connection_timeout_ms));
-                            self->impl_->connect_timer_.async_wait([self, seq](const boost::system::error_code& timer_ec) {
-                              if (timer_ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
-                                return;
-                              }
-                              if (!timer_ec && !self->impl_->stop_requested_.load() &&
-                                  !self->impl_->stopping_.load()) {
-                                UNILINK_LOG_ERROR("tcp_client", "connect_timeout",
-                                                  "Connection timed out after " +
-                                                      std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
-                                self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
-                              }
-                            });
+  resolver_.async_resolve(
+      cfg_.host, std::to_string(cfg_.port), [self, seq](auto ec, tcp::resolver::results_type results) {
+        if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
+          return;
+        }
+        if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
+          return;
+        }
+        if (ec) {
+          self->impl_->schedule_retry(self, seq);
+          return;
+        }
+        self->impl_->connect_timer_.expires_after(std::chrono::milliseconds(self->impl_->cfg_.connection_timeout_ms));
+        self->impl_->connect_timer_.async_wait([self, seq](const boost::system::error_code& timer_ec) {
+          if (timer_ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
+            return;
+          }
+          if (!timer_ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load()) {
+            UNILINK_LOG_ERROR(
+                "tcp_client", "connect_timeout",
+                "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
+            self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
+          }
+        });
 
-                            net::async_connect(self->impl_->socket_, results, [self, seq](auto ec2, const auto&) {
-                              if (ec2 == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
-                                return;
-                              }
-                              if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
-                                self->impl_->close_socket();
-                                self->impl_->connect_timer_.cancel();
-                                return;
-                              }
-                              if (ec2) {
-                                self->impl_->connect_timer_.cancel();
-                                self->impl_->schedule_retry(self, seq);
-                                return;
-                              }
-                              self->impl_->connect_timer_.cancel();
-                              self->impl_->retry_attempts_ = 0;
-                              self->impl_->connected_.store(true);
-                              self->impl_->transition_to(LinkState::Connected);
-                              boost::system::error_code ep_ec;
-                              auto rep = self->impl_->socket_.remote_endpoint(ep_ec);
-                              if (!ep_ec) {
-                                UNILINK_LOG_INFO("tcp_client", "connect",
-                                                 "Connected to " + rep.address().to_string() + ":" +
-                                                     std::to_string(rep.port()));
-                              }
-                              self->impl_->start_read(self, seq);
-                              self->impl_->do_write(self, seq);
-                            });
-                          });
+        net::async_connect(self->impl_->socket_, results, [self, seq](auto ec2, const auto&) {
+          if (ec2 == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
+            return;
+          }
+          if (self->impl_->stop_requested_.load() || self->impl_->stopping_.load()) {
+            self->impl_->close_socket();
+            self->impl_->connect_timer_.cancel();
+            return;
+          }
+          if (ec2) {
+            self->impl_->connect_timer_.cancel();
+            self->impl_->schedule_retry(self, seq);
+            return;
+          }
+          self->impl_->connect_timer_.cancel();
+          self->impl_->retry_attempts_ = 0;
+          self->impl_->connected_.store(true);
+          self->impl_->transition_to(LinkState::Connected);
+          boost::system::error_code ep_ec;
+          auto rep = self->impl_->socket_.remote_endpoint(ep_ec);
+          if (!ep_ec) {
+            UNILINK_LOG_INFO("tcp_client", "connect",
+                             "Connected to " + rep.address().to_string() + ":" + std::to_string(rep.port()));
+          }
+          self->impl_->start_read(self, seq);
+          self->impl_->do_write(self, seq);
+        });
+      });
 }
 
 void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self, uint64_t seq) {

@@ -131,7 +131,7 @@ void TcpServer::stop() {
 
   try {
     {
-      std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
+      std::lock_guard<std::mutex> lock(sessions_mutex_);
       on_bytes_ = nullptr;
       on_state_ = nullptr;
       on_bp_ = nullptr;
@@ -152,7 +152,7 @@ void TcpServer::stop() {
 
         std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
         {
-          std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
+          std::lock_guard<std::mutex> lock(sessions_mutex_);
           sessions_copy.reserve(sessions_.size());
           for (auto& kv : sessions_) {
             sessions_copy.push_back(kv.second);
@@ -231,7 +231,7 @@ void TcpServer::request_stop() {
 }
 
 bool TcpServer::is_connected() const {
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
   return current_session_ && current_session_->alive();
 }
 
@@ -239,7 +239,7 @@ void TcpServer::async_write_copy(memory::ConstByteSpan data) {
   if (stopping_.load()) return;
   std::shared_ptr<TcpServerSession> session;
   {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
     session = current_session_;
   }
 
@@ -252,7 +252,7 @@ void TcpServer::async_write_move(std::vector<uint8_t>&& data) {
   if (stopping_.load()) return;
   std::shared_ptr<TcpServerSession> session;
   {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
     session = current_session_;
   }
 
@@ -265,7 +265,7 @@ void TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   if (stopping_.load() || !data) return;
   std::shared_ptr<TcpServerSession> session;
   {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
     session = current_session_;
   }
 
@@ -275,21 +275,21 @@ void TcpServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
 }
 
 void TcpServer::on_bytes(OnBytes cb) {
-  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
   on_bytes_ = std::move(cb);
 }
 void TcpServer::on_state(OnState cb) {
-  std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
   on_state_ = std::move(cb);
 }
 void TcpServer::on_backpressure(OnBackpressure cb) {
   {
-    std::unique_lock<std::shared_mutex> lock(sessions_mutex_);
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
     on_bp_ = std::move(cb);
   }
   std::shared_ptr<TcpServerSession> session;
   {
-    std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
     session = current_session_;
   }
 
@@ -373,7 +373,7 @@ void TcpServer::do_accept() {
     }
 
     if (self->client_limit_enabled_) {
-      std::unique_lock<std::shared_mutex> lock(self->sessions_mutex_);
+      std::lock_guard<std::mutex> lock(self->sessions_mutex_);
       if (self->sessions_.size() >= self->max_clients_) {
         boost::system::error_code close_ec;
         sock.close(close_ec);
@@ -387,7 +387,7 @@ void TcpServer::do_accept() {
 
     size_t client_id;
     {
-      std::unique_lock<std::shared_mutex> lock(self->sessions_mutex_);
+      std::lock_guard<std::mutex> lock(self->sessions_mutex_);
       client_id = self->next_client_id_.fetch_add(1);
       self->sessions_.emplace(client_id, new_session);
       self->current_session_ = new_session;
@@ -397,7 +397,7 @@ void TcpServer::do_accept() {
       OnBytes cb;
       MultiClientDataHandler multi_cb;
       {
-        std::shared_lock<std::shared_mutex> lock(self->sessions_mutex_);
+        std::lock_guard<std::mutex> lock(self->sessions_mutex_);
         cb = self->on_bytes_;
         multi_cb = self->on_multi_data_;
       }
@@ -414,14 +414,14 @@ void TcpServer::do_accept() {
       if (self->stopping_.load()) return;
       MultiClientDisconnectHandler disconnect_cb;
       {
-        std::shared_lock<std::shared_mutex> lock(self->sessions_mutex_);
+        std::lock_guard<std::mutex> lock(self->sessions_mutex_);
         disconnect_cb = self->on_multi_disconnect_;
       }
       if (disconnect_cb) disconnect_cb(client_id);
 
       bool was_current = false;
       {
-        std::unique_lock<std::shared_mutex> lock(self->sessions_mutex_);
+        std::lock_guard<std::mutex> lock(self->sessions_mutex_);
         self->sessions_.erase(client_id);
         if (self->paused_accept_ && (!self->client_limit_enabled_ || self->sessions_.size() < self->max_clients_)) {
           self->paused_accept_ = false;
@@ -443,7 +443,7 @@ void TcpServer::do_accept() {
 
     MultiClientConnectHandler connect_cb;
     {
-      std::shared_lock<std::shared_mutex> lock(self->sessions_mutex_);
+      std::lock_guard<std::mutex> lock(self->sessions_mutex_);
       connect_cb = self->on_multi_connect_;
     }
     if (connect_cb) connect_cb(client_id, client_info);
@@ -460,7 +460,7 @@ void TcpServer::notify_state() {
   OnState cb;
   try {
     {
-      std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+      std::lock_guard<std::mutex> lock(sessions_mutex_);
       cb = on_state_;
     }
     if (cb) {
@@ -472,7 +472,7 @@ void TcpServer::notify_state() {
 
 bool TcpServer::broadcast(const std::string& message) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(message.begin(), message.end());
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
   bool sent = false;
   for (auto& entry : sessions_) {
     auto& session = entry.second;
@@ -485,7 +485,7 @@ bool TcpServer::broadcast(const std::string& message) {
 }
 
 bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
   auto it = sessions_.find(client_id);
   if (it != sessions_.end() && it->second && it->second->alive()) {
     auto binary_view = common::safe_convert::string_to_bytes(message);
@@ -496,7 +496,7 @@ bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
 }
 
 size_t TcpServer::get_client_count() const {
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
   size_t alive = 0;
   for (const auto& entry : sessions_)
     if (entry.second && entry.second->alive()) ++alive;
@@ -504,7 +504,7 @@ size_t TcpServer::get_client_count() const {
 }
 
 std::vector<size_t> TcpServer::get_connected_clients() const {
-  std::shared_lock<std::shared_mutex> lock(sessions_mutex_);
+  std::lock_guard<std::mutex> lock(sessions_mutex_);
   std::vector<size_t> connected_clients;
   for (const auto& entry : sessions_)
     if (entry.second && entry.second->alive()) connected_clients.push_back(entry.first);
@@ -512,20 +512,20 @@ std::vector<size_t> TcpServer::get_connected_clients() const {
 }
 
 void TcpServer::on_multi_connect(MultiClientConnectHandler h) {
-  std::unique_lock<std::shared_mutex> l(sessions_mutex_);
+  std::lock_guard<std::mutex> l(sessions_mutex_);
   on_multi_connect_ = std::move(h);
 }
 void TcpServer::on_multi_data(MultiClientDataHandler h) {
-  std::unique_lock<std::shared_mutex> l(sessions_mutex_);
+  std::lock_guard<std::mutex> l(sessions_mutex_);
   on_multi_data_ = std::move(h);
 }
 void TcpServer::on_multi_disconnect(MultiClientDisconnectHandler h) {
-  std::unique_lock<std::shared_mutex> l(sessions_mutex_);
+  std::lock_guard<std::mutex> l(sessions_mutex_);
   on_multi_disconnect_ = std::move(h);
 }
 
 void TcpServer::set_client_limit(size_t max) {
-  std::unique_lock<std::shared_mutex> l(sessions_mutex_);
+  std::lock_guard<std::mutex> l(sessions_mutex_);
   max_clients_ = max;
   client_limit_enabled_ = true;
   if (paused_accept_ && sessions_.size() < max_clients_) {
@@ -535,7 +535,7 @@ void TcpServer::set_client_limit(size_t max) {
 }
 
 void TcpServer::set_unlimited_clients() {
-  std::unique_lock<std::shared_mutex> l(sessions_mutex_);
+  std::lock_guard<std::mutex> l(sessions_mutex_);
   client_limit_enabled_ = false;
   max_clients_ = 0;
   if (paused_accept_) {
