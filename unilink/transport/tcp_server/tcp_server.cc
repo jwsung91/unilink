@@ -16,6 +16,7 @@
 
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 
+#include <atomic>
 #include <future>
 #include <iostream>
 
@@ -138,7 +139,10 @@ void TcpServer::stop() {
     on_multi_disconnect_ = nullptr;
   }
 
-  auto cleanup = [this]() {
+  auto cleanup_flag = std::make_shared<std::atomic<bool>>(false);
+  auto cleanup = [this, cleanup_flag]() {
+    if (cleanup_flag->exchange(true)) return;
+
     boost::system::error_code ec;
     if (acceptor_ && acceptor_->is_open()) {
       acceptor_->close(ec);
