@@ -32,6 +32,11 @@
 #include <variant>
 #include <vector>
 
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+#include <sys/socket.h>
+#include <sys/types.h>
+#endif
+
 #include "unilink/base/constants.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/concurrency/thread_safe_state.hpp"
@@ -448,6 +453,12 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           self->impl_->connect_timer_.cancel();
           self->impl_->retry_attempts_ = 0;
           self->impl_->connected_.store(true);
+
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+          int yes = 1;
+          (void)::setsockopt(self->impl_->socket_.native_handle(), SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+#endif
+
           self->impl_->transition_to(LinkState::Connected);
           boost::system::error_code ep_ec;
           auto rep = self->impl_->socket_.remote_endpoint(ep_ec);

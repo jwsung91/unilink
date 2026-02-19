@@ -19,6 +19,7 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
+#include <csignal>
 #include <iostream>
 #include <memory>
 #include <thread>
@@ -33,7 +34,12 @@ using namespace std::chrono_literals;
 
 class TcpServerChaosTest : public ::testing::Test {
  protected:
-  void SetUp() override { test_port_ = TestUtils::getAvailableTestPort(); }
+  void SetUp() override {
+#ifdef SIGPIPE
+    std::signal(SIGPIPE, SIG_IGN);
+#endif
+    test_port_ = TestUtils::getAvailableTestPort();
+  }
   uint16_t test_port_;
 };
 
