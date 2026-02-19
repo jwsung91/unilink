@@ -408,7 +408,12 @@ void TcpServer::do_accept() {
       self->current_session_ = new_session;
     }
 
-    new_session->on_bytes([self, client_id](memory::ConstByteSpan data) {
+    std::weak_ptr<TcpServer> weak_self = self;
+
+    new_session->on_bytes([weak_self, client_id](memory::ConstByteSpan data) {
+      auto self = weak_self.lock();
+      if (!self) return;
+
       OnBytes cb;
       MultiClientDataHandler multi_cb;
       {
@@ -425,8 +430,10 @@ void TcpServer::do_accept() {
 
     if (self->on_bp_) new_session->on_backpressure(self->on_bp_);
 
-    new_session->on_close([self, client_id, new_session] {
-      if (self->stopping_.load()) return;
+    new_session->on_close([weak_self, client_id, new_session] {
+      auto self = weak_self.lock();
+      if (!self || self->stopping_.load()) return;
+
       MultiClientDisconnectHandler disconnect_cb;
       {
         std::lock_guard<std::mutex> lock(self->sessions_mutex_);
