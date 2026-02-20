@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 #include "unilink/base/constants.hpp"
 
@@ -25,6 +26,7 @@ namespace config {
 
 struct TcpServerConfig {
   uint16_t port = 9000;
+  std::string bind_address = "0.0.0.0";
   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_memory_pool = true;
   int max_connections = 100;  // Maximum concurrent connections
@@ -38,7 +40,8 @@ struct TcpServerConfig {
 
   // Validation methods
   bool is_valid() const {
-    return port > 0 && backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
+    return port > 0 && !bind_address.empty() &&
+           backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0 &&
            idle_timeout_ms >= 0;
   }

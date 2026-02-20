@@ -315,8 +315,17 @@ void TcpServer::attempt_port_binding(int retry_count) {
   if (stopping_.load()) return;
   boost::system::error_code ec;
 
+  auto address = net::ip::make_address(cfg_.bind_address, ec);
+  if (ec) {
+    state_.set_state(base::LinkState::Error);
+    notify_state();
+    return;
+  }
+
+  auto endpoint = tcp::endpoint(address, cfg_.port);
+
   if (!acceptor_->is_open()) {
-    acceptor_->open(tcp::v4(), ec);
+    acceptor_->open(endpoint.protocol(), ec);
     if (ec) {
       state_.set_state(base::LinkState::Error);
       notify_state();
@@ -324,7 +333,7 @@ void TcpServer::attempt_port_binding(int retry_count) {
     }
   }
 
-  acceptor_->bind(tcp::endpoint(tcp::v4(), cfg_.port), ec);
+  acceptor_->bind(endpoint, ec);
   if (ec) {
     if (cfg_.enable_port_retry && retry_count < cfg_.max_port_retries) {
       auto self = shared_from_this();
