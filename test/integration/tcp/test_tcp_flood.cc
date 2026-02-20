@@ -18,7 +18,6 @@
 
 #include <atomic>
 #include <boost/asio.hpp>
-#include <thread>
 #include <chrono>
 #include <memory>
 #include <thread>

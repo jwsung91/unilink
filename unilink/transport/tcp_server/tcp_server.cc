@@ -21,6 +21,7 @@
 #include <future>
 #include <iostream>
 #include <mutex>
+#include <thread>
 #include <unordered_map>
 
 #include "unilink/concurrency/io_context_manager.hpp"
