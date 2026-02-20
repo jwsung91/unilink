@@ -532,6 +532,7 @@ TEST_F(TransportPerformanceTest, TcpClientMemoryLeak) {
     cfg.host = "127.0.0.1";
     cfg.port = getTestPort();
     cfg.retry_interval_ms = 1000;
+    cfg.max_retries = 0;  // Prevent retry loop to ensure deterministic cleanup
 
     auto client = TcpClient::create(cfg);
     client->start();
