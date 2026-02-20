@@ -18,6 +18,7 @@
 
 #include <atomic>
 #include <boost/asio.hpp>
+#include <thread>
 #include <chrono>
 #include <csignal>
 #include <iostream>
