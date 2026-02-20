@@ -16,10 +16,9 @@
 
 #pragma once
 
-#include <fstream>
-#include <iostream>
-#include <mutex>
-#include <sstream>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "iconfig_manager.hpp"
 #include "unilink/base/visibility.hpp"
@@ -32,8 +31,16 @@ namespace config {
  */
 class UNILINK_API ConfigManager : public ConfigManagerInterface {
  public:
-  ConfigManager() = default;
-  ~ConfigManager() override = default;
+  ConfigManager();
+  ~ConfigManager() override;
+
+  // Move semantics
+  ConfigManager(ConfigManager&&) noexcept;
+  ConfigManager& operator=(ConfigManager&&) noexcept;
+
+  // Non-copyable
+  ConfigManager(const ConfigManager&) = delete;
+  ConfigManager& operator=(const ConfigManager&) = delete;
 
   // Configuration access
   std::any get(const std::string& key) const override;
@@ -68,15 +75,10 @@ class UNILINK_API ConfigManager : public ConfigManagerInterface {
   bool is_required(const std::string& key) const override;
 
  private:
-  mutable std::mutex mutex_;
-  std::unordered_map<std::string, ConfigItem> config_items_;
-  std::unordered_map<std::string, ConfigChangeCallback> change_callbacks_;
-
-  // Helper methods
-  ValidationResult validate_value(const std::string& key, const std::any& value) const;
-  void notify_change(const std::string& key, const std::any& old_value, const std::any& new_value);
-  std::string serialize_value(const std::any& value, ConfigType type) const;
-  std::any deserialize_value(const std::string& value_str, ConfigType type) const;
+  struct Impl;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
 };
 
 }  // namespace config
