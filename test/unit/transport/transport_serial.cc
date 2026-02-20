@@ -46,6 +46,7 @@ class FakeSerialPort : public interface::SerialPortInterface {
   void close(boost::system::error_code& ec) override {
     open_ = false;
     ec.clear();
+    emit_operation_aborted();
   }
 
   void set_option(const boost::asio::serial_port_base::baud_rate&, boost::system::error_code& ec) override {
@@ -168,6 +169,7 @@ TEST(TransportSerialTest, QueueLimitMovesSerialToError) {
 
   EXPECT_TRUE(error_seen.load());
   serial->stop();
+  ioc.run_for(10ms);
 }
 
 TEST(TransportSerialTest, MoveWriteRespectsQueueLimit) {
@@ -192,6 +194,7 @@ TEST(TransportSerialTest, MoveWriteRespectsQueueLimit) {
 
   EXPECT_TRUE(error_seen.load());
   serial->stop();
+  ioc.run_for(10ms);
 }
 
 TEST(TransportSerialTest, SharedWriteRespectsQueueLimit) {
@@ -216,6 +219,7 @@ TEST(TransportSerialTest, SharedWriteRespectsQueueLimit) {
 
   EXPECT_TRUE(error_seen.load());
   serial->stop();
+  ioc.run_for(10ms);
 }
 
 TEST(TransportSerialTest, CallbackExceptionStopsWhenConfigured) {
@@ -245,6 +249,7 @@ TEST(TransportSerialTest, CallbackExceptionStopsWhenConfigured) {
 
   EXPECT_TRUE(error_seen.load());
   serial->stop();
+  ioc.run_for(10ms);
 }
 
 TEST(TransportSerialTest, CallbackExceptionRetriesWhenAllowed) {
@@ -277,6 +282,7 @@ TEST(TransportSerialTest, CallbackExceptionRetriesWhenAllowed) {
   EXPECT_EQ(error_events.load(), 0);
   EXPECT_GE(connecting_events.load(), 2);  // initial start + retry attempt
   serial->stop();
+  ioc.run_for(10ms);
 }
 
 TEST(TransportSerialTest, BackpressureReliefAfterDrain) {
@@ -302,4 +308,5 @@ TEST(TransportSerialTest, BackpressureReliefAfterDrain) {
   EXPECT_LE(events.back(), cfg.backpressure_threshold / 2);
 
   serial->stop();
+  ioc.run_for(10ms);
 }
