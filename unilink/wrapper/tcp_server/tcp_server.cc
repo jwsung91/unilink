@@ -248,106 +248,109 @@ struct TcpServer::Impl {
   }
 };
 
-TcpServer::TcpServer(uint16_t port) : pimpl_(std::make_unique<Impl>(port)) {}
+TcpServer::TcpServer(uint16_t port) : impl_(std::make_unique<Impl>(port)) {}
 TcpServer::TcpServer(uint16_t port, std::shared_ptr<boost::asio::io_context> ioc)
-    : pimpl_(std::make_unique<Impl>(port, ioc)) {}
-TcpServer::TcpServer(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {}
+    : impl_(std::make_unique<Impl>(port, ioc)) {}
+TcpServer::TcpServer(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {}
 TcpServer::~TcpServer() = default;
 
-std::future<bool> TcpServer::start() { return pimpl_->start(); }
-void TcpServer::stop() { pimpl_->stop(); }
-bool TcpServer::is_listening() const { return pimpl_->is_listening_.load(); }
+TcpServer::TcpServer(TcpServer&&) noexcept = default;
+TcpServer& TcpServer::operator=(TcpServer&&) noexcept = default;
+
+std::future<bool> TcpServer::start() { return impl_->start(); }
+void TcpServer::stop() { impl_->stop(); }
+bool TcpServer::is_listening() const { return get_impl()->is_listening_.load(); }
 
 bool TcpServer::broadcast(std::string_view data) {
-  if (pimpl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
+  if (impl_->channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
     if (transport_server) return transport_server->broadcast(std::string(data));
   }
   return false;
 }
 
 bool TcpServer::send_to(size_t client_id, std::string_view data) {
-  if (pimpl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
+  if (impl_->channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
     if (transport_server) return transport_server->send_to_client(client_id, std::string(data));
   }
   return false;
 }
 
 ServerInterface& TcpServer::on_client_connect(ConnectionHandler h) {
-  pimpl_->on_client_connect_ = std::move(h);
+  impl_->on_client_connect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_client_disconnect(ConnectionHandler h) {
-  pimpl_->on_client_disconnect_ = std::move(h);
+  impl_->on_client_disconnect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_data(MessageHandler h) {
-  pimpl_->on_data_ = std::move(h);
+  impl_->on_data_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
-  pimpl_->on_error_ = std::move(h);
+  impl_->on_error_ = std::move(h);
   return *this;
 }
 
 size_t TcpServer::get_client_count() const {
-  if (!pimpl_->channel_) return 0;
-  auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
+  if (!get_impl()->channel_) return 0;
+  auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(get_impl()->channel_);
   return transport_server ? transport_server->get_client_count() : 0;
 }
 
 std::vector<size_t> TcpServer::get_connected_clients() const {
-  if (!pimpl_->channel_) return std::vector<size_t>();
-  auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
+  if (!get_impl()->channel_) return std::vector<size_t>();
+  auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(get_impl()->channel_);
   return transport_server ? transport_server->get_connected_clients() : std::vector<size_t>();
 }
 
 TcpServer& TcpServer::auto_manage(bool m) {
-  pimpl_->auto_manage_ = m;
-  if (pimpl_->auto_manage_ && !pimpl_->started_) start();
+  impl_->auto_manage_ = m;
+  if (impl_->auto_manage_ && !impl_->started_) start();
   return *this;
 }
 
 TcpServer& TcpServer::enable_port_retry(bool e, int m, int i) {
-  pimpl_->port_retry_enabled_ = e;
-  pimpl_->max_port_retries_ = m;
-  pimpl_->port_retry_interval_ms_ = i;
+  impl_->port_retry_enabled_ = e;
+  impl_->max_port_retries_ = m;
+  impl_->port_retry_interval_ms_ = i;
   return *this;
 }
 
 TcpServer& TcpServer::idle_timeout(int ms) {
-  pimpl_->idle_timeout_ms_ = ms;
+  impl_->idle_timeout_ms_ = ms;
   // Note: Runtime change of idle_timeout is not supported by current transport.
   // Must be set via Builder before start().
   return *this;
 }
 
 TcpServer& TcpServer::set_client_limit(size_t max) {
-  pimpl_->max_clients_ = max;
-  pimpl_->client_limit_enabled_ = true;
-  if (pimpl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
+  impl_->max_clients_ = max;
+  impl_->client_limit_enabled_ = true;
+  if (impl_->channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
     if (transport_server) transport_server->set_client_limit(max);
   }
   return *this;
 }
 
 TcpServer& TcpServer::set_unlimited_clients() {
-  pimpl_->client_limit_enabled_ = false;
-  if (pimpl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(pimpl_->channel_);
+  impl_->client_limit_enabled_ = false;
+  if (impl_->channel_) {
+    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
     if (transport_server) transport_server->set_unlimited_clients();
   }
   return *this;
 }
 
 TcpServer& TcpServer::notify_send_failure(bool e) {
-  pimpl_->notify_send_failure_ = e;
+  impl_->notify_send_failure_ = e;
   return *this;
 }
 TcpServer& TcpServer::set_manage_external_context(bool m) {
-  pimpl_->manage_external_context_ = m;
+  impl_->manage_external_context_ = m;
   return *this;
 }
 

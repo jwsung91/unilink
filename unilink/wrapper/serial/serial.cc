@@ -192,64 +192,67 @@ struct Serial::Impl {
   }
 };
 
-Serial::Serial(const std::string& d, uint32_t b) : pimpl_(std::make_unique<Impl>(d, b)) {}
+Serial::Serial(const std::string& d, uint32_t b) : impl_(std::make_unique<Impl>(d, b)) {}
 Serial::Serial(const std::string& d, uint32_t b, std::shared_ptr<boost::asio::io_context> i)
-    : pimpl_(std::make_unique<Impl>(d, b, i)) {}
-Serial::Serial(std::shared_ptr<interface::Channel> ch) : pimpl_(std::make_unique<Impl>(ch)) {
-  pimpl_->setup_internal_handlers();
+    : impl_(std::make_unique<Impl>(d, b, i)) {}
+Serial::Serial(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {
+  impl_->setup_internal_handlers();
 }
 Serial::~Serial() = default;
 
-std::future<bool> Serial::start() { return pimpl_->start(); }
-void Serial::stop() { pimpl_->stop(); }
+Serial::Serial(Serial&&) noexcept = default;
+Serial& Serial::operator=(Serial&&) noexcept = default;
+
+std::future<bool> Serial::start() { return impl_->start(); }
+void Serial::stop() { impl_->stop(); }
 void Serial::send(std::string_view data) {
-  if (is_connected() && pimpl_->channel) {
+  if (is_connected() && get_impl()->channel) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
-    pimpl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    get_impl()->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
 void Serial::send_line(std::string_view line) { send(std::string(line) + "\n"); }
-bool Serial::is_connected() const { return pimpl_->channel && pimpl_->channel->is_connected(); }
+bool Serial::is_connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
 
 ChannelInterface& Serial::on_data(MessageHandler h) {
-  pimpl_->data_handler = std::move(h);
+  impl_->data_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Serial::on_connect(ConnectionHandler h) {
-  pimpl_->connect_handler = std::move(h);
+  impl_->connect_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Serial::on_disconnect(ConnectionHandler h) {
-  pimpl_->disconnect_handler = std::move(h);
+  impl_->disconnect_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Serial::on_error(ErrorHandler h) {
-  pimpl_->error_handler = std::move(h);
+  impl_->error_handler = std::move(h);
   return *this;
 }
 
 ChannelInterface& Serial::auto_manage(bool m) {
-  pimpl_->auto_manage = m;
-  if (pimpl_->auto_manage && !pimpl_->started) start();
+  impl_->auto_manage = m;
+  if (impl_->auto_manage && !impl_->started) start();
   return *this;
 }
 
-void Serial::set_baud_rate(uint32_t b) { pimpl_->baud_rate = b; }
-void Serial::set_data_bits(int d) { pimpl_->data_bits = d; }
-void Serial::set_stop_bits(int s) { pimpl_->stop_bits = s; }
-void Serial::set_parity(const std::string& p) { pimpl_->parity = p; }
-void Serial::set_flow_control(const std::string& f) { pimpl_->flow_control = f; }
+void Serial::set_baud_rate(uint32_t b) { impl_->baud_rate = b; }
+void Serial::set_data_bits(int d) { impl_->data_bits = d; }
+void Serial::set_stop_bits(int s) { impl_->stop_bits = s; }
+void Serial::set_parity(const std::string& p) { impl_->parity = p; }
+void Serial::set_flow_control(const std::string& f) { impl_->flow_control = f; }
 void Serial::set_retry_interval(std::chrono::milliseconds i) {
-  pimpl_->retry_interval = i;
-  if (pimpl_->channel) {
-    auto ts = std::dynamic_pointer_cast<transport::Serial>(pimpl_->channel);
+  impl_->retry_interval = i;
+  if (impl_->channel) {
+    auto ts = std::dynamic_pointer_cast<transport::Serial>(impl_->channel);
     if (ts) ts->set_retry_interval(static_cast<unsigned int>(i.count()));
   }
 }
 
-config::SerialConfig Serial::build_config() const { return pimpl_->build_config(); }
+config::SerialConfig Serial::build_config() const { return get_impl()->build_config(); }
 
-void Serial::set_manage_external_context(bool m) { pimpl_->manage_external_context = m; }
+void Serial::set_manage_external_context(bool m) { impl_->manage_external_context = m; }
 
 }  // namespace wrapper
 }  // namespace unilink

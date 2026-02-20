@@ -50,6 +50,14 @@ class UNILINK_API Udp : public ChannelInterface {
   explicit Udp(std::shared_ptr<interface::Channel> channel);
   ~Udp() override;
 
+  // Move semantics
+  Udp(Udp&&) noexcept;
+  Udp& operator=(Udp&&) noexcept;
+
+  // Disable copy
+  Udp(const Udp&) = delete;
+  Udp& operator=(const Udp&) = delete;
+
   // ChannelInterface implementation
   std::future<bool> start() override;
   void stop() override;
@@ -68,7 +76,9 @@ class UNILINK_API Udp : public ChannelInterface {
 
  private:
   struct Impl;
-  std::unique_ptr<Impl> pimpl_;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
 };
 
 }  // namespace wrapper

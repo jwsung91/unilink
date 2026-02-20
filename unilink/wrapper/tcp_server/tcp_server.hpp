@@ -50,6 +50,14 @@ class UNILINK_API TcpServer : public ServerInterface {
   explicit TcpServer(std::shared_ptr<interface::Channel> channel);
   ~TcpServer() override;
 
+  // Move semantics
+  TcpServer(TcpServer&&) noexcept;
+  TcpServer& operator=(TcpServer&&) noexcept;
+
+  // Disable copy
+  TcpServer(const TcpServer&) = delete;
+  TcpServer& operator=(const TcpServer&) = delete;
+
   // ServerInterface implementation
   std::future<bool> start() override;
   void stop() override;
@@ -80,7 +88,9 @@ class UNILINK_API TcpServer : public ServerInterface {
 
  private:
   struct Impl;
-  std::unique_ptr<Impl> pimpl_;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
 };
 
 }  // namespace wrapper

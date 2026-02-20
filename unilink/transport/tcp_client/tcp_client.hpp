@@ -52,6 +52,14 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   static std::shared_ptr<TcpClient> create(const TcpClientConfig& cfg, boost::asio::io_context& ioc);
   ~TcpClient();
 
+  // Move semantics
+  TcpClient(TcpClient&&) noexcept;
+  TcpClient& operator=(TcpClient&&) noexcept;
+
+  // Disable copy (should be already disabled by unique_ptr, but being explicit)
+  TcpClient(const TcpClient&) = delete;
+  TcpClient& operator=(const TcpClient&) = delete;
+
   void start() override;
   void stop() override;
   bool is_connected() const override;
@@ -73,6 +81,8 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   explicit TcpClient(const TcpClientConfig& cfg, boost::asio::io_context& ioc);
 
   struct Impl;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
   std::unique_ptr<Impl> impl_;
 };
 }  // namespace transport

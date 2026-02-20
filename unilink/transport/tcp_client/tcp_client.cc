@@ -154,6 +154,9 @@ TcpClient::~TcpClient() {
   impl_->on_bp_ = nullptr;
 }
 
+TcpClient::TcpClient(TcpClient&&) noexcept = default;
+TcpClient& TcpClient::operator=(TcpClient&&) noexcept = default;
+
 void TcpClient::start() {
   auto current_state = impl_->state_.get_state();
   if (current_state == LinkState::Connecting || current_state == LinkState::Connected) {
@@ -231,7 +234,7 @@ void TcpClient::stop() {
   impl_->join_ioc_thread(false);
 }
 
-bool TcpClient::is_connected() const { return impl_->connected_.load(); }
+bool TcpClient::is_connected() const { return get_impl()->connected_.load(); }
 
 void TcpClient::async_write_copy(memory::ConstByteSpan data) {
   if (impl_->stop_requested_.load() || impl_->state_.is_state(LinkState::Closed) ||
