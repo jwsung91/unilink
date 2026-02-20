@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">170</td>
-            <td class="headerCovTableEntry">229</td>
-            <td class="headerCovTableEntryLo">74.2 %</td>
+            <td class="headerCovTableEntry">231</td>
+            <td class="headerCovTableEntryLo">73.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-19 16:20:17</td>
+            <td class="headerValue">2026-02-20 00:35:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">31</td>
-            <td class="headerCovTableEntry">36</td>
-            <td class="headerCovTableEntryMed">86.1 %</td>
+            <td class="headerCovTableEntry">38</td>
+            <td class="headerCovTableEntryMed">81.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -192,16 +192,16 @@
 <a name="114"><span class="lineNum">     114 </span>                :<span class="lineNoCov">          0 :     }</span></a>
 <a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">         67 :   }</span></a>
 <a name="116"><span class="lineNum">     116 </span>                :            : </a>
-<a name="117"><span class="lineNum">     117 </span>                :<span class="lineCov">       4165 :   void fulfill_all(bool value) {</span></a>
-<a name="118"><span class="lineNum">     118 </span>        [<span class="branchCov" title="Branch 0 was taken 4165 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4165 :     std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
-<a name="119"><span class="lineNum">     119 </span>        [<span class="branchCov" title="Branch 0 was taken 47 times"> + </span><span class="branchCov" title="Branch 1 was taken 4165 times"> + </span>]:<span class="lineCov">       4212 :     for (auto&amp; p : pending_promises_) {</span></a>
+<a name="117"><span class="lineNum">     117 </span>                :<span class="lineCov">       4162 :   void fulfill_all(bool value) {</span></a>
+<a name="118"><span class="lineNum">     118 </span>        [<span class="branchCov" title="Branch 0 was taken 4162 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4162 :     std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
+<a name="119"><span class="lineNum">     119 </span>        [<span class="branchCov" title="Branch 0 was taken 48 times"> + </span><span class="branchCov" title="Branch 1 was taken 4162 times"> + </span>]:<span class="lineCov">       4210 :     for (auto&amp; p : pending_promises_) {</span></a>
 <a name="120"><span class="lineNum">     120 </span>                :            :       try {</a>
-<a name="121"><span class="lineNum">     121 </span>        [<span class="branchCov" title="Branch 0 was taken 47 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         47 :         p.set_value(value);</span></a>
+<a name="121"><span class="lineNum">     121 </span>        [<span class="branchCov" title="Branch 0 was taken 48 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         48 :         p.set_value(value);</span></a>
 <a name="122"><span class="lineNum">     122 </span>                :<span class="lineNoCov">          0 :       } catch (...) {</span></a>
 <a name="123"><span class="lineNum">     123 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineNoCov">          0 :       }</span></a>
 <a name="124"><span class="lineNum">     124 </span>                :            :     }</a>
-<a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">       4165 :     pending_promises_.clear();</span></a>
-<a name="126"><span class="lineNum">     126 </span>                :<span class="lineCov">       4165 :   }</span></a>
+<a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">       4162 :     pending_promises_.clear();</span></a>
+<a name="126"><span class="lineNum">     126 </span>                :<span class="lineCov">       4162 :   }</span></a>
 <a name="127"><span class="lineNum">     127 </span>                :            : </a>
 <a name="128"><span class="lineNum">     128 </span>                :<span class="lineCov">         56 :   std::future&lt;bool&gt; start() {</span></a>
 <a name="129"><span class="lineNum">     129 </span>        [<span class="branchCov" title="Branch 0 was taken 56 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         56 :     std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
@@ -278,9 +278,9 @@
 <a name="199"><span class="lineNum">     199 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :         if (external_ioc_) external_ioc_-&gt;stop();</span></a>
 <a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">          1 :         should_join = true;</span></a>
 <a name="201"><span class="lineNum">     201 </span>                :            :       }</a>
-<a name="202"><span class="lineNum">     202 </span>        [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchCov" title="Branch 1 was taken 55 times"> + </span>]:<span class="lineCov">         64 :       for (auto&amp; p : pending_promises_) {</span></a>
+<a name="202"><span class="lineNum">     202 </span>        [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 55 times"> + </span>]:<span class="lineCov">         63 :       for (auto&amp; p : pending_promises_) {</span></a>
 <a name="203"><span class="lineNum">     203 </span>                :            :         try {</a>
-<a name="204"><span class="lineNum">     204 </span>        [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          9 :           p.set_value(false);</span></a>
+<a name="204"><span class="lineNum">     204 </span>        [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          8 :           p.set_value(false);</span></a>
 <a name="205"><span class="lineNum">     205 </span>                :<span class="lineNoCov">          0 :         } catch (...) {</span></a>
 <a name="206"><span class="lineNum">     206 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineNoCov">          0 :         }</span></a>
 <a name="207"><span class="lineNum">     207 </span>                :            :       }</a>
@@ -311,14 +311,14 @@
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 898 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="231"><span class="lineNum">     231 </span>                :<span class="lineCov">        898 :       });</span></a>
 <a name="232"><span class="lineNum">     232 </span>        [<span class="branchCov" title="Branch 0 was taken 55 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         55 :       transport_server-&gt;on_multi_disconnect([this](size_t id) {</span></a>
-<a name="233"><span class="lineNum">     233 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4128 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">       4128 :         if (on_client_disconnect_) on_client_disconnect_(ConnectionContext(id));</span></a>
+<a name="233"><span class="lineNum">     233 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4125 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">       4125 :         if (on_client_disconnect_) on_client_disconnect_(ConnectionContext(id));</span></a>
 <span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
-<a name="234"><span class="lineNum">     234 </span>                :<span class="lineCov">       4128 :       });</span></a>
+<a name="234"><span class="lineNum">     234 </span>                :<span class="lineCov">       4125 :       });</span></a>
 <a name="235"><span class="lineNum">     235 </span>                :            :     }</a>
 <a name="236"><span class="lineNum">     236 </span>        [<span class="branchCov" title="Branch 0 was taken 55 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         55 :     channel_-&gt;on_state([this](base::LinkState state) {</span></a>
-<a name="237"><span class="lineNum">     237 </span>        [<span class="branchCov" title="Branch 0 was taken 4165 times"> + </span><span class="branchCov" title="Branch 1 was taken 4135 times"> + </span>]:<span class="lineCov">       8300 :       if (state == base::LinkState::Listening) {</span></a>
-<a name="238"><span class="lineNum">     238 </span>                :<span class="lineCov">       4165 :         is_listening_ = true;</span></a>
-<a name="239"><span class="lineNum">     239 </span>                :<span class="lineCov">       4165 :         fulfill_all(true);</span></a>
+<a name="237"><span class="lineNum">     237 </span>        [<span class="branchCov" title="Branch 0 was taken 4162 times"> + </span><span class="branchCov" title="Branch 1 was taken 4135 times"> + </span>]:<span class="lineCov">       8297 :       if (state == base::LinkState::Listening) {</span></a>
+<a name="238"><span class="lineNum">     238 </span>                :<span class="lineCov">       4162 :         is_listening_ = true;</span></a>
+<a name="239"><span class="lineNum">     239 </span>                :<span class="lineCov">       4162 :         fulfill_all(true);</span></a>
 <a name="240"><span class="lineNum">     240 </span>  [<span class="branchCov" title="Branch 0 was taken 4135 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 4135 times"> + </span>]:<span class="lineCov">       4135 :       } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {</span></a>
 <a name="241"><span class="lineNum">     241 </span>                :<span class="lineNoCov">          0 :         is_listening_ = false;</span></a>
 <a name="242"><span class="lineNum">     242 </span>                :<span class="lineNoCov">          0 :         fulfill_all(false);</span></a>
@@ -327,118 +327,121 @@
 <a name="244"><span class="lineNum">     244 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :           on_error_(ErrorContext(ErrorCode::IoError, &quot;Server disconnected&quot;));</span></a>
 <a name="245"><span class="lineNum">     245 </span>                :            :         }</a>
 <a name="246"><span class="lineNum">     246 </span>                :            :       }</a>
-<a name="247"><span class="lineNum">     247 </span>                :<span class="lineCov">       8300 :     });</span></a>
+<a name="247"><span class="lineNum">     247 </span>                :<span class="lineCov">       8297 :     });</span></a>
 <a name="248"><span class="lineNum">     248 </span>                :<span class="lineCov">         55 :   }</span></a>
 <a name="249"><span class="lineNum">     249 </span>                :            : };</a>
 <a name="250"><span class="lineNum">     250 </span>                :            : </a>
-<a name="251"><span class="lineNum">     251 </span>        [<span class="branchCov" title="Branch 0 was taken 64 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         64 : TcpServer::TcpServer(uint16_t port) : pimpl_(std::make_unique&lt;Impl&gt;(port)) {}</span></a>
+<a name="251"><span class="lineNum">     251 </span>        [<span class="branchCov" title="Branch 0 was taken 64 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         64 : TcpServer::TcpServer(uint16_t port) : impl_(std::make_unique&lt;Impl&gt;(port)) {}</span></a>
 <a name="252"><span class="lineNum">     252 </span>                :<span class="lineCov">          3 : TcpServer::TcpServer(uint16_t port, std::shared_ptr&lt;boost::asio::io_context&gt; ioc)</span></a>
-<a name="253"><span class="lineNum">     253 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     : pimpl_(std::make_unique&lt;Impl&gt;(port, ioc)) {}</span></a>
-<a name="254"><span class="lineNum">     254 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 : TcpServer::TcpServer(std::shared_ptr&lt;interface::Channel&gt; ch) : pimpl_(std::make_unique&lt;Impl&gt;(ch)) {}</span></a>
+<a name="253"><span class="lineNum">     253 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     : impl_(std::make_unique&lt;Impl&gt;(port, ioc)) {}</span></a>
+<a name="254"><span class="lineNum">     254 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 : TcpServer::TcpServer(std::shared_ptr&lt;interface::Channel&gt; ch) : impl_(std::make_unique&lt;Impl&gt;(ch)) {}</span></a>
 <a name="255"><span class="lineNum">     255 </span>                :<span class="lineCov">        125 : TcpServer::~TcpServer() = default;</span></a>
 <a name="256"><span class="lineNum">     256 </span>                :            : </a>
-<a name="257"><span class="lineNum">     257 </span>                :<span class="lineCov">         56 : std::future&lt;bool&gt; TcpServer::start() { return pimpl_-&gt;start(); }</span></a>
-<a name="258"><span class="lineNum">     258 </span>                :<span class="lineCov">         57 : void TcpServer::stop() { pimpl_-&gt;stop(); }</span></a>
-<a name="259"><span class="lineNum">     259 </span>                :<span class="lineCov">         24 : bool TcpServer::is_listening() const { return pimpl_-&gt;is_listening_.load(); }</span></a>
-<a name="260"><span class="lineNum">     260 </span>                :            : </a>
-<a name="261"><span class="lineNum">     261 </span>                :<span class="lineCov">        163 : bool TcpServer::broadcast(std::string_view data) {</span></a>
-<a name="262"><span class="lineNum">     262 </span>        [<span class="branchCov" title="Branch 0 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        163 :   if (pimpl_-&gt;channel_) {</span></a>
-<a name="263"><span class="lineNum">     263 </span>                :<span class="lineCov">        163 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(pimpl_-&gt;channel_);</span></a>
-<a name="264"><span class="lineNum">     264 </span>  [<span class="branchCov" title="Branch 0 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        163 :     if (transport_server) return transport_server-&gt;broadcast(std::string(data));</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
-<a name="265"><span class="lineNum">     265 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 163 times"> + </span>]:<span class="lineCov">        163 :   }</span></a>
-<a name="266"><span class="lineNum">     266 </span>                :<span class="lineNoCov">          0 :   return false;</span></a>
-<a name="267"><span class="lineNum">     267 </span>                :            : }</a>
-<a name="268"><span class="lineNum">     268 </span>                :            : </a>
-<a name="269"><span class="lineNum">     269 </span>                :<span class="lineNoCov">          0 : bool TcpServer::send_to(size_t client_id, std::string_view data) {</span></a>
-<a name="270"><span class="lineNum">     270 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (pimpl_-&gt;channel_) {</span></a>
-<a name="271"><span class="lineNum">     271 </span>                :<span class="lineNoCov">          0 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(pimpl_-&gt;channel_);</span></a>
-<a name="272"><span class="lineNum">     272 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :     if (transport_server) return transport_server-&gt;send_to_client(client_id, std::string(data));</span></a>
+<a name="257"><span class="lineNum">     257 </span>                :<span class="lineNoCov">          0 : TcpServer::TcpServer(TcpServer&amp;&amp;) noexcept = default;</span></a>
+<a name="258"><span class="lineNum">     258 </span>                :<span class="lineNoCov">          0 : TcpServer&amp; TcpServer::operator=(TcpServer&amp;&amp;) noexcept = default;</span></a>
+<a name="259"><span class="lineNum">     259 </span>                :            : </a>
+<a name="260"><span class="lineNum">     260 </span>                :<span class="lineCov">         56 : std::future&lt;bool&gt; TcpServer::start() { return impl_-&gt;start(); }</span></a>
+<a name="261"><span class="lineNum">     261 </span>                :<span class="lineCov">         57 : void TcpServer::stop() { impl_-&gt;stop(); }</span></a>
+<a name="262"><span class="lineNum">     262 </span>                :<span class="lineCov">         25 : bool TcpServer::is_listening() const { return get_impl()-&gt;is_listening_.load(); }</span></a>
+<a name="263"><span class="lineNum">     263 </span>                :            : </a>
+<a name="264"><span class="lineNum">     264 </span>                :<span class="lineCov">        162 : bool TcpServer::broadcast(std::string_view data) {</span></a>
+<a name="265"><span class="lineNum">     265 </span>        [<span class="branchCov" title="Branch 0 was taken 162 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        162 :   if (impl_-&gt;channel_) {</span></a>
+<a name="266"><span class="lineNum">     266 </span>                :<span class="lineCov">        162 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(impl_-&gt;channel_);</span></a>
+<a name="267"><span class="lineNum">     267 </span>  [<span class="branchCov" title="Branch 0 was taken 162 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 162 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        162 :     if (transport_server) return transport_server-&gt;broadcast(std::string(data));</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 162 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="268"><span class="lineNum">     268 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 162 times"> + </span>]:<span class="lineCov">        162 :   }</span></a>
+<a name="269"><span class="lineNum">     269 </span>                :<span class="lineNoCov">          0 :   return false;</span></a>
+<a name="270"><span class="lineNum">     270 </span>                :            : }</a>
+<a name="271"><span class="lineNum">     271 </span>                :            : </a>
+<a name="272"><span class="lineNum">     272 </span>                :<span class="lineNoCov">          0 : bool TcpServer::send_to(size_t client_id, std::string_view data) {</span></a>
+<a name="273"><span class="lineNum">     273 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (impl_-&gt;channel_) {</span></a>
+<a name="274"><span class="lineNum">     274 </span>                :<span class="lineNoCov">          0 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(impl_-&gt;channel_);</span></a>
+<a name="275"><span class="lineNum">     275 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :     if (transport_server) return transport_server-&gt;send_to_client(client_id, std::string(data));</span></a>
 <span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]
-<a name="273"><span class="lineNum">     273 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   }</span></a>
-<a name="274"><span class="lineNum">     274 </span>                :<span class="lineNoCov">          0 :   return false;</span></a>
-<a name="275"><span class="lineNum">     275 </span>                :            : }</a>
-<a name="276"><span class="lineNum">     276 </span>                :            : </a>
-<a name="277"><span class="lineNum">     277 </span>                :<span class="lineCov">         12 : ServerInterface&amp; TcpServer::on_client_connect(ConnectionHandler h) {</span></a>
-<a name="278"><span class="lineNum">     278 </span>                :<span class="lineCov">         12 :   pimpl_-&gt;on_client_connect_ = std::move(h);</span></a>
-<a name="279"><span class="lineNum">     279 </span>                :<span class="lineCov">         12 :   return *this;</span></a>
-<a name="280"><span class="lineNum">     280 </span>                :            : }</a>
-<a name="281"><span class="lineNum">     281 </span>                :<span class="lineCov">          2 : ServerInterface&amp; TcpServer::on_client_disconnect(ConnectionHandler h) {</span></a>
-<a name="282"><span class="lineNum">     282 </span>                :<span class="lineCov">          2 :   pimpl_-&gt;on_client_disconnect_ = std::move(h);</span></a>
-<a name="283"><span class="lineNum">     283 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
-<a name="284"><span class="lineNum">     284 </span>                :            : }</a>
-<a name="285"><span class="lineNum">     285 </span>                :<span class="lineCov">         16 : ServerInterface&amp; TcpServer::on_data(MessageHandler h) {</span></a>
-<a name="286"><span class="lineNum">     286 </span>                :<span class="lineCov">         16 :   pimpl_-&gt;on_data_ = std::move(h);</span></a>
-<a name="287"><span class="lineNum">     287 </span>                :<span class="lineCov">         16 :   return *this;</span></a>
-<a name="288"><span class="lineNum">     288 </span>                :            : }</a>
-<a name="289"><span class="lineNum">     289 </span>                :<span class="lineCov">          2 : ServerInterface&amp; TcpServer::on_error(ErrorHandler h) {</span></a>
-<a name="290"><span class="lineNum">     290 </span>                :<span class="lineCov">          2 :   pimpl_-&gt;on_error_ = std::move(h);</span></a>
-<a name="291"><span class="lineNum">     291 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
-<a name="292"><span class="lineNum">     292 </span>                :            : }</a>
-<a name="293"><span class="lineNum">     293 </span>                :            : </a>
-<a name="294"><span class="lineNum">     294 </span>                :<span class="lineCov">         58 : size_t TcpServer::get_client_count() const {</span></a>
-<a name="295"><span class="lineNum">     295 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 58 times"> + </span>]:<span class="lineCov">         58 :   if (!pimpl_-&gt;channel_) return 0;</span></a>
-<a name="296"><span class="lineNum">     296 </span>                :<span class="lineCov">         58 :   auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(pimpl_-&gt;channel_);</span></a>
-<a name="297"><span class="lineNum">     297 </span>  [<span class="branchCov" title="Branch 0 was taken 58 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 58 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         58 :   return transport_server ? transport_server-&gt;get_client_count() : 0;</span></a>
-<a name="298"><span class="lineNum">     298 </span>                :<span class="lineCov">         58 : }</span></a>
-<a name="299"><span class="lineNum">     299 </span>                :            : </a>
-<a name="300"><span class="lineNum">     300 </span>                :<span class="lineNoCov">          0 : std::vector&lt;size_t&gt; TcpServer::get_connected_clients() const {</span></a>
-<a name="301"><span class="lineNum">     301 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (!pimpl_-&gt;channel_) return std::vector&lt;size_t&gt;();</span></a>
-<a name="302"><span class="lineNum">     302 </span>                :<span class="lineNoCov">          0 :   auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(pimpl_-&gt;channel_);</span></a>
-<a name="303"><span class="lineNum">     303 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :   return transport_server ? transport_server-&gt;get_connected_clients() : std::vector&lt;size_t&gt;();</span></a>
-<a name="304"><span class="lineNum">     304 </span>                :<span class="lineNoCov">          0 : }</span></a>
-<a name="305"><span class="lineNum">     305 </span>                :            : </a>
-<a name="306"><span class="lineNum">     306 </span>                :<span class="lineCov">          1 : TcpServer&amp; TcpServer::auto_manage(bool m) {</span></a>
-<a name="307"><span class="lineNum">     307 </span>                :<span class="lineCov">          1 :   pimpl_-&gt;auto_manage_ = m;</span></a>
-<a name="308"><span class="lineNum">     308 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (pimpl_-&gt;auto_manage_ &amp;&amp; !pimpl_-&gt;started_) start();</span></a>
+<a name="276"><span class="lineNum">     276 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   }</span></a>
+<a name="277"><span class="lineNum">     277 </span>                :<span class="lineNoCov">          0 :   return false;</span></a>
+<a name="278"><span class="lineNum">     278 </span>                :            : }</a>
+<a name="279"><span class="lineNum">     279 </span>                :            : </a>
+<a name="280"><span class="lineNum">     280 </span>                :<span class="lineCov">         12 : ServerInterface&amp; TcpServer::on_client_connect(ConnectionHandler h) {</span></a>
+<a name="281"><span class="lineNum">     281 </span>                :<span class="lineCov">         12 :   impl_-&gt;on_client_connect_ = std::move(h);</span></a>
+<a name="282"><span class="lineNum">     282 </span>                :<span class="lineCov">         12 :   return *this;</span></a>
+<a name="283"><span class="lineNum">     283 </span>                :            : }</a>
+<a name="284"><span class="lineNum">     284 </span>                :<span class="lineCov">          2 : ServerInterface&amp; TcpServer::on_client_disconnect(ConnectionHandler h) {</span></a>
+<a name="285"><span class="lineNum">     285 </span>                :<span class="lineCov">          2 :   impl_-&gt;on_client_disconnect_ = std::move(h);</span></a>
+<a name="286"><span class="lineNum">     286 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="287"><span class="lineNum">     287 </span>                :            : }</a>
+<a name="288"><span class="lineNum">     288 </span>                :<span class="lineCov">         16 : ServerInterface&amp; TcpServer::on_data(MessageHandler h) {</span></a>
+<a name="289"><span class="lineNum">     289 </span>                :<span class="lineCov">         16 :   impl_-&gt;on_data_ = std::move(h);</span></a>
+<a name="290"><span class="lineNum">     290 </span>                :<span class="lineCov">         16 :   return *this;</span></a>
+<a name="291"><span class="lineNum">     291 </span>                :            : }</a>
+<a name="292"><span class="lineNum">     292 </span>                :<span class="lineCov">          2 : ServerInterface&amp; TcpServer::on_error(ErrorHandler h) {</span></a>
+<a name="293"><span class="lineNum">     293 </span>                :<span class="lineCov">          2 :   impl_-&gt;on_error_ = std::move(h);</span></a>
+<a name="294"><span class="lineNum">     294 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="295"><span class="lineNum">     295 </span>                :            : }</a>
+<a name="296"><span class="lineNum">     296 </span>                :            : </a>
+<a name="297"><span class="lineNum">     297 </span>                :<span class="lineCov">         61 : size_t TcpServer::get_client_count() const {</span></a>
+<a name="298"><span class="lineNum">     298 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 61 times"> + </span>]:<span class="lineCov">         61 :   if (!get_impl()-&gt;channel_) return 0;</span></a>
+<a name="299"><span class="lineNum">     299 </span>                :<span class="lineCov">         61 :   auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(get_impl()-&gt;channel_);</span></a>
+<a name="300"><span class="lineNum">     300 </span>  [<span class="branchCov" title="Branch 0 was taken 61 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 61 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         61 :   return transport_server ? transport_server-&gt;get_client_count() : 0;</span></a>
+<a name="301"><span class="lineNum">     301 </span>                :<span class="lineCov">         61 : }</span></a>
+<a name="302"><span class="lineNum">     302 </span>                :            : </a>
+<a name="303"><span class="lineNum">     303 </span>                :<span class="lineNoCov">          0 : std::vector&lt;size_t&gt; TcpServer::get_connected_clients() const {</span></a>
+<a name="304"><span class="lineNum">     304 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (!get_impl()-&gt;channel_) return std::vector&lt;size_t&gt;();</span></a>
+<a name="305"><span class="lineNum">     305 </span>                :<span class="lineNoCov">          0 :   auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(get_impl()-&gt;channel_);</span></a>
+<a name="306"><span class="lineNum">     306 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :   return transport_server ? transport_server-&gt;get_connected_clients() : std::vector&lt;size_t&gt;();</span></a>
+<a name="307"><span class="lineNum">     307 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="308"><span class="lineNum">     308 </span>                :            : </a>
+<a name="309"><span class="lineNum">     309 </span>                :<span class="lineCov">          1 : TcpServer&amp; TcpServer::auto_manage(bool m) {</span></a>
+<a name="310"><span class="lineNum">     310 </span>                :<span class="lineCov">          1 :   impl_-&gt;auto_manage_ = m;</span></a>
+<a name="311"><span class="lineNum">     311 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl_-&gt;auto_manage_ &amp;&amp; !impl_-&gt;started_) start();</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
-<a name="309"><span class="lineNum">     309 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
-<a name="310"><span class="lineNum">     310 </span>                :            : }</a>
-<a name="311"><span class="lineNum">     311 </span>                :            : </a>
-<a name="312"><span class="lineNum">     312 </span>                :<span class="lineCov">          3 : TcpServer&amp; TcpServer::enable_port_retry(bool e, int m, int i) {</span></a>
-<a name="313"><span class="lineNum">     313 </span>                :<span class="lineCov">          3 :   pimpl_-&gt;port_retry_enabled_ = e;</span></a>
-<a name="314"><span class="lineNum">     314 </span>                :<span class="lineCov">          3 :   pimpl_-&gt;max_port_retries_ = m;</span></a>
-<a name="315"><span class="lineNum">     315 </span>                :<span class="lineCov">          3 :   pimpl_-&gt;port_retry_interval_ms_ = i;</span></a>
-<a name="316"><span class="lineNum">     316 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
-<a name="317"><span class="lineNum">     317 </span>                :            : }</a>
-<a name="318"><span class="lineNum">     318 </span>                :            : </a>
-<a name="319"><span class="lineNum">     319 </span>                :<span class="lineCov">          1 : TcpServer&amp; TcpServer::idle_timeout(int ms) {</span></a>
-<a name="320"><span class="lineNum">     320 </span>                :<span class="lineCov">          1 :   pimpl_-&gt;idle_timeout_ms_ = ms;</span></a>
-<a name="321"><span class="lineNum">     321 </span>                :            :   // Note: Runtime change of idle_timeout is not supported by current transport.</a>
-<a name="322"><span class="lineNum">     322 </span>                :            :   // Must be set via Builder before start().</a>
-<a name="323"><span class="lineNum">     323 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
-<a name="324"><span class="lineNum">     324 </span>                :            : }</a>
-<a name="325"><span class="lineNum">     325 </span>                :            : </a>
-<a name="326"><span class="lineNum">     326 </span>                :<span class="lineCov">          8 : TcpServer&amp; TcpServer::set_client_limit(size_t max) {</span></a>
-<a name="327"><span class="lineNum">     327 </span>                :<span class="lineCov">          8 :   pimpl_-&gt;max_clients_ = max;</span></a>
-<a name="328"><span class="lineNum">     328 </span>                :<span class="lineCov">          8 :   pimpl_-&gt;client_limit_enabled_ = true;</span></a>
-<a name="329"><span class="lineNum">     329 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span>]:<span class="lineCov">          8 :   if (pimpl_-&gt;channel_) {</span></a>
-<a name="330"><span class="lineNum">     330 </span>                :<span class="lineNoCov">          0 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(pimpl_-&gt;channel_);</span></a>
-<a name="331"><span class="lineNum">     331 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (transport_server) transport_server-&gt;set_client_limit(max);</span></a>
-<a name="332"><span class="lineNum">     332 </span>                :<span class="lineNoCov">          0 :   }</span></a>
-<a name="333"><span class="lineNum">     333 </span>                :<span class="lineCov">          8 :   return *this;</span></a>
-<a name="334"><span class="lineNum">     334 </span>                :            : }</a>
-<a name="335"><span class="lineNum">     335 </span>                :            : </a>
-<a name="336"><span class="lineNum">     336 </span>                :<span class="lineCov">         31 : TcpServer&amp; TcpServer::set_unlimited_clients() {</span></a>
-<a name="337"><span class="lineNum">     337 </span>                :<span class="lineCov">         31 :   pimpl_-&gt;client_limit_enabled_ = false;</span></a>
-<a name="338"><span class="lineNum">     338 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 31 times"> + </span>]:<span class="lineCov">         31 :   if (pimpl_-&gt;channel_) {</span></a>
-<a name="339"><span class="lineNum">     339 </span>                :<span class="lineNoCov">          0 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(pimpl_-&gt;channel_);</span></a>
-<a name="340"><span class="lineNum">     340 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (transport_server) transport_server-&gt;set_unlimited_clients();</span></a>
-<a name="341"><span class="lineNum">     341 </span>                :<span class="lineNoCov">          0 :   }</span></a>
-<a name="342"><span class="lineNum">     342 </span>                :<span class="lineCov">         31 :   return *this;</span></a>
-<a name="343"><span class="lineNum">     343 </span>                :            : }</a>
-<a name="344"><span class="lineNum">     344 </span>                :            : </a>
-<a name="345"><span class="lineNum">     345 </span>                :<span class="lineNoCov">          0 : TcpServer&amp; TcpServer::notify_send_failure(bool e) {</span></a>
-<a name="346"><span class="lineNum">     346 </span>                :<span class="lineNoCov">          0 :   pimpl_-&gt;notify_send_failure_ = e;</span></a>
-<a name="347"><span class="lineNum">     347 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
-<a name="348"><span class="lineNum">     348 </span>                :            : }</a>
-<a name="349"><span class="lineNum">     349 </span>                :<span class="lineCov">          1 : TcpServer&amp; TcpServer::set_manage_external_context(bool m) {</span></a>
-<a name="350"><span class="lineNum">     350 </span>                :<span class="lineCov">          1 :   pimpl_-&gt;manage_external_context_ = m;</span></a>
-<a name="351"><span class="lineNum">     351 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
-<a name="352"><span class="lineNum">     352 </span>                :            : }</a>
-<a name="353"><span class="lineNum">     353 </span>                :            : </a>
-<a name="354"><span class="lineNum">     354 </span>                :            : }  // namespace wrapper</a>
-<a name="355"><span class="lineNum">     355 </span>                :            : }  // namespace unilink</a>
+<a name="312"><span class="lineNum">     312 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
+<a name="313"><span class="lineNum">     313 </span>                :            : }</a>
+<a name="314"><span class="lineNum">     314 </span>                :            : </a>
+<a name="315"><span class="lineNum">     315 </span>                :<span class="lineCov">          3 : TcpServer&amp; TcpServer::enable_port_retry(bool e, int m, int i) {</span></a>
+<a name="316"><span class="lineNum">     316 </span>                :<span class="lineCov">          3 :   impl_-&gt;port_retry_enabled_ = e;</span></a>
+<a name="317"><span class="lineNum">     317 </span>                :<span class="lineCov">          3 :   impl_-&gt;max_port_retries_ = m;</span></a>
+<a name="318"><span class="lineNum">     318 </span>                :<span class="lineCov">          3 :   impl_-&gt;port_retry_interval_ms_ = i;</span></a>
+<a name="319"><span class="lineNum">     319 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
+<a name="320"><span class="lineNum">     320 </span>                :            : }</a>
+<a name="321"><span class="lineNum">     321 </span>                :            : </a>
+<a name="322"><span class="lineNum">     322 </span>                :<span class="lineCov">          1 : TcpServer&amp; TcpServer::idle_timeout(int ms) {</span></a>
+<a name="323"><span class="lineNum">     323 </span>                :<span class="lineCov">          1 :   impl_-&gt;idle_timeout_ms_ = ms;</span></a>
+<a name="324"><span class="lineNum">     324 </span>                :            :   // Note: Runtime change of idle_timeout is not supported by current transport.</a>
+<a name="325"><span class="lineNum">     325 </span>                :            :   // Must be set via Builder before start().</a>
+<a name="326"><span class="lineNum">     326 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
+<a name="327"><span class="lineNum">     327 </span>                :            : }</a>
+<a name="328"><span class="lineNum">     328 </span>                :            : </a>
+<a name="329"><span class="lineNum">     329 </span>                :<span class="lineCov">          8 : TcpServer&amp; TcpServer::set_client_limit(size_t max) {</span></a>
+<a name="330"><span class="lineNum">     330 </span>                :<span class="lineCov">          8 :   impl_-&gt;max_clients_ = max;</span></a>
+<a name="331"><span class="lineNum">     331 </span>                :<span class="lineCov">          8 :   impl_-&gt;client_limit_enabled_ = true;</span></a>
+<a name="332"><span class="lineNum">     332 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span>]:<span class="lineCov">          8 :   if (impl_-&gt;channel_) {</span></a>
+<a name="333"><span class="lineNum">     333 </span>                :<span class="lineNoCov">          0 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(impl_-&gt;channel_);</span></a>
+<a name="334"><span class="lineNum">     334 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (transport_server) transport_server-&gt;set_client_limit(max);</span></a>
+<a name="335"><span class="lineNum">     335 </span>                :<span class="lineNoCov">          0 :   }</span></a>
+<a name="336"><span class="lineNum">     336 </span>                :<span class="lineCov">          8 :   return *this;</span></a>
+<a name="337"><span class="lineNum">     337 </span>                :            : }</a>
+<a name="338"><span class="lineNum">     338 </span>                :            : </a>
+<a name="339"><span class="lineNum">     339 </span>                :<span class="lineCov">         31 : TcpServer&amp; TcpServer::set_unlimited_clients() {</span></a>
+<a name="340"><span class="lineNum">     340 </span>                :<span class="lineCov">         31 :   impl_-&gt;client_limit_enabled_ = false;</span></a>
+<a name="341"><span class="lineNum">     341 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 31 times"> + </span>]:<span class="lineCov">         31 :   if (impl_-&gt;channel_) {</span></a>
+<a name="342"><span class="lineNum">     342 </span>                :<span class="lineNoCov">          0 :     auto transport_server = std::dynamic_pointer_cast&lt;transport::TcpServer&gt;(impl_-&gt;channel_);</span></a>
+<a name="343"><span class="lineNum">     343 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (transport_server) transport_server-&gt;set_unlimited_clients();</span></a>
+<a name="344"><span class="lineNum">     344 </span>                :<span class="lineNoCov">          0 :   }</span></a>
+<a name="345"><span class="lineNum">     345 </span>                :<span class="lineCov">         31 :   return *this;</span></a>
+<a name="346"><span class="lineNum">     346 </span>                :            : }</a>
+<a name="347"><span class="lineNum">     347 </span>                :            : </a>
+<a name="348"><span class="lineNum">     348 </span>                :<span class="lineNoCov">          0 : TcpServer&amp; TcpServer::notify_send_failure(bool e) {</span></a>
+<a name="349"><span class="lineNum">     349 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;notify_send_failure_ = e;</span></a>
+<a name="350"><span class="lineNum">     350 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="351"><span class="lineNum">     351 </span>                :            : }</a>
+<a name="352"><span class="lineNum">     352 </span>                :<span class="lineCov">          1 : TcpServer&amp; TcpServer::set_manage_external_context(bool m) {</span></a>
+<a name="353"><span class="lineNum">     353 </span>                :<span class="lineCov">          1 :   impl_-&gt;manage_external_context_ = m;</span></a>
+<a name="354"><span class="lineNum">     354 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
+<a name="355"><span class="lineNum">     355 </span>                :            : }</a>
+<a name="356"><span class="lineNum">     356 </span>                :            : </a>
+<a name="357"><span class="lineNum">     357 </span>                :            : }  // namespace wrapper</a>
+<a name="358"><span class="lineNum">     358 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
