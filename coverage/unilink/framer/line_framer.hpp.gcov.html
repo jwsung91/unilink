@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-20 00:35:46</td>
+            <td class="headerValue">2026-02-20 00:44:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -120,7 +120,7 @@
 <a name="42"><span class="lineNum">      42 </span>                :            :    */</a>
 <a name="43"><span class="lineNum">      43 </span>                :            :   explicit LineFramer(std::string_view delimiter = &quot;\n&quot;, bool include_delimiter = false, size_t max_length = 65536);</a>
 <a name="44"><span class="lineNum">      44 </span>                :            : </a>
-<a name="45"><span class="lineNum">      45 </span>                :<span class="lineCov">         22 :   ~LineFramer() override = default;</span></a>
+<a name="45"><span class="lineNum">      45 </span>                :<span class="lineCov">         24 :   ~LineFramer() override = default;</span></a>
 <a name="46"><span class="lineNum">      46 </span>                :            : </a>
 <a name="47"><span class="lineNum">      47 </span>                :            :   void push_bytes(memory::ConstByteSpan data) override;</a>
 <a name="48"><span class="lineNum">      48 </span>                :            :   void set_on_message(MessageCallback cb) override;</a>
@@ -134,10 +134,19 @@
 <a name="56"><span class="lineNum">      56 </span>                :            :   size_t scanned_idx_ = 0;</a>
 <a name="57"><span class="lineNum">      57 </span>                :            :   std::vector&lt;uint8_t&gt; buffer_;</a>
 <a name="58"><span class="lineNum">      58 </span>                :            :   MessageCallback on_message_;</a>
-<a name="59"><span class="lineNum">      59 </span>                :            : };</a>
-<a name="60"><span class="lineNum">      60 </span>                :            : </a>
-<a name="61"><span class="lineNum">      61 </span>                :            : }  // namespace framer</a>
-<a name="62"><span class="lineNum">      62 </span>                :            : }  // namespace unilink</a>
+<a name="59"><span class="lineNum">      59 </span>                :            : </a>
+<a name="60"><span class="lineNum">      60 </span>                :            :   /**</a>
+<a name="61"><span class="lineNum">      61 </span>                :            :    * @brief Helper to scan data for delimiters and process messages.</a>
+<a name="62"><span class="lineNum">      62 </span>                :            :    *</a>
+<a name="63"><span class="lineNum">      63 </span>                :            :    * @param data The data to scan.</a>
+<a name="64"><span class="lineNum">      64 </span>                :            :    * @param search_start_offset The offset in data to start searching from.</a>
+<a name="65"><span class="lineNum">      65 </span>                :            :    * @return The number of bytes processed (emitted as messages).</a>
+<a name="66"><span class="lineNum">      66 </span>                :            :    */</a>
+<a name="67"><span class="lineNum">      67 </span>                :            :   size_t scan_and_process(memory::ConstByteSpan data, size_t search_start_offset);</a>
+<a name="68"><span class="lineNum">      68 </span>                :            : };</a>
+<a name="69"><span class="lineNum">      69 </span>                :            : </a>
+<a name="70"><span class="lineNum">      70 </span>                :            : }  // namespace framer</a>
+<a name="71"><span class="lineNum">      71 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
