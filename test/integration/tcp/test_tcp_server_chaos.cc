@@ -138,8 +138,12 @@ TEST_F(TcpServerChaosTest, MaxConnections) {
   auto c1 = connect_one();
   auto c2 = connect_one();
 
-  if (c1.second) EXPECT_TRUE(c1.second->is_open());
-  if (c2.second) EXPECT_TRUE(c2.second->is_open());
+  if (c1.second) {
+    EXPECT_TRUE(c1.second->is_open());
+  }
+  if (c2.second) {
+    EXPECT_TRUE(c2.second->is_open());
+  }
 
   server->stop();
 }
