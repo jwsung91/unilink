@@ -117,6 +117,24 @@ struct Serial::Impl {
     rx_.resize(cfg_.read_chunk);
   }
 
+  ~Impl() {
+    try {
+      stopping_.store(true);
+      if (owns_ioc_) {
+        ioc_.stop();
+      }
+      if (ioc_thread_.joinable()) {
+        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
+          ioc_thread_.join();
+        } else {
+          ioc_thread_.detach();
+        }
+      }
+      perform_cleanup();
+    } catch (...) {
+    }
+  }
+
   void open_and_configure(std::shared_ptr<Serial> self) {
     boost::system::error_code ec;
     port_->open(cfg_.device, ec);

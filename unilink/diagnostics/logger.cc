@@ -448,18 +448,8 @@ Logger::Logger(Logger&&) noexcept = default;
 Logger& Logger::operator=(Logger&&) noexcept = default;
 
 Logger& Logger::default_logger() {
-  static Logger* instance = new Logger();
-  static bool initialized = []() {
-    std::atexit([]() {
-      if (instance) {
-        instance->flush();
-        // Do NOT delete instance to avoid destruction order fiasco
-      }
-    });
-    return true;
-  }();
-  (void)initialized;
-  return *instance;
+  static Logger instance;
+  return instance;
 }
 
 Logger& Logger::instance() { return default_logger(); }

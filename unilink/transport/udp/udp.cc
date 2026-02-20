@@ -113,7 +113,24 @@ struct UdpChannel::Impl {
     set_remote_from_config();
   }
 
-  ~Impl() = default;
+  ~Impl() {
+    try {
+      stop_requested_.store(true);
+      stopping_.store(true);
+      if (owns_ioc_ && ioc_) {
+        ioc_->stop();
+      }
+      if (ioc_thread_.joinable()) {
+        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
+          ioc_thread_.join();
+        } else {
+          ioc_thread_.detach();
+        }
+      }
+      perform_stop_cleanup();
+    } catch (...) {
+    }
+  }
 
   void open_socket(std::shared_ptr<UdpChannel> self) {
     if (stopping_.load() || stop_requested_.load()) return;

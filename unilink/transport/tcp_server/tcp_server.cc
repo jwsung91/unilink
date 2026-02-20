@@ -94,7 +94,23 @@ struct TcpServer::Impl {
     }
   }
 
-  ~Impl() = default;
+  ~Impl() {
+    try {
+      stopping_.store(true);
+      if (owns_ioc_) {
+        ioc_.stop();
+      }
+      if (ioc_thread_.joinable()) {
+        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
+          ioc_thread_.join();
+        } else {
+          ioc_thread_.detach();
+        }
+      }
+      perform_cleanup();
+    } catch (...) {
+    }
+  }
 
   void notify_state() {
     if (stopping_.load()) return;
