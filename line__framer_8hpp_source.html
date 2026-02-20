@@ -133,10 +133,12 @@ $(document).ready(function(){initNavTree('line__framer_8hpp_source.html',''); in
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keywordtype">size_t</span> scanned_idx_ = 0;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  std::vector&lt;uint8_t&gt; buffer_;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <a class="code" href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">MessageCallback</a> on_message_;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;};</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}  <span class="comment">// namespace framer</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordtype">size_t</span> scan_and_process(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data, <span class="keywordtype">size_t</span> search_start_offset);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}  <span class="comment">// namespace framer</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1IFramer_html"><div class="ttname"><a href="classunilink_1_1framer_1_1IFramer.html">unilink::framer::IFramer</a></div><div class="ttdoc">Abstract base class for message framing strategies.</div><div class="ttdef"><b>Definition:</b> <a href="iframer_8hpp_source.html#l00035">iframer.hpp:35</a></div></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1IFramer_html_ae5ee86cbd7ded1a4f845f3889b4189ad"><div class="ttname"><a href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">unilink::framer::IFramer::MessageCallback</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; MessageCallback</div><div class="ttdoc">Register a callback to be invoked when a complete message is extracted.</div><div class="ttdef"><b>Definition:</b> <a href="iframer_8hpp_source.html#l00054">iframer.hpp:54</a></div></div>
 <div class="ttc" id="aclassunilink_1_1framer_1_1LineFramer_html"><div class="ttname"><a href="classunilink_1_1framer_1_1LineFramer.html">unilink::framer::LineFramer</a></div><div class="ttdoc">Framer for text-based protocols (e.g., ASCII, NMEA).</div><div class="ttdef"><b>Definition:</b> <a href="line__framer_8hpp_source.html#l00034">line_framer.hpp:34</a></div></div>
@@ -152,7 +154,7 @@ $(document).ready(function(){initNavTree('line__framer_8hpp_source.html',''); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_b00f3e277c8b8a573b84ad405cb4170d.html">framer</a></li><li class="navelem"><a class="el" href="line__framer_8hpp.html">line_framer.hpp</a></li>
-    <li class="footer">Generated on Fri Feb 20 2026 00:29:23 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Feb 20 2026 00:42:39 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
