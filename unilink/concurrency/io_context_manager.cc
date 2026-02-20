@@ -108,8 +108,8 @@ IoContextManager::IoContextManager(IoContext& external_context) : impl_(std::mak
 IoContextManager::~IoContextManager() = default;
 
 IoContextManager& IoContextManager::instance() {
-  static IoContextManager instance;
-  return instance;
+  static IoContextManager* instance = new IoContextManager();
+  return *instance;
 }
 
 boost::asio::io_context& IoContextManager::get_context() {

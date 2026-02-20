@@ -448,8 +448,8 @@ Logger::Logger(Logger&&) noexcept = default;
 Logger& Logger::operator=(Logger&&) noexcept = default;
 
 Logger& Logger::default_logger() {
-  static Logger instance;
-  return instance;
+  static Logger* instance = new Logger();
+  return *instance;
 }
 
 Logger& Logger::instance() { return default_logger(); }
