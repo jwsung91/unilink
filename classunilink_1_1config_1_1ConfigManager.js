@@ -1,7 +1,10 @@
 var classunilink_1_1config_1_1ConfigManager =
 [
-    [ "ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#a86c992b1deea065fda4f0f6003bcfc13", null ],
-    [ "~ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#a8e2eabd60ada3db8ac5386ac7c1622af", null ],
+    [ "Impl", "structunilink_1_1config_1_1ConfigManager_1_1Impl.html", "structunilink_1_1config_1_1ConfigManager_1_1Impl" ],
+    [ "ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#ab9ac92943cffd10135f186673ee4c92b", null ],
+    [ "~ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#a8dae3b83f3a1426cf79b6817dbf9a98b", null ],
+    [ "ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#a2f2c8b02a55e44d08106a00ba339ee16", null ],
+    [ "ConfigManager", "classunilink_1_1config_1_1ConfigManager.html#ac3cc0448cc4776940c17ea599d96d17f", null ],
     [ "clear", "classunilink_1_1config_1_1ConfigManager.html#a3856481d25a75bf4e58776c702b19ef8", null ],
     [ "get", "classunilink_1_1config_1_1ConfigManager.html#a5121a76fcdde495e2f88fde0621aadd3", null ],
     [ "get", "classunilink_1_1config_1_1ConfigManager.html#a908fe65c768e1a1f571857806a768218", null ],
@@ -12,6 +15,8 @@ var classunilink_1_1config_1_1ConfigManager =
     [ "is_required", "classunilink_1_1config_1_1ConfigManager.html#ab78bd0770b20f4f65257c08449a517fd", null ],
     [ "load_from_file", "classunilink_1_1config_1_1ConfigManager.html#a690c0f4d402787e898fba1b6bbb3f151", null ],
     [ "on_change", "classunilink_1_1config_1_1ConfigManager.html#a743a57e24c940ca9a5cd6498df7b9bd5", null ],
+    [ "operator=", "classunilink_1_1config_1_1ConfigManager.html#a812718f6cd6e9cac30b8e8fbc5c4110c", null ],
+    [ "operator=", "classunilink_1_1config_1_1ConfigManager.html#aef9f6cd753d20a7118f73bb802a7c5c2", null ],
     [ "register_item", "classunilink_1_1config_1_1ConfigManager.html#a9b346a7d06049036a8735c380118a61a", null ],
     [ "register_validator", "classunilink_1_1config_1_1ConfigManager.html#ac6d058a2ff29fc28214b6b575fb8d6fe", null ],
     [ "remove", "classunilink_1_1config_1_1ConfigManager.html#a6ec61f4d792e6ec1e09d02a8ad8abfe5", null ],

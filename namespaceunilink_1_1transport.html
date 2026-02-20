@@ -96,6 +96,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1BoostSerialPort.html">BoostSerialPort</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1Serial.html">Serial</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classunilink_1_1transport_1_1Serial.html" title="Serial Transport implementation.">Serial</a> Transport implementation.  <a href="classunilink_1_1transport_1_1Serial.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpClient.html">TcpClient</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,20 +107,40 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boost.Asio implementation of ITcpSocket interface. This is the real implementation used in production.  <a href="classunilink_1_1transport_1_1BoostTcpSocket.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html">TcpServer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread-safe TCP Server implementation.  <a href="classunilink_1_1transport_1_1TcpServer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">UDP Transport implementation.  <a href="classunilink_1_1transport_1_1UdpChannel.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a63ff6ae7cff72b449deea0b9356d9133"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport.html#a63ff6ae7cff72b449deea0b9356d9133">BufferVariant</a> = std::variant&lt; <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html">memory::PooledBuffer</a>, std::vector&lt; uint8_t &gt;, std::shared_ptr&lt; const std::vector&lt; uint8_t &gt; &gt;&gt;</td></tr>
+<tr class="separator:a63ff6ae7cff72b449deea0b9356d9133"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1ed8ce969aa0a469a6bf23c93f46a32"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport.html#ab1ed8ce969aa0a469a6bf23c93f46a32">tcp</a> = net::ip::tcp</td></tr>
 <tr class="separator:ab1ed8ce969aa0a469a6bf23c93f46a32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f33fafb245304040e53375c3eb6f30d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport.html#a9f33fafb245304040e53375c3eb6f30d">udp</a> = net::ip::udp</td></tr>
 <tr class="separator:a9f33fafb245304040e53375c3eb6f30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a id="a63ff6ae7cff72b449deea0b9356d9133"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63ff6ae7cff72b449deea0b9356d9133">&#9670;&nbsp;</a></span>BufferVariant</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceunilink_1_1transport.html#a63ff6ae7cff72b449deea0b9356d9133">unilink::transport::BufferVariant</a> = typedef std::variant&lt;<a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html">memory::PooledBuffer</a>, std::vector&lt;uint8_t&gt;, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt; &gt;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="transport_2serial_2serial_8cc_source.html#l00047">47</a> of file <a class="el" href="transport_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
 <a id="ab1ed8ce969aa0a469a6bf23c93f46a32"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab1ed8ce969aa0a469a6bf23c93f46a32">&#9670;&nbsp;</a></span>tcp</h2>
 
@@ -148,7 +169,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8hpp_source.html#l00043">43</a> of file <a class="el" href="transport_2udp_2udp_8hpp_source.html">udp.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2udp_2udp_8cc_source.html#l00043">43</a> of file <a class="el" href="transport_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -158,7 +179,7 @@ Typedefs</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li>
-    <li class="footer">Generated on Fri Feb 20 2026 01:50:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Feb 20 2026 22:06:39 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

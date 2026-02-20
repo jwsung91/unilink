@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['healthmetrics_930',['HealthMetrics',['../structunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics.html',1,'unilink::memory::MemoryPool']]]
+  ['globalmemorypool_1015',['GlobalMemoryPool',['../classunilink_1_1memory_1_1GlobalMemoryPool.html',1,'unilink::memory']]]
 ];

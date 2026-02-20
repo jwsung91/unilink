@@ -8,7 +8,9 @@ var dir_bdae376d6a766a2d984a51161a7f5788 =
     [ "boost_tcp_socket.hpp", "boost__tcp__socket_8hpp.html", [
       [ "BoostTcpSocket", "classunilink_1_1transport_1_1BoostTcpSocket.html", "classunilink_1_1transport_1_1BoostTcpSocket" ]
     ] ],
-    [ "tcp_server.cc", "transport_2tcp__server_2tcp__server_8cc.html", null ],
+    [ "tcp_server.cc", "transport_2tcp__server_2tcp__server_8cc.html", [
+      [ "Impl", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html", "structunilink_1_1transport_1_1TcpServer_1_1Impl" ]
+    ] ],
     [ "tcp_server.hpp", "transport_2tcp__server_2tcp__server_8hpp.html", [
       [ "TcpServer", "classunilink_1_1transport_1_1TcpServer.html", "classunilink_1_1transport_1_1TcpServer" ]
     ] ],

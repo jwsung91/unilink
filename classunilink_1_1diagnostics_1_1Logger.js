@@ -1,8 +1,11 @@
 var classunilink_1_1diagnostics_1_1Logger =
 [
+    [ "Impl", "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl" ],
     [ "LogCallback", "classunilink_1_1diagnostics_1_1Logger.html#aab6b65a72d045195df582a6c5c00f122", null ],
     [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html#a124de78d8aaa1591849e8c3588ef027f", null ],
     [ "~Logger", "classunilink_1_1diagnostics_1_1Logger.html#aec9b6e07aab5229a4077b58410a94d78", null ],
+    [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html#a87902d159a5737dc5e39a513d7409a94", null ],
+    [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html#a2502cd4188ed77e915272ddbccf94d64", null ],
     [ "critical", "classunilink_1_1diagnostics_1_1Logger.html#a286630c83e07db4633e3f9a9f1f1c115", null ],
     [ "debug", "classunilink_1_1diagnostics_1_1Logger.html#ace307c5e28ee9971be657e431f31a8e5", null ],
     [ "default_logger", "classunilink_1_1diagnostics_1_1Logger.html#a144b6e7c317d47e2e4fb9e0109eb7a9d", null ],
@@ -15,6 +18,8 @@ var classunilink_1_1diagnostics_1_1Logger =
     [ "is_async_logging_enabled", "classunilink_1_1diagnostics_1_1Logger.html#a73ad8498f1b23670d4302b470316841f", null ],
     [ "is_enabled", "classunilink_1_1diagnostics_1_1Logger.html#a7c30d5ca44ef1d1dc20e5a57ad3145e3", null ],
     [ "log", "classunilink_1_1diagnostics_1_1Logger.html#a0b8b5899e59b1c6beb7572fe937df82d", null ],
+    [ "operator=", "classunilink_1_1diagnostics_1_1Logger.html#a1b1d4af00a6762f5afcb7fed25a1a745", null ],
+    [ "operator=", "classunilink_1_1diagnostics_1_1Logger.html#a082c57005f8140e3f02c30135b48dce4", null ],
     [ "set_async_logging", "classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4", null ],
     [ "set_callback", "classunilink_1_1diagnostics_1_1Logger.html#af2ba283a30ba91bc5cb75959e2f61eb0", null ],
     [ "set_console_output", "classunilink_1_1diagnostics_1_1Logger.html#a2f634f2d64d5be96bd683f3c527a6416", null ],

@@ -5,7 +5,9 @@ var dir_1ae9d5707ae3e429484f972fe2e6b4f0 =
       [ "ConfigFactory", "classunilink_1_1config_1_1ConfigFactory.html", "classunilink_1_1config_1_1ConfigFactory" ],
       [ "ConfigPresets", "classunilink_1_1config_1_1ConfigPresets.html", "classunilink_1_1config_1_1ConfigPresets" ]
     ] ],
-    [ "config_manager.cc", "config__manager_8cc.html", null ],
+    [ "config_manager.cc", "config__manager_8cc.html", [
+      [ "Impl", "structunilink_1_1config_1_1ConfigManager_1_1Impl.html", "structunilink_1_1config_1_1ConfigManager_1_1Impl" ]
+    ] ],
     [ "config_manager.hpp", "config__manager_8hpp.html", [
       [ "ConfigManager", "classunilink_1_1config_1_1ConfigManager.html", "classunilink_1_1config_1_1ConfigManager" ]
     ] ],

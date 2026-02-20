@@ -894,7 +894,8 @@ var NAVTREE =
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Typedefs", "functions_type.html", null ],
-        [ "Enumerations", "functions_enum.html", null ]
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -910,15 +911,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classunilink_1_1diagnostics_1_1ConfigurationException.html#a192126dfce64447d2dc7633a07e0226f",
-"classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73",
-"classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0",
-"functions_e.html",
-"md_docs_architecture_memory_safety.html#autotoc_md76",
-"md_docs_guides_core_troubleshooting.html#autotoc_md511",
-"md_docs_test_structure.html#autotoc_md855",
-"namespaceunilink_1_1memory_1_1memory__validator.html#a6587d85f299cba4369de3f45a972242d",
-"structunilink_1_1transport_1_1TcpClient_1_1Impl.html#aa3983c5be54521bc630464be71e16c09"
+"classunilink_1_1config_1_1ConfigPresets.html#af3eb072f8546754247214bbf73feeed4",
+"classunilink_1_1memory_1_1SafeDataBuffer.html#abbb6d75367d17eda9b9b41a61414a05c",
+"classunilink_1_1wrapper_1_1Serial.html#a81629c8bfaf3220c128f37ca9de2858d",
+"error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7afa177138f94a7ea01f549b1aa7893d03",
+"md_docs_architecture_memory_safety.html#autotoc_md41",
+"md_docs_guides_core_troubleshooting.html#autotoc_md483",
+"md_docs_test_structure.html#autotoc_md828",
+"namespaceunilink_1_1diagnostics_1_1error__reporting.html#a09062defd8d7c3c8b916320c34338040",
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a2c07457dc964378102e8797795cf4586",
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a90b6585306d020a4e0fe7cc6830df4bf"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

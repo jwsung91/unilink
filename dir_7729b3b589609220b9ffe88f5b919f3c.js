@@ -9,6 +9,10 @@ var dir_7729b3b589609220b9ffe88f5b919f3c =
       [ "LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],
       [ "LogRotation", "classunilink_1_1diagnostics_1_1LogRotation.html", "classunilink_1_1diagnostics_1_1LogRotation" ]
     ] ],
-    [ "logger.cc", "logger_8cc.html", null ],
+    [ "logger.cc", "logger_8cc.html", [
+      [ "Impl", "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl" ],
+      [ "FormatPart", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart" ],
+      [ "TimestampBuffer", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer" ]
+    ] ],
     [ "logger.hpp", "logger_8hpp.html", "logger_8hpp" ]
 ];

@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['lineframer_935',['LineFramer',['../classunilink_1_1framer_1_1LineFramer.html',1,'unilink::framer']]],
-  ['logentry_936',['LogEntry',['../structunilink_1_1diagnostics_1_1LogEntry.html',1,'unilink::diagnostics']]],
-  ['logger_937',['Logger',['../classunilink_1_1diagnostics_1_1Logger.html',1,'unilink::diagnostics']]],
-  ['logrotation_938',['LogRotation',['../classunilink_1_1diagnostics_1_1LogRotation.html',1,'unilink::diagnostics']]],
-  ['logrotationconfig_939',['LogRotationConfig',['../structunilink_1_1diagnostics_1_1LogRotationConfig.html',1,'unilink::diagnostics']]]
+  ['iframer_1017',['IFramer',['../classunilink_1_1framer_1_1IFramer.html',1,'unilink::framer']]],
+  ['impl_1018',['Impl',['../structunilink_1_1concurrency_1_1IoContextManager_1_1Impl.html',1,'unilink::concurrency::IoContextManager::Impl'],['../structunilink_1_1config_1_1ConfigManager_1_1Impl.html',1,'unilink::config::ConfigManager::Impl'],['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html',1,'unilink::diagnostics::Logger::Impl'],['../structunilink_1_1transport_1_1Serial_1_1Impl.html',1,'unilink::transport::Serial::Impl'],['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html',1,'unilink::transport::TcpClient::Impl'],['../structunilink_1_1transport_1_1TcpServer_1_1Impl.html',1,'unilink::transport::TcpServer::Impl'],['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html',1,'unilink::transport::UdpChannel::Impl'],['../structunilink_1_1wrapper_1_1Serial_1_1Impl.html',1,'unilink::wrapper::Serial::Impl'],['../structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html',1,'unilink::wrapper::TcpClient::Impl'],['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html',1,'unilink::wrapper::TcpServer::Impl'],['../structunilink_1_1wrapper_1_1Udp_1_1Impl.html',1,'unilink::wrapper::Udp::Impl']]],
+  ['inputvalidator_1019',['InputValidator',['../classunilink_1_1util_1_1InputValidator.html',1,'unilink::util']]],
+  ['iocontextmanager_1020',['IoContextManager',['../classunilink_1_1concurrency_1_1IoContextManager.html',1,'unilink::concurrency']]]
 ];
