@@ -912,13 +912,13 @@ var NAVTREEINDEX =
 "annotated.html",
 "classunilink_1_1diagnostics_1_1ConfigurationException.html#a192126dfce64447d2dc7633a07e0226f",
 "classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73",
-"classunilink_1_1wrapper_1_1TcpClient.html#a0a9e954a14b22cef576b6b04162c31dc",
-"functions_func_s.html",
-"md_docs_architecture_runtime_behavior.html#autotoc_md184",
-"md_docs_guides_setup_build_guide.html#autotoc_md540",
-"md_docs_tutorials_01_getting_started.html#autotoc_md885",
-"pages.html",
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0932ad2d58a5900901d237e52b18a735"
+"classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0",
+"functions_e.html",
+"md_docs_architecture_memory_safety.html#autotoc_md76",
+"md_docs_guides_core_troubleshooting.html#autotoc_md511",
+"md_docs_test_structure.html#autotoc_md855",
+"namespaceunilink_1_1memory_1_1memory__validator.html#a6587d85f299cba4369de3f45a972242d",
+"structunilink_1_1transport_1_1TcpClient_1_1Impl.html#aa3983c5be54521bc630464be71e16c09"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

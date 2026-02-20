@@ -136,50 +136,60 @@ $(document).ready(function(){initNavTree('wrapper_2serial_2serial_8hpp_source.ht
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>(std::shared_ptr&lt;interface::Channel&gt; channel);</div>
 <div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1Serial.html#ac777f965de97bd0f6aa6b4ee3002a70d">   51</a></span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1Serial.html#ac777f965de97bd0f6aa6b4ee3002a70d">~Serial</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="comment">// ChannelInterface implementation</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  std::future&lt;bool&gt; start() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keywordtype">void</span> stop() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keywordtype">void</span> send(std::string_view data) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keywordtype">void</span> send_line(std::string_view line) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keywordtype">bool</span> is_connected() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_data(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_connect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_disconnect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_error(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; auto_manage(<span class="keywordtype">bool</span> manage = <span class="keyword">true</span>) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="comment">// Serial-specific methods</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keywordtype">void</span> set_baud_rate(uint32_t baud_rate);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordtype">void</span> set_data_bits(<span class="keywordtype">int</span> data_bits);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keywordtype">void</span> set_stop_bits(<span class="keywordtype">int</span> stop_bits);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keywordtype">void</span> set_parity(<span class="keyword">const</span> std::string&amp; parity);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordtype">void</span> set_flow_control(<span class="keyword">const</span> std::string&amp; flow_control);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keywordtype">void</span> set_retry_interval(std::chrono::milliseconds interval);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordtype">void</span> set_manage_external_context(<span class="keywordtype">bool</span> manage);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="comment">// Expose mapped config for testing/inspection</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <a class="code" href="structunilink_1_1config_1_1SerialConfig.html">config::SerialConfig</a> build_config() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keyword">struct </span><a class="code" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html">Impl</a>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  std::unique_ptr&lt;Impl&gt; pimpl_;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="comment">// Move semantics</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1Serial.html#ad064f429cad2aae8e93a22811759c3be">   54</a></span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1Serial.html#ad064f429cad2aae8e93a22811759c3be">Serial</a>(<a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>&amp;&amp;) noexcept;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1Serial.html#a07b6689a34acf4a31fdaf4ae8e4a0da0">   55</a></span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>&amp; operator=(<a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>&amp;&amp;) noexcept;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="comment">// Disable copy</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1Serial.html#a2fbdec2d253d8a75114501fcccec5d06">   58</a></span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>(const <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>&amp;) = delete;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1Serial.html#a3d073ca5d5fd05b14eb84138ceb2ba2b">   59</a></span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>&amp; operator=(const <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>&amp;) = delete;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="comment">// ChannelInterface implementation</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  std::future&lt;<span class="keywordtype">bool</span>&gt; start() override;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordtype">void</span> stop() override;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">void</span> send(std::string_view data) override;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">void</span> send_line(std::string_view line) override;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">bool</span> is_connected() const override;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_data(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_connect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_disconnect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_error(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler) override;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; auto_manage(<span class="keywordtype">bool</span> manage = true) override;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="comment">// Serial-specific methods</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keywordtype">void</span> set_baud_rate(uint32_t baud_rate);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keywordtype">void</span> set_data_bits(<span class="keywordtype">int</span> data_bits);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keywordtype">void</span> set_stop_bits(<span class="keywordtype">int</span> stop_bits);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keywordtype">void</span> set_parity(const std::<span class="keywordtype">string</span>&amp; parity);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordtype">void</span> set_flow_control(const std::<span class="keywordtype">string</span>&amp; flow_control);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keywordtype">void</span> set_retry_interval(std::chrono::milliseconds interval);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keywordtype">void</span> set_manage_external_context(<span class="keywordtype">bool</span> manage);</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="comment">// Expose mapped config for testing/inspection</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  config::SerialConfig build_config() const;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; private:</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  struct <a class="code" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html">Impl</a>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  const <a class="code" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html">Impl</a>* get_impl()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_.get(); }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  Impl* get_impl() { <span class="keywordflow">return</span> impl_.get(); }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  std::unique_ptr&lt;Impl&gt; impl_;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html">unilink::wrapper::ChannelInterface</a></div><div class="ttdoc">Common interface for 1:1 point-to-point communication (e.g., TcpClient, Serial, Udp)</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00034">ichannel.hpp:34</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a4647fb8450701859f5d4263a228ba8e9"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">unilink::wrapper::ChannelInterface::ErrorHandler</a></div><div class="ttdeci">std::function&lt; void(const ErrorContext &amp;)&gt; ErrorHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00038">ichannel.hpp:38</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_abf0f967343eb3953342a9d762fd9c206"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">unilink::wrapper::ChannelInterface::MessageHandler</a></div><div class="ttdeci">std::function&lt; void(const MessageContext &amp;)&gt; MessageHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00036">ichannel.hpp:36</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_adfd8af3a95f4bce355e1106ff43fa22f"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">unilink::wrapper::ChannelInterface::ConnectionHandler</a></div><div class="ttdeci">std::function&lt; void(const ConnectionContext &amp;)&gt; ConnectionHandler</div><div class="ttdef"><b>Definition:</b> <a href="ichannel_8hpp_source.html#l00037">ichannel.hpp:37</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1Serial_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1Serial.html">unilink::wrapper::Serial</a></div><div class="ttdoc">Modernized Serial Wrapper.</div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2serial_2serial_8hpp_source.html#l00046">serial.hpp:46</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1Serial_html_ac777f965de97bd0f6aa6b4ee3002a70d"><div class="ttname"><a href="classunilink_1_1wrapper_1_1Serial.html#ac777f965de97bd0f6aa6b4ee3002a70d">unilink::wrapper::Serial::~Serial</a></div><div class="ttdeci">~Serial() override</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1Serial_html_ad064f429cad2aae8e93a22811759c3be"><div class="ttname"><a href="classunilink_1_1wrapper_1_1Serial.html#ad064f429cad2aae8e93a22811759c3be">unilink::wrapper::Serial::Serial</a></div><div class="ttdeci">Serial(Serial &amp;&amp;) noexcept</div></div>
 <div class="ttc" id="aichannel_8hpp_html"><div class="ttname"><a href="ichannel_8hpp.html">ichannel.hpp</a></div></div>
 <div class="ttc" id="anamespaceboost_html"><div class="ttname"><a href="namespaceboost.html">boost</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2tcp__client_2tcp__client_8hpp_source.html#l00032">tcp_client.hpp:32</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
 <div class="ttc" id="aserial__config_8hpp_html"><div class="ttname"><a href="serial__config_8hpp.html">serial_config.hpp</a></div></div>
-<div class="ttc" id="astructunilink_1_1config_1_1SerialConfig_html"><div class="ttname"><a href="structunilink_1_1config_1_1SerialConfig.html">unilink::config::SerialConfig</a></div><div class="ttdef"><b>Definition:</b> <a href="serial__config_8hpp_source.html#l00026">serial_config.hpp:26</a></div></div>
 <div class="ttc" id="astructunilink_1_1wrapper_1_1Serial_1_1Impl_html"><div class="ttname"><a href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html">unilink::wrapper::Serial::Impl</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2serial_2serial_8cc_source.html#l00041">serial.cc:41</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="visibility_8hpp.html">visibility.hpp</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html_acdf44665d6deacb60ead833c4a5b0361"><div class="ttname"><a href="visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361">UNILINK_API</a></div><div class="ttdeci">#define UNILINK_API</div><div class="ttdef"><b>Definition:</b> <a href="visibility_8hpp_source.html#l00037">visibility.hpp:37</a></div></div>
@@ -189,7 +199,7 @@ $(document).ready(function(){initNavTree('wrapper_2serial_2serial_8hpp_source.ht
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_2d0fb09c380aed3a7497e2789d41b3dd.html">serial</a></li><li class="navelem"><a class="el" href="wrapper_2serial_2serial_8hpp.html">serial.hpp</a></li>
-    <li class="footer">Generated on Thu Feb 19 2026 15:10:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Feb 20 2026 00:29:23 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
