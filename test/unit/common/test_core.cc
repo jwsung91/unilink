@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <atomic>
+#include <boost/asio.hpp>
 #include <chrono>
 #include <filesystem>
 #include <fstream>

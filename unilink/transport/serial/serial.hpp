@@ -16,50 +16,49 @@
 
 #pragma once
 
-#include <atomic>
-#include <boost/asio.hpp>
-#include <cstddef>
-#include <deque>
 #include <memory>
-#include <optional>
 #include <string>
-#include <thread>
-#include <variant>
 #include <vector>
 
-#include "unilink/base/constants.hpp"
-#include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
-#include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/config/serial_config.hpp"
-#include "unilink/diagnostics/error_handler.hpp"
-#include "unilink/diagnostics/logger.hpp"
 #include "unilink/interface/channel.hpp"
-#include "unilink/interface/iserial_port.hpp"
-#include "unilink/memory/memory_pool.hpp"
+
+namespace boost {
+namespace asio {
+class io_context;
+}
+}  // namespace boost
 
 namespace unilink {
+
+namespace interface {
+class SerialPortInterface;
+}
+
 namespace transport {
 
-using base::LinkState;
-using concurrency::ThreadSafeLinkState;
-using config::SerialConfig;
-using interface::Channel;
-using interface::SerialPortInterface;
-namespace net = boost::asio;
-
-// Use static create() helpers to construct safely
-class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<Serial> {
+/**
+ * @brief Serial Transport implementation
+ */
+class UNILINK_API Serial : public interface::Channel, public std::enable_shared_from_this<Serial> {
  public:
-  using BufferVariant =
-      std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>;
-
-  static std::shared_ptr<Serial> create(const SerialConfig& cfg);
-  static std::shared_ptr<Serial> create(const SerialConfig& cfg, net::io_context& ioc);
-  static std::shared_ptr<Serial> create(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port,
-                                        net::io_context& ioc);
+  static std::shared_ptr<Serial> create(const config::SerialConfig& cfg);
+  static std::shared_ptr<Serial> create(const config::SerialConfig& cfg, boost::asio::io_context& ioc);
+  static std::shared_ptr<Serial> create(const config::SerialConfig& cfg,
+                                        std::unique_ptr<interface::SerialPortInterface> port,
+                                        boost::asio::io_context& ioc);
   ~Serial() override;
 
+  // Move semantics
+  Serial(Serial&&) noexcept;
+  Serial& operator=(Serial&&) noexcept;
+
+  // Non-copyable
+  Serial(const Serial&) = delete;
+  Serial& operator=(const Serial&) = delete;
+
+  // Channel implementation
   void start() override;
   void stop() override;
   bool is_connected() const override;
@@ -72,50 +71,17 @@ class UNILINK_API Serial : public Channel, public std::enable_shared_from_this<S
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
 
-  // Dynamic configuration methods
   void set_retry_interval(unsigned interval_ms);
 
  private:
-  explicit Serial(const SerialConfig& cfg);
-  Serial(const SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port, net::io_context& ioc);
-  void open_and_configure();
-  void start_read();
-  void do_write();
-  void handle_error(const char* where, const boost::system::error_code& ec);
-  void report_backpressure(size_t queued_bytes);
-  void schedule_retry(const char* where, const boost::system::error_code&);
-  void close_port();
-  void notify_state();
+  explicit Serial(const config::SerialConfig& cfg);
+  Serial(const config::SerialConfig& cfg, std::unique_ptr<interface::SerialPortInterface> port,
+         boost::asio::io_context& ioc);
 
- private:
-  bool started_ = false;
-  std::atomic<bool> stopping_{false};
-  net::io_context& ioc_;
-  bool owns_ioc_;
-  net::strand<net::io_context::executor_type> strand_;
-  std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
-  std::thread ioc_thread_;
-
-  std::unique_ptr<interface::SerialPortInterface> port_;
-  SerialConfig cfg_;
-  net::steady_timer retry_timer_;
-
-  std::vector<uint8_t> rx_;
-  std::deque<BufferVariant> tx_;
-  std::optional<BufferVariant> current_write_buffer_;
-  bool writing_ = false;
-  size_t queued_bytes_ = 0;
-  size_t bp_high_;   // Configurable backpressure threshold
-  size_t bp_limit_;  // Hard cap for queued bytes
-  size_t bp_low_;    // Backpressure relief threshold
-  bool backpressure_active_ = false;
-
-  OnBytes on_bytes_;
-  OnState on_state_;
-  OnBackpressure on_bp_;
-
-  std::atomic<bool> opened_{false};
-  ThreadSafeLinkState state_{LinkState::Idle};
+  struct Impl;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
 };
 }  // namespace transport
 }  // namespace unilink

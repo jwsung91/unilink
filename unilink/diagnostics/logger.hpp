@@ -18,17 +18,10 @@
 
 #include <atomic>
 #include <chrono>
-#include <condition_variable>
-#include <fstream>
 #include <functional>
-#include <iomanip>
 #include <memory>
-#include <mutex>
-#include <queue>
-#include <sstream>
 #include <string>
 #include <string_view>
-#include <thread>
 #include <vector>
 
 #include "log_rotation.hpp"
@@ -153,6 +146,14 @@ class UNILINK_API Logger {
   Logger();
   ~Logger();
 
+  // Move semantics
+  Logger(Logger&&) noexcept;
+  Logger& operator=(Logger&&) noexcept;
+
+  // Non-copyable
+  Logger(const Logger&) = delete;
+  Logger& operator=(const Logger&) = delete;
+
   /**
    * @brief Set minimum log level
    * @param level Messages below this level will be ignored
@@ -245,82 +246,10 @@ class UNILINK_API Logger {
   void critical(std::string_view component, std::string_view operation, std::string_view message);
 
  private:
-  // Non-copyable, non-movable
-  Logger(const Logger&) = delete;
-  Logger& operator=(const Logger&) = delete;
-  Logger(Logger&&) = delete;
-  Logger& operator=(Logger&&) = delete;
-
-  mutable std::mutex mutex_;
-  std::atomic<LogLevel> current_level_{LogLevel::INFO};
-  std::atomic<bool> enabled_{true};
-  std::atomic<int> outputs_{static_cast<int>(LogOutput::CONSOLE)};
-
-  std::string format_string_{"{timestamp} [{level}] [{component}] [{operation}] {message}"};
-
-  struct FormatPart {
-    enum Type { LITERAL, TIMESTAMP, LEVEL, COMPONENT, OPERATION, MESSAGE };
-    Type type;
-    std::string value;  // Only used for LITERAL
-  };
-  std::vector<FormatPart> parsed_format_;
-  void parse_format(const std::string& format);
-
-  std::unique_ptr<std::ofstream> file_output_;
-  LogCallback callback_;
-
-  // Log rotation support
-  std::unique_ptr<LogRotation> log_rotation_;
-  std::string current_log_file_;
-
-  // Async logging support
-  std::atomic<bool> async_enabled_{false};
-  AsyncLogConfig async_config_;
-  AsyncLogStats async_stats_;
-
-  // Threading for async logging
-  std::thread worker_thread_;
-  std::atomic<bool> running_{false};
-  std::atomic<bool> shutdown_requested_{false};
-
-  // Queue management
-  std::queue<LogEntry> log_queue_;
-  mutable std::mutex queue_mutex_;
-  std::condition_variable queue_cv_;
-  mutable std::mutex stats_mutex_;
-
-  std::string format_message(std::chrono::system_clock::time_point timestamp, LogLevel level,
-                             std::string_view component, std::string_view operation, std::string_view message);
-  std::string_view level_to_string(LogLevel level);
-
-  struct TimestampBuffer {
-    char data[64];
-    size_t length;
-    std::string_view view() const { return {data, length}; }
-  };
-  TimestampBuffer get_timestamp(std::chrono::system_clock::time_point timestamp);
-  void write_to_console(const std::string& message);
-  void write_to_file(const std::string& message);
-  void call_callback(LogLevel level, const std::string& message);
-
-  // Log rotation helper methods
-  void check_and_rotate_log();
-  void open_log_file(const std::string& filename);
-
-  // Async logging helper methods
-  void setup_async_logging(const AsyncLogConfig& config);
-  void teardown_async_logging();
-  void worker_loop();
-  void process_batch(const std::vector<LogEntry>& batch);
-  bool should_drop_log() const;
-  size_t get_queue_size() const;
-  void clear_queue();
-
-  // Statistics helpers
-  void update_stats_on_enqueue();
-  void update_stats_on_drop();
-  void update_stats_on_batch(size_t batch_size);
-  void update_stats_on_flush();
+  struct Impl;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
 };
 
 /**
@@ -399,5 +328,4 @@ class UNILINK_API Logger {
   } while (0)
 
 }  // namespace diagnostics
-
 }  // namespace unilink

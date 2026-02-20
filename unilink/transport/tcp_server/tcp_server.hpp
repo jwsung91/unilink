@@ -16,52 +16,48 @@
 
 #pragma once
 
-#include <algorithm>
-#include <array>
-#include <atomic>
-#include <boost/asio.hpp>
-#include <cstdint>
-#include <deque>
-#include <functional>
 #include <memory>
-#include <mutex>
-#include <shared_mutex>
-#include <thread>
-#include <unordered_map>
+#include <string>
 #include <vector>
 
-#include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
-#include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/config/tcp_server_config.hpp"
-#include "unilink/diagnostics/error_handler.hpp"
-#include "unilink/diagnostics/logger.hpp"
 #include "unilink/interface/channel.hpp"
-#include "unilink/interface/itcp_acceptor.hpp"
-#include "unilink/transport/tcp_server/tcp_server_session.hpp"
+
+namespace boost {
+namespace asio {
+class io_context;
+}
+}  // namespace boost
 
 namespace unilink {
+
+namespace interface {
+class TcpAcceptorInterface;
+}
+
 namespace transport {
 
-namespace net = boost::asio;
-
-using base::LinkState;
-using concurrency::ThreadSafeLinkState;
-using config::TcpServerConfig;
-using interface::Channel;
-using interface::TcpAcceptorInterface;
-using tcp = net::ip::tcp;
-
-// Use static create() helpers to construct safely
-class UNILINK_API TcpServer : public Channel,
-                              public std::enable_shared_from_this<TcpServer> {  // NOLINT
+/**
+ * @brief Thread-safe TCP Server implementation
+ */
+class UNILINK_API TcpServer : public interface::Channel, public std::enable_shared_from_this<TcpServer> {
  public:
-  static std::shared_ptr<TcpServer> create(const TcpServerConfig& cfg);
-  static std::shared_ptr<TcpServer> create(const TcpServerConfig& cfg,
+  static std::shared_ptr<TcpServer> create(const config::TcpServerConfig& cfg);
+  static std::shared_ptr<TcpServer> create(const config::TcpServerConfig& cfg,
                                            std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
-                                           net::io_context& ioc);
-  ~TcpServer();
+                                           boost::asio::io_context& ioc);
+  ~TcpServer() override;
 
+  // Move semantics
+  TcpServer(TcpServer&&) noexcept;
+  TcpServer& operator=(TcpServer&&) noexcept;
+
+  // Non-copyable
+  TcpServer(const TcpServer&) = delete;
+  TcpServer& operator=(const TcpServer&) = delete;
+
+  // Channel implementation
   void start() override;
   void stop() override;
   bool is_connected() const override;
@@ -72,16 +68,14 @@ class UNILINK_API TcpServer : public Channel,
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
 
-  // Multi-client support methods
+  // Multi-client support
   bool broadcast(const std::string& message);
   bool send_to_client(size_t client_id, const std::string& message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 
-  // Async stop request (safe to call from callbacks)
   void request_stop();
 
-  // Multi-client callback type definitions
   using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
   using MultiClientDataHandler = std::function<void(size_t client_id, const std::string& data)>;
   using MultiClientDisconnectHandler = std::function<void(size_t client_id)>;
@@ -90,54 +84,20 @@ class UNILINK_API TcpServer : public Channel,
   void on_multi_data(MultiClientDataHandler handler);
   void on_multi_disconnect(MultiClientDisconnectHandler handler);
 
-  // Client limit configuration
   void set_client_limit(size_t max_clients);
   void set_unlimited_clients();
 
-  // Public getter for state for testing
   base::LinkState get_state() const;
 
  private:
-  explicit TcpServer(const TcpServerConfig& cfg);
-  TcpServer(const TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
-            net::io_context& ioc);
-  void do_accept();
-  void notify_state();
-  void attempt_port_binding(int retry_count);
+  explicit TcpServer(const config::TcpServerConfig& cfg);
+  TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interface::TcpAcceptorInterface> acceptor,
+            boost::asio::io_context& ioc);
 
- private:
-  std::atomic<bool> stopping_{false};
-  std::atomic<size_t> next_client_id_{0};
-
-  std::unique_ptr<net::io_context> owned_ioc_;
-  bool owns_ioc_;
-  bool uses_global_ioc_;
-  net::io_context& ioc_;
-  std::thread ioc_thread_;
-
-  std::unique_ptr<interface::TcpAcceptorInterface> acceptor_;
-  TcpServerConfig cfg_;
-
-  // State and Callbacks (Must outlive sessions_ because session destruction can trigger callbacks)
-  ThreadSafeLinkState state_{LinkState::Idle};
-  OnBytes on_bytes_;
-  OnState on_state_;
-  OnBackpressure on_bp_;
-  MultiClientConnectHandler on_multi_connect_;
-  MultiClientDataHandler on_multi_data_;
-  MultiClientDisconnectHandler on_multi_disconnect_;
-
-  // Multi-client support
-  mutable std::mutex sessions_mutex_;  // Guards sessions_ and current_session_
-  std::unordered_map<size_t, std::shared_ptr<TcpServerSession>> sessions_;
-
-  // Client limit configuration
-  size_t max_clients_;
-  bool client_limit_enabled_;
-  bool paused_accept_ = false;  // Guards against tight accept loops when full
-
-  // Current active session for existing API compatibility
-  std::shared_ptr<TcpServerSession> current_session_;
+  struct Impl;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
 };
 }  // namespace transport
 }  // namespace unilink

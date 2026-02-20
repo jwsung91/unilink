@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <boost/asio.hpp>
+#include <thread>
 
 #include "test/utils/contract_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"
