@@ -113,9 +113,7 @@ struct UdpChannel::Impl {
     set_remote_from_config();
   }
 
-  ~Impl() {
-    // Note: stop() should be called from UdpChannel destructor
-  }
+  ~Impl() = default;
 
   void open_socket(std::shared_ptr<UdpChannel> self) {
     if (stopping_.load() || stop_requested_.load()) return;
@@ -159,11 +157,11 @@ struct UdpChannel::Impl {
       return;
     }
 
-    socket_.async_receive_from(
-        net::buffer(rx_), recv_endpoint_,
-        [self](const boost::system::error_code& ec, std::size_t bytes) {
-          self->get_impl()->handle_receive(self, ec, bytes);
-        });
+    socket_.async_receive_from(net::buffer(rx_), recv_endpoint_,
+                               [self](const boost::system::error_code& ec, std::size_t bytes) {
+                                 auto impl = self->get_impl();
+                                 impl->handle_receive(self, ec, bytes);
+                               });
   }
 
   void handle_receive(std::shared_ptr<UdpChannel> self, const boost::system::error_code& ec, std::size_t bytes) {
@@ -460,11 +458,13 @@ UdpChannel::UdpChannel(const config::UdpConfig& cfg) : impl_(std::make_unique<Im
 UdpChannel::UdpChannel(const config::UdpConfig& cfg, net::io_context& ioc) : impl_(std::make_unique<Impl>(cfg, ioc)) {}
 
 UdpChannel::~UdpChannel() {
-  stop();
-  impl_->on_bytes_ = nullptr;
-  impl_->on_state_ = nullptr;
-  impl_->on_bp_ = nullptr;
-  impl_->join_ioc_thread(true);
+  if (impl_) {
+    // Cannot use shared_from_this in destructor. Use internal cleanup directly.
+    impl_->stop_requested_.store(true);
+    impl_->stopping_.store(true);
+    impl_->perform_stop_cleanup();
+    impl_->join_ioc_thread(true);
+  }
 }
 
 UdpChannel::UdpChannel(UdpChannel&&) noexcept = default;

@@ -94,15 +94,7 @@ struct TcpServer::Impl {
     }
   }
 
-  ~Impl() {
-    try {
-      if (!state_.is_state(base::LinkState::Closed)) {
-        // Since we can't easily get shared_from_this() in ~Impl,
-        // stop() logic is partially duplicated or called from TcpServer::~TcpServer
-      }
-    } catch (...) {
-    }
-  }
+  ~Impl() = default;
 
   void notify_state() {
     if (stopping_.load()) return;
@@ -139,7 +131,10 @@ struct TcpServer::Impl {
         timer->expires_after(std::chrono::milliseconds(cfg_.port_retry_interval_ms));
         timer->async_wait([self, retry_count, timer](const boost::system::error_code& timer_ec) {
           if (!timer_ec) {
-            self->get_impl()->attempt_port_binding(self, retry_count + 1);
+            auto impl = self->get_impl();
+            if (!impl->stopping_.load()) {
+              impl->attempt_port_binding(self, retry_count + 1);
+            }
           }
         });
         return;
@@ -179,8 +174,9 @@ struct TcpServer::Impl {
           auto timer = std::make_shared<net::steady_timer>(impl->ioc_);
           timer->expires_after(std::chrono::milliseconds(100));
           timer->async_wait([self, timer](const boost::system::error_code&) {
-            if (!self->get_impl()->stopping_.load()) {
-              self->get_impl()->do_accept(self);
+            auto impl = self->get_impl();
+            if (!impl->stopping_.load()) {
+              impl->do_accept(self);
             }
           });
         }
@@ -255,8 +251,7 @@ struct TcpServer::Impl {
         {
           std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
           impl->sessions_.erase(client_id);
-          if (impl->paused_accept_ &&
-              (!impl->client_limit_enabled_ || impl->sessions_.size() < impl->max_clients_)) {
+          if (impl->paused_accept_ && (!impl->client_limit_enabled_ || impl->sessions_.size() < impl->max_clients_)) {
             impl->paused_accept_ = false;
             net::post(impl->ioc_, [self] { self->get_impl()->do_accept(self); });
           }
@@ -288,107 +283,81 @@ struct TcpServer::Impl {
     });
   }
 
+  void perform_cleanup() {
+    try {
+      boost::system::error_code ec;
+      if (acceptor_ && acceptor_->is_open()) {
+        acceptor_->close(ec);
+      }
+
+      std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
+      {
+        std::lock_guard<std::mutex> lock(sessions_mutex_);
+        sessions_copy.reserve(sessions_.size());
+        for (auto& kv : sessions_) {
+          sessions_copy.push_back(kv.second);
+        }
+        sessions_.clear();
+        current_session_.reset();
+      }
+
+      for (auto& session : sessions_copy) {
+        if (session) {
+          session->stop();
+        }
+      }
+
+      state_.set_state(base::LinkState::Closed);
+      notify_state();
+    } catch (...) {
+    }
+  }
+
   void stop(std::shared_ptr<TcpServer> self) {
     if (stopping_.exchange(true)) {
       return;
     }
 
-    try {
-      {
-        std::lock_guard<std::mutex> lock(sessions_mutex_);
-        on_bytes_ = nullptr;
-        on_state_ = nullptr;
-        on_bp_ = nullptr;
-        on_multi_connect_ = nullptr;
-        on_multi_data_ = nullptr;
-        on_multi_disconnect_ = nullptr;
-      }
+    {
+      std::lock_guard<std::mutex> lock(sessions_mutex_);
+      on_bytes_ = nullptr;
+      on_state_ = nullptr;
+      on_bp_ = nullptr;
+      on_multi_connect_ = nullptr;
+      on_multi_data_ = nullptr;
+      on_multi_disconnect_ = nullptr;
+    }
 
-      auto cleanup_flag = std::make_shared<std::atomic<bool>>(false);
-      auto cleanup = [this, cleanup_flag]() {
-        if (cleanup_flag->exchange(true)) return;
+    if (ioc_.get_executor().running_in_this_thread()) {
+      perform_cleanup();
+      if (owns_ioc_) ioc_.stop();
+      return;
+    }
 
-        try {
-          boost::system::error_code ec;
-          if (acceptor_ && acceptor_->is_open()) {
-            acceptor_->close(ec);
-          }
+    bool has_active_ioc = owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
 
-          std::vector<std::shared_ptr<TcpServerSession>> sessions_copy;
-          {
-            std::lock_guard<std::mutex> lock(sessions_mutex_);
-            sessions_copy.reserve(sessions_.size());
-            for (auto& kv : sessions_) {
-              sessions_copy.push_back(kv.second);
-            }
-            sessions_.clear();
-            current_session_.reset();
-          }
+    if (has_active_ioc && self) {
+      auto cleanup_promise = std::make_shared<std::promise<void>>();
+      auto cleanup_future = cleanup_promise->get_future();
 
-          for (auto& session : sessions_copy) {
-            if (session) {
-              session->stop();
-            }
-          }
-
-          state_.set_state(base::LinkState::Closed);
-          notify_state();
-        } catch (const std::exception& e) {
-          std::cerr << "TcpServer cleanup failed: " << e.what() << std::endl;
-        } catch (...) {
-          std::cerr << "TcpServer cleanup failed with unknown error" << std::endl;
+      std::weak_ptr<TcpServer> weak_self = self;
+      net::dispatch(ioc_, [weak_self, cleanup_promise]() {
+        if (auto shared_self = weak_self.lock()) {
+          shared_self->get_impl()->perform_cleanup();
         }
-      };
+        cleanup_promise->set_value();
+      });
 
-      const bool in_ioc_thread = ioc_.get_executor().running_in_this_thread();
-
-      if (in_ioc_thread) {
-        cleanup();
-        if (owns_ioc_) {
-          ioc_.stop();
-        }
-        return;
+      if (cleanup_future.wait_for(std::chrono::seconds(2)) == std::future_status::timeout) {
+        perform_cleanup();
       }
+    } else {
+      perform_cleanup();
+    }
 
-      bool use_sync_cleanup = true;
-      const bool has_active_ioc_thread =
-          owns_ioc_ || (uses_global_ioc_ && concurrency::IoContextManager::instance().is_running());
-
-      if (has_active_ioc_thread) {
-        try {
-          use_sync_cleanup = false;
-
-          auto cleanup_promise = std::make_shared<std::promise<void>>();
-          auto cleanup_future = cleanup_promise->get_future();
-
-          std::weak_ptr<TcpServer> weak_self = self;
-          net::dispatch(ioc_, [weak_self, cleanup, cleanup_promise]() {
-            if (auto shared_self = weak_self.lock()) {
-              cleanup();
-            }
-            cleanup_promise->set_value();
-          });
-
-          if (cleanup_future.wait_for(std::chrono::seconds(5)) != std::future_status::ready) {
-            UNILINK_LOG_WARNING("tcp_server", "stop", "Async stop timed out, continuing in background");
-          }
-        } catch (...) {
-          use_sync_cleanup = true;
-        }
-      }
-
-      if (use_sync_cleanup) {
-        cleanup();
-      }
-
-      if (owns_ioc_ && ioc_thread_.joinable()) {
-        ioc_thread_.join();
-        ioc_.restart();
-      }
-    } catch (const std::exception& e) {
-      std::cerr << "TcpServer::stop failed: " << e.what() << std::endl;
-    } catch (...) {
-      std::cerr << "TcpServer::stop failed with unknown error" << std::endl;
+    if (owns_ioc_ && ioc_thread_.joinable()) {
+      ioc_thread_.join();
+      ioc_.restart();
     }
   }
 };
@@ -410,12 +379,9 @@ TcpServer::TcpServer(const config::TcpServerConfig& cfg, std::unique_ptr<interfa
     : impl_(std::make_unique<Impl>(cfg, std::move(acceptor), ioc)) {}
 
 TcpServer::~TcpServer() {
-  try {
-    if (!get_impl()->state_.is_state(base::LinkState::Closed)) {
-      stop();
-    }
-  } catch (...) {
-    std::cerr << "TcpServer destructor failed" << std::endl;
+  if (impl_ && !impl_->state_.is_state(base::LinkState::Closed)) {
+    // Pass nullptr to stop() to indicate we are in destructor and cannot use shared_from_this
+    impl_->stop(nullptr);
   }
 }
 
@@ -606,9 +572,7 @@ void TcpServer::set_client_limit(size_t max) {
   impl->client_limit_enabled_ = true;
   if (impl->paused_accept_ && impl->sessions_.size() < impl->max_clients_) {
     impl->paused_accept_ = false;
-    net::post(impl->ioc_, [self = shared_from_this()] {
-      self->get_impl()->do_accept(self);
-    });
+    net::post(impl->ioc_, [self = shared_from_this()] { self->get_impl()->do_accept(self); });
   }
 }
 
@@ -619,9 +583,7 @@ void TcpServer::set_unlimited_clients() {
   impl->max_clients_ = 0;
   if (impl->paused_accept_) {
     impl->paused_accept_ = false;
-    net::post(impl->ioc_, [self = shared_from_this()] {
-      self->get_impl()->do_accept(self);
-    });
+    net::post(impl->ioc_, [self = shared_from_this()] { self->get_impl()->do_accept(self); });
   }
 }
 

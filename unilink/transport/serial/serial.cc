@@ -276,26 +276,35 @@ struct Serial::Impl {
         current);
   }
 
+  void perform_cleanup() {
+    try {
+      retry_timer_.cancel();
+      close_port();
+      tx_.clear();
+      queued_bytes_ = 0;
+      writing_ = false;
+      report_backpressure(queued_bytes_);
+      opened_.store(false);
+      state_.set_state(LinkState::Closed);
+      notify_state();
+    } catch (...) {
+    }
+  }
+
   void handle_error(std::shared_ptr<Serial> self, const char* where, const boost::system::error_code& ec) {
     if (ec == boost::asio::error::eof) {
-      start_read(self);
+      if (self) start_read(self);
       return;
     }
 
     if (stopping_.load()) {
-      opened_.store(false);
-      close_port();
-      state_.set_state(LinkState::Closed);
-      notify_state();
+      perform_cleanup();
       return;
     }
 
     if (ec == boost::asio::error::operation_aborted) {
       if (state_.is_state(LinkState::Error)) return;
-      opened_.store(false);
-      close_port();
-      state_.set_state(LinkState::Closed);
-      notify_state();
+      perform_cleanup();
       return;
     }
 
@@ -309,7 +318,7 @@ struct Serial::Impl {
       close_port();
       state_.set_state(LinkState::Connecting);
       notify_state();
-      schedule_retry(self, where, ec);
+      if (self) schedule_retry(self, where, ec);
     } else {
       opened_.store(false);
       close_port();
@@ -324,7 +333,7 @@ struct Serial::Impl {
     if (stopping_.load()) return;
     retry_timer_.expires_after(std::chrono::milliseconds(cfg_.retry_interval_ms));
     retry_timer_.async_wait([self](auto e) {
-      if (!e && !self->get_impl()->stopping_.load()) self->get_impl()->open_and_configure(self);
+      if (!e && self && !self->get_impl()->stopping_.load()) self->get_impl()->open_and_configure(self);
     });
   }
 
@@ -382,7 +391,14 @@ Serial::Serial(const config::SerialConfig& cfg, std::unique_ptr<interface::Seria
     : impl_(std::make_unique<Impl>(cfg, std::move(port), ioc)) {}
 
 Serial::~Serial() {
-  if (get_impl()->started_ && !get_impl()->state_.is_state(LinkState::Closed)) stop();
+  if (impl_ && impl_->started_ && !impl_->state_.is_state(LinkState::Closed)) {
+    // In destructor, stop without shared_from_this
+    impl_->stopping_.store(true);
+    impl_->perform_cleanup();
+    if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {
+      impl_->ioc_thread_.join();
+    }
+  }
 }
 
 Serial::Serial(Serial&&) noexcept = default;
@@ -406,9 +422,11 @@ void Serial::start() {
   auto self = shared_from_this();
   net::post(impl->strand_, [self] {
     auto impl = self->get_impl();
-    impl->state_.set_state(LinkState::Connecting);
-    impl->notify_state();
-    impl->open_and_configure(self);
+    if (!impl->stopping_.load()) {
+      impl->state_.set_state(LinkState::Connecting);
+      impl->notify_state();
+      impl->open_and_configure(self);
+    }
   });
   impl->started_ = true;
 }
@@ -420,29 +438,18 @@ void Serial::stop() {
     return;
   }
 
-  impl->stopping_.store(true);
-  if (!impl->state_.is_state(LinkState::Closed)) {
-    if (impl->work_guard_) impl->work_guard_->reset();
-    auto self = shared_from_this();
-    net::post(impl->strand_, [self] {
-      auto impl = self->get_impl();
-      impl->retry_timer_.cancel();
-      impl->close_port();
-      impl->tx_.clear();
-      impl->queued_bytes_ = 0;
-      impl->writing_ = false;
-      impl->report_backpressure(impl->queued_bytes_);
-      if (impl->owns_ioc_) impl->ioc_.stop();
-    });
+  if (impl->stopping_.exchange(true)) return;
 
-    if (impl->owns_ioc_ && impl->ioc_thread_.joinable()) {
-      impl->ioc_thread_.join();
-      impl->ioc_.restart();
-    }
+  auto self = shared_from_this();
+  net::post(impl->strand_, [self] {
+    auto impl = self->get_impl();
+    impl->perform_cleanup();
+    if (impl->owns_ioc_) impl->ioc_.stop();
+  });
 
-    impl->opened_.store(false);
-    impl->state_.set_state(LinkState::Closed);
-    impl->notify_state();
+  if (impl->owns_ioc_ && impl->ioc_thread_.joinable()) {
+    impl->ioc_thread_.join();
+    impl->ioc_.restart();
   }
   impl->started_ = false;
 }

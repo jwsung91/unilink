@@ -41,8 +41,7 @@ namespace transport {
 /**
  * @brief Thread-safe TCP Server implementation
  */
-class UNILINK_API TcpServer : public interface::Channel,
-                              public std::enable_shared_from_this<TcpServer> {
+class UNILINK_API TcpServer : public interface::Channel, public std::enable_shared_from_this<TcpServer> {
  public:
   static std::shared_ptr<TcpServer> create(const config::TcpServerConfig& cfg);
   static std::shared_ptr<TcpServer> create(const config::TcpServerConfig& cfg,

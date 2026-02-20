@@ -38,8 +38,7 @@ struct IoContextManager::Impl {
 
   Impl() { diagnostics::Logger::instance(); }
 
-  explicit Impl(std::shared_ptr<IoContext> external_context)
-      : owns_context_(false), ioc_(std::move(external_context)) {
+  explicit Impl(std::shared_ptr<IoContext> external_context) : owns_context_(false), ioc_(std::move(external_context)) {
     diagnostics::Logger::instance();
   }
 
@@ -104,8 +103,7 @@ IoContextManager::IoContextManager() : impl_(std::make_unique<Impl>()) {}
 IoContextManager::IoContextManager(std::shared_ptr<IoContext> external_context)
     : impl_(std::make_unique<Impl>(std::move(external_context))) {}
 
-IoContextManager::IoContextManager(IoContext& external_context)
-    : impl_(std::make_unique<Impl>(external_context)) {}
+IoContextManager::IoContextManager(IoContext& external_context) : impl_(std::make_unique<Impl>(external_context)) {}
 
 IoContextManager::~IoContextManager() = default;
 
