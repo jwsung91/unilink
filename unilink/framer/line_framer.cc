@@ -33,9 +33,66 @@ LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_
 void LineFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
 
+  // Optimization: Fast path for zero-copy processing when buffer is empty
+  // This avoids copying data to the internal buffer if the input contains complete messages.
+  if (buffer_.empty()) {
+    size_t processed_count = 0;
+    size_t search_cursor = 0;
+
+    while (true) {
+      if (search_cursor >= data.size()) break;
+
+      auto search_begin = data.begin() + static_cast<std::ptrdiff_t>(search_cursor);
+      decltype(data.begin()) it;
+
+      if (delimiter_.size() == 1) {
+        it = std::find(search_begin, data.end(), static_cast<uint8_t>(delimiter_[0]));
+      } else {
+        it = std::search(search_begin, data.end(), delimiter_.begin(), delimiter_.end());
+      }
+
+      if (it == data.end()) {
+        // No more delimiters found.
+        size_t remaining_len = data.size() - processed_count;
+        if (remaining_len > max_length_) {
+          // The partial message exceeds max length. Discard it.
+          // Buffer remains empty, scanned_idx_ is 0.
+          return;
+        }
+
+        // Append remaining partial message to buffer
+        buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(processed_count), data.end());
+        // We have scanned everything in the buffer
+        scanned_idx_ = buffer_.size();
+        return;
+      }
+
+      // Found a delimiter
+      size_t match_start_idx = static_cast<size_t>(std::distance(data.begin(), it));
+      size_t match_end_idx = match_start_idx + delimiter_.length();
+      size_t current_msg_total_len = match_end_idx - processed_count;
+
+      if (current_msg_total_len <= max_length_) {
+        // Valid message - Emit directly from input data (Zero Copy)
+        if (on_message_) {
+          size_t payload_len =
+              include_delimiter_ ? current_msg_total_len : (current_msg_total_len - delimiter_.length());
+          on_message_(data.subspan(processed_count, payload_len));
+        }
+      } else {
+        // Message exceeds limit. Skip it.
+      }
+
+      // Mark these bytes as processed
+      processed_count = match_end_idx;
+      search_cursor = processed_count;
+    }
+    // All data processed
+    return;
+  }
+
   // Append new data to buffer
   // We utilize a single buffered path to ensure O(N) complexity via the scanned_idx_ optimization.
-  // The 'Fast Path' (zero-copy) optimization was removed to ensure strict correctness and simplify overflow handling.
   buffer_.insert(buffer_.end(), data.begin(), data.end());
 
   // Determine where to start searching to avoid re-scanning
