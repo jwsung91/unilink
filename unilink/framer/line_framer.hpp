@@ -56,6 +56,15 @@ class UNILINK_API LineFramer : public IFramer {
   size_t scanned_idx_ = 0;
   std::vector<uint8_t> buffer_;
   MessageCallback on_message_;
+
+  /**
+   * @brief Helper to scan data for delimiters and process messages.
+   *
+   * @param data The data to scan.
+   * @param search_start_offset The offset in data to start searching from.
+   * @return The number of bytes processed (emitted as messages).
+   */
+  size_t scan_and_process(memory::ConstByteSpan data, size_t search_start_offset);
 };
 
 }  // namespace framer
