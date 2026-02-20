@@ -72,7 +72,10 @@ struct IoContextManager::Impl {
         if (io_thread_.get_id() != std::this_thread::get_id()) {
           worker = std::move(io_thread_);
         } else {
-          UNILINK_LOG_ERROR("io_context_manager", "stop", "Cannot join IoContext thread from within itself.");
+          try {
+            UNILINK_LOG_ERROR("io_context_manager", "stop", "Cannot join IoContext thread from within itself.");
+          } catch (...) {
+          }
           stopping_ = false;
           cv_.notify_all();
           return;
@@ -161,7 +164,10 @@ void IoContextManager::start() {
       try {
         context->run();
       } catch (const std::exception& e) {
-        UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
+        try {
+          UNILINK_LOG_ERROR("io_context_manager", "run", "Thread error: " + std::string(e.what()));
+        } catch (...) {
+        }
       } catch (...) {
       }
       impl_->running_.store(false);

@@ -22,7 +22,6 @@
 #include <condition_variable>
 #include <functional>
 #include <mutex>
-#include <shared_mutex>
 #include <vector>
 
 #include "unilink/base/common.hpp"
@@ -33,9 +32,9 @@ namespace concurrency {
 /**
  * @brief Thread-safe state management class
  *
- * Provides thread-safe state management with read-write lock semantics.
- * Multiple readers can access the state simultaneously, but only one writer
- * can modify the state at a time.
+ * Provides thread-safe state management.
+ * Note: Previously used shared_mutex for read-write optimization, but switched to
+ * std::mutex due to stability issues on some platforms (e.g., macOS EINVAL).
  */
 template <typename StateType>
 class ThreadSafeState {
@@ -74,7 +73,7 @@ class ThreadSafeState {
   void notify_state_change();
 
  private:
-  mutable std::shared_mutex state_mutex_;
+  mutable std::mutex state_mutex_;
   State state_;
   std::atomic<bool> state_changed_{false};
 
@@ -172,14 +171,14 @@ ThreadSafeState<StateType>::ThreadSafeState(const State& initial_state) : state_
 
 template <typename StateType>
 StateType ThreadSafeState<StateType>::get_state() const {
-  std::shared_lock<std::shared_mutex> lock(state_mutex_);
+  std::unique_lock<std::mutex> lock(state_mutex_);
   return state_;
 }
 
 template <typename StateType>
 void ThreadSafeState<StateType>::set_state(const State& new_state) {
   {
-    std::unique_lock<std::shared_mutex> lock(state_mutex_);
+    std::unique_lock<std::mutex> lock(state_mutex_);
     state_ = new_state;
     state_changed_.store(true);
   }
@@ -190,7 +189,7 @@ void ThreadSafeState<StateType>::set_state(const State& new_state) {
 template <typename StateType>
 void ThreadSafeState<StateType>::set_state(State&& new_state) {
   {
-    std::unique_lock<std::shared_mutex> lock(state_mutex_);
+    std::unique_lock<std::mutex> lock(state_mutex_);
     state_ = std::move(new_state);
     state_changed_.store(true);
   }
@@ -200,7 +199,7 @@ void ThreadSafeState<StateType>::set_state(State&& new_state) {
 
 template <typename StateType>
 bool ThreadSafeState<StateType>::compare_and_set(const State& expected, const State& desired) {
-  std::unique_lock<std::shared_mutex> lock(state_mutex_);
+  std::unique_lock<std::mutex> lock(state_mutex_);
   if (state_ == expected) {
     state_ = desired;
     state_changed_.store(true);
@@ -216,7 +215,7 @@ template <typename StateType>
 StateType ThreadSafeState<StateType>::exchange(const State& new_state) {
   State old_state;
   {
-    std::unique_lock<std::shared_mutex> lock(state_mutex_);
+    std::unique_lock<std::mutex> lock(state_mutex_);
     old_state = state_;
     state_ = new_state;
     state_changed_.store(true);
@@ -251,20 +250,20 @@ void ThreadSafeState<StateType>::clear_state_change_callbacks() {
 
 template <typename StateType>
 void ThreadSafeState<StateType>::wait_for_state(const State& expected_state, std::chrono::milliseconds timeout) {
-  std::unique_lock<std::shared_mutex> lock(state_mutex_);
+  std::unique_lock<std::mutex> lock(state_mutex_);
   state_cv_.wait_for(lock, timeout, [this, &expected_state] { return state_ == expected_state; });
 }
 
 template <typename StateType>
 void ThreadSafeState<StateType>::wait_for_state_change(std::chrono::milliseconds timeout) {
-  std::unique_lock<std::shared_mutex> lock(state_mutex_);
+  std::unique_lock<std::mutex> lock(state_mutex_);
   state_cv_.wait_for(lock, timeout, [this] { return state_changed_.load(); });
   state_changed_.store(false);
 }
 
 template <typename StateType>
 bool ThreadSafeState<StateType>::is_state(const State& expected_state) const {
-  std::shared_lock<std::shared_mutex> lock(state_mutex_);
+  std::unique_lock<std::mutex> lock(state_mutex_);
   return state_ == expected_state;
 }
 
