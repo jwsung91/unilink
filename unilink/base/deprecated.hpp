@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-#include <iostream>
-#include <string>
+#pragma once
 
-#include "unilink/unilink.hpp"
+#if defined(_MSC_VER)
+#define UNILINK_DEPRECATED_MSG(msg) __declspec(deprecated(msg))
+#elif defined(__GNUC__) || defined(__clang__)
+#define UNILINK_DEPRECATED_MSG(msg) __attribute__((deprecated(msg)))
+#else
+#define UNILINK_DEPRECATED_MSG(msg)
+#endif
 
-using namespace unilink;
-
-int main() {
-  // Setup UDP receiver on port 9000
-  auto receiver =
-      udp(9000)
-          .on_data([](const unilink::MessageContext& ctx) { std::cout << "Received UDP: " << ctx.data() << std::endl; })
-          .build();
-
-  if (receiver->start().get()) {
-    std::cout << "UDP Receiver listening on port 9000. Press Enter to stop..." << std::endl;
-    std::cin.get();
-  } else {
-    std::cerr << "Failed to start UDP receiver" << std::endl;
-  }
-
-  receiver->stop();
-  return 0;
-}
+// Fallback or alias if desired, but prioritize safety
+#ifndef UNILINK_DEPRECATED
+#define UNILINK_DEPRECATED(msg) UNILINK_DEPRECATED_MSG(msg)
+#endif

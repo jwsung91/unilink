@@ -30,7 +30,7 @@ using namespace unilink;
 
 class EchoClient {
  private:
-  std::shared_ptr<wrapper::TcpClient> client_;
+  std::shared_ptr<unilink::TcpClient> client_;
   diagnostics::Logger& logger_;
   std::atomic<bool> running_;
   std::string host_;
@@ -58,18 +58,18 @@ class EchoClient {
     }
   }
 
-  void on_connect(const wrapper::ConnectionContext& ctx) { logger_.info("client", "connect", "Connected to server"); }
+  void on_connect(const unilink::ConnectionContext&) { logger_.info("client", "connect", "Connected to server"); }
 
-  void on_data(const wrapper::MessageContext& ctx) {
+  void on_data(const unilink::MessageContext& ctx) {
     logger_.info("client", "data", "Received: " + std::string(ctx.data()));
   }
 
-  void on_disconnect(const wrapper::ConnectionContext& ctx) {
+  void on_disconnect(const unilink::ConnectionContext&) {
     logger_.info("client", "disconnect", "Disconnected from server");
     running_.store(false);
   }
 
-  void on_error(const wrapper::ErrorContext& ctx) {
+  void on_error(const unilink::ErrorContext& ctx) {
     logger_.error("client", "error", "Error: " + std::string(ctx.message()));
   }
 
@@ -77,10 +77,10 @@ class EchoClient {
     client_ = unilink::tcp_client(host_, port_)
                   .retry_interval(1000)
                   .max_retries(5)
-                  .on_connect([this](const wrapper::ConnectionContext& ctx) { on_connect(ctx); })
-                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) { on_disconnect(ctx); })
-                  .on_data([this](const wrapper::MessageContext& ctx) { on_data(ctx); })
-                  .on_error([this](const wrapper::ErrorContext& ctx) { on_error(ctx); })
+                  .on_connect([this](const unilink::ConnectionContext& ctx) { on_connect(ctx); })
+                  .on_disconnect([this](const unilink::ConnectionContext& ctx) { on_disconnect(ctx); })
+                  .on_data([this](const unilink::MessageContext& ctx) { on_data(ctx); })
+                  .on_error([this](const unilink::ErrorContext& ctx) { on_error(ctx); })
                   .build();
 
     if (!client_) {

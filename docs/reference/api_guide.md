@@ -36,11 +36,11 @@ auto channel = unilink::{type}(params)
 
 | Method                           | Description                                                       | Default |
 | -------------------------------- | ----------------------------------------------------------------- | ------- |
-| `.on_data(callback)`             | Handle incoming data (`std::string`)                              | None    |
+| `.on_data(callback)`             | Handle incoming data (`const MessageContext&`)                    | None    |
 | `.on_bytes(callback)`            | Handle incoming raw data (`ConstByteSpan`)                        | None    |
-| `.on_connect(callback)`          | Handle connection events                                          | None    |
-| `.on_disconnect(callback)`       | Handle disconnection                                              | None    |
-| `.on_error(callback)`            | Handle errors                                                     | None    |
+| `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)             | None    |
+| `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                 | None    |
+| `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                             | None    |
 | `.auto_manage(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false` |
 | `.use_independent_context(bool)` | Create and run a dedicated `io_context` thread managed by unilink | `false` |
 | `.build()`                       | **Required**: Build the wrapper instance                          | -       |
@@ -50,7 +50,7 @@ auto channel = unilink::{type}(params)
 - `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
 - `TcpServerBuilder`: `.enable_port_retry(enable, max_retries, retry_interval_ms)`
 - `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` **(must choose one before `build()`)**
-- TCP server callbacks also accept multi-client signatures: `.on_connect(size_t, std::string)`, `.on_data(size_t, std::string)`, `.on_bytes(size_t, ConstByteSpan)`, `.on_disconnect(size_t)`
+- TCP server callbacks use the same Context-based signatures. Use `ctx.client_id()` and `ctx.client_info()` to distinguish clients.
 
 ### Efficient Data Handling with SafeSpan
 
@@ -110,17 +110,17 @@ Connect to remote TCP servers with automatic reconnection.
 #include "unilink/unilink.hpp"
 
 auto client = unilink::tcp_client("192.168.1.100", 8080)
-    .on_connect([]() {
+    .on_connect([](const unilink::ConnectionContext& ctx) {
         std::cout << "Connected!" << std::endl;
     })
-    .on_data([](const std::string& data) {
-        std::cout << "Received: " << data << std::endl;
+    .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "Received: " << ctx.data() << std::endl;
     })
-    .on_disconnect([]() {
+    .on_disconnect([](const unilink::ConnectionContext& ctx) {
         std::cout << "Disconnected" << std::endl;
     })
-    .on_error([](const std::string& error) {
-        std::cerr << "Error: " << error << std::endl;
+    .on_error([](const unilink::ErrorContext& ctx) {
+        std::cerr << "Error: " << ctx.message() << std::endl;
     })
     .retry_interval(3000)  // Optional: Retry every 3 seconds (default)
     .build();
@@ -172,11 +172,11 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 
 ```cpp
 class MyClient {
-    std::shared_ptr<unilink::wrapper::TcpClient> client_;
+    std::shared_ptr<unilink::TcpClient> client_;
 
 public:
-    void on_data(const std::string& data) {
-        // Handle data
+    void on_data(const unilink::MessageContext& ctx) {
+        // Handle data: ctx.data()
     }
 
     void connect() {
@@ -193,8 +193,8 @@ public:
 ```cpp
 std::string device_id = "sensor_001";
 auto client = unilink::tcp_client("127.0.0.1", 8080)
-    .on_data([device_id](const std::string& data) {
-        std::cout << "[" << device_id << "] " << data << std::endl;
+    .on_data([device_id](const unilink::MessageContext& ctx) {
+        std::cout << "[" << device_id << "] " << ctx.data() << std::endl;
     })
     .build();
 ```
@@ -211,14 +211,14 @@ Accept multiple client connections with thread-safe operations.
 #include "unilink/unilink.hpp"
 
 auto server = unilink::tcp_server(8080)
-    .on_connect([](size_t client_id, const std::string& ip) {
-        std::cout << "Client " << client_id << " connected from " << ip << std::endl;
+    .on_connect([](const unilink::ConnectionContext& ctx) {
+        std::cout << "Client " << ctx.client_id() << " connected from " << ctx.client_info() << std::endl;
     })
-    .on_data([](size_t client_id, const std::string& data) {
-        std::cout << "Client " << client_id << ": " << data << std::endl;
+    .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "Client " << ctx.client_id() << ": " << ctx.data() << std::endl;
     })
-    .on_disconnect([](size_t client_id) {
-        std::cout << "Client " << client_id << " disconnected" << std::endl;
+    .on_disconnect([](const unilink::ConnectionContext& ctx) {
+        std::cout << "Client " << ctx.client_id() << " disconnected" << std::endl;
     })
     .build();
 
@@ -262,9 +262,7 @@ unilink::tcp_server(uint16_t port)
 | `use_independent_context()` | `bool`                       | Run on a dedicated `io_context` thread managed by unilink            |
 | `auto_manage()`             | `bool`                       | Auto-start immediately and stop on destruction                       |
 
-Multi-client callbacks can be registered with either signature-based overloads (`.on_connect(size_t, std::string)`,
-`.on_data(size_t, std::string)`, `.on_disconnect(size_t)`) or the explicit helpers
-`.on_multi_connect`, `.on_multi_data`, and `.on_multi_disconnect` (available on both the builder and the wrapper).
+Multi-client callbacks use the standard `ConnectionContext` and `MessageContext` which contain `client_id()` and `client_info()` accessors.
 
 #### Instance Methods
 
@@ -288,8 +286,8 @@ Multi-client callbacks can be registered with either signature-based overloads (
 ```cpp
 auto server = unilink::tcp_server(8080)
     .single_client()  // Only one client allowed
-    .on_connect([](size_t client_id, const std::string& ip) {
-        std::cout << "Client connected: " << ip << std::endl;
+    .on_connect([](const unilink::ConnectionContext& ctx) {
+        std::cout << "Client connected: " << ctx.client_info() << std::endl;
     })
     .build();
 ```
@@ -299,8 +297,8 @@ auto server = unilink::tcp_server(8080)
 ```cpp
 auto server = unilink::tcp_server(8080)
     .enable_port_retry(true, 5, 1000)  // 5 retries, 1 second each
-    .on_error([](const std::string& error) {
-        std::cerr << "Server error: " << error << std::endl;
+    .on_error([](const unilink::ErrorContext& ctx) {
+        std::cerr << "Server error: " << ctx.message() << std::endl;
     })
     .build();
 ```
@@ -312,8 +310,8 @@ auto server = unilink::tcp_server(8080)
     .unlimited_clients()
     .build();
 
-server->on_multi_data([&server](size_t client_id, const std::string& data) {
-    server->send_to_client(client_id, "Echo: " + data);
+server->on_data([&server](const unilink::MessageContext& ctx) {
+    server->send_to_client(ctx.client_id(), "Echo: " + std::string(ctx.data()));
 });
 
 server->start();
@@ -331,11 +329,11 @@ Interface with serial devices and embedded systems.
 #include "unilink/unilink.hpp"
 
 auto serial = unilink::serial("/dev/ttyUSB0", 115200)
-    .on_connect([]() {
+    .on_connect([](const unilink::ConnectionContext& ctx) {
         std::cout << "Serial port opened" << std::endl;
     })
-    .on_data([](const std::string& data) {
-        std::cout << "Received: " << data << std::endl;
+    .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "Received: " << ctx.data() << std::endl;
     })
     .build();
 
@@ -410,13 +408,14 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 
 ```cpp
 auto arduino = unilink::serial("/dev/ttyACM0", 9600)
-    .on_connect([]() {
+    .on_connect([](const unilink::ConnectionContext& ctx) {
         std::this_thread::sleep_for(std::chrono::seconds(2));  // Arduino reset delay
     })
-    .on_data([](const std::string& data) {
+    .on_data([](const unilink::MessageContext& ctx) {
         // Parse sensor data
+        std::string_view data = ctx.data();
         if (data.find("TEMP:") == 0) {
-            float temp = std::stof(data.substr(5));
+            float temp = std::stof(std::string(data.substr(5)));
             std::cout << "Temperature: " << temp << "°C" << std::endl;
         }
     })
@@ -427,9 +426,9 @@ auto arduino = unilink::serial("/dev/ttyACM0", 9600)
 
 ```cpp
 auto gps = unilink::serial("/dev/ttyUSB0", 9600)
-    .on_data([](const std::string& nmea) {
+    .on_data([](const unilink::MessageContext& ctx) {
         // Parse NMEA sentences
-        if (nmea.find("$GPGGA") == 0) {
+        if (ctx.data().find("$GPGGA") == 0) {
             // Parse GPS fix data
         }
     })
@@ -451,8 +450,8 @@ Connectionless communication using UDP protocol.
 
 // Create a UDP socket bound to port 8080
 auto receiver = unilink::udp(8080)
-    .on_data([](const std::string& data) {
-        std::cout << "Received: " << data << std::endl;
+    .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "Received: " << ctx.data() << std::endl;
     })
     .build();
 
@@ -511,11 +510,9 @@ unilink::udp(uint16_t local_port)
 
 ```cpp
 auto socket = unilink::udp(8080)
-    .on_data([&](const std::string& data) {
-        std::cout << "Received: " << data << std::endl;
+    .on_data([&](const unilink::MessageContext& ctx) {
+        std::cout << "Received: " << ctx.data() << std::endl;
         // Reply to the sender (automatically tracks last sender)
-        // Note: Full symmetric echo requires manual address handling
-        // which will be available in future updates.
     })
     .build();
 ```
@@ -770,7 +767,7 @@ state.compare_exchange(State::Idle, State::Running);
 
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
-    .on_error([](const std::string& error) {
+    .on_error([](const unilink::ErrorContext& ctx) {
         // Log error, notify user, etc.
     })
     .build();
@@ -814,9 +811,9 @@ unilink::common::Logger::instance().set_console_output(true);
 
 ```cpp
 class MyApplication {
-    std::shared_ptr<unilink::wrapper::TcpClient> client_;
+    std::shared_ptr<unilink::TcpClient> client_;
 
-    void on_data(const std::string& data) { /* ... */ }
+    void on_data(const unilink::MessageContext& ctx) { /* ... */ }
 
     void start() {
         client_ = unilink::tcp_client("server.com", 8080)

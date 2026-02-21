@@ -25,8 +25,8 @@ int main() {
   // Create a TCP client and connect to localhost:8080
   auto client =
       tcp_client("127.0.0.1", 8080)
-          .on_connect([](const wrapper::ConnectionContext& ctx) { std::cout << "Connected to server!" << std::endl; })
-          .on_data([](const wrapper::MessageContext& ctx) { std::cout << "Received: " << ctx.data() << std::endl; })
+          .on_connect([](const unilink::ConnectionContext&) { std::cout << "Connected to server!" << std::endl; })
+          .on_data([](const unilink::MessageContext& ctx) { std::cout << "Received: " << ctx.data() << std::endl; })
           .build();
 
   // Start the client (returns a future)

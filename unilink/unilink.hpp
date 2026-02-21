@@ -19,6 +19,7 @@
 #include <memory>
 #include <variant>
 
+#include "unilink/base/deprecated.hpp"
 #include "unilink/base/error_codes.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
@@ -78,6 +79,19 @@ class MessageContext;
 class ConnectionContext;
 class ErrorContext;
 }  // namespace wrapper
+
+// === Public Facade Aliases ===
+
+// Core communication classes
+using TcpClient = wrapper::TcpClient;
+using TcpServer = wrapper::TcpServer;
+using Serial = wrapper::Serial;
+using Udp = wrapper::Udp;
+
+// Context classes for callbacks
+using MessageContext = wrapper::MessageContext;
+using ConnectionContext = wrapper::ConnectionContext;
+using ErrorContext = wrapper::ErrorContext;
 
 // === Public Builder API Convenience Functions ===
 

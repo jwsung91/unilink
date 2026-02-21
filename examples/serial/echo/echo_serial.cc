@@ -33,10 +33,10 @@ class SerialEchoApp {
 
   void run() {
     auto ul = unilink::serial(device_, baud_rate_)
-                  .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(); })
-                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) { handle_disconnect(); })
-                  .on_data([this](const wrapper::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
-                  .on_error([this](const wrapper::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
+                  .on_connect([this](const unilink::ConnectionContext&) { handle_connect(); })
+                  .on_disconnect([this](const unilink::ConnectionContext&) { handle_disconnect(); })
+                  .on_data([this](const unilink::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
+                  .on_error([this](const unilink::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
                   .build();
 
     if (ul->start().get()) {
@@ -61,7 +61,7 @@ class SerialEchoApp {
 
   void handle_error(const std::string& error) { logger_.error("serial", "ERROR", error); }
 
-  void sender_loop(unilink::wrapper::Serial* ul) {
+  void sender_loop(unilink::Serial* ul) {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (line.empty()) break;

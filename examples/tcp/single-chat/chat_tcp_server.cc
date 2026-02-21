@@ -33,8 +33,8 @@ class TcpChatServer {
   void run() {
     auto server = unilink::tcp_server(port_)
                       .single_client()
-                      .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(ctx); })
-                      .on_data([this](const wrapper::MessageContext& ctx) { handle_data(ctx); })
+                      .on_connect([this](const unilink::ConnectionContext& ctx) { handle_connect(ctx); })
+                      .on_data([this](const unilink::MessageContext& ctx) { handle_data(ctx); })
                       .build();
 
     if (server->start().get()) {
@@ -55,11 +55,11 @@ class TcpChatServer {
   }
 
  private:
-  void handle_connect(const wrapper::ConnectionContext& ctx) {
+  void handle_connect(const unilink::ConnectionContext& ctx) {
     logger_.info("server", "STATE", "Client connected: " + ctx.client_info());
   }
 
-  void handle_data(const wrapper::MessageContext& ctx) { std::cout << "\n[Client] " << ctx.data() << std::endl; }
+  void handle_data(const unilink::MessageContext& ctx) { std::cout << "\n[Client] " << ctx.data() << std::endl; }
 
   uint16_t port_;
   diagnostics::Logger& logger_;

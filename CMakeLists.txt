@@ -59,6 +59,7 @@ set(UNILINK_SOURCES
 set(UNILINK_HEADERS
   unilink/base/common.hpp
   unilink/base/constants.hpp
+  unilink/base/deprecated.hpp
   unilink/base/platform.hpp
   unilink/base/visibility.hpp
   unilink/framer/iframer.hpp

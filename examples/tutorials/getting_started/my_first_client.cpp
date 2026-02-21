@@ -42,14 +42,14 @@ int main(int argc, char** argv) {
       tcp_client(host, port)
           .retry_interval(2000)
           .max_retries(3)
-          .on_connect([](const wrapper::ConnectionContext& ctx) { std::cout << "✓ Connected to server!" << std::endl; })
+          .on_connect([](const unilink::ConnectionContext&) { std::cout << "✓ Connected to server!" << std::endl; })
           .on_disconnect(
-              [](const wrapper::ConnectionContext& ctx) { std::cout << "✗ Disconnected from server." << std::endl; })
-          .on_data([](const wrapper::MessageContext& ctx) {
+              [](const unilink::ConnectionContext&) { std::cout << "✗ Disconnected from server." << std::endl; })
+          .on_data([](const unilink::MessageContext& ctx) {
             std::cout << "\n[Server] " << ctx.data() << std::endl;
             std::cout << "Enter message: " << std::flush;
           })
-          .on_error([](const wrapper::ErrorContext& ctx) {
+          .on_error([](const unilink::ErrorContext& ctx) {
             std::cerr << "⚠ Error: " << ctx.message() << " (Code: " << static_cast<int>(ctx.code()) << ")" << std::endl;
           })
           .build();

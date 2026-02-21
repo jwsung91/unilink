@@ -32,7 +32,7 @@ int main() {
 
   // Attempt to start a server on an invalid port
   auto server = tcp_server(0)
-                    .on_error([](const wrapper::ErrorContext& ctx) {
+                    .on_error([](const unilink::ErrorContext& ctx) {
                       std::cout << "Server Error Detected!" << std::endl;
                       std::cout << "Code: " << static_cast<int>(ctx.code()) << std::endl;
                       std::cout << "Message: " << ctx.message() << std::endl;
@@ -51,7 +51,7 @@ int main() {
 
   // Attempt to connect to a non-existent server
   auto client = tcp_client("127.0.0.1", 1)
-                    .on_error([](const wrapper::ErrorContext& ctx) {
+                    .on_error([](const unilink::ErrorContext& ctx) {
                       std::cout << "\nClient Error Detected!" << std::endl;
                       std::cout << "Code: " << static_cast<int>(ctx.code()) << std::endl;
                       std::cout << "Message: " << ctx.message() << std::endl;

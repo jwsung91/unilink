@@ -30,7 +30,7 @@ using namespace unilink;
 
 class EchoServer {
  private:
-  std::shared_ptr<wrapper::TcpServer> server_;
+  std::shared_ptr<unilink::TcpServer> server_;
   diagnostics::Logger& logger_;
   std::atomic<bool> running_;
   unsigned short port_;
@@ -70,7 +70,7 @@ class EchoServer {
     }
   }
 
-  void on_client_connect(const wrapper::ConnectionContext& ctx) {
+  void on_client_connect(const unilink::ConnectionContext& ctx) {
     if (client_connected_.load()) {
       logger_.warning("server", "connect",
                       "Client " + std::to_string(ctx.client_id()) +
@@ -85,7 +85,7 @@ class EchoServer {
     logger_.info("server", "connect", "Client " + std::to_string(ctx.client_id()) + " connected: " + ctx.client_info());
   }
 
-  void on_data(const wrapper::MessageContext& ctx) {
+  void on_data(const unilink::MessageContext& ctx) {
     logger_.info("server", "data",
                  "Client " + std::to_string(ctx.client_id()) + " message: " + std::string(ctx.data()));
 
@@ -96,12 +96,12 @@ class EchoServer {
     }
   }
 
-  void on_client_disconnect(const wrapper::ConnectionContext& ctx) {
+  void on_client_disconnect(const unilink::ConnectionContext& ctx) {
     client_connected_.store(false);
     logger_.info("server", "disconnect", "Client " + std::to_string(ctx.client_id()) + " disconnected");
   }
 
-  void on_error(const wrapper::ErrorContext& ctx) {
+  void on_error(const unilink::ErrorContext& ctx) {
     logger_.error("server", "error",
                   "Error [" + std::to_string(static_cast<int>(ctx.code())) + "]: " + std::string(ctx.message()));
   }
@@ -111,10 +111,10 @@ class EchoServer {
     server_ = unilink::tcp_server(port_)
                   .single_client()
                   .enable_port_retry(true, 3, 1000)
-                  .on_connect([this](const wrapper::ConnectionContext& ctx) { on_client_connect(ctx); })
-                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) { on_client_disconnect(ctx); })
-                  .on_data([this](const wrapper::MessageContext& ctx) { on_data(ctx); })
-                  .on_error([this](const wrapper::ErrorContext& ctx) { on_error(ctx); })
+                  .on_connect([this](const unilink::ConnectionContext& ctx) { on_client_connect(ctx); })
+                  .on_disconnect([this](const unilink::ConnectionContext& ctx) { on_client_disconnect(ctx); })
+                  .on_data([this](const unilink::MessageContext& ctx) { on_data(ctx); })
+                  .on_error([this](const unilink::ErrorContext& ctx) { on_error(ctx); })
                   .build();
 
     if (!server_) {

@@ -35,14 +35,14 @@ int main() {
   // TCP Server with logging
   auto server =
       tcp_server(8080)
-          .on_connect([](const wrapper::ConnectionContext& ctx) {
+          .on_connect([](const unilink::ConnectionContext& ctx) {
             UNILINK_LOG_INFO("tcp_server", "connect", "Client " + std::to_string(ctx.client_id()) + " connected");
           })
           .build();
 
   // TCP Client with logging
   auto client = tcp_client("127.0.0.1", 8080)
-                    .on_connect([](const wrapper::ConnectionContext& ctx) {
+                    .on_connect([](const unilink::ConnectionContext&) {
                       UNILINK_LOG_INFO("tcp_client", "connect", "Connected to server");
                     })
                     .build();
@@ -50,7 +50,7 @@ int main() {
   // Serial with logging
 #ifndef _WIN32
   auto serial_dev = unilink::serial("/dev/ttyUSB0", 115200)
-                        .on_connect([](const wrapper::ConnectionContext& ctx) {
+                        .on_connect([](const unilink::ConnectionContext&) {
                           UNILINK_LOG_INFO("serial", "connect", "Serial device connected");
                         })
                         .build();
