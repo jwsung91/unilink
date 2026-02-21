@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-21 02:02:19</td>
+            <td class="headerValue">2026-02-21 14:22:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
@@ -215,10 +215,10 @@
 <a name="130"><span class="lineNum">     130 </span>                :<span class="lineCov">        230 : std::any ConfigManager::get(const std::string&amp; key, const std::any&amp; default_value) const {</span></a>
 <a name="131"><span class="lineNum">     131 </span>        [<span class="branchCov" title="Branch 0 was taken 230 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        230 :   std::lock_guard&lt;std::mutex&gt; lock(get_impl()-&gt;mutex_);</span></a>
 <a name="132"><span class="lineNum">     132 </span>        [<span class="branchCov" title="Branch 0 was taken 230 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        230 :   auto it = get_impl()-&gt;config_items_.find(key);</span></a>
-<a name="133"><span class="lineNum">     133 </span>        [<span class="branchCov" title="Branch 0 was taken 204 times"> + </span><span class="branchCov" title="Branch 1 was taken 26 times"> + </span>]:<span class="lineCov">        230 :   if (it != get_impl()-&gt;config_items_.end()) {</span></a>
-<a name="134"><span class="lineNum">     134 </span>        [<span class="branchCov" title="Branch 0 was taken 204 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        204 :     return it-&gt;second.value;</span></a>
+<a name="133"><span class="lineNum">     133 </span>        [<span class="branchCov" title="Branch 0 was taken 209 times"> + </span><span class="branchCov" title="Branch 1 was taken 21 times"> + </span>]:<span class="lineCov">        230 :   if (it != get_impl()-&gt;config_items_.end()) {</span></a>
+<a name="134"><span class="lineNum">     134 </span>        [<span class="branchCov" title="Branch 0 was taken 209 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        209 :     return it-&gt;second.value;</span></a>
 <a name="135"><span class="lineNum">     135 </span>                :            :   }</a>
-<a name="136"><span class="lineNum">     136 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         26 :   return default_value;</span></a>
+<a name="136"><span class="lineNum">     136 </span>        [<span class="branchCov" title="Branch 0 was taken 21 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         21 :   return default_value;</span></a>
 <a name="137"><span class="lineNum">     137 </span>                :<span class="lineCov">        230 : }</span></a>
 <a name="138"><span class="lineNum">     138 </span>                :            : </a>
 <a name="139"><span class="lineNum">     139 </span>                :<span class="lineCov">         16 : bool ConfigManager::has(const std::string&amp; key) const {</span></a>
@@ -256,11 +256,11 @@
 <a name="171"><span class="lineNum">     171 </span>                :<span class="lineCov">         30 : bool ConfigManager::remove(const std::string&amp; key) {</span></a>
 <a name="172"><span class="lineNum">     172 </span>        [<span class="branchCov" title="Branch 0 was taken 30 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         30 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
 <a name="173"><span class="lineNum">     173 </span>        [<span class="branchCov" title="Branch 0 was taken 30 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         30 :   auto it = impl_-&gt;config_items_.find(key);</span></a>
-<a name="174"><span class="lineNum">     174 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchCov" title="Branch 1 was taken 10 times"> + </span>]:<span class="lineCov">         30 :   if (it != impl_-&gt;config_items_.end()) {</span></a>
-<a name="175"><span class="lineNum">     175 </span>        [<span class="branchCov" title="Branch 0 was taken 20 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         20 :     impl_-&gt;config_items_.erase(it);</span></a>
-<a name="176"><span class="lineNum">     176 </span>                :<span class="lineCov">         20 :     return true;</span></a>
+<a name="174"><span class="lineNum">     174 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchCov" title="Branch 1 was taken 13 times"> + </span>]:<span class="lineCov">         30 :   if (it != impl_-&gt;config_items_.end()) {</span></a>
+<a name="175"><span class="lineNum">     175 </span>        [<span class="branchCov" title="Branch 0 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         17 :     impl_-&gt;config_items_.erase(it);</span></a>
+<a name="176"><span class="lineNum">     176 </span>                :<span class="lineCov">         17 :     return true;</span></a>
 <a name="177"><span class="lineNum">     177 </span>                :            :   }</a>
-<a name="178"><span class="lineNum">     178 </span>                :<span class="lineCov">         10 :   return false;</span></a>
+<a name="178"><span class="lineNum">     178 </span>                :<span class="lineCov">         13 :   return false;</span></a>
 <a name="179"><span class="lineNum">     179 </span>                :<span class="lineCov">         30 : }</span></a>
 <a name="180"><span class="lineNum">     180 </span>                :            : </a>
 <a name="181"><span class="lineNum">     181 </span>                :<span class="lineNoCov">          0 : void ConfigManager::clear() {</span></a>
