@@ -5,7 +5,7 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 
 project(
   unilink
-  VERSION 0.4.0
+  VERSION 0.4.1
   DESCRIPTION
     "A cross-platform asynchronous C++ communication library providing a unified API for Serial, TCP, and UDP transports"
   HOMEPAGE_URL "https://github.com/jwsung91/unilink"
