@@ -39,14 +39,18 @@ struct Logger::Impl {
   std::atomic<bool> enabled_{true};
   std::atomic<int> outputs_{static_cast<int>(LogOutput::CONSOLE)};
 
-  std::string format_string_{"{timestamp} [{level}] [{component}] [{operation}] {message}"};
-
   struct FormatPart {
     enum Type { LITERAL, TIMESTAMP, LEVEL, COMPONENT, OPERATION, MESSAGE };
     Type type;
     std::string value;  // Only used for LITERAL
   };
-  std::vector<FormatPart> parsed_format_;
+
+  struct LogFormat {
+    std::string format_string;
+    std::vector<FormatPart> parsed_format;
+  };
+
+  std::shared_ptr<LogFormat> log_format_;
 
   std::unique_ptr<std::ofstream> file_output_;
   LogCallback callback_;
@@ -77,7 +81,7 @@ struct Logger::Impl {
     std::string_view view() const { return {data, length}; }
   };
 
-  Impl() { parse_format(format_string_); }
+  Impl() { parse_format("{timestamp} [{level}] [{component}] [{operation}] {message}"); }
 
   ~Impl() {
     teardown_async_logging();
@@ -85,44 +89,48 @@ struct Logger::Impl {
   }
 
   void parse_format(const std::string& format) {
-    std::lock_guard<std::mutex> lock(mutex_);
-    parsed_format_.clear();
+    auto new_format = std::make_shared<LogFormat>();
+    new_format->format_string = format;
+
     size_t start = 0;
     size_t pos = 0;
 
     while ((pos = format.find('{', start)) != std::string::npos) {
       if (pos > start) {
-        parsed_format_.push_back({FormatPart::LITERAL, format.substr(start, pos - start)});
+        new_format->parsed_format.push_back({FormatPart::LITERAL, format.substr(start, pos - start)});
       }
 
       size_t end = format.find('}', pos);
       if (end == std::string::npos) {
-        parsed_format_.push_back({FormatPart::LITERAL, format.substr(pos)});
+        new_format->parsed_format.push_back({FormatPart::LITERAL, format.substr(pos)});
         start = format.length();
         break;
       }
 
       std::string placeholder = format.substr(pos + 1, end - pos - 1);
       if (placeholder == "timestamp") {
-        parsed_format_.push_back({FormatPart::TIMESTAMP, ""});
+        new_format->parsed_format.push_back({FormatPart::TIMESTAMP, ""});
       } else if (placeholder == "level") {
-        parsed_format_.push_back({FormatPart::LEVEL, ""});
+        new_format->parsed_format.push_back({FormatPart::LEVEL, ""});
       } else if (placeholder == "component") {
-        parsed_format_.push_back({FormatPart::COMPONENT, ""});
+        new_format->parsed_format.push_back({FormatPart::COMPONENT, ""});
       } else if (placeholder == "operation") {
-        parsed_format_.push_back({FormatPart::OPERATION, ""});
+        new_format->parsed_format.push_back({FormatPart::OPERATION, ""});
       } else if (placeholder == "message") {
-        parsed_format_.push_back({FormatPart::MESSAGE, ""});
+        new_format->parsed_format.push_back({FormatPart::MESSAGE, ""});
       } else {
-        parsed_format_.push_back({FormatPart::LITERAL, format.substr(pos, end - pos + 1)});
+        new_format->parsed_format.push_back({FormatPart::LITERAL, format.substr(pos, end - pos + 1)});
       }
 
       start = end + 1;
     }
 
     if (start < format.length()) {
-      parsed_format_.push_back({FormatPart::LITERAL, format.substr(start)});
+      new_format->parsed_format.push_back({FormatPart::LITERAL, format.substr(start)});
     }
+
+    std::lock_guard<std::mutex> lock(mutex_);
+    log_format_ = std::move(new_format);
   }
 
   void flush() {
@@ -139,35 +147,59 @@ struct Logger::Impl {
     TimestampBuffer timestamp = get_timestamp(timestamp_val);
     std::string_view level_str = level_to_string(level);
 
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::shared_ptr<LogFormat> current_format;
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      current_format = log_format_;
+    }
 
     std::string result;
-    result.reserve(format_string_.length() + message.length() + 32);
+    if (current_format) {
+      result.reserve(current_format->format_string.length() + message.length() + 32);
 
-    for (const auto& part : parsed_format_) {
-      switch (part.type) {
-        case FormatPart::LITERAL:
-          result.append(part.value);
-          break;
-        case FormatPart::TIMESTAMP:
-          result.append(timestamp.view());
-          break;
-        case FormatPart::LEVEL:
-          result.append(level_str);
-          break;
-        case FormatPart::COMPONENT:
-          result.append(component);
-          break;
-        case FormatPart::OPERATION:
-          result.append(operation);
-          break;
-        case FormatPart::MESSAGE:
-          result.append(message);
-          break;
+      for (const auto& part : current_format->parsed_format) {
+        switch (part.type) {
+          case FormatPart::LITERAL:
+            result.append(part.value);
+            break;
+          case FormatPart::TIMESTAMP:
+            result.append(timestamp.view());
+            break;
+          case FormatPart::LEVEL:
+            result.append(level_str);
+            break;
+          case FormatPart::COMPONENT:
+            result.append(component);
+            break;
+          case FormatPart::OPERATION:
+            result.append(operation);
+            break;
+          case FormatPart::MESSAGE:
+            result.append(message);
+            break;
+        }
       }
     }
 
     return result;
+  }
+
+  void write_to_sinks(LogLevel level, const std::string& formatted_message) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    int current_outputs = outputs_.load();
+
+    if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
+      write_to_console(formatted_message);
+    }
+
+    if (current_outputs & static_cast<int>(LogOutput::FILE)) {
+      check_and_rotate_log();
+      write_to_file(formatted_message);
+    }
+
+    if (current_outputs & static_cast<int>(LogOutput::CALLBACK)) {
+      call_callback(level, formatted_message);
+    }
   }
 
   std::string_view level_to_string(LogLevel level) const {
@@ -231,14 +263,12 @@ struct Logger::Impl {
   }
 
   void write_to_file(const std::string& message) {
-    std::lock_guard<std::mutex> lock(mutex_);
     if (file_output_ && file_output_->is_open()) {
       *file_output_ << message << '\n';
     }
   }
 
   void call_callback(LogLevel level, const std::string& message) {
-    std::lock_guard<std::mutex> lock(mutex_);
     if (callback_) {
       try {
         callback_(level, message);
@@ -254,8 +284,6 @@ struct Logger::Impl {
     if (!log_rotation_ || current_log_file_.empty()) {
       return;
     }
-
-    std::lock_guard<std::mutex> lock(mutex_);
 
     bool should_rotate = false;
     if (file_output_ && file_output_->is_open()) {
@@ -392,20 +420,7 @@ struct Logger::Impl {
     for (const auto& entry : batch) {
       std::string formatted_message =
           format_message(entry.timestamp, entry.level, entry.component, entry.operation, entry.message);
-      int current_outputs = outputs_.load();
-
-      if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
-        write_to_console(formatted_message);
-      }
-
-      if (current_outputs & static_cast<int>(LogOutput::FILE)) {
-        check_and_rotate_log();
-        write_to_file(formatted_message);
-      }
-
-      if (current_outputs & static_cast<int>(LogOutput::CALLBACK)) {
-        call_callback(entry.level, formatted_message);
-      }
+      write_to_sinks(entry.level, formatted_message);
     }
   }
 
@@ -529,10 +544,7 @@ void Logger::set_enabled(bool enabled) { impl_->enabled_.store(enabled); }
 
 bool Logger::is_enabled() const { return get_impl()->enabled_.load(); }
 
-void Logger::set_format(const std::string& format) {
-  impl_->format_string_ = format;
-  impl_->parse_format(format);
-}
+void Logger::set_format(const std::string& format) { impl_->parse_format(format); }
 
 void Logger::flush() { impl_->flush(); }
 
@@ -561,19 +573,8 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
 
   std::string formatted_message =
       impl_->format_message(std::chrono::system_clock::now(), level, component, operation, message);
-  int current_outputs = get_impl()->outputs_.load();
-
-  if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
-    impl_->write_to_console(formatted_message);
-  }
-
-  if (current_outputs & static_cast<int>(LogOutput::FILE)) {
-    impl_->check_and_rotate_log();
-    impl_->write_to_file(formatted_message);
-  }
-
-  if (current_outputs & static_cast<int>(LogOutput::CALLBACK)) {
-    impl_->call_callback(level, formatted_message);
+  if (get_impl()->outputs_.load(std::memory_order_relaxed) != 0) {
+    impl_->write_to_sinks(level, formatted_message);
   }
 }
 
