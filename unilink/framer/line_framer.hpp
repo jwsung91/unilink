@@ -65,6 +65,11 @@ class UNILINK_API LineFramer : public IFramer {
    * @return The number of bytes processed (emitted as messages).
    */
   size_t scan_and_process(memory::ConstByteSpan data, size_t search_start_offset);
+
+  /**
+   * @brief Internal helper to process a manageable chunk of data.
+   */
+  void push_bytes_internal(memory::ConstByteSpan data);
 };
 
 }  // namespace framer

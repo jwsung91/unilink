@@ -33,6 +33,24 @@ LineFramer::LineFramer(std::string_view delimiter, bool include_delimiter, size_
 void LineFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
 
+  // Process data in chunks to prevent large memory allocations (DoS protection)
+  // We use max(max_length_, 4096) as a reasonable chunk size.
+  // This ensures that even if the user sends a huge payload, we only
+  // allocate memory incrementally and have a chance to clear the buffer
+  // if limits are exceeded.
+  const size_t chunk_limit = std::max(max_length_, size_t(4096));
+
+  size_t offset = 0;
+  while (offset < data.size()) {
+    size_t len = std::min(data.size() - offset, chunk_limit);
+    push_bytes_internal(data.subspan(offset, len));
+    offset += len;
+  }
+}
+
+void LineFramer::push_bytes_internal(memory::ConstByteSpan data) {
+  if (data.empty()) return;
+
   // Fast Path: If buffer is empty, process data directly (zero-copy)
   if (buffer_.empty()) {
     size_t processed_count = scan_and_process(data, 0);
