@@ -131,9 +131,9 @@ $(document).ready(function(){initNavTree('wrapper_2serial_2serial_8hpp_source.ht
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1Serial.html">   46</a></span>&#160;<span class="keyword">class </span><a class="code" href="visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361">UNILINK_API</a> <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a> : <span class="keyword">public</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> {</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>(<span class="keyword">const</span> std::string&amp; device, uint32_t baud_rate);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>(<span class="keyword">const</span> std::string&amp; device, uint32_t baud_rate, std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a>(std::shared_ptr&lt;interface::Channel&gt; channel);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <a class="code" href="namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc">Serial</a>(<span class="keyword">const</span> std::string&amp; device, uint32_t baud_rate);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <a class="code" href="namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc">Serial</a>(<span class="keyword">const</span> std::string&amp; device, uint32_t baud_rate, std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">explicit</span> <a class="code" href="namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc">Serial</a>(std::shared_ptr&lt;interface::Channel&gt; channel);</div>
 <div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classunilink_1_1wrapper_1_1Serial.html#ac777f965de97bd0f6aa6b4ee3002a70d">   51</a></span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1Serial.html#ac777f965de97bd0f6aa6b4ee3002a70d">~Serial</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="comment">// Move semantics</span></div>
@@ -189,6 +189,7 @@ $(document).ready(function(){initNavTree('wrapper_2serial_2serial_8hpp_source.ht
 <div class="ttc" id="aichannel_8hpp_html"><div class="ttname"><a href="ichannel_8hpp.html">ichannel.hpp</a></div></div>
 <div class="ttc" id="anamespaceboost_html"><div class="ttname"><a href="namespaceboost.html">boost</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2serial_2serial_8hpp_source.html#l00027">serial.hpp:27</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a2b404056fdf0a846b06ce934ae923bfc"><div class="ttname"><a href="namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc">unilink::Serial</a></div><div class="ttdeci">wrapper::Serial Serial</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00088">unilink.hpp:88</a></div></div>
 <div class="ttc" id="aserial__config_8hpp_html"><div class="ttname"><a href="serial__config_8hpp.html">serial_config.hpp</a></div></div>
 <div class="ttc" id="astructunilink_1_1wrapper_1_1Serial_1_1Impl_html"><div class="ttname"><a href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html">unilink::wrapper::Serial::Impl</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2serial_2serial_8cc_source.html#l00041">serial.cc:41</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="visibility_8hpp.html">visibility.hpp</a></div></div>
@@ -199,7 +200,7 @@ $(document).ready(function(){initNavTree('wrapper_2serial_2serial_8hpp_source.ht
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_2d0fb09c380aed3a7497e2789d41b3dd.html">serial</a></li><li class="navelem"><a class="el" href="wrapper_2serial_2serial_8hpp.html">serial.hpp</a></li>
-    <li class="footer">Generated on Sat Feb 21 2026 14:25:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Feb 21 2026 15:05:10 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

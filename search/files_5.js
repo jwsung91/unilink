@@ -1,19 +1,8 @@
 var searchData=
 [
-  ['ibuilder_2ehpp_1122',['ibuilder.hpp',['../ibuilder_8hpp.html',1,'']]],
-  ['ichannel_2ehpp_1123',['ichannel.hpp',['../ichannel_8hpp.html',1,'']]],
-  ['iconfig_5fmanager_2ehpp_1124',['iconfig_manager.hpp',['../iconfig__manager_8hpp.html',1,'']]],
-  ['iframer_2ehpp_1125',['iframer.hpp',['../iframer_8hpp.html',1,'']]],
-  ['index_2emd_1126',['index.md',['../index_8md.html',1,'']]],
-  ['input_5fvalidator_2ecc_1127',['input_validator.cc',['../input__validator_8cc.html',1,'']]],
-  ['input_5fvalidator_2ehpp_1128',['input_validator.hpp',['../input__validator_8hpp.html',1,'']]],
-  ['installation_2emd_1129',['installation.md',['../installation_8md.html',1,'']]],
-  ['io_5fcontext_5fmanager_2ecc_1130',['io_context_manager.cc',['../io__context__manager_8cc.html',1,'']]],
-  ['io_5fcontext_5fmanager_2ehpp_1131',['io_context_manager.hpp',['../io__context__manager_8hpp.html',1,'']]],
-  ['iserial_5fport_2ehpp_1132',['iserial_port.hpp',['../iserial__port_8hpp.html',1,'']]],
-  ['iserver_2ehpp_1133',['iserver.hpp',['../iserver_8hpp.html',1,'']]],
-  ['itcp_5facceptor_2ehpp_1134',['itcp_acceptor.hpp',['../itcp__acceptor_8hpp.html',1,'']]],
-  ['itcp_5fresolver_2ehpp_1135',['itcp_resolver.hpp',['../itcp__resolver_8hpp.html',1,'']]],
-  ['itcp_5fsocket_2ehpp_1136',['itcp_socket.hpp',['../itcp__socket_8hpp.html',1,'']]],
-  ['itimer_2ehpp_1137',['itimer.hpp',['../itimer_8hpp.html',1,'']]]
+  ['error_5fcodes_2ehpp_1126',['error_codes.hpp',['../error__codes_8hpp.html',1,'']]],
+  ['error_5fhandler_2ecc_1127',['error_handler.cc',['../error__handler_8cc.html',1,'']]],
+  ['error_5fhandler_2ehpp_1128',['error_handler.hpp',['../error__handler_8hpp.html',1,'']]],
+  ['error_5ftypes_2ehpp_1129',['error_types.hpp',['../error__types_8hpp.html',1,'']]],
+  ['exceptions_2ehpp_1130',['exceptions.hpp',['../exceptions_8hpp.html',1,'']]]
 ];

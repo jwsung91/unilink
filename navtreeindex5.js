@@ -1,5 +1,9 @@
 var NAVTREEINDEX5 =
 {
+"md_docs_architecture_memory_safety.html#autotoc_md34":[2,3,2],
+"md_docs_architecture_memory_safety.html#autotoc_md36":[2,3,3],
+"md_docs_architecture_memory_safety.html#autotoc_md38":[2,3,4],
+"md_docs_architecture_memory_safety.html#autotoc_md40":[2,4],
 "md_docs_architecture_memory_safety.html#autotoc_md41":[2,4,0],
 "md_docs_architecture_memory_safety.html#autotoc_md43":[2,4,1],
 "md_docs_architecture_memory_safety.html#autotoc_md44":[2,4,1,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX5 =
 "md_docs_guides_core_troubleshooting.html#autotoc_md473":[8,2,2,3],
 "md_docs_guides_core_troubleshooting.html#autotoc_md475":[8,3],
 "md_docs_guides_core_troubleshooting.html#autotoc_md476":[8,3,0],
-"md_docs_guides_core_troubleshooting.html#autotoc_md477":[8,3,0,0],
-"md_docs_guides_core_troubleshooting.html#autotoc_md478":[8,3,0,1],
-"md_docs_guides_core_troubleshooting.html#autotoc_md479":[8,3,0,2],
-"md_docs_guides_core_troubleshooting.html#autotoc_md481":[8,3,1],
-"md_docs_guides_core_troubleshooting.html#autotoc_md482":[8,3,1,0]
+"md_docs_guides_core_troubleshooting.html#autotoc_md477":[8,3,0,0]
 };

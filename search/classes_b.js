@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['safedatabuffer_1040',['SafeDataBuffer',['../classunilink_1_1memory_1_1SafeDataBuffer.html',1,'unilink::memory']]],
-  ['safespan_1041',['SafeSpan',['../classunilink_1_1memory_1_1SafeSpan.html',1,'unilink::memory']]],
-  ['scopedmemorytracker_1042',['ScopedMemoryTracker',['../classunilink_1_1memory_1_1ScopedMemoryTracker.html',1,'unilink::memory']]],
-  ['serial_1043',['Serial',['../classunilink_1_1transport_1_1Serial.html',1,'unilink::transport::Serial'],['../classunilink_1_1wrapper_1_1Serial.html',1,'unilink::wrapper::Serial']]],
-  ['serialbuilder_1044',['SerialBuilder',['../classunilink_1_1builder_1_1SerialBuilder.html',1,'unilink::builder']]],
-  ['serialconfig_1045',['SerialConfig',['../structunilink_1_1config_1_1SerialConfig.html',1,'unilink::config']]],
-  ['serialportinterface_1046',['SerialPortInterface',['../classunilink_1_1interface_1_1SerialPortInterface.html',1,'unilink::interface']]],
-  ['serverinterface_1047',['ServerInterface',['../classunilink_1_1wrapper_1_1ServerInterface.html',1,'unilink::wrapper']]]
+  ['safedatabuffer_1048',['SafeDataBuffer',['../classunilink_1_1memory_1_1SafeDataBuffer.html',1,'unilink::memory']]],
+  ['safespan_1049',['SafeSpan',['../classunilink_1_1memory_1_1SafeSpan.html',1,'unilink::memory']]],
+  ['scopedmemorytracker_1050',['ScopedMemoryTracker',['../classunilink_1_1memory_1_1ScopedMemoryTracker.html',1,'unilink::memory']]],
+  ['serial_1051',['Serial',['../classunilink_1_1transport_1_1Serial.html',1,'unilink::transport::Serial'],['../classunilink_1_1wrapper_1_1Serial.html',1,'unilink::wrapper::Serial']]],
+  ['serialbuilder_1052',['SerialBuilder',['../classunilink_1_1builder_1_1SerialBuilder.html',1,'unilink::builder']]],
+  ['serialconfig_1053',['SerialConfig',['../structunilink_1_1config_1_1SerialConfig.html',1,'unilink::config']]],
+  ['serialportinterface_1054',['SerialPortInterface',['../classunilink_1_1interface_1_1SerialPortInterface.html',1,'unilink::interface']]],
+  ['serverinterface_1055',['ServerInterface',['../classunilink_1_1wrapper_1_1ServerInterface.html',1,'unilink::wrapper']]]
 ];

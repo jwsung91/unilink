@@ -1,5 +1,16 @@
 var NAVTREEINDEX9 =
 {
+"structunilink_1_1diagnostics_1_1LogRotationConfig.html#adcdcf06b2e8ffbbb101aefaf961d1043":[18,0,0,4,9,4],
+"structunilink_1_1diagnostics_1_1LogRotationConfig.html#aee4232703c265c251e3c5c50d469f632":[18,0,0,4,9,0],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html":[18,0,0,4,14,0],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a0391ba348eeaca83ab51e33e66a9411f":[18,0,0,4,14,0,10],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a08854cf4ef1b4a7b00a8bfb433bfb90a":[18,0,0,4,14,0,27],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a0e3adb7a1c7f362f85e9637ab4e05fb5":[18,0,0,4,14,0,32],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a1010b32f814447316da185a64f408c5f":[18,0,0,4,14,0,3],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a11822b78fbeb18acd9ad6731328691f1":[18,0,0,4,14,0,41],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a16e662e8e3b30770960c1c14661ff05d":[18,0,0,4,14,0,23],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a24e2ce10eeb6fb05dfcf75096ae6d9f9":[18,0,0,4,14,0,7],
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a27eb6b640ff68d47cff386eb73ac5f3b":[18,0,0,4,14,0,43],
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a2c07457dc964378102e8797795cf4586":[18,0,0,4,14,0,15],
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a3b838f810175568bc8165031a4b819c8":[18,0,0,4,14,0,44],
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a3bf5a5eac7a987b180de6e89cd33965c":[18,0,0,4,14,0,39],
@@ -238,16 +249,5 @@ var NAVTREEINDEX9 =
 "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#afa3e5f935ae72cff77e2759d2beedfcf":[18,0,0,9,7,0,7],
 "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#afa86606b29258250381704e4786caed5":[18,0,0,9,7,0,11],
 "structunilink_1_1wrapper_1_1Serial_1_1Impl.html":[18,0,0,11,5,0],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a017910d38ece7beb209a8ad8aebcb2df":[18,0,0,11,5,0,10],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a02ef8d444b0cbd39e532ee6905845686":[18,0,0,11,5,0,19],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0932ad2d58a5900901d237e52b18a735":[18,0,0,11,5,0,4],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0bbc8e46220cf6453f08786e5cc07331":[18,0,0,11,5,0,14],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0ed4d722bd11a24e6e7b8ff661c11ba6":[18,0,0,11,5,0,13],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a208dfb7931409bf2aa576350bad58c58":[18,0,0,11,5,0,20],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a318297421d3c0ffe31d28f0bb8241bdb":[18,0,0,11,5,0,9],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a36495c240067ed38f30d60e06cd53870":[18,0,0,11,5,0,8],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a376c89c91053358dddfa687c7d2ddcb1":[18,0,0,11,5,0,2],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a377b810bbbbed2cbcaa209efe795c325":[18,0,0,11,5,0,7],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a41db5150dfe7a9ee36bbb6175915fecd":[18,0,0,11,5,0,18],
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a438f3ac1f81c2f8d1292c066746714c8":[18,0,0,11,5,0,17]
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a017910d38ece7beb209a8ad8aebcb2df":[18,0,0,11,5,0,10]
 };
