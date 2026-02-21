@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-21 14:22:33</td>
+            <td class="headerValue">2026-02-21 15:11:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -143,10 +143,15 @@
 <a name="65"><span class="lineNum">      65 </span>                :            :    * @return The number of bytes processed (emitted as messages).</a>
 <a name="66"><span class="lineNum">      66 </span>                :            :    */</a>
 <a name="67"><span class="lineNum">      67 </span>                :            :   size_t scan_and_process(memory::ConstByteSpan data, size_t search_start_offset);</a>
-<a name="68"><span class="lineNum">      68 </span>                :            : };</a>
-<a name="69"><span class="lineNum">      69 </span>                :            : </a>
-<a name="70"><span class="lineNum">      70 </span>                :            : }  // namespace framer</a>
-<a name="71"><span class="lineNum">      71 </span>                :            : }  // namespace unilink</a>
+<a name="68"><span class="lineNum">      68 </span>                :            : </a>
+<a name="69"><span class="lineNum">      69 </span>                :            :   /**</a>
+<a name="70"><span class="lineNum">      70 </span>                :            :    * @brief Internal helper to process a manageable chunk of data.</a>
+<a name="71"><span class="lineNum">      71 </span>                :            :    */</a>
+<a name="72"><span class="lineNum">      72 </span>                :            :   void push_bytes_internal(memory::ConstByteSpan data);</a>
+<a name="73"><span class="lineNum">      73 </span>                :            : };</a>
+<a name="74"><span class="lineNum">      74 </span>                :            : </a>
+<a name="75"><span class="lineNum">      75 </span>                :            : }  // namespace framer</a>
+<a name="76"><span class="lineNum">      76 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

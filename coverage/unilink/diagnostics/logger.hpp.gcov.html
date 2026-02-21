@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-21 14:22:33</td>
+            <td class="headerValue">2026-02-21 15:11:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -161,12 +161,12 @@
 <a name="82"><span class="lineNum">      82 </span>                :            : struct AsyncLogConfig {</a>
 <a name="83"><span class="lineNum">      83 </span>                :            :   size_t max_queue_size = 10000;                     // Maximum queue size</a>
 <a name="84"><span class="lineNum">      84 </span>                :            :   size_t batch_size = 100;                           // Batch processing size</a>
-<a name="85"><span class="lineNum">      85 </span>                :<span class="lineCov">        201 :   std::chrono::milliseconds flush_interval{100};     // Flush interval</span></a>
-<a name="86"><span class="lineNum">      86 </span>                :<span class="lineCov">        201 :   std::chrono::milliseconds shutdown_timeout{5000};  // Shutdown timeout</span></a>
+<a name="85"><span class="lineNum">      85 </span>                :<span class="lineCov">        202 :   std::chrono::milliseconds flush_interval{100};     // Flush interval</span></a>
+<a name="86"><span class="lineNum">      86 </span>                :<span class="lineCov">        202 :   std::chrono::milliseconds shutdown_timeout{5000};  // Shutdown timeout</span></a>
 <a name="87"><span class="lineNum">      87 </span>                :            :   bool enable_backpressure = true;                   // Enable backpressure handling</a>
 <a name="88"><span class="lineNum">      88 </span>                :            :   bool enable_batch_processing = true;               // Enable batch processing</a>
 <a name="89"><span class="lineNum">      89 </span>                :            : </a>
-<a name="90"><span class="lineNum">      90 </span>                :<span class="lineCov">        201 :   AsyncLogConfig() = default;</span></a>
+<a name="90"><span class="lineNum">      90 </span>                :<span class="lineCov">        202 :   AsyncLogConfig() = default;</span></a>
 <a name="91"><span class="lineNum">      91 </span>                :            : </a>
 <a name="92"><span class="lineNum">      92 </span>                :            :   AsyncLogConfig(size_t max_q, size_t batch, std::chrono::milliseconds interval)</a>
 <a name="93"><span class="lineNum">      93 </span>                :            :       : max_queue_size(max_q), batch_size(batch), flush_interval(interval) {}</a>
@@ -184,7 +184,7 @@
 <a name="105"><span class="lineNum">     105 </span>                :            :   uint64_t flush_count{0};</a>
 <a name="106"><span class="lineNum">     106 </span>                :            :   std::chrono::system_clock::time_point start_time;</a>
 <a name="107"><span class="lineNum">     107 </span>                :            : </a>
-<a name="108"><span class="lineNum">     108 </span>                :<span class="lineCov">        190 :   AsyncLogStats() : start_time(std::chrono::system_clock::now()) {}</span></a>
+<a name="108"><span class="lineNum">     108 </span>                :<span class="lineCov">        191 :   AsyncLogStats() : start_time(std::chrono::system_clock::now()) {}</span></a>
 <a name="109"><span class="lineNum">     109 </span>                :            : </a>
 <a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">          6 :   void reset() {</span></a>
 <a name="111"><span class="lineNum">     111 </span>                :<span class="lineCov">          6 :     total_logs = 0;</span></a>
@@ -326,8 +326,8 @@
 <a name="247"><span class="lineNum">     247 </span>                :            : </a>
 <a name="248"><span class="lineNum">     248 </span>                :            :  private:</a>
 <a name="249"><span class="lineNum">     249 </span>                :            :   struct Impl;</a>
-<a name="250"><span class="lineNum">     250 </span>                :<span class="lineCov">    2405690 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
-<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">    2842561 :   Impl* get_impl() { return impl_.get(); }</span></a>
+<a name="250"><span class="lineNum">     250 </span>                :<span class="lineCov">    2405688 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
+<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">    2842553 :   Impl* get_impl() { return impl_.get(); }</span></a>
 <a name="252"><span class="lineNum">     252 </span>                :            :   std::unique_ptr&lt;Impl&gt; impl_;</a>
 <a name="253"><span class="lineNum">     253 </span>                :            : };</a>
 <a name="254"><span class="lineNum">     254 </span>                :            : </a>
