@@ -12,6 +12,7 @@ var dir_7729b3b589609220b9ffe88f5b919f3c =
     [ "logger.cc", "logger_8cc.html", [
       [ "Impl", "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl" ],
       [ "FormatPart", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart" ],
+      [ "LogFormat", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat" ],
       [ "TimestampBuffer", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer" ]
     ] ],
     [ "logger.hpp", "logger_8hpp.html", "logger_8hpp" ]

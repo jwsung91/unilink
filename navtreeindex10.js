@@ -1,5 +1,8 @@
 var NAVTREEINDEX10 =
 {
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a5b1f72a07f672d8a75d6291a68fa1e4e":[18,0,0,11,5,0,26],
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a618e21c609bccf90c6f946dde1622783":[18,0,0,11,5,0,24],
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a7e8194fc0092845a035af4e99f7280a3":[18,0,0,11,5,0,15],
 "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a90b6585306d020a4e0fe7cc6830df4bf":[18,0,0,11,5,0,1],
 "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a948bd16c6606091de5709bf5549b9adc":[18,0,0,11,5,0,12],
 "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a9e6722cf4e4dbee24492d3f3e2c0a894":[18,0,0,11,5,0,5],

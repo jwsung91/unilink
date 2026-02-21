@@ -69,6 +69,7 @@ var hierarchy =
     [ "unilink::util::InputValidator", "classunilink_1_1util_1_1InputValidator.html", null ],
     [ "unilink::concurrency::IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", null ],
     [ "unilink::diagnostics::LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", null ],
+    [ "unilink::diagnostics::Logger::Impl::LogFormat", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat.html", null ],
     [ "unilink::diagnostics::Logger", "classunilink_1_1diagnostics_1_1Logger.html", null ],
     [ "unilink::diagnostics::LogRotation", "classunilink_1_1diagnostics_1_1LogRotation.html", null ],
     [ "unilink::diagnostics::LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", null ],

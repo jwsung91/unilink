@@ -15,7 +15,7 @@ var searchData=
   ['flush_5fcount_267',['flush_count',['../structunilink_1_1diagnostics_1_1AsyncLogStats.html#a92013e35bdfd49b85f88390c19d4cbb4',1,'unilink::diagnostics::AsyncLogStats']]],
   ['flush_5finterval_268',['flush_interval',['../structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea',1,'unilink::diagnostics::AsyncLogConfig']]],
   ['format_5fmessage_269',['format_message',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aa389aa5f38b5ae999769aa93682e6bcb',1,'unilink::diagnostics::Logger::Impl']]],
-  ['format_5fstring_5f_270',['format_string_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a3931c94723b2b302050673fb377b3063',1,'unilink::diagnostics::Logger::Impl']]],
+  ['format_5fstring_270',['format_string',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat.html#a583bfc3ebac9949947070cfd4b3e8b99',1,'unilink::diagnostics::Logger::Impl::LogFormat']]],
   ['formatpart_271',['FormatPart',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1FormatPart.html',1,'unilink::diagnostics::Logger::Impl']]],
   ['formatted_5fmessage_272',['formatted_message',['../structunilink_1_1diagnostics_1_1LogEntry.html#a4855fbeb9ff7bf7301f5d802f433d5d0',1,'unilink::diagnostics::LogEntry']]],
   ['framer_5f_273',['framer_',['../classunilink_1_1builder_1_1BuilderInterface.html#a155f893ff2b37e4e7c028fcfc523ced4',1,'unilink::builder::BuilderInterface']]],

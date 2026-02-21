@@ -920,7 +920,7 @@ var NAVTREEINDEX =
 "md_docs_test_structure.html#autotoc_md828",
 "namespaceunilink_1_1diagnostics_1_1error__reporting.html#a09062defd8d7c3c8b916320c34338040",
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a2c07457dc964378102e8797795cf4586",
-"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a90b6585306d020a4e0fe7cc6830df4bf"
+"structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a5b1f72a07f672d8a75d6291a68fa1e4e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
