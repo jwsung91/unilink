@@ -33,16 +33,16 @@ class SerialChatApp {
 
   void run() {
     auto ul = unilink::serial(device_, baud_rate_)
-                  .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(); })
-                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) { handle_disconnect(); })
-                  .on_data([this](const wrapper::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
-                  .on_error([this](const wrapper::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
+                  .on_connect([this](const unilink::ConnectionContext&) { handle_connect(); })
+                  .on_disconnect([this](const unilink::ConnectionContext&) { handle_disconnect(); })
+                  .on_data([this](const unilink::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
+                  .on_error([this](const unilink::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
                   .build();
 
     ul->start();
 
     // Use a shared pointer to ensure the 'ul' object stays alive for the thread
-    auto shared_ul = std::shared_ptr<wrapper::Serial>(std::move(ul));
+    auto shared_ul = std::shared_ptr<unilink::Serial>(std::move(ul));
     std::thread input_thread([this, shared_ul] { this->input_loop(shared_ul.get()); });
 
     std::cout << "Serial Chat started. Type messages to send." << std::endl;
@@ -61,7 +61,7 @@ class SerialChatApp {
 
   void handle_error(const std::string& error) { logger_.error("serial", "ERROR", error); }
 
-  void input_loop(unilink::wrapper::Serial* ul) {
+  void input_loop(unilink::Serial* ul) {
     std::string line;
     std::cout << "> " << std::flush;
     while (std::getline(std::cin, line)) {

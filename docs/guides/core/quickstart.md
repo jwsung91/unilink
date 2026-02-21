@@ -31,11 +31,11 @@ sudo cmake --install build
 int main() {
     // Create a TCP client - it's that simple!
     auto client = unilink::tcp_client("127.0.0.1", 8080)
-        .on_connect([]() {
+        .on_connect([](const unilink::ConnectionContext& ctx) {
             std::cout << "Connected!" << std::endl;
         })
-        .on_data([](const std::string& data) {
-            std::cout << "Received: " << data << std::endl;
+        .on_data([](const unilink::MessageContext& ctx) {
+            std::cout << "Received: " << ctx.data() << std::endl;
         })
         .build();
     
@@ -72,11 +72,11 @@ int main() {
     // Create a TCP server
     auto server = unilink::tcp_server(8080)
         .unlimited_clients()  // Required: choose client limit before build
-        .on_connect([](size_t client_id, const std::string& ip) {
-            std::cout << "Client " << client_id << " connected from " << ip << std::endl;
+        .on_connect([](const unilink::ConnectionContext& ctx) {
+            std::cout << "Client " << ctx.client_id() << " connected from " << ctx.client_info() << std::endl;
         })
-        .on_data([](size_t client_id, const std::string& data) {
-            std::cout << "Client " << client_id << ": " << data << std::endl;
+        .on_data([](const unilink::MessageContext& ctx) {
+            std::cout << "Client " << ctx.client_id() << ": " << ctx.data() << std::endl;
         })
         .build();
     
@@ -101,11 +101,11 @@ int main() {
 int main() {
     // Create serial connection
     auto serial = unilink::serial("/dev/ttyUSB0", 115200)
-        .on_connect([]() {
+        .on_connect([](const unilink::ConnectionContext& ctx) {
             std::cout << "Serial port opened!" << std::endl;
         })
-        .on_data([](const std::string& data) {
-            std::cout << "Received: " << data << std::endl;
+        .on_data([](const unilink::MessageContext& ctx) {
+            std::cout << "Received: " << ctx.data() << std::endl;
         })
         .build();
     
@@ -138,8 +138,8 @@ client->start();  // Will automatically reconnect on disconnect
 ### Pattern 2: Error Handling
 ```cpp
 auto server = unilink::tcp_server(8080)
-    .on_error([](const std::string& error) {
-        std::cerr << "Error: " << error << std::endl;
+    .on_error([](const unilink::ErrorContext& ctx) {
+        std::cerr << "Error: " << ctx.message() << std::endl;
     })
     .enable_port_retry(true, 5, 1000)  // 5 retries, 1 sec interval
     .build();
@@ -148,8 +148,8 @@ auto server = unilink::tcp_server(8080)
 ### Pattern 3: Member Function Callbacks
 ```cpp
 class MyApp {
-    void on_data(const std::string& data) {
-        // Handle data
+    void on_data(const unilink::MessageContext& ctx) {
+        // Handle data: ctx.data()
     }
     
     void start() {

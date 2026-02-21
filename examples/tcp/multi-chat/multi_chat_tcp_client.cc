@@ -34,10 +34,10 @@ class MultiChatClient {
   void run() {
     auto client = unilink::tcp_client(host_, port_)
                       .auto_manage(true)
-                      .on_connect([](const wrapper::ConnectionContext& ctx) {
+                      .on_connect([](const unilink::ConnectionContext&) {
                         std::cout << "\n*** Connected to Multi-Chat Server ***" << std::endl;
                       })
-                      .on_data([](const wrapper::MessageContext& ctx) {
+                      .on_data([](const unilink::MessageContext& ctx) {
                         std::cout << "\n" << ctx.data() << "\n> " << std::flush;
                       })
                       .build();

@@ -34,17 +34,17 @@ class MultiChatServer {
     auto server =
         unilink::tcp_server(port_)
             .unlimited_clients()
-            .on_connect([this](const wrapper::ConnectionContext& ctx) {
+            .on_connect([this](const unilink::ConnectionContext& ctx) {
               std::string msg = "Client " + std::to_string(ctx.client_id()) + " joined (IP: " + ctx.client_info() + ")";
               logger_.info("server", "STATE", msg);
               if (server_) server_->broadcast("*** " + msg + " ***");
             })
-            .on_disconnect([this](const wrapper::ConnectionContext& ctx) {
+            .on_disconnect([this](const unilink::ConnectionContext& ctx) {
               std::string msg = "Client " + std::to_string(ctx.client_id()) + " left";
               logger_.info("server", "STATE", msg);
               if (server_) server_->broadcast("*** " + msg + " ***");
             })
-            .on_data([this](const wrapper::MessageContext& ctx) {
+            .on_data([this](const unilink::MessageContext& ctx) {
               std::string broadcast = "[Client " + std::to_string(ctx.client_id()) + "]: " + std::string(ctx.data());
               logger_.info("server", "CHAT", broadcast);
               if (server_) server_->broadcast(broadcast);
@@ -53,7 +53,7 @@ class MultiChatServer {
 
     server_ = std::move(server);  // Use std::move to convert unique_ptr to shared_ptr
 
-    if (server->start().get()) {
+    if (server_->start().get()) {
       logger_.info("server", "main", "Multi-Chat Server started on port " + std::to_string(port_));
     }
 
@@ -62,16 +62,16 @@ class MultiChatServer {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (line == "/quit") break;
-      server->broadcast("[Admin]: " + line);
+      server_->broadcast("[Admin]: " + line);
     }
 
-    server->stop();
+    server_->stop();
   }
 
  private:
   uint16_t port_;
   diagnostics::Logger& logger_;
-  std::shared_ptr<wrapper::TcpServer> server_;
+  std::shared_ptr<unilink::TcpServer> server_;
 };
 
 int main(int argc, char** argv) {

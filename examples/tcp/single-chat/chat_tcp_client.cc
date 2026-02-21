@@ -33,15 +33,15 @@ class TcpClientChatApp {
 
   void run() {
     auto ul = unilink::tcp_client(host_, port_)
-                  .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(); })
-                  .on_disconnect([this](const wrapper::ConnectionContext& ctx) { handle_disconnect(); })
-                  .on_data([this](const wrapper::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
-                  .on_error([this](const wrapper::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
+                  .on_connect([this](const unilink::ConnectionContext&) { handle_connect(); })
+                  .on_disconnect([this](const unilink::ConnectionContext&) { handle_disconnect(); })
+                  .on_data([this](const unilink::MessageContext& ctx) { handle_data(std::string(ctx.data())); })
+                  .on_error([this](const unilink::ErrorContext& ctx) { handle_error(std::string(ctx.message())); })
                   .build();
 
     ul->start();
 
-    auto shared_ul = std::shared_ptr<wrapper::TcpClient>(std::move(ul));
+    auto shared_ul = std::shared_ptr<unilink::TcpClient>(std::move(ul));
     std::thread input_thread([this, shared_ul] { this->input_loop(shared_ul.get()); });
 
     std::cout << "TCP Chat Client started. Type messages to send." << std::endl;
@@ -60,7 +60,7 @@ class TcpClientChatApp {
 
   void handle_error(const std::string& error) { logger_.error("client", "ERROR", error); }
 
-  void input_loop(unilink::wrapper::TcpClient* ul) {
+  void input_loop(unilink::TcpClient* ul) {
     std::string line;
     std::cout << "> " << std::flush;
     while (std::getline(std::cin, line)) {
