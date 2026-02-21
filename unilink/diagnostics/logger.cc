@@ -184,6 +184,24 @@ struct Logger::Impl {
     return result;
   }
 
+  void write_to_sinks(LogLevel level, const std::string& formatted_message) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    int current_outputs = outputs_.load();
+
+    if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
+      write_to_console(formatted_message);
+    }
+
+    if (current_outputs & static_cast<int>(LogOutput::FILE)) {
+      check_and_rotate_log();
+      write_to_file(formatted_message);
+    }
+
+    if (current_outputs & static_cast<int>(LogOutput::CALLBACK)) {
+      call_callback(level, formatted_message);
+    }
+  }
+
   std::string_view level_to_string(LogLevel level) const {
     switch (level) {
       case LogLevel::DEBUG:
@@ -245,14 +263,12 @@ struct Logger::Impl {
   }
 
   void write_to_file(const std::string& message) {
-    std::lock_guard<std::mutex> lock(mutex_);
     if (file_output_ && file_output_->is_open()) {
       *file_output_ << message << '\n';
     }
   }
 
   void call_callback(LogLevel level, const std::string& message) {
-    std::lock_guard<std::mutex> lock(mutex_);
     if (callback_) {
       try {
         callback_(level, message);
@@ -268,8 +284,6 @@ struct Logger::Impl {
     if (!log_rotation_ || current_log_file_.empty()) {
       return;
     }
-
-    std::lock_guard<std::mutex> lock(mutex_);
 
     bool should_rotate = false;
     if (file_output_ && file_output_->is_open()) {
@@ -406,20 +420,7 @@ struct Logger::Impl {
     for (const auto& entry : batch) {
       std::string formatted_message =
           format_message(entry.timestamp, entry.level, entry.component, entry.operation, entry.message);
-      int current_outputs = outputs_.load();
-
-      if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
-        write_to_console(formatted_message);
-      }
-
-      if (current_outputs & static_cast<int>(LogOutput::FILE)) {
-        check_and_rotate_log();
-        write_to_file(formatted_message);
-      }
-
-      if (current_outputs & static_cast<int>(LogOutput::CALLBACK)) {
-        call_callback(entry.level, formatted_message);
-      }
+      write_to_sinks(entry.level, formatted_message);
     }
   }
 
@@ -572,19 +573,8 @@ void Logger::log(LogLevel level, std::string_view component, std::string_view op
 
   std::string formatted_message =
       impl_->format_message(std::chrono::system_clock::now(), level, component, operation, message);
-  int current_outputs = get_impl()->outputs_.load();
-
-  if (current_outputs & static_cast<int>(LogOutput::CONSOLE)) {
-    impl_->write_to_console(formatted_message);
-  }
-
-  if (current_outputs & static_cast<int>(LogOutput::FILE)) {
-    impl_->check_and_rotate_log();
-    impl_->write_to_file(formatted_message);
-  }
-
-  if (current_outputs & static_cast<int>(LogOutput::CALLBACK)) {
-    impl_->call_callback(level, formatted_message);
+  if (get_impl()->outputs_.load(std::memory_order_relaxed) != 0) {
+    impl_->write_to_sinks(level, formatted_message);
   }
 }
 
