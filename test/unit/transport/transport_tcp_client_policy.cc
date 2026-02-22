@@ -39,6 +39,10 @@ class TransportTcpClientPolicyTest : public ::testing::Test {
  protected:
   void TearDown() override {
     if (client_) {
+      // Explicitly clear callbacks to prevent use-after-free
+      client_->on_state(nullptr);
+      client_->on_bytes(nullptr);
+      client_->on_backpressure(nullptr);
       client_->stop();
       client_.reset();
     }
@@ -84,6 +88,8 @@ TEST_F(TransportTcpClientPolicyTest, FixedIntervalPolicyRetriesWithDelay) {
     }
   }
 
+  // Prevent callback accessing destroyed attempt_times
+  client_->on_state(nullptr);
   client_->stop();
   client_.reset();
 }
@@ -111,6 +117,8 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
 
   ioc.run_for(std::chrono::milliseconds(500));
 
+  // Prevent callback accessing destroyed attempt_times
+  client_->on_state(nullptr);
   client_->stop();
 
   EXPECT_GE(attempt_times.size(), 3);
@@ -156,6 +164,7 @@ TEST_F(TransportTcpClientPolicyTest, PolicyCanStopRetries) {
   EXPECT_GE(connecting_count.load(), 3);
   EXPECT_TRUE(error_state.load());
 
+  client_->on_state(nullptr);
   client_->stop();
   client_.reset();
 }
@@ -208,6 +217,7 @@ TEST_F(TransportTcpClientPolicyTest, ResetAttemptCountOnSuccess) {
   // Windows might trigger additional transitions due to timeout vs immediate reset -> 4
   EXPECT_GE(connecting_count.load(), 3);
 
+  client_->on_state(nullptr);
   client_->stop();
   client_.reset();
 }

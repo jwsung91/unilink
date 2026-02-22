@@ -468,8 +468,9 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           return;
         }
         if (ec) {
-          uint32_t current_attempts = self->impl_->reconnect_policy_ ? self->impl_->reconnect_attempt_count_
-                                                                     : static_cast<uint32_t>(self->impl_->retry_attempts_);
+          uint32_t current_attempts = self->impl_->reconnect_policy_
+                                          ? self->impl_->reconnect_attempt_count_
+                                          : static_cast<uint32_t>(self->impl_->retry_attempts_);
           self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "resolve",
                                     ec, "Resolution failed: " + ec.message(), true, current_attempts);
           self->impl_->schedule_retry(self, seq);
@@ -565,9 +566,9 @@ void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self, uint64_t s
     reconnect_attempt_count_++;
     transition_to(LinkState::Connecting);
 
-    UNILINK_LOG_INFO("tcp_client", "retry",
-                     "Scheduling retry (policy) in " +
-                         std::to_string(static_cast<double>(decision.delay.count()) / 1000.0) + "s");
+    UNILINK_LOG_INFO(
+        "tcp_client", "retry",
+        "Scheduling retry (policy) in " + std::to_string(static_cast<double>(decision.delay.count()) / 1000.0) + "s");
 
     retry_timer_.expires_after(decision.delay);
     retry_timer_.async_wait([self, seq](const boost::system::error_code& ec) {
@@ -587,10 +588,11 @@ void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self, uint64_t s
   ++retry_attempts_;
   transition_to(LinkState::Connecting);
 
-  UNILINK_LOG_INFO(
-      "tcp_client", "retry",
-      "Scheduling retry in " +
-          std::to_string((retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms) / 1000.0) + "s");
+  UNILINK_LOG_INFO("tcp_client", "retry",
+                   "Scheduling retry in " +
+                       std::to_string((retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms) /
+                                      1000.0) +
+                       "s");
 
   const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;
   retry_timer_.expires_after(std::chrono::milliseconds(interval));
@@ -734,8 +736,7 @@ void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, uint64_t seq
   UNILINK_LOG_INFO("tcp_client", "handle_close", "Closing connection. Error: " + ec.message());
   if (ec) {
     bool retry = (cfg_.max_retries == -1 || retry_attempts_ < cfg_.max_retries);
-    uint32_t current_attempts =
-        reconnect_policy_ ? reconnect_attempt_count_ : static_cast<uint32_t>(retry_attempts_);
+    uint32_t current_attempts = reconnect_policy_ ? reconnect_attempt_count_ : static_cast<uint32_t>(retry_attempts_);
 
     if (reconnect_policy_) {
       retry = true;
