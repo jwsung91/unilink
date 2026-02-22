@@ -69,8 +69,14 @@ inline ReconnectPolicy FixedInterval(std::chrono::milliseconds delay) {
  */
 inline ReconnectPolicy ExponentialBackoff(std::chrono::milliseconds min_delay, std::chrono::milliseconds max_delay,
                                           double factor = 2.0, bool jitter = true) {
-  return [min_delay, max_delay, factor, jitter](const diagnostics::ErrorInfo& error_info,
-                                                uint32_t attempt_count) -> ReconnectDecision {
+  std::shared_ptr<std::mt19937> rng;
+  if (jitter) {
+    std::random_device rd;
+    rng = std::make_shared<std::mt19937>(rd());
+  }
+
+  return [min_delay, max_delay, factor, rng](const diagnostics::ErrorInfo& error_info,
+                                             uint32_t attempt_count) -> ReconnectDecision {
     if (!error_info.retryable) {
       return {false, std::chrono::milliseconds(0)};
     }
@@ -81,13 +87,10 @@ inline ReconnectPolicy ExponentialBackoff(std::chrono::milliseconds min_delay, s
     // Clamp to max_delay
     double delay_ms = std::min(calculated, cap);
 
-    if (jitter) {
+    if (rng) {
       // Full Jitter: random between 0 and calculated delay
-      // Use local generator to avoid potential TLS issues on some platforms
-      std::random_device rd;
-      std::mt19937 gen(rd());
       std::uniform_real_distribution<> dist(0.0, delay_ms);
-      delay_ms = dist(gen);
+      delay_ms = dist(*rng);
     }
 
     return {true, std::chrono::milliseconds(static_cast<long long>(delay_ms))};
