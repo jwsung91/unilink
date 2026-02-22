@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-21 15:11:23</td>
+            <td class="headerValue">2026-02-22 02:23:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">33</td>
@@ -105,23 +105,23 @@
 <a name="27"><span class="lineNum">      27 </span>                :            : </a>
 <a name="28"><span class="lineNum">      28 </span>                :            : using namespace common;</a>
 <a name="29"><span class="lineNum">      29 </span>                :            : </a>
-<a name="30"><span class="lineNum">      30 </span>                :<span class="lineCov">       4156 : TcpServerSession::TcpServerSession(net::io_context&amp; ioc, tcp::socket sock, size_t backpressure_threshold,</span></a>
-<a name="31"><span class="lineNum">      31 </span>                :<span class="lineCov">       4156 :                                    int idle_timeout_ms)</span></a>
-<a name="32"><span class="lineNum">      32 </span>                :<span class="lineCov">       4156 :     : ioc_(ioc),</span></a>
-<a name="33"><span class="lineNum">      33 </span>        [<span class="branchCov" title="Branch 0 was taken 4156 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4156 :       strand_(ioc.get_executor()),</span></a>
-<a name="34"><span class="lineNum">      34 </span>        [<span class="branchCov" title="Branch 0 was taken 4156 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4156 :       idle_timer_(ioc),</span></a>
-<a name="35"><span class="lineNum">      35 </span>        [<span class="branchCov" title="Branch 0 was taken 4156 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4156 :       socket_(std::make_unique&lt;BoostTcpSocket&gt;(std::move(sock))),</span></a>
-<a name="36"><span class="lineNum">      36 </span>                :<span class="lineCov">       4156 :       writing_(false),</span></a>
-<a name="37"><span class="lineNum">      37 </span>                :<span class="lineCov">       4156 :       queue_bytes_(0),</span></a>
-<a name="38"><span class="lineNum">      38 </span>                :<span class="lineCov">       4156 :       bp_high_(backpressure_threshold),</span></a>
-<a name="39"><span class="lineNum">      39 </span>                :<span class="lineCov">       4156 :       idle_timeout_ms_(idle_timeout_ms),</span></a>
-<a name="40"><span class="lineNum">      40 </span>                :<span class="lineCov">       4156 :       alive_(false),</span></a>
-<a name="41"><span class="lineNum">      41 </span>        [<span class="branchCov" title="Branch 0 was taken 4156 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      12468 :       cleanup_done_(false) {</span></a>
-<a name="42"><span class="lineNum">      42 </span>                :<span class="lineCov">       4156 :   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),</span></a>
+<a name="30"><span class="lineNum">      30 </span>                :<span class="lineCov">       4158 : TcpServerSession::TcpServerSession(net::io_context&amp; ioc, tcp::socket sock, size_t backpressure_threshold,</span></a>
+<a name="31"><span class="lineNum">      31 </span>                :<span class="lineCov">       4158 :                                    int idle_timeout_ms)</span></a>
+<a name="32"><span class="lineNum">      32 </span>                :<span class="lineCov">       4158 :     : ioc_(ioc),</span></a>
+<a name="33"><span class="lineNum">      33 </span>        [<span class="branchCov" title="Branch 0 was taken 4158 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4158 :       strand_(ioc.get_executor()),</span></a>
+<a name="34"><span class="lineNum">      34 </span>        [<span class="branchCov" title="Branch 0 was taken 4158 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4158 :       idle_timer_(ioc),</span></a>
+<a name="35"><span class="lineNum">      35 </span>        [<span class="branchCov" title="Branch 0 was taken 4158 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4158 :       socket_(std::make_unique&lt;BoostTcpSocket&gt;(std::move(sock))),</span></a>
+<a name="36"><span class="lineNum">      36 </span>                :<span class="lineCov">       4158 :       writing_(false),</span></a>
+<a name="37"><span class="lineNum">      37 </span>                :<span class="lineCov">       4158 :       queue_bytes_(0),</span></a>
+<a name="38"><span class="lineNum">      38 </span>                :<span class="lineCov">       4158 :       bp_high_(backpressure_threshold),</span></a>
+<a name="39"><span class="lineNum">      39 </span>                :<span class="lineCov">       4158 :       idle_timeout_ms_(idle_timeout_ms),</span></a>
+<a name="40"><span class="lineNum">      40 </span>                :<span class="lineCov">       4158 :       alive_(false),</span></a>
+<a name="41"><span class="lineNum">      41 </span>        [<span class="branchCov" title="Branch 0 was taken 4158 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      12474 :       cleanup_done_(false) {</span></a>
+<a name="42"><span class="lineNum">      42 </span>                :<span class="lineCov">       4158 :   bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),</span></a>
 <a name="43"><span class="lineNum">      43 </span>                :            :                        common::constants::MAX_BUFFER_SIZE);</a>
-<a name="44"><span class="lineNum">      44 </span>        [<span class="branchCov" title="Branch 0 was taken 4156 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4156 :   bp_low_ = bp_high_ &gt; 1 ? bp_high_ / 2 : bp_high_;</span></a>
-<a name="45"><span class="lineNum">      45 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4156 times"> + </span>]:<span class="lineCov">       4156 :   if (bp_low_ == 0) bp_low_ = 1;</span></a>
-<a name="46"><span class="lineNum">      46 </span>                :<span class="lineCov">       4156 : }</span></a>
+<a name="44"><span class="lineNum">      44 </span>        [<span class="branchCov" title="Branch 0 was taken 4158 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4158 :   bp_low_ = bp_high_ &gt; 1 ? bp_high_ / 2 : bp_high_;</span></a>
+<a name="45"><span class="lineNum">      45 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4158 times"> + </span>]:<span class="lineCov">       4158 :   if (bp_low_ == 0) bp_low_ = 1;</span></a>
+<a name="46"><span class="lineNum">      46 </span>                :<span class="lineCov">       4158 : }</span></a>
 <a name="47"><span class="lineNum">      47 </span>                :            : </a>
 <a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">         14 : TcpServerSession::TcpServerSession(net::io_context&amp; ioc, std::unique_ptr&lt;interface::TcpSocketInterface&gt; socket,</span></a>
 <a name="49"><span class="lineNum">      49 </span>                :<span class="lineCov">         14 :                                    size_t backpressure_threshold, int idle_timeout_ms)</span></a>
@@ -141,14 +141,14 @@
 <a name="63"><span class="lineNum">      63 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14 times"> + </span>]:<span class="lineCov">         14 :   if (bp_low_ == 0) bp_low_ = 1;</span></a>
 <a name="64"><span class="lineNum">      64 </span>                :<span class="lineCov">         14 : }</span></a>
 <a name="65"><span class="lineNum">      65 </span>                :            : </a>
-<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">       4170 : void TcpServerSession::start() {</span></a>
-<a name="67"><span class="lineNum">      67 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4170 times"> + </span>]:<span class="lineCov">       4170 :   if (alive_.exchange(true)) return;</span></a>
-<a name="68"><span class="lineNum">      68 </span>        [<span class="branchCov" title="Branch 0 was taken 4170 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4170 :   auto self = shared_from_this();</span></a>
-<a name="69"><span class="lineNum">      69 </span>        [<span class="branchCov" title="Branch 0 was taken 4170 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4170 :   net::dispatch(strand_, [self] {</span></a>
-<a name="70"><span class="lineNum">      70 </span>                :<span class="lineCov">       4166 :     self-&gt;reset_idle_timer();</span></a>
-<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">       4166 :     self-&gt;start_read();</span></a>
-<a name="72"><span class="lineNum">      72 </span>                :<span class="lineCov">       4166 :   });</span></a>
-<a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">       4170 : }</span></a>
+<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">       4172 : void TcpServerSession::start() {</span></a>
+<a name="67"><span class="lineNum">      67 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4172 times"> + </span>]:<span class="lineCov">       4172 :   if (alive_.exchange(true)) return;</span></a>
+<a name="68"><span class="lineNum">      68 </span>        [<span class="branchCov" title="Branch 0 was taken 4172 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4172 :   auto self = shared_from_this();</span></a>
+<a name="69"><span class="lineNum">      69 </span>        [<span class="branchCov" title="Branch 0 was taken 4172 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4172 :   net::dispatch(strand_, [self] {</span></a>
+<a name="70"><span class="lineNum">      70 </span>                :<span class="lineCov">       4168 :     self-&gt;reset_idle_timer();</span></a>
+<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">       4168 :     self-&gt;start_read();</span></a>
+<a name="72"><span class="lineNum">      72 </span>                :<span class="lineCov">       4168 :   });</span></a>
+<a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">       4172 : }</span></a>
 <a name="74"><span class="lineNum">      74 </span>                :            : </a>
 <a name="75"><span class="lineNum">      75 </span>                :<span class="lineCov">        506 : void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {</span></a>
 <a name="76"><span class="lineNum">      76 </span>  [<span class="branchCov" title="Branch 0 was taken 506 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 506 times"> + </span> :<span class="lineCov">       1009 :   if (!alive_ || closing_) return;  // Don't queue writes if session is not alive</span></a>
@@ -250,18 +250,18 @@
 <a name="163"><span class="lineNum">     163 </span>                :<span class="lineCov">        169 :     self-&gt;queue_bytes_ += added;</span></a>
 <a name="164"><span class="lineNum">     164 </span>                :<span class="lineCov">        169 :     self-&gt;tx_.emplace_back(std::move(buf));</span></a>
 <a name="165"><span class="lineNum">     165 </span>                :<span class="lineCov">        169 :     self-&gt;report_backpressure(self-&gt;queue_bytes_);</span></a>
-<a name="166"><span class="lineNum">     166 </span>        [<span class="branchCov" title="Branch 0 was taken 160 times"> + </span><span class="branchCov" title="Branch 1 was taken 9 times"> + </span>]:<span class="lineCov">        169 :     if (!self-&gt;writing_) self-&gt;do_write();</span></a>
+<a name="166"><span class="lineNum">     166 </span>        [<span class="branchCov" title="Branch 0 was taken 166 times"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">        169 :     if (!self-&gt;writing_) self-&gt;do_write();</span></a>
 <a name="167"><span class="lineNum">     167 </span>                :            :   });</a>
 <a name="168"><span class="lineNum">     168 </span>                :            : }</a>
 <a name="169"><span class="lineNum">     169 </span>                :            : </a>
-<a name="170"><span class="lineNum">     170 </span>                :<span class="lineCov">       4157 : void TcpServerSession::on_bytes(OnBytes cb) {</span></a>
-<a name="171"><span class="lineNum">     171 </span>        [<span class="branchCov" title="Branch 0 was taken 4157 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4157 :   auto self = shared_from_this();</span></a>
-<a name="172"><span class="lineNum">     172 </span>        [<span class="branchCov" title="Branch 0 was taken 4157 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4157 :   net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {</span></a>
-<a name="173"><span class="lineNum">     173 </span>  [<span class="branchCov" title="Branch 0 was taken 4157 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 4157 times"> + </span> :<span class="lineCov">       4157 :     if (self-&gt;closing_.load() || self-&gt;cleanup_done_.load()) return;</span></a>
-<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 4157 times"> + </span>]
-<a name="174"><span class="lineNum">     174 </span>                :<span class="lineCov">       4157 :     self-&gt;on_bytes_ = std::move(cb);</span></a>
+<a name="170"><span class="lineNum">     170 </span>                :<span class="lineCov">       4159 : void TcpServerSession::on_bytes(OnBytes cb) {</span></a>
+<a name="171"><span class="lineNum">     171 </span>        [<span class="branchCov" title="Branch 0 was taken 4159 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4159 :   auto self = shared_from_this();</span></a>
+<a name="172"><span class="lineNum">     172 </span>        [<span class="branchCov" title="Branch 0 was taken 4159 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4159 :   net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {</span></a>
+<a name="173"><span class="lineNum">     173 </span>  [<span class="branchCov" title="Branch 0 was taken 4159 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 4159 times"> + </span> :<span class="lineCov">       4159 :     if (self-&gt;closing_.load() || self-&gt;cleanup_done_.load()) return;</span></a>
+<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 4159 times"> + </span>]
+<a name="174"><span class="lineNum">     174 </span>                :<span class="lineCov">       4159 :     self-&gt;on_bytes_ = std::move(cb);</span></a>
 <a name="175"><span class="lineNum">     175 </span>                :            :   });</a>
-<a name="176"><span class="lineNum">     176 </span>                :<span class="lineCov">       4157 : }</span></a>
+<a name="176"><span class="lineNum">     176 </span>                :<span class="lineCov">       4159 : }</span></a>
 <a name="177"><span class="lineNum">     177 </span>                :<span class="lineCov">          4 : void TcpServerSession::on_backpressure(OnBackpressure cb) {</span></a>
 <a name="178"><span class="lineNum">     178 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          4 :   auto self = shared_from_this();</span></a>
 <a name="179"><span class="lineNum">     179 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          4 :   net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {</span></a>
@@ -270,29 +270,29 @@
 <a name="181"><span class="lineNum">     181 </span>                :<span class="lineCov">          3 :     self-&gt;on_bp_ = std::move(cb);</span></a>
 <a name="182"><span class="lineNum">     182 </span>                :            :   });</a>
 <a name="183"><span class="lineNum">     183 </span>                :<span class="lineCov">          4 : }</span></a>
-<a name="184"><span class="lineNum">     184 </span>                :<span class="lineCov">       4164 : void TcpServerSession::on_close(OnClose cb) {</span></a>
-<a name="185"><span class="lineNum">     185 </span>        [<span class="branchCov" title="Branch 0 was taken 4164 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4164 :   auto self = shared_from_this();</span></a>
-<a name="186"><span class="lineNum">     186 </span>        [<span class="branchCov" title="Branch 0 was taken 4164 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4164 :   net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {</span></a>
-<a name="187"><span class="lineNum">     187 </span>  [<span class="branchCov" title="Branch 0 was taken 4164 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 4164 times"> + </span> :<span class="lineCov">       4164 :     if (self-&gt;closing_.load() || self-&gt;cleanup_done_.load()) return;</span></a>
-<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 4164 times"> + </span>]
-<a name="188"><span class="lineNum">     188 </span>                :<span class="lineCov">       4164 :     self-&gt;on_close_ = std::move(cb);</span></a>
+<a name="184"><span class="lineNum">     184 </span>                :<span class="lineCov">       4166 : void TcpServerSession::on_close(OnClose cb) {</span></a>
+<a name="185"><span class="lineNum">     185 </span>        [<span class="branchCov" title="Branch 0 was taken 4166 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4166 :   auto self = shared_from_this();</span></a>
+<a name="186"><span class="lineNum">     186 </span>        [<span class="branchCov" title="Branch 0 was taken 4166 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4166 :   net::dispatch(strand_, [self, cb = std::move(cb)]() mutable {</span></a>
+<a name="187"><span class="lineNum">     187 </span>  [<span class="branchCov" title="Branch 0 was taken 4166 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 4166 times"> + </span> :<span class="lineCov">       4166 :     if (self-&gt;closing_.load() || self-&gt;cleanup_done_.load()) return;</span></a>
+<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 4166 times"> + </span>]
+<a name="188"><span class="lineNum">     188 </span>                :<span class="lineCov">       4166 :     self-&gt;on_close_ = std::move(cb);</span></a>
 <a name="189"><span class="lineNum">     189 </span>                :            :   });</a>
-<a name="190"><span class="lineNum">     190 </span>                :<span class="lineCov">       4164 : }</span></a>
+<a name="190"><span class="lineNum">     190 </span>                :<span class="lineCov">       4166 : }</span></a>
 <a name="191"><span class="lineNum">     191 </span>                :            : </a>
-<a name="192"><span class="lineNum">     192 </span>                :<span class="lineCov">     800276 : bool TcpServerSession::alive() const { return alive_.load(); }</span></a>
+<a name="192"><span class="lineNum">     192 </span>                :<span class="lineCov">     636724 : bool TcpServerSession::alive() const { return alive_.load(); }</span></a>
 <a name="193"><span class="lineNum">     193 </span>                :            : </a>
-<a name="194"><span class="lineNum">     194 </span>                :<span class="lineCov">         17 : void TcpServerSession::stop() {</span></a>
-<a name="195"><span class="lineNum">     195 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchCov" title="Branch 1 was taken 12 times"> + </span>]:<span class="lineCov">         17 :   if (closing_.exchange(true)) return;</span></a>
-<a name="196"><span class="lineNum">     196 </span>        [<span class="branchCov" title="Branch 0 was taken 12 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         12 :   auto self = shared_from_this();</span></a>
-<a name="197"><span class="lineNum">     197 </span>        [<span class="branchCov" title="Branch 0 was taken 12 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         12 :   net::post(strand_, [self] {</span></a>
+<a name="194"><span class="lineNum">     194 </span>                :<span class="lineCov">         19 : void TcpServerSession::stop() {</span></a>
+<a name="195"><span class="lineNum">     195 </span>        [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchCov" title="Branch 1 was taken 13 times"> + </span>]:<span class="lineCov">         19 :   if (closing_.exchange(true)) return;</span></a>
+<a name="196"><span class="lineNum">     196 </span>        [<span class="branchCov" title="Branch 0 was taken 13 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         13 :   auto self = shared_from_this();</span></a>
+<a name="197"><span class="lineNum">     197 </span>        [<span class="branchCov" title="Branch 0 was taken 13 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         13 :   net::post(strand_, [self] {</span></a>
 <a name="198"><span class="lineNum">     198 </span>                :            :     // Clear callbacks on the strand to block further user callbacks after stop.</a>
-<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">         12 :     self-&gt;on_bytes_ = nullptr;</span></a>
-<a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">         12 :     self-&gt;on_bp_ = nullptr;</span></a>
-<a name="201"><span class="lineNum">     201 </span>                :<span class="lineCov">         12 :     self-&gt;on_close_ = nullptr;</span></a>
-<a name="202"><span class="lineNum">     202 </span>                :<span class="lineCov">         12 :     self-&gt;idle_timer_.cancel();</span></a>
-<a name="203"><span class="lineNum">     203 </span>                :<span class="lineCov">         12 :     self-&gt;do_close();</span></a>
-<a name="204"><span class="lineNum">     204 </span>                :<span class="lineCov">         12 :   });</span></a>
-<a name="205"><span class="lineNum">     205 </span>                :<span class="lineCov">         12 : }</span></a>
+<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">         13 :     self-&gt;on_bytes_ = nullptr;</span></a>
+<a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">         13 :     self-&gt;on_bp_ = nullptr;</span></a>
+<a name="201"><span class="lineNum">     201 </span>                :<span class="lineCov">         13 :     self-&gt;on_close_ = nullptr;</span></a>
+<a name="202"><span class="lineNum">     202 </span>                :<span class="lineCov">         13 :     self-&gt;idle_timer_.cancel();</span></a>
+<a name="203"><span class="lineNum">     203 </span>                :<span class="lineCov">         13 :     self-&gt;do_close();</span></a>
+<a name="204"><span class="lineNum">     204 </span>                :<span class="lineCov">         13 :   });</span></a>
+<a name="205"><span class="lineNum">     205 </span>                :<span class="lineCov">         13 : }</span></a>
 <a name="206"><span class="lineNum">     206 </span>                :            : </a>
 <a name="207"><span class="lineNum">     207 </span>                :<span class="lineCov">          2 : void TcpServerSession::cancel() {</span></a>
 <a name="208"><span class="lineNum">     208 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :   auto self = shared_from_this();</span></a>
@@ -308,20 +308,20 @@
 <a name="218"><span class="lineNum">     218 </span>                :<span class="lineCov">          2 :   });</span></a>
 <a name="219"><span class="lineNum">     219 </span>                :<span class="lineCov">          2 : }</span></a>
 <a name="220"><span class="lineNum">     220 </span>                :            : </a>
-<a name="221"><span class="lineNum">     221 </span>                :<span class="lineCov">      31312 : void TcpServerSession::start_read() {</span></a>
-<a name="222"><span class="lineNum">     222 </span>        [<span class="branchCov" title="Branch 0 was taken 31312 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      31312 :   auto self = shared_from_this();</span></a>
-<a name="223"><span class="lineNum">     223 </span>  [<span class="branchCov" title="Branch 0 was taken 31312 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 31312 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      93936 :   socket_-&gt;async_read_some(</span></a>
-<a name="224"><span class="lineNum">     224 </span>        [<span class="branchCov" title="Branch 0 was taken 31312 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      93936 :       net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {</span></a>
-<a name="225"><span class="lineNum">     225 </span>  [<span class="branchCov" title="Branch 0 was taken 31295 times"> + </span><span class="branchCov" title="Branch 1 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 31295 times"> + </span> :<span class="lineCov">      31311 :         if (self-&gt;closing_ || !self-&gt;alive_) return;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 16 times"> + </span><span class="branchCov" title="Branch 5 was taken 31295 times"> + </span>]
-<a name="226"><span class="lineNum">     226 </span>        [<span class="branchCov" title="Branch 0 was taken 4147 times"> + </span><span class="branchCov" title="Branch 1 was taken 27148 times"> + </span>]:<span class="lineCov">      31295 :         if (ec) {</span></a>
-<a name="227"><span class="lineNum">     227 </span>                :<span class="lineCov">       4147 :           self-&gt;do_close();</span></a>
-<a name="228"><span class="lineNum">     228 </span>                :<span class="lineCov">       4147 :           return;</span></a>
+<a name="221"><span class="lineNum">     221 </span>                :<span class="lineCov">      31820 : void TcpServerSession::start_read() {</span></a>
+<a name="222"><span class="lineNum">     222 </span>        [<span class="branchCov" title="Branch 0 was taken 31820 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      31820 :   auto self = shared_from_this();</span></a>
+<a name="223"><span class="lineNum">     223 </span>  [<span class="branchCov" title="Branch 0 was taken 31820 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 31820 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">      95460 :   socket_-&gt;async_read_some(</span></a>
+<a name="224"><span class="lineNum">     224 </span>        [<span class="branchCov" title="Branch 0 was taken 31820 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      95460 :       net::buffer(rx_.data(), rx_.size()), net::bind_executor(strand_, [self](auto ec, std::size_t n) {</span></a>
+<a name="225"><span class="lineNum">     225 </span>  [<span class="branchCov" title="Branch 0 was taken 31802 times"> + </span><span class="branchCov" title="Branch 1 was taken 17 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 31802 times"> + </span> :<span class="lineCov">      31819 :         if (self-&gt;closing_ || !self-&gt;alive_) return;</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 17 times"> + </span><span class="branchCov" title="Branch 5 was taken 31802 times"> + </span>]
+<a name="226"><span class="lineNum">     226 </span>        [<span class="branchCov" title="Branch 0 was taken 4148 times"> + </span><span class="branchCov" title="Branch 1 was taken 27654 times"> + </span>]:<span class="lineCov">      31802 :         if (ec) {</span></a>
+<a name="227"><span class="lineNum">     227 </span>                :<span class="lineCov">       4148 :           self-&gt;do_close();</span></a>
+<a name="228"><span class="lineNum">     228 </span>                :<span class="lineCov">       4148 :           return;</span></a>
 <a name="229"><span class="lineNum">     229 </span>                :            :         }</a>
-<a name="230"><span class="lineNum">     230 </span>                :<span class="lineCov">      27148 :         self-&gt;reset_idle_timer();</span></a>
-<a name="231"><span class="lineNum">     231 </span>        [<span class="branchCov" title="Branch 0 was taken 27148 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      27148 :         if (self-&gt;on_bytes_) {</span></a>
+<a name="230"><span class="lineNum">     230 </span>                :<span class="lineCov">      27654 :         self-&gt;reset_idle_timer();</span></a>
+<a name="231"><span class="lineNum">     231 </span>        [<span class="branchCov" title="Branch 0 was taken 27654 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      27654 :         if (self-&gt;on_bytes_) {</span></a>
 <a name="232"><span class="lineNum">     232 </span>                :            :           try {</a>
-<a name="233"><span class="lineNum">     233 </span>        [<span class="branchCov" title="Branch 0 was taken 27146 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">      27148 :             self-&gt;on_bytes_(memory::ConstByteSpan(self-&gt;rx_.data(), n));</span></a>
+<a name="233"><span class="lineNum">     233 </span>        [<span class="branchCov" title="Branch 0 was taken 27652 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">      27654 :             self-&gt;on_bytes_(memory::ConstByteSpan(self-&gt;rx_.data(), n));</span></a>
 <a name="234"><span class="lineNum">     234 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :           } catch (const std::exception&amp; e) {</span></a>
 <a name="235"><span class="lineNum">     235 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          2 :             UNILINK_LOG_ERROR(&quot;tcp_server_session&quot;, &quot;on_bytes&quot;,</span></a>
 <span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 2 times"> + </span> 
@@ -338,14 +338,14 @@
 <a name="242"><span class="lineNum">     242 </span>                :<span class="lineNoCov">          0 :             return;</span></a>
 <a name="243"><span class="lineNum">     243 </span>                :            :           }</a>
 <a name="244"><span class="lineNum">     244 </span>                :            :         }</a>
-<a name="245"><span class="lineNum">     245 </span>                :<span class="lineCov">      27146 :         self-&gt;start_read();</span></a>
+<a name="245"><span class="lineNum">     245 </span>                :<span class="lineCov">      27652 :         self-&gt;start_read();</span></a>
 <a name="246"><span class="lineNum">     246 </span>                :            :       }));</a>
-<a name="247"><span class="lineNum">     247 </span>                :<span class="lineCov">      31312 : }</span></a>
+<a name="247"><span class="lineNum">     247 </span>                :<span class="lineCov">      31820 : }</span></a>
 <a name="248"><span class="lineNum">     248 </span>                :            : </a>
-<a name="249"><span class="lineNum">     249 </span>                :<span class="lineCov">        331 : void TcpServerSession::do_write() {</span></a>
-<a name="250"><span class="lineNum">     250 </span>        [<span class="branchCov" title="Branch 0 was taken 159 times"> + </span><span class="branchCov" title="Branch 1 was taken 172 times"> + </span>]:<span class="lineCov">        331 :   if (tx_.empty()) {</span></a>
-<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">        159 :     writing_ = false;</span></a>
-<a name="252"><span class="lineNum">     252 </span>                :<span class="lineCov">        159 :     return;</span></a>
+<a name="249"><span class="lineNum">     249 </span>                :<span class="lineCov">        337 : void TcpServerSession::do_write() {</span></a>
+<a name="250"><span class="lineNum">     250 </span>        [<span class="branchCov" title="Branch 0 was taken 165 times"> + </span><span class="branchCov" title="Branch 1 was taken 172 times"> + </span>]:<span class="lineCov">        337 :   if (tx_.empty()) {</span></a>
+<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">        165 :     writing_ = false;</span></a>
+<a name="252"><span class="lineNum">     252 </span>                :<span class="lineCov">        165 :     return;</span></a>
 <a name="253"><span class="lineNum">     253 </span>                :            :   }</a>
 <a name="254"><span class="lineNum">     254 </span>                :<span class="lineCov">        172 :   writing_ = true;</span></a>
 <a name="255"><span class="lineNum">     255 </span>        [<span class="branchCov" title="Branch 0 was taken 172 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        172 :   auto self = shared_from_this();</span></a>
@@ -392,35 +392,35 @@
 <a name="294"><span class="lineNum">     294 </span>                :            :       current);</a>
 <a name="295"><span class="lineNum">     295 </span>                :<span class="lineCov">        172 : }</span></a>
 <a name="296"><span class="lineNum">     296 </span>                :            : </a>
-<a name="297"><span class="lineNum">     297 </span>                :<span class="lineCov">       4165 : void TcpServerSession::do_close() {</span></a>
-<a name="298"><span class="lineNum">     298 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4165 times"> + </span>]:<span class="lineCov">       4165 :   if (cleanup_done_.exchange(true)) return;  // Ensures cleanup runs only once</span></a>
+<a name="297"><span class="lineNum">     297 </span>                :<span class="lineCov">       4167 : void TcpServerSession::do_close() {</span></a>
+<a name="298"><span class="lineNum">     298 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4167 times"> + </span>]:<span class="lineCov">       4167 :   if (cleanup_done_.exchange(true)) return;  // Ensures cleanup runs only once</span></a>
 <a name="299"><span class="lineNum">     299 </span>                :            : </a>
-<a name="300"><span class="lineNum">     300 </span>                :<span class="lineCov">       4165 :   alive_.store(false);</span></a>
-<a name="301"><span class="lineNum">     301 </span>                :<span class="lineCov">       4165 :   closing_.store(true);  // Redundant, but ensures consistency</span></a>
+<a name="300"><span class="lineNum">     300 </span>                :<span class="lineCov">       4167 :   alive_.store(false);</span></a>
+<a name="301"><span class="lineNum">     301 </span>                :<span class="lineCov">       4167 :   closing_.store(true);  // Redundant, but ensures consistency</span></a>
 <a name="302"><span class="lineNum">     302 </span>                :            : </a>
 <a name="303"><span class="lineNum">     303 </span>                :            :   // Safely invoke on_close callback</a>
-<a name="304"><span class="lineNum">     304 </span>                :<span class="lineCov">       4165 :   auto close_cb = std::move(on_close_);</span></a>
+<a name="304"><span class="lineNum">     304 </span>                :<span class="lineCov">       4167 :   auto close_cb = std::move(on_close_);</span></a>
 <a name="305"><span class="lineNum">     305 </span>                :            : </a>
 <a name="306"><span class="lineNum">     306 </span>                :            :   // Clear all callbacks to prevent any further invocations</a>
-<a name="307"><span class="lineNum">     307 </span>                :<span class="lineCov">       4165 :   on_bytes_ = nullptr;</span></a>
-<a name="308"><span class="lineNum">     308 </span>                :<span class="lineCov">       4165 :   on_bp_ = nullptr;</span></a>
-<a name="309"><span class="lineNum">     309 </span>                :<span class="lineCov">       4165 :   on_close_ = nullptr;</span></a>
-<a name="310"><span class="lineNum">     310 </span>        [<span class="branchCov" title="Branch 0 was taken 4165 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4165 :   idle_timer_.cancel();</span></a>
+<a name="307"><span class="lineNum">     307 </span>                :<span class="lineCov">       4167 :   on_bytes_ = nullptr;</span></a>
+<a name="308"><span class="lineNum">     308 </span>                :<span class="lineCov">       4167 :   on_bp_ = nullptr;</span></a>
+<a name="309"><span class="lineNum">     309 </span>                :<span class="lineCov">       4167 :   on_close_ = nullptr;</span></a>
+<a name="310"><span class="lineNum">     310 </span>        [<span class="branchCov" title="Branch 0 was taken 4167 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4167 :   idle_timer_.cancel();</span></a>
 <a name="311"><span class="lineNum">     311 </span>                :            : </a>
-<a name="312"><span class="lineNum">     312 </span>  [<span class="branchCov" title="Branch 0 was taken 4165 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 4165 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">       4165 :   UNILINK_LOG_INFO(&quot;tcp_server_session&quot;, &quot;disconnect&quot;, &quot;Client disconnected&quot;);</span></a>
-<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 4165 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 4165 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 4165 times"> + </span> 
+<a name="312"><span class="lineNum">     312 </span>  [<span class="branchCov" title="Branch 0 was taken 4167 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 4167 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">       4167 :   UNILINK_LOG_INFO(&quot;tcp_server_session&quot;, &quot;disconnect&quot;, &quot;Client disconnected&quot;);</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 4167 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 4167 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 4167 times"> + </span> 
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 9 was not taken"> - </span>]
-<a name="313"><span class="lineNum">     313 </span>                :<span class="lineCov">       4165 :   boost::system::error_code ec;</span></a>
-<a name="314"><span class="lineNum">     314 </span>        [<span class="branchCov" title="Branch 0 was taken 4165 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4165 :   socket_-&gt;shutdown(tcp::socket::shutdown_both, ec);</span></a>
-<a name="315"><span class="lineNum">     315 </span>        [<span class="branchCov" title="Branch 0 was taken 4165 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4165 :   socket_-&gt;close(ec);</span></a>
+<a name="313"><span class="lineNum">     313 </span>                :<span class="lineCov">       4167 :   boost::system::error_code ec;</span></a>
+<a name="314"><span class="lineNum">     314 </span>        [<span class="branchCov" title="Branch 0 was taken 4167 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4167 :   socket_-&gt;shutdown(tcp::socket::shutdown_both, ec);</span></a>
+<a name="315"><span class="lineNum">     315 </span>        [<span class="branchCov" title="Branch 0 was taken 4167 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4167 :   socket_-&gt;close(ec);</span></a>
 <a name="316"><span class="lineNum">     316 </span>                :            : </a>
 <a name="317"><span class="lineNum">     317 </span>                :            :   // Release memory immediately</a>
-<a name="318"><span class="lineNum">     318 </span>                :<span class="lineCov">       4165 :   tx_.clear();</span></a>
-<a name="319"><span class="lineNum">     319 </span>                :<span class="lineCov">       4165 :   queue_bytes_ = 0;</span></a>
+<a name="318"><span class="lineNum">     318 </span>                :<span class="lineCov">       4167 :   tx_.clear();</span></a>
+<a name="319"><span class="lineNum">     319 </span>                :<span class="lineCov">       4167 :   queue_bytes_ = 0;</span></a>
 <a name="320"><span class="lineNum">     320 </span>                :            : </a>
-<a name="321"><span class="lineNum">     321 </span>        [<span class="branchCov" title="Branch 0 was taken 4152 times"> + </span><span class="branchCov" title="Branch 1 was taken 13 times"> + </span>]:<span class="lineCov">       4165 :   if (close_cb) {</span></a>
+<a name="321"><span class="lineNum">     321 </span>        [<span class="branchCov" title="Branch 0 was taken 4153 times"> + </span><span class="branchCov" title="Branch 1 was taken 14 times"> + </span>]:<span class="lineCov">       4167 :   if (close_cb) {</span></a>
 <a name="322"><span class="lineNum">     322 </span>                :            :     try {</a>
-<a name="323"><span class="lineNum">     323 </span>        [<span class="branchCov" title="Branch 0 was taken 4152 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4152 :       close_cb();</span></a>
+<a name="323"><span class="lineNum">     323 </span>        [<span class="branchCov" title="Branch 0 was taken 4153 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       4153 :       close_cb();</span></a>
 <a name="324"><span class="lineNum">     324 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineNoCov">          0 :     } catch (const std::exception&amp; e) {</span></a>
 <a name="325"><span class="lineNum">     325 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineNoCov">          0 :       UNILINK_LOG_ERROR(&quot;tcp_server_session&quot;, &quot;on_close&quot;, &quot;Exception in on_close callback: &quot; + std::string(e.what()));</span></a>
 <span class="lineNum">         </span><span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoCov" title="Branch 8 was not taken"> - </span> 
@@ -432,7 +432,7 @@
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 9 was not taken"> - </span>]
 <a name="328"><span class="lineNum">     328 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineNoCov">          0 :     }</span></a>
 <a name="329"><span class="lineNum">     329 </span>                :            :   }</a>
-<a name="330"><span class="lineNum">     330 </span>                :<span class="lineCov">       4165 : }</span></a>
+<a name="330"><span class="lineNum">     330 </span>                :<span class="lineCov">       4167 : }</span></a>
 <a name="331"><span class="lineNum">     331 </span>                :            : </a>
 <a name="332"><span class="lineNum">     332 </span>                :<span class="lineCov">        340 : void TcpServerSession::report_backpressure(size_t queued_bytes) {</span></a>
 <a name="333"><span class="lineNum">     333 </span>  [<span class="branchCov" title="Branch 0 was taken 340 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 340 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        340 :   if (closing_ || !alive_ || !on_bp_) return;</span></a>
@@ -470,8 +470,8 @@
 <a name="354"><span class="lineNum">     354 </span>                :            :   }</a>
 <a name="355"><span class="lineNum">     355 </span>                :            : }</a>
 <a name="356"><span class="lineNum">     356 </span>                :            : </a>
-<a name="357"><span class="lineNum">     357 </span>                :<span class="lineCov">      31482 : void TcpServerSession::reset_idle_timer() {</span></a>
-<a name="358"><span class="lineNum">     358 </span>        [<span class="branchCov" title="Branch 0 was taken 31480 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">      31482 :   if (idle_timeout_ms_ &lt;= 0) return;</span></a>
+<a name="357"><span class="lineNum">     357 </span>                :<span class="lineCov">      31990 : void TcpServerSession::reset_idle_timer() {</span></a>
+<a name="358"><span class="lineNum">     358 </span>        [<span class="branchCov" title="Branch 0 was taken 31988 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">      31990 :   if (idle_timeout_ms_ &lt;= 0) return;</span></a>
 <a name="359"><span class="lineNum">     359 </span>                :            : </a>
 <a name="360"><span class="lineNum">     360 </span>                :            :   // Cancel any existing timer</a>
 <a name="361"><span class="lineNum">     361 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :   idle_timer_.cancel();</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-21 15:11:23</td>
+            <td class="headerValue">2026-02-22 02:23:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">25</td>
@@ -126,38 +126,38 @@
 <a name="48"><span class="lineNum">      48 </span>                :            :   }</a>
 <a name="49"><span class="lineNum">      49 </span>                :<span class="lineCov">       3085 : }</span></a>
 <a name="50"><span class="lineNum">      50 </span>                :            : </a>
-<a name="51"><span class="lineNum">      51 </span>                :<span class="lineCov">    2443866 : std::unique_ptr&lt;uint8_t[]&gt; MemoryPool::acquire(size_t size) {</span></a>
-<a name="52"><span class="lineNum">      52 </span>                :<span class="lineCov">    2443866 :   validate_size(size);</span></a>
+<a name="51"><span class="lineNum">      51 </span>                :<span class="lineCov">    2443867 : std::unique_ptr&lt;uint8_t[]&gt; MemoryPool::acquire(size_t size) {</span></a>
+<a name="52"><span class="lineNum">      52 </span>                :<span class="lineCov">    2443867 :   validate_size(size);</span></a>
 <a name="53"><span class="lineNum">      53 </span>                :            : </a>
 <a name="54"><span class="lineNum">      54 </span>                :            :   // Optimization: Bypass pool for large allocations &gt; 64KB (XLARGE)</a>
 <a name="55"><span class="lineNum">      55 </span>                :            :   // This avoids mutex contention and fixes truncation bug for sizes &gt; 64KB.</a>
-<a name="56"><span class="lineNum">      56 </span>        [<span class="branchCov" title="Branch 0 was taken 201 times"> + </span><span class="branchCov" title="Branch 1 was taken 2443662 times"> + </span>]:<span class="lineCov">    2443863 :   if (size &gt; static_cast&lt;size_t&gt;(BufferSize::XLARGE)) {</span></a>
+<a name="56"><span class="lineNum">      56 </span>        [<span class="branchCov" title="Branch 0 was taken 201 times"> + </span><span class="branchCov" title="Branch 1 was taken 2443663 times"> + </span>]:<span class="lineCov">    2443864 :   if (size &gt; static_cast&lt;size_t&gt;(BufferSize::XLARGE)) {</span></a>
 <a name="57"><span class="lineNum">      57 </span>        [<span class="branchCov" title="Branch 0 was taken 201 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        201 :     auto buffer = create_buffer(size);</span></a>
 <a name="58"><span class="lineNum">      58 </span>                :            :     // create_buffer throws on failure, so if we are here, we succeeded.</a>
 <a name="59"><span class="lineNum">      59 </span>                :<span class="lineCov">        201 :     total_allocations_.fetch_add(1, std::memory_order_relaxed);</span></a>
 <a name="60"><span class="lineNum">      60 </span>                :<span class="lineCov">        201 :     return buffer;</span></a>
 <a name="61"><span class="lineNum">      61 </span>                :<span class="lineCov">        201 :   }</span></a>
 <a name="62"><span class="lineNum">      62 </span>                :            : </a>
-<a name="63"><span class="lineNum">      63 </span>                :<span class="lineCov">    2443662 :   auto&amp; bucket = get_bucket(size);</span></a>
-<a name="64"><span class="lineNum">      64 </span>                :<span class="lineCov">    2443662 :   return acquire_from_bucket(bucket);</span></a>
+<a name="63"><span class="lineNum">      63 </span>                :<span class="lineCov">    2443663 :   auto&amp; bucket = get_bucket(size);</span></a>
+<a name="64"><span class="lineNum">      64 </span>                :<span class="lineCov">    2443663 :   return acquire_from_bucket(bucket);</span></a>
 <a name="65"><span class="lineNum">      65 </span>                :            : }</a>
 <a name="66"><span class="lineNum">      66 </span>                :            : </a>
 <a name="67"><span class="lineNum">      67 </span>                :<span class="lineCov">          5 : std::unique_ptr&lt;uint8_t[]&gt; MemoryPool::acquire(BufferSize buffer_size) {</span></a>
 <a name="68"><span class="lineNum">      68 </span>                :<span class="lineCov">          5 :   return acquire(static_cast&lt;size_t&gt;(buffer_size));</span></a>
 <a name="69"><span class="lineNum">      69 </span>                :            : }</a>
 <a name="70"><span class="lineNum">      70 </span>                :            : </a>
-<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">    2343853 : void MemoryPool::release(std::unique_ptr&lt;uint8_t[]&gt; buffer, size_t size) {</span></a>
-<a name="72"><span class="lineNum">      72 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2343853 times"> + </span>]:<span class="lineCov">    2343853 :   if (!buffer) return;</span></a>
+<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">    2343854 : void MemoryPool::release(std::unique_ptr&lt;uint8_t[]&gt; buffer, size_t size) {</span></a>
+<a name="72"><span class="lineNum">      72 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2343854 times"> + </span>]:<span class="lineCov">    2343854 :   if (!buffer) return;</span></a>
 <a name="73"><span class="lineNum">      73 </span>                :            : </a>
-<a name="74"><span class="lineNum">      74 </span>                :<span class="lineCov">    2343853 :   validate_size(size);</span></a>
+<a name="74"><span class="lineNum">      74 </span>                :<span class="lineCov">    2343854 :   validate_size(size);</span></a>
 <a name="75"><span class="lineNum">      75 </span>                :            : </a>
-<a name="76"><span class="lineNum">      76 </span>        [<span class="branchCov" title="Branch 0 was taken 201 times"> + </span><span class="branchCov" title="Branch 1 was taken 2343652 times"> + </span>]:<span class="lineCov">    2343853 :   if (size &gt; static_cast&lt;size_t&gt;(BufferSize::XLARGE)) {</span></a>
+<a name="76"><span class="lineNum">      76 </span>        [<span class="branchCov" title="Branch 0 was taken 201 times"> + </span><span class="branchCov" title="Branch 1 was taken 2343653 times"> + </span>]:<span class="lineCov">    2343854 :   if (size &gt; static_cast&lt;size_t&gt;(BufferSize::XLARGE)) {</span></a>
 <a name="77"><span class="lineNum">      77 </span>                :            :     MEMORY_TRACK_DEALLOCATION(buffer.get());</a>
 <a name="78"><span class="lineNum">      78 </span>                :<span class="lineCov">        201 :     return;  // unique_ptr destructor handles cleanup</span></a>
 <a name="79"><span class="lineNum">      79 </span>                :            :   }</a>
 <a name="80"><span class="lineNum">      80 </span>                :            : </a>
-<a name="81"><span class="lineNum">      81 </span>                :<span class="lineCov">    2343652 :   auto&amp; bucket = get_bucket(size);</span></a>
-<a name="82"><span class="lineNum">      82 </span>        [<span class="branchCov" title="Branch 0 was taken 2343652 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2343652 :   release_to_bucket(bucket, std::move(buffer));</span></a>
+<a name="81"><span class="lineNum">      81 </span>                :<span class="lineCov">    2343653 :   auto&amp; bucket = get_bucket(size);</span></a>
+<a name="82"><span class="lineNum">      82 </span>        [<span class="branchCov" title="Branch 0 was taken 2343653 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2343653 :   release_to_bucket(bucket, std::move(buffer));</span></a>
 <a name="83"><span class="lineNum">      83 </span>                :            : }</a>
 <a name="84"><span class="lineNum">      84 </span>                :            : </a>
 <a name="85"><span class="lineNum">      85 </span>                :<span class="lineCov">         54 : MemoryPool::PoolStats MemoryPool::get_stats() const {</span></a>
@@ -206,75 +206,75 @@
 <a name="128"><span class="lineNum">     128 </span>                :            : // Private helper functions</a>
 <a name="129"><span class="lineNum">     129 </span>                :            : // ============================================================================</a>
 <a name="130"><span class="lineNum">     130 </span>                :            : </a>
-<a name="131"><span class="lineNum">     131 </span>                :<span class="lineCov">    4787314 : MemoryPool::PoolBucket&amp; MemoryPool::get_bucket(size_t size) { return buckets_[get_bucket_index(size)]; }</span></a>
+<a name="131"><span class="lineNum">     131 </span>                :<span class="lineCov">    4787316 : MemoryPool::PoolBucket&amp; MemoryPool::get_bucket(size_t size) { return buckets_[get_bucket_index(size)]; }</span></a>
 <a name="132"><span class="lineNum">     132 </span>                :            : </a>
-<a name="133"><span class="lineNum">     133 </span>                :<span class="lineCov">    4787314 : size_t MemoryPool::get_bucket_index(size_t size) const {</span></a>
+<a name="133"><span class="lineNum">     133 </span>                :<span class="lineCov">    4787316 : size_t MemoryPool::get_bucket_index(size_t size) const {</span></a>
 <a name="134"><span class="lineNum">     134 </span>                :            :   // Optimized: Unrolled checks for faster lookup</a>
-<a name="135"><span class="lineNum">     135 </span>        [<span class="branchCov" title="Branch 0 was taken 4382990 times"> + </span><span class="branchCov" title="Branch 1 was taken 404324 times"> + </span>]:<span class="lineCov">    4787314 :   if (size &lt;= static_cast&lt;size_t&gt;(BufferSize::SMALL)) return 0;</span></a>
+<a name="135"><span class="lineNum">     135 </span>        [<span class="branchCov" title="Branch 0 was taken 4382992 times"> + </span><span class="branchCov" title="Branch 1 was taken 404324 times"> + </span>]:<span class="lineCov">    4787316 :   if (size &lt;= static_cast&lt;size_t&gt;(BufferSize::SMALL)) return 0;</span></a>
 <a name="136"><span class="lineNum">     136 </span>        [<span class="branchCov" title="Branch 0 was taken 404218 times"> + </span><span class="branchCov" title="Branch 1 was taken 106 times"> + </span>]:<span class="lineCov">     404324 :   if (size &lt;= static_cast&lt;size_t&gt;(BufferSize::MEDIUM)) return 1;</span></a>
 <a name="137"><span class="lineNum">     137 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 104 times"> + </span>]:<span class="lineCov">        106 :   if (size &lt;= static_cast&lt;size_t&gt;(BufferSize::LARGE)) return 2;</span></a>
 <a name="138"><span class="lineNum">     138 </span>                :<span class="lineCov">        104 :   return 3;  // XLARGE</span></a>
 <a name="139"><span class="lineNum">     139 </span>                :            : }</a>
 <a name="140"><span class="lineNum">     140 </span>                :            : </a>
-<a name="141"><span class="lineNum">     141 </span>                :<span class="lineCov">    2443662 : std::unique_ptr&lt;uint8_t[]&gt; MemoryPool::acquire_from_bucket(PoolBucket&amp; bucket) {</span></a>
-<a name="142"><span class="lineNum">     142 </span>                :<span class="lineCov">    2443662 :   std::unique_ptr&lt;uint8_t[]&gt; buffer;</span></a>
+<a name="141"><span class="lineNum">     141 </span>                :<span class="lineCov">    2443663 : std::unique_ptr&lt;uint8_t[]&gt; MemoryPool::acquire_from_bucket(PoolBucket&amp; bucket) {</span></a>
+<a name="142"><span class="lineNum">     142 </span>                :<span class="lineCov">    2443663 :   std::unique_ptr&lt;uint8_t[]&gt; buffer;</span></a>
 <a name="143"><span class="lineNum">     143 </span>                :            : </a>
 <a name="144"><span class="lineNum">     144 </span>                :            :   {</a>
-<a name="145"><span class="lineNum">     145 </span>        [<span class="branchCov" title="Branch 0 was taken 2443662 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2443662 :     std::lock_guard&lt;std::mutex&gt; lock(bucket.mutex_);</span></a>
+<a name="145"><span class="lineNum">     145 </span>        [<span class="branchCov" title="Branch 0 was taken 2443663 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2443663 :     std::lock_guard&lt;std::mutex&gt; lock(bucket.mutex_);</span></a>
 <a name="146"><span class="lineNum">     146 </span>                :            : </a>
 <a name="147"><span class="lineNum">     147 </span>                :            :     // Get from stack</a>
-<a name="148"><span class="lineNum">     148 </span>        [<span class="branchCov" title="Branch 0 was taken 229478 times"> + </span><span class="branchCov" title="Branch 1 was taken 2214184 times"> + </span>]:<span class="lineCov">    2443662 :     if (!bucket.buffers_.empty()) {</span></a>
-<a name="149"><span class="lineNum">     149 </span>                :<span class="lineCov">     229478 :       buffer = std::move(bucket.buffers_.back());</span></a>
-<a name="150"><span class="lineNum">     150 </span>                :<span class="lineCov">     229478 :       bucket.buffers_.pop_back();</span></a>
+<a name="148"><span class="lineNum">     148 </span>        [<span class="branchCov" title="Branch 0 was taken 229746 times"> + </span><span class="branchCov" title="Branch 1 was taken 2213917 times"> + </span>]:<span class="lineCov">    2443663 :     if (!bucket.buffers_.empty()) {</span></a>
+<a name="149"><span class="lineNum">     149 </span>                :<span class="lineCov">     229746 :       buffer = std::move(bucket.buffers_.back());</span></a>
+<a name="150"><span class="lineNum">     150 </span>                :<span class="lineCov">     229746 :       bucket.buffers_.pop_back();</span></a>
 <a name="151"><span class="lineNum">     151 </span>                :            :     }</a>
-<a name="152"><span class="lineNum">     152 </span>                :<span class="lineCov">    2443662 :   }</span></a>
+<a name="152"><span class="lineNum">     152 </span>                :<span class="lineCov">    2443663 :   }</span></a>
 <a name="153"><span class="lineNum">     153 </span>                :            : </a>
-<a name="154"><span class="lineNum">     154 </span>        [<span class="branchCov" title="Branch 0 was taken 229478 times"> + </span><span class="branchCov" title="Branch 1 was taken 2214184 times"> + </span>]:<span class="lineCov">    2443662 :   if (buffer) {</span></a>
-<a name="155"><span class="lineNum">     155 </span>                :<span class="lineCov">     229478 :     pool_hits_.fetch_add(1, std::memory_order_relaxed);</span></a>
-<a name="156"><span class="lineNum">     156 </span>                :<span class="lineCov">     229478 :     total_allocations_.fetch_add(1, std::memory_order_relaxed);</span></a>
-<a name="157"><span class="lineNum">     157 </span>                :<span class="lineCov">     229478 :     return buffer;</span></a>
+<a name="154"><span class="lineNum">     154 </span>        [<span class="branchCov" title="Branch 0 was taken 229746 times"> + </span><span class="branchCov" title="Branch 1 was taken 2213917 times"> + </span>]:<span class="lineCov">    2443663 :   if (buffer) {</span></a>
+<a name="155"><span class="lineNum">     155 </span>                :<span class="lineCov">     229746 :     pool_hits_.fetch_add(1, std::memory_order_relaxed);</span></a>
+<a name="156"><span class="lineNum">     156 </span>                :<span class="lineCov">     229746 :     total_allocations_.fetch_add(1, std::memory_order_relaxed);</span></a>
+<a name="157"><span class="lineNum">     157 </span>                :<span class="lineCov">     229746 :     return buffer;</span></a>
 <a name="158"><span class="lineNum">     158 </span>                :            :   }</a>
 <a name="159"><span class="lineNum">     159 </span>                :            : </a>
 <a name="160"><span class="lineNum">     160 </span>                :            :   // Create new buffer outside lock</a>
-<a name="161"><span class="lineNum">     161 </span>        [<span class="branchCov" title="Branch 0 was taken 2214184 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2214184 :   buffer = create_buffer(bucket.size_);</span></a>
-<a name="162"><span class="lineNum">     162 </span>        [<span class="branchCov" title="Branch 0 was taken 2214184 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2214184 :   if (buffer) {</span></a>
-<a name="163"><span class="lineNum">     163 </span>                :<span class="lineCov">    2214184 :     total_allocations_.fetch_add(1, std::memory_order_relaxed);</span></a>
+<a name="161"><span class="lineNum">     161 </span>        [<span class="branchCov" title="Branch 0 was taken 2213917 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2213917 :   buffer = create_buffer(bucket.size_);</span></a>
+<a name="162"><span class="lineNum">     162 </span>        [<span class="branchCov" title="Branch 0 was taken 2213917 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2213917 :   if (buffer) {</span></a>
+<a name="163"><span class="lineNum">     163 </span>                :<span class="lineCov">    2213917 :     total_allocations_.fetch_add(1, std::memory_order_relaxed);</span></a>
 <a name="164"><span class="lineNum">     164 </span>                :            :   }</a>
 <a name="165"><span class="lineNum">     165 </span>                :            : </a>
-<a name="166"><span class="lineNum">     166 </span>                :<span class="lineCov">    2214184 :   return buffer;</span></a>
+<a name="166"><span class="lineNum">     166 </span>                :<span class="lineCov">    2213917 :   return buffer;</span></a>
 <a name="167"><span class="lineNum">     167 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <a name="168"><span class="lineNum">     168 </span>                :            : </a>
-<a name="169"><span class="lineNum">     169 </span>                :<span class="lineCov">    2343652 : void MemoryPool::release_to_bucket(PoolBucket&amp; bucket, std::unique_ptr&lt;uint8_t[]&gt; buffer) {</span></a>
+<a name="169"><span class="lineNum">     169 </span>                :<span class="lineCov">    2343653 : void MemoryPool::release_to_bucket(PoolBucket&amp; bucket, std::unique_ptr&lt;uint8_t[]&gt; buffer) {</span></a>
 <a name="170"><span class="lineNum">     170 </span>                :            :   {</a>
-<a name="171"><span class="lineNum">     171 </span>        [<span class="branchCov" title="Branch 0 was taken 2343652 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2343652 :     std::lock_guard&lt;std::mutex&gt; lock(bucket.mutex_);</span></a>
+<a name="171"><span class="lineNum">     171 </span>        [<span class="branchCov" title="Branch 0 was taken 2343653 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2343653 :     std::lock_guard&lt;std::mutex&gt; lock(bucket.mutex_);</span></a>
 <a name="172"><span class="lineNum">     172 </span>                :            : </a>
 <a name="173"><span class="lineNum">     173 </span>                :            :     // Add buffer back to pool (stack)</a>
-<a name="174"><span class="lineNum">     174 </span>        [<span class="branchCov" title="Branch 0 was taken 2233200 times"> + </span><span class="branchCov" title="Branch 1 was taken 110452 times"> + </span>]:<span class="lineCov">    2343652 :     if (bucket.buffers_.size() &lt; bucket.capacity_) {</span></a>
-<a name="175"><span class="lineNum">     175 </span>        [<span class="branchCov" title="Branch 0 was taken 2233200 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2233200 :       bucket.buffers_.push_back(std::move(buffer));</span></a>
-<a name="176"><span class="lineNum">     176 </span>                :<span class="lineCov">    2233200 :       return;</span></a>
+<a name="174"><span class="lineNum">     174 </span>        [<span class="branchCov" title="Branch 0 was taken 2233482 times"> + </span><span class="branchCov" title="Branch 1 was taken 110171 times"> + </span>]:<span class="lineCov">    2343653 :     if (bucket.buffers_.size() &lt; bucket.capacity_) {</span></a>
+<a name="175"><span class="lineNum">     175 </span>        [<span class="branchCov" title="Branch 0 was taken 2233482 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">    2233482 :       bucket.buffers_.push_back(std::move(buffer));</span></a>
+<a name="176"><span class="lineNum">     176 </span>                :<span class="lineCov">    2233482 :       return;</span></a>
 <a name="177"><span class="lineNum">     177 </span>                :            :     }</a>
-<a name="178"><span class="lineNum">     178 </span>        [<span class="branchCov" title="Branch 0 was taken 110452 times"> + </span><span class="branchCov" title="Branch 1 was taken 2233200 times"> + </span>]:<span class="lineCov">    2343652 :   }</span></a>
+<a name="178"><span class="lineNum">     178 </span>        [<span class="branchCov" title="Branch 0 was taken 110171 times"> + </span><span class="branchCov" title="Branch 1 was taken 2233482 times"> + </span>]:<span class="lineCov">    2343653 :   }</span></a>
 <a name="179"><span class="lineNum">     179 </span>                :            : </a>
 <a name="180"><span class="lineNum">     180 </span>                :            :   // If pool is full, discard buffer (auto-release)</a>
 <a name="181"><span class="lineNum">     181 </span>                :            :   // buffer is unique_ptr so it will be automatically deleted when out of scope</a>
 <a name="182"><span class="lineNum">     182 </span>                :            :   MEMORY_TRACK_DEALLOCATION(buffer.get());</a>
 <a name="183"><span class="lineNum">     183 </span>                :            : }</a>
 <a name="184"><span class="lineNum">     184 </span>                :            : </a>
-<a name="185"><span class="lineNum">     185 </span>                :<span class="lineCov">    2214385 : std::unique_ptr&lt;uint8_t[]&gt; MemoryPool::create_buffer(size_t size) {</span></a>
-<a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">    2214385 :   uint8_t* raw_buffer = new (std::nothrow) uint8_t[size];</span></a>
-<a name="187"><span class="lineNum">     187 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2214385 times"> + </span>]:<span class="lineCov">    2214385 :   if (raw_buffer) {</span></a>
+<a name="185"><span class="lineNum">     185 </span>                :<span class="lineCov">    2214118 : std::unique_ptr&lt;uint8_t[]&gt; MemoryPool::create_buffer(size_t size) {</span></a>
+<a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">    2214118 :   uint8_t* raw_buffer = new (std::nothrow) uint8_t[size];</span></a>
+<a name="187"><span class="lineNum">     187 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2214118 times"> + </span>]:<span class="lineCov">    2214118 :   if (raw_buffer) {</span></a>
 <a name="188"><span class="lineNum">     188 </span>                :            :     MEMORY_TRACK_ALLOCATION(raw_buffer, size);</a>
 <a name="189"><span class="lineNum">     189 </span>                :            :   } else {</a>
 <a name="190"><span class="lineNum">     190 </span>                :<span class="lineNoCov">          0 :     throw std::bad_alloc();  // Or handle error appropriately</span></a>
 <a name="191"><span class="lineNum">     191 </span>                :            :   }</a>
-<a name="192"><span class="lineNum">     192 </span>                :<span class="lineCov">    2214385 :   return std::unique_ptr&lt;uint8_t[]&gt;(raw_buffer);</span></a>
+<a name="192"><span class="lineNum">     192 </span>                :<span class="lineCov">    2214118 :   return std::unique_ptr&lt;uint8_t[]&gt;(raw_buffer);</span></a>
 <a name="193"><span class="lineNum">     193 </span>                :            : }</a>
 <a name="194"><span class="lineNum">     194 </span>                :            : </a>
-<a name="195"><span class="lineNum">     195 </span>                :<span class="lineCov">    4787719 : void MemoryPool::validate_size(size_t size) const {</span></a>
-<a name="196"><span class="lineNum">     196 </span>  [<span class="branchCov" title="Branch 0 was taken 4787717 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 4787716 times"> + </span>]:<span class="lineCov">    4787719 :   if (size == 0 || size &gt; 64 * 1024 * 1024) {  // 64MB maximum</span></a>
+<a name="195"><span class="lineNum">     195 </span>                :<span class="lineCov">    4787721 : void MemoryPool::validate_size(size_t size) const {</span></a>
+<a name="196"><span class="lineNum">     196 </span>  [<span class="branchCov" title="Branch 0 was taken 4787719 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 4787718 times"> + </span>]:<span class="lineCov">    4787721 :   if (size == 0 || size &gt; 64 * 1024 * 1024) {  // 64MB maximum</span></a>
 <a name="197"><span class="lineNum">     197 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     throw std::invalid_argument(&quot;Invalid buffer size&quot;);</span></a>
 <a name="198"><span class="lineNum">     198 </span>                :            :   }</a>
-<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">    4787716 : }</span></a>
+<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">    4787718 : }</span></a>
 <a name="200"><span class="lineNum">     200 </span>                :            : </a>
 <a name="201"><span class="lineNum">     201 </span>                :            : // ============================================================================</a>
 <a name="202"><span class="lineNum">     202 </span>                :            : // PoolBucket Move Constructor/Assignment Operator</a>
@@ -302,28 +302,28 @@
 <a name="224"><span class="lineNum">     224 </span>                :            : // PooledBuffer Implementation</a>
 <a name="225"><span class="lineNum">     225 </span>                :            : // ============================================================================</a>
 <a name="226"><span class="lineNum">     226 </span>                :            : </a>
-<a name="227"><span class="lineNum">     227 </span>        [<span class="branchCov" title="Branch 0 was taken 13201 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      13201 : PooledBuffer::PooledBuffer(size_t size) : size_(size), pool_(&amp;GlobalMemoryPool::instance()) {</span></a>
-<a name="228"><span class="lineNum">     228 </span>        [<span class="branchCov" title="Branch 0 was taken 13201 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      13201 :   buffer_ = pool_-&gt;acquire(size);</span></a>
-<a name="229"><span class="lineNum">     229 </span>                :<span class="lineCov">      13201 : }</span></a>
+<a name="227"><span class="lineNum">     227 </span>        [<span class="branchCov" title="Branch 0 was taken 13202 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      13202 : PooledBuffer::PooledBuffer(size_t size) : size_(size), pool_(&amp;GlobalMemoryPool::instance()) {</span></a>
+<a name="228"><span class="lineNum">     228 </span>        [<span class="branchCov" title="Branch 0 was taken 13202 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      13202 :   buffer_ = pool_-&gt;acquire(size);</span></a>
+<a name="229"><span class="lineNum">     229 </span>                :<span class="lineCov">      13202 : }</span></a>
 <a name="230"><span class="lineNum">     230 </span>                :            : </a>
 <a name="231"><span class="lineNum">     231 </span>                :<span class="lineCov">          2 : PooledBuffer::PooledBuffer(MemoryPool::BufferSize buffer_size)</span></a>
 <a name="232"><span class="lineNum">     232 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :     : size_(static_cast&lt;size_t&gt;(buffer_size)), pool_(&amp;GlobalMemoryPool::instance()) {</span></a>
 <a name="233"><span class="lineNum">     233 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :   buffer_ = pool_-&gt;acquire(size_);</span></a>
 <a name="234"><span class="lineNum">     234 </span>                :<span class="lineCov">          2 : }</span></a>
 <a name="235"><span class="lineNum">     235 </span>                :            : </a>
-<a name="236"><span class="lineNum">     236 </span>                :<span class="lineCov">      65736 : PooledBuffer::~PooledBuffer() {</span></a>
-<a name="237"><span class="lineNum">     237 </span>  [<span class="branchCov" title="Branch 0 was taken 13203 times"> + </span><span class="branchCov" title="Branch 1 was taken 52533 times"> + </span><span class="branchCov" title="Branch 2 was taken 13203 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">      65736 :   if (buffer_ &amp;&amp; pool_) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 13203 times"> + </span><span class="branchCov" title="Branch 5 was taken 52533 times"> + </span>]
-<a name="238"><span class="lineNum">     238 </span>                :<span class="lineCov">      13203 :     pool_-&gt;release(std::move(buffer_), size_);</span></a>
+<a name="236"><span class="lineNum">     236 </span>                :<span class="lineCov">      66204 : PooledBuffer::~PooledBuffer() {</span></a>
+<a name="237"><span class="lineNum">     237 </span>  [<span class="branchCov" title="Branch 0 was taken 13204 times"> + </span><span class="branchCov" title="Branch 1 was taken 53000 times"> + </span><span class="branchCov" title="Branch 2 was taken 13204 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">      66204 :   if (buffer_ &amp;&amp; pool_) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 13204 times"> + </span><span class="branchCov" title="Branch 5 was taken 53000 times"> + </span>]
+<a name="238"><span class="lineNum">     238 </span>                :<span class="lineCov">      13204 :     pool_-&gt;release(std::move(buffer_), size_);</span></a>
 <a name="239"><span class="lineNum">     239 </span>                :            :   }</a>
-<a name="240"><span class="lineNum">     240 </span>                :<span class="lineCov">      65736 : }</span></a>
+<a name="240"><span class="lineNum">     240 </span>                :<span class="lineCov">      66204 : }</span></a>
 <a name="241"><span class="lineNum">     241 </span>                :            : </a>
-<a name="242"><span class="lineNum">     242 </span>                :<span class="lineCov">      52533 : PooledBuffer::PooledBuffer(PooledBuffer&amp;&amp; other) noexcept</span></a>
-<a name="243"><span class="lineNum">     243 </span>                :<span class="lineCov">      52533 :     : buffer_(std::move(other.buffer_)), size_(other.size_), pool_(other.pool_) {</span></a>
-<a name="244"><span class="lineNum">     244 </span>                :<span class="lineCov">      52533 :   other.buffer_ = nullptr;</span></a>
-<a name="245"><span class="lineNum">     245 </span>                :<span class="lineCov">      52533 :   other.size_ = 0;</span></a>
-<a name="246"><span class="lineNum">     246 </span>                :<span class="lineCov">      52533 :   other.pool_ = nullptr;</span></a>
-<a name="247"><span class="lineNum">     247 </span>                :<span class="lineCov">      52533 : }</span></a>
+<a name="242"><span class="lineNum">     242 </span>                :<span class="lineCov">      53000 : PooledBuffer::PooledBuffer(PooledBuffer&amp;&amp; other) noexcept</span></a>
+<a name="243"><span class="lineNum">     243 </span>                :<span class="lineCov">      53000 :     : buffer_(std::move(other.buffer_)), size_(other.size_), pool_(other.pool_) {</span></a>
+<a name="244"><span class="lineNum">     244 </span>                :<span class="lineCov">      53000 :   other.buffer_ = nullptr;</span></a>
+<a name="245"><span class="lineNum">     245 </span>                :<span class="lineCov">      53000 :   other.size_ = 0;</span></a>
+<a name="246"><span class="lineNum">     246 </span>                :<span class="lineCov">      53000 :   other.pool_ = nullptr;</span></a>
+<a name="247"><span class="lineNum">     247 </span>                :<span class="lineCov">      53000 : }</span></a>
 <a name="248"><span class="lineNum">     248 </span>                :            : </a>
 <a name="249"><span class="lineNum">     249 </span>                :<span class="lineNoCov">          0 : PooledBuffer&amp; PooledBuffer::operator=(PooledBuffer&amp;&amp; other) noexcept {</span></a>
 <a name="250"><span class="lineNum">     250 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (this != &amp;other) {</span></a>
@@ -347,11 +347,11 @@
 <a name="267"><span class="lineNum">     267 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="268"><span class="lineNum">     268 </span>                :            : }</a>
 <a name="269"><span class="lineNum">     269 </span>                :            : </a>
-<a name="270"><span class="lineNum">     270 </span>                :<span class="lineCov">      13418 : uint8_t* PooledBuffer::data() const { return buffer_.get(); }</span></a>
+<a name="270"><span class="lineNum">     270 </span>                :<span class="lineCov">      13881 : uint8_t* PooledBuffer::data() const { return buffer_.get(); }</span></a>
 <a name="271"><span class="lineNum">     271 </span>                :            : </a>
-<a name="272"><span class="lineNum">     272 </span>                :<span class="lineCov">      13131 : size_t PooledBuffer::size() const { return size_; }</span></a>
+<a name="272"><span class="lineNum">     272 </span>                :<span class="lineCov">      14056 : size_t PooledBuffer::size() const { return size_; }</span></a>
 <a name="273"><span class="lineNum">     273 </span>                :            : </a>
-<a name="274"><span class="lineNum">     274 </span>                :<span class="lineCov">      13204 : bool PooledBuffer::valid() const { return buffer_ != nullptr; }</span></a>
+<a name="274"><span class="lineNum">     274 </span>                :<span class="lineCov">      13205 : bool PooledBuffer::valid() const { return buffer_ != nullptr; }</span></a>
 <a name="275"><span class="lineNum">     275 </span>                :            : </a>
 <a name="276"><span class="lineNum">     276 </span>                :<span class="lineCov">   20484400 : uint8_t&amp; PooledBuffer::operator[](size_t index) { return buffer_[index]; }</span></a>
 <a name="277"><span class="lineNum">     277 </span>                :            : </a>
