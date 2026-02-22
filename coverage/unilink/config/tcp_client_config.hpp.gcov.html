@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-22 02:23:22</td>
+            <td class="headerValue">2026-02-22 10:54:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -112,8 +112,8 @@
 <a name="34"><span class="lineNum">      34 </span>                :            :   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;</a>
 <a name="35"><span class="lineNum">      35 </span>                :            :   bool enable_memory_pool = true;</a>
 <a name="36"><span class="lineNum">      36 </span>                :            : </a>
-<a name="37"><span class="lineNum">      37 </span>        [<span class="branchCov" title="Branch 0 was taken 82 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         82 :   TcpClientConfig() = default;</span></a>
-<a name="38"><span class="lineNum">      38 </span>                :<span class="lineCov">        110 :   TcpClientConfig(const TcpClientConfig&amp;) = default;</span></a>
+<a name="37"><span class="lineNum">      37 </span>        [<span class="branchCov" title="Branch 0 was taken 86 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         86 :   TcpClientConfig() = default;</span></a>
+<a name="38"><span class="lineNum">      38 </span>                :<span class="lineCov">        114 :   TcpClientConfig(const TcpClientConfig&amp;) = default;</span></a>
 <a name="39"><span class="lineNum">      39 </span>                :            :   TcpClientConfig&amp; operator=(const TcpClientConfig&amp;) = default;</a>
 <a name="40"><span class="lineNum">      40 </span>                :            :   TcpClientConfig(TcpClientConfig&amp;&amp;) noexcept = default;</a>
 <a name="41"><span class="lineNum">      41 </span>                :            :   TcpClientConfig&amp; operator=(TcpClientConfig&amp;&amp;) noexcept = default;</a>
@@ -130,23 +130,23 @@
 <a name="51"><span class="lineNum">      51 </span>                :            :   }</a>
 <a name="52"><span class="lineNum">      52 </span>                :            : </a>
 <a name="53"><span class="lineNum">      53 </span>                :            :   // Apply validation and clamp values to valid ranges</a>
-<a name="54"><span class="lineNum">      54 </span>                :<span class="lineCov">         80 :   void validate_and_clamp() {</span></a>
-<a name="55"><span class="lineNum">      55 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchCov" title="Branch 1 was taken 69 times"> + </span>]:<span class="lineCov">         80 :     if (retry_interval_ms &lt; common::constants::MIN_RETRY_INTERVAL_MS) {</span></a>
+<a name="54"><span class="lineNum">      54 </span>                :<span class="lineCov">         84 :   void validate_and_clamp() {</span></a>
+<a name="55"><span class="lineNum">      55 </span>        [<span class="branchCov" title="Branch 0 was taken 11 times"> + </span><span class="branchCov" title="Branch 1 was taken 73 times"> + </span>]:<span class="lineCov">         84 :     if (retry_interval_ms &lt; common::constants::MIN_RETRY_INTERVAL_MS) {</span></a>
 <a name="56"><span class="lineNum">      56 </span>                :<span class="lineCov">         11 :       retry_interval_ms = common::constants::MIN_RETRY_INTERVAL_MS;</span></a>
-<a name="57"><span class="lineNum">      57 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 69 times"> + </span>]:<span class="lineCov">         69 :     } else if (retry_interval_ms &gt; common::constants::MAX_RETRY_INTERVAL_MS) {</span></a>
+<a name="57"><span class="lineNum">      57 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 73 times"> + </span>]:<span class="lineCov">         73 :     } else if (retry_interval_ms &gt; common::constants::MAX_RETRY_INTERVAL_MS) {</span></a>
 <a name="58"><span class="lineNum">      58 </span>                :<span class="lineNoCov">          0 :       retry_interval_ms = common::constants::MAX_RETRY_INTERVAL_MS;</span></a>
 <a name="59"><span class="lineNum">      59 </span>                :            :     }</a>
 <a name="60"><span class="lineNum">      60 </span>                :            : </a>
-<a name="61"><span class="lineNum">      61 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 80 times"> + </span>]:<span class="lineCov">         80 :     if (backpressure_threshold &lt; common::constants::MIN_BACKPRESSURE_THRESHOLD) {</span></a>
+<a name="61"><span class="lineNum">      61 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 84 times"> + </span>]:<span class="lineCov">         84 :     if (backpressure_threshold &lt; common::constants::MIN_BACKPRESSURE_THRESHOLD) {</span></a>
 <a name="62"><span class="lineNum">      62 </span>                :<span class="lineNoCov">          0 :       backpressure_threshold = common::constants::MIN_BACKPRESSURE_THRESHOLD;</span></a>
-<a name="63"><span class="lineNum">      63 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 80 times"> + </span>]:<span class="lineCov">         80 :     } else if (backpressure_threshold &gt; common::constants::MAX_BACKPRESSURE_THRESHOLD) {</span></a>
+<a name="63"><span class="lineNum">      63 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 84 times"> + </span>]:<span class="lineCov">         84 :     } else if (backpressure_threshold &gt; common::constants::MAX_BACKPRESSURE_THRESHOLD) {</span></a>
 <a name="64"><span class="lineNum">      64 </span>                :<span class="lineNoCov">          0 :       backpressure_threshold = common::constants::MAX_BACKPRESSURE_THRESHOLD;</span></a>
 <a name="65"><span class="lineNum">      65 </span>                :            :     }</a>
 <a name="66"><span class="lineNum">      66 </span>                :            : </a>
-<a name="67"><span class="lineNum">      67 </span>  [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 72 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 8 times"> + </span>]:<span class="lineCov">         80 :     if (max_retries != -1 &amp;&amp; max_retries &gt; common::constants::MAX_RETRIES_LIMIT) {</span></a>
+<a name="67"><span class="lineNum">      67 </span>  [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchCov" title="Branch 1 was taken 76 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 8 times"> + </span>]:<span class="lineCov">         84 :     if (max_retries != -1 &amp;&amp; max_retries &gt; common::constants::MAX_RETRIES_LIMIT) {</span></a>
 <a name="68"><span class="lineNum">      68 </span>                :<span class="lineNoCov">          0 :       max_retries = common::constants::MAX_RETRIES_LIMIT;</span></a>
 <a name="69"><span class="lineNum">      69 </span>                :            :     }</a>
-<a name="70"><span class="lineNum">      70 </span>                :<span class="lineCov">         80 :   }</span></a>
+<a name="70"><span class="lineNum">      70 </span>                :<span class="lineCov">         84 :   }</span></a>
 <a name="71"><span class="lineNum">      71 </span>                :            : };</a>
 <a name="72"><span class="lineNum">      72 </span>                :            : </a>
 <a name="73"><span class="lineNum">      73 </span>                :            : }  // namespace config</a>
