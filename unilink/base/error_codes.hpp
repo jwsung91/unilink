@@ -54,22 +54,36 @@ inline std::string to_string(ErrorCode code) {
   switch (code) {
     case ErrorCode::Success:
       return "Success";
+    case ErrorCode::Unknown:
+      return "Unknown Error";
     case ErrorCode::InvalidConfiguration:
       return "Invalid Configuration";
+    case ErrorCode::InternalError:
+      return "Internal Error";
+    case ErrorCode::IoError:
+      return "I/O Error";
     case ErrorCode::ConnectionRefused:
       return "Connection Refused";
     case ErrorCode::ConnectionReset:
       return "Connection Reset";
+    case ErrorCode::ConnectionAborted:
+      return "Connection Aborted";
+    case ErrorCode::TimedOut:
+      return "Operation Timed Out";
+    case ErrorCode::NotConnected:
+      return "Not Connected";
+    case ErrorCode::AlreadyConnected:
+      return "Already Connected";
     case ErrorCode::PortInUse:
       return "Port Already In Use";
     case ErrorCode::AccessDenied:
       return "Access Denied";
-    case ErrorCode::TimedOut:
-      return "Operation Timed Out";
+    case ErrorCode::Stopped:
+      return "Stopped";
     case ErrorCode::StartFailed:
       return "Failed to Start";
     default:
-      return "Unknown Error";
+      return "Unknown Error Code";
   }
 }
 
