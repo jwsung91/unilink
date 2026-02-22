@@ -86,7 +86,8 @@ $(document).ready(function(){initNavTree('namespaceunilink_1_1diagnostics.html',
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">unilink::diagnostics Namespace Reference</div>  </div>
 </div><!--header-->
@@ -184,6 +185,18 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:abe2f9b15cdc3944c1ffe11e59ea3d34f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log output destinations.  <a href="namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34f">More...</a><br /></td></tr>
 <tr class="separator:abe2f9b15cdc3944c1ffe11e59ea3d34f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aee016aa3a0ee29635787a9755eb352f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84a">ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1diagnostics.html#aee016aa3a0ee29635787a9755eb352f1">to_unilink_error_code</a> (const boost::system::error_code &amp;ec)</td></tr>
+<tr class="memdesc:aee016aa3a0ee29635787a9755eb352f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps boost::system::error_code to Unilink ErrorCode.  <a href="namespaceunilink_1_1diagnostics.html#aee016aa3a0ee29635787a9755eb352f1">More...</a><br /></td></tr>
+<tr class="separator:aee016aa3a0ee29635787a9755eb352f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1cee78c0c129f3819db60931664f453"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1diagnostics.html#ad1cee78c0c129f3819db60931664f453">is_retryable_tcp_connect_error</a> (const boost::system::error_code &amp;ec)</td></tr>
+<tr class="memdesc:ad1cee78c0c129f3819db60931664f453"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if a TCP connection error is retryable.  <a href="namespaceunilink_1_1diagnostics.html#ad1cee78c0c129f3819db60931664f453">More...</a><br /></td></tr>
+<tr class="separator:ad1cee78c0c129f3819db60931664f453"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54b6b94a2a2b770022045845ec4eaada"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html">wrapper::ErrorContext</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada">to_error_context</a> (const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;info, std::optional&lt; size_t &gt; client_id=std::nullopt)</td></tr>
+<tr class="memdesc:a54b6b94a2a2b770022045845ec4eaada"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html" title="Comprehensive error information structure.">ErrorInfo</a> to <a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html" title="Context for error events.">wrapper::ErrorContext</a>.  <a href="namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada">More...</a><br /></td></tr>
+<tr class="separator:a54b6b94a2a2b770022045845ec4eaada"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="aa5303c584c1adabc81d70a0498a263e7"></a>
@@ -316,13 +329,114 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ad1cee78c0c129f3819db60931664f453"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1cee78c0c129f3819db60931664f453">&#9670;&nbsp;</a></span>is_retryable_tcp_connect_error()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::diagnostics::is_retryable_tcp_connect_error </td>
+          <td>(</td>
+          <td class="paramtype">const boost::system::error_code &amp;&#160;</td>
+          <td class="paramname"><em>ec</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines if a TCP connection error is retryable. </p>
+
+<p class="definition">Definition at line <a class="el" href="error__mapping_8hpp_source.html#l00072">72</a> of file <a class="el" href="error__mapping_8hpp_source.html">error_mapping.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a54b6b94a2a2b770022045845ec4eaada"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54b6b94a2a2b770022045845ec4eaada">&#9670;&nbsp;</a></span>to_error_context()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html">wrapper::ErrorContext</a> unilink::diagnostics::to_error_context </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; size_t &gt;&#160;</td>
+          <td class="paramname"><em>client_id</em> = <code>std::nullopt</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html" title="Comprehensive error information structure.">ErrorInfo</a> to <a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html" title="Context for error events.">wrapper::ErrorContext</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="error__mapping_8hpp_source.html#l00097">97</a> of file <a class="el" href="error__mapping_8hpp_source.html">error_mapping.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aee016aa3a0ee29635787a9755eb352f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee016aa3a0ee29635787a9755eb352f1">&#9670;&nbsp;</a></span>to_unilink_error_code()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84a">ErrorCode</a> unilink::diagnostics::to_unilink_error_code </td>
+          <td>(</td>
+          <td class="paramtype">const boost::system::error_code &amp;&#160;</td>
+          <td class="paramname"><em>ec</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Maps boost::system::error_code to Unilink ErrorCode. </p>
+
+<p class="definition">Definition at line <a class="el" href="error__mapping_8hpp_source.html#l00034">34</a> of file <a class="el" href="error__mapping_8hpp_source.html">error_mapping.hpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1diagnostics.html">diagnostics</a></li>
-    <li class="footer">Generated on Sat Feb 21 2026 15:05:10 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Feb 22 2026 02:17:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

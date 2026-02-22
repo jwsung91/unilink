@@ -49,5 +49,8 @@ var namespaceunilink_1_1diagnostics =
       [ "CONSOLE", "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa4695859f52d337ca3d7020b2c8f7882a", null ],
       [ "FILE", "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719", null ],
       [ "CALLBACK", "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209", null ]
-    ] ]
+    ] ],
+    [ "is_retryable_tcp_connect_error", "namespaceunilink_1_1diagnostics.html#ad1cee78c0c129f3819db60931664f453", null ],
+    [ "to_error_context", "namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada", null ],
+    [ "to_unilink_error_code", "namespaceunilink_1_1diagnostics.html#aee016aa3a0ee29635787a9755eb352f1", null ]
 ];

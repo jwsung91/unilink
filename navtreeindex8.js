@@ -1,5 +1,12 @@
 var NAVTREEINDEX8 =
 {
+"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98":[17,0,1,5,16,0],
+"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7afa177138f94a7ea01f549b1aa7893d03":[17,0,1,5,16,4],
+"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7":[17,0,1,5,17],
+"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a059e9861e0400dfbe05c98a841f3f96b":[17,0,1,5,17,1],
+"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3":[17,0,1,5,17,0],
+"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a99cd1c61610c76a57cb8d10d6df6b870":[17,0,1,5,17,3],
+"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5":[17,0,1,5,17,2],
 "namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0":[17,0,1,5,18],
 "namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b":[17,0,1,5,18,2],
 "namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3":[17,0,1,5,18,1],
@@ -10,6 +17,8 @@ var NAVTREEINDEX8 =
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa4695859f52d337ca3d7020b2c8f7882a":[17,0,1,5,19,0],
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719":[17,0,1,5,19,1],
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209":[17,0,1,5,19,2],
+"namespaceunilink_1_1diagnostics.html#ad1cee78c0c129f3819db60931664f453":[17,0,1,5,20],
+"namespaceunilink_1_1diagnostics.html#aee016aa3a0ee29635787a9755eb352f1":[17,0,1,5,22],
 "namespaceunilink_1_1diagnostics_1_1error__reporting.html":[17,0,1,5,0],
 "namespaceunilink_1_1diagnostics_1_1error__reporting.html#a09062defd8d7c3c8b916320c34338040":[17,0,1,5,0,6],
 "namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3afe71d736336fb74d5882a148c87fd2":[17,0,1,5,0,4],
@@ -240,14 +249,5 @@ var NAVTREEINDEX8 =
 "structunilink_1_1diagnostics_1_1LogEntry.html#a036f9470e4e9ae264043f6204007cb3b":[18,0,0,4,11,7],
 "structunilink_1_1diagnostics_1_1LogEntry.html#a0d20055613a7903cab2fafa8da315c5f":[18,0,0,4,11,2],
 "structunilink_1_1diagnostics_1_1LogEntry.html#a14f7040624854a72de28224d3c7a6aea":[18,0,0,4,11,4],
-"structunilink_1_1diagnostics_1_1LogEntry.html#a2179681d8f79db0705453d858814019b":[18,0,0,4,11,6],
-"structunilink_1_1diagnostics_1_1LogEntry.html#a2c58eff785796c2cd6f2a9de1850c29a":[18,0,0,4,11,0],
-"structunilink_1_1diagnostics_1_1LogEntry.html#a4855fbeb9ff7bf7301f5d802f433d5d0":[18,0,0,4,11,3],
-"structunilink_1_1diagnostics_1_1LogEntry.html#a53a5b0b22c84be6fb2b21c187cb50a12":[18,0,0,4,11,5],
-"structunilink_1_1diagnostics_1_1LogEntry.html#ae15cac673c84a4dae22a3a2410e55464":[18,0,0,4,11,1],
-"structunilink_1_1diagnostics_1_1LogRotationConfig.html":[18,0,0,4,9],
-"structunilink_1_1diagnostics_1_1LogRotationConfig.html#a0bf714e1070362d1e4f24d593781144c":[18,0,0,4,9,1],
-"structunilink_1_1diagnostics_1_1LogRotationConfig.html#a2092c5692d55863699def6ebfc4a1ede":[18,0,0,4,9,3],
-"structunilink_1_1diagnostics_1_1LogRotationConfig.html#a49e4ee6e3343c5915c71f31bb0ea8882":[18,0,0,4,9,2],
-"structunilink_1_1diagnostics_1_1LogRotationConfig.html#a95acadc3cf2fe260304c4099407a8d27":[18,0,0,4,9,5]
+"structunilink_1_1diagnostics_1_1LogEntry.html#a2179681d8f79db0705453d858814019b":[18,0,0,4,11,6]
 };

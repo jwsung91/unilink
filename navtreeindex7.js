@@ -1,5 +1,11 @@
 var NAVTREEINDEX7 =
 {
+"md_docs_reference_api_guide.html#autotoc_md815":[13,11,0],
+"md_docs_reference_api_guide.html#autotoc_md816":[13,11,1],
+"md_docs_reference_api_guide.html#autotoc_md817":[13,11,2],
+"md_docs_reference_api_guide.html#autotoc_md818":[13,11,3],
+"md_docs_test_structure.html":[14],
+"md_docs_test_structure.html#autotoc_md821":[14,0],
 "md_docs_test_structure.html#autotoc_md823":[14,1],
 "md_docs_test_structure.html#autotoc_md825":[14,2],
 "md_docs_test_structure.html#autotoc_md826":[14,2,0],
@@ -238,16 +244,10 @@ var NAVTREEINDEX7 =
 "namespaceunilink_1_1config.html#a51570eeec2be34fa91656b2f81898577aa0faef0851b4294c06f2b94bb1cb2044":[17,0,1,4,11,1],
 "namespaceunilink_1_1config.html#a51570eeec2be34fa91656b2f81898577ad909d38d705ce75386dd86e611a82f5b":[17,0,1,4,11,3],
 "namespaceunilink_1_1diagnostics.html":[17,0,1,5],
+"namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada":[17,0,1,5,21],
 "namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7":[17,0,1,5,16],
 "namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a3f27148a0073e6705ee8277dc392ab7d":[17,0,1,5,16,1],
 "namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a696b031073e74bf2cb98e5ef201d4aa3":[17,0,1,5,16,5],
 "namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a7014705458ee3cf0192f6aa52cfddea5":[17,0,1,5,16,3],
-"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900":[17,0,1,5,16,2],
-"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98":[17,0,1,5,16,0],
-"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7afa177138f94a7ea01f549b1aa7893d03":[17,0,1,5,16,4],
-"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7":[17,0,1,5,17],
-"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a059e9861e0400dfbe05c98a841f3f96b":[17,0,1,5,17,1],
-"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3":[17,0,1,5,17,0],
-"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a99cd1c61610c76a57cb8d10d6df6b870":[17,0,1,5,17,3],
-"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5":[17,0,1,5,17,2]
+"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900":[17,0,1,5,16,2]
 };
