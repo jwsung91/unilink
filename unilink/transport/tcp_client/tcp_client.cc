@@ -94,6 +94,9 @@ struct TcpClient::Impl {
   ThreadSafeLinkState state_{LinkState::Idle};
   int retry_attempts_ = 0;
 
+  mutable std::mutex last_err_mtx_;
+  std::optional<diagnostics::ErrorInfo> last_error_info_;
+
   Impl(const TcpClientConfig& cfg, net::io_context* ioc_ptr)
       : owned_ioc_(ioc_ptr ? nullptr : std::make_unique<net::io_context>()),
         ioc_(ioc_ptr ? ioc_ptr : owned_ioc_.get()),
@@ -131,6 +134,8 @@ struct TcpClient::Impl {
   void report_backpressure(size_t queued_bytes);
   void notify_state();
   void reset_io_objects();
+  void record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,
+                    const boost::system::error_code& ec, std::string_view msg, bool retryable, uint32_t retry_count);
 };
 
 std::shared_ptr<TcpClient> TcpClient::create(const TcpClientConfig& cfg) {
@@ -156,6 +161,11 @@ TcpClient::~TcpClient() {
 
 TcpClient::TcpClient(TcpClient&&) noexcept = default;
 TcpClient& TcpClient::operator=(TcpClient&&) noexcept = default;
+
+std::optional<diagnostics::ErrorInfo> TcpClient::last_error_info() const {
+  std::lock_guard<std::mutex> lock(impl_->last_err_mtx_);
+  return impl_->last_error_info_;
+}
 
 void TcpClient::start() {
   auto current_state = impl_->state_.get_state();
@@ -269,6 +279,9 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
           if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
             UNILINK_LOG_ERROR("tcp_client", "async_write_copy",
                               "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
+            self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION,
+                                      "async_write_copy", boost::asio::error::no_buffer_space, "Queue limit exceeded",
+                                      false, 0);
             self->impl_->connected_.store(false);
             self->impl_->close_socket();
             self->impl_->tx_.clear();
@@ -303,6 +316,9 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_client", "async_write_copy",
                         "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
+      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION,
+                                "async_write_copy", boost::asio::error::no_buffer_space, "Queue limit exceeded", false,
+                                0);
       self->impl_->connected_.store(false);
       self->impl_->close_socket();
       self->impl_->tx_.clear();
@@ -346,6 +362,9 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_client", "async_write_move",
                         "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
+      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION,
+                                "async_write_move", boost::asio::error::no_buffer_space, "Queue limit exceeded", false,
+                                0);
       self->impl_->connected_.store(false);
       self->impl_->close_socket();
       self->impl_->tx_.clear();
@@ -389,6 +408,9 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_client", "async_write_shared",
                         "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
+      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION,
+                                "async_write_shared", boost::asio::error::no_buffer_space, "Queue limit exceeded",
+                                false, 0);
       self->impl_->connected_.store(false);
       self->impl_->close_socket();
       self->impl_->tx_.clear();
@@ -423,6 +445,9 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           return;
         }
         if (ec) {
+          self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
+                                    "resolve", ec, "Resolution failed: " + ec.message(), true,
+                                    self->impl_->retry_attempts_);
           self->impl_->schedule_retry(self, seq);
           return;
         }
@@ -435,6 +460,9 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
             UNILINK_LOG_ERROR(
                 "tcp_client", "connect_timeout",
                 "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
+            self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
+                                      "connect", boost::asio::error::timed_out, "Connection timed out", true,
+                                      self->impl_->retry_attempts_);
             self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
           }
         });
@@ -450,6 +478,9 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           }
           if (ec2) {
             self->impl_->connect_timer_.cancel();
+            self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
+                                      "connect", ec2, "Connection failed: " + ec2.message(), true,
+                                      self->impl_->retry_attempts_);
             self->impl_->schedule_retry(self, seq);
             return;
           }
@@ -520,6 +551,9 @@ void TcpClient::Impl::start_read(std::shared_ptr<TcpClient> self, uint64_t seq) 
         self->impl_->on_bytes_(memory::ConstByteSpan(self->impl_->rx_.data(), n));
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("tcp_client", "on_bytes", "Exception in on_bytes callback: " + std::string(e.what()));
+        self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION, "on_bytes",
+                                  boost::asio::error::connection_aborted,
+                                  "Exception in on_bytes: " + std::string(e.what()), false, 0);
         self->impl_->handle_close(self, seq, make_error_code(boost::asio::error::connection_aborted));
         return;
       } catch (...) {
@@ -585,6 +619,8 @@ void TcpClient::Impl::do_write(std::shared_ptr<TcpClient> self, uint64_t seq) {
       self->impl_->current_write_buffer_.reset();
 
       UNILINK_LOG_ERROR("tcp_client", "do_write", "Write failed: " + ec.message());
+      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION, "write", ec,
+                                "Write failed: " + ec.message(), false, 0);
       self->impl_->writing_ = false;
       self->impl_->handle_close(self, seq, ec);
       return;
@@ -621,6 +657,11 @@ void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, uint64_t seq
     return;
   }
   UNILINK_LOG_INFO("tcp_client", "handle_close", "Closing connection. Error: " + ec.message());
+  if (ec) {
+    bool retry = (cfg_.max_retries == -1 || retry_attempts_ < cfg_.max_retries);
+    record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "handle_close", ec,
+                 "Connection closed with error: " + ec.message(), retry, retry_attempts_);
+  }
   connected_.store(false);
   writing_ = false;
   connect_timer_.cancel();
@@ -723,6 +764,8 @@ void TcpClient::Impl::perform_stop_cleanup() {
     transition_to(LinkState::Closed);
   } catch (const std::exception& e) {
     UNILINK_LOG_ERROR("tcp_client", "stop_cleanup", "Cleanup error: " + std::string(e.what()));
+    record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::SYSTEM, "stop_cleanup", {},
+                 "Cleanup error: " + std::string(e.what()), false, 0);
     diagnostics::error_reporting::report_system_error("tcp_client", "stop_cleanup",
                                                       "Exception in stop cleanup: " + std::string(e.what()));
   } catch (...) {
@@ -776,6 +819,15 @@ void TcpClient::Impl::notify_state() {
   }
 }
 
+void TcpClient::Impl::record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,
+                                   const boost::system::error_code& ec, std::string_view msg, bool retryable,
+                                   uint32_t retry_count) {
+  std::lock_guard<std::mutex> lock(last_err_mtx_);
+  diagnostics::ErrorInfo info(lvl, cat, "tcp_client", operation, msg, ec, retryable);
+  info.retry_count = retry_count;
+  last_error_info_ = info;
+}
+
 void TcpClient::Impl::reset_io_objects() {
   try {
     boost::system::error_code ec_cancel;
@@ -792,6 +844,8 @@ void TcpClient::Impl::reset_io_objects() {
     backpressure_active_ = false;
   } catch (const std::exception& e) {
     UNILINK_LOG_ERROR("tcp_client", "reset_io_objects", "Reset error: " + std::string(e.what()));
+    record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::SYSTEM, "reset_io_objects", {},
+                 "Reset error: " + std::string(e.what()), false, 0);
     diagnostics::error_reporting::report_system_error("tcp_client", "reset_io_objects",
                                                       "Exception while resetting io objects: " + std::string(e.what()));
   } catch (...) {

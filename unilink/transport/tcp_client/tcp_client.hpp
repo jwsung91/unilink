@@ -17,6 +17,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <variant>
 #include <vector>
@@ -25,6 +26,7 @@
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/tcp_client_config.hpp"
+#include "unilink/diagnostics/error_types.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/memory/memory_pool.hpp"
 
@@ -72,6 +74,8 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   void on_bytes(OnBytes cb) override;
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
+
+  std::optional<diagnostics::ErrorInfo> last_error_info() const;
 
   // Dynamic configuration methods
   void set_retry_interval(unsigned interval_ms);
