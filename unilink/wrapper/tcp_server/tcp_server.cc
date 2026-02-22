@@ -53,6 +53,7 @@ struct TcpServer::Impl {
   int max_port_retries_{3};
   int port_retry_interval_ms_{1000};
   int idle_timeout_ms_{0};
+  std::string bind_address_ = "0.0.0.0";
   bool client_limit_enabled_{false};
   size_t max_clients_{0};
   bool notify_send_failure_{false};
@@ -140,6 +141,7 @@ struct TcpServer::Impl {
     if (!channel_) {
       config::TcpServerConfig config;
       config.port = port_;
+      config.bind_address = bind_address_;
       config.enable_port_retry = port_retry_enabled_;
       config.max_port_retries = max_port_retries_;
       config.port_retry_interval_ms = port_retry_interval_ms_;
@@ -309,6 +311,11 @@ std::vector<size_t> TcpServer::get_connected_clients() const {
 TcpServer& TcpServer::auto_manage(bool m) {
   impl_->auto_manage_ = m;
   if (impl_->auto_manage_ && !impl_->started_) start();
+  return *this;
+}
+
+TcpServer& TcpServer::bind_address(const std::string& address) {
+  impl_->bind_address_ = address;
   return *this;
 }
 

@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 #include "unilink/base/constants.hpp"
 
@@ -24,6 +25,7 @@ namespace unilink {
 namespace config {
 
 struct TcpServerConfig {
+  std::string bind_address = "0.0.0.0";
   uint16_t port = 9000;
   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_memory_pool = true;
