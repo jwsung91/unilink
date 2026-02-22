@@ -17,11 +17,22 @@
 #include <gtest/gtest.h>
 
 #include <atomic>
-#include <boost/asio.hpp>
 #include <chrono>
 #include <cstdint>
 #include <memory>
 #include <vector>
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#endif
+
+#include <boost/asio.hpp>
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 
 #include "test/utils/test_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"

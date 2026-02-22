@@ -20,6 +20,8 @@
 #include <chrono>
 #include <cmath>
 #include <functional>
+#include <memory>
+#include <mutex>
 #include <random>
 #include <thread>
 
@@ -69,8 +71,23 @@ inline ReconnectPolicy FixedInterval(std::chrono::milliseconds delay) {
  */
 inline ReconnectPolicy ExponentialBackoff(std::chrono::milliseconds min_delay, std::chrono::milliseconds max_delay,
                                           double factor = 2.0, bool jitter = true) {
-  return [min_delay, max_delay, factor, jitter](const diagnostics::ErrorInfo& error_info,
-                                                uint32_t attempt_count) -> ReconnectDecision {
+  struct ProtectedRng {
+    std::mt19937 rng;
+    std::mutex mtx;
+
+    ProtectedRng() {
+      auto seed = static_cast<unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+      rng.seed(seed);
+    }
+  };
+
+  std::shared_ptr<ProtectedRng> shared_rng;
+  if (jitter) {
+    shared_rng = std::make_shared<ProtectedRng>();
+  }
+
+  return [min_delay, max_delay, factor, shared_rng](const diagnostics::ErrorInfo& error_info,
+                                                    uint32_t attempt_count) -> ReconnectDecision {
     if (!error_info.retryable) {
       return {false, std::chrono::milliseconds(0)};
     }
@@ -81,16 +98,11 @@ inline ReconnectPolicy ExponentialBackoff(std::chrono::milliseconds min_delay, s
     // Clamp to max_delay
     double delay_ms = std::min(calculated, cap);
 
-    if (jitter) {
-      // Use thread_local RNG seeded by clock to ensure thread safety and avoid random_device issues
-      static thread_local std::mt19937 rng([] {
-        auto seed = static_cast<unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-        return std::mt19937(seed);
-      }());
-
+    if (shared_rng) {
+      std::lock_guard<std::mutex> lock(shared_rng->mtx);
       // Full Jitter: random between 0 and calculated delay
       std::uniform_real_distribution<> dist(0.0, delay_ms);
-      delay_ms = dist(rng);
+      delay_ms = dist(shared_rng->rng);
     }
 
     return {true, std::chrono::milliseconds(static_cast<long long>(delay_ms))};
