@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <iostream>
 #include <random>
 #include <string>
 #include <vector>
-#include <iostream>
 
 #include "unilink/framer/packet_framer.hpp"
 #include "unilink/memory/safe_span.hpp"
@@ -55,7 +55,6 @@ TEST_F(PacketFramerPerfTest, ProcessLargeDataChunks) {
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
 
   double throughput = (static_cast<double>(data.size()) * 1000000.0 / static_cast<double>(duration) / 1024.0 / 1024.0);
-  std::cout << "Processed " << data.size() << " bytes in " << duration << " us. "
-            << "Throughput: " << throughput << " MB/s. "
-            << "Messages: " << msg_count << std::endl;
+  std::cout << "Processed " << data.size() << " bytes in " << duration << " us. " << "Throughput: " << throughput
+            << " MB/s. " << "Messages: " << msg_count << std::endl;
 }
