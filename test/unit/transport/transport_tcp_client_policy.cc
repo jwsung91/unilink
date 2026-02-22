@@ -254,3 +254,113 @@ TEST_F(TransportTcpClientPolicyTest, ResetAttemptCountOnSuccess) {
   client_->stop();
   client_.reset();
 }
+
+TEST_F(TransportTcpClientPolicyTest, MaxRetriesEnforcedOverPolicy) {
+  boost::asio::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = TestUtils::getAvailableTestPort();
+  cfg.connection_timeout_ms = 20;
+  cfg.max_retries = 2;  // Strict limit
+
+  client_ = TcpClient::create(cfg, ioc);
+
+  // Policy that wants to retry forever
+  client_->set_reconnect_policy([](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
+    return {true, 10ms};
+  });
+
+  std::atomic<int> connecting_count{0};
+  std::atomic<bool> error_state{false};
+
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connecting) connecting_count.fetch_add(1);
+    if (state == base::LinkState::Error) error_state = true;
+  });
+
+  client_->start();
+
+  ioc.run_for(std::chrono::milliseconds(500));
+
+  // Initial(1) + Retry1(1) + Retry2(1) = 3 attempts total.
+  // max_retries=2 means 2 retries allowed.
+  // Attempt 0 (start) -> fail.
+  // Retry 1 (count=0) -> fail.
+  // Retry 2 (count=1) -> fail.
+  // Retry 3 (count=2) -> Max Retries Check: count(2) >= max_retries(2). STOP.
+
+  // We expect connecting state to appear around 3 times.
+  // Due to potential duplicates on some platforms, we check strictly it is not infinite.
+  // With 10ms delay, infinite would mean > 30-40.
+
+  EXPECT_LT(connecting_count.load(), 10);
+  EXPECT_GE(connecting_count.load(), 3);
+  EXPECT_TRUE(error_state.load());
+
+  client_->on_state(nullptr);
+  client_->stop();
+  client_.reset();
+}
+
+TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
+  boost::asio::io_context ioc;
+  config::TcpClientConfig cfg;
+  cfg.host = "127.0.0.1";
+  cfg.port = 0; // Will be set after acceptor creation
+  cfg.connection_timeout_ms = 100;
+  cfg.backpressure_threshold = 10; // Low threshold
+
+  // Connect to a real server so we can write
+  tcp::acceptor acceptor(ioc, tcp::endpoint(tcp::v4(), 0));
+  cfg.port = acceptor.local_endpoint().port();
+
+  client_ = TcpClient::create(cfg, ioc);
+
+  // Policy always retries
+  client_->set_reconnect_policy([](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
+    return {true, 10ms};
+  });
+
+  std::atomic<bool> connected{false};
+  client_->on_state([&](base::LinkState state) {
+    if (state == base::LinkState::Connected) connected = true;
+  });
+
+  client_->start();
+
+  // Accept connection
+  std::shared_ptr<tcp::socket> peer;
+  acceptor.async_accept([&](auto ec, tcp::socket s) {
+      if(!ec) peer = std::make_shared<tcp::socket>(std::move(s));
+  });
+
+  ioc.run_for(100ms);
+  ASSERT_TRUE(connected.load());
+
+  // Trigger non-retryable error: Write huge data to trigger queue limit
+  // Limit is at least 1MB (DEFAULT_BACKPRESSURE_THRESHOLD), so need more than that.
+  std::vector<uint8_t> huge_data(2 * 1024 * 1024);
+
+  client_->async_write_copy(huge_data);
+
+  // Run loop to process error and potentially schedule retry
+  std::atomic<int> connecting_count{0};
+  client_->on_state([&](base::LinkState state) {
+      if (state == base::LinkState::Connecting) connecting_count.fetch_add(1);
+  });
+
+  ioc.run_for(200ms);
+
+  // Should NOT reconnect (connecting_count should be 0 because we transitioned from Connected -> Error directly, without passing through Connecting)
+  // Wait, transition_to(Error) does NOT go to Connecting.
+  // Retry logic would go to Connecting.
+  // If schedule_retry stops, it goes to Error (again or stays).
+  // So Connecting should not appear.
+
+  EXPECT_EQ(connecting_count.load(), 0);
+  EXPECT_FALSE(client_->is_connected());
+
+  client_->on_state(nullptr);
+  client_->stop();
+  client_.reset();
+}
