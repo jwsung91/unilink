@@ -47,6 +47,7 @@
 #include "unilink/diagnostics/error_handler.hpp"
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/memory/memory_pool.hpp"
+#include "unilink/transport/tcp_client/detail/reconnect_logic.hpp"
 
 namespace unilink {
 namespace transport {
@@ -79,6 +80,7 @@ struct TcpClient::Impl {
   std::atomic<bool> stop_requested_{false};
   std::atomic<bool> stopping_{false};
   std::atomic<bool> terminal_state_notified_{false};
+  std::atomic<bool> reconnect_pending_{false};
 
   std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<BufferVariant> tx_;
@@ -867,6 +869,7 @@ void TcpClient::Impl::reset_start_state() {
   stop_requested_.store(false);
   stopping_.store(false);
   terminal_state_notified_.store(false);
+  reconnect_pending_.store(false);
   retry_attempts_ = 0;
   reconnect_attempt_count_ = 0;
   connected_.store(false);
