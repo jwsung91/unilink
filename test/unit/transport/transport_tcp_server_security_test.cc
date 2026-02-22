@@ -170,14 +170,14 @@ TEST_F(TransportTcpServerSecurityTest, BindToLocalhost) {
 TEST_F(TransportTcpServerSecurityTest, BindToInvalidAddress) {
   config::TcpServerConfig cfg;
   cfg.port = test::TestUtils::getAvailableTestPort();
-  cfg.bind_address = "999.999.999.999"; // Invalid IP
+  cfg.bind_address = "999.999.999.999";  // Invalid IP
   cfg.enable_port_retry = false;
 
   server_ = TcpServer::create(cfg);
   server_->start();
 
   // Should fail immediately or shortly after
-  ASSERT_TRUE(test::TestUtils::waitForCondition(
-      [&] { return server_->get_state() == unilink::base::LinkState::Error; }, 5000))
+  ASSERT_TRUE(
+      test::TestUtils::waitForCondition([&] { return server_->get_state() == unilink::base::LinkState::Error; }, 5000))
       << "Server should be in Error state due to invalid bind address";
 }
