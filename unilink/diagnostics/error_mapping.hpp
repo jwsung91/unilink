@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include <boost/system/error_code.hpp>
 #include <boost/asio/error.hpp>
+#include <boost/system/error_code.hpp>
 #include <optional>
 #include <string>
 
@@ -94,7 +94,8 @@ inline bool is_retryable_tcp_connect_error(const boost::system::error_code& ec) 
 /**
  * @brief Converts ErrorInfo to wrapper::ErrorContext
  */
-inline wrapper::ErrorContext to_error_context(const diagnostics::ErrorInfo& info, std::optional<size_t> client_id = std::nullopt) {
+inline wrapper::ErrorContext to_error_context(const diagnostics::ErrorInfo& info,
+                                              std::optional<size_t> client_id = std::nullopt) {
   ErrorCode code = ErrorCode::IoError;
 
   if (info.boost_error) {

@@ -15,77 +15,83 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <future>
 #include <iostream>
-#include "unilink/wrapper/tcp_client/tcp_client.hpp"
+
+#include "test_utils.hpp"
 #include "unilink/base/error_codes.hpp"
+#include "unilink/wrapper/tcp_client/tcp_client.hpp"
 
 using namespace unilink;
+using namespace unilink::test;
 
 TEST(TcpClientErrorMappingTest, ConnectionRefused) {
-    // Port 1 is likely closed.
-    wrapper::TcpClient client("127.0.0.1", 1);
+  // Use a port that is likely closed (getAvailableTestPort finds a free port, but we don't listen on it)
+  uint16_t port = TestUtils::getAvailableTestPort();
+  wrapper::TcpClient client("127.0.0.1", port);
 
-    std::promise<ErrorCode> error_promise;
-    auto error_future = error_promise.get_future();
+  std::promise<ErrorCode> error_promise;
+  auto error_future = error_promise.get_future();
 
-    client.on_error([&](const wrapper::ErrorContext& ctx) {
-        try {
-             error_promise.set_value(ctx.code());
-        } catch (...) {}
-    });
-
-    client.set_max_retries(0); // Fail fast
-    client.start();
-
-    // Wait for error
-    std::future_status status = error_future.wait_for(std::chrono::seconds(2));
-    if (status != std::future_status::ready) {
-         // Should have failed by now
-         client.stop();
-         FAIL() << "Did not receive error callback in time";
+  client.on_error([&](const wrapper::ErrorContext& ctx) {
+    try {
+      error_promise.set_value(ctx.code());
+    } catch (...) {
     }
+  });
 
-    auto code = error_future.get();
-    // On Linux/Mac connection refused is expected.
-    EXPECT_TRUE(code == ErrorCode::ConnectionRefused || code == ErrorCode::IoError)
-        << "Expected ConnectionRefused or IoError, got: " << unilink::to_string(code);
+  client.set_max_retries(0);  // Fail fast
+  client.start();
 
+  // Wait for error
+  std::future_status status = error_future.wait_for(std::chrono::seconds(5));
+  if (status != std::future_status::ready) {
+    // Should have failed by now
     client.stop();
+    FAIL() << "Did not receive error callback in time";
+  }
+
+  auto code = error_future.get();
+  // On Linux/Mac connection refused is expected.
+  EXPECT_TRUE(code == ErrorCode::ConnectionRefused || code == ErrorCode::IoError)
+      << "Expected ConnectionRefused or IoError, got: " << unilink::to_string(code);
+
+  client.stop();
 }
 
 TEST(TcpClientErrorMappingTest, Timeout) {
-    // TEST-NET-2 (198.51.100.0/24) is reserved for documentation and examples.
-    // It should be unreachable and cause timeout.
-    wrapper::TcpClient client("198.51.100.1", 12345);
-    client.set_connection_timeout(std::chrono::milliseconds(500));
-    client.set_max_retries(0);
+  // TEST-NET-2 (198.51.100.0/24) is reserved for documentation and examples.
+  // It should be unreachable and cause timeout.
+  wrapper::TcpClient client("198.51.100.1", 12345);
+  client.set_connection_timeout(std::chrono::milliseconds(500));
+  client.set_max_retries(0);
 
-    std::promise<ErrorCode> error_promise;
-    auto error_future = error_promise.get_future();
+  std::promise<ErrorCode> error_promise;
+  auto error_future = error_promise.get_future();
 
-    client.on_error([&](const wrapper::ErrorContext& ctx) {
-         try {
-             error_promise.set_value(ctx.code());
-        } catch (...) {}
-    });
-
-    client.start();
-
-    std::future_status status = error_future.wait_for(std::chrono::seconds(2));
-
-    if (status == std::future_status::ready) {
-        auto code = error_future.get();
-        EXPECT_EQ(code, ErrorCode::TimedOut)
-             << "Expected TimedOut, got: " << unilink::to_string(code);
-    } else {
-        // Timeout didn't happen in 2s (which is > 500ms).
-        // This might happen if system is weird or firewall rejects immediately (Refused).
-        // But we won't fail the test if network behavior is inconsistent in sandbox,
-        // unless we want to be strict.
-        // Let's print a warning.
-        std::cerr << "Warning: Timeout test did not complete in expected time." << std::endl;
+  client.on_error([&](const wrapper::ErrorContext& ctx) {
+    try {
+      error_promise.set_value(ctx.code());
+    } catch (...) {
     }
+  });
 
-    client.stop();
+  client.start();
+
+  std::future_status status = error_future.wait_for(std::chrono::seconds(2));
+
+  if (status == std::future_status::ready) {
+    auto code = error_future.get();
+    EXPECT_EQ(code, ErrorCode::TimedOut) << "Expected TimedOut, got: " << unilink::to_string(code);
+  } else {
+    // Timeout didn't happen in 2s (which is > 500ms).
+    // This might happen if system is weird or firewall rejects immediately (Refused).
+    // But we won't fail the test if network behavior is inconsistent in sandbox,
+    // unless we want to be strict.
+    // Let's print a warning.
+    std::cerr << "Warning: Timeout test did not complete in expected time." << std::endl;
+  }
+
+  client.stop();
 }

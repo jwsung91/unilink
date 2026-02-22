@@ -455,9 +455,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           return;
         }
         if (ec) {
-          self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
-                                    "resolve", ec, "Resolution failed: " + ec.message(), true,
-                                    self->impl_->retry_attempts_);
+          self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "resolve",
+                                    ec, "Resolution failed: " + ec.message(), true, self->impl_->retry_attempts_);
           self->impl_->schedule_retry(self, seq);
           return;
         }
@@ -470,8 +469,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
             UNILINK_LOG_ERROR(
                 "tcp_client", "connect_timeout",
                 "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
-            self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
-                                      "connect", boost::asio::error::timed_out, "Connection timed out", true,
+            self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
+                                      boost::asio::error::timed_out, "Connection timed out", true,
                                       self->impl_->retry_attempts_);
             self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
           }
@@ -488,9 +487,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           }
           if (ec2) {
             self->impl_->connect_timer_.cancel();
-            self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
-                                      "connect", ec2, "Connection failed: " + ec2.message(), true,
-                                      self->impl_->retry_attempts_);
+            self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
+                                      ec2, "Connection failed: " + ec2.message(), true, self->impl_->retry_attempts_);
             self->impl_->schedule_retry(self, seq);
             return;
           }
@@ -849,9 +847,9 @@ void TcpClient::Impl::notify_state() {
   }
 }
 
-void TcpClient::Impl::record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,
-                                   const boost::system::error_code& ec, std::string_view msg, bool retryable,
-                                   uint32_t retry_count) {
+void TcpClient::Impl::record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat,
+                                   std::string_view operation, const boost::system::error_code& ec,
+                                   std::string_view msg, bool retryable, uint32_t retry_count) {
   std::lock_guard<std::mutex> lock(last_err_mtx_);
   diagnostics::ErrorInfo info(lvl, cat, "tcp_client", operation, msg, ec, retryable);
   info.retry_count = retry_count;
