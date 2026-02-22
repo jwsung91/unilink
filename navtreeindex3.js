@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classunilink_1_1wrapper_1_1Serial.html#a4a81c653e5af8fb52a62df82ff5a309f":[18,0,0,11,5,19],
 "classunilink_1_1wrapper_1_1Serial.html#a75d92342feb50976937067a8472cbdb3":[18,0,0,11,5,20],
 "classunilink_1_1wrapper_1_1Serial.html#a81629c8bfaf3220c128f37ca9de2858d":[18,0,0,11,5,3],
 "classunilink_1_1wrapper_1_1Serial.html#a976dc35b1bf360fcb28f0d3056d30bad":[18,0,0,11,5,21],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "error__handler_8hpp.html#a95bf341a9495f4cc97de408b5b02fd3f":[19,0,1,4,1,6],
 "error__handler_8hpp.html#aec3a25238bc1d00b9f7f509b9f6c0616":[19,0,1,4,1,4],
 "error__handler_8hpp_source.html":[19,0,1,4,1],
-"error__mapping_8hpp.html":[19,0,1,4,2],
-"error__mapping_8hpp.html#a54b6b94a2a2b770022045845ec4eaada":[19,0,1,4,2,1]
+"error__mapping_8hpp.html":[19,0,1,4,2]
 };

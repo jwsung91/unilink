@@ -82,6 +82,7 @@ var hierarchy =
     [ "unilink::base::PlatformInfo", "classunilink_1_1base_1_1PlatformInfo.html", null ],
     [ "unilink::memory::PooledBuffer", "classunilink_1_1memory_1_1PooledBuffer.html", null ],
     [ "unilink::memory::MemoryPool::PoolStats", "structunilink_1_1memory_1_1MemoryPool_1_1PoolStats.html", null ],
+    [ "unilink::ReconnectDecision", "structunilink_1_1ReconnectDecision.html", null ],
     [ "std::runtime_error", null, [
       [ "unilink::diagnostics::UnilinkException", "classunilink_1_1diagnostics_1_1UnilinkException.html", [
         [ "unilink::diagnostics::BuilderException", "classunilink_1_1diagnostics_1_1BuilderException.html", null ],

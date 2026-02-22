@@ -17,6 +17,7 @@ var classunilink_1_1transport_1_1TcpClient =
     [ "on_state", "classunilink_1_1transport_1_1TcpClient.html#a57bf60016f4a10576a3a04ddb039e6f1", null ],
     [ "operator=", "classunilink_1_1transport_1_1TcpClient.html#ac179459f9184dd3118488b3de6a93f05", null ],
     [ "operator=", "classunilink_1_1transport_1_1TcpClient.html#ad37c4adfe4a28cf43eedde18fb1b6a5c", null ],
+    [ "set_reconnect_policy", "classunilink_1_1transport_1_1TcpClient.html#a6d4351ce6750e182ae85474a6ccb047d", null ],
     [ "set_retry_interval", "classunilink_1_1transport_1_1TcpClient.html#a9f7feb1e79a832dcd2a8df14542c15d2", null ],
     [ "start", "classunilink_1_1transport_1_1TcpClient.html#a886221c4b9a77e24fa31ceb767aa444a", null ],
     [ "stop", "classunilink_1_1transport_1_1TcpClient.html#a92598b6c47040e1648976e8eade3c5e3", null ]

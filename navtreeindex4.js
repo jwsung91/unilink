@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"error__mapping_8hpp.html#a54b6b94a2a2b770022045845ec4eaada":[19,0,1,4,2,1],
 "error__mapping_8hpp.html#ad1cee78c0c129f3819db60931664f453":[19,0,1,4,2,0],
 "error__mapping_8hpp.html#aee016aa3a0ee29635787a9755eb352f1":[19,0,1,4,2,2],
 "error__mapping_8hpp_source.html":[19,0,1,4,2],
@@ -75,8 +76,8 @@ var NAVTREEINDEX4 =
 "functions_type.html":[18,3,3],
 "functions_u.html":[18,3,0,20],
 "functions_v.html":[18,3,0,21],
-"functions_vars.html":[18,3,2,0],
 "functions_vars.html":[18,3,2],
+"functions_vars.html":[18,3,2,0],
 "functions_vars_b.html":[18,3,2,1],
 "functions_vars_c.html":[18,3,2,2],
 "functions_vars_d.html":[18,3,2,3],
@@ -118,8 +119,8 @@ var NAVTREEINDEX4 =
 "iconfig__manager_8hpp_source.html":[19,0,1,3,4],
 "iframer_8hpp.html":[19,0,1,6,0],
 "iframer_8hpp_source.html":[19,0,1,6,0],
-"index.html":[],
 "index.html":[0],
+"index.html":[],
 "index.html#autotoc_md101":[0,1],
 "index.html#autotoc_md102":[0,1,0],
 "index.html#autotoc_md104":[0,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "md_docs_architecture_memory_safety.html#autotoc_md15":[2,1,1],
 "md_docs_architecture_memory_safety.html#autotoc_md17":[2,2],
 "md_docs_architecture_memory_safety.html#autotoc_md18":[2,2,0],
-"md_docs_architecture_memory_safety.html#autotoc_md20":[2,2,1],
-"md_docs_architecture_memory_safety.html#autotoc_md21":[2,2,1,0]
+"md_docs_architecture_memory_safety.html#autotoc_md20":[2,2,1]
 };

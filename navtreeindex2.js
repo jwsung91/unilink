@@ -107,12 +107,13 @@ var NAVTREEINDEX2 =
 "classunilink_1_1transport_1_1TcpClient.html#a57bf60016f4a10576a3a04ddb039e6f1":[18,0,0,9,2,14],
 "classunilink_1_1transport_1_1TcpClient.html#a691f5852b555c9a261324a00447c6683":[18,0,0,9,2,2],
 "classunilink_1_1transport_1_1TcpClient.html#a69446eead36cb062d06b5a21a8321915":[18,0,0,9,2,12],
+"classunilink_1_1transport_1_1TcpClient.html#a6d4351ce6750e182ae85474a6ccb047d":[18,0,0,9,2,17],
 "classunilink_1_1transport_1_1TcpClient.html#a7c55f4d77900a63f4ff9328b85771818":[18,0,0,9,2,8],
 "classunilink_1_1transport_1_1TcpClient.html#a866b00815ebd682165260ecbe1a4d137":[18,0,0,9,2,7],
-"classunilink_1_1transport_1_1TcpClient.html#a886221c4b9a77e24fa31ceb767aa444a":[18,0,0,9,2,18],
-"classunilink_1_1transport_1_1TcpClient.html#a92598b6c47040e1648976e8eade3c5e3":[18,0,0,9,2,19],
+"classunilink_1_1transport_1_1TcpClient.html#a886221c4b9a77e24fa31ceb767aa444a":[18,0,0,9,2,19],
+"classunilink_1_1transport_1_1TcpClient.html#a92598b6c47040e1648976e8eade3c5e3":[18,0,0,9,2,20],
 "classunilink_1_1transport_1_1TcpClient.html#a996369a17ecad069edd0c20c19689e9d":[18,0,0,9,2,5],
-"classunilink_1_1transport_1_1TcpClient.html#a9f7feb1e79a832dcd2a8df14542c15d2":[18,0,0,9,2,17],
+"classunilink_1_1transport_1_1TcpClient.html#a9f7feb1e79a832dcd2a8df14542c15d2":[18,0,0,9,2,18],
 "classunilink_1_1transport_1_1TcpClient.html#ac179459f9184dd3118488b3de6a93f05":[18,0,0,9,2,15],
 "classunilink_1_1transport_1_1TcpClient.html#ad22b9167b5a60f45aa3ff9aa97588ac8":[18,0,0,9,2,3],
 "classunilink_1_1transport_1_1TcpClient.html#ad37c4adfe4a28cf43eedde18fb1b6a5c":[18,0,0,9,2,16],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classunilink_1_1wrapper_1_1Serial.html#a2fbdec2d253d8a75114501fcccec5d06":[18,0,0,11,5,6],
 "classunilink_1_1wrapper_1_1Serial.html#a328cb1216bcced4cb7fa75c9c659a7af":[18,0,0,11,5,10],
 "classunilink_1_1wrapper_1_1Serial.html#a3d073ca5d5fd05b14eb84138ceb2ba2b":[18,0,0,11,5,14],
-"classunilink_1_1wrapper_1_1Serial.html#a49a8f65c60fe8de6accf0dde6688dd67":[18,0,0,11,5,7],
-"classunilink_1_1wrapper_1_1Serial.html#a4a81c653e5af8fb52a62df82ff5a309f":[18,0,0,11,5,19]
+"classunilink_1_1wrapper_1_1Serial.html#a49a8f65c60fe8de6accf0dde6688dd67":[18,0,0,11,5,7]
 };

@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('namespaceunilink.html',''); initResiza
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -122,8 +123,17 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespaceunilink_1_1wrapper"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1ReconnectDecision.html">ReconnectDecision</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a decision on whether to retry a connection attempt.  <a href="structunilink_1_1ReconnectDecision.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a379951fa136aa3aa08929012fd614066"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> = std::function&lt; <a class="el" href="structunilink_1_1ReconnectDecision.html">ReconnectDecision</a>(const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;, uint32_t)&gt;</td></tr>
+<tr class="memdesc:a379951fa136aa3aa08929012fd614066"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function type for determining reconnection policy.  <a href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">More...</a><br /></td></tr>
+<tr class="separator:a379951fa136aa3aa08929012fd614066"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a790be55fcb59a0aea5dfb178072fd6c7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">TcpClient</a> = <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">wrapper::TcpClient</a></td></tr>
 <tr class="separator:a790be55fcb59a0aea5dfb178072fd6c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e364de9a0a37d3437cb9e10eb1bfba7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7">TcpServer</a> = <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">wrapper::TcpServer</a></td></tr>
@@ -170,6 +180,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a945182ee4d2e3137a6c39f60501f5355"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">to_string</a> (<a class="el" href="namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84a">ErrorCode</a> code)</td></tr>
 <tr class="memdesc:a945182ee4d2e3137a6c39f60501f5355"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert ErrorCode to human-readable string.  <a href="namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355">More...</a><br /></td></tr>
 <tr class="separator:a945182ee4d2e3137a6c39f60501f5355"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12d62491e1b0b8e87eb1202f268af4ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html#a12d62491e1b0b8e87eb1202f268af4ca">FixedInterval</a> (std::chrono::milliseconds delay)</td></tr>
+<tr class="memdesc:a12d62491e1b0b8e87eb1202f268af4ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a policy that retries with a fixed interval.  <a href="namespaceunilink.html#a12d62491e1b0b8e87eb1202f268af4ca">More...</a><br /></td></tr>
+<tr class="separator:a12d62491e1b0b8e87eb1202f268af4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a770f4e845c9196d7c0791ed2c4ec3cb3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html#a770f4e845c9196d7c0791ed2c4ec3cb3">ExponentialBackoff</a> (std::chrono::milliseconds min_delay, std::chrono::milliseconds max_delay, double factor=2.0, bool jitter=true)</td></tr>
+<tr class="memdesc:a770f4e845c9196d7c0791ed2c4ec3cb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a policy that retries with exponential backoff.  <a href="namespaceunilink.html#a770f4e845c9196d7c0791ed2c4ec3cb3">More...</a><br /></td></tr>
+<tr class="separator:a770f4e845c9196d7c0791ed2c4ec3cb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14c0a21a3c09f578b71455e31cf47956"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">builder::TcpServerBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">tcp_server</a> (uint16_t port)</td></tr>
 <tr class="memdesc:a14c0a21a3c09f578b71455e31cf47956"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a TCP server builder.  <a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">More...</a><br /></td></tr>
 <tr class="separator:a14c0a21a3c09f578b71455e31cf47956"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,6 +245,25 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="unilink_8hpp_source.html#l00092">92</a> of file <a class="el" href="unilink_8hpp_source.html">unilink.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a379951fa136aa3aa08929012fd614066"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a379951fa136aa3aa08929012fd614066">&#9670;&nbsp;</a></span>ReconnectPolicy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">unilink::ReconnectPolicy</a> = typedef std::function&lt;<a class="el" href="structunilink_1_1ReconnectDecision.html">ReconnectDecision</a>(const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a>&amp;, uint32_t)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function type for determining reconnection policy. </p>
+<p>Accepts the last error information and the current attempt count (0-based). Returns a <a class="el" href="structunilink_1_1ReconnectDecision.html" title="Represents a decision on whether to retry a connection attempt.">ReconnectDecision</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="reconnect__policy_8hpp_source.html#l00046">46</a> of file <a class="el" href="reconnect__policy_8hpp_source.html">reconnect_policy.hpp</a>.</p>
 
 </div>
 </div>
@@ -341,6 +376,105 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a770f4e845c9196d7c0791ed2c4ec3cb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a770f4e845c9196d7c0791ed2c4ec3cb3">&#9670;&nbsp;</a></span>ExponentialBackoff()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> unilink::ExponentialBackoff </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>min_delay</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>max_delay</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>factor</em> = <code>2.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>jitter</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a policy that retries with exponential backoff. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">min_delay</td><td>The initial delay. </td></tr>
+    <tr><td class="paramname">max_delay</td><td>The maximum delay cap. </td></tr>
+    <tr><td class="paramname">factor</td><td>The multiplier for each retry (default 2.0). </td></tr>
+    <tr><td class="paramname">jitter</td><td>Whether to add randomization to the delay (default true). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A ReconnectPolicy function. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="reconnect__policy_8hpp_source.html#l00072">72</a> of file <a class="el" href="reconnect__policy_8hpp_source.html">reconnect_policy.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a12d62491e1b0b8e87eb1202f268af4ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12d62491e1b0b8e87eb1202f268af4ca">&#9670;&nbsp;</a></span>FixedInterval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> unilink::FixedInterval </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>delay</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a policy that retries with a fixed interval. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delay</td><td>The delay between retries. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A ReconnectPolicy function. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="reconnect__policy_8hpp_source.html#l00054">54</a> of file <a class="el" href="reconnect__policy_8hpp_source.html">reconnect_policy.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a9f2227aea1475c0655cf8cf4a99e55e9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f2227aea1475c0655cf8cf4a99e55e9">&#9670;&nbsp;</a></span>serial()</h2>
 
@@ -547,7 +681,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li>
-    <li class="footer">Generated on Sun Feb 22 2026 02:17:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Feb 22 2026 10:47:23 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

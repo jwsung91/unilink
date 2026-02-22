@@ -39,6 +39,8 @@ var structunilink_1_1transport_1_1TcpClient_1_1Impl =
     [ "owned_ioc_", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#af4cdbc2e63247f6c62e070ebe65799e8", null ],
     [ "owns_ioc_", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a6b3f01251d08cf19a8ad644e3572857e", null ],
     [ "queue_bytes_", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a501749bceb5e8a7cecfd1cbada265b13", null ],
+    [ "reconnect_attempt_count_", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ae3ef0b6f12846b6141d504c860bbf9f0", null ],
+    [ "reconnect_policy_", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a4e933115e6ad0d8a381ad415015d0ef1", null ],
     [ "resolver_", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ac7c0ef6846db06a83475c96e19c04c22", null ],
     [ "retry_attempts_", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a8147cb223df03045cf875906cacc63bf", null ],
     [ "retry_timer_", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a90c00f8a77eddaa200774e652365befd", null ],
