@@ -199,6 +199,30 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
     .build();
 ```
 
+#### Custom Reconnect Policy (Transport Layer)
+
+To use advanced reconnection policies (like Exponential Backoff), use the transport layer directly:
+
+```cpp
+#include "unilink/transport/tcp_client/tcp_client.hpp"
+
+// Configure and create transport client
+unilink::config::TcpClientConfig cfg;
+cfg.host = "127.0.0.1";
+cfg.port = 1234;
+cfg.max_retries = 10;
+
+auto client = unilink::transport::TcpClient::create(cfg);
+
+// Set exponential backoff policy (1s to 30s)
+// Note: If policy is not set, default retry interval is used.
+client->set_reconnect_policy(
+    unilink::ExponentialBackoff(std::chrono::seconds(1), std::chrono::seconds(30))
+);
+
+client->start();
+```
+
 ---
 
 ## TCP Server
