@@ -27,6 +27,7 @@
 
 #include "unilink/base/common.hpp"
 #include "unilink/config/tcp_client_config.hpp"
+#include "unilink/diagnostics/error_mapping.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
@@ -113,6 +114,7 @@ struct TcpClient::Impl {
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
     }
+    started_ = true;
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
       work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
@@ -128,7 +130,6 @@ struct TcpClient::Impl {
         }
       });
     }
-    started_ = true;
     return f;
   }
 
@@ -209,7 +210,16 @@ struct TcpClient::Impl {
         if (state == base::LinkState::Closed && disconnect_handler_) {
           disconnect_handler_(ConnectionContext(0));
         } else if (state == base::LinkState::Error && error_handler_) {
-          error_handler_(ErrorContext(ErrorCode::IoError, "Connection state error"));
+          bool handled = false;
+          if (auto transport = std::dynamic_pointer_cast<transport::TcpClient>(channel_)) {
+            if (auto info = transport->last_error_info()) {
+              error_handler_(diagnostics::to_error_context(*info));
+              handled = true;
+            }
+          }
+          if (!handled) {
+            error_handler_(ErrorContext(ErrorCode::IoError, "Connection state error"));
+          }
         }
       }
     });

@@ -20,7 +20,7 @@ get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 # Default: discover after build so test executables exist
 set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
 
-foreach(test_file test_core.cc test_memory.cc test_pooled_buffer.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_input_validator_edge.cc test_logger_advanced.cc test_pool_stress.cc)
+foreach(test_file test_core.cc test_memory.cc test_pooled_buffer.cc test_boundary.cc test_error_handler.cc test_input_validator.cc test_input_validator_edge.cc test_logger_advanced.cc test_pool_stress.cc test_error_mapping.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/common/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -129,7 +129,7 @@ foreach(test_file test_pool_limits.cpp)
 endforeach()
 
 # Wrapper tests (separate executables)
-foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_serial_advanced.cc test_udp_stop_perf.cc test_udp_options.cc test_udp_failure.cc test_udp_state.cpp)
+foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_serial_advanced.cc test_udp_stop_perf.cc test_udp_options.cc test_udp_failure.cc test_udp_state.cpp test_tcp_client_error_mapping.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -433,6 +433,8 @@ add_dependencies(unilink_unit_tests
   run_unit_test_tcp_client_advanced
   run_unit_test_udp_options
   run_unit_test_udp_state
+  run_unit_test_tcp_client_error_mapping
+  run_unit_test_error_mapping
   run_unit_wrapper_serial_config_mapping
   run_unit_transport_tcp_client
   run_unit_transport_tcp_server
