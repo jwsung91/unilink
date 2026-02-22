@@ -266,9 +266,8 @@ TEST_F(TransportTcpClientPolicyTest, MaxRetriesEnforcedOverPolicy) {
   client_ = TcpClient::create(cfg, ioc);
 
   // Policy that wants to retry forever
-  client_->set_reconnect_policy([](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
-    return {true, 10ms};
-  });
+  client_->set_reconnect_policy(
+      [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision { return {true, 10ms}; });
 
   std::atomic<int> connecting_count{0};
   std::atomic<bool> error_state{false};
@@ -306,9 +305,9 @@ TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
   boost::asio::io_context ioc;
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
-  cfg.port = 0; // Will be set after acceptor creation
+  cfg.port = 0;  // Will be set after acceptor creation
   cfg.connection_timeout_ms = 100;
-  cfg.backpressure_threshold = 10; // Low threshold
+  cfg.backpressure_threshold = 10;  // Low threshold
 
   // Connect to a real server so we can write
   tcp::acceptor acceptor(ioc, tcp::endpoint(tcp::v4(), 0));
@@ -317,9 +316,8 @@ TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
   client_ = TcpClient::create(cfg, ioc);
 
   // Policy always retries
-  client_->set_reconnect_policy([](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
-    return {true, 10ms};
-  });
+  client_->set_reconnect_policy(
+      [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision { return {true, 10ms}; });
 
   std::atomic<bool> connected{false};
   client_->on_state([&](base::LinkState state) {
@@ -331,7 +329,7 @@ TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
   // Accept connection
   std::shared_ptr<tcp::socket> peer;
   acceptor.async_accept([&](auto ec, tcp::socket s) {
-      if(!ec) peer = std::make_shared<tcp::socket>(std::move(s));
+    if (!ec) peer = std::make_shared<tcp::socket>(std::move(s));
   });
 
   ioc.run_for(100ms);
@@ -346,16 +344,14 @@ TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
   // Run loop to process error and potentially schedule retry
   std::atomic<int> connecting_count{0};
   client_->on_state([&](base::LinkState state) {
-      if (state == base::LinkState::Connecting) connecting_count.fetch_add(1);
+    if (state == base::LinkState::Connecting) connecting_count.fetch_add(1);
   });
 
   ioc.run_for(200ms);
 
-  // Should NOT reconnect (connecting_count should be 0 because we transitioned from Connected -> Error directly, without passing through Connecting)
-  // Wait, transition_to(Error) does NOT go to Connecting.
-  // Retry logic would go to Connecting.
-  // If schedule_retry stops, it goes to Error (again or stays).
-  // So Connecting should not appear.
+  // Should NOT reconnect (connecting_count should be 0 because we transitioned from Connected -> Error directly,
+  // without passing through Connecting) Wait, transition_to(Error) does NOT go to Connecting. Retry logic would go to
+  // Connecting. If schedule_retry stops, it goes to Error (again or stays). So Connecting should not appear.
 
   EXPECT_EQ(connecting_count.load(), 0);
   EXPECT_FALSE(client_->is_connected());
