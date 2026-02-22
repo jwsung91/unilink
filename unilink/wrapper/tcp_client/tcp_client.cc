@@ -114,6 +114,7 @@ struct TcpClient::Impl {
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
     }
+    started_ = true;
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
       work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
@@ -129,7 +130,6 @@ struct TcpClient::Impl {
         }
       });
     }
-    started_ = true;
     return f;
   }
 
