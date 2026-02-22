@@ -588,11 +588,10 @@ void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self, uint64_t s
   ++retry_attempts_;
   transition_to(LinkState::Connecting);
 
-  UNILINK_LOG_INFO("tcp_client", "retry",
-                   "Scheduling retry in " +
-                       std::to_string((retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms) /
-                                      1000.0) +
-                       "s");
+  UNILINK_LOG_INFO(
+      "tcp_client", "retry",
+      "Scheduling retry in " +
+          std::to_string((retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms) / 1000.0) + "s");
 
   const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;
   retry_timer_.expires_after(std::chrono::milliseconds(interval));
