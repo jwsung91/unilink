@@ -91,3 +91,40 @@ TEST_F(PacketFramerTest, RejectEmptyPatterns) {
   std::vector<uint8_t> empty_end;
   EXPECT_THROW({ PacketFramer(empty_start, empty_end, 1024); }, std::invalid_argument);
 }
+
+TEST_F(PacketFramerTest, FastPathSplitEndPattern) {
+  // Pattern: "ST...EN"
+  // Chunk 1: "STXXXE"
+  // Chunk 2: "N"
+  // Fast path should process Chunk 1, not find end, buffer it.
+  // Chunk 2 should complete it.
+
+  std::vector<uint8_t> part1 = {'S', 'T', 'X', 'X', 'X', 'E'};
+  std::vector<uint8_t> part2 = {'N'};
+
+  framer_->push_bytes(memory::ConstByteSpan(part1.data(), part1.size()));
+  ASSERT_EQ(messages_.size(), 0);
+
+  framer_->push_bytes(memory::ConstByteSpan(part2.data(), part2.size()));
+  ASSERT_EQ(messages_.size(), 1);
+
+  std::vector<uint8_t> expected = {'S', 'T', 'X', 'X', 'X', 'E', 'N'};
+  EXPECT_EQ(messages_[0], expected);
+}
+
+TEST_F(PacketFramerTest, FastPathSplitStartPattern) {
+  // Chunk 1: "S"
+  // Chunk 2: "TDATAEN"
+
+  std::vector<uint8_t> part1 = {'S'};
+  std::vector<uint8_t> part2 = {'T', 'D', 'A', 'T', 'A', 'E', 'N'};
+
+  framer_->push_bytes(memory::ConstByteSpan(part1.data(), part1.size()));
+  ASSERT_EQ(messages_.size(), 0);
+
+  framer_->push_bytes(memory::ConstByteSpan(part2.data(), part2.size()));
+  ASSERT_EQ(messages_.size(), 1);
+
+  std::vector<uint8_t> expected = {'S', 'T', 'D', 'A', 'T', 'A', 'E', 'N'};
+  EXPECT_EQ(messages_[0], expected);
+}
