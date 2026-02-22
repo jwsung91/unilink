@@ -115,7 +115,8 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
   client_ = TcpClient::create(cfg, ioc);
 
   // Use larger base delay to be robust against Windows timer granularity (15ms)
-  client_->set_reconnect_policy(ExponentialBackoff(50ms, 1000ms, 2.0, false));
+  // Increased to 100ms because 50ms was still proving unreliable on loaded Windows runners
+  client_->set_reconnect_policy(ExponentialBackoff(100ms, 2000ms, 2.0, false));
 
   std::vector<std::chrono::steady_clock::time_point> attempt_times;
 
@@ -127,7 +128,7 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
 
   client_->start();
 
-  ioc.run_for(std::chrono::milliseconds(500));
+  ioc.run_for(std::chrono::milliseconds(800));
 
   // Prevent callback accessing destroyed attempt_times
   client_->on_state(nullptr);
@@ -139,7 +140,7 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
     auto d1 = std::chrono::duration_cast<std::chrono::milliseconds>(attempt_times[1] - attempt_times[0]).count();
     auto d2 = std::chrono::duration_cast<std::chrono::milliseconds>(attempt_times[2] - attempt_times[1]).count();
 
-    // d1 should be around 50ms, d2 around 100ms. Gap is 50ms, safe for Windows.
+    // d1 should be around 100ms, d2 around 200ms. Gap is 100ms, safe for Windows.
     EXPECT_GT(d2, d1);
   }
   client_.reset();
