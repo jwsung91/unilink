@@ -1,5 +1,6 @@
 var namespaceunilink_1_1transport =
 [
+    [ "detail", "namespaceunilink_1_1transport_1_1detail.html", "namespaceunilink_1_1transport_1_1detail" ],
     [ "BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", "classunilink_1_1transport_1_1BoostSerialPort" ],
     [ "Serial", "classunilink_1_1transport_1_1Serial.html", "classunilink_1_1transport_1_1Serial" ],
     [ "TcpClient", "classunilink_1_1transport_1_1TcpClient.html", "classunilink_1_1transport_1_1TcpClient" ],

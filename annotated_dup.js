@@ -77,6 +77,9 @@ var annotated_dup =
         [ "SafeSpan", "classunilink_1_1memory_1_1SafeSpan.html", "classunilink_1_1memory_1_1SafeSpan" ]
       ] ],
       [ "transport", "namespaceunilink_1_1transport.html", [
+        [ "detail", "namespaceunilink_1_1transport_1_1detail.html", [
+          [ "ReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision" ]
+        ] ],
         [ "BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", "classunilink_1_1transport_1_1BoostSerialPort" ],
         [ "Serial", "classunilink_1_1transport_1_1Serial.html", "classunilink_1_1transport_1_1Serial" ],
         [ "TcpClient", "classunilink_1_1transport_1_1TcpClient.html", "classunilink_1_1transport_1_1TcpClient" ],
