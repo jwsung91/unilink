@@ -29,6 +29,7 @@
 #include "unilink/diagnostics/error_types.hpp"
 #include "unilink/interface/channel.hpp"
 #include "unilink/memory/memory_pool.hpp"
+#include "unilink/transport/tcp_client/reconnect_policy.hpp"
 
 // Forward declare boost components
 namespace boost {
@@ -79,6 +80,7 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
 
   // Dynamic configuration methods
   void set_retry_interval(unsigned interval_ms);
+  void set_reconnect_policy(ReconnectPolicy policy);
 
  private:
   explicit TcpClient(const TcpClientConfig& cfg);

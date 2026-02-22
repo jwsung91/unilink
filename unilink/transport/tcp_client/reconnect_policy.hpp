@@ -1,0 +1,95 @@
+/*
+ * Copyright 2025 Jinwoo Sung
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#pragma once
+
+#include <algorithm>
+#include <chrono>
+#include <cmath>
+#include <functional>
+#include <random>
+#include <thread>
+
+#include "unilink/diagnostics/error_types.hpp"
+
+namespace unilink {
+
+/**
+ * @brief Represents a decision on whether to retry a connection attempt.
+ */
+struct ReconnectDecision {
+  bool retry{false};
+  std::chrono::milliseconds delay{0};
+};
+
+/**
+ * @brief Function type for determining reconnection policy.
+ *
+ * Accepts the last error information and the current attempt count (0-based).
+ * Returns a ReconnectDecision.
+ */
+using ReconnectPolicy = std::function<ReconnectDecision(const diagnostics::ErrorInfo&, uint32_t)>;
+
+/**
+ * @brief Creates a policy that retries with a fixed interval.
+ *
+ * @param delay The delay between retries.
+ * @return A ReconnectPolicy function.
+ */
+inline ReconnectPolicy FixedInterval(std::chrono::milliseconds delay) {
+  return [delay](const diagnostics::ErrorInfo& error_info, uint32_t) -> ReconnectDecision {
+    if (!error_info.retryable) {
+      return {false, std::chrono::milliseconds(0)};
+    }
+    return {true, delay};
+  };
+}
+
+/**
+ * @brief Creates a policy that retries with exponential backoff.
+ *
+ * @param min_delay The initial delay.
+ * @param max_delay The maximum delay cap.
+ * @param factor The multiplier for each retry (default 2.0).
+ * @param jitter Whether to add randomization to the delay (default true).
+ * @return A ReconnectPolicy function.
+ */
+inline ReconnectPolicy ExponentialBackoff(std::chrono::milliseconds min_delay, std::chrono::milliseconds max_delay,
+                                          double factor = 2.0, bool jitter = true) {
+  return [min_delay, max_delay, factor, jitter](const diagnostics::ErrorInfo& error_info,
+                                                uint32_t attempt_count) -> ReconnectDecision {
+    if (!error_info.retryable) {
+      return {false, std::chrono::milliseconds(0)};
+    }
+
+    double calculated = static_cast<double>(min_delay.count()) * std::pow(factor, attempt_count);
+    double cap = static_cast<double>(max_delay.count());
+
+    // Clamp to max_delay
+    double delay_ms = std::min(calculated, cap);
+
+    if (jitter) {
+      // Full Jitter: random between 0 and calculated delay
+      static thread_local std::mt19937 gen(std::random_device{}());
+      std::uniform_real_distribution<> dist(0.0, delay_ms);
+      delay_ms = dist(gen);
+    }
+
+    return {true, std::chrono::milliseconds(static_cast<long long>(delay_ms))};
+  };
+}
+
+}  // namespace unilink

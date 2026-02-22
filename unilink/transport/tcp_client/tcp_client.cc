@@ -16,6 +16,10 @@
 
 #include "unilink/transport/tcp_client/tcp_client.hpp"
 
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#endif
+
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -94,6 +98,8 @@ struct TcpClient::Impl {
   std::atomic<bool> connected_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
   int retry_attempts_ = 0;
+  uint32_t reconnect_attempt_count_{0};
+  std::optional<ReconnectPolicy> reconnect_policy_;
 
   mutable std::mutex last_err_mtx_;
   std::optional<diagnostics::ErrorInfo> last_error_info_;
@@ -442,6 +448,13 @@ void TcpClient::on_backpressure(OnBackpressure cb) {
   impl_->on_bp_ = std::move(cb);
 }
 void TcpClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_interval_ms = interval_ms; }
+void TcpClient::set_reconnect_policy(ReconnectPolicy policy) {
+  if (policy) {
+    impl_->reconnect_policy_ = std::move(policy);
+  } else {
+    impl_->reconnect_policy_ = std::nullopt;
+  }
+}
 
 // Impl methods implementation
 
@@ -455,9 +468,10 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           return;
         }
         if (ec) {
+          uint32_t current_attempts = self->impl_->reconnect_policy_ ? self->impl_->reconnect_attempt_count_
+                                                                     : static_cast<uint32_t>(self->impl_->retry_attempts_);
           self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "resolve",
-                                    ec, "Resolution failed: " + ec.message(), true,
-                                    static_cast<uint32_t>(self->impl_->retry_attempts_));
+                                    ec, "Resolution failed: " + ec.message(), true, current_attempts);
           self->impl_->schedule_retry(self, seq);
           return;
         }
@@ -470,9 +484,11 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
             UNILINK_LOG_ERROR(
                 "tcp_client", "connect_timeout",
                 "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
+            uint32_t current_attempts = self->impl_->reconnect_policy_
+                                            ? self->impl_->reconnect_attempt_count_
+                                            : static_cast<uint32_t>(self->impl_->retry_attempts_);
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
-                                      boost::asio::error::timed_out, "Connection timed out", true,
-                                      static_cast<uint32_t>(self->impl_->retry_attempts_));
+                                      boost::asio::error::timed_out, "Connection timed out", true, current_attempts);
             self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
           }
         });
@@ -488,14 +504,17 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           }
           if (ec2) {
             self->impl_->connect_timer_.cancel();
+            uint32_t current_attempts = self->impl_->reconnect_policy_
+                                            ? self->impl_->reconnect_attempt_count_
+                                            : static_cast<uint32_t>(self->impl_->retry_attempts_);
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
-                                      ec2, "Connection failed: " + ec2.message(), true,
-                                      static_cast<uint32_t>(self->impl_->retry_attempts_));
+                                      ec2, "Connection failed: " + ec2.message(), true, current_attempts);
             self->impl_->schedule_retry(self, seq);
             return;
           }
           self->impl_->connect_timer_.cancel();
           self->impl_->retry_attempts_ = 0;
+          self->impl_->reconnect_attempt_count_ = 0;
           self->impl_->connected_.store(true);
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
@@ -521,6 +540,46 @@ void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self, uint64_t s
   if (stop_requested_.load() || stopping_.load()) {
     return;
   }
+
+  if (reconnect_policy_) {
+    std::optional<diagnostics::ErrorInfo> last_err;
+    {
+      std::lock_guard<std::mutex> lock(last_err_mtx_);
+      last_err = last_error_info_;
+    }
+
+    if (!last_err) {
+      last_err = diagnostics::ErrorInfo(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
+                                        "tcp_client", "schedule_retry", "Unknown error",
+                                        make_error_code(boost::asio::error::not_connected), true);
+    }
+
+    auto decision = (*reconnect_policy_)(*last_err, reconnect_attempt_count_);
+
+    if (!decision.retry) {
+      UNILINK_LOG_INFO("tcp_client", "retry", "Reconnect policy decided to stop retrying");
+      transition_to(LinkState::Error);
+      return;
+    }
+
+    reconnect_attempt_count_++;
+    transition_to(LinkState::Connecting);
+
+    UNILINK_LOG_INFO("tcp_client", "retry",
+                     "Scheduling retry (policy) in " +
+                         std::to_string(static_cast<double>(decision.delay.count()) / 1000.0) + "s");
+
+    retry_timer_.expires_after(decision.delay);
+    retry_timer_.async_wait([self, seq](const boost::system::error_code& ec) {
+      if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
+        return;
+      }
+      if (!ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load())
+        self->impl_->do_resolve_connect(self, seq);
+    });
+    return;
+  }
+
   if (cfg_.max_retries != -1 && retry_attempts_ >= cfg_.max_retries) {
     transition_to(LinkState::Error);
     return;
@@ -675,8 +734,15 @@ void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, uint64_t seq
   UNILINK_LOG_INFO("tcp_client", "handle_close", "Closing connection. Error: " + ec.message());
   if (ec) {
     bool retry = (cfg_.max_retries == -1 || retry_attempts_ < cfg_.max_retries);
+    uint32_t current_attempts =
+        reconnect_policy_ ? reconnect_attempt_count_ : static_cast<uint32_t>(retry_attempts_);
+
+    if (reconnect_policy_) {
+      retry = true;
+    }
+
     record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "handle_close", ec,
-                 "Connection closed with error: " + ec.message(), retry, static_cast<uint32_t>(retry_attempts_));
+                 "Connection closed with error: " + ec.message(), retry, current_attempts);
   }
   connected_.store(false);
   writing_ = false;
@@ -802,6 +868,7 @@ void TcpClient::Impl::reset_start_state() {
   stopping_.store(false);
   terminal_state_notified_.store(false);
   retry_attempts_ = 0;
+  reconnect_attempt_count_ = 0;
   connected_.store(false);
   writing_ = false;
   queue_bytes_ = 0;
