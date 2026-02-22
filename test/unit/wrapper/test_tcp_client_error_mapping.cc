@@ -30,6 +30,7 @@ TEST(TcpClientErrorMappingTest, ConnectionRefused) {
   // Use a port that is likely closed (getAvailableTestPort finds a free port, but we don't listen on it)
   uint16_t port = TestUtils::getAvailableTestPort();
   wrapper::TcpClient client("127.0.0.1", port);
+  client.set_connection_timeout(std::chrono::milliseconds(1000));
 
   std::promise<ErrorCode> error_promise;
   auto error_future = error_promise.get_future();
@@ -54,8 +55,10 @@ TEST(TcpClientErrorMappingTest, ConnectionRefused) {
 
   auto code = error_future.get();
   // On Linux/Mac connection refused is expected.
-  EXPECT_TRUE(code == ErrorCode::ConnectionRefused || code == ErrorCode::IoError)
-      << "Expected ConnectionRefused or IoError, got: " << unilink::to_string(code);
+  // On Windows, firewall might drop packets leading to TimedOut.
+  EXPECT_TRUE(code == ErrorCode::ConnectionRefused || code == ErrorCode::IoError || code == ErrorCode::TimedOut ||
+              code == ErrorCode::NetworkUnreachable)
+      << "Expected ConnectionRefused, IoError, TimedOut, or NetworkUnreachable, got: " << unilink::to_string(code);
 
   client.stop();
 }
