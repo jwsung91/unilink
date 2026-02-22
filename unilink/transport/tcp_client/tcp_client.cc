@@ -544,60 +544,56 @@ void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self, uint64_t s
     return;
   }
 
-  if (reconnect_policy_) {
-    std::optional<diagnostics::ErrorInfo> last_err;
-    {
-      std::lock_guard<std::mutex> lock(last_err_mtx_);
-      last_err = last_error_info_;
-    }
-
-    if (!last_err) {
-      last_err = diagnostics::ErrorInfo(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
-                                        "tcp_client", "schedule_retry", "Unknown error",
-                                        make_error_code(boost::asio::error::not_connected), true);
-    }
-
-    auto decision = (*reconnect_policy_)(*last_err, reconnect_attempt_count_);
-
-    if (!decision.retry) {
-      UNILINK_LOG_INFO("tcp_client", "retry", "Reconnect policy decided to stop retrying");
-      transition_to(LinkState::Error);
-      return;
-    }
-
-    reconnect_attempt_count_++;
-    transition_to(LinkState::Connecting);
-
-    UNILINK_LOG_INFO(
-        "tcp_client", "retry",
-        "Scheduling retry (policy) in " + std::to_string(static_cast<double>(decision.delay.count()) / 1000.0) + "s");
-
-    retry_timer_.expires_after(decision.delay);
-    retry_timer_.async_wait([self, seq](const boost::system::error_code& ec) {
-      if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
-        return;
-      }
-      if (!ec && !self->impl_->stop_requested_.load() && !self->impl_->stopping_.load())
-        self->impl_->do_resolve_connect(self, seq);
-    });
+  // Prevent double scheduling of reconnect
+  if (reconnect_pending_.exchange(true)) {
     return;
   }
 
-  if (cfg_.max_retries != -1 && retry_attempts_ >= cfg_.max_retries) {
+  std::optional<diagnostics::ErrorInfo> last_err;
+  {
+    std::lock_guard<std::mutex> lock(last_err_mtx_);
+    last_err = last_error_info_;
+  }
+
+  if (!last_err) {
+    last_err = diagnostics::ErrorInfo(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
+                                      "tcp_client", "schedule_retry", "Unknown error",
+                                      make_error_code(boost::asio::error::not_connected), true);
+  }
+
+  // Determine current attempt count based on active mode
+  uint32_t current_attempts = reconnect_policy_ ? reconnect_attempt_count_ : static_cast<uint32_t>(retry_attempts_);
+
+  auto decision = detail::decide_reconnect(cfg_, *last_err, current_attempts, reconnect_policy_);
+
+  if (!decision.should_retry) {
+    UNILINK_LOG_INFO("tcp_client", "retry", "Reconnect stopped by policy/config");
     transition_to(LinkState::Error);
+    reconnect_pending_.store(false);
     return;
   }
-  ++retry_attempts_;
+
+  std::chrono::milliseconds delay;
+  if (decision.delay) {
+    // Policy-based delay
+    delay = *decision.delay;
+    reconnect_attempt_count_++;
+  } else {
+    // Legacy delay logic
+    ++retry_attempts_;
+    delay = std::chrono::milliseconds(retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms);
+  }
+
   transition_to(LinkState::Connecting);
 
-  UNILINK_LOG_INFO(
-      "tcp_client", "retry",
-      "Scheduling retry in " +
-          std::to_string((retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms) / 1000.0) + "s");
+  UNILINK_LOG_INFO("tcp_client", "retry",
+                   "Scheduling retry in " + std::to_string(static_cast<double>(delay.count()) / 1000.0) + "s");
 
-  const unsigned interval = retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms;
-  retry_timer_.expires_after(std::chrono::milliseconds(interval));
+  retry_timer_.expires_after(delay);
   retry_timer_.async_wait([self, seq](const boost::system::error_code& ec) {
+    // Clear pending flag regardless of result (fired or aborted)
+    self->impl_->reconnect_pending_.store(false);
+
     if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) {
       return;
     }

@@ -1,10 +1,12 @@
+#include "unilink/transport/tcp_client/detail/reconnect_logic.hpp"
+
 #include <gtest/gtest.h>
+
 #include <chrono>
 #include <optional>
 
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/diagnostics/error_types.hpp"
-#include "unilink/transport/tcp_client/detail/reconnect_logic.hpp"
 #include "unilink/transport/tcp_client/reconnect_policy.hpp"
 
 using namespace unilink;
@@ -18,11 +20,11 @@ class ReconnectLogicTest : public ::testing::Test {
   diagnostics::ErrorInfo error_info_;
 
   ReconnectLogicTest()
-      : error_info_(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION,
-                    "test", "op", "msg", {}, true) {}
+      : error_info_(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "test", "op", "msg", {},
+                    true) {}
 
   void SetUp() override {
-    cfg_.max_retries = -1; // Infinite
+    cfg_.max_retries = -1;  // Infinite
   }
 };
 
@@ -53,9 +55,7 @@ TEST_F(ReconnectLogicTest, MaxRetriesLimitEnforced) {
 }
 
 TEST_F(ReconnectLogicTest, PolicyDecisionRespected) {
-  auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
-    return {true, 100ms};
-  };
+  auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision { return {true, 100ms}; };
 
   auto decision = decide_reconnect(cfg_, error_info_, 0, policy);
   EXPECT_TRUE(decision.should_retry);
@@ -63,18 +63,14 @@ TEST_F(ReconnectLogicTest, PolicyDecisionRespected) {
 }
 
 TEST_F(ReconnectLogicTest, PolicyDecisionStop) {
-  auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
-    return {false, 0ms};
-  };
+  auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision { return {false, 0ms}; };
 
   auto decision = decide_reconnect(cfg_, error_info_, 0, policy);
   EXPECT_FALSE(decision.should_retry);
 }
 
 TEST_F(ReconnectLogicTest, PolicyDelayClampedToZero) {
-  auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
-    return {true, -50ms};
-  };
+  auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision { return {true, -50ms}; };
 
   auto decision = decide_reconnect(cfg_, error_info_, 0, policy);
   EXPECT_TRUE(decision.should_retry);
@@ -83,7 +79,7 @@ TEST_F(ReconnectLogicTest, PolicyDelayClampedToZero) {
 
 TEST_F(ReconnectLogicTest, PolicyDelayClampedToMax) {
   auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
-    return {true, 60000ms}; // 60s
+    return {true, 60000ms};  // 60s
   };
 
   // Default max is 30s
@@ -101,9 +97,7 @@ TEST_F(ReconnectLogicTest, LegacyLogicWhenNoPolicy) {
 
 TEST_F(ReconnectLogicTest, MaxRetriesEnforcedWithPolicy) {
   cfg_.max_retries = 2;
-  auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
-    return {true, 10ms};
-  };
+  auto policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision { return {true, 10ms}; };
 
   // Attempt 0 -> OK
   EXPECT_TRUE(decide_reconnect(cfg_, error_info_, 0, policy).should_retry);
