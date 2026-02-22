@@ -83,7 +83,9 @@ inline ReconnectPolicy ExponentialBackoff(std::chrono::milliseconds min_delay, s
 
     if (jitter) {
       // Full Jitter: random between 0 and calculated delay
-      static thread_local std::mt19937 gen(std::random_device{}());
+      // Use local generator to avoid potential TLS issues on some platforms
+      std::random_device rd;
+      std::mt19937 gen(rd());
       std::uniform_real_distribution<> dist(0.0, delay_ms);
       delay_ms = dist(gen);
     }
