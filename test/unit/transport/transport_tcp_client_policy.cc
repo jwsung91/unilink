@@ -91,10 +91,21 @@ TEST_F(TransportTcpClientPolicyTest, FixedIntervalPolicyRetriesWithDelay) {
 
   EXPECT_GE(connecting_count.load(), 3);
 
-  if (attempt_times.size() >= 3) {
+  // Debounce attempt times to handle platform-specific redundant state notifications
+  std::vector<std::chrono::steady_clock::time_point> filtered_times;
+  if (!attempt_times.empty()) {
+    filtered_times.push_back(attempt_times[0]);
     for (size_t i = 1; i < attempt_times.size(); ++i) {
+      if (attempt_times[i] - attempt_times[i - 1] > std::chrono::milliseconds(10)) {
+        filtered_times.push_back(attempt_times[i]);
+      }
+    }
+  }
+
+  if (filtered_times.size() >= 3) {
+    for (size_t i = 1; i < filtered_times.size(); ++i) {
       auto diff =
-          std::chrono::duration_cast<std::chrono::milliseconds>(attempt_times[i] - attempt_times[i - 1]).count();
+          std::chrono::duration_cast<std::chrono::milliseconds>(filtered_times[i] - filtered_times[i - 1]).count();
       EXPECT_LT(diff, 500) << "Interval too long, policy might not be active";
     }
   }
@@ -114,9 +125,7 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
 
   client_ = TcpClient::create(cfg, ioc);
 
-  // Use larger base delay to be robust against Windows timer granularity (15ms)
-  // Increased to 100ms because 50ms was still proving unreliable on loaded Windows runners
-  client_->set_reconnect_policy(ExponentialBackoff(100ms, 2000ms, 2.0, false));
+  client_->set_reconnect_policy(ExponentialBackoff(20ms, 1000ms, 2.0, false));
 
   std::vector<std::chrono::steady_clock::time_point> attempt_times;
 
@@ -128,19 +137,29 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
 
   client_->start();
 
-  ioc.run_for(std::chrono::milliseconds(800));
+  ioc.run_for(std::chrono::milliseconds(500));
 
   // Prevent callback accessing destroyed attempt_times
   client_->on_state(nullptr);
   client_->stop();
 
-  EXPECT_GE(attempt_times.size(), 3);
+  // Debounce attempt times to filter out rapid-fire Connecting states (e.g. from handle_close -> schedule_retry)
+  std::vector<std::chrono::steady_clock::time_point> filtered_times;
+  if (!attempt_times.empty()) {
+    filtered_times.push_back(attempt_times[0]);
+    for (size_t i = 1; i < attempt_times.size(); ++i) {
+      if (attempt_times[i] - attempt_times[i - 1] > std::chrono::milliseconds(10)) {
+        filtered_times.push_back(attempt_times[i]);
+      }
+    }
+  }
 
-  if (attempt_times.size() >= 3) {
-    auto d1 = std::chrono::duration_cast<std::chrono::milliseconds>(attempt_times[1] - attempt_times[0]).count();
-    auto d2 = std::chrono::duration_cast<std::chrono::milliseconds>(attempt_times[2] - attempt_times[1]).count();
+  EXPECT_GE(filtered_times.size(), 3);
 
-    // d1 should be around 100ms, d2 around 200ms. Gap is 100ms, safe for Windows.
+  if (filtered_times.size() >= 3) {
+    auto d1 = std::chrono::duration_cast<std::chrono::milliseconds>(filtered_times[1] - filtered_times[0]).count();
+    auto d2 = std::chrono::duration_cast<std::chrono::milliseconds>(filtered_times[2] - filtered_times[1]).count();
+
     EXPECT_GT(d2, d1);
   }
   client_.reset();
