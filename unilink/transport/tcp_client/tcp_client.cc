@@ -90,6 +90,7 @@ struct TcpClient::Impl {
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_bp_;
+  mutable std::mutex callback_mtx_;
   std::atomic<bool> connected_{false};
   ThreadSafeLinkState state_{LinkState::Idle};
   int retry_attempts_ = 0;
@@ -428,9 +429,18 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   });
 }
 
-void TcpClient::on_bytes(OnBytes cb) { impl_->on_bytes_ = std::move(cb); }
-void TcpClient::on_state(OnState cb) { impl_->on_state_ = std::move(cb); }
-void TcpClient::on_backpressure(OnBackpressure cb) { impl_->on_bp_ = std::move(cb); }
+void TcpClient::on_bytes(OnBytes cb) {
+  std::lock_guard<std::mutex> lock(impl_->callback_mtx_);
+  impl_->on_bytes_ = std::move(cb);
+}
+void TcpClient::on_state(OnState cb) {
+  std::lock_guard<std::mutex> lock(impl_->callback_mtx_);
+  impl_->on_state_ = std::move(cb);
+}
+void TcpClient::on_backpressure(OnBackpressure cb) {
+  std::lock_guard<std::mutex> lock(impl_->callback_mtx_);
+  impl_->on_bp_ = std::move(cb);
+}
 void TcpClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_interval_ms = interval_ms; }
 
 // Impl methods implementation
@@ -546,9 +556,15 @@ void TcpClient::Impl::start_read(std::shared_ptr<TcpClient> self, uint64_t seq) 
       self->impl_->handle_close(self, seq, ec);
       return;
     }
-    if (self->impl_->on_bytes_) {
+    OnBytes on_bytes;
+    {
+      std::lock_guard<std::mutex> lock(self->impl_->callback_mtx_);
+      on_bytes = self->impl_->on_bytes_;
+    }
+
+    if (on_bytes) {
       try {
-        self->impl_->on_bytes_(memory::ConstByteSpan(self->impl_->rx_.data(), n));
+        on_bytes(memory::ConstByteSpan(self->impl_->rx_.data(), n));
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("tcp_client", "on_bytes", "Exception in on_bytes callback: " + std::string(e.what()));
         self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION, "on_bytes",
@@ -695,12 +711,19 @@ void TcpClient::Impl::recalculate_backpressure_bounds() {
 }
 
 void TcpClient::Impl::report_backpressure(size_t queued_bytes) {
-  if (stop_requested_.load() || stopping_.load() || !on_bp_) return;
+  if (stop_requested_.load() || stopping_.load()) return;
+
+  OnBackpressure on_bp;
+  {
+    std::lock_guard<std::mutex> lock(callback_mtx_);
+    on_bp = on_bp_;
+  }
+  if (!on_bp) return;
 
   if (!backpressure_active_ && queued_bytes >= bp_high_) {
     backpressure_active_ = true;
     try {
-      on_bp_(queued_bytes);
+      on_bp(queued_bytes);
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
                         "Exception in backpressure callback: " + std::string(e.what()));
@@ -710,7 +733,7 @@ void TcpClient::Impl::report_backpressure(size_t queued_bytes) {
   } else if (backpressure_active_ && queued_bytes <= bp_low_) {
     backpressure_active_ = false;
     try {
-      on_bp_(queued_bytes);
+      on_bp(queued_bytes);
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("tcp_client", "on_backpressure",
                         "Exception in backpressure callback: " + std::string(e.what()));
@@ -808,10 +831,17 @@ void TcpClient::Impl::join_ioc_thread(bool allow_detach) {
 }
 
 void TcpClient::Impl::notify_state() {
-  if (stop_requested_.load() || stopping_.load() || !on_state_) return;
+  if (stop_requested_.load() || stopping_.load()) return;
+
+  OnState on_state;
+  {
+    std::lock_guard<std::mutex> lock(callback_mtx_);
+    on_state = on_state_;
+  }
+  if (!on_state) return;
 
   try {
-    on_state_(state_.get_state());
+    on_state(state_.get_state());
   } catch (const std::exception& e) {
     UNILINK_LOG_ERROR("tcp_client", "on_state", "Exception in state callback: " + std::string(e.what()));
   } catch (...) {
