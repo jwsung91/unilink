@@ -57,8 +57,8 @@ TEST(TcpClientErrorMappingTest, ConnectionRefused) {
   // On Linux/Mac connection refused is expected.
   // On Windows, firewall might drop packets leading to TimedOut.
   EXPECT_TRUE(code == ErrorCode::ConnectionRefused || code == ErrorCode::IoError || code == ErrorCode::TimedOut ||
-              code == ErrorCode::NetworkUnreachable)
-      << "Expected ConnectionRefused, IoError, TimedOut, or NetworkUnreachable, got: " << unilink::to_string(code);
+              code == ErrorCode::NotConnected)
+      << "Expected ConnectionRefused, IoError, TimedOut, or NotConnected, got: " << unilink::to_string(code);
 
   client.stop();
 }

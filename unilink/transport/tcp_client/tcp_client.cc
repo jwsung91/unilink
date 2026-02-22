@@ -456,7 +456,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
         }
         if (ec) {
           self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "resolve",
-                                    ec, "Resolution failed: " + ec.message(), true, self->impl_->retry_attempts_);
+                                    ec, "Resolution failed: " + ec.message(), true,
+                                    static_cast<uint32_t>(self->impl_->retry_attempts_));
           self->impl_->schedule_retry(self, seq);
           return;
         }
@@ -471,7 +472,7 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                 "Connection timed out after " + std::to_string(self->impl_->cfg_.connection_timeout_ms) + "ms");
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
                                       boost::asio::error::timed_out, "Connection timed out", true,
-                                      self->impl_->retry_attempts_);
+                                      static_cast<uint32_t>(self->impl_->retry_attempts_));
             self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
           }
         });
@@ -488,7 +489,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
           if (ec2) {
             self->impl_->connect_timer_.cancel();
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
-                                      ec2, "Connection failed: " + ec2.message(), true, self->impl_->retry_attempts_);
+                                      ec2, "Connection failed: " + ec2.message(), true,
+                                      static_cast<uint32_t>(self->impl_->retry_attempts_));
             self->impl_->schedule_retry(self, seq);
             return;
           }
@@ -674,7 +676,7 @@ void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, uint64_t seq
   if (ec) {
     bool retry = (cfg_.max_retries == -1 || retry_attempts_ < cfg_.max_retries);
     record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "handle_close", ec,
-                 "Connection closed with error: " + ec.message(), retry, retry_attempts_);
+                 "Connection closed with error: " + ec.message(), retry, static_cast<uint32_t>(retry_attempts_));
   }
   connected_.store(false);
   writing_ = false;
