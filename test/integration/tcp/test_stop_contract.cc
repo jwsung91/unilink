@@ -21,6 +21,7 @@
 #include <memory>
 #include <thread>
 #include <vector>
+#include <boost/asio.hpp>
 
 #include "test_utils.hpp"
 #include "unilink/base/common.hpp"
@@ -65,6 +66,8 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
   config::TcpServerConfig cfg;
   cfg.port = port;
   cfg.max_connections = 0;
+  // Lower threshold to ensure backpressure triggers easily when client doesn't read
+  cfg.backpressure_threshold = 4096;
 
   auto server = transport::TcpServer::create(cfg);
 
@@ -83,21 +86,40 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
   server->start();
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->get_state() == base::LinkState::Listening; }, 1000));
 
-  auto client = tcp_client("127.0.0.1", port).build();
-  client->start();
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 1000));
+  // Use a raw Boost Asio client that connects but DOES NOT READ.
+  // This forces the server's socket buffer to fill up, causing backpressure.
+  boost::asio::io_context ioc;
+  boost::asio::ip::tcp::socket socket(ioc);
+  boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::make_address("127.0.0.1"), port);
 
+  std::atomic<bool> connected{false};
+  socket.async_connect(endpoint, [&](const boost::system::error_code& ec) {
+    if (!ec) connected = true;
+  });
+
+  // Run IO context until connected
+  while (!connected && !ioc.stopped()) {
+    ioc.run_one_for(std::chrono::milliseconds(100));
+  }
+  EXPECT_TRUE(connected);
+
+  // Send enough data to fill socket buffer and trigger backpressure
   std::string data(1024 * 1024, 'X');
   for (int i = 0; i < 5; ++i) {
     server->broadcast(std::string(data.begin(), data.end()));
   }
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return backpressure_triggered.load(); }, 2000));
+  // Wait for backpressure to trigger (because client is not reading)
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return backpressure_triggered.load(); }, 5000));
   EXPECT_GT(backpressure_calls.load(), 0);
 
   server->stop();
   stop_called = true;
   TestUtils::waitFor(200);
+
+  // Cleanup client
+  boost::system::error_code ec;
+  socket.close(ec);
 }
 
 /**
