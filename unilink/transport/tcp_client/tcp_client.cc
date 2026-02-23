@@ -48,7 +48,7 @@
 #include "unilink/diagnostics/error_mapping.hpp"
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/memory/memory_pool.hpp"
-#include "unilink/transport/tcp_client/detail/reconnect_logic.hpp"
+#include "unilink/transport/tcp_client/detail/reconnect_decider.hpp"
 
 namespace unilink {
 namespace transport {
@@ -578,15 +578,16 @@ void TcpClient::Impl::schedule_retry(std::shared_ptr<TcpClient> self, uint64_t s
     return;
   }
 
-  std::chrono::milliseconds delay;
-  if (decision.delay) {
-    // Policy-based delay
-    delay = *decision.delay;
+  // The decider returns a base delay for both policy and fallback paths.
+  std::chrono::milliseconds delay = decision.delay.value_or(std::chrono::milliseconds(cfg_.retry_interval_ms));
+  if (reconnect_policy_) {
     reconnect_attempt_count_++;
   } else {
-    // Legacy delay logic
+    // Preserve existing "fast first retry" behavior for non-policy mode.
     ++retry_attempts_;
-    delay = std::chrono::milliseconds(retry_attempts_ == 1 ? first_retry_interval_ms_ : cfg_.retry_interval_ms);
+    if (retry_attempts_ == 1) {
+      delay = std::chrono::milliseconds(first_retry_interval_ms_);
+    }
   }
 
   transition_to(LinkState::Connecting);

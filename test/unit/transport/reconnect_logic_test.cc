@@ -89,10 +89,12 @@ TEST_F(ReconnectLogicTest, PolicyDelayClampedToMax) {
 }
 
 TEST_F(ReconnectLogicTest, LegacyLogicWhenNoPolicy) {
-  // Should return true and nullopt delay
+  // Fallback path should return cfg.retry_interval delay when no custom policy exists.
+  cfg_.retry_interval_ms = 1500;
   auto decision = decide_reconnect(cfg_, error_info_, 0, std::nullopt);
   EXPECT_TRUE(decision.should_retry);
-  EXPECT_FALSE(decision.delay.has_value());
+  ASSERT_TRUE(decision.delay.has_value());
+  EXPECT_EQ(*decision.delay, 1500ms);
 }
 
 TEST_F(ReconnectLogicTest, MaxRetriesEnforcedWithPolicy) {
