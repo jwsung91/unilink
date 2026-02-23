@@ -475,7 +475,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                                           ? self->impl_->reconnect_attempt_count_
                                           : static_cast<uint32_t>(self->impl_->retry_attempts_);
           self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "resolve",
-                                    ec, "Resolution failed: " + ec.message(), diagnostics::is_retryable_tcp_connect_error(ec), current_attempts);
+                                    ec, "Resolution failed: " + ec.message(),
+                                    diagnostics::is_retryable_tcp_connect_error(ec), current_attempts);
           self->impl_->schedule_retry(self, seq);
           return;
         }
@@ -492,7 +493,9 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                                             ? self->impl_->reconnect_attempt_count_
                                             : static_cast<uint32_t>(self->impl_->retry_attempts_);
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
-                                      boost::asio::error::timed_out, "Connection timed out", diagnostics::is_retryable_tcp_connect_error(boost::asio::error::timed_out), current_attempts);
+                                      boost::asio::error::timed_out, "Connection timed out",
+                                      diagnostics::is_retryable_tcp_connect_error(boost::asio::error::timed_out),
+                                      current_attempts);
             self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
           }
         });
@@ -512,7 +515,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                                             ? self->impl_->reconnect_attempt_count_
                                             : static_cast<uint32_t>(self->impl_->retry_attempts_);
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
-                                      ec2, "Connection failed: " + ec2.message(), diagnostics::is_retryable_tcp_connect_error(ec2), current_attempts);
+                                      ec2, "Connection failed: " + ec2.message(),
+                                      diagnostics::is_retryable_tcp_connect_error(ec2), current_attempts);
             self->impl_->schedule_retry(self, seq);
             return;
           }

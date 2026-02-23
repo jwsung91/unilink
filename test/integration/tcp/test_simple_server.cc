@@ -42,9 +42,7 @@ class SimpleServerTest : public ::testing::Test {
     std::this_thread::sleep_for(test::constants::kShortTimeout);
   }
 
-  uint16_t getTestPort() {
-    return test::TestUtils::getAvailableTestPort();
-  }
+  uint16_t getTestPort() { return test::TestUtils::getAvailableTestPort(); }
 
  protected:
   std::shared_ptr<wrapper::TcpServer> server_;
