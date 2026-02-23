@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <chrono>
 #include <vector>
-#include <algorithm>
 
 #include "unilink/framer/packet_framer.hpp"
 #include "unilink/memory/safe_span.hpp"
@@ -37,12 +37,12 @@ class PacketFramerPerfTest : public ::testing::Test {
 };
 
 TEST_F(PacketFramerPerfTest, ProcessLargeDataChunks) {
-  PacketFramer framer(start_pattern_, end_pattern_, 1024 * 1024); // 1MB max packet
+  PacketFramer framer(start_pattern_, end_pattern_, 1024 * 1024);  // 1MB max packet
   size_t msg_count = 0;
   framer.set_on_message([&](memory::ConstByteSpan) { msg_count++; });
 
   size_t total_size = 1 * 1024 * 1024;  // 1MB (reduced from 50MB due to slowness)
-  size_t payload_size = 100; // Small payload
+  size_t payload_size = 100;            // Small payload
   auto data = generate_data(total_size, payload_size);
 
   auto start = std::chrono::high_resolution_clock::now();
@@ -54,8 +54,8 @@ TEST_F(PacketFramerPerfTest, ProcessLargeDataChunks) {
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
   double throughput = (data.size() * 1000000.0 / duration / 1024 / 1024);
-  std::cout << "Processed " << data.size() << " bytes in " << duration << " us. "
-            << "Throughput: " << throughput << " MB/s. Messages: " << msg_count << std::endl;
+  std::cout << "Processed " << data.size() << " bytes in " << duration << " us. " << "Throughput: " << throughput
+            << " MB/s. Messages: " << msg_count << std::endl;
 }
 
 TEST_F(PacketFramerPerfTest, ProcessLargePackets) {
@@ -64,7 +64,7 @@ TEST_F(PacketFramerPerfTest, ProcessLargePackets) {
   framer.set_on_message([&](memory::ConstByteSpan) { msg_count++; });
 
   size_t total_size = 100 * 1024 * 1024;  // 100MB
-  size_t payload_size = 1024 * 1024; // 1MB payload
+  size_t payload_size = 1024 * 1024;      // 1MB payload
   auto data = generate_data(total_size, payload_size);
 
   auto start = std::chrono::high_resolution_clock::now();
@@ -75,6 +75,6 @@ TEST_F(PacketFramerPerfTest, ProcessLargePackets) {
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
   double throughput = (data.size() * 1000000.0 / duration / 1024 / 1024);
-  std::cout << "Processed " << data.size() << " bytes in " << duration << " us. "
-            << "Throughput: " << throughput << " MB/s. Messages: " << msg_count << std::endl;
+  std::cout << "Processed " << data.size() << " bytes in " << duration << " us. " << "Throughput: " << throughput
+            << " MB/s. Messages: " << msg_count << std::endl;
 }
