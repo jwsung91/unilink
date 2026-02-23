@@ -100,8 +100,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a22e4060c24e0be5f58266c56c8b6cd6d"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a22e4060c24e0be5f58266c56c8b6cd6d">clamp_reconnect_delay</a> (std::chrono::milliseconds delay)</td></tr>
+<tr class="separator:a22e4060c24e0be5f58266c56c8b6cd6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afea3187da4b3318894729cf30d8f512a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">ReconnectLogicDecision</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">decide_reconnect</a> (const <a class="el" href="structunilink_1_1config_1_1TcpClientConfig.html">config::TcpClientConfig</a> &amp;cfg, const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;error_info, uint32_t attempt_count, const std::optional&lt; <a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> &gt; &amp;policy)</td></tr>
-<tr class="memdesc:afea3187da4b3318894729cf30d8f512a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a reconnection attempt should be made based on configuration and error state.  <a href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">More...</a><br /></td></tr>
+<tr class="memdesc:afea3187da4b3318894729cf30d8f512a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a reconnection attempt should be made and the base delay to use.  <a href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">More...</a><br /></td></tr>
 <tr class="separator:afea3187da4b3318894729cf30d8f512a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -110,6 +112,34 @@ Variables</h2></td></tr>
 <tr class="separator:a532cfa26a3aaa99ee534aaae2adf48f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a22e4060c24e0be5f58266c56c8b6cd6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22e4060c24e0be5f58266c56c8b6cd6d">&#9670;&nbsp;</a></span>clamp_reconnect_delay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::chrono::milliseconds unilink::transport::detail::clamp_reconnect_delay </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>delay</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="reconnect__decider_8hpp_source.html#l00043">43</a> of file <a class="el" href="reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
+
+</div>
+</div>
 <a id="afea3187da4b3318894729cf30d8f512a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afea3187da4b3318894729cf30d8f512a">&#9670;&nbsp;</a></span>decide_reconnect()</h2>
 
@@ -156,19 +186,10 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Determines whether a reconnection attempt should be made based on configuration and error state. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">cfg</td><td>The client configuration. </td></tr>
-    <tr><td class="paramname">error_info</td><td>The error information from the last failure. </td></tr>
-    <tr><td class="paramname">attempt_count</td><td>The current attempt count (0-based). </td></tr>
-    <tr><td class="paramname">policy</td><td>The custom reconnection policy, if any. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html" title="Represents the decision on whether to retry a connection attempt.">ReconnectLogicDecision</a> containing whether to retry and the optional delay. </dd></dl>
+<p>Determines whether a reconnection attempt should be made and the base delay to use. </p>
+<p>Guard ordering is intentional: 1) non-retryable errors stop immediately 2) max_retries limits stop immediately 3) custom policy is consulted only after guards pass 4) no policy falls back to cfg.retry_interval_ms </p>
 
-<p class="definition">Definition at line <a class="el" href="reconnect__logic_8hpp_source.html#l00053">53</a> of file <a class="el" href="reconnect__logic_8hpp_source.html">reconnect_logic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reconnect__decider_8hpp_source.html#l00059">59</a> of file <a class="el" href="reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
 
 </div>
 </div>
@@ -193,7 +214,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reconnect__logic_8hpp_source.html#l00034">34</a> of file <a class="el" href="reconnect__logic_8hpp_source.html">reconnect_logic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reconnect__decider_8hpp_source.html#l00033">33</a> of file <a class="el" href="reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
 
 </div>
 </div>
@@ -203,7 +224,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html">detail</a></li>
-    <li class="footer">Generated on Mon Feb 23 2026 12:47:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 23 2026 22:28:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

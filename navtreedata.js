@@ -920,8 +920,8 @@ var NAVTREEINDEX =
 "md_docs_guides_core_troubleshooting.html#autotoc_md469",
 "md_docs_reference_api_guide.html#autotoc_md812",
 "namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada",
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#a8fa68489fc95d06793652536800ad066",
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3662a44297cd68fef9d33e21a849a7d0"
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a48bdf1d2850c935cd787d2ae86bf2833",
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a204bb6bb1992ce403cb85918a44cb5cd"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

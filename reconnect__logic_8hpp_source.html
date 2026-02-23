@@ -105,94 +105,16 @@ $(document).ready(function(){initNavTree('reconnect__logic_8hpp_source.html','')
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;chrono&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="constants_8hpp.html">unilink/base/constants.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tcp__client__config_8hpp.html">unilink/config/tcp_client_config.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="error__types_8hpp.html">unilink/diagnostics/error_types.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="reconnect__policy_8hpp.html">unilink/transport/tcp_client/reconnect_policy.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceunilink.html">unilink</a> {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>transport {</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1transport_1_1detail.html">   31</a></span>&#160;<span class="keyword">namespace </span>detail {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// Maximum allowed delay for reconnection attempts (30 seconds)</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1transport_1_1detail.html#a532cfa26a3aaa99ee534aaae2adf48f5">   34</a></span>&#160;constexpr <span class="keyword">auto</span> <a class="code" href="namespaceunilink_1_1transport_1_1detail.html#a532cfa26a3aaa99ee534aaae2adf48f5">MAX_RECONNECT_DELAY</a> = std::chrono::milliseconds(30000);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">   39</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">ReconnectLogicDecision</a> {</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#a9e389dfc4e2a05638d6e009e534356e5">   40</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#a9e389dfc4e2a05638d6e009e534356e5">should_retry</a>{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#a4c26b5d015bebd4ac2484be715146285">   41</a></span>&#160;  std::optional&lt;std::chrono::milliseconds&gt; <a class="code" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#a4c26b5d015bebd4ac2484be715146285">delay</a>{std::nullopt};</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">   53</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">ReconnectLogicDecision</a> <a class="code" href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">decide_reconnect</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1TcpClientConfig.html">config::TcpClientConfig</a>&amp; cfg,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                                               <span class="keyword">const</span> <a class="code" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a>&amp; error_info, uint32_t attempt_count,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                               <span class="keyword">const</span> std::optional&lt;ReconnectPolicy&gt;&amp; policy) {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="comment">// If the error is not retryable, stop immediately.</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keywordflow">if</span> (!error_info.<a class="code" href="structunilink_1_1diagnostics_1_1ErrorInfo.html#a352382947538a6b6c77ebef6a08c1f37">retryable</a>) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> {<span class="keyword">false</span>, std::nullopt};</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="comment">// If max_retries is 0, stop immediately.</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordflow">if</span> (cfg.<a class="code" href="structunilink_1_1config_1_1TcpClientConfig.html#a8adbe0e970da82c1a1b18191cdd7b0e4">max_retries</a> == 0) {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> {<span class="keyword">false</span>, std::nullopt};</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="comment">// If max_retries is finite (&gt; 0) and we&#39;ve reached or exceeded it, stop.</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordflow">if</span> (cfg.<a class="code" href="structunilink_1_1config_1_1TcpClientConfig.html#a8adbe0e970da82c1a1b18191cdd7b0e4">max_retries</a> &gt; 0 &amp;&amp; attempt_count &gt;= <span class="keyword">static_cast&lt;</span>uint32_t<span class="keyword">&gt;</span>(cfg.<a class="code" href="structunilink_1_1config_1_1TcpClientConfig.html#a8adbe0e970da82c1a1b18191cdd7b0e4">max_retries</a>)) {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">return</span> {<span class="keyword">false</span>, std::nullopt};</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="comment">// If a custom policy is provided, use it.</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <span class="keywordflow">if</span> (policy) {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">auto</span> decision = (*policy)(error_info, attempt_count);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">if</span> (!decision.retry) {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keywordflow">return</span> {<span class="keyword">false</span>, std::nullopt};</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// Clamp delay to be non-negative and within reasonable bounds.</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">auto</span> delay_ms = decision.<a class="code" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#a4c26b5d015bebd4ac2484be715146285">delay</a>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">if</span> (delay_ms &lt; std::chrono::milliseconds(0)) {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      delay_ms = std::chrono::milliseconds(0);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span> (delay_ms &gt; <a class="code" href="namespaceunilink_1_1transport_1_1detail.html#a532cfa26a3aaa99ee534aaae2adf48f5">MAX_RECONNECT_DELAY</a>) {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      delay_ms = <a class="code" href="namespaceunilink_1_1transport_1_1detail.html#a532cfa26a3aaa99ee534aaae2adf48f5">MAX_RECONNECT_DELAY</a>;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">return</span> {<span class="keyword">true</span>, delay_ms};</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="comment">// No custom policy, proceed with legacy logic (delay determined by caller).</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordflow">return</span> {<span class="keyword">true</span>, std::nullopt};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}  <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}  <span class="comment">// namespace unilink</span></div>
-<div class="ttc" id="aconstants_8hpp_html"><div class="ttname"><a href="constants_8hpp.html">constants.hpp</a></div></div>
-<div class="ttc" id="aerror__types_8hpp_html"><div class="ttname"><a href="error__types_8hpp.html">error_types.hpp</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1transport_1_1detail_html_a532cfa26a3aaa99ee534aaae2adf48f5"><div class="ttname"><a href="namespaceunilink_1_1transport_1_1detail.html#a532cfa26a3aaa99ee534aaae2adf48f5">unilink::transport::detail::MAX_RECONNECT_DELAY</a></div><div class="ttdeci">constexpr auto MAX_RECONNECT_DELAY</div><div class="ttdef"><b>Definition:</b> <a href="reconnect__logic_8hpp_source.html#l00034">reconnect_logic.hpp:34</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1transport_1_1detail_html_afea3187da4b3318894729cf30d8f512a"><div class="ttname"><a href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">unilink::transport::detail::decide_reconnect</a></div><div class="ttdeci">ReconnectLogicDecision decide_reconnect(const config::TcpClientConfig &amp;cfg, const diagnostics::ErrorInfo &amp;error_info, uint32_t attempt_count, const std::optional&lt; ReconnectPolicy &gt; &amp;policy)</div><div class="ttdoc">Determines whether a reconnection attempt should be made based on configuration and error state.</div><div class="ttdef"><b>Definition:</b> <a href="reconnect__logic_8hpp_source.html#l00053">reconnect_logic.hpp:53</a></div></div>
-<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
-<div class="ttc" id="areconnect__policy_8hpp_html"><div class="ttname"><a href="reconnect__policy_8hpp.html">reconnect_policy.hpp</a></div></div>
-<div class="ttc" id="astructunilink_1_1config_1_1TcpClientConfig_html"><div class="ttname"><a href="structunilink_1_1config_1_1TcpClientConfig.html">unilink::config::TcpClientConfig</a></div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__config_8hpp_source.html#l00028">tcp_client_config.hpp:28</a></div></div>
-<div class="ttc" id="astructunilink_1_1config_1_1TcpClientConfig_html_a8adbe0e970da82c1a1b18191cdd7b0e4"><div class="ttname"><a href="structunilink_1_1config_1_1TcpClientConfig.html#a8adbe0e970da82c1a1b18191cdd7b0e4">unilink::config::TcpClientConfig::max_retries</a></div><div class="ttdeci">int max_retries</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__config_8hpp_source.html#l00033">tcp_client_config.hpp:33</a></div></div>
-<div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html">unilink::diagnostics::ErrorInfo</a></div><div class="ttdoc">Comprehensive error information structure.</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00064">error_types.hpp:64</a></div></div>
-<div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html_a352382947538a6b6c77ebef6a08c1f37"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html#a352382947538a6b6c77ebef6a08c1f37">unilink::diagnostics::ErrorInfo::retryable</a></div><div class="ttdeci">bool retryable</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00072">error_types.hpp:72</a></div></div>
-<div class="ttc" id="astructunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision_html"><div class="ttname"><a href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">unilink::transport::detail::ReconnectLogicDecision</a></div><div class="ttdoc">Represents the decision on whether to retry a connection attempt.</div><div class="ttdef"><b>Definition:</b> <a href="reconnect__logic_8hpp_source.html#l00039">reconnect_logic.hpp:39</a></div></div>
-<div class="ttc" id="astructunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision_html_a4c26b5d015bebd4ac2484be715146285"><div class="ttname"><a href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#a4c26b5d015bebd4ac2484be715146285">unilink::transport::detail::ReconnectLogicDecision::delay</a></div><div class="ttdeci">std::optional&lt; std::chrono::milliseconds &gt; delay</div><div class="ttdef"><b>Definition:</b> <a href="reconnect__logic_8hpp_source.html#l00041">reconnect_logic.hpp:41</a></div></div>
-<div class="ttc" id="astructunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision_html_a9e389dfc4e2a05638d6e009e534356e5"><div class="ttname"><a href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#a9e389dfc4e2a05638d6e009e534356e5">unilink::transport::detail::ReconnectLogicDecision::should_retry</a></div><div class="ttdeci">bool should_retry</div><div class="ttdef"><b>Definition:</b> <a href="reconnect__logic_8hpp_source.html#l00040">reconnect_logic.hpp:40</a></div></div>
-<div class="ttc" id="atcp__client__config_8hpp_html"><div class="ttname"><a href="tcp__client__config_8hpp.html">tcp_client_config.hpp</a></div></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// Backward-compatible include for existing internal/tests.</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="reconnect__decider_8hpp.html">unilink/transport/tcp_client/detail/reconnect_decider.hpp</a>&quot;</span></div>
+<div class="ttc" id="areconnect__decider_8hpp_html"><div class="ttname"><a href="reconnect__decider_8hpp.html">reconnect_decider.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_5945cecc8885b190726a3218a193f147.html">tcp_client</a></li><li class="navelem"><a class="el" href="dir_bb399f8cc3e2b96ebdd49be173011b1d.html">detail</a></li><li class="navelem"><a class="el" href="reconnect__logic_8hpp.html">reconnect_logic.hpp</a></li>
-    <li class="footer">Generated on Mon Feb 23 2026 12:47:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 23 2026 22:28:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

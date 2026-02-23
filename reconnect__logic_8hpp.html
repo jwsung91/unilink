@@ -83,59 +83,20 @@ $(document).ready(function(){initNavTree('reconnect__logic_8hpp.html',''); initR
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">reconnect_logic.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
-<code>#include &lt;chrono&gt;</code><br />
-<code>#include &lt;cstdint&gt;</code><br />
-<code>#include &lt;optional&gt;</code><br />
-<code>#include &quot;<a class="el" href="constants_8hpp_source.html">unilink/base/constants.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="tcp__client__config_8hpp_source.html">unilink/config/tcp_client_config.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="error__types_8hpp_source.html">unilink/diagnostics/error_types.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="reconnect__policy_8hpp_source.html">unilink/transport/tcp_client/reconnect_policy.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="reconnect__decider_8hpp_source.html">unilink/transport/tcp_client/detail/reconnect_decider.hpp</a>&quot;</code><br />
 </div>
 <p><a href="reconnect__logic_8hpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">unilink::transport::detail::ReconnectLogicDecision</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the decision on whether to retry a connection attempt.  <a href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceunilink"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink.html">unilink</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespaceunilink_1_1transport"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport.html">unilink::transport</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespaceunilink_1_1transport_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html">unilink::transport::detail</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:afea3187da4b3318894729cf30d8f512a"><td class="memItemLeft" align="right" valign="top">ReconnectLogicDecision&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">unilink::transport::detail::decide_reconnect</a> (const config::TcpClientConfig &amp;cfg, const diagnostics::ErrorInfo &amp;error_info, uint32_t attempt_count, const std::optional&lt; ReconnectPolicy &gt; &amp;policy)</td></tr>
-<tr class="memdesc:afea3187da4b3318894729cf30d8f512a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a reconnection attempt should be made based on configuration and error state.  <a href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">More...</a><br /></td></tr>
-<tr class="separator:afea3187da4b3318894729cf30d8f512a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a532cfa26a3aaa99ee534aaae2adf48f5"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a532cfa26a3aaa99ee534aaae2adf48f5">unilink::transport::detail::MAX_RECONNECT_DELAY</a> = std::chrono::milliseconds(30000)</td></tr>
-<tr class="separator:a532cfa26a3aaa99ee534aaae2adf48f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_5945cecc8885b190726a3218a193f147.html">tcp_client</a></li><li class="navelem"><a class="el" href="dir_bb399f8cc3e2b96ebdd49be173011b1d.html">detail</a></li><li class="navelem"><a class="el" href="reconnect__logic_8hpp.html">reconnect_logic.hpp</a></li>
-    <li class="footer">Generated on Mon Feb 23 2026 12:47:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Feb 23 2026 22:28:43 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
