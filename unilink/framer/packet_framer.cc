@@ -34,6 +34,81 @@ PacketFramer::PacketFramer(const std::vector<uint8_t>& start_pattern, const std:
 void PacketFramer::push_bytes(memory::ConstByteSpan data) {
   if (data.empty()) return;
 
+  // Fast Path: Zero-copy processing if buffer is empty
+  if (buffer_.empty()) {
+    size_t processed_count = 0;
+    while (processed_count < data.size()) {
+      // Find start pattern
+      auto search_start = data.begin() + static_cast<std::ptrdiff_t>(processed_count);
+      auto it_start = std::search(search_start, data.end(), start_pattern_.begin(), start_pattern_.end());
+
+      if (it_start == data.end()) {
+        // Start pattern not found.
+        // Keep partial match at the end if applicable.
+        size_t remaining = data.size() - processed_count;
+        size_t keep_len = (start_pattern_.size() > 1) ? (start_pattern_.size() - 1) : 0;
+        if (remaining > keep_len) {
+          processed_count = data.size() - keep_len;
+        }
+        break;
+      }
+
+      // Found start pattern
+      size_t start_idx = static_cast<size_t>(std::distance(data.begin(), it_start));
+      size_t search_end_start_idx = start_idx + start_pattern_.size();
+
+      if (end_pattern_.empty()) {
+        // Assume minimal packet is start pattern only
+        size_t packet_len = start_pattern_.size();
+        if (on_message_) {
+          on_message_(data.subspan(start_idx, packet_len));
+        }
+        processed_count = start_idx + packet_len;
+        continue;
+      }
+
+      // Find end pattern
+      auto search_end_start = data.begin() + static_cast<std::ptrdiff_t>(search_end_start_idx);
+      auto it_end = std::search(search_end_start, data.end(), end_pattern_.begin(), end_pattern_.end());
+
+      if (it_end == data.end()) {
+        // Found start pattern but not end pattern.
+        // Buffer everything starting from start_idx.
+        processed_count = start_idx;
+        // The remaining data starts with start_pattern, so we will transition to Collect state
+        // after appending to buffer.
+        break;
+      }
+
+      // Found end pattern
+      size_t packet_len = static_cast<size_t>(std::distance(data.begin(), it_end)) + end_pattern_.size() - start_idx;
+
+      if (packet_len <= max_length_) {
+        if (on_message_) {
+          on_message_(data.subspan(start_idx, packet_len));
+        }
+      }
+      // If > max_length, discard by advancing processed_count past it
+
+      processed_count = start_idx + packet_len;
+    }
+
+    if (processed_count < data.size()) {
+      buffer_.insert(buffer_.end(), data.begin() + static_cast<std::ptrdiff_t>(processed_count), data.end());
+
+      // Update state if we buffered a partial packet starting with start_pattern
+      if (state_ == State::Sync && !buffer_.empty()) {
+        if (buffer_.size() >= start_pattern_.size()) {
+          if (std::equal(start_pattern_.begin(), start_pattern_.end(), buffer_.begin())) {
+            state_ = State::Collect;
+            scanned_idx_ = start_pattern_.size();
+          }
+        }
+      }
+    }
+    return;
+  }
+
   buffer_.insert(buffer_.end(), data.begin(), data.end());
 
   while (true) {
