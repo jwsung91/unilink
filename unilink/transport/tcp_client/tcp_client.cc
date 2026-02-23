@@ -45,6 +45,7 @@
 #include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/diagnostics/error_handler.hpp"
+#include "unilink/diagnostics/error_mapping.hpp"
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/memory/memory_pool.hpp"
 #include "unilink/transport/tcp_client/detail/reconnect_logic.hpp"
@@ -474,7 +475,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                                           ? self->impl_->reconnect_attempt_count_
                                           : static_cast<uint32_t>(self->impl_->retry_attempts_);
           self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "resolve",
-                                    ec, "Resolution failed: " + ec.message(), true, current_attempts);
+                                    ec, "Resolution failed: " + ec.message(),
+                                    diagnostics::is_retryable_tcp_connect_error(ec), current_attempts);
           self->impl_->schedule_retry(self, seq);
           return;
         }
@@ -491,7 +493,9 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                                             ? self->impl_->reconnect_attempt_count_
                                             : static_cast<uint32_t>(self->impl_->retry_attempts_);
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
-                                      boost::asio::error::timed_out, "Connection timed out", true, current_attempts);
+                                      boost::asio::error::timed_out, "Connection timed out",
+                                      diagnostics::is_retryable_tcp_connect_error(boost::asio::error::timed_out),
+                                      current_attempts);
             self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
           }
         });
@@ -511,7 +515,8 @@ void TcpClient::Impl::do_resolve_connect(std::shared_ptr<TcpClient> self, uint64
                                             ? self->impl_->reconnect_attempt_count_
                                             : static_cast<uint32_t>(self->impl_->retry_attempts_);
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
-                                      ec2, "Connection failed: " + ec2.message(), true, current_attempts);
+                                      ec2, "Connection failed: " + ec2.message(),
+                                      diagnostics::is_retryable_tcp_connect_error(ec2), current_attempts);
             self->impl_->schedule_retry(self, seq);
             return;
           }
@@ -732,15 +737,12 @@ void TcpClient::Impl::handle_close(std::shared_ptr<TcpClient> self, uint64_t seq
   }
   UNILINK_LOG_INFO("tcp_client", "handle_close", "Closing connection. Error: " + ec.message());
   if (ec) {
-    bool retry = (cfg_.max_retries == -1 || retry_attempts_ < cfg_.max_retries);
-    uint32_t current_attempts = reconnect_policy_ ? reconnect_attempt_count_ : static_cast<uint32_t>(retry_attempts_);
-
-    if (reconnect_policy_) {
-      retry = true;
-    }
+    const bool retryable = diagnostics::is_retryable_tcp_connect_error(ec);
+    const uint32_t current_attempts =
+        reconnect_policy_ ? reconnect_attempt_count_ : static_cast<uint32_t>(retry_attempts_);
 
     record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "handle_close", ec,
-                 "Connection closed with error: " + ec.message(), retry, current_attempts);
+                 "Connection closed with error: " + ec.message(), retryable, current_attempts);
   }
   connected_.store(false);
   writing_ = false;

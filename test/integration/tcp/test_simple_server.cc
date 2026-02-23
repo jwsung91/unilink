@@ -22,6 +22,7 @@
 #include <thread>
 
 #include "test_constants.hpp"
+#include "test_utils.hpp"
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
@@ -41,10 +42,7 @@ class SimpleServerTest : public ::testing::Test {
     std::this_thread::sleep_for(test::constants::kShortTimeout);
   }
 
-  uint16_t getTestPort() {
-    static std::atomic<uint16_t> port_counter{50000};
-    return port_counter.fetch_add(1);
-  }
+  uint16_t getTestPort() { return test::TestUtils::getAvailableTestPort(); }
 
  protected:
   std::shared_ptr<wrapper::TcpServer> server_;
