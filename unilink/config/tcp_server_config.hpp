@@ -41,10 +41,8 @@ struct TcpServerConfig {
 
   // Validation methods
   bool is_valid() const {
-    return (util::InputValidator::is_valid_ipv4(bind_address) ||
-            util::InputValidator::is_valid_ipv6(bind_address)) &&
-           port > 0 &&
-           backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
+    return (util::InputValidator::is_valid_ipv4(bind_address) || util::InputValidator::is_valid_ipv6(bind_address)) &&
+           port > 0 && backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0 &&
            idle_timeout_ms >= 0;
   }

@@ -181,7 +181,7 @@ TEST_F(TransportTcpServerSecurityTest, InvalidBindAddress) {
   server_->start();
 
   // Should transition to Error state
-  ASSERT_TRUE(test::TestUtils::waitForCondition(
-      [&] { return server_->get_state() == unilink::base::LinkState::Error; }, 1000))
+  ASSERT_TRUE(
+      test::TestUtils::waitForCondition([&] { return server_->get_state() == unilink::base::LinkState::Error; }, 1000))
       << "Server should be in Error state due to invalid address";
 }
