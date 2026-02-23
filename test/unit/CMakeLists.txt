@@ -202,6 +202,27 @@ foreach(test_file transport_tcp_client.cc transport_tcp_server.cc transport_seri
   )
 endforeach()
 
+# Deterministic reconnect decision tests (policy/max-retries/clamp logic)
+add_executable(run_unit_test_reconnect_decider ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_reconnect_decider.cc)
+target_link_libraries(run_unit_test_reconnect_decider
+  PRIVATE
+    ${_unilink_test_lib}
+    GTest::gtest
+    GTest::gtest_main
+    GTest::gmock
+)
+unilink_set_test_warning_options(run_unit_test_reconnect_decider)
+target_include_directories(run_unit_test_reconnect_decider
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/test/utils
+    ${CMAKE_SOURCE_DIR}/test/fixtures
+)
+gtest_discover_tests(run_unit_test_reconnect_decider
+  PROPERTIES
+    LABELS "stable"
+    TIMEOUT 30
+)
+
 # Contract Compliance Tests
 add_executable(run_unit_test_contract_compliance ${CMAKE_CURRENT_SOURCE_DIR}/transport/test_contract_compliance.cc)
 target_link_libraries(run_unit_test_contract_compliance
@@ -458,4 +479,5 @@ add_dependencies(unilink_unit_tests
   run_unit_packet_framer_test
   run_unit_line_framer_security_test
   run_unit_transport_tcp_client_policy
+  run_unit_test_reconnect_decider
 )
