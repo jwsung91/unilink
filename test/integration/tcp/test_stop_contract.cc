@@ -17,11 +17,11 @@
 #include <gtest/gtest.h>
 
 #include <atomic>
+#include <boost/asio.hpp>
 #include <chrono>
 #include <memory>
 #include <thread>
 #include <vector>
-#include <boost/asio.hpp>
 
 #include "test_utils.hpp"
 #include "unilink/base/common.hpp"
