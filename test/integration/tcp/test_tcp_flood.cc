@@ -37,37 +37,44 @@ class TcpFloodTest : public ::testing::Test {
 };
 
 TEST_F(TcpFloodTest, FloodServer) {
-  std::atomic<size_t> received_count{0};
+  std::atomic<size_t> received_bytes{0};
   auto server = tcp_server(test_port_)
                     .unlimited_clients()
-                    .on_data([&](const wrapper::MessageContext&) { received_count++; })
+                    .on_data([&](const wrapper::MessageContext& ctx) { received_bytes += ctx.data().size(); })
                     .build();
 
   ASSERT_TRUE(server->start().get());
 
   const int num_clients = 3;
   const int messages_per_client = 20;
+  const size_t expected_bytes = static_cast<size_t>(num_clients * messages_per_client);  // "p" is 1 byte
+  std::atomic<bool> client_connect_failed{false};
   std::vector<std::thread> clients;
 
   for (int i = 0; i < num_clients; ++i) {
     clients.emplace_back([&]() {
       auto client = tcp_client("127.0.0.1", test_port_).auto_manage(true).build();
-      TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000);
+      bool connected = TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000);
+      if (!connected) {
+        client_connect_failed.store(true);
+        client->stop();
+        return;
+      }
       for (int j = 0; j < messages_per_client; ++j) {
         client->send("p");
         std::this_thread::sleep_for(1ms);
       }
-      // Critical: wait long enough for server to process before stopping client
-      std::this_thread::sleep_for(1000ms);
+      // Prefer waiting for receipt to avoid dropping queued writes on slower CI runners.
+      TestUtils::waitForCondition([&]() { return received_bytes.load() >= expected_bytes; }, 2000);
       client->stop();
     });
   }
 
   for (auto& t : clients) t.join();
+  EXPECT_FALSE(client_connect_failed.load()) << "One or more flood clients failed to connect";
 
-  bool success =
-      TestUtils::waitForCondition([&]() { return received_count.load() >= num_clients * messages_per_client; }, 10000);
+  bool success = TestUtils::waitForCondition([&]() { return received_bytes.load() >= expected_bytes; }, 10000);
 
-  EXPECT_TRUE(success) << "Final count: " << received_count.load();
+  EXPECT_TRUE(success) << "Final received bytes: " << received_bytes.load() << " / " << expected_bytes;
   server->stop();
 }
