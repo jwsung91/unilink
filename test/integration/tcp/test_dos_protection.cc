@@ -101,17 +101,35 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
   std::cout << "Flooding server..." << std::endl;
 
   std::atomic<bool> flooding{true};
-  std::atomic<int> attempt_count{0};
+  std::atomic<uint64_t> attempt_count{0};
   std::thread flooder([&]() {
-    while (flooding) {
-      try {
-        boost::asio::io_context ioc2;
-        boost::asio::ip::tcp::socket s(ioc2);
-        boost::asio::connect(s, boost::asio::ip::tcp::resolver(ioc2).resolve("127.0.0.1", std::to_string(test_port)));
-        attempt_count++;
-      } catch (...) {
+    boost::asio::io_context ioc2;
+    boost::asio::ip::tcp::resolver resolver(ioc2);
+
+    boost::system::error_code rec;
+    auto endpoints = resolver.resolve("127.0.0.1", std::to_string(test_port), rec);
+    if (rec || endpoints.begin() == endpoints.end()) {
+      return;
+    }
+    auto ep = endpoints.begin()->endpoint();
+
+    while (flooding.load(std::memory_order_relaxed)) {
+      boost::asio::ip::tcp::socket s(ioc2);
+
+      boost::system::error_code ec;
+      s.open(ep.protocol(), ec);
+      if (!ec) {
+        s.non_blocking(true, ec);
       }
-      // No sleep, flood as fast as possible
+      if (!ec) {
+        s.connect(ep, ec);
+        attempt_count.fetch_add(1, std::memory_order_relaxed);
+      }
+
+      boost::system::error_code ignored;
+      s.close(ignored);
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
   });
 
