@@ -145,3 +145,43 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
   EXPECT_TRUE(ec == net::error::eof || ec == net::error::connection_reset || ec == net::error::broken_pipe)
       << "Client should have been disconnected due to timeout. Error: " << ec.message();
 }
+
+TEST_F(TransportTcpServerSecurityTest, BindToLocalhostOnly) {
+  config::TcpServerConfig cfg;
+  cfg.port = test::TestUtils::getAvailableTestPort();
+  cfg.bind_address = "127.0.0.1";
+  cfg.enable_port_retry = true;
+
+  server_ = TcpServer::create(cfg);
+  server_->start();
+
+  ASSERT_TRUE(test::TestUtils::waitForCondition(
+      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      << "Server failed to enter listening state";
+
+  net::io_context client_ioc;
+  tcp::socket client(client_ioc);
+  boost::system::error_code ec;
+
+  // Try connecting via 127.0.0.1 (should work)
+  client.connect(tcp::endpoint(net::ip::make_address("127.0.0.1"), cfg.port), ec);
+  EXPECT_FALSE(ec) << "Failed to connect to localhost";
+}
+
+TEST_F(TransportTcpServerSecurityTest, InvalidBindAddress) {
+  config::TcpServerConfig cfg;
+  cfg.port = test::TestUtils::getAvailableTestPort();
+  cfg.bind_address = "999.999.999.999";
+
+  // Configuration validation should fail
+  EXPECT_FALSE(cfg.is_valid());
+
+  // If we force create server (validation is usually checked by user or factory), start should fail
+  server_ = TcpServer::create(cfg);
+  server_->start();
+
+  // Should transition to Error state
+  ASSERT_TRUE(
+      test::TestUtils::waitForCondition([&] { return server_->get_state() == unilink::base::LinkState::Error; }, 1000))
+      << "Server should be in Error state due to invalid address";
+}

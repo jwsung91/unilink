@@ -132,16 +132,25 @@ struct TcpServer::Impl {
     if (stopping_.load()) return;
     boost::system::error_code ec;
 
+    auto address = net::ip::make_address(cfg_.bind_address, ec);
+    if (ec) {
+      UNILINK_LOG_ERROR("tcp_server", "bind", "Invalid bind address: " + cfg_.bind_address + ", " + ec.message());
+      state_.set_state(base::LinkState::Error);
+      notify_state();
+      return;
+    }
+
     if (!acceptor_->is_open()) {
-      acceptor_->open(tcp::v4(), ec);
+      acceptor_->open(address.is_v6() ? tcp::v6() : tcp::v4(), ec);
       if (ec) {
+        UNILINK_LOG_ERROR("tcp_server", "open", "Failed to open acceptor: " + ec.message());
         state_.set_state(base::LinkState::Error);
         notify_state();
         return;
       }
     }
 
-    acceptor_->bind(tcp::endpoint(tcp::v4(), cfg_.port), ec);
+    acceptor_->bind(tcp::endpoint(address, cfg_.port), ec);
     if (ec) {
       if (cfg_.enable_port_retry && retry_count < cfg_.max_port_retries) {
         auto timer = std::make_shared<net::steady_timer>(ioc_);
@@ -156,6 +165,8 @@ struct TcpServer::Impl {
         });
         return;
       } else {
+        UNILINK_LOG_ERROR("tcp_server", "bind",
+                          "Failed to bind to port " + std::to_string(cfg_.port) + ": " + ec.message());
         state_.set_state(base::LinkState::Error);
         notify_state();
         return;
@@ -164,6 +175,8 @@ struct TcpServer::Impl {
 
     acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
     if (ec) {
+      UNILINK_LOG_ERROR("tcp_server", "listen",
+                        "Failed to listen on port " + std::to_string(cfg_.port) + ": " + ec.message());
       state_.set_state(base::LinkState::Error);
       notify_state();
       return;
