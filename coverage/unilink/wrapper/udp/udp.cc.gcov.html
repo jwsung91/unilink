@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">58</td>
+            <td class="headerCovTableEntry">64</td>
             <td class="headerCovTableEntry">106</td>
-            <td class="headerCovTableEntryLo">54.7 %</td>
+            <td class="headerCovTableEntryLo">60.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-02-22 22:12:26</td>
+            <td class="headerValue">2026-02-23 07:06:36</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">41</td>
+            <td class="headerCovTableEntry">46</td>
             <td class="headerCovTableEntry">134</td>
-            <td class="headerCovTableEntryLo">30.6 %</td>
+            <td class="headerCovTableEntryLo">34.3 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -190,12 +190,12 @@
 <a name="110"><span class="lineNum">     110 </span>                :            : </a>
 <a name="111"><span class="lineNum">     111 </span>                :<span class="lineCov">          5 :     started = false;</span></a>
 <a name="112"><span class="lineNum">     112 </span>                :            : </a>
-<a name="113"><span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :     if (!start_promise_fulfilled_) {</span></a>
+<a name="113"><span class="lineNum">     113 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          5 :     if (!start_promise_fulfilled_) {</span></a>
 <a name="114"><span class="lineNum">     114 </span>                :            :       try {</a>
-<a name="115"><span class="lineNum">     115 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :         start_promise_.set_value(false);</span></a>
+<a name="115"><span class="lineNum">     115 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          4 :         start_promise_.set_value(false);</span></a>
 <a name="116"><span class="lineNum">     116 </span>                :<span class="lineNoCov">          0 :       } catch (...) {</span></a>
 <a name="117"><span class="lineNum">     117 </span>                :<span class="lineNoCov">          0 :       }</span></a>
-<a name="118"><span class="lineNum">     118 </span>                :<span class="lineCov">          5 :       start_promise_fulfilled_ = true;</span></a>
+<a name="118"><span class="lineNum">     118 </span>                :<span class="lineCov">          4 :       start_promise_fulfilled_ = true;</span></a>
 <a name="119"><span class="lineNum">     119 </span>                :            :     }</a>
 <a name="120"><span class="lineNum">     120 </span>                :            :   }</a>
 <a name="121"><span class="lineNum">     121 </span>                :            : </a>
@@ -210,7 +210,7 @@
 <a name="130"><span class="lineNum">     130 </span>                :<span class="lineNoCov">          0 :     });</span></a>
 <a name="131"><span class="lineNum">     131 </span>                :            : </a>
 <a name="132"><span class="lineNum">     132 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :     channel-&gt;on_state([this](base::LinkState state) {</span></a>
-<a name="133"><span class="lineNum">     133 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 4 times"> + </span>]:<span class="lineCov">          4 :       switch (state) {</span></a>
+<a name="133"><span class="lineNum">     133 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 3 times"> + </span>]:<span class="lineCov">          4 :       switch (state) {</span></a>
 <a name="134"><span class="lineNum">     134 </span>                :<span class="lineNoCov">          0 :         case base::LinkState::Connected:</span></a>
 <a name="135"><span class="lineNum">     135 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           if (!start_promise_fulfilled_) {</span></a>
 <a name="136"><span class="lineNum">     136 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :             start_promise_.set_value(true);</span></a>
@@ -223,16 +223,16 @@
 <a name="142"><span class="lineNum">     142 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :           if (disconnect_handler) disconnect_handler(ConnectionContext(0));</span></a>
 <span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]
 <a name="143"><span class="lineNum">     143 </span>                :<span class="lineNoCov">          0 :           break;</span></a>
-<a name="144"><span class="lineNum">     144 </span>                :<span class="lineNoCov">          0 :         case base::LinkState::Error:</span></a>
-<a name="145"><span class="lineNum">     145 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           if (!start_promise_fulfilled_) {</span></a>
-<a name="146"><span class="lineNum">     146 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :             start_promise_.set_value(false);</span></a>
-<a name="147"><span class="lineNum">     147 </span>                :<span class="lineNoCov">          0 :             start_promise_fulfilled_ = true;</span></a>
+<a name="144"><span class="lineNum">     144 </span>                :<span class="lineCov">          1 :         case base::LinkState::Error:</span></a>
+<a name="145"><span class="lineNum">     145 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :           if (!start_promise_fulfilled_) {</span></a>
+<a name="146"><span class="lineNum">     146 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :             start_promise_.set_value(false);</span></a>
+<a name="147"><span class="lineNum">     147 </span>                :<span class="lineCov">          1 :             start_promise_fulfilled_ = true;</span></a>
 <a name="148"><span class="lineNum">     148 </span>                :            :           }</a>
-<a name="149"><span class="lineNum">     149 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :           if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, &quot;Connection error&quot;));</span></a>
-<span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]
-<a name="150"><span class="lineNum">     150 </span>                :<span class="lineNoCov">          0 :           break;</span></a>
-<a name="151"><span class="lineNum">     151 </span>                :<span class="lineCov">          4 :         default:</span></a>
-<a name="152"><span class="lineNum">     152 </span>                :<span class="lineCov">          4 :           break;</span></a>
+<a name="149"><span class="lineNum">     149 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :           if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, &quot;Connection error&quot;));</span></a>
+<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="150"><span class="lineNum">     150 </span>                :<span class="lineCov">          1 :           break;</span></a>
+<a name="151"><span class="lineNum">     151 </span>                :<span class="lineCov">          3 :         default:</span></a>
+<a name="152"><span class="lineNum">     152 </span>                :<span class="lineCov">          3 :           break;</span></a>
 <a name="153"><span class="lineNum">     153 </span>                :            :       }</a>
 <a name="154"><span class="lineNum">     154 </span>                :<span class="lineCov">          4 :     });</span></a>
 <a name="155"><span class="lineNum">     155 </span>                :            :   }</a>
