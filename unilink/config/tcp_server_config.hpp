@@ -17,13 +17,16 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 #include "unilink/base/constants.hpp"
+#include "unilink/util/input_validator.hpp"
 
 namespace unilink {
 namespace config {
 
 struct TcpServerConfig {
+  std::string bind_address = "0.0.0.0";
   uint16_t port = 9000;
   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_memory_pool = true;
@@ -38,7 +41,10 @@ struct TcpServerConfig {
 
   // Validation methods
   bool is_valid() const {
-    return port > 0 && backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
+    return (util::InputValidator::is_valid_ipv4(bind_address) ||
+            util::InputValidator::is_valid_ipv6(bind_address)) &&
+           port > 0 &&
+           backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
            backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0 &&
            idle_timeout_ms >= 0;
   }
