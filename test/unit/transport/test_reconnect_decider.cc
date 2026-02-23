@@ -1,5 +1,3 @@
-#include "unilink/transport/tcp_client/detail/reconnect_decider.hpp"
-
 #include <gtest/gtest.h>
 
 #include <chrono>
@@ -7,6 +5,7 @@
 
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/diagnostics/error_types.hpp"
+#include "unilink/transport/tcp_client/detail/reconnect_decider.hpp"
 #include "unilink/transport/tcp_client/reconnect_policy.hpp"
 
 using namespace unilink;
@@ -83,8 +82,9 @@ TEST(ReconnectDeciderTest, PolicyNegativeDelayClampsToZero) {
 TEST(ReconnectDeciderTest, PolicyHugeDelayClampsToConfiguredCap) {
   auto cfg = MakeBaseConfig();
   auto info = MakeErrorInfo(true);
-  ReconnectPolicy policy =
-      [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision { return {true, 999999ms}; };
+  ReconnectPolicy policy = [](const diagnostics::ErrorInfo&, uint32_t) -> ReconnectDecision {
+    return {true, 999999ms};
+  };
 
   auto decision = decide_reconnect(cfg, info, 0, policy);
   ASSERT_TRUE(decision.should_retry);
