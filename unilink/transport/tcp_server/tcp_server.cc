@@ -134,6 +134,7 @@ struct TcpServer::Impl {
 
     auto address = net::ip::make_address(cfg_.bind_address, ec);
     if (ec) {
+      UNILINK_LOG_ERROR("tcp_server", "bind", "Invalid bind address: " + cfg_.bind_address + ", " + ec.message());
       state_.set_state(base::LinkState::Error);
       notify_state();
       return;
@@ -142,6 +143,7 @@ struct TcpServer::Impl {
     if (!acceptor_->is_open()) {
       acceptor_->open(address.is_v6() ? tcp::v6() : tcp::v4(), ec);
       if (ec) {
+        UNILINK_LOG_ERROR("tcp_server", "open", "Failed to open acceptor: " + ec.message());
         state_.set_state(base::LinkState::Error);
         notify_state();
         return;
@@ -163,6 +165,8 @@ struct TcpServer::Impl {
         });
         return;
       } else {
+        UNILINK_LOG_ERROR("tcp_server", "bind",
+                          "Failed to bind to port " + std::to_string(cfg_.port) + ": " + ec.message());
         state_.set_state(base::LinkState::Error);
         notify_state();
         return;
@@ -171,6 +175,7 @@ struct TcpServer::Impl {
 
     acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
     if (ec) {
+      UNILINK_LOG_ERROR("tcp_server", "listen", "Failed to listen on port " + std::to_string(cfg_.port) + ": " + ec.message());
       state_.set_state(base::LinkState::Error);
       notify_state();
       return;
