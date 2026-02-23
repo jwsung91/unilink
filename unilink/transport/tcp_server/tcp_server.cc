@@ -175,7 +175,8 @@ struct TcpServer::Impl {
 
     acceptor_->listen(boost::asio::socket_base::max_listen_connections, ec);
     if (ec) {
-      UNILINK_LOG_ERROR("tcp_server", "listen", "Failed to listen on port " + std::to_string(cfg_.port) + ": " + ec.message());
+      UNILINK_LOG_ERROR("tcp_server", "listen",
+                        "Failed to listen on port " + std::to_string(cfg_.port) + ": " + ec.message());
       state_.set_state(base::LinkState::Error);
       notify_state();
       return;
