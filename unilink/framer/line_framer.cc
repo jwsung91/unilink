@@ -17,6 +17,7 @@
 #include "unilink/framer/line_framer.hpp"
 
 #include <algorithm>
+#include <cstring>
 #include <iterator>
 #include <string_view>
 
@@ -125,8 +126,14 @@ size_t LineFramer::scan_and_process(memory::ConstByteSpan data, size_t search_st
     decltype(data.begin()) it;
 
     if (delimiter_.size() == 1) {
-      // Optimization: Use std::find for single-byte delimiter
-      it = std::find(search_begin, data.end(), static_cast<uint8_t>(delimiter_[0]));
+      // Optimization: Use std::memchr for single-byte delimiter
+      const void* found = std::memchr(search_begin, static_cast<uint8_t>(delimiter_[0]),
+                                      static_cast<size_t>(std::distance(search_begin, data.end())));
+      if (found) {
+        it = static_cast<const uint8_t*>(found);
+      } else {
+        it = data.end();
+      }
     } else {
       it = std::search(search_begin, data.end(), delimiter_.begin(), delimiter_.end());
     }
