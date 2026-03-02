@@ -73,7 +73,7 @@ jobs:
           unilink/ examples/ test/ || true
 
     - name: Upload cppcheck results
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       if: always()
       with:
         name: cppcheck-results
