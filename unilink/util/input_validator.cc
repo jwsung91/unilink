@@ -19,8 +19,6 @@
 #include <algorithm>
 #include <boost/asio/ip/address.hpp>
 #include <boost/system/error_code.hpp>
-#include <charconv>
-#include <cstring>
 #include <string_view>
 
 namespace unilink {
@@ -97,40 +95,30 @@ bool InputValidator::is_valid_host(const std::string& host) {
 bool InputValidator::is_valid_ipv4(std::string_view address) {
   if (address.empty()) return false;
 
-  int dots = 0;
-  size_t start = 0;
-  size_t end = 0;
+  // Use Boost.Asio for parsing to ensure standard compliance
+  // and robust validation, but enforce strict canonical form
+  // to reject ambiguous formats (e.g., octal, hex, whitespace).
+  boost::system::error_code ec;
 
-  while ((end = address.find('.', start)) != std::string_view::npos) {
-    if (end == start) return false;  // Empty octet
-    size_t len = end - start;
-    if (len > 3) return false;  // Too long (max "255")
+  // Create string copy for compatibility with older Boost versions
+  std::string addr_str(address);
+  auto ip = boost::asio::ip::make_address_v4(addr_str, ec);
 
-    // Check leading zero (unless single '0')
-    if (len > 1 && address[start] == '0') return false;
-
-    int octet;
-    auto res = std::from_chars(address.data() + start, address.data() + end, octet);
-    if (res.ec != std::errc() || res.ptr != address.data() + end) return false;
-    if (octet < 0 || octet > 255) return false;
-
-    dots++;
-    start = end + 1;
+  if (ec) {
+    return false;
   }
 
-  // Last octet
-  if (start >= address.length()) return false;  // Trailing dot or empty last part
-  size_t len = address.length() - start;
-  if (len > 3) return false;
+  // Canonicalization check: The string representation of the parsed IP
+  // must match the input exactly. This rejects:
+  // - Octal (0127.0.0.1 -> 87.0.0.1 != 0127.0.0.1)
+  // - Hex (0x7F000001 -> 127.0.0.1 != 0x7F000001)
+  // - Leading/trailing whitespace
+  // - Leading zeros in octets (01.1.1.1 -> 1.1.1.1 != 01.1.1.1)
+  if (ip.to_string() != addr_str) {
+    return false;
+  }
 
-  if (len > 1 && address[start] == '0') return false;
-
-  int octet;
-  auto res = std::from_chars(address.data() + start, address.data() + address.length(), octet);
-  if (res.ec != std::errc() || res.ptr != address.data() + address.length()) return false;
-  if (octet < 0 || octet > 255) return false;
-
-  return dots == 3;
+  return true;
 }
 
 bool InputValidator::is_valid_ipv6(const std::string& address) {
