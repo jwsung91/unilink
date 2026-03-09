@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['lineframer_1060',['LineFramer',['../classunilink_1_1framer_1_1LineFramer.html',1,'unilink::framer']]],
-  ['logentry_1061',['LogEntry',['../structunilink_1_1diagnostics_1_1LogEntry.html',1,'unilink::diagnostics']]],
-  ['logformat_1062',['LogFormat',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat.html',1,'unilink::diagnostics::Logger::Impl']]],
-  ['logger_1063',['Logger',['../classunilink_1_1diagnostics_1_1Logger.html',1,'unilink::diagnostics']]],
-  ['logrotation_1064',['LogRotation',['../classunilink_1_1diagnostics_1_1LogRotation.html',1,'unilink::diagnostics']]],
-  ['logrotationconfig_1065',['LogRotationConfig',['../structunilink_1_1diagnostics_1_1LogRotationConfig.html',1,'unilink::diagnostics']]]
+  ['lineframer_1063',['LineFramer',['../classunilink_1_1framer_1_1LineFramer.html',1,'unilink::framer']]],
+  ['logentry_1064',['LogEntry',['../structunilink_1_1diagnostics_1_1LogEntry.html',1,'unilink::diagnostics']]],
+  ['logformat_1065',['LogFormat',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat.html',1,'unilink::diagnostics::Logger::Impl']]],
+  ['logger_1066',['Logger',['../classunilink_1_1diagnostics_1_1Logger.html',1,'unilink::diagnostics']]],
+  ['logrotation_1067',['LogRotation',['../classunilink_1_1diagnostics_1_1LogRotation.html',1,'unilink::diagnostics']]],
+  ['logrotationconfig_1068',['LogRotationConfig',['../structunilink_1_1diagnostics_1_1LogRotationConfig.html',1,'unilink::diagnostics']]]
 ];
