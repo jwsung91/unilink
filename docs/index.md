@@ -34,6 +34,7 @@ docs/
 |----------|-------------|------------|
 | [Quick Start](guides/core/quickstart.md) | 5-minute quick start | ⭐ Beginner |
 | [API Guide](reference/api_guide.md) | Comprehensive API reference | ⭐⭐ All Levels |
+| [Python Bindings Guide](guides/core/python_bindings.md) | Python interface reference | ⭐⭐ All Levels |
 | [Best Practices](guides/core/best_practices.md) | Recommended patterns | ⭐⭐ Intermediate |
 | [System Overview](architecture/README.md) | Architecture deep-dive | ⭐⭐⭐ Advanced |
 
