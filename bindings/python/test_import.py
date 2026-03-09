@@ -54,9 +54,13 @@ except ImportError as e:
 
 def test_tcp_client():
     print("Testing TcpClient...")
+    import datetime
     client = unilink_py.TcpClient("127.0.0.1", 8080)
     assert not client.is_connected()
     client.auto_manage(True)
+    client.set_retry_interval(datetime.timedelta(milliseconds=1000))
+    client.set_max_retries(5)
+    client.set_connection_timeout(datetime.timedelta(milliseconds=5000))
 
     def on_data(ctx):
         print(f"Data received from client {ctx.client_id()}: {ctx.data}")
@@ -76,10 +80,13 @@ def test_tcp_server():
 
 def test_serial():
     print("Testing Serial...")
+    import datetime
     try:
         # Just testing instantiation, not actual hardware
         serial = unilink_py.Serial("/dev/ttyUSB0", 115200)
         serial.set_baud_rate(9600)
+        serial.auto_manage(True)
+        serial.set_retry_interval(datetime.timedelta(milliseconds=2000))
         print("Serial initialized.")
     except Exception as e:
         print(f"Serial instantiation failed (expected if no dev): {e}")
@@ -89,6 +96,21 @@ def test_udp():
     config = unilink_py.UdpConfig()
     config.local_port = 8081
     udp = unilink_py.Udp(config)
+    udp.auto_manage(True)
+
+    def on_connect(ctx):
+        print(f"Udp connected: {ctx.client_id()}")
+
+    def on_disconnect(ctx):
+        print(f"Udp disconnected: {ctx.client_id()}")
+
+    def on_error(ctx):
+        print(f"Udp error: {ctx.code}")
+
+    udp.on_connect(on_connect)
+    udp.on_disconnect(on_disconnect)
+    udp.on_error(on_error)
+
     print("Udp initialized.")
 
 if __name__ == "__main__":
