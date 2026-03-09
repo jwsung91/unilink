@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-03-09 19:17:00</td>
+            <td class="headerValue">2026-03-09 19:35:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -174,9 +174,9 @@
 <a name="90"><span class="lineNum">      90 </span>                :            :     {</a>
 <a name="91"><span class="lineNum">      91 </span>        [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         16 :       std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
 <a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">         16 :       stopping_ = false;</span></a>
-<a name="93"><span class="lineNum">      93 </span>  [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 14 times"> + </span><span class="branchCov" title="Branch 3 was taken 2 times"> + </span> :<span class="lineCov">         16 :       if (!worker.joinable() &amp;&amp; !io_thread_.joinable()) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 14 times"> + </span><span class="branchCov" title="Branch 5 was taken 2 times"> + </span>]
-<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">         14 :         running_.store(false);</span></a>
+<a name="93"><span class="lineNum">      93 </span>  [<span class="branchCov" title="Branch 0 was taken 16 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 15 times"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span> :<span class="lineCov">         16 :       if (!worker.joinable() &amp;&amp; !io_thread_.joinable()) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 15 times"> + </span><span class="branchCov" title="Branch 5 was taken 1 time"> + </span>]
+<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">         15 :         running_.store(false);</span></a>
 <a name="95"><span class="lineNum">      95 </span>                :            :       }</a>
 <a name="96"><span class="lineNum">      96 </span>                :<span class="lineCov">         16 :     }</span></a>
 <a name="97"><span class="lineNum">      97 </span>                :<span class="lineCov">         16 :     cv_.notify_all();</span></a>
@@ -192,21 +192,21 @@
 <a name="107"><span class="lineNum">     107 </span>                :            : </a>
 <a name="108"><span class="lineNum">     108 </span>                :<span class="lineNoCov">          0 : IoContextManager::~IoContextManager() = default;</span></a>
 <a name="109"><span class="lineNum">     109 </span>                :            : </a>
-<a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">        827 : IoContextManager&amp; IoContextManager::instance() {</span></a>
-<a name="111"><span class="lineNum">     111 </span>  [<span class="branchCov" title="Branch 0 was taken 111 times"> + </span><span class="branchCov" title="Branch 1 was taken 716 times"> + </span><span class="branchCov" title="Branch 2 was taken 111 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        827 :   static IoContextManager* instance = new IoContextManager();</span></a>
+<a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">        825 : IoContextManager&amp; IoContextManager::instance() {</span></a>
+<a name="111"><span class="lineNum">     111 </span>  [<span class="branchCov" title="Branch 0 was taken 111 times"> + </span><span class="branchCov" title="Branch 1 was taken 714 times"> + </span><span class="branchCov" title="Branch 2 was taken 111 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        825 :   static IoContextManager* instance = new IoContextManager();</span></a>
 <span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 111 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 111 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoCov" title="Branch 8 was not taken"> - </span> 
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 9 was not taken"> - </span>]
-<a name="112"><span class="lineNum">     112 </span>                :<span class="lineCov">        827 :   return *instance;</span></a>
+<a name="112"><span class="lineNum">     112 </span>                :<span class="lineCov">        825 :   return *instance;</span></a>
 <a name="113"><span class="lineNum">     113 </span>                :            : }</a>
 <a name="114"><span class="lineNum">     114 </span>                :            : </a>
-<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">        181 : boost::asio::io_context&amp; IoContextManager::get_context() {</span></a>
-<a name="116"><span class="lineNum">     116 </span>        [<span class="branchCov" title="Branch 0 was taken 181 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        181 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
-<a name="117"><span class="lineNum">     117 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchCov" title="Branch 1 was taken 155 times"> + </span>]:<span class="lineCov">        181 :   if (!impl_-&gt;ioc_) {</span></a>
+<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">        180 : boost::asio::io_context&amp; IoContextManager::get_context() {</span></a>
+<a name="116"><span class="lineNum">     116 </span>        [<span class="branchCov" title="Branch 0 was taken 180 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        180 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
+<a name="117"><span class="lineNum">     117 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchCov" title="Branch 1 was taken 154 times"> + </span>]:<span class="lineCov">        180 :   if (!impl_-&gt;ioc_) {</span></a>
 <a name="118"><span class="lineNum">     118 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         26 :     impl_-&gt;ioc_ = std::make_shared&lt;IoContext&gt;();</span></a>
 <a name="119"><span class="lineNum">     119 </span>                :<span class="lineCov">         26 :     impl_-&gt;owns_context_ = true;</span></a>
 <a name="120"><span class="lineNum">     120 </span>                :            :   }</a>
-<a name="121"><span class="lineNum">     121 </span>                :<span class="lineCov">        362 :   return *impl_-&gt;ioc_;</span></a>
-<a name="122"><span class="lineNum">     122 </span>                :<span class="lineCov">        181 : }</span></a>
+<a name="121"><span class="lineNum">     121 </span>                :<span class="lineCov">        360 :   return *impl_-&gt;ioc_;</span></a>
+<a name="122"><span class="lineNum">     122 </span>                :<span class="lineCov">        180 : }</span></a>
 <a name="123"><span class="lineNum">     123 </span>                :            : </a>
 <a name="124"><span class="lineNum">     124 </span>                :<span class="lineCov">        131 : void IoContextManager::start() {</span></a>
 <a name="125"><span class="lineNum">     125 </span>                :<span class="lineCov">        131 :   std::shared_ptr&lt;IoContext&gt; context;</span></a>
@@ -268,7 +268,7 @@
 <a name="172"><span class="lineNum">     172 </span>                :            : </a>
 <a name="173"><span class="lineNum">     173 </span>                :<span class="lineCov">         26 : void IoContextManager::stop() { impl_-&gt;stop(); }</span></a>
 <a name="174"><span class="lineNum">     174 </span>                :            : </a>
-<a name="175"><span class="lineNum">     175 </span>                :<span class="lineCov">        585 : bool IoContextManager::is_running() const { return get_impl()-&gt;running_.load(); }</span></a>
+<a name="175"><span class="lineNum">     175 </span>                :<span class="lineCov">        584 : bool IoContextManager::is_running() const { return get_impl()-&gt;running_.load(); }</span></a>
 <a name="176"><span class="lineNum">     176 </span>                :            : </a>
 <a name="177"><span class="lineNum">     177 </span>                :<span class="lineCov">          1 : std::unique_ptr&lt;boost::asio::io_context&gt; IoContextManager::create_independent_context() {</span></a>
 <a name="178"><span class="lineNum">     178 </span>                :<span class="lineCov">          1 :   return std::make_unique&lt;IoContext&gt;();</span></a>
