@@ -43,8 +43,10 @@ For CMake usage, source builds, and other installation options, see the [Install
 
 Unilink provides Python bindings for core functionality (`TcpClient`, `TcpServer`, `Serial`, `Udp`).
 
+For a complete guide, see the **[Python Bindings Guide](docs/guides/core/python_bindings.md)**.
+
 ### Prerequisites
-* Python 3.6+ (dev headers)
+* Python 3.8+ (dev headers)
 * pybind11 (`sudo apt-get install pybind11-dev python3-pybind11` on Ubuntu)
 * Boost (`boost-system`, `boost-asio`, `boost-thread`)
 

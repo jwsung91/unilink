@@ -59,6 +59,9 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send_line", &TcpClient::send_line)
       .def("is_connected", &TcpClient::is_connected)
       .def("auto_manage", &TcpClient::auto_manage, py::arg("manage") = true)
+      .def("set_retry_interval", &TcpClient::set_retry_interval)
+      .def("set_max_retries", &TcpClient::set_max_retries)
+      .def("set_connection_timeout", &TcpClient::set_connection_timeout)
       .def("on_data",
            [](TcpClient& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
@@ -147,11 +150,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send", &Serial::send)
       .def("send_line", &Serial::send_line)
       .def("is_connected", &Serial::is_connected)
+      .def("auto_manage", &Serial::auto_manage, py::arg("manage") = true)
       .def("set_baud_rate", &Serial::set_baud_rate)
       .def("set_data_bits", &Serial::set_data_bits)
       .def("set_stop_bits", &Serial::set_stop_bits)
       .def("set_parity", &Serial::set_parity)
       .def("set_flow_control", &Serial::set_flow_control)
+      .def("set_retry_interval", &Serial::set_retry_interval)
       .def("on_data",
            [](Serial& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
@@ -207,8 +212,33 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send", &Udp::send)
       .def("send_line", &Udp::send_line)
       .def("is_connected", &Udp::is_connected)
-      .def("on_data", [](Udp& self, std::function<void(const MessageContext&)> handler) {
-        self.on_data([handler](const MessageContext& ctx) {
+      .def("auto_manage", &Udp::auto_manage, py::arg("manage") = true)
+      .def("on_data",
+           [](Udp& self, std::function<void(const MessageContext&)> handler) {
+             self.on_data([handler](const MessageContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_connect",
+           [](Udp& self, std::function<void(const ConnectionContext&)> handler) {
+             self.on_connect([handler](const ConnectionContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_disconnect",
+           [](Udp& self, std::function<void(const ConnectionContext&)> handler) {
+             self.on_disconnect([handler](const ConnectionContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_error", [](Udp& self, std::function<void(const ErrorContext&)> handler) {
+        self.on_error([handler](const ErrorContext& ctx) {
           py::gil_scoped_acquire gil;
           handler(ctx);
         });
