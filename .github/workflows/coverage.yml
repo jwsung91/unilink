@@ -2,9 +2,9 @@ name: Code Coverage
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   coverage:
@@ -18,165 +18,158 @@ jobs:
       pull-requests: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-    - name: Install dependencies
-      uses: ./.github/actions/apt-install
-      with:
-        packages: >-
-          build-essential
-          cmake
-          libboost-dev
-          libboost-system-dev
-          lcov
+      - name: Install dependencies
+        uses: ./.github/actions/apt-install
+        with:
+          packages: >-
+            build-essential
+            cmake
+            libboost-dev
+            libboost-system-dev
+            lcov
 
-    - name: Configure with coverage
-      run: |
-        cmake -S . -B build-coverage \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_FLAGS="--coverage -fprofile-arcs -ftest-coverage -fprofile-update=atomic" \
-          -DCMAKE_C_FLAGS="--coverage -fprofile-arcs -ftest-coverage -fprofile-update=atomic" \
-          -DCMAKE_EXE_LINKER_FLAGS="--coverage" \
-          -DUNILINK_ENABLE_CONFIG=ON \
-          -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
-          -DUNILINK_BUILD_TESTS=ON \
-          -DUNILINK_BUILD_EXAMPLES=OFF
+      - name: Configure with coverage
+        run: |
+          cmake -S . -B build-coverage \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_CXX_FLAGS="--coverage -fprofile-arcs -ftest-coverage -fprofile-update=atomic" \
+            -DCMAKE_C_FLAGS="--coverage -fprofile-arcs -ftest-coverage -fprofile-update=atomic" \
+            -DCMAKE_EXE_LINKER_FLAGS="--coverage" \
+            -DUNILINK_ENABLE_CONFIG=ON \
+            -DUNILINK_ENABLE_PERFORMANCE_TESTS=ON \
+            -DUNILINK_BUILD_TESTS=ON \
+            -DUNILINK_BUILD_EXAMPLES=OFF
 
-    - name: Build with coverage
-      run: cmake --build build-coverage -j $(nproc)
+      - name: Build with coverage
+        run: cmake --build build-coverage -j $(nproc)
 
-    - name: Run tests
-      run: |
-        cd build-coverage
-        ctest --output-on-failure --parallel $(nproc)
+      - name: Run tests
+        run: |
+          cd build-coverage
+          ctest --output-on-failure --parallel $(nproc)
 
-    - name: Generate coverage report
-      run: |
-        cd build-coverage
-        
-        # Capture coverage data
-        lcov --directory . --capture --output-file coverage.info --rc lcov_branch_coverage=1
-        
-        # Debug: Show total coverage before filtering
-        echo "=== Before filtering ==="
-        lcov --summary coverage.info --rc lcov_branch_coverage=1 2>&1 | grep lines
-        
-        # Step 1: Extract unilink directory using absolute path
-        echo "=== Step 1: Extract unilink directory ==="
-        lcov --extract coverage.info \
-          "${GITHUB_WORKSPACE}/unilink/*" \
-          --output-file coverage_temp.info \
-          --ignore-errors mismatch,negative,unused \
-          --rc lcov_branch_coverage=1
-        lcov --summary coverage_temp.info --rc lcov_branch_coverage=1 2>&1 | grep lines
-        
-        # Step 2: Remove unwanted files (test, _deps, build)
-        echo "=== Step 2: Remove test and dependency files ==="
-        lcov --remove coverage_temp.info \
-          "*/test/*" \
-          "*/_deps/*" \
-          "*/build-coverage/*" \
-          --output-file coverage_filtered.info \
-          --ignore-errors mismatch,negative,unused \
-          --rc lcov_branch_coverage=1
-        
-        # Debug: Show coverage after filtering
-        echo "=== After filtering ==="
-        lcov --summary coverage_filtered.info --rc lcov_branch_coverage=1 2>&1 | grep lines
-        
-        # Debug: Show filtered files
-        echo "=== Filtered files (first 30) ==="
-        lcov --list coverage_filtered.info --rc lcov_branch_coverage=1 2>&1 | head -30
-        
-        # Generate summary
-        lcov --list coverage_filtered.info --rc lcov_branch_coverage=1 > coverage_summary.txt
-        
-        # Generate HTML report
-        genhtml coverage_filtered.info --output-directory coverage_html \
-          --title "unilink Coverage Report" \
-          --legend --show-details \
-          --branch-coverage \
-          --rc lcov_branch_coverage=1
+      - name: Generate coverage report
+        run: |
+          cd build-coverage
 
-    - name: Calculate coverage percentage
-      id: coverage
-      run: |
-        cd build-coverage
-        COVERAGE=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}' | sed 's/%//')
-        echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
-        echo "### 📊 Code Coverage: ${COVERAGE}%" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        cat coverage_summary.txt | tail -20 >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          # Capture coverage data
+          lcov --directory . --capture --output-file coverage.info --rc lcov_branch_coverage=1
 
-    - name: Upload HTML Coverage Report
-      uses: actions/upload-artifact@v7
-      with:
-        name: coverage-report
-        path: build-coverage/coverage_html
-        retention-days: 30
-        overwrite: true
+          # Debug: Show total coverage before filtering
+          echo "=== Before filtering ==="
+          lcov --summary coverage.info --rc lcov_branch_coverage=1 2>&1 | grep lines
 
-    - name: Upload Coverage Data
-      uses: actions/upload-artifact@v7
-      with:
-        name: coverage-data
-        path: |
-          build-coverage/coverage_filtered.info
-          build-coverage/coverage_summary.txt
-        retention-days: 30
-        overwrite: true
+          # Step 1: Extract unilink directory using absolute path
+          echo "=== Step 1: Extract unilink directory ==="
+          lcov --extract coverage.info \
+            "${GITHUB_WORKSPACE}/unilink/*" \
+            --output-file coverage_temp.info \
+            --ignore-errors mismatch,negative,unused \
+            --rc lcov_branch_coverage=1
+          lcov --summary coverage_temp.info --rc lcov_branch_coverage=1 2>&1 | grep lines
 
-    - name: Comment PR with Coverage
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v8
-      with:
-        script: |
-          const fs = require('fs');
-          const coverageFile = 'build-coverage/coverage_summary.txt';
-          const coverage = fs.readFileSync(coverageFile, 'utf8');
-          const percentage = '${{ steps.coverage.outputs.percentage }}';
-          
-          const body = `## 📊 Code Coverage Report
-          
-          **Overall Coverage: ${percentage}%**
-          
-          <details>
-          <summary>📋 Detailed Coverage</summary>
-          
-          \`\`\`
-          ${coverage.split('\n').slice(-20).join('\n')}
-          \`\`\`
-          
-          </details>
-          
-          💡 Download the full HTML report from the [Actions artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          `;
-          
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: body
-          });
+          # Step 2: Remove unwanted files (test, _deps, build)
+          echo "=== Step 2: Remove test and dependency files ==="
+          lcov --remove coverage_temp.info \
+            "*/test/*" \
+            "*/_deps/*" \
+            "*/build-coverage/*" \
+            --output-file coverage_filtered.info \
+            --ignore-errors mismatch,negative,unused \
+            --rc lcov_branch_coverage=1
 
-    - name: Coverage Check
-      run: |
-        cd build-coverage
-        COVERAGE=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}' | sed 's/%//')
-        echo "Coverage: ${COVERAGE}%"
-        
-        # Set minimum coverage threshold (adjust as needed)
-        THRESHOLD=65
-        
-        if (( $(echo "$COVERAGE < $THRESHOLD" | bc -l) )); then
-          echo "❌ Coverage ${COVERAGE}% is below threshold ${THRESHOLD}%"
-          exit 1
-        else
-          echo "✅ Coverage ${COVERAGE}% meets threshold ${THRESHOLD}%"
-        fi
+          # Debug: Show coverage after filtering
+          echo "=== After filtering ==="
+          lcov --summary coverage_filtered.info --rc lcov_branch_coverage=1 2>&1 | grep lines
+
+          # Debug: Show filtered files
+          echo "=== Filtered files (first 30) ==="
+          lcov --list coverage_filtered.info --rc lcov_branch_coverage=1 2>&1 | head -30
+
+          # Generate summary
+          lcov --list coverage_filtered.info --rc lcov_branch_coverage=1 > coverage_summary.txt
+
+          # Generate HTML report
+          genhtml coverage_filtered.info --output-directory coverage_html \
+            --title "unilink Coverage Report" \
+            --legend --show-details \
+            --branch-coverage \
+            --rc lcov_branch_coverage=1
+
+      - name: Calculate coverage percentage
+        id: coverage
+        run: |
+          cd build-coverage
+          COVERAGE=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}' | sed 's/%//')
+          echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
+          echo "### 📊 Code Coverage: ${COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          cat coverage_summary.txt | tail -20 >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload HTML Coverage Report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: build-coverage/coverage_html
+          retention-days: 30
+          overwrite: true
+
+      - name: Upload Coverage Data
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-data
+          path: |
+            build-coverage/coverage_filtered.info
+            build-coverage/coverage_summary.txt
+          retention-days: 30
+          overwrite: true
+
+      - name: Save PR Info for Comment
+        if: github.event_name == 'pull_request'
+        run: |
+          echo ${{ github.event.pull_request.number }} > build-coverage/pr_number.txt
+          echo ${{ steps.coverage.outputs.percentage }} > build-coverage/coverage_percent.txt
+
+      - name: Upload HTML Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: build-coverage/coverage_html
+          retention-days: 30
+          overwrite: true
+
+      - name: Upload Coverage Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-data
+          path: |
+            build-coverage/coverage_filtered.info
+            build-coverage/coverage_summary.txt
+            build-coverage/pr_number.txt        
+            build-coverage/coverage_percent.txt
+          retention-days: 30
+          overwrite: true
+
+      - name: Coverage Check
+        run: |
+          cd build-coverage
+          COVERAGE=$(lcov --summary coverage_filtered.info 2>&1 | grep "lines" | awk '{print $2}' | sed 's/%//')
+          echo "Coverage: ${COVERAGE}%"
+
+          # Set minimum coverage threshold (adjust as needed)
+          THRESHOLD=65
+
+          if (( $(echo "$COVERAGE < $THRESHOLD" | bc -l) )); then
+            echo "❌ Coverage ${COVERAGE}% is below threshold ${THRESHOLD}%"
+            exit 1
+          else
+            echo "✅ Coverage ${COVERAGE}% meets threshold ${THRESHOLD}%"
+          fi
 
   deploy-coverage:
     name: Deploy Coverage to GitHub Pages
@@ -188,140 +181,140 @@ jobs:
       pages: write
       id-token: write
     steps:
-    - name: Download coverage report
-      uses: actions/download-artifact@v8
-      with:
-        name: coverage-report
-        path: ./build-coverage/coverage_html
-    - name: Download coverage data
-      uses: actions/download-artifact@v8
-      with:
-        name: coverage-data
-        path: ./build-coverage
-    - name: Generate coverage badge JSON
-      id: coverage_badge
-      run: |
-        cd build-coverage
-        set -euo pipefail
+      - name: Download coverage report
+        uses: actions/download-artifact@v8
+        with:
+          name: coverage-report
+          path: ./build-coverage/coverage_html
+      - name: Download coverage data
+        uses: actions/download-artifact@v8
+        with:
+          name: coverage-data
+          path: ./build-coverage
+      - name: Generate coverage badge JSON
+        id: coverage_badge
+        run: |
+          cd build-coverage
+          set -euo pipefail
 
-        # Prefer the value computed in the coverage job; fall back to the artifact files if missing
-        COVERAGE_PERCENT="${{ needs.coverage.outputs.coverage_percent }}"
-        if [ -z "$COVERAGE_PERCENT" ]; then
-          SUMMARY_FILE=$(find . -name "coverage_summary.txt" | head -n 1 || true)
-          if [ -n "$SUMMARY_FILE" ]; then
-            COVERAGE_PERCENT=$(grep -m1 "lines" "$SUMMARY_FILE" | awk '{print $2}' | tr -d '%') || true
+          # Prefer the value computed in the coverage job; fall back to the artifact files if missing
+          COVERAGE_PERCENT="${{ needs.coverage.outputs.coverage_percent }}"
+          if [ -z "$COVERAGE_PERCENT" ]; then
+            SUMMARY_FILE=$(find . -name "coverage_summary.txt" | head -n 1 || true)
+            if [ -n "$SUMMARY_FILE" ]; then
+              COVERAGE_PERCENT=$(grep -m1 "lines" "$SUMMARY_FILE" | awk '{print $2}' | tr -d '%') || true
+            fi
           fi
-        fi
-        if [ -z "$COVERAGE_PERCENT" ]; then
-          echo "⚠️  coverage_percent was empty, defaulting to 0" >&2
-          COVERAGE_PERCENT="0"
-        fi
-        export COVERAGE_PERCENT
+          if [ -z "$COVERAGE_PERCENT" ]; then
+            echo "⚠️  coverage_percent was empty, defaulting to 0" >&2
+            COVERAGE_PERCENT="0"
+          fi
+          export COVERAGE_PERCENT
 
-        cov_formatted=$(awk -v v="$COVERAGE_PERCENT" 'BEGIN{printf "%.1f", v+0}')
+          cov_formatted=$(awk -v v="$COVERAGE_PERCENT" 'BEGIN{printf "%.1f", v+0}')
 
-        color="red"
-        grade="poor"
-        if awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=80)}'; then
-          color="brightgreen"
-          grade="excellent"
-        elif awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=60)}'; then
-          color="green"
-          grade="good"
-        elif awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=40)}'; then
-          color="yellow"
-          grade="fair"
-        fi
+          color="red"
+          grade="poor"
+          if awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=80)}'; then
+            color="brightgreen"
+            grade="excellent"
+          elif awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=60)}'; then
+            color="green"
+            grade="good"
+          elif awk -v v="$COVERAGE_PERCENT" 'BEGIN{exit !(v>=40)}'; then
+            color="yellow"
+            grade="fair"
+          fi
 
-        mkdir -p coverage_html/badges
-        cat > coverage_html/badges/coverage.json << EOF
-        {
-          "schemaVersion": 1,
-          "label": "test coverage",
-          "message": "${cov_formatted}%",
-          "color": "${color}"
-        }
-        EOF
+          mkdir -p coverage_html/badges
+          cat > coverage_html/badges/coverage.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "test coverage",
+            "message": "${cov_formatted}%",
+            "color": "${color}"
+          }
+          EOF
 
-        {
-          echo "coverage_percent=${cov_formatted}"
-          echo "coverage_grade=${grade}"
-          echo "coverage_color=${color}"
-        } >> "$GITHUB_OUTPUT"
+          {
+            echo "coverage_percent=${cov_formatted}"
+            echo "coverage_grade=${grade}"
+            echo "coverage_color=${color}"
+          } >> "$GITHUB_OUTPUT"
 
-        echo "✅ Coverage badge JSON created: ${cov_formatted}% (${grade}, ${color})"
+          echo "✅ Coverage badge JSON created: ${cov_formatted}% (${grade}, ${color})"
 
-    - name: Create index page
-      run: |
-        cd build-coverage/coverage_html
-        COVERAGE="${{ steps.coverage_badge.outputs.coverage_percent }}%"
-        GRADE="${{ steps.coverage_badge.outputs.coverage_grade }}"
-        if [ -f index.html ]; then
-          mv index.html index-original.html
-        fi
-        cat > index.html << EOF
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>unilink Coverage Report</title>
-          <style>
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-              margin: 0;
-              padding: 20px;
-              background: #f5f5f5;
-            }
-            .container {
-              max-width: 1200px;
-              margin: 0 auto;
-              background: white;
-              padding: 40px;
-              border-radius: 8px;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-            h1 { color: #333; margin-bottom: 10px; }
-            .coverage { font-size: 48px; font-weight: bold; color: #4CAF50; margin: 20px 0; }
-            .grade { font-size: 24px; color: #666; margin: 10px 0; text-transform: uppercase; }
-            .badge { margin: 20px 0; }
-            .links { margin-top: 30px; }
-            .link { 
-              display: inline-block;
-              padding: 12px 24px;
-              background: #2196F3;
-              color: white;
-              text-decoration: none;
-              border-radius: 4px;
-              margin-right: 10px;
-            }
-            .link:hover { background: #1976D2; }
-            .timestamp { color: #666; font-size: 14px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>🎯 unilink Code Coverage</h1>
-            <p class="timestamp">Generated: $(date '+%Y-%m-%d %H:%M:%S UTC')</p>
-            <div class="coverage">Coverage: ${COVERAGE}</div>
-            <div class="grade">Grade: ${GRADE}</div>
-            <div class="badge">
-              <img src="https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/badges/coverage.json" alt="Coverage Badge">
+      - name: Create index page
+        run: |
+          cd build-coverage/coverage_html
+          COVERAGE="${{ steps.coverage_badge.outputs.coverage_percent }}%"
+          GRADE="${{ steps.coverage_badge.outputs.coverage_grade }}"
+          if [ -f index.html ]; then
+            mv index.html index-original.html
+          fi
+          cat > index.html << EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>unilink Coverage Report</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: #f5f5f5;
+              }
+              .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background: white;
+                padding: 40px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+              }
+              h1 { color: #333; margin-bottom: 10px; }
+              .coverage { font-size: 48px; font-weight: bold; color: #4CAF50; margin: 20px 0; }
+              .grade { font-size: 24px; color: #666; margin: 10px 0; text-transform: uppercase; }
+              .badge { margin: 20px 0; }
+              .links { margin-top: 30px; }
+              .link { 
+                display: inline-block;
+                padding: 12px 24px;
+                background: #2196F3;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                margin-right: 10px;
+              }
+              .link:hover { background: #1976D2; }
+              .timestamp { color: #666; font-size: 14px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>🎯 unilink Code Coverage</h1>
+              <p class="timestamp">Generated: $(date '+%Y-%m-%d %H:%M:%S UTC')</p>
+              <div class="coverage">Coverage: ${COVERAGE}</div>
+              <div class="grade">Grade: ${GRADE}</div>
+              <div class="badge">
+                <img src="https://img.shields.io/endpoint?url=https://jwsung91.github.io/unilink/badges/coverage.json" alt="Coverage Badge">
+              </div>
+              <div class="links">
+                <a href="index-original.html" class="link">📊 Detailed Report</a>
+                <a href="https://github.com/jwsung91/unilink" class="link">📦 Repository</a>
+              </div>
             </div>
-            <div class="links">
-              <a href="index-original.html" class="link">📊 Detailed Report</a>
-              <a href="https://github.com/jwsung91/unilink" class="link">📦 Repository</a>
-            </div>
-          </div>
-        </body>
-        </html>
-        EOF
-        echo "✅ Custom index page created with coverage: ${COVERAGE}"
+          </body>
+          </html>
+          EOF
+          echo "✅ Custom index page created with coverage: ${COVERAGE}"
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build-coverage/coverage_html
-        publish_branch: gh-pages
-        destination_dir: coverage
-        keep_files: true
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build-coverage/coverage_html
+          publish_branch: gh-pages
+          destination_dir: coverage
+          keep_files: true
