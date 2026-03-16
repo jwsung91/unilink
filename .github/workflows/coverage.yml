@@ -136,7 +136,7 @@ jobs:
           echo ${{ steps.coverage.outputs.percentage }} > build-coverage/coverage_percent.txt
 
       - name: Upload HTML Coverage Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: build-coverage/coverage_html
@@ -144,7 +144,7 @@ jobs:
           overwrite: true
 
       - name: Upload Coverage Data
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-data
           path: |
