@@ -92,7 +92,7 @@ TEST_F(TcpServerGetClientsBenchmarkTest, BenchmarkGetClients) {
     auto clients = server_->get_connected_clients();
     // Do something to prevent optimization
     if (clients.size() != client_count) {
-       std::cerr << "Unexpected client count!" << std::endl;
+      std::cerr << "Unexpected client count!" << std::endl;
     }
   }
 
