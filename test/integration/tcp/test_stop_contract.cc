@@ -105,7 +105,7 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
 
   // Send enough data to fill socket buffer and trigger backpressure
   std::string data(1024 * 1024, 'X');
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 50; ++i) {
     server->broadcast(std::string(data.begin(), data.end()));
   }
 

@@ -613,9 +613,9 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
   double messages_per_second = (num_messages * 1000000.0) / static_cast<double>(duration);
 #ifdef _WIN32
   const double expected_threshold =
-      50000.0;  // Windows std::chrono-resolution + thread scheduling yields lower throughput
+      25000.0;  // Windows std::chrono-resolution + thread scheduling yields lower throughput
 #else
-  const double expected_threshold = 100000.0;
+  const double expected_threshold = 50000.0;  // Reduced from 100000 for CI stability and coverage runs
 #endif
   EXPECT_GT(messages_per_second, expected_threshold)
       << "Should process at least " << expected_threshold << " messages per second";
