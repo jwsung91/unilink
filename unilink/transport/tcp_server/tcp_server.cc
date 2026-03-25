@@ -577,6 +577,7 @@ std::vector<size_t> TcpServer::get_connected_clients() const {
   auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   std::vector<size_t> connected_clients;
+  connected_clients.reserve(impl->sessions_.size());
   for (const auto& entry : impl->sessions_)
     if (entry.second && entry.second->alive()) connected_clients.push_back(entry.first);
   return connected_clients;

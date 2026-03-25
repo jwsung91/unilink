@@ -65,3 +65,16 @@ if(BUILD_PERFORMANCE_TESTS)
 else()
   message(STATUS "Skipping performance tests (BUILD_PERFORMANCE_TESTS=OFF)")
 endif()
+add_executable(run_performance_test_tcp_server_get_clients_benchmark
+    benchmark/test_tcp_server_get_clients_benchmark.cc
+)
+
+target_link_libraries(run_performance_test_tcp_server_get_clients_benchmark
+    PRIVATE
+    unilink_shared
+    GTest::gtest_main
+    ${Boost_LIBRARIES}
+)
+
+add_test(NAME PerformanceTcpServerGetClientsBenchmarkTest COMMAND run_performance_test_tcp_server_get_clients_benchmark)
+set_tests_properties(PerformanceTcpServerGetClientsBenchmarkTest PROPERTIES LABELS "performance;benchmark;tcp")
