@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-03-24 13:38:39</td>
+            <td class="headerValue">2026-03-25 21:37:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -148,11 +148,11 @@
 <a name="69"><span class="lineNum">      69 </span>                :            : /**</a>
 <a name="70"><span class="lineNum">      70 </span>                :            :  * @brief Determines if a TCP connection error is retryable</a>
 <a name="71"><span class="lineNum">      71 </span>                :            :  */</a>
-<a name="72"><span class="lineNum">      72 </span>                :<span class="lineCov">         96 : inline bool is_retryable_tcp_connect_error(const boost::system::error_code&amp; ec) {</span></a>
-<a name="73"><span class="lineNum">      73 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 95 times"> + </span>]:<span class="lineCov">         96 :   if (!ec) return false;</span></a>
+<a name="72"><span class="lineNum">      72 </span>                :<span class="lineCov">         97 : inline bool is_retryable_tcp_connect_error(const boost::system::error_code&amp; ec) {</span></a>
+<a name="73"><span class="lineNum">      73 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 96 times"> + </span>]:<span class="lineCov">         97 :   if (!ec) return false;</span></a>
 <a name="74"><span class="lineNum">      74 </span>                :            : </a>
 <a name="75"><span class="lineNum">      75 </span>                :            :   // Connection refused is temporary (server might be starting up)</a>
-<a name="76"><span class="lineNum">      76 </span>        [<span class="branchCov" title="Branch 0 was taken 73 times"> + </span><span class="branchCov" title="Branch 1 was taken 22 times"> + </span>]:<span class="lineCov">         95 :   if (ec == boost::asio::error::connection_refused) return true;</span></a>
+<a name="76"><span class="lineNum">      76 </span>        [<span class="branchCov" title="Branch 0 was taken 74 times"> + </span><span class="branchCov" title="Branch 1 was taken 22 times"> + </span>]:<span class="lineCov">         96 :   if (ec == boost::asio::error::connection_refused) return true;</span></a>
 <a name="77"><span class="lineNum">      77 </span>                :            :   // Timeouts are temporary network glitches</a>
 <a name="78"><span class="lineNum">      78 </span>        [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchCov" title="Branch 1 was taken 13 times"> + </span>]:<span class="lineCov">         22 :   if (ec == boost::asio::error::timed_out) return true;</span></a>
 <a name="79"><span class="lineNum">      79 </span>                :            :   // Reset connection might be temporary</a>
