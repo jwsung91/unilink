@@ -89,25 +89,58 @@ struct Logger::Impl {
   }
 
   void parse_format(const std::string& format) {
+    static const std::string default_format = "{timestamp} [{level}] [{component}] [{operation}] {message}";
+    static std::shared_ptr<LogFormat> cached_default_format;
+    static std::once_flag flag;
+
+    std::call_once(flag, []() {
+      auto new_format = std::make_shared<LogFormat>();
+      new_format->format_string = default_format;
+      new_format->parsed_format.reserve(9);
+      new_format->parsed_format.push_back({FormatPart::TIMESTAMP, ""});
+      new_format->parsed_format.push_back({FormatPart::LITERAL, " ["});
+      new_format->parsed_format.push_back({FormatPart::LEVEL, ""});
+      new_format->parsed_format.push_back({FormatPart::LITERAL, "] ["});
+      new_format->parsed_format.push_back({FormatPart::COMPONENT, ""});
+      new_format->parsed_format.push_back({FormatPart::LITERAL, "] ["});
+      new_format->parsed_format.push_back({FormatPart::OPERATION, ""});
+      new_format->parsed_format.push_back({FormatPart::LITERAL, "] "});
+      new_format->parsed_format.push_back({FormatPart::MESSAGE, ""});
+      cached_default_format = new_format;
+    });
+
+    if (format == default_format) {
+      std::lock_guard<std::mutex> lock(mutex_);
+      log_format_ = cached_default_format;
+      return;
+    }
+
     auto new_format = std::make_shared<LogFormat>();
     new_format->format_string = format;
 
+    size_t count = 1;
+    for (char c : format) {
+      if (c == '{') count += 2;
+    }
+    new_format->parsed_format.reserve(count);
+
     size_t start = 0;
     size_t pos = 0;
+    std::string_view format_view = format;
 
-    while ((pos = format.find('{', start)) != std::string::npos) {
+    while ((pos = format_view.find('{', start)) != std::string_view::npos) {
       if (pos > start) {
-        new_format->parsed_format.push_back({FormatPart::LITERAL, format.substr(start, pos - start)});
+        new_format->parsed_format.push_back({FormatPart::LITERAL, std::string(format_view.substr(start, pos - start))});
       }
 
-      size_t end = format.find('}', pos);
-      if (end == std::string::npos) {
-        new_format->parsed_format.push_back({FormatPart::LITERAL, format.substr(pos)});
-        start = format.length();
+      size_t end = format_view.find('}', pos);
+      if (end == std::string_view::npos) {
+        new_format->parsed_format.push_back({FormatPart::LITERAL, std::string(format_view.substr(pos))});
+        start = format_view.length();
         break;
       }
 
-      std::string placeholder = format.substr(pos + 1, end - pos - 1);
+      std::string_view placeholder = format_view.substr(pos + 1, end - pos - 1);
       if (placeholder == "timestamp") {
         new_format->parsed_format.push_back({FormatPart::TIMESTAMP, ""});
       } else if (placeholder == "level") {
@@ -119,14 +152,14 @@ struct Logger::Impl {
       } else if (placeholder == "message") {
         new_format->parsed_format.push_back({FormatPart::MESSAGE, ""});
       } else {
-        new_format->parsed_format.push_back({FormatPart::LITERAL, format.substr(pos, end - pos + 1)});
+        new_format->parsed_format.push_back({FormatPart::LITERAL, std::string(format_view.substr(pos, end - pos + 1))});
       }
 
       start = end + 1;
     }
 
-    if (start < format.length()) {
-      new_format->parsed_format.push_back({FormatPart::LITERAL, format.substr(start)});
+    if (start < format_view.length()) {
+      new_format->parsed_format.push_back({FormatPart::LITERAL, std::string(format_view.substr(start))});
     }
 
     std::lock_guard<std::mutex> lock(mutex_);

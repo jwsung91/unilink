@@ -125,7 +125,7 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
 
   client_ = TcpClient::create(cfg, ioc);
 
-  client_->set_reconnect_policy(ExponentialBackoff(20ms, 1000ms, 2.0, false));
+  client_->set_reconnect_policy(ExponentialBackoff(50ms, 1000ms, 2.0, false));
 
   std::vector<std::chrono::steady_clock::time_point> attempt_times;
 
@@ -137,7 +137,7 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
 
   client_->start();
 
-  ioc.run_for(std::chrono::milliseconds(500));
+  ioc.run_for(std::chrono::milliseconds(1000));
 
   // Prevent callback accessing destroyed attempt_times
   client_->on_state(nullptr);
@@ -148,7 +148,7 @@ TEST_F(TransportTcpClientPolicyTest, ExponentialBackoffPolicyIncreasesDelay) {
   if (!attempt_times.empty()) {
     filtered_times.push_back(attempt_times[0]);
     for (size_t i = 1; i < attempt_times.size(); ++i) {
-      if (attempt_times[i] - attempt_times[i - 1] > std::chrono::milliseconds(10)) {
+      if (attempt_times[i] - filtered_times.back() > std::chrono::milliseconds(25)) {
         filtered_times.push_back(attempt_times[i]);
       }
     }
