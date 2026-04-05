@@ -44,6 +44,7 @@ class UNILINK_API InputValidator {
   static void validate_port(uint16_t port);
   static void validate_ipv4_address(const std::string& address);
   static void validate_ipv6_address(const std::string& address);
+  static void validate_uds_path(const std::string& path);
 
   // Serial validation
   static void validate_device_path(const std::string& device);
@@ -75,6 +76,7 @@ class UNILINK_API InputValidator {
   static bool is_valid_ipv4(std::string_view address);
   static bool is_valid_ipv6(const std::string& address);
   static bool is_valid_hostname(std::string_view hostname);
+  static bool is_valid_uds_path(const std::string& path);
 
  private:
   // Helper methods

@@ -75,6 +75,7 @@ constexpr size_t DEFAULT_ERROR_CLEANUP_INTERVAL_MS = 60000;  // 1m error cleanup
 // Validation constants
 constexpr size_t MAX_HOSTNAME_LENGTH = 253;     // Maximum hostname length (RFC 1123)
 constexpr size_t MAX_DEVICE_PATH_LENGTH = 256;  // Maximum device path length
+constexpr size_t MAX_UDS_PATH_LENGTH = 108;     // Maximum UDS path length (Linux limit)
 constexpr uint32_t MIN_BAUD_RATE = 50;          // Minimum baud rate
 constexpr uint32_t MAX_BAUD_RATE = 4000000;     // Maximum baud rate
 constexpr uint8_t MIN_DATA_BITS = 5;            // Minimum data bits
