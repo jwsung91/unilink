@@ -22,6 +22,9 @@
 #include "unilink/transport/tcp_server/boost_tcp_acceptor.hpp"
 #include "unilink/transport/tcp_server/tcp_server.hpp"
 #include "unilink/transport/udp/udp.hpp"
+#include "unilink/transport/uds/uds_client.hpp"
+#include "unilink/transport/uds/uds_server.hpp"
+#include "unilink/transport/uds/boost_uds_acceptor.hpp"
 
 namespace unilink {
 namespace factory {
@@ -40,6 +43,10 @@ std::shared_ptr<interface::Channel> ChannelFactory::create(const ChannelOptions&
           return create_serial(config, external_ioc);
         } else if constexpr (std::is_same_v<T, config::UdpConfig>) {
           return create_udp(config, external_ioc);
+        } else if constexpr (std::is_same_v<T, config::UdsClientConfig>) {
+          return create_uds_client(config, external_ioc);
+        } else if constexpr (std::is_same_v<T, config::UdsServerConfig>) {
+          return create_uds_server(config, external_ioc);
         } else {
           static_assert(std::is_same_v<T, void>, "Unsupported config type");
           return nullptr;
@@ -79,6 +86,23 @@ std::shared_ptr<interface::Channel> ChannelFactory::create_udp(const config::Udp
     return transport::UdpChannel::create(cfg, *external_ioc);
   }
   return transport::UdpChannel::create(cfg);
+}
+
+std::shared_ptr<interface::Channel> ChannelFactory::create_uds_server(
+    const config::UdsServerConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc) {
+  if (external_ioc) {
+    auto acceptor = std::make_unique<transport::BoostUdsAcceptor>(*external_ioc);
+    return transport::UdsServer::create(cfg, std::move(acceptor), *external_ioc);
+  }
+  return transport::UdsServer::create(cfg);
+}
+
+std::shared_ptr<interface::Channel> ChannelFactory::create_uds_client(
+    const config::UdsClientConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc) {
+  if (external_ioc) {
+    return transport::UdsClient::create(cfg, *external_ioc);
+  }
+  return transport::UdsClient::create(cfg);
 }
 
 }  // namespace factory

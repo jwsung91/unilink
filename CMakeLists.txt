@@ -46,6 +46,11 @@ set(UNILINK_SOURCES
   unilink/transport/tcp_server/boost_tcp_socket.cc
   unilink/transport/tcp_server/tcp_server_session.cc
   unilink/transport/udp/udp.cc
+  unilink/transport/uds/boost_uds_acceptor.cc
+  unilink/transport/uds/boost_uds_socket.cc
+  unilink/transport/uds/uds_client.cc
+  unilink/transport/uds/uds_server.cc
+  unilink/transport/uds/uds_server_session.cc
   unilink/util/input_validator.cc
   unilink/wrapper/serial/serial.cc
   unilink/wrapper/tcp_client/tcp_client.cc
@@ -81,6 +86,7 @@ set(UNILINK_HEADERS
   unilink/config/tcp_client_config.hpp
   unilink/config/tcp_server_config.hpp
   unilink/config/udp_config.hpp
+  unilink/config/uds_config.hpp
   unilink/diagnostics/error_handler.hpp
   unilink/diagnostics/error_types.hpp
   unilink/diagnostics/exceptions.hpp
@@ -93,6 +99,8 @@ set(UNILINK_HEADERS
   unilink/interface/itcp_resolver.hpp
   unilink/interface/itcp_socket.hpp
   unilink/interface/itimer.hpp
+  unilink/interface/iuds_acceptor.hpp
+  unilink/interface/iuds_socket.hpp
   unilink/memory/memory_pool.hpp
   unilink/memory/memory_tracker.hpp
   unilink/memory/memory_validator.hpp
@@ -107,6 +115,11 @@ set(UNILINK_HEADERS
   unilink/transport/tcp_server/tcp_server_session.hpp
   unilink/transport/tcp_server/tcp_server.hpp
   unilink/transport/udp/udp.hpp
+  unilink/transport/uds/boost_uds_acceptor.hpp
+  unilink/transport/uds/boost_uds_socket.hpp
+  unilink/transport/uds/uds_client.hpp
+  unilink/transport/uds/uds_server.hpp
+  unilink/transport/uds/uds_server_session.hpp
   unilink/unilink.hpp
   unilink/util/input_validator.hpp
   unilink/wrapper/ichannel.hpp

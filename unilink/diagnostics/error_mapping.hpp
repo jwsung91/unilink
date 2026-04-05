@@ -92,6 +92,25 @@ inline bool is_retryable_tcp_connect_error(const boost::system::error_code& ec) 
 }
 
 /**
+ * @brief Determines if a UDS connection error is retryable
+ */
+inline bool is_retryable_uds_connect_error(const boost::system::error_code& ec) {
+  if (!ec) return false;
+
+  // For UDS, "connection refused" often means the socket file exists but no one is listening.
+  // "no such file or directory" means the server hasn't created the socket yet.
+  // Both are retryable.
+  if (ec == boost::asio::error::connection_refused) return true;
+  if (ec == boost::system::errc::no_such_file_or_directory) return true;
+  if (ec == boost::asio::error::timed_out) return true;
+  if (ec == boost::asio::error::try_again) return true;
+
+  if (ec == boost::asio::error::operation_aborted) return false;
+
+  return true;
+}
+
+/**
  * @brief Converts ErrorInfo to wrapper::ErrorContext
  */
 inline wrapper::ErrorContext to_error_context(const diagnostics::ErrorInfo& info,
