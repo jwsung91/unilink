@@ -34,6 +34,8 @@
 #include "unilink/wrapper/tcp_client/tcp_client.hpp"
 #include "unilink/wrapper/tcp_server/tcp_server.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
+#include "unilink/wrapper/uds_client/uds_client.hpp"
+#include "unilink/wrapper/uds_server/uds_server.hpp"
 
 // High-level Builder API includes
 #include "unilink/builder/ibuilder.hpp"
@@ -41,6 +43,7 @@
 #include "unilink/builder/tcp_client_builder.hpp"
 #include "unilink/builder/tcp_server_builder.hpp"
 #include "unilink/builder/udp_builder.hpp"
+#include "unilink/builder/uds_builder.hpp"
 #include "unilink/builder/unified_builder.hpp"
 
 // Configuration Management API includes (optional)
@@ -64,6 +67,8 @@ class TcpServerBuilder;
 class TcpClientBuilder;
 class SerialBuilder;
 class UdpBuilder;
+class UdsClientBuilder;
+class UdsServerBuilder;
 class UnifiedBuilder;
 }  // namespace builder
 
@@ -73,6 +78,8 @@ class TcpServer;
 class TcpClient;
 class Serial;
 class Udp;
+class UdsClient;
+class UdsServer;
 class ChannelInterface;
 class ServerInterface;
 class MessageContext;
@@ -87,6 +94,8 @@ using TcpClient = wrapper::TcpClient;
 using TcpServer = wrapper::TcpServer;
 using Serial = wrapper::Serial;
 using Udp = wrapper::Udp;
+using UdsClient = wrapper::UdsClient;
+using UdsServer = wrapper::UdsServer;
 
 // Context classes for callbacks
 using MessageContext = wrapper::MessageContext;
@@ -110,6 +119,24 @@ inline builder::TcpServerBuilder tcp_server(uint16_t port) { return builder::Tcp
  */
 inline builder::TcpClientBuilder tcp_client(const std::string& host, uint16_t port) {
   return builder::TcpClientBuilder(host, port);
+}
+
+/**
+ * @brief Create a UDS server builder
+ * @param socket_path The path to the Unix Domain Socket file
+ * @return UdsServerBuilder A configured builder for UdsServer
+ */
+inline builder::UdsServerBuilder uds_server(const std::string& socket_path) {
+  return builder::UdsServerBuilder(socket_path);
+}
+
+/**
+ * @brief Create a UDS client builder
+ * @param socket_path The path to the Unix Domain Socket file
+ * @return UdsClientBuilder A configured builder for UdsClient
+ */
+inline builder::UdsClientBuilder uds_client(const std::string& socket_path) {
+  return builder::UdsClientBuilder(socket_path);
 }
 
 /**

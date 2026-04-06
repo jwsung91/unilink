@@ -49,8 +49,17 @@ int main() {
         std::cout << "Client " << client_id << " disconnected" << std::endl;
     });
 
+    std::cout << "DEBUG: Example server socket path: " << cfg.socket_path << std::endl;
     std::cout << "Starting UDS Echo Server on " << cfg.socket_path << "..." << std::endl;
     server->start();
+
+    // Give some time to start
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    if (server->is_listening()) {
+        std::cout << "DEBUG: Server is confirmed listening." << std::endl;
+    } else {
+        std::cout << "DEBUG: Server is NOT listening yet." << std::endl;
+    }
 
     std::cout << "Press Enter to stop..." << std::endl;
     std::cin.get();

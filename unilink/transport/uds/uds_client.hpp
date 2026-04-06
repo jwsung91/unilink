@@ -28,6 +28,7 @@
 #include "unilink/config/uds_config.hpp"
 #include "unilink/diagnostics/error_types.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/interface/iuds_socket.hpp"
 #include "unilink/memory/memory_pool.hpp"
 #include "unilink/transport/tcp_client/reconnect_policy.hpp"
 
@@ -55,6 +56,9 @@ class UNILINK_API UdsClient : public Channel, public std::enable_shared_from_thi
 
   static std::shared_ptr<UdsClient> create(const UdsClientConfig& cfg);
   static std::shared_ptr<UdsClient> create(const UdsClientConfig& cfg, boost::asio::io_context& ioc);
+  static std::shared_ptr<UdsClient> create(const UdsClientConfig& cfg,
+                                           std::unique_ptr<interface::UdsSocketInterface> socket,
+                                           boost::asio::io_context& ioc);
   ~UdsClient();
 
   // Move semantics
@@ -82,10 +86,12 @@ class UNILINK_API UdsClient : public Channel, public std::enable_shared_from_thi
   void set_retry_interval(unsigned interval_ms);
   void set_reconnect_policy(ReconnectPolicy policy);
 
- private:
   explicit UdsClient(const UdsClientConfig& cfg);
   explicit UdsClient(const UdsClientConfig& cfg, boost::asio::io_context& ioc);
+  UdsClient(const UdsClientConfig& cfg, std::unique_ptr<interface::UdsSocketInterface> socket,
+            boost::asio::io_context& ioc);
 
+ private:
   struct Impl;
   const Impl* get_impl() const { return impl_.get(); }
   Impl* get_impl() { return impl_.get(); }

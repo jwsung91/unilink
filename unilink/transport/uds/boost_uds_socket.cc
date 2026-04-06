@@ -34,6 +34,10 @@ void BoostUdsSocket::async_write(const net::const_buffer& buffer,
   net::async_write(socket_, buffer, std::move(handler));
 }
 
+void BoostUdsSocket::async_connect(const uds::endpoint& endpoint, std::function<void(const boost::system::error_code&)> handler) {
+  socket_.async_connect(endpoint, std::move(handler));
+}
+
 void BoostUdsSocket::shutdown(uds::socket::shutdown_type what, boost::system::error_code& ec) {
   socket_.shutdown(what, ec);
 }

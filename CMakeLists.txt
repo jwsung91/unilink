@@ -56,6 +56,9 @@ set(UNILINK_SOURCES
   unilink/wrapper/tcp_client/tcp_client.cc
   unilink/wrapper/tcp_server/tcp_server.cc
   unilink/wrapper/udp/udp.cc
+  unilink/wrapper/uds_client/uds_client.cc
+  unilink/wrapper/uds_server/uds_server.cc
+  unilink/builder/uds_builder.cc
   unilink/framer/line_framer.cc
   unilink/framer/packet_framer.cc
 )
@@ -76,6 +79,7 @@ set(UNILINK_HEADERS
   unilink/builder/tcp_client_builder.hpp
   unilink/builder/tcp_server_builder.hpp
   unilink/builder/udp_builder.hpp
+  unilink/builder/uds_builder.hpp
   unilink/builder/unified_builder.hpp
   unilink/concurrency/io_context_manager.hpp
   unilink/concurrency/thread_safe_state.hpp
@@ -127,6 +131,8 @@ set(UNILINK_HEADERS
   unilink/wrapper/tcp_client/tcp_client.hpp
   unilink/wrapper/tcp_server/tcp_server.hpp
   unilink/wrapper/udp/udp.hpp
+  unilink/wrapper/uds_client/uds_client.hpp
+  unilink/wrapper/uds_server/uds_server.hpp
 )
 
 # Create the library

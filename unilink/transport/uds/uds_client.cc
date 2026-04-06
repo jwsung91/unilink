@@ -37,6 +37,8 @@
 #include "unilink/memory/memory_pool.hpp"
 #include "unilink/transport/uds/detail/reconnect_decider.hpp"
 
+#include "unilink/transport/uds/boost_uds_socket.hpp"
+
 namespace unilink {
 namespace transport {
 
@@ -55,7 +57,7 @@ struct UdsClient::Impl {
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
   std::thread ioc_thread_;
   std::atomic<uint64_t> current_seq_{0};
-  uds::socket socket_;
+  std::unique_ptr<interface::UdsSocketInterface> socket_;
   UdsClientConfig cfg_;
   net::steady_timer retry_timer_;
   net::steady_timer connect_timer_;
@@ -86,16 +88,19 @@ struct UdsClient::Impl {
   mutable std::mutex last_err_mtx_;
   std::optional<diagnostics::ErrorInfo> last_error_info_;
 
-  Impl(const UdsClientConfig& cfg, net::io_context* ioc_ptr)
+  Impl(const UdsClientConfig& cfg, net::io_context* ioc_ptr, std::unique_ptr<interface::UdsSocketInterface> socket = nullptr)
       : owned_ioc_(ioc_ptr ? nullptr : std::make_unique<net::io_context>()),
         ioc_(ioc_ptr ? ioc_ptr : owned_ioc_.get()),
         strand_(net::make_strand(*ioc_)),
-        socket_(strand_),
+        socket_(std::move(socket)),
         cfg_(cfg),
         retry_timer_(strand_),
         connect_timer_(strand_),
         owns_ioc_(!ioc_ptr),
         bp_high_(cfg.backpressure_threshold) {
+    if (!socket_) {
+      socket_ = std::make_unique<BoostUdsSocket>(uds::socket(strand_));
+    }
     init();
   }
 
@@ -128,17 +133,39 @@ std::shared_ptr<UdsClient> UdsClient::create(const UdsClientConfig& cfg, boost::
   return std::shared_ptr<UdsClient>(new UdsClient(cfg, ioc));
 }
 
+std::shared_ptr<UdsClient> UdsClient::create(const UdsClientConfig& cfg,
+                                             std::unique_ptr<interface::UdsSocketInterface> socket,
+                                             boost::asio::io_context& ioc) {
+  return std::shared_ptr<UdsClient>(new UdsClient(cfg, std::move(socket), ioc));
+}
+
 UdsClient::UdsClient(const UdsClientConfig& cfg) : impl_(std::make_unique<Impl>(cfg, nullptr)) {}
 UdsClient::UdsClient(const UdsClientConfig& cfg, boost::asio::io_context& ioc)
     : impl_(std::make_unique<Impl>(cfg, &ioc)) {}
 
+UdsClient::UdsClient(const UdsClientConfig& cfg, std::unique_ptr<interface::UdsSocketInterface> socket,
+                     boost::asio::io_context& ioc)
+    : impl_(std::make_unique<Impl>(cfg, &ioc, std::move(socket))) {}
+
 UdsClient::~UdsClient() {
-  stop();
-  if (impl_->ioc_thread_.joinable()) {
-    if (impl_->owns_ioc_) {
+  // Use a specialized internal stop that doesn't use shared_from_this()
+  impl_->stop_requested_ = true;
+  uint64_t seq = impl_->current_seq_.load();
+
+  if (impl_->ioc_) {
+    net::dispatch(impl_->strand_, [this, seq]() {
+      if (impl_->stopping_) return;
+      impl_->stopping_ = true;
+      impl_->handle_close(nullptr, seq);
+    });
+  }
+
+  if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {
+    if (std::this_thread::get_id() != impl_->ioc_thread_.get_id()) {
       impl_->ioc_->stop();
       impl_->ioc_thread_.join();
     } else {
+      impl_->ioc_->stop();
       impl_->ioc_thread_.detach();
     }
   }
@@ -171,14 +198,27 @@ void UdsClient::start() {
 }
 
 void UdsClient::stop() {
+  bool already_stopping = impl_->stopping_.exchange(true);
+  if (already_stopping) return;
+  
   impl_->stop_requested_ = true;
-  uint64_t seq = impl_->current_seq_.load();
 
-  net::dispatch(impl_->strand_, [this, self = shared_from_this(), seq]() {
-    if (impl_->stopping_) return;
-    impl_->stopping_ = true;
-    impl_->handle_close(self, seq);
-  });
+  // Immediate cancellation of operations
+  boost::system::error_code ec;
+  impl_->retry_timer_.cancel(ec);
+  impl_->connect_timer_.cancel(ec);
+  impl_->close_socket();
+
+  // Release work guard and STOP the io_context to break ioc->run()
+  if (impl_->ioc_) {
+    if (impl_->owns_ioc_) {
+      impl_->work_guard_.reset();
+      impl_->ioc_->stop();
+    }
+  }
+
+  // Transition to Idle state (lock-free or safe call)
+  impl_->state_.set_state(LinkState::Idle);
 }
 
 bool UdsClient::is_connected() const { return impl_->connected_.load(); }
@@ -197,7 +237,9 @@ void UdsClient::async_write_move(std::vector<uint8_t>&& data) {
     impl_->queue_bytes_ += added;
     impl_->tx_.emplace_back(std::move(data));
     impl_->report_backpressure(impl_->queue_bytes_);
-    if (!impl_->writing_) impl_->do_write(self, impl_->current_seq_.load());
+    if (!impl_->writing_) {
+      impl_->do_write(self, impl_->current_seq_.load());
+    }
   });
 }
 
@@ -243,13 +285,14 @@ void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) 
     }
   });
 
-  socket_.async_connect(endpoint, [self, seq](const boost::system::error_code& ec) {
+  socket_->async_connect(endpoint, [self, seq](const boost::system::error_code& ec) {
     self->impl_->connect_timer_.cancel();
     if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
     if (ec) {
       self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
                                 ec, "Connect failed: " + ec.message(), 
                                 diagnostics::is_retryable_uds_connect_error(ec), self->impl_->reconnect_attempt_count_);
+      std::cout << "DEBUG: Client connect failed: " << ec.message() << " (" << ec.value() << ")" << std::endl;
       self->impl_->schedule_retry(self, seq);
       return;
     }
@@ -285,7 +328,7 @@ void UdsClient::Impl::schedule_retry(std::shared_ptr<UdsClient> self, uint64_t s
 }
 
 void UdsClient::Impl::start_read(std::shared_ptr<UdsClient> self, uint64_t seq) {
-  socket_.async_read_some(net::buffer(rx_), [self, seq](const boost::system::error_code& ec, size_t bytes) {
+  socket_->async_read_some(net::buffer(rx_), [self, seq](const boost::system::error_code& ec, size_t bytes) {
     if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
     if (ec) {
       self->impl_->handle_close(self, seq, ec);
@@ -317,7 +360,7 @@ void UdsClient::Impl::do_write(std::shared_ptr<UdsClient> self, uint64_t seq) {
   }, *current_write_buffer_);
 
   size_t bytes_to_write = buffer.size();
-  net::async_write(socket_, buffer, [self, seq, bytes_to_write](const boost::system::error_code& ec, size_t) {
+  socket_->async_write(buffer, [self, seq, bytes_to_write](const boost::system::error_code& ec, size_t) {
     if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
     self->impl_->writing_ = false;
     self->impl_->current_write_buffer_ = std::nullopt;
@@ -332,7 +375,7 @@ void UdsClient::Impl::do_write(std::shared_ptr<UdsClient> self, uint64_t seq) {
   });
 }
 
-void UdsClient::Impl::handle_close(std::shared_ptr<UdsClient> self, uint64_t seq, const boost::system::error_code& ec) {
+void UdsClient::Impl::handle_close(std::shared_ptr<UdsClient> self, uint64_t seq, const boost::system::error_code&) {
   connected_ = false;
   close_socket();
   retry_timer_.cancel();
@@ -345,7 +388,7 @@ void UdsClient::Impl::handle_close(std::shared_ptr<UdsClient> self, uint64_t seq
   }
 }
 
-void UdsClient::Impl::transition_to(LinkState next, const boost::system::error_code& ec) {
+void UdsClient::Impl::transition_to(LinkState next, const boost::system::error_code&) {
   state_.set_state(next);
   OnState cb;
   {
@@ -357,7 +400,7 @@ void UdsClient::Impl::transition_to(LinkState next, const boost::system::error_c
 
 void UdsClient::Impl::close_socket() {
   boost::system::error_code ec;
-  socket_.close(ec);
+  socket_->close(ec);
 }
 
 void UdsClient::Impl::recalculate_backpressure_bounds() {

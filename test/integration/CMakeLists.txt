@@ -106,6 +106,28 @@ foreach(test_file test_builder_integration.cc)
   )
 endforeach()
 
+# UDS integration tests
+foreach(test_file test_uds_integration.cc)
+  get_filename_component(test_name ${test_file} NAME_WE)
+  add_executable(
+    run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/uds/${test_file}
+  )
+  target_link_libraries(
+    run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
+                                         GTest::gtest_main GTest::gmock
+  )
+  unilink_set_test_warning_options(run_integration_${test_name})
+  target_include_directories(
+    run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
+                                         ${CMAKE_SOURCE_DIR}/test/fixtures
+  )
+  gtest_discover_tests(
+    run_integration_${test_name}
+    PROPERTIES LABELS "integration_uds_medium"
+    TIMEOUT 300
+  )
+endforeach()
+
 # Core/General integration tests
 foreach(test_file test_stable_integration.cc
                   test_core_integrated.cc test_safety_integrated.cc

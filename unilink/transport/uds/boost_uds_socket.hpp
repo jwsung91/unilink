@@ -41,6 +41,7 @@ class UNILINK_API BoostUdsSocket : public interface::UdsSocketInterface {
                        std::function<void(const boost::system::error_code&, std::size_t)> handler) override;
   void async_write(const net::const_buffer& buffer,
                    std::function<void(const boost::system::error_code&, std::size_t)> handler) override;
+  void async_connect(const uds::endpoint& endpoint, std::function<void(const boost::system::error_code&)> handler) override;
   void shutdown(uds::socket::shutdown_type what, boost::system::error_code& ec) override;
   void close(boost::system::error_code& ec) override;
   uds::endpoint remote_endpoint(boost::system::error_code& ec) const override;

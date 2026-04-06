@@ -71,12 +71,15 @@ struct UdsServer::Impl {
 
   ~Impl() {
     stopping_ = true;
-    if (ioc_thread_.joinable()) {
-      if (owns_ioc_) {
-        ioc_->stop();
-        ioc_thread_.join();
-      } else {
-        ioc_thread_.detach();
+    if (ioc_) {
+      if (owns_ioc_ && ioc_thread_.joinable()) {
+        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
+          ioc_->stop();
+          ioc_thread_.join();
+        } else {
+          ioc_->stop();
+          ioc_thread_.detach();
+        }
       }
     }
     // UDS Cleanup: socket file should be removed.
@@ -104,58 +107,7 @@ UdsServer::UdsServer(const config::UdsServerConfig& cfg, std::unique_ptr<interfa
   impl_->acceptor_ = std::move(acceptor);
 }
 
-UdsServer::~UdsServer() { stop(); }
-
-UdsServer::UdsServer(UdsServer&&) noexcept = default;
-UdsServer& UdsServer::operator=(UdsServer&&) noexcept = default;
-
-void UdsServer::start() {
-  if (impl_->state_.get_state() == base::LinkState::Connected) return;
-
-  impl_->stopping_ = false;
-
-  if (impl_->owns_ioc_ && !impl_->ioc_thread_.joinable()) {
-    impl_->work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(
-        net::make_work_guard(*impl_->ioc_));
-    impl_->ioc_thread_ = std::thread([this]() { impl_->ioc_->run(); });
-  }
-
-  // Cleanup old socket file if exists
-  std::remove(impl_->cfg_.socket_path.c_str());
-
-  net::post(impl_->ioc_->get_executor(), [this, self = shared_from_this()]() {
-    boost::system::error_code ec;
-    impl_->acceptor_->open(uds(), ec);
-    if (ec) {
-      UNILINK_LOG_ERROR("uds_server", "start", "Failed to open acceptor: " + ec.message());
-      impl_->state_.set_state(base::LinkState::Error);
-      impl_->notify_state();
-      return;
-    }
-
-    impl_->acceptor_->bind(uds::endpoint(impl_->cfg_.socket_path), ec);
-    if (ec) {
-      UNILINK_LOG_ERROR("uds_server", "start", "Failed to bind to " + impl_->cfg_.socket_path + ": " + ec.message());
-      impl_->state_.set_state(base::LinkState::Error);
-      impl_->notify_state();
-      return;
-    }
-
-    impl_->acceptor_->listen(net::socket_base::max_listen_connections, ec);
-    if (ec) {
-      UNILINK_LOG_ERROR("uds_server", "start", "Failed to listen: " + ec.message());
-      impl_->state_.set_state(base::LinkState::Error);
-      impl_->notify_state();
-      return;
-    }
-
-    impl_->state_.set_state(base::LinkState::Connected);
-    impl_->notify_state();
-    impl_->do_accept(self);
-  });
-}
-
-void UdsServer::stop() {
+UdsServer::~UdsServer() {
   impl_->stopping_ = true;
   boost::system::error_code ec;
   impl_->acceptor_->close(ec);
@@ -165,11 +117,91 @@ void UdsServer::stop() {
     pair.second->stop();
   }
   impl_->sessions_.clear();
+}
+
+UdsServer::UdsServer(UdsServer&&) noexcept = default;
+UdsServer& UdsServer::operator=(UdsServer&&) noexcept = default;
+
+void UdsServer::start() {
+  if (impl_->state_.get_state() == base::LinkState::Listening) return;
+
+  impl_->stopping_ = false;
+
+  // Cleanup old socket file if exists
+  std::remove(impl_->cfg_.socket_path.c_str());
+
+  boost::system::error_code ec;
+  impl_->acceptor_->open(uds(), ec);
+  if (ec) {
+    UNILINK_LOG_ERROR("uds_server", "start", "Failed to open acceptor: " + ec.message());
+    impl_->state_.set_state(base::LinkState::Error);
+    impl_->notify_state();
+    return;
+  }
+
+  impl_->acceptor_->bind(uds::endpoint(impl_->cfg_.socket_path), ec);
+  if (ec) {
+    UNILINK_LOG_ERROR("uds_server", "start", "Failed to bind to " + impl_->cfg_.socket_path + ": " + ec.message());
+    impl_->state_.set_state(base::LinkState::Error);
+    impl_->notify_state();
+    return;
+  }
+
+  impl_->acceptor_->listen(net::socket_base::max_listen_connections, ec);
+  if (ec) {
+    UNILINK_LOG_ERROR("uds_server", "start", "Failed to listen: " + ec.message());
+    impl_->state_.set_state(base::LinkState::Error);
+    impl_->notify_state();
+    return;
+  }
+
+  impl_->state_.set_state(base::LinkState::Listening);
+  impl_->notify_state();
+
+  if (impl_->owns_ioc_ && !impl_->ioc_thread_.joinable()) {
+    impl_->work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(
+        net::make_work_guard(*impl_->ioc_));
+    impl_->ioc_thread_ = std::thread([this]() { impl_->ioc_->run(); });
+  }
+
+  net::post(impl_->ioc_->get_executor(), [this, self = shared_from_this()]() {
+    impl_->do_accept(self);
+  });
+}
+
+void UdsServer::stop() {
+  bool already_stopping = impl_->stopping_.exchange(true);
+  if (already_stopping) return;
+  
+  boost::system::error_code ec;
+  impl_->acceptor_->close(ec);
+  
+  // Cleanup UDS socket file on stop
+  std::remove(impl_->cfg_.socket_path.c_str());
+
+  // Release work guard if owned
+  if (impl_->owns_ioc_) {
+    impl_->work_guard_.reset();
+  }
+
+  std::vector<std::shared_ptr<UdsServerSession>> sessions_to_stop;
+  {
+    std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+    for (auto& pair : impl_->sessions_) {
+      sessions_to_stop.push_back(pair.second);
+    }
+    impl_->sessions_.clear();
+  }
+
+  for (auto& session : sessions_to_stop) {
+    session->stop();
+  }
+
   impl_->state_.set_state(base::LinkState::Idle);
   impl_->notify_state();
 }
 
-bool UdsServer::is_connected() const { return impl_->state_.get_state() == base::LinkState::Connected; }
+bool UdsServer::is_connected() const { return impl_->state_.get_state() == base::LinkState::Listening; }
 
 void UdsServer::async_write_copy(memory::ConstByteSpan data) {
   broadcast(std::vector<uint8_t>(data.begin(), data.end()));
@@ -251,7 +283,11 @@ void UdsServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
 base::LinkState UdsServer::get_state() const { return impl_->state_.get_state(); }
 
 void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
-  acceptor_->async_accept([self](const boost::system::error_code& ec, uds::socket socket) {
+  std::weak_ptr<UdsServer> weak_self = self;
+  acceptor_->async_accept([weak_self](const boost::system::error_code& ec, uds::socket socket) {
+    auto self = weak_self.lock();
+    if (!self || self->impl_->stopping_) return;
+
     if (!ec) {
       size_t client_id = self->impl_->next_client_id_++;
       auto session = std::make_shared<UdsServerSession>(*self->impl_->ioc_, std::move(socket), self->impl_->cfg_.backpressure_threshold);
@@ -261,24 +297,28 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
         self->impl_->sessions_[client_id] = session;
       }
 
-      session->on_bytes([self, client_id](memory::ConstByteSpan data) {
+      session->on_bytes([weak_self, client_id](memory::ConstByteSpan data) {
+        auto s = weak_self.lock();
+        if (!s) return;
         MultiClientDataHandler data_handler;
         OnBytes bytes_handler;
         {
-          std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);
-          data_handler = self->impl_->on_multi_data_;
-          bytes_handler = self->impl_->on_bytes_;
+          std::lock_guard<std::mutex> lock(s->impl_->sessions_mutex_);
+          data_handler = s->impl_->on_multi_data_;
+          bytes_handler = s->impl_->on_bytes_;
         }
         if (data_handler) data_handler(client_id, std::vector<uint8_t>(data.begin(), data.end()));
         if (bytes_handler) bytes_handler(data);
       });
 
-      session->on_close([self, client_id]() {
+      session->on_close([weak_self, client_id]() {
+        auto s = weak_self.lock();
+        if (!s) return;
         MultiClientDisconnectHandler disconnect_handler;
         {
-          std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);
-          self->impl_->sessions_.erase(client_id);
-          disconnect_handler = self->impl_->on_multi_disconnect_;
+          std::lock_guard<std::mutex> lock(s->impl_->sessions_mutex_);
+          s->impl_->sessions_.erase(client_id);
+          disconnect_handler = s->impl_->on_multi_disconnect_;
         }
         if (disconnect_handler) disconnect_handler(client_id);
       });
@@ -291,10 +331,14 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
         connect_handler = self->impl_->on_multi_connect_;
       }
       if (connect_handler) connect_handler(client_id, "UDS Client");
-    }
 
-    if (!self->impl_->stopping_) {
+      // Continue accepting only if no error occurred
       self->impl_->do_accept(self);
+    } else {
+      // Log only real errors, not operation_aborted
+      if (ec != boost::asio::error::operation_aborted) {
+        UNILINK_LOG_ERROR("uds_server", "accept", "Accept failed: " + ec.message());
+      }
     }
   });
 }

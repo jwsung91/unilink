@@ -178,7 +178,7 @@ gtest_discover_tests(run_unit_wrapper_serial_config_mapping
 
 # Transport tests (fast, unit-level without real network dependencies)
 # Updated list to include fuzz tests, server session tests, and timeout tests
-foreach(test_file transport_tcp_client.cc transport_tcp_server.cc transport_serial.cc transport_udp.cc transport_udp_extended.cc transport_tcp_client_policy.cc reconnect_logic_test.cc)
+foreach(test_file transport_tcp_client.cc transport_tcp_server.cc transport_uds_client.cc transport_uds_server.cc transport_serial.cc transport_udp.cc transport_udp_extended.cc transport_tcp_client_policy.cc reconnect_logic_test.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/transport/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -459,6 +459,8 @@ add_dependencies(unilink_unit_tests
   run_unit_wrapper_serial_config_mapping
   run_unit_transport_tcp_client
   run_unit_transport_tcp_server
+  run_unit_transport_uds_client
+  run_unit_transport_uds_server
   run_unit_transport_serial
   run_unit_transport_udp_extended
   run_unit_transport_tcp_server_session

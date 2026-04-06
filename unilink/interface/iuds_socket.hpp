@@ -39,6 +39,8 @@ class UNILINK_API UdsSocketInterface {
                                std::function<void(const boost::system::error_code&, std::size_t)> handler) = 0;
   virtual void async_write(const net::const_buffer& buffer,
                            std::function<void(const boost::system::error_code&, std::size_t)> handler) = 0;
+  virtual void async_connect(const net::local::stream_protocol::endpoint& endpoint,
+                             std::function<void(const boost::system::error_code&)> handler) = 0;
   virtual void shutdown(net::local::stream_protocol::socket::shutdown_type what, boost::system::error_code& ec) = 0;
   virtual void close(boost::system::error_code& ec) = 0;
   virtual net::local::stream_protocol::endpoint remote_endpoint(boost::system::error_code& ec) const = 0;
