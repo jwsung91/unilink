@@ -220,25 +220,26 @@ struct TcpServer::Impl {
         client_info = rep.address().to_string() + ":" + std::to_string(rep.port());
       }
 
-      if (impl->client_limit_enabled_) {
-        std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-        if (impl->sessions_.size() >= impl->max_clients_) {
+      if (accept_impl->client_limit_enabled_) {
+        std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
+        if (accept_impl->sessions_.size() >= accept_impl->max_clients_) {
           boost::system::error_code close_ec;
           sock.close(close_ec);
-          impl->paused_accept_ = true;
+          accept_impl->paused_accept_ = true;
           return;
         }
       }
 
       auto new_session = std::make_shared<TcpServerSession>(
-          impl->ioc_, std::move(sock), impl->cfg_.backpressure_threshold, impl->cfg_.idle_timeout_ms);
+          accept_impl->ioc_, std::move(sock), accept_impl->cfg_.backpressure_threshold,
+          accept_impl->cfg_.idle_timeout_ms);
 
       size_t client_id;
       {
-        std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-        client_id = impl->next_client_id_.fetch_add(1);
-        impl->sessions_.emplace(client_id, new_session);
-        impl->current_session_ = new_session;
+        std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
+        client_id = accept_impl->next_client_id_.fetch_add(1);
+        accept_impl->sessions_.emplace(client_id, new_session);
+        accept_impl->current_session_ = new_session;
       }
 
       std::weak_ptr<TcpServer> weak_self = self;
@@ -262,7 +263,7 @@ struct TcpServer::Impl {
         }
       });
 
-      if (impl->on_bp_) new_session->on_backpressure(impl->on_bp_);
+      if (accept_impl->on_bp_) new_session->on_backpressure(accept_impl->on_bp_);
 
       new_session->on_close([weak_self, client_id, new_session] {
         auto shared_self = weak_self.lock();
@@ -302,15 +303,15 @@ struct TcpServer::Impl {
 
       MultiClientConnectHandler connect_cb;
       {
-        std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-        connect_cb = impl->on_multi_connect_;
+        std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
+        connect_cb = accept_impl->on_multi_connect_;
       }
       if (connect_cb) connect_cb(client_id, client_info);
 
-      impl->state_.set_state(base::LinkState::Connected);
-      impl->notify_state();
+      accept_impl->state_.set_state(base::LinkState::Connected);
+      accept_impl->notify_state();
       new_session->start();
-      impl->do_accept(self);
+      accept_impl->do_accept(self);
     });
   }
 
