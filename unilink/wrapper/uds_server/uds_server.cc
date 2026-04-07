@@ -150,28 +150,45 @@ struct UdsServer::Impl {
 
     std::weak_ptr<bool> weak_alive = alive_marker_;
 
-    server_->on_multi_connect([this, weak_alive](size_t client_id, const std::string& info) {
-      if (!weak_alive.lock()) return;
-      std::lock_guard<std::mutex> lock(mutex_);
-      if (client_connect_handler_) {
-        client_connect_handler_(ConnectionContext(client_id, info));
+    server_->on_multi_connect([weak_alive, this](size_t client_id, const std::string& info) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
+      ConnectionHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = client_connect_handler_;
+      }
+      if (handler) {
+        handler(ConnectionContext(client_id, info));
       }
     });
 
-    server_->on_multi_disconnect([this, weak_alive](size_t client_id) {
-      if (!weak_alive.lock()) return;
-      std::lock_guard<std::mutex> lock(mutex_);
-      if (client_disconnect_handler_) {
-        client_disconnect_handler_(ConnectionContext(client_id, "disconnected"));
+    server_->on_multi_disconnect([weak_alive, this](size_t client_id) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
+      ConnectionHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = client_disconnect_handler_;
+      }
+      if (handler) {
+        handler(ConnectionContext(client_id, "disconnected"));
       }
     });
 
-    server_->on_multi_data([this, weak_alive](size_t client_id, const std::vector<uint8_t>& data) {
-      if (!weak_alive.lock()) return;
-      std::lock_guard<std::mutex> lock(mutex_);
-      if (data_handler_) {
-        data_handler_(
-            MessageContext(client_id, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
+    server_->on_multi_data([weak_alive, this](size_t client_id, const std::vector<uint8_t>& data) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = data_handler_;
+      }
+      if (handler) {
+        handler(MessageContext(client_id, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
       }
     });
   }

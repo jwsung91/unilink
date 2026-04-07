@@ -178,28 +178,43 @@ struct UdsClient::Impl {
     std::weak_ptr<bool> weak_alive = alive_marker_;
 
     channel_->on_state([this, weak_alive](base::LinkState state) {
-      if (!weak_alive.lock()) return;
+      auto alive = weak_alive.lock();
+      if (!alive) return;
 
       if (state == base::LinkState::Connected) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        fulfill_all_locked(true);
-        if (connect_handler_) {
-          connect_handler_(ConnectionContext(0, "connected"));
+        ConnectionHandler handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          fulfill_all_locked(true);
+          handler = connect_handler_;
+        }
+        if (handler) {
+          handler(ConnectionContext(0, "connected"));
         }
       } else if (state == base::LinkState::Error || state == base::LinkState::Idle) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        fulfill_all_locked(false);
-        if (disconnect_handler_) {
-          disconnect_handler_(ConnectionContext(0, "disconnected"));
+        ConnectionHandler handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          fulfill_all_locked(false);
+          handler = disconnect_handler_;
+        }
+        if (handler) {
+          handler(ConnectionContext(0, "disconnected"));
         }
       }
     });
 
     channel_->on_bytes([this, weak_alive](memory::ConstByteSpan data) {
-      if (!weak_alive.lock()) return;
-      std::lock_guard<std::mutex> lock(mutex_);
-      if (data_handler_) {
-        data_handler_(MessageContext(0, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = data_handler_;
+      }
+      if (handler) {
+        handler(MessageContext(0, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
       }
     });
   }
