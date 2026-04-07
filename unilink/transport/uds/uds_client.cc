@@ -148,17 +148,14 @@ UdsClient::UdsClient(const UdsClientConfig& cfg, std::unique_ptr<interface::UdsS
     : impl_(std::make_unique<Impl>(cfg, &ioc, std::move(socket))) {}
 
 UdsClient::~UdsClient() {
-  // Use a specialized internal stop that doesn't use shared_from_this()
   impl_->stop_requested_ = true;
-  uint64_t seq = impl_->current_seq_.load();
+  impl_->stopping_ = true;
 
-  if (impl_->ioc_) {
-    net::dispatch(impl_->strand_, [this, seq]() {
-      if (impl_->stopping_) return;
-      impl_->stopping_ = true;
-      impl_->handle_close(nullptr, seq);
-    });
-  }
+  // Cancel all pending operations synchronously
+  boost::system::error_code ec;
+  impl_->retry_timer_.cancel(ec);
+  impl_->connect_timer_.cancel(ec);
+  impl_->close_socket();
 
   if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {
     if (std::this_thread::get_id() != impl_->ioc_thread_.get_id()) {
@@ -274,7 +271,7 @@ void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) 
   uds::endpoint endpoint(cfg_.socket_path);
 
   connect_timer_.expires_after(std::chrono::milliseconds(cfg_.connection_timeout_ms));
-  connect_timer_.async_wait([self, seq](const boost::system::error_code& ec) {
+  connect_timer_.async_wait(net::bind_executor(strand_, [self, seq](const boost::system::error_code& ec) {
     if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
     if (!ec) {
       self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
@@ -282,28 +279,29 @@ void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) 
                                 self->impl_->reconnect_attempt_count_);
       self->impl_->handle_close(self, seq, boost::asio::error::timed_out);
     }
-  });
+  }));
 
-  socket_->async_connect(endpoint, [self, seq](const boost::system::error_code& ec) {
-    self->impl_->connect_timer_.cancel();
-    if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
-    if (ec) {
-      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect", ec,
-                                "Connect failed: " + ec.message(), diagnostics::is_retryable_uds_connect_error(ec),
-                                self->impl_->reconnect_attempt_count_);
-      self->impl_->schedule_retry(self, seq);
-      return;
-    }
+  socket_->async_connect(endpoint, net::bind_executor(strand_, [self, seq](const boost::system::error_code& ec) {
+                           self->impl_->connect_timer_.cancel();
+                           if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
+                           if (ec) {
+                             self->impl_->record_error(
+                                 diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect", ec,
+                                 "Connect failed: " + ec.message(), diagnostics::is_retryable_uds_connect_error(ec),
+                                 self->impl_->reconnect_attempt_count_);
+                             self->impl_->schedule_retry(self, seq);
+                             return;
+                           }
 
-    self->impl_->connected_ = true;
-    self->impl_->reconnect_attempt_count_ = 0;
-    self->impl_->retry_attempts_ = 0;
-    self->impl_->transition_to(LinkState::Connected);
-    self->impl_->start_read(self, seq);
-    if (!self->impl_->tx_.empty() && !self->impl_->writing_) {
-      self->impl_->do_write(self, seq);
-    }
-  });
+                           self->impl_->connected_ = true;
+                           self->impl_->reconnect_attempt_count_ = 0;
+                           self->impl_->retry_attempts_ = 0;
+                           self->impl_->transition_to(LinkState::Connected);
+                           self->impl_->start_read(self, seq);
+                           if (!self->impl_->tx_.empty() && !self->impl_->writing_) {
+                             self->impl_->do_write(self, seq);
+                           }
+                         }));
 }
 
 void UdsClient::Impl::schedule_retry(std::shared_ptr<UdsClient> self, uint64_t seq) {
@@ -320,28 +318,29 @@ void UdsClient::Impl::schedule_retry(std::shared_ptr<UdsClient> self, uint64_t s
 
   reconnect_attempt_count_++;
   retry_timer_.expires_after(decision.delay.value_or(std::chrono::milliseconds(cfg_.retry_interval_ms)));
-  retry_timer_.async_wait([self, seq](const boost::system::error_code& ec) {
+  retry_timer_.async_wait(net::bind_executor(strand_, [self, seq](const boost::system::error_code& ec) {
     if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
     self->impl_->do_connect(self, seq);
-  });
+  }));
 }
 
 void UdsClient::Impl::start_read(std::shared_ptr<UdsClient> self, uint64_t seq) {
-  socket_->async_read_some(net::buffer(rx_), [self, seq](const boost::system::error_code& ec, size_t bytes) {
-    if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
-    if (ec) {
-      self->impl_->handle_close(self, seq, ec);
-      return;
-    }
+  socket_->async_read_some(net::buffer(rx_),
+                           net::bind_executor(strand_, [self, seq](const boost::system::error_code& ec, size_t bytes) {
+                             if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
+                             if (ec) {
+                               self->impl_->handle_close(self, seq, ec);
+                               return;
+                             }
 
-    OnBytes cb;
-    {
-      std::lock_guard<std::mutex> lock(self->impl_->callback_mtx_);
-      cb = self->impl_->on_bytes_;
-    }
-    if (cb) cb(memory::ConstByteSpan(self->impl_->rx_.data(), bytes));
-    self->impl_->start_read(self, seq);
-  });
+                             OnBytes cb;
+                             {
+                               std::lock_guard<std::mutex> lock(self->impl_->callback_mtx_);
+                               cb = self->impl_->on_bytes_;
+                             }
+                             if (cb) cb(memory::ConstByteSpan(self->impl_->rx_.data(), bytes));
+                             self->impl_->start_read(self, seq);
+                           }));
 }
 
 void UdsClient::Impl::do_write(std::shared_ptr<UdsClient> self, uint64_t seq) {
@@ -364,19 +363,20 @@ void UdsClient::Impl::do_write(std::shared_ptr<UdsClient> self, uint64_t seq) {
       *current_write_buffer_);
 
   size_t bytes_to_write = buffer.size();
-  socket_->async_write(buffer, [self, seq, bytes_to_write](const boost::system::error_code& ec, size_t) {
-    if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
-    self->impl_->writing_ = false;
-    self->impl_->current_write_buffer_ = std::nullopt;
-    self->impl_->queue_bytes_ -= bytes_to_write;
-    self->impl_->report_backpressure(self->impl_->queue_bytes_);
+  socket_->async_write(
+      buffer, net::bind_executor(strand_, [self, seq, bytes_to_write](const boost::system::error_code& ec, size_t) {
+        if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
+        self->impl_->writing_ = false;
+        self->impl_->current_write_buffer_ = std::nullopt;
+        self->impl_->queue_bytes_ -= bytes_to_write;
+        self->impl_->report_backpressure(self->impl_->queue_bytes_);
 
-    if (ec) {
-      self->impl_->handle_close(self, seq, ec);
-      return;
-    }
-    if (!self->impl_->tx_.empty()) self->impl_->do_write(self, seq);
-  });
+        if (ec) {
+          self->impl_->handle_close(self, seq, ec);
+          return;
+        }
+        if (!self->impl_->tx_.empty()) self->impl_->do_write(self, seq);
+      }));
 }
 
 void UdsClient::Impl::handle_close(std::shared_ptr<UdsClient> self, uint64_t seq, const boost::system::error_code&) {

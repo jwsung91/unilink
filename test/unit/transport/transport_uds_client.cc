@@ -41,7 +41,10 @@ class TransportUdsClientTest : public ::testing::Test {
     unilink::diagnostics::Logger::instance().set_console_output(true);
     unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
 
-    cfg.socket_path = "/tmp/test_uds.sock";
+    auto temp_path = TestUtils::makeTempFilePath("test_uds_client.sock");
+    cfg.socket_path = temp_path.string();
+    TestUtils::removeFileIfExists(temp_path);
+
     mock_socket = new MockUdsSocket();
     auto socket_ptr = std::unique_ptr<interface::UdsSocketInterface>(mock_socket);
     // Use an external io_context from IoContextManager to match common project patterns
@@ -53,6 +56,7 @@ class TransportUdsClientTest : public ::testing::Test {
       client->stop();
       client.reset();
     }
+    TestUtils::removeFileIfExists(cfg.socket_path);
     ioc.restart();
     ioc.run_for(std::chrono::milliseconds(50));
   }

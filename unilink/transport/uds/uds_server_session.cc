@@ -83,15 +83,16 @@ void UdsServerSession::on_backpressure(OnBackpressure cb) { on_bp_ = std::move(c
 void UdsServerSession::on_close(OnClose cb) { on_close_ = std::move(cb); }
 
 void UdsServerSession::start_read() {
-  socket_->async_read_some(net::buffer(rx_),
-                           [this, self = shared_from_this()](const boost::system::error_code& ec, size_t bytes) {
-                             if (ec) {
-                               do_close();
-                               return;
-                             }
-                             if (on_bytes_) on_bytes_(memory::ConstByteSpan(rx_.data(), bytes));
-                             start_read();
-                           });
+  socket_->async_read_some(
+      net::buffer(rx_),
+      net::bind_executor(strand_, [this, self = shared_from_this()](const boost::system::error_code& ec, size_t bytes) {
+        if (ec) {
+          do_close();
+          return;
+        }
+        if (on_bytes_) on_bytes_(memory::ConstByteSpan(rx_.data(), bytes));
+        start_read();
+      }));
 }
 
 void UdsServerSession::do_write() {
@@ -114,8 +115,8 @@ void UdsServerSession::do_write() {
       *current_write_buffer_);
 
   size_t bytes_to_write = buffer.size();
-  socket_->async_write(buffer,
-                       [this, self = shared_from_this(), bytes_to_write](const boost::system::error_code& ec, size_t) {
+  socket_->async_write(buffer, net::bind_executor(strand_, [this, self = shared_from_this(), bytes_to_write](
+                                                               const boost::system::error_code& ec, size_t) {
                          writing_ = false;
                          current_write_buffer_ = std::nullopt;
                          queue_bytes_ -= bytes_to_write;
@@ -126,7 +127,7 @@ void UdsServerSession::do_write() {
                            return;
                          }
                          if (!tx_.empty()) do_write();
-                       });
+                       }));
 }
 
 void UdsServerSession::do_close() {

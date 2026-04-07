@@ -37,7 +37,10 @@ using ::testing::Return;
 class TransportUdsServerTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    cfg.socket_path = "/tmp/test_uds_server.sock";
+    auto temp_path = TestUtils::makeTempFilePath("test_uds_server.sock");
+    cfg.socket_path = temp_path.string();
+    TestUtils::removeFileIfExists(temp_path);
+
     mock_acceptor = new MockUdsAcceptor();
     auto acceptor_ptr = std::unique_ptr<interface::UdsAcceptorInterface>(mock_acceptor);
     server = UdsServer::create(cfg, std::move(acceptor_ptr), ioc);
@@ -45,6 +48,7 @@ class TransportUdsServerTest : public ::testing::Test {
 
   void TearDown() override {
     server->stop();
+    TestUtils::removeFileIfExists(cfg.socket_path);
     TestUtils::waitFor(constants::kShortTimeout.count());
   }
 
