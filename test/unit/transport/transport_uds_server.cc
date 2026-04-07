@@ -39,7 +39,7 @@ class TransportUdsServerTest : public ::testing::Test {
     cfg.socket_path = "/tmp/test_uds_server.sock";
     mock_acceptor = new MockUdsAcceptor();
     auto acceptor_ptr = std::unique_ptr<interface::UdsAcceptorInterface>(mock_acceptor);
-    server = std::make_shared<UdsServer>(cfg, std::move(acceptor_ptr), ioc);
+    server = UdsServer::create(cfg, std::move(acceptor_ptr), ioc);
   }
 
   void TearDown() override {

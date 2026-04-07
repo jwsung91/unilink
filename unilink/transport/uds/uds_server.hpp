@@ -81,14 +81,15 @@ class UNILINK_API UdsServer : public interface::Channel, public std::enable_shar
   void on_multi_connect(MultiClientConnectHandler handler);
   void on_multi_data(MultiClientDataHandler handler);
   void on_multi_disconnect(MultiClientDisconnectHandler handler);
-base::LinkState get_state() const;
 
-explicit UdsServer(const config::UdsServerConfig& cfg);
-UdsServer(const config::UdsServerConfig& cfg, std::unique_ptr<interface::UdsAcceptorInterface> acceptor,
-          boost::asio::io_context& ioc);
+  base::LinkState get_state() const;
 
-private:
-struct Impl;
+ private:
+  explicit UdsServer(const config::UdsServerConfig& cfg);
+  UdsServer(const config::UdsServerConfig& cfg, std::unique_ptr<interface::UdsAcceptorInterface> acceptor,
+            boost::asio::io_context& ioc);
+
+  struct Impl;
   const Impl* get_impl() const { return impl_.get(); }
   Impl* get_impl() { return impl_.get(); }
   std::unique_ptr<Impl> impl_;

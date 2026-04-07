@@ -62,8 +62,8 @@ class UNILINK_API UdsClient : public Channel, public std::enable_shared_from_thi
   ~UdsClient();
 
   // Move semantics
-  UdsClient(UdsClient&&) noexcept;
-  UdsClient& operator=(UdsClient&&) noexcept;
+  UdsClient(UdsClient&&) noexcept = default;
+  UdsClient& operator=(UdsClient&&) noexcept = default;
 
   // Disable copy
   UdsClient(const UdsClient&) = delete;
@@ -86,12 +86,12 @@ class UNILINK_API UdsClient : public Channel, public std::enable_shared_from_thi
   void set_retry_interval(unsigned interval_ms);
   void set_reconnect_policy(ReconnectPolicy policy);
 
+ private:
   explicit UdsClient(const UdsClientConfig& cfg);
   explicit UdsClient(const UdsClientConfig& cfg, boost::asio::io_context& ioc);
   UdsClient(const UdsClientConfig& cfg, std::unique_ptr<interface::UdsSocketInterface> socket,
             boost::asio::io_context& ioc);
 
- private:
   struct Impl;
   const Impl* get_impl() const { return impl_.get(); }
   Impl* get_impl() { return impl_.get(); }

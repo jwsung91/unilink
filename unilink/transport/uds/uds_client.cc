@@ -171,9 +171,6 @@ UdsClient::~UdsClient() {
   }
 }
 
-UdsClient::UdsClient(UdsClient&&) noexcept = default;
-UdsClient& UdsClient::operator=(UdsClient&&) noexcept = default;
-
 void UdsClient::start() {
   auto current_state = impl_->state_.get_state();
   if (current_state == LinkState::Connecting || current_state == LinkState::Connected) {
@@ -292,7 +289,6 @@ void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) 
       self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect",
                                 ec, "Connect failed: " + ec.message(), 
                                 diagnostics::is_retryable_uds_connect_error(ec), self->impl_->reconnect_attempt_count_);
-      std::cout << "DEBUG: Client connect failed: " << ec.message() << " (" << ec.value() << ")" << std::endl;
       self->impl_->schedule_retry(self, seq);
       return;
     }

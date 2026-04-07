@@ -44,7 +44,7 @@ class TransportUdsClientTest : public ::testing::Test {
     mock_socket = new MockUdsSocket();
     auto socket_ptr = std::unique_ptr<interface::UdsSocketInterface>(mock_socket);
     // Use an external io_context from IoContextManager to match common project patterns
-    client = std::make_shared<UdsClient>(cfg, std::move(socket_ptr), ioc);
+    client = UdsClient::create(cfg, std::move(socket_ptr), ioc);
   }
 
   void TearDown() override {
