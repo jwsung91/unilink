@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
 #include <boost/asio.hpp>
 #include <memory>
 #include <thread>
 
-#include "unilink/transport/uds/uds_client.hpp"
 #include "test/mocks/mock_uds_socket.hpp"
 #include "test_constants.hpp"
 #include "test_utils.hpp"
+#include "unilink/transport/uds/uds_client.hpp"
 
 using namespace unilink;
 using namespace unilink::transport;
@@ -39,7 +40,7 @@ class TransportUdsClientTest : public ::testing::Test {
   void SetUp() override {
     unilink::diagnostics::Logger::instance().set_console_output(true);
     unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
-    
+
     cfg.socket_path = "/tmp/test_uds.sock";
     mock_socket = new MockUdsSocket();
     auto socket_ptr = std::unique_ptr<interface::UdsSocketInterface>(mock_socket);
@@ -78,18 +79,18 @@ TEST_F(TransportUdsClientTest, SharedFromThisCheck) {
 TEST_F(TransportUdsClientTest, SuccessfulConnection) {
   // Ensure we don't call shared_from_this until it's safe
   auto self = client->shared_from_this();
-  
+
   EXPECT_CALL(*mock_socket, async_connect(_, _))
-      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&, std::function<void(const boost::system::error_code&)> handler) {
-        net::post(ioc, [handler]() { 
-          handler(boost::system::error_code()); 
-        });
+      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&,
+                              std::function<void(const boost::system::error_code&)> handler) {
+        net::post(ioc, [handler]() { handler(boost::system::error_code()); });
       }));
 
   EXPECT_CALL(*mock_socket, async_read_some(_, _))
-      .WillRepeatedly(Invoke([](const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {
-        // Do nothing
-      }));
+      .WillRepeatedly(
+          Invoke([](const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {
+            // Do nothing
+          }));
 
   std::atomic<bool> connected{false};
   client->on_state([&connected](base::LinkState state) {
@@ -99,7 +100,7 @@ TEST_F(TransportUdsClientTest, SuccessfulConnection) {
   });
 
   client->start();
-  
+
   // Run io_context to process handlers
   ioc.restart();
   ioc.run_for(std::chrono::milliseconds(100));
@@ -110,10 +111,9 @@ TEST_F(TransportUdsClientTest, SuccessfulConnection) {
 
 TEST_F(TransportUdsClientTest, ConnectionFailure) {
   EXPECT_CALL(*mock_socket, async_connect(_, _))
-      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&, std::function<void(const boost::system::error_code&)> handler) {
-        net::post(ioc, [handler]() { 
-          handler(make_error_code(boost::asio::error::connection_refused)); 
-        });
+      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&,
+                              std::function<void(const boost::system::error_code&)> handler) {
+        net::post(ioc, [handler]() { handler(make_error_code(boost::asio::error::connection_refused)); });
       }));
 
   std::atomic<bool> has_error{false};
@@ -135,57 +135,58 @@ TEST_F(TransportUdsClientTest, WriteData) {
   // Setup successful connection first
   std::cout << "WriteData: setting up async_connect mock" << std::endl;
   EXPECT_CALL(*mock_socket, async_connect(_, _))
-      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&, std::function<void(const boost::system::error_code&)> handler) {
+      .WillOnce(Invoke([this](const net::local::stream_protocol::endpoint&,
+                              std::function<void(const boost::system::error_code&)> handler) {
         std::cout << "WriteData: async_connect called, posting handler" << std::endl;
-        net::post(ioc, [handler]() { 
+        net::post(ioc, [handler]() {
           std::cout << "WriteData: executing connect handler" << std::endl;
-          handler(boost::system::error_code()); 
+          handler(boost::system::error_code());
         });
       }));
-  
+
   EXPECT_CALL(*mock_socket, async_read_some(_, _))
-      .WillRepeatedly(Invoke([](const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {
-        // Do nothing, just stay active
-      }));
+      .WillRepeatedly(
+          Invoke([](const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>) {
+            // Do nothing, just stay active
+          }));
 
   std::cout << "WriteData: starting client" << std::endl;
   client->start();
-  
+
   // Give it time to connect
   std::cout << "WriteData: waiting for connection" << std::endl;
-  for(int i=0; i<10; ++i) {
+  for (int i = 0; i < 10; ++i) {
     ioc.restart();
     ioc.run_for(std::chrono::milliseconds(20));
     if (client->is_connected()) break;
   }
-  
+
   ASSERT_TRUE(client->is_connected());
   std::cout << "WriteData: client connected" << std::endl;
 
   std::vector<uint8_t> test_data = {1, 2, 3, 4, 5};
   std::atomic<bool> write_called{false};
-  
+
   EXPECT_CALL(*mock_socket, async_write(_, _))
-      .WillOnce(Invoke([&](const net::const_buffer& buffer, std::function<void(const boost::system::error_code&, std::size_t)> handler) {
+      .WillOnce(Invoke([&](const net::const_buffer& buffer,
+                           std::function<void(const boost::system::error_code&, std::size_t)> handler) {
         std::cout << "WriteData: async_write called" << std::endl;
         EXPECT_EQ(buffer.size(), test_data.size());
         write_called = true;
-        net::post(ioc, [handler, size = buffer.size()]() {
-          handler(boost::system::error_code(), size);
-        });
+        net::post(ioc, [handler, size = buffer.size()]() { handler(boost::system::error_code(), size); });
       }));
 
   std::cout << "WriteData: calling async_write_copy" << std::endl;
   client->async_write_copy(memory::ConstByteSpan(test_data.data(), test_data.size()));
-  
+
   // Process write
   std::cout << "WriteData: polling for write" << std::endl;
-  for(int i=0; i<10; ++i) {
+  for (int i = 0; i < 10; ++i) {
     ioc.restart();
     ioc.run_for(std::chrono::milliseconds(20));
     if (write_called) break;
   }
-  
+
   EXPECT_TRUE(write_called);
   std::cout << "WriteData: test finished" << std::endl;
 }

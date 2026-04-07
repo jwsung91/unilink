@@ -15,14 +15,15 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <cstdio>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
-#include <cstdio>
 
 #include "test_utils.hpp"
 #include "unilink/builder/auto_initializer.hpp"
@@ -35,13 +36,12 @@ using namespace std::chrono_literals;
 class UdsIntegrationTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    socket_path_ = "/tmp/unilink_test_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".sock";
+    socket_path_ =
+        "/tmp/unilink_test_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".sock";
     std::remove(socket_path_.c_str());
   }
 
-  void TearDown() override {
-    std::remove(socket_path_.c_str());
-  }
+  void TearDown() override { std::remove(socket_path_.c_str()); }
 
   std::string socket_path_;
 };
@@ -63,9 +63,7 @@ TEST_F(UdsIntegrationTest, BasicCommunication) {
   std::condition_variable cv;
 
   auto server = unilink::uds_server(socket_path_)
-                    .on_connect([&server_connected](const wrapper::ConnectionContext&) {
-                      server_connected = true;
-                    })
+                    .on_connect([&server_connected](const wrapper::ConnectionContext&) { server_connected = true; })
                     .on_data([&](const wrapper::MessageContext& ctx) {
                       std::lock_guard<std::mutex> lock(mtx);
                       received_data = std::string(ctx.data());
@@ -75,16 +73,14 @@ TEST_F(UdsIntegrationTest, BasicCommunication) {
                     .build();
 
   server->start();
-  
+
   // Wait for server to be ready
   bool listening = TestUtils::waitForCondition([&]() { return server->is_listening(); }, 2000);
   ASSERT_TRUE(listening) << "Server failed to start listening";
 
   auto client = unilink::uds_client(socket_path_)
                     .use_independent_context(true)
-                    .on_connect([&client_connected](const wrapper::ConnectionContext&) {
-                      client_connected = true;
-                    })
+                    .on_connect([&client_connected](const wrapper::ConnectionContext&) { client_connected = true; })
                     .build();
 
   client->start();
@@ -116,12 +112,8 @@ TEST_F(UdsIntegrationTest, MultiClientCommunication) {
 
   auto server = unilink::uds_server(socket_path_)
                     .unlimited_clients()
-                    .on_connect([&connections](const wrapper::ConnectionContext&) {
-                      connections++;
-                    })
-                    .on_data([&](const wrapper::MessageContext& ctx) {
-                      messages_received++;
-                    })
+                    .on_connect([&connections](const wrapper::ConnectionContext&) { connections++; })
+                    .on_data([&](const wrapper::MessageContext& ctx) { messages_received++; })
                     .build();
 
   server->start();

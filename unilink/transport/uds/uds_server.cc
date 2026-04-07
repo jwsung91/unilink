@@ -18,18 +18,18 @@
 
 #include <atomic>
 #include <boost/asio.hpp>
+#include <cstdio>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
-#include <cstdio>
 
+#include "unilink/builder/auto_initializer.hpp"
 #include "unilink/concurrency/io_context_manager.hpp"
 #include "unilink/concurrency/thread_safe_state.hpp"
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/interface/iuds_acceptor.hpp"
 #include "unilink/transport/uds/boost_uds_acceptor.hpp"
 #include "unilink/transport/uds/uds_server_session.hpp"
-#include "unilink/builder/auto_initializer.hpp"
 
 namespace unilink {
 namespace transport {
@@ -111,7 +111,7 @@ UdsServer::~UdsServer() {
   impl_->stopping_ = true;
   boost::system::error_code ec;
   impl_->acceptor_->close(ec);
-  
+
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   for (auto& pair : impl_->sessions_) {
     pair.second->stop();
@@ -164,18 +164,18 @@ void UdsServer::start() {
     impl_->ioc_thread_ = std::thread([this]() { impl_->ioc_->run(); });
   }
 
-  net::post(impl_->ioc_->get_executor(), [this, self = shared_from_this()]() {
-    impl_->do_accept(self);
+  net::post(impl_->ioc_->get_executor(), [self = shared_from_this()]() {
+    self->impl_->do_accept(self);
   });
 }
 
 void UdsServer::stop() {
   bool already_stopping = impl_->stopping_.exchange(true);
   if (already_stopping) return;
-  
+
   boost::system::error_code ec;
   impl_->acceptor_->close(ec);
-  
+
   // Cleanup UDS socket file on stop
   std::remove(impl_->cfg_.socket_path.c_str());
 
@@ -207,9 +207,7 @@ void UdsServer::async_write_copy(memory::ConstByteSpan data) {
   broadcast(std::vector<uint8_t>(data.begin(), data.end()));
 }
 
-void UdsServer::async_write_move(std::vector<uint8_t>&& data) {
-  broadcast(data);
-}
+void UdsServer::async_write_move(std::vector<uint8_t>&& data) { broadcast(data); }
 
 void UdsServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
@@ -290,8 +288,9 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
 
     if (!ec) {
       size_t client_id = self->impl_->next_client_id_++;
-      auto session = std::make_shared<UdsServerSession>(*self->impl_->ioc_, std::move(socket), self->impl_->cfg_.backpressure_threshold);
-      
+      auto session = std::make_shared<UdsServerSession>(*self->impl_->ioc_, std::move(socket),
+                                                        self->impl_->cfg_.backpressure_threshold);
+
       {
         std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);
         self->impl_->sessions_[client_id] = session;
@@ -324,7 +323,7 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
       });
 
       session->start();
-      
+
       MultiClientConnectHandler connect_handler;
       {
         std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);

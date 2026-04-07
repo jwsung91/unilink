@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
 #include <boost/asio.hpp>
 #include <memory>
 #include <thread>
 
-#include "unilink/transport/uds/uds_server.hpp"
 #include "test/mocks/mock_uds_acceptor.hpp"
 #include "test_constants.hpp"
 #include "test_utils.hpp"
+#include "unilink/transport/uds/uds_server.hpp"
 
 using namespace unilink;
 using namespace unilink::transport;
@@ -58,9 +59,10 @@ TEST_F(TransportUdsServerTest, SuccessfulStart) {
   EXPECT_CALL(*mock_acceptor, bind(_, _)).WillOnce(Return());
   EXPECT_CALL(*mock_acceptor, listen(_, _)).WillOnce(Return());
   EXPECT_CALL(*mock_acceptor, async_accept(_))
-      .WillOnce(Invoke([this](std::function<void(const boost::system::error_code&, net::local::stream_protocol::socket)>) {
-        // Just keep the handler, don't call it yet to simulate listening
-      }));
+      .WillOnce(
+          Invoke([this](std::function<void(const boost::system::error_code&, net::local::stream_protocol::socket)>) {
+            // Just keep the handler, don't call it yet to simulate listening
+          }));
 
   std::atomic<bool> listening{false};
   server->on_state([&listening](base::LinkState state) {
@@ -70,11 +72,11 @@ TEST_F(TransportUdsServerTest, SuccessfulStart) {
   });
 
   server->start();
-  
+
   // Give it time to transition
-  for(int i=0; i<10; ++i) {
+  for (int i = 0; i < 10; ++i) {
     ioc.poll();
-    if (server->is_connected()) break; // is_connected() checks for Listening state in my implementation
+    if (server->is_connected()) break;  // is_connected() checks for Listening state in my implementation
     TestUtils::waitFor(10);
   }
 
@@ -97,8 +99,8 @@ TEST_F(TransportUdsServerTest, BindFailure) {
   });
 
   server->start();
-  
-  for(int i=0; i<10; ++i) {
+
+  for (int i = 0; i < 10; ++i) {
     ioc.poll();
     if (has_error) break;
     TestUtils::waitFor(10);

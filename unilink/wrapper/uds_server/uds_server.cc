@@ -16,9 +16,9 @@
 
 #include "unilink/wrapper/uds_server/uds_server.hpp"
 
+#include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
-#include <atomic>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -129,16 +129,16 @@ struct UdsServer::Impl {
     if (work_guard_) {
       work_guard_.reset();
     }
-    
+
     if (external_ioc_) {
       external_ioc_->stop();
     }
 
     if (external_thread_.joinable()) {
       if (std::this_thread::get_id() != external_thread_.get_id()) {
-        lock.unlock(); // RELEASE LOCK BEFORE JOINING
+        lock.unlock();  // RELEASE LOCK BEFORE JOINING
         external_thread_.join();
-        lock.lock(); // RE-ACQUIRE
+        lock.lock();  // RE-ACQUIRE
       } else {
         external_thread_.detach();
       }
@@ -170,7 +170,8 @@ struct UdsServer::Impl {
       if (!weak_alive.lock()) return;
       std::lock_guard<std::mutex> lock(mutex_);
       if (data_handler_) {
-        data_handler_(MessageContext(client_id, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
+        data_handler_(
+            MessageContext(client_id, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
       }
     });
   }
@@ -192,7 +193,9 @@ std::future<bool> UdsServer::start() { return impl_->start(); }
 
 void UdsServer::stop() { impl_->stop(); }
 
-bool UdsServer::is_listening() const { return impl_->started_.load() && impl_->server_ && impl_->server_->is_connected(); }
+bool UdsServer::is_listening() const {
+  return impl_->started_.load() && impl_->server_ && impl_->server_->is_connected();
+}
 
 bool UdsServer::broadcast(std::string_view data) {
   if (impl_->server_) {

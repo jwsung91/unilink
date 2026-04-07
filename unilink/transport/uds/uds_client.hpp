@@ -62,8 +62,8 @@ class UNILINK_API UdsClient : public Channel, public std::enable_shared_from_thi
   ~UdsClient();
 
   // Move semantics
-  UdsClient(UdsClient&&) noexcept = default;
-  UdsClient& operator=(UdsClient&&) noexcept = default;
+  UdsClient(UdsClient&&) noexcept;
+  UdsClient& operator=(UdsClient&&) noexcept;
 
   // Disable copy
   UdsClient(const UdsClient&) = delete;

@@ -56,7 +56,7 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
 
   UdsServerSession(net::io_context& ioc, uds::socket sock,
                    size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
-  
+
   UdsServerSession(net::io_context& ioc, std::unique_ptr<interface::UdsSocketInterface> socket,
                    size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
 

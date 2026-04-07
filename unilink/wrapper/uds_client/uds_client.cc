@@ -130,10 +130,10 @@ struct UdsClient::Impl {
       setup_internal_handlers();
     }
 
-    lock.unlock(); // UNLOCK BEFORE START
+    lock.unlock();  // UNLOCK BEFORE START
     channel_->start();
     lock.lock();
-    
+
     return f;
   }
 
@@ -154,16 +154,16 @@ struct UdsClient::Impl {
     if (work_guard_) {
       work_guard_.reset();
     }
-    
+
     if (external_ioc_) {
       external_ioc_->stop();
     }
 
     if (external_thread_.joinable()) {
       if (std::this_thread::get_id() != external_thread_.get_id()) {
-        lock.unlock(); // RELEASE LOCK BEFORE JOINING
+        lock.unlock();  // RELEASE LOCK BEFORE JOINING
         external_thread_.join();
-        lock.lock(); // RE-ACQUIRE
+        lock.lock();  // RE-ACQUIRE
       } else {
         external_thread_.detach();
       }
@@ -223,7 +223,8 @@ void UdsClient::stop() { impl_->stop(); }
 
 void UdsClient::send(std::string_view data) {
   if (impl_->channel_) {
-    impl_->channel_->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
+    impl_->channel_->async_write_copy(
+        memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
   }
 }
 
