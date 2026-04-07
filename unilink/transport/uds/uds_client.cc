@@ -152,9 +152,8 @@ UdsClient::~UdsClient() {
   impl_->stopping_ = true;
 
   // Cancel all pending operations synchronously
-  boost::system::error_code ec;
-  impl_->retry_timer_.cancel(ec);
-  impl_->connect_timer_.cancel(ec);
+  impl_->retry_timer_.cancel();
+  impl_->connect_timer_.cancel();
   impl_->close_socket();
 
   if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {

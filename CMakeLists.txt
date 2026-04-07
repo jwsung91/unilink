@@ -36,9 +36,13 @@ set(UNILINK_SOURCES
   unilink/config/config_factory.cc
   unilink/config/config_manager.cc
   unilink/diagnostics/error_handler.cc
+  unilink/diagnostics/exceptions.cc
   unilink/diagnostics/log_rotation.cc
   unilink/diagnostics/logger.cc
   unilink/factory/channel_factory.cc
+  unilink/interface/channel.cc
+  unilink/interface/itcp_acceptor.cc
+  unilink/interface/itcp_socket.cc
   unilink/memory/memory_pool.cc
   unilink/memory/memory_tracker.cc
   unilink/memory/safe_data_buffer.cc

@@ -31,7 +31,7 @@ class UNILINK_API Channel {
   using OnState = std::function<void(base::LinkState)>;
   using OnBackpressure = std::function<void(size_t /*queued_bytes*/)>;
 
-  virtual ~Channel() = default;
+  virtual ~Channel();
 
   virtual void start() = 0;
   virtual void stop() = 0;

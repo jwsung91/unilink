@@ -122,10 +122,7 @@ class UNILINK_API MemoryPool {
  */
 class UNILINK_API GlobalMemoryPool {
  public:
-  static MemoryPool& instance() {
-    static MemoryPool pool;
-    return pool;
-  }
+  static MemoryPool& instance();
 
   // Factory method to create optimized memory pool
   static std::unique_ptr<MemoryPool> create_optimized() {
