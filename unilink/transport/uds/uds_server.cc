@@ -285,12 +285,13 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
     if (!self || self->impl_->stopping_) return;
 
     if (!ec) {
-      size_t client_id = self->impl_->next_client_id_++;
+      size_t client_id;
       auto session = std::make_shared<UdsServerSession>(*self->impl_->ioc_, std::move(socket),
                                                         self->impl_->cfg_.backpressure_threshold);
 
       {
         std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);
+        client_id = self->impl_->next_client_id_++;
         self->impl_->sessions_[client_id] = session;
       }
 
@@ -329,8 +330,9 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
       }
       if (connect_handler) connect_handler(client_id, "UDS Client");
 
-      // Continue accepting only if no error occurred
-      self->impl_->do_accept(self);
+      // Continue accepting
+      auto* impl = self->impl_.get();
+      impl->do_accept(self);
     } else {
       // Log only real errors, not operation_aborted
       if (ec != boost::asio::error::operation_aborted) {
