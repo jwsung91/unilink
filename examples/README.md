@@ -32,7 +32,6 @@ socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
 # Terminal 3: Connect to second port
 socat - /tmp/ttyB
 ```
-
 ### TCP Communication
 
 ````bash
@@ -51,8 +50,22 @@ cd tcp/single-chat
 # TCP chat client
 cd tcp/single-chat
 ./chat_tcp_client 127.0.0.1 9000
+````
+
+### UDS Communication
+
+```bash
+# UDS echo server
+cd uds
+./echo_uds_server /tmp/my_socket.sock
+
+# UDS echo client
+cd uds
+./echo_uds_client /tmp/my_socket.sock
+```
 
 ### UDP Communication
+
 ```bash
 # UDP receiver (reply enabled)
 cd udp
@@ -99,6 +112,10 @@ make chat_tcp_server
 
 - **single-echo/**: TCP echo server and client for network echo testing
 - **single-chat/**: TCP chat server and client for network chat
+
+### UDS Communication
+
+- **uds/**: Unix Domain Socket echo server and client for local IPC testing
 
 ### Common Functionality
 

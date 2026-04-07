@@ -57,11 +57,17 @@ Step-by-step guides for common tasks:
   - Implement chat server
   - Duration: 20 minutes
 
+- **[Tutorial 3: Local IPC with UDS](tutorials/03_uds_communication.md)**
+  - Use Unix Domain Sockets
+  - High-performance local IPC
+  - Server and Client setup
+  - Duration: 10 minutes
+
 ### Coming Soon
-- Tutorial 3: Serial Communication
-- Tutorial 4: Error Handling & Recovery
-- Tutorial 5: Performance Optimization
-- Tutorial 6: Building Production Systems
+- Tutorial 4: Serial Communication
+- Tutorial 5: Error Handling & Recovery
+- Tutorial 6: Performance Optimization
+- Tutorial 7: Building Production Systems
 
 ---
 
@@ -107,6 +113,7 @@ Complete API documentation:
 |-----|-------------|
 | **[TCP Client](reference/api_guide.md#tcp-client)** | Connect to TCP servers |
 | **[TCP Server](reference/api_guide.md#tcp-server)** | Accept client connections |
+| **[UDS Communication](reference/api_guide.md#uds-communication)** | High-performance local IPC |
 | **[Serial Communication](reference/api_guide.md#serial-communication)** | Interface with serial devices |
 | **[Error Handling](reference/api_guide.md#error-handling)** | Centralized error management |
 | **[Logging System](reference/api_guide.md#logging-system)** | Flexible logging |

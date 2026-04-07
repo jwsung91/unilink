@@ -543,6 +543,88 @@ auto socket = unilink::udp(8080)
 
 ---
 
+## UDS Communication
+
+High-performance local inter-process communication (IPC) using Unix Domain Sockets.
+
+### Basic Usage
+
+#### UDS Server
+
+```cpp
+#include "unilink/unilink.hpp"
+
+auto server = unilink::uds_server("/tmp/my_service.sock")
+    .unlimited_clients()
+    .on_connect([](const unilink::ConnectionContext& ctx) {
+        std::cout << "Client connected!" << std::endl;
+    })
+    .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "Received: " << ctx.data() << std::endl;
+    })
+    .build();
+
+server->start();
+```
+
+#### UDS Client
+
+```cpp
+#include "unilink/unilink.hpp"
+
+auto client = unilink::uds_client("/tmp/my_service.sock")
+    .on_connect([](const unilink::ConnectionContext& ctx) {
+        std::cout << "Connected to UDS server!" << std::endl;
+    })
+    .build();
+
+client->start();
+client->send("Hello IPC!");
+```
+
+### API Reference
+
+#### Constructors
+
+```cpp
+unilink::uds_server(const std::string& socket_path)
+unilink::uds_client(const std::string& socket_path)
+```
+
+#### Builder Methods (UDS Server)
+
+| Method                | Parameters     | Description                                     |
+| --------------------- | -------------- | ----------------------------------------------- |
+| `single_client()`     | None           | Only allow one client at a time                 |
+| `multi_client(max)`   | `size_t (>=2)` | Allow up to `max` concurrent clients            |
+| `unlimited_clients()` | None           | Allow unlimited clients                         |
+| `auto_manage()`       | `bool`         | Auto-start/stop lifecycle                       |
+
+#### Builder Methods (UDS Client)
+
+| Method                | Parameters | Description                                |
+| --------------------- | ---------- | ------------------------------------------ |
+| `retry_interval(ms)`  | `unsigned` | Set reconnection interval (default `3000`) |
+| `auto_manage()`       | `bool`     | Auto-start/stop lifecycle                  |
+
+#### Instance Methods (Common)
+
+| Method            | Return | Description                       |
+| ----------------- | ------ | --------------------------------- |
+| `start()`         | `void` | Start communication               |
+| `stop()`          | `void` | Stop communication                |
+| `is_connected()`  | `bool` | Check if channel is active        |
+| `send(data)`      | `void` | Send data to peer(s)              |
+| `is_listening()`  | `bool` | (Server only) Check if listening  |
+
+### Notes on UDS
+
+- **Platform Support**: Unix Domain Sockets are natively supported on Linux, macOS, and recent versions of Windows 10/11.
+- **Path Length**: Socket paths are typically limited to ~108 characters (standard `sockaddr_un` limit).
+- **Cleanup**: Unilink automatically removes the socket file when the server starts and stops to ensure clean initialization.
+
+---
+
 ## Error Handling
 
 Centralized error handling system with callbacks and statistics.
