@@ -78,8 +78,7 @@ struct UdsServerConfig {
   bool is_valid() const {
     return util::InputValidator::is_valid_uds_path(socket_path) &&
            backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
-           backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD &&
-           max_connections > 0;
+           backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0;
   }
 
   void validate_and_clamp() {

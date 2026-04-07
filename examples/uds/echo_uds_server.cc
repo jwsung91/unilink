@@ -14,47 +14,44 @@
  * limitations under the License.
  */
 
+#include <csignal>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <csignal>
 
-#include "unilink/factory/channel_factory.hpp"
 #include "unilink/config/uds_config.hpp"
+#include "unilink/factory/channel_factory.hpp"
 #include "unilink/transport/uds/uds_server.hpp"
 
 using namespace unilink;
 
 int main() {
-    config::UdsServerConfig cfg;
-    cfg.socket_path = "/tmp/unilink_echo.sock";
+  config::UdsServerConfig cfg;
+  cfg.socket_path = "/tmp/unilink_echo.sock";
 
-    auto server = std::static_pointer_cast<transport::UdsServer>(
-        factory::ChannelFactory::create(cfg)
-    );
+  auto server = std::static_pointer_cast<transport::UdsServer>(factory::ChannelFactory::create(cfg));
 
-    server->on_multi_connect([](size_t client_id, const std::string& info) {
-        std::cout << "Client " << client_id << " connected: " << info << std::endl;
-    });
+  server->on_multi_connect([](size_t client_id, const std::string& info) {
+    std::cout << "Client " << client_id << " connected: " << info << std::endl;
+  });
 
-    server->on_multi_data([server](size_t client_id, const std::vector<uint8_t>& data) {
-        std::string msg(data.begin(), data.end());
-        std::cout << "Received from client " << client_id << ": " << msg << std::endl << std::flush;
-        
-        // Echo back
-        server->send_to_client(client_id, data);
-    });
+  server->on_multi_data([server](size_t client_id, const std::vector<uint8_t>& data) {
+    std::string msg(data.begin(), data.end());
+    std::cout << "Received from client " << client_id << ": " << msg << std::endl << std::flush;
 
-    server->on_multi_disconnect([](size_t client_id) {
-        std::cout << "Client " << client_id << " disconnected" << std::endl;
-    });
+    // Echo back
+    server->send_to_client(client_id, data);
+  });
 
-    std::cout << "Starting UDS Echo Server on " << cfg.socket_path << "..." << std::endl;
-    server->start();
+  server->on_multi_disconnect(
+      [](size_t client_id) { std::cout << "Client " << client_id << " disconnected" << std::endl; });
 
-    std::cout << "Press Enter to stop..." << std::endl;
-    std::cin.get();
+  std::cout << "Starting UDS Echo Server on " << cfg.socket_path << "..." << std::endl;
+  server->start();
 
-    server->stop();
-    return 0;
+  std::cout << "Press Enter to stop..." << std::endl;
+  std::cin.get();
+
+  server->stop();
+  return 0;
 }

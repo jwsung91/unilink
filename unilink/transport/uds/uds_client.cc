@@ -186,8 +186,8 @@ void UdsClient::start() {
   uint64_t seq = impl_->current_seq_.load();
 
   if (impl_->owns_ioc_ && !impl_->ioc_thread_.joinable()) {
-    impl_->work_guard_ = std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(
-        net::make_work_guard(*impl_->ioc_));
+    impl_->work_guard_ =
+        std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(net::make_work_guard(*impl_->ioc_));
     impl_->ioc_thread_ = std::thread([this]() { impl_->ioc_->run(); });
   }
 

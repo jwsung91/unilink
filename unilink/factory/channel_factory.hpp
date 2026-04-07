@@ -38,9 +38,8 @@ namespace factory {
  */
 class UNILINK_API ChannelFactory {
  public:
-  using ChannelOptions =
-      std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig, config::UdpConfig,
-                   config::UdsClientConfig, config::UdsServerConfig>;
+  using ChannelOptions = std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig,
+                                      config::UdpConfig, config::UdsClientConfig, config::UdsServerConfig>;
 
   // Channel creation
   static std::shared_ptr<interface::Channel> create(const ChannelOptions& options,

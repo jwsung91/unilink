@@ -17,8 +17,10 @@
 #pragma once
 
 #include <gmock/gmock.h>
+
 #include <boost/asio.hpp>
 #include <functional>
+
 #include "unilink/interface/iuds_socket.hpp"
 
 namespace unilink {
@@ -30,9 +32,14 @@ using uds = net::local::stream_protocol;
 
 class MockUdsSocket : public interface::UdsSocketInterface {
  public:
-  MOCK_METHOD(void, async_read_some, (const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>), (override));
-  MOCK_METHOD(void, async_write, (const net::const_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>), (override));
-  MOCK_METHOD(void, async_connect, (const uds::endpoint&, std::function<void(const boost::system::error_code&)>), (override));
+  MOCK_METHOD(void, async_read_some,
+              (const net::mutable_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>),
+              (override));
+  MOCK_METHOD(void, async_write,
+              (const net::const_buffer&, std::function<void(const boost::system::error_code&, std::size_t)>),
+              (override));
+  MOCK_METHOD(void, async_connect, (const uds::endpoint&, std::function<void(const boost::system::error_code&)>),
+              (override));
   MOCK_METHOD(void, shutdown, (uds::socket::shutdown_type, boost::system::error_code&), (override));
   MOCK_METHOD(void, close, (boost::system::error_code&), (override));
   MOCK_METHOD(uds::endpoint, remote_endpoint, (boost::system::error_code&), (const, override));
