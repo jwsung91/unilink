@@ -124,7 +124,7 @@ foreach(test_file test_uds_integration.cc)
   gtest_discover_tests(
     run_integration_${test_name}
     PROPERTIES LABELS "integration_uds_medium"
-    TIMEOUT 300
+    TIMEOUT 300 RESOURCE_LOCK "uds_socket_path_allocation"
   )
 endforeach()
 

@@ -42,7 +42,12 @@ void UdsServerSession::start() {
 }
 
 void UdsServerSession::stop() {
-  net::post(strand_, [this, self = shared_from_this()]() { do_close(); });
+  if (closing_.exchange(true)) return;
+  net::post(strand_, [this, self = shared_from_this()]() {
+    on_bytes_ = nullptr;
+    on_bp_ = nullptr;
+    do_close();
+  });
 }
 
 bool UdsServerSession::alive() const { return alive_.load(); }
@@ -86,6 +91,7 @@ void UdsServerSession::start_read() {
   socket_->async_read_some(
       net::buffer(rx_),
       net::bind_executor(strand_, [this, self = shared_from_this()](const boost::system::error_code& ec, size_t bytes) {
+        if (closing_ || !alive_) return;
         if (ec) {
           do_close();
           return;
@@ -117,9 +123,10 @@ void UdsServerSession::do_write() {
   size_t bytes_to_write = buffer.size();
   socket_->async_write(buffer, net::bind_executor(strand_, [this, self = shared_from_this(), bytes_to_write](
                                                                const boost::system::error_code& ec, size_t) {
+                         if (closing_ || !alive_) return;
                          writing_ = false;
                          current_write_buffer_ = std::nullopt;
-                         queue_bytes_ -= bytes_to_write;
+                         queue_bytes_ = (queue_bytes_ >= bytes_to_write) ? (queue_bytes_ - bytes_to_write) : 0;
                          report_backpressure(queue_bytes_);
 
                          if (ec) {
@@ -131,14 +138,28 @@ void UdsServerSession::do_write() {
 }
 
 void UdsServerSession::do_close() {
-  if (closing_.exchange(true)) return;
+  if (!closing_.exchange(true) && !alive_) return;
   alive_ = false;
+  auto close_cb = std::move(on_close_);
+  on_bytes_ = nullptr;
+  on_bp_ = nullptr;
+  on_close_ = nullptr;
+  tx_.clear();
+  current_write_buffer_ = std::nullopt;
+  queue_bytes_ = 0;
+  writing_ = false;
   boost::system::error_code ec;
   socket_->close(ec);
-  if (on_close_) on_close_();
+  if (close_cb) {
+    try {
+      close_cb();
+    } catch (...) {
+    }
+  }
 }
 
 void UdsServerSession::report_backpressure(size_t queued_bytes) {
+  if (closing_ || !alive_) return;
   if (on_bp_) on_bp_(queued_bytes);
 }
 

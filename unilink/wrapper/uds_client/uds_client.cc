@@ -146,6 +146,8 @@ struct UdsClient::Impl {
     // RELEASE LOCK before calling channel_->stop() because it might trigger
     // callbacks that try to acquire this same lock (e.g., on_state -> fulfill_all)
     if (channel_) {
+      channel_->on_bytes(nullptr);
+      channel_->on_state(nullptr);
       lock.unlock();
       channel_->stop();
       lock.lock();
@@ -166,6 +168,7 @@ struct UdsClient::Impl {
     }
 
     fulfill_all_locked(false);
+    channel_.reset();
   }
 
   void setup_internal_handlers() {

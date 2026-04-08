@@ -36,8 +36,7 @@ using namespace std::chrono_literals;
 class UdsIntegrationTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    auto temp_path = TestUtils::makeTempFilePath(
-        "unilink_test_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".sock");
+    auto temp_path = TestUtils::makeUniqueTempFilePath("unilink_test", ".sock");
     socket_path_ = temp_path.string();
     TestUtils::removeFileIfExists(temp_path);
   }

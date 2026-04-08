@@ -169,6 +169,16 @@ void UdsServer::stop() {
   boost::system::error_code ec;
   impl_->acceptor_->close(ec);
 
+  {
+    std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+    impl_->on_bytes_ = nullptr;
+    impl_->on_state_ = nullptr;
+    impl_->on_bp_ = nullptr;
+    impl_->on_multi_connect_ = nullptr;
+    impl_->on_multi_data_ = nullptr;
+    impl_->on_multi_disconnect_ = nullptr;
+  }
+
   // Cleanup UDS socket file on stop
   std::remove(impl_->cfg_.socket_path.c_str());
 

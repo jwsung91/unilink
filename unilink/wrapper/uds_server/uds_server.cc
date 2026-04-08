@@ -121,6 +121,12 @@ struct UdsServer::Impl {
     }
 
     if (server_) {
+      server_->on_multi_connect(nullptr);
+      server_->on_multi_data(nullptr);
+      server_->on_multi_disconnect(nullptr);
+      server_->on_bytes(nullptr);
+      server_->on_state(nullptr);
+      server_->on_backpressure(nullptr);
       lock.unlock();
       server_->stop();
       lock.lock();
@@ -139,6 +145,8 @@ struct UdsServer::Impl {
         external_thread_.detach();
       }
     }
+
+    server_.reset();
   }
 
   void setup_internal_handlers() {
