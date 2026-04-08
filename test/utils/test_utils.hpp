@@ -227,6 +227,20 @@ class TestUtils {
   }
 
   /**
+   * @brief Builds a short Unix domain socket path suitable for macOS path limits
+   * @param prefix File name prefix
+   * @return std::filesystem::path Absolute path to a unique short socket path
+   */
+  static std::filesystem::path makeUniqueUdsSocketPath(const std::string& prefix = "ul") {
+    static std::atomic<uint64_t> unique_counter{0};
+    std::random_device rd;
+    auto counter = unique_counter.fetch_add(1, std::memory_order_relaxed);
+    auto random = static_cast<uint64_t>(rd() & 0xFFFF);
+    auto short_dir = std::filesystem::path("/tmp");
+    return short_dir / (prefix + "_" + std::to_string(counter) + "_" + std::to_string(random) + ".sock");
+  }
+
+  /**
    * @brief Removes a file if it exists, ignoring errors
    * @param path File path to remove
    */

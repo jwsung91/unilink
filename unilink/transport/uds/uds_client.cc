@@ -287,7 +287,25 @@ void UdsClient::on_backpressure(OnBackpressure cb) {
 }
 
 void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) {
-  auto endpoint = std::make_shared<uds::endpoint>(cfg_.socket_path);
+  if (!cfg_.is_valid()) {
+    self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONFIGURATION, "connect",
+                              make_error_code(boost::system::errc::invalid_argument), "Invalid UDS socket path", false,
+                              self->impl_->reconnect_attempt_count_);
+    self->impl_->transition_to(LinkState::Error);
+    return;
+  }
+
+  std::shared_ptr<uds::endpoint> endpoint;
+  try {
+    endpoint = std::make_shared<uds::endpoint>(cfg_.socket_path);
+  } catch (const std::exception& e) {
+    self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONFIGURATION, "connect",
+                              make_error_code(boost::system::errc::filename_too_long),
+                              "Invalid UDS endpoint: " + std::string(e.what()), false,
+                              self->impl_->reconnect_attempt_count_);
+    self->impl_->transition_to(LinkState::Error);
+    return;
+  }
 
   connect_timer_.expires_after(std::chrono::milliseconds(cfg_.connection_timeout_ms));
   connect_timer_.async_wait(net::bind_executor(strand_, [self, seq](const boost::system::error_code& ec) {

@@ -114,6 +114,13 @@ void UdsServer::start() {
 
   impl_->stopping_ = false;
 
+  if (!impl_->cfg_.is_valid()) {
+    UNILINK_LOG_ERROR("uds_server", "start", "Invalid UDS server configuration or socket path");
+    impl_->state_.set_state(base::LinkState::Error);
+    impl_->notify_state();
+    return;
+  }
+
   // Cleanup old socket file if exists
   std::remove(impl_->cfg_.socket_path.c_str());
 
@@ -126,7 +133,17 @@ void UdsServer::start() {
     return;
   }
 
-  impl_->acceptor_->bind(uds::endpoint(impl_->cfg_.socket_path), ec);
+  uds::endpoint endpoint;
+  try {
+    endpoint = uds::endpoint(impl_->cfg_.socket_path);
+  } catch (const std::exception& e) {
+    UNILINK_LOG_ERROR("uds_server", "start", "Invalid UDS endpoint: " + std::string(e.what()));
+    impl_->state_.set_state(base::LinkState::Error);
+    impl_->notify_state();
+    return;
+  }
+
+  impl_->acceptor_->bind(endpoint, ec);
   if (ec) {
     UNILINK_LOG_ERROR("uds_server", "start", "Failed to bind to " + impl_->cfg_.socket_path + ": " + ec.message());
     impl_->state_.set_state(base::LinkState::Error);

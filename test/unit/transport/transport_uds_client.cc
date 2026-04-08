@@ -41,7 +41,7 @@ class TransportUdsClientTest : public ::testing::Test {
     unilink::diagnostics::Logger::instance().set_console_output(true);
     unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
 
-    auto temp_path = TestUtils::makeTempFilePath("test_uds_client.sock");
+    auto temp_path = TestUtils::makeUniqueUdsSocketPath("ulc");
     cfg.socket_path = temp_path.string();
     TestUtils::removeFileIfExists(temp_path);
 

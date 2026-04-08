@@ -37,7 +37,7 @@ using ::testing::Return;
 class TransportUdsServerTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    auto temp_path = TestUtils::makeTempFilePath("test_uds_server.sock");
+    auto temp_path = TestUtils::makeUniqueUdsSocketPath("uls");
     cfg.socket_path = temp_path.string();
     TestUtils::removeFileIfExists(temp_path);
 
