@@ -123,6 +123,27 @@ struct UdsClient::Impl {
   void report_backpressure(size_t queued_bytes);
   void record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,
                     const boost::system::error_code& ec, std::string_view msg, bool retryable, uint32_t retry_count);
+
+  ~Impl() {
+    stop_requested_ = true;
+    stopping_ = true;
+
+    retry_timer_.cancel();
+    connect_timer_.cancel();
+    close_socket();
+
+    if (work_guard_) {
+      work_guard_.reset();
+    }
+
+    if (ioc_ && owns_ioc_ && ioc_thread_.joinable()) {
+      if (std::this_thread::get_id() != ioc_thread_.get_id()) {
+        ioc_thread_.join();
+      } else {
+        ioc_thread_.detach();
+      }
+    }
+  }
 };
 
 std::shared_ptr<UdsClient> UdsClient::create(const UdsClientConfig& cfg) {

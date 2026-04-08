@@ -64,6 +64,7 @@ TEST_F(UdsIntegrationTest, BasicCommunication) {
   std::condition_variable cv;
 
   auto server = unilink::uds_server(socket_path_)
+                    .use_independent_context(true)
                     .on_connect([&server_connected](const wrapper::ConnectionContext&) { server_connected = true; })
                     .on_data([&](const wrapper::MessageContext& ctx) {
                       std::lock_guard<std::mutex> lock(mtx);
@@ -113,6 +114,7 @@ TEST_F(UdsIntegrationTest, MultiClientCommunication) {
 
   auto server = unilink::uds_server(socket_path_)
                     .unlimited_clients()
+                    .use_independent_context(true)
                     .on_connect([&connections](const wrapper::ConnectionContext&) { connections++; })
                     .on_data([&](const wrapper::MessageContext& ctx) { messages_received++; })
                     .build();

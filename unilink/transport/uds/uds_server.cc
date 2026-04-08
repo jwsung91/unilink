@@ -68,22 +68,21 @@ struct UdsServer::Impl {
         cfg_(cfg) {
     acceptor_ = std::make_unique<BoostUdsAcceptor>(*ioc_);
   }
-
   ~Impl() {
     stopping_ = true;
-    if (ioc_) {
-      if (owns_ioc_ && ioc_thread_.joinable()) {
-        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
-          ioc_thread_.join();
-        } else {
-          ioc_thread_.detach();
-        }
+    if (work_guard_) {
+      work_guard_.reset();
+    }
+    if (ioc_ && owns_ioc_ && ioc_thread_.joinable()) {
+      if (std::this_thread::get_id() != ioc_thread_.get_id()) {
+        ioc_thread_.join();
+      } else {
+        ioc_thread_.detach();
       }
     }
     // UDS Cleanup: socket file should be removed.
     std::remove(cfg_.socket_path.c_str());
   }
-
   void do_accept(std::shared_ptr<UdsServer> self);
   void notify_state();
 };
