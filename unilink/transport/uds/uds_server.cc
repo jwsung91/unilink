@@ -279,9 +279,7 @@ void UdsServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
 base::LinkState UdsServer::get_state() const { return impl_->state_.get_state(); }
 
 void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
-  std::weak_ptr<UdsServer> weak_self = self;
-  acceptor_->async_accept([weak_self](const boost::system::error_code& ec, uds::socket socket) {
-    auto self = weak_self.lock();
+  acceptor_->async_accept([self](const boost::system::error_code& ec, uds::socket socket) {
     if (!self || self->impl_->stopping_) return;
 
     if (!ec) {
@@ -295,6 +293,7 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
         self->impl_->sessions_[client_id] = session;
       }
 
+      std::weak_ptr<UdsServer> weak_self = self;
       session->on_bytes([weak_self, client_id](memory::ConstByteSpan data) {
         auto s = weak_self.lock();
         if (!s) return;

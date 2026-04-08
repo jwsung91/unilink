@@ -267,7 +267,7 @@ void UdsClient::on_backpressure(OnBackpressure cb) {
 }
 
 void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) {
-  uds::endpoint endpoint(cfg_.socket_path);
+  auto endpoint = std::make_shared<uds::endpoint>(cfg_.socket_path);
 
   connect_timer_.expires_after(std::chrono::milliseconds(cfg_.connection_timeout_ms));
   connect_timer_.async_wait(net::bind_executor(strand_, [self, seq](const boost::system::error_code& ec) {
@@ -280,27 +280,27 @@ void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) 
     }
   }));
 
-  socket_->async_connect(endpoint, net::bind_executor(strand_, [self, seq](const boost::system::error_code& ec) {
-                           self->impl_->connect_timer_.cancel();
-                           if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
-                           if (ec) {
-                             self->impl_->record_error(
-                                 diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect", ec,
-                                 "Connect failed: " + ec.message(), diagnostics::is_retryable_uds_connect_error(ec),
-                                 self->impl_->reconnect_attempt_count_);
-                             self->impl_->schedule_retry(self, seq);
-                             return;
-                           }
+  socket_->async_connect(*endpoint, net::bind_executor(strand_, [self, seq,
+                                                                 endpoint](const boost::system::error_code& ec) {
+    self->impl_->connect_timer_.cancel();
+    if (ec == net::error::operation_aborted || seq != self->impl_->current_seq_.load()) return;
+    if (ec) {
+      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONNECTION, "connect", ec,
+                                "Connect failed: " + ec.message(), diagnostics::is_retryable_uds_connect_error(ec),
+                                self->impl_->reconnect_attempt_count_);
+      self->impl_->schedule_retry(self, seq);
+      return;
+    }
 
-                           self->impl_->connected_ = true;
-                           self->impl_->reconnect_attempt_count_ = 0;
-                           self->impl_->retry_attempts_ = 0;
-                           self->impl_->transition_to(LinkState::Connected);
-                           self->impl_->start_read(self, seq);
-                           if (!self->impl_->tx_.empty() && !self->impl_->writing_) {
-                             self->impl_->do_write(self, seq);
-                           }
-                         }));
+    self->impl_->connected_ = true;
+    self->impl_->reconnect_attempt_count_ = 0;
+    self->impl_->retry_attempts_ = 0;
+    self->impl_->transition_to(LinkState::Connected);
+    self->impl_->start_read(self, seq);
+    if (!self->impl_->tx_.empty() && !self->impl_->writing_) {
+      self->impl_->do_write(self, seq);
+    }
+  }));
 }
 
 void UdsClient::Impl::schedule_retry(std::shared_ptr<UdsClient> self, uint64_t seq) {
