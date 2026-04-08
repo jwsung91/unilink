@@ -155,7 +155,6 @@ struct TcpClient::Impl {
       }
       if (use_external_context_ && manage_external_context_) {
         if (work_guard_) work_guard_.reset();
-        if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
       for (auto& p : pending_promises_) {
