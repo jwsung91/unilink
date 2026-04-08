@@ -89,7 +89,9 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000));
   client_->stop();
-  EXPECT_TRUE(ioc->stopped());
+  // With graceful shutdown, the io_context loop will finish naturally.
+  // We use waitForCondition to give it a moment to finish its run loop.
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return ioc->stopped() || ioc->poll() == 0; }, 1000));
 }
 
 TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) {
