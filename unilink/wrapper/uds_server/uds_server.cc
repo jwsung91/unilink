@@ -130,10 +130,6 @@ struct UdsServer::Impl {
       work_guard_.reset();
     }
 
-    if (external_ioc_) {
-      external_ioc_->stop();
-    }
-
     if (external_thread_.joinable()) {
       if (std::this_thread::get_id() != external_thread_.get_id()) {
         lock.unlock();  // RELEASE LOCK BEFORE JOINING

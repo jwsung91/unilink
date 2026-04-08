@@ -74,10 +74,8 @@ struct UdsServer::Impl {
     if (ioc_) {
       if (owns_ioc_ && ioc_thread_.joinable()) {
         if (std::this_thread::get_id() != ioc_thread_.get_id()) {
-          ioc_->stop();
           ioc_thread_.join();
         } else {
-          ioc_->stop();
           ioc_thread_.detach();
         }
       }
@@ -107,17 +105,7 @@ UdsServer::UdsServer(const config::UdsServerConfig& cfg, std::unique_ptr<interfa
   impl_->acceptor_ = std::move(acceptor);
 }
 
-UdsServer::~UdsServer() {
-  impl_->stopping_ = true;
-  boost::system::error_code ec;
-  impl_->acceptor_->close(ec);
-
-  std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
-  for (auto& pair : impl_->sessions_) {
-    pair.second->stop();
-  }
-  impl_->sessions_.clear();
-}
+UdsServer::~UdsServer() { stop(); }
 
 UdsServer::UdsServer(UdsServer&&) noexcept = default;
 UdsServer& UdsServer::operator=(UdsServer&&) noexcept = default;
@@ -159,9 +147,17 @@ void UdsServer::start() {
   impl_->notify_state();
 
   if (impl_->owns_ioc_ && !impl_->ioc_thread_.joinable()) {
+    if (impl_->ioc_->stopped()) {
+      impl_->ioc_->restart();
+    }
     impl_->work_guard_ =
         std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(net::make_work_guard(*impl_->ioc_));
-    impl_->ioc_thread_ = std::thread([this]() { impl_->ioc_->run(); });
+    impl_->ioc_thread_ = std::thread([this]() {
+      try {
+        impl_->ioc_->run();
+      } catch (...) {
+      }
+    });
   }
 
   net::post(impl_->ioc_->get_executor(), [self = shared_from_this()]() { self->impl_->do_accept(self); });

@@ -148,20 +148,12 @@ UdsClient::UdsClient(const UdsClientConfig& cfg, std::unique_ptr<interface::UdsS
     : impl_(std::make_unique<Impl>(cfg, &ioc, std::move(socket))) {}
 
 UdsClient::~UdsClient() {
-  impl_->stop_requested_ = true;
-  impl_->stopping_ = true;
-
-  // Cancel all pending operations synchronously
-  impl_->retry_timer_.cancel();
-  impl_->connect_timer_.cancel();
-  impl_->close_socket();
+  stop();
 
   if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {
     if (std::this_thread::get_id() != impl_->ioc_thread_.get_id()) {
-      impl_->ioc_->stop();
       impl_->ioc_thread_.join();
     } else {
-      impl_->ioc_->stop();
       impl_->ioc_thread_.detach();
     }
   }
@@ -182,9 +174,17 @@ void UdsClient::start() {
   uint64_t seq = impl_->current_seq_.load();
 
   if (impl_->owns_ioc_ && !impl_->ioc_thread_.joinable()) {
+    if (impl_->ioc_->stopped()) {
+      impl_->ioc_->restart();
+    }
     impl_->work_guard_ =
         std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(net::make_work_guard(*impl_->ioc_));
-    impl_->ioc_thread_ = std::thread([this]() { impl_->ioc_->run(); });
+    impl_->ioc_thread_ = std::thread([this]() {
+      try {
+        impl_->ioc_->run();
+      } catch (...) {
+      }
+    });
   }
 
   net::post(impl_->strand_, [self = shared_from_this(), seq]() {
@@ -204,11 +204,10 @@ void UdsClient::stop() {
   impl_->connect_timer_.cancel();
   impl_->close_socket();
 
-  // Release work guard and STOP the io_context to break ioc->run()
+  // Release work guard and allow io_context to run out of work
   if (impl_->ioc_) {
     if (impl_->owns_ioc_) {
       impl_->work_guard_.reset();
-      impl_->ioc_->stop();
     }
   }
 
