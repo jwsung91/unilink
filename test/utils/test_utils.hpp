@@ -227,7 +227,7 @@ class TestUtils {
   }
 
   /**
-   * @brief Builds a short Unix domain socket path suitable for macOS path limits
+   * @brief Builds a short Unix domain socket path suitable for platform-specific path limits
    * @param prefix File name prefix
    * @return std::filesystem::path Absolute path to a unique short socket path
    */
@@ -236,7 +236,12 @@ class TestUtils {
     std::random_device rd;
     auto counter = unique_counter.fetch_add(1, std::memory_order_relaxed);
     auto random = static_cast<uint64_t>(rd() & 0xFFFF);
-    auto short_dir = std::filesystem::path("/tmp");
+    std::filesystem::path short_dir;
+#ifdef _WIN32
+    short_dir = std::filesystem::temp_directory_path();
+#else
+    short_dir = std::filesystem::path("/tmp");
+#endif
     return short_dir / (prefix + "_" + std::to_string(counter) + "_" + std::to_string(random) + ".sock");
   }
 
