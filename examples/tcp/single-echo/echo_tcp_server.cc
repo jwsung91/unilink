@@ -85,7 +85,6 @@ class EchoServer {
   }
 
   void on_client_disconnect(const unilink::ConnectionContext& ctx) {
-    client_connected_.store(false);
     logger_.info("server", "disconnect", "Client " + std::to_string(ctx.client_id()) + " disconnected");
   }
 
