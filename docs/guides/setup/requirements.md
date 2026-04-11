@@ -7,18 +7,19 @@ This guide describes the system requirements and dependencies needed to build an
 ## System Requirements
 
 ### Recommended Platform
+
 - **Ubuntu 22.04 LTS or later**
 - **C++17 compatible compiler** (GCC 11+ or Clang 14+)
-- **CMake 3.10 or later**
+- **CMake 3.12 or later**
 
 ### Supported Platforms
 
-| Platform | Status | Notes |
-|----------|--------|-------|
-| Ubuntu 22.04 LTS | ✅ Fully Supported | Recommended for production |
-| Ubuntu 24.04 LTS | ✅ Fully Supported | Latest features and optimizations |
+| Platform         | Status              | Notes                                 |
+| ---------------- | ------------------- | ------------------------------------- |
+| Ubuntu 22.04 LTS | ✅ Fully Supported  | Recommended for production            |
+| Ubuntu 24.04 LTS | ✅ Fully Supported  | Latest features and optimizations     |
 | Ubuntu 20.04 LTS | ⚠️ Local Build Only | Not supported in CI/CD, build locally |
-| Other Linux | 🔄 Should Work | Not officially tested |
+| Other Linux      | 🔄 Should Work      | Not officially tested                 |
 
 ---
 
@@ -39,12 +40,12 @@ sudo apt update && sudo apt install -y \
 
 ### Dependency Details
 
-| Dependency | Version | License | Purpose |
-|------------|---------|---------|---------|
-| **GCC/G++** | 11+ | GPL | C++17 compiler |
-| **Clang** | 14+ (optional) | Apache 2.0 | Alternative C++17 compiler |
-| **CMake** | 3.10+ | BSD-3-Clause | Build system |
-| **Boost** | 1.65+ | BSL 1.0 | Asio for async I/O |
+| Dependency  | Version        | License      | Purpose                    |
+| ----------- | -------------- | ------------ | -------------------------- |
+| **GCC/G++** | 11+            | GPL          | C++17 compiler             |
+| **Clang**   | 14+ (optional) | Apache 2.0   | Alternative C++17 compiler |
+| **CMake**   | 3.12+          | BSD-3-Clause | Build system               |
+| **Boost**   | 1.65+          | BSL 1.0      | Asio for async I/O         |
 
 ---
 
@@ -74,15 +75,17 @@ sudo apt install -y clang-format
 ### Minimum Compiler Versions
 
 | Compiler | Minimum Version | Recommended Version |
-|----------|----------------|---------------------|
-| GCC | 11.0 | 11.4+ |
-| Clang | 14.0 | 14.0+ |
+| -------- | --------------- | ------------------- |
+| GCC      | 11.0            | 11.4+               |
+| Clang    | 14.0            | 14.0+               |
 
 ### C++ Standard
+
 - **C++17** is required
 - C++20 and C++23 are supported but not required
 
 ### Compiler Features Required
+
 - Lambda expressions
 - `std::thread` and threading support
 - `<filesystem>` support (C++17)
@@ -94,15 +97,18 @@ sudo apt install -y clang-format
 ## Build Environment
 
 ### Disk Space
+
 - **Source code**: ~10 MB
 - **Build artifacts**: ~50-100 MB (depending on configuration)
 - **Examples and tests**: ~50 MB additional
 
 ### Memory Requirements
+
 - **Compilation**: Minimum 2 GB RAM recommended
 - **Parallel builds** (`-j`): Additional 500 MB per core
 
 ### CPU
+
 - Any modern x86_64 or ARM64 processor
 - Parallel builds benefit from multi-core processors
 
@@ -119,6 +125,7 @@ sudo apt install -y libboost-system1.74.0
 ```
 
 ### Thread Support
+
 - POSIX threads (pthread) support required
 - Typically included in standard Linux distributions
 
@@ -127,11 +134,13 @@ sudo apt install -y libboost-system1.74.0
 ## Platform-Specific Notes
 
 ### Ubuntu 22.04 LTS
+
 - Default GCC 11.4 meets all requirements
 - All features fully supported
 - Recommended platform for production use
 
 ### Ubuntu 20.04 LTS
+
 - Default GCC 9.4 does **not** meet requirements
 - Must install GCC 11+ or Clang 14+ manually
 - See [Ubuntu 20.04 Build Guide](build_guide.md#ubuntu-2004-build)
@@ -140,6 +149,7 @@ sudo apt install -y libboost-system1.74.0
 - **Local Development**: You can still build and test locally on Ubuntu 20.04
 
 ### Other Linux Distributions
+
 - Debian 11+: Supported with default packages
 - Fedora 35+: Supported with default packages
 - CentOS/RHEL 8+: May require SCL or manual compiler installation
@@ -165,7 +175,7 @@ clang++ --version
 
 ```bash
 cmake --version
-# Should show version 3.10 or higher
+# Should show version 3.12 or higher
 ```
 
 ### Check Boost Version

@@ -36,24 +36,24 @@ auto channel = unilink::{type}(params)
 
 ### Common Methods (All Builders)
 
-| Method                           | Description                                                       | Default |
-| -------------------------------- | ----------------------------------------------------------------- | ------- |
-| `.on_data(callback)`             | Handle incoming data (`const MessageContext&`)                             | None    |
-| `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)                      | None    |
-| `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                          | None    |
-| `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                                      | None    |
-| `.auto_manage(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)               | `false` |
-| `.use_independent_context(bool)` | Create and run a dedicated `io_context` thread managed by unilink          | `false` |
-| `.use_line_framer(...)`          | Split incoming bytes into delimiter-based messages                         | Disabled |
-| `.use_packet_framer(...)`        | Split incoming bytes into packet-based messages                            | Disabled |
-| `.on_message(callback)`          | Handle framed messages as `unilink::memory::ConstByteSpan`                 | None    |
-| `.build()`                       | **Required**: Build the wrapper instance                                   | -       |
+| Method                           | Description                                                       | Default  |
+| -------------------------------- | ----------------------------------------------------------------- | -------- |
+| `.on_data(callback)`             | Handle incoming data (`const MessageContext&`)                    | None     |
+| `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)             | None     |
+| `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                 | None     |
+| `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                             | None     |
+| `.auto_manage(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false`  |
+| `.use_independent_context(bool)` | Create and run a dedicated `io_context` thread managed by unilink | `false`  |
+| `.use_line_framer(...)`          | Split incoming bytes into delimiter-based messages                | Disabled |
+| `.use_packet_framer(...)`        | Split incoming bytes into packet-based messages                   | Disabled |
+| `.on_message(callback)`          | Handle framed messages as `unilink::memory::ConstByteSpan`        | None     |
+| `.build()`                       | **Required**: Build the wrapper instance                          | -        |
 
 **Builder-Specific Options**
 
 - `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
 - `TcpServerBuilder`: `.enable_port_retry(enable, max_retries, retry_interval_ms)`
-- `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` **(must choose one before `build()`)**
+- `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` (Defaults to `unlimited_clients()` if not specified)
 - TCP server callbacks use the same Context-based signatures. Use `ctx.client_id()` and `ctx.client_info()` to distinguish clients.
 
 ### Framed Message Handling with `ConstByteSpan`
@@ -61,10 +61,12 @@ auto channel = unilink::{type}(params)
 Use `.on_message()` together with a framer when you want zero-copy access to framed payloads.
 
 **Benefits:**
+
 - **Performance**: Avoids `std::string` allocation overhead.
 - **Safety**: Bounds-checked access preventing buffer overflows.
 
 **Example:**
+
 ```cpp
 .use_line_framer("\n")
 .on_message([](unilink::memory::ConstByteSpan msg) {
@@ -162,16 +164,16 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 
 #### Instance Methods
 
-| Method                     | Return | Description                                                           |
-| -------------------------- | ------ | --------------------------------------------------------------------- |
-| `send()`                   | `void` | Send data to server                                                   |
-| `send_line()`              | `void` | Send data with trailing newline                                       |
-| `is_connected()`           | `bool` | Check connection status                                               |
-| `start()`                  | `std::future<bool>` | Start connection attempt                                  |
-| `stop()`                   | `void` | Stop and disconnect                                                   |
-| `set_retry_interval()`     | `void` | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
-| `set_max_retries()`        | `void` | Set max reconnect attempts (`-1` for unlimited)                       |
-| `set_connection_timeout()` | `void` | Set connection timeout (`std::chrono::milliseconds`)                  |
+| Method                     | Return              | Description                                                           |
+| -------------------------- | ------------------- | --------------------------------------------------------------------- |
+| `send()`                   | `void`              | Send data to server                                                   |
+| `send_line()`              | `void`              | Send data with trailing newline                                       |
+| `is_connected()`           | `bool`              | Check connection status                                               |
+| `start()`                  | `std::future<bool>` | Start connection attempt                                              |
+| `stop()`                   | `void`              | Stop and disconnect                                                   |
+| `set_retry_interval()`     | `void`              | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
+| `set_max_retries()`        | `void`              | Set max reconnect attempts (`-1` for unlimited)                       |
+| `set_connection_timeout()` | `void`              | Set connection timeout (`std::chrono::milliseconds`)                  |
 
 ### Advanced Examples
 
@@ -416,20 +418,20 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 
 #### Instance Methods
 
-| Method                 | Return         | Description                                                |
-| ---------------------- | -------------- | ---------------------------------------------------------- |
-| `send()`               | `void`         | Send data to device                                        |
-| `send_line()`          | `void`         | Send data with trailing newline                            |
-| `is_connected()`       | `bool`         | Check if port is open                                      |
-| `start()`              | `std::future<bool>` | Open serial port                                      |
-| `stop()`               | `void`         | Close serial port                                          |
-| `set_baud_rate()`      | `void`         | Adjust baud rate at runtime                                |
-| `set_data_bits()`      | `void`         | Set data bits (5-8)                                        |
-| `set_stop_bits()`      | `void`         | Set stop bits (1-2)                                        |
-| `set_parity()`         | `void`         | Set parity (`none`, `even`, `odd`)                         |
-| `set_flow_control()`   | `void`         | Set flow control (`none`, `software`, `hardware`)          |
-| `set_retry_interval()` | `void`         | Adjust reconnection interval (`std::chrono::milliseconds`) |
-| `build_config()`       | `SerialConfig` | Inspect current mapped serial config                       |
+| Method                 | Return              | Description                                                |
+| ---------------------- | ------------------- | ---------------------------------------------------------- |
+| `send()`               | `void`              | Send data to device                                        |
+| `send_line()`          | `void`              | Send data with trailing newline                            |
+| `is_connected()`       | `bool`              | Check if port is open                                      |
+| `start()`              | `std::future<bool>` | Open serial port                                           |
+| `stop()`               | `void`              | Close serial port                                          |
+| `set_baud_rate()`      | `void`              | Adjust baud rate at runtime                                |
+| `set_data_bits()`      | `void`              | Set data bits (5-8)                                        |
+| `set_stop_bits()`      | `void`              | Set stop bits (1-2)                                        |
+| `set_parity()`         | `void`              | Set parity (`none`, `even`, `odd`)                         |
+| `set_flow_control()`   | `void`              | Set flow control (`none`, `software`, `hardware`)          |
+| `set_retry_interval()` | `void`              | Adjust reconnection interval (`std::chrono::milliseconds`) |
+| `build_config()`       | `SerialConfig`      | Inspect current mapped serial config                       |
 
 ### Device Paths
 
@@ -537,21 +539,21 @@ unilink::udp(uint16_t local_port)
 
 #### Builder Methods
 
-| Method                      | Parameters         | Description                                   |
-| --------------------------- | ------------------ | --------------------------------------------- |
-| `set_local_port(port)`      | `uint16_t`         | Bind to a specific local port          |
-| `set_remote(ip, port)`      | `string, uint16_t` | Set default destination for `send()`   |
-| `use_independent_context()` | `bool`             | Run on dedicated IO thread             |
-| `auto_manage()`             | `bool`             | Auto-start/stop lifecycle              |
+| Method                      | Parameters         | Description                          |
+| --------------------------- | ------------------ | ------------------------------------ |
+| `set_local_port(port)`      | `uint16_t`         | Bind to a specific local port        |
+| `set_remote(ip, port)`      | `string, uint16_t` | Set default destination for `send()` |
+| `use_independent_context()` | `bool`             | Run on dedicated IO thread           |
+| `auto_manage()`             | `bool`             | Auto-start/stop lifecycle            |
 
 #### Instance Methods
 
-| Method           | Return | Description                            |
-| ---------------- | ------ | -------------------------------------- |
-| `send()`         | `void` | Send data to configured remote address |
-| `start()`        | `std::future<bool>` | Start listening/sending         |
-| `stop()`         | `void` | Close socket                           |
-| `is_connected()` | `bool` | Check if socket is open and ready      |
+| Method           | Return              | Description                            |
+| ---------------- | ------------------- | -------------------------------------- |
+| `send()`         | `void`              | Send data to configured remote address |
+| `start()`        | `std::future<bool>` | Start listening/sending                |
+| `stop()`         | `void`              | Close socket                           |
+| `is_connected()` | `bool`              | Check if socket is open and ready      |
 
 ### Advanced Examples
 
@@ -623,44 +625,44 @@ unilink::uds_client(const std::string& socket_path)
 
 #### Builder Methods (UDS Server)
 
-| Method                      | Parameters | Description                               |
-| --------------------------- | ---------- | ----------------------------------------- |
-| `max_clients(max)`          | `size_t`   | Allow up to `max` concurrent clients      |
-| `unlimited_clients()`       | None       | Allow unlimited clients                   |
-| `use_independent_context()` | `bool`     | Run on dedicated IO thread                |
-| `auto_manage()`             | `bool`     | Auto-start/stop lifecycle                 |
+| Method                      | Parameters | Description                          |
+| --------------------------- | ---------- | ------------------------------------ |
+| `max_clients(max)`          | `size_t`   | Allow up to `max` concurrent clients |
+| `unlimited_clients()`       | None       | Allow unlimited clients              |
+| `use_independent_context()` | `bool`     | Run on dedicated IO thread           |
+| `auto_manage()`             | `bool`     | Auto-start/stop lifecycle            |
 
 #### Builder Methods (UDS Client)
 
-| Method                | Parameters | Description                                |
-| --------------------- | ---------- | ------------------------------------------ |
-| `retry_interval(ms)`  | `unsigned` | Set reconnection interval (default `3000`) |
-| `max_retries(count)`  | `int`      | Set maximum reconnect attempts             |
-| `connection_timeout(ms)` | `unsigned` | Set connection timeout in milliseconds   |
-| `use_independent_context()` | `bool` | Run on a dedicated `io_context` thread    |
-| `auto_manage()`       | `bool`     | Auto-start/stop lifecycle                  |
+| Method                      | Parameters | Description                                |
+| --------------------------- | ---------- | ------------------------------------------ |
+| `retry_interval(ms)`        | `unsigned` | Set reconnection interval (default `3000`) |
+| `max_retries(count)`        | `int`      | Set maximum reconnect attempts             |
+| `connection_timeout(ms)`    | `unsigned` | Set connection timeout in milliseconds     |
+| `use_independent_context()` | `bool`     | Run on a dedicated `io_context` thread     |
+| `auto_manage()`             | `bool`     | Auto-start/stop lifecycle                  |
 
 #### Instance Methods (UDS Client)
 
-| Method            | Return              | Description                              |
-| ----------------- | ------------------- | ---------------------------------------- |
-| `start()`         | `std::future<bool>` | Start communication                      |
-| `stop()`          | `void`              | Stop communication                       |
-| `is_connected()`  | `bool`              | Check if the client channel is active    |
-| `send(data)`      | `void`              | Send data to the server                  |
-| `send_line(text)` | `void`              | Send text with a trailing newline        |
+| Method            | Return              | Description                           |
+| ----------------- | ------------------- | ------------------------------------- |
+| `start()`         | `std::future<bool>` | Start communication                   |
+| `stop()`          | `void`              | Stop communication                    |
+| `is_connected()`  | `bool`              | Check if the client channel is active |
+| `send(data)`      | `void`              | Send data to the server               |
+| `send_line(text)` | `void`              | Send text with a trailing newline     |
 
 #### Instance Methods (UDS Server)
 
-| Method                    | Return                | Description                            |
-| ------------------------- | --------------------- | -------------------------------------- |
-| `start()`                 | `std::future<bool>`   | Start accepting connections            |
-| `stop()`                  | `void`                | Stop the server                        |
-| `is_listening()`          | `bool`                | Check if the socket is listening       |
-| `broadcast(data)`         | `bool`                | Send to all connected clients          |
-| `send_to(client_id, data)`| `bool`                | Send to a specific client              |
-| `get_client_count()`      | `size_t`              | Number of connected clients            |
-| `get_connected_clients()` | `std::vector<size_t>` | List of connected client IDs           |
+| Method                     | Return                | Description                      |
+| -------------------------- | --------------------- | -------------------------------- |
+| `start()`                  | `std::future<bool>`   | Start accepting connections      |
+| `stop()`                   | `void`                | Stop the server                  |
+| `is_listening()`           | `bool`                | Check if the socket is listening |
+| `broadcast(data)`          | `bool`                | Send to all connected clients    |
+| `send_to(client_id, data)` | `bool`                | Send to a specific client        |
+| `get_client_count()`       | `size_t`              | Number of connected clients      |
+| `get_connected_clients()`  | `std::vector<size_t>` | List of connected client IDs     |
 
 ### Notes on UDS
 
