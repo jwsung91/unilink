@@ -211,6 +211,41 @@ class TestUtils {
   static std::filesystem::path makeTempFilePath(const std::string& filename) { return getTempDirectory() / filename; }
 
   /**
+   * @brief Builds a temp file path with a process-local uniqueness suffix
+   * @param prefix File name prefix
+   * @param suffix Optional suffix including extension
+   * @return std::filesystem::path Absolute path to a unique temp file
+   */
+  static std::filesystem::path makeUniqueTempFilePath(const std::string& prefix, const std::string& suffix = "") {
+    static std::atomic<uint64_t> unique_counter{0};
+    std::random_device rd;
+    auto tick = static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count());
+    auto counter = unique_counter.fetch_add(1, std::memory_order_relaxed);
+    auto random = static_cast<uint64_t>(rd());
+    return makeTempFilePath(prefix + "_" + std::to_string(tick) + "_" + std::to_string(counter) + "_" +
+                            std::to_string(random) + suffix);
+  }
+
+  /**
+   * @brief Builds a short Unix domain socket path suitable for platform-specific path limits
+   * @param prefix File name prefix
+   * @return std::filesystem::path Absolute path to a unique short socket path
+   */
+  static std::filesystem::path makeUniqueUdsSocketPath(const std::string& prefix = "ul") {
+    static std::atomic<uint64_t> unique_counter{0};
+    std::random_device rd;
+    auto counter = unique_counter.fetch_add(1, std::memory_order_relaxed);
+    auto random = static_cast<uint64_t>(rd() & 0xFFFF);
+    std::filesystem::path short_dir;
+#ifdef _WIN32
+    short_dir = std::filesystem::temp_directory_path();
+#else
+    short_dir = std::filesystem::path("/tmp");
+#endif
+    return short_dir / (prefix + "_" + std::to_string(counter) + "_" + std::to_string(random) + ".sock");
+  }
+
+  /**
    * @brief Removes a file if it exists, ignoring errors
    * @param path File path to remove
    */

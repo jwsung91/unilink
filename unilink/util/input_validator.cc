@@ -51,6 +51,15 @@ void InputValidator::validate_ipv6_address(const std::string& address) {
   }
 }
 
+void InputValidator::validate_uds_path(const std::string& path) {
+  validate_non_empty_string(path, "uds_path");
+  validate_string_length(path, base::constants::MAX_UDS_PATH_LENGTH, "uds_path");
+
+  if (!is_valid_uds_path(path)) {
+    throw diagnostics::ValidationException("invalid UDS path format", "uds_path", "valid Unix Domain Socket path");
+  }
+}
+
 void InputValidator::validate_device_path(const std::string& device) {
   validate_non_empty_string(device, "device_path");
   validate_string_length(device, base::constants::MAX_DEVICE_PATH_LENGTH, "device_path");
@@ -188,6 +197,21 @@ bool InputValidator::is_valid_hostname(std::string_view hostname) {
     if (!std::isalnum(static_cast<unsigned char>(c)) && c != '-') {
       return false;
     }
+  }
+
+  return true;
+}
+
+bool InputValidator::is_valid_uds_path(const std::string& path) {
+  if (path.empty() || path.length() > base::constants::MAX_UDS_PATH_LENGTH) {
+    return false;
+  }
+
+  // UDS path should be a valid file system path.
+  // For simplicity, we check if it's not empty and doesn't contain null characters.
+  // On Linux/Unix, almost any character except null is valid in a filename.
+  if (path.find('\0') != std::string::npos) {
+    return false;
   }
 
   return true;

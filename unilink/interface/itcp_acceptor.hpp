@@ -33,7 +33,7 @@ namespace net = boost::asio;
  */
 class UNILINK_API TcpAcceptorInterface {
  public:
-  virtual ~TcpAcceptorInterface() = default;
+  virtual ~TcpAcceptorInterface();
 
   virtual void open(const net::ip::tcp& protocol, boost::system::error_code& ec) = 0;
   virtual void bind(const net::ip::tcp::endpoint& endpoint, boost::system::error_code& ec) = 0;

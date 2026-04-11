@@ -117,8 +117,8 @@ struct UdpChannel::Impl {
     try {
       stop_requested_.store(true);
       stopping_.store(true);
-      if (owns_ioc_ && ioc_) {
-        ioc_->stop();
+      if (owns_ioc_ && work_guard_) {
+        work_guard_.reset();
       }
       if (ioc_thread_.joinable()) {
         if (std::this_thread::get_id() != ioc_thread_.get_id()) {
@@ -429,9 +429,6 @@ struct UdpChannel::Impl {
       }
       connected_.store(false);
       opened_.store(false);
-      if (owns_ioc_ && ioc_) {
-        ioc_->stop();
-      }
       if (owns_ioc_ && work_guard_) {
         work_guard_->reset();
       }

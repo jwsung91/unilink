@@ -18,12 +18,18 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <mutex>
 #include <stdexcept>
 
 #include "unilink/memory/memory_tracker.hpp"
 
 namespace unilink {
 namespace memory {
+
+MemoryPool& GlobalMemoryPool::instance() {
+  static MemoryPool* pool = new MemoryPool();
+  return *pool;
+}
 
 // ============================================================================
 // SelectiveMemoryPool Implementation

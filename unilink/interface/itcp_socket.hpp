@@ -33,7 +33,7 @@ namespace net = boost::asio;
  */
 class UNILINK_API TcpSocketInterface {
  public:
-  virtual ~TcpSocketInterface() = default;
+  virtual ~TcpSocketInterface();
 
   virtual void async_read_some(const net::mutable_buffer& buffer,
                                std::function<void(const boost::system::error_code&, std::size_t)> handler) = 0;

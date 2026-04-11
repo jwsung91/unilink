@@ -157,9 +157,9 @@ struct TcpServer::Impl {
         timer->expires_after(std::chrono::milliseconds(cfg_.port_retry_interval_ms));
         timer->async_wait([self, retry_count, timer](const boost::system::error_code& timer_ec) {
           if (!timer_ec) {
-            auto impl = self->get_impl();
-            if (!impl->stopping_.load()) {
-              impl->attempt_port_binding(self, retry_count + 1);
+            auto* timer_impl = self->get_impl();
+            if (!timer_impl->stopping_.load()) {
+              timer_impl->attempt_port_binding(self, retry_count + 1);
             }
           }
         });
@@ -191,22 +191,22 @@ struct TcpServer::Impl {
     if (stopping_.load() || !acceptor_ || !acceptor_->is_open()) return;
 
     acceptor_->async_accept([self](auto ec, tcp::socket sock) {
-      auto impl = self->get_impl();
-      if (impl->stopping_.load()) {
+      auto* accept_impl = self->get_impl();
+      if (accept_impl->stopping_.load()) {
         return;
       }
       if (ec) {
         if (ec != boost::asio::error::operation_aborted) {
-          impl->state_.set_state(base::LinkState::Error);
-          impl->notify_state();
+          accept_impl->state_.set_state(base::LinkState::Error);
+          accept_impl->notify_state();
         }
-        if (!impl->state_.is_state(base::LinkState::Closed) && !impl->stopping_.load()) {
-          auto timer = std::make_shared<net::steady_timer>(impl->ioc_);
+        if (!accept_impl->state_.is_state(base::LinkState::Closed) && !accept_impl->stopping_.load()) {
+          auto timer = std::make_shared<net::steady_timer>(accept_impl->ioc_);
           timer->expires_after(std::chrono::milliseconds(100));
           timer->async_wait([self, timer](const boost::system::error_code&) {
-            auto impl = self->get_impl();
-            if (!impl->stopping_.load()) {
-              impl->do_accept(self);
+            auto* retry_impl = self->get_impl();
+            if (!retry_impl->stopping_.load()) {
+              retry_impl->do_accept(self);
             }
           });
         }
@@ -220,40 +220,41 @@ struct TcpServer::Impl {
         client_info = rep.address().to_string() + ":" + std::to_string(rep.port());
       }
 
-      if (impl->client_limit_enabled_) {
-        std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-        if (impl->sessions_.size() >= impl->max_clients_) {
+      if (accept_impl->client_limit_enabled_) {
+        std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
+        if (accept_impl->sessions_.size() >= accept_impl->max_clients_) {
           boost::system::error_code close_ec;
           sock.close(close_ec);
-          impl->paused_accept_ = true;
+          accept_impl->paused_accept_ = true;
           return;
         }
       }
 
-      auto new_session = std::make_shared<TcpServerSession>(
-          impl->ioc_, std::move(sock), impl->cfg_.backpressure_threshold, impl->cfg_.idle_timeout_ms);
+      auto new_session = std::make_shared<TcpServerSession>(accept_impl->ioc_, std::move(sock),
+                                                            accept_impl->cfg_.backpressure_threshold,
+                                                            accept_impl->cfg_.idle_timeout_ms);
 
       size_t client_id;
       {
-        std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-        client_id = impl->next_client_id_.fetch_add(1);
-        impl->sessions_.emplace(client_id, new_session);
-        impl->current_session_ = new_session;
+        std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
+        client_id = accept_impl->next_client_id_.fetch_add(1);
+        accept_impl->sessions_.emplace(client_id, new_session);
+        accept_impl->current_session_ = new_session;
       }
 
       std::weak_ptr<TcpServer> weak_self = self;
 
       new_session->on_bytes([weak_self, client_id](memory::ConstByteSpan data) {
-        auto self = weak_self.lock();
-        if (!self) return;
-        auto impl = self->get_impl();
+        auto shared_self = weak_self.lock();
+        if (!shared_self) return;
+        auto* bytes_impl = shared_self->get_impl();
 
         OnBytes cb;
         MultiClientDataHandler multi_cb;
         {
-          std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-          cb = impl->on_bytes_;
-          multi_cb = impl->on_multi_data_;
+          std::lock_guard<std::mutex> lock(bytes_impl->sessions_mutex_);
+          cb = bytes_impl->on_bytes_;
+          multi_cb = bytes_impl->on_multi_data_;
         }
         if (cb) cb(data);
         if (multi_cb) {
@@ -262,54 +263,55 @@ struct TcpServer::Impl {
         }
       });
 
-      if (impl->on_bp_) new_session->on_backpressure(impl->on_bp_);
+      if (accept_impl->on_bp_) new_session->on_backpressure(accept_impl->on_bp_);
 
       new_session->on_close([weak_self, client_id, new_session] {
-        auto self = weak_self.lock();
-        if (!self) return;
-        auto impl = self->get_impl();
-        if (impl->stopping_.load()) return;
+        auto shared_self = weak_self.lock();
+        if (!shared_self) return;
+        auto* close_impl = shared_self->get_impl();
+        if (close_impl->stopping_.load()) return;
 
         MultiClientDisconnectHandler disconnect_cb;
         {
-          std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-          disconnect_cb = impl->on_multi_disconnect_;
+          std::lock_guard<std::mutex> lock(close_impl->sessions_mutex_);
+          disconnect_cb = close_impl->on_multi_disconnect_;
         }
         if (disconnect_cb) disconnect_cb(client_id);
 
         bool was_current = false;
         {
-          std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-          impl->sessions_.erase(client_id);
-          if (impl->paused_accept_ && (!impl->client_limit_enabled_ || impl->sessions_.size() < impl->max_clients_)) {
-            impl->paused_accept_ = false;
-            net::post(impl->ioc_, [self] { self->get_impl()->do_accept(self); });
+          std::lock_guard<std::mutex> lock(close_impl->sessions_mutex_);
+          close_impl->sessions_.erase(client_id);
+          if (close_impl->paused_accept_ &&
+              (!close_impl->client_limit_enabled_ || close_impl->sessions_.size() < close_impl->max_clients_)) {
+            close_impl->paused_accept_ = false;
+            net::post(close_impl->ioc_, [shared_self] { shared_self->get_impl()->do_accept(shared_self); });
           }
-          was_current = (impl->current_session_ == new_session);
+          was_current = (close_impl->current_session_ == new_session);
           if (was_current) {
-            if (!impl->sessions_.empty())
-              impl->current_session_ = impl->sessions_.begin()->second;
+            if (!close_impl->sessions_.empty())
+              close_impl->current_session_ = close_impl->sessions_.begin()->second;
             else
-              impl->current_session_.reset();
+              close_impl->current_session_.reset();
           }
         }
         if (was_current) {
-          impl->state_.set_state(base::LinkState::Listening);
-          impl->notify_state();
+          close_impl->state_.set_state(base::LinkState::Listening);
+          close_impl->notify_state();
         }
       });
 
       MultiClientConnectHandler connect_cb;
       {
-        std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-        connect_cb = impl->on_multi_connect_;
+        std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
+        connect_cb = accept_impl->on_multi_connect_;
       }
       if (connect_cb) connect_cb(client_id, client_info);
 
-      impl->state_.set_state(base::LinkState::Connected);
-      impl->notify_state();
+      accept_impl->state_.set_state(base::LinkState::Connected);
+      accept_impl->notify_state();
       new_session->start();
-      impl->do_accept(self);
+      accept_impl->do_accept(self);
     });
   }
 
@@ -373,7 +375,8 @@ struct TcpServer::Impl {
       std::weak_ptr<TcpServer> weak_self = self;
       net::dispatch(ioc_, [weak_self, cleanup_promise]() {
         if (auto shared_self = weak_self.lock()) {
-          shared_self->get_impl()->perform_cleanup();
+          auto* cleanup_impl = shared_self->get_impl();
+          cleanup_impl->perform_cleanup();
         }
         cleanup_promise->set_value();
       });

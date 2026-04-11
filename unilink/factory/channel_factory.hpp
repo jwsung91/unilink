@@ -25,6 +25,7 @@
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/config/tcp_server_config.hpp"
 #include "unilink/config/udp_config.hpp"
+#include "unilink/config/uds_config.hpp"
 #include "unilink/interface/channel.hpp"
 
 namespace unilink {
@@ -37,8 +38,8 @@ namespace factory {
  */
 class UNILINK_API ChannelFactory {
  public:
-  using ChannelOptions =
-      std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig, config::UdpConfig>;
+  using ChannelOptions = std::variant<config::TcpClientConfig, config::TcpServerConfig, config::SerialConfig,
+                                      config::UdpConfig, config::UdsClientConfig, config::UdsServerConfig>;
 
   // Channel creation
   static std::shared_ptr<interface::Channel> create(const ChannelOptions& options,
@@ -54,6 +55,10 @@ class UNILINK_API ChannelFactory {
                                                            std::shared_ptr<boost::asio::io_context> external_ioc);
   static std::shared_ptr<interface::Channel> create_udp(const config::UdpConfig& cfg,
                                                         std::shared_ptr<boost::asio::io_context> external_ioc);
+  static std::shared_ptr<interface::Channel> create_uds_server(const config::UdsServerConfig& cfg,
+                                                               std::shared_ptr<boost::asio::io_context> external_ioc);
+  static std::shared_ptr<interface::Channel> create_uds_client(const config::UdsClientConfig& cfg,
+                                                               std::shared_ptr<boost::asio::io_context> external_ioc);
 };
 
 }  // namespace factory

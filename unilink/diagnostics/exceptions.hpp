@@ -36,6 +36,8 @@ class UNILINK_API UnilinkException : public std::runtime_error {
                             const std::string& operation = "")
       : std::runtime_error(message), component_(component), operation_(operation) {}
 
+  virtual ~UnilinkException() noexcept;
+
   const std::string& get_component() const noexcept { return component_; }
   const std::string& get_operation() const noexcept { return operation_; }
 
@@ -67,6 +69,8 @@ class UNILINK_API BuilderException : public UnilinkException {
                             const std::string& operation = "")
       : UnilinkException(message, "builder", operation), builder_type_(builder_type) {}
 
+  ~BuilderException() noexcept override;
+
   const std::string& get_builder_type() const noexcept { return builder_type_; }
 
   std::string get_full_message() const {
@@ -92,6 +96,8 @@ class UNILINK_API ValidationException : public UnilinkException {
   explicit ValidationException(const std::string& message, const std::string& parameter = "",
                                const std::string& expected = "")
       : UnilinkException(message, "validation", "validate"), parameter_(parameter), expected_(expected) {}
+
+  ~ValidationException() noexcept override;
 
   const std::string& get_parameter() const noexcept { return parameter_; }
   const std::string& get_expected() const noexcept { return expected_; }
@@ -123,6 +129,8 @@ class UNILINK_API MemoryException : public UnilinkException {
   explicit MemoryException(const std::string& message, size_t size = 0, const std::string& operation = "")
       : UnilinkException(message, "memory", operation), size_(size) {}
 
+  ~MemoryException() noexcept override;
+
   size_t get_size() const noexcept { return size_; }
 
   std::string get_full_message() const {
@@ -149,6 +157,8 @@ class UNILINK_API ConnectionException : public UnilinkException {
                                const std::string& operation = "")
       : UnilinkException(message, "connection", operation), connection_type_(connection_type) {}
 
+  ~ConnectionException() noexcept override;
+
   const std::string& get_connection_type() const noexcept { return connection_type_; }
 
   std::string get_full_message() const {
@@ -174,6 +184,8 @@ class UNILINK_API ConfigurationException : public UnilinkException {
   explicit ConfigurationException(const std::string& message, const std::string& config_section = "",
                                   const std::string& operation = "")
       : UnilinkException(message, "configuration", operation), config_section_(config_section) {}
+
+  ~ConfigurationException() noexcept override;
 
   const std::string& get_config_section() const noexcept { return config_section_; }
 

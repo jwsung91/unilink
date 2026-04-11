@@ -36,9 +36,13 @@ set(UNILINK_SOURCES
   unilink/config/config_factory.cc
   unilink/config/config_manager.cc
   unilink/diagnostics/error_handler.cc
+  unilink/diagnostics/exceptions.cc
   unilink/diagnostics/log_rotation.cc
   unilink/diagnostics/logger.cc
   unilink/factory/channel_factory.cc
+  unilink/interface/channel.cc
+  unilink/interface/itcp_acceptor.cc
+  unilink/interface/itcp_socket.cc
   unilink/memory/memory_pool.cc
   unilink/memory/memory_tracker.cc
   unilink/memory/safe_data_buffer.cc
@@ -46,11 +50,19 @@ set(UNILINK_SOURCES
   unilink/transport/tcp_server/boost_tcp_socket.cc
   unilink/transport/tcp_server/tcp_server_session.cc
   unilink/transport/udp/udp.cc
+  unilink/transport/uds/boost_uds_acceptor.cc
+  unilink/transport/uds/boost_uds_socket.cc
+  unilink/transport/uds/uds_client.cc
+  unilink/transport/uds/uds_server.cc
+  unilink/transport/uds/uds_server_session.cc
   unilink/util/input_validator.cc
   unilink/wrapper/serial/serial.cc
   unilink/wrapper/tcp_client/tcp_client.cc
   unilink/wrapper/tcp_server/tcp_server.cc
   unilink/wrapper/udp/udp.cc
+  unilink/wrapper/uds_client/uds_client.cc
+  unilink/wrapper/uds_server/uds_server.cc
+  unilink/builder/uds_builder.cc
   unilink/framer/line_framer.cc
   unilink/framer/packet_framer.cc
 )
@@ -71,6 +83,7 @@ set(UNILINK_HEADERS
   unilink/builder/tcp_client_builder.hpp
   unilink/builder/tcp_server_builder.hpp
   unilink/builder/udp_builder.hpp
+  unilink/builder/uds_builder.hpp
   unilink/builder/unified_builder.hpp
   unilink/concurrency/io_context_manager.hpp
   unilink/concurrency/thread_safe_state.hpp
@@ -81,6 +94,7 @@ set(UNILINK_HEADERS
   unilink/config/tcp_client_config.hpp
   unilink/config/tcp_server_config.hpp
   unilink/config/udp_config.hpp
+  unilink/config/uds_config.hpp
   unilink/diagnostics/error_handler.hpp
   unilink/diagnostics/error_types.hpp
   unilink/diagnostics/exceptions.hpp
@@ -93,6 +107,8 @@ set(UNILINK_HEADERS
   unilink/interface/itcp_resolver.hpp
   unilink/interface/itcp_socket.hpp
   unilink/interface/itimer.hpp
+  unilink/interface/iuds_acceptor.hpp
+  unilink/interface/iuds_socket.hpp
   unilink/memory/memory_pool.hpp
   unilink/memory/memory_tracker.hpp
   unilink/memory/memory_validator.hpp
@@ -107,6 +123,11 @@ set(UNILINK_HEADERS
   unilink/transport/tcp_server/tcp_server_session.hpp
   unilink/transport/tcp_server/tcp_server.hpp
   unilink/transport/udp/udp.hpp
+  unilink/transport/uds/boost_uds_acceptor.hpp
+  unilink/transport/uds/boost_uds_socket.hpp
+  unilink/transport/uds/uds_client.hpp
+  unilink/transport/uds/uds_server.hpp
+  unilink/transport/uds/uds_server_session.hpp
   unilink/unilink.hpp
   unilink/util/input_validator.hpp
   unilink/wrapper/ichannel.hpp
@@ -114,6 +135,8 @@ set(UNILINK_HEADERS
   unilink/wrapper/tcp_client/tcp_client.hpp
   unilink/wrapper/tcp_server/tcp_server.hpp
   unilink/wrapper/udp/udp.hpp
+  unilink/wrapper/uds_client/uds_client.hpp
+  unilink/wrapper/uds_server/uds_server.hpp
 )
 
 # Create the library

@@ -53,7 +53,7 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
 
   static std::shared_ptr<TcpClient> create(const TcpClientConfig& cfg);
   static std::shared_ptr<TcpClient> create(const TcpClientConfig& cfg, boost::asio::io_context& ioc);
-  ~TcpClient();
+  ~TcpClient() override;
 
   // Move semantics
   TcpClient(TcpClient&&) noexcept;
