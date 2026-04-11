@@ -147,6 +147,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a79ce10d7ee5799078bda65121a08900f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b080d4eed250fbf1af42f7fab375494"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a8b080d4eed250fbf1af42f7fab375494">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> handler) override</td></tr>
 <tr class="separator:a8b080d4eed250fbf1af42f7fab375494"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52ecbaf6ce2385a8fa62841f0711c8bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a52ecbaf6ce2385a8fa62841f0711c8bc">set_framer_factory</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override</td></tr>
+<tr class="memdesc:a52ecbaf6ce2385a8fa62841f0711c8bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a factory function to create a new framer for each client connection.  <a href="classunilink_1_1wrapper_1_1UdsServer.html#a52ecbaf6ce2385a8fa62841f0711c8bc">More...</a><br /></td></tr>
+<tr class="separator:a52ecbaf6ce2385a8fa62841f0711c8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfec62d7040eaddfab729c6a5619daf2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#acfec62d7040eaddfab729c6a5619daf2">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override</td></tr>
+<tr class="memdesc:acfec62d7040eaddfab729c6a5619daf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <a href="classunilink_1_1wrapper_1_1UdsServer.html#acfec62d7040eaddfab729c6a5619daf2">More...</a><br /></td></tr>
+<tr class="separator:acfec62d7040eaddfab729c6a5619daf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa72a8b83b92dfff039713ef65df4953f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#aa72a8b83b92dfff039713ef65df4953f">get_client_count</a> () const override</td></tr>
 <tr class="separator:aa72a8b83b92dfff039713ef65df4953f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8838c56a12356f9f9c8467d1ac49cde"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ac8838c56a12356f9f9c8467d1ac49cde">get_connected_clients</a> () const override</td></tr>
@@ -172,6 +178,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a9e34226680bde780c9197a2e9f52cd3b inherit pub_types_classunilink_1_1wrapper_1_1ServerInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cdd888c893263e473aa6d11dc183fd5 inherit pub_types_classunilink_1_1wrapper_1_1ServerInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> = std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html">ErrorContext</a> &amp;)&gt;</td></tr>
 <tr class="separator:a9cdd888c893263e473aa6d11dc183fd5 inherit pub_types_classunilink_1_1wrapper_1_1ServerInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60a8fd95e90722873eb9cf344a81c0be inherit pub_types_classunilink_1_1wrapper_1_1ServerInterface"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> = std::function&lt; std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;()&gt;</td></tr>
+<tr class="separator:a60a8fd95e90722873eb9cf344a81c0be inherit pub_types_classunilink_1_1wrapper_1_1ServerInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Modernized UDS Server Wrapper. </p>
@@ -202,7 +210,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00201">201</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00237">237</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -232,7 +240,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00203">203</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00239">239</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -260,7 +268,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00206">206</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00242">242</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -358,7 +366,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00267">267</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00313">313</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -388,7 +396,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00221">221</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00257">257</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -417,7 +425,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a38043328329f0a9b7bd11c5c776b8629">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00261">261</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00307">307</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -446,7 +454,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ae14979da3763998d40dde76da2cf1304">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00263">263</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00309">309</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -475,7 +483,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a4e06f0175a2f72fc75fb50dbbe1a008a">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00217">217</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00253">253</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -505,7 +513,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8c53d8804c273c0af6364a65c9dec883">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00237">237</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00273">273</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -535,7 +543,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#afeb025189ff78fc75508b8ab936f5653">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00243">243</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00279">279</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -565,7 +573,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a517ccc48a874346f5dc6a2e12461e972">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00249">249</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00285">285</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -595,7 +603,45 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a718e53bfde0aa5904ed873cf67e43f76">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00255">255</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00291">291</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="acfec62d7040eaddfab729c6a5619daf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfec62d7040eaddfab729c6a5619daf2">&#9670;&nbsp;</a></span>on_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::wrapper::UdsServer::on_message </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a>&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set a handler for complete messages extracted by the framer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>callback taking <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html" title="Context for data/message related events.">MessageContext</a> (where data is the framed payload). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8becc3cc46c0df62f48425a218499680">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00302">302</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -687,7 +733,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a7aeee8f7d23b350d2f755c448ae1f200">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00229">229</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00265">265</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -707,7 +753,45 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00272">272</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00318">318</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a52ecbaf6ce2385a8fa62841f0711c8bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52ecbaf6ce2385a8fa62841f0711c8bc">&#9670;&nbsp;</a></span>set_framer_factory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::wrapper::UdsServer::set_framer_factory </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a>&#160;</td>
+          <td class="paramname"><em>factory</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set a factory function to create a new framer for each client connection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">factory</td><td>Function that returns a unique_ptr to a new framer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac8834305eca4483fafad22b8daa5dd4b">unilink::wrapper::ServerInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00297">297</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -727,7 +811,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00282">282</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00328">328</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -746,7 +830,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00277">277</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00323">323</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -775,7 +859,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#af155896bc2266885191a35b3dac12542">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00213">213</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00249">249</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -804,7 +888,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0">unilink::wrapper::ServerInterface</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00215">215</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html#l00251">251</a> of file <a class="el" href="wrapper_2uds__server_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -818,7 +902,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a></li>
-    <li class="footer">Generated on Sat Apr 11 2026 07:56:05 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 09:25:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

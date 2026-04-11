@@ -247,16 +247,43 @@ Basic Usage</h2>
 <h1><a class="anchor" id="autotoc_md348"></a>
 🛠️ Advanced Features</h1>
 <h2><a class="anchor" id="autotoc_md349"></a>
+Message Framing (Line/Packet)</h2>
+<p>Unilink allows you to avoid dealing with raw fragmented bytes by using built-in framers. When a framer is set, you use <code>on_message</code> instead of <code>on_data</code> to receive completely framed payloads.</p>
+<div class="fragment"><div class="line">import unilink_py</div>
+<div class="line"> </div>
+<div class="line">client = unilink_py.TcpClient(&quot;127.0.0.1&quot;, 8080)</div>
+<div class="line"> </div>
+<div class="line"># Automatically frame incoming bytes by newline (&quot;\n&quot;)</div>
+<div class="line">client.use_line_framer(&quot;\n&quot;, include_delimiter=False, max_length=65536)</div>
+<div class="line"> </div>
+<div class="line"># Or use a PacketFramer for binary protocols (e.g., [0x02] ... [0x03])</div>
+<div class="line">client.use_packet_framer([0x02], [0x03], 1024)</div>
+<div class="line"> </div>
+<div class="line"># Client&#39;s on_message receives raw bytes of the framed payload</div>
+<div class="line">@client.on_message</div>
+<div class="line">def handle_message(msg_bytes):</div>
+<div class="line">    print(f&quot;Received complete line: {msg_bytes.decode(&#39;utf-8&#39;)}&quot;)</div>
+<div class="line"> </div>
+<div class="line">client.start()</div>
+</div><!-- fragment --><p>For servers, the framer is allocated per-session automatically:</p>
+<div class="fragment"><div class="line">server = unilink_py.TcpServer(8080)</div>
+<div class="line">server.use_line_framer(&quot;\n&quot;)</div>
+<div class="line"> </div>
+<div class="line"># Server&#39;s on_message receives a MessageContext with the client_id</div>
+<div class="line">@server.on_message</div>
+<div class="line">def handle_client_message(ctx):</div>
+<div class="line">    print(f&quot;Client {ctx.client_id} sent: {ctx.data}&quot;)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md350"></a>
 Threading &amp; GIL</h2>
 <p>The bindings are designed to be thread-safe. When C++ triggers a callback, it automatically acquires the Python GIL (Global Interpreter Lock), allowing you to safely run Python code inside handlers. Long-running operations in Python handlers will block other callbacks for that specific channel, so keep them brief.</p>
-<h2><a class="anchor" id="autotoc_md350"></a>
+<h2><a class="anchor" id="autotoc_md351"></a>
 Lifecycle Management</h2>
 <ul>
 <li>**<code>start()</code>**: Returns a <code>std::future&lt;bool&gt;</code> equivalent in Python (usually blocks until initial attempt finishes if wrapped).</li>
 <li>**<code>stop()</code>**: Synchronously stops all I/O operations and joins internal threads.</li>
 <li>**<code>auto_manage(True)</code>**: When enabled, the channel starts immediately and stops when the Python object is garbage collected.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md351"></a>
+<h2><a class="anchor" id="autotoc_md352"></a>
 Configuration</h2>
 <ul>
 <li>**<code>UdpConfig</code>**: A dedicated class for UDP settings (buffer sizes, memory pools, etc.).</li>
@@ -269,7 +296,7 @@ Configuration</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 07:56:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 09:25:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

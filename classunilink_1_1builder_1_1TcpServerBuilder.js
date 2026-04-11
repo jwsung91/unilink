@@ -13,6 +13,7 @@ var classunilink_1_1builder_1_1TcpServerBuilder =
     [ "on_data", "classunilink_1_1builder_1_1TcpServerBuilder.html#a7855e70ae9a79ba8e62c31010d98a4be", null ],
     [ "on_disconnect", "classunilink_1_1builder_1_1TcpServerBuilder.html#a57d11fa1b0a6f273760ad1859443557d", null ],
     [ "on_error", "classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc", null ],
+    [ "on_message", "classunilink_1_1builder_1_1TcpServerBuilder.html#ae7006db0d1e42e8cc5a66f5220ae9989", null ],
     [ "operator=", "classunilink_1_1builder_1_1TcpServerBuilder.html#a97f71c574e0f5de7a836198e0ba4aa83", null ],
     [ "operator=", "classunilink_1_1builder_1_1TcpServerBuilder.html#af4a1786275a24a42a80fb8e7b51cf247", null ],
     [ "single_client", "classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc", null ],

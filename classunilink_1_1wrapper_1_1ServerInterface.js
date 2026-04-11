@@ -2,6 +2,7 @@ var classunilink_1_1wrapper_1_1ServerInterface =
 [
     [ "ConnectionHandler", "classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b", null ],
     [ "ErrorHandler", "classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5", null ],
+    [ "FramerFactory", "classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be", null ],
     [ "MessageHandler", "classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6", null ],
     [ "~ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html#a0696d9e529521e5b5a016e769bd95537", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9", null ],
@@ -12,7 +13,9 @@ var classunilink_1_1wrapper_1_1ServerInterface =
     [ "on_client_disconnect", "classunilink_1_1wrapper_1_1ServerInterface.html#afeb025189ff78fc75508b8ab936f5653", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1ServerInterface.html#a517ccc48a874346f5dc6a2e12461e972", null ],
     [ "on_error", "classunilink_1_1wrapper_1_1ServerInterface.html#a718e53bfde0aa5904ed873cf67e43f76", null ],
+    [ "on_message", "classunilink_1_1wrapper_1_1ServerInterface.html#a8becc3cc46c0df62f48425a218499680", null ],
     [ "send_to", "classunilink_1_1wrapper_1_1ServerInterface.html#a7aeee8f7d23b350d2f755c448ae1f200", null ],
+    [ "set_framer_factory", "classunilink_1_1wrapper_1_1ServerInterface.html#ac8834305eca4483fafad22b8daa5dd4b", null ],
     [ "start", "classunilink_1_1wrapper_1_1ServerInterface.html#af155896bc2266885191a35b3dac12542", null ],
     [ "stop", "classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0", null ]
 ];

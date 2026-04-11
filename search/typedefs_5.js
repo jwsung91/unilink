@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['iocontext_2126',['IoContext',['../classunilink_1_1concurrency_1_1IoContextManager.html#aa3fbc4eb7af5de9caff4f34217638673',1,'unilink::concurrency::IoContextManager']]],
-  ['iocontextmanager_2127',['IoContextManager',['../namespaceunilink_1_1common.html#a7b43f5afbe1d3f1147ac6c60c32b770d',1,'unilink::common']]],
-  ['iterator_2128',['iterator',['../classunilink_1_1memory_1_1SafeSpan.html#a376267b90306ab362fb7d0e666f72118',1,'unilink::memory::SafeSpan']]]
+  ['framedmessagehandler_2141',['FramedMessageHandler',['../classunilink_1_1wrapper_1_1ChannelInterface.html#a903d5c8226370d06609694848822cc54',1,'unilink::wrapper::ChannelInterface']]],
+  ['framerfactory_2142',['FramerFactory',['../classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be',1,'unilink::wrapper::ServerInterface']]]
 ];

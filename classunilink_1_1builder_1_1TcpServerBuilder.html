@@ -135,6 +135,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae853d94713e747d53006c5f086f472bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc">on_error</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html">wrapper::ErrorContext</a> &amp;)&gt; handler) override</td></tr>
 <tr class="memdesc:ae853d94713e747d53006c5f086f472bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set error handler callback.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc">More...</a><br /></td></tr>
 <tr class="separator:ae853d94713e747d53006c5f086f472bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7006db0d1e42e8cc5a66f5220ae9989"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae7006db0d1e42e8cc5a66f5220ae9989">on_message</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a> &amp;)&gt; handler)</td></tr>
+<tr class="memdesc:ae7006db0d1e42e8cc5a66f5220ae9989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback for framed messages (Server version with context)  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae7006db0d1e42e8cc5a66f5220ae9989">More...</a><br /></td></tr>
+<tr class="separator:ae7006db0d1e42e8cc5a66f5220ae9989"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae78ea0ce308a630bfc92abfba6d389e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae78ea0ce308a630bfc92abfba6d389e8">use_independent_context</a> (bool use_independent=true)</td></tr>
 <tr class="memdesc:ae78ea0ce308a630bfc92abfba6d389e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use independent IoContext for this server.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae78ea0ce308a630bfc92abfba6d389e8">More...</a><br /></td></tr>
 <tr class="separator:ae78ea0ce308a630bfc92abfba6d389e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,9 +190,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb">use_packet_framer</a> (const std::vector&lt; uint8_t &gt; &amp;start_pattern, const std::vector&lt; uint8_t &gt; &amp;end_pattern, size_t max_length)</td></tr>
 <tr class="memdesc:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use PacketFramer for message segmentation (binary pattern matching)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb">More...</a><br /></td></tr>
 <tr class="separator:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acab8f9a10abf2fe0937dd3c8c8db3153 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acab8f9a10abf2fe0937dd3c8c8db3153">on_message</a> (std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt; handler)</td></tr>
-<tr class="memdesc:acab8f9a10abf2fe0937dd3c8c8db3153 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback (for framed messages)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#acab8f9a10abf2fe0937dd3c8c8db3153">More...</a><br /></td></tr>
-<tr class="separator:acab8f9a10abf2fe0937dd3c8c8db3153 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afff5e9c0738f1a3eeb920b89b8d93b2f inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#afff5e9c0738f1a3eeb920b89b8d93b2f">on_message</a> (std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt; handler)</td></tr>
+<tr class="memdesc:afff5e9c0738f1a3eeb920b89b8d93b2f inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback (for framed messages)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#afff5e9c0738f1a3eeb920b89b8d93b2f">More...</a><br /></td></tr>
+<tr class="separator:afff5e9c0738f1a3eeb920b89b8d93b2f inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d69170af68815e82dcfd15a0e1e734f inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a8d69170af68815e82dcfd15a0e1e734f">on_message</a> (U *obj, F method)</td></tr>
 <tr class="memdesc:a8d69170af68815e82dcfd15a0e1e734f inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback using member function pointer.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a8d69170af68815e82dcfd15a0e1e734f">More...</a><br /></td></tr>
 <tr class="separator:a8d69170af68815e82dcfd15a0e1e734f inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,8 +200,8 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_classunilink_1_1builder_1_1BuilderInterface"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classunilink_1_1builder_1_1BuilderInterface')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a></td></tr>
-<tr class="memitem:a155f893ff2b37e4e7c028fcfc523ced4 inherit pro_attribs_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a155f893ff2b37e4e7c028fcfc523ced4">framer_</a></td></tr>
-<tr class="separator:a155f893ff2b37e4e7c028fcfc523ced4 inherit pro_attribs_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab83f989b18c5bedcbf9c4d411172c696 inherit pro_attribs_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">std::function&lt; std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#ab83f989b18c5bedcbf9c4d411172c696">framer_factory_</a></td></tr>
+<tr class="separator:ab83f989b18c5bedcbf9c4d411172c696 inherit pro_attribs_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5716b75e47e34f725ea5c27fcc9396e2 inherit pro_attribs_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a5716b75e47e34f725ea5c27fcc9396e2">on_message_</a></td></tr>
 <tr class="separator:a5716b75e47e34f725ea5c27fcc9396e2 inherit pro_attribs_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -323,7 +326,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00080">80</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00088">88</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -393,7 +396,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Enable port binding retry on failure. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00110">110</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00123">123</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -415,7 +418,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set idle connection timeout. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00117">117</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00130">130</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -437,7 +440,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Set maximum number of clients. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00122">122</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00135">135</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -459,7 +462,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configure server for multi-client mode with limit. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00136">136</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00149">149</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -498,7 +501,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#ac566a7264c6a7d0722aefa9424db2433">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00090">90</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00098">98</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -537,7 +540,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a66e7f72117f82c78aa7fc451395cbb8f">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00085">85</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00093">93</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -576,7 +579,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a37595682d57b9b28c499d9b8b1b0b029">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00095">95</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00103">103</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -615,7 +618,29 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2bb9f6f024eb186245db88420e5d2da2">unilink::builder::BuilderInterface&lt; wrapper::TcpServer, TcpServerBuilder &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00100">100</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00108">108</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+
+</div>
+</div>
+<a id="ae7006db0d1e42e8cc5a66f5220ae9989"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7006db0d1e42e8cc5a66f5220ae9989">&#9670;&nbsp;</a></span>on_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp; unilink::builder::TcpServerBuilder::on_message </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a> &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set message handler callback for framed messages (Server version with context) </p>
+
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00113">113</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -688,7 +713,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configure server for single client mode. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00130">130</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00143">143</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -709,7 +734,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Configure server for unlimited multi-client mode. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00138">138</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00151">151</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -731,7 +756,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Use independent IoContext for this server. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00105">105</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00118">118</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
 
 </div>
 </div>
@@ -745,7 +770,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a></li>
-    <li class="footer">Generated on Sat Apr 11 2026 07:56:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 09:25:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

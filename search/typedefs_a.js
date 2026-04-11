@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['reconnectpolicy_2144',['ReconnectPolicy',['../namespaceunilink.html#a379951fa136aa3aa08929012fd614066',1,'unilink']]],
-  ['reference_2145',['reference',['../classunilink_1_1memory_1_1SafeSpan.html#a78e14f40eb6de7c90f78aa31ff4c3930',1,'unilink::memory::SafeSpan']]],
-  ['reverse_5fiterator_2146',['reverse_iterator',['../classunilink_1_1memory_1_1SafeSpan.html#ab2a7660b73412356e8d5c87042276219',1,'unilink::memory::SafeSpan']]]
+  ['platforminfo_2159',['PlatformInfo',['../namespaceunilink_1_1common.html#a4bfa8e4aac6180db678118209ad654fa',1,'unilink::common']]],
+  ['pointer_2160',['pointer',['../classunilink_1_1memory_1_1SafeSpan.html#a545cf36f3ef1dd29b8fd433bbcadd4dc',1,'unilink::memory::SafeSpan']]]
 ];

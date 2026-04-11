@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['tcp_2153',['tcp',['../namespaceunilink_1_1transport.html#ab1ed8ce969aa0a469a6bf23c93f46a32',1,'unilink::transport']]],
-  ['tcpclient_2154',['TcpClient',['../namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7',1,'unilink']]],
-  ['tcpserver_2155',['TcpServer',['../namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7',1,'unilink']]],
-  ['threadsafelinkstate_2156',['ThreadSafeLinkState',['../namespaceunilink_1_1concurrency.html#ac0964c4a3d030d1e14a45079d9aaec44',1,'unilink::concurrency']]]
+  ['safedatahandler_2164',['SafeDataHandler',['../namespaceunilink_1_1memory.html#ab24b0543c51948b5f6807fad9b3d94f6',1,'unilink::memory']]],
+  ['serial_2165',['Serial',['../namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc',1,'unilink']]],
+  ['size_5ftype_2166',['size_type',['../classunilink_1_1memory_1_1SafeSpan.html#a6ee274522125eea443c57cd6ccaf8bce',1,'unilink::memory::SafeSpan']]],
+  ['state_2167',['State',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#a04390997b93863b05dbb1a8fce304484',1,'unilink::concurrency::ThreadSafeState::State()'],['../classunilink_1_1concurrency_1_1AtomicState.html#a71c0084af08e110dd52386ec7d151cd4',1,'unilink::concurrency::AtomicState::State()']]],
+  ['statecallback_2168',['StateCallback',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#a974567d33f60e72c4fd166f666c15c17',1,'unilink::concurrency::ThreadSafeState']]],
+  ['statecallbackhandle_2169',['StateCallbackHandle',['../classunilink_1_1concurrency_1_1ThreadSafeState.html#a7302349515a2a7571b40780f35a93481',1,'unilink::concurrency::ThreadSafeState']]]
 ];

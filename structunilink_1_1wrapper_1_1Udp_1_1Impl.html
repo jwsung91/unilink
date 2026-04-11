@@ -108,6 +108,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af5e75201266442a4d739dd13c9e2c3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a466de009e3ffc5e4762903e9975b3338"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a466de009e3ffc5e4762903e9975b3338">setup_internal_handlers</a> ()</td></tr>
 <tr class="separator:a466de009e3ffc5e4762903e9975b3338"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a8324e4713181157ebbd842d4dbf39b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a8a8324e4713181157ebbd842d4dbf39b">set_framer</a> (std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; f)</td></tr>
+<tr class="separator:a8a8324e4713181157ebbd842d4dbf39b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ad3e3ed4c5931b5b82f11ae143a0922"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a2ad3e3ed4c5931b5b82f11ae143a0922">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a903d5c8226370d06609694848822cc54">FramedMessageHandler</a> handler)</td></tr>
+<tr class="separator:a2ad3e3ed4c5931b5b82f11ae143a0922"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -135,6 +139,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:adf15fb3d526d38b563d7ed1543622d29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dade5856a7a6554f767160f3aeabb51"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a1dade5856a7a6554f767160f3aeabb51">error_handler</a> {nullptr}</td></tr>
 <tr class="separator:a1dade5856a7a6554f767160f3aeabb51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ad023ad371016a5527f24242bc9b528"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a903d5c8226370d06609694848822cc54">FramedMessageHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a9ad023ad371016a5527f24242bc9b528">message_handler</a> {nullptr}</td></tr>
+<tr class="separator:a9ad023ad371016a5527f24242bc9b528"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae881b50f864d7d16a8c96b61a781b30e"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ae881b50f864d7d16a8c96b61a781b30e">framer</a> {nullptr}</td></tr>
+<tr class="separator:ae881b50f864d7d16a8c96b61a781b30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1dcdada2fadf2cae955ab6b4ce019ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#aa1dcdada2fadf2cae955ab6b4ce019ff">auto_manage</a> {false}</td></tr>
 <tr class="separator:aa1dcdada2fadf2cae955ab6b4ce019ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada9134583ae3d9191c06c9090322e8a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ada9134583ae3d9191c06c9090322e8a7">started</a> {false}</td></tr>
@@ -168,7 +176,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00058">58</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00061">61</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -206,7 +214,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00059">59</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00062">62</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -234,7 +242,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00061">61</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00064">64</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -261,11 +269,67 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00063">63</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00066">66</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2ad3e3ed4c5931b5b82f11ae143a0922"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ad3e3ed4c5931b5b82f11ae143a0922">&#9670;&nbsp;</a></span>on_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::wrapper::Udp::Impl::on_message </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a903d5c8226370d06609694848822cc54">FramedMessageHandler</a>&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00175">175</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
+<a id="a8a8324e4713181157ebbd842d4dbf39b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a8324e4713181157ebbd842d4dbf39b">&#9670;&nbsp;</a></span>set_framer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::wrapper::Udp::Impl::set_framer </td>
+          <td>(</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00168">168</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
 <a id="a466de009e3ffc5e4762903e9975b3338"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a466de009e3ffc5e4762903e9975b3338">&#9670;&nbsp;</a></span>setup_internal_handlers()</h2>
 
@@ -289,7 +353,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00122">122</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00127">127</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -316,7 +380,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00070">70</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00073">73</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -343,7 +407,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00097">97</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00100">100</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -360,7 +424,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00055">55</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00058">58</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -492,6 +556,22 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae881b50f864d7d16a8c96b61a781b30e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae881b50f864d7d16a8c96b61a781b30e">&#9670;&nbsp;</a></span>framer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a>&gt; unilink::wrapper::Udp::Impl::framer {nullptr}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00056">56</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
 <a id="ab7c68c2693ec525e9a41b3414432b646"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab7c68c2693ec525e9a41b3414432b646">&#9670;&nbsp;</a></span>manage_external_context</h2>
 
@@ -505,6 +585,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00042">42</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
+<a id="a9ad023ad371016a5527f24242bc9b528"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ad023ad371016a5527f24242bc9b528">&#9670;&nbsp;</a></span>message_handler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a903d5c8226370d06609694848822cc54">FramedMessageHandler</a> unilink::wrapper::Udp::Impl::message_handler {nullptr}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00054">54</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -552,7 +648,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00056">56</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00059">59</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -581,7 +677,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1Udp.html">Udp</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat Apr 11 2026 07:56:05 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 09:25:15 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
