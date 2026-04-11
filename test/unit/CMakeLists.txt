@@ -493,7 +493,7 @@ foreach(test_file line_framer_test.cc packet_framer_test.cc line_framer_security
   )
 endforeach()
 
-# Create a custom target to build all unit tests
+# Framer tests (separate executables)
 add_custom_target(unilink_unit_tests)
 
 # Add dependencies to the custom target
@@ -535,8 +535,6 @@ add_dependencies(unilink_unit_tests
   run_unit_transport_tcp_fuzz_test
   run_unit_transport_tcp_timeout_test
   run_unit_transport_tcp_server_security_test
-  run_unit_line_framer_test
-  run_unit_packet_framer_test
   run_unit_line_framer_security_test
   run_unit_transport_tcp_client_policy
   run_unit_test_reconnect_decider

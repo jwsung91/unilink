@@ -78,6 +78,11 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
    */
   boost::asio::ip::udp::endpoint local_endpoint() const;
 
+  /**
+   * @brief Get the ASIO executor for this channel.
+   */
+  boost::asio::any_io_executor get_executor() const;
+
  private:
   explicit UdpChannel(const config::UdpConfig& cfg);
   UdpChannel(const config::UdpConfig& cfg, boost::asio::io_context& ioc);

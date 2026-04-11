@@ -278,7 +278,7 @@ struct UdpChannel::Impl {
     if (!dest_endpoint) {
       UNILINK_LOG_WARNING("udp", "write", "Remote endpoint not set; dropping write request");
       writing_ = false;
-      do_write(self); // Process next in queue
+      do_write(self);  // Process next in queue
       return;
     }
 
@@ -709,6 +709,8 @@ void UdpChannel::async_write_to(memory::ConstByteSpan data, const boost::asio::i
 void UdpChannel::on_bytes_from(OnBytesFrom cb) { impl_->on_bytes_from_ = std::move(cb); }
 
 boost::asio::ip::udp::endpoint UdpChannel::local_endpoint() const { return get_impl()->local_endpoint_; }
+
+boost::asio::any_io_executor UdpChannel::get_executor() const { return get_impl()->ioc_->get_executor(); }
 
 }  // namespace transport
 }  // namespace unilink

@@ -149,7 +149,8 @@ UdpServerBuilder& UdpServerBuilder::on_client_connect(std::function<void(const w
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+UdpServerBuilder& UdpServerBuilder::on_client_disconnect(
+    std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_disconnect_ = std::move(handler);
   return *this;
 }

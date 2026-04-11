@@ -18,6 +18,7 @@
 
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
+#include <boost/asio/steady_timer.hpp>
 #include <iostream>
 #include <map>
 #include <mutex>
@@ -47,6 +48,9 @@ struct UdpServer::Impl {
   std::map<boost::asio::ip::udp::endpoint, size_t> endpoint_to_id;
   std::map<size_t, boost::asio::ip::udp::endpoint> id_to_endpoint;
   std::map<size_t, std::unique_ptr<framer::IFramer>> client_framers;
+  std::map<size_t, std::chrono::steady_clock::time_point> session_activity;
+  std::chrono::milliseconds session_timeout{30000};  // Default 30s
+  std::unique_ptr<boost::asio::steady_timer> reaper_timer;
 
   ConnectionHandler on_connect{nullptr};
   ConnectionHandler on_disconnect{nullptr};
@@ -63,6 +67,53 @@ struct UdpServer::Impl {
     try {
       stop();
     } catch (...) {
+    }
+  }
+
+  void schedule_reaper() {
+    if (!started || !reaper_timer) return;
+
+    // Run reaper at interval proportional to timeout (min 100ms, max 5s)
+    auto interval =
+        std::max(std::chrono::milliseconds(100), std::min(std::chrono::milliseconds(5000), session_timeout / 2));
+
+    reaper_timer->expires_after(interval);
+    reaper_timer->async_wait([this](const boost::system::error_code& ec) {
+      if (!ec) {
+        run_reaper();
+        schedule_reaper();
+      }
+    });
+  }
+
+  void run_reaper() {
+    std::vector<size_t> to_remove;
+    auto now = std::chrono::steady_clock::now();
+
+    {
+      std::lock_guard<std::mutex> lock(mutex);
+      for (auto const& [id, last_seen] : session_activity) {
+        if (now - last_seen > session_timeout) {
+          to_remove.push_back(id);
+        }
+      }
+
+      for (size_t id : to_remove) {
+        auto it_ep = id_to_endpoint.find(id);
+        if (it_ep != id_to_endpoint.end()) {
+          endpoint_to_id.erase(it_ep->second);
+          id_to_endpoint.erase(it_ep);
+        }
+        client_framers.erase(id);
+        session_activity.erase(id);
+      }
+    }
+
+    // Call disconnect handlers outside the lock
+    if (on_disconnect) {
+      for (size_t id : to_remove) {
+        on_disconnect(ConnectionContext(id, "timeout"));
+      }
     }
   }
 
@@ -98,6 +149,7 @@ struct UdpServer::Impl {
         } else {
           client_id = it->second;
         }
+        session_activity[client_id] = std::chrono::steady_clock::now();
       }
 
       if (is_new && on_connect) {
@@ -135,8 +187,7 @@ struct UdpServer::Impl {
     }
 
     if (!channel) {
-      channel = std::dynamic_pointer_cast<transport::UdpChannel>(
-          factory::ChannelFactory::create(cfg, external_ioc));
+      channel = std::dynamic_pointer_cast<transport::UdpChannel>(factory::ChannelFactory::create(cfg, external_ioc));
       setup_internal_handlers();
     }
 
@@ -153,6 +204,13 @@ struct UdpServer::Impl {
     }
 
     started = true;
+
+    // Start Reaper Timer
+    if (channel) {
+      reaper_timer = std::make_unique<boost::asio::steady_timer>(channel->get_executor());
+      schedule_reaper();
+    }
+
     std::promise<bool> p;
     p.set_value(true);
     return p.get_future();
@@ -164,6 +222,12 @@ struct UdpServer::Impl {
 
     if (channel) {
       channel->stop();
+    }
+
+    if (reaper_timer) {
+      boost::system::error_code ec;
+      reaper_timer->cancel(ec);
+      reaper_timer.reset();
     }
 
     if (use_external_context && manage_external_context && external_thread.joinable()) {
@@ -198,7 +262,7 @@ bool UdpServer::is_listening() const { return impl_->started; }
 bool UdpServer::broadcast(std::string_view data) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   if (!impl_->channel) return false;
-  
+
   auto bytes = common::safe_convert::string_to_bytes(data);
   for (const auto& pair : impl_->id_to_endpoint) {
     impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), pair.second);
@@ -243,9 +307,7 @@ void UdpServer::set_framer_factory(FramerFactory factory) {
   impl_->framer_factory = std::move(factory);
 }
 
-void UdpServer::on_message(MessageHandler h) {
-  impl_->on_message = std::move(h);
-}
+void UdpServer::on_message(MessageHandler h) { impl_->on_message = std::move(h); }
 
 size_t UdpServer::get_client_count() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
@@ -262,7 +324,8 @@ std::vector<size_t> UdpServer::get_connected_clients() const {
 }
 
 UdpServer& UdpServer::set_session_timeout(std::chrono::milliseconds timeout) {
-  (void)timeout;
+  std::lock_guard<std::mutex> lock(impl_->mutex);
+  impl_->session_timeout = timeout;
   return *this;
 }
 
