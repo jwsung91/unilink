@@ -21,8 +21,6 @@ var structunilink_1_1wrapper_1_1Udp_1_1Impl =
     [ "framer", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ae881b50f864d7d16a8c96b61a781b30e", null ],
     [ "manage_external_context", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ab7c68c2693ec525e9a41b3414432b646", null ],
     [ "message_handler", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a9ad023ad371016a5527f24242bc9b528", null ],
-    [ "start_promise_", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#aee3362a8b69e087d902df7d6868c9985", null ],
-    [ "start_promise_fulfilled_", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a73d091f1bc62281666a66515356050ac", null ],
     [ "started", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ada9134583ae3d9191c06c9090322e8a7", null ],
     [ "use_external_context", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a064da8fe11fb8915a02cfa83ed208bd7", null ]
 ];
