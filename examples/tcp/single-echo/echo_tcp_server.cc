@@ -36,8 +36,7 @@ class EchoServer {
   unsigned short port_;
 
  public:
-  EchoServer(unsigned short port)
-      : logger_(unilink::diagnostics::Logger::instance()), running_(true), port_(port) {
+  EchoServer(unsigned short port) : logger_(unilink::diagnostics::Logger::instance()), running_(true), port_(port) {
     // Initialize logger
     logger_.set_level(unilink::diagnostics::LogLevel::INFO);
     logger_.set_console_output(true);
