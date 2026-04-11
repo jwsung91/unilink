@@ -225,8 +225,7 @@ struct UdpServer::Impl {
     }
 
     if (reaper_timer) {
-      boost::system::error_code ec;
-      reaper_timer->cancel(ec);
+      reaper_timer->cancel();
       reaper_timer.reset();
     }
 

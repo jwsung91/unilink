@@ -61,6 +61,8 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
   TcpServerBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
 
+  // Framing support
+  using BuilderInterface<wrapper::TcpServer, TcpServerBuilder>::on_message;
   /**
    * @brief Set message handler callback for framed messages (Server version with context)
    */
