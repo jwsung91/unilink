@@ -347,8 +347,8 @@ client->stop();         // Thread 3
 Callbacks are executed in the I/O thread context:
 
 ```cpp
-.on_data([](const std::string& data) {
-    // This runs in I/O thread
+.on_data([](const unilink::MessageContext& ctx) {
+    // This runs in the I/O thread.
     // Don't block here!
 });
 ```

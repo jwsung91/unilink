@@ -54,11 +54,9 @@ Immutable, type-safe buffer wrapper around existing data:
 #include "unilink/memory/safe_span.hpp"
 #include "unilink/memory/safe_data_buffer.hpp"
 
-using namespace unilink::common;
-
 // Create from existing data
-SafeDataBuffer from_vec(std::vector<uint8_t>{1, 2, 3});
-SafeDataBuffer from_str(std::string("hello"));
+unilink::memory::SafeDataBuffer from_vec(std::vector<uint8_t>{1, 2, 3});
+unilink::memory::SafeDataBuffer from_str(std::string("hello"));
 
 // Read access
 auto span = from_vec.as_span();      // Non-owning view
@@ -132,9 +130,7 @@ Lightweight, non-owning view of contiguous data:
 ```cpp
 #include "unilink/memory/safe_span.hpp"
 
-using namespace unilink::common;
-
-void process_data(safe_span<const uint8_t> data) {
+void process_data(unilink::memory::ConstByteSpan data) {
     // Iteration (operator[] is unchecked)
     for (size_t i = 0; i < data.size(); i++) {
         uint8_t byte = data[i];
@@ -147,7 +143,7 @@ void process_data(safe_span<const uint8_t> data) {
 
 // Usage
 std::vector<uint8_t> buffer = {1, 2, 3, 4, 5};
-process_data(safe_span<const uint8_t>(buffer));
+process_data(unilink::memory::ConstByteSpan(buffer));
 ```
 
 **Features:**
@@ -168,8 +164,6 @@ Read-write lock based state management:
 ```cpp
 #include "unilink/concurrency/thread_safe_state.hpp"
 
-using namespace unilink::common;
-
 enum class ConnectionState {
     Closed,
     Connecting,
@@ -177,7 +171,7 @@ enum class ConnectionState {
     Error
 };
 
-ThreadSafeState<ConnectionState> state(ConnectionState::Closed);
+unilink::concurrency::ThreadSafeState<ConnectionState> state(ConnectionState::Closed);
 
 // Thread 1: Write
 state.set_state(ConnectionState::Connecting);
@@ -295,17 +289,16 @@ Monitor all memory allocations and deallocations:
 ```cpp
 #include "unilink/memory/memory_tracker.hpp"
 
-using namespace unilink::common;
-
 // Tracking happens automatically
 auto* data = new uint8_t[1024];  // Tracked
 delete[] data;  // Tracked
 
 // Query statistics
-MemoryTracker::Stats stats = MemoryTracker::instance().get_stats();
+unilink::memory::MemoryTracker::MemoryStats stats =
+    unilink::memory::MemoryTracker::instance().get_stats();
 std::cout << "Total allocations: " << stats.total_allocations << std::endl;
 std::cout << "Total deallocations: " << stats.total_deallocations << std::endl;
-std::cout << "Current usage: " << stats.current_usage << " bytes" << std::endl;
+std::cout << "Current usage: " << stats.current_bytes_allocated << " bytes" << std::endl;
 ```
 
 ---
@@ -316,7 +309,7 @@ Identify potential memory leaks:
 
 ```cpp
 // At program exit, check for leaks
-MemoryTracker::Stats stats = MemoryTracker::instance().get_stats();
+auto stats = unilink::memory::MemoryTracker::instance().get_stats();
 
 if (stats.total_allocations != stats.total_deallocations) {
     size_t leaked = stats.total_allocations - stats.total_deallocations;

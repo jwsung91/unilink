@@ -24,8 +24,8 @@ Learn the recommended patterns and practices for using unilink effectively.
 ```cpp
 // GOOD
 auto client = unilink::tcp_client("server.com", 8080)
-    .on_error([](const std::string& error) {
-        log_error("TCP Client", error);
+    .on_error([](const unilink::ErrorContext& ctx) {
+        log_error("TCP Client", std::string(ctx.message()));
         // Handle error appropriately
     })
     .build();
@@ -54,11 +54,11 @@ client->send("Hello");  // May fail silently
 ```cpp
 // GOOD - Graceful recovery
 auto client = unilink::tcp_client("server.com", 8080)
-    .on_error([this](const std::string& error) {
-        log_error(error);
+    .on_error([this](const unilink::ErrorContext& ctx) {
+        log_error(std::string(ctx.message()));
         
         // Categorize error
-        if (is_retryable(error)) {
+        if (is_retryable(ctx.code())) {
             schedule_retry();
         } else {
             notify_user("Connection failed permanently");
@@ -69,8 +69,8 @@ auto client = unilink::tcp_client("server.com", 8080)
 
 // BAD - No recovery strategy
 auto client = unilink::tcp_client("server.com", 8080)
-    .on_error([](const std::string& error) {
-        std::cerr << error << std::endl;  // Just print and hope
+    .on_error([](const unilink::ErrorContext& ctx) {
+        std::cerr << ctx.message() << std::endl;  // Just print and hope
     })
     .build();
 ```
@@ -89,7 +89,7 @@ void setup_error_handler() {
             send_to_monitoring(error);
             
             // Alert on critical
-            if (error.level == ErrorLevel::CRITICAL) {
+            if (error.level == unilink::diagnostics::ErrorLevel::CRITICAL) {
                 send_alert(error);
             }
         });
@@ -130,7 +130,7 @@ delete client;   // Must remember to delete
 ```cpp
 // GOOD - Graceful shutdown
 class Application {
-    std::shared_ptr<unilink::wrapper::TcpClient> client_;
+    std::unique_ptr<unilink::wrapper::TcpClient> client_;
     
     ~Application() {
         shutdown();
@@ -148,7 +148,7 @@ class Application {
 
 // BAD - Abrupt shutdown
 class Application {
-    std::shared_ptr<unilink::wrapper::TcpClient> client_;
+    std::unique_ptr<unilink::wrapper::TcpClient> client_;
     
     ~Application() {
         // client_ destroyed abruptly
@@ -165,7 +165,7 @@ class Application {
 ```cpp
 // GOOD - Reuse connection
 class DataSender {
-    std::shared_ptr<unilink::wrapper::TcpClient> client_;
+    std::unique_ptr<unilink::wrapper::TcpClient> client_;
     
     void send_multiple_messages() {
         for (const auto& msg : messages) {
@@ -225,14 +225,14 @@ class Server {
 #include "unilink/concurrency/thread_safe_state.hpp"
 
 class Connection {
-    unilink::common::ThreadSafeState<State> state_;
+    unilink::concurrency::ThreadSafeState<State> state_;
     
     void set_state(State new_state) {
-        state_.set(new_state);  // Thread-safe
+        state_.set_state(new_state);  // Thread-safe
     }
     
     State get_state() const {
-        return state_.get();  // Thread-safe
+        return state_.get_state();  // Thread-safe
     }
 };
 ```
@@ -242,18 +242,18 @@ class Connection {
 ```cpp
 // BAD - Blocking in callback
 auto client = tcp_client("server.com", 8080)
-    .on_data([](const std::string& data) {
+    .on_data([](const unilink::MessageContext& ctx) {
         // This blocks the I/O thread!
         std::this_thread::sleep_for(std::chrono::seconds(10));
-        process_data(data);
+        process_data(ctx.data());
     })
     .build();
 
 // GOOD - Process asynchronously
 auto client = tcp_client("server.com", 8080)
-    .on_data([this](const std::string& data) {
+    .on_data([this](const unilink::MessageContext& ctx) {
         // Queue for processing in another thread
-        message_queue_.push(data);
+        message_queue_.push(std::string(ctx.data()));
     })
     .build();
 
@@ -351,29 +351,29 @@ for (const auto& msg : small_messages) {
 // GOOD - Organized in a class
 class ChatClient {
 private:
-    std::shared_ptr<unilink::wrapper::TcpClient> client_;
+    std::unique_ptr<unilink::wrapper::TcpClient> client_;
     std::string nickname_;
     
 public:
     void connect(const std::string& server, uint16_t port) {
         client_ = unilink::tcp_client(server, port)
-            .on_connect([this]() { handle_connect(); })
-            .on_data([this](const std::string& data) { handle_data(data); })
-            .on_disconnect([this]() { handle_disconnect(); })
+            .on_connect([this](const unilink::ConnectionContext&) { handle_connect(); })
+            .on_data([this](const unilink::MessageContext& ctx) { handle_data(ctx.data()); })
+            .on_disconnect([this](const unilink::ConnectionContext&) { handle_disconnect(); })
             .build();
     }
     
 private:
     void handle_connect() { /* ... */ }
-    void handle_data(const std::string& data) { /* ... */ }
+    void handle_data(std::string_view data) { /* ... */ }
     void handle_disconnect() { /* ... */ }
 };
 
 // BAD - Everything in main()
 int main() {
     auto client = tcp_client("server.com", 8080)
-        .on_connect([]() { /* 100 lines of code */ })
-        .on_data([](const std::string& data) { /* 200 lines */ })
+        .on_connect([](const unilink::ConnectionContext&) { /* 100 lines of code */ })
+        .on_data([](const unilink::MessageContext& ctx) { /* 200 lines */ })
         .build();
     // Hard to maintain!
 }
@@ -397,8 +397,8 @@ class Application {
     MessageHandler handler_;
     
     void start() {
-        network_.on_data([this](const std::string& msg) {
-            handler_.process_message(msg);  // Delegate
+        network_.on_data([this](const unilink::MessageContext& ctx) {
+            handler_.process_message(std::string(ctx.data()));  // Delegate
         });
     }
 };
@@ -406,7 +406,7 @@ class Application {
 // BAD - Mixed concerns
 class Application {
     void start() {
-        client_->on_data([](const std::string& msg) {
+        client_->on_data([](const unilink::MessageContext& ctx) {
             // Network logic
             // Business logic
             // UI logic
@@ -457,7 +457,7 @@ TEST(ClientTest, HandlesConnectionError) {
     bool error_received = false;
     
     auto client = tcp_client("invalid.server", 9999)
-        .on_error([&](const std::string& error) {
+        .on_error([&](const unilink::ErrorContext& ctx) {
             error_received = true;
         })
         .build();
@@ -543,13 +543,13 @@ class RateLimiter {
 };
 
 // Use in server
-server_->on_data([this, limiter](size_t id, const std::string& data) {
-    if (!limiter->is_allowed(id)) {
-        log_warning("Rate limit exceeded for client " + std::to_string(id));
+server_->on_data([this, limiter](const unilink::MessageContext& ctx) {
+    if (!limiter->is_allowed(ctx.client_id())) {
+        log_warning("Rate limit exceeded for client " + std::to_string(ctx.client_id()));
         return;
     }
     
-    process_data(id, data);
+    process_data(ctx.client_id(), std::string(ctx.data()));
 });
 ```
 
@@ -561,10 +561,10 @@ class Server {
     const size_t max_clients_{100};
     std::atomic<size_t> current_clients_{0};
     
-    void on_connect(size_t id, const std::string& ip) {
+    void on_connect(const unilink::ConnectionContext& ctx) {
         if (current_clients_ >= max_clients_) {
-            log_warning("Max clients reached, rejecting " + ip);
-            server_->send_to_client(id, "Server full\n");
+            log_warning("Max clients reached, rejecting " + ctx.client_info());
+            server_->send_to(ctx.client_id(), "Server full\n");
             // Disconnect client
             return;
         }

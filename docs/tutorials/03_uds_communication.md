@@ -22,33 +22,30 @@ A local echo service that:
 
 ```cpp
 #include <iostream>
-#include <memory>
 #include <string>
 #include "unilink/unilink.hpp"
 
 int main() {
     const std::string socket_path = "/tmp/unilink_echo.sock";
 
-    std::shared_ptr<unilink::UdsServer> server;
-    server = std::move(
-        unilink::uds_server(socket_path)
-            .unlimited_clients()
-            .on_connect([](const unilink::ConnectionContext& ctx) {
-                std::cout << "Client connected: " << ctx.client_id()
-                          << " info=" << ctx.client_info() << std::endl;
-            })
-            .on_data([&server](const unilink::MessageContext& ctx) {
-                std::cout << "Received: " << ctx.data() << std::endl;
-                server->send_to(ctx.client_id(), "Echo: " + std::string(ctx.data()));
-            })
-            .on_disconnect([](const unilink::ConnectionContext& ctx) {
-                std::cout << "Client disconnected: " << ctx.client_id() << std::endl;
-            })
-            .on_error([](const unilink::ErrorContext& ctx) {
-                std::cerr << "[Error] " << ctx.message() << std::endl;
-            })
-            .build()
-    );
+    std::unique_ptr<unilink::UdsServer> server;
+    server = unilink::uds_server(socket_path)
+        .unlimited_clients()
+        .on_connect([](const unilink::ConnectionContext& ctx) {
+            std::cout << "Client connected: " << ctx.client_id()
+                      << " info=" << ctx.client_info() << std::endl;
+        })
+        .on_data([&server](const unilink::MessageContext& ctx) {
+            std::cout << "Received: " << ctx.data() << std::endl;
+            server->send_to(ctx.client_id(), "Echo: " + std::string(ctx.data()));
+        })
+        .on_disconnect([](const unilink::ConnectionContext& ctx) {
+            std::cout << "Client disconnected: " << ctx.client_id() << std::endl;
+        })
+        .on_error([](const unilink::ErrorContext& ctx) {
+            std::cerr << "[Error] " << ctx.message() << std::endl;
+        })
+        .build();
 
     if (!server->start().get()) {
         std::cerr << "Failed to start UDS server" << std::endl;

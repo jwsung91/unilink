@@ -69,7 +69,7 @@ public:
     }
 
 private:
-    std::shared_ptr<unilink::TcpServer> server_;
+    std::unique_ptr<unilink::TcpServer> server_;
 };
 
 int main() {
