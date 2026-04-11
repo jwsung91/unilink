@@ -23,6 +23,7 @@ A small TCP client that:
 
 Create `my_first_client.cpp`:
 
+<!-- doc-compile: tutorial_getting_started_client -->
 ```cpp
 #include <iostream>
 #include <string>

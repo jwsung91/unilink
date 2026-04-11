@@ -20,6 +20,7 @@ A local echo service that:
 
 ## Step 1: Create A UDS Server
 
+<!-- doc-compile: tutorial_uds_server -->
 ```cpp
 #include <iostream>
 #include <string>
@@ -63,6 +64,7 @@ int main() {
 
 ## Step 2: Create A UDS Client
 
+<!-- doc-compile: tutorial_uds_client -->
 ```cpp
 #include <iostream>
 #include <string>

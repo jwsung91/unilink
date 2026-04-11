@@ -84,6 +84,7 @@ python3 -m http.server 8000
 - Keep public wrapper/builder APIs and transport-internal behavior in separate documents.
 - When documenting callbacks or methods, verify signatures against headers under `unilink/wrapper/` and `unilink/builder/`.
 - Treat runnable examples under `examples/` as the preferred source for tutorial snippets when possible.
+- For compile-checked tutorial snippets, keep the `<!-- doc-compile: ... -->` marker attached to the canonical fenced C++ block.
 - When build flags or defaults change, update `README.md`, `docs/index.md`, and `docs/guides/setup/build_guide.md` together.
 - When adding public APIs, update `docs/reference/api_guide.md` and `docs/implementation_status.md`.
 - When changing config behavior, update both `docs/reference/api_guide.md` and architecture notes that mention configuration flow.

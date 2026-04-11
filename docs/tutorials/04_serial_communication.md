@@ -39,6 +39,7 @@ This creates two connected ports, `/tmp/ttyA` and `/tmp/ttyB`.
 
 ## Step 2: Create A Minimal Serial Terminal
 
+<!-- doc-compile: tutorial_serial_terminal -->
 ```cpp
 #include <iostream>
 #include <string>

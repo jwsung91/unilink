@@ -23,6 +23,7 @@ A TCP server that:
 
 Create `echo_server.cpp`:
 
+<!-- doc-compile: tutorial_tcp_server_echo -->
 ```cpp
 #include <iostream>
 #include <string>

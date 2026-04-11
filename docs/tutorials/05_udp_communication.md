@@ -20,6 +20,7 @@ A two-process UDP setup:
 
 ## Step 1: Create A Receiver
 
+<!-- doc-compile: tutorial_udp_receiver -->
 ```cpp
 #include <iostream>
 #include "unilink/unilink.hpp"
@@ -50,6 +51,7 @@ int main() {
 
 ## Step 2: Create A Sender
 
+<!-- doc-compile: tutorial_udp_sender -->
 ```cpp
 #include <iostream>
 #include <string>
