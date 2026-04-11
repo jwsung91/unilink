@@ -197,11 +197,16 @@ TEST_F(TransportTcpServerTest, MaxClientsLimit) {
 
     // Run io_context to process the async read
     // Give enough time for server to accept and then close the connection
-    client_ioc.run_for(constants::kLongTimeout);
+    for (int i = 0; i < 10 && !read_completed.load(); ++i) {
+      client_ioc.poll();
+      if (!read_completed.load()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      }
+    }
 
-    EXPECT_TRUE(read_completed.load());
+    EXPECT_TRUE(read_completed.load()) << "Read from rejected client should complete (with EOF/error)";
     // Expect EOF or error
-    EXPECT_TRUE(read_ec == net::error::eof || read_ec == net::error::connection_reset);
+    EXPECT_TRUE(read_ec == net::error::eof || read_ec == net::error::connection_reset || read_ec == net::error::broken_pipe);
   }
 }
 

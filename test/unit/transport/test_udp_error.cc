@@ -52,15 +52,17 @@ TEST(TransportUdpErrorTest, SendOversizedPacket) {
 
   channel->start();
 
-  // UDP payload limit is 65535. Sending 70000 should fail.
-  // The UdpChannel implementation checks against MAX_BUFFER_SIZE (64MB) and bp_limit (tuned by backpressure_threshold).
-  // 70KB is within those limits, so it will attempt async_send_to.
-  // async_send_to should fail with message_size error.
-  std::vector<uint8_t> huge_packet(70000, 0xDD);
+  // UDP payload limit is 65535. Sending 100KB should definitely fail.
+  std::vector<uint8_t> huge_packet(100000, 0xDD);
   channel->async_write_copy(memory::ConstByteSpan(huge_packet.data(), huge_packet.size()));
 
-  // Run loop to process send
-  ioc.run_for(100ms);
+  // Run loop to process send - give it more time and poll multiple times
+  for (int i = 0; i < 10 && !error_occurred.load(); ++i) {
+    ioc.poll();
+    if (!error_occurred.load()) {
+      std::this_thread::sleep_for(10ms);
+    }
+  }
 
   EXPECT_TRUE(error_occurred.load()) << "Sending >65535 bytes via UDP should trigger Error state";
 

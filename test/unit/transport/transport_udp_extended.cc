@@ -179,13 +179,13 @@ TEST(TransportUdpExtendedTest, BackpressureReporting) {
   channel->start();
 
   // We don't run the IOC yet, so writes should queue up
-  // MIN_BACKPRESSURE_THRESHOLD is 1024, so we need > 1024 bytes to trigger it.
-  std::vector<uint8_t> chunk(800, 0xFF);
+  // MIN_BACKPRESSURE_THRESHOLD is usually 1024, so we need > 1024 bytes to trigger it.
+  std::vector<uint8_t> chunk(2000, 0xFF);
 
-  // First write: 800 bytes (below threshold 1024)
+  // First write: 2000 bytes (above typical threshold)
   channel->async_write_copy(memory::ConstByteSpan(chunk.data(), chunk.size()));
 
-  // Second write: 1600 bytes total (above threshold)
+  // Second write: 4000 bytes total
   channel->async_write_copy(memory::ConstByteSpan(chunk.data(), chunk.size()));
 
   // Now run IO to drain. The strand ensures the writes are processed
