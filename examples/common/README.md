@@ -1,11 +1,11 @@
 # Common Functionality Examples
 
-Examples demonstrating common functionality and utilities provided by the unilink library.
+Small examples for logger configuration and error callback handling.
 
 ## Examples
 
-- **logging_example**: Demonstrates the logging system usage
-- **error_handling_example**: Shows error handling system usage
+- **logging_example**: Configures the logger and emits example log messages from builder callbacks
+- **error_handling_example**: Triggers expected startup/connection failures and prints `ErrorContext`
 
 ## Logging Example
 
@@ -15,21 +15,15 @@ Examples demonstrating common functionality and utilities provided by the unilin
 ```
 
 ### What it demonstrates
-- Setting log levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-- Console and file output configuration
-- Async logging with batch processing
-- Log rotation and cleanup
-- Performance monitoring
+- Setting the logger level to `DEBUG`
+- Enabling console output
+- Emitting log messages with `UNILINK_LOG_INFO(...)`
+- Attaching logging hooks to TCP and Serial builders
 
 ### Expected Output
 ```
-=== Unilink Logging System Usage Example ===
-
-1. Logging system setup
-2. Basic logging examples
-3. Async logging demonstration
-4. Performance test
-5. Log rotation test
+[INFO] [main] [setup] Starting logging example...
+[INFO] [main] [cleanup] Example finished.
 ```
 
 ## Error Handling Example
@@ -40,69 +34,39 @@ Examples demonstrating common functionality and utilities provided by the unilin
 ```
 
 ### What it demonstrates
-- Error handler setup and configuration
-- Error callback registration
-- Different error levels and types
-- Error recovery mechanisms
-- Error statistics and monitoring
+- Using `.on_error(...)` with the current wrapper API
+- Reading `ErrorContext::code()` and `ErrorContext::message()`
+- Waiting on `start().get()` to observe expected failures
 
 ### Expected Output
 ```
-=== Unilink Error Handling System Usage Example ===
-
-1. Error handler setup
-2. Basic error handling
-3. Error recovery demonstration
-4. Error statistics
+--- Unilink Error Handling Example ---
+Server Error Detected!
+Server start failed as expected.
+Starting client connection attempt...
+Client Error Detected!
+Client connection failed as expected.
 ```
-
-## Key Features
-
-### Logging System
-- **Multiple output destinations**: Console, file, callback
-- **Async logging**: Non-blocking log processing
-- **Log rotation**: Automatic file rotation and cleanup
-- **Performance monitoring**: Log processing statistics
-- **Configurable levels**: DEBUG, INFO, WARNING, ERROR, CRITICAL
-
-### Error Handling System
-- **Centralized error management**: Single point for all errors
-- **Error categorization**: Different error types and levels
-- **Recovery mechanisms**: Automatic retry and fallback
-- **Error monitoring**: Statistics and reporting
-- **Custom error callbacks**: User-defined error handling
 
 ## Configuration
 
 ### Logging Configuration
 ```cpp
-// Set log level
+// Set log level and console output
 Logger::instance().set_level(LogLevel::DEBUG);
-
-// Enable file output
-Logger::instance().set_file_output("app.log");
-
-// Enable console output
-Logger::instance().enable_console_output();
-
-// Configure async logging
-Logger::instance().enable_async_logging();
+Logger::instance().set_console_output(true);
 ```
 
 ### Error Handling Configuration
 ```cpp
-// Set minimum error level
-ErrorHandler::instance().set_min_error_level(ErrorLevel::INFO);
-
-// Register error callback
-ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
-    // Handle error
-});
+auto client = tcp_client("127.0.0.1", 1)
+    .on_error([](const ErrorContext& ctx) {
+        std::cout << ctx.message() << std::endl;
+    })
+    .build();
 ```
 
 ## Use Cases
 
-- **Application logging**: Comprehensive logging for applications
-- **Error monitoring**: Centralized error handling and reporting
-- **Debugging**: Detailed logging for development and debugging
-- **Production monitoring**: Error tracking and performance monitoring
+- Use `logging_example` as a starting point for logger setup.
+- Use `error_handling_example` as a starting point for `on_error(...)` callback wiring.

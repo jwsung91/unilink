@@ -1,15 +1,27 @@
 # Unilink Examples
 
-This directory contains various examples demonstrating how to use the unilink library for different communication protocols and common functionality.
+This directory contains runnable examples for the current public `unilink/unilink.hpp` API.
 
 ## Structure
 
+- **tutorials/**: Small tutorial companions that mirror the docs
+- **common/**: Logging and error handling examples
 - **serial/**: Serial communication examples
 - **tcp/**: TCP communication examples
 - **udp/**: UDP communication examples
-- **common/**: Common functionality examples
+- **uds/**: Unix domain socket examples
 
 ## Quick Start
+
+### Build Examples
+
+```bash
+# From project root
+mkdir -p build
+cd build
+cmake ..
+cmake --build .
+```
 
 ### Serial Communication
 
@@ -32,9 +44,10 @@ socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
 # Terminal 3: Connect to second port
 socat - /tmp/ttyB
 ```
+
 ### TCP Communication
 
-````bash
+```bash
 # TCP echo server
 cd tcp/single-echo
 ./echo_tcp_server 9000
@@ -50,31 +63,35 @@ cd tcp/single-chat
 # TCP chat client
 cd tcp/single-chat
 ./chat_tcp_client 127.0.0.1 9000
-````
+```
 
 ### UDS Communication
 
 ```bash
 # UDS echo server
 cd uds
+./echo_uds_server
+# or
 ./echo_uds_server /tmp/my_socket.sock
 
 # UDS echo client
 cd uds
+./echo_uds_client
+# or
 ./echo_uds_client /tmp/my_socket.sock
 ```
 
 ### UDP Communication
 
 ```bash
-# UDP receiver (reply enabled)
+# UDP receiver (listens on 9000)
 cd udp
-./udp_receiver --local-port 9000 --reply
+./udp_receiver
 
-# UDP sender (default interval 1000ms, local port defaults to remote+1)
+# UDP sender (sends to 127.0.0.1:9000)
 cd udp
-./udp_sender --remote-ip 127.0.0.1 --remote-port 9000 --message "ping" --interval-ms 500
-````
+./udp_sender
+```
 
 ### Common Functionality
 
@@ -88,20 +105,16 @@ cd common
 ./error_handling_example
 ```
 
-## Building Examples
-
-```bash
-# Build all examples
-mkdir build && cd build
-cmake ..
-make
-
-# Build specific example
-make echo_serial
-make chat_tcp_server
-```
-
 ## Example Categories
+
+### Tutorial Companions
+
+- **tutorials/**: Minimal tutorial programs kept in sync with the docs
+
+### Common Functionality
+
+- **logging_example**: Shows basic logger setup and logging hooks
+- **error_handling_example**: Shows `on_error(...)` callbacks and failed start/connect flows
 
 ### Serial Communication
 
@@ -112,15 +125,11 @@ make chat_tcp_server
 
 - **single-echo/**: TCP echo server and client for network echo testing
 - **single-chat/**: TCP chat server and client for network chat
+- **multi-chat/**: Multi-client chat server and client
 
 ### UDS Communication
 
 - **uds/**: Unix Domain Socket echo server and client for local IPC testing
-
-### Common Functionality
-
-- **logging_example**: Demonstrates logging system usage
-- **error_handling_example**: Shows error handling system usage
 
 ## Prerequisites
 
@@ -185,5 +194,6 @@ cd vcpkg
 
 - **Linux**: Use `/dev/ttyUSB0`, `/dev/ttyACM0` for serial ports
 - **Windows**: Use `COM3`, `COM4` for serial ports
+- **UDS**: Unix domain sockets are intended for Unix-like platforms
 
 For detailed information about each example, see the README.md files in each subdirectory.

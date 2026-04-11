@@ -6,6 +6,7 @@ Examples demonstrating TCP network communication using the unilink library.
 
 - **single-echo/**: TCP echo server and client for network echo testing
 - **single-chat/**: TCP chat server and client for network chat
+- **multi-chat/**: Multi-client chat server and client
 
 ## Common Usage
 

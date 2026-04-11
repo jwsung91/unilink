@@ -1,60 +1,45 @@
 # UDP Sender and Receiver
 
-UDP sender/receiver examples using the unilink UDP builder. The receiver listens on a local port and optionally replies to the first peer it learns. The sender pushes periodic messages and prints replies.
+Minimal UDP examples using the current builder API from `unilink/unilink.hpp`.
+
+These programs are intentionally small. They do not parse command-line options.
 
 ## Receiver Usage
 
 ```bash
-./udp_receiver --local-port <port> [--local-ip <ip>] [--reply]
+./udp_receiver
 ```
 
-### Examples
-
-```bash
-# Listen on port 9000, reply to the first peer
-./udp_receiver --local-port 9000 --reply
-
-# Bind to a specific interface without replying
-./udp_receiver --local-port 9000 --local-ip 0.0.0.0
-```
+The receiver binds to local port `9000` and prints incoming datagrams.
 
 ## Sender Usage
 
 ```bash
-./udp_sender --remote-ip <ip> --remote-port <port> [--local-port <port>] [--local-ip <ip>] \
-  [--interval-ms <ms>] [--count <n>] [--message <text>]
+./udp_sender
 ```
 
-### Examples
-
-```bash
-# Send "ping" every 500ms to the receiver, using local port 9001
-./udp_sender --remote-ip 127.0.0.1 --remote-port 9000 --local-port 9001 --interval-ms 500 --message "ping"
-
-# Send five messages then exit (local port defaults to remote+1)
-./udp_sender --remote-ip 127.0.0.1 --remote-port 9000 --count 5
-```
+The sender uses an ephemeral local port and sends user-entered messages to `127.0.0.1:9000`.
 
 ## Quick Start (Two Terminals)
 
-**Terminal 1: Receiver (reply enabled)**
+**Terminal 1: Receiver**
 
 ```bash
 cd examples/udp
-./udp_receiver --local-port 9000 --reply
+./udp_receiver
 ```
 
 **Terminal 2: Sender**
 
 ```bash
 cd examples/udp
-./udp_sender --remote-ip 127.0.0.1 --remote-port 9000 --local-port 9001 --message "ping" --interval-ms 500
+./udp_sender
 ```
 
-You should see the receiver log inbound packets and reply once the first peer is learned. The sender logs every transmit and prints any replies.
+Type lines into the sender terminal. Each line is sent immediately, and the receiver prints it.
 
 ## Notes
 
-- The receiver only replies after the first peer is learned; writes before that are ignored by design.
-- The sender's `--count` defaults to `0` (infinite). Use a positive value to stop after a fixed number of sends.
-- Default local port for the sender is `remote-port + 1`, matching the documented 9000/9001 example pairing.
+- `udp_receiver.cpp` is the simplest "bind and print" example.
+- `udp_sender.cpp` is the simplest "set remote endpoint and send" example.
+- If you need argument parsing or richer UDP workflows, use these files as a starting point rather than expecting a CLI tool.
