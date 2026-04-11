@@ -42,10 +42,6 @@ struct Udp::Impl {
   bool manage_external_context{false};
   std::thread external_thread;
 
-  // Start status notification
-  std::promise<bool> start_promise_;
-  bool start_promise_fulfilled_{false};
-
   // Event handlers (Context based)
   MessageHandler data_handler{nullptr};
   ConnectionHandler connect_handler{nullptr};
@@ -77,9 +73,6 @@ struct Udp::Impl {
       return p.get_future();
     }
 
-    start_promise_ = std::promise<bool>();
-    start_promise_fulfilled_ = false;
-
     if (!channel) {
       channel = factory::ChannelFactory::create(cfg, external_ioc);
       setup_internal_handlers();
@@ -94,7 +87,13 @@ struct Udp::Impl {
     }
 
     started = true;
-    return start_promise_.get_future();
+
+    // For UDP, we return a successful future immediately.
+    // Use a fresh promise to avoid any potential future_error or state issues.
+    auto p = std::make_shared<std::promise<bool>>();
+    auto f = p->get_future();
+    p->set_value(true);
+    return f;
   }
 
   void stop() {
@@ -112,14 +111,6 @@ struct Udp::Impl {
     }
 
     started = false;
-
-    if (!start_promise_fulfilled_) {
-      try {
-        start_promise_.set_value(false);
-      } catch (...) {
-      }
-      start_promise_fulfilled_ = true;
-    }
 
     if (framer) framer->reset();
   }
@@ -143,20 +134,12 @@ struct Udp::Impl {
     channel->on_state([this](base::LinkState state) {
       switch (state) {
         case base::LinkState::Connected:
-          if (!start_promise_fulfilled_) {
-            start_promise_.set_value(true);
-            start_promise_fulfilled_ = true;
-          }
           if (connect_handler) connect_handler(ConnectionContext(0));
           break;
         case base::LinkState::Closed:
           if (disconnect_handler) disconnect_handler(ConnectionContext(0));
           break;
         case base::LinkState::Error:
-          if (!start_promise_fulfilled_) {
-            start_promise_.set_value(false);
-            start_promise_fulfilled_ = true;
-          }
           if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, "Connection error"));
           break;
         default:
