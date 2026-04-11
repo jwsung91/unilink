@@ -1,11 +1,13 @@
 var structunilink_1_1transport_1_1UdpChannel_1_1Impl =
 [
+    [ "TxItem", "structunilink_1_1transport_1_1UdpChannel_1_1Impl_1_1TxItem.html", "structunilink_1_1transport_1_1UdpChannel_1_1Impl_1_1TxItem" ],
+    [ "BufferVariant", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a94063d24141e05cc656f05a60b707e53", null ],
     [ "Impl", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a18c6b0af67bb82bbeea338c372f6c3f9", null ],
     [ "Impl", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ac65bef895861f22c72e4f95dce6718b3", null ],
     [ "~Impl", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abb6764ea5c652eaaaf0d431650c2fbab", null ],
     [ "close_socket", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a5fd9e984449413e16f0e89dabc0f9897", null ],
     [ "do_write", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ae29267b4cb8f4bc26f6f120ab30d5989", null ],
-    [ "enqueue_buffer", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a8fb6149676ea53bdd92c276c0c8af186", null ],
+    [ "enqueue_buffer", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#acf617233e3487454b0f11e395739b037", null ],
     [ "handle_receive", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#aba65af15d38f615afb33e770f2fbcdbf", null ],
     [ "init", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#afa3e5f935ae72cff77e2759d2beedfcf", null ],
     [ "join_ioc_thread", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3c8dc4a82dfb3b1fa9b11915fde14ed9", null ],
@@ -27,6 +29,7 @@ var structunilink_1_1transport_1_1UdpChannel_1_1Impl =
     [ "local_endpoint_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a34794cf543b00b92a5496ae220497b16", null ],
     [ "on_bp_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a861de434ba55ff08f2911c399286385f", null ],
     [ "on_bytes_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#aa532a9b464ba4b8418a6d9c58edd81ea", null ],
+    [ "on_bytes_from_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#acb9b19e61af09975bd31d4f3c0bb5cb6", null ],
     [ "on_state_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ad776cc389dccff5917008f97023f130c", null ],
     [ "opened_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a2cf2f99f97802005ec33021757b85a87", null ],
     [ "owned_ioc_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a204bb6bb1992ce403cb85918a44cb5cd", null ],
@@ -42,7 +45,7 @@ var structunilink_1_1transport_1_1UdpChannel_1_1Impl =
     [ "stopping_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a0795f885dca1333945e6d17f5c75e5ed", null ],
     [ "strand_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a9fbda73f0ddc20ca376e54226ef0ac4c", null ],
     [ "terminal_state_notified_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#af044bfee371f853b339083fd2ea5e730", null ],
-    [ "tx_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a81f408924f3fbfcc08c40ab129426a0e", null ],
+    [ "tx_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#accca84fa24bcea4b2d0b50b21cfade81", null ],
     [ "work_guard_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#af7b251b5a91c6900346a024d1337be1f", null ],
     [ "writing_", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a196c4a109e5702d5ddbfe24d4b9876d9", null ]
 ];

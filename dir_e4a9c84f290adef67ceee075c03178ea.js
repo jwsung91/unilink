@@ -20,9 +20,7 @@ var dir_e4a9c84f290adef67ceee075c03178ea =
       [ "TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html", "classunilink_1_1builder_1_1TcpServerBuilder" ]
     ] ],
     [ "udp_builder.cc", "udp__builder_8cc.html", null ],
-    [ "udp_builder.hpp", "udp__builder_8hpp.html", [
-      [ "UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", "classunilink_1_1builder_1_1UdpBuilder" ]
-    ] ],
+    [ "udp_builder.hpp", "udp__builder_8hpp.html", "udp__builder_8hpp" ],
     [ "uds_builder.cc", "uds__builder_8cc.html", null ],
     [ "uds_builder.hpp", "uds__builder_8hpp.html", [
       [ "UdsClientBuilder", "classunilink_1_1builder_1_1UdsClientBuilder.html", "classunilink_1_1builder_1_1UdsClientBuilder" ],

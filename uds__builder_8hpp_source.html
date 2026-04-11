@@ -160,27 +160,29 @@ $(document).ready(function(){initNavTree('uds__builder_8hpp_source.html',''); in
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; on_disconnect(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a>&amp;)&gt; handler) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; on_error(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html">wrapper::ErrorContext</a>&amp;)&gt; handler) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; on_message(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a>&amp;)&gt; handler);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; use_independent_context(<span class="keywordtype">bool</span> use_independent = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; unlimited_clients();</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  std::string socket_path_;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordtype">bool</span> auto_manage_;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordtype">bool</span> use_independent_context_;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keywordtype">size_t</span> max_clients_;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a>&amp;)&gt; on_data_;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a>&amp;)&gt; on_connect_;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a>&amp;)&gt; on_disconnect_;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html">wrapper::ErrorContext</a>&amp;)&gt; on_error_;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a>&amp;)&gt; on_framed_message_;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}  <span class="comment">// namespace builder</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="comment">// Framing support</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">using</span> <a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface&lt;wrapper::UdsServer, UdsServerBuilder&gt;::on_message</a>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; on_message(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a>&amp;)&gt; handler);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; use_independent_context(<span class="keywordtype">bool</span> use_independent = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; unlimited_clients();</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  std::string socket_path_;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keywordtype">bool</span> auto_manage_;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keywordtype">bool</span> use_independent_context_;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keywordtype">size_t</span> max_clients_;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a>&amp;)&gt; on_data_;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a>&amp;)&gt; on_connect_;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a>&amp;)&gt; on_disconnect_;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html">wrapper::ErrorContext</a>&amp;)&gt; on_error_;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  std::function&lt;void(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a>&amp;)&gt; on_framed_message_;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;};</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}  <span class="comment">// namespace builder</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a></div><div class="ttdoc">Generic Builder interface for fluent API pattern.</div><div class="ttdef"><b>Definition:</b> <a href="ibuilder_8hpp_source.html#l00045">ibuilder.hpp:45</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdsClientBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsClientBuilder.html">unilink::builder::UdsClientBuilder</a></div><div class="ttdoc">Modernized Builder for UdsClient.</div><div class="ttdef"><b>Definition:</b> <a href="uds__builder_8hpp_source.html#l00034">uds_builder.hpp:34</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdsServerBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsServerBuilder.html">unilink::builder::UdsServerBuilder</a></div><div class="ttdoc">Modernized Builder for UdsServer.</div><div class="ttdef"><b>Definition:</b> <a href="uds__builder_8hpp_source.html#l00068">uds_builder.hpp:68</a></div></div>
@@ -199,7 +201,7 @@ $(document).ready(function(){initNavTree('uds__builder_8hpp_source.html',''); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_e4a9c84f290adef67ceee075c03178ea.html">builder</a></li><li class="navelem"><a class="el" href="uds__builder_8hpp.html">uds_builder.hpp</a></li>
-    <li class="footer">Generated on Sat Apr 11 2026 12:02:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 13:37:32 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

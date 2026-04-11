@@ -15,8 +15,11 @@ var hierarchy =
     [ "unilink::builder::BuilderInterface< wrapper::TcpServer, TcpServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html", null ]
     ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::Udp, UdpBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
-      [ "unilink::builder::UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", null ]
+    [ "unilink::builder::BuilderInterface< wrapper::Udp, UdpClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+      [ "unilink::builder::UdpClientBuilder", "classunilink_1_1builder_1_1UdpClientBuilder.html", null ]
+    ] ],
+    [ "unilink::builder::BuilderInterface< wrapper::UdpServer, UdpServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+      [ "unilink::builder::UdpServerBuilder", "classunilink_1_1builder_1_1UdpServerBuilder.html", null ]
     ] ],
     [ "unilink::builder::BuilderInterface< wrapper::UdsClient, UdsClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::UdsClientBuilder", "classunilink_1_1builder_1_1UdsClientBuilder.html", null ]
@@ -80,6 +83,7 @@ var hierarchy =
     [ "unilink::wrapper::TcpClient::Impl", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html", null ],
     [ "unilink::wrapper::TcpServer::Impl", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html", null ],
     [ "unilink::wrapper::Udp::Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html", null ],
+    [ "unilink::wrapper::UdpServer::Impl", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html", null ],
     [ "unilink::wrapper::UdsClient::Impl", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html", null ],
     [ "unilink::wrapper::UdsServer::Impl", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html", null ],
     [ "unilink::util::InputValidator", "classunilink_1_1util_1_1InputValidator.html", null ],
@@ -118,6 +122,7 @@ var hierarchy =
     ] ],
     [ "unilink::wrapper::ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html", [
       [ "unilink::wrapper::TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", null ],
+      [ "unilink::wrapper::UdpServer", "classunilink_1_1wrapper_1_1UdpServer.html", null ],
       [ "unilink::wrapper::UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html", null ]
     ] ],
     [ "unilink::interface::TcpAcceptorInterface", "classunilink_1_1interface_1_1TcpAcceptorInterface.html", [
@@ -135,6 +140,7 @@ var hierarchy =
     [ "unilink::concurrency::ThreadSafeState< base::LinkState >", "classunilink_1_1concurrency_1_1ThreadSafeState.html", null ],
     [ "unilink::interface::TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", null ],
     [ "unilink::diagnostics::Logger::Impl::TimestampBuffer", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html", null ],
+    [ "unilink::transport::UdpChannel::Impl::TxItem", "structunilink_1_1transport_1_1UdpChannel_1_1Impl_1_1TxItem.html", null ],
     [ "unilink::config::UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", null ],
     [ "unilink::interface::UdsAcceptorInterface", "classunilink_1_1interface_1_1UdsAcceptorInterface.html", [
       [ "unilink::transport::BoostUdsAcceptor", "classunilink_1_1transport_1_1BoostUdsAcceptor.html", null ]

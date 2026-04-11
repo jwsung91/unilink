@@ -121,7 +121,7 @@ Error Handling</h1>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a8fcc7d822c1a43646e29d24c236e9823"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8fcc7d822c1a43646e29d24c236e9823">unilink::builder::TcpClientBuilder::on_error</a></div><div class="ttdeci">TcpClientBuilder &amp; on_error(std::function&lt; void(const wrapper::ErrorContext &amp;)&gt; handler) override</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00094">tcp_client_builder.cc:94</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::wrapper::ErrorContext</a></div><div class="ttdoc">Context for error events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00070">context.hpp:70</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a9f7fc6c812b11ff1d77aa71233a3221c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">unilink::wrapper::ErrorContext::message</a></div><div class="ttdeci">std::string_view message() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00076">context.hpp:76</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00120">unilink.hpp:120</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00119">unilink.hpp:119</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md290"></a>
 ✅ DO: Check Connection Status Before Sending</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD</span></div>
@@ -206,7 +206,7 @@ Resource Management</h1>
 <div class="line">client-&gt;stop();  <span class="comment">// Must remember to call</span></div>
 <div class="line"><span class="keyword">delete</span> client;   <span class="comment">// Must remember to delete</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a2b5c3a4512e9c13dba24b8adb4aaf0de"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">unilink::builder::TcpClientBuilder::auto_manage</a></div><div class="ttdeci">TcpClientBuilder &amp; auto_manage(bool auto_manage=true) override</div><div class="ttdoc">Enable auto-manage functionality.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00074">tcp_client_builder.cc:74</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a790be55fcb59a0aea5dfb178072fd6c7"><div class="ttname"><a href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">unilink::TcpClient</a></div><div class="ttdeci">wrapper::TcpClient TcpClient</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a790be55fcb59a0aea5dfb178072fd6c7"><div class="ttname"><a href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">unilink::TcpClient</a></div><div class="ttdeci">wrapper::TcpClient TcpClient</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00092">unilink.hpp:92</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md296"></a>
 ✅ DO: Stop Connections Before Shutdown</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Graceful shutdown</span></div>
@@ -667,7 +667,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 12:02:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 13:37:33 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

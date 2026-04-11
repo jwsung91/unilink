@@ -10,7 +10,8 @@ var annotated_dup =
         [ "SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html", "classunilink_1_1builder_1_1SerialBuilder" ],
         [ "TcpClientBuilder", "classunilink_1_1builder_1_1TcpClientBuilder.html", "classunilink_1_1builder_1_1TcpClientBuilder" ],
         [ "TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html", "classunilink_1_1builder_1_1TcpServerBuilder" ],
-        [ "UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", "classunilink_1_1builder_1_1UdpBuilder" ],
+        [ "UdpClientBuilder", "classunilink_1_1builder_1_1UdpClientBuilder.html", "classunilink_1_1builder_1_1UdpClientBuilder" ],
+        [ "UdpServerBuilder", "classunilink_1_1builder_1_1UdpServerBuilder.html", "classunilink_1_1builder_1_1UdpServerBuilder" ],
         [ "UdsClientBuilder", "classunilink_1_1builder_1_1UdsClientBuilder.html", "classunilink_1_1builder_1_1UdsClientBuilder" ],
         [ "UdsServerBuilder", "classunilink_1_1builder_1_1UdsServerBuilder.html", "classunilink_1_1builder_1_1UdsServerBuilder" ],
         [ "UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", "classunilink_1_1builder_1_1UnifiedBuilder" ]
@@ -114,6 +115,7 @@ var annotated_dup =
         [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", "classunilink_1_1wrapper_1_1TcpClient" ],
         [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", "classunilink_1_1wrapper_1_1TcpServer" ],
         [ "Udp", "classunilink_1_1wrapper_1_1Udp.html", "classunilink_1_1wrapper_1_1Udp" ],
+        [ "UdpServer", "classunilink_1_1wrapper_1_1UdpServer.html", "classunilink_1_1wrapper_1_1UdpServer" ],
         [ "UdsClient", "classunilink_1_1wrapper_1_1UdsClient.html", "classunilink_1_1wrapper_1_1UdsClient" ],
         [ "UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html", "classunilink_1_1wrapper_1_1UdsServer" ]
       ] ],

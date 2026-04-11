@@ -876,18 +876,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classunilink_1_1config_1_1ConfigManager.html#a8dae3b83f3a1426cf79b6817dbf9a98b",
-"classunilink_1_1memory_1_1MemoryTracker.html#a30a1c22ce1345ed2fa5d07efdf778608",
-"classunilink_1_1transport_1_1UdpChannel.html#a753af71ad739e467588e3d6c3af9c5ef",
-"classunilink_1_1wrapper_1_1Udp.html#a9d2180b90d33d46df4e6a9813a195185",
-"functions_e.html",
-"md_docs_architecture_memory_safety.html#autotoc_md63",
-"md_docs_guides_core_troubleshooting.html#autotoc_md501",
-"md_docs_test_structure.html#autotoc_md815",
-"namespaceunilink_1_1memory_1_1memory__validator.html#a60d61b8895e986a0bee5cafc38f60704",
-"structunilink_1_1diagnostics_1_1LogRotationConfig.html#a0bf714e1070362d1e4f24d593781144c",
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ad776cc389dccff5917008f97023f130c",
-"structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a2c447ab1b6d1b18417d04f44015ba1c0"
+"classunilink_1_1config_1_1ConfigManager.html#a3fb5a064deb4e8cc067b96a0dd3bf877",
+"classunilink_1_1memory_1_1MemoryPool.html#a8ad3705eb7668a2263d01ec27e9b69cf",
+"classunilink_1_1transport_1_1TcpServerSession.html#af06c5ae133e8ee9a040d75f1eefccd90",
+"classunilink_1_1wrapper_1_1TcpServer.html#af9f81ab409fae99f9b02da5187e49957",
+"error__mapping_8hpp.html#a54b6b94a2a2b770022045845ec4eaada",
+"md_docs_architecture_channel_contract.html#autotoc_md4",
+"md_docs_guides_core_troubleshooting.html",
+"md_docs_reference_api_guide.html#autotoc_md775",
+"namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a059e9861e0400dfbe05c98a841f3f96b",
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a270827dd9f3bb427f7bc8ee4bf12395e",
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html",
+"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#aaa5cc9a97a3280d2a5d1c8c2a58678c9"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

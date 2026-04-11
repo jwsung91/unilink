@@ -124,21 +124,31 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a7775484c6a9ab3d8c1153ef885eac329">unilink::transport::UdsClient::Impl</a>
 , <a class="el" href="structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a6fb50a953b3f4e8f332a7cd0e8d1fb3b">unilink::transport::UdsServer::Impl</a>
 </li>
+<li>on_bytes_from()
+: <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a9f885be5ab202784575293b46f3eed9a">unilink::transport::UdpChannel</a>
+</li>
+<li>on_bytes_from_
+: <a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#acb9b19e61af09975bd31d4f3c0bb5cb6">unilink::transport::UdpChannel::Impl</a>
+</li>
 <li>on_change()
 : <a class="el" href="classunilink_1_1config_1_1ConfigManager.html#a743a57e24c940ca9a5cd6498df7b9bd5">unilink::config::ConfigManager</a>
 , <a class="el" href="classunilink_1_1config_1_1ConfigManagerInterface.html#a517b543d0e6565557ad8668bef584878">unilink::config::ConfigManagerInterface</a>
 </li>
 <li>on_client_connect()
-: <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8c53d8804c273c0af6364a65c9dec883">unilink::wrapper::ServerInterface</a>
+: <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#ab7708eae0cdf8cf8e83c86cf5a436dd1">unilink::builder::UdpServerBuilder</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8c53d8804c273c0af6364a65c9dec883">unilink::wrapper::ServerInterface</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a379244c1bfcda52a7a25f6038de3f484">unilink::wrapper::TcpServer</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#aa6e62f959f85860bbe3c8e17f0a44b20">unilink::wrapper::UdpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ae15cce1baca0c5e80c2eefbfcdc67bcb">unilink::wrapper::UdsServer</a>
 </li>
 <li>on_client_connect_
 : <a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10defb582fb338ff5d688e929e793a57">unilink::wrapper::TcpServer::Impl</a>
 </li>
 <li>on_client_disconnect()
-: <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#afeb025189ff78fc75508b8ab936f5653">unilink::wrapper::ServerInterface</a>
+: <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#aceada24565c9a33d92860a63bcef81e4">unilink::builder::UdpServerBuilder</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#afeb025189ff78fc75508b8ab936f5653">unilink::wrapper::ServerInterface</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ad44939f72c0a63490822845e7b2b02a3">unilink::wrapper::TcpServer</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ab90222f6c1e2a6614bbf0658c5fa577e">unilink::wrapper::UdpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a12d757f24ce653b162ab2d1202c27ba0">unilink::wrapper::UdsServer</a>
 </li>
 <li>on_client_disconnect_
@@ -153,21 +163,24 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a96d737e91f16e3fd669e03ad18f19c36">unilink::builder::SerialBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">unilink::builder::TcpClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">unilink::builder::TcpServerBuilder</a>
-, <a class="el" href="classunilink_1_1builder_1_1UdpBuilder.html#a22dab56c9f09685d86e3c546a45065a0">unilink::builder::UdpBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpClientBuilder.html#a0141db9e31bae5495056afbd966facae">unilink::builder::UdpClientBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a96d394d39f4231e0b8285b06171a6ecf">unilink::builder::UdpServerBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsClientBuilder.html#a0adde1b5efd342eddb197367c919f005">unilink::builder::UdsClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a2620226c46de2acee4c1caf342dd8ee0">unilink::builder::UdsServerBuilder</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aed78ec545128d674f7bb9e2d6bd9497e">unilink::wrapper::ChannelInterface</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a328cb1216bcced4cb7fa75c9c659a7af">unilink::wrapper::Serial</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a2e24a2859f8d1fa2faf34a2a3d116b67">unilink::wrapper::TcpClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#ab0f17d293895efbc2e003d2186e939a7">unilink::wrapper::Udp</a>
+, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a32482bf214a34c02b0d76fcffe5a6cd2">unilink::wrapper::UdpServer::Impl</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ae4af8fc6ae761cce0c09fcdf434a970b">unilink::wrapper::UdsClient</a>
 </li>
 <li>on_data()
-: <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a66e7f72117f82c78aa7fc451395cbb8f">unilink::builder::BuilderInterface&lt; T, Derived &gt;</a>
+: <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a8de9b4e0b156ad2085fbb3141d390bbc">unilink::builder::BuilderInterface&lt; T, Derived &gt;</a>
 , <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a19f2f48e6d0fb18e8bb020866d2cd6a5">unilink::builder::SerialBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">unilink::builder::TcpClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a7855e70ae9a79ba8e62c31010d98a4be">unilink::builder::TcpServerBuilder</a>
-, <a class="el" href="classunilink_1_1builder_1_1UdpBuilder.html#a57489c2617e0c904f2126c17f692a26d">unilink::builder::UdpBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpClientBuilder.html#a7dc9314877c23ea40347e8b3a0e084bf">unilink::builder::UdpClientBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a3e4c923a966381bfb2a24228514f0acd">unilink::builder::UdpServerBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsClientBuilder.html#aedf0f6faf1eb05686b84ab7e7d55281f">unilink::builder::UdsClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a06a39ee066f8d1abd4520bca8997af38">unilink::builder::UdsServerBuilder</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abdbf994959370c616311474dfc7a199f">unilink::wrapper::ChannelInterface</a>
@@ -176,6 +189,8 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a92a13ab0f67fcf6dc54452074eb8c028">unilink::wrapper::TcpClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a30745a9e9f88247048edef18045f2e11">unilink::wrapper::TcpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a9d2180b90d33d46df4e6a9813a195185">unilink::wrapper::Udp</a>
+, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a5c25550dd52688612c6a76d0787cc658">unilink::wrapper::UdpServer::Impl</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a7b239bff057cef3146029c1ac83a1f9f">unilink::wrapper::UdpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a7ae5ca61188fd7b9d570900c27ad016f">unilink::wrapper::UdsClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a79ce10d7ee5799078bda65121a08900f">unilink::wrapper::UdsServer</a>
 </li>
@@ -187,13 +202,15 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a068a1027c7c6a243cd81d17ddcf000f1">unilink::builder::SerialBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aba798ecba4566d644b42fc3e3dd2c92c">unilink::builder::TcpClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a57d11fa1b0a6f273760ad1859443557d">unilink::builder::TcpServerBuilder</a>
-, <a class="el" href="classunilink_1_1builder_1_1UdpBuilder.html#ada6f281b7fb7578d3c53e0e6ed81769c">unilink::builder::UdpBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpClientBuilder.html#afd8dc3108d6dd306de6c579a4f1266f4">unilink::builder::UdpClientBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a5355b26261321e4a1a236a5337f4eb68">unilink::builder::UdpServerBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsClientBuilder.html#aa4e5a21e52a77453686e157d16c30a50">unilink::builder::UdsClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#abaf7a661ecd4b27aa47af46de5687566">unilink::builder::UdsServerBuilder</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ab2fc21ba4b82738e71cc68370680715a">unilink::wrapper::ChannelInterface</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a25e05819e04bdc27957ed698b95b39fa">unilink::wrapper::Serial</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a4401c5e02864adee270e6d74ba7ea93f">unilink::wrapper::TcpClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a159043bb3a9821b23257f14e9faa42c4">unilink::wrapper::Udp</a>
+, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a45d3b59efb6dcee512e54856fe07b80c">unilink::wrapper::UdpServer::Impl</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#aa9f4f008e4f276d21483871e8b3193d4">unilink::wrapper::UdsClient</a>
 </li>
 <li>on_error()
@@ -201,7 +218,8 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aabdd31229583cbc907720b336eb91254">unilink::builder::SerialBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8fcc7d822c1a43646e29d24c236e9823">unilink::builder::TcpClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc">unilink::builder::TcpServerBuilder</a>
-, <a class="el" href="classunilink_1_1builder_1_1UdpBuilder.html#afbdff1560eb99cef79531c4f39c67aa9">unilink::builder::UdpBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpClientBuilder.html#a0ae152a571c2992db4d844a3ab22eb4c">unilink::builder::UdpClientBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a07f537628482487b5933d9d6b635078b">unilink::builder::UdpServerBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsClientBuilder.html#a7fe2fc8ad2991582c7ce3b763f7aca95">unilink::builder::UdsClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a2595f4e58e035744357fe187985887aa">unilink::builder::UdsServerBuilder</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae9837f9dfd68b6db1fa62ef7078d96fe">unilink::wrapper::ChannelInterface</a>
@@ -210,6 +228,8 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a0a9e954a14b22cef576b6b04162c31dc">unilink::wrapper::TcpClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#af9f81ab409fae99f9b02da5187e49957">unilink::wrapper::TcpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a9bda9ed81d4ae9336cb6ece7c5881f1f">unilink::wrapper::Udp</a>
+, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a427a3f7cbd39df7c0425390bb5783dbf">unilink::wrapper::UdpServer::Impl</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a185da1be985fcdf233909259b24d5435">unilink::wrapper::UdpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#ac20b76f66b86180a9bb8c045f1604766">unilink::wrapper::UdsClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a8b080d4eed250fbf1af42f7fab375494">unilink::wrapper::UdsServer</a>
 </li>
@@ -217,8 +237,9 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 : <a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10e13cecb8abba84705b61aac61b3c51">unilink::wrapper::TcpServer::Impl</a>
 </li>
 <li>on_message()
-: <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#afff5e9c0738f1a3eeb920b89b8d93b2f">unilink::builder::BuilderInterface&lt; T, Derived &gt;</a>
+: <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a8d69170af68815e82dcfd15a0e1e734f">unilink::builder::BuilderInterface&lt; T, Derived &gt;</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae7006db0d1e42e8cc5a66f5220ae9989">unilink::builder::TcpServerBuilder</a>
+, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#afe5f1770c8bd3b501c647dd8872757e0">unilink::builder::UdpServerBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a914b4f011a55f80a047981e611828dbd">unilink::builder::UdsServerBuilder</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#afd077ac9b7b5c8db199bc631c62a151b">unilink::wrapper::ChannelInterface</a>
 , <a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a732298671b51b55485f392cc99f3a196">unilink::wrapper::Serial::Impl</a>
@@ -229,6 +250,8 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#af70a1064c23e5471bc4a09df2f340e58">unilink::wrapper::TcpServer</a>
 , <a class="el" href="structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a2ad3e3ed4c5931b5b82f11ae143a0922">unilink::wrapper::Udp::Impl</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#adc04b61f4147b77d1b3fae1b36732b05">unilink::wrapper::Udp</a>
+, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#afdf5cd9a047dbb98d58279b1bee733ee">unilink::wrapper::UdpServer::Impl</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#aab968048b851746313e396c16ed2be8a">unilink::wrapper::UdpServer</a>
 , <a class="el" href="structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html#ae6e75fdbcb856e251d561ca86fda8220">unilink::wrapper::UdsClient::Impl</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a08a3a989d029c2fd7ac32c9524d3967b">unilink::wrapper::UdsClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#acfec62d7040eaddfab729c6a5619daf2">unilink::wrapper::UdsServer</a>
@@ -289,6 +312,9 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a33002ebd873b32f644ae6cc7458d6ef4">unilink::transport::TcpServerSession</a>
 , <a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#a255b0a585fbb6d0b8f5e0a0190de7f2d">unilink::transport::UdsServerSession</a>
 </li>
+<li>OnBytesFrom
+: <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a8033df80528dfc0ee66401bef35a0f54">unilink::transport::UdpChannel</a>
+</li>
 <li>OnClose
 : <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a1d692982ec34bcbe037d32cb5059352b">unilink::transport::TcpServerSession</a>
 , <a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#a417488145f5e36f60120f990d0690d8d">unilink::transport::UdsServerSession</a>
@@ -335,16 +361,15 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a47bf095985cb5c07e3c9134478a641e5">unilink::builder::SerialBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#afaadbe75bb5e0f51da1b595e177febaf">unilink::builder::TcpClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a97f71c574e0f5de7a836198e0ba4aa83">unilink::builder::TcpServerBuilder</a>
-, <a class="el" href="classunilink_1_1builder_1_1UdpBuilder.html#a7723327adb3167f99942569b740a8bfb">unilink::builder::UdpBuilder</a>
-, <a class="el" href="classunilink_1_1concurrency_1_1IoContextManager.html#a43142a02979a07d43f4ba741eb7c97d1">unilink::concurrency::IoContextManager</a>
+, <a class="el" href="classunilink_1_1concurrency_1_1IoContextManager.html#ae38638363f85ecd1c2d05698310d1c31">unilink::concurrency::IoContextManager</a>
 , <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#af14ab7a87a6834629de77a2789dd8cd0">unilink::concurrency::ThreadSafeState&lt; StateType &gt;</a>
 , <a class="el" href="classunilink_1_1config_1_1ConfigManager.html#a812718f6cd6e9cac30b8e8fbc5c4110c">unilink::config::ConfigManager</a>
-, <a class="el" href="structunilink_1_1config_1_1TcpClientConfig.html#a315d4a00974aa423ce989ad4342d7f24">unilink::config::TcpClientConfig</a>
+, <a class="el" href="structunilink_1_1config_1_1TcpClientConfig.html#adefe77ce5f0f7bc6852b7a8bf9973aa6">unilink::config::TcpClientConfig</a>
 , <a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#a082c57005f8140e3f02c30135b48dce4">unilink::diagnostics::Logger</a>
 , <a class="el" href="classunilink_1_1memory_1_1GlobalMemoryPool.html#ac6cf59a77ec49d0ebae8e10f207b05c9">unilink::memory::GlobalMemoryPool</a>
 , <a class="el" href="classunilink_1_1memory_1_1MemoryPool.html#a821b94c00ce579cb0f6f861333ac889d">unilink::memory::MemoryPool</a>
-, <a class="el" href="classunilink_1_1memory_1_1MemoryValidator.html#a8eafe514b70629ada81da3d7639e07d1">unilink::memory::MemoryValidator</a>
-, <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#a8f8dc11b22544f6430121b8df1310e3c">unilink::memory::PooledBuffer</a>
+, <a class="el" href="classunilink_1_1memory_1_1MemoryValidator.html#a9ed70607f102f35284be727338a5b806">unilink::memory::MemoryValidator</a>
+, <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#a72dd80e27f44d3f673d17039066f36b0">unilink::memory::PooledBuffer</a>
 , <a class="el" href="classunilink_1_1memory_1_1SafeDataBuffer.html#a043b913feee208c980d75737e0038bde">unilink::memory::SafeDataBuffer</a>
 , <a class="el" href="classunilink_1_1transport_1_1Serial.html#a15584e33e48ee80b84816adeedb892ab">unilink::transport::Serial</a>
 , <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#ad37c4adfe4a28cf43eedde18fb1b6a5c">unilink::transport::TcpClient</a>
@@ -363,7 +388,7 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 : <a class="el" href="classunilink_1_1memory_1_1SafeDataBuffer.html#af2b192abe244aaa1afa557a2a15db2fa">unilink::memory::SafeDataBuffer</a>
 </li>
 <li>operator[]()
-: <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#a5e365743f105fa8fc0dde10154044722">unilink::memory::PooledBuffer</a>
+: <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#abcd5e51a9b3a0849f4ed4c35f73c8343">unilink::memory::PooledBuffer</a>
 , <a class="el" href="classunilink_1_1memory_1_1SafeDataBuffer.html#aa441cfa7f246ef1e1c2d76c1dd9eaf37">unilink::memory::SafeDataBuffer</a>
 , <a class="el" href="classunilink_1_1memory_1_1SafeSpan.html#ac13be8e3a157cd15d30fa1a1bc7241fd">unilink::memory::SafeSpan&lt; T &gt;</a>
 </li>
@@ -394,7 +419,7 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 12:02:55 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 13:37:33 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

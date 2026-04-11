@@ -57,7 +57,8 @@ var namespaceunilink =
     [ "tcp_client", "namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac", null ],
     [ "tcp_server", "namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956", null ],
     [ "to_string", "namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355", null ],
-    [ "udp", "namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212", null ],
+    [ "udp", "namespaceunilink.html#a374a0cf6196fb21b2f65f78e8c8623ef", null ],
+    [ "udp_server", "namespaceunilink.html#aee1c8d6e1e37f094547571a0e29123dd", null ],
     [ "uds_client", "namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a", null ],
     [ "uds_server", "namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80", null ]
 ];
