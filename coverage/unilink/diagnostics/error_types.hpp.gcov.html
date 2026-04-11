@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-11 12:09:11</td>
+            <td class="headerValue">2026-04-11 13:42:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -167,17 +167,17 @@
 <a name="89"><span class="lineNum">      89 </span>                :            :   /**</a>
 <a name="90"><span class="lineNum">      90 </span>                :            :    * @brief Constructor with Boost error code</a>
 <a name="91"><span class="lineNum">      91 </span>                :            :    */</a>
-<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        161 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        163 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,</span></a>
 <a name="93"><span class="lineNum">      93 </span>                :            :             const boost::system::error_code&amp; ec, bool retry = false)</a>
-<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">        161 :       : level(l),</span></a>
-<a name="95"><span class="lineNum">      95 </span>                :<span class="lineCov">        161 :         category(c),</span></a>
-<a name="96"><span class="lineNum">      96 </span>        [<span class="branchCov" title="Branch 0 was taken 161 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        161 :         component(comp),</span></a>
-<a name="97"><span class="lineNum">      97 </span>        [<span class="branchCov" title="Branch 0 was taken 161 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        161 :         operation(op),</span></a>
-<a name="98"><span class="lineNum">      98 </span>        [<span class="branchCov" title="Branch 0 was taken 161 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        161 :         message(msg),</span></a>
-<a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">        161 :         boost_error(ec),</span></a>
-<a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">        161 :         timestamp(std::chrono::system_clock::now()),</span></a>
-<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">        161 :         retryable(retry),</span></a>
-<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">        161 :         retry_count(0) {}</span></a>
+<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">        163 :       : level(l),</span></a>
+<a name="95"><span class="lineNum">      95 </span>                :<span class="lineCov">        163 :         category(c),</span></a>
+<a name="96"><span class="lineNum">      96 </span>        [<span class="branchCov" title="Branch 0 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        163 :         component(comp),</span></a>
+<a name="97"><span class="lineNum">      97 </span>        [<span class="branchCov" title="Branch 0 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        163 :         operation(op),</span></a>
+<a name="98"><span class="lineNum">      98 </span>        [<span class="branchCov" title="Branch 0 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        163 :         message(msg),</span></a>
+<a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">        163 :         boost_error(ec),</span></a>
+<a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">        163 :         timestamp(std::chrono::system_clock::now()),</span></a>
+<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">        163 :         retryable(retry),</span></a>
+<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">        163 :         retry_count(0) {}</span></a>
 <a name="103"><span class="lineNum">     103 </span>                :            : </a>
 <a name="104"><span class="lineNum">     104 </span>                :            :   /**</a>
 <a name="105"><span class="lineNum">     105 </span>                :            :    * @brief Get formatted timestamp string</a>
