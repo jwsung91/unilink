@@ -19,8 +19,8 @@
 #include <boost/asio.hpp>
 #include <thread>
 
-#include "test_utils.hpp"
 #include "test/utils/contract_utils.hpp"
+#include "test_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"

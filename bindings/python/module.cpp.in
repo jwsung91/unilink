@@ -3,9 +3,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "unilink/unilink.hpp"
 #include "unilink/framer/line_framer.hpp"
 #include "unilink/framer/packet_framer.hpp"
+#include "unilink/unilink.hpp"
 
 namespace py = pybind11;
 using namespace unilink;
@@ -154,9 +154,8 @@ PYBIND11_MODULE(unilink_py, m) {
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](TcpServer& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
-             self.set_framer_factory([start, end, max_length]() {
-               return std::make_unique<framer::PacketFramer>(start, end, max_length);
-             });
+             self.set_framer_factory(
+                 [start, end, max_length]() { return std::make_unique<framer::PacketFramer>(start, end, max_length); });
              return &self;
            })
       .def("on_message",
@@ -361,9 +360,8 @@ PYBIND11_MODULE(unilink_py, m) {
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](UdsServer& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
-             self.set_framer_factory([start, end, max_length]() {
-               return std::make_unique<framer::PacketFramer>(start, end, max_length);
-             });
+             self.set_framer_factory(
+                 [start, end, max_length]() { return std::make_unique<framer::PacketFramer>(start, end, max_length); });
              return &self;
            })
       .def("on_message",

@@ -206,7 +206,8 @@ TEST_F(TransportTcpServerTest, MaxClientsLimit) {
 
     EXPECT_TRUE(read_completed.load()) << "Read from rejected client should complete (with EOF/error)";
     // Expect EOF or error
-    EXPECT_TRUE(read_ec == net::error::eof || read_ec == net::error::connection_reset || read_ec == net::error::broken_pipe);
+    EXPECT_TRUE(read_ec == net::error::eof || read_ec == net::error::connection_reset ||
+                read_ec == net::error::broken_pipe);
   }
 }
 
