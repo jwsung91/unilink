@@ -17,7 +17,7 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-# Tutorial 1: Getting Started Examples
+# Getting Started examples
 add_executable(tutorial_simple_client
     getting_started/simple_client.cpp
 )
@@ -36,7 +36,7 @@ target_link_libraries(tutorial_my_first_client
 )
 unilink_configure_executable(tutorial_my_first_client)
 
-# Tutorial 2: TCP Server Examples
+# TCP server examples
 add_executable(tutorial_echo_server
     tcp_server/echo_server.cpp
 )

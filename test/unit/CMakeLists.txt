@@ -16,6 +16,7 @@
 # Each test file is built as a separate executable due to having its own main()
 
 get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
 # Default: discover after build so test executables exist
 set(_UNILINK_GTEST_DISCOVERY_MODE POST_BUILD)
@@ -174,6 +175,63 @@ gtest_discover_tests(run_unit_wrapper_serial_config_mapping
   PROPERTIES
     LABELS "unit_wrapper_serial"
     TIMEOUT 30
+)
+
+# Documentation snippet compile smoke tests
+set(_unilink_doc_snippet_dir ${CMAKE_CURRENT_BINARY_DIR}/generated/doc_snippets)
+set(_unilink_doc_extract_script ${CMAKE_SOURCE_DIR}/docs/scripts/extract_doc_snippet.py)
+set(_unilink_doc_snippets
+  "tutorial_getting_started_client|docs/tutorials/01_getting_started.md"
+  "tutorial_tcp_server_echo|docs/tutorials/02_tcp_server.md"
+  "tutorial_uds_server|docs/tutorials/03_uds_communication.md"
+  "tutorial_uds_client|docs/tutorials/03_uds_communication.md"
+  "tutorial_serial_terminal|docs/tutorials/04_serial_communication.md"
+  "tutorial_udp_receiver|docs/tutorials/05_udp_communication.md"
+  "tutorial_udp_sender|docs/tutorials/05_udp_communication.md"
+)
+
+set(_unilink_doc_targets)
+foreach(doc_entry IN LISTS _unilink_doc_snippets)
+  string(REPLACE "|" ";" doc_entry_parts "${doc_entry}")
+  list(GET doc_entry_parts 0 doc_snippet_name)
+  list(GET doc_entry_parts 1 doc_source_relpath)
+
+  set(doc_source_path ${CMAKE_SOURCE_DIR}/${doc_source_relpath})
+  set(doc_generated_source ${_unilink_doc_snippet_dir}/${doc_snippet_name}.cc)
+  set(doc_target run_doc_snippet_${doc_snippet_name})
+
+  add_custom_command(
+    OUTPUT ${doc_generated_source}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${_unilink_doc_snippet_dir}
+    COMMAND
+      ${Python3_EXECUTABLE}
+      ${_unilink_doc_extract_script}
+      --input ${doc_source_path}
+      --snippet ${doc_snippet_name}
+      --output ${doc_generated_source}
+    DEPENDS ${doc_source_path} ${_unilink_doc_extract_script}
+    VERBATIM
+  )
+
+  add_executable(${doc_target} ${doc_generated_source})
+  target_link_libraries(${doc_target} PRIVATE ${_unilink_test_lib})
+  target_include_directories(${doc_target} PRIVATE ${CMAKE_SOURCE_DIR})
+  target_compile_features(${doc_target} PRIVATE cxx_std_17)
+  unilink_set_test_warning_options(${doc_target})
+
+  list(APPEND _unilink_doc_targets ${doc_target})
+endforeach()
+
+add_custom_target(doc_snippets_smoke DEPENDS ${_unilink_doc_targets})
+add_test(
+  NAME DocSnippetsCompile
+  COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target doc_snippets_smoke --config $<CONFIG>
+)
+set_tests_properties(
+  DocSnippetsCompile
+  PROPERTIES
+    LABELS "docs_snippets"
+    TIMEOUT 120
 )
 
 # Transport tests (fast, unit-level without real network dependencies)

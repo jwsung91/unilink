@@ -72,10 +72,10 @@ std::thread t3([&client]() { client->stop(); });
 
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
-    .on_data([](const std::string& data) {
+    .on_data([](const unilink::MessageContext& ctx) {
         // ⚠️ This runs in the I/O thread!
         // Don't block here!
-        std::cout << "Received: " << data << std::endl;
+        std::cout << "Received: " << ctx.data() << std::endl;
     })
     .build();
 ```
@@ -86,7 +86,6 @@ auto client = unilink::tcp_client("server.com", 8080)
 - `on_disconnect()` - Connection lost
 - `on_data()` - Data received
 - `on_error()` - Error occurred
-- `on_backpressure()` - Queue size exceeded threshold
 
 ---
 
@@ -95,27 +94,28 @@ auto client = unilink::tcp_client("server.com", 8080)
 **Bad - Blocks I/O thread:**
 
 ```cpp
-.on_data([](const std::string& data) {
+.on_data([](const unilink::MessageContext& ctx) {
     // ❌ BAD: Blocks I/O thread
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    heavy_computation(data);
-    database_query(data);  // Blocking I/O
+    heavy_computation(ctx.data());
+    database_query(ctx.data());  // Blocking I/O
 })
 ```
 
 **Good - Offload to worker threads:**
 
 ```cpp
-.on_data([](const std::string& data) {
+.on_data([](const unilink::MessageContext& ctx) {
     // ✅ GOOD: Offload to worker thread
-    std::thread([data]() {
-        heavy_computation(data);
-        database_query(data);
+    std::string payload(ctx.data());
+    std::thread([payload]() {
+        heavy_computation(payload);
+        database_query(payload);
     }).detach();
 
     // Or use a thread pool
-    thread_pool.submit([data]() {
-        heavy_computation(data);
+    thread_pool.submit([payload]() {
+        heavy_computation(payload);
     });
 })
 ```
@@ -211,10 +211,10 @@ stateDiagram-v2
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
     .retry_interval(5000)    // Retry every 5 seconds
-    .on_connect([]() {
+    .on_connect([](const unilink::ConnectionContext&) {
         std::cout << "Connected!" << std::endl;
     })
-    .on_disconnect([]() {
+    .on_disconnect([](const unilink::ConnectionContext&) {
         std::cout << "Disconnected - will auto-reconnect" << std::endl;
     })
     .build();
@@ -255,17 +255,17 @@ Monitor connection state changes:
 
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
-    .on_connect([]() {
+    .on_connect([](const unilink::ConnectionContext&) {
         // Connection established
         std::cout << "✅ Connected" << std::endl;
     })
-    .on_disconnect([]() {
+    .on_disconnect([](const unilink::ConnectionContext&) {
         // Connection lost (will auto-reconnect)
         std::cout << "❌ Disconnected" << std::endl;
     })
-    .on_error([](const std::string& error) {
+    .on_error([](const unilink::ErrorContext& ctx) {
         // Error occurred
-        std::cout << "⚠️ Error: " << error << std::endl;
+        std::cout << "⚠️ Error: " << ctx.message() << std::endl;
     })
     .build();
 ```
@@ -340,7 +340,7 @@ client.reset();
 
 ## Backpressure Handling
 
-When the send queue grows too large (network slower than application), `unilink` notifies your application via backpressure callbacks. If a safety cap is exceeded, the transport closes the socket, clears the queue, and transitions to `Error`.
+When the send queue grows too large (network slower than application), `unilink` applies internal backpressure protection in the transport layer. The public wrapper/builder API does not currently expose an `on_backpressure()` callback, so applications should implement rate limiting and queue monitoring at the application level and react to send failures or error callbacks.
 
 ### Backpressure Flow
 
@@ -352,8 +352,8 @@ flowchart TD
     Check -->|No| Write[Continue Normal Write]
     Write --> Complete([Data Sent])
 
-    Check -->|Yes: queue_bytes > 1MB| Callback[Trigger on_backpressure callback]
-    Callback --> AppDecision{Application Decision}
+    Check -->|Yes: queue_bytes > 1MB| Protect[Internal backpressure protection]
+    Protect --> AppDecision{Application Decision}
 
     AppDecision -->|Pause Sending| Wait[Wait for queue to drain]
     AppDecision -->|Rate Limit| Throttle[Reduce send rate]
@@ -369,7 +369,7 @@ flowchart TD
     Force --> Write
     Resume --> Complete
 
-    style Callback fill:#f9f,stroke:#333,stroke-width:2px
+    style Protect fill:#f9f,stroke:#333,stroke-width:2px
     style AppDecision fill:#ff9,stroke:#333,stroke-width:2px
     style Force fill:#f66,stroke:#333,stroke-width:2px
 ```
@@ -378,17 +378,7 @@ flowchart TD
 
 ### Backpressure Configuration
 
-```cpp
-auto client = unilink::tcp_client("server.com", 8080)
-    .on_backpressure([](size_t queue_bytes) {
-        std::cout << "⚠️ Queue size: " << queue_bytes << " bytes" << std::endl;
-
-        // Option 1: Pause sending
-        // Option 2: Rate limit
-        // Option 3: Drop non-critical data
-    })
-    .build();
-```
+Use transport-layer configuration if you need direct queue-threshold control. At the wrapper level, keep your own send budget and stop producing data when downstream systems slow down.
 
 **Default threshold:** 1 MB (1,048,576 bytes)  
 **Configurable range:** 1 KB - 100 MB  
@@ -404,20 +394,11 @@ Stop sending until queue drains:
 
 ```cpp
 std::atomic<bool> can_send{true};
+std::atomic<size_t> queued_messages{0};
 
-auto client = unilink::tcp_client("server.com", 8080)
-    .on_backpressure([&can_send](size_t queue_bytes) {
-        if (queue_bytes > 5 * 1024 * 1024) {  // 5 MB
-            can_send = false;
-        } else if (queue_bytes < 1024 * 1024) {  // 1 MB
-            can_send = true;
-        }
-    })
-    .build();
-
-// Application code
-if (can_send) {
+if (queued_messages.load() < 1000 && can_send.load()) {
     client->send(data);
+    queued_messages.fetch_add(1);
 }
 ```
 
@@ -430,12 +411,10 @@ if (can_send) {
 Reduce send rate:
 
 ```cpp
-auto client = unilink::tcp_client("server.com", 8080)
-    .on_backpressure([](size_t queue_bytes) {
-        // Slow down sending
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    })
-    .build();
+for (const auto& packet : packets) {
+    client->send(packet);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+}
 ```
 
 **Best for:** Continuous data streams
@@ -447,16 +426,9 @@ auto client = unilink::tcp_client("server.com", 8080)
 Skip non-critical data:
 
 ```cpp
-std::atomic<bool> high_backpressure{false};
+std::atomic<bool> degraded_mode{false};
 
-auto client = unilink::tcp_client("server.com", 8080)
-    .on_backpressure([&high_backpressure](size_t queue_bytes) {
-        high_backpressure = (queue_bytes > 10 * 1024 * 1024);  // 10 MB
-    })
-    .build();
-
-// Send only critical data when backpressure is high
-if (!high_backpressure || is_critical) {
+if (!degraded_mode.load() || is_critical) {
     client->send(data);
 }
 ```
@@ -470,15 +442,17 @@ if (!high_backpressure || is_critical) {
 Track queue size continuously:
 
 ```cpp
-size_t max_queue_size = 0;
+size_t sent_messages = 0;
+size_t dropped_messages = 0;
 
-auto client = unilink::tcp_client("server.com", 8080)
-    .on_backpressure([&max_queue_size](size_t queue_bytes) {
-        max_queue_size = std::max(max_queue_size, queue_bytes);
-        std::cout << "Current queue: " << queue_bytes
-                  << " bytes, Max: " << max_queue_size << " bytes\n";
-    })
-    .build();
+for (const auto& packet : packets) {
+    if (should_send(packet)) {
+        client->send(packet);
+        ++sent_messages;
+    } else {
+        ++dropped_messages;
+    }
+}
 ```
 
 ---
@@ -488,9 +462,9 @@ auto client = unilink::tcp_client("server.com", 8080)
 Backpressure handling ensures:
 
 - ✅ Queue size is monitored continuously
-- ✅ Callback fires when `queue_bytes > threshold`
-- ✅ Application can take corrective action
-- ⚠️ **No automatic flow control** - application must handle backpressure
+- ✅ Queue growth is bounded internally in the transport layer
+- ✅ Applications can add their own send throttling policy
+- ⚠️ Wrapper-level backpressure callbacks are not part of the current public API
 - ✅ Memory pools reduce allocation overhead for small buffers (<64KB)
 
 ---
@@ -577,5 +551,5 @@ Backpressure handling ensures:
 
 - [Memory Safety](memory_safety.md) - Memory safety features
 - [System Overview](README.md) - High-level architecture
-- [Performance Guide](../guides/performance.md) - Optimization techniques
-- [Best Practices](../guides/best_practices.md) - Recommended patterns
+- [Performance Guide](../guides/advanced/performance.md) - Optimization techniques
+- [Best Practices](../guides/core/best_practices.md) - Recommended patterns

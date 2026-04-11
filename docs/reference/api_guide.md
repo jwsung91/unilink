@@ -10,10 +10,12 @@ Comprehensive API reference for the unilink library.
 2. [TCP Client](#tcp-client)
 3. [TCP Server](#tcp-server)
 4. [Serial Communication](#serial-communication)
-5. [Error Handling](#error-handling)
-6. [Logging System](#logging-system)
-7. [Configuration Management](#configuration-management)
-8. [Advanced Features](#advanced-features)
+5. [UDP Communication](#udp-communication)
+6. [UDS Communication](#uds-communication)
+7. [Error Handling](#error-handling)
+8. [Logging System](#logging-system)
+9. [Configuration Management](#configuration-management)
+10. [Advanced Features](#advanced-features)
 
 ---
 
@@ -36,14 +38,16 @@ auto channel = unilink::{type}(params)
 
 | Method                           | Description                                                       | Default |
 | -------------------------------- | ----------------------------------------------------------------- | ------- |
-| `.on_data(callback)`             | Handle incoming data (`const MessageContext&`)                    | None    |
-| `.on_bytes(callback)`            | Handle incoming raw data (`ConstByteSpan`)                        | None    |
-| `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)             | None    |
-| `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                 | None    |
-| `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                             | None    |
-| `.auto_manage(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false` |
-| `.use_independent_context(bool)` | Create and run a dedicated `io_context` thread managed by unilink | `false` |
-| `.build()`                       | **Required**: Build the wrapper instance                          | -       |
+| `.on_data(callback)`             | Handle incoming data (`const MessageContext&`)                             | None    |
+| `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)                      | None    |
+| `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                          | None    |
+| `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                                      | None    |
+| `.auto_manage(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)               | `false` |
+| `.use_independent_context(bool)` | Create and run a dedicated `io_context` thread managed by unilink          | `false` |
+| `.use_line_framer(...)`          | Split incoming bytes into delimiter-based messages                         | Disabled |
+| `.use_packet_framer(...)`        | Split incoming bytes into packet-based messages                            | Disabled |
+| `.on_message(callback)`          | Handle framed messages as `unilink::memory::ConstByteSpan`                 | None    |
+| `.build()`                       | **Required**: Build the wrapper instance                                   | -       |
 
 **Builder-Specific Options**
 
@@ -52,9 +56,9 @@ auto channel = unilink::{type}(params)
 - `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` **(must choose one before `build()`)**
 - TCP server callbacks use the same Context-based signatures. Use `ctx.client_id()` and `ctx.client_info()` to distinguish clients.
 
-### Efficient Data Handling with SafeSpan
+### Framed Message Handling with `ConstByteSpan`
 
-The `.on_bytes()` callback uses `unilink::memory::ConstByteSpan` (a C++17 compatible view) to provide zero-copy access to the receive buffer.
+Use `.on_message()` together with a framer when you want zero-copy access to framed payloads.
 
 **Benefits:**
 - **Performance**: Avoids `std::string` allocation overhead.
@@ -62,13 +66,13 @@ The `.on_bytes()` callback uses `unilink::memory::ConstByteSpan` (a C++17 compat
 
 **Example:**
 ```cpp
-.on_bytes([](unilink::memory::ConstByteSpan data) {
-    // Access metadata
-    size_t len = data.size();
-    const uint8_t* ptr = data.data();
+.use_line_framer("\n")
+.on_message([](unilink::memory::ConstByteSpan msg) {
+    size_t len = msg.size();
+    const uint8_t* ptr = msg.data();
 
-    // Convert to string using helper
-    std::string s = unilink::common::safe_convert::uint8_to_string(ptr, len);
+    std::string text(reinterpret_cast<const char*>(ptr), len);
+    std::cout << "Framed message: " << text << std::endl;
 })
 ```
 
@@ -77,9 +81,10 @@ The `.on_bytes()` callback uses `unilink::memory::ConstByteSpan` (a C++17 compat
 | ------------------------------------ | ---------------------------------------------------------------------- |
 | `->start()` | **Required**: Start the connection |
 | `->stop()` | Stop the connection |
-| `->send(data)` / `->send_line(text)` | Send data to peer(s) |
-| `->is_connected()` | Check connection status (`TcpServer` reports underlying channel state) |
-| `TcpServer::is_listening()` | Check if the server socket is bound and listening |
+| `TcpClient` / `Serial` / `Udp` / `UdsClient`: `->send(data)` / `->send_line(text)` | Send data to the configured peer |
+| `TcpClient` / `Serial` / `Udp` / `UdsClient`: `->is_connected()` | Check channel state |
+| `TcpServer` / `UdsServer`: `->broadcast(data)` / `->send_to(client_id, data)` | Send data to one or more connected clients |
+| `TcpServer` / `UdsServer`: `->is_listening()` | Check if the server socket is bound and listening |
 
 **Builder Flow**
 
@@ -160,7 +165,7 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 | `send()`                   | `void` | Send data to server                                                   |
 | `send_line()`              | `void` | Send data with trailing newline                                       |
 | `is_connected()`           | `bool` | Check connection status                                               |
-| `start()`                  | `void` | Start connection attempt                                              |
+| `start()`                  | `std::future<bool>` | Start connection attempt                                  |
 | `stop()`                   | `void` | Stop and disconnect                                                   |
 | `set_retry_interval()`     | `void` | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
 | `set_max_retries()`        | `void` | Set max reconnect attempts (`-1` for unlimited)                       |
@@ -172,7 +177,7 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 
 ```cpp
 class MyClient {
-    std::shared_ptr<unilink::TcpClient> client_;
+    std::unique_ptr<unilink::TcpClient> client_;
 
 public:
     void on_data(const unilink::MessageContext& ctx) {
@@ -235,6 +240,7 @@ Accept multiple client connections with thread-safe operations.
 #include "unilink/unilink.hpp"
 
 auto server = unilink::tcp_server(8080)
+    .unlimited_clients()
     .on_connect([](const unilink::ConnectionContext& ctx) {
         std::cout << "Client " << ctx.client_id() << " connected from " << ctx.client_info() << std::endl;
     })
@@ -250,10 +256,10 @@ auto server = unilink::tcp_server(8080)
 server->start();
 
 // Send to specific client
-server->send_to_client(1, "Hello, Client 1!");
+server->send_to(1, "Hello, Client 1!");
 
 // Send to all clients
-server->send("Broadcast message");
+server->broadcast("Broadcast message");
 
 // Check if listening
 if (server->is_listening()) {
@@ -290,18 +296,19 @@ Multi-client callbacks use the standard `ConnectionContext` and `MessageContext`
 
 #### Instance Methods
 
-| Method                    | Return                | Description                     |
-| ------------------------- | --------------------- | ------------------------------- |
-| `send()`                  | `void`                | Send to all connected clients   |
-| `send_to_client()`        | `void`                | Send to specific client         |
-| `broadcast()`             | `void`                | Explicit broadcast helper       |
-| `send_line()`             | `void`                | Send data with trailing newline |
-| `get_client_count()`      | `size_t`              | Number of connected clients     |
-| `get_connected_clients()` | `std::vector<size_t>` | List of connected client IDs    |
-| `is_connected()`          | `bool`                | Channel connection state        |
-| `is_listening()`          | `bool`                | Check if server is listening    |
-| `start()`                 | `void`                | Start accepting connections     |
-| `stop()`                  | `void`                | Stop server and disconnect all  |
+| Method                    | Return                | Description                            |
+| ------------------------- | --------------------- | -------------------------------------- |
+| `broadcast()`             | `bool`                | Send to all connected clients          |
+| `send_to()`               | `bool`                | Send to a specific client              |
+| `get_client_count()`      | `size_t`              | Number of connected clients            |
+| `get_connected_clients()` | `std::vector<size_t>` | List of connected client IDs           |
+| `on_client_connect()`     | `ServerInterface&`    | Register runtime connect callback      |
+| `on_client_disconnect()`  | `ServerInterface&`    | Register runtime disconnect callback   |
+| `on_data()`               | `ServerInterface&`    | Register runtime message callback      |
+| `on_error()`              | `ServerInterface&`    | Register runtime error callback        |
+| `is_listening()`          | `bool`                | Check if server is listening           |
+| `start()`                 | `std::future<bool>`   | Start accepting connections            |
+| `stop()`                  | `void`                | Stop server and disconnect all clients |
 
 ### Advanced Examples
 
@@ -335,7 +342,7 @@ auto server = unilink::tcp_server(8080)
     .build();
 
 server->on_data([&server](const unilink::MessageContext& ctx) {
-    server->send_to_client(ctx.client_id(), "Echo: " + std::string(ctx.data()));
+    server->send_to(ctx.client_id(), "Echo: " + std::string(ctx.data()));
 });
 
 server->start();
@@ -367,9 +374,9 @@ serial->start();
 // Send AT command
 serial->send("AT\r\n");
 
-// Send binary data
-std::vector<uint8_t> binary = {0x01, 0x02, 0x03};
-serial->send(binary);
+// Send binary payload through string-compatible storage
+std::string binary_payload("\x01\x02\x03", 3);
+serial->send(binary_payload);
 ```
 
 ### API Reference
@@ -399,7 +406,7 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 | `send()`               | `void`         | Send data to device                                        |
 | `send_line()`          | `void`         | Send data with trailing newline                            |
 | `is_connected()`       | `bool`         | Check if port is open                                      |
-| `start()`              | `void`         | Open serial port                                           |
+| `start()`              | `std::future<bool>` | Open serial port                                      |
 | `stop()`               | `void`         | Close serial port                                          |
 | `set_baud_rate()`      | `void`         | Adjust baud rate at runtime                                |
 | `set_data_bits()`      | `void`         | Set data bits (5-8)                                        |
@@ -513,18 +520,17 @@ unilink::udp(uint16_t local_port)
 
 | Method                      | Parameters         | Description                                   |
 | --------------------------- | ------------------ | --------------------------------------------- |
-| `set_local_port(port)`      | `uint16_t`         | Bind to specific local port                   |
-| `set_local_address(ip)`     | `string`           | Bind to specific local IP (default "0.0.0.0") |
-| `set_remote(ip, port)`      | `string, uint16_t` | Set default destination for `send()`          |
-| `use_independent_context()` | `bool`             | Run on dedicated IO thread                    |
-| `auto_manage()`             | `bool`             | Auto-start/stop lifecycle                     |
+| `set_local_port(port)`      | `uint16_t`         | Bind to a specific local port          |
+| `set_remote(ip, port)`      | `string, uint16_t` | Set default destination for `send()`   |
+| `use_independent_context()` | `bool`             | Run on dedicated IO thread             |
+| `auto_manage()`             | `bool`             | Auto-start/stop lifecycle              |
 
 #### Instance Methods
 
 | Method           | Return | Description                            |
 | ---------------- | ------ | -------------------------------------- |
 | `send()`         | `void` | Send data to configured remote address |
-| `start()`        | `void` | Start listening/sending                |
+| `start()`        | `std::future<bool>` | Start listening/sending         |
 | `stop()`         | `void` | Close socket                           |
 | `is_connected()` | `bool` | Check if socket is open and ready      |
 
@@ -593,12 +599,12 @@ unilink::uds_client(const std::string& socket_path)
 
 #### Builder Methods (UDS Server)
 
-| Method                | Parameters     | Description                                     |
-| --------------------- | -------------- | ----------------------------------------------- |
-| `single_client()`     | None           | Only allow one client at a time                 |
-| `multi_client(max)`   | `size_t (>=2)` | Allow up to `max` concurrent clients            |
-| `unlimited_clients()` | None           | Allow unlimited clients                         |
-| `auto_manage()`       | `bool`         | Auto-start/stop lifecycle                       |
+| Method                      | Parameters | Description                               |
+| --------------------------- | ---------- | ----------------------------------------- |
+| `max_clients(max)`          | `size_t`   | Allow up to `max` concurrent clients      |
+| `unlimited_clients()`       | None       | Allow unlimited clients                   |
+| `use_independent_context()` | `bool`     | Run on dedicated IO thread                |
+| `auto_manage()`             | `bool`     | Auto-start/stop lifecycle                 |
 
 #### Builder Methods (UDS Client)
 
@@ -607,15 +613,27 @@ unilink::uds_client(const std::string& socket_path)
 | `retry_interval(ms)`  | `unsigned` | Set reconnection interval (default `3000`) |
 | `auto_manage()`       | `bool`     | Auto-start/stop lifecycle                  |
 
-#### Instance Methods (Common)
+#### Instance Methods (UDS Client)
 
-| Method            | Return | Description                       |
-| ----------------- | ------ | --------------------------------- |
-| `start()`         | `void` | Start communication               |
-| `stop()`          | `void` | Stop communication                |
-| `is_connected()`  | `bool` | Check if channel is active        |
-| `send(data)`      | `void` | Send data to peer(s)              |
-| `is_listening()`  | `bool` | (Server only) Check if listening  |
+| Method            | Return              | Description                              |
+| ----------------- | ------------------- | ---------------------------------------- |
+| `start()`         | `std::future<bool>` | Start communication                      |
+| `stop()`          | `void`              | Stop communication                       |
+| `is_connected()`  | `bool`              | Check if the client channel is active    |
+| `send(data)`      | `void`              | Send data to the server                  |
+| `send_line(text)` | `void`              | Send text with a trailing newline        |
+
+#### Instance Methods (UDS Server)
+
+| Method                    | Return                | Description                            |
+| ------------------------- | --------------------- | -------------------------------------- |
+| `start()`                 | `std::future<bool>`   | Start accepting connections            |
+| `stop()`                  | `void`                | Stop the server                        |
+| `is_listening()`          | `bool`                | Check if the socket is listening       |
+| `broadcast(data)`         | `bool`                | Send to all connected clients          |
+| `send_to(client_id, data)`| `bool`                | Send to a specific client              |
+| `get_client_count()`      | `size_t`              | Number of connected clients            |
+| `get_connected_clients()` | `std::vector<size_t>` | List of connected client IDs           |
 
 ### Notes on UDS
 
@@ -634,7 +652,7 @@ Centralized error handling system with callbacks and statistics.
 ```cpp
 #include "unilink/diagnostics/error_handler.hpp"
 
-using namespace unilink::common;
+using namespace unilink::diagnostics;
 
 // Register global error callback
 ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
@@ -672,7 +690,7 @@ std::cout << "Errors: " << stats.error_count << std::endl;
 ### Error Categories
 
 ```cpp
-namespace error_reporting = unilink::common::error_reporting;
+namespace error_reporting = unilink::diagnostics::error_reporting;
 
 // Connection errors
 error_reporting::report_connection_error("tcp_client", "connect", ec, true);
@@ -699,13 +717,11 @@ Flexible logging with multiple outputs and async processing.
 #include "unilink/diagnostics/logger.hpp"
 #include "unilink/diagnostics/error_handler.hpp"
 
-using namespace unilink::common;
+auto& logger = unilink::diagnostics::Logger::instance();
 
 // Get logger instance
-auto& logger = Logger::instance();
-
 // Configure logger
-logger.set_level(LogLevel::DEBUG);
+logger.set_level(unilink::diagnostics::LogLevel::DEBUG);
 logger.set_console_output(true);
 logger.set_file_output("app.log");
 
@@ -731,7 +747,7 @@ logger.critical("component", "operation", "Critical message");
 
 ```cpp
 // Enable async logging for better performance
-AsyncLogConfig config;
+unilink::diagnostics::AsyncLogConfig config;
 config.batch_size = 100;                    // Process 100 logs at once
 config.flush_interval = std::chrono::milliseconds(1000); // Flush every 1 second
 
@@ -758,48 +774,43 @@ _(Available when built with `UNILINK_ENABLE_CONFIG=ON`)_
 ### Load Configuration from File
 
 ```cpp
-#include "unilink/config/config_manager.hpp"
+#include <any>
+#include "unilink/config/config_factory.hpp"
 
-using namespace unilink::config;
+auto config = unilink::config::ConfigFactory::create_with_defaults();
+config->load_from_file("unilink.conf");
 
-auto config = ConfigManager::load_from_file("config.json");
-
-// Access configuration
-auto host = config->get_tcp_client_config("main_client").host;
-auto port = config->get_tcp_client_config("main_client").port;
+auto host = std::any_cast<std::string>(config->get("tcp.client.host"));
+auto port = static_cast<uint16_t>(std::any_cast<int>(config->get("tcp.client.port")));
+auto retry_interval_ms = static_cast<unsigned>(
+    std::any_cast<int>(config->get("tcp.client.retry_interval_ms"))
+);
 
 // Create client from config
 auto client = unilink::tcp_client(host, port)
-    .retry_interval(config->get_tcp_client_config("main_client").retry_interval_ms)
+    .retry_interval(retry_interval_ms)
     .build();
 ```
 
-### Configuration File Format (JSON)
+### Configuration File Format
 
-```json
-{
-  "tcp_clients": {
-    "main_client": {
-      "host": "192.168.1.100",
-      "port": 8080,
-      "retry_interval_ms": 3000
-    }
-  },
-  "tcp_servers": {
-    "main_server": {
-      "port": 9000,
-      "single_client_mode": false
-    }
-  },
-  "serials": {
-    "arduino": {
-      "device": "/dev/ttyACM0",
-      "baud_rate": 115200,
-      "retry_interval_ms": 5000
-    }
-  }
-}
+The current configuration manager reads simple `key=value` files.
+
+```ini
+# unilink.conf
+tcp.client.host=192.168.1.100
+tcp.client.port=8080
+tcp.client.retry_interval_ms=3000
+
+tcp.server.port=9000
+tcp.server.max_connections=100
+
+serial.port=/dev/ttyACM0
+serial.baud_rate=115200
+serial.retry_interval_ms=5000
 ```
+
+Common preset keys are populated by `unilink::config::ConfigPresets` through `ConfigFactory::create_with_defaults()`.
 
 ---
 
@@ -813,14 +824,12 @@ Efficient memory allocation for high-performance scenarios.
 #include "unilink/memory/memory_pool.hpp"
 #include "unilink/memory/safe_data_buffer.hpp"
 
-using namespace unilink::common;
-
-MemoryPool pool(1024, 100);  // 1KB blocks, 100 blocks
+unilink::memory::MemoryPool pool;
 
 // Allocate from pool
-auto buffer = pool.allocate();
+auto buffer = pool.acquire(1024);
 // ... use buffer ...
-pool.deallocate(buffer);
+pool.release(std::move(buffer), 1024);
 ```
 
 ### Safe Data Buffer
@@ -830,16 +839,11 @@ Type-safe data buffer with bounds checking.
 ```cpp
 #include "unilink/memory/safe_data_buffer.hpp"
 
-using namespace unilink::common;
-
-SafeDataBuffer buffer(1024);
+unilink::memory::SafeDataBuffer buffer("Hello");
 
 // Safe operations
-buffer.append("Hello");
-buffer.append_bytes({0x01, 0x02, 0x03});
-
-auto data = buffer.to_string();
-auto bytes = buffer.to_vector();
+auto text = buffer.as_string();
+auto bytes = buffer.as_span();
 ```
 
 ### Thread-Safe State
@@ -849,20 +853,18 @@ Thread-safe state management with read-write locks.
 ```cpp
 #include "unilink/concurrency/thread_safe_state.hpp"
 
-using namespace unilink::common;
-
 enum class State { Idle, Running, Stopped };
 
-ThreadSafeState<State> state(State::Idle);
+unilink::concurrency::ThreadSafeState<State> state(State::Idle);
 
 // Read state
-auto current = state.get();
+auto current = state.get_state();
 
 // Write state
-state.set(State::Running);
+state.set_state(State::Running);
 
 // Atomic compare-and-swap
-state.compare_exchange(State::Idle, State::Running);
+state.compare_and_set(State::Idle, State::Running);
 ```
 
 ---
@@ -909,15 +911,15 @@ auto remote_client = unilink::tcp_client("remote.com", 8080)
 ### 4. Enable Logging for Debugging
 
 ```cpp
-unilink::common::Logger::instance().set_level(unilink::common::LogLevel::DEBUG);
-unilink::common::Logger::instance().set_console_output(true);
+unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+unilink::diagnostics::Logger::instance().set_console_output(true);
 ```
 
 ### 5. Use Member Functions for OOP Design
 
 ```cpp
 class MyApplication {
-    std::shared_ptr<unilink::TcpClient> client_;
+    std::unique_ptr<unilink::TcpClient> client_;
 
     void on_data(const unilink::MessageContext& ctx) { /* ... */ }
 
@@ -946,7 +948,9 @@ class MyApplication {
 ### 2. Enable Async Logging
 
 ```cpp
-Logger::instance().enable_async(true);
+unilink::diagnostics::AsyncLogConfig config;
+config.batch_size = 100;
+unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 ```
 
 ### 3. Use Memory Pool for Frequent Allocations

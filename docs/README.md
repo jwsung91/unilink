@@ -1,191 +1,95 @@
 # unilink Documentation
 
-This directory contains all documentation-related files for the unilink library.
+This directory contains the hand-written documentation for `unilink` plus the configuration and helper scripts used to generate Doxygen output.
 
 ## Directory Structure
 
-```
+```text
 docs/
-├── README.md              # This file
-├── INDEX.md               # Documentation entry point
-├── guides/                # Quickstart, best practices, troubleshooting
-├── reference/             # API reference (API_GUIDE.md)
-├── architecture/          # System overview and design notes
-├── tutorials/             # Step-by-step tutorials
-├── development/           # Contributor guides and notes
-├── scripts/               # Documentation generation scripts
-├── config/                # Doxygen configuration
-└── html/                  # Generated HTML documentation (after generation)
+├── README.md                 # Documentation maintenance guide
+├── index.md                  # Main handwritten documentation index
+├── implementation_status.md  # Current codebase snapshot
+├── architecture/             # Design and runtime notes
+├── config/                   # Doxygen configuration
+├── guides/                   # Setup, usage, testing, troubleshooting
+├── img/                      # Images referenced by docs
+├── reference/                # API guide and reference material
+├── scripts/                  # Helper scripts for docs generation/serving
+└── tutorials/                # Step-by-step walkthroughs
 ```
+
+Generated HTML is written to `docs/html/` when Doxygen runs. That output is a generated artefact, not the source of truth.
+
+## Where To Start
+
+- Reader entry point: `docs/index.md`
+- Current implementation snapshot: `docs/implementation_status.md`
+- Doxygen configuration: `docs/config/Doxyfile`
+- Helper scripts: `docs/scripts/generate_docs.sh`, `serve_docs.sh`, `clean_docs.sh`
 
 ## Generating Documentation
 
 ### Prerequisites
 
-Install Doxygen and Graphviz:
-
 ```bash
-# Ubuntu/Debian
 sudo apt install doxygen graphviz
-
-# CentOS/RHEL/Fedora
-sudo yum install doxygen graphviz
-
-# Windows
-# Download from https://www.doxygen.nl/download.html
 ```
 
-### Generation Methods
+### Supported Methods
 
-#### Method 1: Using the Script
+Using the helper script:
+
 ```bash
 ./docs/scripts/generate_docs.sh
 ```
 
-#### Method 2: Using CMake
-```bash
-mkdir build && cd build
-cmake .. -DBUILD_DOCUMENTATION=ON
-make docs
-```
+Using the top-level Makefile:
 
-#### Method 3: Using Makefile (from project root)
 ```bash
 make docs
 ```
 
-#### Method 4: Using Documentation Makefile (from docs directory)
+Using the docs Makefile:
+
 ```bash
 cd docs
 make generate
 ```
 
-#### Method 5: Direct Doxygen
+Running Doxygen directly:
+
 ```bash
 doxygen docs/config/Doxyfile
 ```
 
-> The scripts and make targets pass the top-level `project(VERSION ...)` from `CMakeLists.txt` into Doxygen automatically. If you invoke Doxygen manually, export `PROJECT_NUMBER` yourself to keep the displayed version in sync.
+If you invoke Doxygen directly, set `PROJECT_NUMBER` yourself if you want the generated version banner to match `project(VERSION ...)` from `CMakeLists.txt`.
 
-### Viewing Documentation
+## Viewing Generated HTML
 
-After generation, you can view the documentation in several ways:
-
-#### Method 1: Direct File Access
 ```bash
-# Open in browser
-xdg-open docs/html/index.html  # Linux
-start docs/html/index.html     # Windows
-```
-
-#### Method 2: Local Server (Recommended)
-```bash
-# Using the provided script
-make serve-docs
-# or
-./docs/scripts/serve_docs.sh
-
-# Manual server
-cd docs/html && python3 -m http.server 8000
-# Then open http://localhost:8000
-```
-
-### Additional Scripts
-
-#### Clean Documentation
-```bash
-make clean-docs
-# or
-./docs/scripts/clean_docs.sh
-```
-
-#### Serve Documentation
-```bash
-make serve-docs
-# or
 ./docs/scripts/serve_docs.sh
 ```
 
-## Documentation Structure
+Or:
 
-The generated documentation includes:
-
-- **Main Page**: Overview of the library and quick start guide
-- **Classes**: Detailed API documentation for all classes
-- **Files**: Source file documentation
-- **Namespaces**: Namespace organization
-- **Examples**: Code examples and usage patterns
-- **Modules**: Logical grouping of related functionality
-
-## Features
-
-- **Cross-references**: Links between related classes and functions
-- **Call graphs**: Visual representation of function call relationships
-- **Inheritance diagrams**: Class hierarchy visualization
-- **Collaboration diagrams**: Class interaction visualization
-- **Search functionality**: Full-text search across all documentation
-- **Code examples**: Inline code examples with syntax highlighting
-
-## Customization
-
-The documentation can be customized by modifying the `Doxyfile` configuration:
-
-- **HTML output**: Custom CSS styling, navigation, and layout
-- **Input sources**: Additional source files and directories
-- **Output format**: HTML, LaTeX, RTF, XML, etc.
-- **Diagrams**: Graphviz integration for class and call graphs
-- **Search**: Full-text search configuration
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Doxygen not found**: Install Doxygen using the package manager
-2. **Graphviz not found**: Install Graphviz for diagram generation
-3. **Permission denied**: Ensure write permissions for the docs directory
-4. **Missing diagrams**: Check Graphviz installation and PATH
-
-### Debug Information
-
-Enable verbose output:
 ```bash
-doxygen -d Doxyfile
+cd docs/html
+python3 -m http.server 8000
 ```
 
-Check Doxygen version:
-```bash
-doxygen --version
-```
+## Maintenance Notes
 
-## Continuous Integration
-
-The documentation can be automatically generated in CI/CD pipelines:
-
-```yaml
-# GitHub Actions example
-- name: Generate Documentation
-  run: |
-    sudo apt install doxygen graphviz
-    make docs
-    # Upload docs to GitHub Pages or artifact storage
-```
-
-## Contributing
-
-When adding new classes or functions, please include proper Doxygen comments:
-
-```cpp
-/**
- * @brief Brief description of the function
- * @param param1 Description of parameter 1
- * @param param2 Description of parameter 2
- * @return Description of return value
- * @throws ExceptionType When this exception is thrown
- * @note Additional notes
- * @warning Important warnings
- * @example
- * @code
- * // Example usage
- * @endcode
- */
-```
+- Keep links aligned with real file names and directory layout.
+- Prefer documenting verified behavior over aspirational behavior.
+- Keep public wrapper/builder APIs and transport-internal behavior in separate documents.
+- When documenting callbacks or methods, verify signatures against headers under `unilink/wrapper/` and `unilink/builder/`.
+- Treat runnable examples under `examples/` as the preferred source for tutorial snippets when possible.
+- For compile-checked tutorial snippets, keep the `<!-- doc-compile: ... -->` marker attached to the canonical fenced C++ block.
+- When build flags or defaults change, update `README.md`, `docs/index.md`, and `docs/guides/setup/build_guide.md` together.
+- When adding public APIs, update `docs/reference/api_guide.md` and `docs/implementation_status.md`.
+- When changing config behavior, update both `docs/reference/api_guide.md` and architecture notes that mention configuration flow.
+- Keep document roles separated to avoid copy drift:
+  - `quickstart`: shortest successful path
+  - `tutorials`: step-by-step workflows
+  - `reference/api_guide.md`: protocol and API surface details
+  - `examples/*/README.md`: runnable example commands and CLI usage

@@ -136,6 +136,58 @@ jobs:
         retention-days: 7
         overwrite: true
 
+  docs-snippets:
+    name: Docs Snippets (ubuntu-22.04, gcc)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    needs: []
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Cache ccache
+      uses: actions/cache@v5
+      with:
+        path: ~/.cache/ccache
+        key: ccache-${{ runner.os }}-docs-snippets-${{ hashFiles('**/CMakeLists.txt', 'docs/**/*.md', 'docs/scripts/*.py') }}
+        restore-keys: |
+          ccache-${{ runner.os }}-docs-snippets-
+
+    - name: Install dependencies
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake ccache gcc-11 g++-11 python3 libboost1.74-dev libboost-system1.74-dev"
+
+    - name: Configure CMake
+      run: |
+        cmake -S . -B build-docs-snippets \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_CXX_STANDARD=${{ env.CXX_STANDARD }} \
+          -DUNILINK_ENABLE_CONFIG=ON \
+          -DUNILINK_BUILD_EXAMPLES=OFF \
+          -DUNILINK_BUILD_DOCS=OFF \
+          -DUNILINK_BUILD_TESTS=ON \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+    - name: Build doc snippet smoke target
+      run: cmake --build build-docs-snippets --target doc_snippets_smoke -j $(nproc)
+
+    - name: Run doc snippet tests
+      run: |
+        cd build-docs-snippets
+        ctest --output-on-failure -L docs_snippets
+
+    - name: Upload docs snippet test results
+      uses: actions/upload-artifact@v7
+      if: always()
+      with:
+        name: docs-snippet-test-results
+        path: build-docs-snippets/Testing/
+        retention-days: 7
+        overwrite: true
+
   # Integration Tests
   integration-tests:
     name: Integration Tests (ubuntu-22.04, gcc)
@@ -337,7 +389,7 @@ jobs:
   test-summary:
     name: Test Summary
     runs-on: ubuntu-22.04
-    needs: [unit-tests, integration-tests, performance-tests, memory-safety-tests, e2e-tests]
+    needs: [unit-tests, docs-snippets, integration-tests, performance-tests, memory-safety-tests, e2e-tests]
     if: always()
 
     steps:
@@ -347,6 +399,7 @@ jobs:
         echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
         echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
         echo "| Unit Tests | ${{ needs.unit-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Docs Snippets | ${{ needs.docs-snippets.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Integration Tests | ${{ needs.integration-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Performance Tests | ${{ needs.performance-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Memory Safety Tests | ${{ needs.memory-safety-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

@@ -98,11 +98,11 @@ Logging can be a major bottleneck. Enable async logging for high-performance app
 
 ```cpp
 // ✅ GOOD: Async logging (non-blocking)
-unilink::common::AsyncLogConfig config;
+unilink::diagnostics::AsyncLogConfig config;
 config.batch_size = 1000;
 config.flush_interval = std::chrono::milliseconds(1000);
 
-unilink::common::Logger::instance().set_async_logging(true, config);
+unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 ```
 
 **Impact**: 10-100x faster logging throughput.
@@ -113,15 +113,16 @@ Never perform heavy computation or blocking operations (like `sleep`) inside cal
 
 ```cpp
 // ❌ BAD: Blocking I/O thread
-.on_data([](const std::string& data) {
+.on_data([](const unilink::MessageContext& ctx) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    process_data(data);
+    process_data(ctx.data());
 })
 
 // ✅ GOOD: Offload to worker thread/pool
-.on_data([&thread_pool](const std::string& data) {
-    thread_pool.submit([data]() {
-        process_data(data);
+.on_data([&thread_pool](const unilink::MessageContext& ctx) {
+    std::string payload(ctx.data());
+    thread_pool.submit([payload = std::move(payload)]() {
+        process_data(payload);
     });
 })
 ```

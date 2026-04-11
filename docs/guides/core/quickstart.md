@@ -138,6 +138,7 @@ client->start();  // Will automatically reconnect on disconnect
 ### Pattern 2: Error Handling
 ```cpp
 auto server = unilink::tcp_server(8080)
+    .unlimited_clients()
     .on_error([](const unilink::ErrorContext& ctx) {
         std::cerr << "Error: " << ctx.message() << std::endl;
     })
@@ -177,7 +178,7 @@ auto server = unilink::tcp_server(8080)
 
 ## Next Steps
 
-1. **Read the API Guide**: `docs/reference/API_GUIDE.md`
+1. **Read the API Guide**: `docs/reference/api_guide.md`
 2. **Check Examples**: `examples/` directory
 3. **Run Tests**: `cd build && ctest`
 4. **View Full Docs**: `docs/html/index.html` (run `make docs` first)
@@ -189,13 +190,14 @@ auto server = unilink::tcp_server(8080)
 ### Can't connect to server?
 ```cpp
 // Enable logging to see what's happening
-unilink::common::Logger::instance().set_level(unilink::common::LogLevel::DEBUG);
-unilink::common::Logger::instance().set_console_output(true);
+unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+unilink::diagnostics::Logger::instance().set_console_output(true);
 ```
 
 ### Port already in use?
 ```cpp
 auto server = unilink::tcp_server(8080)
+    .unlimited_clients()
     .enable_port_retry(true, 5, 1000)  // Try 5 times
     .build();
 ```

@@ -1,317 +1,165 @@
-# Tutorial 1: Getting Started with Unilink
+# Getting Started with Unilink
 
-This tutorial will guide you through creating your first application with unilink.
+This tutorial shows the current builder-based C++ API for creating a simple TCP client with connection, data, disconnect, and error callbacks.
 
-**Duration**: 15 minutes  
-**Difficulty**: Beginner  
-**Prerequisites**: Basic C++ knowledge, CMake installed
+**Duration**: 10 minutes
+**Difficulty**: Beginner
+**Prerequisites**: Basic C++ and CMake familiarity
 
 ---
 
 ## What You'll Build
 
-A simple TCP client that:
-1. Connects to a server
-2. Sends a message
-3. Receives a response
-4. Handles disconnections gracefully
+A small TCP client that:
+
+1. connects to a server
+2. prints connection status
+3. receives messages through `MessageContext`
+4. sends user input until `/quit`
 
 ---
 
-## Step 1: Install Dependencies
+## Step 1: Create The Client
 
-### Ubuntu/Debian
-```bash
-sudo apt update
-sudo apt install -y build-essential cmake libboost-dev libboost-system-dev
-```
+Create `my_first_client.cpp`:
 
-### macOS
-```bash
-brew install cmake boost
-```
-
-### Windows (vcpkg)
-```bash
-vcpkg install boost
-```
-
----
-
-## Step 2: Install Unilink
-
-### Option A: From Source
-```bash
-git clone https://github.com/jwsung91/unilink.git
-cd unilink
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j
-sudo cmake --install build
-```
-
-### Option B: Use as Subdirectory
-```cmake
-# In your CMakeLists.txt
-add_subdirectory(unilink)
-target_link_libraries(your_app PRIVATE unilink)
-```
-
----
-
-## Step 3: Create Your First Client
-
-Create a file named `my_first_client.cpp`:
-
+<!-- doc-compile: tutorial_getting_started_client -->
 ```cpp
 #include <iostream>
-#include <thread>
-#include <chrono>
+#include <string>
 #include "unilink/unilink.hpp"
 
-int main() {
-    std::cout << "=== My First Unilink Client ===" << std::endl;
-    
-    // Step 1: Create a TCP client
-    auto client = unilink::tcp_client("127.0.0.1", 8080)
-        
-        // Step 2: Handle connection event
-        .on_connect([]() {
-            std::cout << "✓ Connected to server!" << std::endl;
+int main(int argc, char** argv) {
+    std::string host = (argc > 1) ? argv[1] : "127.0.0.1";
+    uint16_t port = (argc > 2) ? static_cast<uint16_t>(std::stoi(argv[2])) : 8080;
+
+    auto client = unilink::tcp_client(host, port)
+        .retry_interval(2000)
+        .max_retries(3)
+        .on_connect([](const unilink::ConnectionContext&) {
+            std::cout << "Connected to server" << std::endl;
         })
-        
-        // Step 3: Handle incoming data (Zero-copy with ConstByteSpan)
-        .on_bytes([](unilink::memory::ConstByteSpan data) {
-            // Convert to string safely
-            std::string str = unilink::common::safe_convert::uint8_to_string(data.data(), data.size());
-            std::cout << "✓ Received: " << str << std::endl;
+        .on_disconnect([](const unilink::ConnectionContext&) {
+            std::cout << "Disconnected from server" << std::endl;
         })
-        
-        // Step 4: Handle disconnection
-        .on_disconnect([]() {
-            std::cout << "✗ Disconnected from server" << std::endl;
+        .on_data([](const unilink::MessageContext& ctx) {
+            std::cout << "[Server] " << ctx.data() << std::endl;
         })
-        
-        // Step 5: Handle errors
-        .on_error([](const std::string& error) {
-            std::cerr << "✗ Error: " << error << std::endl;
+        .on_error([](const unilink::ErrorContext& ctx) {
+            std::cerr << "[Error] " << ctx.message()
+                      << " (code=" << static_cast<int>(ctx.code()) << ")" << std::endl;
         })
-        
-        // Step 6: Configure auto-reconnection (default is 3000ms)
-        // .retry_interval(3000)  // This is the default, so we can omit it
-        
-        // Build the client
         .build();
-    
-    // Step 7: Start the connection explicitly
-    client->start();
-    
-    // Wait for connection (up to 5 seconds)
-    std::cout << "Waiting for connection..." << std::endl;
-    for (int i = 0; i < 50; ++i) {
-        if (client->is_connected()) {
-            break;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-    
-    // Send a message
-    if (client->is_connected()) {
-        std::cout << "Sending message..." << std::endl;
-        client->send("Hello from unilink!");
-    } else {
-        std::cerr << "Failed to connect. Is the server running?" << std::endl;
+
+    std::cout << "Connecting to " << host << ":" << port << "..." << std::endl;
+    if (!client->start().get()) {
+        std::cerr << "Initial connection attempt failed" << std::endl;
         return 1;
     }
-    
-    // Keep running for 10 seconds
-    std::cout << "Running for 10 seconds..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(10));
-    
-    std::cout << "Shutting down..." << std::endl;
+
+    std::cout << "Type messages. Use /quit to exit." << std::endl;
+
+    std::string line;
+    while (std::getline(std::cin, line)) {
+        if (line == "/quit") break;
+        client->send(line);
+    }
+
+    client->stop();
     return 0;
 }
 ```
 
 ---
 
-## Step 4: Create CMakeLists.txt
+## Step 2: Build With CMake
+
+Create `CMakeLists.txt`:
 
 ```cmake
-cmake_minimum_required(VERSION 3.10)
-project(MyFirstUnilinkApp)
+cmake_minimum_required(VERSION 3.12)
+project(my_first_unilink_app LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(unilink CONFIG REQUIRED)
 
-# Find unilink (adjust path if needed)
-find_package(unilink REQUIRED)
-
-# Create executable
 add_executable(my_first_client my_first_client.cpp)
+target_link_libraries(my_first_client PRIVATE unilink::unilink)
+target_compile_features(my_first_client PRIVATE cxx_std_17)
+```
 
-# Link libraries
-target_link_libraries(my_first_client
-    PRIVATE
-        unilink
-        Boost::system
-        pthread
-)
+Then build:
+
+```bash
+cmake -S . -B build
+cmake --build build
 ```
 
 ---
 
-## Step 5: Build Your Application
+## Step 3: Run Against A Test Server
 
-```bash
-mkdir build && cd build
-cmake ..
-cmake --build .
-```
+Start a simple server in another terminal:
 
-Or with direct compilation:
-```bash
-g++ -std=c++17 my_first_client.cpp \
-    -o my_first_client \
-    -lunilink \
-    -lboost_system \
-    -pthread
-```
-
----
-
-## Step 6: Test Your Application
-
-### Start a Test Server
-
-**Terminal 1** (using netcat):
 ```bash
 nc -l 8080
 ```
 
-Or use the provided example server:
+Run the client:
+
 ```bash
-cd interface-socket/build/examples/tcp/single-echo
-./echo_tcp_server 8080
+./build/my_first_client
 ```
 
-### Run Your Client
-
-**Terminal 2**:
-```bash
-./my_first_client
-```
-
-**Expected Output**:
-```
-=== My First Unilink Client ===
-Waiting for connection...
-✓ Connected to server!
-Sending message...
-✓ Received: Hello from unilink!
-Running for 10 seconds...
-Shutting down...
-```
+Type a message in the client, then type a reply in the `nc` terminal.
 
 ---
 
-## Step 7: Understanding the Code
+## What Changed In The Current API
 
-### 1. Builder Pattern
+The current tutorial code uses context-based callbacks consistently:
+
+- `on_connect(const ConnectionContext&)`
+- `on_disconnect(const ConnectionContext&)`
+- `on_data(const MessageContext&)`
+- `on_error(const ErrorContext&)`
+
+The initial `start()` call returns `std::future<bool>`, so the common pattern is:
+
 ```cpp
-auto client = unilink::tcp_client("127.0.0.1", 8080)
-    .on_connect(...)
-    .on_data(...)
-    .build();
+if (!client->start().get()) {
+    // handle startup failure
+}
 ```
-The builder pattern provides a fluent, chainable API for configuration.
 
-### 2. Callbacks
-```cpp
-.on_connect([]() { /* called when connected */ })
-.on_bytes([](unilink::memory::ConstByteSpan data) { /* zero-copy data access */ })
-```
-Callbacks are invoked automatically by the library. The `.on_bytes` callback provides high-performance access to data.
+After the client is running, use:
 
-### 3. Automatic Reconnection
-```cpp
-.retry_interval(3000)  // Retry every 3 seconds (default)
-```
-After calling `client->start()`, the client will automatically attempt to reconnect if disconnected.
-
-### 4. Thread Safety
-All callbacks are executed in a thread-safe manner. You can safely access shared data from callbacks using proper synchronization.
+- `client->send(...)`
+- `client->send_line(...)`
+- `client->is_connected()`
+- `client->stop()`
 
 ---
 
-## Common Issues
+## Use The Full Example If You Want More
 
-### Issue 1: Connection Refused
-```
-✗ Error: Connection refused
-```
+The repository already includes ready-to-build tutorial examples:
 
-**Solution**: Make sure the server is running on the correct port.
+- [examples/tutorials/getting_started/simple_client.cpp](../../examples/tutorials/getting_started/simple_client.cpp)
+- [examples/tutorials/getting_started/my_first_client.cpp](../../examples/tutorials/getting_started/my_first_client.cpp)
+- [examples/tutorials/README.md](../../examples/tutorials/README.md)
 
-### Issue 2: Port Already in Use
-```
-✗ Error: Address already in use
-```
-
-**Solution**: The port is being used by another application. Choose a different port or stop the other application.
-
-### Issue 3: Compilation Error - unilink not found
-```
-fatal error: unilink/unilink.hpp: No such file or directory
-```
-
-**Solution**: 
-```bash
-# Make sure unilink is installed
-sudo cmake --install build
-
-# Or add include path
-g++ -I/path/to/unilink/include ...
-```
+This tutorial stays smaller than the example sources on purpose.
 
 ---
 
 ## Next Steps
 
-Congratulations! You've created your first unilink application. 
-
-**Continue learning:**
-- [Tutorial 2: Building a TCP Server](02_tcp_server.md)
-- [Tutorial 3: Serial Communication](03_serial_communication.md)
-- [Tutorial 4: Error Handling](04_error_handling.md)
-
-**Explore more:**
-- [API Reference](../reference/API_GUIDE.md)
-- [Best Practices](../guides/best_practices.md)
-- [Examples Directory](../../examples/)
+- [Building a TCP Server](02_tcp_server.md)
+- [UDS Communication](03_uds_communication.md)
+- [Serial Communication](04_serial_communication.md)
+- [UDP Communication](05_udp_communication.md)
+- [API Reference](../reference/api_guide.md#tcp-client)
 
 ---
 
-## Full Example Code
-
-✅ **Ready-to-compile examples are available!**
-
-**Location**: `examples/tutorials/getting_started/`
-
-| File | Description |
-|------|-------------|
-| `simple_client.cpp` | Minimal 30-second example |
-| `my_first_client.cpp` | Complete walkthrough from this tutorial |
-
-**Build and run**:
-```bash
-# From project root
-cmake --build build --target tutorial_my_first_client
-./build/examples/tutorials/tutorial_my_first_client
-```
-
-See [examples/tutorials/README.md](../../examples/tutorials/README.md) for detailed build instructions.
-
----
-
-**Next Tutorial**: [Building a TCP Server →](02_tcp_server.md)
-
+**Next**: [Building a TCP Server →](02_tcp_server.md)

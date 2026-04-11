@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     g++ \
     libboost-dev \
     libboost-system-dev \
+    python3 \
     doxygen \
     graphviz \
     git \

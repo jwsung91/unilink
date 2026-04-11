@@ -1,99 +1,99 @@
-# Tutorial 03: Local IPC with Unix Domain Sockets (UDS)
+# UDS Communication
 
-In this tutorial, you'll learn how to implement high-performance local inter-process communication using Unix Domain Sockets (UDS) in Unilink.
+This tutorial shows the current UDS client/server API using `uds_server(...)` and `uds_client(...)` from `unilink/unilink.hpp`.
+
+**Duration**: 10 minutes
+**Difficulty**: Beginner to Intermediate
+**Prerequisites**: [Building a TCP Server](02_tcp_server.md)
 
 ---
 
-## What are Unix Domain Sockets?
+## What You'll Build
 
-Unix Domain Sockets (UDS) are a data communication endpoint for exchanging data between processes executing on the same host operating system. While TCP/IP is designed for network communication, UDS is optimized for local communication, offering:
+A local echo service that:
 
-- **Lower Latency**: No network stack overhead (routing, checksums, etc.).
-- **Higher Throughput**: Efficient memory-to-memory transfers.
-- **Security**: Access can be controlled using standard filesystem permissions.
+1. binds a Unix domain socket path
+2. accepts multiple local clients
+3. echoes each message back to the sender
 
-## Step 1: Creating a UDS Server
+---
 
-Creating a UDS server is almost identical to creating a TCP server, but instead of a port number, you provide a filesystem path.
+## Step 1: Create A UDS Server
 
-```cpp
-#include <iostream>
-#include "unilink/unilink.hpp"
-
-int main() {
-    // Define the socket path
-    std::string socket_path = "/tmp/unilink_echo.sock";
-
-    // Build the UDS server
-    auto server = unilink::uds_server(socket_path)
-        .unlimited_clients() // Support multiple concurrent connections
-        .on_connect([](const unilink::ConnectionContext& ctx) {
-            std::cout << "Client connected!" << std::endl;
-        })
-        .on_data([&](const unilink::MessageContext& ctx) {
-            std::string msg(ctx.data());
-            std::cout << "Received: " << msg << std::endl;
-            
-            // Echo back to client
-            ctx.reply("Echo: " + msg);
-        })
-        .on_disconnect([](const unilink::ConnectionContext& ctx) {
-            std::cout << "Client disconnected" << std::endl;
-        })
-        .build();
-
-    // Start the server
-    std::cout << "Starting UDS server on " << socket_path << "..." << std::endl;
-    server->start();
-
-    std::cout << "Press Enter to stop..." << std::endl;
-    std::cin.get();
-
-    server->stop();
-    return 0;
-}
-```
-
-## Step 2: Creating a UDS Client
-
-Similarly, the UDS client connects to the specified socket path.
-
+<!-- doc-compile: tutorial_uds_server -->
 ```cpp
 #include <iostream>
 #include <string>
 #include "unilink/unilink.hpp"
 
 int main() {
-    std::string socket_path = "/tmp/unilink_echo.sock";
+    const std::string socket_path = "/tmp/unilink_echo.sock";
 
-    // Build the UDS client
-    auto client = unilink::uds_client(socket_path)
+    std::unique_ptr<unilink::UdsServer> server;
+    server = unilink::uds_server(socket_path)
+        .unlimited_clients()
         .on_connect([](const unilink::ConnectionContext& ctx) {
-            std::cout << "Connected to server!" << std::endl;
+            std::cout << "Client connected: " << ctx.client_id()
+                      << " info=" << ctx.client_info() << std::endl;
         })
-        .on_data([](const unilink::MessageContext& ctx) {
-            std::cout << "Server said: " << ctx.data() << std::endl;
+        .on_data([&server](const unilink::MessageContext& ctx) {
+            std::cout << "Received: " << ctx.data() << std::endl;
+            server->send_to(ctx.client_id(), "Echo: " + std::string(ctx.data()));
+        })
+        .on_disconnect([](const unilink::ConnectionContext& ctx) {
+            std::cout << "Client disconnected: " << ctx.client_id() << std::endl;
         })
         .on_error([](const unilink::ErrorContext& ctx) {
-            std::cerr << "Client error: " << ctx.message() << std::endl;
+            std::cerr << "[Error] " << ctx.message() << std::endl;
         })
         .build();
 
-    // Start connecting
-    client->start();
+    if (!server->start().get()) {
+        std::cerr << "Failed to start UDS server" << std::endl;
+        return 1;
+    }
 
-    // Interaction loop
+    std::cout << "Listening on " << socket_path << std::endl;
+    std::cin.get();
+    server->stop();
+    return 0;
+}
+```
+
+---
+
+## Step 2: Create A UDS Client
+
+<!-- doc-compile: tutorial_uds_client -->
+```cpp
+#include <iostream>
+#include <string>
+#include "unilink/unilink.hpp"
+
+int main() {
+    const std::string socket_path = "/tmp/unilink_echo.sock";
+
+    auto client = unilink::uds_client(socket_path)
+        .on_connect([](const unilink::ConnectionContext&) {
+            std::cout << "Connected to UDS server" << std::endl;
+        })
+        .on_data([](const unilink::MessageContext& ctx) {
+            std::cout << "[Server] " << ctx.data() << std::endl;
+        })
+        .on_error([](const unilink::ErrorContext& ctx) {
+            std::cerr << "[Error] " << ctx.message() << std::endl;
+        })
+        .build();
+
+    if (!client->start().get()) {
+        std::cerr << "Failed to connect to UDS server" << std::endl;
+        return 1;
+    }
+
     std::string input;
-    while (true) {
-        std::cout << "> ";
-        std::getline(std::cin, input);
-        if (input == "exit") break;
-
-        if (client->is_connected()) {
-            client->send(input);
-        } else {
-            std::cout << "Connecting..." << std::endl;
-        }
+    while (std::getline(std::cin, input)) {
+        if (input == "/quit") break;
+        client->send(input);
     }
 
     client->stop();
@@ -101,21 +101,36 @@ int main() {
 }
 ```
 
-## Key Considerations for UDS
+---
 
-### Socket Cleanup
-Unilink handles the creation and removal of the socket file for you.
-- **On Start**: The library automatically removes any existing file at the specified path before binding to prevent "Address already in use" errors.
-- **On Stop/Destruction**: The library removes the socket file to leave the filesystem clean.
+## Why Use UDS Instead Of TCP
 
-### Platform Support
-- **Linux/macOS**: Native and robust support.
-- **Windows**: Supported on Windows 10 (build 17063) and later. For older Windows versions, consider using TCP or Named Pipes.
+UDS is useful when both processes are on the same machine and you want:
 
-### Permissions
-Since the socket is a file, you can control which users can connect to your server by setting permissions on the socket file or the directory containing it.
+- low local IPC overhead
+- filesystem-based access control
+- a socket path instead of a TCP port
+
+The callback model and wrapper lifecycle are intentionally very similar to the TCP API.
 
 ---
 
-## Summary
-You have successfully implemented a local IPC system using Unilink's UDS support. The Builder API makes it easy to switch between TCP and UDS by simply changing one line of code, while keeping your business logic intact.
+## Operational Notes
+
+- The socket path should usually live under `/tmp` or another writable runtime directory.
+- Old socket files can cause bind failures if a process crashes before cleanup.
+- On Linux and macOS, UDS is a natural choice for local service-to-service IPC.
+
+---
+
+## Next Steps
+
+- [Serial Communication](04_serial_communication.md)
+- [UDP Communication](05_udp_communication.md)
+- [API Reference](../reference/api_guide.md#uds-communication)
+- [Examples Directory](../../examples/uds/)
+
+---
+
+**Previous**: [← Building a TCP Server](02_tcp_server.md)
+**Next**: [Serial Communication →](04_serial_communication.md)

@@ -113,14 +113,15 @@ cmake --build build -j
 |--------|---------|-------------|
 | `CMAKE_BUILD_TYPE` | `Release` | Build type: `Release`, `Debug`, `RelWithDebInfo` |
 | `UNILINK_ENABLE_CONFIG` | `ON` | Enable configuration management API |
-| `BUILD_EXAMPLES` | `ON` | Build example applications |
-| `BUILD_TESTING` | `ON` | Build unit tests |
+| `UNILINK_BUILD_EXAMPLES` | `ON` | Build example applications |
+| `UNILINK_BUILD_TESTS` | `ON` | Build tests |
+| `UNILINK_BUILD_DOCS` | `ON` | Enable documentation targets |
 
 ### Development Options
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `UNILINK_ENABLE_MEMORY_TRACKING` | `ON` | Enable memory tracking for debugging |
+| `UNILINK_ENABLE_MEMORY_TRACKING` | `OFF` | Enable memory tracking for debugging |
 | `UNILINK_ENABLE_SANITIZERS` | `OFF` | Enable AddressSanitizer and other sanitizers |
 | `CMAKE_EXPORT_COMPILE_COMMANDS` | `OFF` | Generate `compile_commands.json` for IDEs |
 
@@ -129,7 +130,8 @@ cmake --build build -j
 | Option | Default | Description |
 |--------|---------|-------------|
 | `CMAKE_INSTALL_PREFIX` | `/usr/local` | Installation directory |
-| `UNILINK_INSTALL_DOCS` | `ON` | Install documentation files |
+| `UNILINK_ENABLE_INSTALL` | `ON` | Enable install and export targets |
+| `UNILINK_ENABLE_PKGCONFIG` | `ON` | Install `unilink.pc` |
 
 ---
 
@@ -190,8 +192,8 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DUNILINK_ENABLE_CONFIG=OFF \
-  -DBUILD_EXAMPLES=OFF \
-  -DBUILD_TESTING=OFF
+  -DUNILINK_BUILD_EXAMPLES=OFF \
+  -DUNILINK_BUILD_TESTS=OFF
 
 cmake --build build -j
 sudo cmake --install build
@@ -205,8 +207,8 @@ sudo cmake --install build
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Debug \
   -DUNILINK_ENABLE_CONFIG=ON \
-  -DBUILD_EXAMPLES=ON \
-  -DBUILD_TESTING=ON \
+  -DUNILINK_BUILD_EXAMPLES=ON \
+  -DUNILINK_BUILD_TESTS=ON \
   -DUNILINK_ENABLE_MEMORY_TRACKING=ON
 
 cmake --build build -j
@@ -220,7 +222,7 @@ cmake --build build -j
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Debug \
   -DUNILINK_ENABLE_CONFIG=ON \
-  -DBUILD_TESTING=ON \
+  -DUNILINK_BUILD_TESTS=ON \
   -DUNILINK_ENABLE_SANITIZERS=ON
 
 cmake --build build -j
@@ -316,8 +318,8 @@ cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_CXX_STANDARD=17 \
   -DUNILINK_ENABLE_CONFIG=ON \
-  -DBUILD_EXAMPLES=ON \
-  -DBUILD_TESTING=ON
+  -DUNILINK_BUILD_EXAMPLES=ON \
+  -DUNILINK_BUILD_TESTS=ON
 
 # 3. Build
 cmake --build build -j $(nproc)
@@ -584,7 +586,6 @@ pkg-config --cflags --libs unilink
 
 - [Installation Guide](installation.md) - Complete installation instructions
 - [Requirements](requirements.md) - System requirements and dependencies
-- [Performance Optimization](performance.md) - Optimize build configuration
-- [Testing Guide](testing.md) - Run tests and CI/CD integration
-- [Quick Start Guide](QUICKSTART.md) - Start using unilink
-
+- [Performance Optimization](../advanced/performance.md) - Optimize build configuration
+- [Testing Guide](../core/testing.md) - Run tests and CI/CD integration
+- [Quick Start Guide](../core/quickstart.md) - Start using unilink

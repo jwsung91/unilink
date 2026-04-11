@@ -21,6 +21,7 @@ Common issues and solutions when using unilink.
 ### Problem: Connection Refused
 
 **Symptoms:**
+
 ```
 ✗ Error: Connection refused
 ```
@@ -28,6 +29,7 @@ Common issues and solutions when using unilink.
 **Possible Causes & Solutions:**
 
 #### 1. Server Not Running
+
 ```bash
 # Check if server is running
 netstat -an | grep 8080
@@ -38,6 +40,7 @@ lsof -i :8080
 **Solution:** Start the server before connecting client.
 
 #### 2. Wrong Host/Port
+
 ```cpp
 // Check your configuration
 auto client = tcp_client("127.0.0.1", 8080)  // Correct port?
@@ -47,6 +50,7 @@ auto client = tcp_client("127.0.0.1", 8080)  // Correct port?
 **Solution:** Verify server address and port number.
 
 #### 3. Firewall Blocking
+
 ```bash
 # Check firewall rules (Linux)
 sudo iptables -L | grep 8080
@@ -60,6 +64,7 @@ sudo ufw allow 8080
 ### Problem: Connection Timeout
 
 **Symptoms:**
+
 ```
 ✗ Error: Connection timeout
 ```
@@ -67,6 +72,7 @@ sudo ufw allow 8080
 **Possible Causes & Solutions:**
 
 #### 1. Network Unreachable
+
 ```bash
 # Test connectivity
 ping server.com
@@ -76,7 +82,9 @@ telnet server.com 8080
 **Solution:** Check network connectivity, DNS resolution.
 
 #### 2. Server Overloaded
+
 **Solution:** Increase retry interval:
+
 ```cpp
 auto client = tcp_client("server.com", 8080)
     .retry_interval(10000)  // Wait 10 seconds
@@ -84,7 +92,9 @@ auto client = tcp_client("server.com", 8080)
 ```
 
 #### 3. Slow Network
+
 **Solution:** Increase timeout (requires custom implementation):
+
 ```cpp
 // Set socket options for longer timeout
 boost::asio::socket_base::linger option(true, 30);
@@ -96,26 +106,29 @@ socket.set_option(option);
 ### Problem: Connection Drops Randomly
 
 **Symptoms:**
+
 - Client disconnects unexpectedly
 - `on_disconnect()` called without `stop()`
 
 **Possible Causes & Solutions:**
 
 #### 1. Network Instability
+
 ```cpp
 // Enable auto-reconnection
 auto client = tcp_client("server.com", 8080)
     .retry_interval(3000)  // Retry every 3 seconds
-    .on_disconnect([]() {
+    .on_disconnect([](const unilink::ConnectionContext&) {
         log_info("Disconnected, will auto-retry");
     })
     .build();
 ```
 
 #### 2. Server Closing Connection
+
 ```cpp
 // Log disconnect reason
-.on_disconnect([this]() {
+.on_disconnect([this](const unilink::ConnectionContext&) {
     // Check if stop() was called
     if (!intentional_disconnect_) {
         log_warning("Unexpected disconnect from server");
@@ -124,6 +137,7 @@ auto client = tcp_client("server.com", 8080)
 ```
 
 #### 3. Keep-Alive Not Set
+
 ```cpp
 // Implement heartbeat
 std::thread heartbeat_thread([this]() {
@@ -141,6 +155,7 @@ std::thread heartbeat_thread([this]() {
 ### Problem: Port Already in Use
 
 **Symptoms:**
+
 ```
 ✗ Error: Address already in use
 ```
@@ -148,6 +163,7 @@ std::thread heartbeat_thread([this]() {
 **Solutions:**
 
 #### 1. Kill Existing Process
+
 ```bash
 # Find process using port
 lsof -i :8080
@@ -159,19 +175,24 @@ kill -9 <PID>
 ```
 
 #### 2. Use Different Port
+
 ```cpp
 auto server = tcp_server(8081)  // Try different port
+    .unlimited_clients()
     .build();
 ```
 
 #### 3. Enable Port Retry
+
 ```cpp
 auto server = tcp_server(8080)
+    .unlimited_clients()
     .enable_port_retry(true, 5, 1000)  // Retry 5 times
     .build();
 ```
 
 #### 4. Set SO_REUSEADDR (Advanced)
+
 ```cpp
 // Allow immediate port reuse
 boost::asio::socket_base::reuse_address option(true);
@@ -185,6 +206,7 @@ acceptor.set_option(option);
 ### Problem: unilink/unilink.hpp Not Found
 
 **Symptoms:**
+
 ```
 fatal error: unilink/unilink.hpp: No such file or directory
 ```
@@ -192,13 +214,15 @@ fatal error: unilink/unilink.hpp: No such file or directory
 **Solutions:**
 
 #### 1. Install unilink
+
 ```bash
-cd interface-socket
+cd unilink
 cmake -S . -B build
 sudo cmake --install build
 ```
 
 #### 2. Add Include Path
+
 ```bash
 # CMake
 target_include_directories(your_app PRIVATE /path/to/unilink/include)
@@ -208,6 +232,7 @@ g++ -I/path/to/unilink/include ...
 ```
 
 #### 3. Use as Subdirectory
+
 ```cmake
 # CMakeLists.txt
 add_subdirectory(unilink)
@@ -219,6 +244,7 @@ target_link_libraries(your_app PRIVATE unilink)
 ### Problem: Undefined Reference to unilink Symbols
 
 **Symptoms:**
+
 ```
 undefined reference to `unilink::tcp_client(std::string const&, unsigned short)'
 ```
@@ -226,6 +252,7 @@ undefined reference to `unilink::tcp_client(std::string const&, unsigned short)'
 **Solutions:**
 
 #### 1. Link unilink Library
+
 ```bash
 # g++
 g++ main.cpp -o app -lunilink -lboost_system -pthread
@@ -235,6 +262,7 @@ target_link_libraries(your_app PRIVATE unilink Boost::system pthread)
 ```
 
 #### 2. Check Library Path
+
 ```bash
 # Add to LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
@@ -249,6 +277,7 @@ sudo ldconfig
 ### Problem: Boost Not Found
 
 **Symptoms:**
+
 ```
 CMake Error: Could not find Boost
 ```
@@ -256,21 +285,25 @@ CMake Error: Could not find Boost
 **Solutions:**
 
 #### Ubuntu/Debian
+
 ```bash
 sudo apt install libboost-all-dev
 ```
 
 #### macOS
+
 ```bash
 brew install boost
 ```
 
 #### Windows (vcpkg)
+
 ```bash
 vcpkg install boost
 ```
 
 #### Manual Boost Path
+
 ```cmake
 set(BOOST_ROOT /path/to/boost)
 find_package(Boost REQUIRED COMPONENTS system)
@@ -283,6 +316,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 ### Problem: Segmentation Fault
 
 **Symptoms:**
+
 ```
 Segmentation fault (core dumped)
 ```
@@ -290,6 +324,7 @@ Segmentation fault (core dumped)
 **Debugging Steps:**
 
 #### 1. Enable Core Dumps
+
 ```bash
 ulimit -c unlimited
 ./your_app
@@ -301,6 +336,7 @@ gdb ./your_app core
 ```
 
 #### 2. Use AddressSanitizer
+
 ```bash
 # Compile with sanitizer
 cmake -DUNILINK_ENABLE_SANITIZERS=ON ..
@@ -314,6 +350,7 @@ cmake --build .
 #### 3. Common Causes
 
 **Dangling Pointer:**
+
 ```cpp
 // BAD
 auto* client = client_ptr.get();
@@ -326,6 +363,7 @@ client->send("data");
 ```
 
 **Use After Stop:**
+
 ```cpp
 // BAD
 client->stop();
@@ -342,12 +380,14 @@ if (client->is_connected()) {
 ### Problem: Callbacks Not Being Called
 
 **Symptoms:**
+
 - `on_connect()` never called
 - `on_data()` not receiving data
 
 **Possible Causes & Solutions:**
 
 #### 1. Callback Not Registered
+
 ```cpp
 // BAD - Forgot to register callback
 auto client = tcp_client("server.com", 8080)
@@ -355,13 +395,14 @@ auto client = tcp_client("server.com", 8080)
 
 // GOOD
 auto client = tcp_client("server.com", 8080)
-    .on_data([](const std::string& data) {
-        std::cout << data << std::endl;
+    .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << ctx.data() << std::endl;
     })
     .build();
 ```
 
 #### 2. Client Not Started
+
 ```cpp
 // BAD - Forgot to start
 auto client = tcp_client("server.com", 8080)
@@ -375,11 +416,12 @@ client->start();  // Start the connection
 ```
 
 #### 3. Application Exits Too Quickly
+
 ```cpp
 // BAD
 int main() {
     auto client = tcp_client("server.com", 8080)
-        .on_connect([]() { std::cout << "Connected!\n"; })
+        .on_connect([](const unilink::ConnectionContext&) { std::cout << "Connected!\n"; })
         .build();
     client->start();
     
@@ -389,7 +431,7 @@ int main() {
 // GOOD
 int main() {
     auto client = tcp_client("server.com", 8080)
-        .on_connect([]() { std::cout << "Connected!\n"; })
+        .on_connect([](const unilink::ConnectionContext&) { std::cout << "Connected!\n"; })
         .build();
     client->start();
     
@@ -405,27 +447,30 @@ int main() {
 ### Problem: High CPU Usage
 
 **Symptoms:**
+
 - Process using 100% CPU
 - System becomes slow
 
 **Possible Causes & Solutions:**
 
 #### 1. Busy Loop in Callback
+
 ```cpp
 // BAD - Blocks I/O thread
-.on_data([](const std::string& data) {
+.on_data([](const unilink::MessageContext& ctx) {
     while (processing) {  // Busy loop!
         process();
     }
 })
 
 // GOOD - Process asynchronously
-.on_data([this](const std::string& data) {
-    message_queue_.push(data);  // Queue for processing
+.on_data([this](const unilink::MessageContext& ctx) {
+    message_queue_.push(std::string(ctx.data()));  // Queue for processing
 })
 ```
 
 #### 2. Too Many Retries
+
 ```cpp
 // BAD - Retries too often
 .retry_interval(10)  // Retry every 10ms!
@@ -435,17 +480,18 @@ int main() {
 ```
 
 #### 3. Excessive Logging
+
 ```cpp
 // BAD - Log every byte
-.on_data([](const std::string& data) {
-    for (auto byte : data) {
+.on_data([](const unilink::MessageContext& ctx) {
+    for (auto byte : ctx.data()) {
         logger.debug("byte", "received", std::to_string(byte));
     }
 })
 
 // GOOD - Log summary
-.on_data([](const std::string& data) {
-    logger.debug("data", "received", "Received " + std::to_string(data.size()) + " bytes");
+.on_data([](const unilink::MessageContext& ctx) {
+    logger.debug("data", "received", "Received " + std::to_string(ctx.data().size()) + " bytes");
 })
 ```
 
@@ -454,12 +500,14 @@ int main() {
 ### Problem: High Memory Usage
 
 **Symptoms:**
+
 - Memory usage keeps growing
 - Out of memory errors
 
 **Solutions:**
 
 #### 1. Enable Memory Tracking (Debug)
+
 ```bash
 cmake -DUNILINK_ENABLE_MEMORY_TRACKING=ON ..
 cmake --build .
@@ -469,6 +517,7 @@ cmake --build .
 ```
 
 #### 2. Fix Memory Leaks
+
 ```cpp
 // BAD - Circular reference
 class Client {
@@ -485,6 +534,7 @@ class Handler {
 ```
 
 #### 3. Limit Buffer Sizes
+
 ```cpp
 // Limit message queue size
 std::deque<std::string> message_queue_;
@@ -503,12 +553,14 @@ void add_message(const std::string& msg) {
 ### Problem: Slow Data Transfer
 
 **Symptoms:**
+
 - Low throughput
 - Messages take long to arrive
 
 **Solutions:**
 
 #### 1. Batch Small Messages
+
 ```cpp
 // BAD - Send each character
 for (char c : message) {
@@ -520,6 +572,7 @@ client->send(message);
 ```
 
 #### 2. Use Binary Protocol
+
 ```cpp
 // Instead of text: "LENGTH:1024\nDATA:..."
 // Use binary: [4 bytes length][data]
@@ -534,9 +587,12 @@ std::vector<uint8_t> create_binary_message(const std::string& data) {
 ```
 
 #### 3. Enable Async Logging
+
 ```cpp
 // Don't let logging slow down I/O
-Logger::instance().enable_async(true);
+unilink::diagnostics::AsyncLogConfig config;
+config.batch_size = 100;
+unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 ```
 
 ---
@@ -546,6 +602,7 @@ Logger::instance().enable_async(true);
 ### Problem: Memory Leak Detected
 
 **Symptoms:**
+
 ```
 Memory leak detected: 1024 bytes at 0x...
 ```
@@ -577,8 +634,9 @@ valgrind --leak-check=full ./your_app
 // 2. Circular shared_ptr
 // See "High Memory Usage" section above
 
-// 3. Not clearing callbacks
-server->clear_callbacks();  // Clear before destruction
+// 3. Keeping wrappers alive longer than intended
+server->stop();
+server.reset();
 ```
 
 ---
@@ -588,6 +646,7 @@ server->clear_callbacks();  // Clear before destruction
 ### Problem: Race Condition / Data Corruption
 
 **Symptoms:**
+
 - Occasional crashes
 - Corrupted data
 - Inconsistent state
@@ -595,6 +654,7 @@ server->clear_callbacks();  // Clear before destruction
 **Solutions:**
 
 #### 1. Protect Shared State
+
 ```cpp
 // BAD - No protection
 std::map<size_t, ClientInfo> clients_;
@@ -614,10 +674,11 @@ void add_client(size_t id) {
 ```
 
 #### 2. Use Thread-Safe Containers
+
 ```cpp
 #include <unilink/concurrency/thread_safe_state.hpp>
 
-unilink::common::ThreadSafeState<State> state_;
+unilink::concurrency::ThreadSafeState<State> state_;
 // All operations are thread-safe
 ```
 
@@ -631,16 +692,16 @@ unilink::common::ThreadSafeState<State> state_;
 // In main() or initialization
 void setup_debugging() {
     // Set debug log level
-    unilink::common::Logger::instance().set_level(unilink::common::LogLevel::DEBUG);
-    unilink::common::Logger::instance().set_console_output(true);
-    unilink::common::Logger::instance().set_file_output("debug.log");
+    unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+    unilink::diagnostics::Logger::instance().set_console_output(true);
+    unilink::diagnostics::Logger::instance().set_file_output("debug.log");
     
     // Enable error handler
-    unilink::common::ErrorHandler::instance().set_min_error_level(
-        unilink::common::ErrorLevel::INFO
+    unilink::diagnostics::ErrorHandler::instance().set_min_error_level(
+        unilink::diagnostics::ErrorLevel::INFO
     );
-    unilink::common::ErrorHandler::instance().register_callback(
-        [](const unilink::common::ErrorInfo& error) {
+    unilink::diagnostics::ErrorHandler::instance().register_callback(
+        [](const unilink::diagnostics::ErrorInfo& error) {
             std::cerr << "[ERROR] " << error.get_summary() << std::endl;
         }
     );
@@ -700,8 +761,8 @@ nc localhost 8080 < test_data.txt
 If you're still experiencing issues:
 
 1. **Check Examples**: Look at `examples/` directory
-2. **Read API Guide**: See `docs/reference/API_GUIDE.md`
-3. **Search Issues**: https://github.com/jwsung91/unilink/issues
+2. **Read API Guide**: See `docs/reference/api_guide.md`
+3. **Search Issues**: <https://github.com/jwsung91/unilink/issues>
 4. **Ask Community**: Create a new issue with:
    - Minimal reproducible example
    - Error messages / logs
@@ -711,6 +772,7 @@ If you're still experiencing issues:
 ---
 
 **See Also:**
+
 - [Best Practices](best_practices.md)
-- [Performance Tuning](performance_tuning.md)
-- [API Reference](../reference/API_GUIDE.md)
+- [Performance Guide](../advanced/performance.md)
+- [API Reference](../reference/api_guide.md)
