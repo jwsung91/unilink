@@ -1,5 +1,7 @@
 var NAVTREEINDEX9 =
 {
+"namespaceunilink_1_1transport_1_1detail.html#a70b2d349db27101eb27f36bf3a608643":[22,0,1,10,0,3],
+"namespaceunilink_1_1transport_1_1detail.html#a955086b549ba1ad4eabea036d9a7e5db":[22,0,1,10,0,5],
 "namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a":[22,0,1,10,0,4],
 "namespaceunilink_1_1util.html":[22,0,1,11],
 "namespaceunilink_1_1wrapper.html":[22,0,1,12],
@@ -247,7 +249,5 @@ var NAVTREEINDEX9 =
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a3bf5a5eac7a987b180de6e89cd33965c":[23,0,0,4,14,0,39],
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a406c60c11a2d5a3a5829269e58c3ffcc":[23,0,0,4,14,0,24],
 "structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a4440cb13b53b0af86dc97a374a880a72":[23,0,0,4,14,0,9],
-"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a50965f92ffc383e49e645538f97bd236":[23,0,0,4,14,0,37],
-"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a6cc2812ecab36f34742c9436655e0d51":[23,0,0,4,14,0,35],
-"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a75440795f5114b67ef505c54d822413c":[23,0,0,4,14,0,26]
+"structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a50965f92ffc383e49e645538f97bd236":[23,0,0,4,14,0,37]
 };

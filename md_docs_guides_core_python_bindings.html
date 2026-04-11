@@ -220,18 +220,43 @@ Basic Usage</h2>
 <div class="line">udp.send(&quot;Hello UDP&quot;)</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md345"></a>
-🛠️ Advanced Features</h1>
+📂 UDS Communication</h1>
+<p>Unix Domain Sockets for high-performance local IPC.</p>
 <h2><a class="anchor" id="autotoc_md346"></a>
+Basic Usage</h2>
+<div class="fragment"><div class="line">import unilink_py</div>
+<div class="line"> </div>
+<div class="line"># Initialize client/server with socket path</div>
+<div class="line">server = unilink_py.UdsServer(&quot;/tmp/myapp.sock&quot;)</div>
+<div class="line">client = unilink_py.UdsClient(&quot;/tmp/myapp.sock&quot;)</div>
+<div class="line"> </div>
+<div class="line">@server.on_data</div>
+<div class="line">def on_server_data(ctx):</div>
+<div class="line">    print(f&quot;Server received: {ctx.data}&quot;)</div>
+<div class="line">    server.send_to(ctx.client_id, &quot;ACK&quot;)</div>
+<div class="line"> </div>
+<div class="line">@client.on_data</div>
+<div class="line">def on_client_data(ctx):</div>
+<div class="line">    print(f&quot;Client received: {ctx.data}&quot;)</div>
+<div class="line"> </div>
+<div class="line">server.start()</div>
+<div class="line">client.start()</div>
+<div class="line"> </div>
+<div class="line">client.send(&quot;Hello over UDS&quot;)</div>
+</div><!-- fragment --><hr  />
+<h1><a class="anchor" id="autotoc_md348"></a>
+🛠️ Advanced Features</h1>
+<h2><a class="anchor" id="autotoc_md349"></a>
 Threading &amp; GIL</h2>
 <p>The bindings are designed to be thread-safe. When C++ triggers a callback, it automatically acquires the Python GIL (Global Interpreter Lock), allowing you to safely run Python code inside handlers. Long-running operations in Python handlers will block other callbacks for that specific channel, so keep them brief.</p>
-<h2><a class="anchor" id="autotoc_md347"></a>
+<h2><a class="anchor" id="autotoc_md350"></a>
 Lifecycle Management</h2>
 <ul>
 <li>**<code>start()</code>**: Returns a <code>std::future&lt;bool&gt;</code> equivalent in Python (usually blocks until initial attempt finishes if wrapped).</li>
 <li>**<code>stop()</code>**: Synchronously stops all I/O operations and joins internal threads.</li>
 <li>**<code>auto_manage(True)</code>**: When enabled, the channel starts immediately and stops when the Python object is garbage collected.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md348"></a>
+<h2><a class="anchor" id="autotoc_md351"></a>
 Configuration</h2>
 <ul>
 <li>**<code>UdpConfig</code>**: A dedicated class for UDP settings (buffer sizes, memory pools, etc.).</li>
@@ -244,7 +269,7 @@ Configuration</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 06:33:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 07:56:04 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
