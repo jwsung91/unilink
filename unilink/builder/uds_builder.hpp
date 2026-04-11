@@ -77,6 +77,11 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   UdsServerBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
   UdsServerBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
 
+  /**
+   * @brief Set message handler callback for framed messages (Server version with context)
+   */
+  UdsServerBuilder& on_message(std::function<void(const wrapper::MessageContext&)> handler);
+
   UdsServerBuilder& use_independent_context(bool use_independent = true);
   UdsServerBuilder& max_clients(size_t max);
   UdsServerBuilder& unlimited_clients();
@@ -91,6 +96,7 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   std::function<void(const wrapper::ConnectionContext&)> on_connect_;
   std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
   std::function<void(const wrapper::ErrorContext&)> on_error_;
+  std::function<void(const wrapper::MessageContext&)> on_framed_message_;
 };
 
 }  // namespace builder

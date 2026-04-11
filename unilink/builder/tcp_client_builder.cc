@@ -57,8 +57,8 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   client->set_max_retries(max_retries_);
   client->set_connection_timeout(connection_timeout_);
 
-  if (framer_) {
-    client->set_framer(std::move(framer_));
+  if (framer_factory_) {
+    client->set_framer(framer_factory_());
   }
   if (on_message_) {
     client->on_message(std::move(on_message_));

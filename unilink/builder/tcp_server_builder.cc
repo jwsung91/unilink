@@ -55,6 +55,14 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   if (on_disconnect_) server->on_client_disconnect(on_disconnect_);
   if (on_error_) server->on_error(on_error_);
 
+  if (framer_factory_) {
+    server->set_framer_factory(framer_factory_);
+  }
+
+  if (on_framed_message_) {
+    server->on_message(on_framed_message_);
+  }
+
   if (enable_port_retry_) {
     server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
   }
@@ -99,6 +107,11 @@ TcpServerBuilder& TcpServerBuilder::on_disconnect(std::function<void(const wrapp
 
 TcpServerBuilder& TcpServerBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
   on_error_ = std::move(handler);
+  return *this;
+}
+
+TcpServerBuilder& TcpServerBuilder::on_message(std::function<void(const wrapper::MessageContext&)> handler) {
+  on_framed_message_ = std::move(handler);
   return *this;
 }
 
