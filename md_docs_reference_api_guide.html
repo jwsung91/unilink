@@ -221,10 +221,10 @@ Basic Usage</h2>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Start connection</span></div>
-<div class="line">client-&gt;start();</div>
+<div class="line"><span class="keywordtype">bool</span> connected = client-&gt;start().get();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Send data</span></div>
-<div class="line"><span class="keywordflow">if</span> (client-&gt;is_connected()) {</div>
+<div class="line"><span class="keywordflow">if</span> (connected &amp;&amp; client-&gt;is_connected()) {</div>
 <div class="line">    client-&gt;send(<span class="stringliteral">&quot;Hello, Server!&quot;</span>);</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -251,6 +251,10 @@ Builder Methods</h3>
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Parameters   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>retry_interval(ms)</code>   </td><td class="markdownTableBodyNone"><code>unsigned</code>   </td><td class="markdownTableBodyNone">Set reconnection interval in milliseconds (default <code>3000</code>)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>max_retries(count)</code>   </td><td class="markdownTableBodyNone"><code>int</code>   </td><td class="markdownTableBodyNone">Set maximum reconnect attempts (<code>-1</code> for unlimited)    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>connection_timeout(ms)</code>   </td><td class="markdownTableBodyNone"><code>unsigned</code>   </td><td class="markdownTableBodyNone">Set connection timeout in milliseconds    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>use_independent_context()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Use separate IO thread (for testing)    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -308,7 +312,7 @@ With Lambda Capture</h3>
 <div class="line">    .build();</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md722"></a>
 Custom Reconnect Policy (Transport Layer)</h3>
-<p>To use advanced reconnection policies (like Exponential Backoff), use the transport layer directly:</p>
+<p>If you need transport-level reconnect policy control such as <code>ExponentialBackoff(...)</code>, you can drop below the wrapper API and use the transport layer directly. This is an advanced path; the recommended public entry point remains <code>unilink::tcp_client(...)</code>.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="transport_2tcp__client_2tcp__client_8hpp.html">unilink/transport/tcp_client/tcp_client.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Configure and create transport client</span></div>
@@ -355,16 +359,20 @@ Basic Usage</h2>
 <div class="line">    .build();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Start server</span></div>
-<div class="line">server-&gt;start();</div>
+<div class="line"><span class="keywordtype">bool</span> listening = server-&gt;start().get();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Send to specific client</span></div>
-<div class="line">server-&gt;send_to(1, <span class="stringliteral">&quot;Hello, Client 1!&quot;</span>);</div>
+<div class="line"><span class="keywordflow">if</span> (listening) {</div>
+<div class="line">    server-&gt;send_to(1, <span class="stringliteral">&quot;Hello, Client 1!&quot;</span>);</div>
+<div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Send to all clients</span></div>
-<div class="line">server-&gt;broadcast(<span class="stringliteral">&quot;Broadcast message&quot;</span>);</div>
+<div class="line"><span class="keywordflow">if</span> (listening) {</div>
+<div class="line">    server-&gt;broadcast(<span class="stringliteral">&quot;Broadcast message&quot;</span>);</div>
+<div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Check if listening</span></div>
-<div class="line"><span class="keywordflow">if</span> (server-&gt;is_listening()) {</div>
+<div class="line"><span class="keywordflow">if</span> (listening &amp;&amp; server-&gt;is_listening()) {</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Server is listening&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -445,6 +453,7 @@ Single Client Mode</h3>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md732"></a>
 Port Retry</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">single_client</a>()</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">enable_port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// 5 retries, 1 second each</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae853d94713e747d53006c5f086f472bc">on_error</a>([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::ErrorContext</a>&amp; ctx) {</div>
 <div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;Server error: &quot;</span> &lt;&lt; ctx.<a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">message</a>() &lt;&lt; std::endl;</div>
@@ -482,14 +491,18 @@ Basic Usage</h2>
 <div class="line">    .build();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Start serial communication</span></div>
-<div class="line"><a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;start();</div>
+<div class="line"><span class="keywordtype">bool</span> opened = <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;start().get();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Send AT command</span></div>
-<div class="line"><a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;send(<span class="stringliteral">&quot;AT\r\n&quot;</span>);</div>
+<div class="line"><span class="keywordflow">if</span> (opened) {</div>
+<div class="line">    <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;send(<span class="stringliteral">&quot;AT\r\n&quot;</span>);</div>
+<div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Send binary payload through string-compatible storage</span></div>
 <div class="line">std::string binary_payload(<span class="stringliteral">&quot;\x01\x02\x03&quot;</span>, 3);</div>
-<div class="line"><a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;send(binary_payload);</div>
+<div class="line"><span class="keywordflow">if</span> (opened) {</div>
+<div class="line">    <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;send(binary_payload);</div>
+<div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1SerialBuilder_html_a96d737e91f16e3fd669e03ad18f19c36"><div class="ttname"><a href="classunilink_1_1builder_1_1SerialBuilder.html#a96d737e91f16e3fd669e03ad18f19c36">unilink::builder::SerialBuilder::on_connect</a></div><div class="ttdeci">SerialBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="serial__builder_8cc_source.html#l00077">serial_builder.cc:77</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a9f2227aea1475c0655cf8cf4a99e55e9"><div class="ttname"><a href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">unilink::serial</a></div><div class="ttdeci">builder::SerialBuilder serial(const std::string &amp;device, uint32_t baud_rate)</div><div class="ttdoc">Create a Serial port builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00148">unilink.hpp:148</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md737"></a>
@@ -506,6 +519,14 @@ Builder Methods</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Parameters   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>data_bits(bits)</code>   </td><td class="markdownTableBodyNone"><code>int</code>   </td><td class="markdownTableBodyNone">Set serial data bits before <code>build()</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>stop_bits(bits)</code>   </td><td class="markdownTableBodyNone"><code>int</code>   </td><td class="markdownTableBodyNone">Set serial stop bits before <code>build()</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>parity(mode)</code>   </td><td class="markdownTableBodyNone"><code>string</code>   </td><td class="markdownTableBodyNone">Set serial parity before <code>build()</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>flow_control(mode)</code>   </td><td class="markdownTableBodyNone"><code>string</code>   </td><td class="markdownTableBodyNone">Set flow control before <code>build()</code>    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>retry_interval(ms)</code>   </td><td class="markdownTableBodyNone"><code>unsigned</code>   </td><td class="markdownTableBodyNone">Set reconnection interval (default <code>3000</code>)    </td></tr>
 <tr class="markdownTableRowEven">
@@ -597,11 +618,13 @@ UDP Receiver (Server)</h3>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 <div class="line"> </div>
-<div class="line">receiver-&gt;start();</div>
+<div class="line"><span class="keywordtype">bool</span> receiver_started = receiver-&gt;start().get();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Keep running...</span></div>
-<div class="line">std::this_thread::sleep_for(std::chrono::seconds(60));</div>
-<div class="line">receiver-&gt;stop();</div>
+<div class="line"><span class="keywordflow">if</span> (receiver_started) {</div>
+<div class="line">    std::this_thread::sleep_for(std::chrono::seconds(60));</div>
+<div class="line">    receiver-&gt;stop();</div>
+<div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a57489c2617e0c904f2126c17f692a26d"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a57489c2617e0c904f2126c17f692a26d">unilink::builder::UdpBuilder::on_data</a></div><div class="ttdeci">UdpBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00057">udp_builder.cc:57</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_ab000e6359a7c6a9ead41fb57c52c2212"><div class="ttname"><a href="namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212">unilink::udp</a></div><div class="ttdeci">builder::UdpBuilder udp(uint16_t local_port)</div><div class="ttdoc">Create a UDP builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00157">unilink.hpp:157</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md749"></a>
@@ -613,8 +636,10 @@ UDP Sender (Client)</h3>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html#a3f3bdfca13cf1d0eb0c87f59c170472f">set_remote</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1UdpBuilder.html#a34a3284a0210b03739bbf9d0d3a30079">build</a>();</div>
 <div class="line"> </div>
-<div class="line">sender-&gt;start();</div>
-<div class="line">sender-&gt;send(<span class="stringliteral">&quot;Hello UDP!&quot;</span>);</div>
+<div class="line"><span class="keywordtype">bool</span> sender_started = sender-&gt;start().get();</div>
+<div class="line"><span class="keywordflow">if</span> (sender_started) {</div>
+<div class="line">    sender-&gt;send(<span class="stringliteral">&quot;Hello UDP!&quot;</span>);</div>
+<div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a34a3284a0210b03739bbf9d0d3a30079"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a34a3284a0210b03739bbf9d0d3a30079">unilink::builder::UdpBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::Udp &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00031">udp_builder.cc:31</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdpBuilder_html_a3f3bdfca13cf1d0eb0c87f59c170472f"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpBuilder.html#a3f3bdfca13cf1d0eb0c87f59c170472f">unilink::builder::UdpBuilder::set_remote</a></div><div class="ttdeci">UdpBuilder &amp; set_remote(const std::string &amp;address, uint16_t port)</div><div class="ttdoc">Set remote address and port.</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00082">udp_builder.cc:82</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md750"></a>
@@ -681,7 +706,10 @@ UDS Server</h3>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 <div class="line"> </div>
-<div class="line">server-&gt;start();</div>
+<div class="line"><span class="keywordtype">bool</span> listening = server-&gt;start().get();</div>
+<div class="line"><span class="keywordflow">if</span> (!listening) {</div>
+<div class="line">    std::cerr &lt;&lt; <span class="stringliteral">&quot;Failed to start UDS server&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdsServerBuilder_html_a2620226c46de2acee4c1caf342dd8ee0"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsServerBuilder.html#a2620226c46de2acee4c1caf342dd8ee0">unilink::builder::UdsServerBuilder::on_connect</a></div><div class="ttdeci">UdsServerBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="uds__builder_8cc_source.html#l00143">uds_builder.cc:143</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdsServerBuilder_html_adc12541e49d23fc1d671c61629372ebe"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsServerBuilder.html#adc12541e49d23fc1d671c61629372ebe">unilink::builder::UdsServerBuilder::unlimited_clients</a></div><div class="ttdeci">UdsServerBuilder &amp; unlimited_clients()</div><div class="ttdef"><b>Definition:</b> <a href="uds__builder_8cc_source.html#l00168">uds_builder.cc:168</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_ad9137b62ca2550572c06204e1f4a5c80"><div class="ttname"><a href="namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80">unilink::uds_server</a></div><div class="ttdeci">builder::UdsServerBuilder uds_server(const std::string &amp;socket_path)</div><div class="ttdoc">Create a UDS server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00129">unilink.hpp:129</a></div></div>
@@ -695,8 +723,10 @@ UDS Client</h3>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 <div class="line"> </div>
-<div class="line">client-&gt;start();</div>
-<div class="line">client-&gt;send(<span class="stringliteral">&quot;Hello IPC!&quot;</span>);</div>
+<div class="line"><span class="keywordtype">bool</span> connected = client-&gt;start().get();</div>
+<div class="line"><span class="keywordflow">if</span> (connected) {</div>
+<div class="line">    client-&gt;send(<span class="stringliteral">&quot;Hello IPC!&quot;</span>);</div>
+<div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1UdsClientBuilder_html_a0adde1b5efd342eddb197367c919f005"><div class="ttname"><a href="classunilink_1_1builder_1_1UdsClientBuilder.html#a0adde1b5efd342eddb197367c919f005">unilink::builder::UdsClientBuilder::on_connect</a></div><div class="ttdeci">UdsClientBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="uds__builder_8cc_source.html#l00070">uds_builder.cc:70</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_aea8ffb995b971cd3ed4474daff633c5a"><div class="ttname"><a href="namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a">unilink::uds_client</a></div><div class="ttdeci">builder::UdsClientBuilder uds_client(const std::string &amp;socket_path)</div><div class="ttdoc">Create a UDS client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00138">unilink.hpp:138</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md761"></a>
@@ -727,6 +757,12 @@ Builder Methods (UDS Client)</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>retry_interval(ms)</code>   </td><td class="markdownTableBodyNone"><code>unsigned</code>   </td><td class="markdownTableBodyNone">Set reconnection interval (default <code>3000</code>)    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>max_retries(count)</code>   </td><td class="markdownTableBodyNone"><code>int</code>   </td><td class="markdownTableBodyNone">Set maximum reconnect attempts    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>connection_timeout(ms)</code>   </td><td class="markdownTableBodyNone"><code>unsigned</code>   </td><td class="markdownTableBodyNone">Set connection timeout in milliseconds    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>use_independent_context()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Run on a dedicated <code>io_context</code> thread    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>auto_manage()</code>   </td><td class="markdownTableBodyNone"><code>bool</code>   </td><td class="markdownTableBodyNone">Auto-start/stop lifecycle   </td></tr>
 </table>
 <h3><a class="anchor" id="autotoc_md765"></a>
@@ -1076,7 +1112,7 @@ Performance Tips</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 05:04:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
