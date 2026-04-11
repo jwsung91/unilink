@@ -60,11 +60,18 @@ class UNILINK_API UnifiedBuilder {
   static SerialBuilder serial(const std::string& device, uint32_t baud_rate);
 
   /**
-   * @brief Create a UDP builder
+   * @brief Create a UDP client builder
    * @param local_port The local port to bind
-   * @return UdpBuilder A configured builder for UDP communication
+   * @return UdpClientBuilder A configured builder for UDP communication
    */
-  static UdpBuilder udp(uint16_t local_port);
+  static UdpClientBuilder udp(uint16_t local_port);
+
+  /**
+   * @brief Create a UDP server builder
+   * @param local_port The local port to bind
+   * @return UdpServerBuilder A configured builder for UDP communication
+   */
+  static UdpServerBuilder udp_server(uint16_t local_port);
 };
 
 }  // namespace builder

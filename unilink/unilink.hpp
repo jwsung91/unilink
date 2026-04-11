@@ -66,7 +66,6 @@ namespace builder {
 class TcpServerBuilder;
 class TcpClientBuilder;
 class SerialBuilder;
-class UdpBuilder;
 class UdsClientBuilder;
 class UdsServerBuilder;
 class UnifiedBuilder;
@@ -150,12 +149,23 @@ inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_ra
 }
 
 /**
- * @brief Create a UDP builder
+ * @brief Create a UDP client builder
  * @param local_port The local port to bind
- * @return UdpBuilder A configured builder for UDP
+ * @return UdpClientBuilder A configured builder for UDP Client
  */
-inline builder::UdpBuilder udp(uint16_t local_port) {
-  builder::UdpBuilder b;
+inline builder::UdpClientBuilder udp(uint16_t local_port) {
+  builder::UdpClientBuilder b;
+  b.set_local_port(local_port);
+  return b;
+}
+
+/**
+ * @brief Create a UDP server builder (Virtual sessions)
+ * @param local_port The local port to bind
+ * @return UdpServerBuilder A configured builder for UDP Server
+ */
+inline builder::UdpServerBuilder udp_server(uint16_t local_port) {
+  builder::UdpServerBuilder b;
   b.set_local_port(local_port);
   return b;
 }

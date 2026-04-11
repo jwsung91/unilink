@@ -15,7 +15,7 @@ PYBIND11_MODULE(unilink_py, m) {
   m.doc() = "unilink python bindings";
   m.attr("__version__") = "@UNILINK_VERSION@";
 
-  // ErrorCode enum (Matching actual definitions in error_codes.hpp)
+  // ErrorCode enum
   py::enum_<ErrorCode>(m, "ErrorCode")
       .value("Success", ErrorCode::Success)
       .value("Unknown", ErrorCode::Unknown)
@@ -49,16 +49,14 @@ PYBIND11_MODULE(unilink_py, m) {
       .def_property_readonly("message", [](const ErrorContext& self) { return std::string(self.message()); })
       .def_property_readonly("client_id", &ErrorContext::client_id);
 
-  // Framer Interface (Base)
+  // Framer
   py::class_<framer::IFramer, std::shared_ptr<framer::IFramer>>(m, "IFramer");
 
-  // LineFramer
   py::class_<framer::LineFramer, framer::IFramer, std::shared_ptr<framer::LineFramer>>(m, "LineFramer")
       .def(py::init<const std::string&, bool, size_t>(), py::arg("delimiter") = "\n",
            py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("reset", &framer::LineFramer::reset);
 
-  // PacketFramer
   py::class_<framer::PacketFramer, framer::IFramer, std::shared_ptr<framer::PacketFramer>>(m, "PacketFramer")
       .def(py::init<const std::vector<uint8_t>&, const std::vector<uint8_t>&, size_t>())
       .def("reset", &framer::PacketFramer::reset);
@@ -66,11 +64,7 @@ PYBIND11_MODULE(unilink_py, m) {
   // TcpClient
   py::class_<TcpClient, std::shared_ptr<TcpClient>>(m, "TcpClient")
       .def(py::init<const std::string&, uint16_t>())
-      .def("start",
-           [](TcpClient& self) {
-             py::gil_scoped_release release;
-             return self.start().get();
-           })
+      .def("start", [](TcpClient& self) { py::gil_scoped_release release; return self.start().get(); })
       .def("stop", &TcpClient::stop)
       .def("send", &TcpClient::send)
       .def("send_line", &TcpClient::send_line)
@@ -79,133 +73,66 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("set_retry_interval", &TcpClient::set_retry_interval)
       .def("set_max_retries", &TcpClient::set_max_retries)
       .def("set_connection_timeout", &TcpClient::set_connection_timeout)
-      .def(
-          "use_line_framer",
-          [](TcpClient& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
-            self.set_framer(std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length));
-            return &self;
-          },
-          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
-           [](TcpClient& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
-             self.set_framer(std::make_unique<framer::PacketFramer>(start, end, max_length));
-             return &self;
-           })
-      .def("on_message",
-           [](TcpClient& self, std::function<void(py::bytes)> handler) {
-             self.on_message([handler](memory::ConstByteSpan msg) {
-               py::gil_scoped_acquire gil;
-               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
-             });
-             return &self;
-           })
-      .def("on_data",
-           [](TcpClient& self, std::function<void(const MessageContext&)> handler) {
-             self.on_data([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_connect",
-           [](TcpClient& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_connect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_disconnect",
-           [](TcpClient& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_disconnect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_error", [](TcpClient& self, std::function<void(const ErrorContext&)> handler) {
-        self.on_error([handler](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          handler(ctx);
-        });
-        return &self;
+      .def("use_line_framer", [](TcpClient& self, const std::string& d, bool i, size_t m) {
+          self.set_framer(std::make_unique<framer::LineFramer>(d, i, m)); return &self;
+      }, py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer", [](TcpClient& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
+          self.set_framer(std::make_unique<framer::PacketFramer>(s, e, m)); return &self;
+      })
+      .def("on_message", [](TcpClient& self, std::function<void(py::bytes)> handler) {
+          self.on_message([handler](memory::ConstByteSpan msg) {
+              py::gil_scoped_acquire gil;
+              handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+          });
+          return &self;
+      })
+      .def("on_data", [](TcpClient& self, std::function<void(const MessageContext&)> h) {
+          self.on_data([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_connect", [](TcpClient& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_connect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_disconnect", [](TcpClient& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_disconnect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_error", [](TcpClient& self, std::function<void(const ErrorContext&)> h) {
+          self.on_error([h](const ErrorContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
       });
 
   // TcpServer
   py::class_<TcpServer, std::shared_ptr<TcpServer>>(m, "TcpServer")
       .def(py::init<uint16_t>())
-      .def("start",
-           [](TcpServer& self) {
-             py::gil_scoped_release release;
-             return self.start().get();
-           })
+      .def("start", [](TcpServer& self) { py::gil_scoped_release release; return self.start().get(); })
       .def("stop", &TcpServer::stop)
       .def("broadcast", &TcpServer::broadcast)
       .def("send_to", &TcpServer::send_to)
       .def("get_client_count", &TcpServer::get_client_count)
-      .def(
-          "use_line_framer",
-          [](TcpServer& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
-            self.set_framer_factory([delim = delimiter, include_delimiter, max_length]() {
-              return std::make_unique<framer::LineFramer>(delim, include_delimiter, max_length);
-            });
-            return &self;
-          },
-          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
-           [](TcpServer& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
-             self.set_framer_factory(
-                 [start, end, max_length]() { return std::make_unique<framer::PacketFramer>(start, end, max_length); });
-             return &self;
-           })
-      .def("on_message",
-           [](TcpServer& self, std::function<void(const MessageContext&)> handler) {
-             self.on_message([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_data",
-           [](TcpServer& self, std::function<void(const MessageContext&)> handler) {
-             self.on_data([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_client_connect",
-           [](TcpServer& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_client_connect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_client_disconnect",
-           [](TcpServer& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_client_disconnect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_error", [](TcpServer& self, std::function<void(const ErrorContext&)> handler) {
-        self.on_error([handler](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          handler(ctx);
-        });
-        return &self;
+      .def("use_line_framer", [](TcpServer& self, const std::string& d, bool i, size_t m) {
+          self.set_framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); }); return &self;
+      }, py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer", [](TcpServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
+          self.set_framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); }); return &self;
+      })
+      .def("on_message", [](TcpServer& self, std::function<void(const MessageContext&)> h) {
+          self.on_message([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_data", [](TcpServer& self, std::function<void(const MessageContext&)> h) {
+          self.on_data([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_client_connect", [](TcpServer& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_client_connect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_client_disconnect", [](TcpServer& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_client_disconnect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_error", [](TcpServer& self, std::function<void(const ErrorContext&)> h) {
+          self.on_error([h](const ErrorContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
       });
 
   // Serial
   py::class_<Serial, std::shared_ptr<Serial>>(m, "Serial")
       .def(py::init<const std::string&, uint32_t>())
-      .def("start",
-           [](Serial& self) {
-             py::gil_scoped_release release;
-             return self.start().get();
-           })
+      .def("start", [](Serial& self) { py::gil_scoped_release release; return self.start().get(); })
       .def("stop", &Serial::stop)
       .def("send", &Serial::send)
       .def("send_line", &Serial::send_line)
@@ -217,66 +144,36 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("set_parity", &Serial::set_parity)
       .def("set_flow_control", &Serial::set_flow_control)
       .def("set_retry_interval", &Serial::set_retry_interval)
-      .def(
-          "use_line_framer",
-          [](Serial& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
-            self.set_framer(std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length));
-            return &self;
-          },
-          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
-           [](Serial& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
-             self.set_framer(std::make_unique<framer::PacketFramer>(start, end, max_length));
-             return &self;
-           })
-      .def("on_message",
-           [](Serial& self, std::function<void(py::bytes)> handler) {
-             self.on_message([handler](memory::ConstByteSpan msg) {
-               py::gil_scoped_acquire gil;
-               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
-             });
-             return &self;
-           })
-      .def("on_data",
-           [](Serial& self, std::function<void(const MessageContext&)> handler) {
-             self.on_data([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_connect",
-           [](Serial& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_connect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_disconnect",
-           [](Serial& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_disconnect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_error", [](Serial& self, std::function<void(const ErrorContext&)> handler) {
-        self.on_error([handler](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          handler(ctx);
-        });
-        return &self;
+      .def("use_line_framer", [](Serial& self, const std::string& d, bool i, size_t m) {
+          self.set_framer(std::make_unique<framer::LineFramer>(d, i, m)); return &self;
+      }, py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer", [](Serial& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
+          self.set_framer(std::make_unique<framer::PacketFramer>(s, e, m)); return &self;
+      })
+      .def("on_message", [](Serial& self, std::function<void(py::bytes)> handler) {
+          self.on_message([handler](memory::ConstByteSpan msg) {
+              py::gil_scoped_acquire gil;
+              handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+          });
+          return &self;
+      })
+      .def("on_data", [](Serial& self, std::function<void(const MessageContext&)> h) {
+          self.on_data([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_connect", [](Serial& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_connect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_disconnect", [](Serial& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_disconnect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_error", [](Serial& self, std::function<void(const ErrorContext&)> h) {
+          self.on_error([h](const ErrorContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
       });
 
   // UdsClient
   py::class_<UdsClient, std::shared_ptr<UdsClient>>(m, "UdsClient")
       .def(py::init<const std::string&>())
-      .def("start",
-           [](UdsClient& self) {
-             py::gil_scoped_release release;
-             return self.start().get();
-           })
+      .def("start", [](UdsClient& self) { py::gil_scoped_release release; return self.start().get(); })
       .def("stop", &UdsClient::stop)
       .def("send", &UdsClient::send)
       .def("send_line", &UdsClient::send_line)
@@ -285,123 +182,60 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("set_retry_interval", &UdsClient::set_retry_interval)
       .def("set_max_retries", &UdsClient::set_max_retries)
       .def("set_connection_timeout", &UdsClient::set_connection_timeout)
-      .def(
-          "use_line_framer",
-          [](UdsClient& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
-            self.set_framer(std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length));
-            return &self;
-          },
-          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
-           [](UdsClient& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
-             self.set_framer(std::make_unique<framer::PacketFramer>(start, end, max_length));
-             return &self;
-           })
-      .def("on_message",
-           [](UdsClient& self, std::function<void(py::bytes)> handler) {
-             self.on_message([handler](memory::ConstByteSpan msg) {
-               py::gil_scoped_acquire gil;
-               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
-             });
-             return &self;
-           })
-      .def("on_data",
-           [](UdsClient& self, std::function<void(const MessageContext&)> handler) {
-             self.on_data([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_connect",
-           [](UdsClient& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_connect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_disconnect",
-           [](UdsClient& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_disconnect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_error", [](UdsClient& self, std::function<void(const ErrorContext&)> handler) {
-        self.on_error([handler](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          handler(ctx);
-        });
-        return &self;
+      .def("use_line_framer", [](UdsClient& self, const std::string& d, bool i, size_t m) {
+          self.set_framer(std::make_unique<framer::LineFramer>(d, i, m)); return &self;
+      }, py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer", [](UdsClient& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
+          self.set_framer(std::make_unique<framer::PacketFramer>(s, e, m)); return &self;
+      })
+      .def("on_message", [](UdsClient& self, std::function<void(py::bytes)> handler) {
+          self.on_message([handler](memory::ConstByteSpan msg) {
+              py::gil_scoped_acquire gil;
+              handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+          });
+          return &self;
+      })
+      .def("on_data", [](UdsClient& self, std::function<void(const MessageContext&)> h) {
+          self.on_data([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_connect", [](UdsClient& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_connect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_disconnect", [](UdsClient& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_disconnect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_error", [](UdsClient& self, std::function<void(const ErrorContext&)> h) {
+          self.on_error([h](const ErrorContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
       });
 
   // UdsServer
   py::class_<UdsServer, std::shared_ptr<UdsServer>>(m, "UdsServer")
       .def(py::init<const std::string&>())
-      .def("start",
-           [](UdsServer& self) {
-             py::gil_scoped_release release;
-             return self.start().get();
-           })
+      .def("start", [](UdsServer& self) { py::gil_scoped_release release; return self.start().get(); })
       .def("stop", &UdsServer::stop)
       .def("broadcast", &UdsServer::broadcast)
       .def("send_to", &UdsServer::send_to)
       .def("get_client_count", &UdsServer::get_client_count)
-      .def(
-          "use_line_framer",
-          [](UdsServer& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
-            self.set_framer_factory([delim = delimiter, include_delimiter, max_length]() {
-              return std::make_unique<framer::LineFramer>(delim, include_delimiter, max_length);
-            });
-            return &self;
-          },
-          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
-           [](UdsServer& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
-             self.set_framer_factory(
-                 [start, end, max_length]() { return std::make_unique<framer::PacketFramer>(start, end, max_length); });
-             return &self;
-           })
-      .def("on_message",
-           [](UdsServer& self, std::function<void(const MessageContext&)> handler) {
-             self.on_message([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_data",
-           [](UdsServer& self, std::function<void(const MessageContext&)> handler) {
-             self.on_data([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_client_connect",
-           [](UdsServer& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_client_connect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_client_disconnect",
-           [](UdsServer& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_client_disconnect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_error", [](UdsServer& self, std::function<void(const ErrorContext&)> handler) {
-        self.on_error([handler](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          handler(ctx);
-        });
-        return &self;
+      .def("use_line_framer", [](UdsServer& self, const std::string& d, bool i, size_t m) {
+          self.set_framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); }); return &self;
+      }, py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer", [](UdsServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
+          self.set_framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); }); return &self;
+      })
+      .def("on_message", [](UdsServer& self, std::function<void(const MessageContext&)> h) {
+          self.on_message([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_data", [](UdsServer& self, std::function<void(const MessageContext&)> h) {
+          self.on_data([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_client_connect", [](UdsServer& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_client_connect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_client_disconnect", [](UdsServer& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_client_disconnect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_error", [](UdsServer& self, std::function<void(const ErrorContext&)> h) {
+          self.on_error([h](const ErrorContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
       });
 
   // UdpConfig
@@ -415,68 +249,69 @@ PYBIND11_MODULE(unilink_py, m) {
       .def_readwrite("enable_memory_pool", &config::UdpConfig::enable_memory_pool)
       .def_readwrite("stop_on_callback_exception", &config::UdpConfig::stop_on_callback_exception);
 
-  // Udp
+  // Udp (Client role)
   py::class_<Udp, std::shared_ptr<Udp>>(m, "Udp")
       .def(py::init<const config::UdpConfig&>())
-      .def("start",
-           [](Udp& self) {
-             py::gil_scoped_release release;
-             return self.start().get();
-           })
+      .def("start", [](Udp& self) { py::gil_scoped_release release; return self.start().get(); })
       .def("stop", &Udp::stop)
       .def("send", &Udp::send)
       .def("send_line", &Udp::send_line)
       .def("is_connected", &Udp::is_connected)
       .def("auto_manage", &Udp::auto_manage, py::arg("manage") = true)
-      .def(
-          "use_line_framer",
-          [](Udp& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
-            self.set_framer(std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length));
-            return &self;
-          },
-          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
-           [](Udp& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
-             self.set_framer(std::make_unique<framer::PacketFramer>(start, end, max_length));
-             return &self;
-           })
-      .def("on_message",
-           [](Udp& self, std::function<void(py::bytes)> handler) {
-             self.on_message([handler](memory::ConstByteSpan msg) {
-               py::gil_scoped_acquire gil;
-               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
-             });
-             return &self;
-           })
-      .def("on_data",
-           [](Udp& self, std::function<void(const MessageContext&)> handler) {
-             self.on_data([handler](const MessageContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_connect",
-           [](Udp& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_connect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_disconnect",
-           [](Udp& self, std::function<void(const ConnectionContext&)> handler) {
-             self.on_disconnect([handler](const ConnectionContext& ctx) {
-               py::gil_scoped_acquire gil;
-               handler(ctx);
-             });
-             return &self;
-           })
-      .def("on_error", [](Udp& self, std::function<void(const ErrorContext&)> handler) {
-        self.on_error([handler](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          handler(ctx);
-        });
-        return &self;
+      .def("use_line_framer", [](Udp& self, const std::string& d, bool i, size_t m) {
+          self.set_framer(std::make_unique<framer::LineFramer>(d, i, m)); return &self;
+      }, py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer", [](Udp& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
+          self.set_framer(std::make_unique<framer::PacketFramer>(s, e, m)); return &self;
+      })
+      .def("on_message", [](Udp& self, std::function<void(py::bytes)> handler) {
+          self.on_message([handler](memory::ConstByteSpan msg) {
+              py::gil_scoped_acquire gil;
+              handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+          });
+          return &self;
+      })
+      .def("on_data", [](Udp& self, std::function<void(const MessageContext&)> h) {
+          self.on_data([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_connect", [](Udp& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_connect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_disconnect", [](Udp& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_disconnect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_error", [](Udp& self, std::function<void(const ErrorContext&)> h) {
+          self.on_error([h](const ErrorContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      });
+
+  // UdpServer
+  py::class_<UdpServer, std::shared_ptr<UdpServer>>(m, "UdpServer")
+      .def(py::init<uint16_t>())
+      .def(py::init<const config::UdpConfig&>())
+      .def("start", [](UdpServer& self) { py::gil_scoped_release release; return self.start().get(); })
+      .def("stop", &UdpServer::stop)
+      .def("broadcast", &UdpServer::broadcast)
+      .def("send_to", &UdpServer::send_to)
+      .def("get_client_count", &UdpServer::get_client_count)
+      .def("use_line_framer", [](UdpServer& self, const std::string& d, bool i, size_t m) {
+          self.set_framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); }); return &self;
+      }, py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer", [](UdpServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
+          self.set_framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); }); return &self;
+      })
+      .def("on_message", [](UdpServer& self, std::function<void(const MessageContext&)> h) {
+          self.on_message([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_data", [](UdpServer& self, std::function<void(const MessageContext&)> h) {
+          self.on_data([h](const MessageContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_client_connect", [](UdpServer& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_client_connect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_client_disconnect", [](UdpServer& self, std::function<void(const ConnectionContext&)> h) {
+          self.on_client_disconnect([h](const ConnectionContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
+      })
+      .def("on_error", [](UdpServer& self, std::function<void(const ErrorContext&)> h) {
+          self.on_error([h](const ErrorContext& ctx) { py::gil_scoped_acquire gil; h(ctx); }); return &self;
       });
 }

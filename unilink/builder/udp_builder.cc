@@ -17,24 +17,26 @@
 #include "unilink/builder/udp_builder.hpp"
 
 #include <boost/asio/io_context.hpp>
+#include <memory>
 
-#include "unilink/builder/auto_initializer.hpp"
+#include "unilink/concurrency/io_context_manager.hpp"
 
 namespace unilink {
 namespace builder {
 
-UdpBuilder::UdpBuilder() : auto_manage_(false), use_independent_context_(false) {
-  // Ensure background IO service is running
-  AutoInitializer::ensure_io_context_running();
-}
+// --- UdpClientBuilder Implementation ---
 
-std::unique_ptr<wrapper::Udp> UdpBuilder::build() {
-  std::unique_ptr<wrapper::Udp> udp;
+UdpClientBuilder::UdpClientBuilder() : auto_manage_(false), use_independent_context_(false) {}
+
+std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
+  std::shared_ptr<boost::asio::io_context> ioc = nullptr;
   if (use_independent_context_) {
-    udp = std::make_unique<wrapper::Udp>(cfg_, std::make_shared<boost::asio::io_context>());
+    ioc = std::make_shared<boost::asio::io_context>();
+  }
+
+  auto udp = std::make_unique<wrapper::Udp>(cfg_, ioc);
+  if (use_independent_context_) {
     udp->set_manage_external_context(true);
-  } else {
-    udp = std::make_unique<wrapper::Udp>(cfg_);
   }
 
   if (on_data_) udp->on_data(on_data_);
@@ -56,43 +58,118 @@ std::unique_ptr<wrapper::Udp> UdpBuilder::build() {
   return udp;
 }
 
-UdpBuilder& UdpBuilder::auto_manage(bool auto_manage) {
+UdpClientBuilder& UdpClientBuilder::auto_manage(bool auto_manage) {
   auto_manage_ = auto_manage;
   return *this;
 }
 
-UdpBuilder& UdpBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
+UdpClientBuilder& UdpClientBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
   on_data_ = std::move(handler);
   return *this;
 }
 
-UdpBuilder& UdpBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+UdpClientBuilder& UdpClientBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_connect_ = std::move(handler);
   return *this;
 }
 
-UdpBuilder& UdpBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+UdpClientBuilder& UdpClientBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_disconnect_ = std::move(handler);
   return *this;
 }
 
-UdpBuilder& UdpBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
+UdpClientBuilder& UdpClientBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
   on_error_ = std::move(handler);
   return *this;
 }
 
-UdpBuilder& UdpBuilder::set_local_port(uint16_t port) {
+UdpClientBuilder& UdpClientBuilder::set_local_port(uint16_t port) {
   cfg_.local_port = port;
   return *this;
 }
 
-UdpBuilder& UdpBuilder::set_remote(const std::string& address, uint16_t port) {
+UdpClientBuilder& UdpClientBuilder::set_remote(const std::string& address, uint16_t port) {
   cfg_.remote_address = address;
   cfg_.remote_port = port;
   return *this;
 }
 
-UdpBuilder& UdpBuilder::use_independent_context(bool use_independent) {
+UdpClientBuilder& UdpClientBuilder::use_independent_context(bool use_independent) {
+  use_independent_context_ = use_independent;
+  return *this;
+}
+
+// --- UdpServerBuilder Implementation ---
+
+UdpServerBuilder::UdpServerBuilder() : auto_manage_(false), use_independent_context_(false) {}
+
+std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
+  std::shared_ptr<boost::asio::io_context> ioc = nullptr;
+  if (use_independent_context_) {
+    ioc = std::make_shared<boost::asio::io_context>();
+  }
+
+  auto server = std::make_unique<wrapper::UdpServer>(cfg_, ioc);
+  if (use_independent_context_) {
+    server->set_manage_external_context(true);
+  }
+
+  if (on_data_) server->on_data(on_data_);
+  if (on_connect_) server->on_client_connect(on_connect_);
+  if (on_disconnect_) server->on_client_disconnect(on_disconnect_);
+  if (on_error_) server->on_error(on_error_);
+
+  if (framer_factory_) {
+    server->set_framer_factory(framer_factory_);
+  }
+
+  if (on_framed_message_) {
+    server->on_message(on_framed_message_);
+  }
+
+  if (auto_manage_) {
+    server->start();
+  }
+
+  return server;
+}
+
+UdpServerBuilder& UdpServerBuilder::auto_manage(bool auto_manage) {
+  auto_manage_ = auto_manage;
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
+  on_data_ = std::move(handler);
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+  on_connect_ = std::move(handler);
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+  on_disconnect_ = std::move(handler);
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
+  on_error_ = std::move(handler);
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::on_message(std::function<void(const wrapper::MessageContext&)> handler) {
+  on_framed_message_ = std::move(handler);
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::set_local_port(uint16_t port) {
+  cfg_.local_port = port;
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::use_independent_context(bool use_independent) {
   use_independent_context_ = use_independent;
   return *this;
 }
