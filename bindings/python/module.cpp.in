@@ -4,6 +4,8 @@
 #include <pybind11/stl.h>
 
 #include "unilink/unilink.hpp"
+#include "unilink/framer/line_framer.hpp"
+#include "unilink/framer/packet_framer.hpp"
 
 namespace py = pybind11;
 using namespace unilink;
@@ -63,6 +65,21 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("set_retry_interval", &TcpClient::set_retry_interval)
       .def("set_max_retries", &TcpClient::set_max_retries)
       .def("set_connection_timeout", &TcpClient::set_connection_timeout)
+      .def(
+          "use_line_framer",
+          [](TcpClient& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
+            self.set_framer(std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length));
+            return &self;
+          },
+          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("on_message",
+           [](TcpClient& self, std::function<void(py::bytes)> handler) {
+             self.on_message([handler](memory::ConstByteSpan msg) {
+               py::gil_scoped_acquire gil;
+               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+             });
+             return &self;
+           })
       .def("on_data",
            [](TcpClient& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
@@ -107,6 +124,23 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("broadcast", &TcpServer::broadcast)
       .def("send_to", &TcpServer::send_to)
       .def("get_client_count", &TcpServer::get_client_count)
+      .def(
+          "use_line_framer",
+          [](TcpServer& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
+            self.set_framer_factory([delim = delimiter, include_delimiter, max_length]() {
+              return std::make_unique<framer::LineFramer>(delim, include_delimiter, max_length);
+            });
+            return &self;
+          },
+          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("on_message",
+           [](TcpServer& self, std::function<void(const MessageContext&)> handler) {
+             self.on_message([handler](const MessageContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
       .def("on_data",
            [](TcpServer& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
@@ -158,6 +192,21 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("set_parity", &Serial::set_parity)
       .def("set_flow_control", &Serial::set_flow_control)
       .def("set_retry_interval", &Serial::set_retry_interval)
+      .def(
+          "use_line_framer",
+          [](Serial& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
+            self.set_framer(std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length));
+            return &self;
+          },
+          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("on_message",
+           [](Serial& self, std::function<void(py::bytes)> handler) {
+             self.on_message([handler](memory::ConstByteSpan msg) {
+               py::gil_scoped_acquire gil;
+               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+             });
+             return &self;
+           })
       .def("on_data",
            [](Serial& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
@@ -206,6 +255,21 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("set_retry_interval", &UdsClient::set_retry_interval)
       .def("set_max_retries", &UdsClient::set_max_retries)
       .def("set_connection_timeout", &UdsClient::set_connection_timeout)
+      .def(
+          "use_line_framer",
+          [](UdsClient& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
+            self.set_framer(std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length));
+            return &self;
+          },
+          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("on_message",
+           [](UdsClient& self, std::function<void(py::bytes)> handler) {
+             self.on_message([handler](memory::ConstByteSpan msg) {
+               py::gil_scoped_acquire gil;
+               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+             });
+             return &self;
+           })
       .def("on_data",
            [](UdsClient& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
@@ -250,6 +314,23 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("broadcast", &UdsServer::broadcast)
       .def("send_to", &UdsServer::send_to)
       .def("get_client_count", &UdsServer::get_client_count)
+      .def(
+          "use_line_framer",
+          [](UdsServer& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
+            self.set_framer_factory([delim = delimiter, include_delimiter, max_length]() {
+              return std::make_unique<framer::LineFramer>(delim, include_delimiter, max_length);
+            });
+            return &self;
+          },
+          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("on_message",
+           [](UdsServer& self, std::function<void(const MessageContext&)> handler) {
+             self.on_message([handler](const MessageContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
       .def("on_data",
            [](UdsServer& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {
@@ -306,6 +387,21 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send_line", &Udp::send_line)
       .def("is_connected", &Udp::is_connected)
       .def("auto_manage", &Udp::auto_manage, py::arg("manage") = true)
+      .def(
+          "use_line_framer",
+          [](Udp& self, const std::string& delimiter, bool include_delimiter, size_t max_length) {
+            self.set_framer(std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length));
+            return &self;
+          },
+          py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("on_message",
+           [](Udp& self, std::function<void(py::bytes)> handler) {
+             self.on_message([handler](memory::ConstByteSpan msg) {
+               py::gil_scoped_acquire gil;
+               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+             });
+             return &self;
+           })
       .def("on_data",
            [](Udp& self, std::function<void(const MessageContext&)> handler) {
              self.on_data([handler](const MessageContext& ctx) {

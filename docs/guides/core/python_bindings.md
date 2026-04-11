@@ -191,6 +191,38 @@ client.send("Hello over UDS")
 
 ## 🛠️ Advanced Features
 
+### Message Framing (Line/Packet)
+
+Unilink allows you to avoid dealing with raw fragmented bytes by using built-in framers. When a framer is set, you use `on_message` instead of `on_data` to receive completely framed payloads.
+
+```python
+import unilink_py
+
+client = unilink_py.TcpClient("127.0.0.1", 8080)
+
+# Automatically frame incoming bytes by newline ("\n")
+client.use_line_framer("\n", include_delimiter=False, max_length=65536)
+
+# Client's on_message receives raw bytes of the framed payload
+@client.on_message
+def handle_message(msg_bytes):
+    print(f"Received complete line: {msg_bytes.decode('utf-8')}")
+
+client.start()
+```
+
+For servers, the framer is allocated per-session automatically:
+
+```python
+server = unilink_py.TcpServer(8080)
+server.use_line_framer("\n")
+
+# Server's on_message receives a MessageContext with the client_id
+@server.on_message
+def handle_client_message(ctx):
+    print(f"Client {ctx.client_id} sent: {ctx.data}")
+```
+
 ### Threading & GIL
 The bindings are designed to be thread-safe. When C++ triggers a callback, it automatically acquires the Python GIL (Global Interpreter Lock), allowing you to safely run Python code inside handlers. Long-running operations in Python handlers will block other callbacks for that specific channel, so keep them brief.
 
