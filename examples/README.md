@@ -48,21 +48,21 @@ socat - /tmp/ttyB
 ### TCP Communication
 
 ```bash
-# TCP echo server
+# TCP echo server (default: 8080)
 cd tcp/single-echo
-./echo_tcp_server 9000
+./echo_tcp_server
 
-# TCP echo client
+# TCP echo client (default: 127.0.0.1:8080)
 cd tcp/single-echo
-./echo_tcp_client 127.0.0.1 9000
+./echo_tcp_client
 
-# TCP chat server
+# TCP chat server (default: 8080)
 cd tcp/single-chat
-./chat_tcp_server 9000
+./chat_tcp_server
 
-# TCP chat client
+# TCP chat client (default: 127.0.0.1:8080)
 cd tcp/single-chat
-./chat_tcp_client 127.0.0.1 9000
+./chat_tcp_client
 ```
 
 ### UDS Communication

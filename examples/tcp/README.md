@@ -1,86 +1,88 @@
 # TCP Communication Examples
 
-Examples demonstrating TCP network communication using the unilink library.
+TCP examples using the current public API.
 
-## Examples
+## Included Examples
 
-- **single-echo/**: TCP echo server and client for network echo testing
-- **single-chat/**: TCP chat server and client for network chat
-- **multi-chat/**: Multi-client chat server and client
+- `single-echo/`: Single-client echo server and client
+- `single-chat/`: Single-client chat server and client
+- `multi-chat/`: Multi-client chat server and client
 
 ## Common Usage
 
 ```bash
-# Start server
-./server_example <port>
-
-# Connect client
-./client_example <host> <port>
-```
-
-## Network Configuration
-
-### Local Testing
-```bash
 # Server
-./echo_tcp_server 9000
+./server_binary <port>
 
-# Client (same machine)
-./echo_tcp_client 127.0.0.1 9000
+# Client
+./client_binary <host> <port>
 ```
 
-### Remote Testing
+Most binaries also provide sensible defaults when arguments are omitted:
+
+- Server examples default to port `8080`
+- Client examples default to `127.0.0.1:8080`
+
+## Quick Start
+
+### Echo
+
 ```bash
-# Server
-./echo_tcp_server 9000
+# Terminal 1
+./echo_tcp_server
 
-# Client (different machine)
-./echo_tcp_client 192.168.1.100 9000
+# Terminal 2
+./echo_tcp_client
 ```
 
-## Prerequisites
+### Single-Client Chat
 
-- Network connectivity between server and client
-- Available port (not in use by other applications)
-- Firewall configuration (if needed)
+```bash
+# Terminal 1
+./chat_tcp_server
+
+# Terminal 2
+./chat_tcp_client
+```
+
+### Multi-Client Chat
+
+```bash
+# Terminal 1
+./multi_chat_tcp_server
+
+# Terminal 2
+./multi_chat_tcp_client
+
+# Terminal 3
+./multi_chat_tcp_client
+```
+
+## Notes
+
+- These examples use the builder and wrapper API from `unilink/unilink.hpp`.
+- `single-echo` uses `.single_client()` and targeted replies with `send_to(...)`.
+- `single-chat` is intentionally single-client.
+- `multi-chat` uses `.unlimited_clients()` and `broadcast(...)`.
 
 ## Troubleshooting
 
 ### Port Already in Use
+
 ```bash
-# Check what's using the port
 netstat -tulpn | grep :9000
 # or
 lsof -i :9000
+```
 
-# Use a different port
+Run the server on another port if needed:
+
+```bash
 ./echo_tcp_server 9001
 ```
 
 ### Connection Refused
-- Verify server is running
-- Check firewall settings
-- Ensure correct IP address and port
 
-### Firewall Issues
-```bash
-# Linux - allow port through firewall
-sudo ufw allow 9000
-
-# Check firewall status
-sudo ufw status
-```
-
-## Example Workflows
-
-### Single Echo Server/Client
-1. Start server: `./echo_tcp_server 9000`
-2. Start client: `./echo_tcp_client 127.0.0.1 9000`
-3. Type messages in client
-4. Server echoes messages back
-
-### Single Chat Server/Client
-1. Start server: `./chat_tcp_server 9000`
-2. Start client: `./chat_tcp_client 127.0.0.1 9000`
-3. Type messages in client
-4. Server displays received messages
+- Verify the server is already running
+- Check the client host and port
+- Confirm firewall settings for remote connections

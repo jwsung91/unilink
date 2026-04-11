@@ -100,6 +100,8 @@ You do **not** need to read everything to get started.
 * [TCP Examples](examples/tcp/)
 * [UDP Examples](examples/udp/)
 * [Serial Examples](examples/serial/)
+* [UDS Examples](examples/uds/)
+* [Common Examples](examples/common/)
 * [Tutorials](docs/tutorials/)
 * [Documentation Index](docs/index.md)
 
