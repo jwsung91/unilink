@@ -203,6 +203,9 @@ client = unilink_py.TcpClient("127.0.0.1", 8080)
 # Automatically frame incoming bytes by newline ("\n")
 client.use_line_framer("\n", include_delimiter=False, max_length=65536)
 
+# Or use a PacketFramer for binary protocols (e.g., [0x02] ... [0x03])
+client.use_packet_framer([0x02], [0x03], 1024)
+
 # Client's on_message receives raw bytes of the framed payload
 @client.on_message
 def handle_message(msg_bytes):

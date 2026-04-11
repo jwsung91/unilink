@@ -19,6 +19,7 @@
 #include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
+#include <thread>
 #include <vector>
 
 #include "unilink/base/common.hpp"

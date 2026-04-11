@@ -49,6 +49,20 @@ PYBIND11_MODULE(unilink_py, m) {
       .def_property_readonly("message", [](const ErrorContext& self) { return std::string(self.message()); })
       .def_property_readonly("client_id", &ErrorContext::client_id);
 
+  // Framer Interface (Base)
+  py::class_<framer::IFramer, std::shared_ptr<framer::IFramer>>(m, "IFramer");
+
+  // LineFramer
+  py::class_<framer::LineFramer, framer::IFramer, std::shared_ptr<framer::LineFramer>>(m, "LineFramer")
+      .def(py::init<const std::string&, bool, size_t>(), py::arg("delimiter") = "\n",
+           py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("reset", &framer::LineFramer::reset);
+
+  // PacketFramer
+  py::class_<framer::PacketFramer, framer::IFramer, std::shared_ptr<framer::PacketFramer>>(m, "PacketFramer")
+      .def(py::init<const std::vector<uint8_t>&, const std::vector<uint8_t>&, size_t>())
+      .def("reset", &framer::PacketFramer::reset);
+
   // TcpClient
   py::class_<TcpClient, std::shared_ptr<TcpClient>>(m, "TcpClient")
       .def(py::init<const std::string&, uint16_t>())
@@ -72,6 +86,11 @@ PYBIND11_MODULE(unilink_py, m) {
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer",
+           [](TcpClient& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
+             self.set_framer(std::make_unique<framer::PacketFramer>(start, end, max_length));
+             return &self;
+           })
       .def("on_message",
            [](TcpClient& self, std::function<void(py::bytes)> handler) {
              self.on_message([handler](memory::ConstByteSpan msg) {
@@ -133,6 +152,13 @@ PYBIND11_MODULE(unilink_py, m) {
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer",
+           [](TcpServer& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
+             self.set_framer_factory([start, end, max_length]() {
+               return std::make_unique<framer::PacketFramer>(start, end, max_length);
+             });
+             return &self;
+           })
       .def("on_message",
            [](TcpServer& self, std::function<void(const MessageContext&)> handler) {
              self.on_message([handler](const MessageContext& ctx) {
@@ -199,6 +225,11 @@ PYBIND11_MODULE(unilink_py, m) {
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer",
+           [](Serial& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
+             self.set_framer(std::make_unique<framer::PacketFramer>(start, end, max_length));
+             return &self;
+           })
       .def("on_message",
            [](Serial& self, std::function<void(py::bytes)> handler) {
              self.on_message([handler](memory::ConstByteSpan msg) {
@@ -262,6 +293,11 @@ PYBIND11_MODULE(unilink_py, m) {
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer",
+           [](UdsClient& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
+             self.set_framer(std::make_unique<framer::PacketFramer>(start, end, max_length));
+             return &self;
+           })
       .def("on_message",
            [](UdsClient& self, std::function<void(py::bytes)> handler) {
              self.on_message([handler](memory::ConstByteSpan msg) {
@@ -323,6 +359,13 @@ PYBIND11_MODULE(unilink_py, m) {
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer",
+           [](UdsServer& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
+             self.set_framer_factory([start, end, max_length]() {
+               return std::make_unique<framer::PacketFramer>(start, end, max_length);
+             });
+             return &self;
+           })
       .def("on_message",
            [](UdsServer& self, std::function<void(const MessageContext&)> handler) {
              self.on_message([handler](const MessageContext& ctx) {
@@ -394,6 +437,11 @@ PYBIND11_MODULE(unilink_py, m) {
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
+      .def("use_packet_framer",
+           [](Udp& self, const std::vector<uint8_t>& start, const std::vector<uint8_t>& end, size_t max_length) {
+             self.set_framer(std::make_unique<framer::PacketFramer>(start, end, max_length));
+             return &self;
+           })
       .def("on_message",
            [](Udp& self, std::function<void(py::bytes)> handler) {
              self.on_message([handler](memory::ConstByteSpan msg) {
