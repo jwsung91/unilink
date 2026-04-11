@@ -152,6 +152,7 @@ cmake -S . -B build \
 
 ## Next Steps
 
-- [Quick Start Guide](QUICKSTART.md)
-- [API Reference](../reference/API_GUIDE.md)
+- [Quick Start Guide](../core/quickstart.md)
+- [API Reference](../reference/api_guide.md)
+- [Implementation Status](../../implementation_status.md)
 - [Examples](../../examples/)

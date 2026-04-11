@@ -734,6 +734,6 @@ Unilink's architecture emphasizes:
 
 **See Also:**
 
-- [Design Patterns](design_patterns.md)
-- [Threading Model](threading_model.md)
-- [Performance Guide](../guides/performance_tuning.md)
+- [Runtime Behavior](runtime_behavior.md)
+- [Memory Safety](memory_safety.md)
+- [Performance Guide](../guides/advanced/performance.md)

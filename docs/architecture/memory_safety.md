@@ -634,7 +634,7 @@ All memory safety features are tested in CI/CD:
 - ✅ ThreadSanitizer enabled (selected tests)
 - ✅ Valgrind memcheck
 
-See [Testing Guide](../guides/testing.md) for details.
+See [Testing Guide](../guides/core/testing.md) for details.
 
 ---
 
@@ -642,5 +642,5 @@ See [Testing Guide](../guides/testing.md) for details.
 
 - [Runtime Behavior](runtime_behavior.md) - Threading and execution model
 - [System Overview](README.md) - High-level architecture
-- [Testing Guide](../guides/testing.md) - Memory safety testing
-- [Best Practices](../guides/best_practices.md) - Safe coding patterns
+- [Testing Guide](../guides/core/testing.md) - Memory safety testing
+- [Best Practices](../guides/core/best_practices.md) - Safe coding patterns

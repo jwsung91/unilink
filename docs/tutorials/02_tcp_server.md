@@ -1,10 +1,10 @@
-# Tutorial 2: Building a TCP Server
+# Building a TCP Server
 
 Learn how to create a robust TCP server with unilink.
 
 **Duration**: 20 minutes  
 **Difficulty**: Beginner to Intermediate  
-**Prerequisites**: [Tutorial 1: Getting Started](01_getting_started.md)
+**Prerequisites**: [Getting Started](01_getting_started.md)
 
 ---
 
@@ -558,9 +558,11 @@ struct RateLimiter {
 
 ## Next Steps
 
-- [Tutorial 3: Serial Communication →](03_serial_communication.md)
-- [Best Practices Guide](../guides/best_practices.md)
-- [Performance Tuning](../guides/performance_tuning.md)
+- [UDS Communication →](03_uds_communication.md)
+- [Serial Communication](04_serial_communication.md)
+- [UDP Communication](05_udp_communication.md)
+- [Best Practices Guide](../guides/core/best_practices.md)
+- [Performance Guide](../guides/advanced/performance.md)
 
 ---
 
@@ -591,5 +593,4 @@ See [examples/tutorials/README.md](../../examples/tutorials/README.md) for detai
 ---
 
 **Previous**: [← Getting Started](01_getting_started.md)  
-**Next**: [Serial Communication →](03_serial_communication.md)
-
+**Next**: [UDS Communication →](03_uds_communication.md)

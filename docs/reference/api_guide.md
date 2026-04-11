@@ -909,8 +909,8 @@ auto remote_client = unilink::tcp_client("remote.com", 8080)
 ### 4. Enable Logging for Debugging
 
 ```cpp
-unilink::common::Logger::instance().set_level(unilink::common::LogLevel::DEBUG);
-unilink::common::Logger::instance().set_console_output(true);
+unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+unilink::diagnostics::Logger::instance().set_console_output(true);
 ```
 
 ### 5. Use Member Functions for OOP Design

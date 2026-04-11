@@ -12,22 +12,23 @@
 
 ## Description
 
-Simple, cross-platform async C++ communication library for Serial, TCP, and UDP
+Simple async C++ communication library for Serial, TCP, UDP, and Unix Domain Sockets
 
-`unilink` provides a unified interface for asynchronous communication across different transports, allowing applications to switch between Serial, TCP, and UDP with minimal code changes.
+`unilink` provides a unified interface for asynchronous communication across different transports, allowing applications to switch between Serial, TCP, UDP, and UDS with minimal code changes. The public C++ API exposes builders and wrappers for all four transport families; Python bindings currently cover TCP client/server, Serial, and UDP.
 
 The project prioritizes **API clarity, predictable runtime behavior, and stability** over rapid feature expansion.
 
 ## Feature Highlights
 
-*   **Zero-copy memory safety via SafeSpan**: Efficient data handling without unnecessary copies.
-*   **Fluent API with CRTP Builders**: Type-safe configuration with improved method chaining.
-*   **Unified Async Interface**: Consistent API across TCP, UDP, and Serial transports.
+* **Unified transport surface**: Consistent builders and wrappers for TCP client/server, UDP, Serial, and UDS.
+* **Zero-copy memory safety via SafeSpan**: Efficient data handling without unnecessary copies.
+* **Fluent API with CRTP Builders**: Type-safe configuration with improved method chaining.
+* **Tested runtime behavior**: Unit, integration, and end-to-end test suites are part of the repository and documented in `test/`.
 
 ## Requirements
 
-*   **C++17 compliant compiler** (required)
-*   CMake 3.10 or later
+* **C++17 compliant compiler** (required)
+* CMake 3.10 or later
 
 ## 📦 Installation
 
@@ -41,16 +42,18 @@ For CMake usage, source builds, and other installation options, see the [Install
 
 ## 🐍 Python Bindings
 
-Unilink provides Python bindings for core functionality (`TcpClient`, `TcpServer`, `Serial`, `Udp`).
+Unilink provides Python bindings for core functionality (`TcpClient`, `TcpServer`, `Serial`, `Udp`). UDS wrappers are available in the C++ API but are not currently exposed in `unilink_py`.
 
 For a complete guide, see the **[Python Bindings Guide](docs/guides/core/python_bindings.md)**.
 
 ### Prerequisites
+
 * Python 3.8+ (dev headers)
 * pybind11 (`sudo apt-get install pybind11-dev python3-pybind11` on Ubuntu)
 * Boost (`boost-system`, `boost-asio`, `boost-thread`)
 
 ### Build
+
 Pass `-DBUILD_PYTHON_BINDINGS=ON` to CMake:
 
 ```bash
@@ -76,12 +79,13 @@ You do **not** need to read everything to get started.
 * [Installation Guide](docs/guides/setup/installation.md) – Package, source, and build options
 * [Build Guide](docs/guides/setup/build_guide.md) – Build configurations and flags
 * [Requirements](docs/guides/setup/requirements.md) – Supported platforms and dependencies
+* [Implementation Status](docs/implementation_status.md) – Current codebase snapshot, verified scope, and known gaps
 
 ### 🏗️ Architecture & Design
 
 * [Runtime Behavior](docs/architecture/runtime_behavior.md) – Threading model, reconnection, backpressure
 * [Memory Safety](docs/architecture/memory_safety.md) – Ownership rules and safety guarantees
-* [System Overview](docs/architecture/system_overview.md) – High-level structure
+* [Architecture Overview](docs/architecture/README.md) – High-level structure and layer responsibilities
 
 ### 🔧 Guides & Reference
 

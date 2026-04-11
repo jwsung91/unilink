@@ -223,6 +223,5 @@ sudo apt install cmake
 ## Next Steps
 
 - [Build Guide](build_guide.md) - Build instructions for different configurations
-- [Quick Start Guide](QUICKSTART.md) - Get started with unilink
-- [Troubleshooting](troubleshooting.md) - Common issues and solutions
-
+- [Quick Start Guide](../core/quickstart.md) - Get started with unilink
+- [Troubleshooting](../core/troubleshooting.md) - Common issues and solutions

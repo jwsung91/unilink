@@ -631,16 +631,16 @@ unilink::common::ThreadSafeState<State> state_;
 // In main() or initialization
 void setup_debugging() {
     // Set debug log level
-    unilink::common::Logger::instance().set_level(unilink::common::LogLevel::DEBUG);
-    unilink::common::Logger::instance().set_console_output(true);
-    unilink::common::Logger::instance().set_file_output("debug.log");
+    unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+    unilink::diagnostics::Logger::instance().set_console_output(true);
+    unilink::diagnostics::Logger::instance().set_file_output("debug.log");
     
     // Enable error handler
-    unilink::common::ErrorHandler::instance().set_min_error_level(
-        unilink::common::ErrorLevel::INFO
+    unilink::diagnostics::ErrorHandler::instance().set_min_error_level(
+        unilink::diagnostics::ErrorLevel::INFO
     );
-    unilink::common::ErrorHandler::instance().register_callback(
-        [](const unilink::common::ErrorInfo& error) {
+    unilink::diagnostics::ErrorHandler::instance().register_callback(
+        [](const unilink::diagnostics::ErrorInfo& error) {
             std::cerr << "[ERROR] " << error.get_summary() << std::endl;
         }
     );
@@ -700,7 +700,7 @@ nc localhost 8080 < test_data.txt
 If you're still experiencing issues:
 
 1. **Check Examples**: Look at `examples/` directory
-2. **Read API Guide**: See `docs/reference/API_GUIDE.md`
+2. **Read API Guide**: See `docs/reference/api_guide.md`
 3. **Search Issues**: https://github.com/jwsung91/unilink/issues
 4. **Ask Community**: Create a new issue with:
    - Minimal reproducible example
@@ -712,5 +712,5 @@ If you're still experiencing issues:
 
 **See Also:**
 - [Best Practices](best_practices.md)
-- [Performance Tuning](performance_tuning.md)
-- [API Reference](../reference/API_GUIDE.md)
+- [Performance Guide](../advanced/performance.md)
+- [API Reference](../reference/api_guide.md)

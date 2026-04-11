@@ -80,8 +80,8 @@ auto client = unilink::tcp_client("server.com", 8080)
 ```cpp
 // GOOD - Centralized error management
 void setup_error_handler() {
-    unilink::common::ErrorHandler::instance()
-        .register_callback([](const ErrorInfo& error) {
+    unilink::diagnostics::ErrorHandler::instance()
+        .register_callback([](const unilink::diagnostics::ErrorInfo& error) {
             // Log to file
             log_to_file(error);
             
@@ -287,8 +287,9 @@ client->send(large_data);  // Copy entire string
 
 ```cpp
 // GOOD - Async logging for performance
-unilink::common::Logger::instance().enable_async(true);
-unilink::common::Logger::instance().set_batch_size(100);
+unilink::diagnostics::AsyncLogConfig config;
+config.batch_size = 100;
+unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 
 // Now logging is non-blocking
 logger.info("component", "operation", "message");  // Fast!
@@ -598,11 +599,11 @@ logger.error("client", "connect", "Connected to server");  // Not an error!
 ```cpp
 // GOOD - Debug mode for development
 #ifdef DEBUG
-    unilink::common::Logger::instance().set_level(LogLevel::DEBUG);
-    unilink::common::ErrorHandler::instance().set_min_error_level(ErrorLevel::INFO);
+    unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
+    unilink::diagnostics::ErrorHandler::instance().set_min_error_level(unilink::diagnostics::ErrorLevel::INFO);
 #else
-    unilink::common::Logger::instance().set_level(LogLevel::WARNING);
-    unilink::common::ErrorHandler::instance().set_min_error_level(ErrorLevel::WARNING);
+    unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::WARNING);
+    unilink::diagnostics::ErrorHandler::instance().set_min_error_level(unilink::diagnostics::ErrorLevel::WARNING);
 #endif
 ```
 

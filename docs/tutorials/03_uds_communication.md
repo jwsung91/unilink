@@ -1,4 +1,4 @@
-# Tutorial 03: Local IPC with Unix Domain Sockets (UDS)
+# Local IPC with Unix Domain Sockets (UDS)
 
 In this tutorial, you'll learn how to implement high-performance local inter-process communication using Unix Domain Sockets (UDS) in Unilink.
 
@@ -119,3 +119,16 @@ Since the socket is a file, you can control which users can connect to your serv
 
 ## Summary
 You have successfully implemented a local IPC system using Unilink's UDS support. The Builder API makes it easy to switch between TCP and UDS by simply changing one line of code, while keeping your business logic intact.
+
+---
+
+## Next Steps
+
+- [Serial Communication](04_serial_communication.md)
+- [UDP Communication](05_udp_communication.md)
+- [API Reference](../reference/api_guide.md#uds-communication)
+
+---
+
+**Previous**: [← Building a TCP Server](02_tcp_server.md)
+**Next**: [Serial Communication →](04_serial_communication.md)

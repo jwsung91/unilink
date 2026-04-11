@@ -6,19 +6,19 @@ Ready-to-compile examples from the unilink tutorials.
 
 ## 📚 Included Examples
 
-### Tutorial 1: Getting Started
+### Getting Started
 
 | Example | File | Description | Tutorial Link |
 |---------|------|-------------|---------------|
-| **Simple Client** | `simple_client.cpp` | Minimal 30-second example | [Tutorial 1](../../docs/tutorials/01_getting_started.md) |
-| **My First Client** | `my_first_client.cpp` | Complete first application | [Tutorial 1](../../docs/tutorials/01_getting_started.md) |
+| **Simple Client** | `simple_client.cpp` | Minimal 30-second example | [Getting Started](../../docs/tutorials/01_getting_started.md) |
+| **My First Client** | `my_first_client.cpp` | Complete first application | [Getting Started](../../docs/tutorials/01_getting_started.md) |
 
-### Tutorial 2: TCP Server
+### TCP Server
 
 | Example | File | Description | Tutorial Link |
 |---------|------|-------------|---------------|
-| **Echo Server** | `echo_server.cpp` | Basic echo server | [Tutorial 2](../../docs/tutorials/02_tcp_server.md) |
-| **Chat Server** | `chat_server.cpp` | Multi-client chat server | [Tutorial 2](../../docs/tutorials/02_tcp_server.md) |
+| **Echo Server** | `echo_server.cpp` | Basic echo server | [TCP Server](../../docs/tutorials/02_tcp_server.md) |
+| **Chat Server** | `chat_server.cpp` | Multi-client chat server | [TCP Server](../../docs/tutorials/02_tcp_server.md) |
 
 ---
 
@@ -119,7 +119,7 @@ Hello everyone!      # Send a message
 
 Each example corresponds to a tutorial in the documentation:
 
-### Tutorial 1: Getting Started
+### Getting Started
 - **Documentation**: [docs/tutorials/01_getting_started.md](../../docs/tutorials/01_getting_started.md)
 - **Examples**: 
   - `simple_client.cpp` - The 30-second example
@@ -133,7 +133,7 @@ Each example corresponds to a tutorial in the documentation:
 
 ---
 
-### Tutorial 2: Building a TCP Server
+### Building a TCP Server
 - **Documentation**: [docs/tutorials/02_tcp_server.md](../../docs/tutorials/02_tcp_server.md)
 - **Examples**:
   - `echo_server.cpp` - Basic echo server
@@ -144,6 +144,20 @@ Each example corresponds to a tutorial in the documentation:
 - Accepting multiple clients
 - Broadcasting messages
 - Implementing commands
+
+---
+
+## Additional Protocol Tutorials
+
+Not every tutorial has dedicated files under `examples/tutorials/`. The Serial and UDP tutorials intentionally reuse the protocol-specific example directories instead of duplicating near-identical sample programs.
+
+### Serial Communication
+- **Documentation**: [docs/tutorials/04_serial_communication.md](../../docs/tutorials/04_serial_communication.md)
+- **Examples**: [examples/serial/README.md](../../examples/serial/README.md)
+
+### UDP Communication
+- **Documentation**: [docs/tutorials/05_udp_communication.md](../../docs/tutorials/05_udp_communication.md)
+- **Examples**: [examples/udp/README.md](../../examples/udp/README.md)
 
 ---
 
@@ -290,19 +304,18 @@ lsof -i :8080
 After trying these examples:
 
 1. **Read the Tutorials**: [docs/tutorials/](../../docs/tutorials/)
-2. **Explore API Guide**: [docs/reference/API_GUIDE.md](../../docs/reference/API_GUIDE.md)
-3. **Learn Best Practices**: [docs/guides/best_practices.md](../../docs/guides/best_practices.md)
+2. **Explore API Guide**: [docs/reference/api_guide.md](../../docs/reference/api_guide.md)
+3. **Learn Best Practices**: [docs/guides/core/best_practices.md](../../docs/guides/core/best_practices.md)
 4. **Build Your Own**: Modify these examples or create new ones!
 
 ---
 
 ## 🆘 Need Help?
 
-- **Can't compile?** See [Troubleshooting Guide](../../docs/guides/troubleshooting.md#compilation-errors)
-- **Connection issues?** See [Troubleshooting Guide](../../docs/guides/troubleshooting.md#connection-issues)
-- **Questions?** Check the [Documentation Index](../../docs/INDEX.md)
+- **Can't compile?** See [Troubleshooting Guide](../../docs/guides/core/troubleshooting.md#compilation-errors)
+- **Connection issues?** See [Troubleshooting Guide](../../docs/guides/core/troubleshooting.md#connection-issues)
+- **Questions?** Check the [Documentation Index](../../docs/index.md)
 
 ---
 
 **Happy Coding!** 🚀
-
