@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-11 08:00:32</td>
+            <td class="headerValue">2026-04-11 09:30:28</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">55</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">295</td>
+            <td class="headerCovTableEntry">293</td>
             <td class="headerCovTableEntry">730</td>
-            <td class="headerCovTableEntryLo">40.4 %</td>
+            <td class="headerCovTableEntryLo">40.1 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -457,7 +457,7 @@
 <a name="341"><span class="lineNum">     341 </span>  [<span class="branchCov" title="Branch 0 was taken 24 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 20 times"> + </span><span class="branchCov" title="Branch 3 was taken 4 times"> + </span> :<span class="lineCov">         24 :     if (stop_requested_.load() || !on_bp_) return;</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 20 times"> + </span><span class="branchCov" title="Branch 5 was taken 4 times"> + </span>]
 <a name="342"><span class="lineNum">     342 </span>                :            : </a>
-<a name="343"><span class="lineNum">     343 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">          4 :     if (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</span></a>
+<a name="343"><span class="lineNum">     343 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          4 :     if (!backpressure_active_ &amp;&amp; queued_bytes &gt;= bp_high_) {</span></a>
 <a name="344"><span class="lineNum">     344 </span>                :<span class="lineCov">          1 :       backpressure_active_ = true;</span></a>
 <a name="345"><span class="lineNum">     345 </span>                :            :       try {</a>
 <a name="346"><span class="lineNum">     346 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         on_bp_(queued_bytes);</span></a>
@@ -471,7 +471,7 @@
 <span class="lineNum">         </span><span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchNoCov" title="Branch 6 was not taken"> - </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoCov" title="Branch 8 was not taken"> - </span> 
 <span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 9 was not taken"> - </span>]
 <a name="351"><span class="lineNum">     351 </span>                :<span class="lineNoCov">          0 :       }</span></a>
-<a name="352"><span class="lineNum">     352 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>]:<span class="lineCov">          4 :     } else if (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</span></a>
+<a name="352"><span class="lineNum">     352 </span>  [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 2 times"> + </span>]:<span class="lineCov">          4 :     } else if (backpressure_active_ &amp;&amp; queued_bytes &lt;= bp_low_) {</span></a>
 <a name="353"><span class="lineNum">     353 </span>                :<span class="lineCov">          1 :       backpressure_active_ = false;</span></a>
 <a name="354"><span class="lineNum">     354 </span>                :            :       try {</a>
 <a name="355"><span class="lineNum">     355 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         on_bp_(queued_bytes);</span></a>
