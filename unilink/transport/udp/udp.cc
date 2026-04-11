@@ -241,6 +241,7 @@ struct UdpChannel::Impl {
       report_backpressure(queue_bytes_);
       return;
     }
+
     if (!remote_endpoint_) {
       // Try to set from config if possible
       set_remote_from_config();
