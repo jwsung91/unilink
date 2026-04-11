@@ -88,7 +88,7 @@ $(document).ready(function(){initNavTree('md_docs_test_structure.html',''); init
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>This document describes how the test tree is organized and how to work with it, without embedding release-specific counts or dated snapshots.</p>
-<h1><a class="anchor" id="autotoc_md803"></a>
+<h1><a class="anchor" id="autotoc_md802"></a>
 Layout</h1>
 <div class="fragment"><div class="line">test/</div>
 <div class="line">├── unit/          # Unit and transport-focused tests</div>
@@ -99,7 +99,7 @@ Layout</h1>
 <div class="line">├── mocks/         # Additional mock types used by tests</div>
 <div class="line">├── utils/         # Shared test helpers and constants</div>
 <div class="line">└── CMakeLists.txt # Main test registration</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md804"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md803"></a>
 What Each Area Covers</h1>
 <ul>
 <li><code>unit/</code>: isolated component behavior, transport edge cases, wrapper behavior, framing, config, and utility coverage</li>
@@ -107,7 +107,7 @@ What Each Area Covers</h1>
 <li><code>e2e/</code>: scenario-level behavior, recovery cases, and stress-oriented coverage</li>
 <li><code>performance/</code>: optional benchmarks that are only registered when explicitly enabled</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md805"></a>
+<h1><a class="anchor" id="autotoc_md804"></a>
 Build-Time Controls</h1>
 <p>The test tree is controlled by CMake options rather than hardcoded assumptions in this document.</p>
 <ul>
@@ -115,20 +115,20 @@ Build-Time Controls</h1>
 <li><code>UNILINK_ENABLE_PERFORMANCE_TESTS</code>: registers optional performance tests</li>
 </ul>
 <p>Treat <code>test/CMakeLists.txt</code> and the active build directory as the source of truth for what is currently registered.</p>
-<h1><a class="anchor" id="autotoc_md806"></a>
+<h1><a class="anchor" id="autotoc_md805"></a>
 Running Tests</h1>
-<h2><a class="anchor" id="autotoc_md807"></a>
+<h2><a class="anchor" id="autotoc_md806"></a>
 Run All Registered Tests</h2>
 <div class="fragment"><div class="line">cd build</div>
 <div class="line">ctest --output-on-failure</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md808"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md807"></a>
 Run By Broad Category</h2>
 <div class="fragment"><div class="line">ctest -L unit</div>
 <div class="line">ctest -L integration</div>
 <div class="line">ctest -L e2e</div>
 <div class="line">ctest -L performance</div>
 </div><!-- fragment --><p><code>performance</code> only returns results if the build was configured with <code>-DUNILINK_ENABLE_PERFORMANCE_TESTS=ON</code>.</p>
-<h2><a class="anchor" id="autotoc_md809"></a>
+<h2><a class="anchor" id="autotoc_md808"></a>
 Useful Focused Runs</h2>
 <div class="fragment"><div class="line"># TCP-heavy tests</div>
 <div class="line">ctest -L tcp</div>
@@ -139,21 +139,21 @@ Useful Focused Runs</h2>
 <div class="line"># Security and contract checks</div>
 <div class="line">ctest -L security</div>
 <div class="line">ctest -L contract</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md810"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md809"></a>
 Inspect What Is Currently Registered</h2>
 <div class="fragment"><div class="line">ctest -N</div>
 <div class="line">ctest -N -L unit</div>
 <div class="line">ctest -N -L integration</div>
 <div class="line">ctest -N -L e2e</div>
 </div><!-- fragment --><p>Use these commands instead of storing counts in documentation. The exact number of tests changes as coverage grows.</p>
-<h1><a class="anchor" id="autotoc_md811"></a>
+<h1><a class="anchor" id="autotoc_md810"></a>
 Notes</h1>
 <ul>
 <li>Label sets are not necessarily exclusive.</li>
 <li>Performance sources may exist in the tree even when no performance tests are currently registered.</li>
 <li>When test organization changes, update the commands and directory descriptions here, not the output of a particular local run.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md812"></a>
+<h1><a class="anchor" id="autotoc_md811"></a>
 CI/CD Integration</h1>
 <p>Repository workflows live under <code>.github/workflows/</code>. If labels or test grouping changes, keep CI filters in sync with the commands documented here. </p>
 </div></div><!-- contents -->
@@ -162,7 +162,7 @@ CI/CD Integration</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 05:04:31 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 06:33:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
