@@ -1,0 +1,27 @@
+var structunilink_1_1wrapper_1_1UdsServer_1_1Impl =
+[
+    [ "Impl", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#af766ae773fe390cb7862764d5074705e", null ],
+    [ "Impl", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#adff0eea47835e9668bb4bdaef420936f", null ],
+    [ "Impl", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a82fa898e3d4786c76704919dea8dae46", null ],
+    [ "~Impl", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#af217a8fca8c47896ee2ab3406a7742cf", null ],
+    [ "setup_internal_handlers", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a10ed4dde741e2d4077f3df717d38cde5", null ],
+    [ "start", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a2883eed89960c9412febc1635c3bfa4d", null ],
+    [ "stop", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a4f1a04de7b94441ff9d01a4bbb7b8492", null ],
+    [ "alive_marker_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a6f34ebe15e5ab19e3b862f7f49586c82", null ],
+    [ "auto_manage_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a6214f78d03b7fd17d4d4878287357929", null ],
+    [ "client_connect_handler_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#ad61859eaa9a10cfdab96cf59a3c84a56", null ],
+    [ "client_disconnect_handler_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#ae21ba9040a7052fe4f62e113136d7416", null ],
+    [ "data_handler_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a30e750b303c15413d437c34599a178a1", null ],
+    [ "error_handler_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a71b77f0cbb88e0fbb39335c883020e14", null ],
+    [ "external_ioc_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a950da4097adb37256be0c30b9f0eb892", null ],
+    [ "external_thread_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a520c40a1c437857421817eeabe2671d5", null ],
+    [ "manage_external_context_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a2c447ab1b6d1b18417d04f44015ba1c0", null ],
+    [ "max_clients_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a145ae8333bd43e43d7e73af6b73eecee", null ],
+    [ "mutex_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#ab6c771ff12f258a039357706f990b2c0", null ],
+    [ "server_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#affc3ad213d154dea33b18725c3dcf640", null ],
+    [ "socket_path_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#ac1a69f0e343a99fd3dc14eac782e5b54", null ],
+    [ "start_promise_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a7a36826a9630ee676d86fd288f62ef24", null ],
+    [ "started_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a3b1ebf9da8a6f97e2db5f15e7e0acf1d", null ],
+    [ "use_external_context_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a62121ddcf8535498f9f3359c6eb4ec59", null ],
+    [ "work_guard_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#aa7418b5f6758c56487d19394c5abd759", null ]
+];

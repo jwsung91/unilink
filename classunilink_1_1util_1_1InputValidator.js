@@ -4,6 +4,7 @@ var classunilink_1_1util_1_1InputValidator =
     [ "is_valid_hostname", "classunilink_1_1util_1_1InputValidator.html#a23535e3c86d42f6527152317ddc91036", null ],
     [ "is_valid_ipv4", "classunilink_1_1util_1_1InputValidator.html#a9a174cc017bb418ea82a6c42ecdde04c", null ],
     [ "is_valid_ipv6", "classunilink_1_1util_1_1InputValidator.html#a7bbf5901f38eff733e30d233ac9ba431", null ],
+    [ "is_valid_uds_path", "classunilink_1_1util_1_1InputValidator.html#a3298d974c57b24bd36f9aad2f3520e2d", null ],
     [ "validate_baud_rate", "classunilink_1_1util_1_1InputValidator.html#a0bba2f5dbc1991c39b40f1d682d4436c", null ],
     [ "validate_buffer_size", "classunilink_1_1util_1_1InputValidator.html#ade59397099a8e6f0077f75376eb65325", null ],
     [ "validate_data_bits", "classunilink_1_1util_1_1InputValidator.html#aaf1398c1116806a5fa2aa394b088c320", null ],
@@ -22,5 +23,6 @@ var classunilink_1_1util_1_1InputValidator =
     [ "validate_retry_interval", "classunilink_1_1util_1_1InputValidator.html#a1cf3a8c751134194dc6e5df247cd6632", null ],
     [ "validate_stop_bits", "classunilink_1_1util_1_1InputValidator.html#a059006a014b622c0cfef368120d3b352", null ],
     [ "validate_string_length", "classunilink_1_1util_1_1InputValidator.html#acd37ecd589d7955ef4a2eef0d9b5639a", null ],
-    [ "validate_timeout", "classunilink_1_1util_1_1InputValidator.html#a04e8a5a639ef4ceee8ccf1f4b3da9fe6", null ]
+    [ "validate_timeout", "classunilink_1_1util_1_1InputValidator.html#a04e8a5a639ef4ceee8ccf1f4b3da9fe6", null ],
+    [ "validate_uds_path", "classunilink_1_1util_1_1InputValidator.html#abc23ab99a94244520ca487c096701080", null ]
 ];

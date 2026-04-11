@@ -103,6 +103,8 @@ Inheritance diagram for unilink::interface::Channel:</div>
 <area href="classunilink_1_1transport_1_1TcpClient.html" alt="unilink::transport::TcpClient" shape="rect" coords="189,56,368,80"/>
 <area href="classunilink_1_1transport_1_1TcpServer.html" title="Thread-safe TCP Server implementation." alt="unilink::transport::TcpServer" shape="rect" coords="378,56,557,80"/>
 <area href="classunilink_1_1transport_1_1UdpChannel.html" title="UDP Transport implementation." alt="unilink::transport::UdpChannel" shape="rect" coords="567,56,746,80"/>
+<area href="classunilink_1_1transport_1_1UdsClient.html" title="Thread-safe UDS Client implementation." alt="unilink::transport::UdsClient" shape="rect" coords="756,56,935,80"/>
+<area href="classunilink_1_1transport_1_1UdsServer.html" title="Thread-safe UDS Server implementation." alt="unilink::transport::UdsServer" shape="rect" coords="945,56,1124,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -117,8 +119,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2c3cac3c076f640761003abffc15b3e0"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a2c3cac3c076f640761003abffc15b3e0">~Channel</a> ()=default</td></tr>
-<tr class="separator:a2c3cac3c076f640761003abffc15b3e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa69624945cfeb9b00145d9ea7aacd261"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#aa69624945cfeb9b00145d9ea7aacd261">~Channel</a> ()</td></tr>
+<tr class="separator:aa69624945cfeb9b00145d9ea7aacd261"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e33349d34d5aa72709307ed52500a4e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0e33349d34d5aa72709307ed52500a4e">start</a> ()=0</td></tr>
 <tr class="separator:a0e33349d34d5aa72709307ed52500a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98ff6856a5ebd04adc7a9760437c9cf1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a98ff6856a5ebd04adc7a9760437c9cf1">stop</a> ()=0</td></tr>
@@ -191,8 +193,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2c3cac3c076f640761003abffc15b3e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c3cac3c076f640761003abffc15b3e0">&#9670;&nbsp;</a></span>~Channel()</h2>
+<a id="aa69624945cfeb9b00145d9ea7aacd261"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa69624945cfeb9b00145d9ea7aacd261">&#9670;&nbsp;</a></span>~Channel()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -201,7 +203,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual unilink::interface::Channel::~Channel </td>
+          <td class="memname">unilink::interface::Channel::~Channel </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -241,7 +243,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a753af71ad739e467588e3d6c3af9c5ef">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a0fcd07ee0c01d113f98d89e2b16966dc">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a996369a17ecad069edd0c20c19689e9d">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a66dcdee06d54ec2370dcdcbafef40875">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a9c2b6c07b63911273deb53e4f3a863b3">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a753af71ad739e467588e3d6c3af9c5ef">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a0fcd07ee0c01d113f98d89e2b16966dc">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a996369a17ecad069edd0c20c19689e9d">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a66dcdee06d54ec2370dcdcbafef40875">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -269,7 +271,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a1e1e619bca97afc8fc4deb86cce82551">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#af1aa40f2c75c5a7921370440ae00ed82">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#af53cb4fa2887e8ba2d8cd5848870b8ca">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a36c1543fbe8a209eaecbb26115c65044">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a0121ea0f97534722feb3ebe191c70438">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a1e1e619bca97afc8fc4deb86cce82551">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#af1aa40f2c75c5a7921370440ae00ed82">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#af53cb4fa2887e8ba2d8cd5848870b8ca">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a36c1543fbe8a209eaecbb26115c65044">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -297,7 +299,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#ae627b0504e112815b87739c6093b282a">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ab55a6cc2c2711fe1104f0c5c5e2222b0">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a866b00815ebd682165260ecbe1a4d137">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a89f17458c5b88c599ed6d7c11f0a8c17">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a592ea67985b770fad7bf8da68c374724">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#ae627b0504e112815b87739c6093b282a">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ab55a6cc2c2711fe1104f0c5c5e2222b0">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a866b00815ebd682165260ecbe1a4d137">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a89f17458c5b88c599ed6d7c11f0a8c17">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -324,7 +326,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a56db3890b6ec301aa3f6cec69044da92">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#afb43ac8461d5c61cddf4fb76a4af3f34">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a4b8730362847982e2b9b58eedd1d6f8c">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a8ff1b4ff7c7baf03be0449a5320d0a10">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a31f15a635639f84ebda0fe1c8082f6cf">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a56db3890b6ec301aa3f6cec69044da92">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#afb43ac8461d5c61cddf4fb76a4af3f34">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a4b8730362847982e2b9b58eedd1d6f8c">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a8ff1b4ff7c7baf03be0449a5320d0a10">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -352,7 +354,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a001d7e4693e20c664d7474e379a9581e">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a3c53da70b5af81134dee8b8ddee79a42">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a69446eead36cb062d06b5a21a8321915">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a1c53a52c146e739a1349240a2db495fa">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#aae59e3b6440e509afc8b081264cf7938">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a0efaec29f188e779e48130c21d0a2f2b">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a001d7e4693e20c664d7474e379a9581e">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a3c53da70b5af81134dee8b8ddee79a42">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a69446eead36cb062d06b5a21a8321915">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#a1c53a52c146e739a1349240a2db495fa">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -380,7 +382,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#aa525c59d2a86f718ddbd5e9dfa44d4d8">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a0d8b30bf523a712a686bc66141f26b4e">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a172fb40352ae942e668ed40b85774cdc">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#acbe2587bf058f151150b1b76eaa4efb3">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ae7ce7dabb1aa20a874ab5d9a47deddae">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a3d6266cd525005baddcbb2f3a68d1394">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#aa525c59d2a86f718ddbd5e9dfa44d4d8">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a0d8b30bf523a712a686bc66141f26b4e">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a172fb40352ae942e668ed40b85774cdc">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#acbe2587bf058f151150b1b76eaa4efb3">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -408,7 +410,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a15f914c9f91ab4d1b04dec8c02aa3222">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#accb7f241221b8b1b275e2a1a52cfcdf7">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a57bf60016f4a10576a3a04ddb039e6f1">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#aa3ffc472c2115bcf2250279baab0f194">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a168bae909f2e4703f65233c09529a231">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a15f914c9f91ab4d1b04dec8c02aa3222">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#accb7f241221b8b1b275e2a1a52cfcdf7">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a57bf60016f4a10576a3a04ddb039e6f1">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#aa3ffc472c2115bcf2250279baab0f194">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -435,7 +437,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a48a842372f9e9e56eda1a1cd0925c09c">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a7dc115cc9cc67ae7c5990c0d01a5a0a6">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a886221c4b9a77e24fa31ceb767aa444a">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#adff0562ceac86c1ee4a1848c1f100f97">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ad1d32d30e782b7fc5e29d4c7161575e6">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#ad1e968b1eeab0ae6711748cdb8cccefe">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#a48a842372f9e9e56eda1a1cd0925c09c">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a7dc115cc9cc67ae7c5990c0d01a5a0a6">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a886221c4b9a77e24fa31ceb767aa444a">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#adff0562ceac86c1ee4a1848c1f100f97">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
@@ -462,12 +464,13 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#adcf4c3c74fed39f8127701fe6c3af831">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a3535932f4b2d08af75ac212aa6d11a12">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a92598b6c47040e1648976e8eade3c5e3">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#ad914ece98201a7bc0ce8464e4ab01e7d">unilink::transport::Serial</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">unilink::transport::UdsServer</a>, <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a483612d5e20fe53227ca5ecd6cce7334">unilink::transport::UdsClient</a>, <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#adcf4c3c74fed39f8127701fe6c3af831">unilink::transport::UdpChannel</a>, <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a3535932f4b2d08af75ac212aa6d11a12">unilink::transport::TcpServer</a>, <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#a92598b6c47040e1648976e8eade3c5e3">unilink::transport::TcpClient</a>, and <a class="el" href="classunilink_1_1transport_1_1Serial.html#ad914ece98201a7bc0ce8464e4ab01e7d">unilink::transport::Serial</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>unilink/interface/<a class="el" href="channel_8hpp_source.html">channel.hpp</a></li>
+<li>unilink/interface/<a class="el" href="channel_8cc_source.html">channel.cc</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -475,7 +478,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1interface.html">interface</a></li><li class="navelem"><a class="el" href="classunilink_1_1interface_1_1Channel.html">Channel</a></li>
-    <li class="footer">Generated on Wed Mar 25 2026 21:38:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 00:33:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

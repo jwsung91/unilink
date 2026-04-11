@@ -147,14 +147,21 @@ Beginner Tutorials</h2>
 <li>Duration: 20 minutes</li>
 </ul>
 </li>
+<li><b><a class="el" href="md_docs_tutorials_03_uds_communication.html">Tutorial 3: Local IPC with UDS</a></b><ul>
+<li>Use Unix Domain Sockets</li>
+<li>High-performance local IPC</li>
+<li>Server and Client setup</li>
+<li>Duration: 10 minutes</li>
+</ul>
+</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md692"></a>
 Coming Soon</h2>
 <ul>
-<li>Tutorial 3: Serial Communication</li>
-<li>Tutorial 4: Error Handling &amp; Recovery</li>
-<li>Tutorial 5: Performance Optimization</li>
-<li>Tutorial 6: Building Production Systems</li>
+<li>Tutorial 4: Serial Communication</li>
+<li>Tutorial 5: Error Handling &amp; Recovery</li>
+<li>Tutorial 6: Performance Optimization</li>
+<li>Tutorial 7: Building Production Systems</li>
 </ul>
 <hr  />
 <h1><a class="anchor" id="autotoc_md694"></a>
@@ -214,10 +221,12 @@ Core APIs</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#tcp-server">TCP Server</a></b>   </td><td class="markdownTableBodyNone">Accept client connections    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#serial-communication">Serial Communication</a></b>   </td><td class="markdownTableBodyNone">Interface with serial devices    </td></tr>
+<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#uds-communication">UDS Communication</a></b>   </td><td class="markdownTableBodyNone">High-performance local IPC    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#error-handling">Error Handling</a></b>   </td><td class="markdownTableBodyNone">Centralized error management    </td></tr>
+<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#serial-communication">Serial Communication</a></b>   </td><td class="markdownTableBodyNone">Interface with serial devices    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#error-handling">Error Handling</a></b>   </td><td class="markdownTableBodyNone">Centralized error management    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#logging-system">Logging System</a></b>   </td><td class="markdownTableBodyNone">Flexible logging   </td></tr>
 </table>
 <h2><a class="anchor" id="autotoc_md702"></a>
@@ -345,7 +354,7 @@ Code Snippets</h2>
 <div class="line"> </div>
 <div class="line">client-&gt;start();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aaddf0fcbc64fa9a79d0a4f523d5b3fc7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">unilink::builder::TcpClientBuilder::on_data</a></div><div class="ttdeci">TcpClientBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00072">tcp_client_builder.cc:72</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00111">unilink.hpp:111</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00120">unilink.hpp:120</a></div></div>
 </div><!-- fragment --><p><b>Quick TCP Server:</b> </p><div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unlimited_clients</a>()</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a7855e70ae9a79ba8e62c31010d98a4be">on_data</a>([](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; data) {</div>
@@ -358,7 +367,7 @@ Code Snippets</h2>
 <div class="line">server-&gt;stop();  <span class="comment">// Clean shutdown</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a7855e70ae9a79ba8e62c31010d98a4be"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a7855e70ae9a79ba8e62c31010d98a4be">unilink::builder::TcpServerBuilder::on_data</a></div><div class="ttdeci">TcpServerBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00085">tcp_server_builder.cc:85</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a94c1f68d31130820c5c2bd20b906fba5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unilink::builder::TcpServerBuilder::unlimited_clients</a></div><div class="ttdeci">TcpServerBuilder &amp; unlimited_clients()</div><div class="ttdoc">Configure server for unlimited multi-client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00138">tcp_server_builder.cc:138</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00103">unilink.hpp:103</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00112">unilink.hpp:112</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md716"></a>
 🔍 Search &amp; Find</h1>
@@ -463,7 +472,7 @@ Learning Path</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Mar 25 2026 21:38:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 00:33:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

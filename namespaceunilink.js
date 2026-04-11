@@ -32,6 +32,8 @@ var namespaceunilink =
     [ "TcpClient", "namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7", null ],
     [ "TcpServer", "namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7", null ],
     [ "Udp", "namespaceunilink.html#a4a71fa819f4284d7581cdb9c47fffb9e", null ],
+    [ "UdsClient", "namespaceunilink.html#a9b8ed9339c39013379280fecccd3a72c", null ],
+    [ "UdsServer", "namespaceunilink.html#a1f48e446d6c7cce2a9f1ad4904a1d53f", null ],
     [ "ErrorCode", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84a", [
       [ "Success", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa505a83f220c02df2f85c3810cd9ceb38", null ],
       [ "Unknown", "namespaceunilink.html#a718d86a87600ed5b3b4e597324c5d84aa88183b946cc5f0e8c96b2e66e1c74a7e", null ],
@@ -55,5 +57,7 @@ var namespaceunilink =
     [ "tcp_client", "namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac", null ],
     [ "tcp_server", "namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956", null ],
     [ "to_string", "namespaceunilink.html#a945182ee4d2e3137a6c39f60501f5355", null ],
-    [ "udp", "namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212", null ]
+    [ "udp", "namespaceunilink.html#ab000e6359a7c6a9ead41fb57c52c2212", null ],
+    [ "uds_client", "namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a", null ],
+    [ "uds_server", "namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80", null ]
 ];

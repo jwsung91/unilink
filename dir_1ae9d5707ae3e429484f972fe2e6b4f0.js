@@ -23,5 +23,9 @@ var dir_1ae9d5707ae3e429484f972fe2e6b4f0 =
     ] ],
     [ "udp_config.hpp", "udp__config_8hpp.html", [
       [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", "structunilink_1_1config_1_1UdpConfig" ]
+    ] ],
+    [ "uds_config.hpp", "uds__config_8hpp.html", [
+      [ "UdsClientConfig", "structunilink_1_1config_1_1UdsClientConfig.html", "structunilink_1_1config_1_1UdsClientConfig" ],
+      [ "UdsServerConfig", "structunilink_1_1config_1_1UdsServerConfig.html", "structunilink_1_1config_1_1UdsServerConfig" ]
     ] ]
 ];

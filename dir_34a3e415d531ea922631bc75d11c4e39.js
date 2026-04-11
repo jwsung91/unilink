@@ -4,6 +4,8 @@ var dir_34a3e415d531ea922631bc75d11c4e39 =
     [ "tcp_client", "dir_d1704df37e1cea997490230b5e7b9125.html", "dir_d1704df37e1cea997490230b5e7b9125" ],
     [ "tcp_server", "dir_fdd6e5571e153f1d8025548436a989da.html", "dir_fdd6e5571e153f1d8025548436a989da" ],
     [ "udp", "dir_b326aa12ac4fd529ad72c1f5aa11c7fc.html", "dir_b326aa12ac4fd529ad72c1f5aa11c7fc" ],
+    [ "uds_client", "dir_53fe126917d581c2cf884e23d902a853.html", "dir_53fe126917d581c2cf884e23d902a853" ],
+    [ "uds_server", "dir_b88a6c339073afb50b2b7b303399597d.html", "dir_b88a6c339073afb50b2b7b303399597d" ],
     [ "context.hpp", "context_8hpp.html", [
       [ "MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html", "classunilink_1_1wrapper_1_1MessageContext" ],
       [ "ConnectionContext", "classunilink_1_1wrapper_1_1ConnectionContext.html", "classunilink_1_1wrapper_1_1ConnectionContext" ],

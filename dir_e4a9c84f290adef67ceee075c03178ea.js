@@ -23,6 +23,11 @@ var dir_e4a9c84f290adef67ceee075c03178ea =
     [ "udp_builder.hpp", "udp__builder_8hpp.html", [
       [ "UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", "classunilink_1_1builder_1_1UdpBuilder" ]
     ] ],
+    [ "uds_builder.cc", "uds__builder_8cc.html", null ],
+    [ "uds_builder.hpp", "uds__builder_8hpp.html", [
+      [ "UdsClientBuilder", "classunilink_1_1builder_1_1UdsClientBuilder.html", "classunilink_1_1builder_1_1UdsClientBuilder" ],
+      [ "UdsServerBuilder", "classunilink_1_1builder_1_1UdsServerBuilder.html", "classunilink_1_1builder_1_1UdsServerBuilder" ]
+    ] ],
     [ "unified_builder.cc", "unified__builder_8cc.html", null ],
     [ "unified_builder.hpp", "unified__builder_8hpp.html", [
       [ "UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", "classunilink_1_1builder_1_1UnifiedBuilder" ]

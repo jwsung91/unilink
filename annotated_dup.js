@@ -11,6 +11,8 @@ var annotated_dup =
         [ "TcpClientBuilder", "classunilink_1_1builder_1_1TcpClientBuilder.html", "classunilink_1_1builder_1_1TcpClientBuilder" ],
         [ "TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html", "classunilink_1_1builder_1_1TcpServerBuilder" ],
         [ "UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", "classunilink_1_1builder_1_1UdpBuilder" ],
+        [ "UdsClientBuilder", "classunilink_1_1builder_1_1UdsClientBuilder.html", "classunilink_1_1builder_1_1UdsClientBuilder" ],
+        [ "UdsServerBuilder", "classunilink_1_1builder_1_1UdsServerBuilder.html", "classunilink_1_1builder_1_1UdsServerBuilder" ],
         [ "UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", "classunilink_1_1builder_1_1UnifiedBuilder" ]
       ] ],
       [ "concurrency", "namespaceunilink_1_1concurrency.html", [
@@ -30,7 +32,9 @@ var annotated_dup =
         [ "SerialConfig", "structunilink_1_1config_1_1SerialConfig.html", "structunilink_1_1config_1_1SerialConfig" ],
         [ "TcpClientConfig", "structunilink_1_1config_1_1TcpClientConfig.html", "structunilink_1_1config_1_1TcpClientConfig" ],
         [ "TcpServerConfig", "structunilink_1_1config_1_1TcpServerConfig.html", "structunilink_1_1config_1_1TcpServerConfig" ],
-        [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", "structunilink_1_1config_1_1UdpConfig" ]
+        [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", "structunilink_1_1config_1_1UdpConfig" ],
+        [ "UdsClientConfig", "structunilink_1_1config_1_1UdsClientConfig.html", "structunilink_1_1config_1_1UdsClientConfig" ],
+        [ "UdsServerConfig", "structunilink_1_1config_1_1UdsServerConfig.html", "structunilink_1_1config_1_1UdsServerConfig" ]
       ] ],
       [ "diagnostics", "namespaceunilink_1_1diagnostics.html", [
         [ "ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", "classunilink_1_1diagnostics_1_1ErrorHandler" ],
@@ -63,7 +67,9 @@ var annotated_dup =
         [ "TcpAcceptorInterface", "classunilink_1_1interface_1_1TcpAcceptorInterface.html", "classunilink_1_1interface_1_1TcpAcceptorInterface" ],
         [ "TcpResolverInterface", "classunilink_1_1interface_1_1TcpResolverInterface.html", "classunilink_1_1interface_1_1TcpResolverInterface" ],
         [ "TcpSocketInterface", "classunilink_1_1interface_1_1TcpSocketInterface.html", "classunilink_1_1interface_1_1TcpSocketInterface" ],
-        [ "TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", "classunilink_1_1interface_1_1TimerInterface" ]
+        [ "TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", "classunilink_1_1interface_1_1TimerInterface" ],
+        [ "UdsAcceptorInterface", "classunilink_1_1interface_1_1UdsAcceptorInterface.html", "classunilink_1_1interface_1_1UdsAcceptorInterface" ],
+        [ "UdsSocketInterface", "classunilink_1_1interface_1_1UdsSocketInterface.html", "classunilink_1_1interface_1_1UdsSocketInterface" ]
       ] ],
       [ "memory", "namespaceunilink_1_1memory.html", [
         [ "MemoryPool", "classunilink_1_1memory_1_1MemoryPool.html", "classunilink_1_1memory_1_1MemoryPool" ],
@@ -78,7 +84,8 @@ var annotated_dup =
       ] ],
       [ "transport", "namespaceunilink_1_1transport.html", [
         [ "detail", "namespaceunilink_1_1transport_1_1detail.html", [
-          [ "ReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision" ]
+          [ "ReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html", "structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision" ],
+          [ "UdsReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html", "structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision" ]
         ] ],
         [ "BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", "classunilink_1_1transport_1_1BoostSerialPort" ],
         [ "Serial", "classunilink_1_1transport_1_1Serial.html", "classunilink_1_1transport_1_1Serial" ],
@@ -87,7 +94,12 @@ var annotated_dup =
         [ "BoostTcpSocket", "classunilink_1_1transport_1_1BoostTcpSocket.html", "classunilink_1_1transport_1_1BoostTcpSocket" ],
         [ "TcpServer", "classunilink_1_1transport_1_1TcpServer.html", "classunilink_1_1transport_1_1TcpServer" ],
         [ "TcpServerSession", "classunilink_1_1transport_1_1TcpServerSession.html", "classunilink_1_1transport_1_1TcpServerSession" ],
-        [ "UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", "classunilink_1_1transport_1_1UdpChannel" ]
+        [ "UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", "classunilink_1_1transport_1_1UdpChannel" ],
+        [ "BoostUdsAcceptor", "classunilink_1_1transport_1_1BoostUdsAcceptor.html", "classunilink_1_1transport_1_1BoostUdsAcceptor" ],
+        [ "BoostUdsSocket", "classunilink_1_1transport_1_1BoostUdsSocket.html", "classunilink_1_1transport_1_1BoostUdsSocket" ],
+        [ "UdsClient", "classunilink_1_1transport_1_1UdsClient.html", "classunilink_1_1transport_1_1UdsClient" ],
+        [ "UdsServer", "classunilink_1_1transport_1_1UdsServer.html", "classunilink_1_1transport_1_1UdsServer" ],
+        [ "UdsServerSession", "classunilink_1_1transport_1_1UdsServerSession.html", "classunilink_1_1transport_1_1UdsServerSession" ]
       ] ],
       [ "util", "namespaceunilink_1_1util.html", [
         [ "InputValidator", "classunilink_1_1util_1_1InputValidator.html", "classunilink_1_1util_1_1InputValidator" ]
@@ -101,7 +113,9 @@ var annotated_dup =
         [ "Serial", "classunilink_1_1wrapper_1_1Serial.html", "classunilink_1_1wrapper_1_1Serial" ],
         [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", "classunilink_1_1wrapper_1_1TcpClient" ],
         [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", "classunilink_1_1wrapper_1_1TcpServer" ],
-        [ "Udp", "classunilink_1_1wrapper_1_1Udp.html", "classunilink_1_1wrapper_1_1Udp" ]
+        [ "Udp", "classunilink_1_1wrapper_1_1Udp.html", "classunilink_1_1wrapper_1_1Udp" ],
+        [ "UdsClient", "classunilink_1_1wrapper_1_1UdsClient.html", "classunilink_1_1wrapper_1_1UdsClient" ],
+        [ "UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html", "classunilink_1_1wrapper_1_1UdsServer" ]
       ] ],
       [ "ReconnectDecision", "structunilink_1_1ReconnectDecision.html", "structunilink_1_1ReconnectDecision" ]
     ] ]

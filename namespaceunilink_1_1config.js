@@ -10,6 +10,8 @@ var namespaceunilink_1_1config =
     [ "TcpClientConfig", "structunilink_1_1config_1_1TcpClientConfig.html", "structunilink_1_1config_1_1TcpClientConfig" ],
     [ "TcpServerConfig", "structunilink_1_1config_1_1TcpServerConfig.html", "structunilink_1_1config_1_1TcpServerConfig" ],
     [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", "structunilink_1_1config_1_1UdpConfig" ],
+    [ "UdsClientConfig", "structunilink_1_1config_1_1UdsClientConfig.html", "structunilink_1_1config_1_1UdsClientConfig" ],
+    [ "UdsServerConfig", "structunilink_1_1config_1_1UdsServerConfig.html", "structunilink_1_1config_1_1UdsServerConfig" ],
     [ "ConfigChangeCallback", "namespaceunilink_1_1config.html#a4aafa42155321e016da3f7a8c290f1d5", null ],
     [ "ConfigType", "namespaceunilink_1_1config.html#a51570eeec2be34fa91656b2f81898577", [
       [ "String", "namespaceunilink_1_1config.html#a51570eeec2be34fa91656b2f81898577a27118326006d3829667a400ad23d5d98", null ],

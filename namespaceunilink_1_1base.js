@@ -33,6 +33,7 @@ var namespaceunilink_1_1base =
       [ "MAX_SESSION_TIMEOUT_MS", "namespaceunilink_1_1base_1_1constants.html#afba16688382b58258e2ad606905dba6e", null ],
       [ "MAX_STOP_BITS", "namespaceunilink_1_1base_1_1constants.html#a630d0f50312403602cb2384308cfc8c1", null ],
       [ "MAX_THREAD_POOL_SIZE", "namespaceunilink_1_1base_1_1constants.html#a30925e14f6dbd8a43a6d009eb1678f23", null ],
+      [ "MAX_UDS_PATH_LENGTH", "namespaceunilink_1_1base_1_1constants.html#a21de7cb998803824e515385917b82477", null ],
       [ "MIN_BACKPRESSURE_THRESHOLD", "namespaceunilink_1_1base_1_1constants.html#a795225ba256bb4cb1317e50c3871f3ae", null ],
       [ "MIN_BAUD_RATE", "namespaceunilink_1_1base_1_1constants.html#aed6706d42aeb4c4e30e43e6a210925e7", null ],
       [ "MIN_BUFFER_SIZE", "namespaceunilink_1_1base_1_1constants.html#a6095471d3c0d967faf82d0b72399acc2", null ],

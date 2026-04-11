@@ -6,5 +6,7 @@ var namespaceunilink_1_1builder =
     [ "TcpClientBuilder", "classunilink_1_1builder_1_1TcpClientBuilder.html", "classunilink_1_1builder_1_1TcpClientBuilder" ],
     [ "TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html", "classunilink_1_1builder_1_1TcpServerBuilder" ],
     [ "UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", "classunilink_1_1builder_1_1UdpBuilder" ],
+    [ "UdsClientBuilder", "classunilink_1_1builder_1_1UdsClientBuilder.html", "classunilink_1_1builder_1_1UdsClientBuilder" ],
+    [ "UdsServerBuilder", "classunilink_1_1builder_1_1UdsServerBuilder.html", "classunilink_1_1builder_1_1UdsServerBuilder" ],
     [ "UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", "classunilink_1_1builder_1_1UnifiedBuilder" ]
 ];

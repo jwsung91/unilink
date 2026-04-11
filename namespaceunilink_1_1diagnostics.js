@@ -51,6 +51,7 @@ var namespaceunilink_1_1diagnostics =
       [ "CALLBACK", "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209", null ]
     ] ],
     [ "is_retryable_tcp_connect_error", "namespaceunilink_1_1diagnostics.html#ad1cee78c0c129f3819db60931664f453", null ],
+    [ "is_retryable_uds_connect_error", "namespaceunilink_1_1diagnostics.html#a64ef9068c86fed2fc120eff040163732", null ],
     [ "to_error_context", "namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada", null ],
     [ "to_unilink_error_code", "namespaceunilink_1_1diagnostics.html#aee016aa3a0ee29635787a9755eb352f1", null ]
 ];

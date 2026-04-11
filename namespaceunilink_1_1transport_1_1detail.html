@@ -97,6 +97,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">ReconnectLogicDecision</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the decision on whether to retry a connection attempt.  <a href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html">UdsReconnectLogicDecision</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the decision on whether to retry a connection attempt for UDS.  <a href="structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -105,6 +108,11 @@ Functions</h2></td></tr>
 <tr class="memitem:afea3187da4b3318894729cf30d8f512a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1transport_1_1detail_1_1ReconnectLogicDecision.html">ReconnectLogicDecision</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">decide_reconnect</a> (const <a class="el" href="structunilink_1_1config_1_1TcpClientConfig.html">config::TcpClientConfig</a> &amp;cfg, const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;error_info, uint32_t attempt_count, const std::optional&lt; <a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> &gt; &amp;policy)</td></tr>
 <tr class="memdesc:afea3187da4b3318894729cf30d8f512a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a reconnection attempt should be made and the base delay to use.  <a href="namespaceunilink_1_1transport_1_1detail.html#afea3187da4b3318894729cf30d8f512a">More...</a><br /></td></tr>
 <tr class="separator:afea3187da4b3318894729cf30d8f512a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70b2d349db27101eb27f36bf3a608643"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a70b2d349db27101eb27f36bf3a608643">clamp_reconnect_delay_uds</a> (std::chrono::milliseconds delay)</td></tr>
+<tr class="separator:a70b2d349db27101eb27f36bf3a608643"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a955086b549ba1ad4eabea036d9a7e5db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html">UdsReconnectLogicDecision</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html#a955086b549ba1ad4eabea036d9a7e5db">decide_reconnect_uds</a> (const <a class="el" href="structunilink_1_1config_1_1UdsClientConfig.html">config::UdsClientConfig</a> &amp;cfg, const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;error_info, uint32_t attempt_count, const std::optional&lt; <a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> &gt; &amp;policy)</td></tr>
+<tr class="memdesc:a955086b549ba1ad4eabea036d9a7e5db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a UDS reconnection attempt should be made.  <a href="namespaceunilink_1_1transport_1_1detail.html#a955086b549ba1ad4eabea036d9a7e5db">More...</a><br /></td></tr>
+<tr class="separator:a955086b549ba1ad4eabea036d9a7e5db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -136,7 +144,35 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reconnect__decider_8hpp_source.html#l00043">43</a> of file <a class="el" href="reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__client_2detail_2reconnect__decider_8hpp_source.html#l00043">43</a> of file <a class="el" href="tcp__client_2detail_2reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a70b2d349db27101eb27f36bf3a608643"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70b2d349db27101eb27f36bf3a608643">&#9670;&nbsp;</a></span>clamp_reconnect_delay_uds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::chrono::milliseconds unilink::transport::detail::clamp_reconnect_delay_uds </td>
+          <td>(</td>
+          <td class="paramtype">std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>delay</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uds_2detail_2reconnect__decider_8hpp_source.html#l00043">43</a> of file <a class="el" href="uds_2detail_2reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
 
 </div>
 </div>
@@ -189,7 +225,59 @@ Variables</h2></td></tr>
 <p>Determines whether a reconnection attempt should be made and the base delay to use. </p>
 <p>Guard ordering is intentional: 1) non-retryable errors stop immediately 2) max_retries limits stop immediately 3) custom policy is consulted only after guards pass 4) no policy falls back to cfg.retry_interval_ms </p>
 
-<p class="definition">Definition at line <a class="el" href="reconnect__decider_8hpp_source.html#l00059">59</a> of file <a class="el" href="reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__client_2detail_2reconnect__decider_8hpp_source.html#l00059">59</a> of file <a class="el" href="tcp__client_2detail_2reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a955086b549ba1ad4eabea036d9a7e5db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a955086b549ba1ad4eabea036d9a7e5db">&#9670;&nbsp;</a></span>decide_reconnect_uds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html">UdsReconnectLogicDecision</a> unilink::transport::detail::decide_reconnect_uds </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structunilink_1_1config_1_1UdsClientConfig.html">config::UdsClientConfig</a> &amp;&#160;</td>
+          <td class="paramname"><em>cfg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>error_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>attempt_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::optional&lt; <a class="el" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>policy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines whether a UDS reconnection attempt should be made. </p>
+
+<p class="definition">Definition at line <a class="el" href="uds_2detail_2reconnect__decider_8hpp_source.html#l00053">53</a> of file <a class="el" href="uds_2detail_2reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
 
 </div>
 </div>
@@ -214,7 +302,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reconnect__decider_8hpp_source.html#l00033">33</a> of file <a class="el" href="reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__client_2detail_2reconnect__decider_8hpp_source.html#l00033">33</a> of file <a class="el" href="tcp__client_2detail_2reconnect__decider_8hpp_source.html">reconnect_decider.hpp</a>.</p>
 
 </div>
 </div>
@@ -224,7 +312,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport_1_1detail.html">detail</a></li>
-    <li class="footer">Generated on Wed Mar 25 2026 21:38:58 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 00:33:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

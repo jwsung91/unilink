@@ -1,0 +1,25 @@
+var structunilink_1_1transport_1_1UdsServer_1_1Impl =
+[
+    [ "Impl", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a76c7ffccaf87a92583cf1d0e1bddc581", null ],
+    [ "~Impl", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a793172d95f66fc5f282d31a51e50e74b", null ],
+    [ "do_accept", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a76ee4f7897b2521c4a922ad983598ba1", null ],
+    [ "notify_state", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#acc1a3645ba02d3a6c5823fe7c3b84db5", null ],
+    [ "acceptor_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#acf1bbb97f672d58d3949d6bfabb3675c", null ],
+    [ "cfg_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a825472bc7ffc9cb3db299057cabf593f", null ],
+    [ "ioc_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a503bf1012515003ccfa926eee4ed8feb", null ],
+    [ "ioc_thread_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a3a68c425a266f1fd0b38a65493b2d639", null ],
+    [ "next_client_id_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a4a8843dd0df1e40d208b74f1dadf22b7", null ],
+    [ "on_bp_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a48b42f977248242d9df924e3e0efe39a", null ],
+    [ "on_bytes_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a6fb50a953b3f4e8f332a7cd0e8d1fb3b", null ],
+    [ "on_multi_connect_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a29226fab8023de38fbb9ac84f1d5e283", null ],
+    [ "on_multi_data_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a5ac3a9058959c4e5bfd1f9f34585d6fb", null ],
+    [ "on_multi_disconnect_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a0d35737a45b2a3239b0661af97a8c5d4", null ],
+    [ "on_state_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#ae219187014f2ff9ca168b03db22edeb1", null ],
+    [ "owned_ioc_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a88a89a7bdb26b9af206cd2b141a3e7fc", null ],
+    [ "owns_ioc_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#aa5e764050dbc9d82e16e3d0e54233452", null ],
+    [ "sessions_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#ac0cbc10d11ee45697096cde3045ac8d3", null ],
+    [ "sessions_mutex_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#acb5caf069199746ee80db483aa51b1b7", null ],
+    [ "state_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#aa97bad37cb730d4fafbe6e3f302dc1ff", null ],
+    [ "stopping_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#ae8966bfa90d3c74babd07b8861a1d7e9", null ],
+    [ "work_guard_", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a2c7146f0b1a252018b9763434b823ca3", null ]
+];

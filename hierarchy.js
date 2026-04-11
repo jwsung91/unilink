@@ -18,17 +18,26 @@ var hierarchy =
     [ "unilink::builder::BuilderInterface< wrapper::Udp, UdpBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::UdpBuilder", "classunilink_1_1builder_1_1UdpBuilder.html", null ]
     ] ],
+    [ "unilink::builder::BuilderInterface< wrapper::UdsClient, UdsClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+      [ "unilink::builder::UdsClientBuilder", "classunilink_1_1builder_1_1UdsClientBuilder.html", null ]
+    ] ],
+    [ "unilink::builder::BuilderInterface< wrapper::UdsServer, UdsServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+      [ "unilink::builder::UdsServerBuilder", "classunilink_1_1builder_1_1UdsServerBuilder.html", null ]
+    ] ],
     [ "unilink::interface::Channel", "classunilink_1_1interface_1_1Channel.html", [
       [ "unilink::transport::Serial", "classunilink_1_1transport_1_1Serial.html", null ],
       [ "unilink::transport::TcpClient", "classunilink_1_1transport_1_1TcpClient.html", null ],
       [ "unilink::transport::TcpServer", "classunilink_1_1transport_1_1TcpServer.html", null ],
-      [ "unilink::transport::UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", null ]
+      [ "unilink::transport::UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", null ],
+      [ "unilink::transport::UdsClient", "classunilink_1_1transport_1_1UdsClient.html", null ],
+      [ "unilink::transport::UdsServer", "classunilink_1_1transport_1_1UdsServer.html", null ]
     ] ],
     [ "unilink::factory::ChannelFactory", "classunilink_1_1factory_1_1ChannelFactory.html", null ],
     [ "unilink::wrapper::ChannelInterface", "classunilink_1_1wrapper_1_1ChannelInterface.html", [
       [ "unilink::wrapper::Serial", "classunilink_1_1wrapper_1_1Serial.html", null ],
       [ "unilink::wrapper::TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", null ],
-      [ "unilink::wrapper::Udp", "classunilink_1_1wrapper_1_1Udp.html", null ]
+      [ "unilink::wrapper::Udp", "classunilink_1_1wrapper_1_1Udp.html", null ],
+      [ "unilink::wrapper::UdsClient", "classunilink_1_1wrapper_1_1UdsClient.html", null ]
     ] ],
     [ "unilink::config::ConfigFactory", "classunilink_1_1config_1_1ConfigFactory.html", null ],
     [ "unilink::config::ConfigItem", "structunilink_1_1config_1_1ConfigItem.html", null ],
@@ -42,7 +51,10 @@ var hierarchy =
       [ "unilink::transport::TcpClient", "classunilink_1_1transport_1_1TcpClient.html", null ],
       [ "unilink::transport::TcpServer", "classunilink_1_1transport_1_1TcpServer.html", null ],
       [ "unilink::transport::TcpServerSession", "classunilink_1_1transport_1_1TcpServerSession.html", null ],
-      [ "unilink::transport::UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", null ]
+      [ "unilink::transport::UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", null ],
+      [ "unilink::transport::UdsClient", "classunilink_1_1transport_1_1UdsClient.html", null ],
+      [ "unilink::transport::UdsServer", "classunilink_1_1transport_1_1UdsServer.html", null ],
+      [ "unilink::transport::UdsServerSession", "classunilink_1_1transport_1_1UdsServerSession.html", null ]
     ] ],
     [ "unilink::wrapper::ErrorContext", "classunilink_1_1wrapper_1_1ErrorContext.html", null ],
     [ "unilink::diagnostics::ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", null ],
@@ -62,10 +74,14 @@ var hierarchy =
     [ "unilink::transport::TcpClient::Impl", "structunilink_1_1transport_1_1TcpClient_1_1Impl.html", null ],
     [ "unilink::transport::TcpServer::Impl", "structunilink_1_1transport_1_1TcpServer_1_1Impl.html", null ],
     [ "unilink::transport::UdpChannel::Impl", "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html", null ],
+    [ "unilink::transport::UdsClient::Impl", "structunilink_1_1transport_1_1UdsClient_1_1Impl.html", null ],
+    [ "unilink::transport::UdsServer::Impl", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html", null ],
     [ "unilink::wrapper::Serial::Impl", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html", null ],
     [ "unilink::wrapper::TcpClient::Impl", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html", null ],
     [ "unilink::wrapper::TcpServer::Impl", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html", null ],
     [ "unilink::wrapper::Udp::Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html", null ],
+    [ "unilink::wrapper::UdsClient::Impl", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html", null ],
+    [ "unilink::wrapper::UdsServer::Impl", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html", null ],
     [ "unilink::util::InputValidator", "classunilink_1_1util_1_1InputValidator.html", null ],
     [ "unilink::concurrency::IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", null ],
     [ "unilink::diagnostics::LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", null ],
@@ -101,7 +117,8 @@ var hierarchy =
       [ "unilink::transport::BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", null ]
     ] ],
     [ "unilink::wrapper::ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html", [
-      [ "unilink::wrapper::TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", null ]
+      [ "unilink::wrapper::TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", null ],
+      [ "unilink::wrapper::UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html", null ]
     ] ],
     [ "unilink::interface::TcpAcceptorInterface", "classunilink_1_1interface_1_1TcpAcceptorInterface.html", [
       [ "unilink::transport::BoostTcpAcceptor", "classunilink_1_1transport_1_1BoostTcpAcceptor.html", null ]
@@ -119,6 +136,15 @@ var hierarchy =
     [ "unilink::interface::TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", null ],
     [ "unilink::diagnostics::Logger::Impl::TimestampBuffer", "structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html", null ],
     [ "unilink::config::UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", null ],
+    [ "unilink::interface::UdsAcceptorInterface", "classunilink_1_1interface_1_1UdsAcceptorInterface.html", [
+      [ "unilink::transport::BoostUdsAcceptor", "classunilink_1_1transport_1_1BoostUdsAcceptor.html", null ]
+    ] ],
+    [ "unilink::config::UdsClientConfig", "structunilink_1_1config_1_1UdsClientConfig.html", null ],
+    [ "unilink::transport::detail::UdsReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html", null ],
+    [ "unilink::config::UdsServerConfig", "structunilink_1_1config_1_1UdsServerConfig.html", null ],
+    [ "unilink::interface::UdsSocketInterface", "classunilink_1_1interface_1_1UdsSocketInterface.html", [
+      [ "unilink::transport::BoostUdsSocket", "classunilink_1_1transport_1_1BoostUdsSocket.html", null ]
+    ] ],
     [ "unilink::builder::UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", null ],
     [ "unilink::config::ValidationResult", "structunilink_1_1config_1_1ValidationResult.html", null ]
 ];

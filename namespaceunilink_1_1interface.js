@@ -5,5 +5,7 @@ var namespaceunilink_1_1interface =
     [ "TcpAcceptorInterface", "classunilink_1_1interface_1_1TcpAcceptorInterface.html", "classunilink_1_1interface_1_1TcpAcceptorInterface" ],
     [ "TcpResolverInterface", "classunilink_1_1interface_1_1TcpResolverInterface.html", "classunilink_1_1interface_1_1TcpResolverInterface" ],
     [ "TcpSocketInterface", "classunilink_1_1interface_1_1TcpSocketInterface.html", "classunilink_1_1interface_1_1TcpSocketInterface" ],
-    [ "TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", "classunilink_1_1interface_1_1TimerInterface" ]
+    [ "TimerInterface", "classunilink_1_1interface_1_1TimerInterface.html", "classunilink_1_1interface_1_1TimerInterface" ],
+    [ "UdsAcceptorInterface", "classunilink_1_1interface_1_1UdsAcceptorInterface.html", "classunilink_1_1interface_1_1UdsAcceptorInterface" ],
+    [ "UdsSocketInterface", "classunilink_1_1interface_1_1UdsSocketInterface.html", "classunilink_1_1interface_1_1UdsSocketInterface" ]
 ];
