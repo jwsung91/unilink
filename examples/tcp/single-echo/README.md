@@ -1,6 +1,6 @@
 # TCP Echo Server and Client
 
-TCP echo server and client for network communication testing. The server echoes back any data received from clients.
+TCP echo examples using the current builder and wrapper API.
 
 ## Server Usage
 
@@ -8,13 +8,14 @@ TCP echo server and client for network communication testing. The server echoes 
 ./echo_tcp_server <port>
 ```
 
-### Examples
+Examples:
+
 ```bash
-# Default port 9000
-./echo_tcp_server 9000
+# Default port is 8080 when omitted
+./echo_tcp_server
 
 # Custom port
-./echo_tcp_server 8080
+./echo_tcp_server 9000
 ```
 
 ## Client Usage
@@ -23,125 +24,81 @@ TCP echo server and client for network communication testing. The server echoes 
 ./echo_tcp_client <host> <port>
 ```
 
-### Examples
+Examples:
+
 ```bash
-# Local connection
+# Default target is 127.0.0.1:8080 when omitted
+./echo_tcp_client
+
+# Explicit local connection
 ./echo_tcp_client 127.0.0.1 9000
 
 # Remote connection
 ./echo_tcp_client 192.168.1.100 9000
 ```
 
-## What it does
+## Behavior
 
-### Server
-- Listens on the specified port
-- Accepts client connections
-- Echoes received data back to clients
-- Logs connection status and data flow
-- Handles multiple clients (one at a time)
-
-### Client
-- Connects to the specified server
-- Sends data to the server
-- Receives echoed data from the server
-- Logs connection status and data flow
+- The server binds a TCP port in single-client mode.
+- Each message received from the client is echoed back to that client.
+- The client reads stdin lines, sends them, and prints echoed responses.
+- Exit with `/quit` or `Ctrl+C`.
 
 ## Expected Output
 
-### Server Output
-```
-2025-01-15 10:30:45.123 [INFO] [server] [start] Starting TCP server on port 9000
-2025-01-15 10:30:45.124 [INFO] [server] [STATE] Client connected
-2025-01-15 10:30:45.125 [INFO] [server] [RX] Hello from client
-2025-01-15 10:30:45.126 [INFO] [server] [TX] Hello from client
-2025-01-15 10:30:45.127 [INFO] [server] [STATE] Client disconnected
-```
+Server:
 
-### Client Output
-```
-2025-01-15 10:30:45.123 [INFO] [client] [start] Connecting to 127.0.0.1:9000
-2025-01-15 10:30:45.124 [INFO] [client] [STATE] Connected
-2025-01-15 10:30:45.125 [INFO] [client] [TX] Hello from client
-2025-01-15 10:30:45.126 [INFO] [client] [RX] Hello from client
+```text
+[INFO] [server] [startup] Starting server on port 8080...
+[INFO] [server] [startup] Server started successfully. Waiting for client connections...
+[INFO] [server] [connect] Client 1 connected: 127.0.0.1:...
+[INFO] [server] [data] Client 1 message: hello
+[INFO] [server] [echo] Echoed to client 1
 ```
 
-## Testing Workflow
+Client:
 
-### Local Testing
-1. **Start the server**:
-   ```bash
-   ./echo_tcp_server 9000
-   ```
+```text
+[INFO] [client] [startup] Connecting to 127.0.0.1:8080...
+[INFO] [client] [connect] Connected to server
+[INFO] [client] [send] Sent: hello
+[INFO] [client] [data] Received: hello
+```
 
-2. **Start the client** (in another terminal):
-   ```bash
-   ./echo_tcp_client 127.0.0.1 9000
-   ```
+## Quick Test
 
-3. **Send messages**:
-   - Type messages in the client
-   - Server will echo them back
-   - Observe the logging output
+```bash
+# Terminal 1
+./echo_tcp_server
 
-### Network Testing
-1. **Start server on machine A**:
-   ```bash
-   ./echo_tcp_server 9000
-   ```
+# Terminal 2
+./echo_tcp_client
+```
 
-2. **Start client on machine B**:
-   ```bash
-   ./echo_tcp_client <machine_A_IP> 9000
-   ```
+## Notes
 
-## Features
-
-### Server Features
-- **Port binding**: Listens on specified port
-- **Client handling**: Accepts and manages client connections
-- **Data echoing**: Sends received data back to client
-- **Connection logging**: Logs all connection events
-- **Error handling**: Graceful handling of connection errors
-
-### Client Features
-- **Connection management**: Connects to specified server
-- **Data transmission**: Sends data to server
-- **Data reception**: Receives echoed data from server
-- **Status logging**: Logs connection and data events
-- **Error handling**: Handles connection failures
-
-## Use Cases
-
-- **Network testing**: Verify network connectivity and latency
-- **Protocol testing**: Test custom protocols over TCP
-- **Load testing**: Test server performance under load
-- **Debugging**: Debug network communication issues
+- The server example uses `.single_client()`.
+- The client example uses retry settings through the builder API.
+- Both examples are built from the public `unilink/unilink.hpp` interface.
 
 ## Troubleshooting
 
 ### Port Already in Use
+
 ```bash
-# Check what's using the port
 netstat -tulpn | grep :9000
 # or
 lsof -i :9000
+```
 
-# Use a different port
+Start the server on another port if needed:
+
+```bash
 ./echo_tcp_server 9001
 ```
 
 ### Connection Refused
-- Verify server is running
-- Check firewall settings
-- Ensure correct IP address and port
-- Check if port is accessible
 
-### Firewall Issues
-```bash
-# Linux - allow port through firewall
-sudo ufw allow 9000
-
-# Check firewall status
-sudo ufw status
-```
+- Verify the server is running.
+- Check the host and port.
+- Check firewall rules if connecting across machines.

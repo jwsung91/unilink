@@ -131,10 +131,10 @@ auto client = unilink::tcp_client("192.168.1.100", 8080)
     .build();
 
 // Start connection
-client->start();
+bool connected = client->start().get();
 
 // Send data
-if (client->is_connected()) {
+if (connected && client->is_connected()) {
     client->send("Hello, Server!");
 }
 
@@ -155,6 +155,8 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 | Method                      | Parameters | Description                                                |
 | --------------------------- | ---------- | ---------------------------------------------------------- |
 | `retry_interval(ms)`        | `unsigned` | Set reconnection interval in milliseconds (default `3000`) |
+| `max_retries(count)`        | `int`      | Set maximum reconnect attempts (`-1` for unlimited)        |
+| `connection_timeout(ms)`    | `unsigned` | Set connection timeout in milliseconds                     |
 | `use_independent_context()` | `bool`     | Use separate IO thread (for testing)                       |
 | `auto_manage()`             | `bool`     | Auto-start immediately and stop on destruction             |
 
@@ -206,7 +208,7 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
 
 #### Custom Reconnect Policy (Transport Layer)
 
-To use advanced reconnection policies (like Exponential Backoff), use the transport layer directly:
+If you need transport-level reconnect policy control such as `ExponentialBackoff(...)`, you can drop below the wrapper API and use the transport layer directly. This is an advanced path; the recommended public entry point remains `unilink::tcp_client(...)`.
 
 ```cpp
 #include "unilink/transport/tcp_client/tcp_client.hpp"
@@ -253,16 +255,20 @@ auto server = unilink::tcp_server(8080)
     .build();
 
 // Start server
-server->start();
+bool listening = server->start().get();
 
 // Send to specific client
-server->send_to(1, "Hello, Client 1!");
+if (listening) {
+    server->send_to(1, "Hello, Client 1!");
+}
 
 // Send to all clients
-server->broadcast("Broadcast message");
+if (listening) {
+    server->broadcast("Broadcast message");
+}
 
 // Check if listening
-if (server->is_listening()) {
+if (listening && server->is_listening()) {
     std::cout << "Server is listening" << std::endl;
 }
 
@@ -327,6 +333,7 @@ auto server = unilink::tcp_server(8080)
 
 ```cpp
 auto server = unilink::tcp_server(8080)
+    .single_client()
     .enable_port_retry(true, 5, 1000)  // 5 retries, 1 second each
     .on_error([](const unilink::ErrorContext& ctx) {
         std::cerr << "Server error: " << ctx.message() << std::endl;
@@ -369,14 +376,18 @@ auto serial = unilink::serial("/dev/ttyUSB0", 115200)
     .build();
 
 // Start serial communication
-serial->start();
+bool opened = serial->start().get();
 
 // Send AT command
-serial->send("AT\r\n");
+if (opened) {
+    serial->send("AT\r\n");
+}
 
 // Send binary payload through string-compatible storage
 std::string binary_payload("\x01\x02\x03", 3);
-serial->send(binary_payload);
+if (opened) {
+    serial->send(binary_payload);
+}
 ```
 
 ### API Reference
@@ -395,6 +406,10 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 
 | Method                      | Parameters | Description                                               |
 | --------------------------- | ---------- | --------------------------------------------------------- |
+| `data_bits(bits)`           | `int`      | Set serial data bits before `build()`                     |
+| `stop_bits(bits)`           | `int`      | Set serial stop bits before `build()`                     |
+| `parity(mode)`              | `string`   | Set serial parity before `build()`                        |
+| `flow_control(mode)`        | `string`   | Set flow control before `build()`                         |
 | `retry_interval(ms)`        | `unsigned` | Set reconnection interval (default `3000`)                |
 | `use_independent_context()` | `bool`     | Run on a dedicated `io_context` thread managed by unilink |
 | `auto_manage()`             | `bool`     | Auto-start immediately and stop on destruction            |
@@ -486,11 +501,13 @@ auto receiver = unilink::udp(8080)
     })
     .build();
 
-receiver->start();
+bool receiver_started = receiver->start().get();
 
 // Keep running...
-std::this_thread::sleep_for(std::chrono::seconds(60));
-receiver->stop();
+if (receiver_started) {
+    std::this_thread::sleep_for(std::chrono::seconds(60));
+    receiver->stop();
+}
 ```
 
 #### UDP Sender (Client)
@@ -503,8 +520,10 @@ auto sender = unilink::udp(0)  // 0 = ephemeral port
     .set_remote("127.0.0.1", 8080)
     .build();
 
-sender->start();
-sender->send("Hello UDP!");
+bool sender_started = sender->start().get();
+if (sender_started) {
+    sender->send("Hello UDP!");
+}
 ```
 
 ### API Reference
@@ -570,7 +589,10 @@ auto server = unilink::uds_server("/tmp/my_service.sock")
     })
     .build();
 
-server->start();
+bool listening = server->start().get();
+if (!listening) {
+    std::cerr << "Failed to start UDS server" << std::endl;
+}
 ```
 
 #### UDS Client
@@ -584,8 +606,10 @@ auto client = unilink::uds_client("/tmp/my_service.sock")
     })
     .build();
 
-client->start();
-client->send("Hello IPC!");
+bool connected = client->start().get();
+if (connected) {
+    client->send("Hello IPC!");
+}
 ```
 
 ### API Reference
@@ -611,6 +635,9 @@ unilink::uds_client(const std::string& socket_path)
 | Method                | Parameters | Description                                |
 | --------------------- | ---------- | ------------------------------------------ |
 | `retry_interval(ms)`  | `unsigned` | Set reconnection interval (default `3000`) |
+| `max_retries(count)`  | `int`      | Set maximum reconnect attempts             |
+| `connection_timeout(ms)` | `unsigned` | Set connection timeout in milliseconds   |
+| `use_independent_context()` | `bool` | Run on a dedicated `io_context` thread    |
 | `auto_manage()`       | `bool`     | Auto-start/stop lifecycle                  |
 
 #### Instance Methods (UDS Client)

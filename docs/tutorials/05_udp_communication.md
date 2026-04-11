@@ -84,18 +84,29 @@ int main() {
 
 ---
 
-## Step 3: Run Both Programs
+## Step 3: Build The Two Programs
+
+If you saved the snippets as `udp_receiver.cpp` and `udp_sender.cpp`:
+
+```bash
+g++ -std=c++17 udp_receiver.cpp -o udp_receiver -lunilink -lboost_system -pthread
+g++ -std=c++17 udp_sender.cpp -o udp_sender -lunilink -lboost_system -pthread
+```
+
+---
+
+## Step 4: Run Both Programs
 
 **Terminal 1**
 
 ```bash
-./udp_receiver_app
+./udp_receiver
 ```
 
 **Terminal 2**
 
 ```bash
-./udp_sender_app
+./udp_sender
 ```
 
 Type messages in the sender terminal and verify that the receiver prints them.
@@ -126,13 +137,13 @@ For simple local tests, UDP is useful when you want low overhead and can tolerat
 
 ## Use The Full Examples For Repeated Testing
 
-For CLI flags, reply behavior, and sender timing options, use:
+For ready-to-run maintained examples, use:
 
 - [examples/udp/README.md](../../examples/udp/README.md)
 - [examples/udp/udp_receiver.cpp](../../examples/udp/udp_receiver.cpp)
 - [examples/udp/udp_sender.cpp](../../examples/udp/udp_sender.cpp)
 
-This tutorial intentionally stays smaller than the example README to avoid duplicating all command-line details.
+Those examples intentionally stay minimal too: one receiver bound to `9000` and one sender targeting `127.0.0.1:9000`.
 
 ---
 

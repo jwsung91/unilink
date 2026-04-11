@@ -1,128 +1,83 @@
 # Serial Communication Examples
 
-Examples demonstrating serial communication using the unilink library.
+Serial examples using the current public API.
 
-## Examples
+## Included Examples
 
-- **echo/**: Serial echo server that echoes received data back to sender
-- **chat/**: Serial chat application for interactive communication
+- `echo/`: Echoes each received line back to the same serial link
+- `chat/`: Interactive two-way serial chat
 
 ## Common Usage
 
-```bash
-# Set serial port permissions (Linux)
-sudo chmod 666 /dev/ttyUSB0
+Both examples accept the same arguments:
 
-# Windows uses COM ports
-# COM3, COM4, etc.
+```bash
+./echo_serial <device> <baud_rate>
+./chat_serial <device> <baud_rate>
 ```
 
-## Testing with socat (Virtual Serial Ports)
+Examples:
 
-For testing without physical serial devices, you can use socat to create virtual serial port pairs:
-
-### Setup Virtual Serial Ports
 ```bash
-# Terminal 1: Create virtual serial pair
+# Linux
+./echo_serial /dev/ttyUSB0 115200
+./chat_serial /dev/ttyUSB0 115200
+
+# Windows
+./echo_serial COM3 9600
+./chat_serial COM3 9600
+```
+
+If arguments are omitted, the code defaults to `/dev/ttyUSB0` and `115200`.
+
+## Quick Test With `socat`
+
+```bash
+# Terminal 1
 socat -d -d pty,raw,echo=0,link=/tmp/ttyA pty,raw,echo=0,link=/tmp/ttyB
-# Creates: /tmp/ttyA <-> /tmp/ttyB
-```
 
-### Test Echo Server
-```bash
-# Terminal 2: Run echo server on first port
-cd serial/echo
+# Terminal 2
 ./echo_serial /tmp/ttyA 115200
 
-# Terminal 3: Connect to second port
-cd serial/echo
+# Terminal 3
 ./echo_serial /tmp/ttyB 115200
-
-# Type messages and see them echoed back
 ```
 
-### Test Chat Application
+For interactive chat instead of echo:
+
 ```bash
-# Terminal 2: Run chat server on first port
-cd serial/chat
+# Terminal 2
 ./chat_serial /tmp/ttyA 115200
 
-# Terminal 3: Connect to second port
-cd serial/chat
+# Terminal 3
 ./chat_serial /tmp/ttyB 115200
-
-# Start chatting between terminals
 ```
 
-### Advanced socat Testing
-```bash
-# Create multiple virtual ports with fixed paths
-socat -d -d pty,raw,echo=0,link=/tmp/ttyA1 pty,raw,echo=0,link=/tmp/ttyB1 &
-socat -d -d pty,raw,echo=0,link=/tmp/ttyA2 pty,raw,echo=0,link=/tmp/ttyB2 &
+## Notes
 
-# Test with different baud rates
-socat -d -d pty,raw,echo=0,link=/tmp/ttyA,ispeed=9600,ospeed=9600 pty,raw,echo=0,link=/tmp/ttyB,ispeed=9600,ospeed=9600
-```
-
-## Prerequisites
-
-- Serial port device connected (or socat for virtual testing)
-- Appropriate permissions to access serial port
-- Matching baud rate between device and application
-
-### Installing socat for Virtual Testing
-
-#### Ubuntu/Debian
-```bash
-sudo apt update
-sudo apt install socat
-```
-
-#### CentOS/RHEL/Fedora
-```bash
-sudo yum install socat
-# or
-sudo dnf install socat
-```
-
-
-#### Windows
-```bash
-# Via WSL (Windows Subsystem for Linux)
-wsl --install
-# Then in WSL:
-sudo apt install socat
-
-# Or via Cygwin
-# Download and install Cygwin, then install socat package
-```
+- These examples use `serial(...).on_connect(...).on_data(...).on_error(...).build()`.
+- `echo_serial` exits when you submit an empty line.
+- `chat_serial` exits on `/quit`.
+- On Linux, serial-device access often requires `dialout` or similar group membership.
 
 ## Troubleshooting
 
 ### Permission Denied
+
 ```bash
-# Add user to dialout group (Linux)
 sudo usermod -a -G dialout $USER
-# Log out and log back in
 ```
 
+Log out and back in after changing group membership.
+
 ### Device Not Found
-- Check if device is connected: `ls /dev/tty*`
-- Verify device path: `/dev/ttyUSB0`, `/dev/ttyACM0`, etc.
-- On Windows: Check Device Manager for COM ports
+
+- Check available devices with `ls /dev/tty*`
+- Verify the correct device path such as `/dev/ttyUSB0` or `/dev/ttyACM0`
+- On Windows, verify the COM port in Device Manager
 
 ### Connection Issues
-- Ensure baud rate matches device settings
-- Check if another application is using the port
-- Verify cable and device functionality
 
-## Platform-Specific Notes
-
-### Linux
-- Common devices: `/dev/ttyUSB0`, `/dev/ttyACM0`
-- May need udev rules for consistent device naming
-
-### Windows
-- Use COM ports: `COM3`, `COM4`, etc.
-- Check Device Manager for available ports
-
+- Make sure baud rates match on both sides
+- Verify another program is not already using the port
+- Recheck cable, adapter, and device wiring

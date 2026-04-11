@@ -2,50 +2,33 @@
 
 Quick guide to compile and run tutorial examples.
 
-## Quick Build (Recommended)
+## Quick Build
 
-From project root:
+From the project root:
 
-\`\`\`bash
-# Configure (first time only)
+```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-
-# Build tutorial examples
-cmake --build build --target tutorial_simple_client
-cmake --build build --target tutorial_my_first_client
-cmake --build build --target tutorial_echo_server
-cmake --build build --target tutorial_chat_server
-
-# Or build all at once
-cmake --build build -j
-\`\`\`
+cmake --build build --target tutorial_simple_client tutorial_my_first_client tutorial_echo_server tutorial_chat_server
+```
 
 ## Run Examples
 
-\`\`\`bash
-# Simple client (needs server on port 8080)
-./build/examples/tutorials/tutorial_simple_client
+```bash
+# Simple client (needs a server on port 8080)
+./build/bin/tutorial_simple_client
 
-# My first client
-./build/examples/tutorials/tutorial_my_first_client [host] [port]
+# Interactive client
+./build/bin/tutorial_my_first_client [host] [port]
 
-# Echo server
-./build/examples/tutorials/tutorial_echo_server [port]
+# Echo server (fixed to port 8080)
+./build/bin/tutorial_echo_server
 
-# Chat server
-./build/examples/tutorials/tutorial_chat_server [port]
-\`\`\`
+# Chat server (fixed to port 8080)
+./build/bin/tutorial_chat_server
+```
 
-## Manual Compilation
+## Notes
 
-If CMake is not available:
-
-\`\`\`bash
-g++ -std=c++17 getting_started/simple_client.cpp \\
-    -I../../unilink \\
-    -L../../build \\
-    -lunilink -lboost_system -pthread \\
-    -o simple_client
-\`\`\`
-
-See [README.md](README.md) for detailed instructions.
+- Tutorial binaries are currently emitted under `build/bin/`.
+- `tutorial_echo_server` and `tutorial_chat_server` do not parse CLI port arguments.
+- See [README.md](README.md) for example workflows.

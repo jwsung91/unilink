@@ -14,48 +14,35 @@
  * limitations under the License.
  */
 
-#include <chrono>
 #include <iostream>
 #include <string>
-#include <thread>
-#include <vector>
 
-#include "unilink/config/uds_config.hpp"
-#include "unilink/factory/channel_factory.hpp"
-#include "unilink/interface/channel.hpp"
+#include "unilink/unilink.hpp"
 
 using namespace unilink;
 
-int main() {
-  config::UdsClientConfig cfg;
-  cfg.socket_path = "/tmp/unilink_echo.sock";
+int main(int argc, char** argv) {
+  const std::string socket_path = (argc > 1) ? argv[1] : "/tmp/unilink_echo.sock";
 
-  auto client = factory::ChannelFactory::create(cfg);
+  auto client =
+      unilink::uds_client(socket_path)
+          .on_connect([](const unilink::ConnectionContext&) { std::cout << "Connected to UDS server" << std::endl; })
+          .on_disconnect(
+              [](const unilink::ConnectionContext&) { std::cout << "Disconnected from UDS server" << std::endl; })
+          .on_data([](const unilink::MessageContext& ctx) { std::cout << "[Server] " << ctx.data() << std::endl; })
+          .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[Error] " << ctx.message() << std::endl; })
+          .build();
 
-  client->on_state(
-      [](base::LinkState state) { std::cout << "Client state changed to: " << base::to_cstr(state) << std::endl; });
+  if (!client || !client->start().get()) {
+    std::cerr << "Failed to connect to UDS server at " << socket_path << std::endl;
+    return 1;
+  }
 
-  client->on_bytes([](memory::ConstByteSpan data) {
-    std::string msg(reinterpret_cast<const char*>(data.data()), data.size());
-    std::cout << "Received echo: " << msg << std::endl;
-  });
-
-  std::cout << "Connecting to UDS server at " << cfg.socket_path << "..." << std::endl;
-  client->start();
-
-  // Simple loop to send messages
+  std::cout << "Connected to " << socket_path << ". Type messages or '/quit'." << std::endl;
   std::string input;
-  while (true) {
-    std::cout << "Enter message (or 'exit' to quit): ";
-    std::getline(std::cin, input);
-    if (input == "exit") break;
-
-    if (client->is_connected()) {
-      client->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(input.data()), input.size()));
-    } else {
-      std::cout << "Client is not connected yet, trying again in 1s..." << std::endl;
-      std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
+  while (std::getline(std::cin, input)) {
+    if (input == "/quit") break;
+    client->send(input);
   }
 
   client->stop();

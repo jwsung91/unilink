@@ -32,7 +32,7 @@ This index is the stable entry point for the handwritten documentation in `docs/
 | [Serial Communication](tutorials/04_serial_communication.md) | Device I/O and virtual-port testing |
 | [UDP Communication](tutorials/05_udp_communication.md) | Connectionless send/receive workflow |
 
-Tutorial companion material is split between `examples/tutorials/` and the protocol-specific example directories under `examples/serial/` and `examples/udp/`.
+Tutorial companion material is split between `examples/tutorials/` and the protocol-specific example directories under `examples/serial/`, `examples/udp/`, and `examples/uds/`.
 
 ## Architecture Notes
 
@@ -46,6 +46,11 @@ Tutorial companion material is split between `examples/tutorials/` and the proto
 ## Examples and Tests
 
 - [Examples Directory](../examples/README.md)
+- [Tutorial Examples](../examples/tutorials/README.md)
+- [Protocol Examples](../examples/tcp/README.md)
+- [Serial Examples](../examples/serial/README.md)
+- [UDP Examples](../examples/udp/README.md)
+- [UDS Examples](../examples/uds/README.md)
 - [Test Overview](test_structure.md)
 - [Top-level Test Notes](../test/README.md)
 
