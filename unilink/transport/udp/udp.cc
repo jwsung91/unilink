@@ -242,9 +242,16 @@ struct UdpChannel::Impl {
       return;
     }
     if (!remote_endpoint_) {
-      UNILINK_LOG_WARNING("udp", "write", "Remote endpoint not set; dropping write request");
-      writing_ = false;
-      return;
+      // Try to set from config if possible
+      set_remote_from_config();
+      if (!remote_endpoint_) {
+        UNILINK_LOG_WARNING("udp", "write", "Remote endpoint not set; dropping write request");
+        writing_ = false;
+        return;
+      }
+      // If we just set it, consider it connected
+      connected_.store(true);
+      transition_to(LinkState::Connected);
     }
 
     writing_ = true;
