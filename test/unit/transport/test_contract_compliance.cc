@@ -20,6 +20,7 @@
 #include <thread>
 
 #include "test/utils/contract_utils.hpp"
+#include "test_utils.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/memory/safe_span.hpp"
 #include "unilink/transport/tcp_client/tcp_client.hpp"
@@ -144,20 +145,9 @@ TEST_F(ContractComplianceTest, Serial_StopSemantics) {
 
 TEST_F(ContractComplianceTest, TcpServer_StopSemantics) {
   config::TcpServerConfig cfg;
-  cfg.port = 12346;  // Use different port
+  cfg.port = TestUtils::getAvailableTestPort();
 
-  auto server = TcpServer::create(cfg);  // Use global context manager, but we don't pump it here... wait.
-  // TcpServer uses IoContextManager by default. We should inject our ioc for control.
-  // Wait, TcpServer::create overload with ioc requires acceptor unique_ptr.
-  // Let's use the default create but we need to ensure IoContextManager runs?
-  // Actually, TcpServer uses IoContextManager::instance().get_context() by default.
-  // Since we want to control the loop, let's use the overload if possible.
-  // Or just rely on IoContextManager's thread (it starts its own thread).
-  // But for stop semantics test, we need precise control or just observation.
-  // Observation is fine.
-
-  // Let's stick to default create. It spawns a thread.
-  server = TcpServer::create(cfg);
+  auto server = TcpServer::create(cfg);
 
   CallbackRecorder recorder;
   server->on_state(recorder.get_state_callback());
@@ -165,16 +155,19 @@ TEST_F(ContractComplianceTest, TcpServer_StopSemantics) {
   server->start();
 
   // Wait for Listening
-  ASSERT_TRUE(recorder.wait_for_state(base::LinkState::Listening, std::chrono::milliseconds(100)));
+  ASSERT_TRUE(recorder.wait_for_state(base::LinkState::Listening, std::chrono::milliseconds(500)));
 
   // --- STOP ---
   server->stop();
   auto stop_time = std::chrono::steady_clock::now();
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  // Give a small grace period for the final 'Closed' state event which might be
+  // triggered during the stop() call itself or immediately after.
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
+  // The contract says NO callbacks after stop() RETURNS.
+  // We use a small epsilon if needed, but verify_no_events_after should handle it.
   EXPECT_TRUE(recorder.verify_no_events_after(stop_time))
-
       << "TcpServer: Found events after stop()! This violates the Channel Contract.";
 }
 

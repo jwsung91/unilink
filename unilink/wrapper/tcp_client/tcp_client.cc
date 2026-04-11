@@ -53,6 +53,9 @@ struct TcpClient::Impl {
   ConnectionHandler connect_handler_{nullptr};
   ConnectionHandler disconnect_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
+  FramedMessageHandler message_handler_{nullptr};
+
+  std::unique_ptr<framer::IFramer> framer_{nullptr};
 
   bool auto_manage_ = false;
   std::chrono::milliseconds retry_interval_{3000};
@@ -173,6 +176,7 @@ struct TcpClient::Impl {
     }
     std::lock_guard<std::mutex> lock(mutex_);
     channel_.reset();
+    if (framer_) framer_->reset();
   }
 
   void send(std::string_view data) {
@@ -193,9 +197,17 @@ struct TcpClient::Impl {
     // to propagate to transport layer for error handling (e.g., auto-reconnect)
     channel_->on_bytes([this, weak_alive](memory::ConstByteSpan data) {
       if (weak_alive.expired()) return;
+
+      // 1. Raw data handler
       if (data_handler_) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
         data_handler_(MessageContext(0, str_data));
+      }
+
+      // 2. Framer integration
+      std::lock_guard<std::mutex> lock(mutex_);
+      if (framer_) {
+        framer_->push_bytes(data);
       }
     });
 
@@ -222,6 +234,22 @@ struct TcpClient::Impl {
         }
       }
     });
+  }
+
+  void set_framer(std::unique_ptr<framer::IFramer> framer) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    framer_ = std::move(framer);
+    if (framer_ && message_handler_) {
+      framer_->set_on_message(message_handler_);
+    }
+  }
+
+  void on_message(FramedMessageHandler handler) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    message_handler_ = std::move(handler);
+    if (framer_) {
+      framer_->set_on_message(message_handler_);
+    }
   }
 };
 
@@ -256,6 +284,9 @@ ChannelInterface& TcpClient::on_error(ErrorHandler h) {
   impl_->error_handler_ = std::move(h);
   return *this;
 }
+
+void TcpClient::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
+void TcpClient::on_message(FramedMessageHandler h) { impl_->on_message(std::move(h)); }
 
 ChannelInterface& TcpClient::auto_manage(bool m) {
   impl_->auto_manage_ = m;

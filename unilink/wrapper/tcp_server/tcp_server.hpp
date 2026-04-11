@@ -73,6 +73,9 @@ class UNILINK_API TcpServer : public ServerInterface {
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
 
+  void set_framer_factory(FramerFactory factory) override;
+  void on_message(MessageHandler handler) override;
+
   // Client count and management
   size_t get_client_count() const override;
   std::vector<size_t> get_connected_clients() const override;

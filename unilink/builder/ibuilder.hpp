@@ -155,7 +155,10 @@ class BuilderInterface {
    */
   Derived& use_line_framer(std::string_view delimiter = "\n", bool include_delimiter = false,
                            size_t max_length = 65536) {
-    framer_ = std::make_unique<framer::LineFramer>(delimiter, include_delimiter, max_length);
+    std::string delim(delimiter);
+    framer_factory_ = [delim, include_delimiter, max_length]() {
+      return std::make_unique<framer::LineFramer>(delim, include_delimiter, max_length);
+    };
     return static_cast<Derived&>(*this);
   }
 
@@ -168,7 +171,9 @@ class BuilderInterface {
    */
   Derived& use_packet_framer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
                              size_t max_length) {
-    framer_ = std::make_unique<framer::PacketFramer>(start_pattern, end_pattern, max_length);
+    framer_factory_ = [start_pattern, end_pattern, max_length]() {
+      return std::make_unique<framer::PacketFramer>(start_pattern, end_pattern, max_length);
+    };
     return static_cast<Derived&>(*this);
   }
 
@@ -177,7 +182,7 @@ class BuilderInterface {
    * @param handler Function to handle complete messages
    * @return Derived& Reference to this builder
    */
-  Derived& on_message(std::function<void(memory::ConstByteSpan)> handler) {
+  virtual Derived& on_message(std::function<void(memory::ConstByteSpan)> handler) {
     on_message_ = std::move(handler);
     return static_cast<Derived&>(*this);
   }
@@ -196,7 +201,7 @@ class BuilderInterface {
   }
 
  protected:
-  std::unique_ptr<framer::IFramer> framer_;
+  std::function<std::unique_ptr<framer::IFramer>()> framer_factory_;
   std::function<void(memory::ConstByteSpan)> on_message_;
 };
 

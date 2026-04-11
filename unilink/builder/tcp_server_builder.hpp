@@ -62,6 +62,11 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
 
   /**
+   * @brief Set message handler callback for framed messages (Server version with context)
+   */
+  TcpServerBuilder& on_message(std::function<void(const wrapper::MessageContext&)> handler);
+
+  /**
    * @brief Use independent IoContext for this server
    */
   TcpServerBuilder& use_independent_context(bool use_independent = true);
@@ -114,6 +119,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   std::function<void(const wrapper::ConnectionContext&)> on_connect_;
   std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
   std::function<void(const wrapper::ErrorContext&)> on_error_;
+  std::function<void(const wrapper::MessageContext&)> on_framed_message_;
 };
 
 #ifdef _MSC_VER

@@ -42,6 +42,13 @@ std::unique_ptr<wrapper::Udp> UdpBuilder::build() {
   if (on_disconnect_) udp->on_disconnect(on_disconnect_);
   if (on_error_) udp->on_error(on_error_);
 
+  if (framer_factory_) {
+    udp->set_framer(framer_factory_());
+  }
+  if (on_message_) {
+    udp->on_message(std::move(on_message_));
+  }
+
   if (auto_manage_) {
     udp->auto_manage(true);
   }

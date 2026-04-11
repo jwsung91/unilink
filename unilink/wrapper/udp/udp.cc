@@ -51,6 +51,9 @@ struct Udp::Impl {
   ConnectionHandler connect_handler{nullptr};
   ConnectionHandler disconnect_handler{nullptr};
   ErrorHandler error_handler{nullptr};
+  FramedMessageHandler message_handler{nullptr};
+
+  std::unique_ptr<framer::IFramer> framer{nullptr};
 
   bool auto_manage{false};
   bool started{false};
@@ -117,15 +120,23 @@ struct Udp::Impl {
       }
       start_promise_fulfilled_ = true;
     }
+
+    if (framer) framer->reset();
   }
 
   void setup_internal_handlers() {
     if (!channel) return;
 
     channel->on_bytes([this](memory::ConstByteSpan data) {
+      // 1. Raw data handler
       if (data_handler) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
         data_handler(MessageContext(0, str_data));
+      }
+
+      // 2. Framer integration
+      if (framer) {
+        framer->push_bytes(data);
       }
     });
 
@@ -152,6 +163,20 @@ struct Udp::Impl {
           break;
       }
     });
+  }
+
+  void set_framer(std::unique_ptr<framer::IFramer> f) {
+    framer = std::move(f);
+    if (framer && message_handler) {
+      framer->set_on_message(message_handler);
+    }
+  }
+
+  void on_message(FramedMessageHandler handler) {
+    message_handler = std::move(handler);
+    if (framer) {
+      framer->set_on_message(message_handler);
+    }
   }
 };
 
@@ -193,6 +218,9 @@ ChannelInterface& Udp::on_error(ErrorHandler h) {
   impl_->error_handler = std::move(h);
   return *this;
 }
+
+void Udp::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
+void Udp::on_message(FramedMessageHandler h) { impl_->on_message(std::move(h)); }
 
 ChannelInterface& Udp::auto_manage(bool m) {
   impl_->auto_manage = m;

@@ -21,6 +21,7 @@
 #include <boost/asio/io_context.hpp>
 #include <mutex>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #include "unilink/base/common.hpp"
@@ -49,6 +50,10 @@ struct UdsServer::Impl {
   ConnectionHandler client_disconnect_handler_{nullptr};
   MessageHandler data_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
+  FramerFactory framer_factory_{nullptr};
+  MessageHandler on_message_{nullptr};
+
+  std::unordered_map<size_t, std::unique_ptr<framer::IFramer>> framers_;
 
   bool auto_manage_ = false;
   size_t max_clients_ = 100;
@@ -158,6 +163,22 @@ struct UdsServer::Impl {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (framer_factory_) {
+          auto framer = framer_factory_();
+          if (framer) {
+            framer->set_on_message([this, client_id](memory::ConstByteSpan msg) {
+              if (on_message_) {
+                std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
+                on_message_(MessageContext(client_id, str_msg));
+              }
+            });
+            framers_[client_id] = std::move(framer);
+          }
+        }
+      }
+
       ConnectionHandler handler;
       {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -171,6 +192,11 @@ struct UdsServer::Impl {
     server_->on_multi_disconnect([weak_alive, this](size_t client_id) {
       auto alive = weak_alive.lock();
       if (!alive) return;
+
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        framers_.erase(client_id);
+      }
 
       ConnectionHandler handler;
       {
@@ -186,6 +212,7 @@ struct UdsServer::Impl {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
+      // 1. Raw data handler
       MessageHandler handler;
       {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -193,6 +220,15 @@ struct UdsServer::Impl {
       }
       if (handler) {
         handler(MessageContext(client_id, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
+      }
+
+      // 2. Framer integration
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        auto it = framers_.find(client_id);
+        if (it != framers_.end()) {
+          it->second->push_bytes(memory::ConstByteSpan(data.data(), data.size()));
+        }
       }
     });
   }
@@ -256,6 +292,16 @@ ServerInterface& UdsServer::on_error(ErrorHandler handler) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(handler);
   return *this;
+}
+
+void UdsServer::set_framer_factory(FramerFactory factory) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  impl_->framer_factory_ = std::move(factory);
+}
+
+void UdsServer::on_message(MessageHandler handler) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  impl_->on_message_ = std::move(handler);
 }
 
 size_t UdsServer::get_client_count() const { return impl_->server_ ? impl_->server_->get_client_count() : 0; }

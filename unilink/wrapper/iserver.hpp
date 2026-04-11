@@ -23,6 +23,7 @@
 #include <vector>
 
 #include "unilink/base/visibility.hpp"
+#include "unilink/framer/iframer.hpp"
 #include "unilink/wrapper/context.hpp"
 
 namespace unilink {
@@ -36,6 +37,7 @@ class UNILINK_API ServerInterface {
   using MessageHandler = std::function<void(const MessageContext&)>;
   using ConnectionHandler = std::function<void(const ConnectionContext&)>;
   using ErrorHandler = std::function<void(const ErrorContext&)>;
+  using FramerFactory = std::function<std::unique_ptr<framer::IFramer>()>;
 
   virtual ~ServerInterface() = default;
 
@@ -53,6 +55,18 @@ class UNILINK_API ServerInterface {
   virtual ServerInterface& on_client_disconnect(ConnectionHandler handler) = 0;
   virtual ServerInterface& on_data(MessageHandler handler) = 0;
   virtual ServerInterface& on_error(ErrorHandler handler) = 0;
+
+  /**
+   * @brief Set a factory function to create a new framer for each client connection.
+   * @param factory Function that returns a unique_ptr to a new framer.
+   */
+  virtual void set_framer_factory(FramerFactory factory) = 0;
+
+  /**
+   * @brief Set a handler for complete messages extracted by the framer.
+   * @param handler callback taking MessageContext (where data is the framed payload).
+   */
+  virtual void on_message(MessageHandler handler) = 0;
 
   // Management
   virtual size_t get_client_count() const = 0;

@@ -57,6 +57,13 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   serial->set_flow_control(flow_control_);
   serial->set_retry_interval(retry_interval_);
 
+  if (framer_factory_) {
+    serial->set_framer(framer_factory_());
+  }
+  if (on_message_) {
+    serial->on_message(std::move(on_message_));
+  }
+
   if (auto_manage_) {
     serial->auto_manage(true);
   }

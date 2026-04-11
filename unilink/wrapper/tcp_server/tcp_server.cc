@@ -23,6 +23,7 @@
 #include <mutex>
 #include <stdexcept>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #include "unilink/base/common.hpp"
@@ -61,6 +62,10 @@ struct TcpServer::Impl {
   ConnectionHandler on_client_disconnect_{nullptr};
   MessageHandler on_data_{nullptr};
   ErrorHandler on_error_{nullptr};
+  FramerFactory framer_factory_{nullptr};
+  MessageHandler on_message_{nullptr};
+
+  std::unordered_map<size_t, std::unique_ptr<framer::IFramer>> framers_;
 
   explicit Impl(uint16_t port)
       : port_(port),
@@ -223,12 +228,38 @@ struct TcpServer::Impl {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
       transport_server->on_multi_connect([this](size_t id, const std::string& info) {
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          if (framer_factory_) {
+            auto framer = framer_factory_();
+            if (framer) {
+              framer->set_on_message([this, id](memory::ConstByteSpan msg) {
+                if (on_message_) {
+                  std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
+                  on_message_(MessageContext(id, str_msg));
+                }
+              });
+              framers_[id] = std::move(framer);
+            }
+          }
+        }
         if (on_client_connect_) on_client_connect_(ConnectionContext(id, info));
       });
       transport_server->on_multi_data([this](size_t id, const std::string& data) {
         if (on_data_) on_data_(MessageContext(id, data));
+
+        std::lock_guard<std::mutex> lock(mutex_);
+        auto it = framers_.find(id);
+        if (it != framers_.end()) {
+          auto binary_view = common::safe_convert::string_to_bytes(data);
+          it->second->push_bytes(memory::ConstByteSpan(binary_view.first, binary_view.second));
+        }
       });
       transport_server->on_multi_disconnect([this](size_t id) {
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          framers_.erase(id);
+        }
         if (on_client_disconnect_) on_client_disconnect_(ConnectionContext(id));
       });
     }
@@ -291,6 +322,16 @@ ServerInterface& TcpServer::on_data(MessageHandler h) {
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
   impl_->on_error_ = std::move(h);
   return *this;
+}
+
+void TcpServer::set_framer_factory(FramerFactory factory) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  impl_->framer_factory_ = std::move(factory);
+}
+
+void TcpServer::on_message(MessageHandler handler) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  impl_->on_message_ = std::move(handler);
 }
 
 size_t TcpServer::get_client_count() const {

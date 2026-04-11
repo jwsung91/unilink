@@ -54,6 +54,13 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   client->set_max_retries(max_retries_);
   client->set_connection_timeout(connection_timeout_);
 
+  if (framer_factory_) {
+    client->set_framer(framer_factory_());
+  }
+  if (on_message_) {
+    client->on_message(std::move(on_message_));
+  }
+
   return client;
 }
 
@@ -125,6 +132,14 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
       .on_client_disconnect(on_disconnect_)
       .on_error(on_error_);
 
+  if (framer_factory_) {
+    server->set_framer_factory(framer_factory_);
+  }
+
+  if (on_framed_message_) {
+    server->on_message(on_framed_message_);
+  }
+
   server->set_client_limit(max_clients_);
 
   return server;
@@ -152,6 +167,11 @@ UdsServerBuilder& UdsServerBuilder::on_disconnect(std::function<void(const wrapp
 
 UdsServerBuilder& UdsServerBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
   on_error_ = std::move(handler);
+  return *this;
+}
+
+UdsServerBuilder& UdsServerBuilder::on_message(std::function<void(const wrapper::MessageContext&)> handler) {
+  on_framed_message_ = std::move(handler);
   return *this;
 }
 

@@ -52,6 +52,9 @@ struct UdsClient::Impl {
   ConnectionHandler connect_handler_{nullptr};
   ConnectionHandler disconnect_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
+  FramedMessageHandler message_handler_{nullptr};
+
+  std::unique_ptr<framer::IFramer> framer_{nullptr};
 
   bool auto_manage_ = false;
   std::chrono::milliseconds retry_interval_{3000};
@@ -169,6 +172,9 @@ struct UdsClient::Impl {
 
     fulfill_all_locked(false);
     channel_.reset();
+    if (framer_) {
+      framer_->reset();
+    }
   }
 
   void setup_internal_handlers() {
@@ -207,6 +213,7 @@ struct UdsClient::Impl {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
+      // 1. Raw data handler
       MessageHandler handler;
       {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -215,7 +222,29 @@ struct UdsClient::Impl {
       if (handler) {
         handler(MessageContext(0, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
       }
+
+      // 2. Framer integration
+      std::lock_guard<std::mutex> lock(mutex_);
+      if (framer_) {
+        framer_->push_bytes(data);
+      }
     });
+  }
+
+  void set_framer(std::unique_ptr<framer::IFramer> framer) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    framer_ = std::move(framer);
+    if (framer_ && message_handler_) {
+      framer_->set_on_message(message_handler_);
+    }
+  }
+
+  void on_message(FramedMessageHandler handler) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    message_handler_ = std::move(handler);
+    if (framer_) {
+      framer_->set_on_message(message_handler_);
+    }
   }
 };
 
@@ -273,6 +302,10 @@ ChannelInterface& UdsClient::on_error(ErrorHandler handler) {
   impl_->error_handler_ = std::move(handler);
   return *this;
 }
+
+void UdsClient::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
+
+void UdsClient::on_message(FramedMessageHandler h) { impl_->on_message(std::move(h)); }
 
 ChannelInterface& UdsClient::auto_manage(bool manage) {
   impl_->auto_manage_ = manage;

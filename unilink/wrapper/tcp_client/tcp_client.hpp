@@ -70,6 +70,9 @@ class UNILINK_API TcpClient : public ChannelInterface {
   ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
+  void set_framer(std::unique_ptr<framer::IFramer> framer) override;
+  void on_message(FramedMessageHandler handler) override;
+
   ChannelInterface& auto_manage(bool manage = true) override;
 
   // Configuration
