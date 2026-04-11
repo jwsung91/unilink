@@ -15,7 +15,7 @@
 # Tutorial Examples CMakeLists.txt
 # These examples correspond to the documentation tutorials
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 
 # Getting Started examples
 add_executable(tutorial_simple_client

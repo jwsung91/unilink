@@ -1,6 +1,10 @@
 find_package(pybind11 CONFIG REQUIRED)
 
-pybind11_add_module(unilink_py module.cpp)
+# Inject version from CMake
+set(UNILINK_VERSION ${PROJECT_VERSION})
+configure_file(module.cpp.in module.cpp @ONLY)
+
+pybind11_add_module(unilink_py ${CMAKE_CURRENT_BINARY_DIR}/module.cpp)
 
 # Link against the main library
 target_link_libraries(unilink_py PRIVATE unilink::unilink)

@@ -34,11 +34,9 @@ class EchoServer {
   diagnostics::Logger& logger_;
   std::atomic<bool> running_;
   unsigned short port_;
-  std::atomic<bool> client_connected_;
 
  public:
-  EchoServer(unsigned short port)
-      : logger_(unilink::diagnostics::Logger::instance()), running_(true), port_(port), client_connected_(false) {
+  EchoServer(unsigned short port) : logger_(unilink::diagnostics::Logger::instance()), running_(true), port_(port) {
     // Initialize logger
     logger_.set_level(unilink::diagnostics::LogLevel::INFO);
     logger_.set_console_output(true);
@@ -71,17 +69,6 @@ class EchoServer {
   }
 
   void on_client_connect(const unilink::ConnectionContext& ctx) {
-    if (client_connected_.load()) {
-      logger_.warning("server", "connect",
-                      "Client " + std::to_string(ctx.client_id()) +
-                          " connection rejected - echo server supports only one client at a time");
-      if (server_) {
-        server_->send_to(ctx.client_id(), "[Server] Connection rejected - single client mode");
-        // Disconnect logic could be more robust in production
-      }
-      return;
-    }
-    client_connected_.store(true);
     logger_.info("server", "connect", "Client " + std::to_string(ctx.client_id()) + " connected: " + ctx.client_info());
   }
 
@@ -97,7 +84,6 @@ class EchoServer {
   }
 
   void on_client_disconnect(const unilink::ConnectionContext& ctx) {
-    client_connected_.store(false);
     logger_.info("server", "disconnect", "Client " + std::to_string(ctx.client_id()) + " disconnected");
   }
 

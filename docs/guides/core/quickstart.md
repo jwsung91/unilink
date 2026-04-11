@@ -5,6 +5,7 @@ Get started with unilink in 5 minutes!
 ## Installation
 
 ### Prerequisites
+
 ```bash
 # Ubuntu/Debian
 sudo apt update && sudo apt install -y \
@@ -12,6 +13,7 @@ sudo apt update && sudo apt install -y \
 ```
 
 ### Build & Install
+
 ```bash
 git clone https://github.com/jwsung91/unilink.git
 cd unilink
@@ -38,15 +40,15 @@ int main() {
             std::cout << "Received: " << ctx.data() << std::endl;
         })
         .build();
-    
+
     client->start();
-    
+
     // Send a message
     std::this_thread::sleep_for(std::chrono::seconds(1));
     if (client->is_connected()) {
         client->send("Hello, Server!");
     }
-    
+
     // Keep running
     std::this_thread::sleep_for(std::chrono::seconds(5));
     client->stop();
@@ -55,6 +57,7 @@ int main() {
 ```
 
 **Compile:**
+
 ```bash
 g++ -std=c++17 my_client.cc -lunilink -lboost_system -pthread -o my_client
 ./my_client
@@ -69,9 +72,8 @@ g++ -std=c++17 my_client.cc -lunilink -lboost_system -pthread -o my_client
 #include "unilink/unilink.hpp"
 
 int main() {
-    // Create a TCP server
+    // Create a TCP server (defaults to unlimited clients)
     auto server = unilink::tcp_server(8080)
-        .unlimited_clients()  // Required: choose client limit before build
         .on_connect([](const unilink::ConnectionContext& ctx) {
             std::cout << "Client " << ctx.client_id() << " connected from " << ctx.client_info() << std::endl;
         })
@@ -79,10 +81,10 @@ int main() {
             std::cout << "Client " << ctx.client_id() << ": " << ctx.data() << std::endl;
         })
         .build();
-    
+
     server->start();
     std::cout << "Server listening on port 8080..." << std::endl;
-    
+
     // Keep running for 60 seconds
     std::this_thread::sleep_for(std::chrono::seconds(60));
     server->stop();
@@ -108,13 +110,13 @@ int main() {
             std::cout << "Received: " << ctx.data() << std::endl;
         })
         .build();
-    
+
     serial->start();
-    
+
     // Send data
     std::this_thread::sleep_for(std::chrono::seconds(1));
     serial->send("AT\r\n");
-    
+
     // Keep running
     std::this_thread::sleep_for(std::chrono::seconds(5));
     serial->stop();
@@ -127,6 +129,7 @@ int main() {
 ## Common Patterns
 
 ### Pattern 1: Auto-Reconnection
+
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
     .retry_interval(3000)  // Retry every 3 seconds (default)
@@ -136,9 +139,9 @@ client->start();  // Will automatically reconnect on disconnect
 ```
 
 ### Pattern 2: Error Handling
+
 ```cpp
 auto server = unilink::tcp_server(8080)
-    .unlimited_clients()
     .on_error([](const unilink::ErrorContext& ctx) {
         std::cerr << "Error: " << ctx.message() << std::endl;
     })
@@ -146,22 +149,8 @@ auto server = unilink::tcp_server(8080)
     .build();
 ```
 
-### Pattern 3: Member Function Callbacks
-```cpp
-class MyApp {
-    void on_data(const unilink::MessageContext& ctx) {
-        // Handle data: ctx.data()
-    }
-    
-    void start() {
-        auto client = unilink::tcp_client("127.0.0.1", 8080)
-            .on_data(this, &MyApp::on_data)  // Member function!
-            .build();
-    }
-};
-```
+### Pattern 3: Single vs Multi-Client Server (optional)
 
-### Pattern 4: Single vs Multi-Client Server (choose one)
 ```cpp
 // Single client only (reject others)
 auto server = unilink::tcp_server(8080)
@@ -171,6 +160,11 @@ auto server = unilink::tcp_server(8080)
 // Multiple clients (set an explicit limit)
 auto server = unilink::tcp_server(8080)
     .multi_client(8)  // allow up to 8 clients
+    .build();
+
+// Unlimited clients (default)
+auto server = unilink::tcp_server(8080)
+    .unlimited_clients()
     .build();
 ```
 
@@ -188,6 +182,7 @@ auto server = unilink::tcp_server(8080)
 ## Troubleshooting
 
 ### Can't connect to server?
+
 ```cpp
 // Enable logging to see what's happening
 unilink::diagnostics::Logger::instance().set_level(unilink::diagnostics::LogLevel::DEBUG);
@@ -195,6 +190,7 @@ unilink::diagnostics::Logger::instance().set_console_output(true);
 ```
 
 ### Port already in use?
+
 ```cpp
 auto server = unilink::tcp_server(8080)
     .unlimited_clients()
@@ -203,6 +199,7 @@ auto server = unilink::tcp_server(8080)
 ```
 
 ### Need independent IO thread?
+
 ```cpp
 // For testing or isolation
 auto client = unilink::tcp_client("127.0.0.1", 8080)

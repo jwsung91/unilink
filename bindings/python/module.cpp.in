@@ -11,6 +11,7 @@ using namespace unilink::wrapper;
 
 PYBIND11_MODULE(unilink_py, m) {
   m.doc() = "unilink python bindings";
+  m.attr("__version__") = "@UNILINK_VERSION@";
 
   // ErrorCode enum (Matching actual definitions in error_codes.hpp)
   py::enum_<ErrorCode>(m, "ErrorCode")

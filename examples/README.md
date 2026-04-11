@@ -134,7 +134,7 @@ cd common
 ## Prerequisites
 
 - C++17 or later
-- CMake 3.10 or later
+- CMake 3.12 or later
 - Boost libraries (for TCP functionality)
 - Serial port access (for serial examples)
 

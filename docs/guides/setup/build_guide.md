@@ -51,12 +51,12 @@ When adding or removing `.cc` or `.hpp` files in the `unilink/` directory, you *
 
 You can build the library with different configurations to optimize for your use case.
 
-### Minimal Build (Builder API only)
+### Minimal Build (without Configuration Management API)
 
-**Recommended for most users** - includes only the Builder API with a smaller footprint.
+**Recommended for most users** - includes the core Builder and Wrapper APIs with a smaller footprint by excluding the optional Configuration Management API.
 
 ```bash
-# Configure for minimal footprint (Builder API only)
+# Configure for minimal footprint (excludes Configuration Management API)
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DUNILINK_ENABLE_CONFIG=OFF
@@ -66,24 +66,26 @@ cmake --build build -j
 ```
 
 **Benefits:**
+
 - ✅ Faster compilation time
 - ✅ Smaller binary size (~30% reduction)
 - ✅ Lower memory usage
-- ✅ Simpler dependencies
+- ✅ Simpler dependencies (no need for config parsing logic)
 
 **Use for:**
+
 - Simple TCP/Serial applications
 - Embedded systems with memory constraints
-- Production deployments with minimal footprint
+- Production deployments where static configuration via Builder API is sufficient
 
 ---
 
 ### Full Build (includes Configuration Management API)
 
-Includes advanced configuration management features for dynamic configuration.
+Includes advanced configuration management features for dynamic or file-based configuration.
 
 ```bash
-# Configure with all features
+# Configure with all features (includes Configuration Management API)
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
   -DUNILINK_ENABLE_CONFIG=ON
@@ -93,12 +95,14 @@ cmake --build build -j
 ```
 
 **Benefits:**
+
 - ✅ Dynamic configuration management
-- ✅ File-based configuration loading
+- ✅ File-based configuration loading (JSON/YAML)
 - ✅ Runtime parameter adjustment
-- ✅ Advanced features for complex applications
+- ✅ Advanced features for complex applications requiring dynamic reconfiguration
 
 **Use for:**
+
 - Configuration-heavy applications
 - Testing and development
 - Applications requiring runtime configuration
@@ -109,29 +113,32 @@ cmake --build build -j
 
 ### Core Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `CMAKE_BUILD_TYPE` | `Release` | Build type: `Release`, `Debug`, `RelWithDebInfo` |
-| `UNILINK_ENABLE_CONFIG` | `ON` | Enable configuration management API |
-| `UNILINK_BUILD_EXAMPLES` | `ON` | Build example applications |
-| `UNILINK_BUILD_TESTS` | `ON` | Build tests |
-| `UNILINK_BUILD_DOCS` | `ON` | Enable documentation targets |
+| Option                   | Default   | Description                                      |
+| ------------------------ | --------- | ------------------------------------------------ |
+| `CMAKE_BUILD_TYPE`       | `Release` | Build type: `Release`, `Debug`, `RelWithDebInfo` |
+| `UNILINK_BUILD_SHARED`   | `ON`      | Build shared library                             |
+| `UNILINK_BUILD_STATIC`   | `ON`      | Build static library                             |
+| `UNILINK_BUILD_EXAMPLES` | `ON`      | Build example applications                       |
+| `UNILINK_BUILD_TESTS`    | `ON`      | Build tests                                      |
+| `UNILINK_BUILD_DOCS`     | `ON`      | Enable documentation targets                     |
+| `UNILINK_ENABLE_CONFIG`  | `ON`      | Enable configuration management API              |
 
 ### Development Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `UNILINK_ENABLE_MEMORY_TRACKING` | `OFF` | Enable memory tracking for debugging |
-| `UNILINK_ENABLE_SANITIZERS` | `OFF` | Enable AddressSanitizer and other sanitizers |
-| `CMAKE_EXPORT_COMPILE_COMMANDS` | `OFF` | Generate `compile_commands.json` for IDEs |
+| Option                             | Default | Description                                  |
+| ---------------------------------- | ------- | -------------------------------------------- |
+| `UNILINK_ENABLE_MEMORY_TRACKING`   | `OFF`   | Enable memory tracking for debugging         |
+| `UNILINK_ENABLE_SANITIZERS`        | `OFF`   | Enable AddressSanitizer and other sanitizers |
+| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF`   | Enable performance/benchmark tests           |
+| `CMAKE_EXPORT_COMPILE_COMMANDS`    | `OFF`   | Generate `compile_commands.json` for IDEs    |
 
 ### Installation Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `CMAKE_INSTALL_PREFIX` | `/usr/local` | Installation directory |
-| `UNILINK_ENABLE_INSTALL` | `ON` | Enable install and export targets |
-| `UNILINK_ENABLE_PKGCONFIG` | `ON` | Install `unilink.pc` |
+| Option                     | Default      | Description                       |
+| -------------------------- | ------------ | --------------------------------- |
+| `CMAKE_INSTALL_PREFIX`     | `/usr/local` | Installation directory            |
+| `UNILINK_ENABLE_INSTALL`   | `ON`         | Enable install and export targets |
+| `UNILINK_ENABLE_PKGCONFIG` | `ON`         | Install `unilink.pc`              |
 
 ---
 
@@ -232,6 +239,7 @@ cd build && ctest --output-on-failure
 ```
 
 **Sanitizers detect:**
+
 - Memory leaks
 - Use-after-free errors
 - Buffer overflows
@@ -329,6 +337,7 @@ cd build && ctest --output-on-failure
 ```
 
 #### Notes
+
 - Ubuntu 20.04 LTS reaches end-of-life in April 2025
 - Consider upgrading to Ubuntu 22.04 LTS for better long-term support
 - **CI/CD Policy**: Not supported in automated CI/CD due to runner availability issues
