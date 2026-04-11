@@ -32,12 +32,14 @@ If you need the exact public entry points, treat `unilink/unilink.hpp` and the h
 
 The Python module is implemented in `bindings/python/module.cpp`.
 
-At a high level, `unilink_py` currently covers:
+At a high level, `unilink_py` covers:
 
 - TCP client
 - TCP server
 - UDP
 - Serial
+- UDS client
+- UDS server
 
 If binding coverage changes, update this section only when the exposed API surface changes, not when the package version changes.
 

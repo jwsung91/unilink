@@ -159,6 +159,36 @@ udp.send("Hello UDP")
 
 ---
 
+## 📂 UDS Communication
+
+Unix Domain Sockets for high-performance local IPC.
+
+### Basic Usage
+
+```python
+import unilink_py
+
+# Initialize client/server with socket path
+server = unilink_py.UdsServer("/tmp/myapp.sock")
+client = unilink_py.UdsClient("/tmp/myapp.sock")
+
+@server.on_data
+def on_server_data(ctx):
+    print(f"Server received: {ctx.data}")
+    server.send_to(ctx.client_id, "ACK")
+
+@client.on_data
+def on_client_data(ctx):
+    print(f"Client received: {ctx.data}")
+
+server.start()
+client.start()
+
+client.send("Hello over UDS")
+```
+
+---
+
 ## 🛠️ Advanced Features
 
 ### Threading & GIL
