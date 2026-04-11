@@ -2,6 +2,10 @@
 
 Comprehensive overview of unilink's architecture and design principles.
 
+> Scope note
+>
+> This section mixes public high-level concepts with internal implementation details. For exact application-facing APIs, prefer `docs/reference/api_guide.md`. For transport-internal contracts, prefer `docs/architecture/channel_contract.md`.
+
 ---
 
 ## Table of Contents
@@ -119,17 +123,28 @@ namespace unilink::builder {
 
 ```cpp
 namespace unilink::wrapper {
-    // Base interface
     class ChannelInterface {
-        virtual void send(const std::string& data) = 0;
-        virtual void start() = 0;
+        virtual std::future<bool> start() = 0;
         virtual void stop() = 0;
+        virtual bool is_connected() const = 0;
+        virtual void send(std::string_view data) = 0;
+        virtual void send_line(std::string_view line) = 0;
     };
 
-    // Implementations
+    class ServerInterface {
+        virtual std::future<bool> start() = 0;
+        virtual void stop() = 0;
+        virtual bool is_listening() const = 0;
+        virtual bool broadcast(std::string_view data) = 0;
+        virtual bool send_to(size_t client_id, std::string_view data) = 0;
+    };
+
     class TcpClient : public ChannelInterface;
-    class TcpServer : public ChannelInterface;
     class Serial : public ChannelInterface;
+    class Udp : public ChannelInterface;
+    class UdsClient : public ChannelInterface;
+    class TcpServer : public ServerInterface;
+    class UdsServer : public ServerInterface;
 }
 ```
 
@@ -165,25 +180,23 @@ namespace unilink::transport {
 ### 4. Common Utilities
 
 ```cpp
-namespace unilink::common {
-    // Thread safety
-    template<typename T>
-    class ThreadSafeState;
+namespace unilink {
+namespace concurrency {
+    template<typename T> class ThreadSafeState;
+    template<typename T> class AtomicState;
+}
 
-    template<typename T>
-    class AtomicState;
-
-    // Memory management
+namespace memory {
     class MemoryPool;
     class MemoryTracker;
     class SafeDataBuffer;
+}
 
-    // Logging
+namespace diagnostics {
     class Logger;
     class LogRotation;
-
-    // Error handling
     class ErrorHandler;
+}
 }
 ```
 
@@ -560,15 +573,19 @@ class MemoryTracker { ... };
 ### Runtime Configuration
 
 ```cpp
-struct TcpClientConfig {
-    std::string host;
-    uint16_t port;
-    unsigned retry_interval_ms{3000};  // Default is 3 seconds
-};
+#include "unilink/config/config_factory.hpp"
 
-// Load from file
-auto config = ConfigManager::load_from_file("config.json");
-auto client_config = config->get_tcp_client_config("my_client");
+auto config = unilink::config::ConfigFactory::create_with_defaults();
+config->load_from_file("unilink.conf");
+
+auto host = std::any_cast<std::string>(config->get("tcp.client.host"));
+auto port = static_cast<uint16_t>(std::any_cast<int>(config->get("tcp.client.port")));
+
+auto client = unilink::tcp_client(host, port)
+    .retry_interval(static_cast<unsigned>(
+        std::any_cast<int>(config->get("tcp.client.retry_interval_ms"))
+    ))
+    .build();
 ```
 
 ---
@@ -606,8 +623,8 @@ class ConnectionPool {
 
 ```cpp
 // Avoid repeated allocations
-MemoryPool buffer_pool_(1024, 100);
-auto buffer = buffer_pool_.allocate();  // Fast!
+unilink::memory::MemoryPool buffer_pool_;
+auto buffer = buffer_pool_.acquire(1024);  // Fast!
 ```
 
 ---

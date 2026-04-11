@@ -81,8 +81,12 @@ python3 -m http.server 8000
 
 - Keep links aligned with real file names and directory layout.
 - Prefer documenting verified behavior over aspirational behavior.
+- Keep public wrapper/builder APIs and transport-internal behavior in separate documents.
+- When documenting callbacks or methods, verify signatures against headers under `unilink/wrapper/` and `unilink/builder/`.
+- Treat runnable examples under `examples/` as the preferred source for tutorial snippets when possible.
 - When build flags or defaults change, update `README.md`, `docs/index.md`, and `docs/guides/setup/build_guide.md` together.
 - When adding public APIs, update `docs/reference/api_guide.md` and `docs/implementation_status.md`.
+- When changing config behavior, update both `docs/reference/api_guide.md` and architecture notes that mention configuration flow.
 - Keep document roles separated to avoid copy drift:
   - `quickstart`: shortest successful path
   - `tutorials`: step-by-step workflows

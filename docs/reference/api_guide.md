@@ -774,48 +774,43 @@ _(Available when built with `UNILINK_ENABLE_CONFIG=ON`)_
 ### Load Configuration from File
 
 ```cpp
-#include "unilink/config/config_manager.hpp"
+#include <any>
+#include "unilink/config/config_factory.hpp"
 
-using namespace unilink::config;
+auto config = unilink::config::ConfigFactory::create_with_defaults();
+config->load_from_file("unilink.conf");
 
-auto config = ConfigManager::load_from_file("config.json");
-
-// Access configuration
-auto host = config->get_tcp_client_config("main_client").host;
-auto port = config->get_tcp_client_config("main_client").port;
+auto host = std::any_cast<std::string>(config->get("tcp.client.host"));
+auto port = static_cast<uint16_t>(std::any_cast<int>(config->get("tcp.client.port")));
+auto retry_interval_ms = static_cast<unsigned>(
+    std::any_cast<int>(config->get("tcp.client.retry_interval_ms"))
+);
 
 // Create client from config
 auto client = unilink::tcp_client(host, port)
-    .retry_interval(config->get_tcp_client_config("main_client").retry_interval_ms)
+    .retry_interval(retry_interval_ms)
     .build();
 ```
 
-### Configuration File Format (JSON)
+### Configuration File Format
 
-```json
-{
-  "tcp_clients": {
-    "main_client": {
-      "host": "192.168.1.100",
-      "port": 8080,
-      "retry_interval_ms": 3000
-    }
-  },
-  "tcp_servers": {
-    "main_server": {
-      "port": 9000,
-      "single_client_mode": false
-    }
-  },
-  "serials": {
-    "arduino": {
-      "device": "/dev/ttyACM0",
-      "baud_rate": 115200,
-      "retry_interval_ms": 5000
-    }
-  }
-}
+The current configuration manager reads simple `key=value` files.
+
+```ini
+# unilink.conf
+tcp.client.host=192.168.1.100
+tcp.client.port=8080
+tcp.client.retry_interval_ms=3000
+
+tcp.server.port=9000
+tcp.server.max_connections=100
+
+serial.port=/dev/ttyACM0
+serial.baud_rate=115200
+serial.retry_interval_ms=5000
 ```
+
+Common preset keys are populated by `unilink::config::ConfigPresets` through `ConfigFactory::create_with_defaults()`.
 
 ---
 
