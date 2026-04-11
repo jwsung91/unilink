@@ -77,6 +77,8 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   UdsServerBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
   UdsServerBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
 
+  // Framing support
+  using BuilderInterface<wrapper::UdsServer, UdsServerBuilder>::on_message;
   /**
    * @brief Set message handler callback for framed messages (Server version with context)
    */

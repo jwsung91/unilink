@@ -60,6 +60,7 @@ set(UNILINK_SOURCES
   unilink/wrapper/tcp_client/tcp_client.cc
   unilink/wrapper/tcp_server/tcp_server.cc
   unilink/wrapper/udp/udp.cc
+  unilink/wrapper/udp/udp_server.cc
   unilink/wrapper/uds_client/uds_client.cc
   unilink/wrapper/uds_server/uds_server.cc
   unilink/builder/uds_builder.cc

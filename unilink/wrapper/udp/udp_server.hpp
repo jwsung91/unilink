@@ -1,0 +1,76 @@
+/*
+ * Copyright 2025 Jinwoo Sung
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#pragma once
+
+#include <boost/asio/io_context.hpp>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "unilink/base/visibility.hpp"
+#include "unilink/config/udp_config.hpp"
+#include "unilink/wrapper/iserver.hpp"
+
+namespace unilink {
+namespace wrapper {
+
+/**
+ * @brief UDP implementation of ServerInterface using virtual sessions.
+ */
+class UNILINK_API UdpServer : public ServerInterface {
+ public:
+  explicit UdpServer(uint16_t port);
+  explicit UdpServer(const config::UdpConfig& cfg);
+  UdpServer(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc);
+  ~UdpServer() override;
+
+  // Lifecycle
+  std::future<bool> start() override;
+  void stop() override;
+  bool is_listening() const override;
+
+  // Transmission
+  bool broadcast(std::string_view data) override;
+  bool send_to(size_t client_id, std::string_view data) override;
+
+  // Event handlers
+  ServerInterface& on_client_connect(ConnectionHandler handler) override;
+  ServerInterface& on_client_disconnect(ConnectionHandler handler) override;
+  ServerInterface& on_data(MessageHandler handler) override;
+  ServerInterface& on_error(ErrorHandler handler) override;
+
+  // Framing
+  void set_framer_factory(FramerFactory factory) override;
+  void on_message(MessageHandler handler) override;
+
+  // Management
+  size_t get_client_count() const override;
+  std::vector<size_t> get_connected_clients() const override;
+
+  // UDP specific
+  UdpServer& set_session_timeout(std::chrono::milliseconds timeout);
+  void set_manage_external_context(bool manage);
+
+ private:
+  struct Impl;
+  const Impl* get_impl() const { return impl_.get(); }
+  Impl* get_impl() { return impl_.get(); }
+  std::unique_ptr<Impl> impl_;
+};
+
+}  // namespace wrapper
+}  // namespace unilink

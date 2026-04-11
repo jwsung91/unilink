@@ -16,7 +16,10 @@
 
 #pragma once
 
+#include <boost/asio/ip/udp.hpp>
+#include <functional>
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "unilink/base/visibility.hpp"
@@ -33,10 +36,12 @@ namespace unilink {
 namespace transport {
 
 /**
- * @brief UDP Transport implementation
+ * @brief UDP Transport implementation with 1:N support
  */
 class UNILINK_API UdpChannel : public interface::Channel, public std::enable_shared_from_this<UdpChannel> {
  public:
+  using OnBytesFrom = std::function<void(memory::ConstByteSpan, const boost::asio::ip::udp::endpoint&)>;
+
   static std::shared_ptr<UdpChannel> create(const config::UdpConfig& cfg);
   static std::shared_ptr<UdpChannel> create(const config::UdpConfig& cfg, boost::asio::io_context& ioc);
   ~UdpChannel() override;
@@ -54,13 +59,29 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   void stop() override;
   bool is_connected() const override;
 
+  // 1:1 writes (using configured remote_endpoint_)
   void async_write_copy(memory::ConstByteSpan data) override;
   void async_write_move(std::vector<uint8_t>&& data) override;
   void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 
+  // 1:N writes (explicit destination)
+  virtual void async_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination);
+
+  // Callbacks
   void on_bytes(OnBytes cb) override;
+  virtual void on_bytes_from(OnBytesFrom cb);
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
+
+  /**
+   * @brief Get the local endpoint the socket is bound to.
+   */
+  boost::asio::ip::udp::endpoint local_endpoint() const;
+
+  /**
+   * @brief Get the ASIO executor for this channel.
+   */
+  boost::asio::any_io_executor get_executor() const;
 
  private:
   explicit UdpChannel(const config::UdpConfig& cfg);
