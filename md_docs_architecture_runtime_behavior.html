@@ -145,13 +145,15 @@ Key Points</h2>
 ✅ Callback Execution Context</h3>
 <p><b>Important:</b> Callbacks execute in the I/O thread context:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">on_data</a>([](<span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">on_data</a>([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
 <div class="line">        <span class="comment">// ⚠️ This runs in the I/O thread!</span></div>
 <div class="line">        <span class="comment">// Don&#39;t block here!</span></div>
-<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</div>
+<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>() &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aaddf0fcbc64fa9a79d0a4f523d5b3fc7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">unilink::builder::TcpClientBuilder::on_data</a></div><div class="ttdeci">TcpClientBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00072">tcp_client_builder.cc:72</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::wrapper::MessageContext</a></div><div class="ttdoc">Context for data/message related events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00033">context.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a49d3f7b0aeac37cb41885b5fc2fa6423"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">unilink::wrapper::MessageContext::data</a></div><div class="ttdeci">std::string_view data() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00039">context.hpp:39</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00120">unilink.hpp:120</a></div></div>
 </div><!-- fragment --><p><b>Available callbacks:</b></p>
 <ul>
@@ -159,29 +161,29 @@ Key Points</h2>
 <li><code>on_disconnect()</code> - Connection lost</li>
 <li><code>on_data()</code> - Data received</li>
 <li><code>on_error()</code> - Error occurred</li>
-<li><code>on_backpressure()</code> - Queue size exceeded threshold</li>
 </ul>
 <hr  />
 <h3><a class="anchor" id="autotoc_md186"></a>
 ⚠️ Never Block in Callbacks</h3>
 <p><b>Bad - Blocks I/O thread:</b></p>
-<div class="fragment"><div class="line">.on_data([](<span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="fragment"><div class="line">.on_data([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
 <div class="line">    <span class="comment">// ❌ BAD: Blocks I/O thread</span></div>
 <div class="line">    std::this_thread::sleep_for(std::chrono::seconds(1));</div>
-<div class="line">    heavy_computation(data);</div>
-<div class="line">    database_query(data);  <span class="comment">// Blocking I/O</span></div>
+<div class="line">    heavy_computation(ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>());</div>
+<div class="line">    database_query(ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>());  <span class="comment">// Blocking I/O</span></div>
 <div class="line">})</div>
 </div><!-- fragment --><p><b>Good - Offload to worker threads:</b></p>
-<div class="fragment"><div class="line">.on_data([](<span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="fragment"><div class="line">.on_data([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
 <div class="line">    <span class="comment">// ✅ GOOD: Offload to worker thread</span></div>
-<div class="line">    std::thread([data]() {</div>
-<div class="line">        heavy_computation(data);</div>
-<div class="line">        database_query(data);</div>
+<div class="line">    std::string payload(ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>());</div>
+<div class="line">    std::thread([payload]() {</div>
+<div class="line">        heavy_computation(payload);</div>
+<div class="line">        database_query(payload);</div>
 <div class="line">    }).detach();</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Or use a thread pool</span></div>
-<div class="line">    thread_pool.submit([data]() {</div>
-<div class="line">        heavy_computation(data);</div>
+<div class="line">    thread_pool.submit([payload]() {</div>
+<div class="line">        heavy_computation(payload);</div>
 <div class="line">    });</div>
 <div class="line">})</div>
 </div><!-- fragment --><p><b>Impact of blocking:</b></p>
@@ -275,10 +277,10 @@ Connection States</h2>
 Configuration Example</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8c1e4e8c618ce01445313f3062eeb2fb">retry_interval</a>(5000)    <span class="comment">// Retry every 5 seconds</span></div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">on_connect</a>([]() {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">on_connect</a>([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp;) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Connected!&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
-<div class="line">    .on_disconnect([]() {</div>
+<div class="line">    .on_disconnect([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp;) {</div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Disconnected - will auto-reconnect&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
@@ -286,6 +288,7 @@ Configuration Example</h2>
 <div class="line">client-&gt;start();  <span class="comment">// Start the connection explicitly</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a3ea4ef6983359f12490d6b2e679a0b1f"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">unilink::builder::TcpClientBuilder::on_connect</a></div><div class="ttdeci">TcpClientBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00077">tcp_client_builder.cc:77</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a8c1e4e8c618ce01445313f3062eeb2fb"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8c1e4e8c618ce01445313f3062eeb2fb">unilink::builder::TcpClientBuilder::retry_interval</a></div><div class="ttdeci">TcpClientBuilder &amp; retry_interval(uint32_t milliseconds)</div><div class="ttdoc">Set connection retry interval.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00092">tcp_client_builder.cc:92</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00054">context.hpp:54</a></div></div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md199"></a>
 Retry Behavior</h2>
@@ -312,19 +315,21 @@ Retry Interval Configuration</h3>
 State Callbacks</h3>
 <p>Monitor connection state changes:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">on_connect</a>([]() {</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a3ea4ef6983359f12490d6b2e679a0b1f">on_connect</a>([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp;) {</div>
 <div class="line">        <span class="comment">// Connection established</span></div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;✅ Connected&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
-<div class="line">    .on_disconnect([]() {</div>
+<div class="line">    .on_disconnect([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp;) {</div>
 <div class="line">        <span class="comment">// Connection lost (will auto-reconnect)</span></div>
 <div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;❌ Disconnected&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
-<div class="line">    .on_error([](<span class="keyword">const</span> std::string&amp; error) {</div>
+<div class="line">    .on_error([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::ErrorContext</a>&amp; ctx) {</div>
 <div class="line">        <span class="comment">// Error occurred</span></div>
-<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;⚠️ Error: &quot;</span> &lt;&lt; error &lt;&lt; std::endl;</div>
+<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;⚠️ Error: &quot;</span> &lt;&lt; ctx.<a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">message</a>() &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::wrapper::ErrorContext</a></div><div class="ttdoc">Context for error events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00070">context.hpp:70</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a9f7fc6c812b11ff1d77aa71233a3221c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">unilink::wrapper::ErrorContext::message</a></div><div class="ttdeci">std::string_view message() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00076">context.hpp:76</a></div></div>
 </div><!-- fragment --><hr  />
 <h3><a class="anchor" id="autotoc_md205"></a>
 Manual Control</h3>
@@ -385,7 +390,7 @@ Reconnection Best Practices</h2>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md214"></a>
 Backpressure Handling</h1>
-<p>When the send queue grows too large (network slower than application), <code>unilink</code> notifies your application via backpressure callbacks. If a safety cap is exceeded, the transport closes the socket, clears the queue, and transitions to <code>Error</code>.</p>
+<p>When the send queue grows too large (network slower than application), <code>unilink</code> applies internal backpressure protection in the transport layer. The public wrapper/builder API does not currently expose an <code>on_backpressure()</code> callback, so applications should implement rate limiting and queue monitoring at the application level and react to send failures or error callbacks.</p>
 <h2><a class="anchor" id="autotoc_md215"></a>
 Backpressure Flow</h2>
 <div class="fragment"><div class="line">flowchart TD</div>
@@ -395,8 +400,8 @@ Backpressure Flow</h2>
 <div class="line">    Check --&gt;|No| Write[Continue Normal Write]</div>
 <div class="line">    Write --&gt; Complete([Data Sent])</div>
 <div class="line"> </div>
-<div class="line">    Check --&gt;|Yes: queue_bytes &gt; 1MB| Callback[Trigger on_backpressure callback]</div>
-<div class="line">    Callback --&gt; AppDecision{Application Decision}</div>
+<div class="line">    Check --&gt;|Yes: queue_bytes &gt; 1MB| Protect[Internal backpressure protection]</div>
+<div class="line">    Protect --&gt; AppDecision{Application Decision}</div>
 <div class="line"> </div>
 <div class="line">    AppDecision --&gt;|Pause Sending| Wait[Wait for queue to drain]</div>
 <div class="line">    AppDecision --&gt;|Rate Limit| Throttle[Reduce send rate]</div>
@@ -412,22 +417,14 @@ Backpressure Flow</h2>
 <div class="line">    Force --&gt; Write</div>
 <div class="line">    Resume --&gt; Complete</div>
 <div class="line"> </div>
-<div class="line">    style Callback fill:#f9f,stroke:#333,stroke-width:2px</div>
+<div class="line">    style Protect fill:#f9f,stroke:#333,stroke-width:2px</div>
 <div class="line">    style AppDecision fill:#ff9,stroke:#333,stroke-width:2px</div>
 <div class="line">    style Force fill:#f66,stroke:#333,stroke-width:2px</div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md217"></a>
 Backpressure Configuration</h2>
-<div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .on_backpressure([](<span class="keywordtype">size_t</span> queue_bytes) {</div>
-<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;⚠️ Queue size: &quot;</span> &lt;&lt; queue_bytes &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"> </div>
-<div class="line">        <span class="comment">// Option 1: Pause sending</span></div>
-<div class="line">        <span class="comment">// Option 2: Rate limit</span></div>
-<div class="line">        <span class="comment">// Option 3: Drop non-critical data</span></div>
-<div class="line">    })</div>
-<div class="line">    .build();</div>
-</div><!-- fragment --><p><b>Default threshold:</b> 1 MB (1,048,576 bytes) <br  />
+<p>Use transport-layer configuration if you need direct queue-threshold control. At the wrapper level, keep your own send budget and stop producing data when downstream systems slow down.</p>
+<p><b>Default threshold:</b> 1 MB (1,048,576 bytes) <br  />
  <b>Configurable range:</b> 1 KB - 100 MB <br  />
  <b>Safety cap:</b> ~4x the high watermark (capped at 64 MB) triggers automatic close + Error state</p>
 <hr  />
@@ -437,47 +434,29 @@ Backpressure Strategies</h2>
 Strategy 1: Pause Sending</h3>
 <p>Stop sending until queue drains:</p>
 <div class="fragment"><div class="line">std::atomic&lt;bool&gt; can_send{<span class="keyword">true</span>};</div>
+<div class="line">std::atomic&lt;size_t&gt; queued_messages{0};</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .on_backpressure([&amp;can_send](<span class="keywordtype">size_t</span> queue_bytes) {</div>
-<div class="line">        <span class="keywordflow">if</span> (queue_bytes &gt; 5 * 1024 * 1024) {  <span class="comment">// 5 MB</span></div>
-<div class="line">            can_send = <span class="keyword">false</span>;</div>
-<div class="line">        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (queue_bytes &lt; 1024 * 1024) {  <span class="comment">// 1 MB</span></div>
-<div class="line">            can_send = <span class="keyword">true</span>;</div>
-<div class="line">        }</div>
-<div class="line">    })</div>
-<div class="line">    .build();</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Application code</span></div>
-<div class="line"><span class="keywordflow">if</span> (can_send) {</div>
+<div class="line"><span class="keywordflow">if</span> (queued_messages.load() &lt; 1000 &amp;&amp; can_send.load()) {</div>
 <div class="line">    client-&gt;send(data);</div>
+<div class="line">    queued_messages.fetch_add(1);</div>
 <div class="line">}</div>
 </div><!-- fragment --><p><b>Best for:</b> Real-time data, can tolerate delays</p>
 <hr  />
 <h3><a class="anchor" id="autotoc_md222"></a>
 Strategy 2: Rate Limiting</h3>
 <p>Reduce send rate:</p>
-<div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .on_backpressure([](<span class="keywordtype">size_t</span> queue_bytes) {</div>
-<div class="line">        <span class="comment">// Slow down sending</span></div>
-<div class="line">        std::this_thread::sleep_for(std::chrono::milliseconds(10));</div>
-<div class="line">    })</div>
-<div class="line">    .build();</div>
+<div class="fragment"><div class="line"><span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; packet : packets) {</div>
+<div class="line">    client-&gt;send(packet);</div>
+<div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(10));</div>
+<div class="line">}</div>
 </div><!-- fragment --><p><b>Best for:</b> Continuous data streams</p>
 <hr  />
 <h3><a class="anchor" id="autotoc_md224"></a>
 Strategy 3: Drop Data</h3>
 <p>Skip non-critical data:</p>
-<div class="fragment"><div class="line">std::atomic&lt;bool&gt; high_backpressure{<span class="keyword">false</span>};</div>
+<div class="fragment"><div class="line">std::atomic&lt;bool&gt; degraded_mode{<span class="keyword">false</span>};</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .on_backpressure([&amp;high_backpressure](<span class="keywordtype">size_t</span> queue_bytes) {</div>
-<div class="line">        high_backpressure = (queue_bytes &gt; 10 * 1024 * 1024);  <span class="comment">// 10 MB</span></div>
-<div class="line">    })</div>
-<div class="line">    .build();</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Send only critical data when backpressure is high</span></div>
-<div class="line"><span class="keywordflow">if</span> (!high_backpressure || is_critical) {</div>
+<div class="line"><span class="keywordflow">if</span> (!degraded_mode.load() || is_critical) {</div>
 <div class="line">    client-&gt;send(data);</div>
 <div class="line">}</div>
 </div><!-- fragment --><p><b>Best for:</b> Non-critical telemetry, logging</p>
@@ -485,24 +464,26 @@ Strategy 3: Drop Data</h3>
 <h2><a class="anchor" id="autotoc_md226"></a>
 Backpressure Monitoring</h2>
 <p>Track queue size continuously:</p>
-<div class="fragment"><div class="line"><span class="keywordtype">size_t</span> max_queue_size = 0;</div>
+<div class="fragment"><div class="line"><span class="keywordtype">size_t</span> sent_messages = 0;</div>
+<div class="line"><span class="keywordtype">size_t</span> dropped_messages = 0;</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .on_backpressure([&amp;max_queue_size](<span class="keywordtype">size_t</span> queue_bytes) {</div>
-<div class="line">        max_queue_size = std::max(max_queue_size, queue_bytes);</div>
-<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Current queue: &quot;</span> &lt;&lt; queue_bytes</div>
-<div class="line">                  &lt;&lt; <span class="stringliteral">&quot; bytes, Max: &quot;</span> &lt;&lt; max_queue_size &lt;&lt; <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
-<div class="line">    })</div>
-<div class="line">    .build();</div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; packet : packets) {</div>
+<div class="line">    <span class="keywordflow">if</span> (should_send(packet)) {</div>
+<div class="line">        client-&gt;send(packet);</div>
+<div class="line">        ++sent_messages;</div>
+<div class="line">    } <span class="keywordflow">else</span> {</div>
+<div class="line">        ++dropped_messages;</div>
+<div class="line">    }</div>
+<div class="line">}</div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md228"></a>
 Memory Safety</h2>
 <p>Backpressure handling ensures:</p>
 <ul>
 <li>✅ Queue size is monitored continuously</li>
-<li>✅ Callback fires when <code>queue_bytes &gt; threshold</code></li>
-<li>✅ Application can take corrective action</li>
-<li>⚠️ <b>No automatic flow control</b> - application must handle backpressure</li>
+<li>✅ Queue growth is bounded internally in the transport layer</li>
+<li>✅ Applications can add their own send throttling policy</li>
+<li>⚠️ Wrapper-level backpressure callbacks are not part of the current public API</li>
 <li>✅ Memory pools reduce allocation overhead for small buffers (&lt;64KB)</li>
 </ul>
 <hr  />
@@ -594,8 +575,8 @@ Next Steps</h1>
 <ul>
 <li><a class="el" href="md_docs_architecture_memory_safety.html">Memory Safety</a> - Memory safety features</li>
 <li><a class="el" href="/home/runner/work/unilink/unilink/README.md#md_README">System Overview</a> - High-level architecture</li>
-<li>../guides/performance.md "Performance Guide" - Optimization techniques</li>
-<li>../guides/best_practices.md "Best Practices" - Recommended patterns </li>
+<li><a class="el" href="md_docs_guides_advanced_performance.html">Performance Guide</a> - Optimization techniques</li>
+<li><a class="el" href="md_docs_guides_core_best_practices.html">Best Practices</a> - Recommended patterns </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -603,7 +584,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 00:33:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

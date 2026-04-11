@@ -87,384 +87,81 @@ $(document).ready(function(){initNavTree('md_docs_index.html',''); initResizable
 <div class="title">Unilink Documentation Index </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Welcome to the comprehensive documentation for unilink - a modern C++ communication library.</p>
-<hr  />
-<h1><a class="anchor" id="autotoc_md684"></a>
-📚 Documentation Structure</h1>
-<div class="fragment"><div class="line">docs/</div>
-<div class="line">├── guides/</div>
-<div class="line">│   ├── setup/       # Installation and build guides</div>
-<div class="line">│   ├── core/        # Core concepts and usage guides</div>
-<div class="line">│   └── advanced/    # Performance and advanced topics</div>
-<div class="line">├── tutorials/       # Step-by-step tutorials</div>
-<div class="line">├── reference/       # API reference documentation</div>
-<div class="line">├── architecture/    # System design and architecture</div>
-<div class="line">└── development/     # Development and contribution guides</div>
-</div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md686"></a>
-🚀 Getting Started</h1>
-<h2><a class="anchor" id="autotoc_md687"></a>
-New to Unilink?</h2>
+<div class="textblock"><p>This index is the stable entry point for the handwritten documentation in <code>docs/</code>. It is intentionally kept lightweight so version bumps, option changes, and test-count changes do not require editing this page.</p>
+<h1><a class="anchor" id="autotoc_md689"></a>
+Start Here</h1>
 <ol type="1">
-<li><b><a class="el" href="md_docs_guides_core_quickstart.html">Quick Start Guide</a></b> - Get up and running in 5 minutes</li>
-<li><b><a class="el" href="md_docs_tutorials_01_getting_started.html">Tutorial 1: Getting Started</a></b> - Your first application</li>
-<li><b><a class="el" href="md_docs_reference_api_guide.html">API Guide</a></b> - Complete API reference</li>
+<li><a class="el" href="md_docs_guides_core_quickstart.html">Quick Start Guide</a></li>
+<li><a class="el" href="md_docs_guides_setup_installation.html">Installation Guide</a></li>
+<li><a class="el" href="md_docs_reference_api_guide.html">API Guide</a></li>
+<li><a class="el" href="md_docs_implementation_status.html">Implementation Status</a></li>
+<li><a class="el" href="md_docs_guides_setup_build_guide.html">Build Guide</a></li>
 </ol>
-<h2><a class="anchor" id="autotoc_md688"></a>
-Core Documentation</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Document   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Difficulty    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_core_quickstart.html">Quick Start</a>   </td><td class="markdownTableBodyNone">5-minute quick start   </td><td class="markdownTableBodyNone">⭐ Beginner    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="md_docs_reference_api_guide.html">API Guide</a>   </td><td class="markdownTableBodyNone">Comprehensive API reference   </td><td class="markdownTableBodyNone">⭐⭐ All Levels    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_core_python_bindings.html">Python Bindings Guide</a>   </td><td class="markdownTableBodyNone">Python interface reference   </td><td class="markdownTableBodyNone">⭐⭐ All Levels    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_core_best_practices.html">Best Practices</a>   </td><td class="markdownTableBodyNone">Recommended patterns   </td><td class="markdownTableBodyNone">⭐⭐ Intermediate    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="index.html#md_docs_architecture_README">System Overview</a>   </td><td class="markdownTableBodyNone">Architecture deep-dive   </td><td class="markdownTableBodyNone">⭐⭐⭐ Advanced   </td></tr>
-</table>
-<hr  />
 <h1><a class="anchor" id="autotoc_md690"></a>
-📖 Tutorials</h1>
-<p>Step-by-step guides for common tasks:</p>
-<h2><a class="anchor" id="autotoc_md691"></a>
-Beginner Tutorials</h2>
+Core Guides</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Document   </th><th class="markdownTableHeadNone">What it covers    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_setup_build_guide.html">Build Guide</a>   </td><td class="markdownTableBodyNone">Actual CMake options and build profiles    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_setup_requirements.html">Requirements</a>   </td><td class="markdownTableBodyNone">Platform and dependency expectations    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_core_best_practices.html">Best Practices</a>   </td><td class="markdownTableBodyNone">Runtime usage patterns and guardrails    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_core_troubleshooting.html">Troubleshooting</a>   </td><td class="markdownTableBodyNone">Common failures and debugging steps    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_core_testing.html">Testing</a>   </td><td class="markdownTableBodyNone">Running tests and understanding coverage    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_core_python_bindings.html">Python Bindings</a>   </td><td class="markdownTableBodyNone"><code>unilink_py</code> usage and current scope    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_advanced_performance.html">Performance</a>   </td><td class="markdownTableBodyNone">Tuning and async logging considerations   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md691"></a>
+Tutorials</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Tutorial   </th><th class="markdownTableHeadNone">Focus    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_tutorials_01_getting_started.html">Getting Started</a>   </td><td class="markdownTableBodyNone">First TCP client    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_tutorials_02_tcp_server.html">TCP Server</a>   </td><td class="markdownTableBodyNone">Server lifecycle and callbacks    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_tutorials_03_uds_communication.html">UDS Communication</a>   </td><td class="markdownTableBodyNone">Local IPC with Unix domain sockets    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_tutorials_04_serial_communication.html">Serial Communication</a>   </td><td class="markdownTableBodyNone">Device I/O and virtual-port testing    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_tutorials_05_udp_communication.html">UDP Communication</a>   </td><td class="markdownTableBodyNone">Connectionless send/receive workflow   </td></tr>
+</table>
+<p>Tutorial companion material is split between <code>examples/tutorials/</code> and the protocol-specific example directories under <code>examples/serial/</code> and <code>examples/udp/</code>.</p>
+<h1><a class="anchor" id="autotoc_md692"></a>
+Architecture Notes</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Document   </th><th class="markdownTableHeadNone">Focus    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="index.html#md_docs_architecture_README">Architecture Overview</a>   </td><td class="markdownTableBodyNone">Layers, responsibilities, design patterns    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_architecture_runtime_behavior.html">Runtime Behavior</a>   </td><td class="markdownTableBodyNone">Lifecycle, retries, callback behavior    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_architecture_memory_safety.html">Memory Safety</a>   </td><td class="markdownTableBodyNone">Ownership and buffer handling rules    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="md_docs_architecture_channel_contract.html">Channel Contract</a>   </td><td class="markdownTableBodyNone">Wrapper/transport expectations   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md693"></a>
+Examples and Tests</h1>
 <ul>
-<li><b><a class="el" href="md_docs_tutorials_01_getting_started.html">Tutorial 1: Getting Started</a></b><ul>
-<li>Install dependencies</li>
-<li>Create your first client</li>
-<li>Connect and send data</li>
-<li>Duration: 15 minutes</li>
+<li>Examples Directory</li>
+<li><a class="el" href="md_docs_test_structure.html">Test Overview</a></li>
+<li>Top-level Test Notes</li>
 </ul>
-</li>
-<li><b><a class="el" href="md_docs_tutorials_02_tcp_server.html">Tutorial 2: Building a TCP Server</a></b><ul>
-<li>Create echo server</li>
-<li>Handle multiple clients</li>
-<li>Implement chat server</li>
-<li>Duration: 20 minutes</li>
-</ul>
-</li>
-<li><b><a class="el" href="md_docs_tutorials_03_uds_communication.html">Tutorial 3: Local IPC with UDS</a></b><ul>
-<li>Use Unix Domain Sockets</li>
-<li>High-performance local IPC</li>
-<li>Server and Client setup</li>
-<li>Duration: 10 minutes</li>
-</ul>
-</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md692"></a>
-Coming Soon</h2>
-<ul>
-<li>Tutorial 4: Serial Communication</li>
-<li>Tutorial 5: Error Handling &amp; Recovery</li>
-<li>Tutorial 6: Performance Optimization</li>
-<li>Tutorial 7: Building Production Systems</li>
-</ul>
-<hr  />
 <h1><a class="anchor" id="autotoc_md694"></a>
-📋 Guides</h1>
-<p>Practical guides for using unilink effectively:</p>
-<h2><a class="anchor" id="autotoc_md695"></a>
-Setup Guides</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Guide   </th><th class="markdownTableHeadNone">Topics Covered    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a class="el" href="md_docs_guides_setup_installation.html">Installation</a></b>   </td><td class="markdownTableBodyNone">Installing dependencies, CMake setup    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b><a class="el" href="md_docs_guides_setup_build_guide.html">Build Guide</a></b>   </td><td class="markdownTableBodyNone">Build options, configurations    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a class="el" href="md_docs_guides_setup_requirements.html">Requirements</a></b>   </td><td class="markdownTableBodyNone">System requirements   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md696"></a>
-Core Guides</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Guide   </th><th class="markdownTableHeadNone">Topics Covered    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a class="el" href="md_docs_guides_core_best_practices.html">Best Practices</a></b>   </td><td class="markdownTableBodyNone">Error handling, resource management, thread safety    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b><a class="el" href="md_docs_guides_core_troubleshooting.html">Troubleshooting</a></b>   </td><td class="markdownTableBodyNone">Common issues, debugging tips, solutions    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a class="el" href="md_docs_guides_core_testing.html">Testing</a></b>   </td><td class="markdownTableBodyNone">Testing strategies, unit tests   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md697"></a>
-Advanced Guides</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Guide   </th><th class="markdownTableHeadNone">Topics Covered    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a class="el" href="md_docs_guides_advanced_performance.html">Performance Guide</a></b>   </td><td class="markdownTableBodyNone">Optimization, tuning, benchmarks   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md698"></a>
-Quick Reference</h2>
+Notes For Maintainers</h1>
 <ul>
-<li><b>Error Handling</b>: <a href="guides/core/best_practices.md#error-handling">Best Practices §1</a></li>
-<li><b>Thread Safety</b>: <a href="guides/core/best_practices.md#thread-safety">Best Practices §3</a></li>
-<li><b>Performance</b>: <a class="el" href="md_docs_guides_advanced_performance.html">Performance Guide</a></li>
-<li><b>Debugging</b>: <a href="guides/core/troubleshooting.md#debugging-tips">Troubleshooting</a></li>
+<li>Keep this page aligned with actual files under <code>docs/</code>.</li>
+<li>Prefer linking to existing files over placeholder topics.</li>
+<li>Do not duplicate release-specific values here. Version, build defaults, and test status belong in source-of-truth files or generated output.</li>
 </ul>
-<hr  />
-<h1><a class="anchor" id="autotoc_md700"></a>
-📚 API Reference</h1>
-<p>Complete API documentation:</p>
-<h2><a class="anchor" id="autotoc_md701"></a>
-Core APIs</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">API   </th><th class="markdownTableHeadNone">Description    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#tcp-client">TCP Client</a></b>   </td><td class="markdownTableBodyNone">Connect to TCP servers    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#tcp-server">TCP Server</a></b>   </td><td class="markdownTableBodyNone">Accept client connections    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#uds-communication">UDS Communication</a></b>   </td><td class="markdownTableBodyNone">High-performance local IPC    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#serial-communication">Serial Communication</a></b>   </td><td class="markdownTableBodyNone">Interface with serial devices    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#error-handling">Error Handling</a></b>   </td><td class="markdownTableBodyNone">Centralized error management    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b><a href="reference/api_guide.md#logging-system">Logging System</a></b>   </td><td class="markdownTableBodyNone">Flexible logging   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md702"></a>
-Advanced Features</h2>
-<ul>
-<li><b><a href="reference/api_guide.md#configuration-management">Configuration Management</a></b> (Optional)</li>
-<li><b><a href="reference/api_guide.md#memory-pool">Memory Pool</a></b></li>
-<li><b><a href="reference/api_guide.md#thread-safe-state">Thread-Safe State</a></b></li>
-<li><b><a href="reference/api_guide.md#safe-data-buffer">Safe Data Buffer</a></b></li>
-</ul>
-<hr  />
-<h1><a class="anchor" id="autotoc_md704"></a>
-🏗️ Architecture</h1>
-<p>Understanding unilink's design:</p>
-<h2><a class="anchor" id="autotoc_md705"></a>
-Architecture Documentation</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Document   </th><th class="markdownTableHeadNone">Description    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b><a class="el" href="index.html#md_docs_architecture_README">System Overview</a></b>   </td><td class="markdownTableBodyNone">Complete architecture documentation    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Design Patterns   </td><td class="markdownTableBodyNone">Patterns used in unilink (Coming Soon)    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Threading Model   </td><td class="markdownTableBodyNone">Concurrency and thread safety (Coming Soon)   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md706"></a>
-Key Concepts</h2>
-<ol type="1">
-<li><b><a href="architecture/README.md#layered-architecture">Layered Architecture</a></b><ul>
-<li>Builder API Layer</li>
-<li>Wrapper API Layer</li>
-<li>Transport Layer</li>
-<li>Common Utilities Layer</li>
-</ul>
-</li>
-<li><b><a href="architecture/README.md#design-patterns">Design Patterns</a></b><ul>
-<li>Builder Pattern</li>
-<li>Observer Pattern</li>
-<li>Dependency Injection</li>
-<li>RAII</li>
-</ul>
-</li>
-<li><b><a href="architecture/README.md#threading-model">Threading Model</a></b><ul>
-<li>IO Context Management</li>
-<li>Thread Safety</li>
-<li>Callback Execution</li>
-</ul>
-</li>
-<li><b><a href="architecture/README.md#memory-management">Memory Management</a></b><ul>
-<li>Smart Pointers</li>
-<li>Memory Pools</li>
-<li>Safe Buffers</li>
-</ul>
-</li>
-</ol>
-<hr  />
-<h1><a class="anchor" id="autotoc_md708"></a>
-🔧 Development</h1>
-<p>For contributors and advanced users:</p>
-<h2><a class="anchor" id="autotoc_md709"></a>
-Development Documentation</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Document   </th><th class="markdownTableHeadNone">Description    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Improvement Recommendations</b>   </td><td class="markdownTableBodyNone">Code quality assessment &amp; roadmap    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Contributing Guide   </td><td class="markdownTableBodyNone">How to contribute (Coming Soon)    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Code Style Guide   </td><td class="markdownTableBodyNone">Coding standards (Coming Soon)    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Testing Guide   </td><td class="markdownTableBodyNone">Writing and running tests (Coming Soon)   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md710"></a>
-Build Options</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Option   </th><th class="markdownTableHeadNone">Default   </th><th class="markdownTableHeadNone">Description    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>CMAKE_BUILD_TYPE</code>   </td><td class="markdownTableBodyNone"><code>Release</code>   </td><td class="markdownTableBodyNone">Build type (Release/Debug)    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>UNILINK_BUILD_EXAMPLES</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build example applications    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>UNILINK_BUILD_TESTS</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Master test toggle    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>UNILINK_ENABLE_PERFORMANCE_TESTS</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Build performance/benchmark tests    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>UNILINK_ENABLE_CONFIG</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable configuration API    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>UNILINK_ENABLE_MEMORY_TRACKING</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable memory tracking    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>UNILINK_ENABLE_SANITIZERS</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Enable AddressSanitizer   </td></tr>
-</table>
-<hr  />
-<h1><a class="anchor" id="autotoc_md712"></a>
-💡 Examples</h1>
-<p>Practical code examples:</p>
-<h2><a class="anchor" id="autotoc_md713"></a>
-Example Applications</h2>
-<p>Located in <code>examples/</code> directory:</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Example   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Lines of Code    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>TCP Echo Server</b>   </td><td class="markdownTableBodyNone">Simple echo server   </td><td class="markdownTableBodyNone">~100    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>TCP Echo Client</b>   </td><td class="markdownTableBodyNone">Echo client with reconnection   </td><td class="markdownTableBodyNone">~80    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Serial Echo</b>   </td><td class="markdownTableBodyNone">Serial port echo   </td><td class="markdownTableBodyNone">~90    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Chat Server</b>   </td><td class="markdownTableBodyNone">Multi-client chat server   </td><td class="markdownTableBodyNone">~200    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>Logging Example</b>   </td><td class="markdownTableBodyNone">Logging system demo   </td><td class="markdownTableBodyNone">~60    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><b>Error Handling Example</b>   </td><td class="markdownTableBodyNone">Error handling demo   </td><td class="markdownTableBodyNone">~80   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md714"></a>
-Code Snippets</h2>
-<p><b>Quick TCP Client:</b> </p><div class="fragment"><div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">on_data</a>([](<span class="keyword">const</span> std::string&amp; data) {</div>
-<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Received: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</div>
-<div class="line">    })</div>
-<div class="line">    .build();</div>
-<div class="line"> </div>
-<div class="line">client-&gt;start();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aaddf0fcbc64fa9a79d0a4f523d5b3fc7"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aaddf0fcbc64fa9a79d0a4f523d5b3fc7">unilink::builder::TcpClientBuilder::on_data</a></div><div class="ttdeci">TcpClientBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00072">tcp_client_builder.cc:72</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00120">unilink.hpp:120</a></div></div>
-</div><!-- fragment --><p><b>Quick TCP Server:</b> </p><div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unlimited_clients</a>()</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a7855e70ae9a79ba8e62c31010d98a4be">on_data</a>([](<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string&amp; data) {</div>
-<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;Client &quot;</span> &lt;&lt; <span class="keywordtype">id</span> &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</div>
-<div class="line">    })</div>
-<div class="line">    .build();</div>
-<div class="line"> </div>
-<div class="line">server-&gt;start();</div>
-<div class="line"><span class="comment">// ... do work ...</span></div>
-<div class="line">server-&gt;stop();  <span class="comment">// Clean shutdown</span></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a7855e70ae9a79ba8e62c31010d98a4be"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a7855e70ae9a79ba8e62c31010d98a4be">unilink::builder::TcpServerBuilder::on_data</a></div><div class="ttdeci">TcpServerBuilder &amp; on_data(std::function&lt; void(const wrapper::MessageContext &amp;)&gt; handler) override</div><div class="ttdoc">Set data handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00085">tcp_server_builder.cc:85</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a94c1f68d31130820c5c2bd20b906fba5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unilink::builder::TcpServerBuilder::unlimited_clients</a></div><div class="ttdeci">TcpServerBuilder &amp; unlimited_clients()</div><div class="ttdoc">Configure server for unlimited multi-client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00138">tcp_server_builder.cc:138</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00112">unilink.hpp:112</a></div></div>
-</div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md716"></a>
-🔍 Search &amp; Find</h1>
-<h2><a class="anchor" id="autotoc_md717"></a>
-By Topic</h2>
-<ul>
-<li><b>Connection Issues</b>: <a href="guides/core/troubleshooting.md#connection-issues">Troubleshooting §1</a></li>
-<li><b>Performance Problems</b>: <a href="guides/core/troubleshooting.md#performance-issues">Troubleshooting §4</a></li>
-<li><b>Memory Leaks</b>: <a href="guides/core/troubleshooting.md#memory-issues">Troubleshooting §5</a></li>
-<li><b>Thread Safety</b>: <a href="guides/core/best_practices.md#thread-safety">Best Practices §3</a></li>
-<li><b>Error Handling</b>: <a href="guides/core/best_practices.md#error-handling">Best Practices §1</a></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md718"></a>
-By Use Case</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Use Case   </th><th class="markdownTableHeadNone">Relevant Documentation    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">IoT Device   </td><td class="markdownTableBodyNone"><a href="reference/api_guide.md#serial-communication">Serial API</a>, <a class="el" href="md_docs_guides_advanced_performance.html">Performance</a>    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Web Service   </td><td class="markdownTableBodyNone"><a href="reference/api_guide.md#tcp-server">TCP Server</a>, <a class="el" href="md_docs_guides_core_best_practices.html">Best Practices</a>    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Data Streaming   </td><td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_advanced_performance.html">Performance Guide</a>, <a class="el" href="index.html#md_docs_architecture_README">Architecture</a>    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Testing   </td><td class="markdownTableBodyNone"><a class="el" href="md_docs_guides_core_troubleshooting.html">Troubleshooting</a>, <a class="el" href="md_docs_reference_api_guide.html">API Guide</a>   </td></tr>
-</table>
-<hr  />
-<h1><a class="anchor" id="autotoc_md720"></a>
-📊 Documentation Stats</h1>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Metric   </th><th class="markdownTableHeadNone">Count    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Total Pages   </td><td class="markdownTableBodyNone">10+    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Tutorials   </td><td class="markdownTableBodyNone">2 (more coming)    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Guides   </td><td class="markdownTableBodyNone">7    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Code Examples   </td><td class="markdownTableBodyNone">50+    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">API Methods Documented   </td><td class="markdownTableBodyNone">100+   </td></tr>
-</table>
-<hr  />
-<h1><a class="anchor" id="autotoc_md722"></a>
-🆘 Need Help?</h1>
-<h2><a class="anchor" id="autotoc_md723"></a>
-Quick Links</h2>
-<ul>
-<li><b>Common Issues</b>: <a class="el" href="md_docs_guides_core_troubleshooting.html">Troubleshooting Guide</a></li>
-<li><b>FAQ</b>: <a href="guides/core/troubleshooting.md#getting-help">Troubleshooting §Getting Help</a></li>
-<li><b>Examples</b>: <a href="../examples/">Examples Directory</a></li>
-<li><b>GitHub Issues</b>: <a href="https://github.com/jwsung91/unilink/issues">Report a Bug</a></li>
-</ul>
-<h2><a class="anchor" id="autotoc_md724"></a>
-Learning Path</h2>
-<p><b>Beginner Path:</b></p><ol type="1">
-<li>Quick Start Guide</li>
-<li>Tutorial 1: Getting Started</li>
-<li>Tutorial 2: TCP Server</li>
-<li>API Guide (TCP sections)</li>
-<li>Best Practices (Error Handling)</li>
-</ol>
-<p><b>Intermediate Path:</b></p><ol type="1">
-<li>API Guide (complete)</li>
-<li>Best Practices (complete)</li>
-<li>Performance Guide</li>
-<li>Architecture Overview</li>
-</ol>
-<p><b>Advanced Path:</b></p><ol type="1">
-<li>System Architecture</li>
-<li>Threading Model</li>
-<li>Memory Management</li>
-<li>Contributing Guide</li>
-</ol>
-<hr  />
-<h1><a class="anchor" id="autotoc_md726"></a>
-📝 Document History</h1>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Date   </th><th class="markdownTableHeadNone">Version   </th><th class="markdownTableHeadNone">Changes    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">2025-10-11   </td><td class="markdownTableBodyNone">1.0   </td><td class="markdownTableBodyNone">Initial comprehensive documentation release    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">2025-12-27   </td><td class="markdownTableBodyNone">1.1   </td><td class="markdownTableBodyNone">Restructured documentation (Categories, snake_case)   </td></tr>
-</table>
-<hr  />
-<h1><a class="anchor" id="autotoc_md728"></a>
-🤝 Contributing</h1>
-<p>Found an issue or want to improve documentation?</p>
-<ol type="1">
-<li><b>Report Issues</b>: <a href="https://github.com/jwsung91/unilink/issues">GitHub Issues</a></li>
-<li><b>Suggest Improvements</b>: Create a pull request</li>
-<li><b>Ask Questions</b>: Create an issue with "question" label</li>
-</ol>
-<hr  />
-<p><b>Happy Coding with Unilink!</b> 🚀</p>
 <p><a class="el" href="/home/runner/work/unilink/unilink/README.md#md_README">Back to Main README</a> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -472,7 +169,7 @@ Learning Path</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 00:33:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

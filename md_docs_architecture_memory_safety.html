@@ -137,18 +137,16 @@ SafeDataBuffer</h2>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="safe__span_8hpp.html">unilink/memory/safe_span.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="safe__data__buffer_8hpp.html">unilink/memory/safe_data_buffer.hpp</a>&quot;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceunilink_1_1common.html">unilink::common</a>;</div>
-<div class="line"> </div>
 <div class="line"><span class="comment">// Create from existing data</span></div>
-<div class="line">SafeDataBuffer from_vec(std::vector&lt;uint8_t&gt;{1, 2, 3});</div>
-<div class="line">SafeDataBuffer from_str(std::string(<span class="stringliteral">&quot;hello&quot;</span>));</div>
+<div class="line"><a class="code" href="classunilink_1_1memory_1_1SafeDataBuffer.html">unilink::memory::SafeDataBuffer</a> from_vec(std::vector&lt;uint8_t&gt;{1, 2, 3});</div>
+<div class="line"><a class="code" href="classunilink_1_1memory_1_1SafeDataBuffer.html">unilink::memory::SafeDataBuffer</a> from_str(std::string(<span class="stringliteral">&quot;hello&quot;</span>));</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Read access</span></div>
 <div class="line"><span class="keyword">auto</span> span = from_vec.as_span();      <span class="comment">// Non-owning view</span></div>
 <div class="line"><span class="keyword">auto</span> <span class="keywordtype">byte</span> = from_vec.at(1);          <span class="comment">// Bounds-checked</span></div>
 <div class="line"><span class="keyword">auto</span> unchecked = from_vec.data()[0]; <span class="comment">// Pointer access</span></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1SafeDataBuffer_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeDataBuffer.html">unilink::memory::SafeDataBuffer</a></div><div class="ttdoc">Safe data buffer for type-safe data transfer.</div><div class="ttdef"><b>Definition:</b> <a href="safe__data__buffer_8hpp_source.html#l00040">safe_data_buffer.hpp:40</a></div></div>
 <div class="ttc" id="amemory__tracker_8hpp_html"><div class="ttname"><a href="memory__tracker_8hpp.html">memory_tracker.hpp</a></div></div>
-<div class="ttc" id="anamespaceunilink_1_1common_html"><div class="ttname"><a href="namespaceunilink_1_1common.html">unilink::common</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00189">common.hpp:189</a></div></div>
 <div class="ttc" id="asafe__data__buffer_8hpp_html"><div class="ttname"><a href="safe__data__buffer_8hpp.html">safe_data_buffer.hpp</a></div></div>
 <div class="ttc" id="asafe__span_8hpp_html"><div class="ttname"><a href="safe__span_8hpp.html">safe_span.hpp</a></div></div>
 </div><!-- fragment --><hr  />
@@ -206,22 +204,23 @@ Safe Span (C++17 Compatible)</h2>
 <p>Lightweight, non-owning view of contiguous data:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="safe__span_8hpp.html">unilink/memory/safe_span.hpp</a>&quot;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceunilink_1_1common.html">unilink::common</a>;</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> process_data(safe_span&lt;const uint8_t&gt; data) {</div>
+<div class="line"><span class="keywordtype">void</span> process_data(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::ConstByteSpan</a> data) {</div>
 <div class="line">    <span class="comment">// Iteration (operator[] is unchecked)</span></div>
-<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; data.size(); i++) {</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73">size</a>(); i++) {</div>
 <div class="line">        uint8_t <span class="keywordtype">byte</span> = data[i];</div>
 <div class="line">        process_byte(<span class="keywordtype">byte</span>);</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Bounds-checked access</span></div>
-<div class="line">    <span class="keyword">auto</span> subset = data.subspan(1, 2);  <span class="comment">// throws on invalid ranges</span></div>
+<div class="line">    <span class="keyword">auto</span> subset = data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a8d5082b8dc5b9ccf4d9c0d07e4380985">subspan</a>(1, 2);  <span class="comment">// throws on invalid ranges</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Usage</span></div>
 <div class="line">std::vector&lt;uint8_t&gt; buffer = {1, 2, 3, 4, 5};</div>
-<div class="line">process_data(safe_span&lt;const uint8_t&gt;(buffer));</div>
+<div class="line">process_data(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::ConstByteSpan</a>(buffer));</div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html">unilink::memory::SafeSpan</a></div><div class="ttdoc">A C++17 compatible span-like class for safe array access.</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00038">safe_span.hpp:38</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a0e63f52083142fa895b98ea38f51dc73"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73">unilink::memory::SafeSpan::size</a></div><div class="ttdeci">constexpr size_type size() const noexcept</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00081">safe_span.hpp:81</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a8d5082b8dc5b9ccf4d9c0d07e4380985"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a8d5082b8dc5b9ccf4d9c0d07e4380985">unilink::memory::SafeSpan::subspan</a></div><div class="ttdeci">constexpr SafeSpan&lt; T &gt; subspan(size_type offset, size_type count=SIZE_MAX) const</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00105">safe_span.hpp:105</a></div></div>
 </div><!-- fragment --><p><b>Features:</b></p>
 <ul>
 <li>No ownership (lightweight)</li>
@@ -237,8 +236,6 @@ ThreadSafeState</h2>
 <p>Read-write lock based state management:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="thread__safe__state_8hpp.html">unilink/concurrency/thread_safe_state.hpp</a>&quot;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceunilink_1_1common.html">unilink::common</a>;</div>
-<div class="line"> </div>
 <div class="line"><span class="keyword">enum class</span> ConnectionState {</div>
 <div class="line">    <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e">Closed</a>,</div>
 <div class="line">    <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae321c53b354930ba96f0243e652df458">Connecting</a>,</div>
@@ -246,7 +243,7 @@ ThreadSafeState</h2>
 <div class="line">    <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">Error</a></div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">ThreadSafeState&lt;ConnectionState&gt; state(ConnectionState::Closed);</div>
+<div class="line"><a class="code" href="classunilink_1_1concurrency_1_1ThreadSafeState.html">unilink::concurrency::ThreadSafeState&lt;ConnectionState&gt;</a> state(ConnectionState::Closed);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Thread 1: Write</span></div>
 <div class="line">state.set_state(ConnectionState::Connecting);</div>
@@ -259,6 +256,7 @@ ThreadSafeState</h2>
 <div class="line">    ConnectionState::Connecting,  <span class="comment">// Expected</span></div>
 <div class="line">    ConnectionState::Connected     <span class="comment">// New value</span></div>
 <div class="line">);</div>
+<div class="ttc" id="aclassunilink_1_1concurrency_1_1ThreadSafeState_html"><div class="ttname"><a href="classunilink_1_1concurrency_1_1ThreadSafeState.html">unilink::concurrency::ThreadSafeState</a></div><div class="ttdoc">Thread-safe state management class.</div><div class="ttdef"><b>Definition:</b> <a href="thread__safe__state_8hpp_source.html#l00041">thread_safe_state.hpp:41</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca03f4a47830f97377a35321051685071e">unilink::base::LinkState::Closed</a></div><div class="ttdeci">@ Closed</div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75ca2ec0d16e4ca169baedb9b2d50ec5c6d7"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca2ec0d16e4ca169baedb9b2d50ec5c6d7">unilink::base::LinkState::Connected</a></div><div class="ttdeci">@ Connected</div></div>
 <div class="ttc" id="anamespaceunilink_1_1base_html_a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd"><div class="ttname"><a href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">unilink::base::LinkState::Error</a></div><div class="ttdeci">@ Error</div></div>
@@ -348,26 +346,31 @@ Features</h2>
 <p>Monitor all memory allocations and deallocations:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="memory__tracker_8hpp.html">unilink/memory/memory_tracker.hpp</a>&quot;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceunilink_1_1common.html">unilink::common</a>;</div>
-<div class="line"> </div>
 <div class="line"><span class="comment">// Tracking happens automatically</span></div>
 <div class="line"><span class="keyword">auto</span>* data = <span class="keyword">new</span> uint8_t[1024];  <span class="comment">// Tracked</span></div>
 <div class="line"><span class="keyword">delete</span>[] data;  <span class="comment">// Tracked</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Query statistics</span></div>
-<div class="line">MemoryTracker::Stats stats = MemoryTracker::instance().get_stats();</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Total allocations: &quot;</span> &lt;&lt; stats.total_allocations &lt;&lt; std::endl;</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Total deallocations: &quot;</span> &lt;&lt; stats.total_deallocations &lt;&lt; std::endl;</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current usage: &quot;</span> &lt;&lt; stats.current_usage &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a class="code" href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html">unilink::memory::MemoryTracker::MemoryStats</a> stats =</div>
+<div class="line">    <a class="code" href="classunilink_1_1memory_1_1MemoryTracker.html#a30a1c22ce1345ed2fa5d07efdf778608">unilink::memory::MemoryTracker::instance</a>().<a class="code" href="classunilink_1_1memory_1_1MemoryTracker.html#a5d794a5fa20965fded52b901b4d91763">get_stats</a>();</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Total allocations: &quot;</span> &lt;&lt; stats.<a class="code" href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#ad409f7734701fed0bcafbc6a6c2f75c5">total_allocations</a> &lt;&lt; std::endl;</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Total deallocations: &quot;</span> &lt;&lt; stats.<a class="code" href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a3dcc668a77ad8d45bee3d43cad5d5c67">total_deallocations</a> &lt;&lt; std::endl;</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Current usage: &quot;</span> &lt;&lt; stats.<a class="code" href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a2bfa2675319600bed9098ff053a1be53">current_bytes_allocated</a> &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1MemoryTracker_html_a30a1c22ce1345ed2fa5d07efdf778608"><div class="ttname"><a href="classunilink_1_1memory_1_1MemoryTracker.html#a30a1c22ce1345ed2fa5d07efdf778608">unilink::memory::MemoryTracker::instance</a></div><div class="ttdeci">static MemoryTracker &amp; instance()</div><div class="ttdef"><b>Definition:</b> <a href="memory__tracker_8cc_source.html#l00028">memory_tracker.cc:28</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1MemoryTracker_html_a5d794a5fa20965fded52b901b4d91763"><div class="ttname"><a href="classunilink_1_1memory_1_1MemoryTracker.html#a5d794a5fa20965fded52b901b4d91763">unilink::memory::MemoryTracker::get_stats</a></div><div class="ttdeci">MemoryStats get_stats() const</div><div class="ttdef"><b>Definition:</b> <a href="memory__tracker_8cc_source.html#l00085">memory_tracker.cc:85</a></div></div>
+<div class="ttc" id="astructunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats_html"><div class="ttname"><a href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html">unilink::memory::MemoryTracker::MemoryStats</a></div><div class="ttdef"><b>Definition:</b> <a href="memory__tracker_8hpp_source.html#l00049">memory_tracker.hpp:49</a></div></div>
+<div class="ttc" id="astructunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats_html_a2bfa2675319600bed9098ff053a1be53"><div class="ttname"><a href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a2bfa2675319600bed9098ff053a1be53">unilink::memory::MemoryTracker::MemoryStats::current_bytes_allocated</a></div><div class="ttdeci">size_t current_bytes_allocated</div><div class="ttdef"><b>Definition:</b> <a href="memory__tracker_8hpp_source.html#l00056">memory_tracker.hpp:56</a></div></div>
+<div class="ttc" id="astructunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats_html_a3dcc668a77ad8d45bee3d43cad5d5c67"><div class="ttname"><a href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a3dcc668a77ad8d45bee3d43cad5d5c67">unilink::memory::MemoryTracker::MemoryStats::total_deallocations</a></div><div class="ttdeci">size_t total_deallocations</div><div class="ttdef"><b>Definition:</b> <a href="memory__tracker_8hpp_source.html#l00051">memory_tracker.hpp:51</a></div></div>
+<div class="ttc" id="astructunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats_html_ad409f7734701fed0bcafbc6a6c2f75c5"><div class="ttname"><a href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#ad409f7734701fed0bcafbc6a6c2f75c5">unilink::memory::MemoryTracker::MemoryStats::total_allocations</a></div><div class="ttdeci">size_t total_allocations</div><div class="ttdef"><b>Definition:</b> <a href="memory__tracker_8hpp_source.html#l00050">memory_tracker.hpp:50</a></div></div>
 </div><!-- fragment --><hr  />
 <h3><a class="anchor" id="autotoc_md46"></a>
 2. Leak Detection</h3>
 <p>Identify potential memory leaks:</p>
 <div class="fragment"><div class="line"><span class="comment">// At program exit, check for leaks</span></div>
-<div class="line">MemoryTracker::Stats stats = MemoryTracker::instance().get_stats();</div>
+<div class="line"><span class="keyword">auto</span> stats = <a class="code" href="classunilink_1_1memory_1_1MemoryTracker.html#a30a1c22ce1345ed2fa5d07efdf778608">unilink::memory::MemoryTracker::instance</a>().<a class="code" href="classunilink_1_1memory_1_1MemoryTracker.html#a5d794a5fa20965fded52b901b4d91763">get_stats</a>();</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordflow">if</span> (stats.total_allocations != stats.total_deallocations) {</div>
-<div class="line">    <span class="keywordtype">size_t</span> leaked = stats.total_allocations - stats.total_deallocations;</div>
+<div class="line"><span class="keywordflow">if</span> (stats.<a class="code" href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#ad409f7734701fed0bcafbc6a6c2f75c5">total_allocations</a> != stats.<a class="code" href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a3dcc668a77ad8d45bee3d43cad5d5c67">total_deallocations</a>) {</div>
+<div class="line">    <span class="keywordtype">size_t</span> leaked = stats.<a class="code" href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#ad409f7734701fed0bcafbc6a6c2f75c5">total_allocations</a> - stats.<a class="code" href="structunilink_1_1memory_1_1MemoryTracker_1_1MemoryStats.html#a3dcc668a77ad8d45bee3d43cad5d5c67">total_deallocations</a>;</div>
 <div class="line">    std::cerr &lt;&lt; <span class="stringliteral">&quot;⚠️ Memory leak detected: &quot;</span></div>
 <div class="line">              &lt;&lt; leaked &lt;&lt; <span class="stringliteral">&quot; allocations not freed&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"> </div>
@@ -613,15 +616,15 @@ Continuous Integration</h2>
 <li>✅ ThreadSanitizer enabled (selected tests)</li>
 <li>✅ Valgrind memcheck</li>
 </ul>
-<p>See ../guides/testing.md "Testing Guide" for details.</p>
+<p>See <a class="el" href="md_docs_guides_core_testing.html">Testing Guide</a> for details.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md96"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="md_docs_architecture_runtime_behavior.html">Runtime Behavior</a> - Threading and execution model</li>
 <li><a class="el" href="/home/runner/work/unilink/unilink/README.md#md_README">System Overview</a> - High-level architecture</li>
-<li>../guides/testing.md "Testing Guide" - Memory safety testing</li>
-<li>../guides/best_practices.md "Best Practices" - Safe coding patterns </li>
+<li><a class="el" href="md_docs_guides_core_testing.html">Testing Guide</a> - Memory safety testing</li>
+<li><a class="el" href="md_docs_guides_core_best_practices.html">Best Practices</a> - Safe coding patterns </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -629,7 +632,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 00:33:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['system_20requirements_2253',['System Requirements',['../md_docs_guides_setup_requirements.html',1,'']]]
+  ['serial_20communication_2265',['Serial Communication',['../md_docs_tutorials_04_serial_communication.html',1,'']]],
+  ['system_20requirements_2266',['System Requirements',['../md_docs_guides_setup_requirements.html',1,'']]]
 ];

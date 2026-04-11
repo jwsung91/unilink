@@ -495,15 +495,15 @@ Example: Custom Integration Test</h2>
 <div class="line">    <span class="comment">// Create server</span></div>
 <div class="line">    <span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unlimited_clients</a>()</div>
-<div class="line">        .on_accept([](<span class="keyword">const</span> std::string&amp; client_id) {</div>
-<div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;Client connected: &quot;</span> &lt;&lt; client_id &lt;&lt; std::endl;</div>
+<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">on_connect</a>([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp; ctx) {</div>
+<div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;Client connected: &quot;</span> &lt;&lt; ctx.<a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html#a556940f4854839c3e5ee7525daf7cea1">client_id</a>() &lt;&lt; std::endl;</div>
 <div class="line">        })</div>
-<div class="line">        .on_data([&amp;received_data](<span class="keyword">const</span> std::string&amp; data) {</div>
-<div class="line">            received_data = data;</div>
+<div class="line">        .on_data([&amp;received_data](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
+<div class="line">            received_data = std::string(ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>());</div>
 <div class="line">        })</div>
 <div class="line">        .build();</div>
 <div class="line">    </div>
-<div class="line">    server-&gt;start();</div>
+<div class="line">    ASSERT_TRUE(server-&gt;start().get());</div>
 <div class="line">    server_ready = <span class="keyword">true</span>;</div>
 <div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(100));</div>
 <div class="line">    </div>
@@ -511,7 +511,7 @@ Example: Custom Integration Test</h2>
 <div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
 <div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line">    </div>
-<div class="line">    client-&gt;start();</div>
+<div class="line">    ASSERT_TRUE(client-&gt;start().get());</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Wait for connection</span></div>
 <div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(100));</div>
@@ -530,7 +530,12 @@ Example: Custom Integration Test</h2>
 <div class="line">    client-&gt;stop();</div>
 <div class="line">    server-&gt;stop();</div>
 <div class="line">}</div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a78022f0940452ae0b5fe115baca2e409"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a78022f0940452ae0b5fe115baca2e409">unilink::builder::TcpServerBuilder::on_connect</a></div><div class="ttdeci">TcpServerBuilder &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler) override</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00090">tcp_server_builder.cc:90</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a94c1f68d31130820c5c2bd20b906fba5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unilink::builder::TcpServerBuilder::unlimited_clients</a></div><div class="ttdeci">TcpServerBuilder &amp; unlimited_clients()</div><div class="ttdoc">Configure server for unlimited multi-client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00138">tcp_server_builder.cc:138</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00054">context.hpp:54</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a556940f4854839c3e5ee7525daf7cea1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a556940f4854839c3e5ee7525daf7cea1">unilink::wrapper::ConnectionContext::client_id</a></div><div class="ttdeci">size_t client_id() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00059">context.hpp:59</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::wrapper::MessageContext</a></div><div class="ttdoc">Context for data/message related events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00033">context.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a49d3f7b0aeac37cb41885b5fc2fa6423"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">unilink::wrapper::MessageContext::data</a></div><div class="ttdeci">std::string_view data() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00039">context.hpp:39</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00112">unilink.hpp:112</a></div></div>
 </div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md430"></a>
@@ -656,9 +661,9 @@ View HTML Coverage Report</h2>
 <h1><a class="anchor" id="autotoc_md453"></a>
 Next Steps</h1>
 <ul>
-<li><a class="el" href="performance_8md.html">Performance Optimization</a> - Optimize your tests</li>
+<li><a class="el" href="md_docs_guides_advanced_performance.html">Performance Optimization</a> - Optimize your tests</li>
 <li><a class="el" href="md_docs_guides_core_best_practices.html">Best Practices</a> - Testing best practices</li>
-<li><a class="el" href="build__guide_8md.html">Build Guide</a> - Build options for testing</li>
+<li><a class="el" href="md_docs_guides_setup_build_guide.html">Build Guide</a> - Build options for testing</li>
 <li><a class="el" href="md_docs_guides_core_troubleshooting.html">Troubleshooting</a> - Common test issues </li>
 </ul>
 </div></div><!-- contents -->
@@ -667,7 +672,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 00:33:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

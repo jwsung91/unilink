@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['test_20structure_2254',['Test Structure',['../md_docs_test_structure.html',1,'']]],
-  ['testing_20guide_2255',['Testing Guide',['../md_docs_guides_core_testing.html',1,'']]],
-  ['troubleshooting_20guide_2256',['Troubleshooting Guide',['../md_docs_guides_core_troubleshooting.html',1,'']]],
-  ['tutorial_2003_3a_20local_20ipc_20with_20unix_20domain_20sockets_20_28uds_29_2257',['Tutorial 03: Local IPC with Unix Domain Sockets (UDS)',['../md_docs_tutorials_03_uds_communication.html',1,'']]],
-  ['tutorial_201_3a_20getting_20started_20with_20unilink_2258',['Tutorial 1: Getting Started with Unilink',['../md_docs_tutorials_01_getting_started.html',1,'']]],
-  ['tutorial_202_3a_20building_20a_20tcp_20server_2259',['Tutorial 2: Building a TCP Server',['../md_docs_tutorials_02_tcp_server.html',1,'']]]
+  ['test_20structure_2267',['Test Structure',['../md_docs_test_structure.html',1,'']]],
+  ['testing_20guide_2268',['Testing Guide',['../md_docs_guides_core_testing.html',1,'']]],
+  ['transport_20channel_20contract_2269',['Transport Channel Contract',['../md_docs_architecture_channel_contract.html',1,'']]],
+  ['troubleshooting_20guide_2270',['Troubleshooting Guide',['../md_docs_guides_core_troubleshooting.html',1,'']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>unilink: Channel Contract: Ensuring Predictable and Robust Communication</title>
+<title>unilink: Transport Channel Contract</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -84,12 +84,16 @@ $(document).ready(function(){initNavTree('md_docs_architecture_channel_contract.
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Channel Contract: Ensuring Predictable and Robust Communication </div>  </div>
+<div class="title">Transport Channel Contract </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md1"></a>
+<div class="textblock"><blockquote class="doxtable">
+<p>Internal architecture note</p>
+<p>This document describes the transport-layer <code><a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></code> contract and related implementation guarantees. It is not the public wrapper/builder API reference. Public application-facing behavior is documented in <code><a class="el" href="api__guide_8md.html">docs/reference/api_guide.md</a></code>. </p>
+</blockquote>
+<h1><a class="anchor" id="autotoc_md1"></a>
 1. Introduction</h1>
-<p>The Unilink library provides flexible communication channels (TCP, UDP, Serial) that abstract away low-level networking and hardware details. To ensure consistent, predictable, and robust behavior across these diverse transports, a formal "Channel Contract" is established. This document outlines the fundamental rules and guarantees that all Unilink channels must adhere to. Adherence to this contract is critical for building reliable applications and simplifying the interaction with various communication mechanisms.</p>
+<p>The unilink library provides flexible communication channels (TCP, UDP, Serial, UDS) that abstract away low-level networking and hardware details. To keep behavior consistent across these transports, the transport layer follows a formal "Channel Contract". This document outlines the guarantees expected from internal channel implementations and the runtime assumptions built on top of them.</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 2. Core Principles</h1>
 <p>The Channel Contract is built upon the following core principles:</p><ul>
@@ -101,7 +105,7 @@ $(document).ready(function(){initNavTree('md_docs_architecture_channel_contract.
 3. Stop Semantics: No Callbacks After Stop()</h1>
 <p>One of the most critical aspects of the Channel Contract is the "Stop Semantics."</p>
 <p><b>Contract Rule:</b> </p><blockquote class="doxtable">
-<p><b>Once <code>Channel::stop()</code> is called and returns, no further asynchronous callbacks (e.g., <code>on_state</code>, <code>on_bytes</code>, <code>on_backpressure</code>) related to that specific channel instance shall be invoked.</b> </p>
+<p><b>Once <code>Channel::stop()</code> is called and returns, no further transport-layer asynchronous callbacks (for example <code>on_state</code>, <code>on_bytes</code>, <code>on_backpressure</code>) related to that specific channel instance shall be invoked.</b> </p>
 </blockquote>
 <p>This rule ensures that once an application explicitly requests a channel to stop, it can safely clean up resources and assume that no more events will arrive from that channel, preventing potential use-after-free bugs or unexpected state changes.</p>
 <p><b>Implementation Details:</b></p><ul>
@@ -133,15 +137,15 @@ $(document).ready(function(){initNavTree('md_docs_architecture_channel_contract.
 4. Backpressure Policy</h1>
 <p>To prevent memory exhaustion and manage flow control, channels implement a backpressure mechanism based on the size of the internal write queue.</p>
 <p><b>Contract Rules:</b></p><ol type="1">
-<li><b>Triggering (High Watermark):</b> When the size of queued write data (bytes pending transmission) reaches or exceeds the configured <code>backpressure_threshold</code>, the channel MUST invoke the <code>on_backpressure</code> callback with the current queue size. This signals the application to pause or slow down data generation.</li>
-<li><b>Relieving (Low Watermark):</b> Once backpressure is active, when the queue size drops to or below a "Low Watermark" (typically defined as <code>threshold / 2</code> or <code>0</code> depending on implementation, but must be strictly less than the high watermark), the channel MUST invoke the <code>on_backpressure</code> callback with the new (lower) queue size. This signals the application that it can resume normal data generation.</li>
+<li><b>Triggering (High Watermark):</b> When the size of queued write data (bytes pending transmission) reaches or exceeds the configured <code>backpressure_threshold</code>, the transport MUST invoke its internal <code>on_backpressure</code> callback with the current queue size. Wrapper APIs may choose not to expose this directly.</li>
+<li><b>Relieving (Low Watermark):</b> Once backpressure is active, when the queue size drops to or below a "Low Watermark" (typically defined as <code>threshold / 2</code> or <code>0</code> depending on implementation, but must be strictly less than the high watermark), the transport MUST invoke its internal <code>on_backpressure</code> callback with the new lower queue size.</li>
 <li><b>No Relief on Stop:</b> As per the <b>Stop Semantics</b>, clearing the queue during a <code>stop()</code> or shutdown sequence MUST NOT trigger a backpressure relief callback. The application is shutting down the channel and does not need to know that the queue is empty.</li>
 </ol>
 <p><b>Transport-Specific Implementation Details:</b></p><ul>
 <li><b>TcpClient:</b> Implements a high watermark at <code>backpressure_threshold</code> and a low watermark at <code>threshold / 2</code> (or 1 if threshold is small). Checks are performed after every write operation (enqueue/dequeue).</li>
 <li><b>Serial:</b> Should follow the same logic as TcpClient.</li>
 <li><b>TcpServer:</b> Implements backpressure per-session (<code>TcpServerSession</code>).<ul>
-<li><b>Note:</b> If <code>on_backpressure</code> callback is registered on <code>TcpServer</code> after client connections have been established, existing sessions will not receive this updated callback. It is recommended to register all callbacks before calling <code>start()</code> on the <code>TcpServer</code>.</li>
+<li><b>Note:</b> This is a transport concern. The current wrapper/builder API does not expose a public <code>on_backpressure()</code> hook.</li>
 </ul>
 </li>
 </ul>
@@ -160,7 +164,7 @@ $(document).ready(function(){initNavTree('md_docs_architecture_channel_contract.
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 00:33:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

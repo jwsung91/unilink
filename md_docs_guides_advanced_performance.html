@@ -180,27 +180,35 @@ Runtime Optimization</h1>
 2. Async Logging</h2>
 <p>Logging can be a major bottleneck. Enable async logging for high-performance applications.</p>
 <div class="fragment"><div class="line"><span class="comment">// ✅ GOOD: Async logging (non-blocking)</span></div>
-<div class="line">unilink::common::AsyncLogConfig config;</div>
-<div class="line">config.batch_size = 1000;</div>
-<div class="line">config.flush_interval = std::chrono::milliseconds(1000);</div>
+<div class="line"><a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a> config;</div>
+<div class="line">config.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">batch_size</a> = 1000;</div>
+<div class="line">config.<a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">flush_interval</a> = std::chrono::milliseconds(1000);</div>
 <div class="line"> </div>
-<div class="line">unilink::common::Logger::instance().set_async_logging(<span class="keyword">true</span>, config);</div>
+<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">set_async_logging</a>(<span class="keyword">true</span>, config);</div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2e114f7695d5aac3b9a993be97c501c9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00503">logger.cc:503</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00546">logger.cc:546</a></div></div>
+<div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a></div><div class="ttdoc">Async logging configuration.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8hpp_source.html#l00082">logger.hpp:82</a></div></div>
+<div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_aca0467bc46f99891373b0338a43e5790"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">unilink::diagnostics::AsyncLogConfig::batch_size</a></div><div class="ttdeci">size_t batch_size</div><div class="ttdef"><b>Definition:</b> <a href="logger_8hpp_source.html#l00084">logger.hpp:84</a></div></div>
+<div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_ad45fd1ba0889c92320635c03db237cea"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea">unilink::diagnostics::AsyncLogConfig::flush_interval</a></div><div class="ttdeci">std::chrono::milliseconds flush_interval</div><div class="ttdef"><b>Definition:</b> <a href="logger_8hpp_source.html#l00085">logger.hpp:85</a></div></div>
 </div><!-- fragment --><p><b>Impact</b>: 10-100x faster logging throughput.</p>
 <h2><a class="anchor" id="autotoc_md263"></a>
 3. Non-Blocking Callbacks</h2>
 <p>Never perform heavy computation or blocking operations (like <code>sleep</code>) inside callbacks.</p>
 <div class="fragment"><div class="line"><span class="comment">// ❌ BAD: Blocking I/O thread</span></div>
-<div class="line">.on_data([](<span class="keyword">const</span> std::string&amp; data) {</div>
+<div class="line">.on_data([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
 <div class="line">    std::this_thread::sleep_for(std::chrono::milliseconds(100));</div>
-<div class="line">    process_data(data);</div>
+<div class="line">    process_data(ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>());</div>
 <div class="line">})</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ✅ GOOD: Offload to worker thread/pool</span></div>
-<div class="line">.on_data([&amp;thread_pool](<span class="keyword">const</span> std::string&amp; data) {</div>
-<div class="line">    thread_pool.submit([data]() {</div>
-<div class="line">        process_data(data);</div>
+<div class="line">.on_data([&amp;thread_pool](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
+<div class="line">    std::string payload(ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>());</div>
+<div class="line">    thread_pool.submit([payload = std::move(payload)]() {</div>
+<div class="line">        process_data(payload);</div>
 <div class="line">    });</div>
 <div class="line">})</div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::wrapper::MessageContext</a></div><div class="ttdoc">Context for data/message related events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00033">context.hpp:33</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a49d3f7b0aeac37cb41885b5fc2fa6423"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">unilink::wrapper::MessageContext::data</a></div><div class="ttdeci">std::string_view data() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00039">context.hpp:39</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md265"></a>
 Memory Optimization</h1>
@@ -303,7 +311,7 @@ Case Study 3: IoT Gateway (1000+ Connections)</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 00:33:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

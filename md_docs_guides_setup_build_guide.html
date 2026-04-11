@@ -185,9 +185,11 @@ Core Options</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>UNILINK_ENABLE_CONFIG</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable configuration management API    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>BUILD_EXAMPLES</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build example applications    </td></tr>
+<td class="markdownTableBodyNone"><code>UNILINK_BUILD_EXAMPLES</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build example applications    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>BUILD_TESTING</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build unit tests   </td></tr>
+<td class="markdownTableBodyNone"><code>UNILINK_BUILD_TESTS</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Build tests    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>UNILINK_BUILD_DOCS</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable documentation targets   </td></tr>
 </table>
 <h2><a class="anchor" id="autotoc_md555"></a>
 Development Options</h2>
@@ -195,7 +197,7 @@ Development Options</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Option   </th><th class="markdownTableHeadNone">Default   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>UNILINK_ENABLE_MEMORY_TRACKING</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable memory tracking for debugging    </td></tr>
+<td class="markdownTableBodyNone"><code>UNILINK_ENABLE_MEMORY_TRACKING</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Enable memory tracking for debugging    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>UNILINK_ENABLE_SANITIZERS</code>   </td><td class="markdownTableBodyNone"><code>OFF</code>   </td><td class="markdownTableBodyNone">Enable AddressSanitizer and other sanitizers    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -209,7 +211,9 @@ Installation Options</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>CMAKE_INSTALL_PREFIX</code>   </td><td class="markdownTableBodyNone"><code>/usr/local</code>   </td><td class="markdownTableBodyNone">Installation directory    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>UNILINK_INSTALL_DOCS</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Install documentation files   </td></tr>
+<td class="markdownTableBodyNone"><code>UNILINK_ENABLE_INSTALL</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Enable install and export targets    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>UNILINK_ENABLE_PKGCONFIG</code>   </td><td class="markdownTableBodyNone"><code>ON</code>   </td><td class="markdownTableBodyNone">Install <code>unilink.pc</code>   </td></tr>
 </table>
 <hr  />
 <h1><a class="anchor" id="autotoc_md558"></a>
@@ -256,8 +260,8 @@ Example 1: Minimal Production Build</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=OFF \</div>
-<div class="line">  -DBUILD_EXAMPLES=OFF \</div>
-<div class="line">  -DBUILD_TESTING=OFF</div>
+<div class="line">  -DUNILINK_BUILD_EXAMPLES=OFF \</div>
+<div class="line">  -DUNILINK_BUILD_TESTS=OFF</div>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
 <div class="line">sudo cmake --install build</div>
@@ -267,8 +271,8 @@ Example 2: Development Build with Examples</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=ON \</div>
-<div class="line">  -DBUILD_EXAMPLES=ON \</div>
-<div class="line">  -DBUILD_TESTING=ON \</div>
+<div class="line">  -DUNILINK_BUILD_EXAMPLES=ON \</div>
+<div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
 <div class="line">  -DUNILINK_ENABLE_MEMORY_TRACKING=ON</div>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
@@ -278,7 +282,7 @@ Example 3: Testing with Sanitizers</h2>
 <div class="fragment"><div class="line">cmake -S . -B build \</div>
 <div class="line">  -DCMAKE_BUILD_TYPE=Debug \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=ON \</div>
-<div class="line">  -DBUILD_TESTING=ON \</div>
+<div class="line">  -DUNILINK_BUILD_TESTS=ON \</div>
 <div class="line">  -DUNILINK_ENABLE_SANITIZERS=ON</div>
 <div class="line"> </div>
 <div class="line">cmake --build build -j</div>
@@ -354,8 +358,8 @@ Build Steps</h3>
 <div class="line">  -DCMAKE_BUILD_TYPE=Release \</div>
 <div class="line">  -DCMAKE_CXX_STANDARD=17 \</div>
 <div class="line">  -DUNILINK_ENABLE_CONFIG=ON \</div>
-<div class="line">  -DBUILD_EXAMPLES=ON \</div>
-<div class="line">  -DBUILD_TESTING=ON</div>
+<div class="line">  -DUNILINK_BUILD_EXAMPLES=ON \</div>
+<div class="line">  -DUNILINK_BUILD_TESTS=ON</div>
 <div class="line"> </div>
 <div class="line"># 3. Build</div>
 <div class="line">cmake --build build -j $(nproc)</div>
@@ -553,9 +557,9 @@ Next Steps</h1>
 <ul>
 <li><a class="el" href="md_docs_guides_setup_installation.html">Installation Guide</a> - Complete installation instructions</li>
 <li><a class="el" href="md_docs_guides_setup_requirements.html">Requirements</a> - System requirements and dependencies</li>
-<li><a class="el" href="performance_8md.html">Performance Optimization</a> - Optimize build configuration</li>
-<li><a class="el" href="testing_8md.html">Testing Guide</a> - Run tests and CI/CD integration</li>
-<li>Quick Start Guide - Start using unilink </li>
+<li><a class="el" href="md_docs_guides_advanced_performance.html">Performance Optimization</a> - Optimize build configuration</li>
+<li><a class="el" href="md_docs_guides_core_testing.html">Testing Guide</a> - Run tests and CI/CD integration</li>
+<li><a class="el" href="md_docs_guides_core_quickstart.html">Quick Start Guide</a> - Start using unilink </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -563,7 +567,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 00:33:44 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

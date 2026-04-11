@@ -88,7 +88,12 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_docs_architecture_README"></a> Comprehensive overview of unilink's architecture and design principles.</p>
-<hr  />
+<blockquote class="doxtable">
+<p>Scope note</p>
+<p>This section mixes public high-level concepts with internal implementation details. For exact application-facing APIs, prefer <code><a class="el" href="api__guide_8md.html">docs/reference/api_guide.md</a></code>. For transport-internal contracts, prefer <code><a class="el" href="channel__contract_8md.html">docs/architecture/channel_contract.md</a></code>. </p>
+</blockquote>
+<h1><a class="anchor" id="autotoc_md98"></a>
+&lt;/blockquote&gt;</h1>
 <h1><a class="anchor" id="autotoc_md99"></a>
 Table of Contents</h1>
 <ol type="1">
@@ -208,25 +213,46 @@ Core Components</h1>
 <h2><a class="anchor" id="autotoc_md113"></a>
 2. Wrapper System</h2>
 <div class="fragment"><div class="line"><span class="keyword">namespace </span><a class="code" href="namespaceunilink_1_1wrapper.html">unilink::wrapper</a> {</div>
-<div class="line">    <span class="comment">// Base interface</span></div>
 <div class="line">    <span class="keyword">class </span>ChannelInterface {</div>
-<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a457bd3d0e566402a8b620714840e5e85">send</a>(<span class="keyword">const</span> std::string&amp; data) = 0;</div>
-<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a015554265152c7601cbff20480afeb43">start</a>() = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> std::future&lt;bool&gt; <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a015554265152c7601cbff20480afeb43">start</a>() = 0;</div>
 <div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">stop</a>() = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af00a13e38e4a80728ccdc573c5d8da97">is_connected</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a457bd3d0e566402a8b620714840e5e85">send</a>(std::string_view data) = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a14fb9222ca699358ee4e818bb977890c">send_line</a>(std::string_view line) = 0;</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// Implementations</span></div>
+<div class="line">    <span class="keyword">class </span>ServerInterface {</div>
+<div class="line">        <span class="keyword">virtual</span> std::future&lt;bool&gt; <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#af155896bc2266885191a35b3dac12542">start</a>() = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0">stop</a>() = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a4e06f0175a2f72fc75fb50dbbe1a008a">is_listening</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9">broadcast</a>(std::string_view data) = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a7aeee8f7d23b350d2f755c448ae1f200">send_to</a>(<span class="keywordtype">size_t</span> client_id, std::string_view data) = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
 <div class="line">    <span class="keyword">class </span><a class="code" href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">TcpClient</a> : <span class="keyword">public</span> ChannelInterface;</div>
-<div class="line">    class <a class="code" href="namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7">TcpServer</a> : <span class="keyword">public</span> ChannelInterface;</div>
 <div class="line">    class <a class="code" href="namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc">Serial</a> : <span class="keyword">public</span> ChannelInterface;</div>
+<div class="line">    class <a class="code" href="namespaceunilink.html#a4a71fa819f4284d7581cdb9c47fffb9e">Udp</a> : <span class="keyword">public</span> ChannelInterface;</div>
+<div class="line">    class <a class="code" href="namespaceunilink.html#a9b8ed9339c39013379280fecccd3a72c">UdsClient</a> : <span class="keyword">public</span> ChannelInterface;</div>
+<div class="line">    class <a class="code" href="namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7">TcpServer</a> : <span class="keyword">public</span> ServerInterface;</div>
+<div class="line">    class <a class="code" href="namespaceunilink.html#a1f48e446d6c7cce2a9f1ad4904a1d53f">UdsServer</a> : <span class="keyword">public</span> ServerInterface;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a015554265152c7601cbff20480afeb43"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a015554265152c7601cbff20480afeb43">unilink::wrapper::ChannelInterface::start</a></div><div class="ttdeci">virtual std::future&lt; bool &gt; start()=0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a14fb9222ca699358ee4e818bb977890c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a14fb9222ca699358ee4e818bb977890c">unilink::wrapper::ChannelInterface::send_line</a></div><div class="ttdeci">virtual void send_line(std::string_view line)=0</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a457bd3d0e566402a8b620714840e5e85"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a457bd3d0e566402a8b620714840e5e85">unilink::wrapper::ChannelInterface::send</a></div><div class="ttdeci">virtual void send(std::string_view data)=0</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_ad8b698aa572dffa18e0e9df5d465c6d0"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">unilink::wrapper::ChannelInterface::stop</a></div><div class="ttdeci">virtual void stop()=0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_af00a13e38e4a80728ccdc573c5d8da97"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#af00a13e38e4a80728ccdc573c5d8da97">unilink::wrapper::ChannelInterface::is_connected</a></div><div class="ttdeci">virtual bool is_connected() const =0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a2264498ef97a2d7b609557afc46754f9"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9">unilink::wrapper::ServerInterface::broadcast</a></div><div class="ttdeci">virtual bool broadcast(std::string_view data)=0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a4e06f0175a2f72fc75fb50dbbe1a008a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a4e06f0175a2f72fc75fb50dbbe1a008a">unilink::wrapper::ServerInterface::is_listening</a></div><div class="ttdeci">virtual bool is_listening() const =0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a7aeee8f7d23b350d2f755c448ae1f200"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a7aeee8f7d23b350d2f755c448ae1f200">unilink::wrapper::ServerInterface::send_to</a></div><div class="ttdeci">virtual bool send_to(size_t client_id, std::string_view data)=0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a988cc589cc3d3d23176f77dc44bb41a0"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0">unilink::wrapper::ServerInterface::stop</a></div><div class="ttdeci">virtual void stop()=0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_af155896bc2266885191a35b3dac12542"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#af155896bc2266885191a35b3dac12542">unilink::wrapper::ServerInterface::start</a></div><div class="ttdeci">virtual std::future&lt; bool &gt; start()=0</div></div>
 <div class="ttc" id="anamespaceunilink_1_1wrapper_html"><div class="ttname"><a href="namespaceunilink_1_1wrapper.html">unilink::wrapper</a></div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00076">unilink.hpp:76</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a1e364de9a0a37d3437cb9e10eb1bfba7"><div class="ttname"><a href="namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7">unilink::TcpServer</a></div><div class="ttdeci">wrapper::TcpServer TcpServer</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00094">unilink.hpp:94</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a1f48e446d6c7cce2a9f1ad4904a1d53f"><div class="ttname"><a href="namespaceunilink.html#a1f48e446d6c7cce2a9f1ad4904a1d53f">unilink::UdsServer</a></div><div class="ttdeci">wrapper::UdsServer UdsServer</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00098">unilink.hpp:98</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a2b404056fdf0a846b06ce934ae923bfc"><div class="ttname"><a href="namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc">unilink::Serial</a></div><div class="ttdeci">wrapper::Serial Serial</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00095">unilink.hpp:95</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a4a71fa819f4284d7581cdb9c47fffb9e"><div class="ttname"><a href="namespaceunilink.html#a4a71fa819f4284d7581cdb9c47fffb9e">unilink::Udp</a></div><div class="ttdeci">wrapper::Udp Udp</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00096">unilink.hpp:96</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a790be55fcb59a0aea5dfb178072fd6c7"><div class="ttname"><a href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">unilink::TcpClient</a></div><div class="ttdeci">wrapper::TcpClient TcpClient</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a9b8ed9339c39013379280fecccd3a72c"><div class="ttname"><a href="namespaceunilink.html#a9b8ed9339c39013379280fecccd3a72c">unilink::UdsClient</a></div><div class="ttdeci">wrapper::UdsClient UdsClient</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00097">unilink.hpp:97</a></div></div>
 </div><!-- fragment --><p><b>Key Features:</b></p>
 <ul>
 <li>Unified interface</li>
@@ -256,27 +282,25 @@ Core Components</h1>
 </ul>
 <h2><a class="anchor" id="autotoc_md115"></a>
 4. Common Utilities</h2>
-<div class="fragment"><div class="line"><span class="keyword">namespace </span><a class="code" href="namespaceunilink_1_1common.html">unilink::common</a> {</div>
-<div class="line">    <span class="comment">// Thread safety</span></div>
-<div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line">    <span class="keyword">class </span>ThreadSafeState;</div>
+<div class="fragment"><div class="line"><span class="keyword">namespace </span><a class="code" href="namespaceunilink.html">unilink</a> {</div>
+<div class="line"><span class="keyword">namespace </span>concurrency {</div>
+<div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">class </span>ThreadSafeState;</div>
+<div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">class </span>AtomicState;</div>
+<div class="line">}</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line">    <span class="keyword">class </span>AtomicState;</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Memory management</span></div>
+<div class="line"><span class="keyword">namespace </span>memory {</div>
 <div class="line">    <span class="keyword">class </span>MemoryPool;</div>
 <div class="line">    <span class="keyword">class </span>MemoryTracker;</div>
 <div class="line">    <span class="keyword">class </span>SafeDataBuffer;</div>
+<div class="line">}</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// Logging</span></div>
+<div class="line"><span class="keyword">namespace </span>diagnostics {</div>
 <div class="line">    <span class="keyword">class </span>Logger;</div>
 <div class="line">    <span class="keyword">class </span>LogRotation;</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Error handling</span></div>
 <div class="line">    <span class="keyword">class </span>ErrorHandler;</div>
 <div class="line">}</div>
-<div class="ttc" id="anamespaceunilink_1_1common_html"><div class="ttname"><a href="namespaceunilink_1_1common.html">unilink::common</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00189">common.hpp:189</a></div></div>
+<div class="line">}</div>
+<div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md117"></a>
 Design Patterns</h1>
@@ -407,10 +431,11 @@ Thread Safety Guarantees</h2>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md129"></a>
 2. Callbacks</h3>
 <p>Callbacks are executed in the I/O thread context:</p>
-<div class="fragment"><div class="line">.on_data([](<span class="keyword">const</span> std::string&amp; data) {</div>
-<div class="line">    <span class="comment">// This runs in I/O thread</span></div>
+<div class="fragment"><div class="line">.on_data([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::MessageContext</a>&amp; ctx) {</div>
+<div class="line">    <span class="comment">// This runs in the I/O thread.</span></div>
 <div class="line">    <span class="comment">// Don&#39;t block here!</span></div>
 <div class="line">});</div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::wrapper::MessageContext</a></div><div class="ttdoc">Context for data/message related events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00033">context.hpp:33</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md130"></a>
 3. Shared State</h3>
 <p>All shared state is protected:</p>
@@ -586,15 +611,21 @@ Compile-Time Configuration</h2>
 <div class="line"><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md150"></a>
 Runtime Configuration</h2>
-<div class="fragment"><div class="line"><span class="keyword">struct </span>TcpClientConfig {</div>
-<div class="line">    std::string host;</div>
-<div class="line">    uint16_t port;</div>
-<div class="line">    <span class="keywordtype">unsigned</span> retry_interval_ms{3000};  <span class="comment">// Default is 3 seconds</span></div>
-<div class="line">};</div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="config__factory_8hpp.html">unilink/config/config_factory.hpp</a>&quot;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Load from file</span></div>
-<div class="line"><span class="keyword">auto</span> config = ConfigManager::load_from_file(<span class="stringliteral">&quot;config.json&quot;</span>);</div>
-<div class="line"><span class="keyword">auto</span> client_config = config-&gt;get_tcp_client_config(<span class="stringliteral">&quot;my_client&quot;</span>);</div>
+<div class="line"><span class="keyword">auto</span> config = <a class="code" href="classunilink_1_1config_1_1ConfigFactory.html#a4edec9716691c78976092f69d6810ae5">unilink::config::ConfigFactory::create_with_defaults</a>();</div>
+<div class="line">config-&gt;load_from_file(<span class="stringliteral">&quot;unilink.conf&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> host = std::any_cast&lt;std::string&gt;(config-&gt;get(<span class="stringliteral">&quot;tcp.client.host&quot;</span>));</div>
+<div class="line"><span class="keyword">auto</span> port = <span class="keyword">static_cast&lt;</span>uint16_t<span class="keyword">&gt;</span>(std::any_cast&lt;int&gt;(config-&gt;get(<span class="stringliteral">&quot;tcp.client.port&quot;</span>)));</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(host, port)</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a8c1e4e8c618ce01445313f3062eeb2fb">retry_interval</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(</div>
+<div class="line">        std::any_cast&lt;int&gt;(config-&gt;get(<span class="stringliteral">&quot;tcp.client.retry_interval_ms&quot;</span>))</div>
+<div class="line">    ))</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="ttc" id="aclassunilink_1_1config_1_1ConfigFactory_html_a4edec9716691c78976092f69d6810ae5"><div class="ttname"><a href="classunilink_1_1config_1_1ConfigFactory.html#a4edec9716691c78976092f69d6810ae5">unilink::config::ConfigFactory::create_with_defaults</a></div><div class="ttdeci">static std::shared_ptr&lt; ConfigManagerInterface &gt; create_with_defaults()</div><div class="ttdef"><b>Definition:</b> <a href="config__factory_8cc_source.html#l00031">config_factory.cc:31</a></div></div>
+<div class="ttc" id="aconfig__factory_8hpp_html"><div class="ttname"><a href="config__factory_8hpp.html">config_factory.hpp</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md152"></a>
 Performance Considerations</h1>
@@ -623,8 +654,10 @@ Performance Considerations</h1>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md156"></a>
 4. Memory Pooling</h2>
 <div class="fragment"><div class="line"><span class="comment">// Avoid repeated allocations</span></div>
-<div class="line">MemoryPool buffer_pool_(1024, 100);</div>
-<div class="line"><span class="keyword">auto</span> buffer = buffer_pool_.allocate();  <span class="comment">// Fast!</span></div>
+<div class="line"><a class="code" href="classunilink_1_1memory_1_1MemoryPool.html">unilink::memory::MemoryPool</a> buffer_pool_;</div>
+<div class="line"><span class="keyword">auto</span> buffer = buffer_pool_.<a class="code" href="classunilink_1_1memory_1_1MemoryPool.html#a72af4e14f7dc98ae5cbb227546c1e015">acquire</a>(1024);  <span class="comment">// Fast!</span></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1MemoryPool_html"><div class="ttname"><a href="classunilink_1_1memory_1_1MemoryPool.html">unilink::memory::MemoryPool</a></div><div class="ttdoc">Selective simplified memory pool with optimized performance.</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8hpp_source.html#l00043">memory_pool.hpp:43</a></div></div>
+<div class="ttc" id="aclassunilink_1_1memory_1_1MemoryPool_html_a72af4e14f7dc98ae5cbb227546c1e015"><div class="ttname"><a href="classunilink_1_1memory_1_1MemoryPool.html#a72af4e14f7dc98ae5cbb227546c1e015">unilink::memory::MemoryPool::acquire</a></div><div class="ttdeci">std::unique_ptr&lt; uint8_t[]&gt; acquire(size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="memory__pool_8cc_source.html#l00057">memory_pool.cc:57</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md158"></a>
 Extension Points</h1>
@@ -722,9 +755,9 @@ Summary</h1>
 <hr  />
 <p><b>See Also:</b></p>
 <ul>
-<li>Design Patterns</li>
-<li>Threading Model</li>
-<li>../guides/performance_tuning.md "Performance Guide" </li>
+<li><a class="el" href="md_docs_architecture_runtime_behavior.html">Runtime Behavior</a></li>
+<li><a class="el" href="md_docs_architecture_memory_safety.html">Memory Safety</a></li>
+<li><a class="el" href="md_docs_guides_advanced_performance.html">Performance Guide</a> </li>
 </ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
@@ -732,7 +765,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 11 2026 00:33:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 11 2026 03:37:47 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
