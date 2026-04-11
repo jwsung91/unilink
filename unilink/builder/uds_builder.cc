@@ -54,6 +54,13 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   client->set_max_retries(max_retries_);
   client->set_connection_timeout(connection_timeout_);
 
+  if (framer_) {
+    client->set_framer(std::move(framer_));
+  }
+  if (on_message_) {
+    client->on_message(std::move(on_message_));
+  }
+
   return client;
 }
 
