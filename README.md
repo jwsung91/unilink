@@ -14,7 +14,7 @@
 
 Simple async C++ communication library for Serial, TCP, UDP, and Unix Domain Sockets
 
-`unilink` provides a unified interface for asynchronous communication across different transports, allowing applications to switch between Serial, TCP, UDP, and UDS with minimal code changes. The public C++ API exposes builders and wrappers for all four transport families; Python bindings currently cover TCP client/server, Serial, and UDP.
+`unilink` provides a unified interface for asynchronous communication across different transports, allowing applications to switch between Serial, TCP, UDP, and UDS with minimal code changes. The public C++ API exposes builders and wrappers for all four transport families; Python bindings cover Serial, TCP, UDP, and UDS.
 
 The project prioritizes **API clarity, predictable runtime behavior, and stability** over rapid feature expansion.
 
@@ -42,7 +42,7 @@ For CMake usage, source builds, and other installation options, see the [Install
 
 ## 🐍 Python Bindings
 
-Unilink provides Python bindings for core functionality (`TcpClient`, `TcpServer`, `Serial`, `Udp`). UDS wrappers are available in the C++ API but are not currently exposed in `unilink_py`.
+Unilink provides Python bindings for all core transport families (`TcpClient`, `TcpServer`, `Serial`, `Udp`, `UdsClient`, `UdsServer`). 
 
 For a complete guide, see the **[Python Bindings Guide](docs/guides/core/python_bindings.md)**.
 

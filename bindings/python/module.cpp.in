@@ -190,6 +190,98 @@ PYBIND11_MODULE(unilink_py, m) {
         return &self;
       });
 
+  // UdsClient
+  py::class_<UdsClient, std::shared_ptr<UdsClient>>(m, "UdsClient")
+      .def(py::init<const std::string&>())
+      .def("start",
+           [](UdsClient& self) {
+             py::gil_scoped_release release;
+             return self.start().get();
+           })
+      .def("stop", &UdsClient::stop)
+      .def("send", &UdsClient::send)
+      .def("send_line", &UdsClient::send_line)
+      .def("is_connected", &UdsClient::is_connected)
+      .def("auto_manage", &UdsClient::auto_manage, py::arg("manage") = true)
+      .def("set_retry_interval", &UdsClient::set_retry_interval)
+      .def("set_max_retries", &UdsClient::set_max_retries)
+      .def("set_connection_timeout", &UdsClient::set_connection_timeout)
+      .def("on_data",
+           [](UdsClient& self, std::function<void(const MessageContext&)> handler) {
+             self.on_data([handler](const MessageContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_connect",
+           [](UdsClient& self, std::function<void(const ConnectionContext&)> handler) {
+             self.on_connect([handler](const ConnectionContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_disconnect",
+           [](UdsClient& self, std::function<void(const ConnectionContext&)> handler) {
+             self.on_disconnect([handler](const ConnectionContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_error", [](UdsClient& self, std::function<void(const ErrorContext&)> handler) {
+        self.on_error([handler](const ErrorContext& ctx) {
+          py::gil_scoped_acquire gil;
+          handler(ctx);
+        });
+        return &self;
+      });
+
+  // UdsServer
+  py::class_<UdsServer, std::shared_ptr<UdsServer>>(m, "UdsServer")
+      .def(py::init<const std::string&>())
+      .def("start",
+           [](UdsServer& self) {
+             py::gil_scoped_release release;
+             return self.start().get();
+           })
+      .def("stop", &UdsServer::stop)
+      .def("broadcast", &UdsServer::broadcast)
+      .def("send_to", &UdsServer::send_to)
+      .def("get_client_count", &UdsServer::get_client_count)
+      .def("on_data",
+           [](UdsServer& self, std::function<void(const MessageContext&)> handler) {
+             self.on_data([handler](const MessageContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_client_connect",
+           [](UdsServer& self, std::function<void(const ConnectionContext&)> handler) {
+             self.on_client_connect([handler](const ConnectionContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_client_disconnect",
+           [](UdsServer& self, std::function<void(const ConnectionContext&)> handler) {
+             self.on_client_disconnect([handler](const ConnectionContext& ctx) {
+               py::gil_scoped_acquire gil;
+               handler(ctx);
+             });
+             return &self;
+           })
+      .def("on_error", [](UdsServer& self, std::function<void(const ErrorContext&)> handler) {
+        self.on_error([handler](const ErrorContext& ctx) {
+          py::gil_scoped_acquire gil;
+          handler(ctx);
+        });
+        return &self;
+      });
+
   // UdpConfig
   py::class_<config::UdpConfig>(m, "UdpConfig")
       .def(py::init<>())
