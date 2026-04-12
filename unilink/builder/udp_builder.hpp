@@ -42,11 +42,6 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpCl
 
   UdpClientBuilder& auto_manage(bool auto_manage = true) override;
 
-  UdpClientBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
-  UdpClientBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  UdpClientBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  UdpClientBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
-
   UdpClientBuilder& set_local_port(uint16_t port);
   UdpClientBuilder& set_remote(const std::string& address, uint16_t port);
   UdpClientBuilder& use_independent_context(bool use_independent = true);
@@ -55,11 +50,6 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpCl
   config::UdpConfig cfg_;
   bool auto_manage_;
   bool use_independent_context_;
-
-  std::function<void(const wrapper::MessageContext&)> on_data_;
-  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
-  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
-  std::function<void(const wrapper::ErrorContext&)> on_error_;
 };
 
 /**
@@ -73,22 +63,15 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
 
   UdpServerBuilder& auto_manage(bool auto_manage = true) override;
 
-  UdpServerBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
+  /**
+   * @brief Helper for client connection events
+   */
   UdpServerBuilder& on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler);
+
+  /**
+   * @brief Helper for client disconnection events
+   */
   UdpServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler);
-  UdpServerBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
-
-  // Implement BuilderInterface requirements by forwarding to client handlers
-  UdpServerBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override {
-    return on_client_connect(std::move(handler));
-  }
-  UdpServerBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override {
-    return on_client_disconnect(std::move(handler));
-  }
-
-  // Framing support
-  using BuilderInterface<wrapper::UdpServer, UdpServerBuilder>::on_message;
-  UdpServerBuilder& on_message(std::function<void(const wrapper::MessageContext&)> handler);
 
   UdpServerBuilder& set_local_port(uint16_t port);
   UdpServerBuilder& use_independent_context(bool use_independent = true);
@@ -97,12 +80,6 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   config::UdpConfig cfg_;
   bool auto_manage_;
   bool use_independent_context_;
-
-  std::function<void(const wrapper::MessageContext&)> on_data_;
-  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
-  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
-  std::function<void(const wrapper::ErrorContext&)> on_error_;
-  std::function<void(const wrapper::MessageContext&)> on_framed_message_;
 };
 
 using UdpBuilder = UdpClientBuilder;

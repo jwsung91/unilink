@@ -37,8 +37,9 @@ PYBIND11_MODULE(unilink_py, m) {
   // Context objects
   py::class_<MessageContext>(m, "MessageContext")
       .def_property_readonly("client_id", &MessageContext::client_id)
-      .def_property_readonly("data", [](const MessageContext& self) { return std::string(self.data()); })
-      .def_property_readonly("client_info", &MessageContext::client_info);
+      .def_property_readonly("data", [](const MessageContext& self) { return py::bytes(std::string(self.data())); })
+      .def_property_readonly("client_info", &MessageContext::client_info)
+      .def_property_readonly("remote_address", &MessageContext::remote_address);
 
   py::class_<ConnectionContext>(m, "ConnectionContext")
       .def_property_readonly("client_id", &ConnectionContext::client_id)
@@ -90,10 +91,10 @@ PYBIND11_MODULE(unilink_py, m) {
              return &self;
            })
       .def("on_message",
-           [](TcpClient& self, std::function<void(py::bytes)> handler) {
-             self.on_message([handler](memory::ConstByteSpan msg) {
+           [](TcpClient& self, std::function<void(const MessageContext&)> h) {
+             self.on_message([h](const MessageContext& ctx) {
                py::gil_scoped_acquire gil;
-               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+               h(ctx);
              });
              return &self;
            })
@@ -141,6 +142,8 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("broadcast", &TcpServer::broadcast)
       .def("send_to", &TcpServer::send_to)
       .def("get_client_count", &TcpServer::get_client_count)
+      .def("get_connected_clients", &TcpServer::get_connected_clients)
+      .def("is_listening", &TcpServer::is_listening)
       .def(
           "use_line_framer",
           [](TcpServer& self, const std::string& d, bool i, size_t m) {
@@ -225,10 +228,10 @@ PYBIND11_MODULE(unilink_py, m) {
              return &self;
            })
       .def("on_message",
-           [](Serial& self, std::function<void(py::bytes)> handler) {
-             self.on_message([handler](memory::ConstByteSpan msg) {
+           [](Serial& self, std::function<void(const MessageContext&)> h) {
+             self.on_message([h](const MessageContext& ctx) {
                py::gil_scoped_acquire gil;
-               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+               h(ctx);
              });
              return &self;
            })
@@ -293,10 +296,10 @@ PYBIND11_MODULE(unilink_py, m) {
              return &self;
            })
       .def("on_message",
-           [](UdsClient& self, std::function<void(py::bytes)> handler) {
-             self.on_message([handler](memory::ConstByteSpan msg) {
+           [](UdsClient& self, std::function<void(const MessageContext&)> h) {
+             self.on_message([h](const MessageContext& ctx) {
                py::gil_scoped_acquire gil;
-               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+               h(ctx);
              });
              return &self;
            })
@@ -344,6 +347,8 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("broadcast", &UdsServer::broadcast)
       .def("send_to", &UdsServer::send_to)
       .def("get_client_count", &UdsServer::get_client_count)
+      .def("get_connected_clients", &UdsServer::get_connected_clients)
+      .def("is_listening", &UdsServer::is_listening)
       .def(
           "use_line_framer",
           [](UdsServer& self, const std::string& d, bool i, size_t m) {
@@ -433,10 +438,10 @@ PYBIND11_MODULE(unilink_py, m) {
              return &self;
            })
       .def("on_message",
-           [](Udp& self, std::function<void(py::bytes)> handler) {
-             self.on_message([handler](memory::ConstByteSpan msg) {
+           [](Udp& self, std::function<void(const MessageContext&)> h) {
+             self.on_message([h](const MessageContext& ctx) {
                py::gil_scoped_acquire gil;
-               handler(py::bytes(reinterpret_cast<const char*>(msg.data()), msg.size()));
+               h(ctx);
              });
              return &self;
            })
@@ -485,6 +490,9 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("broadcast", &UdpServer::broadcast)
       .def("send_to", &UdpServer::send_to)
       .def("get_client_count", &UdpServer::get_client_count)
+      .def("get_connected_clients", &UdpServer::get_connected_clients)
+      .def("is_listening", &UdpServer::is_listening)
+      .def("set_session_timeout", &UdpServer::set_session_timeout)
       .def(
           "use_line_framer",
           [](UdpServer& self, const std::string& d, bool i, size_t m) {

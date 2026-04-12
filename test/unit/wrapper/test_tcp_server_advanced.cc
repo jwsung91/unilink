@@ -105,7 +105,8 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
     std::lock_guard<std::mutex> lk(ids_mutex);
     ids.push_back(ctx.client_id());
   });
-  server_->start();
+  auto server_start_fut = server_->start();
+  ASSERT_TRUE(server_start_fut.get());
 
   auto client1 = unilink::tcp_client("127.0.0.1", test_port_).build();
   auto client2 = unilink::tcp_client("127.0.0.1", test_port_).build();
@@ -114,11 +115,19 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
   client1->on_data([&](const wrapper::MessageContext&) { client_received++; });
   client2->on_data([&](const wrapper::MessageContext&) { client_received++; });
 
-  client1->start();
-  client2->start();
+  auto c1_fut = client1->start();
+  auto c2_fut = client2->start();
+  ASSERT_TRUE(c1_fut.get());
+  ASSERT_TRUE(c2_fut.get());
 
   // Wait for connections to stabilize
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 2; }, 10000));
+  EXPECT_TRUE(TestUtils::waitForCondition(
+      [&]() {
+        std::lock_guard<std::mutex> lk(ids_mutex);
+        return ids.size() >= 2;
+      },
+      5000));
 
   // Small extra delay for transport session readiness
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -129,12 +138,17 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
     if (!ids.empty()) target_id = ids.front();
   }
 
-  // Final check: try broadcast if send_to is too picky
+  // Send once first
+  if (target_id != 0) server_->send_to(target_id, "ping");
+  server_->broadcast("ping");
+
+  // Final check
   bool success = TestUtils::waitForCondition(
       [&]() {
-        if (target_id != 0) server_->send_to(target_id, "ping");
+        if (client_received.load() > 0) return true;
+        // Periodic retry if not received yet
         server_->broadcast("ping");
-        return client_received.load() > 0;
+        return false;
       },
       5000);
 

@@ -87,7 +87,7 @@ telnet server.com 8080
 
 ```cpp
 auto client = tcp_client("server.com", 8080)
-    .retry_interval(10000)  // Wait 10 seconds
+    .retry_interval(10000ms)  // Wait 10 seconds
     .build();
 ```
 
@@ -117,7 +117,7 @@ socket.set_option(option);
 ```cpp
 // Enable auto-reconnection
 auto client = tcp_client("server.com", 8080)
-    .retry_interval(3000)  // Retry every 3 seconds
+    .retry_interval(3000ms)  // Retry every 3 seconds
     .on_disconnect([](const unilink::ConnectionContext&) {
         log_info("Disconnected, will auto-retry");
     })
@@ -476,7 +476,7 @@ int main() {
 .retry_interval(10)  // Retry every 10ms!
 
 // GOOD
-.retry_interval(3000)  // Retry every 3 seconds
+.retry_interval(3000ms)  // Retry every 3 seconds
 ```
 
 #### 3. Excessive Logging

@@ -48,16 +48,10 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
 
   TcpClientBuilder& auto_manage(bool auto_manage = true) override;
 
-  // Modernized event handlers
-  TcpClientBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
-  TcpClientBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  TcpClientBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  TcpClientBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
-
   /**
    * @brief Set connection retry interval
    */
-  TcpClientBuilder& retry_interval(uint32_t milliseconds);
+  TcpClientBuilder& retry_interval(std::chrono::milliseconds interval);
 
   /**
    * @brief Set maximum connection retries (-1 for unlimited)
@@ -67,7 +61,7 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   /**
    * @brief Set connection timeout
    */
-  TcpClientBuilder& connection_timeout(uint32_t milliseconds);
+  TcpClientBuilder& connection_timeout(std::chrono::milliseconds timeout);
 
   /**
    * @brief Use independent IoContext for this client
@@ -84,12 +78,6 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   std::chrono::milliseconds retry_interval_;
   int max_retries_;
   std::chrono::milliseconds connection_timeout_;
-
-  // Callbacks
-  std::function<void(const wrapper::MessageContext&)> on_data_;
-  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
-  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
-  std::function<void(const wrapper::ErrorContext&)> on_error_;
 };
 
 #ifdef _MSC_VER

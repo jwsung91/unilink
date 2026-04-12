@@ -71,7 +71,7 @@ class UNILINK_API Udp : public ChannelInterface {
   ChannelInterface& on_error(ErrorHandler handler) override;
 
   void set_framer(std::unique_ptr<framer::IFramer> framer) override;
-  void on_message(FramedMessageHandler handler) override;
+  void on_message(MessageHandler handler) override;
 
   ChannelInterface& auto_manage(bool manage = true) override;
 

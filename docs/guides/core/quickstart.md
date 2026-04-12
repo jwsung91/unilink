@@ -132,7 +132,7 @@ int main() {
 
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
-    .retry_interval(3000)  // Retry every 3 seconds (default)
+    .retry_interval(3000ms)  // Retry every 3 seconds (default)
     .build();
 
 client->start();  // Will automatically reconnect on disconnect

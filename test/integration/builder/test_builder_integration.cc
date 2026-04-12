@@ -70,7 +70,7 @@ TEST_F(UnifiedBuilderIntegrationTest, BuilderConfigurationAffectsCommunication) 
   // Use a unique port for this sub-test
   uint16_t p = TestUtils::getAvailableTestPort();
 
-  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", p).retry_interval(100).build();
+  auto client = builder::UnifiedBuilder::tcp_client("127.0.0.1", p).retry_interval(100ms).build();
 
   // Start client without server
   auto f = client->start();

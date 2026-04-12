@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -23,6 +24,7 @@
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 class SerialChatApp {
  public:

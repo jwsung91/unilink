@@ -83,7 +83,7 @@ class UNILINK_API TcpServer : public ServerInterface {
   // Configuration (Fluent API)
   TcpServer& auto_manage(bool manage = true);
   TcpServer& enable_port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
-  TcpServer& idle_timeout(int timeout_ms);
+  TcpServer& idle_timeout(std::chrono::milliseconds timeout);
   TcpServer& set_client_limit(size_t max_clients);
   TcpServer& set_unlimited_clients();
   TcpServer& notify_send_failure(bool enable = true);

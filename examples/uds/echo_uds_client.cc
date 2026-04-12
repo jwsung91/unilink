@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+#include <chrono>
 #include <iostream>
 #include <string>
 
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 int main(int argc, char** argv) {
   const std::string socket_path = (argc > 1) ? argv[1] : "/tmp/unilink_echo.sock";

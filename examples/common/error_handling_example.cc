@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <chrono>
 #include <iostream>
 #include <string>
 
@@ -26,6 +27,7 @@
  */
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 int main() {
   std::cout << "--- Unilink Error Handling Example ---" << std::endl;

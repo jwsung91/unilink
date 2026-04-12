@@ -38,14 +38,9 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
   std::unique_ptr<wrapper::UdsClient> build() override;
   UdsClientBuilder& auto_manage(bool auto_manage = true) override;
 
-  UdsClientBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
-  UdsClientBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  UdsClientBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  UdsClientBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
-
-  UdsClientBuilder& retry_interval(uint32_t milliseconds);
+  UdsClientBuilder& retry_interval(std::chrono::milliseconds milliseconds);
   UdsClientBuilder& max_retries(int max_retries);
-  UdsClientBuilder& connection_timeout(uint32_t milliseconds);
+  UdsClientBuilder& connection_timeout(std::chrono::milliseconds milliseconds);
   UdsClientBuilder& use_independent_context(bool use_independent = true);
 
  private:
@@ -55,11 +50,6 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
   std::chrono::milliseconds retry_interval_;
   int max_retries_;
   std::chrono::milliseconds connection_timeout_;
-
-  std::function<void(const wrapper::MessageContext&)> on_data_;
-  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
-  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
-  std::function<void(const wrapper::ErrorContext&)> on_error_;
 };
 
 /**
@@ -72,17 +62,19 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   std::unique_ptr<wrapper::UdsServer> build() override;
   UdsServerBuilder& auto_manage(bool auto_manage = true) override;
 
-  UdsServerBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
-  UdsServerBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  UdsServerBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  UdsServerBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
-
-  // Framing support
-  using BuilderInterface<wrapper::UdsServer, UdsServerBuilder>::on_message;
   /**
-   * @brief Set message handler callback for framed messages (Server version with context)
+   * @brief Helper for client connection events
    */
-  UdsServerBuilder& on_message(std::function<void(const wrapper::MessageContext&)> handler);
+  UdsServerBuilder& on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+    return on_connect(std::move(handler));
+  }
+
+  /**
+   * @brief Helper for client disconnection events
+   */
+  UdsServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+    return on_disconnect(std::move(handler));
+  }
 
   UdsServerBuilder& use_independent_context(bool use_independent = true);
   UdsServerBuilder& max_clients(size_t max);
@@ -93,12 +85,6 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   bool auto_manage_;
   bool use_independent_context_;
   size_t max_clients_;
-
-  std::function<void(const wrapper::MessageContext&)> on_data_;
-  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
-  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
-  std::function<void(const wrapper::ErrorContext&)> on_error_;
-  std::function<void(const wrapper::MessageContext&)> on_framed_message_;
 };
 
 }  // namespace builder

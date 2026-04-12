@@ -42,6 +42,7 @@ struct UdpServer::Impl {
 
   mutable std::mutex mutex;
   bool started{false};
+  std::shared_ptr<std::promise<bool>> start_promise;
 
   // Virtual Session Management
   size_t next_client_id{1};
@@ -87,32 +88,34 @@ struct UdpServer::Impl {
   }
 
   void run_reaper() {
-    std::vector<size_t> to_remove;
+    std::vector<std::pair<size_t, std::string>> to_remove_with_info;
     auto now = std::chrono::steady_clock::now();
 
     {
       std::lock_guard<std::mutex> lock(mutex);
       for (auto const& [id, last_seen] : session_activity) {
         if (now - last_seen > session_timeout) {
-          to_remove.push_back(id);
+          auto it_ep = id_to_endpoint.find(id);
+          std::string info = "timeout";
+          if (it_ep != id_to_endpoint.end()) {
+            info = it_ep->second.address().to_string() + ":" + std::to_string(it_ep->second.port());
+            endpoint_to_id.erase(it_ep->second);
+            id_to_endpoint.erase(it_ep);
+          }
+          client_framers.erase(id);
+          to_remove_with_info.push_back({id, info});
         }
       }
 
-      for (size_t id : to_remove) {
-        auto it_ep = id_to_endpoint.find(id);
-        if (it_ep != id_to_endpoint.end()) {
-          endpoint_to_id.erase(it_ep->second);
-          id_to_endpoint.erase(it_ep);
-        }
-        client_framers.erase(id);
+      for (auto const& [id, info] : to_remove_with_info) {
         session_activity.erase(id);
       }
     }
 
     // Call disconnect handlers outside the lock
     if (on_disconnect) {
-      for (size_t id : to_remove) {
-        on_disconnect(ConnectionContext(id, "timeout"));
+      for (auto const& [id, info] : to_remove_with_info) {
+        on_disconnect(ConnectionContext(id, info));
       }
     }
   }
@@ -172,8 +175,27 @@ struct UdpServer::Impl {
     });
 
     channel->on_state([this](base::LinkState state) {
-      if (state == base::LinkState::Error && on_error) {
-        on_error(ErrorContext(ErrorCode::IoError, "UDP Transport Error"));
+      if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
+        std::lock_guard<std::mutex> lock(mutex);
+        if (start_promise) {
+          try {
+            start_promise->set_value(true);
+          } catch (...) {
+          }
+          start_promise.reset();
+        }
+      } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
+        std::lock_guard<std::mutex> lock(mutex);
+        if (start_promise) {
+          try {
+            start_promise->set_value(false);
+          } catch (...) {
+          }
+          start_promise.reset();
+        }
+        if (on_error) {
+          on_error(ErrorContext(ErrorCode::IoError, "UDP Transport Error"));
+        }
       }
     });
   }
@@ -185,6 +207,9 @@ struct UdpServer::Impl {
       p.set_value(true);
       return p.get_future();
     }
+
+    start_promise = std::make_shared<std::promise<bool>>();
+    auto fut = start_promise->get_future();
 
     if (!channel) {
       channel = std::dynamic_pointer_cast<transport::UdpChannel>(factory::ChannelFactory::create(cfg, external_ioc));
@@ -211,9 +236,7 @@ struct UdpServer::Impl {
       schedule_reaper();
     }
 
-    std::promise<bool> p;
-    p.set_value(true);
-    return p.get_future();
+    return fut;
   }
 
   void stop() {
@@ -238,6 +261,12 @@ struct UdpServer::Impl {
     endpoint_to_id.clear();
     id_to_endpoint.clear();
     client_framers.clear();
+    session_activity.clear();
+    next_client_id = 1;
+    if (start_promise) {
+      start_promise->set_value(false);
+      start_promise.reset();
+    }
   }
 };
 
@@ -256,7 +285,12 @@ UdpServer::~UdpServer() = default;
 
 std::future<bool> UdpServer::start() { return impl_->start(); }
 void UdpServer::stop() { impl_->stop(); }
-bool UdpServer::is_listening() const { return impl_->started; }
+bool UdpServer::is_listening() const {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
+  return impl_->started && impl_->channel &&
+         (impl_->channel->is_connected() ||
+          impl_->channel->local_endpoint().port() != 0);  // UdpChannel is_connected might mean remote is set
+}
 
 bool UdpServer::broadcast(std::string_view data) {
   std::lock_guard<std::mutex> lock(impl_->mutex);

@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <cstdint>
 
 #include "unilink/base/visibility.hpp"
@@ -55,19 +56,6 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
    */
   TcpServerBuilder& auto_manage(bool auto_manage = true) override;
 
-  // Modernized event handlers (Override BuilderInterface)
-  TcpServerBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
-  TcpServerBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  TcpServerBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  TcpServerBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
-
-  // Framing support
-  using BuilderInterface<wrapper::TcpServer, TcpServerBuilder>::on_message;
-  /**
-   * @brief Set message handler callback for framed messages (Server version with context)
-   */
-  TcpServerBuilder& on_message(std::function<void(const wrapper::MessageContext&)> handler);
-
   /**
    * @brief Use independent IoContext for this server
    */
@@ -81,7 +69,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   /**
    * @brief Set idle connection timeout
    */
-  TcpServerBuilder& idle_timeout(int timeout_ms);
+  TcpServerBuilder& idle_timeout(std::chrono::milliseconds timeout);
 
   /**
    * @brief Set maximum number of clients
@@ -112,16 +100,9 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   bool enable_port_retry_;
   int max_port_retries_;
   int port_retry_interval_ms_;
-  int idle_timeout_ms_;
+  std::chrono::milliseconds idle_timeout_;
   size_t max_clients_;
   bool client_limit_set_;
-
-  // Modernized callbacks
-  std::function<void(const wrapper::MessageContext&)> on_data_;
-  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
-  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
-  std::function<void(const wrapper::ErrorContext&)> on_error_;
-  std::function<void(const wrapper::MessageContext&)> on_framed_message_;
 };
 
 #ifdef _MSC_VER

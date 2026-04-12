@@ -48,7 +48,7 @@ TEST_F(SerialBuilderIntegrationTest, BuilderWithInputValidation) {
 }
 
 TEST_F(SerialBuilderIntegrationTest, BuilderRetryIntervalValidation) {
-  auto serial_ptr = serial(device_, 9600).retry_interval(500).build();
+  auto serial_ptr = serial(device_, 9600).retry_interval(500ms).build();
   ASSERT_NE(serial_ptr, nullptr);
 }
 

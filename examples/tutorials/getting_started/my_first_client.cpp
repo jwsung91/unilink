@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -29,6 +30,7 @@
  */
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 int main(int argc, char** argv) {
   std::string host = (argc > 1) ? argv[1] : "127.0.0.1";
@@ -40,7 +42,7 @@ int main(int argc, char** argv) {
   // 1. Configure the client using the fluent Builder API
   auto client =
       tcp_client(host, port)
-          .retry_interval(2000)
+          .retry_interval(2000ms)
           .max_retries(3)
           .on_connect([](const unilink::ConnectionContext&) { std::cout << "✓ Connected to server!" << std::endl; })
           .on_disconnect(

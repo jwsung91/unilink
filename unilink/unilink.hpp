@@ -93,6 +93,7 @@ using TcpClient = wrapper::TcpClient;
 using TcpServer = wrapper::TcpServer;
 using Serial = wrapper::Serial;
 using Udp = wrapper::Udp;
+using UdpServer = wrapper::UdpServer;
 using UdsClient = wrapper::UdsClient;
 using UdsServer = wrapper::UdsServer;
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <chrono>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -31,6 +32,7 @@
  */
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 class ChatServer {
  public:

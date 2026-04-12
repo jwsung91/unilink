@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+#include <chrono>
 #include <iostream>
 #include <string>
 
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 int main() {
   // Create a TCP client and connect to localhost:8080

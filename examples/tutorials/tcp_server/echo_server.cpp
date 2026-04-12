@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -28,6 +29,7 @@
  */
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 class EchoServer {
  public:

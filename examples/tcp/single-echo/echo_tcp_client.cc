@@ -27,6 +27,7 @@
 
 // Example namespace usage
 using namespace unilink;
+using namespace std::chrono_literals;
 
 class EchoClient {
  private:
@@ -75,7 +76,7 @@ class EchoClient {
 
   bool start() {
     client_ = unilink::tcp_client(host_, port_)
-                  .retry_interval(1000)
+                  .retry_interval(1000ms)
                   .max_retries(5)
                   .on_connect([this](const unilink::ConnectionContext& ctx) { on_connect(ctx); })
                   .on_disconnect([this](const unilink::ConnectionContext& ctx) { on_disconnect(ctx); })
