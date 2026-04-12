@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <boost/asio.hpp>
+#include <chrono>
 #include <thread>
 
 #include "test_utils.hpp"
@@ -32,26 +33,26 @@ namespace {
 class UdpStateTest : public ::testing::Test {};
 
 TEST_F(UdpStateTest, BindConflict) {
+  using namespace std::chrono_literals;
+
   uint16_t port = TestUtils::getAvailableTestPort();
 
   UdpConfig cfg1;
   cfg1.local_address = "127.0.0.1";
   cfg1.local_port = port;
   Udp udp1(cfg1);
-  udp1.start();
-
-  // Give it a moment to bind
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  auto udp1_started = udp1.start();
+  ASSERT_EQ(udp1_started.wait_for(2s), std::future_status::ready);
+  EXPECT_TRUE(udp1_started.get());
 
   UdpConfig cfg2;
   cfg2.local_address = "127.0.0.1";
   cfg2.local_port = port;  // Same port
   Udp udp2(cfg2);
 
-  // This should throw because port is in use
-  // However, the implementation catches exceptions and logs error.
-  // So we verify it fails to connect/bind.
-  EXPECT_NO_THROW(udp2.start());
+  auto udp2_started = udp2.start();
+  ASSERT_EQ(udp2_started.wait_for(2s), std::future_status::ready);
+  EXPECT_FALSE(udp2_started.get());
 
   // Verify it did not successfully start/connect
   EXPECT_FALSE(udp2.is_connected());

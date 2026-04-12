@@ -42,7 +42,7 @@ class UdpOptionsTest : public ::testing::Test {
 
 TEST_F(UdpOptionsTest, SetterCoverage) {
   UdpConfig config;
-  config.local_port = TestUtils::getAvailableTestPort();
+  config.local_port = 0;
 
   Udp udp(config);
 
@@ -58,7 +58,7 @@ TEST_F(UdpOptionsTest, SetterCoverage) {
 
 TEST_F(UdpOptionsTest, ConstructorWithExternalContext) {
   UdpConfig config;
-  config.local_port = TestUtils::getAvailableTestPort();
+  config.local_port = 0;
 
   auto ioc = std::make_shared<boost::asio::io_context>();
   Udp udp(config, ioc);
