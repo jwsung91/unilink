@@ -18,7 +18,6 @@
 #include <chrono>
 #include <csignal>
 #include <iostream>
-#include <chrono>
 #include <memory>
 #include <string>
 #include <thread>
