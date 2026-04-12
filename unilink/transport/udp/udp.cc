@@ -159,6 +159,24 @@ struct UdpChannel::Impl {
       return;
     }
 
+    if (cfg_.reuse_address) {
+      socket_.set_option(net::socket_base::reuse_address(true), ec);
+      if (ec) {
+        UNILINK_LOG_ERROR("udp", "open", "Failed to set reuse_address: " + ec.message());
+        transition_to(LinkState::Error, ec);
+        return;
+      }
+    }
+
+    if (cfg_.enable_broadcast) {
+      socket_.set_option(net::socket_base::broadcast(true), ec);
+      if (ec) {
+        UNILINK_LOG_ERROR("udp", "open", "Failed to set broadcast: " + ec.message());
+        transition_to(LinkState::Error, ec);
+        return;
+      }
+    }
+
     socket_.bind(local_endpoint_, ec);
     if (ec) {
       UNILINK_LOG_ERROR("udp", "bind", "Bind failed: " + ec.message());

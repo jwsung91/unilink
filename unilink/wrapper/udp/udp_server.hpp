@@ -63,7 +63,7 @@ class UNILINK_API UdpServer : public ServerInterface {
 
   // UDP specific
   UdpServer& set_session_timeout(std::chrono::milliseconds timeout);
-  void set_manage_external_context(bool manage);
+  UdpServer& set_manage_external_context(bool manage);
 
  private:
   struct Impl;

@@ -31,6 +31,8 @@ struct UdpConfig {
   std::optional<std::string> remote_address;
   std::optional<uint16_t> remote_port;
   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  bool enable_broadcast = false;
+  bool reuse_address = false;
   bool enable_memory_pool = true;
   bool stop_on_callback_exception = false;
 
