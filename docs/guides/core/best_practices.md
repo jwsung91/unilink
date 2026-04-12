@@ -64,7 +64,7 @@ auto client = unilink::tcp_client("server.com", 8080)
             notify_user("Connection failed permanently");
         }
     })
-    .retry_interval(5000)  // Auto-retry
+    .retry_interval(5000ms)  // Auto-retry
     .build();
 
 // BAD - No recovery strategy

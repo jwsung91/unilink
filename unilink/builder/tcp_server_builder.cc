@@ -32,7 +32,7 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
       enable_port_retry_(false),
       max_port_retries_(3),
       port_retry_interval_ms_(1000),
-      idle_timeout_ms_(0),
+      idle_timeout_(0),
       max_clients_(0),
       client_limit_set_(false) {
   if (port == 0) throw diagnostics::BuilderException("Invalid port number: 0");
@@ -59,16 +59,16 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     server->set_framer_factory(framer_factory_);
   }
 
-  if (on_framed_message_) {
-    server->on_message(on_framed_message_);
+  if (on_message_) {
+    server->on_message(on_message_);
   }
 
   if (enable_port_retry_) {
     server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
   }
 
-  if (idle_timeout_ms_ > 0) {
-    server->idle_timeout(idle_timeout_ms_);
+  if (idle_timeout_.count() > 0) {
+    server->idle_timeout(idle_timeout_);
   }
 
   if (client_limit_set_) {
@@ -90,31 +90,6 @@ TcpServerBuilder& TcpServerBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_data_ = std::move(handler);
-  return *this;
-}
-
-TcpServerBuilder& TcpServerBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_connect_ = std::move(handler);
-  return *this;
-}
-
-TcpServerBuilder& TcpServerBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_disconnect_ = std::move(handler);
-  return *this;
-}
-
-TcpServerBuilder& TcpServerBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
-  on_error_ = std::move(handler);
-  return *this;
-}
-
-TcpServerBuilder& TcpServerBuilder::on_message(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_framed_message_ = std::move(handler);
-  return *this;
-}
-
 TcpServerBuilder& TcpServerBuilder::use_independent_context(bool use_independent) {
   use_independent_context_ = use_independent;
   return *this;
@@ -127,8 +102,8 @@ TcpServerBuilder& TcpServerBuilder::enable_port_retry(bool enable, int max_retri
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::idle_timeout(int timeout_ms) {
-  idle_timeout_ms_ = timeout_ms;
+TcpServerBuilder& TcpServerBuilder::idle_timeout(std::chrono::milliseconds timeout) {
+  idle_timeout_ = timeout;
   return *this;
 }
 

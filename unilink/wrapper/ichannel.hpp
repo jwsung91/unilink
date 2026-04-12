@@ -37,7 +37,6 @@ class UNILINK_API ChannelInterface {
   using MessageHandler = std::function<void(const MessageContext&)>;
   using ConnectionHandler = std::function<void(const ConnectionContext&)>;
   using ErrorHandler = std::function<void(const ErrorContext&)>;
-  using FramedMessageHandler = std::function<void(memory::ConstByteSpan)>;
 
   virtual ~ChannelInterface() = default;
 
@@ -66,7 +65,7 @@ class UNILINK_API ChannelInterface {
    * @brief Set a handler for complete messages extracted by the framer.
    * @param handler The callback for framed messages.
    */
-  virtual void on_message(FramedMessageHandler handler) = 0;
+  virtual void on_message(MessageHandler handler) = 0;
 
   // Management
   virtual ChannelInterface& auto_manage(bool manage = true) = 0;

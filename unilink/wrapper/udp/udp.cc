@@ -47,12 +47,13 @@ struct Udp::Impl {
   ConnectionHandler connect_handler{nullptr};
   ConnectionHandler disconnect_handler{nullptr};
   ErrorHandler error_handler{nullptr};
-  FramedMessageHandler message_handler{nullptr};
+  MessageHandler message_handler{nullptr};
 
   std::unique_ptr<framer::IFramer> framer{nullptr};
 
   bool auto_manage{false};
   bool started{false};
+  std::shared_ptr<std::promise<bool>> start_promise;
 
   explicit Impl(const config::UdpConfig& config) : cfg(config) {}
   Impl(const config::UdpConfig& config, std::shared_ptr<boost::asio::io_context> ioc)
@@ -73,6 +74,9 @@ struct Udp::Impl {
       return p.get_future();
     }
 
+    start_promise = std::make_shared<std::promise<bool>>();
+    auto fut = start_promise->get_future();
+
     if (!channel) {
       channel = factory::ChannelFactory::create(cfg, external_ioc);
       setup_internal_handlers();
@@ -87,13 +91,7 @@ struct Udp::Impl {
     }
 
     started = true;
-
-    // For UDP, we return a successful future immediately.
-    // Use a fresh promise to avoid any potential future_error or state issues.
-    auto p = std::make_shared<std::promise<bool>>();
-    auto f = p->get_future();
-    p->set_value(true);
-    return f;
+    return fut;
   }
 
   void stop() {
@@ -111,6 +109,10 @@ struct Udp::Impl {
     }
 
     started = false;
+    if (start_promise) {
+      start_promise->set_value(false);
+      start_promise.reset();
+    }
 
     if (framer) framer->reset();
   }
@@ -132,6 +134,18 @@ struct Udp::Impl {
     });
 
     channel->on_state([this](base::LinkState state) {
+      if (state == base::LinkState::Connected || state == base::LinkState::Listening) {
+        if (start_promise) {
+          start_promise->set_value(true);
+          start_promise.reset();
+        }
+      } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
+        if (start_promise) {
+          start_promise->set_value(false);
+          start_promise.reset();
+        }
+      }
+
       switch (state) {
         case base::LinkState::Connected:
           if (connect_handler) connect_handler(ConnectionContext(0));
@@ -151,14 +165,24 @@ struct Udp::Impl {
   void set_framer(std::unique_ptr<framer::IFramer> f) {
     framer = std::move(f);
     if (framer && message_handler) {
-      framer->set_on_message(message_handler);
+      framer->set_on_message([this](memory::ConstByteSpan msg) {
+        if (message_handler) {
+          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
+          message_handler(MessageContext(0, str_msg));
+        }
+      });
     }
   }
 
-  void on_message(FramedMessageHandler handler) {
+  void on_message(MessageHandler handler) {
     message_handler = std::move(handler);
     if (framer) {
-      framer->set_on_message(message_handler);
+      framer->set_on_message([this](memory::ConstByteSpan msg) {
+        if (message_handler) {
+          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
+          message_handler(MessageContext(0, str_msg));
+        }
+      });
     }
   }
 };
@@ -203,7 +227,7 @@ ChannelInterface& Udp::on_error(ErrorHandler h) {
 }
 
 void Udp::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
-void Udp::on_message(FramedMessageHandler h) { impl_->on_message(std::move(h)); }
+void Udp::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
 
 ChannelInterface& Udp::auto_manage(bool m) {
   impl_->auto_manage = m;

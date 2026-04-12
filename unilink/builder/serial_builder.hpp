@@ -48,12 +48,6 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
 
   SerialBuilder& auto_manage(bool auto_manage = true) override;
 
-  // Modernized event handlers
-  SerialBuilder& on_data(std::function<void(const wrapper::MessageContext&)> handler) override;
-  SerialBuilder& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  SerialBuilder& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) override;
-  SerialBuilder& on_error(std::function<void(const wrapper::ErrorContext&)> handler) override;
-
   /**
    * @brief Set number of data bits
    */
@@ -77,7 +71,7 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
   /**
    * @brief Set reconnection retry interval
    */
-  SerialBuilder& retry_interval(uint32_t milliseconds);
+  SerialBuilder& retry_interval(std::chrono::milliseconds interval);
 
   /**
    * @brief Use independent IoContext
@@ -96,12 +90,6 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
   std::string parity_;
   std::string flow_control_;
   std::chrono::milliseconds retry_interval_;
-
-  // Callbacks
-  std::function<void(const wrapper::MessageContext&)> on_data_;
-  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
-  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
-  std::function<void(const wrapper::ErrorContext&)> on_error_;
 };
 
 #ifdef _MSC_VER

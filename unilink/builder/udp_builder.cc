@@ -63,26 +63,6 @@ UdpClientBuilder& UdpClientBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_data_ = std::move(handler);
-  return *this;
-}
-
-UdpClientBuilder& UdpClientBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_connect_ = std::move(handler);
-  return *this;
-}
-
-UdpClientBuilder& UdpClientBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_disconnect_ = std::move(handler);
-  return *this;
-}
-
-UdpClientBuilder& UdpClientBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
-  on_error_ = std::move(handler);
-  return *this;
-}
-
 UdpClientBuilder& UdpClientBuilder::set_local_port(uint16_t port) {
   cfg_.local_port = port;
   return *this;
@@ -123,8 +103,8 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
     server->set_framer_factory(framer_factory_);
   }
 
-  if (on_framed_message_) {
-    server->on_message(on_framed_message_);
+  if (on_message_) {
+    server->on_message(on_message_);
   }
 
   if (auto_manage_) {
@@ -139,11 +119,6 @@ UdpServerBuilder& UdpServerBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_data_ = std::move(handler);
-  return *this;
-}
-
 UdpServerBuilder& UdpServerBuilder::on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_connect_ = std::move(handler);
   return *this;
@@ -152,16 +127,6 @@ UdpServerBuilder& UdpServerBuilder::on_client_connect(std::function<void(const w
 UdpServerBuilder& UdpServerBuilder::on_client_disconnect(
     std::function<void(const wrapper::ConnectionContext&)> handler) {
   on_disconnect_ = std::move(handler);
-  return *this;
-}
-
-UdpServerBuilder& UdpServerBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
-  on_error_ = std::move(handler);
-  return *this;
-}
-
-UdpServerBuilder& UdpServerBuilder::on_message(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_framed_message_ = std::move(handler);
   return *this;
 }
 

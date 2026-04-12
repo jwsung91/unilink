@@ -76,26 +76,6 @@ SerialBuilder& SerialBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-SerialBuilder& SerialBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_data_ = std::move(handler);
-  return *this;
-}
-
-SerialBuilder& SerialBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_connect_ = std::move(handler);
-  return *this;
-}
-
-SerialBuilder& SerialBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_disconnect_ = std::move(handler);
-  return *this;
-}
-
-SerialBuilder& SerialBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
-  on_error_ = std::move(handler);
-  return *this;
-}
-
 SerialBuilder& SerialBuilder::data_bits(int bits) {
   data_bits_ = bits;
   return *this;
@@ -116,8 +96,8 @@ SerialBuilder& SerialBuilder::flow_control(const std::string& flow) {
   return *this;
 }
 
-SerialBuilder& SerialBuilder::retry_interval(uint32_t milliseconds) {
-  retry_interval_ = std::chrono::milliseconds(milliseconds);
+SerialBuilder& SerialBuilder::retry_interval(std::chrono::milliseconds interval) {
+  retry_interval_ = interval;
   return *this;
 }
 

@@ -15,6 +15,7 @@
  */
 
 #include <iostream>
+#include <chrono>
 #include <string>
 
 #include "unilink/unilink.hpp"
@@ -26,6 +27,7 @@
  */
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 int main() {
   std::cout << "--- Unilink Error Handling Example ---" << std::endl;

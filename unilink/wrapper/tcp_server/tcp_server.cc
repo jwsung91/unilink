@@ -359,8 +359,8 @@ TcpServer& TcpServer::enable_port_retry(bool e, int m, int i) {
   return *this;
 }
 
-TcpServer& TcpServer::idle_timeout(int ms) {
-  impl_->idle_timeout_ms_ = ms;
+TcpServer& TcpServer::idle_timeout(std::chrono::milliseconds timeout) {
+  impl_->idle_timeout_ms_ = static_cast<int>(timeout.count());
   // Note: Runtime change of idle_timeout is not supported by current transport.
   // Must be set via Builder before start().
   return *this;

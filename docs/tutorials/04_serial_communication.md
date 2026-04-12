@@ -42,8 +42,11 @@ This creates two connected ports, `/tmp/ttyA` and `/tmp/ttyB`.
 <!-- doc-compile: tutorial_serial_terminal -->
 ```cpp
 #include <iostream>
+#include <chrono>
 #include <string>
 #include "unilink/unilink.hpp"
+
+using namespace std::chrono_literals;
 
 int main(int argc, char** argv) {
     std::string device = (argc > 1) ? argv[1] : "/dev/ttyUSB0";
@@ -131,8 +134,9 @@ Messages typed in one terminal should appear in the other.
 You can tune the serial wrapper before `build()`:
 
 ```cpp
+using namespace std::chrono_literals;
 auto serial = unilink::serial("/dev/ttyUSB0", 115200)
-    .retry_interval(1000)
+    .retry_interval(1000ms)
     .build();
 ```
 

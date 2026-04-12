@@ -69,7 +69,10 @@ class BuilderInterface {
    * @param handler Function to handle incoming data with context
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& on_data(std::function<void(const wrapper::MessageContext&)> handler) = 0;
+  Derived& on_data(std::function<void(const wrapper::MessageContext&)> handler) {
+    on_data_ = std::move(handler);
+    return static_cast<Derived&>(*this);
+  }
 
   /**
    * @brief Set data handler callback using member function pointer
@@ -89,7 +92,10 @@ class BuilderInterface {
    * @param handler Function to handle connection events with context
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) = 0;
+  Derived& on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+    on_connect_ = std::move(handler);
+    return static_cast<Derived&>(*this);
+  }
 
   /**
    * @brief Set connection handler callback using member function pointer
@@ -109,7 +115,10 @@ class BuilderInterface {
    * @param handler Function to handle disconnection events with context
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) = 0;
+  Derived& on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+    on_disconnect_ = std::move(handler);
+    return static_cast<Derived&>(*this);
+  }
 
   /**
    * @brief Set disconnection handler callback using member function pointer
@@ -129,7 +138,10 @@ class BuilderInterface {
    * @param handler Function to handle error events with context
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& on_error(std::function<void(const wrapper::ErrorContext&)> handler) = 0;
+  Derived& on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
+    on_error_ = std::move(handler);
+    return static_cast<Derived&>(*this);
+  }
 
   /**
    * @brief Set error handler callback using member function pointer
@@ -144,7 +156,17 @@ class BuilderInterface {
     return on_error([obj, method](const wrapper::ErrorContext& ctx) { (obj->*method)(ctx); });
   }
 
-  // Framing Support (remains focused on raw data for now, can be evolved)
+  // Framing Support
+
+  /**
+   * @brief Set a custom framer factory
+   * @param factory Function that creates a unique_ptr to an IFramer
+   * @return Derived& Reference to this builder
+   */
+  Derived& framer(std::function<std::unique_ptr<framer::IFramer>()> factory) {
+    framer_factory_ = std::move(factory);
+    return static_cast<Derived&>(*this);
+  }
 
   /**
    * @brief Use LineFramer for message segmentation (e.g., newline delimited)
@@ -179,10 +201,10 @@ class BuilderInterface {
 
   /**
    * @brief Set message handler callback (for framed messages)
-   * @param handler Function to handle complete messages
+   * @param handler Function to handle complete messages with context
    * @return Derived& Reference to this builder
    */
-  virtual Derived& on_message(std::function<void(memory::ConstByteSpan)> handler) {
+  Derived& on_message(std::function<void(const wrapper::MessageContext&)> handler) {
     on_message_ = std::move(handler);
     return static_cast<Derived&>(*this);
   }
@@ -197,12 +219,16 @@ class BuilderInterface {
    */
   template <typename U, typename F>
   Derived& on_message(U* obj, F method) {
-    return on_message([obj, method](memory::ConstByteSpan msg) { (obj->*method)(msg); });
+    return on_message([obj, method](const wrapper::MessageContext& ctx) { (obj->*method)(ctx); });
   }
 
  protected:
   std::function<std::unique_ptr<framer::IFramer>()> framer_factory_;
-  std::function<void(memory::ConstByteSpan)> on_message_;
+  std::function<void(const wrapper::MessageContext&)> on_data_;
+  std::function<void(const wrapper::ConnectionContext&)> on_connect_;
+  std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
+  std::function<void(const wrapper::ErrorContext&)> on_error_;
+  std::function<void(const wrapper::MessageContext&)> on_message_;
 };
 
 }  // namespace builder

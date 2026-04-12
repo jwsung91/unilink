@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -24,6 +25,7 @@
 #include "unilink/unilink.hpp"
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 class BuilderTest : public ::testing::Test {
  protected:
@@ -92,7 +94,7 @@ TEST_F(BuilderTest, TcpServerBuilderBasic) {
 
 TEST_F(BuilderTest, TcpClientBuilderBasic) {
   client_ = tcp_client("127.0.0.1", test_port_)
-                .retry_interval(1000)
+                .retry_interval(1000ms)
                 .on_data([](const wrapper::MessageContext& ctx) {
                   // 데이터 처리
                 })
@@ -144,7 +146,7 @@ TEST_F(BuilderTest, MultipleBuilders) {
 }
 
 TEST_F(BuilderTest, BuilderConfiguration) {
-  server_ = tcp_server(test_port_).idle_timeout(5000).max_clients(10).build();
+  server_ = tcp_server(test_port_).idle_timeout(5000ms).max_clients(10).build();
 
   ASSERT_NE(server_, nullptr);
   EXPECT_FALSE(server_->is_listening());

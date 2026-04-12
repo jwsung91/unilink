@@ -129,7 +129,7 @@ auto client = unilink::tcp_client("192.168.1.100", 8080)
     .on_error([](const unilink::ErrorContext& ctx) {
         std::cerr << "Error: " << ctx.message() << std::endl;
     })
-    .retry_interval(3000)  // Optional: Retry every 3 seconds (default)
+    .retry_interval(3000ms)  // Optional: Retry every 3 seconds (default)
     .build();
 
 // Start connection
@@ -928,12 +928,12 @@ client->stop();   // Stop when done
 ```cpp
 // Fast retry for local connections
 auto local_client = unilink::tcp_client("127.0.0.1", 8080)
-    .retry_interval(1000)  // 1 second
+    .retry_interval(1000ms)  // 1 second
     .build();
 
 // Slower retry for remote connections
 auto remote_client = unilink::tcp_client("remote.com", 8080)
-    .retry_interval(10000)  // 10 seconds
+    .retry_interval(10000ms)  // 10 seconds
     .build();
 ```
 

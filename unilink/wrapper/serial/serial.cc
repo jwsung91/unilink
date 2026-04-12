@@ -56,7 +56,7 @@ struct Serial::Impl {
   ConnectionHandler connect_handler{nullptr};
   ConnectionHandler disconnect_handler{nullptr};
   ErrorHandler error_handler{nullptr};
-  FramedMessageHandler message_handler{nullptr};
+  MessageHandler message_handler{nullptr};
 
   std::unique_ptr<framer::IFramer> framer{nullptr};
 
@@ -179,14 +179,24 @@ struct Serial::Impl {
   void set_framer(std::unique_ptr<framer::IFramer> f) {
     framer = std::move(f);
     if (framer && message_handler) {
-      framer->set_on_message(message_handler);
+      framer->set_on_message([this](memory::ConstByteSpan msg) {
+        if (message_handler) {
+          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
+          message_handler(MessageContext(0, str_msg));
+        }
+      });
     }
   }
 
-  void on_message(FramedMessageHandler handler) {
+  void on_message(MessageHandler handler) {
     message_handler = std::move(handler);
     if (framer) {
-      framer->set_on_message(message_handler);
+      framer->set_on_message([this](memory::ConstByteSpan msg) {
+        if (message_handler) {
+          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
+          message_handler(MessageContext(0, str_msg));
+        }
+      });
     }
   }
 
@@ -257,7 +267,7 @@ ChannelInterface& Serial::on_error(ErrorHandler h) {
 }
 
 void Serial::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
-void Serial::on_message(FramedMessageHandler h) { impl_->on_message(std::move(h)); }
+void Serial::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
 
 ChannelInterface& Serial::auto_manage(bool m) {
   impl_->auto_manage = m;

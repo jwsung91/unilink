@@ -210,7 +210,7 @@ stateDiagram-v2
 
 ```cpp
 auto client = unilink::tcp_client("server.com", 8080)
-    .retry_interval(5000)    // Retry every 5 seconds
+    .retry_interval(5000ms)    // Retry every 5 seconds
     .on_connect([](const unilink::ConnectionContext&) {
         std::cout << "Connected!" << std::endl;
     })
@@ -239,10 +239,10 @@ client->start();  // Start the connection explicitly
 .retry_interval(100)  // 100 ms
 
 // Moderate reconnection (default)
-.retry_interval(3000)  // 3 seconds
+.retry_interval(3000ms)  // 3 seconds
 
 // Slow reconnection (conservative)
-.retry_interval(10000)  // 10 seconds
+.retry_interval(10000ms)  // 10 seconds
 ```
 
 **Range:** 100 ms - 300,000 ms (5 minutes)

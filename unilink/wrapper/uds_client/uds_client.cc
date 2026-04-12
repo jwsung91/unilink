@@ -52,7 +52,7 @@ struct UdsClient::Impl {
   ConnectionHandler connect_handler_{nullptr};
   ConnectionHandler disconnect_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
-  FramedMessageHandler message_handler_{nullptr};
+  MessageHandler message_handler_{nullptr};
 
   std::unique_ptr<framer::IFramer> framer_{nullptr};
 
@@ -235,15 +235,25 @@ struct UdsClient::Impl {
     std::lock_guard<std::mutex> lock(mutex_);
     framer_ = std::move(framer);
     if (framer_ && message_handler_) {
-      framer_->set_on_message(message_handler_);
+      framer_->set_on_message([this](memory::ConstByteSpan msg) {
+        if (message_handler_) {
+          std::string str_msg = std::string(reinterpret_cast<const char*>(msg.data()), msg.size());
+          message_handler_(MessageContext(0, str_msg));
+        }
+      });
     }
   }
 
-  void on_message(FramedMessageHandler handler) {
+  void on_message(MessageHandler handler) {
     std::lock_guard<std::mutex> lock(mutex_);
     message_handler_ = std::move(handler);
     if (framer_) {
-      framer_->set_on_message(message_handler_);
+      framer_->set_on_message([this](memory::ConstByteSpan msg) {
+        if (message_handler_) {
+          std::string str_msg = std::string(reinterpret_cast<const char*>(msg.data()), msg.size());
+          message_handler_(MessageContext(0, str_msg));
+        }
+      });
     }
   }
 };
@@ -305,7 +315,7 @@ ChannelInterface& UdsClient::on_error(ErrorHandler handler) {
 
 void UdsClient::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
 
-void UdsClient::on_message(FramedMessageHandler h) { impl_->on_message(std::move(h)); }
+void UdsClient::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
 
 ChannelInterface& UdsClient::auto_manage(bool manage) {
   impl_->auto_manage_ = manage;

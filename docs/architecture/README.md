@@ -214,7 +214,7 @@ TcpClient(host, port, retry_interval, callbacks...);
 
 // We use this:
 auto client = tcp_client(host, port)
-    .retry_interval(3000)  // Optional, 3000ms is default
+    .retry_interval(3000ms)  // Optional, 3000ms is default
     .on_data(callback)
     .build();
 

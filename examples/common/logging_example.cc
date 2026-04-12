@@ -24,6 +24,7 @@
  */
 
 using namespace unilink;
+using namespace std::chrono_literals;
 
 int main() {
   auto& logger = diagnostics::Logger::instance();

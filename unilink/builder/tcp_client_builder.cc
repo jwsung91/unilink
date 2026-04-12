@@ -76,28 +76,8 @@ TcpClientBuilder& TcpClientBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-TcpClientBuilder& TcpClientBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_data_ = std::move(handler);
-  return *this;
-}
-
-TcpClientBuilder& TcpClientBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_connect_ = std::move(handler);
-  return *this;
-}
-
-TcpClientBuilder& TcpClientBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_disconnect_ = std::move(handler);
-  return *this;
-}
-
-TcpClientBuilder& TcpClientBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
-  on_error_ = std::move(handler);
-  return *this;
-}
-
-TcpClientBuilder& TcpClientBuilder::retry_interval(uint32_t milliseconds) {
-  retry_interval_ = std::chrono::milliseconds(milliseconds);
+TcpClientBuilder& TcpClientBuilder::retry_interval(std::chrono::milliseconds interval) {
+  retry_interval_ = interval;
   return *this;
 }
 
@@ -106,8 +86,8 @@ TcpClientBuilder& TcpClientBuilder::max_retries(int max_retries) {
   return *this;
 }
 
-TcpClientBuilder& TcpClientBuilder::connection_timeout(uint32_t milliseconds) {
-  connection_timeout_ = std::chrono::milliseconds(milliseconds);
+TcpClientBuilder& TcpClientBuilder::connection_timeout(std::chrono::milliseconds timeout) {
+  connection_timeout_ = timeout;
   return *this;
 }
 

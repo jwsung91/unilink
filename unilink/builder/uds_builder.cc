@@ -44,11 +44,10 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
     client = std::make_unique<wrapper::UdsClient>(socket_path_);
   }
 
-  client->auto_manage(auto_manage_)
-      .on_data(on_data_)
-      .on_connect(on_connect_)
-      .on_disconnect(on_disconnect_)
-      .on_error(on_error_);
+  if (on_data_) client->on_data(on_data_);
+  if (on_connect_) client->on_connect(on_connect_);
+  if (on_disconnect_) client->on_disconnect(on_disconnect_);
+  if (on_error_) client->on_error(on_error_);
 
   client->set_retry_interval(retry_interval_);
   client->set_max_retries(max_retries_);
@@ -61,6 +60,10 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
     client->on_message(std::move(on_message_));
   }
 
+  if (auto_manage_) {
+    client->auto_manage(true);
+  }
+
   return client;
 }
 
@@ -69,28 +72,8 @@ UdsClientBuilder& UdsClientBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-UdsClientBuilder& UdsClientBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_data_ = std::move(handler);
-  return *this;
-}
-
-UdsClientBuilder& UdsClientBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_connect_ = std::move(handler);
-  return *this;
-}
-
-UdsClientBuilder& UdsClientBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_disconnect_ = std::move(handler);
-  return *this;
-}
-
-UdsClientBuilder& UdsClientBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
-  on_error_ = std::move(handler);
-  return *this;
-}
-
-UdsClientBuilder& UdsClientBuilder::retry_interval(uint32_t milliseconds) {
-  retry_interval_ = std::chrono::milliseconds(milliseconds);
+UdsClientBuilder& UdsClientBuilder::retry_interval(std::chrono::milliseconds milliseconds) {
+  retry_interval_ = milliseconds;
   return *this;
 }
 
@@ -99,8 +82,8 @@ UdsClientBuilder& UdsClientBuilder::max_retries(int max_retries) {
   return *this;
 }
 
-UdsClientBuilder& UdsClientBuilder::connection_timeout(uint32_t milliseconds) {
-  connection_timeout_ = std::chrono::milliseconds(milliseconds);
+UdsClientBuilder& UdsClientBuilder::connection_timeout(std::chrono::milliseconds milliseconds) {
+  connection_timeout_ = milliseconds;
   return *this;
 }
 
@@ -126,52 +109,30 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
     server = std::make_unique<wrapper::UdsServer>(socket_path_);
   }
 
-  server->auto_manage(auto_manage_)
-      .on_data(on_data_)
-      .on_client_connect(on_connect_)
-      .on_client_disconnect(on_disconnect_)
-      .on_error(on_error_);
+  if (on_data_) server->on_data(on_data_);
+  if (on_connect_) server->on_client_connect(on_connect_);
+  if (on_disconnect_) server->on_client_disconnect(on_disconnect_);
+  if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
     server->set_framer_factory(framer_factory_);
   }
 
-  if (on_framed_message_) {
-    server->on_message(on_framed_message_);
+  if (on_message_) {
+    server->on_message(on_message_);
   }
 
   server->set_client_limit(max_clients_);
+
+  if (auto_manage_) {
+    server->auto_manage(true);
+  }
 
   return server;
 }
 
 UdsServerBuilder& UdsServerBuilder::auto_manage(bool auto_manage) {
   auto_manage_ = auto_manage;
-  return *this;
-}
-
-UdsServerBuilder& UdsServerBuilder::on_data(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_data_ = std::move(handler);
-  return *this;
-}
-
-UdsServerBuilder& UdsServerBuilder::on_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_connect_ = std::move(handler);
-  return *this;
-}
-
-UdsServerBuilder& UdsServerBuilder::on_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_disconnect_ = std::move(handler);
-  return *this;
-}
-
-UdsServerBuilder& UdsServerBuilder::on_error(std::function<void(const wrapper::ErrorContext&)> handler) {
-  on_error_ = std::move(handler);
-  return *this;
-}
-
-UdsServerBuilder& UdsServerBuilder::on_message(std::function<void(const wrapper::MessageContext&)> handler) {
-  on_framed_message_ = std::move(handler);
   return *this;
 }
 
