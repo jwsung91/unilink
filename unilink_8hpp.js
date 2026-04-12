@@ -7,6 +7,7 @@ var unilink_8hpp =
     [ "TcpClient", "unilink_8hpp.html#a790be55fcb59a0aea5dfb178072fd6c7", null ],
     [ "TcpServer", "unilink_8hpp.html#a1e364de9a0a37d3437cb9e10eb1bfba7", null ],
     [ "Udp", "unilink_8hpp.html#a4a71fa819f4284d7581cdb9c47fffb9e", null ],
+    [ "UdpServer", "unilink_8hpp.html#aae94ee39714235b4c0199dd8394bfad9", null ],
     [ "UdsClient", "unilink_8hpp.html#a9b8ed9339c39013379280fecccd3a72c", null ],
     [ "UdsServer", "unilink_8hpp.html#a1f48e446d6c7cce2a9f1ad4904a1d53f", null ],
     [ "serial", "unilink_8hpp.html#a9f2227aea1475c0655cf8cf4a99e55e9", null ],

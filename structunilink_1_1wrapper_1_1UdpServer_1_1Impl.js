@@ -27,6 +27,7 @@ var structunilink_1_1wrapper_1_1UdpServer_1_1Impl =
     [ "reaper_timer", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8", null ],
     [ "session_activity", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#afb0357513929f7f9265c2557d76ca99e", null ],
     [ "session_timeout", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a7e81d8719ed39c54984e641b790220ab", null ],
+    [ "start_promise", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a9bbc1aded757d3dbea8c64f7f9e74b99", null ],
     [ "started", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a1709c451d9d7ebe663587fffaa7af254", null ],
     [ "use_external_context", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a86ed6c7997a84c7fd06ceec18fd7ca4a", null ],
     [ "work_guard", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#affec1e108de03a3e7785e6db14789bd1", null ]

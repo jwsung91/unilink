@@ -12,7 +12,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "enable_port_retry", "classunilink_1_1wrapper_1_1TcpServer.html#a7feb0465a5329983630fe6e353b2ddf5", null ],
     [ "get_client_count", "classunilink_1_1wrapper_1_1TcpServer.html#af36b3dfe54edca2ea39a980d14729131", null ],
     [ "get_connected_clients", "classunilink_1_1wrapper_1_1TcpServer.html#ac5362ca889c5b2ed23984be1ada34ec3", null ],
-    [ "idle_timeout", "classunilink_1_1wrapper_1_1TcpServer.html#a3bf24d44d971410dd337b58e6e7153db", null ],
+    [ "idle_timeout", "classunilink_1_1wrapper_1_1TcpServer.html#a8d1309bfe7e5bbc89da2f4ca95fd84d6", null ],
     [ "is_listening", "classunilink_1_1wrapper_1_1TcpServer.html#a00ec7f00722335d8291854aafd381d96", null ],
     [ "notify_send_failure", "classunilink_1_1wrapper_1_1TcpServer.html#a5792d6e21525f8b119c7fb6bc91a5d7a", null ],
     [ "on_client_connect", "classunilink_1_1wrapper_1_1TcpServer.html#a379244c1bfcda52a7a25f6038de3f484", null ],

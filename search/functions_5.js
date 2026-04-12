@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['first_1492',['first',['../classunilink_1_1memory_1_1SafeSpan.html#a3b0f136f697101cef0b107048c105e4f',1,'unilink::memory::SafeSpan']]],
-  ['fixedinterval_1493',['FixedInterval',['../namespaceunilink.html#a12d62491e1b0b8e87eb1202f268af4ca',1,'unilink']]],
-  ['flow_5fcontrol_1494',['flow_control',['../classunilink_1_1builder_1_1SerialBuilder.html#a963f3798eed15b91ec0342d7792e1d97',1,'unilink::builder::SerialBuilder']]],
-  ['flush_1495',['flush',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a24e2ce10eeb6fb05dfcf75096ae6d9f9',1,'unilink::diagnostics::Logger::Impl::flush()'],['../classunilink_1_1diagnostics_1_1Logger.html#aaced1d16dd069a52e2696c020be26073',1,'unilink::diagnostics::Logger::flush()']]],
-  ['format_5fmessage_1496',['format_message',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aa389aa5f38b5ae999769aa93682e6bcb',1,'unilink::diagnostics::Logger::Impl']]],
+  ['first_1491',['first',['../classunilink_1_1memory_1_1SafeSpan.html#a3b0f136f697101cef0b107048c105e4f',1,'unilink::memory::SafeSpan']]],
+  ['fixedinterval_1492',['FixedInterval',['../namespaceunilink.html#a12d62491e1b0b8e87eb1202f268af4ca',1,'unilink']]],
+  ['flow_5fcontrol_1493',['flow_control',['../classunilink_1_1builder_1_1SerialBuilder.html#a963f3798eed15b91ec0342d7792e1d97',1,'unilink::builder::SerialBuilder']]],
+  ['flush_1494',['flush',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a24e2ce10eeb6fb05dfcf75096ae6d9f9',1,'unilink::diagnostics::Logger::Impl::flush()'],['../classunilink_1_1diagnostics_1_1Logger.html#aaced1d16dd069a52e2696c020be26073',1,'unilink::diagnostics::Logger::flush()']]],
+  ['format_5fmessage_1495',['format_message',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aa389aa5f38b5ae999769aa93682e6bcb',1,'unilink::diagnostics::Logger::Impl']]],
+  ['framer_1496',['framer',['../classunilink_1_1builder_1_1BuilderInterface.html#a9c1e052c7c96ae0700c5880e354b4756',1,'unilink::builder::BuilderInterface']]],
   ['from_5fc_5fstring_1497',['from_c_string',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#ad47b9c31322e249f60bb70e5d71c3f5f',1,'unilink::memory::safe_buffer_factory']]],
   ['from_5fraw_5fdata_1498',['from_raw_data',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#af038015aafcb3ab44bd10eb3392752ac',1,'unilink::memory::safe_buffer_factory']]],
   ['from_5fspan_1499',['from_span',['../namespaceunilink_1_1memory_1_1safe__buffer__factory.html#a5ee9d29f198e862b650cdffa34f48abb',1,'unilink::memory::safe_buffer_factory']]],

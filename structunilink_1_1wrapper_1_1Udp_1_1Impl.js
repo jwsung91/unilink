@@ -4,7 +4,7 @@ var structunilink_1_1wrapper_1_1Udp_1_1Impl =
     [ "Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ad8c419d47d4a6f72a251e3f666d6cbdf", null ],
     [ "Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#afe67708ef99dc29d96f12340305da696", null ],
     [ "~Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#adf39c589e2fbb91e1fdc57e6a97ba1bb", null ],
-    [ "on_message", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a2ad3e3ed4c5931b5b82f11ae143a0922", null ],
+    [ "on_message", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ae3eec4b6e82317a6cfa077653f560b79", null ],
     [ "set_framer", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a8a8324e4713181157ebbd842d4dbf39b", null ],
     [ "setup_internal_handlers", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a466de009e3ffc5e4762903e9975b3338", null ],
     [ "start", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#afaa366e188f397af36f00f001aa152d4", null ],
@@ -20,7 +20,9 @@ var structunilink_1_1wrapper_1_1Udp_1_1Impl =
     [ "external_thread", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a7b2e8231abac5fe268c40a37528b0164", null ],
     [ "framer", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ae881b50f864d7d16a8c96b61a781b30e", null ],
     [ "manage_external_context", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ab7c68c2693ec525e9a41b3414432b646", null ],
-    [ "message_handler", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a9ad023ad371016a5527f24242bc9b528", null ],
+    [ "message_handler", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a7a4ac49b29298c35fa27a1af3e463cef", null ],
+    [ "mutex", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a355149a4083a094d5cc034963718e7be", null ],
+    [ "start_promise", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a9ceb1f82004e60cd6d10947182e58e51", null ],
     [ "started", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ada9134583ae3d9191c06c9090322e8a7", null ],
     [ "use_external_context", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a064da8fe11fb8915a02cfa83ed208bd7", null ]
 ];

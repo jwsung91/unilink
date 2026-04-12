@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['packet_5fframer_2ecc_641',['packet_framer.cc',['../packet__framer_8cc.html',1,'']]],
-  ['packet_5fframer_2ehpp_642',['packet_framer.hpp',['../packet__framer_8hpp.html',1,'']]],
-  ['packetframer_643',['PacketFramer',['../classunilink_1_1framer_1_1PacketFramer.html#af95988deeb0863d7df1fb2bcda01763d',1,'unilink::framer::PacketFramer::PacketFramer()'],['../classunilink_1_1framer_1_1PacketFramer.html',1,'unilink::framer::PacketFramer']]],
-  ['parity_644',['parity',['../structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ae115d09819750c4e28b52201a450dde0',1,'unilink::wrapper::Serial::Impl::parity()'],['../classunilink_1_1builder_1_1SerialBuilder.html#a4126f76a8f94c12b466f886baa8f5191',1,'unilink::builder::SerialBuilder::parity()'],['../structunilink_1_1config_1_1SerialConfig.html#aac99c4bd2145b420ba8e68861556b17e',1,'unilink::config::SerialConfig::parity()']]],
-  ['parity_645',['Parity',['../structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7c',1,'unilink::config::SerialConfig']]],
+  ['packet_5fframer_2ecc_640',['packet_framer.cc',['../packet__framer_8cc.html',1,'']]],
+  ['packet_5fframer_2ehpp_641',['packet_framer.hpp',['../packet__framer_8hpp.html',1,'']]],
+  ['packetframer_642',['PacketFramer',['../classunilink_1_1framer_1_1PacketFramer.html#af95988deeb0863d7df1fb2bcda01763d',1,'unilink::framer::PacketFramer::PacketFramer()'],['../classunilink_1_1framer_1_1PacketFramer.html',1,'unilink::framer::PacketFramer']]],
+  ['parity_643',['parity',['../classunilink_1_1builder_1_1SerialBuilder.html#a4126f76a8f94c12b466f886baa8f5191',1,'unilink::builder::SerialBuilder']]],
+  ['parity_644',['Parity',['../structunilink_1_1config_1_1SerialConfig.html#a2ba36a247dcec217d6106380b2e47d7c',1,'unilink::config::SerialConfig']]],
+  ['parity_645',['parity',['../structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ae115d09819750c4e28b52201a450dde0',1,'unilink::wrapper::Serial::Impl::parity()'],['../structunilink_1_1config_1_1SerialConfig.html#aac99c4bd2145b420ba8e68861556b17e',1,'unilink::config::SerialConfig::parity()']]],
   ['parse_5fformat_646',['parse_format',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#acbf5e5f993445f6eb91b73073c2aee73',1,'unilink::diagnostics::Logger::Impl']]],
   ['parsed_5fformat_647',['parsed_format',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1LogFormat.html#a432bf1039f3d98fd3a4284384fe3f564',1,'unilink::diagnostics::Logger::Impl::LogFormat']]],
   ['paused_5faccept_5f_648',['paused_accept_',['../structunilink_1_1transport_1_1TcpServer_1_1Impl.html#adc3e5f8ec309a8f5fd4fae7aec0c0c90',1,'unilink::transport::TcpServer::Impl']]],
