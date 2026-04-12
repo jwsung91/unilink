@@ -19,7 +19,7 @@ var classunilink_1_1wrapper_1_1Udp =
     [ "send", "classunilink_1_1wrapper_1_1Udp.html#a5b3a62797f4769f5ac05a78248903526", null ],
     [ "send_line", "classunilink_1_1wrapper_1_1Udp.html#a3eda877fe6128011222ba22f6752c13a", null ],
     [ "set_framer", "classunilink_1_1wrapper_1_1Udp.html#a9ad4c9673b0f46ff3fb7a7858ca850dc", null ],
-    [ "set_manage_external_context", "classunilink_1_1wrapper_1_1Udp.html#a088a216802fc71dac5fc0fb5d67b341d", null ],
+    [ "set_manage_external_context", "classunilink_1_1wrapper_1_1Udp.html#aede4c3d28f0354650e31238f935f95e3", null ],
     [ "start", "classunilink_1_1wrapper_1_1Udp.html#a3ae53a4c6428c76f7d034b1037e7ad3b", null ],
     [ "stop", "classunilink_1_1wrapper_1_1Udp.html#af859c7698df73fb8d6d1b6b96d96d91f", null ]
 ];

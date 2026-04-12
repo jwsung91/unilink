@@ -1,5 +1,10 @@
 var NAVTREEINDEX4 =
 {
+"classunilink_1_1wrapper_1_1Udp.html#af859c7698df73fb8d6d1b6b96d96d91f":[23,0,0,11,8,21],
+"classunilink_1_1wrapper_1_1Udp.html#afaacf0604fe6019e5021f809bb3f9e88":[23,0,0,11,8,6],
+"classunilink_1_1wrapper_1_1UdpServer.html":[23,0,0,11,9],
+"classunilink_1_1wrapper_1_1UdpServer.html#a15fd7f95c4862cebfdbeaf611f0afc56":[23,0,0,11,9,16],
+"classunilink_1_1wrapper_1_1UdpServer.html#a17da8a56e5c01be6ac9d68abbbfaef18":[23,0,0,11,9,19],
 "classunilink_1_1wrapper_1_1UdpServer.html#a185da1be985fcdf233909259b24d5435":[23,0,0,11,9,12],
 "classunilink_1_1wrapper_1_1UdpServer.html#a2b9bf80c0ad4af4397800fc7aee19c58":[23,0,0,11,9,15],
 "classunilink_1_1wrapper_1_1UdpServer.html#a39e2f9136b71383338a25bfc023a4277":[23,0,0,11,9,8],
@@ -11,7 +16,6 @@ var NAVTREEINDEX4 =
 "classunilink_1_1wrapper_1_1UdpServer.html#a9ffe9171686846136f76759e2ac01045":[23,0,0,11,9,1],
 "classunilink_1_1wrapper_1_1UdpServer.html#aa6e62f959f85860bbe3c8e17f0a44b20":[23,0,0,11,9,9],
 "classunilink_1_1wrapper_1_1UdpServer.html#aab968048b851746313e396c16ed2be8a":[23,0,0,11,9,13],
-"classunilink_1_1wrapper_1_1UdpServer.html#ab7ecce305026edba9838642d5433e1a4":[23,0,0,11,9,16],
 "classunilink_1_1wrapper_1_1UdpServer.html#ab90222f6c1e2a6614bbf0658c5fa577e":[23,0,0,11,9,10],
 "classunilink_1_1wrapper_1_1UdpServer.html#abfcb2c156e65c461e0f28adb4d90f829":[23,0,0,11,9,6],
 "classunilink_1_1wrapper_1_1UdpServer.html#ad940ba858eab4278083f4a4710f83257":[23,0,0,11,9,3],
@@ -245,9 +249,5 @@ var NAVTREEINDEX4 =
 "error__types_8hpp.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5":[24,0,1,4,3,3,2],
 "error__types_8hpp_source.html":[24,0,1,4,3],
 "exceptions_8cc.html":[24,0,1,4,4],
-"exceptions_8cc_source.html":[24,0,1,4,4],
-"exceptions_8hpp.html":[24,0,1,4,5],
-"exceptions_8hpp.html#a076e76a2fb9d28f8e7fcdd3d28f46b49":[24,0,1,4,5,6],
-"exceptions_8hpp.html#a47be5bfced15f828bb05505c02933b64":[24,0,1,4,5,11],
-"exceptions_8hpp.html#a62f3e8f6668279c0fbc26ea10a5c318b":[24,0,1,4,5,9]
+"exceptions_8cc_source.html":[24,0,1,4,4]
 };

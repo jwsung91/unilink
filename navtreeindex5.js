@@ -1,5 +1,9 @@
 var NAVTREEINDEX5 =
 {
+"exceptions_8hpp.html":[24,0,1,4,5],
+"exceptions_8hpp.html#a076e76a2fb9d28f8e7fcdd3d28f46b49":[24,0,1,4,5,6],
+"exceptions_8hpp.html#a47be5bfced15f828bb05505c02933b64":[24,0,1,4,5,11],
+"exceptions_8hpp.html#a62f3e8f6668279c0fbc26ea10a5c318b":[24,0,1,4,5,9],
 "exceptions_8hpp.html#a73fd9ee71b0358d499f750fffd68efa2":[24,0,1,4,5,7],
 "exceptions_8hpp.html#ac53bea10e6c0431bf16c02b246ffbb07":[24,0,1,4,5,8],
 "exceptions_8hpp.html#aebd52022731114dbccbf21ffbf5654d2":[24,0,1,4,5,10],
@@ -245,9 +249,5 @@ var NAVTREEINDEX5 =
 "md_docs_architecture_memory_safety.html#autotoc_md30":[2,3,0],
 "md_docs_architecture_memory_safety.html#autotoc_md32":[2,3,1],
 "md_docs_architecture_memory_safety.html#autotoc_md34":[2,3,2],
-"md_docs_architecture_memory_safety.html#autotoc_md36":[2,3,3],
-"md_docs_architecture_memory_safety.html#autotoc_md38":[2,3,4],
-"md_docs_architecture_memory_safety.html#autotoc_md40":[2,4],
-"md_docs_architecture_memory_safety.html#autotoc_md41":[2,4,0],
-"md_docs_architecture_memory_safety.html#autotoc_md43":[2,4,1]
+"md_docs_architecture_memory_safety.html#autotoc_md36":[2,3,3]
 };

@@ -16,7 +16,7 @@ var classunilink_1_1wrapper_1_1UdpServer =
     [ "on_message", "classunilink_1_1wrapper_1_1UdpServer.html#aab968048b851746313e396c16ed2be8a", null ],
     [ "send_to", "classunilink_1_1wrapper_1_1UdpServer.html#a533c33451a692947067e9ca7d2b70ad8", null ],
     [ "set_framer_factory", "classunilink_1_1wrapper_1_1UdpServer.html#a2b9bf80c0ad4af4397800fc7aee19c58", null ],
-    [ "set_manage_external_context", "classunilink_1_1wrapper_1_1UdpServer.html#ab7ecce305026edba9838642d5433e1a4", null ],
+    [ "set_manage_external_context", "classunilink_1_1wrapper_1_1UdpServer.html#a15fd7f95c4862cebfdbeaf611f0afc56", null ],
     [ "set_session_timeout", "classunilink_1_1wrapper_1_1UdpServer.html#a9f17752d8e2b1418a72ad9b0fd2beb24", null ],
     [ "start", "classunilink_1_1wrapper_1_1UdpServer.html#a450f858480989071ba7c02990ec7d63c", null ],
     [ "stop", "classunilink_1_1wrapper_1_1UdpServer.html#a17da8a56e5c01be6ac9d68abbbfaef18", null ]
