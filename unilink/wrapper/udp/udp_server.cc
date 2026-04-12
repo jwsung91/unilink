@@ -178,13 +178,19 @@ struct UdpServer::Impl {
       if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
         std::lock_guard<std::mutex> lock(mutex);
         if (start_promise) {
-          start_promise->set_value(true);
+          try {
+            start_promise->set_value(true);
+          } catch (...) {
+          }
           start_promise.reset();
         }
       } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
         std::lock_guard<std::mutex> lock(mutex);
         if (start_promise) {
-          start_promise->set_value(false);
+          try {
+            start_promise->set_value(false);
+          } catch (...) {
+          }
           start_promise.reset();
         }
         if (on_error) {

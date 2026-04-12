@@ -54,6 +54,7 @@ struct Udp::Impl {
   bool auto_manage{false};
   bool started{false};
   std::shared_ptr<std::promise<bool>> start_promise;
+  mutable std::mutex mutex;
 
   explicit Impl(const config::UdpConfig& config) : cfg(config) {}
   Impl(const config::UdpConfig& config, std::shared_ptr<boost::asio::io_context> ioc)
@@ -68,6 +69,7 @@ struct Udp::Impl {
   }
 
   std::future<bool> start() {
+    std::lock_guard<std::mutex> lock(mutex);
     if (started) {
       std::promise<bool> p;
       p.set_value(true);
@@ -95,6 +97,7 @@ struct Udp::Impl {
   }
 
   void stop() {
+    std::lock_guard<std::mutex> lock(mutex);
     if (!started) return;
 
     if (channel) {
@@ -110,7 +113,10 @@ struct Udp::Impl {
 
     started = false;
     if (start_promise) {
-      start_promise->set_value(false);
+      try {
+        start_promise->set_value(false);
+      } catch (...) {
+      }
       start_promise.reset();
     }
 
@@ -122,39 +128,65 @@ struct Udp::Impl {
 
     channel->on_bytes([this](memory::ConstByteSpan data) {
       // 1. Raw data handler
-      if (data_handler) {
+      MessageHandler h;
+      {
+        std::lock_guard<std::mutex> lock(mutex);
+        h = data_handler;
+      }
+      if (h) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
-        data_handler(MessageContext(0, str_data));
+        h(MessageContext(0, str_data));
       }
 
       // 2. Framer integration
-      if (framer) {
-        framer->push_bytes(data);
+      {
+        std::lock_guard<std::mutex> lock(mutex);
+        if (framer) {
+          framer->push_bytes(data);
+        }
       }
     });
 
     channel->on_state([this](base::LinkState state) {
       if (state == base::LinkState::Connected || state == base::LinkState::Listening) {
+        std::lock_guard<std::mutex> lock(mutex);
         if (start_promise) {
-          start_promise->set_value(true);
+          try {
+            start_promise->set_value(true);
+          } catch (...) {
+          }
           start_promise.reset();
         }
       } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
+        std::lock_guard<std::mutex> lock(mutex);
         if (start_promise) {
-          start_promise->set_value(false);
+          try {
+            start_promise->set_value(false);
+          } catch (...) {
+          }
           start_promise.reset();
         }
       }
 
+      ConnectionHandler c_h;
+      ConnectionHandler d_h;
+      ErrorHandler e_h;
+      {
+        std::lock_guard<std::mutex> lock(mutex);
+        c_h = connect_handler;
+        d_h = disconnect_handler;
+        e_h = error_handler;
+      }
+
       switch (state) {
         case base::LinkState::Connected:
-          if (connect_handler) connect_handler(ConnectionContext(0));
+          if (c_h) c_h(ConnectionContext(0));
           break;
         case base::LinkState::Closed:
-          if (disconnect_handler) disconnect_handler(ConnectionContext(0));
+          if (d_h) d_h(ConnectionContext(0));
           break;
         case base::LinkState::Error:
-          if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+          if (e_h) e_h(ErrorContext(ErrorCode::IoError, "Connection error"));
           break;
         default:
           break;
@@ -163,24 +195,36 @@ struct Udp::Impl {
   }
 
   void set_framer(std::unique_ptr<framer::IFramer> f) {
+    std::lock_guard<std::mutex> lock(mutex);
     framer = std::move(f);
     if (framer && message_handler) {
       framer->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler) {
+        MessageHandler h;
+        {
+          std::lock_guard<std::mutex> lk(mutex);
+          h = message_handler;
+        }
+        if (h) {
           std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler(MessageContext(0, str_msg));
+          h(MessageContext(0, str_msg));
         }
       });
     }
   }
 
   void on_message(MessageHandler handler) {
+    std::lock_guard<std::mutex> lock(mutex);
     message_handler = std::move(handler);
     if (framer) {
       framer->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler) {
+        MessageHandler h;
+        {
+          std::lock_guard<std::mutex> lk(mutex);
+          h = message_handler;
+        }
+        if (h) {
           std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler(MessageContext(0, str_msg));
+          h(MessageContext(0, str_msg));
         }
       });
     }
