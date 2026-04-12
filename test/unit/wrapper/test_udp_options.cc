@@ -21,6 +21,7 @@
 #include <memory>
 
 #include "test_utils.hpp"
+#include "unilink/builder/udp_builder.hpp"
 #include "unilink/config/udp_config.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
 
@@ -41,7 +42,7 @@ class UdpOptionsTest : public ::testing::Test {
 
 TEST_F(UdpOptionsTest, SetterCoverage) {
   UdpConfig config;
-  config.local_port = TestUtils::getAvailableTestPort();
+  config.local_port = 0;
 
   Udp udp(config);
 
@@ -51,26 +52,25 @@ TEST_F(UdpOptionsTest, SetterCoverage) {
   udp.auto_manage(false);
 
   // Test set_manage_external_context
-  // This is a void method in Udp wrapper
   udp.set_manage_external_context(true);
   udp.set_manage_external_context(false);
-
-  // Note: The following setters were requested but are not available in the Udp wrapper API:
-  // - set_multicast_ttl
-  // - join_multicast_group
-  // - set_broadcast
-  // - set_reuse_address
-  //
-  // If these features are added in the future, tests should be added here.
 }
 
 TEST_F(UdpOptionsTest, ConstructorWithExternalContext) {
   UdpConfig config;
-  config.local_port = TestUtils::getAvailableTestPort();
+  config.local_port = 0;
 
   auto ioc = std::make_shared<boost::asio::io_context>();
   Udp udp(config, ioc);
 
   // Should not throw
   udp.auto_manage(false);
+}
+
+TEST_F(UdpOptionsTest, BuilderCoverageForUdpSocketOptions) {
+  unilink::builder::UdpClientBuilder client_builder;
+  client_builder.enable_broadcast(true).reuse_address(true);
+
+  unilink::builder::UdpServerBuilder server_builder;
+  server_builder.enable_broadcast(true).reuse_address(true);
 }

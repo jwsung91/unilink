@@ -79,6 +79,16 @@ UdpClientBuilder& UdpClientBuilder::use_independent_context(bool use_independent
   return *this;
 }
 
+UdpClientBuilder& UdpClientBuilder::enable_broadcast(bool enable) {
+  cfg_.enable_broadcast = enable;
+  return *this;
+}
+
+UdpClientBuilder& UdpClientBuilder::reuse_address(bool enable) {
+  cfg_.reuse_address = enable;
+  return *this;
+}
+
 // --- UdpServerBuilder Implementation ---
 
 UdpServerBuilder::UdpServerBuilder() : auto_manage_(false), use_independent_context_(false) {}
@@ -137,6 +147,16 @@ UdpServerBuilder& UdpServerBuilder::set_local_port(uint16_t port) {
 
 UdpServerBuilder& UdpServerBuilder::use_independent_context(bool use_independent) {
   use_independent_context_ = use_independent;
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::enable_broadcast(bool enable) {
+  cfg_.enable_broadcast = enable;
+  return *this;
+}
+
+UdpServerBuilder& UdpServerBuilder::reuse_address(bool enable) {
+  cfg_.reuse_address = enable;
   return *this;
 }
 
