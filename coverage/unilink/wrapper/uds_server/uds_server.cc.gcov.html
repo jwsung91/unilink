@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">138</td>
+            <td class="headerCovTableEntry">125</td>
             <td class="headerCovTableEntry">193</td>
-            <td class="headerCovTableEntryLo">71.5 %</td>
+            <td class="headerCovTableEntryLo">64.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-11 14:08:32</td>
+            <td class="headerValue">2026-04-12 22:21:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">21</td>
             <td class="headerCovTableEntry">36</td>
-            <td class="headerCovTableEntryLo">66.7 %</td>
+            <td class="headerCovTableEntryLo">58.3 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">87</td>
+            <td class="headerCovTableEntry">85</td>
             <td class="headerCovTableEntry">234</td>
-            <td class="headerCovTableEntryLo">37.2 %</td>
+            <td class="headerCovTableEntryLo">36.3 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -351,29 +351,29 @@
 <a name="270"><span class="lineNum">     270 </span>                :<span class="lineNoCov">          0 :   return false;</span></a>
 <a name="271"><span class="lineNum">     271 </span>                :            : }</a>
 <a name="272"><span class="lineNum">     272 </span>                :            : </a>
-<a name="273"><span class="lineNum">     273 </span>                :<span class="lineCov">          3 : ServerInterface&amp; UdsServer::on_client_connect(ConnectionHandler handler) {</span></a>
-<a name="274"><span class="lineNum">     274 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
-<a name="275"><span class="lineNum">     275 </span>                :<span class="lineCov">          3 :   impl_-&gt;client_connect_handler_ = std::move(handler);</span></a>
-<a name="276"><span class="lineNum">     276 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
-<a name="277"><span class="lineNum">     277 </span>                :<span class="lineCov">          3 : }</span></a>
+<a name="273"><span class="lineNum">     273 </span>                :<span class="lineCov">          2 : ServerInterface&amp; UdsServer::on_client_connect(ConnectionHandler handler) {</span></a>
+<a name="274"><span class="lineNum">     274 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
+<a name="275"><span class="lineNum">     275 </span>                :<span class="lineCov">          2 :   impl_-&gt;client_connect_handler_ = std::move(handler);</span></a>
+<a name="276"><span class="lineNum">     276 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="277"><span class="lineNum">     277 </span>                :<span class="lineCov">          2 : }</span></a>
 <a name="278"><span class="lineNum">     278 </span>                :            : </a>
-<a name="279"><span class="lineNum">     279 </span>                :<span class="lineCov">          3 : ServerInterface&amp; UdsServer::on_client_disconnect(ConnectionHandler handler) {</span></a>
-<a name="280"><span class="lineNum">     280 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
-<a name="281"><span class="lineNum">     281 </span>                :<span class="lineCov">          3 :   impl_-&gt;client_disconnect_handler_ = std::move(handler);</span></a>
-<a name="282"><span class="lineNum">     282 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
-<a name="283"><span class="lineNum">     283 </span>                :<span class="lineCov">          3 : }</span></a>
+<a name="279"><span class="lineNum">     279 </span>                :<span class="lineNoCov">          0 : ServerInterface&amp; UdsServer::on_client_disconnect(ConnectionHandler handler) {</span></a>
+<a name="280"><span class="lineNum">     280 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
+<a name="281"><span class="lineNum">     281 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;client_disconnect_handler_ = std::move(handler);</span></a>
+<a name="282"><span class="lineNum">     282 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="283"><span class="lineNum">     283 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <a name="284"><span class="lineNum">     284 </span>                :            : </a>
-<a name="285"><span class="lineNum">     285 </span>                :<span class="lineCov">          3 : ServerInterface&amp; UdsServer::on_data(MessageHandler handler) {</span></a>
-<a name="286"><span class="lineNum">     286 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
-<a name="287"><span class="lineNum">     287 </span>                :<span class="lineCov">          3 :   impl_-&gt;data_handler_ = std::move(handler);</span></a>
-<a name="288"><span class="lineNum">     288 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
-<a name="289"><span class="lineNum">     289 </span>                :<span class="lineCov">          3 : }</span></a>
+<a name="285"><span class="lineNum">     285 </span>                :<span class="lineCov">          2 : ServerInterface&amp; UdsServer::on_data(MessageHandler handler) {</span></a>
+<a name="286"><span class="lineNum">     286 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
+<a name="287"><span class="lineNum">     287 </span>                :<span class="lineCov">          2 :   impl_-&gt;data_handler_ = std::move(handler);</span></a>
+<a name="288"><span class="lineNum">     288 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="289"><span class="lineNum">     289 </span>                :<span class="lineCov">          2 : }</span></a>
 <a name="290"><span class="lineNum">     290 </span>                :            : </a>
-<a name="291"><span class="lineNum">     291 </span>                :<span class="lineCov">          3 : ServerInterface&amp; UdsServer::on_error(ErrorHandler handler) {</span></a>
-<a name="292"><span class="lineNum">     292 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
-<a name="293"><span class="lineNum">     293 </span>                :<span class="lineCov">          3 :   impl_-&gt;error_handler_ = std::move(handler);</span></a>
-<a name="294"><span class="lineNum">     294 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
-<a name="295"><span class="lineNum">     295 </span>                :<span class="lineCov">          3 : }</span></a>
+<a name="291"><span class="lineNum">     291 </span>                :<span class="lineNoCov">          0 : ServerInterface&amp; UdsServer::on_error(ErrorHandler handler) {</span></a>
+<a name="292"><span class="lineNum">     292 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
+<a name="293"><span class="lineNum">     293 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;error_handler_ = std::move(handler);</span></a>
+<a name="294"><span class="lineNum">     294 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="295"><span class="lineNum">     295 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <a name="296"><span class="lineNum">     296 </span>                :            : </a>
 <a name="297"><span class="lineNum">     297 </span>                :<span class="lineNoCov">          0 : void UdsServer::set_framer_factory(FramerFactory factory) {</span></a>
 <a name="298"><span class="lineNum">     298 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
@@ -391,9 +391,9 @@
 <a name="310"><span class="lineNum">     310 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   return impl_-&gt;server_ ? impl_-&gt;server_-&gt;get_connected_clients() : std::vector&lt;size_t&gt;();</span></a>
 <a name="311"><span class="lineNum">     311 </span>                :            : }</a>
 <a name="312"><span class="lineNum">     312 </span>                :            : </a>
-<a name="313"><span class="lineNum">     313 </span>                :<span class="lineCov">          3 : UdsServer&amp; UdsServer::auto_manage(bool manage) {</span></a>
-<a name="314"><span class="lineNum">     314 </span>                :<span class="lineCov">          3 :   impl_-&gt;auto_manage_ = manage;</span></a>
-<a name="315"><span class="lineNum">     315 </span>                :<span class="lineCov">          3 :   return *this;</span></a>
+<a name="313"><span class="lineNum">     313 </span>                :<span class="lineNoCov">          0 : UdsServer&amp; UdsServer::auto_manage(bool manage) {</span></a>
+<a name="314"><span class="lineNum">     314 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;auto_manage_ = manage;</span></a>
+<a name="315"><span class="lineNum">     315 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="316"><span class="lineNum">     316 </span>                :            : }</a>
 <a name="317"><span class="lineNum">     317 </span>                :            : </a>
 <a name="318"><span class="lineNum">     318 </span>                :<span class="lineCov">          3 : UdsServer&amp; UdsServer::set_client_limit(size_t max_clients) {</span></a>

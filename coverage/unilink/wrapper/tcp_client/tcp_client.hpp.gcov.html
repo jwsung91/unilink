@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-11 14:08:32</td>
+            <td class="headerValue">2026-04-12 22:21:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -149,7 +149,7 @@
 <a name="71"><span class="lineNum">      71 </span>                :            :   ChannelInterface&amp; on_error(ErrorHandler handler) override;</a>
 <a name="72"><span class="lineNum">      72 </span>                :            : </a>
 <a name="73"><span class="lineNum">      73 </span>                :            :   void set_framer(std::unique_ptr&lt;framer::IFramer&gt; framer) override;</a>
-<a name="74"><span class="lineNum">      74 </span>                :            :   void on_message(FramedMessageHandler handler) override;</a>
+<a name="74"><span class="lineNum">      74 </span>                :            :   void on_message(MessageHandler handler) override;</a>
 <a name="75"><span class="lineNum">      75 </span>                :            : </a>
 <a name="76"><span class="lineNum">      76 </span>                :            :   ChannelInterface&amp; auto_manage(bool manage = true) override;</a>
 <a name="77"><span class="lineNum">      77 </span>                :            : </a>
@@ -161,7 +161,7 @@
 <a name="83"><span class="lineNum">      83 </span>                :            : </a>
 <a name="84"><span class="lineNum">      84 </span>                :            :  private:</a>
 <a name="85"><span class="lineNum">      85 </span>                :            :   struct Impl;</a>
-<a name="86"><span class="lineNum">      86 </span>                :<span class="lineCov">         68 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
+<a name="86"><span class="lineNum">      86 </span>                :<span class="lineCov">         67 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
 <a name="87"><span class="lineNum">      87 </span>                :            :   Impl* get_impl() { return impl_.get(); }</a>
 <a name="88"><span class="lineNum">      88 </span>                :            :   std::unique_ptr&lt;Impl&gt; impl_;</a>
 <a name="89"><span class="lineNum">      89 </span>                :            : };</a>

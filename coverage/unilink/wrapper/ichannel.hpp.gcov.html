@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-11 14:08:32</td>
+            <td class="headerValue">2026-04-12 22:21:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -115,43 +115,42 @@
 <a name="37"><span class="lineNum">      37 </span>                :            :   using MessageHandler = std::function&lt;void(const MessageContext&amp;)&gt;;</a>
 <a name="38"><span class="lineNum">      38 </span>                :            :   using ConnectionHandler = std::function&lt;void(const ConnectionContext&amp;)&gt;;</a>
 <a name="39"><span class="lineNum">      39 </span>                :            :   using ErrorHandler = std::function&lt;void(const ErrorContext&amp;)&gt;;</a>
-<a name="40"><span class="lineNum">      40 </span>                :            :   using FramedMessageHandler = std::function&lt;void(memory::ConstByteSpan)&gt;;</a>
-<a name="41"><span class="lineNum">      41 </span>                :            : </a>
-<a name="42"><span class="lineNum">      42 </span>                :<span class="lineCov">        107 :   virtual ~ChannelInterface() = default;</span></a>
-<a name="43"><span class="lineNum">      43 </span>                :            : </a>
-<a name="44"><span class="lineNum">      44 </span>                :            :   // Lifecycle</a>
-<a name="45"><span class="lineNum">      45 </span>                :            :   virtual std::future&lt;bool&gt; start() = 0;</a>
-<a name="46"><span class="lineNum">      46 </span>                :            :   virtual void stop() = 0;</a>
-<a name="47"><span class="lineNum">      47 </span>                :            :   virtual bool is_connected() const = 0;</a>
-<a name="48"><span class="lineNum">      48 </span>                :            : </a>
-<a name="49"><span class="lineNum">      49 </span>                :            :   // Transmission</a>
-<a name="50"><span class="lineNum">      50 </span>                :            :   virtual void send(std::string_view data) = 0;</a>
-<a name="51"><span class="lineNum">      51 </span>                :            :   virtual void send_line(std::string_view line) = 0;</a>
-<a name="52"><span class="lineNum">      52 </span>                :            : </a>
-<a name="53"><span class="lineNum">      53 </span>                :            :   // Event handlers</a>
-<a name="54"><span class="lineNum">      54 </span>                :            :   virtual ChannelInterface&amp; on_data(MessageHandler handler) = 0;</a>
-<a name="55"><span class="lineNum">      55 </span>                :            :   virtual ChannelInterface&amp; on_connect(ConnectionHandler handler) = 0;</a>
-<a name="56"><span class="lineNum">      56 </span>                :            :   virtual ChannelInterface&amp; on_disconnect(ConnectionHandler handler) = 0;</a>
-<a name="57"><span class="lineNum">      57 </span>                :            :   virtual ChannelInterface&amp; on_error(ErrorHandler handler) = 0;</a>
-<a name="58"><span class="lineNum">      58 </span>                :            : </a>
-<a name="59"><span class="lineNum">      59 </span>                :            :   /**</a>
-<a name="60"><span class="lineNum">      60 </span>                :            :    * @brief Set a message framer for this channel.</a>
-<a name="61"><span class="lineNum">      61 </span>                :            :    * @param framer The framer instance to use.</a>
-<a name="62"><span class="lineNum">      62 </span>                :            :    */</a>
-<a name="63"><span class="lineNum">      63 </span>                :            :   virtual void set_framer(std::unique_ptr&lt;framer::IFramer&gt; framer) = 0;</a>
-<a name="64"><span class="lineNum">      64 </span>                :            : </a>
-<a name="65"><span class="lineNum">      65 </span>                :            :   /**</a>
-<a name="66"><span class="lineNum">      66 </span>                :            :    * @brief Set a handler for complete messages extracted by the framer.</a>
-<a name="67"><span class="lineNum">      67 </span>                :            :    * @param handler The callback for framed messages.</a>
-<a name="68"><span class="lineNum">      68 </span>                :            :    */</a>
-<a name="69"><span class="lineNum">      69 </span>                :            :   virtual void on_message(FramedMessageHandler handler) = 0;</a>
-<a name="70"><span class="lineNum">      70 </span>                :            : </a>
-<a name="71"><span class="lineNum">      71 </span>                :            :   // Management</a>
-<a name="72"><span class="lineNum">      72 </span>                :            :   virtual ChannelInterface&amp; auto_manage(bool manage = true) = 0;</a>
-<a name="73"><span class="lineNum">      73 </span>                :            : };</a>
-<a name="74"><span class="lineNum">      74 </span>                :            : </a>
-<a name="75"><span class="lineNum">      75 </span>                :            : }  // namespace wrapper</a>
-<a name="76"><span class="lineNum">      76 </span>                :            : }  // namespace unilink</a>
+<a name="40"><span class="lineNum">      40 </span>                :            : </a>
+<a name="41"><span class="lineNum">      41 </span>                :<span class="lineCov">        107 :   virtual ~ChannelInterface() = default;</span></a>
+<a name="42"><span class="lineNum">      42 </span>                :            : </a>
+<a name="43"><span class="lineNum">      43 </span>                :            :   // Lifecycle</a>
+<a name="44"><span class="lineNum">      44 </span>                :            :   virtual std::future&lt;bool&gt; start() = 0;</a>
+<a name="45"><span class="lineNum">      45 </span>                :            :   virtual void stop() = 0;</a>
+<a name="46"><span class="lineNum">      46 </span>                :            :   virtual bool is_connected() const = 0;</a>
+<a name="47"><span class="lineNum">      47 </span>                :            : </a>
+<a name="48"><span class="lineNum">      48 </span>                :            :   // Transmission</a>
+<a name="49"><span class="lineNum">      49 </span>                :            :   virtual void send(std::string_view data) = 0;</a>
+<a name="50"><span class="lineNum">      50 </span>                :            :   virtual void send_line(std::string_view line) = 0;</a>
+<a name="51"><span class="lineNum">      51 </span>                :            : </a>
+<a name="52"><span class="lineNum">      52 </span>                :            :   // Event handlers</a>
+<a name="53"><span class="lineNum">      53 </span>                :            :   virtual ChannelInterface&amp; on_data(MessageHandler handler) = 0;</a>
+<a name="54"><span class="lineNum">      54 </span>                :            :   virtual ChannelInterface&amp; on_connect(ConnectionHandler handler) = 0;</a>
+<a name="55"><span class="lineNum">      55 </span>                :            :   virtual ChannelInterface&amp; on_disconnect(ConnectionHandler handler) = 0;</a>
+<a name="56"><span class="lineNum">      56 </span>                :            :   virtual ChannelInterface&amp; on_error(ErrorHandler handler) = 0;</a>
+<a name="57"><span class="lineNum">      57 </span>                :            : </a>
+<a name="58"><span class="lineNum">      58 </span>                :            :   /**</a>
+<a name="59"><span class="lineNum">      59 </span>                :            :    * @brief Set a message framer for this channel.</a>
+<a name="60"><span class="lineNum">      60 </span>                :            :    * @param framer The framer instance to use.</a>
+<a name="61"><span class="lineNum">      61 </span>                :            :    */</a>
+<a name="62"><span class="lineNum">      62 </span>                :            :   virtual void set_framer(std::unique_ptr&lt;framer::IFramer&gt; framer) = 0;</a>
+<a name="63"><span class="lineNum">      63 </span>                :            : </a>
+<a name="64"><span class="lineNum">      64 </span>                :            :   /**</a>
+<a name="65"><span class="lineNum">      65 </span>                :            :    * @brief Set a handler for complete messages extracted by the framer.</a>
+<a name="66"><span class="lineNum">      66 </span>                :            :    * @param handler The callback for framed messages.</a>
+<a name="67"><span class="lineNum">      67 </span>                :            :    */</a>
+<a name="68"><span class="lineNum">      68 </span>                :            :   virtual void on_message(MessageHandler handler) = 0;</a>
+<a name="69"><span class="lineNum">      69 </span>                :            : </a>
+<a name="70"><span class="lineNum">      70 </span>                :            :   // Management</a>
+<a name="71"><span class="lineNum">      71 </span>                :            :   virtual ChannelInterface&amp; auto_manage(bool manage = true) = 0;</a>
+<a name="72"><span class="lineNum">      72 </span>                :            : };</a>
+<a name="73"><span class="lineNum">      73 </span>                :            : </a>
+<a name="74"><span class="lineNum">      74 </span>                :            : }  // namespace wrapper</a>
+<a name="75"><span class="lineNum">      75 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
