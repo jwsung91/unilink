@@ -201,7 +201,7 @@ struct UdsServer::Impl {
       }
 
       if (error_handler) {
-        error_handler(ErrorContext(ErrorCode::IoError, "Server state error"));
+        error_handler(ErrorContext(ErrorCode::IoError, "Server error"));
       }
     });
 
@@ -215,9 +215,14 @@ struct UdsServer::Impl {
           auto framer = framer_factory_();
           if (framer) {
             framer->set_on_message([this, client_id](memory::ConstByteSpan msg) {
-              if (on_message_) {
+              MessageHandler on_message_handler;
+              {
+                std::lock_guard<std::mutex> lock(mutex_);
+                on_message_handler = on_message_;
+              }
+              if (on_message_handler) {
                 std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-                on_message_(MessageContext(client_id, str_msg));
+                on_message_handler(MessageContext(client_id, str_msg));
               }
             });
             framers_[client_id] = std::move(framer);

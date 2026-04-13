@@ -45,8 +45,9 @@ struct TcpServer::Impl {
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
   std::vector<std::promise<bool>> pending_promises_;
-  bool started_{false};
+  std::atomic<bool> started_{false};
   std::atomic<bool> is_listening_{false};
+  std::shared_ptr<bool> alive_marker_{std::make_shared<bool>(true)};
 
   // Configuration
   bool auto_manage_{false};
@@ -119,8 +120,7 @@ struct TcpServer::Impl {
     }
   }
 
-  void fulfill_all(bool value) {
-    std::lock_guard<std::mutex> lock(mutex_);
+  void fulfill_all_locked(bool value) {
     for (auto& p : pending_promises_) {
       try {
         p.set_value(value);
@@ -131,8 +131,8 @@ struct TcpServer::Impl {
   }
 
   std::future<bool> start() {
-    std::lock_guard<std::mutex> lock(mutex_);
-    if (is_listening_) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    if (is_listening_.load()) {
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
@@ -140,7 +140,7 @@ struct TcpServer::Impl {
     std::promise<bool> p;
     auto f = p.get_future();
     pending_promises_.push_back(std::move(p));
-    if (started_) return f;
+    if (started_.exchange(true)) return f;
 
     if (!channel_) {
       config::TcpServerConfig config;
@@ -163,10 +163,14 @@ struct TcpServer::Impl {
         }
       }
     }
+    lock.unlock();
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+      if (external_ioc_ && external_ioc_->stopped()) {
+        external_ioc_->restart();
+      }
       work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
-          external_ioc_->get_executor());
+          boost::asio::make_work_guard(*external_ioc_));
       external_thread_ = std::thread([ioc = external_ioc_]() {
         try {
           ioc->run();
@@ -174,7 +178,6 @@ struct TcpServer::Impl {
         }
       });
     }
-    started_ = true;
     return f;
   }
 
@@ -182,14 +185,9 @@ struct TcpServer::Impl {
     bool should_join = false;
     {
       std::unique_lock<std::mutex> lock(mutex_);
-      if (!started_) {
-        for (auto& p : pending_promises_) {
-          try {
-            p.set_value(false);
-          } catch (...) {
-          }
-        }
-        pending_promises_.clear();
+      if (!started_.exchange(false)) {
+        is_listening_ = false;
+        fulfill_all_locked(false);
         return;
       }
       if (channel_) {
@@ -197,25 +195,24 @@ struct TcpServer::Impl {
         channel_->on_state(nullptr);
         auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
         if (transport_server) transport_server->request_stop();
+        lock.unlock();
         channel_->stop();
+        lock.lock();
       }
       if (use_external_context_ && manage_external_context_) {
         if (work_guard_) work_guard_.reset();
         should_join = true;
       }
-      for (auto& p : pending_promises_) {
-        try {
-          p.set_value(false);
-        } catch (...) {
-        }
-      }
-      pending_promises_.clear();
-      started_ = false;
+      fulfill_all_locked(false);
       is_listening_ = false;
     }
     if (should_join && external_thread_.joinable()) {
       try {
-        external_thread_.join();
+        if (std::this_thread::get_id() != external_thread_.get_id()) {
+          external_thread_.join();
+        } else {
+          external_thread_.detach();
+        }
       } catch (...) {
       }
     }
@@ -225,28 +222,47 @@ struct TcpServer::Impl {
 
   void setup_internal_handlers() {
     if (!channel_) return;
+    std::weak_ptr<bool> weak_alive = alive_marker_;
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->on_multi_connect([this](size_t id, const std::string& info) {
+      transport_server->on_multi_connect([this, weak_alive](size_t id, const std::string& info) {
+        auto alive = weak_alive.lock();
+        if (!alive) return;
+
+        ConnectionHandler handler;
         {
           std::lock_guard<std::mutex> lock(mutex_);
           if (framer_factory_) {
             auto framer = framer_factory_();
             if (framer) {
               framer->set_on_message([this, id](memory::ConstByteSpan msg) {
-                if (on_message_) {
+                MessageHandler on_message_handler;
+                {
+                  std::lock_guard<std::mutex> lock(mutex_);
+                  on_message_handler = on_message_;
+                }
+                if (on_message_handler) {
                   std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-                  on_message_(MessageContext(id, str_msg));
+                  on_message_handler(MessageContext(id, str_msg));
                 }
               });
               framers_[id] = std::move(framer);
             }
           }
+          handler = on_client_connect_;
         }
-        if (on_client_connect_) on_client_connect_(ConnectionContext(id, info));
+        if (handler) handler(ConnectionContext(id, info));
       });
-      transport_server->on_multi_data([this](size_t id, const std::string& data) {
-        if (on_data_) on_data_(MessageContext(id, data));
+      transport_server->on_multi_data([this, weak_alive](size_t id, const std::string& data) {
+        auto alive = weak_alive.lock();
+        if (!alive) return;
+
+        MessageHandler handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          handler = on_data_;
+        }
+        if (handler) handler(MessageContext(id, data));
 
         std::lock_guard<std::mutex> lock(mutex_);
         auto it = framers_.find(id);
@@ -255,23 +271,40 @@ struct TcpServer::Impl {
           it->second->push_bytes(memory::ConstByteSpan(binary_view.first, binary_view.second));
         }
       });
-      transport_server->on_multi_disconnect([this](size_t id) {
+      transport_server->on_multi_disconnect([this, weak_alive](size_t id) {
+        auto alive = weak_alive.lock();
+        if (!alive) return;
+
+        ConnectionHandler handler;
         {
           std::lock_guard<std::mutex> lock(mutex_);
           framers_.erase(id);
+          handler = on_client_disconnect_;
         }
-        if (on_client_disconnect_) on_client_disconnect_(ConnectionContext(id));
+        if (handler) handler(ConnectionContext(id));
       });
     }
-    channel_->on_state([this](base::LinkState state) {
+    channel_->on_state([this, weak_alive](base::LinkState state) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
       if (state == base::LinkState::Listening) {
         is_listening_ = true;
-        fulfill_all(true);
-      } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        fulfill_all_locked(true);
+      } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
+                 state == base::LinkState::Idle) {
+        ErrorHandler handler;
         is_listening_ = false;
-        fulfill_all(false);
-        if (state == base::LinkState::Error && on_error_) {
-          on_error_(ErrorContext(ErrorCode::IoError, "Server disconnected"));
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          fulfill_all_locked(false);
+          if (state == base::LinkState::Error) {
+            handler = on_error_;
+          }
+        }
+        if (handler) {
+          handler(ErrorContext(ErrorCode::IoError, "Server disconnected"));
         }
       }
     });
@@ -308,18 +341,22 @@ bool TcpServer::send_to(size_t client_id, std::string_view data) {
 }
 
 ServerInterface& TcpServer::on_client_connect(ConnectionHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->on_client_connect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_client_disconnect(ConnectionHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->on_client_disconnect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_data(MessageHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->on_data_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->on_error_ = std::move(h);
   return *this;
 }
@@ -348,7 +385,7 @@ std::vector<size_t> TcpServer::get_connected_clients() const {
 
 TcpServer& TcpServer::auto_manage(bool m) {
   impl_->auto_manage_ = m;
-  if (impl_->auto_manage_ && !impl_->started_) start();
+  if (impl_->auto_manage_ && !impl_->started_.load()) start();
   return *this;
 }
 

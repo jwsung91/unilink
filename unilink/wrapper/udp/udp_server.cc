@@ -166,9 +166,14 @@ struct UdpServer::Impl {
             auto framer = framer_factory();
             if (framer) {
               framer->set_on_message([this, client_id](memory::ConstByteSpan msg) {
-                if (on_message) {
+                MessageHandler on_message_handler;
+                {
+                  std::lock_guard<std::mutex> lock(mutex);
+                  on_message_handler = on_message;
+                }
+                if (on_message_handler) {
                   std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-                  on_message(MessageContext(client_id, str_msg));
+                  on_message_handler(MessageContext(client_id, str_msg));
                 }
               });
               client_framers[client_id] = std::shared_ptr<framer::IFramer>(std::move(framer));
@@ -222,7 +227,7 @@ struct UdpServer::Impl {
       }
 
       if (error_handler_copy) {
-        error_handler_copy(ErrorContext(ErrorCode::IoError, "UDP Transport Error"));
+        error_handler_copy(ErrorContext(ErrorCode::IoError, "Server error"));
       }
     });
   }
@@ -368,21 +373,25 @@ bool UdpServer::send_to(size_t client_id, std::string_view data) {
 }
 
 ServerInterface& UdpServer::on_client_connect(ConnectionHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_connect = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_client_disconnect(ConnectionHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_disconnect = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_data(MessageHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_data = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_error(ErrorHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_error = std::move(h);
   return *this;
 }
@@ -392,7 +401,10 @@ void UdpServer::set_framer_factory(FramerFactory factory) {
   impl_->framer_factory = std::move(factory);
 }
 
-void UdpServer::on_message(MessageHandler h) { impl_->on_message = std::move(h); }
+void UdpServer::on_message(MessageHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
+  impl_->on_message = std::move(h);
+}
 
 size_t UdpServer::get_client_count() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
