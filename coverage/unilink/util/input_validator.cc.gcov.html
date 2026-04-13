@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-13 22:22:47</td>
+            <td class="headerValue">2026-04-13 22:23:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -296,20 +296,20 @@
 <a name="202"><span class="lineNum">     202 </span>                :<span class="lineCov">          6 :   return true;</span></a>
 <a name="203"><span class="lineNum">     203 </span>                :            : }</a>
 <a name="204"><span class="lineNum">     204 </span>                :            : </a>
-<a name="205"><span class="lineNum">     205 </span>                :<span class="lineCov">         10 : bool InputValidator::is_valid_uds_path(const std::string&amp; path) {</span></a>
-<a name="206"><span class="lineNum">     206 </span>  [<span class="branchCov" title="Branch 0 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 10 times"> + </span> :<span class="lineCov">         10 :   if (path.empty() || path.length() &gt; base::constants::MAX_UDS_PATH_LENGTH) {</span></a>
-<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 10 times"> + </span>]
+<a name="205"><span class="lineNum">     205 </span>                :<span class="lineCov">         14 : bool InputValidator::is_valid_uds_path(const std::string&amp; path) {</span></a>
+<a name="206"><span class="lineNum">     206 </span>  [<span class="branchCov" title="Branch 0 was taken 14 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 14 times"> + </span> :<span class="lineCov">         14 :   if (path.empty() || path.length() &gt; base::constants::MAX_UDS_PATH_LENGTH) {</span></a>
+<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 14 times"> + </span>]
 <a name="207"><span class="lineNum">     207 </span>                :<span class="lineNoCov">          0 :     return false;</span></a>
 <a name="208"><span class="lineNum">     208 </span>                :            :   }</a>
 <a name="209"><span class="lineNum">     209 </span>                :            : </a>
 <a name="210"><span class="lineNum">     210 </span>                :            :   // UDS path should be a valid file system path.</a>
 <a name="211"><span class="lineNum">     211 </span>                :            :   // For simplicity, we check if it's not empty and doesn't contain null characters.</a>
 <a name="212"><span class="lineNum">     212 </span>                :            :   // On Linux/Unix, almost any character except null is valid in a filename.</a>
-<a name="213"><span class="lineNum">     213 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 10 times"> + </span>]:<span class="lineCov">         10 :   if (path.find('\0') != std::string::npos) {</span></a>
+<a name="213"><span class="lineNum">     213 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 14 times"> + </span>]:<span class="lineCov">         14 :   if (path.find('\0') != std::string::npos) {</span></a>
 <a name="214"><span class="lineNum">     214 </span>                :<span class="lineNoCov">          0 :     return false;</span></a>
 <a name="215"><span class="lineNum">     215 </span>                :            :   }</a>
 <a name="216"><span class="lineNum">     216 </span>                :            : </a>
-<a name="217"><span class="lineNum">     217 </span>                :<span class="lineCov">         10 :   return true;</span></a>
+<a name="217"><span class="lineNum">     217 </span>                :<span class="lineCov">         14 :   return true;</span></a>
 <a name="218"><span class="lineNum">     218 </span>                :            : }</a>
 <a name="219"><span class="lineNum">     219 </span>                :            : </a>
 <a name="220"><span class="lineNum">     220 </span>                :<span class="lineCov">         25 : bool InputValidator::is_valid_device_path(const std::string&amp; device) {</span></a>
