@@ -4,11 +4,13 @@ var structunilink_1_1wrapper_1_1Udp_1_1Impl =
     [ "Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ad8c419d47d4a6f72a251e3f666d6cbdf", null ],
     [ "Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#afe67708ef99dc29d96f12340305da696", null ],
     [ "~Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#adf39c589e2fbb91e1fdc57e6a97ba1bb", null ],
+    [ "fulfill_all_locked", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a30e8ebcdbf10069b2c24862148cb7893", null ],
     [ "on_message", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ae3eec4b6e82317a6cfa077653f560b79", null ],
     [ "set_framer", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a8a8324e4713181157ebbd842d4dbf39b", null ],
     [ "setup_internal_handlers", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a466de009e3ffc5e4762903e9975b3338", null ],
     [ "start", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#afaa366e188f397af36f00f001aa152d4", null ],
     [ "stop", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#af5e75201266442a4d739dd13c9e2c3c6", null ],
+    [ "alive_marker", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a0f352619639f6a8166269811907cdd85", null ],
     [ "auto_manage", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#aa1dcdada2fadf2cae955ab6b4ce019ff", null ],
     [ "cfg", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a81f1eed6aad6d47ff435c2de1d3f6324", null ],
     [ "channel", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a70164524cfc68954959c4eadf9dd9269", null ],
@@ -21,7 +23,9 @@ var structunilink_1_1wrapper_1_1Udp_1_1Impl =
     [ "framer", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ae881b50f864d7d16a8c96b61a781b30e", null ],
     [ "manage_external_context", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ab7c68c2693ec525e9a41b3414432b646", null ],
     [ "message_handler", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a7a4ac49b29298c35fa27a1af3e463cef", null ],
-    [ "start_promise", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a9ceb1f82004e60cd6d10947182e58e51", null ],
-    [ "started", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ada9134583ae3d9191c06c9090322e8a7", null ],
-    [ "use_external_context", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a064da8fe11fb8915a02cfa83ed208bd7", null ]
+    [ "mutex_", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ad91ed0b831e19fa437048f819af8bea1", null ],
+    [ "pending_promises", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#abb7b64b734f28b1c3671fc63b741a25f", null ],
+    [ "started", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ab6829d56b1c06dc866d65cdcf06873b9", null ],
+    [ "use_external_context", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a064da8fe11fb8915a02cfa83ed208bd7", null ],
+    [ "work_guard", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#acc716e482d7c8b086594d7876ea666c0", null ]
 ];

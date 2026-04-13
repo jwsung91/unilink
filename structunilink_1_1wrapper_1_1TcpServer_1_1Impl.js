@@ -4,10 +4,11 @@ var structunilink_1_1wrapper_1_1TcpServer_1_1Impl =
     [ "Impl", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ae7f852047d73a75ac48dc9d29bacd1a0", null ],
     [ "Impl", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a8b8ab1b95d8a945e14a5d161828e729d", null ],
     [ "~Impl", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ad40cf9e0518b8f75c7ef7288d1432c91", null ],
-    [ "fulfill_all", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#afccae4ae6f049cec7c0bec115ce35ea7", null ],
+    [ "fulfill_all_locked", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a030e4af5940c8a62c646d7246fa075d0", null ],
     [ "setup_internal_handlers", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#afa02bec7c4ffe754aa0a8b2da4f135a5", null ],
     [ "start", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#acde93124f9a0055182ac36eadca0c7b2", null ],
     [ "stop", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ab5a016578e5da644275d050caa2319be", null ],
+    [ "alive_marker_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a8ad016700c438026ae3eb136b07701c5", null ],
     [ "auto_manage_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ab709e97ae055daa9ab5eac9901e4ed72", null ],
     [ "channel_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a61697a7b76a66ec72e66b3645c380784", null ],
     [ "client_limit_enabled_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#afea8423f2eeca59f5239173af8492419", null ],
@@ -31,7 +32,7 @@ var structunilink_1_1wrapper_1_1TcpServer_1_1Impl =
     [ "port_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10e97ab04797fc1bfcf6f1d785cd634c", null ],
     [ "port_retry_enabled_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#acc754b1bedbc5426ba62ecf552b9ee27", null ],
     [ "port_retry_interval_ms_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a8f3477df42b1fcbe0f6321fe5598189d", null ],
-    [ "started_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a66df77eb6f2bb7a35b1c6b60da0873af", null ],
+    [ "started_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a3187201e56810ab965da445645047808", null ],
     [ "use_external_context_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ac55ff9f1031b108605323f6a22acf9bf", null ],
     [ "work_guard_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ac4c1719442280ca5fc75a2e4f319409e", null ]
 ];

@@ -880,14 +880,14 @@ var NAVTREEINDEX =
 "classunilink_1_1memory_1_1MemoryTracker.html#ae9fb507731d366f394a764fceb67599d",
 "classunilink_1_1transport_1_1UdpChannel.html#ad25668365ea4c6c425d27e6ae1af20b2",
 "classunilink_1_1wrapper_1_1Udp.html#af859c7698df73fb8d6d1b6b96d96d91f",
-"exceptions_8hpp.html",
-"md_docs_architecture_memory_safety.html#autotoc_md38",
-"md_docs_guides_core_troubleshooting.html#autotoc_md484",
-"md_docs_reference_api_guide.html#autotoc_md801",
-"namespaceunilink_1_1diagnostics_1_1error__reporting.html#a5b7a4963a80bfaa872fd54ff9744c05a",
-"structunilink_1_1diagnostics_1_1ErrorStats.html#a46ef6cc3bc892f4bfc3d6d671ab4a3c4",
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a861de434ba55ff08f2911c399286385f",
-"structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a70164524cfc68954959c4eadf9dd9269"
+"error__types_8hpp.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3",
+"md_docs_architecture_memory_safety.html#autotoc_md27",
+"md_docs_guides_core_troubleshooting.html#autotoc_md477",
+"md_docs_reference_api_guide.html#autotoc_md794",
+"namespaceunilink_1_1diagnostics.html#ad1cee78c0c129f3819db60931664f453",
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#ab14db65466ad4c19708ba36813d49236",
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3c8dc4a82dfb3b1fa9b11915fde14ed9",
+"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#aca0c974620edf67db29ccc55a22dda50"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

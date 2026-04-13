@@ -1,5 +1,11 @@
 var NAVTREEINDEX9 =
 {
+"namespaceunilink_1_1diagnostics.html#ad1cee78c0c129f3819db60931664f453":[22,0,1,5,20],
+"namespaceunilink_1_1diagnostics.html#aee016aa3a0ee29635787a9755eb352f1":[22,0,1,5,23],
+"namespaceunilink_1_1diagnostics_1_1error__reporting.html":[22,0,1,5,0],
+"namespaceunilink_1_1diagnostics_1_1error__reporting.html#a09062defd8d7c3c8b916320c34338040":[22,0,1,5,0,6],
+"namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3afe71d736336fb74d5882a148c87fd2":[22,0,1,5,0,4],
+"namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3c203bfeff57e2f08d7a29383e05d367":[22,0,1,5,0,1],
 "namespaceunilink_1_1diagnostics_1_1error__reporting.html#a5b7a4963a80bfaa872fd54ff9744c05a":[22,0,1,5,0,0],
 "namespaceunilink_1_1diagnostics_1_1error__reporting.html#a7f2b308de562edc3c4c1d821b9a65f5e":[22,0,1,5,0,2],
 "namespaceunilink_1_1diagnostics_1_1error__reporting.html#a95bf341a9495f4cc97de408b5b02fd3f":[22,0,1,5,0,5],
@@ -243,11 +249,5 @@ var NAVTREEINDEX9 =
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a6a559451ca42b7c1c1830c29eacb98a8":[23,0,0,4,1,12],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a6f03b4bac2ca5c1e8048466f67524347":[23,0,0,4,1,11],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a849a6b4a7c0cbc469678bcd8eb8544f8":[23,0,0,4,1,5],
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#a8fa68489fc95d06793652536800ad066":[23,0,0,4,1,3],
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#ab14db65466ad4c19708ba36813d49236":[23,0,0,4,1,2],
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#ac3644d1d58ce2a174d87f319ec7c6071":[23,0,0,4,1,10],
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#add67e4b87d957bd9eaf36117982d781a":[23,0,0,4,1,8],
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#af4e2266aac1e309b00df03e1e7d629de":[23,0,0,4,1,7],
-"structunilink_1_1diagnostics_1_1ErrorStats.html":[23,0,0,4,2],
-"structunilink_1_1diagnostics_1_1ErrorStats.html#a32393f5f43007b46ea4544f866a29efb":[23,0,0,4,2,4]
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a8fa68489fc95d06793652536800ad066":[23,0,0,4,1,3]
 };

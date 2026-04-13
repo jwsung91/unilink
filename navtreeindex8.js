@@ -1,5 +1,11 @@
 var NAVTREEINDEX8 =
 {
+"md_docs_reference_api_guide.html#autotoc_md794":[15,11,0],
+"md_docs_reference_api_guide.html#autotoc_md795":[15,11,1],
+"md_docs_reference_api_guide.html#autotoc_md796":[15,11,2],
+"md_docs_reference_api_guide.html#autotoc_md797":[15,11,3],
+"md_docs_reference_api_guide.html#autotoc_md798":[15,11,4],
+"md_docs_reference_api_guide.html#autotoc_md800":[15,12],
 "md_docs_reference_api_guide.html#autotoc_md801":[15,12,0],
 "md_docs_reference_api_guide.html#autotoc_md802":[15,12,1],
 "md_docs_reference_api_guide.html#autotoc_md803":[15,12,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX8 =
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34f":[22,0,1,5,19],
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa4695859f52d337ca3d7020b2c8f7882a":[22,0,1,5,19,0],
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719":[22,0,1,5,19,1],
-"namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209":[22,0,1,5,19,2],
-"namespaceunilink_1_1diagnostics.html#ad1cee78c0c129f3819db60931664f453":[22,0,1,5,20],
-"namespaceunilink_1_1diagnostics.html#aee016aa3a0ee29635787a9755eb352f1":[22,0,1,5,23],
-"namespaceunilink_1_1diagnostics_1_1error__reporting.html":[22,0,1,5,0],
-"namespaceunilink_1_1diagnostics_1_1error__reporting.html#a09062defd8d7c3c8b916320c34338040":[22,0,1,5,0,6],
-"namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3afe71d736336fb74d5882a148c87fd2":[22,0,1,5,0,4],
-"namespaceunilink_1_1diagnostics_1_1error__reporting.html#a3c203bfeff57e2f08d7a29383e05d367":[22,0,1,5,0,1]
+"namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209":[22,0,1,5,19,2]
 };

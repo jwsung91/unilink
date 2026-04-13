@@ -1,5 +1,11 @@
 var NAVTREEINDEX5 =
 {
+"error__types_8hpp.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3":[24,0,1,4,3,3,0],
+"error__types_8hpp.html#ab22d3e2cb33951afa9b3ec53950e5cc7a99cd1c61610c76a57cb8d10d6df6b870":[24,0,1,4,3,3,3],
+"error__types_8hpp.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5":[24,0,1,4,3,3,2],
+"error__types_8hpp_source.html":[24,0,1,4,3],
+"exceptions_8cc.html":[24,0,1,4,4],
+"exceptions_8cc_source.html":[24,0,1,4,4],
 "exceptions_8hpp.html":[24,0,1,4,5],
 "exceptions_8hpp.html#a076e76a2fb9d28f8e7fcdd3d28f46b49":[24,0,1,4,5,6],
 "exceptions_8hpp.html#a47be5bfced15f828bb05505c02933b64":[24,0,1,4,5,11],
@@ -18,8 +24,8 @@ var NAVTREEINDEX5 =
 "functions_enum.html":[23,3,4],
 "functions_eval.html":[23,3,5],
 "functions_f.html":[23,3,0,5],
-"functions_func.html":[23,3,1],
 "functions_func.html":[23,3,1,0],
+"functions_func.html":[23,3,1],
 "functions_func_b.html":[23,3,1,1],
 "functions_func_c.html":[23,3,1,2],
 "functions_func_d.html":[23,3,1,3],
@@ -243,11 +249,5 @@ var NAVTREEINDEX5 =
 "md_docs_architecture_memory_safety.html#autotoc_md20":[2,2,1],
 "md_docs_architecture_memory_safety.html#autotoc_md21":[2,2,1,0],
 "md_docs_architecture_memory_safety.html#autotoc_md23":[2,2,1,1],
-"md_docs_architecture_memory_safety.html#autotoc_md25":[2,2,1,2],
-"md_docs_architecture_memory_safety.html#autotoc_md27":[2,2,2],
-"md_docs_architecture_memory_safety.html#autotoc_md29":[2,3],
-"md_docs_architecture_memory_safety.html#autotoc_md30":[2,3,0],
-"md_docs_architecture_memory_safety.html#autotoc_md32":[2,3,1],
-"md_docs_architecture_memory_safety.html#autotoc_md34":[2,3,2],
-"md_docs_architecture_memory_safety.html#autotoc_md36":[2,3,3]
+"md_docs_architecture_memory_safety.html#autotoc_md25":[2,2,1,2]
 };

@@ -102,6 +102,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a376c89c91053358dddfa687c7d2ddcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1f8e4b0e65bff5ab11cf4d6be855c3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#af1f8e4b0e65bff5ab11cf4d6be855c3a">~Impl</a> ()</td></tr>
 <tr class="separator:af1f8e4b0e65bff5ab11cf4d6be855c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab39d81708e27dbf71661724c049bcee1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ab39d81708e27dbf71661724c049bcee1">fulfill_all_locked</a> (bool value)</td></tr>
+<tr class="separator:ab39d81708e27dbf71661724c049bcee1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade318d3f130981eecc92b908dbb471cf"><td class="memItemLeft" align="right" valign="top">std::future&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ade318d3f130981eecc92b908dbb471cf">start</a> ()</td></tr>
 <tr class="separator:ade318d3f130981eecc92b908dbb471cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a377b810bbbbed2cbcaa209efe795c325"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a377b810bbbbed2cbcaa209efe795c325">stop</a> ()</td></tr>
@@ -117,6 +119,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a4120a18501fadc85ef4cf38e138ffab4"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a4120a18501fadc85ef4cf38e138ffab4">mutex_</a></td></tr>
+<tr class="separator:a4120a18501fadc85ef4cf38e138ffab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bbc8e46220cf6453f08786e5cc07331"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0bbc8e46220cf6453f08786e5cc07331">device</a></td></tr>
 <tr class="separator:a0bbc8e46220cf6453f08786e5cc07331"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a318297421d3c0ffe31d28f0bb8241bdb"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a318297421d3c0ffe31d28f0bb8241bdb">baud_rate</a></td></tr>
@@ -131,10 +135,14 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a208dfb7931409bf2aa576350bad58c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41db5150dfe7a9ee36bbb6175915fecd"><td class="memItemLeft" align="right" valign="top">std::thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a41db5150dfe7a9ee36bbb6175915fecd">external_thread</a></td></tr>
 <tr class="separator:a41db5150dfe7a9ee36bbb6175915fecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9b12c016186adab0ffa7315f4be5d93"><td class="memItemLeft" align="right" valign="top">std::promise&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ac9b12c016186adab0ffa7315f4be5d93">start_promise_</a></td></tr>
-<tr class="separator:ac9b12c016186adab0ffa7315f4be5d93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a618e21c609bccf90c6f946dde1622783"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a618e21c609bccf90c6f946dde1622783">start_promise_fulfilled_</a> {false}</td></tr>
-<tr class="separator:a618e21c609bccf90c6f946dde1622783"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dee5398b69ece67526c084eecd945bf"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; boost::asio::executor_work_guard&lt; boost::asio::io_context::executor_type &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a1dee5398b69ece67526c084eecd945bf">work_guard_</a></td></tr>
+<tr class="separator:a1dee5398b69ece67526c084eecd945bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ca56b06673f60e5df7b1d9fa69e6009"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::promise&lt; bool &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a9ca56b06673f60e5df7b1d9fa69e6009">pending_promises_</a></td></tr>
+<tr class="separator:a9ca56b06673f60e5df7b1d9fa69e6009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a753342c72ae42750a3c4ce373eff1"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ad5a753342c72ae42750a3c4ce373eff1">started_</a> {false}</td></tr>
+<tr class="separator:ad5a753342c72ae42750a3c4ce373eff1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a485de85ec017120e77ff01343aabba1e"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a485de85ec017120e77ff01343aabba1e">alive_marker_</a> {std::make_shared&lt;bool&gt;(true)}</td></tr>
+<tr class="separator:a485de85ec017120e77ff01343aabba1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ed4d722bd11a24e6e7b8ff661c11ba6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0ed4d722bd11a24e6e7b8ff661c11ba6">data_handler</a> {nullptr}</td></tr>
 <tr class="separator:a0ed4d722bd11a24e6e7b8ff661c11ba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0d7c161fba59697abfc902e66b47628"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ac0d7c161fba59697abfc902e66b47628">connect_handler</a> {nullptr}</td></tr>
@@ -149,8 +157,6 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a3b93b9faff8a0386d79d935b0320615e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36495c240067ed38f30d60e06cd53870"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a36495c240067ed38f30d60e06cd53870">auto_manage</a> = false</td></tr>
 <tr class="separator:a36495c240067ed38f30d60e06cd53870"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaebeba1b141204555d9decd4a00cffac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#aaebeba1b141204555d9decd4a00cffac">started</a> = false</td></tr>
-<tr class="separator:aaebeba1b141204555d9decd4a00cffac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a948bd16c6606091de5709bf5549b9adc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a948bd16c6606091de5709bf5549b9adc">data_bits</a> = 8</td></tr>
 <tr class="separator:a948bd16c6606091de5709bf5549b9adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b1f72a07f672d8a75d6291a68fa1e4e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a5b1f72a07f672d8a75d6291a68fa1e4e">stop_bits</a> = 1</td></tr>
@@ -164,7 +170,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00041">41</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00043">43</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad680e5bab2ba751bf14afe7f91145f57"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad680e5bab2ba751bf14afe7f91145f57">&#9670;&nbsp;</a></span>Impl() <span class="overload">[1/3]</span></h2>
@@ -200,7 +206,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00072">72</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00075">75</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -244,7 +250,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00073">73</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00076">76</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -272,7 +278,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00075">75</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00078">78</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -299,7 +305,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00077">77</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00080">80</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -327,7 +333,35 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00203">203</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00278">278</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="ab39d81708e27dbf71661724c049bcee1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab39d81708e27dbf71661724c049bcee1">&#9670;&nbsp;</a></span>fulfill_all_locked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::wrapper::Serial::Impl::fulfill_all_locked </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00087">87</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -355,7 +389,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00191">191</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00260">260</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -383,7 +417,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00179">179</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00242">242</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -410,7 +444,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00138">138</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00172">172</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -437,7 +471,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00084">84</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00097">97</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -464,11 +498,27 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00111">111</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00137">137</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a485de85ec017120e77ff01343aabba1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a485de85ec017120e77ff01343aabba1e">&#9670;&nbsp;</a></span>alive_marker_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;bool&gt; unilink::wrapper::Serial::Impl::alive_marker_ {std::make_shared&lt;bool&gt;(true)}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00056">56</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
 <a id="a36495c240067ed38f30d60e06cd53870"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a36495c240067ed38f30d60e06cd53870">&#9670;&nbsp;</a></span>auto_manage</h2>
 
@@ -481,7 +531,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00064">64</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00068">68</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -497,7 +547,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00043">43</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00046">46</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -513,7 +563,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00044">44</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00047">47</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -529,7 +579,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00056">56</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00060">60</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -545,7 +595,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00066">66</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00069">69</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -561,7 +611,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00055">55</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00059">59</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -577,7 +627,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00042">42</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00045">45</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -593,7 +643,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00057">57</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00061">61</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -609,7 +659,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00058">58</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00062">62</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -625,7 +675,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00045">45</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00048">48</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -641,7 +691,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00048">48</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00051">51</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -657,7 +707,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00069">69</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00072">72</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -673,7 +723,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00061">61</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00065">65</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -689,7 +739,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00047">47</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00050">50</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -705,7 +755,31 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00059">59</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00063">63</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="a4120a18501fadc85ef4cf38e138ffab4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4120a18501fadc85ef4cf38e138ffab4">&#9670;&nbsp;</a></span>mutex_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex unilink::wrapper::Serial::Impl::mutex_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00044">44</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -721,7 +795,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00068">68</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00071">71</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="a9ca56b06673f60e5df7b1d9fa69e6009"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ca56b06673f60e5df7b1d9fa69e6009">&#9670;&nbsp;</a></span>pending_promises_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::promise&lt;bool&gt; &gt; unilink::wrapper::Serial::Impl::pending_promises_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00054">54</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -737,55 +827,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00070">70</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00073">73</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
-<a id="ac9b12c016186adab0ffa7315f4be5d93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9b12c016186adab0ffa7315f4be5d93">&#9670;&nbsp;</a></span>start_promise_</h2>
+<a id="ad5a753342c72ae42750a3c4ce373eff1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a753342c72ae42750a3c4ce373eff1">&#9670;&nbsp;</a></span>started_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::promise&lt;bool&gt; unilink::wrapper::Serial::Impl::start_promise_</td>
+          <td class="memname">std::atomic&lt;bool&gt; unilink::wrapper::Serial::Impl::started_ {false}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00051">51</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
-
-</div>
-</div>
-<a id="a618e21c609bccf90c6f946dde1622783"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a618e21c609bccf90c6f946dde1622783">&#9670;&nbsp;</a></span>start_promise_fulfilled_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool unilink::wrapper::Serial::Impl::start_promise_fulfilled_ {false}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00052">52</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
-
-</div>
-</div>
-<a id="aaebeba1b141204555d9decd4a00cffac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaebeba1b141204555d9decd4a00cffac">&#9670;&nbsp;</a></span>started</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool unilink::wrapper::Serial::Impl::started = false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00065">65</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00055">55</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -801,7 +859,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00067">67</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00070">70</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -817,7 +875,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00046">46</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00049">49</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
+
+</div>
+</div>
+<a id="a1dee5398b69ece67526c084eecd945bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dee5398b69ece67526c084eecd945bf">&#9670;&nbsp;</a></span>work_guard_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;boost::asio::executor_work_guard&lt;boost::asio::io_context::executor_type&gt; &gt; unilink::wrapper::Serial::Impl::work_guard_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2serial_2serial_8cc_source.html#l00052">52</a> of file <a class="el" href="wrapper_2serial_2serial_8cc_source.html">serial.cc</a>.</p>
 
 </div>
 </div>
@@ -830,7 +904,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1Serial.html">Serial</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1Serial_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Mon Apr 13 2026 22:18:12 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Mon Apr 13 2026 22:30:03 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

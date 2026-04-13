@@ -1,5 +1,11 @@
 var NAVTREEINDEX10 =
 {
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#ab14db65466ad4c19708ba36813d49236":[23,0,0,4,1,2],
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#ac3644d1d58ce2a174d87f319ec7c6071":[23,0,0,4,1,10],
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#add67e4b87d957bd9eaf36117982d781a":[23,0,0,4,1,8],
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#af4e2266aac1e309b00df03e1e7d629de":[23,0,0,4,1,7],
+"structunilink_1_1diagnostics_1_1ErrorStats.html":[23,0,0,4,2],
+"structunilink_1_1diagnostics_1_1ErrorStats.html#a32393f5f43007b46ea4544f866a29efb":[23,0,0,4,2,4],
 "structunilink_1_1diagnostics_1_1ErrorStats.html#a46ef6cc3bc892f4bfc3d6d671ab4a3c4":[23,0,0,4,2,5],
 "structunilink_1_1diagnostics_1_1ErrorStats.html#a8af236497462100771cd8c6d98877947":[23,0,0,4,2,3],
 "structunilink_1_1diagnostics_1_1ErrorStats.html#a8c0458cf882af74d55aac0cc8e965f70":[23,0,0,4,2,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX10 =
 "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a2cf2f99f97802005ec33021757b85a87":[23,0,0,9,8,0,31],
 "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a2fdbf202799862cbc7847402022fbea0":[23,0,0,9,8,0,36],
 "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a34794cf543b00b92a5496ae220497b16":[23,0,0,9,8,0,26],
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3662a44297cd68fef9d33e21a849a7d0":[23,0,0,9,8,0,12],
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3c8dc4a82dfb3b1fa9b11915fde14ed9":[23,0,0,9,8,0,10],
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a4369921a50237913e709b163741b026a":[23,0,0,9,8,0,25],
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a4d26c94cdd3c92d83f81d981f7b3ae8f":[23,0,0,9,8,0,18],
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a5fd9e984449413e16f0e89dabc0f9897":[23,0,0,9,8,0,5],
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a64bd41ab90af98dfeee7e91ab43eaae7":[23,0,0,9,8,0,22],
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a859d2f37efb6f61becbe3c6b429a788d":[23,0,0,9,8,0,39]
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3662a44297cd68fef9d33e21a849a7d0":[23,0,0,9,8,0,12]
 };

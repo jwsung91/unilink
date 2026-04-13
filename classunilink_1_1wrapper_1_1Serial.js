@@ -23,7 +23,7 @@ var classunilink_1_1wrapper_1_1Serial =
     [ "set_data_bits", "classunilink_1_1wrapper_1_1Serial.html#a4a81c653e5af8fb52a62df82ff5a309f", null ],
     [ "set_flow_control", "classunilink_1_1wrapper_1_1Serial.html#a75d92342feb50976937067a8472cbdb3", null ],
     [ "set_framer", "classunilink_1_1wrapper_1_1Serial.html#ad085791f01992e74b81daa4b7331e1a6", null ],
-    [ "set_manage_external_context", "classunilink_1_1wrapper_1_1Serial.html#a976dc35b1bf360fcb28f0d3056d30bad", null ],
+    [ "set_manage_external_context", "classunilink_1_1wrapper_1_1Serial.html#a00f2b5d4fd184f1b3074c46721024cdc", null ],
     [ "set_parity", "classunilink_1_1wrapper_1_1Serial.html#a235e1dc10b317e618f3e1fa3fcf1efaf", null ],
     [ "set_retry_interval", "classunilink_1_1wrapper_1_1Serial.html#a118a73d96c0a7426ffee945aba05a74b", null ],
     [ "set_stop_bits", "classunilink_1_1wrapper_1_1Serial.html#a0aa6bbf8e1e28cfa0132e85f3363f134", null ],
