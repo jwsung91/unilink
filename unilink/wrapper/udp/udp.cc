@@ -24,8 +24,10 @@
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <iostream>
+#include <mutex>
 #include <stdexcept>
 #include <thread>
+#include <vector>
 
 #include "unilink/base/common.hpp"
 #include "unilink/factory/channel_factory.hpp"
@@ -35,12 +37,14 @@ namespace unilink {
 namespace wrapper {
 
 struct Udp::Impl {
+  mutable std::mutex mutex_;
   config::UdpConfig cfg;
   std::shared_ptr<interface::Channel> channel;
   std::shared_ptr<boost::asio::io_context> external_ioc;
   bool use_external_context{false};
   bool manage_external_context{false};
   std::thread external_thread;
+  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard;
 
   // Event handlers (Context based)
   MessageHandler data_handler{nullptr};
@@ -52,9 +56,9 @@ struct Udp::Impl {
   std::unique_ptr<framer::IFramer> framer{nullptr};
 
   bool auto_manage{false};
-  bool started{false};
-
-  std::shared_ptr<std::promise<bool>> start_promise;
+  std::vector<std::promise<bool>> pending_promises;
+  std::atomic<bool> started{false};
+  std::shared_ptr<bool> alive_marker{std::make_shared<bool>(true)};
 
   explicit Impl(const config::UdpConfig& config) : cfg(config) {}
   Impl(const config::UdpConfig& config, std::shared_ptr<boost::asio::io_context> ioc)
@@ -68,11 +72,30 @@ struct Udp::Impl {
     }
   }
 
+  void fulfill_all_locked(bool value) {
+    for (auto& promise : pending_promises) {
+      try {
+        promise.set_value(value);
+      } catch (...) {
+      }
+    }
+    pending_promises.clear();
+  }
+
   std::future<bool> start() {
-    if (started) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    if (channel && channel->is_connected()) {
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
+    }
+
+    std::promise<bool> p;
+    auto future = p.get_future();
+    pending_promises.emplace_back(std::move(p));
+
+    if (started.exchange(true)) {
+      return future;
     }
 
     if (!channel) {
@@ -80,91 +103,126 @@ struct Udp::Impl {
       setup_internal_handlers();
     }
 
-    start_promise = std::make_shared<std::promise<bool>>();
-    auto fut = start_promise->get_future();
-
+    lock.unlock();
     channel->start();
     if (use_external_context && manage_external_context && !external_thread.joinable()) {
       if (external_ioc->stopped()) external_ioc->restart();
-      external_thread = std::thread([ioc = external_ioc]() {
-        boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
-        ioc->run();
+      work_guard = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+          boost::asio::make_work_guard(*external_ioc));
+      external_thread = std::thread([this, ioc = external_ioc]() {
+        try {
+          ioc->run();
+        } catch (...) {
+        }
       });
     }
-
-    started = true;
-    return fut;
+    return future;
   }
 
   void stop() {
-    if (!started) return;
+    std::unique_lock<std::mutex> lock(mutex_);
+    if (!started.exchange(false)) {
+      fulfill_all_locked(false);
+      return;
+    }
 
     if (channel) {
       channel->on_bytes(nullptr);
       channel->on_state(nullptr);
+      lock.unlock();
       channel->stop();
+      lock.lock();
+    }
+
+    if (work_guard) {
+      work_guard.reset();
     }
 
     if (use_external_context && manage_external_context && external_thread.joinable()) {
-      if (external_ioc) external_ioc->stop();
-      external_thread.join();
+      if (external_ioc) {
+        external_ioc->stop();
+      }
+      if (std::this_thread::get_id() != external_thread.get_id()) {
+        lock.unlock();
+        external_thread.join();
+        lock.lock();
+      } else {
+        external_thread.detach();
+      }
     }
 
-    started = false;
+    fulfill_all_locked(false);
 
-    if (framer) framer->reset();
-
-    if (start_promise) {
-      try {
-        start_promise->set_value(false);
-      } catch (...) {
-      }
-      start_promise.reset();
+    if (framer) {
+      framer->reset();
     }
   }
 
   void setup_internal_handlers() {
     if (!channel) return;
 
-    channel->on_bytes([this](memory::ConstByteSpan data) {
+    std::weak_ptr<bool> weak_alive = alive_marker;
+
+    channel->on_bytes([this, weak_alive](memory::ConstByteSpan data) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
       // 1. Raw data handler
-      if (data_handler) {
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = data_handler;
+      }
+      if (handler) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
-        data_handler(MessageContext(0, str_data));
+        handler(MessageContext(0, str_data));
       }
 
       // 2. Framer integration
+      std::lock_guard<std::mutex> lock(mutex_);
       if (framer) {
         framer->push_bytes(data);
       }
     });
 
-    channel->on_state([this](base::LinkState state) {
+    channel->on_state([this, weak_alive](base::LinkState state) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
       switch (state) {
         case base::LinkState::Connected:
-        case base::LinkState::Listening:
-          if (start_promise) {
-            try {
-              start_promise->set_value(true);
-            } catch (...) {
-            }
-            start_promise.reset();
+        case base::LinkState::Listening: {
+          ConnectionHandler handler;
+          {
+            std::lock_guard<std::mutex> lock(mutex_);
+            fulfill_all_locked(true);
+            handler = connect_handler;
           }
-          if (connect_handler) connect_handler(ConnectionContext(0));
+          if (handler) handler(ConnectionContext(0));
           break;
+        }
         case base::LinkState::Closed:
-          if (disconnect_handler) disconnect_handler(ConnectionContext(0));
-          break;
         case base::LinkState::Error:
-          if (start_promise) {
-            try {
-              start_promise->set_value(false);
-            } catch (...) {
+        case base::LinkState::Idle: {
+          ConnectionHandler disconnect_handler_snapshot;
+          ErrorHandler error_handler_snapshot;
+          {
+            std::lock_guard<std::mutex> lock(mutex_);
+            fulfill_all_locked(false);
+            if (state == base::LinkState::Error) {
+              error_handler_snapshot = error_handler;
+            } else {
+              disconnect_handler_snapshot = disconnect_handler;
             }
-            start_promise.reset();
           }
-          if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+          if (disconnect_handler_snapshot) {
+            disconnect_handler_snapshot(ConnectionContext(0));
+          }
+          if (error_handler_snapshot) {
+            error_handler_snapshot(ErrorContext(ErrorCode::IoError, "Connection error"));
+          }
           break;
+        }
         default:
           break;
       }
@@ -172,24 +230,36 @@ struct Udp::Impl {
   }
 
   void set_framer(std::unique_ptr<framer::IFramer> f) {
+    std::lock_guard<std::mutex> lock(mutex_);
     framer = std::move(f);
     if (framer && message_handler) {
       framer->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler) {
+        MessageHandler handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          handler = message_handler;
+        }
+        if (handler) {
           std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler(MessageContext(0, str_msg));
+          handler(MessageContext(0, str_msg));
         }
       });
     }
   }
 
   void on_message(MessageHandler handler) {
+    std::lock_guard<std::mutex> lock(mutex_);
     message_handler = std::move(handler);
     if (framer) {
       framer->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler) {
+        MessageHandler callback;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          callback = message_handler;
+        }
+        if (callback) {
           std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler(MessageContext(0, str_msg));
+          callback(MessageContext(0, str_msg));
         }
       });
     }
@@ -240,7 +310,7 @@ void Udp::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
 
 ChannelInterface& Udp::auto_manage(bool m) {
   impl_->auto_manage = m;
-  if (impl_->auto_manage && !impl_->started) start();
+  if (impl_->auto_manage && !impl_->started.load()) start();
   return *this;
 }
 

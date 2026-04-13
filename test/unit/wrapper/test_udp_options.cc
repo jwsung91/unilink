@@ -18,11 +18,13 @@
 #include <gtest/gtest.h>
 
 #include <boost/asio.hpp>
+#include <chrono>
 #include <memory>
 
 #include "test_utils.hpp"
 #include "unilink/builder/udp_builder.hpp"
 #include "unilink/config/udp_config.hpp"
+#include "unilink/transport/udp/udp.hpp"
 #include "unilink/wrapper/udp/udp.hpp"
 
 using namespace unilink::wrapper;
@@ -65,6 +67,63 @@ TEST_F(UdpOptionsTest, ConstructorWithExternalContext) {
 
   // Should not throw
   udp.auto_manage(false);
+}
+
+TEST_F(UdpOptionsTest, AutoManageStartsInjectedTransport) {
+  using namespace std::chrono_literals;
+
+  UdpConfig sender_cfg;
+  sender_cfg.local_port = 0;
+  sender_cfg.remote_address = "127.0.0.1";
+  const uint16_t receiver_port = TestUtils::getAvailableTestPort();
+  sender_cfg.remote_port = receiver_port;
+
+  UdpConfig receiver_cfg;
+  receiver_cfg.local_address = "127.0.0.1";
+  receiver_cfg.local_port = receiver_port;
+
+  boost::asio::io_context sender_ioc;
+  boost::asio::io_context receiver_ioc;
+
+  auto sender_transport = unilink::transport::UdpChannel::create(sender_cfg, sender_ioc);
+  auto receiver_transport = unilink::transport::UdpChannel::create(receiver_cfg, receiver_ioc);
+
+  Udp receiver(std::static_pointer_cast<unilink::interface::Channel>(receiver_transport));
+  auto receiver_started = receiver.start();
+  receiver_ioc.run_for(50ms);
+  ASSERT_EQ(receiver_started.wait_for(100ms), std::future_status::ready);
+  EXPECT_TRUE(receiver_started.get());
+
+  Udp sender(std::static_pointer_cast<unilink::interface::Channel>(sender_transport));
+  sender.auto_manage(true);
+  sender_ioc.run_for(50ms);
+
+  EXPECT_TRUE(sender.is_connected());
+
+  sender.stop();
+  receiver.stop();
+}
+
+TEST_F(UdpOptionsTest, StartFutureReflectsBindFailure) {
+  using namespace std::chrono_literals;
+
+  boost::asio::io_context guard_ioc;
+  boost::asio::ip::udp::socket occupied_socket(guard_ioc);
+  occupied_socket.open(boost::asio::ip::udp::v4());
+  occupied_socket.bind({boost::asio::ip::make_address("127.0.0.1"), 0});
+
+  UdpConfig cfg;
+  cfg.local_address = "127.0.0.1";
+  cfg.local_port = occupied_socket.local_endpoint().port();
+
+  Udp udp(cfg);
+  auto started = udp.start();
+
+  ASSERT_EQ(started.wait_for(2s), std::future_status::ready);
+  EXPECT_FALSE(started.get());
+  EXPECT_FALSE(udp.is_connected());
+
+  udp.stop();
 }
 
 TEST_F(UdpOptionsTest, BuilderCoverageForUdpSocketOptions) {
