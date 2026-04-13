@@ -98,6 +98,9 @@ struct Serial::Impl {
 
     channel->start();
     if (use_external_context && manage_external_context && !external_thread.joinable()) {
+      if (external_ioc && external_ioc->stopped()) {
+        external_ioc->restart();
+      }
       external_thread = std::thread([ioc = external_ioc]() {
         boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
         ioc->run();
@@ -290,7 +293,10 @@ void Serial::set_retry_interval(std::chrono::milliseconds i) {
 
 config::SerialConfig Serial::build_config() const { return get_impl()->build_config(); }
 
-void Serial::set_manage_external_context(bool m) { impl_->manage_external_context = m; }
+Serial& Serial::set_manage_external_context(bool m) {
+  impl_->manage_external_context = m;
+  return *this;
+}
 
 }  // namespace wrapper
 }  // namespace unilink

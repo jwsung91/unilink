@@ -35,19 +35,16 @@ class UdpStateTest : public ::testing::Test {};
 TEST_F(UdpStateTest, BindConflict) {
   using namespace std::chrono_literals;
 
-  uint16_t port = TestUtils::getAvailableTestPort();
+  boost::asio::io_context guard_ioc;
+  boost::asio::ip::udp::socket occupied_socket(guard_ioc);
+  occupied_socket.open(boost::asio::ip::udp::v4());
+  occupied_socket.bind({boost::asio::ip::make_address("127.0.0.1"), 0});
 
-  UdpConfig cfg1;
-  cfg1.local_address = "127.0.0.1";
-  cfg1.local_port = port;
-  Udp udp1(cfg1);
-  auto udp1_started = udp1.start();
-  ASSERT_EQ(udp1_started.wait_for(2s), std::future_status::ready);
-  EXPECT_TRUE(udp1_started.get());
+  const uint16_t port = occupied_socket.local_endpoint().port();
 
   UdpConfig cfg2;
   cfg2.local_address = "127.0.0.1";
-  cfg2.local_port = port;  // Same port
+  cfg2.local_port = port;  // Same port already occupied by a live UDP socket
   Udp udp2(cfg2);
 
   auto udp2_started = udp2.start();
@@ -57,7 +54,6 @@ TEST_F(UdpStateTest, BindConflict) {
   // Verify it did not successfully start/connect
   EXPECT_FALSE(udp2.is_connected());
 
-  udp1.stop();
   udp2.stop();
 }
 

@@ -118,6 +118,9 @@ struct UdsClient::Impl {
       if (use_external_context_) {
         channel_ = factory::ChannelFactory::create(cfg, external_ioc_);
         if (manage_external_context_ && !external_thread_.joinable()) {
+          if (external_ioc_ && external_ioc_->stopped()) {
+            external_ioc_->restart();
+          }
           work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
               boost::asio::make_work_guard(*external_ioc_));
           external_thread_ = std::thread([this]() {
@@ -196,7 +199,17 @@ struct UdsClient::Impl {
         if (handler) {
           handler(ConnectionContext(0, "connected"));
         }
-      } else if (state == base::LinkState::Error || state == base::LinkState::Idle) {
+      } else if (state == base::LinkState::Error) {
+        ErrorHandler handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          fulfill_all_locked(false);
+          handler = error_handler_;
+        }
+        if (handler) {
+          handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+        }
+      } else if (state == base::LinkState::Closed || state == base::LinkState::Idle) {
         ConnectionHandler handler;
         {
           std::lock_guard<std::mutex> lock(mutex_);
@@ -319,6 +332,9 @@ void UdsClient::on_message(MessageHandler h) { impl_->on_message(std::move(h)); 
 
 ChannelInterface& UdsClient::auto_manage(bool manage) {
   impl_->auto_manage_ = manage;
+  if (impl_->auto_manage_ && !impl_->started_.load()) {
+    start();
+  }
   return *this;
 }
 

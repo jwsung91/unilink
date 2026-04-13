@@ -42,8 +42,9 @@ struct UdsServer::Impl {
   std::thread external_thread_;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
-  std::promise<bool> start_promise_;
+  std::vector<std::promise<bool>> pending_promises_;
   std::atomic<bool> started_{false};
+  std::atomic<bool> is_listening_{false};
   std::shared_ptr<bool> alive_marker_{std::make_shared<bool>(true)};
 
   ConnectionHandler client_connect_handler_{nullptr};
@@ -79,16 +80,31 @@ struct UdsServer::Impl {
     }
   }
 
+  void fulfill_all_locked(bool value) {
+    for (auto& p : pending_promises_) {
+      try {
+        p.set_value(value);
+      } catch (...) {
+      }
+    }
+    pending_promises_.clear();
+  }
+
   std::future<bool> start() {
-    std::lock_guard<std::mutex> lock(mutex_);
-    if (started_) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    if (is_listening_.load()) {
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
     }
 
-    start_promise_ = std::promise<bool>();
-    auto f = start_promise_.get_future();
+    std::promise<bool> p;
+    auto f = p.get_future();
+    pending_promises_.emplace_back(std::move(p));
+
+    if (started_.exchange(true)) {
+      return f;
+    }
 
     if (!server_) {
       config::UdsServerConfig cfg;
@@ -98,6 +114,9 @@ struct UdsServer::Impl {
       if (use_external_context_) {
         server_ = std::dynamic_pointer_cast<transport::UdsServer>(factory::ChannelFactory::create(cfg, external_ioc_));
         if (manage_external_context_ && !external_thread_.joinable()) {
+          if (external_ioc_ && external_ioc_->stopped()) {
+            external_ioc_->restart();
+          }
           work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
               boost::asio::make_work_guard(*external_ioc_));
           external_thread_ = std::thread([this]() {
@@ -113,15 +132,15 @@ struct UdsServer::Impl {
       setup_internal_handlers();
     }
 
+    lock.unlock();
     server_->start();
-    started_ = true;
-    start_promise_.set_value(true);
     return f;
   }
 
   void stop() {
     std::unique_lock<std::mutex> lock(mutex_);
     if (!started_.exchange(false)) {
+      fulfill_all_locked(false);
       return;
     }
 
@@ -151,6 +170,8 @@ struct UdsServer::Impl {
       }
     }
 
+    is_listening_ = false;
+    fulfill_all_locked(false);
     server_.reset();
   }
 
@@ -158,6 +179,31 @@ struct UdsServer::Impl {
     if (!server_) return;
 
     std::weak_ptr<bool> weak_alive = alive_marker_;
+
+    server_->on_state([weak_alive, this](base::LinkState state) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
+      ErrorHandler error_handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
+          is_listening_ = true;
+          fulfill_all_locked(true);
+        } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
+                   state == base::LinkState::Idle) {
+          is_listening_ = false;
+          fulfill_all_locked(false);
+          if (state == base::LinkState::Error) {
+            error_handler = error_handler_;
+          }
+        }
+      }
+
+      if (error_handler) {
+        error_handler(ErrorContext(ErrorCode::IoError, "Server state error"));
+      }
+    });
 
     server_->on_multi_connect([weak_alive, this](size_t client_id, const std::string& info) {
       auto alive = weak_alive.lock();
@@ -250,9 +296,7 @@ std::future<bool> UdsServer::start() { return impl_->start(); }
 
 void UdsServer::stop() { impl_->stop(); }
 
-bool UdsServer::is_listening() const {
-  return impl_->started_.load() && impl_->server_ && impl_->server_->is_connected();
-}
+bool UdsServer::is_listening() const { return impl_->is_listening_.load(); }
 
 bool UdsServer::broadcast(std::string_view data) {
   if (impl_->server_) {
@@ -312,6 +356,9 @@ std::vector<size_t> UdsServer::get_connected_clients() const {
 
 UdsServer& UdsServer::auto_manage(bool manage) {
   impl_->auto_manage_ = manage;
+  if (impl_->auto_manage_ && !impl_->started_.load()) {
+    start();
+  }
   return *this;
 }
 
