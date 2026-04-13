@@ -26,6 +26,10 @@
 #include "unilink/wrapper/iserver.hpp"
 
 namespace unilink {
+namespace interface {
+class Channel;
+}
+
 namespace wrapper {
 
 /**
@@ -36,7 +40,14 @@ class UNILINK_API UdpServer : public ServerInterface {
   explicit UdpServer(uint16_t port);
   explicit UdpServer(const config::UdpConfig& cfg);
   UdpServer(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc);
+  explicit UdpServer(std::shared_ptr<interface::Channel> channel);
   ~UdpServer() override;
+
+  UdpServer(UdpServer&&) noexcept;
+  UdpServer& operator=(UdpServer&&) noexcept;
+
+  UdpServer(const UdpServer&) = delete;
+  UdpServer& operator=(const UdpServer&) = delete;
 
   // Lifecycle
   std::future<bool> start() override;
@@ -62,6 +73,7 @@ class UNILINK_API UdpServer : public ServerInterface {
   std::vector<size_t> get_connected_clients() const override;
 
   // UDP specific
+  UdpServer& auto_manage(bool manage = true);
   UdpServer& set_session_timeout(std::chrono::milliseconds timeout);
   UdpServer& set_manage_external_context(bool manage);
 
