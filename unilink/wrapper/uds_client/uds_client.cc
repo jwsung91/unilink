@@ -197,7 +197,7 @@ struct UdsClient::Impl {
           handler = connect_handler_;
         }
         if (handler) {
-          handler(ConnectionContext(0, "connected"));
+          handler(ConnectionContext(0));
         }
       } else if (state == base::LinkState::Error) {
         ErrorHandler handler;
@@ -217,7 +217,7 @@ struct UdsClient::Impl {
           handler = disconnect_handler_;
         }
         if (handler) {
-          handler(ConnectionContext(0, "disconnected"));
+          handler(ConnectionContext(0));
         }
       }
     });

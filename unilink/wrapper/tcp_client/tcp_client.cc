@@ -229,7 +229,7 @@ struct TcpClient::Impl {
             }
           }
           if (!handled) {
-            error_handler_(ErrorContext(ErrorCode::IoError, "Connection state error"));
+            error_handler_(ErrorContext(ErrorCode::IoError, "Connection error"));
           }
         }
       }
@@ -279,18 +279,22 @@ void TcpClient::send_line(std::string_view line) { impl_->send(std::string(line)
 bool TcpClient::is_connected() const { return get_impl()->is_connected(); }
 
 ChannelInterface& TcpClient::on_data(MessageHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->data_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_connect(ConnectionHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->connect_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_disconnect(ConnectionHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->disconnect_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_error(ErrorHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(h);
   return *this;
 }
