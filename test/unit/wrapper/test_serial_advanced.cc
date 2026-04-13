@@ -156,6 +156,8 @@ TEST_F(SerialWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   EXPECT_TRUE(serial.is_connected());
 
   serial.stop();
+  ioc.restart();
+  ioc.run_for(50ms);
 }
 
 TEST_F(SerialWrapperAdvancedTest, StartFutureReflectsTransportFailure) {
@@ -178,4 +180,6 @@ TEST_F(SerialWrapperAdvancedTest, StartFutureReflectsTransportFailure) {
   EXPECT_FALSE(serial.is_connected());
 
   serial.stop();
+  ioc.restart();
+  ioc.run_for(50ms);
 }
