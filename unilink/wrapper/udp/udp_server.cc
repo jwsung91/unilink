@@ -23,6 +23,7 @@
 #include <map>
 #include <mutex>
 #include <thread>
+#include <vector>
 
 #include "unilink/base/common.hpp"
 #include "unilink/factory/channel_factory.hpp"
@@ -41,8 +42,9 @@ struct UdpServer::Impl {
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard;
 
   mutable std::mutex mutex;
-  bool started{false};
-  std::shared_ptr<std::promise<bool>> start_promise;
+  std::vector<std::promise<bool>> pending_promises;
+  std::atomic<bool> started{false};
+  std::atomic<bool> is_listening{false};
 
   // Virtual Session Management
   size_t next_client_id{1};
@@ -52,6 +54,7 @@ struct UdpServer::Impl {
   std::map<size_t, std::chrono::steady_clock::time_point> session_activity;
   std::chrono::milliseconds session_timeout{30000};  // Default 30s
   std::unique_ptr<boost::asio::steady_timer> reaper_timer;
+  bool auto_manage{false};
 
   ConnectionHandler on_connect{nullptr};
   ConnectionHandler on_disconnect{nullptr};
@@ -65,6 +68,10 @@ struct UdpServer::Impl {
   explicit Impl(const config::UdpConfig& config) : cfg(config) {}
   Impl(const config::UdpConfig& config, std::shared_ptr<boost::asio::io_context> ioc)
       : cfg(config), external_ioc(std::move(ioc)), use_external_context(external_ioc != nullptr) {}
+  explicit Impl(std::shared_ptr<interface::Channel> ch)
+      : channel(std::dynamic_pointer_cast<transport::UdpChannel>(ch)) {
+    setup_internal_handlers();
+  }
 
   ~Impl() {
     *is_alive = false;
@@ -74,8 +81,18 @@ struct UdpServer::Impl {
     }
   }
 
+  void fulfill_all_locked(bool value) {
+    for (auto& promise : pending_promises) {
+      try {
+        promise.set_value(value);
+      } catch (...) {
+      }
+    }
+    pending_promises.clear();
+  }
+
   void schedule_reaper() {
-    if (!started || !reaper_timer) return;
+    if (!started.load() || !reaper_timer) return;
 
     // Run reaper at interval proportional to timeout (min 100ms, max 5s)
     auto interval =
@@ -132,6 +149,8 @@ struct UdpServer::Impl {
     channel->on_bytes_from([this](memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& ep) {
       size_t client_id = 0;
       bool is_new = false;
+      ConnectionHandler connect_handler_copy{nullptr};
+      MessageHandler data_handler_copy{nullptr};
 
       {
         std::lock_guard<std::mutex> lock(mutex);
@@ -147,9 +166,14 @@ struct UdpServer::Impl {
             auto framer = framer_factory();
             if (framer) {
               framer->set_on_message([this, client_id](memory::ConstByteSpan msg) {
-                if (on_message) {
+                MessageHandler on_message_handler;
+                {
+                  std::lock_guard<std::mutex> lock(mutex);
+                  on_message_handler = on_message;
+                }
+                if (on_message_handler) {
                   std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-                  on_message(MessageContext(client_id, str_msg));
+                  on_message_handler(MessageContext(client_id, str_msg));
                 }
               });
               client_framers[client_id] = std::shared_ptr<framer::IFramer>(std::move(framer));
@@ -159,15 +183,17 @@ struct UdpServer::Impl {
           client_id = it->second;
         }
         session_activity[client_id] = std::chrono::steady_clock::now();
+        connect_handler_copy = on_connect;
+        data_handler_copy = on_data;
       }
 
-      if (is_new && on_connect) {
-        on_connect(ConnectionContext(client_id, ep.address().to_string() + ":" + std::to_string(ep.port())));
+      if (is_new && connect_handler_copy) {
+        connect_handler_copy(ConnectionContext(client_id, ep.address().to_string() + ":" + std::to_string(ep.port())));
       }
 
-      if (on_data) {
+      if (data_handler_copy) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
-        on_data(MessageContext(client_id, str_data));
+        data_handler_copy(MessageContext(client_id, str_data));
       }
 
       // Push to framer
@@ -188,75 +214,64 @@ struct UdpServer::Impl {
       ErrorHandler error_handler_copy{nullptr};
       if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
         std::lock_guard<std::mutex> lock(mutex);
-        if (start_promise) {
-          try {
-            start_promise->set_value(true);
-          } catch (...) {
-          }
-          start_promise.reset();
-        }
-      } else if (state == base::LinkState::Error || state == base::LinkState::Closed) {
+        is_listening = true;
+        fulfill_all_locked(true);
+      } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
+                 state == base::LinkState::Idle) {
         std::lock_guard<std::mutex> lock(mutex);
-        if (start_promise) {
-          try {
-            start_promise->set_value(false);
-          } catch (...) {
-          }
-          start_promise.reset();
-        }
+        is_listening = false;
+        fulfill_all_locked(false);
         if (state == base::LinkState::Error) {
           error_handler_copy = on_error;
         }
       }
 
       if (error_handler_copy) {
-        error_handler_copy(ErrorContext(ErrorCode::IoError, "UDP Transport Error"));
+        error_handler_copy(ErrorContext(ErrorCode::IoError, "Server error"));
       }
     });
   }
 
   std::future<bool> start() {
-    std::future<bool> fut;
-    {
-      std::lock_guard<std::mutex> lock(mutex);
-      if (started) {
-        std::promise<bool> p;
-        p.set_value(true);
-        return p.get_future();
-      }
-
-      start_promise = std::make_shared<std::promise<bool>>();
-      fut = start_promise->get_future();
-
-      if (!channel) {
-        channel = std::dynamic_pointer_cast<transport::UdpChannel>(factory::ChannelFactory::create(cfg, external_ioc));
-        setup_internal_handlers();
-      }
+    std::unique_lock<std::mutex> lock(mutex);
+    if (is_listening.load()) {
+      std::promise<bool> p;
+      p.set_value(true);
+      return p.get_future();
     }
 
+    std::promise<bool> p;
+    auto fut = p.get_future();
+    pending_promises.emplace_back(std::move(p));
+
+    if (started.exchange(true)) {
+      return fut;
+    }
+
+    if (!channel) {
+      channel = std::dynamic_pointer_cast<transport::UdpChannel>(factory::ChannelFactory::create(cfg, external_ioc));
+      setup_internal_handlers();
+    }
+
+    lock.unlock();
     channel->start();
 
-    {
-      std::lock_guard<std::mutex> lock(mutex);
-      if (use_external_context && manage_external_context && !external_thread.joinable()) {
-        if (external_ioc->stopped()) external_ioc->restart();
-        work_guard = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
-            external_ioc->get_executor());
-        external_thread = std::thread([ioc = external_ioc]() {
-          try {
-            ioc->run();
-          } catch (...) {
-          }
-        });
-      }
+    lock.lock();
+    if (use_external_context && manage_external_context && !external_thread.joinable()) {
+      if (external_ioc->stopped()) external_ioc->restart();
+      work_guard = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+          external_ioc->get_executor());
+      external_thread = std::thread([ioc = external_ioc]() {
+        try {
+          ioc->run();
+        } catch (...) {
+        }
+      });
+    }
 
-      started = true;
-
-      // Start Reaper Timer
-      if (channel) {
-        reaper_timer = std::make_unique<boost::asio::steady_timer>(channel->get_executor());
-        schedule_reaper();
-      }
+    if (channel) {
+      reaper_timer = std::make_unique<boost::asio::steady_timer>(channel->get_executor());
+      schedule_reaper();
     }
 
     return fut;
@@ -265,13 +280,19 @@ struct UdpServer::Impl {
   void stop() {
     bool should_join = false;
     {
-      std::lock_guard<std::mutex> lock(mutex);
-      if (!started) return;
+      std::unique_lock<std::mutex> lock(mutex);
+      if (!started.exchange(false)) {
+        is_listening = false;
+        fulfill_all_locked(false);
+        return;
+      }
 
       if (channel) {
         channel->on_bytes_from(nullptr);
         channel->on_state(nullptr);
+        lock.unlock();
         channel->stop();
+        lock.lock();
       }
 
       if (reaper_timer) {
@@ -284,24 +305,22 @@ struct UdpServer::Impl {
         should_join = true;
       }
 
-      started = false;
+      is_listening = false;
       endpoint_to_id.clear();
       id_to_endpoint.clear();
       client_framers.clear();
       session_activity.clear();
       next_client_id = 1;
-      if (start_promise) {
-        try {
-          start_promise->set_value(false);
-        } catch (...) {
-        }
-        start_promise.reset();
-      }
+      fulfill_all_locked(false);
     }
 
     if (should_join) {
       try {
-        external_thread.join();
+        if (std::this_thread::get_id() != external_thread.get_id()) {
+          external_thread.join();
+        } else {
+          external_thread.detach();
+        }
       } catch (...) {
       }
     }
@@ -319,16 +338,16 @@ UdpServer::UdpServer(const config::UdpConfig& cfg) : impl_(std::make_unique<Impl
 UdpServer::UdpServer(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> ioc)
     : impl_(std::make_unique<Impl>(cfg, ioc)) {}
 
+UdpServer::UdpServer(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(std::move(ch))) {}
+
 UdpServer::~UdpServer() = default;
+
+UdpServer::UdpServer(UdpServer&&) noexcept = default;
+UdpServer& UdpServer::operator=(UdpServer&&) noexcept = default;
 
 std::future<bool> UdpServer::start() { return impl_->start(); }
 void UdpServer::stop() { impl_->stop(); }
-bool UdpServer::is_listening() const {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
-  return impl_->started && impl_->channel &&
-         (impl_->channel->is_connected() ||
-          impl_->channel->local_endpoint().port() != 0);  // UdpChannel is_connected might mean remote is set
-}
+bool UdpServer::is_listening() const { return impl_->is_listening.load(); }
 
 bool UdpServer::broadcast(std::string_view data) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
@@ -354,21 +373,25 @@ bool UdpServer::send_to(size_t client_id, std::string_view data) {
 }
 
 ServerInterface& UdpServer::on_client_connect(ConnectionHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_connect = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_client_disconnect(ConnectionHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_disconnect = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_data(MessageHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_data = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_error(ErrorHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_error = std::move(h);
   return *this;
 }
@@ -378,7 +401,10 @@ void UdpServer::set_framer_factory(FramerFactory factory) {
   impl_->framer_factory = std::move(factory);
 }
 
-void UdpServer::on_message(MessageHandler h) { impl_->on_message = std::move(h); }
+void UdpServer::on_message(MessageHandler h) {
+  std::lock_guard<std::mutex> lock(impl_->mutex);
+  impl_->on_message = std::move(h);
+}
 
 size_t UdpServer::get_client_count() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
@@ -392,6 +418,14 @@ std::vector<size_t> UdpServer::get_connected_clients() const {
     ids.push_back(pair.first);
   }
   return ids;
+}
+
+UdpServer& UdpServer::auto_manage(bool m) {
+  impl_->auto_manage = m;
+  if (impl_->auto_manage && !impl_->started.load()) {
+    start();
+  }
+  return *this;
 }
 
 UdpServer& UdpServer::set_session_timeout(std::chrono::milliseconds timeout) {

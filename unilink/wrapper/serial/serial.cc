@@ -21,8 +21,10 @@
 #include <boost/asio/io_context.hpp>
 #include <cctype>
 #include <iostream>
+#include <mutex>
 #include <stdexcept>
 #include <thread>
+#include <vector>
 
 #include "unilink/base/common.hpp"
 #include "unilink/factory/channel_factory.hpp"
@@ -39,6 +41,7 @@ std::string to_lower(std::string s) {
 }  // namespace
 
 struct Serial::Impl {
+  mutable std::mutex mutex_;
   std::string device;
   uint32_t baud_rate;
   std::shared_ptr<interface::Channel> channel;
@@ -46,10 +49,11 @@ struct Serial::Impl {
   bool use_external_context{false};
   bool manage_external_context{false};
   std::thread external_thread;
+  std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
-  // Start notification
-  std::promise<bool> start_promise_;
-  bool start_promise_fulfilled_{false};
+  std::vector<std::promise<bool>> pending_promises_;
+  std::atomic<bool> started_{false};
+  std::shared_ptr<bool> alive_marker_{std::make_shared<bool>(true)};
 
   // Event handlers (Context based)
   MessageHandler data_handler{nullptr};
@@ -62,7 +66,6 @@ struct Serial::Impl {
 
   // Configuration
   bool auto_manage = false;
-  bool started = false;
   int data_bits = 8;
   int stop_bits = 1;
   std::string parity = "none";
@@ -81,56 +84,87 @@ struct Serial::Impl {
     }
   }
 
+  void fulfill_all_locked(bool value) {
+    for (auto& promise : pending_promises_) {
+      try {
+        promise.set_value(value);
+      } catch (...) {
+      }
+    }
+    pending_promises_.clear();
+  }
+
   std::future<bool> start() {
-    if (started) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    if (channel && channel->is_connected()) {
       std::promise<bool> p;
       p.set_value(true);
       return p.get_future();
     }
 
-    start_promise_ = std::promise<bool>();
-    start_promise_fulfilled_ = false;
+    std::promise<bool> p;
+    auto future = p.get_future();
+    pending_promises_.emplace_back(std::move(p));
+
+    if (started_.exchange(true)) {
+      return future;
+    }
 
     if (!channel) {
       channel = factory::ChannelFactory::create(build_config(), external_ioc);
       setup_internal_handlers();
     }
 
+    lock.unlock();
     channel->start();
     if (use_external_context && manage_external_context && !external_thread.joinable()) {
+      if (external_ioc && external_ioc->stopped()) {
+        external_ioc->restart();
+      }
+      work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+          boost::asio::make_work_guard(*external_ioc));
       external_thread = std::thread([ioc = external_ioc]() {
-        boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(ioc->get_executor());
-        ioc->run();
+        try {
+          ioc->run();
+        } catch (...) {
+        }
       });
     }
 
-    started = true;
-    return start_promise_.get_future();
+    return future;
   }
 
   void stop() {
-    if (!started) return;
+    std::unique_lock<std::mutex> lock(mutex_);
+    if (!started_.exchange(false)) {
+      fulfill_all_locked(false);
+      return;
+    }
 
     if (channel) {
       channel->on_bytes(nullptr);
       channel->on_state(nullptr);
+      lock.unlock();
       channel->stop();
+      lock.lock();
+    }
+
+    if (work_guard_) {
+      work_guard_.reset();
     }
 
     if (use_external_context && manage_external_context && external_thread.joinable()) {
       if (external_ioc) external_ioc->stop();
-      external_thread.join();
-    }
-
-    started = false;
-
-    if (!start_promise_fulfilled_) {
-      try {
-        start_promise_.set_value(false);
-      } catch (...) {
+      if (std::this_thread::get_id() != external_thread.get_id()) {
+        lock.unlock();
+        external_thread.join();
+        lock.lock();
+      } else {
+        external_thread.detach();
       }
-      start_promise_fulfilled_ = true;
     }
+
+    fulfill_all_locked(false);
 
     if (framer) framer->reset();
   }
@@ -138,38 +172,67 @@ struct Serial::Impl {
   void setup_internal_handlers() {
     if (!channel) return;
 
-    channel->on_bytes([this](memory::ConstByteSpan data) {
+    std::weak_ptr<bool> weak_alive = alive_marker_;
+
+    channel->on_bytes([this, weak_alive](memory::ConstByteSpan data) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
       // 1. Raw data handler
-      if (data_handler) {
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = data_handler;
+      }
+      if (handler) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
-        data_handler(MessageContext(0, str_data));
+        handler(MessageContext(0, str_data));
       }
 
       // 2. Framer integration
+      std::lock_guard<std::mutex> lock(mutex_);
       if (framer) {
         framer->push_bytes(data);
       }
     });
 
-    channel->on_state([this](base::LinkState state) {
+    channel->on_state([this, weak_alive](base::LinkState state) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+
       switch (state) {
-        case base::LinkState::Connected:
-          if (!start_promise_fulfilled_) {
-            start_promise_.set_value(true);
-            start_promise_fulfilled_ = true;
+        case base::LinkState::Connected: {
+          ConnectionHandler handler;
+          {
+            std::lock_guard<std::mutex> lock(mutex_);
+            fulfill_all_locked(true);
+            handler = connect_handler;
           }
-          if (connect_handler) connect_handler(ConnectionContext(0));
+          if (handler) handler(ConnectionContext(0));
           break;
+        }
         case base::LinkState::Closed:
-          if (disconnect_handler) disconnect_handler(ConnectionContext(0));
-          break;
         case base::LinkState::Error:
-          if (!start_promise_fulfilled_) {
-            start_promise_.set_value(false);
-            start_promise_fulfilled_ = true;
+        case base::LinkState::Idle: {
+          ConnectionHandler disconnect_handler_snapshot;
+          ErrorHandler error_handler_snapshot;
+          {
+            std::lock_guard<std::mutex> lock(mutex_);
+            fulfill_all_locked(false);
+            if (state == base::LinkState::Error) {
+              error_handler_snapshot = error_handler;
+            } else {
+              disconnect_handler_snapshot = disconnect_handler;
+            }
           }
-          if (error_handler) error_handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+          if (disconnect_handler_snapshot) {
+            disconnect_handler_snapshot(ConnectionContext(0));
+          }
+          if (error_handler_snapshot) {
+            error_handler_snapshot(ErrorContext(ErrorCode::IoError, "Connection error"));
+          }
           break;
+        }
         default:
           break;
       }
@@ -177,24 +240,36 @@ struct Serial::Impl {
   }
 
   void set_framer(std::unique_ptr<framer::IFramer> f) {
+    std::lock_guard<std::mutex> lock(mutex_);
     framer = std::move(f);
     if (framer && message_handler) {
       framer->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler) {
+        MessageHandler handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          handler = message_handler;
+        }
+        if (handler) {
           std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler(MessageContext(0, str_msg));
+          handler(MessageContext(0, str_msg));
         }
       });
     }
   }
 
   void on_message(MessageHandler handler) {
+    std::lock_guard<std::mutex> lock(mutex_);
     message_handler = std::move(handler);
     if (framer) {
       framer->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler) {
+        MessageHandler callback;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          callback = message_handler;
+        }
+        if (callback) {
           std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler(MessageContext(0, str_msg));
+          callback(MessageContext(0, str_msg));
         }
       });
     }
@@ -271,7 +346,7 @@ void Serial::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
 
 ChannelInterface& Serial::auto_manage(bool m) {
   impl_->auto_manage = m;
-  if (impl_->auto_manage && !impl_->started) start();
+  if (impl_->auto_manage && !impl_->started_.load()) start();
   return *this;
 }
 
@@ -290,7 +365,10 @@ void Serial::set_retry_interval(std::chrono::milliseconds i) {
 
 config::SerialConfig Serial::build_config() const { return get_impl()->build_config(); }
 
-void Serial::set_manage_external_context(bool m) { impl_->manage_external_context = m; }
+Serial& Serial::set_manage_external_context(bool m) {
+  impl_->manage_external_context = m;
+  return *this;
+}
 
 }  // namespace wrapper
 }  // namespace unilink

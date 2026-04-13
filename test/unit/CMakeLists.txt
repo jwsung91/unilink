@@ -129,8 +129,8 @@ foreach(test_file test_pool_limits.cpp)
   )
 endforeach()
 
-# Wrapper tests (separate executables)
-foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_serial_advanced.cc test_udp_stop_perf.cc test_udp_options.cc test_udp_failure.cc test_udp_state.cpp test_tcp_client_error_mapping.cc)
+# Wrapper tests (separate executables across TCP/UDP/UDS/Serial)
+foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_serial_advanced.cc test_udp_stop_perf.cc test_udp_options.cc test_udp_failure.cc test_udp_state.cpp test_tcp_client_error_mapping.cc test_uds_advanced.cc test_udp_server_advanced.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/wrapper/${test_file})
   target_link_libraries(run_unit_${test_name}
@@ -149,7 +149,7 @@ foreach(test_file test_tcp_server_advanced.cc test_tcp_client_advanced.cc test_s
 
   gtest_discover_tests(run_unit_${test_name}
     PROPERTIES
-      LABELS "unit_wrapper_tcp"
+      LABELS "unit_wrapper"
       TIMEOUT 120
       RESOURCE_LOCK "tcp_port_allocation"
   )
