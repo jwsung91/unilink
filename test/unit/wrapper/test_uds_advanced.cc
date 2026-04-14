@@ -246,18 +246,45 @@ TEST(UdsClientWrapperContractTest, StopSuppressesLateCallbacks) {
 }
 
 TEST(UdsServerWrapperContractTest, ConnectHandlerReplacementUsesLatestCallback) {
+  boost::asio::io_context ioc;
+  config::UdsServerConfig cfg;
+  cfg.socket_path = test::TestUtils::makeUniqueUdsSocketPath("uds-server-contract").string();
+  test::TestUtils::removeFileIfExists(cfg.socket_path);
+
+  auto* mock_acceptor = new test::mocks::MockUdsAcceptor();
+  auto transport_server =
+      transport::UdsServer::create(cfg, std::unique_ptr<interface::UdsAcceptorInterface>(mock_acceptor), ioc);
+
+  EXPECT_CALL(*mock_acceptor, open(_, _)).WillOnce(Return());
+  EXPECT_CALL(*mock_acceptor, bind(_, _)).WillOnce(Return());
+  EXPECT_CALL(*mock_acceptor, listen(_, _)).WillOnce(Return());
+  EXPECT_CALL(*mock_acceptor, close(_)).Times(testing::AnyNumber()).WillRepeatedly(Return());
+  EXPECT_CALL(*mock_acceptor, async_accept(_))
+      .WillOnce(Invoke([&ioc](auto handler) {
+        auto socket = boost::asio::local::stream_protocol::socket(ioc);
+        boost::asio::post(ioc, [handler = std::move(handler), socket = std::move(socket)]() mutable {
+          handler({}, std::move(socket));
+        });
+      }))
+      .WillRepeatedly(Invoke([](auto) {}));
+
   std::atomic<int> count{0};
-  test::wrapper_support::UdsServerLoopbackHarness harness("uds-server-contract");
-  auto server = harness.start_server();
-  server->on_client_connect([&](const ConnectionContext&) { count = 1; });
-  server->on_client_connect([&](const ConnectionContext&) { count = 2; });
+  UdsServer server(std::static_pointer_cast<interface::Channel>(transport_server));
+  server.on_client_connect([&](const ConnectionContext&) { count = 1; });
+  server.on_client_connect([&](const ConnectionContext&) { count = 2; });
 
-  auto client = harness.connect_client();
-  (void)client;
+  auto started = server.start();
+  ioc.restart();
+  ioc.run_for(100ms);
 
+  ASSERT_EQ(started.wait_for(0ms), std::future_status::ready);
+  ASSERT_TRUE(started.get());
   ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000));
   EXPECT_EQ(count.load(), 2);
-  ASSERT_TRUE(harness.wait_for_client_count(1));
+
+  server.stop();
+  ioc.restart();
+  ioc.run_for(50ms);
 }
 
 }  // namespace
