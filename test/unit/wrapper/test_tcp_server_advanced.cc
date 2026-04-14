@@ -96,6 +96,21 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
   EXPECT_TRUE(ioc->stopped());
 }
 
+TEST_F(AdvancedTcpServerCoverageTest, ManagedExternalContextRestartsStoppedIoContext) {
+  auto ioc = std::make_shared<boost::asio::io_context>();
+  ioc->stop();
+
+  server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
+  server_->set_manage_external_context(true);
+
+  auto started = server_->start();
+  EXPECT_TRUE(started.get());
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000));
+
+  server_->stop();
+  EXPECT_TRUE(ioc->stopped());
+}
+
 TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnStatus) {
   std::vector<size_t> ids;
   std::mutex ids_mutex;
@@ -190,6 +205,26 @@ TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
   client->start();
 
   TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000);
+  EXPECT_EQ(count.load(), 2);
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, DisconnectHandlerReplacementUsesLatestCallback) {
+  std::atomic<int> count{0};
+  server_ = unilink::tcp_server(test_port_).build();
+  server_->on_client_disconnect([&](const wrapper::ConnectionContext&) { count = 1; });
+  server_->on_client_disconnect([&](const wrapper::ConnectionContext&) { count = 2; });
+
+  auto started = server_->start();
+  ASSERT_TRUE(started.get());
+
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
+  auto client_started = client->start();
+  ASSERT_TRUE(client_started.get());
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 1; }, 5000));
+
+  client->stop();
+
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000));
   EXPECT_EQ(count.load(), 2);
 }
 
