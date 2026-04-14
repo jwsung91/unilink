@@ -253,9 +253,14 @@ struct UdsClient::Impl {
     framer_ = std::move(framer);
     if (framer_ && message_handler_) {
       framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler_) {
+        MessageHandler handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          handler = message_handler_;
+        }
+        if (handler) {
           std::string str_msg = std::string(reinterpret_cast<const char*>(msg.data()), msg.size());
-          message_handler_(MessageContext(0, str_msg));
+          handler(MessageContext(0, str_msg));
         }
       });
     }
@@ -266,9 +271,14 @@ struct UdsClient::Impl {
     message_handler_ = std::move(handler);
     if (framer_) {
       framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler_) {
+        MessageHandler callback;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          callback = message_handler_;
+        }
+        if (callback) {
           std::string str_msg = std::string(reinterpret_cast<const char*>(msg.data()), msg.size());
-          message_handler_(MessageContext(0, str_msg));
+          callback(MessageContext(0, str_msg));
         }
       });
     }
