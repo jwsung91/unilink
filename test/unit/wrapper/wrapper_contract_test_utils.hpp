@@ -17,10 +17,14 @@
 #pragma once
 
 #include <memory>
+#include <stdexcept>
+#include <string>
 #include <string_view>
 #include <vector>
 
+#include "test/utils/test_utils.hpp"
 #include "unilink/interface/channel.hpp"
+#include "unilink/unilink.hpp"
 
 namespace unilink::test::wrapper_support {
 
@@ -60,6 +64,185 @@ class FakeChannel : public interface::Channel {
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_backpressure_;
+};
+
+class TcpServerLoopbackHarness {
+ public:
+  TcpServerLoopbackHarness() : port_(TestUtils::getAvailableTestPort()) {}
+
+  ~TcpServerLoopbackHarness() { stop_all(); }
+
+  std::shared_ptr<wrapper::TcpServer> start_server() {
+    server_ = std::make_shared<wrapper::TcpServer>(port_);
+    auto started = server_->start();
+    if (!started.get()) {
+      throw std::runtime_error("Failed to start TCP test server");
+    }
+    if (!TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000)) {
+      throw std::runtime_error("TCP test server did not reach listening state");
+    }
+    return server_;
+  }
+
+  std::shared_ptr<wrapper::TcpClient> connect_client() {
+    client_ = std::make_shared<wrapper::TcpClient>("127.0.0.1", port_);
+    auto started = client_->start();
+    if (!started.get()) {
+      throw std::runtime_error("Failed to start TCP test client");
+    }
+    if (!TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000)) {
+      throw std::runtime_error("TCP test client did not connect");
+    }
+    return client_;
+  }
+
+  bool wait_for_client_count(size_t expected, int timeout_ms = 5000) const {
+    return server_ &&
+           TestUtils::waitForCondition([&]() { return server_->get_client_count() >= expected; }, timeout_ms);
+  }
+
+  void stop_all() {
+    if (client_) {
+      client_->stop();
+      client_.reset();
+    }
+    if (server_) {
+      server_->stop();
+      server_.reset();
+    }
+  }
+
+ private:
+  uint16_t port_;
+  std::shared_ptr<wrapper::TcpServer> server_;
+  std::shared_ptr<wrapper::TcpClient> client_;
+};
+
+class UdsServerLoopbackHarness {
+ public:
+  explicit UdsServerLoopbackHarness(std::string prefix = "wrapper-contract-uds")
+      : socket_path_(TestUtils::makeUniqueUdsSocketPath(prefix).string()) {
+    TestUtils::removeFileIfExists(socket_path_);
+  }
+
+  ~UdsServerLoopbackHarness() {
+    stop_all();
+    TestUtils::removeFileIfExists(socket_path_);
+  }
+
+  std::shared_ptr<wrapper::UdsServer> start_server() {
+    server_ = std::make_shared<wrapper::UdsServer>(socket_path_);
+    auto started = server_->start();
+    if (!started.get()) {
+      throw std::runtime_error("Failed to start UDS test server");
+    }
+    if (!TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000)) {
+      throw std::runtime_error("UDS test server did not reach listening state");
+    }
+    return server_;
+  }
+
+  std::shared_ptr<wrapper::UdsClient> connect_client() {
+    client_ = std::make_shared<wrapper::UdsClient>(socket_path_);
+    auto started = client_->start();
+    if (!started.get()) {
+      throw std::runtime_error("Failed to start UDS test client");
+    }
+    if (!TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000)) {
+      throw std::runtime_error("UDS test client did not connect");
+    }
+    return client_;
+  }
+
+  bool wait_for_client_count(size_t expected, int timeout_ms = 5000) const {
+    return server_ &&
+           TestUtils::waitForCondition([&]() { return server_->get_client_count() >= expected; }, timeout_ms);
+  }
+
+  void stop_all() {
+    if (client_) {
+      client_->stop();
+      client_.reset();
+    }
+    if (server_) {
+      server_->stop();
+      server_.reset();
+    }
+  }
+
+ private:
+  std::string socket_path_;
+  std::shared_ptr<wrapper::UdsServer> server_;
+  std::shared_ptr<wrapper::UdsClient> client_;
+};
+
+class UdpServerLoopbackHarness {
+ public:
+  UdpServerLoopbackHarness() : port_(TestUtils::getAvailableTestPort()) {}
+
+  ~UdpServerLoopbackHarness() { stop_all(); }
+
+  std::shared_ptr<wrapper::UdpServer> start_server() {
+    config::UdpConfig server_cfg;
+    server_cfg.local_address = "127.0.0.1";
+    server_cfg.local_port = port_;
+
+    server_ = std::make_shared<wrapper::UdpServer>(server_cfg);
+    auto started = server_->start();
+    if (!started.get()) {
+      throw std::runtime_error("Failed to start UDP test server");
+    }
+    if (!TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000)) {
+      throw std::runtime_error("UDP test server did not reach listening state");
+    }
+    return server_;
+  }
+
+  std::shared_ptr<wrapper::Udp> start_sender() {
+    config::UdpConfig client_cfg;
+    client_cfg.local_address = "127.0.0.1";
+    client_cfg.local_port = 0;
+    client_cfg.remote_address = std::string("127.0.0.1");
+    client_cfg.remote_port = port_;
+
+    client_ = std::make_shared<wrapper::Udp>(client_cfg);
+    auto started = client_->start();
+    if (!started.get()) {
+      throw std::runtime_error("Failed to start UDP test client");
+    }
+    if (!TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000)) {
+      throw std::runtime_error("UDP test client did not reach connected state");
+    }
+    return client_;
+  }
+
+  void send_from_client(std::string_view data) {
+    if (!client_) {
+      throw std::runtime_error("UDP test client is not started");
+    }
+    client_->send(data);
+  }
+
+  bool wait_for_client_count(size_t expected, int timeout_ms = 5000) const {
+    return server_ &&
+           TestUtils::waitForCondition([&]() { return server_->get_client_count() >= expected; }, timeout_ms);
+  }
+
+  void stop_all() {
+    if (client_) {
+      client_->stop();
+      client_.reset();
+    }
+    if (server_) {
+      server_->stop();
+      server_.reset();
+    }
+  }
+
+ private:
+  uint16_t port_;
+  std::shared_ptr<wrapper::UdpServer> server_;
+  std::shared_ptr<wrapper::Udp> client_;
 };
 
 }  // namespace unilink::test::wrapper_support

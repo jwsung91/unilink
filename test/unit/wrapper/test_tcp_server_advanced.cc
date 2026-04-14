@@ -27,6 +27,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/unilink.hpp"
+#include "wrapper_contract_test_utils.hpp"
 
 namespace {
 
@@ -210,17 +211,13 @@ TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
 
 TEST_F(AdvancedTcpServerCoverageTest, DisconnectHandlerReplacementUsesLatestCallback) {
   std::atomic<int> count{0};
-  server_ = unilink::tcp_server(test_port_).build();
+  wrapper_support::TcpServerLoopbackHarness harness;
+  server_ = harness.start_server();
   server_->on_client_disconnect([&](const wrapper::ConnectionContext&) { count = 1; });
   server_->on_client_disconnect([&](const wrapper::ConnectionContext&) { count = 2; });
 
-  auto started = server_->start();
-  ASSERT_TRUE(started.get());
-
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
-  auto client_started = client->start();
-  ASSERT_TRUE(client_started.get());
-  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 1; }, 5000));
+  auto client = harness.connect_client();
+  ASSERT_TRUE(harness.wait_for_client_count(1));
 
   client->stop();
 

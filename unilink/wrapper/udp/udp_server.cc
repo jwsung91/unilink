@@ -287,17 +287,17 @@ struct UdpServer::Impl {
         return;
       }
 
+      if (reaper_timer) {
+        reaper_timer->cancel();
+        reaper_timer.reset();
+      }
+
       if (channel) {
         channel->on_bytes_from(nullptr);
         channel->on_state(nullptr);
         lock.unlock();
         channel->stop();
         lock.lock();
-      }
-
-      if (reaper_timer) {
-        reaper_timer->cancel();
-        reaper_timer.reset();
       }
 
       if (use_external_context && manage_external_context && external_thread.joinable()) {
