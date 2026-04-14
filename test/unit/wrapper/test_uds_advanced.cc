@@ -59,6 +59,10 @@ TEST(UdsClientWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   ioc.run_for(100ms);
 
   EXPECT_TRUE(client.is_connected());
+
+  client.stop();
+  ioc.restart();
+  ioc.run_for(50ms);
 }
 
 TEST(UdsClientWrapperAdvancedTest, StartFutureReflectsTransportFailure) {
@@ -82,6 +86,37 @@ TEST(UdsClientWrapperAdvancedTest, StartFutureReflectsTransportFailure) {
 
   ASSERT_EQ(started.wait_for(0ms), std::future_status::ready);
   EXPECT_FALSE(started.get());
+
+  client.stop();
+  ioc.restart();
+  ioc.run_for(50ms);
+}
+
+TEST(UdsClientWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
+  auto ioc = std::make_shared<boost::asio::io_context>();
+  auto socket_path = test::TestUtils::makeUniqueUdsSocketPath("uwc-managed").string();
+  test::TestUtils::removeFileIfExists(socket_path);
+
+  UdsServer server(socket_path);
+  auto server_started = server.start();
+  ASSERT_EQ(server_started.wait_for(1s), std::future_status::ready);
+  ASSERT_TRUE(server_started.get());
+
+  UdsClient client(socket_path, ioc);
+  client.set_manage_external_context(true);
+
+  ioc->stop();
+  auto started = client.start();
+  ASSERT_EQ(started.wait_for(1s), std::future_status::ready);
+  EXPECT_TRUE(started.get());
+
+  EXPECT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return client.is_connected(); }, 2000));
+
+  client.stop();
+  EXPECT_TRUE(ioc->stopped());
+
+  server.stop();
+  test::TestUtils::removeFileIfExists(socket_path);
 }
 
 TEST(UdsServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
@@ -106,6 +141,10 @@ TEST(UdsServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   ioc.poll();
 
   EXPECT_TRUE(server.is_listening());
+
+  server.stop();
+  ioc.restart();
+  ioc.run_for(50ms);
 }
 
 TEST(UdsServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
@@ -132,6 +171,30 @@ TEST(UdsServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
   ASSERT_EQ(started.wait_for(0ms), std::future_status::ready);
   EXPECT_FALSE(started.get());
   EXPECT_FALSE(server.is_listening());
+
+  server.stop();
+  ioc.restart();
+  ioc.run_for(50ms);
+}
+
+TEST(UdsServerWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
+  auto ioc = std::make_shared<boost::asio::io_context>();
+  auto socket_path = test::TestUtils::makeUniqueUdsSocketPath("uws-managed").string();
+  test::TestUtils::removeFileIfExists(socket_path);
+
+  UdsServer server(socket_path, ioc);
+  server.set_manage_external_context(true);
+
+  ioc->stop();
+  auto started = server.start();
+  ASSERT_EQ(started.wait_for(1s), std::future_status::ready);
+  EXPECT_TRUE(started.get());
+
+  EXPECT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return server.is_listening(); }, 2000));
+
+  server.stop();
+  EXPECT_TRUE(ioc->stopped());
+  test::TestUtils::removeFileIfExists(socket_path);
 }
 
 }  // namespace

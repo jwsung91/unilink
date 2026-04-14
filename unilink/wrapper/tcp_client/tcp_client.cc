@@ -120,6 +120,9 @@ struct TcpClient::Impl {
     started_ = true;
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+      if (external_ioc_ && external_ioc_->stopped()) {
+        external_ioc_->restart();
+      }
       work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
           external_ioc_->get_executor());
       external_thread_ = std::thread([this, ioc = external_ioc_]() {
@@ -158,6 +161,7 @@ struct TcpClient::Impl {
       }
       if (use_external_context_ && manage_external_context_) {
         if (work_guard_) work_guard_.reset();
+        if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
       for (auto& p : pending_promises_) {

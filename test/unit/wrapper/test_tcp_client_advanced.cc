@@ -94,6 +94,21 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return ioc->stopped() || ioc->poll() == 0; }, 1000));
 }
 
+TEST_F(AdvancedTcpClientCoverageTest, ManagedExternalContextRestartsStoppedIoContext) {
+  auto ioc = std::make_shared<boost::asio::io_context>();
+  ioc->stop();
+
+  client_ = std::make_shared<wrapper::TcpClient>("127.0.0.1", test_port_, ioc);
+  client_->set_manage_external_context(true);
+
+  auto started = client_->start();
+  EXPECT_TRUE(started.get());
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000));
+
+  client_->stop();
+  EXPECT_TRUE(ioc->stopped());
+}
+
 TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) {
   std::atomic<bool> connected{false};
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
