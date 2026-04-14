@@ -21,16 +21,15 @@
 #include <boost/asio.hpp>
 #include <chrono>
 #include <memory>
-#include <string_view>
 
 #include "test/mocks/mock_uds_acceptor.hpp"
 #include "test/mocks/mock_uds_socket.hpp"
 #include "test_utils.hpp"
-#include "unilink/interface/channel.hpp"
 #include "unilink/transport/uds/uds_client.hpp"
 #include "unilink/transport/uds/uds_server.hpp"
 #include "unilink/wrapper/uds_client/uds_client.hpp"
 #include "unilink/wrapper/uds_server/uds_server.hpp"
+#include "wrapper_contract_test_utils.hpp"
 
 using ::testing::_;
 using ::testing::Invoke;
@@ -39,44 +38,6 @@ using namespace std::chrono_literals;
 
 namespace unilink::wrapper {
 namespace {
-
-class FakeChannel : public interface::Channel {
- public:
-  void start() override { connected_ = true; }
-  void stop() override { connected_ = false; }
-  bool is_connected() const override { return connected_; }
-
-  void async_write_copy(memory::ConstByteSpan) override {}
-  void async_write_move(std::vector<uint8_t>&&) override {}
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {}
-
-  void on_bytes(OnBytes cb) override { on_bytes_ = std::move(cb); }
-  void on_state(OnState cb) override { on_state_ = std::move(cb); }
-  void on_backpressure(OnBackpressure cb) override { on_backpressure_ = std::move(cb); }
-
-  void emit_bytes(std::string_view text) {
-    if (!on_bytes_) return;
-    on_bytes_(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(text.data()), text.size()));
-  }
-
-  void emit_state(base::LinkState state) {
-    if (state == base::LinkState::Connected) {
-      connected_ = true;
-    } else if (state == base::LinkState::Closed || state == base::LinkState::Error || state == base::LinkState::Idle) {
-      connected_ = false;
-    }
-
-    if (on_state_) {
-      on_state_(state);
-    }
-  }
-
- private:
-  bool connected_{false};
-  OnBytes on_bytes_;
-  OnState on_state_;
-  OnBackpressure on_backpressure_;
-};
 
 TEST(UdsClientWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   boost::asio::io_context ioc;
@@ -238,7 +199,7 @@ TEST(UdsServerWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
 }
 
 TEST(UdsClientWrapperContractTest, HandlerReplacementUsesLatestCallback) {
-  auto fake_channel = std::make_shared<FakeChannel>();
+  auto fake_channel = std::make_shared<test::wrapper_support::FakeChannel>();
   UdsClient client(fake_channel);
 
   std::atomic<int> connected{0};
@@ -264,7 +225,7 @@ TEST(UdsClientWrapperContractTest, HandlerReplacementUsesLatestCallback) {
 }
 
 TEST(UdsClientWrapperContractTest, StopSuppressesLateCallbacks) {
-  auto fake_channel = std::make_shared<FakeChannel>();
+  auto fake_channel = std::make_shared<test::wrapper_support::FakeChannel>();
   UdsClient client(fake_channel);
 
   std::atomic<int> callbacks{0};

@@ -22,56 +22,17 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
-#include <string>
 #include <thread>
 #include <vector>
 
 #include "test_utils.hpp"
-#include "unilink/interface/channel.hpp"
 #include "unilink/unilink.hpp"
+#include "wrapper_contract_test_utils.hpp"
 
 namespace {
 
 using namespace unilink;
 using namespace unilink::test;
-
-class FakeChannel : public interface::Channel {
- public:
-  void start() override { connected_ = true; }
-  void stop() override { connected_ = false; }
-  bool is_connected() const override { return connected_; }
-
-  void async_write_copy(memory::ConstByteSpan) override {}
-  void async_write_move(std::vector<uint8_t>&&) override {}
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {}
-
-  void on_bytes(OnBytes cb) override { on_bytes_ = std::move(cb); }
-  void on_state(OnState cb) override { on_state_ = std::move(cb); }
-  void on_backpressure(OnBackpressure cb) override { on_backpressure_ = std::move(cb); }
-
-  void emit_bytes(std::string_view text) {
-    if (!on_bytes_) return;
-    on_bytes_(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(text.data()), text.size()));
-  }
-
-  void emit_state(base::LinkState state) {
-    if (state == base::LinkState::Connected) {
-      connected_ = true;
-    } else if (state == base::LinkState::Closed || state == base::LinkState::Error || state == base::LinkState::Idle) {
-      connected_ = false;
-    }
-
-    if (on_state_) {
-      on_state_(state);
-    }
-  }
-
- private:
-  bool connected_{false};
-  OnBytes on_bytes_;
-  OnState on_state_;
-  OnBackpressure on_backpressure_;
-};
 
 class AdvancedTcpClientCoverageTest : public ::testing::Test {
  protected:
@@ -181,7 +142,7 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
 }
 
 TEST(TcpClientWrapperContractTest, HandlerReplacementUsesLatestCallback) {
-  auto fake_channel = std::make_shared<FakeChannel>();
+  auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
   wrapper::TcpClient client(fake_channel);
 
   std::atomic<int> connected{0};
@@ -207,7 +168,7 @@ TEST(TcpClientWrapperContractTest, HandlerReplacementUsesLatestCallback) {
 }
 
 TEST(TcpClientWrapperContractTest, StopSuppressesLateCallbacks) {
-  auto fake_channel = std::make_shared<FakeChannel>();
+  auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
   wrapper::TcpClient client(fake_channel);
 
   std::atomic<int> callbacks{0};
