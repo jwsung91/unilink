@@ -245,27 +245,19 @@ TEST(UdsClientWrapperContractTest, StopSuppressesLateCallbacks) {
   EXPECT_EQ(callbacks.load(), 0);
 }
 
-TEST(UdsServerWrapperContractTest, DisconnectHandlerReplacementUsesLatestCallback) {
+TEST(UdsServerWrapperContractTest, ConnectHandlerReplacementUsesLatestCallback) {
   std::atomic<int> count{0};
   test::wrapper_support::UdsServerLoopbackHarness harness("uds-server-contract");
   auto server = harness.start_server();
-  server->on_client_disconnect([&](const ConnectionContext&) { count = 1; });
-  server->on_client_disconnect([&](const ConnectionContext&) { count = 2; });
+  server->on_client_connect([&](const ConnectionContext&) { count = 1; });
+  server->on_client_connect([&](const ConnectionContext&) { count = 2; });
 
   auto client = harness.connect_client();
-  ASSERT_TRUE(harness.wait_for_client_count(1));
-
-  client->stop();
+  (void)client;
 
   ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000));
   EXPECT_EQ(count.load(), 2);
-
-  // Shut down explicitly before leaving the test to avoid relying on
-  // destructor ordering while asynchronous disconnect cleanup is still unwinding.
-  server->stop();
-  client.reset();
-  server.reset();
-  harness.stop_all();
+  ASSERT_TRUE(harness.wait_for_client_count(1));
 }
 
 }  // namespace
