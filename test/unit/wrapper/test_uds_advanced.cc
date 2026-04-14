@@ -259,6 +259,13 @@ TEST(UdsServerWrapperContractTest, DisconnectHandlerReplacementUsesLatestCallbac
 
   ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000));
   EXPECT_EQ(count.load(), 2);
+
+  // Shut down explicitly before leaving the test to avoid relying on
+  // destructor ordering while asynchronous disconnect cleanup is still unwinding.
+  server->stop();
+  client.reset();
+  server.reset();
+  harness.stop_all();
 }
 
 }  // namespace
