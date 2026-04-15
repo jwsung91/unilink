@@ -34,7 +34,7 @@ public:
     void start(uint16_t port) {
         server_ = unilink::tcp_server(port)
             .unlimited_clients()
-            .enable_port_retry(true)
+            .port_retry(true)
             .on_connect([this](const unilink::ConnectionContext& ctx) {
                 std::cout << "[Connect] client=" << ctx.client_id()
                           << " info=" << ctx.client_info() << std::endl;

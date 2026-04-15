@@ -173,7 +173,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
-  server_ = unilink::tcp_server(test_port_).enable_port_retry(true, 5, 100).build();
+  server_ = unilink::tcp_server(test_port_).port_retry(true, 5, 100).build();
   auto f = server_->start();
   EXPECT_TRUE(f.get());
   EXPECT_TRUE(server_->is_listening());

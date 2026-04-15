@@ -392,7 +392,7 @@ TcpServer& TcpServer::auto_manage(bool m) {
   return *this;
 }
 
-TcpServer& TcpServer::enable_port_retry(bool e, int m, int i) {
+TcpServer& TcpServer::port_retry(bool e, int m, int i) {
   impl_->port_retry_enabled_ = e;
   impl_->max_port_retries_ = m;
   impl_->port_retry_interval_ms_ = i;

@@ -64,7 +64,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   }
 
   if (enable_port_retry_) {
-    server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
+    server->port_retry(true, max_port_retries_, port_retry_interval_ms_);
   }
 
   if (idle_timeout_.count() > 0) {
@@ -95,7 +95,7 @@ TcpServerBuilder& TcpServerBuilder::use_independent_context(bool use_independent
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::enable_port_retry(bool enable, int max_retries, int retry_interval_ms) {
+TcpServerBuilder& TcpServerBuilder::port_retry(bool enable, int max_retries, int retry_interval_ms) {
   enable_port_retry_ = enable;
   max_port_retries_ = max_retries;
   port_retry_interval_ms_ = retry_interval_ms;

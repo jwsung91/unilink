@@ -145,7 +145,7 @@ auto server = unilink::tcp_server(8080)
     .on_error([](const unilink::ErrorContext& ctx) {
         std::cerr << "Error: " << ctx.message() << std::endl;
     })
-    .enable_port_retry(true, 5, 1000)  // 5 retries, 1 sec interval
+    .port_retry(true, 5, 1000)  // 5 retries, 1 sec interval
     .build();
 ```
 
@@ -194,7 +194,7 @@ unilink::diagnostics::Logger::instance().set_console_output(true);
 ```cpp
 auto server = unilink::tcp_server(8080)
     .unlimited_clients()
-    .enable_port_retry(true, 5, 1000)  // Try 5 times
+    .port_retry(true, 5, 1000)  // Try 5 times
     .build();
 ```
 

@@ -187,7 +187,7 @@ auto server = tcp_server(8081)  // Try different port
 ```cpp
 auto server = tcp_server(8080)
     .unlimited_clients()
-    .enable_port_retry(true, 5, 1000)  // Retry 5 times
+    .port_retry(true, 5, 1000)  // Retry 5 times
     .build();
 ```
 

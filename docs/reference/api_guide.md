@@ -52,7 +52,7 @@ auto channel = unilink::{type}(params)
 **Builder-Specific Options**
 
 - `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
-- `TcpServerBuilder`: `.enable_port_retry(enable, max_retries, retry_interval_ms)`
+- `TcpServerBuilder`: `.port_retry(enable, max_retries, retry_interval_ms)`
 - `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` (Defaults to `unlimited_clients()` if not specified)
 - TCP server callbacks use the same Context-based signatures. Use `ctx.client_id()` and `ctx.client_info()` to distinguish clients.
 
@@ -296,7 +296,7 @@ unilink::tcp_server(uint16_t port)
 | `single_client()`           | None                         | Accept only one client (required to choose a limit before `build()`) |
 | `multi_client(max)`         | `size_t (>=2)`               | Accept up to `max` clients                                           |
 | `unlimited_clients()`       | None                         | Accept unlimited clients                                             |
-| `enable_port_retry()`       | `bool, retries, interval_ms` | Retry if port is in use                                              |
+| `port_retry()`       | `bool, retries, interval_ms` | Retry if port is in use                                              |
 | `use_independent_context()` | `bool`                       | Run on a dedicated `io_context` thread managed by unilink            |
 | `auto_manage()`             | `bool`                       | Auto-start immediately and stop on destruction                       |
 
@@ -336,7 +336,7 @@ auto server = unilink::tcp_server(8080)
 ```cpp
 auto server = unilink::tcp_server(8080)
     .single_client()
-    .enable_port_retry(true, 5, 1000)  // 5 retries, 1 second each
+    .port_retry(true, 5, 1000)  // 5 retries, 1 second each
     .on_error([](const unilink::ErrorContext& ctx) {
         std::cerr << "Server error: " << ctx.message() << std::endl;
     })

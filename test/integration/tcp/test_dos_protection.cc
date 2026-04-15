@@ -69,7 +69,7 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
   diagnostics::Logger::instance().set_level(diagnostics::LogLevel::DEBUG);
 
   // Create single client server
-  server_ = unilink::tcp_server(test_port).single_client().enable_port_retry(true, 3, 1000).build();
+  server_ = unilink::tcp_server(test_port).single_client().port_retry(true, 3, 1000).build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   server_->start();
