@@ -141,8 +141,8 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("stop", &TcpServer::stop)
       .def("broadcast", &TcpServer::broadcast)
       .def("send_to", &TcpServer::send_to)
-      .def("get_client_count", &TcpServer::get_client_count)
-      .def("get_connected_clients", &TcpServer::get_connected_clients)
+      .def("client_count", &TcpServer::client_count)
+      .def("connected_clients", &TcpServer::connected_clients)
       .def("is_listening", &TcpServer::is_listening)
       .def(
           "use_line_framer",
@@ -346,8 +346,8 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("stop", &UdsServer::stop)
       .def("broadcast", &UdsServer::broadcast)
       .def("send_to", &UdsServer::send_to)
-      .def("get_client_count", &UdsServer::get_client_count)
-      .def("get_connected_clients", &UdsServer::get_connected_clients)
+      .def("client_count", &UdsServer::client_count)
+      .def("connected_clients", &UdsServer::connected_clients)
       .def("is_listening", &UdsServer::is_listening)
       .def(
           "use_line_framer",
@@ -489,8 +489,8 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("stop", &UdpServer::stop)
       .def("broadcast", &UdpServer::broadcast)
       .def("send_to", &UdpServer::send_to)
-      .def("get_client_count", &UdpServer::get_client_count)
-      .def("get_connected_clients", &UdpServer::get_connected_clients)
+      .def("client_count", &UdpServer::client_count)
+      .def("connected_clients", &UdpServer::connected_clients)
       .def("is_listening", &UdpServer::is_listening)
       .def("session_timeout", &UdpServer::session_timeout)
       .def(
