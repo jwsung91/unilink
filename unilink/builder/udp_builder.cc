@@ -36,7 +36,7 @@ std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
 
   auto udp = std::make_unique<wrapper::Udp>(cfg_, ioc);
   if (use_independent_context_) {
-    udp->set_manage_external_context(true);
+    udp->manage_external_context(true);
   }
 
   if (on_data_) udp->on_data(on_data_);
@@ -101,7 +101,7 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
 
   auto server = std::make_unique<wrapper::UdpServer>(cfg_, ioc);
   if (use_independent_context_) {
-    server->set_manage_external_context(true);
+    server->manage_external_context(true);
   }
 
   if (on_data_) server->on_data(on_data_);

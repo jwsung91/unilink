@@ -47,8 +47,8 @@ This document captures the behavioral contract currently enforced by the wrapper
 
 ### 5. Managed and unmanaged external contexts have different ownership rules
 
-- `set_manage_external_context(false)` means the wrapper uses the external context but does not own its run loop.
-- `set_manage_external_context(true)` means the wrapper owns the wrapper-specific run loop it starts around that external context.
+- `manage_external_context(false)` means the wrapper uses the external context but does not own its run loop.
+- `manage_external_context(true)` means the wrapper owns the wrapper-specific run loop it starts around that external context.
 
 Expected behavior:
 

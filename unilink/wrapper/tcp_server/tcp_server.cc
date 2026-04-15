@@ -429,7 +429,7 @@ TcpServer& TcpServer::send_failure_notify(bool e) {
   impl_->notify_send_failure_ = e;
   return *this;
 }
-TcpServer& TcpServer::set_manage_external_context(bool m) {
+TcpServer& TcpServer::manage_external_context(bool m) {
   impl_->manage_external_context_ = m;
   return *this;
 }

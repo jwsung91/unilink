@@ -436,7 +436,7 @@ UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
   return *this;
 }
 
-UdpServer& UdpServer::set_manage_external_context(bool m) {
+UdpServer& UdpServer::manage_external_context(bool m) {
   impl_->manage_external_context = m;
   return *this;
 }

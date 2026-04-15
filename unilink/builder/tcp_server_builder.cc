@@ -45,7 +45,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   std::unique_ptr<wrapper::TcpServer> server;
   if (use_independent_context_) {
     server = std::make_unique<wrapper::TcpServer>(port_, std::make_shared<boost::asio::io_context>());
-    server->set_manage_external_context(true);
+    server->manage_external_context(true);
   } else {
     server = std::make_unique<wrapper::TcpServer>(port_);
   }

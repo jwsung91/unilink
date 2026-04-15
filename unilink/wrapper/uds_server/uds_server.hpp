@@ -84,7 +84,7 @@ class UNILINK_API UdsServer : public ServerInterface {
   UdsServer& auto_manage(bool manage = true);
   UdsServer& max_clients(size_t max);
   UdsServer& unlimited_clients();
-  UdsServer& set_manage_external_context(bool manage);
+  UdsServer& manage_external_context(bool manage);
 
  private:
   struct Impl;

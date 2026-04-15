@@ -373,7 +373,7 @@ UdsClient& UdsClient::connection_timeout(std::chrono::milliseconds timeout) {
   return *this;
 }
 
-UdsClient& UdsClient::set_manage_external_context(bool manage) {
+UdsClient& UdsClient::manage_external_context(bool manage) {
   impl_->manage_external_context_ = manage;
   return *this;
 }

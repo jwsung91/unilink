@@ -380,7 +380,7 @@ TcpClient& TcpClient::connection_timeout(std::chrono::milliseconds t) {
   impl_->connection_timeout_ = t;
   return *this;
 }
-TcpClient& TcpClient::set_manage_external_context(bool m) {
+TcpClient& TcpClient::manage_external_context(bool m) {
   impl_->manage_external_context_ = m;
   return *this;
 }

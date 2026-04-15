@@ -41,7 +41,7 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   std::unique_ptr<wrapper::Serial> serial;
   if (use_independent_context_) {
     serial = std::make_unique<wrapper::Serial>(device_, baud_rate_, std::make_shared<boost::asio::io_context>());
-    serial->set_manage_external_context(true);
+    serial->manage_external_context(true);
   } else {
     serial = std::make_unique<wrapper::Serial>(device_, baud_rate_);
   }

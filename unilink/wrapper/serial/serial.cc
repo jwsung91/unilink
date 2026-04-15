@@ -371,7 +371,7 @@ void Serial::retry_interval(std::chrono::milliseconds i) {
 
 config::SerialConfig Serial::build_config() const { return get_impl()->build_config(); }
 
-Serial& Serial::set_manage_external_context(bool m) {
+Serial& Serial::manage_external_context(bool m) {
   impl_->manage_external_context = m;
   return *this;
 }

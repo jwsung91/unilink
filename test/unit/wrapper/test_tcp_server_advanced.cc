@@ -87,7 +87,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
 TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
-  server_->set_manage_external_context(true);
+  server_->manage_external_context(true);
   server_->start();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -102,7 +102,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ManagedExternalContextRestartsStoppedIoCon
   ioc->stop();
 
   server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
-  server_->set_manage_external_context(true);
+  server_->manage_external_context(true);
 
   auto started = server_->start();
   EXPECT_TRUE(started.get());

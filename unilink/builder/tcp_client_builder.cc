@@ -43,7 +43,7 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   std::unique_ptr<wrapper::TcpClient> client;
   if (use_independent_context_) {
     client = std::make_unique<wrapper::TcpClient>(host_, port_, std::make_shared<boost::asio::io_context>());
-    client->set_manage_external_context(true);
+    client->manage_external_context(true);
   } else {
     client = std::make_unique<wrapper::TcpClient>(host_, port_);
   }

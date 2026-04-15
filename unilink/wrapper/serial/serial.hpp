@@ -82,7 +82,7 @@ class UNILINK_API Serial : public ChannelInterface {
   void parity(const std::string& parity);
   void flow_control(const std::string& flow_control);
   void retry_interval(std::chrono::milliseconds interval);
-  Serial& set_manage_external_context(bool manage);
+  Serial& manage_external_context(bool manage);
 
   // Expose mapped config for testing/inspection
   config::SerialConfig build_config() const;

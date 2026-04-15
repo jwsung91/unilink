@@ -53,9 +53,9 @@ TEST_F(UdpOptionsTest, SetterCoverage) {
   udp.auto_manage(true);
   udp.auto_manage(false);
 
-  // Test set_manage_external_context
-  udp.set_manage_external_context(true);
-  udp.set_manage_external_context(false);
+  // Test manage_external_context
+  udp.manage_external_context(true);
+  udp.manage_external_context(false);
 }
 
 TEST_F(UdpOptionsTest, ConstructorWithExternalContext) {

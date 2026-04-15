@@ -320,7 +320,7 @@ ChannelInterface& Udp::auto_manage(bool m) {
   return *this;
 }
 
-Udp& Udp::set_manage_external_context(bool manage) {
+Udp& Udp::manage_external_context(bool manage) {
   impl_->manage_external_context = manage;
   return *this;
 }

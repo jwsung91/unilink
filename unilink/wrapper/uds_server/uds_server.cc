@@ -383,7 +383,7 @@ UdsServer& UdsServer::unlimited_clients() {
   return *this;
 }
 
-UdsServer& UdsServer::set_manage_external_context(bool manage) {
+UdsServer& UdsServer::manage_external_context(bool manage) {
   impl_->manage_external_context_ = manage;
   return *this;
 }

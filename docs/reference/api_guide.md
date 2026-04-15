@@ -103,7 +103,7 @@ tcp_server(port)
 
 - **Default**: Builders use the shared `IoContextManager` thread; unilink starts/stops it for you.
 - **`use_independent_context(true)`**: Builder creates its own `io_context` and runs it on an internal thread; cleanup is automatic.
-- **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will _not_ run/stop it unless you call `set_manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_manage(true)` (it starts immediately).
+- **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will _not_ run/stop it unless you call `manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_manage(true)` (it starts immediately).
 
 ---
 

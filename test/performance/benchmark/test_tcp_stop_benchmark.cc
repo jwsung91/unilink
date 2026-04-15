@@ -49,7 +49,7 @@ TEST_F(TcpClientStopBenchmark, StopLatency) {
     wrapper::TcpClient client("127.0.0.1", 12345, ioc);
 
     // Configure to manage external context
-    client.set_manage_external_context(true);
+    client.manage_external_context(true);
 
     // Start (creates thread and work guard)
     client.start();

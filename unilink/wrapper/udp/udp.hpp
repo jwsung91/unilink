@@ -75,7 +75,7 @@ class UNILINK_API Udp : public ChannelInterface {
 
   ChannelInterface& auto_manage(bool manage = true) override;
 
-  Udp& set_manage_external_context(bool manage);
+  Udp& manage_external_context(bool manage);
 
  private:
   struct Impl;

@@ -39,7 +39,7 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   if (use_independent_context_) {
     auto ioc = std::make_shared<boost::asio::io_context>();
     client = std::make_unique<wrapper::UdsClient>(socket_path_, ioc);
-    client->set_manage_external_context(true);
+    client->manage_external_context(true);
   } else {
     client = std::make_unique<wrapper::UdsClient>(socket_path_);
   }
@@ -104,7 +104,7 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   if (use_independent_context_) {
     auto ioc = std::make_shared<boost::asio::io_context>();
     server = std::make_unique<wrapper::UdsServer>(socket_path_, ioc);
-    server->set_manage_external_context(true);
+    server->manage_external_context(true);
   } else {
     server = std::make_unique<wrapper::UdsServer>(socket_path_);
   }
