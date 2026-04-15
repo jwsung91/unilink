@@ -27,6 +27,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/unilink.hpp"
+#include "wrapper_contract_test_utils.hpp"
 
 namespace {
 
@@ -91,6 +92,21 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
 
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   EXPECT_TRUE(server_->is_listening());
+
+  server_->stop();
+  EXPECT_TRUE(ioc->stopped());
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, ManagedExternalContextRestartsStoppedIoContext) {
+  auto ioc = std::make_shared<boost::asio::io_context>();
+  ioc->stop();
+
+  server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
+  server_->set_manage_external_context(true);
+
+  auto started = server_->start();
+  EXPECT_TRUE(started.get());
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000));
 
   server_->stop();
   EXPECT_TRUE(ioc->stopped());
@@ -190,6 +206,22 @@ TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
   client->start();
 
   TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000);
+  EXPECT_EQ(count.load(), 2);
+}
+
+TEST_F(AdvancedTcpServerCoverageTest, DisconnectHandlerReplacementUsesLatestCallback) {
+  std::atomic<int> count{0};
+  wrapper_support::TcpServerLoopbackHarness harness;
+  server_ = harness.start_server();
+  server_->on_client_disconnect([&](const wrapper::ConnectionContext&) { count = 1; });
+  server_->on_client_disconnect([&](const wrapper::ConnectionContext&) { count = 2; });
+
+  auto client = harness.connect_client();
+  ASSERT_TRUE(harness.wait_for_client_count(1));
+
+  client->stop();
+
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return count.load() > 0; }, 5000));
   EXPECT_EQ(count.load(), 2);
 }
 

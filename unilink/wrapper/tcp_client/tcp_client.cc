@@ -120,6 +120,9 @@ struct TcpClient::Impl {
     started_ = true;
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+      if (external_ioc_ && external_ioc_->stopped()) {
+        external_ioc_->restart();
+      }
       work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
           external_ioc_->get_executor());
       external_thread_ = std::thread([this, ioc = external_ioc_]() {
@@ -158,6 +161,7 @@ struct TcpClient::Impl {
       }
       if (use_external_context_ && manage_external_context_) {
         if (work_guard_) work_guard_.reset();
+        if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
       for (auto& p : pending_promises_) {
@@ -199,9 +203,14 @@ struct TcpClient::Impl {
       if (weak_alive.expired()) return;
 
       // 1. Raw data handler
-      if (data_handler_) {
+      MessageHandler data_handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        data_handler = data_handler_;
+      }
+      if (data_handler) {
         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
-        data_handler_(MessageContext(0, str_data));
+        data_handler(MessageContext(0, str_data));
       }
 
       // 2. Framer integration
@@ -213,23 +222,53 @@ struct TcpClient::Impl {
 
     channel_->on_state([this, weak_alive](base::LinkState state) {
       if (weak_alive.expired()) return;
+      ConnectionHandler connect_handler;
+      ConnectionHandler disconnect_handler;
+      ErrorHandler error_handler;
+      std::shared_ptr<interface::Channel> channel_snapshot;
+
       if (state == base::LinkState::Connected) {
-        fulfill_all(true);
-        if (connect_handler_) connect_handler_(ConnectionContext(0));
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          for (auto& p : pending_promises_) {
+            try {
+              p.set_value(true);
+            } catch (...) {
+            }
+          }
+          pending_promises_.clear();
+          connect_handler = connect_handler_;
+        }
+        if (connect_handler) connect_handler(ConnectionContext(0));
       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {
-        fulfill_all(false);
-        if (state == base::LinkState::Closed && disconnect_handler_) {
-          disconnect_handler_(ConnectionContext(0));
-        } else if (state == base::LinkState::Error && error_handler_) {
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          for (auto& p : pending_promises_) {
+            try {
+              p.set_value(false);
+            } catch (...) {
+            }
+          }
+          pending_promises_.clear();
+          if (state == base::LinkState::Closed) {
+            disconnect_handler = disconnect_handler_;
+          } else {
+            error_handler = error_handler_;
+            channel_snapshot = channel_;
+          }
+        }
+        if (state == base::LinkState::Closed && disconnect_handler) {
+          disconnect_handler(ConnectionContext(0));
+        } else if (state == base::LinkState::Error && error_handler) {
           bool handled = false;
-          if (auto transport = std::dynamic_pointer_cast<transport::TcpClient>(channel_)) {
+          if (auto transport = std::dynamic_pointer_cast<transport::TcpClient>(channel_snapshot)) {
             if (auto info = transport->last_error_info()) {
-              error_handler_(diagnostics::to_error_context(*info));
+              error_handler(diagnostics::to_error_context(*info));
               handled = true;
             }
           }
           if (!handled) {
-            error_handler_(ErrorContext(ErrorCode::IoError, "Connection error"));
+            error_handler(ErrorContext(ErrorCode::IoError, "Connection error"));
           }
         }
       }
@@ -241,9 +280,14 @@ struct TcpClient::Impl {
     framer_ = std::move(framer);
     if (framer_ && message_handler_) {
       framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler_) {
+        MessageHandler handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          handler = message_handler_;
+        }
+        if (handler) {
           std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler_(MessageContext(0, str_msg));
+          handler(MessageContext(0, str_msg));
         }
       });
     }
@@ -254,9 +298,14 @@ struct TcpClient::Impl {
     message_handler_ = std::move(handler);
     if (framer_) {
       framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        if (message_handler_) {
+        MessageHandler message_handler;
+        {
+          std::lock_guard<std::mutex> lock(mutex_);
+          message_handler = message_handler_;
+        }
+        if (message_handler) {
           std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler_(MessageContext(0, str_msg));
+          message_handler(MessageContext(0, str_msg));
         }
       });
     }

@@ -16,12 +16,14 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
 #include <boost/asio.hpp>
 #include <chrono>
 
 #include "unilink/config/udp_config.hpp"
 #include "unilink/transport/udp/udp.hpp"
 #include "unilink/wrapper/udp/udp_server.hpp"
+#include "wrapper_contract_test_utils.hpp"
 
 using namespace unilink;
 using namespace std::chrono_literals;
@@ -61,4 +63,35 @@ TEST(UdpServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
   EXPECT_FALSE(server.is_listening());
 
   server.stop();
+}
+
+TEST(UdpServerWrapperContractTest, ConnectHandlerReplacementUsesLatestCallback) {
+  std::atomic<int> connected{0};
+  test::wrapper_support::UdpServerLoopbackHarness harness;
+  auto server = harness.start_server();
+  server->on_client_connect([&](const wrapper::ConnectionContext&) { connected = 1; });
+  server->on_client_connect([&](const wrapper::ConnectionContext&) { connected = 2; });
+
+  auto client = harness.start_sender();
+  (void)client;
+  harness.send_from_client("hello");
+
+  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return connected.load() > 0; }, 5000));
+  EXPECT_EQ(connected.load(), 2);
+  EXPECT_TRUE(harness.wait_for_client_count(1));
+}
+
+TEST(UdpServerWrapperContractTest, DataHandlerReplacementUsesLatestCallback) {
+  std::atomic<int> data{0};
+  test::wrapper_support::UdpServerLoopbackHarness harness;
+  auto server = harness.start_server();
+  server->on_data([&](const wrapper::MessageContext&) { data = 1; });
+  server->on_data([&](const wrapper::MessageContext&) { data = 2; });
+
+  auto client = harness.start_sender();
+  (void)client;
+  harness.send_from_client("payload");
+
+  ASSERT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return data.load() > 0; }, 5000));
+  EXPECT_EQ(data.load(), 2);
 }

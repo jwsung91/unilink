@@ -201,6 +201,7 @@ struct TcpServer::Impl {
       }
       if (use_external_context_ && manage_external_context_) {
         if (work_guard_) work_guard_.reset();
+        if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
       fulfill_all_locked(false);
@@ -304,7 +305,7 @@ struct TcpServer::Impl {
           }
         }
         if (handler) {
-          handler(ErrorContext(ErrorCode::IoError, "Server disconnected"));
+          handler(ErrorContext(ErrorCode::IoError, "Server error"));
         }
       }
     });

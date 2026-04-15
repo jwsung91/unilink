@@ -27,6 +27,7 @@
 
 #include "test_utils.hpp"
 #include "unilink/unilink.hpp"
+#include "wrapper_contract_test_utils.hpp"
 
 namespace {
 
@@ -94,6 +95,21 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return ioc->stopped() || ioc->poll() == 0; }, 1000));
 }
 
+TEST_F(AdvancedTcpClientCoverageTest, ManagedExternalContextRestartsStoppedIoContext) {
+  auto ioc = std::make_shared<boost::asio::io_context>();
+  ioc->stop();
+
+  client_ = std::make_shared<wrapper::TcpClient>("127.0.0.1", test_port_, ioc);
+  client_->set_manage_external_context(true);
+
+  auto started = client_->start();
+  EXPECT_TRUE(started.get());
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000));
+
+  client_->stop();
+  EXPECT_TRUE(ioc->stopped());
+}
+
 TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) {
   std::atomic<bool> connected{false};
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
@@ -123,6 +139,53 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
   }
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return received.load() >= 5; }, 5000));
+}
+
+TEST(TcpClientWrapperContractTest, HandlerReplacementUsesLatestCallback) {
+  auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
+  wrapper::TcpClient client(fake_channel);
+
+  std::atomic<int> connected{0};
+  std::atomic<int> data{0};
+  std::atomic<int> errors{0};
+
+  client.on_connect([&](const wrapper::ConnectionContext&) { connected = 1; });
+  client.on_connect([&](const wrapper::ConnectionContext&) { connected = 2; });
+
+  client.on_data([&](const wrapper::MessageContext&) { data = 1; });
+  client.on_data([&](const wrapper::MessageContext&) { data = 2; });
+
+  client.on_error([&](const wrapper::ErrorContext&) { errors = 1; });
+  client.on_error([&](const wrapper::ErrorContext&) { errors = 2; });
+
+  fake_channel->emit_state(base::LinkState::Connected);
+  fake_channel->emit_bytes("payload");
+  fake_channel->emit_state(base::LinkState::Error);
+
+  EXPECT_EQ(connected.load(), 2);
+  EXPECT_EQ(data.load(), 2);
+  EXPECT_EQ(errors.load(), 2);
+}
+
+TEST(TcpClientWrapperContractTest, StopSuppressesLateCallbacks) {
+  auto fake_channel = std::make_shared<wrapper_support::FakeChannel>();
+  wrapper::TcpClient client(fake_channel);
+
+  std::atomic<int> callbacks{0};
+  client.on_connect([&](const wrapper::ConnectionContext&) { callbacks++; });
+  client.on_data([&](const wrapper::MessageContext&) { callbacks++; });
+  client.on_error([&](const wrapper::ErrorContext&) { callbacks++; });
+  client.on_disconnect([&](const wrapper::ConnectionContext&) { callbacks++; });
+
+  client.start();
+  client.stop();
+
+  fake_channel->emit_state(base::LinkState::Connected);
+  fake_channel->emit_bytes("payload");
+  fake_channel->emit_state(base::LinkState::Error);
+  fake_channel->emit_state(base::LinkState::Closed);
+
+  EXPECT_EQ(callbacks.load(), 0);
 }
 
 }  // namespace

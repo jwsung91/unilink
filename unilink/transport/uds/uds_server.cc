@@ -73,11 +73,14 @@ struct UdsServer::Impl {
     if (work_guard_) {
       work_guard_.reset();
     }
-    if (ioc_ && owns_ioc_ && ioc_thread_.joinable()) {
-      if (std::this_thread::get_id() != ioc_thread_.get_id()) {
-        ioc_thread_.join();
-      } else {
-        ioc_thread_.detach();
+    if (ioc_ && owns_ioc_) {
+      ioc_->stop();
+      if (ioc_thread_.joinable()) {
+        if (std::this_thread::get_id() != ioc_thread_.get_id()) {
+          ioc_thread_.join();
+        } else {
+          ioc_thread_.detach();
+        }
       }
     }
     // UDS Cleanup: socket file should be removed.
@@ -202,6 +205,9 @@ void UdsServer::stop() {
   // Release work guard if owned
   if (impl_->owns_ioc_) {
     impl_->work_guard_.reset();
+    if (impl_->ioc_) {
+      impl_->ioc_->stop();
+    }
   }
 
   std::vector<std::shared_ptr<UdsServerSession>> sessions_to_stop;
@@ -215,6 +221,14 @@ void UdsServer::stop() {
 
   for (auto& session : sessions_to_stop) {
     session->stop();
+  }
+
+  if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {
+    if (std::this_thread::get_id() != impl_->ioc_thread_.get_id()) {
+      impl_->ioc_thread_.join();
+    } else {
+      impl_->ioc_thread_.detach();
+    }
   }
 
   impl_->state_.set_state(base::LinkState::Idle);

@@ -41,7 +41,8 @@ Tutorial companion material is split between `examples/tutorials/` and the proto
 | [Architecture Overview](architecture/README.md) | Layers, responsibilities, design patterns |
 | [Runtime Behavior](architecture/runtime_behavior.md) | Lifecycle, retries, callback behavior |
 | [Memory Safety](architecture/memory_safety.md) | Ownership and buffer handling rules |
-| [Channel Contract](architecture/channel_contract.md) | Wrapper/transport expectations |
+| [Channel Contract](architecture/channel_contract.md) | Transport-layer contract and stop semantics |
+| [Wrapper Contract](architecture/wrapper_contract.md) | Wrapper lifecycle and callback guarantees |
 
 ## Examples and Tests
 
