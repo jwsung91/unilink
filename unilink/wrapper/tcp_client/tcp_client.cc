@@ -348,7 +348,7 @@ ChannelInterface& TcpClient::on_error(ErrorHandler h) {
   return *this;
 }
 
-ChannelInterface& TcpClient::set_framer(std::unique_ptr<framer::IFramer> f) {
+ChannelInterface& TcpClient::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
 }

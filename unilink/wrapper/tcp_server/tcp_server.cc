@@ -362,7 +362,7 @@ ServerInterface& TcpServer::on_error(ErrorHandler h) {
   return *this;
 }
 
-ServerInterface& TcpServer::set_framer_factory(FramerFactory factory) {
+ServerInterface& TcpServer::framer_factory(FramerFactory factory) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;

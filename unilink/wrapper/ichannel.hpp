@@ -59,7 +59,7 @@ class UNILINK_API ChannelInterface {
    * @brief Set a message framer for this channel.
    * @param framer The framer instance to use.
    */
-  virtual ChannelInterface& set_framer(std::unique_ptr<framer::IFramer> framer) = 0;
+  virtual ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) = 0;
 
   /**
    * @brief Set a handler for complete messages extracted by the framer.

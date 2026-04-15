@@ -73,7 +73,7 @@ class UNILINK_API UdsServer : public ServerInterface {
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
 
-  ServerInterface& set_framer_factory(FramerFactory factory) override;
+  ServerInterface& framer_factory(FramerFactory factory) override;
   ServerInterface& on_message(MessageHandler handler) override;
 
   // Client count and management

@@ -305,7 +305,7 @@ ChannelInterface& Udp::on_error(ErrorHandler h) {
   return *this;
 }
 
-ChannelInterface& Udp::set_framer(std::unique_ptr<framer::IFramer> f) {
+ChannelInterface& Udp::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
 }

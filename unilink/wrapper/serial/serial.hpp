@@ -70,7 +70,7 @@ class UNILINK_API Serial : public ChannelInterface {
   ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
-  ChannelInterface& set_framer(std::unique_ptr<framer::IFramer> framer) override;
+  ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
   ChannelInterface& on_message(MessageHandler handler) override;
 
   ChannelInterface& auto_manage(bool manage = true) override;

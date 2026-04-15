@@ -340,7 +340,7 @@ ChannelInterface& UdsClient::on_error(ErrorHandler handler) {
   return *this;
 }
 
-ChannelInterface& UdsClient::set_framer(std::unique_ptr<framer::IFramer> f) {
+ChannelInterface& UdsClient::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
 }

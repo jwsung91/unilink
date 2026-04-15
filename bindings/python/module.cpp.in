@@ -81,13 +81,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def(
           "use_line_framer",
           [](TcpClient& self, const std::string& d, bool i, size_t m) {
-            self.set_framer(std::make_unique<framer::LineFramer>(d, i, m));
+            self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](TcpClient& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
-             self.set_framer(std::make_unique<framer::PacketFramer>(s, e, m));
+             self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
            })
       .def("on_message",
@@ -147,13 +147,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def(
           "use_line_framer",
           [](TcpServer& self, const std::string& d, bool i, size_t m) {
-            self.set_framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
+            self.framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](TcpServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
-             self.set_framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
+             self.framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
              return &self;
            })
       .def("on_message",
@@ -218,13 +218,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def(
           "use_line_framer",
           [](Serial& self, const std::string& d, bool i, size_t m) {
-            self.set_framer(std::make_unique<framer::LineFramer>(d, i, m));
+            self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](Serial& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
-             self.set_framer(std::make_unique<framer::PacketFramer>(s, e, m));
+             self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
            })
       .def("on_message",
@@ -286,13 +286,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def(
           "use_line_framer",
           [](UdsClient& self, const std::string& d, bool i, size_t m) {
-            self.set_framer(std::make_unique<framer::LineFramer>(d, i, m));
+            self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](UdsClient& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
-             self.set_framer(std::make_unique<framer::PacketFramer>(s, e, m));
+             self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
            })
       .def("on_message",
@@ -352,13 +352,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def(
           "use_line_framer",
           [](UdsServer& self, const std::string& d, bool i, size_t m) {
-            self.set_framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
+            self.framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](UdsServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
-             self.set_framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
+             self.framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
              return &self;
            })
       .def("on_message",
@@ -428,13 +428,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def(
           "use_line_framer",
           [](Udp& self, const std::string& d, bool i, size_t m) {
-            self.set_framer(std::make_unique<framer::LineFramer>(d, i, m));
+            self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](Udp& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
-             self.set_framer(std::make_unique<framer::PacketFramer>(s, e, m));
+             self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
            })
       .def("on_message",
@@ -496,13 +496,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def(
           "use_line_framer",
           [](UdpServer& self, const std::string& d, bool i, size_t m) {
-            self.set_framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
+            self.framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
            [](UdpServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
-             self.set_framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
+             self.framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
              return &self;
            })
       .def("on_message",

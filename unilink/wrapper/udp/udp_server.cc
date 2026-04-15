@@ -396,7 +396,7 @@ ServerInterface& UdpServer::on_error(ErrorHandler h) {
   return *this;
 }
 
-ServerInterface& UdpServer::set_framer_factory(FramerFactory factory) {
+ServerInterface& UdpServer::framer_factory(FramerFactory factory) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->framer_factory = std::move(factory);
   return *this;

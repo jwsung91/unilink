@@ -347,7 +347,7 @@ ServerInterface& UdsServer::on_error(ErrorHandler handler) {
   return *this;
 }
 
-ServerInterface& UdsServer::set_framer_factory(FramerFactory factory) {
+ServerInterface& UdsServer::framer_factory(FramerFactory factory) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
