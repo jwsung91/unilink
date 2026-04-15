@@ -56,7 +56,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
-    server->set_framer_factory(framer_factory_);
+    server->framer_factory(framer_factory_);
   }
 
   if (on_message_) {

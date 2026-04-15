@@ -45,7 +45,7 @@ std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
   if (on_error_) udp->on_error(on_error_);
 
   if (framer_factory_) {
-    udp->set_framer(framer_factory_());
+    udp->framer(framer_factory_());
   }
   if (on_message_) {
     udp->on_message(std::move(on_message_));
@@ -110,7 +110,7 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
-    server->set_framer_factory(framer_factory_);
+    server->framer_factory(framer_factory_);
   }
 
   if (on_message_) {

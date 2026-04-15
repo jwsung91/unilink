@@ -58,7 +58,7 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   serial->retry_interval(retry_interval_);
 
   if (framer_factory_) {
-    serial->set_framer(framer_factory_());
+    serial->framer(framer_factory_());
   }
   if (on_message_) {
     serial->on_message(std::move(on_message_));

@@ -54,7 +54,7 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   client->connection_timeout(connection_timeout_);
 
   if (framer_factory_) {
-    client->set_framer(framer_factory_());
+    client->framer(framer_factory_());
   }
   if (on_message_) {
     client->on_message(std::move(on_message_));
@@ -115,7 +115,7 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
-    server->set_framer_factory(framer_factory_);
+    server->framer_factory(framer_factory_);
   }
 
   if (on_message_) {

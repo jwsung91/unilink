@@ -58,7 +58,7 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   client->connection_timeout(connection_timeout_);
 
   if (framer_factory_) {
-    client->set_framer(framer_factory_());
+    client->framer(framer_factory_());
   }
   if (on_message_) {
     client->on_message(std::move(on_message_));
