@@ -89,7 +89,7 @@ $(document).ready(function(){initNavTree('md_docs_guides_core_best_practices.htm
 <div class="contents">
 <div class="textblock"><p>Learn the recommended patterns and practices for using unilink effectively.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md286"></a>
+<h1><a class="anchor" id="autotoc_md301"></a>
 Table of Contents</h1>
 <ol type="1">
 <li><a href="#error-handling">Error Handling</a></li>
@@ -102,9 +102,9 @@ Table of Contents</h1>
 <li><a href="#logging-and-debugging">Logging and Debugging</a></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md288"></a>
+<h1><a class="anchor" id="autotoc_md303"></a>
 Error Handling</h1>
-<h2><a class="anchor" id="autotoc_md289"></a>
+<h2><a class="anchor" id="autotoc_md304"></a>
 ✅ DO: Always Register Error Callbacks</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -122,7 +122,7 @@ Error Handling</h1>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::wrapper::ErrorContext</a></div><div class="ttdoc">Context for error events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00070">context.hpp:70</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a9f7fc6c812b11ff1d77aa71233a3221c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">unilink::wrapper::ErrorContext::message</a></div><div class="ttdeci">std::string_view message() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00076">context.hpp:76</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00120">unilink.hpp:120</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md290"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md305"></a>
 ✅ DO: Check Connection Status Before Sending</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD</span></div>
 <div class="line"><span class="keywordflow">if</span> (client-&gt;is_connected()) {</div>
@@ -133,7 +133,7 @@ Error Handling</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// BAD - Send without checking</span></div>
 <div class="line">client-&gt;send(<span class="stringliteral">&quot;Hello&quot;</span>);  <span class="comment">// May fail silently</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md291"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md306"></a>
 ✅ DO: Implement Graceful Error Recovery</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Graceful recovery</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -157,7 +157,7 @@ Error Handling</h1>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a75baa0901a7b5c261e5f0f5615a13059"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a75baa0901a7b5c261e5f0f5615a13059">unilink::wrapper::ErrorContext::code</a></div><div class="ttdeci">ErrorCode code() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00075">context.hpp:75</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md292"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md307"></a>
 ✅ DO: Use Centralized Error Handler</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Centralized error management</span></div>
 <div class="line"><span class="keywordtype">void</span> setup_error_handler() {</div>
@@ -186,9 +186,9 @@ Error Handling</h1>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html">unilink::diagnostics::ErrorInfo</a></div><div class="ttdoc">Comprehensive error information structure.</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00064">error_types.hpp:64</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html_ac3644d1d58ce2a174d87f319ec7c6071"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html#ac3644d1d58ce2a174d87f319ec7c6071">unilink::diagnostics::ErrorInfo::level</a></div><div class="ttdeci">ErrorLevel level</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00065">error_types.hpp:65</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md294"></a>
+<h1><a class="anchor" id="autotoc_md309"></a>
 Resource Management</h1>
-<h2><a class="anchor" id="autotoc_md295"></a>
+<h2><a class="anchor" id="autotoc_md310"></a>
 ✅ DO: Use RAII and Smart Pointers</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Automatic cleanup</span></div>
 <div class="line">{</div>
@@ -207,7 +207,7 @@ Resource Management</h1>
 <div class="line"><span class="keyword">delete</span> client;   <span class="comment">// Must remember to delete</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a2b5c3a4512e9c13dba24b8adb4aaf0de"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">unilink::builder::TcpClientBuilder::auto_manage</a></div><div class="ttdeci">TcpClientBuilder &amp; auto_manage(bool auto_manage=true) override</div><div class="ttdoc">Enable auto-manage functionality.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00074">tcp_client_builder.cc:74</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a790be55fcb59a0aea5dfb178072fd6c7"><div class="ttname"><a href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">unilink::TcpClient</a></div><div class="ttdeci">wrapper::TcpClient TcpClient</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00092">unilink.hpp:92</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md296"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md311"></a>
 ✅ DO: Stop Connections Before Shutdown</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Graceful shutdown</span></div>
 <div class="line"><span class="keyword">class </span>Application {</div>
@@ -241,7 +241,7 @@ Resource Management</h1>
 <blockquote class="doxtable">
 <p>Advanced: If you supply your own <code>boost::asio::io_context</code> to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with <code>set_manage_external_context(true)</code>). Make sure the context is running on a thread you control. </p>
 </blockquote>
-<h2><a class="anchor" id="autotoc_md297"></a>
+<h2><a class="anchor" id="autotoc_md312"></a>
 ✅ DO: Reuse Connections When Possible</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Reuse connection</span></div>
 <div class="line"><span class="keyword">class </span>DataSender {</div>
@@ -264,9 +264,9 @@ Resource Management</h1>
 <div class="line">    client-&gt;stop();  <span class="comment">// Wasteful!</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md299"></a>
+<h1><a class="anchor" id="autotoc_md314"></a>
 Thread Safety</h1>
-<h2><a class="anchor" id="autotoc_md300"></a>
+<h2><a class="anchor" id="autotoc_md315"></a>
 ✅ DO: Protect Shared State</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Thread-safe state management</span></div>
 <div class="line"><span class="keyword">class </span>Server {</div>
@@ -292,7 +292,7 @@ Thread Safety</h1>
 <div class="line">        clients_[id] = info;  <span class="comment">// UNSAFE from multiple threads!</span></div>
 <div class="line">    }</div>
 <div class="line">};</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md301"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md316"></a>
 ✅ DO: Use ThreadSafeState for Complex States</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Use provided thread-safe utilities</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="thread__safe__state_8hpp.html">unilink/concurrency/thread_safe_state.hpp</a>&quot;</span></div>
@@ -312,7 +312,7 @@ Thread Safety</h1>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1ThreadSafeState_html_a2ed569d3580e1dc1660e22a1d8389c37"><div class="ttname"><a href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a2ed569d3580e1dc1660e22a1d8389c37">unilink::concurrency::ThreadSafeState::set_state</a></div><div class="ttdeci">void set_state(const State &amp;new_state)</div><div class="ttdef"><b>Definition:</b> <a href="thread__safe__state_8hpp_source.html#l00180">thread_safe_state.hpp:180</a></div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1ThreadSafeState_html_a813f758763fd4400ef781b34a6614502"><div class="ttname"><a href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a813f758763fd4400ef781b34a6614502">unilink::concurrency::ThreadSafeState::get_state</a></div><div class="ttdeci">State get_state() const</div><div class="ttdef"><b>Definition:</b> <a href="thread__safe__state_8hpp_source.html#l00174">thread_safe_state.hpp:174</a></div></div>
 <div class="ttc" id="athread__safe__state_8hpp_html"><div class="ttname"><a href="thread__safe__state_8hpp.html">thread_safe_state.hpp</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md302"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md317"></a>
 ❌ DON'T: Block in Callbacks</h2>
 <div class="fragment"><div class="line"><span class="comment">// BAD - Blocking in callback</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
@@ -343,9 +343,9 @@ Thread Safety</h1>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html">unilink::wrapper::MessageContext</a></div><div class="ttdoc">Context for data/message related events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00033">context.hpp:33</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a49d3f7b0aeac37cb41885b5fc2fa6423"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">unilink::wrapper::MessageContext::data</a></div><div class="ttdeci">std::string_view data() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00039">context.hpp:39</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md304"></a>
+<h1><a class="anchor" id="autotoc_md319"></a>
 Performance Optimization</h1>
-<h2><a class="anchor" id="autotoc_md305"></a>
+<h2><a class="anchor" id="autotoc_md320"></a>
 ✅ DO: Use Move Semantics</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Move instead of copy</span></div>
 <div class="line">std::string large_data = generate_large_data();</div>
@@ -354,7 +354,7 @@ Performance Optimization</h1>
 <div class="line"><span class="comment">// BAD - Unnecessary copy</span></div>
 <div class="line">std::string large_data = generate_large_data();</div>
 <div class="line">client-&gt;send(large_data);  <span class="comment">// Copy entire string</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md306"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md321"></a>
 ✅ DO: Enable Async Logging</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Async logging for performance</span></div>
 <div class="line"><a class="code" href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a> config;</div>
@@ -367,7 +367,7 @@ Performance Optimization</h1>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a59e33a20b37773a2299729876d8552e4"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4">unilink::diagnostics::Logger::set_async_logging</a></div><div class="ttdeci">void set_async_logging(bool enable, const AsyncLogConfig &amp;config=AsyncLogConfig{})</div><div class="ttdoc">Enable/disable async logging.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00546">logger.cc:546</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html">unilink::diagnostics::AsyncLogConfig</a></div><div class="ttdoc">Async logging configuration.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8hpp_source.html#l00082">logger.hpp:82</a></div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1AsyncLogConfig_html_aca0467bc46f99891373b0338a43e5790"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aca0467bc46f99891373b0338a43e5790">unilink::diagnostics::AsyncLogConfig::batch_size</a></div><div class="ttdeci">size_t batch_size</div><div class="ttdef"><b>Definition:</b> <a href="logger_8hpp_source.html#l00084">logger.hpp:84</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md307"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md322"></a>
 ✅ DO: Use Shared IO Context (Default)</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Shared context (efficient)</span></div>
 <div class="line"><span class="keyword">auto</span> client1 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server1.com&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
@@ -379,7 +379,7 @@ Performance Optimization</h1>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a567fa16a7c094edee54a0ea2fec74fcd">use_independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Only for tests</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a567fa16a7c094edee54a0ea2fec74fcd"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a567fa16a7c094edee54a0ea2fec74fcd">unilink::builder::TcpClientBuilder::use_independent_context</a></div><div class="ttdeci">TcpClientBuilder &amp; use_independent_context(bool use_independent=true)</div><div class="ttdoc">Use independent IoContext for this client.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00094">tcp_client_builder.cc:94</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md308"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md323"></a>
 ✅ DO: Batch Small Messages</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Batch small messages</span></div>
 <div class="line"><span class="keyword">class </span>MessageBatcher {</div>
@@ -409,9 +409,9 @@ Performance Optimization</h1>
 <div class="line">    client-&gt;send(msg);  <span class="comment">// Many small sends - inefficient</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md310"></a>
+<h1><a class="anchor" id="autotoc_md325"></a>
 Code Organization</h1>
-<h2><a class="anchor" id="autotoc_md311"></a>
+<h2><a class="anchor" id="autotoc_md326"></a>
 ✅ DO: Use Classes for Complex Logic</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Organized in a class</span></div>
 <div class="line"><span class="keyword">class </span>ChatClient {</div>
@@ -444,7 +444,7 @@ Code Organization</h1>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ac1b292b700428522a1a7cd7bc3e9e4f5"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ac1b292b700428522a1a7cd7bc3e9e4f5">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="ibuilder_8hpp_source.html#l00095">ibuilder.hpp:95</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00054">context.hpp:54</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md312"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md327"></a>
 ✅ DO: Separate Concerns</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Separated concerns</span></div>
 <div class="line"><span class="keyword">class </span>NetworkManager {</div>
@@ -480,9 +480,9 @@ Code Organization</h1>
 <div class="line">    }</div>
 <div class="line">};</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md314"></a>
+<h1><a class="anchor" id="autotoc_md329"></a>
 Testing</h1>
-<h2><a class="anchor" id="autotoc_md315"></a>
+<h2><a class="anchor" id="autotoc_md330"></a>
 ✅ DO: Use Dependency Injection</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Testable design</span></div>
 <div class="line"><span class="keyword">class </span>MessageProcessor {</div>
@@ -507,7 +507,7 @@ Testing</h1>
 <div class="line"><span class="keyword">auto</span> mock_client = std::make_shared&lt;MockClient&gt;();</div>
 <div class="line">MessageProcessor processor(mock_client);</div>
 <div class="line">EXPECT_CALL(*mock_client, send(<span class="stringliteral">&quot;test&quot;</span>));</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md316"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md331"></a>
 ✅ DO: Test Error Scenarios</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Test error handling</span></div>
 <div class="line">TEST(ClientTest, HandlesConnectionError) {</div>
@@ -524,7 +524,7 @@ Testing</h1>
 <div class="line">    </div>
 <div class="line">    EXPECT_TRUE(error_received);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md317"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md332"></a>
 ✅ DO: Use Independent Context for Tests</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Isolated tests</span></div>
 <div class="line">TEST(ClientTest, SendReceive) {</div>
@@ -535,9 +535,9 @@ Testing</h1>
 <div class="line">    <span class="comment">// Test won&#39;t interfere with other tests</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md319"></a>
+<h1><a class="anchor" id="autotoc_md334"></a>
 Security</h1>
-<h2><a class="anchor" id="autotoc_md320"></a>
+<h2><a class="anchor" id="autotoc_md335"></a>
 ✅ DO: Validate All Input</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Input validation</span></div>
 <div class="line"><span class="keywordtype">void</span> handle_message(<span class="keyword">const</span> std::string&amp; msg) {</div>
@@ -563,7 +563,7 @@ Security</h1>
 <div class="line"><span class="keywordtype">void</span> handle_message(<span class="keyword">const</span> std::string&amp; msg) {</div>
 <div class="line">    process_message(msg);  <span class="comment">// Trusting input blindly</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md321"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md336"></a>
 ✅ DO: Implement Rate Limiting</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Rate limiting</span></div>
 <div class="line"><span class="keyword">class </span>RateLimiter {</div>
@@ -599,7 +599,7 @@ Security</h1>
 <div class="line">    process_data(ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a0ee74400b6593ae9c118e166538b1d26">client_id</a>(), std::string(ctx.<a class="code" href="classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423">data</a>()));</div>
 <div class="line">});</div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1MessageContext_html_a0ee74400b6593ae9c118e166538b1d26"><div class="ttname"><a href="classunilink_1_1wrapper_1_1MessageContext.html#a0ee74400b6593ae9c118e166538b1d26">unilink::wrapper::MessageContext::client_id</a></div><div class="ttdeci">size_t client_id() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00038">context.hpp:38</a></div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md322"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md337"></a>
 ✅ DO: Set Connection Limits</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Limit connections</span></div>
 <div class="line"><span class="keyword">class </span>Server {</div>
@@ -621,9 +621,9 @@ Security</h1>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a14688954e7b065e67510b18052a5385a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a14688954e7b065e67510b18052a5385a">unilink::wrapper::ConnectionContext::client_info</a></div><div class="ttdeci">const std::string &amp; client_info() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00060">context.hpp:60</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a556940f4854839c3e5ee7525daf7cea1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a556940f4854839c3e5ee7525daf7cea1">unilink::wrapper::ConnectionContext::client_id</a></div><div class="ttdeci">size_t client_id() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00059">context.hpp:59</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md324"></a>
+<h1><a class="anchor" id="autotoc_md339"></a>
 Logging and Debugging</h1>
-<h2><a class="anchor" id="autotoc_md325"></a>
+<h2><a class="anchor" id="autotoc_md340"></a>
 ✅ DO: Use Appropriate Log Levels</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Proper log levels</span></div>
 <div class="line">logger.debug(<span class="stringliteral">&quot;client&quot;</span>, <span class="stringliteral">&quot;send&quot;</span>, <span class="stringliteral">&quot;Sending data: &quot;</span> + data);  <span class="comment">// Detailed</span></div>
@@ -635,7 +635,7 @@ Logging and Debugging</h1>
 <div class="line"><span class="comment">// BAD - Wrong log levels</span></div>
 <div class="line">logger.info(<span class="stringliteral">&quot;client&quot;</span>, <span class="stringliteral">&quot;send&quot;</span>, <span class="stringliteral">&quot;Sending data: &quot;</span> + data);  <span class="comment">// Too noisy</span></div>
 <div class="line">logger.error(<span class="stringliteral">&quot;client&quot;</span>, <span class="stringliteral">&quot;connect&quot;</span>, <span class="stringliteral">&quot;Connected to server&quot;</span>);  <span class="comment">// Not an error!</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md326"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md341"></a>
 ✅ DO: Enable Debug Logging During Development</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Debug mode for development</span></div>
 <div class="line"><span class="preprocessor">#ifdef DEBUG</span></div>
@@ -651,7 +651,7 @@ Logging and Debugging</h1>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::ErrorLevel::INFO</a></div><div class="ttdeci">@ INFO</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b">unilink::diagnostics::LogLevel::WARNING</a></div><div class="ttdeci">@ WARNING</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a></div><div class="ttdeci">@ DEBUG</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md327"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md342"></a>
 ✅ DO: Log Context Information</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Rich context</span></div>
 <div class="line">logger.info(<span class="stringliteral">&quot;tcp_client&quot;</span>, <span class="stringliteral">&quot;connect&quot;</span>, </div>
@@ -667,7 +667,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 13 2026 22:30:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

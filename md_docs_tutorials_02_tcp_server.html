@@ -90,7 +90,7 @@ $(document).ready(function(){initNavTree('md_docs_tutorials_02_tcp_server.html',
 <div class="textblock"><p>This tutorial uses the current <code>TcpServerBuilder</code> and <code>TcpServer</code> wrapper API to build a simple echo server with context-based callbacks.</p>
 <p><b>Duration</b>: 15 minutes <b>Difficulty</b>: Beginner to Intermediate <b>Prerequisites</b>: <a class="el" href="md_docs_tutorials_01_getting_started.html">Getting Started</a></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md834"></a>
+<h1><a class="anchor" id="autotoc_md849"></a>
 What You'll Build</h1>
 <p>A TCP server that:</p>
 <ol type="1">
@@ -100,7 +100,7 @@ What You'll Build</h1>
 <li>echoes messages back to the sender</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md836"></a>
+<h1><a class="anchor" id="autotoc_md851"></a>
 Step 1: Create The Server</h1>
 <p>Create <code>echo_server.cpp</code>:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -175,7 +175,7 @@ Step 1: Create The Server</h1>
 <div class="ttc" id="anamespaceunilink_html_a14c0a21a3c09f578b71455e31cf47956"><div class="ttname"><a href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a></div><div class="ttdeci">builder::TcpServerBuilder tcp_server(uint16_t port)</div><div class="ttdoc">Create a TCP server builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00112">unilink.hpp:112</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md838"></a>
+<h1><a class="anchor" id="autotoc_md853"></a>
 Step 2: Run It</h1>
 <p>Start the server:</p>
 <div class="fragment"><div class="line">./echo_server</div>
@@ -183,7 +183,7 @@ Step 2: Run It</h1>
 <div class="fragment"><div class="line">nc localhost 8080</div>
 </div><!-- fragment --><p>Anything you send should be echoed back.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md840"></a>
+<h1><a class="anchor" id="autotoc_md855"></a>
 Step 3: Understand The Current Server API</h1>
 <p>The current server wrapper uses these key methods:</p>
 <ul>
@@ -200,7 +200,7 @@ Step 3: Understand The Current Server API</h1>
 <li><code>ErrorContext</code>: error code and message</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md842"></a>
+<h1><a class="anchor" id="autotoc_md857"></a>
 Client Limits</h1>
 <p>Choose a client-limit mode before <code>build()</code>:</p>
 <div class="fragment"><div class="line"><a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080).<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">single_client</a>();</div>
@@ -210,7 +210,7 @@ Client Limits</h1>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9349e7963408c74d2dac92fae288cddc"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9349e7963408c74d2dac92fae288cddc">unilink::builder::TcpServerBuilder::single_client</a></div><div class="ttdeci">TcpServerBuilder &amp; single_client()</div><div class="ttdoc">Configure server for single client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00118">tcp_server_builder.cc:118</a></div></div>
 </div><!-- fragment --><p>For tutorial simplicity, the example above uses <code>unlimited_clients()</code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md844"></a>
+<h1><a class="anchor" id="autotoc_md859"></a>
 Use The Full Example Programs For More</h1>
 <p>The repository already includes maintained tutorial examples:</p>
 <ul>
@@ -220,7 +220,7 @@ Use The Full Example Programs For More</h1>
 </ul>
 <p>Use the chat example when you want a larger stateful server example with nicknames and broadcast behavior.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md846"></a>
+<h1><a class="anchor" id="autotoc_md861"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="md_docs_tutorials_03_uds_communication.html">UDS Communication</a></li>
@@ -237,7 +237,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 13 2026 22:30:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

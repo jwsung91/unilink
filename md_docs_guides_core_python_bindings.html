@@ -89,9 +89,9 @@ $(document).ready(function(){initNavTree('md_docs_guides_core_python_bindings.ht
 <div class="contents">
 <div class="textblock"><p>Unilink provides high-level Python bindings (<code>unilink_py</code>) that mirror the C++ Wrapper API. This allows you to build cross-platform communication applications using Python with the performance of a C++ core.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md330"></a>
+<h1><a class="anchor" id="autotoc_md345"></a>
 🚀 Getting Started</h1>
-<h2><a class="anchor" id="autotoc_md331"></a>
+<h2><a class="anchor" id="autotoc_md346"></a>
 Installation</h2>
 <ol type="1">
 <li><b>Prerequisites</b>:<ul>
@@ -107,10 +107,10 @@ Installation</h2>
 </div><!-- fragment --></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md333"></a>
+<h1><a class="anchor" id="autotoc_md348"></a>
 🔌 TCP Client</h1>
 <p>The <code>TcpClient</code> in Python supports automatic reconnection and asynchronous event handling.</p>
-<h2><a class="anchor" id="autotoc_md334"></a>
+<h2><a class="anchor" id="autotoc_md349"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line">import unilink_py</div>
 <div class="line">import datetime</div>
@@ -148,10 +148,10 @@ Basic Usage</h2>
 <div class="line">time.sleep(1)</div>
 <div class="line">client.stop()</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md336"></a>
+<h1><a class="anchor" id="autotoc_md351"></a>
 🖥️ TCP Server</h1>
 <p><code>TcpServer</code> manages multiple client connections seamlessly.</p>
-<h2><a class="anchor" id="autotoc_md337"></a>
+<h2><a class="anchor" id="autotoc_md352"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line">import unilink_py</div>
 <div class="line"> </div>
@@ -170,10 +170,10 @@ Basic Usage</h2>
 <div class="line">server.start()</div>
 <div class="line">print(&quot;Server started on port 8080&quot;)</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md339"></a>
+<h1><a class="anchor" id="autotoc_md354"></a>
 📟 Serial Communication</h1>
 <p>Supports RS-232/422/485 with automatic retry logic.</p>
-<h2><a class="anchor" id="autotoc_md340"></a>
+<h2><a class="anchor" id="autotoc_md355"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line">import unilink_py</div>
 <div class="line">import datetime</div>
@@ -194,10 +194,10 @@ Basic Usage</h2>
 <div class="line"> </div>
 <div class="line">serial.send(&quot;AT\r\n&quot;)</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md342"></a>
+<h1><a class="anchor" id="autotoc_md357"></a>
 🌐 UDP Communication</h1>
 <p>Flexible UDP transport with automatic remote endpoint tracking.</p>
-<h2><a class="anchor" id="autotoc_md343"></a>
+<h2><a class="anchor" id="autotoc_md358"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line">import unilink_py</div>
 <div class="line"> </div>
@@ -219,10 +219,10 @@ Basic Usage</h2>
 <div class="line">udp.start()</div>
 <div class="line">udp.send(&quot;Hello UDP&quot;)</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md345"></a>
+<h1><a class="anchor" id="autotoc_md360"></a>
 📂 UDS Communication</h1>
 <p>Unix Domain Sockets for high-performance local IPC.</p>
-<h2><a class="anchor" id="autotoc_md346"></a>
+<h2><a class="anchor" id="autotoc_md361"></a>
 Basic Usage</h2>
 <div class="fragment"><div class="line">import unilink_py</div>
 <div class="line"> </div>
@@ -244,9 +244,9 @@ Basic Usage</h2>
 <div class="line"> </div>
 <div class="line">client.send(&quot;Hello over UDS&quot;)</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md348"></a>
+<h1><a class="anchor" id="autotoc_md363"></a>
 🛠️ Advanced Features</h1>
-<h2><a class="anchor" id="autotoc_md349"></a>
+<h2><a class="anchor" id="autotoc_md364"></a>
 Message Framing (Line/Packet)</h2>
 <p>Unilink allows you to avoid dealing with raw fragmented bytes by using built-in framers. When a framer is set, you use <code>on_message</code> instead of <code>on_data</code> to receive completely framed payloads.</p>
 <div class="fragment"><div class="line">import unilink_py</div>
@@ -273,17 +273,17 @@ Message Framing (Line/Packet)</h2>
 <div class="line">@server.on_message</div>
 <div class="line">def handle_client_message(ctx):</div>
 <div class="line">    print(f&quot;Client {ctx.client_id} sent: {ctx.data}&quot;)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md350"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md365"></a>
 Threading &amp; GIL</h2>
 <p>The bindings are designed to be thread-safe. When C++ triggers a callback, it automatically acquires the Python GIL (Global Interpreter Lock), allowing you to safely run Python code inside handlers. Long-running operations in Python handlers will block other callbacks for that specific channel, so keep them brief.</p>
-<h2><a class="anchor" id="autotoc_md351"></a>
+<h2><a class="anchor" id="autotoc_md366"></a>
 Lifecycle Management</h2>
 <ul>
 <li>**<code>start()</code>**: Returns a <code>std::future&lt;bool&gt;</code> equivalent in Python (usually blocks until initial attempt finishes if wrapped).</li>
 <li>**<code>stop()</code>**: Synchronously stops all I/O operations and joins internal threads.</li>
 <li>**<code>auto_manage(True)</code>**: When enabled, the channel starts immediately and stops when the Python object is garbage collected.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md352"></a>
+<h2><a class="anchor" id="autotoc_md367"></a>
 Configuration</h2>
 <ul>
 <li>**<code>UdpConfig</code>**: A dedicated class for UDP settings (buffer sizes, memory pools, etc.).</li>
@@ -296,7 +296,7 @@ Configuration</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 13 2026 22:30:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

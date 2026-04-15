@@ -376,17 +376,17 @@ $(document).ready(function(){initNavTree('udp__server_8cc_source.html',''); init
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;      }</div>
 <div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f">channel</a>) {</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f">channel</a>-&gt;on_bytes_from(<span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f">channel</a>-&gt;on_state(<span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        lock.unlock();</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f">channel</a>-&gt;stop();</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        lock.lock();</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      }</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8">reaper_timer</a>) {</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8">reaper_timer</a>-&gt;cancel();</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8">reaper_timer</a>.reset();</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8">reaper_timer</a>) {</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8">reaper_timer</a>-&gt;cancel();</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8">reaper_timer</a>.reset();</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;      }</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f">channel</a>) {</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f">channel</a>-&gt;on_bytes_from(<span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f">channel</a>-&gt;on_state(<span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        lock.unlock();</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f">channel</a>-&gt;stop();</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        lock.lock();</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;      }</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a86ed6c7997a84c7fd06ceec18fd7ca4a">use_external_context</a> &amp;&amp; <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a6ef3a484dc5165711bdf15c4918a2b15">manage_external_context</a> &amp;&amp; <a class="code" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a47073cf48d7864fb1fda7a2b267ca151">external_thread</a>.joinable()) {</div>
@@ -621,7 +621,7 @@ $(document).ready(function(){initNavTree('udp__server_8cc_source.html',''); init
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_b326aa12ac4fd529ad72c1f5aa11c7fc.html">udp</a></li><li class="navelem"><a class="el" href="udp__server_8cc.html">udp_server.cc</a></li>
-    <li class="footer">Generated on Mon Apr 13 2026 22:30:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

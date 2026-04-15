@@ -162,307 +162,321 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__server_8cc_source
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#aa7418b5f6758c56487d19394c5abd759">work_guard_</a>) {</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <a class="code" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#aa7418b5f6758c56487d19394c5abd759">work_guard_</a>.reset();</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span> (ioc_ &amp;&amp; owns_ioc_ &amp;&amp; ioc_thread_.joinable()) {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      <span class="keywordflow">if</span> (std::this_thread::get_id() != ioc_thread_.get_id()) {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        ioc_thread_.join();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        ioc_thread_.detach();</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// UDS Cleanup: socket file should be removed.</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::remove(cfg_.<a class="code" href="structunilink_1_1config_1_1UdsServerConfig.html#a1b6e3decae24b71fa994d73edd29871c">socket_path</a>.c_str());</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordtype">void</span> do_accept(std::shared_ptr&lt;UdsServer&gt; <span class="keyword">self</span>);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordtype">void</span> notify_state();</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;};</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4">   90</a></span>&#160;std::shared_ptr&lt;UdsServer&gt; <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4">UdsServer::create</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdsServerConfig.html">config::UdsServerConfig</a>&amp; cfg) {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordflow">return</span> std::shared_ptr&lt;UdsServer&gt;(<span class="keyword">new</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer</a>(cfg));</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;std::shared_ptr&lt;UdsServer&gt; <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4">UdsServer::create</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdsServerConfig.html">config::UdsServerConfig</a>&amp; cfg,</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                                             std::unique_ptr&lt;interface::UdsAcceptorInterface&gt; acceptor,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                                             net::io_context&amp; ioc) {</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keywordflow">return</span> std::shared_ptr&lt;UdsServer&gt;(<span class="keyword">new</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer</a>(cfg, std::move(acceptor), ioc));</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer::UdsServer</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdsServerConfig.html">config::UdsServerConfig</a>&amp; cfg) : impl_(std::make_unique&lt;Impl&gt;(cfg, nullptr)) {}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer::UdsServer</a>(<span class="keyword">const</span> config::UdsServerConfig&amp; cfg, std::unique_ptr&lt;interface::UdsAcceptorInterface&gt; acceptor,</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                     net::io_context&amp; ioc)</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    : impl_(std::make_unique&lt;Impl&gt;(cfg, &amp;ioc)) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  impl_-&gt;acceptor_ = std::move(acceptor);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a7351a1236052df08f059f21aab85ea6f">  107</a></span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a7351a1236052df08f059f21aab85ea6f">UdsServer::~UdsServer</a>() { <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">stop</a>(); }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer::UdsServer</a>(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>&amp;&amp;) noexcept = default;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>&amp; <a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>::operator=(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>&amp;&amp;) noexcept = default;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span> (ioc_ &amp;&amp; owns_ioc_) {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      ioc_-&gt;stop();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keywordflow">if</span> (ioc_thread_.joinable()) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">if</span> (std::this_thread::get_id() != ioc_thread_.get_id()) {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;          ioc_thread_.join();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;          ioc_thread_.detach();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// UDS Cleanup: socket file should be removed.</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    std::remove(cfg_.<a class="code" href="structunilink_1_1config_1_1UdsServerConfig.html#a1b6e3decae24b71fa994d73edd29871c">socket_path</a>.c_str());</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keywordtype">void</span> do_accept(std::shared_ptr&lt;UdsServer&gt; <span class="keyword">self</span>);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keywordtype">void</span> notify_state();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4">   93</a></span>&#160;std::shared_ptr&lt;UdsServer&gt; <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4">UdsServer::create</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdsServerConfig.html">config::UdsServerConfig</a>&amp; cfg) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keywordflow">return</span> std::shared_ptr&lt;UdsServer&gt;(<span class="keyword">new</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer</a>(cfg));</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;std::shared_ptr&lt;UdsServer&gt; <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4">UdsServer::create</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdsServerConfig.html">config::UdsServerConfig</a>&amp; cfg,</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                                             std::unique_ptr&lt;interface::UdsAcceptorInterface&gt; acceptor,</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                                             net::io_context&amp; ioc) {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keywordflow">return</span> std::shared_ptr&lt;UdsServer&gt;(<span class="keyword">new</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer</a>(cfg, std::move(acceptor), ioc));</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;}</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer::UdsServer</a>(<span class="keyword">const</span> <a class="code" href="structunilink_1_1config_1_1UdsServerConfig.html">config::UdsServerConfig</a>&amp; cfg) : impl_(std::make_unique&lt;Impl&gt;(cfg, nullptr)) {}</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer::UdsServer</a>(<span class="keyword">const</span> config::UdsServerConfig&amp; cfg, std::unique_ptr&lt;interface::UdsAcceptorInterface&gt; acceptor,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                     net::io_context&amp; ioc)</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    : impl_(std::make_unique&lt;Impl&gt;(cfg, &amp;ioc)) {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  impl_-&gt;acceptor_ = std::move(acceptor);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a7351a1236052df08f059f21aab85ea6f">  110</a></span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a7351a1236052df08f059f21aab85ea6f">UdsServer::~UdsServer</a>() { <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">stop</a>(); }</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#ad1d32d30e782b7fc5e29d4c7161575e6">  112</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>::start() {</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordflow">if</span> (impl_-&gt;state_.get_state() == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">UdsServer::UdsServer</a>(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>&amp;&amp;) noexcept = default;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>&amp; <a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>::operator=(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>&amp;&amp;) noexcept = default;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  impl_-&gt;stopping_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="keywordflow">if</span> (!impl_-&gt;cfg_.is_valid()) {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Invalid UDS server configuration or socket path&quot;</span>);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    impl_-&gt;notify_state();</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  }</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="comment">// Cleanup old socket file if exists</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  std::remove(impl_-&gt;cfg_.socket_path.c_str());</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#ad1d32d30e782b7fc5e29d4c7161575e6">  115</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a>::start() {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="keywordflow">if</span> (impl_-&gt;state_.get_state() == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  impl_-&gt;stopping_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="keywordflow">if</span> (!impl_-&gt;cfg_.is_valid()) {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Invalid UDS server configuration or socket path&quot;</span>);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    impl_-&gt;notify_state();</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  }</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  boost::system::error_code ec;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  impl_-&gt;acceptor_-&gt;open(<a class="code" href="namespaceunilink_1_1transport.html#a2c518969e90be691097a4e47dafff14e">uds</a>(), ec);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  <span class="keywordflow">if</span> (ec) {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Failed to open acceptor: &quot;</span> + ec.message());</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    impl_-&gt;notify_state();</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;  }</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;  uds::endpoint endpoint;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    endpoint = uds::endpoint(impl_-&gt;cfg_.socket_path);</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;  } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Invalid UDS endpoint: &quot;</span> + std::string(e.what()));</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    impl_-&gt;notify_state();</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;  }</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;  impl_-&gt;acceptor_-&gt;bind(endpoint, ec);</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;  <span class="keywordflow">if</span> (ec) {</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Failed to bind to &quot;</span> + impl_-&gt;cfg_.socket_path + <span class="stringliteral">&quot;: &quot;</span> + ec.message());</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    impl_-&gt;notify_state();</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;  }</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;  impl_-&gt;acceptor_-&gt;listen(net::socket_base::max_listen_connections, ec);</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  <span class="keywordflow">if</span> (ec) {</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Failed to listen: &quot;</span> + ec.message());</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    impl_-&gt;notify_state();</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;  }</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;  impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  impl_-&gt;notify_state();</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  <span class="comment">// Cleanup old socket file if exists</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  std::remove(impl_-&gt;cfg_.socket_path.c_str());</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  boost::system::error_code ec;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  impl_-&gt;acceptor_-&gt;open(<a class="code" href="namespaceunilink_1_1transport.html#a2c518969e90be691097a4e47dafff14e">uds</a>(), ec);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <span class="keywordflow">if</span> (ec) {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Failed to open acceptor: &quot;</span> + ec.message());</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    impl_-&gt;notify_state();</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;  uds::endpoint endpoint;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;  <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    endpoint = uds::endpoint(impl_-&gt;cfg_.socket_path);</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;  } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Invalid UDS endpoint: &quot;</span> + std::string(e.what()));</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    impl_-&gt;notify_state();</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;  }</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;  impl_-&gt;acceptor_-&gt;bind(endpoint, ec);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  <span class="keywordflow">if</span> (ec) {</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Failed to bind to &quot;</span> + impl_-&gt;cfg_.socket_path + <span class="stringliteral">&quot;: &quot;</span> + ec.message());</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    impl_-&gt;notify_state();</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  }</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;  impl_-&gt;acceptor_-&gt;listen(net::socket_base::max_listen_connections, ec);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;  <span class="keywordflow">if</span> (ec) {</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Failed to listen: &quot;</span> + ec.message());</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca902b0d55fddef6f8d651fe1035b7d4bd">base::LinkState::Error</a>);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    impl_-&gt;notify_state();</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  }</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  <span class="keywordflow">if</span> (impl_-&gt;owns_ioc_ &amp;&amp; !impl_-&gt;ioc_thread_.joinable()) {</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordflow">if</span> (impl_-&gt;ioc_-&gt;stopped()) {</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;      impl_-&gt;ioc_-&gt;restart();</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    }</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    impl_-&gt;work_guard_ =</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        std::make_unique&lt;net::executor_work_guard&lt;net::io_context::executor_type&gt;&gt;(net::make_work_guard(*impl_-&gt;ioc_));</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    impl_-&gt;ioc_thread_ = std::thread([<span class="keyword">this</span>]() {</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;      <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        impl_-&gt;ioc_-&gt;run();</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;      } <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;      }</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    });</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;  }</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;  net::post(impl_-&gt;ioc_-&gt;get_executor(), [<span class="keyword">self</span> = shared_from_this()]() { <span class="keyword">self</span>-&gt;impl_-&gt;do_accept(<span class="keyword">self</span>); });</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;}</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  impl_-&gt;notify_state();</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="keywordflow">if</span> (impl_-&gt;owns_ioc_ &amp;&amp; !impl_-&gt;ioc_thread_.joinable()) {</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">if</span> (impl_-&gt;ioc_-&gt;stopped()) {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      impl_-&gt;ioc_-&gt;restart();</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    }</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    impl_-&gt;work_guard_ =</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        std::make_unique&lt;net::executor_work_guard&lt;net::io_context::executor_type&gt;&gt;(net::make_work_guard(*impl_-&gt;ioc_));</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    impl_-&gt;ioc_thread_ = std::thread([<span class="keyword">this</span>]() {</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;      <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        impl_-&gt;ioc_-&gt;run();</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;      } <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;      }</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    });</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  }</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">  182</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">UdsServer::stop</a>() {</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  <span class="keywordtype">bool</span> already_stopping = impl_-&gt;stopping_.exchange(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  <span class="keywordflow">if</span> (already_stopping) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;  boost::system::error_code ec;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;  impl_-&gt;acceptor_-&gt;close(ec);</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  net::post(impl_-&gt;ioc_-&gt;get_executor(), [<span class="keyword">self</span> = shared_from_this()]() { <span class="keyword">self</span>-&gt;impl_-&gt;do_accept(<span class="keyword">self</span>); });</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;}</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
+<div class="line"><a name="l00185"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">  185</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">UdsServer::stop</a>() {</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;  <span class="keywordtype">bool</span> already_stopping = impl_-&gt;stopping_.exchange(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;  <span class="keywordflow">if</span> (already_stopping) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;  {</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    impl_-&gt;on_bytes_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    impl_-&gt;on_state_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    impl_-&gt;on_bp_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    impl_-&gt;on_multi_connect_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    impl_-&gt;on_multi_data_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    impl_-&gt;on_multi_disconnect_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;  }</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;  <span class="comment">// Cleanup UDS socket file on stop</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  std::remove(impl_-&gt;cfg_.socket_path.c_str());</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;  boost::system::error_code ec;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;  impl_-&gt;acceptor_-&gt;close(ec);</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;  {</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    impl_-&gt;on_bytes_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    impl_-&gt;on_state_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    impl_-&gt;on_bp_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    impl_-&gt;on_multi_connect_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    impl_-&gt;on_multi_data_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    impl_-&gt;on_multi_disconnect_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  }</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;  <span class="comment">// Release work guard if owned</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  <span class="keywordflow">if</span> (impl_-&gt;owns_ioc_) {</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    impl_-&gt;work_guard_.reset();</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;  }</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;  std::vector&lt;std::shared_ptr&lt;UdsServerSession&gt;&gt; sessions_to_stop;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  {</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; pair : impl_-&gt;sessions_) {</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;      sessions_to_stop.push_back(pair.second);</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    }</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    impl_-&gt;sessions_.clear();</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;  }</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; session : sessions_to_stop) {</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    session-&gt;stop();</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  }</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae599161956d626eda4cb0a5ffb85271c">base::LinkState::Idle</a>);</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  impl_-&gt;notify_state();</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;}</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
-<div class="line"><a name="l00224"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab">  224</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab">UdsServer::is_connected</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_-&gt;state_.get_state() == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>; }</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;  <span class="comment">// Cleanup UDS socket file on stop</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  std::remove(impl_-&gt;cfg_.socket_path.c_str());</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;  <span class="comment">// Release work guard if owned</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;  <span class="keywordflow">if</span> (impl_-&gt;owns_ioc_) {</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    impl_-&gt;work_guard_.reset();</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordflow">if</span> (impl_-&gt;ioc_) {</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;      impl_-&gt;ioc_-&gt;stop();</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    }</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  }</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  std::vector&lt;std::shared_ptr&lt;UdsServerSession&gt;&gt; sessions_to_stop;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;  {</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; pair : impl_-&gt;sessions_) {</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;      sessions_to_stop.push_back(pair.second);</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    }</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    impl_-&gt;sessions_.clear();</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  }</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; session : sessions_to_stop) {</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    session-&gt;stop();</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;  }</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
-<div class="line"><a name="l00226"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64">  226</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64">UdsServer::async_write_copy</a>(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) {</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;  <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">broadcast</a>(std::vector&lt;uint8_t&gt;(data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a3d1f1b920d4769b25c5bf8a058d203dd">begin</a>(), data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a569f565034ab74fd20549f16af9d220c">end</a>()));</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;}</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
-<div class="line"><a name="l00230"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58">  230</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58">UdsServer::async_write_move</a>(std::vector&lt;uint8_t&gt;&amp;&amp; data) { <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">broadcast</a>(data); }</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
-<div class="line"><a name="l00232"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">  232</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">UdsServer::async_write_shared</a>(std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt; data) {</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; pair : impl_-&gt;sessions_) {</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    pair.second-&gt;async_write_shared(data);</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  }</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;}</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
-<div class="line"><a name="l00239"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#ae7ce7dabb1aa20a874ab5d9a47deddae">  239</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae7ce7dabb1aa20a874ab5d9a47deddae">UdsServer::on_bytes</a>(<a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb) {</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;  impl_-&gt;on_bytes_ = std::move(cb);</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;  <span class="keywordflow">if</span> (impl_-&gt;owns_ioc_ &amp;&amp; impl_-&gt;ioc_thread_.joinable()) {</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="keywordflow">if</span> (std::this_thread::get_id() != impl_-&gt;ioc_thread_.get_id()) {</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;      impl_-&gt;ioc_thread_.join();</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;      impl_-&gt;ioc_thread_.detach();</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    }</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;  }</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;  impl_-&gt;state_.set_state(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75cae599161956d626eda4cb0a5ffb85271c">base::LinkState::Idle</a>);</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  impl_-&gt;notify_state();</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;}</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
+<div class="line"><a name="l00238"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab">  238</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab">UdsServer::is_connected</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_-&gt;state_.get_state() == <a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75ca962ef616821625a13a028ac14ac0fef8">base::LinkState::Listening</a>; }</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
+<div class="line"><a name="l00240"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64">  240</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64">UdsServer::async_write_copy</a>(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) {</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;  <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">broadcast</a>(std::vector&lt;uint8_t&gt;(data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a3d1f1b920d4769b25c5bf8a058d203dd">begin</a>(), data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a569f565034ab74fd20549f16af9d220c">end</a>()));</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;}</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
-<div class="line"><a name="l00244"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7">  244</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7">UdsServer::on_state</a>(<a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb) {</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;  impl_-&gt;on_state_ = std::move(cb);</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;}</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
-<div class="line"><a name="l00249"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#aae59e3b6440e509afc8b081264cf7938">  249</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aae59e3b6440e509afc8b081264cf7938">UdsServer::on_backpressure</a>(<a class="code" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> cb) {</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;  impl_-&gt;on_bp_ = std::move(cb);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;}</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160; </div>
-<div class="line"><a name="l00254"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">  254</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">UdsServer::broadcast</a>(<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&amp; message) {</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;  <span class="keyword">auto</span> data = std::make_shared&lt;const std::vector&lt;uint8_t&gt;&gt;(message);</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">async_write_shared</a>(data);</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;}</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
-<div class="line"><a name="l00260"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a1163605f84d924ceb1dff85313323865">  260</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a1163605f84d924ceb1dff85313323865">UdsServer::send_to_client</a>(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::vector&lt;uint8_t&gt;&amp; message) {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;  std::shared_ptr&lt;UdsServerSession&gt; session;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;  {</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keyword">auto</span> it = impl_-&gt;sessions_.find(client_id);</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keywordflow">if</span> (it != impl_-&gt;sessions_.end()) session = it-&gt;second;</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  }</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;  <span class="keywordflow">if</span> (session) {</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    session-&gt;async_write_copy(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(message.data(), message.size()));</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  }</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00244"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58">  244</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58">UdsServer::async_write_move</a>(std::vector&lt;uint8_t&gt;&amp;&amp; data) { <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">broadcast</a>(data); }</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
+<div class="line"><a name="l00246"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">  246</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">UdsServer::async_write_shared</a>(std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt; data) {</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; pair : impl_-&gt;sessions_) {</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    pair.second-&gt;async_write_shared(data);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  }</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;}</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
+<div class="line"><a name="l00253"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#ae7ce7dabb1aa20a874ab5d9a47deddae">  253</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae7ce7dabb1aa20a874ab5d9a47deddae">UdsServer::on_bytes</a>(<a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb) {</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;  impl_-&gt;on_bytes_ = std::move(cb);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;}</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160; </div>
+<div class="line"><a name="l00258"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7">  258</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7">UdsServer::on_state</a>(<a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb) {</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;  impl_-&gt;on_state_ = std::move(cb);</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;}</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
+<div class="line"><a name="l00263"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#aae59e3b6440e509afc8b081264cf7938">  263</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aae59e3b6440e509afc8b081264cf7938">UdsServer::on_backpressure</a>(<a class="code" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> cb) {</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  impl_-&gt;on_bp_ = std::move(cb);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;}</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
+<div class="line"><a name="l00268"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">  268</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">UdsServer::broadcast</a>(<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&amp; message) {</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  <span class="keyword">auto</span> data = std::make_shared&lt;const std::vector&lt;uint8_t&gt;&gt;(message);</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">async_write_shared</a>(data);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;}</div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
-<div class="line"><a name="l00274"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#aadc51e2778ccc9dbacc8065df1c9a510">  274</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aadc51e2778ccc9dbacc8065df1c9a510">UdsServer::get_client_count</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  <span class="keywordflow">return</span> impl_-&gt;sessions_.size();</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;}</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
-<div class="line"><a name="l00279"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a8fb6e1ed8b23bc60a213f7068f321687">  279</a></span>&#160;std::vector&lt;size_t&gt; <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a8fb6e1ed8b23bc60a213f7068f321687">UdsServer::get_connected_clients</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  std::vector&lt;size_t&gt; ids;</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pair : impl_-&gt;sessions_) ids.push_back(pair.first);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;  <span class="keywordflow">return</span> ids;</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;}</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
-<div class="line"><a name="l00286"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a64c837167f176f5f7cc751e990879232">  286</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a64c837167f176f5f7cc751e990879232">UdsServer::on_multi_connect</a>(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3">MultiClientConnectHandler</a> handler) {</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;  impl_-&gt;on_multi_connect_ = std::move(handler);</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
-<div class="line"><a name="l00291"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#adda98a9e31bde2b57651ac95ee05509e">  291</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#adda98a9e31bde2b57651ac95ee05509e">UdsServer::on_multi_data</a>(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a70ffc366db2c508d22734f0ade8e21b9">MultiClientDataHandler</a> handler) {</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;  impl_-&gt;on_multi_data_ = std::move(handler);</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;}</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
-<div class="line"><a name="l00296"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#ae4beb346689bb6964ec1028d85108d7e">  296</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae4beb346689bb6964ec1028d85108d7e">UdsServer::on_multi_disconnect</a>(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f">MultiClientDisconnectHandler</a> handler) {</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;  impl_-&gt;on_multi_disconnect_ = std::move(handler);</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;}</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
-<div class="line"><a name="l00301"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597">  301</a></span>&#160;<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597">UdsServer::get_state</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_-&gt;state_.get_state(); }</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
-<div class="line"><a name="l00303"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a76ee4f7897b2521c4a922ad983598ba1">  303</a></span>&#160;<span class="keywordtype">void</span> UdsServer::Impl::do_accept(std::shared_ptr&lt;UdsServer&gt; <span class="keyword">self</span>) {</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;  acceptor_-&gt;async_accept([<span class="keyword">self</span>](<span class="keyword">const</span> boost::system::error_code&amp; ec, uds::socket socket) {</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <span class="keywordflow">if</span> (!<span class="keyword">self</span> || self-&gt;impl_-&gt;stopping_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    if (!ec) {</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;      <span class="keywordtype">size_t</span> client_id;</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;      <span class="keyword">auto</span> session = std::make_shared&lt;UdsServerSession&gt;(*self-&gt;impl_-&gt;ioc_, std::move(socket),</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;                                                        self-&gt;impl_-&gt;cfg_.backpressure_threshold);</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;      {</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        std::lock_guard&lt;std::mutex&gt; lock(self-&gt;impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        client_id = <span class="keyword">self</span>-&gt;impl_-&gt;next_client_id_++;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        <span class="keyword">self</span>-&gt;impl_-&gt;sessions_[client_id] = session;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;      }</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;      std::weak_ptr&lt;UdsServer&gt; weak_self = <span class="keyword">self</span>;</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;      session-&gt;on_bytes([weak_self, client_id](<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) {</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        <span class="keyword">auto</span> s = weak_self.lock();</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        <span class="keywordflow">if</span> (!s) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a70ffc366db2c508d22734f0ade8e21b9">MultiClientDataHandler</a> data_handler;</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> bytes_handler;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        {</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;          std::lock_guard&lt;std::mutex&gt; lock(s-&gt;impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;          data_handler = s-&gt;impl_-&gt;on_multi_data_;</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;          bytes_handler = s-&gt;impl_-&gt;on_bytes_;</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        }</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <span class="keywordflow">if</span> (data_handler) data_handler(client_id, std::vector&lt;uint8_t&gt;(data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a3d1f1b920d4769b25c5bf8a058d203dd">begin</a>(), data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a569f565034ab74fd20549f16af9d220c">end</a>()));</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        <span class="keywordflow">if</span> (bytes_handler) bytes_handler(data);</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;      });</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;      session-&gt;on_close([weak_self, client_id]() {</div>
+<div class="line"><a name="l00274"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a1163605f84d924ceb1dff85313323865">  274</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a1163605f84d924ceb1dff85313323865">UdsServer::send_to_client</a>(<span class="keywordtype">size_t</span> client_id, <span class="keyword">const</span> std::vector&lt;uint8_t&gt;&amp; message) {</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  std::shared_ptr&lt;UdsServerSession&gt; session;</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  {</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keyword">auto</span> it = impl_-&gt;sessions_.find(client_id);</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;    <span class="keywordflow">if</span> (it != impl_-&gt;sessions_.end()) session = it-&gt;second;</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  }</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  <span class="keywordflow">if</span> (session) {</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    session-&gt;async_write_copy(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(message.data(), message.size()));</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  }</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;}</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
+<div class="line"><a name="l00288"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#aadc51e2778ccc9dbacc8065df1c9a510">  288</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aadc51e2778ccc9dbacc8065df1c9a510">UdsServer::get_client_count</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;  <span class="keywordflow">return</span> impl_-&gt;sessions_.size();</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;}</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160; </div>
+<div class="line"><a name="l00293"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a8fb6e1ed8b23bc60a213f7068f321687">  293</a></span>&#160;std::vector&lt;size_t&gt; <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a8fb6e1ed8b23bc60a213f7068f321687">UdsServer::get_connected_clients</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;  std::vector&lt;size_t&gt; ids;</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; pair : impl_-&gt;sessions_) ids.push_back(pair.first);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;  <span class="keywordflow">return</span> ids;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;}</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
+<div class="line"><a name="l00300"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#a64c837167f176f5f7cc751e990879232">  300</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a64c837167f176f5f7cc751e990879232">UdsServer::on_multi_connect</a>(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3">MultiClientConnectHandler</a> handler) {</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;  impl_-&gt;on_multi_connect_ = std::move(handler);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;}</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
+<div class="line"><a name="l00305"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#adda98a9e31bde2b57651ac95ee05509e">  305</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#adda98a9e31bde2b57651ac95ee05509e">UdsServer::on_multi_data</a>(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a70ffc366db2c508d22734f0ade8e21b9">MultiClientDataHandler</a> handler) {</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  impl_-&gt;on_multi_data_ = std::move(handler);</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;}</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
+<div class="line"><a name="l00310"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#ae4beb346689bb6964ec1028d85108d7e">  310</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#ae4beb346689bb6964ec1028d85108d7e">UdsServer::on_multi_disconnect</a>(<a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f">MultiClientDisconnectHandler</a> handler) {</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;  impl_-&gt;on_multi_disconnect_ = std::move(handler);</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;}</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597">  315</a></span>&#160;<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a> <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597">UdsServer::get_state</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_-&gt;state_.get_state(); }</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
+<div class="line"><a name="l00317"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsServer_1_1Impl.html#a76ee4f7897b2521c4a922ad983598ba1">  317</a></span>&#160;<span class="keywordtype">void</span> UdsServer::Impl::do_accept(std::shared_ptr&lt;UdsServer&gt; <span class="keyword">self</span>) {</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;  acceptor_-&gt;async_accept([<span class="keyword">self</span>](<span class="keyword">const</span> boost::system::error_code&amp; ec, uds::socket socket) {</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <span class="keywordflow">if</span> (!<span class="keyword">self</span> || self-&gt;impl_-&gt;stopping_) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    if (!ec) {</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;      <span class="keywordtype">size_t</span> client_id;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;      <span class="keyword">auto</span> session = std::make_shared&lt;UdsServerSession&gt;(*self-&gt;impl_-&gt;ioc_, std::move(socket),</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;                                                        self-&gt;impl_-&gt;cfg_.backpressure_threshold);</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;      {</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        std::lock_guard&lt;std::mutex&gt; lock(self-&gt;impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        client_id = <span class="keyword">self</span>-&gt;impl_-&gt;next_client_id_++;</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <span class="keyword">self</span>-&gt;impl_-&gt;sessions_[client_id] = session;</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;      }</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160; </div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;      std::weak_ptr&lt;UdsServer&gt; weak_self = <span class="keyword">self</span>;</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;      session-&gt;on_bytes([weak_self, client_id](<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a> data) {</div>
 <div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <span class="keyword">auto</span> s = weak_self.lock();</div>
 <div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        <span class="keywordflow">if</span> (!s) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f">MultiClientDisconnectHandler</a> disconnect_handler;</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        {</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;          std::lock_guard&lt;std::mutex&gt; lock(s-&gt;impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;          s-&gt;impl_-&gt;sessions_.erase(client_id);</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;          disconnect_handler = s-&gt;impl_-&gt;on_multi_disconnect_;</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        }</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;        <span class="keywordflow">if</span> (disconnect_handler) disconnect_handler(client_id);</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;      });</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;      session-&gt;start();</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a70ffc366db2c508d22734f0ade8e21b9">MultiClientDataHandler</a> data_handler;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        <a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> bytes_handler;</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        {</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;          std::lock_guard&lt;std::mutex&gt; lock(s-&gt;impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;          data_handler = s-&gt;impl_-&gt;on_multi_data_;</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;          bytes_handler = s-&gt;impl_-&gt;on_bytes_;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;        }</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;        <span class="keywordflow">if</span> (data_handler) data_handler(client_id, std::vector&lt;uint8_t&gt;(data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a3d1f1b920d4769b25c5bf8a058d203dd">begin</a>(), data.<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html#a569f565034ab74fd20549f16af9d220c">end</a>()));</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        <span class="keywordflow">if</span> (bytes_handler) bytes_handler(data);</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;      });</div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;      <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3">MultiClientConnectHandler</a> connect_handler;</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;      {</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        std::lock_guard&lt;std::mutex&gt; lock(self-&gt;impl_-&gt;sessions_mutex_);</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        connect_handler = <span class="keyword">self</span>-&gt;impl_-&gt;on_multi_connect_;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;      }</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;      <span class="keywordflow">if</span> (connect_handler) connect_handler(client_id, <span class="stringliteral">&quot;UDS Client&quot;</span>);</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;      <span class="comment">// Continue accepting</span></div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;      <span class="keyword">auto</span>* impl = <span class="keyword">self</span>-&gt;impl_.get();</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;      impl-&gt;do_accept(<span class="keyword">self</span>);</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;      <span class="comment">// Log only real errors, not operation_aborted</span></div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;      <span class="keywordflow">if</span> (ec != boost::asio::error::operation_aborted) {</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;        <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;accept&quot;</span>, <span class="stringliteral">&quot;Accept failed: &quot;</span> + ec.message());</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;      }</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    }</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;  });</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;}</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
-<div class="line"><a name="l00366"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsServer_1_1Impl.html#acc1a3645ba02d3a6c5823fe7c3b84db5">  366</a></span>&#160;<span class="keywordtype">void</span> UdsServer::Impl::notify_state() {</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb;</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;  {</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(sessions_mutex_);</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    cb = on_state_;</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;  }</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;  <span class="keywordflow">if</span> (cb) cb(state_.get_state());</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;}</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160; </div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;      session-&gt;on_close([weak_self, client_id]() {</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        <span class="keyword">auto</span> s = weak_self.lock();</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        <span class="keywordflow">if</span> (!s) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f">MultiClientDisconnectHandler</a> disconnect_handler;</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;        {</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;          std::lock_guard&lt;std::mutex&gt; lock(s-&gt;impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;          s-&gt;impl_-&gt;sessions_.erase(client_id);</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;          disconnect_handler = s-&gt;impl_-&gt;on_multi_disconnect_;</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;        }</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;        <span class="keywordflow">if</span> (disconnect_handler) disconnect_handler(client_id);</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;      });</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160; </div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;      session-&gt;start();</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160; </div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;      <a class="code" href="classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3">MultiClientConnectHandler</a> connect_handler;</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;      {</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        std::lock_guard&lt;std::mutex&gt; lock(self-&gt;impl_-&gt;sessions_mutex_);</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;        connect_handler = <span class="keyword">self</span>-&gt;impl_-&gt;on_multi_connect_;</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;      }</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;      <span class="keywordflow">if</span> (connect_handler) connect_handler(client_id, <span class="stringliteral">&quot;UDS Client&quot;</span>);</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;      <span class="comment">// Continue accepting</span></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;      <span class="keyword">auto</span>* impl = <span class="keyword">self</span>-&gt;impl_.get();</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;      impl-&gt;do_accept(<span class="keyword">self</span>);</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;      <span class="comment">// Log only real errors, not operation_aborted</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;      <span class="keywordflow">if</span> (ec != boost::asio::error::operation_aborted) {</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;uds_server&quot;</span>, <span class="stringliteral">&quot;accept&quot;</span>, <span class="stringliteral">&quot;Accept failed: &quot;</span> + ec.message());</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;      }</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    }</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;  });</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;}</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160; </div>
+<div class="line"><a name="l00380"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsServer_1_1Impl.html#acc1a3645ba02d3a6c5823fe7c3b84db5">  380</a></span>&#160;<span class="keywordtype">void</span> UdsServer::Impl::notify_state() {</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb;</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;  {</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(sessions_mutex_);</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    cb = on_state_;</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;  }</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;  <span class="keywordflow">if</span> (cb) cb(state_.get_state());</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;}</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aauto__initializer_8hpp_html"><div class="ttname"><a href="auto__initializer_8hpp.html">auto_initializer.hpp</a></div></div>
 <div class="ttc" id="aboost__uds__acceptor_8hpp_html"><div class="ttname"><a href="boost__uds__acceptor_8hpp.html">boost_uds_acceptor.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1ThreadSafeState_html"><div class="ttname"><a href="classunilink_1_1concurrency_1_1ThreadSafeState.html">unilink::concurrency::ThreadSafeState&lt; base::LinkState &gt;</a></div></div>
@@ -473,28 +487,28 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__server_8cc_source
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a3d1f1b920d4769b25c5bf8a058d203dd"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a3d1f1b920d4769b25c5bf8a058d203dd">unilink::memory::SafeSpan::begin</a></div><div class="ttdeci">constexpr iterator begin() const noexcept</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00088">safe_span.hpp:88</a></div></div>
 <div class="ttc" id="aclassunilink_1_1memory_1_1SafeSpan_html_a569f565034ab74fd20549f16af9d220c"><div class="ttname"><a href="classunilink_1_1memory_1_1SafeSpan.html#a569f565034ab74fd20549f16af9d220c">unilink::memory::SafeSpan::end</a></div><div class="ttdeci">constexpr iterator end() const noexcept</div><div class="ttdef"><b>Definition:</b> <a href="safe__span_8hpp_source.html#l00090">safe_span.hpp:90</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html">unilink::transport::UdsServer</a></div><div class="ttdoc">Thread-safe UDS Server implementation.</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8hpp_source.html#l00044">uds_server.hpp:44</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a02cf1bd9a84546dc732efbe1ba608c64"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64">unilink::transport::UdsServer::async_write_copy</a></div><div class="ttdeci">void async_write_copy(memory::ConstByteSpan data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00226">uds_server.cc:226</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a09cda5628dad423b5c7dc20aa8242b58"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58">unilink::transport::UdsServer::async_write_move</a></div><div class="ttdeci">void async_write_move(std::vector&lt; uint8_t &gt; &amp;&amp;data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00230">uds_server.cc:230</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a1163605f84d924ceb1dff85313323865"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a1163605f84d924ceb1dff85313323865">unilink::transport::UdsServer::send_to_client</a></div><div class="ttdeci">bool send_to_client(size_t client_id, const std::vector&lt; uint8_t &gt; &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00260">uds_server.cc:260</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a127465c927d60230b8b3a0ab8da30cc7"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7">unilink::transport::UdsServer::on_state</a></div><div class="ttdeci">void on_state(OnState cb) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00244">uds_server.cc:244</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a02cf1bd9a84546dc732efbe1ba608c64"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64">unilink::transport::UdsServer::async_write_copy</a></div><div class="ttdeci">void async_write_copy(memory::ConstByteSpan data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00240">uds_server.cc:240</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a09cda5628dad423b5c7dc20aa8242b58"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58">unilink::transport::UdsServer::async_write_move</a></div><div class="ttdeci">void async_write_move(std::vector&lt; uint8_t &gt; &amp;&amp;data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00244">uds_server.cc:244</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a1163605f84d924ceb1dff85313323865"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a1163605f84d924ceb1dff85313323865">unilink::transport::UdsServer::send_to_client</a></div><div class="ttdeci">bool send_to_client(size_t client_id, const std::vector&lt; uint8_t &gt; &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00274">uds_server.cc:274</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a127465c927d60230b8b3a0ab8da30cc7"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7">unilink::transport::UdsServer::on_state</a></div><div class="ttdeci">void on_state(OnState cb) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00258">uds_server.cc:258</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a17116c803833de756b193ff221c4ea3f"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f">unilink::transport::UdsServer::MultiClientDisconnectHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id)&gt; MultiClientDisconnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8hpp_source.html#l00079">uds_server.hpp:79</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a64c837167f176f5f7cc751e990879232"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a64c837167f176f5f7cc751e990879232">unilink::transport::UdsServer::on_multi_connect</a></div><div class="ttdeci">void on_multi_connect(MultiClientConnectHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00286">uds_server.cc:286</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a6da642c072a8416e09778452bb119bb4"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4">unilink::transport::UdsServer::create</a></div><div class="ttdeci">static std::shared_ptr&lt; UdsServer &gt; create(const config::UdsServerConfig &amp;cfg)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00090">uds_server.cc:90</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a64c837167f176f5f7cc751e990879232"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a64c837167f176f5f7cc751e990879232">unilink::transport::UdsServer::on_multi_connect</a></div><div class="ttdeci">void on_multi_connect(MultiClientConnectHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00300">uds_server.cc:300</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a6da642c072a8416e09778452bb119bb4"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4">unilink::transport::UdsServer::create</a></div><div class="ttdeci">static std::shared_ptr&lt; UdsServer &gt; create(const config::UdsServerConfig &amp;cfg)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00093">uds_server.cc:93</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a70ffc366db2c508d22734f0ade8e21b9"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a70ffc366db2c508d22734f0ade8e21b9">unilink::transport::UdsServer::MultiClientDataHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id, const std::vector&lt; uint8_t &gt; &amp;data)&gt; MultiClientDataHandler</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8hpp_source.html#l00078">uds_server.hpp:78</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a7351a1236052df08f059f21aab85ea6f"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a7351a1236052df08f059f21aab85ea6f">unilink::transport::UdsServer::~UdsServer</a></div><div class="ttdeci">~UdsServer() override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00107">uds_server.cc:107</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a8acd6ea17fd839fa936502643e2b1430"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">unilink::transport::UdsServer::stop</a></div><div class="ttdeci">void stop() override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00182">uds_server.cc:182</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a8fb6e1ed8b23bc60a213f7068f321687"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a8fb6e1ed8b23bc60a213f7068f321687">unilink::transport::UdsServer::get_connected_clients</a></div><div class="ttdeci">std::vector&lt; size_t &gt; get_connected_clients() const</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00279">uds_server.cc:279</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a7351a1236052df08f059f21aab85ea6f"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a7351a1236052df08f059f21aab85ea6f">unilink::transport::UdsServer::~UdsServer</a></div><div class="ttdeci">~UdsServer() override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00110">uds_server.cc:110</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a8acd6ea17fd839fa936502643e2b1430"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430">unilink::transport::UdsServer::stop</a></div><div class="ttdeci">void stop() override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00185">uds_server.cc:185</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_a8fb6e1ed8b23bc60a213f7068f321687"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#a8fb6e1ed8b23bc60a213f7068f321687">unilink::transport::UdsServer::get_connected_clients</a></div><div class="ttdeci">std::vector&lt; size_t &gt; get_connected_clients() const</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00293">uds_server.cc:293</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_aa692ac146ebca1f44af235b765ba7bc3"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3">unilink::transport::UdsServer::MultiClientConnectHandler</a></div><div class="ttdeci">std::function&lt; void(size_t client_id, const std::string &amp;client_info)&gt; MultiClientConnectHandler</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8hpp_source.html#l00077">uds_server.hpp:77</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_aabadab1ec1092e2dc5dd98a6a62ff597"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597">unilink::transport::UdsServer::get_state</a></div><div class="ttdeci">base::LinkState get_state() const</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00301">uds_server.cc:301</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_aadc51e2778ccc9dbacc8065df1c9a510"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#aadc51e2778ccc9dbacc8065df1c9a510">unilink::transport::UdsServer::get_client_count</a></div><div class="ttdeci">size_t get_client_count() const</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00274">uds_server.cc:274</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_aae59e3b6440e509afc8b081264cf7938"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#aae59e3b6440e509afc8b081264cf7938">unilink::transport::UdsServer::on_backpressure</a></div><div class="ttdeci">void on_backpressure(OnBackpressure cb) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00249">uds_server.cc:249</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_ab9cabf60593c9ff15a36a585255550ab"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab">unilink::transport::UdsServer::is_connected</a></div><div class="ttdeci">bool is_connected() const override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00224">uds_server.cc:224</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_acebf0e1be21857381746bc545b1cc776"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">unilink::transport::UdsServer::broadcast</a></div><div class="ttdeci">bool broadcast(const std::vector&lt; uint8_t &gt; &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00254">uds_server.cc:254</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_adda98a9e31bde2b57651ac95ee05509e"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#adda98a9e31bde2b57651ac95ee05509e">unilink::transport::UdsServer::on_multi_data</a></div><div class="ttdeci">void on_multi_data(MultiClientDataHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00291">uds_server.cc:291</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_ae4beb346689bb6964ec1028d85108d7e"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#ae4beb346689bb6964ec1028d85108d7e">unilink::transport::UdsServer::on_multi_disconnect</a></div><div class="ttdeci">void on_multi_disconnect(MultiClientDisconnectHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00296">uds_server.cc:296</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_aabadab1ec1092e2dc5dd98a6a62ff597"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597">unilink::transport::UdsServer::get_state</a></div><div class="ttdeci">base::LinkState get_state() const</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00315">uds_server.cc:315</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_aadc51e2778ccc9dbacc8065df1c9a510"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#aadc51e2778ccc9dbacc8065df1c9a510">unilink::transport::UdsServer::get_client_count</a></div><div class="ttdeci">size_t get_client_count() const</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00288">uds_server.cc:288</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_aae59e3b6440e509afc8b081264cf7938"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#aae59e3b6440e509afc8b081264cf7938">unilink::transport::UdsServer::on_backpressure</a></div><div class="ttdeci">void on_backpressure(OnBackpressure cb) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00263">uds_server.cc:263</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_ab9cabf60593c9ff15a36a585255550ab"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab">unilink::transport::UdsServer::is_connected</a></div><div class="ttdeci">bool is_connected() const override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00238">uds_server.cc:238</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_acebf0e1be21857381746bc545b1cc776"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776">unilink::transport::UdsServer::broadcast</a></div><div class="ttdeci">bool broadcast(const std::vector&lt; uint8_t &gt; &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00268">uds_server.cc:268</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_adda98a9e31bde2b57651ac95ee05509e"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#adda98a9e31bde2b57651ac95ee05509e">unilink::transport::UdsServer::on_multi_data</a></div><div class="ttdeci">void on_multi_data(MultiClientDataHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00305">uds_server.cc:305</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_ae4beb346689bb6964ec1028d85108d7e"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#ae4beb346689bb6964ec1028d85108d7e">unilink::transport::UdsServer::on_multi_disconnect</a></div><div class="ttdeci">void on_multi_disconnect(MultiClientDisconnectHandler handler)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00310">uds_server.cc:310</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_ae6c4d075bbebda1c00fe79daa86a5d1c"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c">unilink::transport::UdsServer::UdsServer</a></div><div class="ttdeci">UdsServer(UdsServer &amp;&amp;) noexcept</div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_ae7ce7dabb1aa20a874ab5d9a47deddae"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#ae7ce7dabb1aa20a874ab5d9a47deddae">unilink::transport::UdsServer::on_bytes</a></div><div class="ttdeci">void on_bytes(OnBytes cb) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00239">uds_server.cc:239</a></div></div>
-<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_af432686eee24a102bf5b5a52b71c29ab"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">unilink::transport::UdsServer::async_write_shared</a></div><div class="ttdeci">void async_write_shared(std::shared_ptr&lt; const std::vector&lt; uint8_t &gt;&gt; data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00232">uds_server.cc:232</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_ae7ce7dabb1aa20a874ab5d9a47deddae"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#ae7ce7dabb1aa20a874ab5d9a47deddae">unilink::transport::UdsServer::on_bytes</a></div><div class="ttdeci">void on_bytes(OnBytes cb) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00253">uds_server.cc:253</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsServer_html_af432686eee24a102bf5b5a52b71c29ab"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab">unilink::transport::UdsServer::async_write_shared</a></div><div class="ttdeci">void async_write_shared(std::shared_ptr&lt; const std::vector&lt; uint8_t &gt;&gt; data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__server_8cc_source.html#l00246">uds_server.cc:246</a></div></div>
 <div class="ttc" id="aio__context__manager_8hpp_html"><div class="ttname"><a href="io__context__manager_8hpp.html">io_context_manager.hpp</a></div></div>
 <div class="ttc" id="aiuds__acceptor_8hpp_html"><div class="ttname"><a href="iuds__acceptor_8hpp.html">iuds_acceptor.hpp</a></div></div>
 <div class="ttc" id="alogger_8hpp_html"><div class="ttname"><a href="logger_8hpp.html">logger.hpp</a></div></div>
@@ -539,7 +553,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__server_8cc_source
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_789fd087a5f0a4f41fb4500cfddbcae1.html">uds</a></li><li class="navelem"><a class="el" href="transport_2uds_2uds__server_8cc.html">uds_server.cc</a></li>
-    <li class="footer">Generated on Mon Apr 13 2026 22:30:02 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
