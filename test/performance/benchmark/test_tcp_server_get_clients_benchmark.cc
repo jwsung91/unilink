@@ -76,12 +76,12 @@ TEST_F(TcpServerGetClientsBenchmarkTest, BenchmarkGetClients) {
 
   // Wait for all clients to connect on the server side
   int attempts = 0;
-  while (server_->client_count() < client_count && attempts < 50) {
+  while (server_->get_client_count() < client_count && attempts < 50) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     attempts++;
   }
 
-  EXPECT_EQ(server_->client_count(), client_count);
+  EXPECT_EQ(server_->get_client_count(), client_count);
 
   std::cout << "Benchmarking connected_clients() with " << client_count << " clients..." << std::endl;
 
@@ -89,7 +89,7 @@ TEST_F(TcpServerGetClientsBenchmarkTest, BenchmarkGetClients) {
   auto start_time = std::chrono::high_resolution_clock::now();
 
   for (int i = 0; i < iterations; ++i) {
-    auto clients = server_->connected_clients();
+    auto clients = server_->get_connected_clients();
     // Do something to prevent optimization
     if (clients.size() != client_count) {
       std::cerr << "Unexpected client count!" << std::endl;

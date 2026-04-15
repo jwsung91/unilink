@@ -94,7 +94,7 @@ TEST_F(TcpServerMutexContentionTest, BenchmarkThroughput) {
   // and sending data (which uses std::shared_lock for callback lookup).
   std::thread status_reader([&] {
     while (running.load(std::memory_order_relaxed)) {
-      volatile size_t count = server_->client_count();
+      volatile size_t count = server_->get_client_count();
       (void)count;
       std::this_thread::yield();
     }
