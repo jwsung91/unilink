@@ -45,7 +45,7 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpCl
   UdpClientBuilder& local_port(uint16_t port);
   UdpClientBuilder& remote(const std::string& address, uint16_t port);
   UdpClientBuilder& use_independent_context(bool use_independent = true);
-  UdpClientBuilder& enable_broadcast(bool enable = true);
+  UdpClientBuilder& broadcast(bool enable = true);
   UdpClientBuilder& reuse_address(bool enable = true);
 
  private:
@@ -77,7 +77,7 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
 
   UdpServerBuilder& local_port(uint16_t port);
   UdpServerBuilder& use_independent_context(bool use_independent = true);
-  UdpServerBuilder& enable_broadcast(bool enable = true);
+  UdpServerBuilder& broadcast(bool enable = true);
   UdpServerBuilder& reuse_address(bool enable = true);
 
  private:

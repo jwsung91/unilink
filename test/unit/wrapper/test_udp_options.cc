@@ -128,8 +128,8 @@ TEST_F(UdpOptionsTest, StartFutureReflectsBindFailure) {
 
 TEST_F(UdpOptionsTest, BuilderCoverageForUdpSocketOptions) {
   unilink::builder::UdpClientBuilder client_builder;
-  client_builder.enable_broadcast(true).reuse_address(true);
+  client_builder.broadcast(true).reuse_address(true);
 
   unilink::builder::UdpServerBuilder server_builder;
-  server_builder.enable_broadcast(true).reuse_address(true);
+  server_builder.broadcast(true).reuse_address(true);
 }

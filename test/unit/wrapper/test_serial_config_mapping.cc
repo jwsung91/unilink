@@ -37,11 +37,11 @@ TEST_F(SerialConfigMappingTest, MapsParityFlowBitsAndBaud) {
   uint32_t baud = 115200;
 
   auto wrapper = std::make_shared<wrapper::Serial>(device, baud);
-  wrapper->set_data_bits(8);
-  wrapper->set_stop_bits(1);
-  wrapper->set_parity("even");
-  wrapper->set_flow_control("hardware");
-  wrapper->set_retry_interval(std::chrono::milliseconds(500));
+  wrapper->data_bits(8);
+  wrapper->stop_bits(1);
+  wrapper->parity("even");
+  wrapper->flow_control("hardware");
+  wrapper->retry_interval(std::chrono::milliseconds(500));
 
   auto cfg = wrapper->build_config();
 
@@ -58,11 +58,11 @@ TEST_F(SerialConfigMappingTest, InvalidStringsFallbackToNoneAndClampBits) {
   auto wrapper = std::make_shared<wrapper::Serial>("/dev/ttyACM0", 9600);
 
   // Set invalid values
-  wrapper->set_parity("invalid_parity");
-  wrapper->set_flow_control("invalid_flow");
+  wrapper->parity("invalid_parity");
+  wrapper->flow_control("invalid_flow");
 
   // Out of range bits
-  wrapper->set_data_bits(3);  // Too small -> clamped to 5 by config validator? Or just passed?
+  wrapper->data_bits(3);  // Too small -> clamped to 5 by config validator? Or just passed?
                               // Config::validate_and_clamp logic is inside transport constructor.
                               // Wrapper just stores values. Let's see if builder logic applies clamping or validation.
   // Actually wrapper just stores primitives. The transport will clamp.
@@ -71,8 +71,8 @@ TEST_F(SerialConfigMappingTest, InvalidStringsFallbackToNoneAndClampBits) {
   // Wrapper serial constructor doesn't validate.
   // build_config() maps strings to enums.
 
-  wrapper->set_data_bits(5);
-  wrapper->set_stop_bits(2);
+  wrapper->data_bits(5);
+  wrapper->stop_bits(2);
 
   auto cfg = wrapper->build_config();
 

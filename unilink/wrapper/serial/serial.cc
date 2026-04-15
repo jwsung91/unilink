@@ -356,12 +356,12 @@ ChannelInterface& Serial::auto_manage(bool m) {
   return *this;
 }
 
-void Serial::set_baud_rate(uint32_t b) { impl_->baud_rate = b; }
-void Serial::set_data_bits(int d) { impl_->data_bits = d; }
-void Serial::set_stop_bits(int s) { impl_->stop_bits = s; }
-void Serial::set_parity(const std::string& p) { impl_->parity = p; }
-void Serial::set_flow_control(const std::string& f) { impl_->flow_control = f; }
-void Serial::set_retry_interval(std::chrono::milliseconds i) {
+void Serial::baud_rate(uint32_t b) { impl_->baud_rate = b; }
+void Serial::data_bits(int d) { impl_->data_bits = d; }
+void Serial::stop_bits(int s) { impl_->stop_bits = s; }
+void Serial::parity(const std::string& p) { impl_->parity = p; }
+void Serial::flow_control(const std::string& f) { impl_->flow_control = f; }
+void Serial::retry_interval(std::chrono::milliseconds i) {
   impl_->retry_interval = i;
   if (impl_->channel) {
     auto ts = std::dynamic_pointer_cast<transport::Serial>(impl_->channel);

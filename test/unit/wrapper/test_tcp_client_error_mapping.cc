@@ -30,7 +30,7 @@ TEST(TcpClientErrorMappingTest, ConnectionRefused) {
   // Use a port that is likely closed (getAvailableTestPort finds a free port, but we don't listen on it)
   uint16_t port = TestUtils::getAvailableTestPort();
   wrapper::TcpClient client("127.0.0.1", port);
-  client.set_connection_timeout(std::chrono::milliseconds(1000));
+  client.connection_timeout(std::chrono::milliseconds(1000));
 
   std::promise<ErrorCode> error_promise;
   auto error_future = error_promise.get_future();
@@ -42,7 +42,7 @@ TEST(TcpClientErrorMappingTest, ConnectionRefused) {
     }
   });
 
-  client.set_max_retries(0);  // Fail fast
+  client.max_retries(0);  // Fail fast
   client.start();
 
   // Wait for error
@@ -67,8 +67,8 @@ TEST(TcpClientErrorMappingTest, Timeout) {
   // TEST-NET-2 (198.51.100.0/24) is reserved for documentation and examples.
   // It should be unreachable and cause timeout.
   wrapper::TcpClient client("198.51.100.1", 12345);
-  client.set_connection_timeout(std::chrono::milliseconds(500));
-  client.set_max_retries(0);
+  client.connection_timeout(std::chrono::milliseconds(500));
+  client.max_retries(0);
 
   std::promise<ErrorCode> error_promise;
   auto error_future = error_promise.get_future();

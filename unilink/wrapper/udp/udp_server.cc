@@ -430,7 +430,7 @@ UdpServer& UdpServer::auto_manage(bool m) {
   return *this;
 }
 
-UdpServer& UdpServer::set_session_timeout(std::chrono::milliseconds timeout) {
+UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->session_timeout = timeout;
   return *this;

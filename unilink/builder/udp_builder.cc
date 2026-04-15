@@ -79,7 +79,7 @@ UdpClientBuilder& UdpClientBuilder::use_independent_context(bool use_independent
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::enable_broadcast(bool enable) {
+UdpClientBuilder& UdpClientBuilder::broadcast(bool enable) {
   cfg_.enable_broadcast = enable;
   return *this;
 }
@@ -150,7 +150,7 @@ UdpServerBuilder& UdpServerBuilder::use_independent_context(bool use_independent
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::enable_broadcast(bool enable) {
+UdpServerBuilder& UdpServerBuilder::broadcast(bool enable) {
   cfg_.enable_broadcast = enable;
   return *this;
 }

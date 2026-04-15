@@ -86,7 +86,7 @@ class UNILINK_API TcpServer : public ServerInterface {
   TcpServer& idle_timeout(std::chrono::milliseconds timeout);
   TcpServer& max_clients(size_t max);
   TcpServer& unlimited_clients();
-  TcpServer& notify_send_failure(bool enable = true);
+  TcpServer& send_failure_notify(bool enable = true);
   TcpServer& set_manage_external_context(bool manage);
 
  private:

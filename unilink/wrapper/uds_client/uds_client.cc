@@ -358,17 +358,17 @@ ChannelInterface& UdsClient::auto_manage(bool manage) {
   return *this;
 }
 
-UdsClient& UdsClient::set_retry_interval(std::chrono::milliseconds interval) {
+UdsClient& UdsClient::retry_interval(std::chrono::milliseconds interval) {
   impl_->retry_interval_ = interval;
   return *this;
 }
 
-UdsClient& UdsClient::set_max_retries(int max_retries) {
+UdsClient& UdsClient::max_retries(int max_retries) {
   impl_->max_retries_ = max_retries;
   return *this;
 }
 
-UdsClient& UdsClient::set_connection_timeout(std::chrono::milliseconds timeout) {
+UdsClient& UdsClient::connection_timeout(std::chrono::milliseconds timeout) {
   impl_->connection_timeout_ = timeout;
   return *this;
 }

@@ -76,12 +76,12 @@ class UNILINK_API Serial : public ChannelInterface {
   ChannelInterface& auto_manage(bool manage = true) override;
 
   // Serial-specific methods
-  void set_baud_rate(uint32_t baud_rate);
-  void set_data_bits(int data_bits);
-  void set_stop_bits(int stop_bits);
-  void set_parity(const std::string& parity);
-  void set_flow_control(const std::string& flow_control);
-  void set_retry_interval(std::chrono::milliseconds interval);
+  void baud_rate(uint32_t baud_rate);
+  void data_bits(int data_bits);
+  void stop_bits(int stop_bits);
+  void parity(const std::string& parity);
+  void flow_control(const std::string& flow_control);
+  void retry_interval(std::chrono::milliseconds interval);
   Serial& set_manage_external_context(bool manage);
 
   // Expose mapped config for testing/inspection

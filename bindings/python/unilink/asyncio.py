@@ -66,8 +66,8 @@ class AsyncSerial(AsyncChannelBase):
     def __init__(self, device: str, baud_rate: int):
         super().__init__(unilink_py.Serial(device, baud_rate))
     
-    def set_baud_rate(self, baud: int):
-        self._raw_client.set_baud_rate(baud)
+    def baud_rate(self, baud: int):
+        self._raw_client.baud_rate(baud)
 
 class AsyncUdp(AsyncChannelBase):
     def __init__(self, config: unilink_py.UdpConfig):

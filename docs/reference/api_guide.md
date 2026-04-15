@@ -171,9 +171,9 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 | `is_connected()`           | `bool`              | Check connection status                                               |
 | `start()`                  | `std::future<bool>` | Start connection attempt                                              |
 | `stop()`                   | `void`              | Stop and disconnect                                                   |
-| `set_retry_interval()`     | `void`              | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
-| `set_max_retries()`        | `void`              | Set max reconnect attempts (`-1` for unlimited)                       |
-| `set_connection_timeout()` | `void`              | Set connection timeout (`std::chrono::milliseconds`)                  |
+| `retry_interval()`     | `void`              | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
+| `max_retries()`        | `void`              | Set max reconnect attempts (`-1` for unlimited)                       |
+| `connection_timeout()` | `void`              | Set connection timeout (`std::chrono::milliseconds`)                  |
 
 ### Advanced Examples
 
@@ -425,12 +425,12 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 | `is_connected()`       | `bool`              | Check if port is open                                      |
 | `start()`              | `std::future<bool>` | Open serial port                                           |
 | `stop()`               | `void`              | Close serial port                                          |
-| `set_baud_rate()`      | `void`              | Adjust baud rate at runtime                                |
-| `set_data_bits()`      | `void`              | Set data bits (5-8)                                        |
-| `set_stop_bits()`      | `void`              | Set stop bits (1-2)                                        |
-| `set_parity()`         | `void`              | Set parity (`none`, `even`, `odd`)                         |
-| `set_flow_control()`   | `void`              | Set flow control (`none`, `software`, `hardware`)          |
-| `set_retry_interval()` | `void`              | Adjust reconnection interval (`std::chrono::milliseconds`) |
+| `baud_rate()`      | `void`              | Adjust baud rate at runtime                                |
+| `data_bits()`      | `void`              | Set data bits (5-8)                                        |
+| `stop_bits()`      | `void`              | Set stop bits (1-2)                                        |
+| `parity()`         | `void`              | Set parity (`none`, `even`, `odd`)                         |
+| `flow_control()`   | `void`              | Set flow control (`none`, `software`, `hardware`)          |
+| `retry_interval()` | `void`              | Adjust reconnection interval (`std::chrono::milliseconds`) |
 | `build_config()`       | `SerialConfig`      | Inspect current mapped serial config                       |
 
 ### Device Paths

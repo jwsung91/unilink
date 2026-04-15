@@ -143,11 +143,11 @@ auto serial = unilink::serial("/dev/ttyUSB0", 115200)
 At runtime, you can also adjust settings on the wrapper:
 
 ```cpp
-serial->set_baud_rate(9600);
-serial->set_data_bits(8);
-serial->set_stop_bits(1);
-serial->set_parity("none");
-serial->set_flow_control("none");
+serial->baud_rate(9600);
+serial->data_bits(8);
+serial->stop_bits(1);
+serial->parity("none");
+serial->flow_control("none");
 ```
 
 ---

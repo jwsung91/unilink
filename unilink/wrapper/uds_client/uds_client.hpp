@@ -76,9 +76,9 @@ class UNILINK_API UdsClient : public ChannelInterface {
   ChannelInterface& auto_manage(bool manage = true) override;
 
   // Configuration
-  UdsClient& set_retry_interval(std::chrono::milliseconds interval);
-  UdsClient& set_max_retries(int max_retries);
-  UdsClient& set_connection_timeout(std::chrono::milliseconds timeout);
+  UdsClient& retry_interval(std::chrono::milliseconds interval);
+  UdsClient& max_retries(int max_retries);
+  UdsClient& connection_timeout(std::chrono::milliseconds timeout);
   UdsClient& set_manage_external_context(bool manage);
 
  private:

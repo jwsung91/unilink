@@ -363,7 +363,7 @@ ChannelInterface& TcpClient::auto_manage(bool m) {
   return *this;
 }
 
-TcpClient& TcpClient::set_retry_interval(std::chrono::milliseconds i) {
+TcpClient& TcpClient::retry_interval(std::chrono::milliseconds i) {
   impl_->retry_interval_ = i;
   if (impl_->channel_) {
     auto transport_client = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
@@ -372,11 +372,11 @@ TcpClient& TcpClient::set_retry_interval(std::chrono::milliseconds i) {
   return *this;
 }
 
-TcpClient& TcpClient::set_max_retries(int m) {
+TcpClient& TcpClient::max_retries(int m) {
   impl_->max_retries_ = m;
   return *this;
 }
-TcpClient& TcpClient::set_connection_timeout(std::chrono::milliseconds t) {
+TcpClient& TcpClient::connection_timeout(std::chrono::milliseconds t) {
   impl_->connection_timeout_ = t;
   return *this;
 }

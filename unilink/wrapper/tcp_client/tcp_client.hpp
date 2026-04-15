@@ -76,9 +76,9 @@ class UNILINK_API TcpClient : public ChannelInterface {
   ChannelInterface& auto_manage(bool manage = true) override;
 
   // Configuration
-  TcpClient& set_retry_interval(std::chrono::milliseconds interval);
-  TcpClient& set_max_retries(int max_retries);
-  TcpClient& set_connection_timeout(std::chrono::milliseconds timeout);
+  TcpClient& retry_interval(std::chrono::milliseconds interval);
+  TcpClient& max_retries(int max_retries);
+  TcpClient& connection_timeout(std::chrono::milliseconds timeout);
   TcpClient& set_manage_external_context(bool manage);
 
  private:

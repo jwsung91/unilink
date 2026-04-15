@@ -42,9 +42,9 @@ import time
 client = unilink_py.TcpClient("127.0.0.1", 8080)
 
 # Configure (Optional)
-client.set_retry_interval(datetime.timedelta(milliseconds=2000))
-client.set_max_retries(10)
-client.set_connection_timeout(datetime.timedelta(milliseconds=5000))
+client.retry_interval(datetime.timedelta(milliseconds=2000))
+client.max_retries(10)
+client.connection_timeout(datetime.timedelta(milliseconds=5000))
 
 # Register Callbacks
 @client.on_connect
@@ -113,8 +113,8 @@ import datetime
 serial = unilink_py.Serial("/dev/ttyUSB0", 115200)
 
 # Configure
-serial.set_baud_rate(9600)
-serial.set_retry_interval(datetime.timedelta(milliseconds=1000))
+serial.baud_rate(9600)
+serial.retry_interval(datetime.timedelta(milliseconds=1000))
 serial.auto_manage(True) # Automatically starts
 
 @serial.on_data
@@ -236,6 +236,6 @@ The bindings are designed to be thread-safe. When C++ triggers a callback, it au
 
 ### Configuration
 - **`UdpConfig`**: A dedicated class for UDP settings (buffer sizes, memory pools, etc.).
-- **Timeouts**: Methods like `set_retry_interval` accept `datetime.timedelta` objects for intuitive configuration.
+- **Timeouts**: Methods like `retry_interval` accept `datetime.timedelta` objects for intuitive configuration.
 
 ```

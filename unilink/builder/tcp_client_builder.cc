@@ -53,9 +53,9 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   if (on_disconnect_) client->on_disconnect(on_disconnect_);
   if (on_error_) client->on_error(on_error_);
 
-  client->set_retry_interval(retry_interval_);
-  client->set_max_retries(max_retries_);
-  client->set_connection_timeout(connection_timeout_);
+  client->retry_interval(retry_interval_);
+  client->max_retries(max_retries_);
+  client->connection_timeout(connection_timeout_);
 
   if (framer_factory_) {
     client->set_framer(framer_factory_());

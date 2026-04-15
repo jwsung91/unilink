@@ -425,7 +425,7 @@ TcpServer& TcpServer::unlimited_clients() {
   return *this;
 }
 
-TcpServer& TcpServer::notify_send_failure(bool e) {
+TcpServer& TcpServer::send_failure_notify(bool e) {
   impl_->notify_send_failure_ = e;
   return *this;
 }
