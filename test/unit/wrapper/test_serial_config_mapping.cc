@@ -63,8 +63,8 @@ TEST_F(SerialConfigMappingTest, InvalidStringsFallbackToNoneAndClampBits) {
 
   // Out of range bits
   wrapper->data_bits(3);  // Too small -> clamped to 5 by config validator? Or just passed?
-                              // Config::validate_and_clamp logic is inside transport constructor.
-                              // Wrapper just stores values. Let's see if builder logic applies clamping or validation.
+                          // Config::validate_and_clamp logic is inside transport constructor.
+                          // Wrapper just stores values. Let's see if builder logic applies clamping or validation.
   // Actually wrapper just stores primitives. The transport will clamp.
   // build_config() returns what is stored.
   // Wait, does wrapper perform mapping or validation?
