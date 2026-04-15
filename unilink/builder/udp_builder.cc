@@ -63,12 +63,12 @@ UdpClientBuilder& UdpClientBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::set_local_port(uint16_t port) {
+UdpClientBuilder& UdpClientBuilder::local_port(uint16_t port) {
   cfg_.local_port = port;
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::set_remote(const std::string& address, uint16_t port) {
+UdpClientBuilder& UdpClientBuilder::remote(const std::string& address, uint16_t port) {
   cfg_.remote_address = address;
   cfg_.remote_port = port;
   return *this;
@@ -140,7 +140,7 @@ UdpServerBuilder& UdpServerBuilder::on_client_disconnect(
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::set_local_port(uint16_t port) {
+UdpServerBuilder& UdpServerBuilder::local_port(uint16_t port) {
   cfg_.local_port = port;
   return *this;
 }

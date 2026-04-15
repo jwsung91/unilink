@@ -519,7 +519,7 @@ if (receiver_started) {
 
 // Create a UDP socket and set remote destination
 auto sender = unilink::udp(0)  // 0 = ephemeral port
-    .set_remote("127.0.0.1", 8080)
+    .remote("127.0.0.1", 8080)
     .build();
 
 bool sender_started = sender->start().get();
@@ -541,8 +541,8 @@ unilink::udp(uint16_t local_port)
 
 | Method                      | Parameters         | Description                          |
 | --------------------------- | ------------------ | ------------------------------------ |
-| `set_local_port(port)`      | `uint16_t`         | Bind to a specific local port        |
-| `set_remote(ip, port)`      | `string, uint16_t` | Set default destination for `send()` |
+| `local_port(port)`          | `uint16_t`         | Bind to a specific local port        |
+| `remote(ip, port)`          | `string, uint16_t` | Set default destination for `send()` |
 | `use_independent_context()` | `bool`             | Run on dedicated IO thread           |
 | `auto_manage()`             | `bool`             | Auto-start/stop lifecycle            |
 

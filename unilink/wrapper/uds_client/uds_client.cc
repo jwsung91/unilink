@@ -340,9 +340,15 @@ ChannelInterface& UdsClient::on_error(ErrorHandler handler) {
   return *this;
 }
 
-void UdsClient::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
+ChannelInterface& UdsClient::set_framer(std::unique_ptr<framer::IFramer> f) {
+  impl_->set_framer(std::move(f));
+  return *this;
+}
 
-void UdsClient::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
+ChannelInterface& UdsClient::on_message(MessageHandler h) {
+  impl_->on_message(std::move(h));
+  return *this;
+}
 
 ChannelInterface& UdsClient::auto_manage(bool manage) {
   impl_->auto_manage_ = manage;

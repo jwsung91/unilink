@@ -122,7 +122,7 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
     server->on_message(on_message_);
   }
 
-  server->set_client_limit(max_clients_);
+  server->max_clients(max_clients_);
 
   if (auto_manage_) {
     server->auto_manage(true);

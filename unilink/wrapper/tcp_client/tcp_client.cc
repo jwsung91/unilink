@@ -348,8 +348,14 @@ ChannelInterface& TcpClient::on_error(ErrorHandler h) {
   return *this;
 }
 
-void TcpClient::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
-void TcpClient::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
+ChannelInterface& TcpClient::set_framer(std::unique_ptr<framer::IFramer> f) {
+  impl_->set_framer(std::move(f));
+  return *this;
+}
+ChannelInterface& TcpClient::on_message(MessageHandler h) {
+  impl_->on_message(std::move(h));
+  return *this;
+}
 
 ChannelInterface& TcpClient::auto_manage(bool m) {
   impl_->auto_manage_ = m;

@@ -347,14 +347,16 @@ ServerInterface& UdsServer::on_error(ErrorHandler handler) {
   return *this;
 }
 
-void UdsServer::set_framer_factory(FramerFactory factory) {
+ServerInterface& UdsServer::set_framer_factory(FramerFactory factory) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
+  return *this;
 }
 
-void UdsServer::on_message(MessageHandler handler) {
+ServerInterface& UdsServer::on_message(MessageHandler handler) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
+  return *this;
 }
 
 size_t UdsServer::get_client_count() const { return impl_->server_ ? impl_->server_->get_client_count() : 0; }
@@ -371,12 +373,12 @@ UdsServer& UdsServer::auto_manage(bool manage) {
   return *this;
 }
 
-UdsServer& UdsServer::set_client_limit(size_t max_clients) {
-  impl_->max_clients_ = max_clients;
+UdsServer& UdsServer::max_clients(size_t max) {
+  impl_->max_clients_ = max;
   return *this;
 }
 
-UdsServer& UdsServer::set_unlimited_clients() {
+UdsServer& UdsServer::unlimited_clients() {
   impl_->max_clients_ = 1000000;
   return *this;
 }

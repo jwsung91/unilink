@@ -396,14 +396,16 @@ ServerInterface& UdpServer::on_error(ErrorHandler h) {
   return *this;
 }
 
-void UdpServer::set_framer_factory(FramerFactory factory) {
+ServerInterface& UdpServer::set_framer_factory(FramerFactory factory) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->framer_factory = std::move(factory);
+  return *this;
 }
 
-void UdpServer::on_message(MessageHandler h) {
+ServerInterface& UdpServer::on_message(MessageHandler h) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_message = std::move(h);
+  return *this;
 }
 
 size_t UdpServer::get_client_count() const {

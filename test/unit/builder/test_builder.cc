@@ -117,7 +117,7 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
 }
 
 TEST_F(BuilderTest, UdpBuilderBasic) {
-  udp_ = udp(test_port_).set_remote("127.0.0.1", 9000).build();
+  udp_ = udp(test_port_).remote("127.0.0.1", 9000).build();
 
   ASSERT_NE(udp_, nullptr);
 }

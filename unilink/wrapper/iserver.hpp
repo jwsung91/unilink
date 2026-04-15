@@ -60,13 +60,13 @@ class UNILINK_API ServerInterface {
    * @brief Set a factory function to create a new framer for each client connection.
    * @param factory Function that returns a unique_ptr to a new framer.
    */
-  virtual void set_framer_factory(FramerFactory factory) = 0;
+  virtual ServerInterface& set_framer_factory(FramerFactory factory) = 0;
 
   /**
    * @brief Set a handler for complete messages extracted by the framer.
    * @param handler callback taking MessageContext (where data is the framed payload).
    */
-  virtual void on_message(MessageHandler handler) = 0;
+  virtual ServerInterface& on_message(MessageHandler handler) = 0;
 
   // Management
   virtual size_t get_client_count() const = 0;

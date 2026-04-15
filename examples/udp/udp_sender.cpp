@@ -28,7 +28,7 @@ int main() {
   // Setup UDP sender (point to 127.0.0.1:9000)
   auto sender =
       udp(0)  // Ephemeral local port
-          .set_remote("127.0.0.1", 9000)
+          .remote("127.0.0.1", 9000)
           .on_connect([](const unilink::ConnectionContext&) { std::cout << "UDP Sender ready" << std::endl; })
           .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "Error: " << ctx.message() << std::endl; })
           .build();

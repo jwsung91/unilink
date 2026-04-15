@@ -341,8 +341,14 @@ ChannelInterface& Serial::on_error(ErrorHandler h) {
   return *this;
 }
 
-void Serial::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
-void Serial::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
+ChannelInterface& Serial::set_framer(std::unique_ptr<framer::IFramer> f) {
+  impl_->set_framer(std::move(f));
+  return *this;
+}
+ChannelInterface& Serial::on_message(MessageHandler h) {
+  impl_->on_message(std::move(h));
+  return *this;
+}
 
 ChannelInterface& Serial::auto_manage(bool m) {
   impl_->auto_manage = m;

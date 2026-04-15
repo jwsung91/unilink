@@ -73,9 +73,9 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
 
   if (client_limit_set_) {
     if (max_clients_ == 0)
-      server->set_unlimited_clients();
+      server->unlimited_clients();
     else
-      server->set_client_limit(max_clients_);
+      server->max_clients(max_clients_);
   }
 
   if (auto_manage_) {

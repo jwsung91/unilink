@@ -362,14 +362,16 @@ ServerInterface& TcpServer::on_error(ErrorHandler h) {
   return *this;
 }
 
-void TcpServer::set_framer_factory(FramerFactory factory) {
+ServerInterface& TcpServer::set_framer_factory(FramerFactory factory) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
+  return *this;
 }
 
-void TcpServer::on_message(MessageHandler handler) {
+ServerInterface& TcpServer::on_message(MessageHandler handler) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
+  return *this;
 }
 
 size_t TcpServer::get_client_count() const {
@@ -404,7 +406,7 @@ TcpServer& TcpServer::idle_timeout(std::chrono::milliseconds timeout) {
   return *this;
 }
 
-TcpServer& TcpServer::set_client_limit(size_t max) {
+TcpServer& TcpServer::max_clients(size_t max) {
   impl_->max_clients_ = max;
   impl_->client_limit_enabled_ = true;
   if (impl_->channel_) {
@@ -414,7 +416,7 @@ TcpServer& TcpServer::set_client_limit(size_t max) {
   return *this;
 }
 
-TcpServer& TcpServer::set_unlimited_clients() {
+TcpServer& TcpServer::unlimited_clients() {
   impl_->client_limit_enabled_ = false;
   if (impl_->channel_) {
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);

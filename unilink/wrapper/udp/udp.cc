@@ -305,8 +305,14 @@ ChannelInterface& Udp::on_error(ErrorHandler h) {
   return *this;
 }
 
-void Udp::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
-void Udp::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
+ChannelInterface& Udp::set_framer(std::unique_ptr<framer::IFramer> f) {
+  impl_->set_framer(std::move(f));
+  return *this;
+}
+ChannelInterface& Udp::on_message(MessageHandler h) {
+  impl_->on_message(std::move(h));
+  return *this;
+}
 
 ChannelInterface& Udp::auto_manage(bool m) {
   impl_->auto_manage = m;
