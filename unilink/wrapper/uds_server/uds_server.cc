@@ -359,9 +359,9 @@ ServerInterface& UdsServer::on_message(MessageHandler handler) {
   return *this;
 }
 
-size_t UdsServer::get_client_count() const { return impl_->server_ ? impl_->server_->get_client_count() : 0; }
+size_t UdsServer::client_count() const { return impl_->server_ ? impl_->server_->get_client_count() : 0; }
 
-std::vector<size_t> UdsServer::get_connected_clients() const {
+std::vector<size_t> UdsServer::connected_clients() const {
   return impl_->server_ ? impl_->server_->get_connected_clients() : std::vector<size_t>();
 }
 

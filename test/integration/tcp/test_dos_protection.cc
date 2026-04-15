@@ -93,8 +93,8 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
   // Verify s1 is holding the slot
-  if (server_->get_client_count() != 1) {
-    FAIL() << "Client 1 is not connected. Client count: " << server_->get_client_count();
+  if (server_->client_count() != 1) {
+    FAIL() << "Client 1 is not connected. Client count: " << server_->client_count();
   }
 
   // 2. Flood server with attempts
@@ -141,8 +141,8 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
   std::cout << "Flood finished. Attempts: " << attempt_count << ", Rejections: " << rejection_count << std::endl;
 
   // Verify s1 is STILL connected
-  if (server_->get_client_count() != 1) {
-    FAIL() << "Client 1 disconnected during flood. Client count: " << server_->get_client_count();
+  if (server_->client_count() != 1) {
+    FAIL() << "Client 1 disconnected during flood. Client count: " << server_->client_count();
   }
 
   // With the fix, rejections should be minimal (typically 1).

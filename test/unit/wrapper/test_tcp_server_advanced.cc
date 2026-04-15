@@ -137,7 +137,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
   ASSERT_TRUE(c2_fut.get());
 
   // Wait for connections to stabilize
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 2; }, 10000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() >= 2; }, 10000));
   EXPECT_TRUE(TestUtils::waitForCondition(
       [&]() {
         std::lock_guard<std::mutex> lk(ids_mutex);

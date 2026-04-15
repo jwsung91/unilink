@@ -202,7 +202,7 @@ class Server {
         clients_[id] = info;
     }
     
-    size_t get_client_count() const {
+    size_t client_count() const {
         std::lock_guard<std::mutex> lock(clients_mutex_);
         return clients_.size();
     }

@@ -113,7 +113,7 @@ The current server wrapper uses these key methods:
 - `broadcast(...)` to send to all connected clients
 - `send_to(client_id, ...)` to reply to one client
 - `is_listening()` to check listener state
-- `get_client_count()` and `get_connected_clients()` for inspection
+- `client_count()` and `connected_clients()` for inspection
 
 The key callback contexts are:
 

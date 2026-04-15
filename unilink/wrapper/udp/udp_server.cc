@@ -408,12 +408,12 @@ ServerInterface& UdpServer::on_message(MessageHandler h) {
   return *this;
 }
 
-size_t UdpServer::get_client_count() const {
+size_t UdpServer::client_count() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   return impl_->endpoint_to_id.size();
 }
 
-std::vector<size_t> UdpServer::get_connected_clients() const {
+std::vector<size_t> UdpServer::connected_clients() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   std::vector<size_t> ids;
   for (const auto& pair : impl_->id_to_endpoint) {

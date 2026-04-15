@@ -98,7 +98,7 @@ class TcpServerLoopbackHarness {
 
   bool wait_for_client_count(size_t expected, int timeout_ms = 5000) const {
     return server_ &&
-           TestUtils::waitForCondition([&]() { return server_->get_client_count() >= expected; }, timeout_ms);
+           TestUtils::waitForCondition([&]() { return server_->client_count() >= expected; }, timeout_ms);
   }
 
   void stop_all() {
@@ -156,7 +156,7 @@ class UdsServerLoopbackHarness {
 
   bool wait_for_client_count(size_t expected, int timeout_ms = 5000) const {
     return server_ &&
-           TestUtils::waitForCondition([&]() { return server_->get_client_count() >= expected; }, timeout_ms);
+           TestUtils::waitForCondition([&]() { return server_->client_count() >= expected; }, timeout_ms);
   }
 
   void stop_all() {
@@ -225,7 +225,7 @@ class UdpServerLoopbackHarness {
 
   bool wait_for_client_count(size_t expected, int timeout_ms = 5000) const {
     return server_ &&
-           TestUtils::waitForCondition([&]() { return server_->get_client_count() >= expected; }, timeout_ms);
+           TestUtils::waitForCondition([&]() { return server_->client_count() >= expected; }, timeout_ms);
   }
 
   void stop_all() {

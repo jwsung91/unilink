@@ -374,13 +374,13 @@ ServerInterface& TcpServer::on_message(MessageHandler handler) {
   return *this;
 }
 
-size_t TcpServer::get_client_count() const {
+size_t TcpServer::client_count() const {
   if (!get_impl()->channel_) return 0;
   auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(get_impl()->channel_);
   return transport_server ? transport_server->get_client_count() : 0;
 }
 
-std::vector<size_t> TcpServer::get_connected_clients() const {
+std::vector<size_t> TcpServer::connected_clients() const {
   if (!get_impl()->channel_) return std::vector<size_t>();
   auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(get_impl()->channel_);
   return transport_server ? transport_server->get_connected_clients() : std::vector<size_t>();

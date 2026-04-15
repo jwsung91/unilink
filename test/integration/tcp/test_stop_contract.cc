@@ -102,7 +102,7 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
     ioc.run_one_for(std::chrono::milliseconds(100));
   }
   EXPECT_TRUE(connected);
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->get_client_count() == 1; }, 2000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->client_count() == 1; }, 2000));
 
   // Send enough data to fill socket buffer and trigger backpressure
   std::string data(1024 * 1024, 'X');

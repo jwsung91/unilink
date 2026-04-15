@@ -308,8 +308,8 @@ Multi-client callbacks use the standard `ConnectionContext` and `MessageContext`
 | ------------------------- | --------------------- | -------------------------------------- |
 | `broadcast()`             | `bool`                | Send to all connected clients          |
 | `send_to()`               | `bool`                | Send to a specific client              |
-| `get_client_count()`      | `size_t`              | Number of connected clients            |
-| `get_connected_clients()` | `std::vector<size_t>` | List of connected client IDs           |
+| `client_count()`      | `size_t`              | Number of connected clients            |
+| `connected_clients()` | `std::vector<size_t>` | List of connected client IDs           |
 | `on_client_connect()`     | `ServerInterface&`    | Register runtime connect callback      |
 | `on_client_disconnect()`  | `ServerInterface&`    | Register runtime disconnect callback   |
 | `on_data()`               | `ServerInterface&`    | Register runtime message callback      |
@@ -661,8 +661,8 @@ unilink::uds_client(const std::string& socket_path)
 | `is_listening()`           | `bool`                | Check if the socket is listening |
 | `broadcast(data)`          | `bool`                | Send to all connected clients    |
 | `send_to(client_id, data)` | `bool`                | Send to a specific client        |
-| `get_client_count()`       | `size_t`              | Number of connected clients      |
-| `get_connected_clients()`  | `std::vector<size_t>` | List of connected client IDs     |
+| `client_count()`       | `size_t`              | Number of connected clients      |
+| `connected_clients()`  | `std::vector<size_t>` | List of connected client IDs     |
 
 ### Notes on UDS
 

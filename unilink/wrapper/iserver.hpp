@@ -69,8 +69,8 @@ class UNILINK_API ServerInterface {
   virtual ServerInterface& on_message(MessageHandler handler) = 0;
 
   // Management
-  virtual size_t get_client_count() const = 0;
-  virtual std::vector<size_t> get_connected_clients() const = 0;
+  virtual size_t client_count() const = 0;
+  virtual std::vector<size_t> connected_clients() const = 0;
 };
 
 }  // namespace wrapper
