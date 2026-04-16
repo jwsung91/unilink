@@ -67,6 +67,8 @@ struct TcpServer::Impl {
   MessageHandler on_message_{nullptr};
 
   std::unordered_map<size_t, std::unique_ptr<framer::IFramer>> framers_;
+  // Cached transport pointer — set once in start(), avoids repeated dynamic_cast.
+  std::shared_ptr<transport::TcpServer> transport_cache_;
 
   explicit Impl(uint16_t port)
       : port_(port),
@@ -151,6 +153,7 @@ struct TcpServer::Impl {
       config.idle_timeout_ms = idle_timeout_ms_;
 
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
+      transport_cache_ = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
       setup_internal_handlers();
 
       if (client_limit_enabled_) {
@@ -326,19 +329,13 @@ void TcpServer::stop() { impl_->stop(); }
 bool TcpServer::is_listening() const { return get_impl()->is_listening_.load(); }
 
 bool TcpServer::broadcast(std::string_view data) {
-  if (impl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
-    if (transport_server) return transport_server->broadcast(std::string(data));
-  }
-  return false;
+  const auto& ts = impl_->transport_cache_;
+  return ts ? ts->broadcast(std::string(data)) : false;
 }
 
 bool TcpServer::send_to(size_t client_id, std::string_view data) {
-  if (impl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
-    if (transport_server) return transport_server->send_to_client(client_id, std::string(data));
-  }
-  return false;
+  const auto& ts = impl_->transport_cache_;
+  return ts ? ts->send_to_client(client_id, std::string(data)) : false;
 }
 
 ServerInterface& TcpServer::on_client_connect(ConnectionHandler h) {
@@ -375,15 +372,13 @@ ServerInterface& TcpServer::on_message(MessageHandler handler) {
 }
 
 size_t TcpServer::client_count() const {
-  if (!get_impl()->channel_) return 0;
-  auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(get_impl()->channel_);
-  return transport_server ? transport_server->get_client_count() : 0;
+  const auto& ts = get_impl()->transport_cache_;
+  return ts ? ts->get_client_count() : 0;
 }
 
 std::vector<size_t> TcpServer::connected_clients() const {
-  if (!get_impl()->channel_) return std::vector<size_t>();
-  auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(get_impl()->channel_);
-  return transport_server ? transport_server->get_connected_clients() : std::vector<size_t>();
+  const auto& ts = get_impl()->transport_cache_;
+  return ts ? ts->get_connected_clients() : std::vector<size_t>();
 }
 
 TcpServer& TcpServer::auto_manage(bool m) {
@@ -409,19 +404,13 @@ TcpServer& TcpServer::idle_timeout(std::chrono::milliseconds timeout) {
 TcpServer& TcpServer::max_clients(size_t max) {
   impl_->max_clients_ = max;
   impl_->client_limit_enabled_ = true;
-  if (impl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
-    if (transport_server) transport_server->set_client_limit(max);
-  }
+  if (impl_->transport_cache_) impl_->transport_cache_->set_client_limit(max);
   return *this;
 }
 
 TcpServer& TcpServer::unlimited_clients() {
   impl_->client_limit_enabled_ = false;
-  if (impl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
-    if (transport_server) transport_server->set_unlimited_clients();
-  }
+  if (impl_->transport_cache_) impl_->transport_cache_->set_unlimited_clients();
   return *this;
 }
 
