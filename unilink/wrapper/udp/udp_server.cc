@@ -20,7 +20,7 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -47,11 +47,14 @@ struct UdpServer::Impl {
   std::atomic<bool> is_listening{false};
 
   // Virtual Session Management
+  struct SessionEntry {
+    boost::asio::ip::udp::endpoint endpoint;
+    std::shared_ptr<framer::IFramer> framer;
+    std::chrono::steady_clock::time_point last_seen;
+  };
   size_t next_client_id{1};
-  std::map<boost::asio::ip::udp::endpoint, size_t> endpoint_to_id;
-  std::map<size_t, boost::asio::ip::udp::endpoint> id_to_endpoint;
-  std::map<size_t, std::shared_ptr<framer::IFramer>> client_framers;
-  std::map<size_t, std::chrono::steady_clock::time_point> session_activity;
+  std::unordered_map<boost::asio::ip::udp::endpoint, size_t> endpoint_to_id;
+  std::unordered_map<size_t, SessionEntry> sessions;
   std::chrono::milliseconds session_timeout{30000};  // Default 30s
   std::unique_ptr<boost::asio::steady_timer> reaper_timer;
   bool auto_manage{false};
@@ -116,22 +119,16 @@ struct UdpServer::Impl {
 
     {
       std::lock_guard<std::mutex> lock(mutex);
-      for (auto const& [id, last_seen] : session_activity) {
-        if (now - last_seen > session_timeout) {
-          auto it_ep = id_to_endpoint.find(id);
-          std::string info = "timeout";
-          if (it_ep != id_to_endpoint.end()) {
-            info = it_ep->second.address().to_string() + ":" + std::to_string(it_ep->second.port());
-            endpoint_to_id.erase(it_ep->second);
-            id_to_endpoint.erase(it_ep);
-          }
-          client_framers.erase(id);
+      for (auto& [id, entry] : sessions) {
+        if (now - entry.last_seen > session_timeout) {
+          std::string info = entry.endpoint.address().to_string() + ":" +
+                             std::to_string(entry.endpoint.port());
+          endpoint_to_id.erase(entry.endpoint);
           to_remove_with_info.push_back({id, info});
         }
       }
-
       for (auto const& [id, info] : to_remove_with_info) {
-        session_activity.erase(id);
+        sessions.erase(id);
       }
     }
 
@@ -158,7 +155,9 @@ struct UdpServer::Impl {
         if (it == endpoint_to_id.end()) {
           client_id = next_client_id++;
           endpoint_to_id[ep] = client_id;
-          id_to_endpoint[client_id] = ep;
+          SessionEntry entry;
+          entry.endpoint = ep;
+          entry.last_seen = std::chrono::steady_clock::now();
           is_new = true;
 
           // Create framer for new session
@@ -172,17 +171,17 @@ struct UdpServer::Impl {
                   on_message_handler = on_message;
                 }
                 if (on_message_handler) {
-                  std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-                  on_message_handler(MessageContext(client_id, str_msg));
+                  on_message_handler(MessageContext(client_id, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
                 }
               });
-              client_framers[client_id] = std::shared_ptr<framer::IFramer>(std::move(framer));
+              entry.framer = std::move(framer);
             }
           }
+          sessions[client_id] = std::move(entry);
         } else {
           client_id = it->second;
+          sessions[client_id].last_seen = std::chrono::steady_clock::now();
         }
-        session_activity[client_id] = std::chrono::steady_clock::now();
         connect_handler_copy = on_connect;
         data_handler_copy = on_data;
       }
@@ -200,9 +199,9 @@ struct UdpServer::Impl {
       std::shared_ptr<framer::IFramer> target_framer;
       {
         std::lock_guard<std::mutex> lock(mutex);
-        auto it = client_framers.find(client_id);
-        if (it != client_framers.end()) {
-          target_framer = it->second;
+        auto it = sessions.find(client_id);
+        if (it != sessions.end()) {
+          target_framer = it->second.framer;
         }
       }
       if (target_framer) {
@@ -307,9 +306,7 @@ struct UdpServer::Impl {
 
       is_listening = false;
       endpoint_to_id.clear();
-      id_to_endpoint.clear();
-      client_framers.clear();
-      session_activity.clear();
+      sessions.clear();
       next_client_id = 1;
       fulfill_all_locked(false);
     }
@@ -354,8 +351,8 @@ bool UdpServer::broadcast(std::string_view data) {
   if (!impl_->channel) return false;
 
   auto bytes = common::safe_convert::string_to_bytes(data);
-  for (const auto& pair : impl_->id_to_endpoint) {
-    impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), pair.second);
+  for (const auto& [id, entry] : impl_->sessions) {
+    impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
   }
   return true;
 }
@@ -364,11 +361,11 @@ bool UdpServer::send_to(size_t client_id, std::string_view data) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   if (!impl_->channel) return false;
 
-  auto it = impl_->id_to_endpoint.find(client_id);
-  if (it == impl_->id_to_endpoint.end()) return false;
+  auto it = impl_->sessions.find(client_id);
+  if (it == impl_->sessions.end()) return false;
 
   auto bytes = common::safe_convert::string_to_bytes(data);
-  impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second);
+  impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
   return true;
 }
 
@@ -416,8 +413,9 @@ size_t UdpServer::client_count() const {
 std::vector<size_t> UdpServer::connected_clients() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   std::vector<size_t> ids;
-  for (const auto& pair : impl_->id_to_endpoint) {
-    ids.push_back(pair.first);
+  ids.reserve(impl_->sessions.size());
+  for (const auto& [id, entry] : impl_->sessions) {
+    ids.push_back(id);
   }
   return ids;
 }
