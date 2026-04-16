@@ -36,7 +36,7 @@ std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
 
   auto udp = std::make_unique<wrapper::Udp>(cfg_, ioc);
   if (use_independent_context_) {
-    udp->set_manage_external_context(true);
+    udp->manage_external_context(true);
   }
 
   if (on_data_) udp->on_data(on_data_);
@@ -45,7 +45,7 @@ std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
   if (on_error_) udp->on_error(on_error_);
 
   if (framer_factory_) {
-    udp->set_framer(framer_factory_());
+    udp->framer(framer_factory_());
   }
   if (on_message_) {
     udp->on_message(std::move(on_message_));
@@ -63,12 +63,12 @@ UdpClientBuilder& UdpClientBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::set_local_port(uint16_t port) {
+UdpClientBuilder& UdpClientBuilder::local_port(uint16_t port) {
   cfg_.local_port = port;
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::set_remote(const std::string& address, uint16_t port) {
+UdpClientBuilder& UdpClientBuilder::remote(const std::string& address, uint16_t port) {
   cfg_.remote_address = address;
   cfg_.remote_port = port;
   return *this;
@@ -79,7 +79,7 @@ UdpClientBuilder& UdpClientBuilder::use_independent_context(bool use_independent
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::enable_broadcast(bool enable) {
+UdpClientBuilder& UdpClientBuilder::broadcast(bool enable) {
   cfg_.enable_broadcast = enable;
   return *this;
 }
@@ -101,7 +101,7 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
 
   auto server = std::make_unique<wrapper::UdpServer>(cfg_, ioc);
   if (use_independent_context_) {
-    server->set_manage_external_context(true);
+    server->manage_external_context(true);
   }
 
   if (on_data_) server->on_data(on_data_);
@@ -110,7 +110,7 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
-    server->set_framer_factory(framer_factory_);
+    server->framer_factory(framer_factory_);
   }
 
   if (on_message_) {
@@ -140,7 +140,7 @@ UdpServerBuilder& UdpServerBuilder::on_client_disconnect(
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::set_local_port(uint16_t port) {
+UdpServerBuilder& UdpServerBuilder::local_port(uint16_t port) {
   cfg_.local_port = port;
   return *this;
 }
@@ -150,7 +150,7 @@ UdpServerBuilder& UdpServerBuilder::use_independent_context(bool use_independent
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::enable_broadcast(bool enable) {
+UdpServerBuilder& UdpServerBuilder::broadcast(bool enable) {
   cfg_.enable_broadcast = enable;
   return *this;
 }

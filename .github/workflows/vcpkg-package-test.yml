@@ -167,8 +167,8 @@ jobs:
 
           int main() {
             unilink::wrapper::TcpClient client("127.0.0.1", 9000);
-            client.set_retry_interval(std::chrono::milliseconds(250));
-            client.set_max_retries(1);
+            client.retry_interval(std::chrono::milliseconds(250));
+            client.max_retries(1);
             client.auto_manage(false);
             std::cout << "unilink vcpkg package loaded" << std::endl;
             return 0;
@@ -213,8 +213,8 @@ jobs:
 
           int main() {
             unilink::wrapper::TcpClient client("127.0.0.1", 9000);
-            client.set_retry_interval(std::chrono::milliseconds(250));
-            client.set_max_retries(1);
+            client.retry_interval(std::chrono::milliseconds(250));
+            client.max_retries(1);
             client.auto_manage(false);
             std::cout << "unilink vcpkg package loaded" << std::endl;
             return 0;

@@ -89,7 +89,7 @@ TEST_F(TcpServerMutexContentionTest, BenchmarkThroughput) {
   std::atomic<size_t> total_sent{0};
 
   // Concurrent Status Reader Thread (simulating contention on shared_mutex)
-  // This thread repeatedly calls get_client_count() which uses std::shared_lock
+  // This thread repeatedly calls client_count() which uses std::shared_lock
   // while clients are connecting/disconnecting (which uses std::unique_lock)
   // and sending data (which uses std::shared_lock for callback lookup).
   std::thread status_reader([&] {

@@ -43,7 +43,7 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   std::unique_ptr<wrapper::TcpClient> client;
   if (use_independent_context_) {
     client = std::make_unique<wrapper::TcpClient>(host_, port_, std::make_shared<boost::asio::io_context>());
-    client->set_manage_external_context(true);
+    client->manage_external_context(true);
   } else {
     client = std::make_unique<wrapper::TcpClient>(host_, port_);
   }
@@ -53,12 +53,12 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   if (on_disconnect_) client->on_disconnect(on_disconnect_);
   if (on_error_) client->on_error(on_error_);
 
-  client->set_retry_interval(retry_interval_);
-  client->set_max_retries(max_retries_);
-  client->set_connection_timeout(connection_timeout_);
+  client->retry_interval(retry_interval_);
+  client->max_retries(max_retries_);
+  client->connection_timeout(connection_timeout_);
 
   if (framer_factory_) {
-    client->set_framer(framer_factory_());
+    client->framer(framer_factory_());
   }
   if (on_message_) {
     client->on_message(std::move(on_message_));

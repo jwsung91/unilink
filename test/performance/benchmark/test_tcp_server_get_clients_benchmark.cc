@@ -83,7 +83,7 @@ TEST_F(TcpServerGetClientsBenchmarkTest, BenchmarkGetClients) {
 
   EXPECT_EQ(server_->get_client_count(), client_count);
 
-  std::cout << "Benchmarking get_connected_clients() with " << client_count << " clients..." << std::endl;
+  std::cout << "Benchmarking connected_clients() with " << client_count << " clients..." << std::endl;
 
   const int iterations = 100000;
   auto start_time = std::chrono::high_resolution_clock::now();

@@ -97,7 +97,7 @@ class EchoServer {
     // Create TCP server with Phase 2 Modern API
     server_ = unilink::tcp_server(port_)
                   .single_client()
-                  .enable_port_retry(true, 3, 1000)
+                  .port_retry(true, 3, 1000)
                   .on_connect([this](const unilink::ConnectionContext& ctx) { on_client_connect(ctx); })
                   .on_disconnect([this](const unilink::ConnectionContext& ctx) { on_client_disconnect(ctx); })
                   .on_data([this](const unilink::MessageContext& ctx) { on_data(ctx); })

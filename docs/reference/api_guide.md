@@ -52,7 +52,7 @@ auto channel = unilink::{type}(params)
 **Builder-Specific Options**
 
 - `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
-- `TcpServerBuilder`: `.enable_port_retry(enable, max_retries, retry_interval_ms)`
+- `TcpServerBuilder`: `.port_retry(enable, max_retries, retry_interval_ms)`
 - `TcpServerBuilder`: `.single_client()`, `.multi_client(max>=2)`, `.unlimited_clients()` (Defaults to `unlimited_clients()` if not specified)
 - TCP server callbacks use the same Context-based signatures. Use `ctx.client_id()` and `ctx.client_info()` to distinguish clients.
 
@@ -103,7 +103,7 @@ tcp_server(port)
 
 - **Default**: Builders use the shared `IoContextManager` thread; unilink starts/stops it for you.
 - **`use_independent_context(true)`**: Builder creates its own `io_context` and runs it on an internal thread; cleanup is automatic.
-- **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will _not_ run/stop it unless you call `set_manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_manage(true)` (it starts immediately).
+- **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will _not_ run/stop it unless you call `manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_manage(true)` (it starts immediately).
 
 ---
 
@@ -171,9 +171,9 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 | `is_connected()`           | `bool`              | Check connection status                                               |
 | `start()`                  | `std::future<bool>` | Start connection attempt                                              |
 | `stop()`                   | `void`              | Stop and disconnect                                                   |
-| `set_retry_interval()`     | `void`              | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
-| `set_max_retries()`        | `void`              | Set max reconnect attempts (`-1` for unlimited)                       |
-| `set_connection_timeout()` | `void`              | Set connection timeout (`std::chrono::milliseconds`)                  |
+| `retry_interval()`     | `void`              | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
+| `max_retries()`        | `void`              | Set max reconnect attempts (`-1` for unlimited)                       |
+| `connection_timeout()` | `void`              | Set connection timeout (`std::chrono::milliseconds`)                  |
 
 ### Advanced Examples
 
@@ -296,7 +296,7 @@ unilink::tcp_server(uint16_t port)
 | `single_client()`           | None                         | Accept only one client (required to choose a limit before `build()`) |
 | `multi_client(max)`         | `size_t (>=2)`               | Accept up to `max` clients                                           |
 | `unlimited_clients()`       | None                         | Accept unlimited clients                                             |
-| `enable_port_retry()`       | `bool, retries, interval_ms` | Retry if port is in use                                              |
+| `port_retry()`       | `bool, retries, interval_ms` | Retry if port is in use                                              |
 | `use_independent_context()` | `bool`                       | Run on a dedicated `io_context` thread managed by unilink            |
 | `auto_manage()`             | `bool`                       | Auto-start immediately and stop on destruction                       |
 
@@ -308,8 +308,8 @@ Multi-client callbacks use the standard `ConnectionContext` and `MessageContext`
 | ------------------------- | --------------------- | -------------------------------------- |
 | `broadcast()`             | `bool`                | Send to all connected clients          |
 | `send_to()`               | `bool`                | Send to a specific client              |
-| `get_client_count()`      | `size_t`              | Number of connected clients            |
-| `get_connected_clients()` | `std::vector<size_t>` | List of connected client IDs           |
+| `client_count()`      | `size_t`              | Number of connected clients            |
+| `connected_clients()` | `std::vector<size_t>` | List of connected client IDs           |
 | `on_client_connect()`     | `ServerInterface&`    | Register runtime connect callback      |
 | `on_client_disconnect()`  | `ServerInterface&`    | Register runtime disconnect callback   |
 | `on_data()`               | `ServerInterface&`    | Register runtime message callback      |
@@ -336,7 +336,7 @@ auto server = unilink::tcp_server(8080)
 ```cpp
 auto server = unilink::tcp_server(8080)
     .single_client()
-    .enable_port_retry(true, 5, 1000)  // 5 retries, 1 second each
+    .port_retry(true, 5, 1000)  // 5 retries, 1 second each
     .on_error([](const unilink::ErrorContext& ctx) {
         std::cerr << "Server error: " << ctx.message() << std::endl;
     })
@@ -425,12 +425,12 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 | `is_connected()`       | `bool`              | Check if port is open                                      |
 | `start()`              | `std::future<bool>` | Open serial port                                           |
 | `stop()`               | `void`              | Close serial port                                          |
-| `set_baud_rate()`      | `void`              | Adjust baud rate at runtime                                |
-| `set_data_bits()`      | `void`              | Set data bits (5-8)                                        |
-| `set_stop_bits()`      | `void`              | Set stop bits (1-2)                                        |
-| `set_parity()`         | `void`              | Set parity (`none`, `even`, `odd`)                         |
-| `set_flow_control()`   | `void`              | Set flow control (`none`, `software`, `hardware`)          |
-| `set_retry_interval()` | `void`              | Adjust reconnection interval (`std::chrono::milliseconds`) |
+| `baud_rate()`      | `void`              | Adjust baud rate at runtime                                |
+| `data_bits()`      | `void`              | Set data bits (5-8)                                        |
+| `stop_bits()`      | `void`              | Set stop bits (1-2)                                        |
+| `parity()`         | `void`              | Set parity (`none`, `even`, `odd`)                         |
+| `flow_control()`   | `void`              | Set flow control (`none`, `software`, `hardware`)          |
+| `retry_interval()` | `void`              | Adjust reconnection interval (`std::chrono::milliseconds`) |
 | `build_config()`       | `SerialConfig`      | Inspect current mapped serial config                       |
 
 ### Device Paths
@@ -519,7 +519,7 @@ if (receiver_started) {
 
 // Create a UDP socket and set remote destination
 auto sender = unilink::udp(0)  // 0 = ephemeral port
-    .set_remote("127.0.0.1", 8080)
+    .remote("127.0.0.1", 8080)
     .build();
 
 bool sender_started = sender->start().get();
@@ -541,8 +541,8 @@ unilink::udp(uint16_t local_port)
 
 | Method                      | Parameters         | Description                          |
 | --------------------------- | ------------------ | ------------------------------------ |
-| `set_local_port(port)`      | `uint16_t`         | Bind to a specific local port        |
-| `set_remote(ip, port)`      | `string, uint16_t` | Set default destination for `send()` |
+| `local_port(port)`          | `uint16_t`         | Bind to a specific local port        |
+| `remote(ip, port)`          | `string, uint16_t` | Set default destination for `send()` |
 | `use_independent_context()` | `bool`             | Run on dedicated IO thread           |
 | `auto_manage()`             | `bool`             | Auto-start/stop lifecycle            |
 
@@ -661,8 +661,8 @@ unilink::uds_client(const std::string& socket_path)
 | `is_listening()`           | `bool`                | Check if the socket is listening |
 | `broadcast(data)`          | `bool`                | Send to all connected clients    |
 | `send_to(client_id, data)` | `bool`                | Send to a specific client        |
-| `get_client_count()`       | `size_t`              | Number of connected clients      |
-| `get_connected_clients()`  | `std::vector<size_t>` | List of connected client IDs     |
+| `client_count()`       | `size_t`              | Number of connected clients      |
+| `connected_clients()`  | `std::vector<size_t>` | List of connected client IDs     |
 
 ### Notes on UDS
 

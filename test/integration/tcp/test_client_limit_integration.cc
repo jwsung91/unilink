@@ -89,11 +89,11 @@ TEST_F(ClientLimitIntegrationTest, SingleClientLimitTest) {
   auto client_futures = simulateClients("127.0.0.1", test_port, 3);
 
   // Wait for at least one to be established
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 1; }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() >= 1; }, 5000));
 
   // Verify it never exceeds 1
   std::this_thread::sleep_for(500ms);
-  EXPECT_LE(server_->get_client_count(), 1);
+  EXPECT_LE(server_->client_count(), 1);
 
   for (auto& f : client_futures) f.wait();
 }
@@ -107,11 +107,11 @@ TEST_F(ClientLimitIntegrationTest, MultiClientLimitTest) {
   auto client_futures = simulateClients("127.0.0.1", test_port, 4);
 
   // Wait for connections to reach limit
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 2; }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() >= 2; }, 5000));
 
   // Verify it never exceeds 2
   std::this_thread::sleep_for(500ms);
-  EXPECT_LE(server_->get_client_count(), 2);
+  EXPECT_LE(server_->client_count(), 2);
 
   for (auto& f : client_futures) f.wait();
 }
@@ -126,7 +126,7 @@ TEST_F(ClientLimitIntegrationTest, UnlimitedClientsTest) {
   auto client_futures = simulateClients("127.0.0.1", test_port, 5, 3000);
 
   // Verify server sees all 5 simultaneous connections
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() == 5; }, 10000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() == 5; }, 10000));
 
   for (auto& f : client_futures) f.wait();
 }

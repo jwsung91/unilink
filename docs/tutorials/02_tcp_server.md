@@ -34,7 +34,7 @@ public:
     void start(uint16_t port) {
         server_ = unilink::tcp_server(port)
             .unlimited_clients()
-            .enable_port_retry(true)
+            .port_retry(true)
             .on_connect([this](const unilink::ConnectionContext& ctx) {
                 std::cout << "[Connect] client=" << ctx.client_id()
                           << " info=" << ctx.client_info() << std::endl;
@@ -113,7 +113,7 @@ The current server wrapper uses these key methods:
 - `broadcast(...)` to send to all connected clients
 - `send_to(client_id, ...)` to reply to one client
 - `is_listening()` to check listener state
-- `get_client_count()` and `get_connected_clients()` for inspection
+- `client_count()` and `connected_clients()` for inspection
 
 The key callback contexts are:
 

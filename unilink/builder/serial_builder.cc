@@ -41,7 +41,7 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   std::unique_ptr<wrapper::Serial> serial;
   if (use_independent_context_) {
     serial = std::make_unique<wrapper::Serial>(device_, baud_rate_, std::make_shared<boost::asio::io_context>());
-    serial->set_manage_external_context(true);
+    serial->manage_external_context(true);
   } else {
     serial = std::make_unique<wrapper::Serial>(device_, baud_rate_);
   }
@@ -51,14 +51,14 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   if (on_disconnect_) serial->on_disconnect(on_disconnect_);
   if (on_error_) serial->on_error(on_error_);
 
-  serial->set_data_bits(data_bits_);
-  serial->set_stop_bits(stop_bits_);
-  serial->set_parity(parity_);
-  serial->set_flow_control(flow_control_);
-  serial->set_retry_interval(retry_interval_);
+  serial->data_bits(data_bits_);
+  serial->stop_bits(stop_bits_);
+  serial->parity(parity_);
+  serial->flow_control(flow_control_);
+  serial->retry_interval(retry_interval_);
 
   if (framer_factory_) {
-    serial->set_framer(framer_factory_());
+    serial->framer(framer_factory_());
   }
   if (on_message_) {
     serial->on_message(std::move(on_message_));

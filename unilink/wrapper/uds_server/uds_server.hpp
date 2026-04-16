@@ -73,18 +73,18 @@ class UNILINK_API UdsServer : public ServerInterface {
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
 
-  void set_framer_factory(FramerFactory factory) override;
-  void on_message(MessageHandler handler) override;
+  ServerInterface& framer_factory(FramerFactory factory) override;
+  ServerInterface& on_message(MessageHandler handler) override;
 
   // Client count and management
-  size_t get_client_count() const override;
-  std::vector<size_t> get_connected_clients() const override;
+  size_t client_count() const override;
+  std::vector<size_t> connected_clients() const override;
 
   // Configuration (Fluent API)
   UdsServer& auto_manage(bool manage = true);
-  UdsServer& set_client_limit(size_t max_clients);
-  UdsServer& set_unlimited_clients();
-  UdsServer& set_manage_external_context(bool manage);
+  UdsServer& max_clients(size_t max);
+  UdsServer& unlimited_clients();
+  UdsServer& manage_external_context(bool manage);
 
  private:
   struct Impl;

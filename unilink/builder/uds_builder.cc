@@ -39,7 +39,7 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   if (use_independent_context_) {
     auto ioc = std::make_shared<boost::asio::io_context>();
     client = std::make_unique<wrapper::UdsClient>(socket_path_, ioc);
-    client->set_manage_external_context(true);
+    client->manage_external_context(true);
   } else {
     client = std::make_unique<wrapper::UdsClient>(socket_path_);
   }
@@ -49,12 +49,12 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   if (on_disconnect_) client->on_disconnect(on_disconnect_);
   if (on_error_) client->on_error(on_error_);
 
-  client->set_retry_interval(retry_interval_);
-  client->set_max_retries(max_retries_);
-  client->set_connection_timeout(connection_timeout_);
+  client->retry_interval(retry_interval_);
+  client->max_retries(max_retries_);
+  client->connection_timeout(connection_timeout_);
 
   if (framer_factory_) {
-    client->set_framer(framer_factory_());
+    client->framer(framer_factory_());
   }
   if (on_message_) {
     client->on_message(std::move(on_message_));
@@ -104,7 +104,7 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   if (use_independent_context_) {
     auto ioc = std::make_shared<boost::asio::io_context>();
     server = std::make_unique<wrapper::UdsServer>(socket_path_, ioc);
-    server->set_manage_external_context(true);
+    server->manage_external_context(true);
   } else {
     server = std::make_unique<wrapper::UdsServer>(socket_path_);
   }
@@ -115,14 +115,14 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
-    server->set_framer_factory(framer_factory_);
+    server->framer_factory(framer_factory_);
   }
 
   if (on_message_) {
     server->on_message(on_message_);
   }
 
-  server->set_client_limit(max_clients_);
+  server->max_clients(max_clients_);
 
   if (auto_manage_) {
     server->auto_manage(true);

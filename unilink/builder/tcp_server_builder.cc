@@ -45,7 +45,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   std::unique_ptr<wrapper::TcpServer> server;
   if (use_independent_context_) {
     server = std::make_unique<wrapper::TcpServer>(port_, std::make_shared<boost::asio::io_context>());
-    server->set_manage_external_context(true);
+    server->manage_external_context(true);
   } else {
     server = std::make_unique<wrapper::TcpServer>(port_);
   }
@@ -56,7 +56,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
-    server->set_framer_factory(framer_factory_);
+    server->framer_factory(framer_factory_);
   }
 
   if (on_message_) {
@@ -64,7 +64,7 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   }
 
   if (enable_port_retry_) {
-    server->enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);
+    server->port_retry(true, max_port_retries_, port_retry_interval_ms_);
   }
 
   if (idle_timeout_.count() > 0) {
@@ -73,9 +73,9 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
 
   if (client_limit_set_) {
     if (max_clients_ == 0)
-      server->set_unlimited_clients();
+      server->unlimited_clients();
     else
-      server->set_client_limit(max_clients_);
+      server->max_clients(max_clients_);
   }
 
   if (auto_manage_) {
@@ -95,7 +95,7 @@ TcpServerBuilder& TcpServerBuilder::use_independent_context(bool use_independent
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::enable_port_retry(bool enable, int max_retries, int retry_interval_ms) {
+TcpServerBuilder& TcpServerBuilder::port_retry(bool enable, int max_retries, int retry_interval_ms) {
   enable_port_retry_ = enable;
   max_port_retries_ = max_retries;
   port_retry_interval_ms_ = retry_interval_ms;

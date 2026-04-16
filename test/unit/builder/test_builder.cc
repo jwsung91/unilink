@@ -117,7 +117,7 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
 }
 
 TEST_F(BuilderTest, UdpBuilderBasic) {
-  udp_ = udp(test_port_).set_remote("127.0.0.1", 9000).build();
+  udp_ = udp(test_port_).remote("127.0.0.1", 9000).build();
 
   ASSERT_NE(udp_, nullptr);
 }
@@ -126,7 +126,7 @@ TEST_F(BuilderTest, BuilderChaining) {
   server_ =
       tcp_server(test_port_)
           .unlimited_clients()
-          .enable_port_retry(true, 5, 500)
+          .port_retry(true, 5, 500)
           .on_data([this](const wrapper::MessageContext& ctx) { data_received_.push_back(std::string(ctx.data())); })
           .build();
 

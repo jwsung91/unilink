@@ -158,7 +158,7 @@ class Application {
 
 > Tip: Register all callbacks before calling `.auto_manage(true)` or manually invoking `start()`, because `auto_manage(true)` now starts the connection immediately.
 
-> Advanced: If you supply your own `boost::asio::io_context` to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with `set_manage_external_context(true)`). Make sure the context is running on a thread you control.
+> Advanced: If you supply your own `boost::asio::io_context` to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with `manage_external_context(true)`). Make sure the context is running on a thread you control.
 
 ### ✅ DO: Reuse Connections When Possible
 
@@ -202,7 +202,7 @@ class Server {
         clients_[id] = info;
     }
     
-    size_t get_client_count() const {
+    size_t client_count() const {
         std::lock_guard<std::mutex> lock(clients_mutex_);
         return clients_.size();
     }

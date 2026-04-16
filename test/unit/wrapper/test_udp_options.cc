@@ -53,9 +53,9 @@ TEST_F(UdpOptionsTest, SetterCoverage) {
   udp.auto_manage(true);
   udp.auto_manage(false);
 
-  // Test set_manage_external_context
-  udp.set_manage_external_context(true);
-  udp.set_manage_external_context(false);
+  // Test manage_external_context
+  udp.manage_external_context(true);
+  udp.manage_external_context(false);
 }
 
 TEST_F(UdpOptionsTest, ConstructorWithExternalContext) {
@@ -128,8 +128,8 @@ TEST_F(UdpOptionsTest, StartFutureReflectsBindFailure) {
 
 TEST_F(UdpOptionsTest, BuilderCoverageForUdpSocketOptions) {
   unilink::builder::UdpClientBuilder client_builder;
-  client_builder.enable_broadcast(true).reuse_address(true);
+  client_builder.broadcast(true).reuse_address(true);
 
   unilink::builder::UdpServerBuilder server_builder;
-  server_builder.enable_broadcast(true).reuse_address(true);
+  server_builder.broadcast(true).reuse_address(true);
 }

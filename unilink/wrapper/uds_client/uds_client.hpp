@@ -70,16 +70,16 @@ class UNILINK_API UdsClient : public ChannelInterface {
   ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
-  void set_framer(std::unique_ptr<framer::IFramer> framer) override;
-  void on_message(MessageHandler handler) override;
+  ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
+  ChannelInterface& on_message(MessageHandler handler) override;
 
   ChannelInterface& auto_manage(bool manage = true) override;
 
   // Configuration
-  UdsClient& set_retry_interval(std::chrono::milliseconds interval);
-  UdsClient& set_max_retries(int max_retries);
-  UdsClient& set_connection_timeout(std::chrono::milliseconds timeout);
-  UdsClient& set_manage_external_context(bool manage);
+  UdsClient& retry_interval(std::chrono::milliseconds interval);
+  UdsClient& max_retries(int max_retries);
+  UdsClient& connection_timeout(std::chrono::milliseconds timeout);
+  UdsClient& manage_external_context(bool manage);
 
  private:
   struct Impl;

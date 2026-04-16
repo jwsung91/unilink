@@ -65,17 +65,17 @@ class UNILINK_API UdpServer : public ServerInterface {
   ServerInterface& on_error(ErrorHandler handler) override;
 
   // Framing
-  void set_framer_factory(FramerFactory factory) override;
-  void on_message(MessageHandler handler) override;
+  ServerInterface& framer_factory(FramerFactory factory) override;
+  ServerInterface& on_message(MessageHandler handler) override;
 
   // Management
-  size_t get_client_count() const override;
-  std::vector<size_t> get_connected_clients() const override;
+  size_t client_count() const override;
+  std::vector<size_t> connected_clients() const override;
 
   // UDP specific
   UdpServer& auto_manage(bool manage = true);
-  UdpServer& set_session_timeout(std::chrono::milliseconds timeout);
-  UdpServer& set_manage_external_context(bool manage);
+  UdpServer& session_timeout(std::chrono::milliseconds timeout);
+  UdpServer& manage_external_context(bool manage);
 
  private:
   struct Impl;

@@ -348,8 +348,14 @@ ChannelInterface& TcpClient::on_error(ErrorHandler h) {
   return *this;
 }
 
-void TcpClient::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
-void TcpClient::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
+ChannelInterface& TcpClient::framer(std::unique_ptr<framer::IFramer> f) {
+  impl_->set_framer(std::move(f));
+  return *this;
+}
+ChannelInterface& TcpClient::on_message(MessageHandler h) {
+  impl_->on_message(std::move(h));
+  return *this;
+}
 
 ChannelInterface& TcpClient::auto_manage(bool m) {
   impl_->auto_manage_ = m;
@@ -357,7 +363,7 @@ ChannelInterface& TcpClient::auto_manage(bool m) {
   return *this;
 }
 
-TcpClient& TcpClient::set_retry_interval(std::chrono::milliseconds i) {
+TcpClient& TcpClient::retry_interval(std::chrono::milliseconds i) {
   impl_->retry_interval_ = i;
   if (impl_->channel_) {
     auto transport_client = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
@@ -366,15 +372,15 @@ TcpClient& TcpClient::set_retry_interval(std::chrono::milliseconds i) {
   return *this;
 }
 
-TcpClient& TcpClient::set_max_retries(int m) {
+TcpClient& TcpClient::max_retries(int m) {
   impl_->max_retries_ = m;
   return *this;
 }
-TcpClient& TcpClient::set_connection_timeout(std::chrono::milliseconds t) {
+TcpClient& TcpClient::connection_timeout(std::chrono::milliseconds t) {
   impl_->connection_timeout_ = t;
   return *this;
 }
-TcpClient& TcpClient::set_manage_external_context(bool m) {
+TcpClient& TcpClient::manage_external_context(bool m) {
   impl_->manage_external_context_ = m;
   return *this;
 }

@@ -156,7 +156,7 @@ inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_ra
  */
 inline builder::UdpClientBuilder udp(uint16_t local_port) {
   builder::UdpClientBuilder b;
-  b.set_local_port(local_port);
+  b.local_port(local_port);
   return b;
 }
 
@@ -167,7 +167,7 @@ inline builder::UdpClientBuilder udp(uint16_t local_port) {
  */
 inline builder::UdpServerBuilder udp_server(uint16_t local_port) {
   builder::UdpServerBuilder b;
-  b.set_local_port(local_port);
+  b.local_port(local_port);
   return b;
 }
 

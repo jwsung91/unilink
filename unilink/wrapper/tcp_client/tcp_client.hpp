@@ -70,16 +70,16 @@ class UNILINK_API TcpClient : public ChannelInterface {
   ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
-  void set_framer(std::unique_ptr<framer::IFramer> framer) override;
-  void on_message(MessageHandler handler) override;
+  ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
+  ChannelInterface& on_message(MessageHandler handler) override;
 
   ChannelInterface& auto_manage(bool manage = true) override;
 
   // Configuration
-  TcpClient& set_retry_interval(std::chrono::milliseconds interval);
-  TcpClient& set_max_retries(int max_retries);
-  TcpClient& set_connection_timeout(std::chrono::milliseconds timeout);
-  TcpClient& set_manage_external_context(bool manage);
+  TcpClient& retry_interval(std::chrono::milliseconds interval);
+  TcpClient& max_retries(int max_retries);
+  TcpClient& connection_timeout(std::chrono::milliseconds timeout);
+  TcpClient& manage_external_context(bool manage);
 
  private:
   struct Impl;

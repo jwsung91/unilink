@@ -64,7 +64,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   /**
    * @brief Enable port binding retry on failure
    */
-  TcpServerBuilder& enable_port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
+  TcpServerBuilder& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
 
   /**
    * @brief Set idle connection timeout

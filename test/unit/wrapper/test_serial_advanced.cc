@@ -127,12 +127,12 @@ TEST_F(SerialWrapperAdvancedTest, AutoManageStartsAndStopsChannel) {
 TEST_F(SerialWrapperAdvancedTest, ConfigurationSetters) {
   auto serial = std::make_shared<wrapper::Serial>(device_, 9600);
 
-  serial->set_baud_rate(115200);
-  serial->set_data_bits(7);
-  serial->set_stop_bits(2);
-  serial->set_parity("even");
-  serial->set_flow_control("hardware");
-  serial->set_retry_interval(500ms);
+  serial->baud_rate(115200);
+  serial->data_bits(7);
+  serial->stop_bits(2);
+  serial->parity("even");
+  serial->flow_control("hardware");
+  serial->retry_interval(500ms);
 
   // Should be able to start with these settings
   serial->start();

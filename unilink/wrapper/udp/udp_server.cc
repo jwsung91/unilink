@@ -396,22 +396,24 @@ ServerInterface& UdpServer::on_error(ErrorHandler h) {
   return *this;
 }
 
-void UdpServer::set_framer_factory(FramerFactory factory) {
+ServerInterface& UdpServer::framer_factory(FramerFactory factory) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->framer_factory = std::move(factory);
+  return *this;
 }
 
-void UdpServer::on_message(MessageHandler h) {
+ServerInterface& UdpServer::on_message(MessageHandler h) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->on_message = std::move(h);
+  return *this;
 }
 
-size_t UdpServer::get_client_count() const {
+size_t UdpServer::client_count() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   return impl_->endpoint_to_id.size();
 }
 
-std::vector<size_t> UdpServer::get_connected_clients() const {
+std::vector<size_t> UdpServer::connected_clients() const {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   std::vector<size_t> ids;
   for (const auto& pair : impl_->id_to_endpoint) {
@@ -428,13 +430,13 @@ UdpServer& UdpServer::auto_manage(bool m) {
   return *this;
 }
 
-UdpServer& UdpServer::set_session_timeout(std::chrono::milliseconds timeout) {
+UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
   std::lock_guard<std::mutex> lock(impl_->mutex);
   impl_->session_timeout = timeout;
   return *this;
 }
 
-UdpServer& UdpServer::set_manage_external_context(bool m) {
+UdpServer& UdpServer::manage_external_context(bool m) {
   impl_->manage_external_context = m;
   return *this;
 }

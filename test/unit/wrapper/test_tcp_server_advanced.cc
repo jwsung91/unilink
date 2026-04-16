@@ -87,7 +87,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
 TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
-  server_->set_manage_external_context(true);
+  server_->manage_external_context(true);
   server_->start();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -102,7 +102,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ManagedExternalContextRestartsStoppedIoCon
   ioc->stop();
 
   server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
-  server_->set_manage_external_context(true);
+  server_->manage_external_context(true);
 
   auto started = server_->start();
   EXPECT_TRUE(started.get());
@@ -137,7 +137,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
   ASSERT_TRUE(c2_fut.get());
 
   // Wait for connections to stabilize
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_client_count() >= 2; }, 10000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->client_count() >= 2; }, 10000));
   EXPECT_TRUE(TestUtils::waitForCondition(
       [&]() {
         std::lock_guard<std::mutex> lk(ids_mutex);
@@ -173,7 +173,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
-  server_ = unilink::tcp_server(test_port_).enable_port_retry(true, 5, 100).build();
+  server_ = unilink::tcp_server(test_port_).port_retry(true, 5, 100).build();
   auto f = server_->start();
   EXPECT_TRUE(f.get());
   EXPECT_TRUE(server_->is_listening());

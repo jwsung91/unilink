@@ -58,9 +58,9 @@ def test_tcp_client():
     client = unilink_py.TcpClient("127.0.0.1", 8080)
     assert not client.is_connected()
     client.auto_manage(True)
-    client.set_retry_interval(datetime.timedelta(milliseconds=1000))
-    client.set_max_retries(5)
-    client.set_connection_timeout(datetime.timedelta(milliseconds=5000))
+    client.retry_interval(datetime.timedelta(milliseconds=1000))
+    client.max_retries(5)
+    client.connection_timeout(datetime.timedelta(milliseconds=5000))
 
     def on_data(ctx):
         print(f"Data received from client {ctx.client_id()}: {ctx.data}")
@@ -84,9 +84,9 @@ def test_serial():
     try:
         # Just testing instantiation, not actual hardware
         serial = unilink_py.Serial("/dev/ttyUSB0", 115200)
-        serial.set_baud_rate(9600)
+        serial.baud_rate(9600)
         serial.auto_manage(True)
-        serial.set_retry_interval(datetime.timedelta(milliseconds=2000))
+        serial.retry_interval(datetime.timedelta(milliseconds=2000))
         print("Serial initialized.")
     except Exception as e:
         print(f"Serial instantiation failed (expected if no dev): {e}")

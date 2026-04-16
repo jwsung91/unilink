@@ -340,9 +340,15 @@ ChannelInterface& UdsClient::on_error(ErrorHandler handler) {
   return *this;
 }
 
-void UdsClient::set_framer(std::unique_ptr<framer::IFramer> f) { impl_->set_framer(std::move(f)); }
+ChannelInterface& UdsClient::framer(std::unique_ptr<framer::IFramer> f) {
+  impl_->set_framer(std::move(f));
+  return *this;
+}
 
-void UdsClient::on_message(MessageHandler h) { impl_->on_message(std::move(h)); }
+ChannelInterface& UdsClient::on_message(MessageHandler h) {
+  impl_->on_message(std::move(h));
+  return *this;
+}
 
 ChannelInterface& UdsClient::auto_manage(bool manage) {
   impl_->auto_manage_ = manage;
@@ -352,22 +358,22 @@ ChannelInterface& UdsClient::auto_manage(bool manage) {
   return *this;
 }
 
-UdsClient& UdsClient::set_retry_interval(std::chrono::milliseconds interval) {
+UdsClient& UdsClient::retry_interval(std::chrono::milliseconds interval) {
   impl_->retry_interval_ = interval;
   return *this;
 }
 
-UdsClient& UdsClient::set_max_retries(int max_retries) {
+UdsClient& UdsClient::max_retries(int max_retries) {
   impl_->max_retries_ = max_retries;
   return *this;
 }
 
-UdsClient& UdsClient::set_connection_timeout(std::chrono::milliseconds timeout) {
+UdsClient& UdsClient::connection_timeout(std::chrono::milliseconds timeout) {
   impl_->connection_timeout_ = timeout;
   return *this;
 }
 
-UdsClient& UdsClient::set_manage_external_context(bool manage) {
+UdsClient& UdsClient::manage_external_context(bool manage) {
   impl_->manage_external_context_ = manage;
   return *this;
 }

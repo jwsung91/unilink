@@ -36,7 +36,7 @@ class EchoServer {
   void start(uint16_t port) {
     server_ = tcp_server(port)
                   .unlimited_clients()
-                  .enable_port_retry(true)
+                  .port_retry(true)
                   .on_connect([this](const wrapper::ConnectionContext& ctx) { handle_connect(ctx); })
                   .on_data([this](const wrapper::MessageContext& ctx) { handle_data(ctx); })
                   .build();

@@ -104,7 +104,7 @@ TEST(UdsClientWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
   ASSERT_TRUE(server_started.get());
 
   UdsClient client(socket_path, ioc);
-  client.set_manage_external_context(true);
+  client.manage_external_context(true);
 
   ioc->stop();
   auto started = client.start();
@@ -184,7 +184,7 @@ TEST(UdsServerWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
   test::TestUtils::removeFileIfExists(socket_path);
 
   UdsServer server(socket_path, ioc);
-  server.set_manage_external_context(true);
+  server.manage_external_context(true);
 
   ioc->stop();
   auto started = server.start();
