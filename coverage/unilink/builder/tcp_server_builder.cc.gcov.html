@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-15 00:57:24</td>
+            <td class="headerValue">2026-04-16 00:32:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -125,7 +125,7 @@
 <a name="45"><span class="lineNum">      45 </span>                :<span class="lineCov">         58 :   std::unique_ptr&lt;wrapper::TcpServer&gt; server;</span></a>
 <a name="46"><span class="lineNum">      46 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 58 times"> + </span>]:<span class="lineCov">         58 :   if (use_independent_context_) {</span></a>
 <a name="47"><span class="lineNum">      47 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server = std::make_unique&lt;wrapper::TcpServer&gt;(port_, std::make_shared&lt;boost::asio::io_context&gt;());</span></a>
-<a name="48"><span class="lineNum">      48 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;set_manage_external_context(true);</span></a>
+<a name="48"><span class="lineNum">      48 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;manage_external_context(true);</span></a>
 <a name="49"><span class="lineNum">      49 </span>                :            :   } else {</a>
 <a name="50"><span class="lineNum">      50 </span>        [<span class="branchCov" title="Branch 0 was taken 58 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         58 :     server = std::make_unique&lt;wrapper::TcpServer&gt;(port_);</span></a>
 <a name="51"><span class="lineNum">      51 </span>                :            :   }</a>
@@ -140,7 +140,7 @@
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="57"><span class="lineNum">      57 </span>                :            : </a>
 <a name="58"><span class="lineNum">      58 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 58 times"> + </span>]:<span class="lineCov">         58 :   if (framer_factory_) {</span></a>
-<a name="59"><span class="lineNum">      59 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;set_framer_factory(framer_factory_);</span></a>
+<a name="59"><span class="lineNum">      59 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;framer_factory(framer_factory_);</span></a>
 <a name="60"><span class="lineNum">      60 </span>                :            :   }</a>
 <a name="61"><span class="lineNum">      61 </span>                :            : </a>
 <a name="62"><span class="lineNum">      62 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 58 times"> + </span>]:<span class="lineCov">         58 :   if (on_message_) {</span></a>
@@ -148,7 +148,7 @@
 <a name="64"><span class="lineNum">      64 </span>                :            :   }</a>
 <a name="65"><span class="lineNum">      65 </span>                :            : </a>
 <a name="66"><span class="lineNum">      66 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 55 times"> + </span>]:<span class="lineCov">         58 :   if (enable_port_retry_) {</span></a>
-<a name="67"><span class="lineNum">      67 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     server-&gt;enable_port_retry(true, max_port_retries_, port_retry_interval_ms_);</span></a>
+<a name="67"><span class="lineNum">      67 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     server-&gt;port_retry(true, max_port_retries_, port_retry_interval_ms_);</span></a>
 <a name="68"><span class="lineNum">      68 </span>                :            :   }</a>
 <a name="69"><span class="lineNum">      69 </span>                :            : </a>
 <a name="70"><span class="lineNum">      70 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 57 times"> + </span>]:<span class="lineCov">         58 :   if (idle_timeout_.count() &gt; 0) {</span></a>
@@ -157,9 +157,9 @@
 <a name="73"><span class="lineNum">      73 </span>                :            : </a>
 <a name="74"><span class="lineNum">      74 </span>        [<span class="branchCov" title="Branch 0 was taken 39 times"> + </span><span class="branchCov" title="Branch 1 was taken 19 times"> + </span>]:<span class="lineCov">         58 :   if (client_limit_set_) {</span></a>
 <a name="75"><span class="lineNum">      75 </span>        [<span class="branchCov" title="Branch 0 was taken 31 times"> + </span><span class="branchCov" title="Branch 1 was taken 8 times"> + </span>]:<span class="lineCov">         39 :     if (max_clients_ == 0)</span></a>
-<a name="76"><span class="lineNum">      76 </span>        [<span class="branchCov" title="Branch 0 was taken 31 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         31 :       server-&gt;set_unlimited_clients();</span></a>
+<a name="76"><span class="lineNum">      76 </span>        [<span class="branchCov" title="Branch 0 was taken 31 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         31 :       server-&gt;unlimited_clients();</span></a>
 <a name="77"><span class="lineNum">      77 </span>                :            :     else</a>
-<a name="78"><span class="lineNum">      78 </span>        [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          8 :       server-&gt;set_client_limit(max_clients_);</span></a>
+<a name="78"><span class="lineNum">      78 </span>        [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          8 :       server-&gt;max_clients(max_clients_);</span></a>
 <a name="79"><span class="lineNum">      79 </span>                :            :   }</a>
 <a name="80"><span class="lineNum">      80 </span>                :            : </a>
 <a name="81"><span class="lineNum">      81 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 57 times"> + </span>]:<span class="lineCov">         58 :   if (auto_manage_) {</span></a>
@@ -179,7 +179,7 @@
 <a name="95"><span class="lineNum">      95 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
 <a name="96"><span class="lineNum">      96 </span>                :            : }</a>
 <a name="97"><span class="lineNum">      97 </span>                :            : </a>
-<a name="98"><span class="lineNum">      98 </span>                :<span class="lineCov">          3 : TcpServerBuilder&amp; TcpServerBuilder::enable_port_retry(bool enable, int max_retries, int retry_interval_ms) {</span></a>
+<a name="98"><span class="lineNum">      98 </span>                :<span class="lineCov">          3 : TcpServerBuilder&amp; TcpServerBuilder::port_retry(bool enable, int max_retries, int retry_interval_ms) {</span></a>
 <a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">          3 :   enable_port_retry_ = enable;</span></a>
 <a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">          3 :   max_port_retries_ = max_retries;</span></a>
 <a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">          3 :   port_retry_interval_ms_ = retry_interval_ms;</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-15 00:57:24</td>
+            <td class="headerValue">2026-04-16 00:32:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -114,7 +114,7 @@
 <a name="36"><span class="lineNum">      36 </span>                :            : </a>
 <a name="37"><span class="lineNum">      37 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :   auto udp = std::make_unique&lt;wrapper::Udp&gt;(cfg_, ioc);</span></a>
 <a name="38"><span class="lineNum">      38 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :   if (use_independent_context_) {</span></a>
-<a name="39"><span class="lineNum">      39 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     udp-&gt;set_manage_external_context(true);</span></a>
+<a name="39"><span class="lineNum">      39 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     udp-&gt;manage_external_context(true);</span></a>
 <a name="40"><span class="lineNum">      40 </span>                :            :   }</a>
 <a name="41"><span class="lineNum">      41 </span>                :            : </a>
 <a name="42"><span class="lineNum">      42 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          2 :   if (on_data_) udp-&gt;on_data(on_data_);</span></a>
@@ -127,7 +127,7 @@
 <span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="46"><span class="lineNum">      46 </span>                :            : </a>
 <a name="47"><span class="lineNum">      47 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :   if (framer_factory_) {</span></a>
-<a name="48"><span class="lineNum">      48 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     udp-&gt;set_framer(framer_factory_());</span></a>
+<a name="48"><span class="lineNum">      48 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     udp-&gt;framer(framer_factory_());</span></a>
 <a name="49"><span class="lineNum">      49 </span>                :            :   }</a>
 <a name="50"><span class="lineNum">      50 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :   if (on_message_) {</span></a>
 <a name="51"><span class="lineNum">      51 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     udp-&gt;on_message(std::move(on_message_));</span></a>
@@ -145,12 +145,12 @@
 <a name="63"><span class="lineNum">      63 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="64"><span class="lineNum">      64 </span>                :            : }</a>
 <a name="65"><span class="lineNum">      65 </span>                :            : </a>
-<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">          2 : UdpClientBuilder&amp; UdpClientBuilder::set_local_port(uint16_t port) {</span></a>
+<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">          2 : UdpClientBuilder&amp; UdpClientBuilder::local_port(uint16_t port) {</span></a>
 <a name="67"><span class="lineNum">      67 </span>                :<span class="lineCov">          2 :   cfg_.local_port = port;</span></a>
 <a name="68"><span class="lineNum">      68 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
 <a name="69"><span class="lineNum">      69 </span>                :            : }</a>
 <a name="70"><span class="lineNum">      70 </span>                :            : </a>
-<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">          1 : UdpClientBuilder&amp; UdpClientBuilder::set_remote(const std::string&amp; address, uint16_t port) {</span></a>
+<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">          1 : UdpClientBuilder&amp; UdpClientBuilder::remote(const std::string&amp; address, uint16_t port) {</span></a>
 <a name="72"><span class="lineNum">      72 </span>                :<span class="lineCov">          1 :   cfg_.remote_address = address;</span></a>
 <a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">          1 :   cfg_.remote_port = port;</span></a>
 <a name="74"><span class="lineNum">      74 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
@@ -161,7 +161,7 @@
 <a name="79"><span class="lineNum">      79 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="80"><span class="lineNum">      80 </span>                :            : }</a>
 <a name="81"><span class="lineNum">      81 </span>                :            : </a>
-<a name="82"><span class="lineNum">      82 </span>                :<span class="lineCov">          1 : UdpClientBuilder&amp; UdpClientBuilder::enable_broadcast(bool enable) {</span></a>
+<a name="82"><span class="lineNum">      82 </span>                :<span class="lineCov">          1 : UdpClientBuilder&amp; UdpClientBuilder::broadcast(bool enable) {</span></a>
 <a name="83"><span class="lineNum">      83 </span>                :<span class="lineCov">          1 :   cfg_.enable_broadcast = enable;</span></a>
 <a name="84"><span class="lineNum">      84 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
 <a name="85"><span class="lineNum">      85 </span>                :            : }</a>
@@ -183,7 +183,7 @@
 <a name="101"><span class="lineNum">     101 </span>                :            : </a>
 <a name="102"><span class="lineNum">     102 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   auto server = std::make_unique&lt;wrapper::UdpServer&gt;(cfg_, ioc);</span></a>
 <a name="103"><span class="lineNum">     103 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (use_independent_context_) {</span></a>
-<a name="104"><span class="lineNum">     104 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;set_manage_external_context(true);</span></a>
+<a name="104"><span class="lineNum">     104 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;manage_external_context(true);</span></a>
 <a name="105"><span class="lineNum">     105 </span>                :            :   }</a>
 <a name="106"><span class="lineNum">     106 </span>                :            : </a>
 <a name="107"><span class="lineNum">     107 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :   if (on_data_) server-&gt;on_data(on_data_);</span></a>
@@ -196,7 +196,7 @@
 <span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]
 <a name="111"><span class="lineNum">     111 </span>                :            : </a>
 <a name="112"><span class="lineNum">     112 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (framer_factory_) {</span></a>
-<a name="113"><span class="lineNum">     113 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;set_framer_factory(framer_factory_);</span></a>
+<a name="113"><span class="lineNum">     113 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;framer_factory(framer_factory_);</span></a>
 <a name="114"><span class="lineNum">     114 </span>                :            :   }</a>
 <a name="115"><span class="lineNum">     115 </span>                :            : </a>
 <a name="116"><span class="lineNum">     116 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (on_message_) {</span></a>
@@ -226,7 +226,7 @@
 <a name="140"><span class="lineNum">     140 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="141"><span class="lineNum">     141 </span>                :            : }</a>
 <a name="142"><span class="lineNum">     142 </span>                :            : </a>
-<a name="143"><span class="lineNum">     143 </span>                :<span class="lineNoCov">          0 : UdpServerBuilder&amp; UdpServerBuilder::set_local_port(uint16_t port) {</span></a>
+<a name="143"><span class="lineNum">     143 </span>                :<span class="lineNoCov">          0 : UdpServerBuilder&amp; UdpServerBuilder::local_port(uint16_t port) {</span></a>
 <a name="144"><span class="lineNum">     144 </span>                :<span class="lineNoCov">          0 :   cfg_.local_port = port;</span></a>
 <a name="145"><span class="lineNum">     145 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="146"><span class="lineNum">     146 </span>                :            : }</a>
@@ -236,7 +236,7 @@
 <a name="150"><span class="lineNum">     150 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="151"><span class="lineNum">     151 </span>                :            : }</a>
 <a name="152"><span class="lineNum">     152 </span>                :            : </a>
-<a name="153"><span class="lineNum">     153 </span>                :<span class="lineCov">          1 : UdpServerBuilder&amp; UdpServerBuilder::enable_broadcast(bool enable) {</span></a>
+<a name="153"><span class="lineNum">     153 </span>                :<span class="lineCov">          1 : UdpServerBuilder&amp; UdpServerBuilder::broadcast(bool enable) {</span></a>
 <a name="154"><span class="lineNum">     154 </span>                :<span class="lineCov">          1 :   cfg_.enable_broadcast = enable;</span></a>
 <a name="155"><span class="lineNum">     155 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
 <a name="156"><span class="lineNum">     156 </span>                :            : }</a>

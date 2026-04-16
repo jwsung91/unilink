@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-15 00:57:24</td>
+            <td class="headerValue">2026-04-16 00:32:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -148,12 +148,12 @@
 <a name="70"><span class="lineNum">      70 </span>                :            :   ChannelInterface&amp; on_disconnect(ConnectionHandler handler) override;</a>
 <a name="71"><span class="lineNum">      71 </span>                :            :   ChannelInterface&amp; on_error(ErrorHandler handler) override;</a>
 <a name="72"><span class="lineNum">      72 </span>                :            : </a>
-<a name="73"><span class="lineNum">      73 </span>                :            :   void set_framer(std::unique_ptr&lt;framer::IFramer&gt; framer) override;</a>
-<a name="74"><span class="lineNum">      74 </span>                :            :   void on_message(MessageHandler handler) override;</a>
+<a name="73"><span class="lineNum">      73 </span>                :            :   ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) override;</a>
+<a name="74"><span class="lineNum">      74 </span>                :            :   ChannelInterface&amp; on_message(MessageHandler handler) override;</a>
 <a name="75"><span class="lineNum">      75 </span>                :            : </a>
 <a name="76"><span class="lineNum">      76 </span>                :            :   ChannelInterface&amp; auto_manage(bool manage = true) override;</a>
 <a name="77"><span class="lineNum">      77 </span>                :            : </a>
-<a name="78"><span class="lineNum">      78 </span>                :            :   Udp&amp; set_manage_external_context(bool manage);</a>
+<a name="78"><span class="lineNum">      78 </span>                :            :   Udp&amp; manage_external_context(bool manage);</a>
 <a name="79"><span class="lineNum">      79 </span>                :            : </a>
 <a name="80"><span class="lineNum">      80 </span>                :            :  private:</a>
 <a name="81"><span class="lineNum">      81 </span>                :            :   struct Impl;</a>

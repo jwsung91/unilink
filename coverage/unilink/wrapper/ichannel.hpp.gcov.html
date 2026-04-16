@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-15 00:57:24</td>
+            <td class="headerValue">2026-04-16 00:32:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -137,13 +137,13 @@
 <a name="59"><span class="lineNum">      59 </span>                :            :    * @brief Set a message framer for this channel.</a>
 <a name="60"><span class="lineNum">      60 </span>                :            :    * @param framer The framer instance to use.</a>
 <a name="61"><span class="lineNum">      61 </span>                :            :    */</a>
-<a name="62"><span class="lineNum">      62 </span>                :            :   virtual void set_framer(std::unique_ptr&lt;framer::IFramer&gt; framer) = 0;</a>
+<a name="62"><span class="lineNum">      62 </span>                :            :   virtual ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) = 0;</a>
 <a name="63"><span class="lineNum">      63 </span>                :            : </a>
 <a name="64"><span class="lineNum">      64 </span>                :            :   /**</a>
 <a name="65"><span class="lineNum">      65 </span>                :            :    * @brief Set a handler for complete messages extracted by the framer.</a>
 <a name="66"><span class="lineNum">      66 </span>                :            :    * @param handler The callback for framed messages.</a>
 <a name="67"><span class="lineNum">      67 </span>                :            :    */</a>
-<a name="68"><span class="lineNum">      68 </span>                :            :   virtual void on_message(MessageHandler handler) = 0;</a>
+<a name="68"><span class="lineNum">      68 </span>                :            :   virtual ChannelInterface&amp; on_message(MessageHandler handler) = 0;</a>
 <a name="69"><span class="lineNum">      69 </span>                :            : </a>
 <a name="70"><span class="lineNum">      70 </span>                :            :   // Management</a>
 <a name="71"><span class="lineNum">      71 </span>                :            :   virtual ChannelInterface&amp; auto_manage(bool manage = true) = 0;</a>

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">106</td>
-            <td class="headerCovTableEntry">189</td>
-            <td class="headerCovTableEntryLo">56.1 %</td>
+            <td class="headerCovTableEntry">193</td>
+            <td class="headerCovTableEntryLo">54.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-15 00:57:24</td>
+            <td class="headerValue">2026-04-16 00:32:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -390,23 +390,29 @@
 <a name="305"><span class="lineNum">     305 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="306"><span class="lineNum">     306 </span>                :            : }</a>
 <a name="307"><span class="lineNum">     307 </span>                :            : </a>
-<a name="308"><span class="lineNum">     308 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 : void Udp::set_framer(std::unique_ptr&lt;framer::IFramer&gt; f) { impl_-&gt;set_framer(std::move(f)); }</span></a>
-<a name="309"><span class="lineNum">     309 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 : void Udp::on_message(MessageHandler h) { impl_-&gt;on_message(std::move(h)); }</span></a>
-<a name="310"><span class="lineNum">     310 </span>                :            : </a>
-<a name="311"><span class="lineNum">     311 </span>                :<span class="lineCov">          4 : ChannelInterface&amp; Udp::auto_manage(bool m) {</span></a>
-<a name="312"><span class="lineNum">     312 </span>                :<span class="lineCov">          4 :   impl_-&gt;auto_manage = m;</span></a>
-<a name="313"><span class="lineNum">     313 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          4 :   if (impl_-&gt;auto_manage &amp;&amp; !impl_-&gt;started.load()) start();</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchCov" title="Branch 5 was taken 2 times"> + </span>]
-<a name="314"><span class="lineNum">     314 </span>                :<span class="lineCov">          4 :   return *this;</span></a>
+<a name="308"><span class="lineNum">     308 </span>                :<span class="lineNoCov">          0 : ChannelInterface&amp; Udp::framer(std::unique_ptr&lt;framer::IFramer&gt; f) {</span></a>
+<a name="309"><span class="lineNum">     309 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   impl_-&gt;set_framer(std::move(f));</span></a>
+<a name="310"><span class="lineNum">     310 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="311"><span class="lineNum">     311 </span>                :            : }</a>
+<a name="312"><span class="lineNum">     312 </span>                :<span class="lineNoCov">          0 : ChannelInterface&amp; Udp::on_message(MessageHandler h) {</span></a>
+<a name="313"><span class="lineNum">     313 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   impl_-&gt;on_message(std::move(h));</span></a>
+<a name="314"><span class="lineNum">     314 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="315"><span class="lineNum">     315 </span>                :            : }</a>
 <a name="316"><span class="lineNum">     316 </span>                :            : </a>
-<a name="317"><span class="lineNum">     317 </span>                :<span class="lineCov">          2 : Udp&amp; Udp::set_manage_external_context(bool manage) {</span></a>
-<a name="318"><span class="lineNum">     318 </span>                :<span class="lineCov">          2 :   impl_-&gt;manage_external_context = manage;</span></a>
-<a name="319"><span class="lineNum">     319 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
-<a name="320"><span class="lineNum">     320 </span>                :            : }</a>
-<a name="321"><span class="lineNum">     321 </span>                :            : </a>
-<a name="322"><span class="lineNum">     322 </span>                :            : }  // namespace wrapper</a>
-<a name="323"><span class="lineNum">     323 </span>                :            : }  // namespace unilink</a>
+<a name="317"><span class="lineNum">     317 </span>                :<span class="lineCov">          4 : ChannelInterface&amp; Udp::auto_manage(bool m) {</span></a>
+<a name="318"><span class="lineNum">     318 </span>                :<span class="lineCov">          4 :   impl_-&gt;auto_manage = m;</span></a>
+<a name="319"><span class="lineNum">     319 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          4 :   if (impl_-&gt;auto_manage &amp;&amp; !impl_-&gt;started.load()) start();</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchCov" title="Branch 5 was taken 2 times"> + </span>]
+<a name="320"><span class="lineNum">     320 </span>                :<span class="lineCov">          4 :   return *this;</span></a>
+<a name="321"><span class="lineNum">     321 </span>                :            : }</a>
+<a name="322"><span class="lineNum">     322 </span>                :            : </a>
+<a name="323"><span class="lineNum">     323 </span>                :<span class="lineCov">          2 : Udp&amp; Udp::manage_external_context(bool manage) {</span></a>
+<a name="324"><span class="lineNum">     324 </span>                :<span class="lineCov">          2 :   impl_-&gt;manage_external_context = manage;</span></a>
+<a name="325"><span class="lineNum">     325 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="326"><span class="lineNum">     326 </span>                :            : }</a>
+<a name="327"><span class="lineNum">     327 </span>                :            : </a>
+<a name="328"><span class="lineNum">     328 </span>                :            : }  // namespace wrapper</a>
+<a name="329"><span class="lineNum">     329 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

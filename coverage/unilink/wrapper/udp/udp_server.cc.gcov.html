@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">142</td>
-            <td class="headerCovTableEntry">269</td>
-            <td class="headerCovTableEntryLo">52.8 %</td>
+            <td class="headerCovTableEntry">271</td>
+            <td class="headerCovTableEntryLo">52.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-15 00:57:24</td>
+            <td class="headerValue">2026-04-16 00:32:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -484,52 +484,54 @@
 <a name="396"><span class="lineNum">     396 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="397"><span class="lineNum">     397 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <a name="398"><span class="lineNum">     398 </span>                :            : </a>
-<a name="399"><span class="lineNum">     399 </span>                :<span class="lineNoCov">          0 : void UdpServer::set_framer_factory(FramerFactory factory) {</span></a>
+<a name="399"><span class="lineNum">     399 </span>                :<span class="lineNoCov">          0 : ServerInterface&amp; UdpServer::framer_factory(FramerFactory factory) {</span></a>
 <a name="400"><span class="lineNum">     400 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
 <a name="401"><span class="lineNum">     401 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;framer_factory = std::move(factory);</span></a>
-<a name="402"><span class="lineNum">     402 </span>                :<span class="lineNoCov">          0 : }</span></a>
-<a name="403"><span class="lineNum">     403 </span>                :            : </a>
-<a name="404"><span class="lineNum">     404 </span>                :<span class="lineNoCov">          0 : void UdpServer::on_message(MessageHandler h) {</span></a>
-<a name="405"><span class="lineNum">     405 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
-<a name="406"><span class="lineNum">     406 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;on_message = std::move(h);</span></a>
-<a name="407"><span class="lineNum">     407 </span>                :<span class="lineNoCov">          0 : }</span></a>
-<a name="408"><span class="lineNum">     408 </span>                :            : </a>
-<a name="409"><span class="lineNum">     409 </span>                :<span class="lineCov">          1 : size_t UdpServer::get_client_count() const {</span></a>
-<a name="410"><span class="lineNum">     410 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
-<a name="411"><span class="lineNum">     411 </span>                :<span class="lineCov">          2 :   return impl_-&gt;endpoint_to_id.size();</span></a>
-<a name="412"><span class="lineNum">     412 </span>                :<span class="lineCov">          1 : }</span></a>
-<a name="413"><span class="lineNum">     413 </span>                :            : </a>
-<a name="414"><span class="lineNum">     414 </span>                :<span class="lineNoCov">          0 : std::vector&lt;size_t&gt; UdpServer::get_connected_clients() const {</span></a>
-<a name="415"><span class="lineNum">     415 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
-<a name="416"><span class="lineNum">     416 </span>                :<span class="lineNoCov">          0 :   std::vector&lt;size_t&gt; ids;</span></a>
-<a name="417"><span class="lineNum">     417 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   for (const auto&amp; pair : impl_-&gt;id_to_endpoint) {</span></a>
-<a name="418"><span class="lineNum">     418 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     ids.push_back(pair.first);</span></a>
-<a name="419"><span class="lineNum">     419 </span>                :            :   }</a>
-<a name="420"><span class="lineNum">     420 </span>                :<span class="lineNoCov">          0 :   return ids;</span></a>
-<a name="421"><span class="lineNum">     421 </span>                :<span class="lineNoCov">          0 : }</span></a>
-<a name="422"><span class="lineNum">     422 </span>                :            : </a>
-<a name="423"><span class="lineNum">     423 </span>                :<span class="lineCov">          1 : UdpServer&amp; UdpServer::auto_manage(bool m) {</span></a>
-<a name="424"><span class="lineNum">     424 </span>                :<span class="lineCov">          1 :   impl_-&gt;auto_manage = m;</span></a>
-<a name="425"><span class="lineNum">     425 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl_-&gt;auto_manage &amp;&amp; !impl_-&gt;started.load()) {</span></a>
+<a name="402"><span class="lineNum">     402 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="403"><span class="lineNum">     403 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="404"><span class="lineNum">     404 </span>                :            : </a>
+<a name="405"><span class="lineNum">     405 </span>                :<span class="lineNoCov">          0 : ServerInterface&amp; UdpServer::on_message(MessageHandler h) {</span></a>
+<a name="406"><span class="lineNum">     406 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
+<a name="407"><span class="lineNum">     407 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;on_message = std::move(h);</span></a>
+<a name="408"><span class="lineNum">     408 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="409"><span class="lineNum">     409 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="410"><span class="lineNum">     410 </span>                :            : </a>
+<a name="411"><span class="lineNum">     411 </span>                :<span class="lineCov">          1 : size_t UdpServer::client_count() const {</span></a>
+<a name="412"><span class="lineNum">     412 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
+<a name="413"><span class="lineNum">     413 </span>                :<span class="lineCov">          2 :   return impl_-&gt;endpoint_to_id.size();</span></a>
+<a name="414"><span class="lineNum">     414 </span>                :<span class="lineCov">          1 : }</span></a>
+<a name="415"><span class="lineNum">     415 </span>                :            : </a>
+<a name="416"><span class="lineNum">     416 </span>                :<span class="lineNoCov">          0 : std::vector&lt;size_t&gt; UdpServer::connected_clients() const {</span></a>
+<a name="417"><span class="lineNum">     417 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
+<a name="418"><span class="lineNum">     418 </span>                :<span class="lineNoCov">          0 :   std::vector&lt;size_t&gt; ids;</span></a>
+<a name="419"><span class="lineNum">     419 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   for (const auto&amp; pair : impl_-&gt;id_to_endpoint) {</span></a>
+<a name="420"><span class="lineNum">     420 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     ids.push_back(pair.first);</span></a>
+<a name="421"><span class="lineNum">     421 </span>                :            :   }</a>
+<a name="422"><span class="lineNum">     422 </span>                :<span class="lineNoCov">          0 :   return ids;</span></a>
+<a name="423"><span class="lineNum">     423 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="424"><span class="lineNum">     424 </span>                :            : </a>
+<a name="425"><span class="lineNum">     425 </span>                :<span class="lineCov">          1 : UdpServer&amp; UdpServer::auto_manage(bool m) {</span></a>
+<a name="426"><span class="lineNum">     426 </span>                :<span class="lineCov">          1 :   impl_-&gt;auto_manage = m;</span></a>
+<a name="427"><span class="lineNum">     427 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl_-&gt;auto_manage &amp;&amp; !impl_-&gt;started.load()) {</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
-<a name="426"><span class="lineNum">     426 </span>                :<span class="lineCov">          1 :     start();</span></a>
-<a name="427"><span class="lineNum">     427 </span>                :            :   }</a>
-<a name="428"><span class="lineNum">     428 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
-<a name="429"><span class="lineNum">     429 </span>                :            : }</a>
-<a name="430"><span class="lineNum">     430 </span>                :            : </a>
-<a name="431"><span class="lineNum">     431 </span>                :<span class="lineNoCov">          0 : UdpServer&amp; UdpServer::set_session_timeout(std::chrono::milliseconds timeout) {</span></a>
-<a name="432"><span class="lineNum">     432 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
-<a name="433"><span class="lineNum">     433 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;session_timeout = timeout;</span></a>
-<a name="434"><span class="lineNum">     434 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
-<a name="435"><span class="lineNum">     435 </span>                :<span class="lineNoCov">          0 : }</span></a>
-<a name="436"><span class="lineNum">     436 </span>                :            : </a>
-<a name="437"><span class="lineNum">     437 </span>                :<span class="lineNoCov">          0 : UdpServer&amp; UdpServer::set_manage_external_context(bool m) {</span></a>
-<a name="438"><span class="lineNum">     438 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;manage_external_context = m;</span></a>
-<a name="439"><span class="lineNum">     439 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
-<a name="440"><span class="lineNum">     440 </span>                :            : }</a>
-<a name="441"><span class="lineNum">     441 </span>                :            : </a>
-<a name="442"><span class="lineNum">     442 </span>                :            : }  // namespace wrapper</a>
-<a name="443"><span class="lineNum">     443 </span>                :            : }  // namespace unilink</a>
+<a name="428"><span class="lineNum">     428 </span>                :<span class="lineCov">          1 :     start();</span></a>
+<a name="429"><span class="lineNum">     429 </span>                :            :   }</a>
+<a name="430"><span class="lineNum">     430 </span>                :<span class="lineCov">          1 :   return *this;</span></a>
+<a name="431"><span class="lineNum">     431 </span>                :            : }</a>
+<a name="432"><span class="lineNum">     432 </span>                :            : </a>
+<a name="433"><span class="lineNum">     433 </span>                :<span class="lineNoCov">          0 : UdpServer&amp; UdpServer::session_timeout(std::chrono::milliseconds timeout) {</span></a>
+<a name="434"><span class="lineNum">     434 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex);</span></a>
+<a name="435"><span class="lineNum">     435 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;session_timeout = timeout;</span></a>
+<a name="436"><span class="lineNum">     436 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="437"><span class="lineNum">     437 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="438"><span class="lineNum">     438 </span>                :            : </a>
+<a name="439"><span class="lineNum">     439 </span>                :<span class="lineNoCov">          0 : UdpServer&amp; UdpServer::manage_external_context(bool m) {</span></a>
+<a name="440"><span class="lineNum">     440 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;manage_external_context = m;</span></a>
+<a name="441"><span class="lineNum">     441 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="442"><span class="lineNum">     442 </span>                :            : }</a>
+<a name="443"><span class="lineNum">     443 </span>                :            : </a>
+<a name="444"><span class="lineNum">     444 </span>                :            : }  // namespace wrapper</a>
+<a name="445"><span class="lineNum">     445 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
