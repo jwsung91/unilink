@@ -237,7 +237,7 @@ struct UdsClient::Impl {
         handler = data_handler_;
       }
       if (handler) {
-        handler(MessageContext(0, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
+        handler(MessageContext(0, common::safe_convert::uint8_to_string(data.data(), data.size())));
       }
 
       // 2. Framer integration
@@ -248,40 +248,32 @@ struct UdsClient::Impl {
     });
   }
 
+  // Attach the stored message_handler_ to framer_->set_on_message().
+  // Must be called with mutex_ already held.
+  void attach_framer_callback() {
+    if (!framer_) return;
+    framer_->set_on_message([this](memory::ConstByteSpan msg) {
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = message_handler_;
+      }
+      if (handler) {
+        handler(MessageContext(0, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+      }
+    });
+  }
+
   void set_framer(std::unique_ptr<framer::IFramer> framer) {
     std::lock_guard<std::mutex> lock(mutex_);
     framer_ = std::move(framer);
-    if (framer_ && message_handler_) {
-      framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler handler;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          handler = message_handler_;
-        }
-        if (handler) {
-          std::string str_msg = std::string(reinterpret_cast<const char*>(msg.data()), msg.size());
-          handler(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer_ && message_handler_) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
     std::lock_guard<std::mutex> lock(mutex_);
     message_handler_ = std::move(handler);
-    if (framer_) {
-      framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler callback;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          callback = message_handler_;
-        }
-        if (callback) {
-          std::string str_msg = std::string(reinterpret_cast<const char*>(msg.data()), msg.size());
-          callback(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer_) attach_framer_callback();
   }
 };
 

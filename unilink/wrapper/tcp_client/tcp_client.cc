@@ -275,40 +275,32 @@ struct TcpClient::Impl {
     });
   }
 
+  // Attach the stored message_handler_ to framer_->set_on_message().
+  // Must be called with mutex_ already held.
+  void attach_framer_callback() {
+    if (!framer_) return;
+    framer_->set_on_message([this](memory::ConstByteSpan msg) {
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = message_handler_;
+      }
+      if (handler) {
+        handler(MessageContext(0, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+      }
+    });
+  }
+
   void set_framer(std::unique_ptr<framer::IFramer> framer) {
     std::lock_guard<std::mutex> lock(mutex_);
     framer_ = std::move(framer);
-    if (framer_ && message_handler_) {
-      framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler handler;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          handler = message_handler_;
-        }
-        if (handler) {
-          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          handler(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer_ && message_handler_) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
     std::lock_guard<std::mutex> lock(mutex_);
     message_handler_ = std::move(handler);
-    if (framer_) {
-      framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler message_handler;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          message_handler = message_handler_;
-        }
-        if (message_handler) {
-          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          message_handler(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer_) attach_framer_callback();
   }
 };
 
