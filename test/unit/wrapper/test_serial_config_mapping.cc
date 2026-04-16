@@ -23,20 +23,20 @@
 
 using namespace unilink;
 
-class SerialConfigMappingTest : public ::testing::Test {
- protected:
-  void SetUp() override {
-    // Tests rely on mapping internal string/enum values to config.
-    // Since we don't have direct access to builder internals without exposing
-    // them, we use the build_config() method exposed for testing (refactoring).
-  }
+// Thin subclass that re-exposes the protected build_config() method.
+class TestableSerial : public wrapper::Serial {
+ public:
+  using wrapper::Serial::Serial;
+  using wrapper::Serial::build_config;
 };
+
+class SerialConfigMappingTest : public ::testing::Test {};
 
 TEST_F(SerialConfigMappingTest, MapsParityFlowBitsAndBaud) {
   std::string device = "/dev/ttyUSB0";
   uint32_t baud = 115200;
 
-  auto wrapper = std::make_shared<wrapper::Serial>(device, baud);
+  auto wrapper = std::make_shared<TestableSerial>(device, baud);
   wrapper->data_bits(8);
   wrapper->stop_bits(1);
   wrapper->parity("even");
@@ -55,7 +55,7 @@ TEST_F(SerialConfigMappingTest, MapsParityFlowBitsAndBaud) {
 }
 
 TEST_F(SerialConfigMappingTest, InvalidStringsFallbackToNoneAndClampBits) {
-  auto wrapper = std::make_shared<wrapper::Serial>("/dev/ttyACM0", 9600);
+  auto wrapper = std::make_shared<TestableSerial>("/dev/ttyACM0", 9600);
 
   // Set invalid values
   wrapper->parity("invalid_parity");

@@ -84,7 +84,8 @@ class UNILINK_API Serial : public ChannelInterface {
   Serial& retry_interval(std::chrono::milliseconds interval);
   Serial& manage_external_context(bool manage);
 
-  // Expose mapped config for testing/inspection
+ protected:
+  // Exposed for testing only — not part of the public API.
   config::SerialConfig build_config() const;
 
  private:
