@@ -126,9 +126,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae78ea0ce308a630bfc92abfba6d389e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae78ea0ce308a630bfc92abfba6d389e8">use_independent_context</a> (bool use_independent=true)</td></tr>
 <tr class="memdesc:ae78ea0ce308a630bfc92abfba6d389e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use independent IoContext for this server.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae78ea0ce308a630bfc92abfba6d389e8">More...</a><br /></td></tr>
 <tr class="separator:ae78ea0ce308a630bfc92abfba6d389e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5361cef3aa804d32cba0b73c02e6492d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">enable_port_retry</a> (bool enable=true, int max_retries=3, int retry_interval_ms=1000)</td></tr>
-<tr class="memdesc:a5361cef3aa804d32cba0b73c02e6492d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable port binding retry on failure.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">More...</a><br /></td></tr>
-<tr class="separator:a5361cef3aa804d32cba0b73c02e6492d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9b5de3896e82bc59ed60c5872c7f6f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">port_retry</a> (bool enable=true, int max_retries=3, int retry_interval_ms=1000)</td></tr>
+<tr class="memdesc:af9b5de3896e82bc59ed60c5872c7f6f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable port binding retry on failure.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">More...</a><br /></td></tr>
+<tr class="separator:af9b5de3896e82bc59ed60c5872c7f6f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0c3633344e83ddfcf57fb40ba75bacc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae0c3633344e83ddfcf57fb40ba75bacc">idle_timeout</a> (std::chrono::milliseconds timeout)</td></tr>
 <tr class="memdesc:ae0c3633344e83ddfcf57fb40ba75bacc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set idle connection timeout.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae0c3633344e83ddfcf57fb40ba75bacc">More...</a><br /></td></tr>
 <tr class="separator:ae0c3633344e83ddfcf57fb40ba75bacc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -370,44 +370,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a5361cef3aa804d32cba0b73c02e6492d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5361cef3aa804d32cba0b73c02e6492d">&#9670;&nbsp;</a></span>enable_port_retry()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp; unilink::builder::TcpServerBuilder::enable_port_retry </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enable</em> = <code>true</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>max_retries</em> = <code>3</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>retry_interval_ms</em> = <code>1000</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable port binding retry on failure. </p>
-
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00098">98</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
-
-</div>
-</div>
 <a id="ae0c3633344e83ddfcf57fb40ba75bacc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae0c3633344e83ddfcf57fb40ba75bacc">&#9670;&nbsp;</a></span>idle_timeout()</h2>
 
@@ -526,6 +488,44 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="af9b5de3896e82bc59ed60c5872c7f6f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9b5de3896e82bc59ed60c5872c7f6f1">&#9670;&nbsp;</a></span>port_retry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp; unilink::builder::TcpServerBuilder::port_retry </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>max_retries</em> = <code>3</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>retry_interval_ms</em> = <code>1000</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable port binding retry on failure. </p>
+
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00098">98</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+
+</div>
+</div>
 <a id="a9349e7963408c74d2dac92fae288cddc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9349e7963408c74d2dac92fae288cddc">&#9670;&nbsp;</a></span>single_client()</h2>
 
@@ -600,7 +600,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a></li>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

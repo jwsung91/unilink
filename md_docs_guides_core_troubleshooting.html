@@ -222,9 +222,9 @@ Problem: Port Already in Use</h2>
 3. Enable Port Retry</h3>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unlimited_clients</a>()</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">enable_port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// Retry 5 times</span></div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// Retry 5 times</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">build</a>();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5361cef3aa804d32cba0b73c02e6492d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">unilink::builder::TcpServerBuilder::enable_port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00098">tcp_server_builder.cc:98</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_af9b5de3896e82bc59ed60c5872c7f6f1"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00098">tcp_server_builder.cc:98</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md496"></a>
 4. Set SO_REUSEADDR (Advanced)</h3>
 <div class="fragment"><div class="line"><span class="comment">// Allow immediate port reuse</span></div>
@@ -692,7 +692,7 @@ Getting Help</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

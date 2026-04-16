@@ -156,16 +156,16 @@ $(document).ready(function(){initNavTree('wrapper_2uds__client_2uds__client_8hpp
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_disconnect(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_error(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler) override;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keywordtype">void</span> set_framer(std::unique_ptr&lt;framer::IFramer&gt; framer) override;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keywordtype">void</span> on_message(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) override;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; on_message(<a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a>&amp; auto_manage(<span class="keywordtype">bool</span> manage = true) override;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="comment">// Configuration</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a>&amp; set_retry_interval(std::chrono::milliseconds interval);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a>&amp; set_max_retries(<span class="keywordtype">int</span> max_retries);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a>&amp; set_connection_timeout(std::chrono::milliseconds timeout);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a>&amp; set_manage_external_context(<span class="keywordtype">bool</span> manage);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a>&amp; retry_interval(std::chrono::milliseconds interval);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a>&amp; max_retries(<span class="keywordtype">int</span> max_retries);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a>&amp; connection_timeout(std::chrono::milliseconds timeout);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsClient.html">UdsClient</a>&amp; manage_external_context(<span class="keywordtype">bool</span> manage);</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; private:</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  struct <a class="code" href="structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html">Impl</a>;</div>
@@ -196,7 +196,7 @@ $(document).ready(function(){initNavTree('wrapper_2uds__client_2uds__client_8hpp
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_53fe126917d581c2cf884e23d902a853.html">uds_client</a></li><li class="navelem"><a class="el" href="wrapper_2uds__client_2uds__client_8hpp.html">uds_client.hpp</a></li>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

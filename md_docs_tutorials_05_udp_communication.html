@@ -142,7 +142,7 @@ Step 2: Create A Sender</h1>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">    <span class="keyword">auto</span> sender = <a class="code" href="namespaceunilink.html#a374a0cf6196fb21b2f65f78e8c8623ef">unilink::udp</a>(0)</div>
-<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1UdpClientBuilder.html#aedc56cb1ea500c41fd177a227475a67e">set_remote</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 9000)</div>
+<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1UdpClientBuilder.html#a5aab8070a6807f659ca8c826cfbacd1d">remote</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 9000)</div>
 <div class="line">        .<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#ac1b292b700428522a1a7cd7bc3e9e4f5">on_connect</a>([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp;) {</div>
 <div class="line">            std::cout &lt;&lt; <span class="stringliteral">&quot;UDP sender ready&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">        })</div>
@@ -164,7 +164,7 @@ Step 2: Create A Sender</h1>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ac1b292b700428522a1a7cd7bc3e9e4f5"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ac1b292b700428522a1a7cd7bc3e9e4f5">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="ibuilder_8hpp_source.html#l00095">ibuilder.hpp:95</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1UdpClientBuilder_html_aedc56cb1ea500c41fd177a227475a67e"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpClientBuilder.html#aedc56cb1ea500c41fd177a227475a67e">unilink::builder::UdpClientBuilder::set_remote</a></div><div class="ttdeci">UdpClientBuilder &amp; set_remote(const std::string &amp;address, uint16_t port)</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00071">udp_builder.cc:71</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1UdpClientBuilder_html_a5aab8070a6807f659ca8c826cfbacd1d"><div class="ttname"><a href="classunilink_1_1builder_1_1UdpClientBuilder.html#a5aab8070a6807f659ca8c826cfbacd1d">unilink::builder::UdpClientBuilder::remote</a></div><div class="ttdeci">UdpClientBuilder &amp; remote(const std::string &amp;address, uint16_t port)</div><div class="ttdef"><b>Definition:</b> <a href="udp__builder_8cc_source.html#l00071">udp_builder.cc:71</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00054">context.hpp:54</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md903"></a>
@@ -196,7 +196,7 @@ What Is Different About UDP</h1>
 Practical Notes</h1>
 <ul>
 <li><code>unilink::udp(0)</code> uses an ephemeral local port for the sender.</li>
-<li><code>set_remote(host, port)</code> configures the default destination for <code>send()</code>.</li>
+<li><code>remote(host, port)</code> configures the default destination for <code>send()</code>.</li>
 <li>The receiver can run without a predefined remote peer.</li>
 <li>If you need more operational examples, the protocol-specific examples are richer than this tutorial.</li>
 </ul>
@@ -226,7 +226,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

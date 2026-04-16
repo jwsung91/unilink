@@ -132,7 +132,7 @@ $(document).ready(function(){initNavTree('tcp__client__builder_8cc_source.html',
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  std::unique_ptr&lt;wrapper::TcpClient&gt; client;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keywordflow">if</span> (use_independent_context_) {</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    client = std::make_unique&lt;wrapper::TcpClient&gt;(host_, port_, std::make_shared&lt;boost::asio::io_context&gt;());</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    client-&gt;set_manage_external_context(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    client-&gt;manage_external_context(<span class="keyword">true</span>);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    client = std::make_unique&lt;wrapper::TcpClient&gt;(host_, port_);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  }</div>
@@ -142,12 +142,12 @@ $(document).ready(function(){initNavTree('tcp__client__builder_8cc_source.html',
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#a47cc01e994e05d52edd6396dec4a01f6">on_disconnect_</a>) client-&gt;on_disconnect(<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#a47cc01e994e05d52edd6396dec4a01f6">on_disconnect_</a>);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#ae6ed9d140b8e8b25d5707ea7eaea7202">on_error_</a>) client-&gt;on_error(<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#ae6ed9d140b8e8b25d5707ea7eaea7202">on_error_</a>);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  client-&gt;set_retry_interval(retry_interval_);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  client-&gt;set_max_retries(max_retries_);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  client-&gt;set_connection_timeout(connection_timeout_);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  client-&gt;retry_interval(retry_interval_);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  client-&gt;max_retries(max_retries_);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  client-&gt;connection_timeout(connection_timeout_);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#ab83f989b18c5bedcbf9c4d411172c696">framer_factory_</a>) {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    client-&gt;set_framer(<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#ab83f989b18c5bedcbf9c4d411172c696">framer_factory_</a>());</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    client-&gt;framer(<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#ab83f989b18c5bedcbf9c4d411172c696">framer_factory_</a>());</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  }</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordflow">if</span> (<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#a3d93e221a88b4399e6141416f8065188">on_message_</a>) {</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    client-&gt;on_message(std::move(<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#a3d93e221a88b4399e6141416f8065188">on_message_</a>));</div>
@@ -213,7 +213,7 @@ $(document).ready(function(){initNavTree('tcp__client__builder_8cc_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_e4a9c84f290adef67ceee075c03178ea.html">builder</a></li><li class="navelem"><a class="el" href="tcp__client__builder_8cc.html">tcp_client_builder.cc</a></li>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -898,7 +898,7 @@ var NAVTREEINDEX =
 "classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496",
 "classunilink_1_1memory_1_1MemoryTracker.html#ae9fb507731d366f394a764fceb67599d",
 "classunilink_1_1transport_1_1UdpChannel.html#ad25668365ea4c6c425d27e6ae1af20b2",
-"classunilink_1_1wrapper_1_1Udp.html#af859c7698df73fb8d6d1b6b96d96d91f",
+"classunilink_1_1wrapper_1_1Udp.html#afaacf0604fe6019e5021f809bb3f9e88",
 "error__types_8hpp.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3",
 "md_docs_architecture_memory_safety.html#autotoc_md27",
 "md_docs_guides_core_troubleshooting.html",

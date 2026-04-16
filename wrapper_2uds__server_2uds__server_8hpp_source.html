@@ -159,18 +159,18 @@ $(document).ready(function(){initNavTree('wrapper_2uds__server_2uds__server_8hpp
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; on_data(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; on_error(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> handler) override;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <span class="keywordtype">void</span> set_framer_factory(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keywordtype">void</span> on_message(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; framer_factory(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; on_message(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="comment">// Client count and management</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordtype">size_t</span> get_client_count() const override;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  std::vector&lt;<span class="keywordtype">size_t</span>&gt; get_connected_clients() const override;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordtype">size_t</span> client_count() const override;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  std::vector&lt;<span class="keywordtype">size_t</span>&gt; connected_clients() const override;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="comment">// Configuration (Fluent API)</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a>&amp; auto_manage(<span class="keywordtype">bool</span> manage = true);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a>&amp; set_client_limit(<span class="keywordtype">size_t</span> max_clients);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a>&amp; set_unlimited_clients();</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a>&amp; set_manage_external_context(<span class="keywordtype">bool</span> manage);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a>&amp; unlimited_clients();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a>&amp; manage_external_context(<span class="keywordtype">bool</span> manage);</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; private:</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  struct <a class="code" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html">Impl</a>;</div>
@@ -202,7 +202,7 @@ $(document).ready(function(){initNavTree('wrapper_2uds__server_2uds__server_8hpp
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_b88a6c339073afb50b2b7b303399597d.html">uds_server</a></li><li class="navelem"><a class="el" href="wrapper_2uds__server_2uds__server_8hpp.html">uds_server.hpp</a></li>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

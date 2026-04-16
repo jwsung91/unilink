@@ -136,8 +136,8 @@ External &lt;tt&gt;io_context&lt;/tt&gt; Contract</h1>
 <h2><a class="anchor" id="autotoc_md257"></a>
 5. Managed and unmanaged external contexts have different ownership rules</h2>
 <ul>
-<li><code>set_manage_external_context(false)</code> means the wrapper uses the external context but does not own its run loop.</li>
-<li><code>set_manage_external_context(true)</code> means the wrapper owns the wrapper-specific run loop it starts around that external context.</li>
+<li><code>manage_external_context(false)</code> means the wrapper uses the external context but does not own its run loop.</li>
+<li><code>manage_external_context(true)</code> means the wrapper owns the wrapper-specific run loop it starts around that external context.</li>
 </ul>
 <p>Expected behavior:</p>
 <ul>
@@ -208,7 +208,7 @@ Testing Status</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

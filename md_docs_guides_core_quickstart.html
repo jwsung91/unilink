@@ -217,7 +217,7 @@ Pattern 2: Error Handling</h2>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#a99411d22e20c0c2af568425d88986b08">on_error</a>([](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::ErrorContext</a>&amp; ctx) {</div>
 <div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: &quot;</span> &lt;&lt; ctx.<a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">message</a>() &lt;&lt; std::endl;</div>
 <div class="line">    })</div>
-<div class="line">    .enable_port_retry(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// 5 retries, 1 sec interval</span></div>
+<div class="line">    .port_retry(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// 5 retries, 1 sec interval</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">build</a>();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_a99411d22e20c0c2af568425d88986b08"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#a99411d22e20c0c2af568425d88986b08">unilink::builder::BuilderInterface::on_error</a></div><div class="ttdeci">Derived &amp; on_error(std::function&lt; void(const wrapper::ErrorContext &amp;)&gt; handler)</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="ibuilder_8hpp_source.html#l00141">ibuilder.hpp:141</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a9c74b1d7730ee134044b4fcc111191ec"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">unilink::builder::TcpServerBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpServer &gt; build() override</div><div class="ttdoc">Build and return the configured TcpServer.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00044">tcp_server_builder.cc:44</a></div></div>
@@ -267,9 +267,9 @@ Can't connect to server?</h2>
 Port already in use?</h2>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> server = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(8080)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unlimited_clients</a>()</div>
-<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">enable_port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// Try 5 times</span></div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">port_retry</a>(<span class="keyword">true</span>, 5, 1000)  <span class="comment">// Try 5 times</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">build</a>();</div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5361cef3aa804d32cba0b73c02e6492d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">unilink::builder::TcpServerBuilder::enable_port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00098">tcp_server_builder.cc:98</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_af9b5de3896e82bc59ed60c5872c7f6f1"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00098">tcp_server_builder.cc:98</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md389"></a>
 Need independent IO thread?</h2>
 <div class="fragment"><div class="line"><span class="comment">// For testing or isolation</span></div>
@@ -292,7 +292,7 @@ Support</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

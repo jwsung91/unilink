@@ -275,7 +275,7 @@ Concurrency Safety Tests</h2>
 <div class="line">  --gtest_filter=AdvancedTcpServerCoverageTest.StableClientIdsAreMonotonicAndNotReused:AdvancedTcpServerCoverageTest.StopFromCallbackDoesNotDeadlock</div>
 </div><!-- fragment --></li>
 <li>Requires permission to bind local TCP ports; allow local sockets if your environment sandboxes networking.</li>
-<li>TCP server multi-client send APIs return a bool (true on success, false if no target). Enable <code>notify_send_failure(true)</code> to trigger <code>on_error</code> when the target is missing or disconnected.</li>
+<li>TCP server multi-client send APIs return a bool (true on success, false if no target). Enable <code>send_failure_notify(true)</code> to trigger <code>on_error</code> when the target is missing or disconnected.</li>
 </ul>
 <hr  />
 <h2><a class="anchor" id="autotoc_md421"></a>
@@ -672,7 +672,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

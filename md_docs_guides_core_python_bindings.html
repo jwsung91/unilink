@@ -120,9 +120,9 @@ Basic Usage</h2>
 <div class="line">client = unilink_py.TcpClient(&quot;127.0.0.1&quot;, 8080)</div>
 <div class="line"> </div>
 <div class="line"># Configure (Optional)</div>
-<div class="line">client.set_retry_interval(datetime.timedelta(milliseconds=2000))</div>
-<div class="line">client.set_max_retries(10)</div>
-<div class="line">client.set_connection_timeout(datetime.timedelta(milliseconds=5000))</div>
+<div class="line">client.retry_interval(datetime.timedelta(milliseconds=2000))</div>
+<div class="line">client.max_retries(10)</div>
+<div class="line">client.connection_timeout(datetime.timedelta(milliseconds=5000))</div>
 <div class="line"> </div>
 <div class="line"># Register Callbacks</div>
 <div class="line">@client.on_connect</div>
@@ -181,8 +181,8 @@ Basic Usage</h2>
 <div class="line">serial = unilink_py.Serial(&quot;/dev/ttyUSB0&quot;, 115200)</div>
 <div class="line"> </div>
 <div class="line"># Configure</div>
-<div class="line">serial.set_baud_rate(9600)</div>
-<div class="line">serial.set_retry_interval(datetime.timedelta(milliseconds=1000))</div>
+<div class="line">serial.baud_rate(9600)</div>
+<div class="line">serial.retry_interval(datetime.timedelta(milliseconds=1000))</div>
 <div class="line">serial.auto_manage(True) # Automatically starts</div>
 <div class="line"> </div>
 <div class="line">@serial.on_data</div>
@@ -287,7 +287,7 @@ Lifecycle Management</h2>
 Configuration</h2>
 <ul>
 <li>**<code>UdpConfig</code>**: A dedicated class for UDP settings (buffer sizes, memory pools, etc.).</li>
-<li><b>Timeouts</b>: Methods like <code>set_retry_interval</code> accept <code>datetime.timedelta</code> objects for intuitive configuration.</li>
+<li><b>Timeouts</b>: Methods like <code>retry_interval</code> accept <code>datetime.timedelta</code> objects for intuitive configuration.</li>
 </ul>
 <p>``` </p>
 </div></div><!-- contents -->
@@ -296,7 +296,7 @@ Configuration</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

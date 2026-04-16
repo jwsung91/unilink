@@ -112,7 +112,7 @@ Step 1: Create The Server</h1>
 <div class="line">    <span class="keywordtype">void</span> start(uint16_t port) {</div>
 <div class="line">        server_ = <a class="code" href="namespaceunilink.html#a14c0a21a3c09f578b71455e31cf47956">unilink::tcp_server</a>(port)</div>
 <div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unlimited_clients</a>()</div>
-<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">enable_port_retry</a>(<span class="keyword">true</span>)</div>
+<div class="line">            .<a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">port_retry</a>(<span class="keyword">true</span>)</div>
 <div class="line">            .<a class="code" href="classunilink_1_1builder_1_1BuilderInterface.html#ac1b292b700428522a1a7cd7bc3e9e4f5">on_connect</a>([<span class="keyword">this</span>](<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::ConnectionContext</a>&amp; ctx) {</div>
 <div class="line">                std::cout &lt;&lt; <span class="stringliteral">&quot;[Connect] client=&quot;</span> &lt;&lt; ctx.<a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html#a556940f4854839c3e5ee7525daf7cea1">client_id</a>()</div>
 <div class="line">                          &lt;&lt; <span class="stringliteral">&quot; info=&quot;</span> &lt;&lt; ctx.<a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html#a14688954e7b065e67510b18052a5385a">client_info</a>() &lt;&lt; std::endl;</div>
@@ -162,8 +162,8 @@ Step 1: Create The Server</h1>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ac1b292b700428522a1a7cd7bc3e9e4f5"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ac1b292b700428522a1a7cd7bc3e9e4f5">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="ibuilder_8hpp_source.html#l00095">ibuilder.hpp:95</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5361cef3aa804d32cba0b73c02e6492d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5361cef3aa804d32cba0b73c02e6492d">unilink::builder::TcpServerBuilder::enable_port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; enable_port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00098">tcp_server_builder.cc:98</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a94c1f68d31130820c5c2bd20b906fba5"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a94c1f68d31130820c5c2bd20b906fba5">unilink::builder::TcpServerBuilder::unlimited_clients</a></div><div class="ttdeci">TcpServerBuilder &amp; unlimited_clients()</div><div class="ttdoc">Configure server for unlimited multi-client mode.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00126">tcp_server_builder.cc:126</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_af9b5de3896e82bc59ed60c5872c7f6f1"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">unilink::builder::TcpServerBuilder::port_retry</a></div><div class="ttdeci">TcpServerBuilder &amp; port_retry(bool enable=true, int max_retries=3, int retry_interval_ms=1000)</div><div class="ttdoc">Enable port binding retry on failure.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8cc_source.html#l00098">tcp_server_builder.cc:98</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00054">context.hpp:54</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a14688954e7b065e67510b18052a5385a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a14688954e7b065e67510b18052a5385a">unilink::wrapper::ConnectionContext::client_info</a></div><div class="ttdeci">const std::string &amp; client_info() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00060">context.hpp:60</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a556940f4854839c3e5ee7525daf7cea1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a556940f4854839c3e5ee7525daf7cea1">unilink::wrapper::ConnectionContext::client_id</a></div><div class="ttdeci">size_t client_id() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00059">context.hpp:59</a></div></div>
@@ -191,7 +191,7 @@ Step 3: Understand The Current Server API</h1>
 <li><code>broadcast(...)</code> to send to all connected clients</li>
 <li><code>send_to(client_id, ...)</code> to reply to one client</li>
 <li><code>is_listening()</code> to check listener state</li>
-<li><code>get_client_count()</code> and <code>get_connected_clients()</code> for inspection</li>
+<li><code>client_count()</code> and <code>connected_clients()</code> for inspection</li>
 </ul>
 <p>The key callback contexts are:</p>
 <ul>
@@ -237,7 +237,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

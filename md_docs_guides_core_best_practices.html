@@ -239,7 +239,7 @@ Resource Management</h1>
 <p>Tip: Register all callbacks before calling <code>.auto_manage(true)</code> or manually invoking <code>start()</code>, because <code>auto_manage(true)</code> now starts the connection immediately. </p>
 </blockquote>
 <blockquote class="doxtable">
-<p>Advanced: If you supply your own <code>boost::asio::io_context</code> to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with <code>set_manage_external_context(true)</code>). Make sure the context is running on a thread you control. </p>
+<p>Advanced: If you supply your own <code>boost::asio::io_context</code> to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with <code>manage_external_context(true)</code>). Make sure the context is running on a thread you control. </p>
 </blockquote>
 <h2><a class="anchor" id="autotoc_md312"></a>
 ✅ DO: Reuse Connections When Possible</h2>
@@ -278,7 +278,7 @@ Thread Safety</h1>
 <div class="line">        clients_[id] = info;</div>
 <div class="line">    }</div>
 <div class="line">    </div>
-<div class="line">    <span class="keywordtype">size_t</span> get_client_count()<span class="keyword"> const </span>{</div>
+<div class="line">    <span class="keywordtype">size_t</span> client_count()<span class="keyword"> const </span>{</div>
 <div class="line">        std::lock_guard&lt;std::mutex&gt; lock(clients_mutex_);</div>
 <div class="line">        <span class="keywordflow">return</span> clients_.size();</div>
 <div class="line">    }</div>
@@ -667,7 +667,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2026 00:44:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
