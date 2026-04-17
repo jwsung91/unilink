@@ -12,7 +12,7 @@ var classunilink_1_1transport_1_1UdsClient =
     [ "create", "classunilink_1_1transport_1_1UdsClient.html#a2a5328658479c6b7b2221b6d4223e844", null ],
     [ "create", "classunilink_1_1transport_1_1UdsClient.html#aa9fb3995830cbccdc784c7b2f158436d", null ],
     [ "is_connected", "classunilink_1_1transport_1_1UdsClient.html#a31f15a635639f84ebda0fe1c8082f6cf", null ],
-    [ "last_error_info", "classunilink_1_1transport_1_1UdsClient.html#aedafa0d42ff14333476246b5ae941a67", null ],
+    [ "last_error_info", "classunilink_1_1transport_1_1UdsClient.html#abdc3d9577ff3ef1a526ae76bc3786015", null ],
     [ "on_backpressure", "classunilink_1_1transport_1_1UdsClient.html#a0efaec29f188e779e48130c21d0a2f2b", null ],
     [ "on_bytes", "classunilink_1_1transport_1_1UdsClient.html#a3d6266cd525005baddcbb2f3a68d1394", null ],
     [ "on_state", "classunilink_1_1transport_1_1UdsClient.html#a168bae909f2e4703f65233c09529a231", null ],

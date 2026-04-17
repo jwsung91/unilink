@@ -125,6 +125,7 @@ var hierarchy =
       [ "unilink::wrapper::UdpServer", "classunilink_1_1wrapper_1_1UdpServer.html", null ],
       [ "unilink::wrapper::UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html", null ]
     ] ],
+    [ "unilink::wrapper::UdpServer::Impl::SessionEntry", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html", null ],
     [ "unilink::interface::TcpAcceptorInterface", "classunilink_1_1interface_1_1TcpAcceptorInterface.html", [
       [ "unilink::transport::BoostTcpAcceptor", "classunilink_1_1transport_1_1BoostTcpAcceptor.html", null ]
     ] ],

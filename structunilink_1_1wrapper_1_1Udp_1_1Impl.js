@@ -4,6 +4,7 @@ var structunilink_1_1wrapper_1_1Udp_1_1Impl =
     [ "Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ad8c419d47d4a6f72a251e3f666d6cbdf", null ],
     [ "Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#afe67708ef99dc29d96f12340305da696", null ],
     [ "~Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#adf39c589e2fbb91e1fdc57e6a97ba1bb", null ],
+    [ "attach_framer_callback", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a3f93439297447b819ff5654c4b87a478", null ],
     [ "fulfill_all_locked", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a30e8ebcdbf10069b2c24862148cb7893", null ],
     [ "on_message", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#ae3eec4b6e82317a6cfa077653f560b79", null ],
     [ "set_framer", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html#a8a8324e4713181157ebbd842d4dbf39b", null ],

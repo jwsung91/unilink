@@ -10,7 +10,7 @@ var classunilink_1_1transport_1_1UdsServer =
     [ "async_write_copy", "classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64", null ],
     [ "async_write_move", "classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58", null ],
     [ "async_write_shared", "classunilink_1_1transport_1_1UdsServer.html#af432686eee24a102bf5b5a52b71c29ab", null ],
-    [ "broadcast", "classunilink_1_1transport_1_1UdsServer.html#acebf0e1be21857381746bc545b1cc776", null ],
+    [ "broadcast", "classunilink_1_1transport_1_1UdsServer.html#aacbee04cedb4d12c530678970f3e4cb0", null ],
     [ "create", "classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4", null ],
     [ "create", "classunilink_1_1transport_1_1UdsServer.html#adb551eaf441a4c47f400bc9b0e8c4d73", null ],
     [ "get_client_count", "classunilink_1_1transport_1_1UdsServer.html#aadc51e2778ccc9dbacc8065df1c9a510", null ],
@@ -25,7 +25,7 @@ var classunilink_1_1transport_1_1UdsServer =
     [ "on_state", "classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7", null ],
     [ "operator=", "classunilink_1_1transport_1_1UdsServer.html#aa3a9716a71a1986da003f6700cb527e5", null ],
     [ "operator=", "classunilink_1_1transport_1_1UdsServer.html#ab49612640d707062bb2a8c14d01beff2", null ],
-    [ "send_to_client", "classunilink_1_1transport_1_1UdsServer.html#a1163605f84d924ceb1dff85313323865", null ],
+    [ "send_to_client", "classunilink_1_1transport_1_1UdsServer.html#a41cffde717dba58b373a297ee40648b5", null ],
     [ "start", "classunilink_1_1transport_1_1UdsServer.html#ad1d32d30e782b7fc5e29d4c7161575e6", null ],
     [ "stop", "classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430", null ]
 ];

@@ -21,7 +21,7 @@ var structunilink_1_1wrapper_1_1UdsServer_1_1Impl =
     [ "is_listening_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a918e69d0837a8b5d939dfcfc087b9422", null ],
     [ "manage_external_context_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a2c447ab1b6d1b18417d04f44015ba1c0", null ],
     [ "max_clients_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a145ae8333bd43e43d7e73af6b73eecee", null ],
-    [ "mutex_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#ab6c771ff12f258a039357706f990b2c0", null ],
+    [ "mutex_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a2cd952f070c7aec83beb62939844522c", null ],
     [ "on_message_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a27aff5347f422c6bc80b395345e95155", null ],
     [ "pending_promises_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#af787603a0e13b694de7a779601414f82", null ],
     [ "server_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#affc3ad213d154dea33b18725c3dcf640", null ],

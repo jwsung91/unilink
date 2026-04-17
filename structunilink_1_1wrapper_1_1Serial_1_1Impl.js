@@ -4,6 +4,7 @@ var structunilink_1_1wrapper_1_1Serial_1_1Impl =
     [ "Impl", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a90b6585306d020a4e0fe7cc6830df4bf", null ],
     [ "Impl", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a376c89c91053358dddfa687c7d2ddcb1", null ],
     [ "~Impl", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#af1f8e4b0e65bff5ab11cf4d6be855c3a", null ],
+    [ "attach_framer_callback", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0322ca1987cff30ecb38f0873053bacc", null ],
     [ "build_config", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0932ad2d58a5900901d237e52b18a735", null ],
     [ "fulfill_all_locked", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ab39d81708e27dbf71661724c049bcee1", null ],
     [ "on_message", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a214c3e2dc0880150308c36e23165e708", null ],

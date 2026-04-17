@@ -21,7 +21,7 @@ var structunilink_1_1wrapper_1_1TcpServer_1_1Impl =
     [ "manage_external_context_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#aa9821e7dcad9bccf16387726a320e49e", null ],
     [ "max_clients_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#af74107c041d44b81b6313b6d4f7121c8", null ],
     [ "max_port_retries_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ad99d9d52c6629b949fd1515dc8d26722", null ],
-    [ "mutex_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a4267ee74f678bf1e8f35fad91e3a717f", null ],
+    [ "mutex_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a176f804e5b2f58e2c3b05ec19e16048a", null ],
     [ "notify_send_failure_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a15697310912330736e6aa14b2f677a8a", null ],
     [ "on_client_connect_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10defb582fb338ff5d688e929e793a57", null ],
     [ "on_client_disconnect_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a132e8d75878579382aa6337aa79fac65", null ],
@@ -33,6 +33,7 @@ var structunilink_1_1wrapper_1_1TcpServer_1_1Impl =
     [ "port_retry_enabled_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#acc754b1bedbc5426ba62ecf552b9ee27", null ],
     [ "port_retry_interval_ms_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a8f3477df42b1fcbe0f6321fe5598189d", null ],
     [ "started_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a3187201e56810ab965da445645047808", null ],
+    [ "transport_cache_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#adb50e31a3db025cae59a0c3ac62a3cd2", null ],
     [ "use_external_context_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ac55ff9f1031b108605323f6a22acf9bf", null ],
     [ "work_guard_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ac4c1719442280ca5fc75a2e4f319409e", null ]
 ];

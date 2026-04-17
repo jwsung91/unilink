@@ -8,10 +8,10 @@ var classunilink_1_1wrapper_1_1Serial =
     [ "Serial", "classunilink_1_1wrapper_1_1Serial.html#ad064f429cad2aae8e93a22811759c3be", null ],
     [ "Serial", "classunilink_1_1wrapper_1_1Serial.html#a2fbdec2d253d8a75114501fcccec5d06", null ],
     [ "auto_manage", "classunilink_1_1wrapper_1_1Serial.html#a49a8f65c60fe8de6accf0dde6688dd67", null ],
-    [ "baud_rate", "classunilink_1_1wrapper_1_1Serial.html#a2364f764a5f927150b3c57445c3997db", null ],
+    [ "baud_rate", "classunilink_1_1wrapper_1_1Serial.html#a062c7d4e703bf3f79f52f11941c95a85", null ],
     [ "build_config", "classunilink_1_1wrapper_1_1Serial.html#a187aba4ee4b20cc58f9bf6715291983b", null ],
-    [ "data_bits", "classunilink_1_1wrapper_1_1Serial.html#a6cc6c4b58613f2e3e622bc9b91597411", null ],
-    [ "flow_control", "classunilink_1_1wrapper_1_1Serial.html#aac3f0d8325e08a85edb8b61be422d510", null ],
+    [ "data_bits", "classunilink_1_1wrapper_1_1Serial.html#a261ea6cce059bc6913f1689b4ff2f9ba", null ],
+    [ "flow_control", "classunilink_1_1wrapper_1_1Serial.html#a104903a0efd73aef176de566ed769cce", null ],
     [ "framer", "classunilink_1_1wrapper_1_1Serial.html#a252064c40c12a44f4d1ea69bec25fa80", null ],
     [ "is_connected", "classunilink_1_1wrapper_1_1Serial.html#a19032f98db2f1cbf4382f03ad9c97730", null ],
     [ "manage_external_context", "classunilink_1_1wrapper_1_1Serial.html#a93eab2f5f1c0c04fef4883ec3c405f58", null ],
@@ -22,11 +22,11 @@ var classunilink_1_1wrapper_1_1Serial =
     [ "on_message", "classunilink_1_1wrapper_1_1Serial.html#a80b9913b7e9a554341aaa43d6947e7ae", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1Serial.html#a3d073ca5d5fd05b14eb84138ceb2ba2b", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1Serial.html#a07b6689a34acf4a31fdaf4ae8e4a0da0", null ],
-    [ "parity", "classunilink_1_1wrapper_1_1Serial.html#a4efeaab4c8158b7e8cc4474b905dcf66", null ],
-    [ "retry_interval", "classunilink_1_1wrapper_1_1Serial.html#a31734878d8314234c56f10751c1ea66e", null ],
+    [ "parity", "classunilink_1_1wrapper_1_1Serial.html#ab0fb62c47b6443959c950136c528f757", null ],
+    [ "retry_interval", "classunilink_1_1wrapper_1_1Serial.html#a6ce8939a471a8fd6c48bd9d26558aade", null ],
     [ "send", "classunilink_1_1wrapper_1_1Serial.html#ac24bfcd3b30eecf8d45c163ad3c73cd4", null ],
     [ "send_line", "classunilink_1_1wrapper_1_1Serial.html#af356b51850ae355e85938b6ff0c59d8f", null ],
     [ "start", "classunilink_1_1wrapper_1_1Serial.html#a1d0c46c79487050268065fedda5fec4a", null ],
     [ "stop", "classunilink_1_1wrapper_1_1Serial.html#ad65a699425f67b86cfc2e55ca3c455ca", null ],
-    [ "stop_bits", "classunilink_1_1wrapper_1_1Serial.html#a04c4a5a51ec8d8818d4cce32e94113fd", null ]
+    [ "stop_bits", "classunilink_1_1wrapper_1_1Serial.html#a2e5c4c663a19b4a9003c56bd991157a6", null ]
 ];

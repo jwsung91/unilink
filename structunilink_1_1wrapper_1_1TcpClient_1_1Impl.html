@@ -102,8 +102,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a32dae0c43294e3469ed3802896fe8116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8300ea891edd309841f538d63bce05a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a8300ea891edd309841f538d63bce05a4">~Impl</a> ()</td></tr>
 <tr class="separator:a8300ea891edd309841f538d63bce05a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af96088b6b3c8b991999e7d0ff042608a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#af96088b6b3c8b991999e7d0ff042608a">fulfill_all</a> (bool value)</td></tr>
-<tr class="separator:af96088b6b3c8b991999e7d0ff042608a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3b155170c7fd998a22deb92e9443b1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ad3b155170c7fd998a22deb92e9443b1f">fulfill_all_locked</a> (bool value)</td></tr>
+<tr class="separator:ad3b155170c7fd998a22deb92e9443b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad28d0b43728cdfd96c5fb9563d585b56"><td class="memItemLeft" align="right" valign="top">std::future&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ad28d0b43728cdfd96c5fb9563d585b56">start</a> ()</td></tr>
 <tr class="separator:ad28d0b43728cdfd96c5fb9563d585b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a8b8b9a961dffd4e71d5d64d570c8e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a1a8b8b9a961dffd4e71d5d64d570c8e2">stop</a> ()</td></tr>
@@ -114,6 +114,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a35d81629db669d24510c612b2beb8919"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71ca6976f08b07bfb8fdc6c17d84aae5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a71ca6976f08b07bfb8fdc6c17d84aae5">setup_internal_handlers</a> ()</td></tr>
 <tr class="separator:a71ca6976f08b07bfb8fdc6c17d84aae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6193e6eced480d2e35e09f8a8aaf3ede"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a6193e6eced480d2e35e09f8a8aaf3ede">attach_framer_callback</a> ()</td></tr>
+<tr class="separator:a6193e6eced480d2e35e09f8a8aaf3ede"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3d872b2d253b6f2d86677ee7b145ae3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aa3d872b2d253b6f2d86677ee7b145ae3">set_framer</a> (std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd4b8fd33c56b74e8e4233a14f076212">framer</a>)</td></tr>
 <tr class="separator:aa3d872b2d253b6f2d86677ee7b145ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a748ca8efb8f89cd5b4e259697aff9e94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a748ca8efb8f89cd5b4e259697aff9e94">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler)</td></tr>
@@ -308,8 +310,8 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af96088b6b3c8b991999e7d0ff042608a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af96088b6b3c8b991999e7d0ff042608a">&#9670;&nbsp;</a></span>fulfill_all()</h2>
+<a id="a6193e6eced480d2e35e09f8a8aaf3ede"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6193e6eced480d2e35e09f8a8aaf3ede">&#9670;&nbsp;</a></span>attach_framer_callback()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -318,7 +320,34 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void unilink::wrapper::TcpClient::Impl::fulfill_all </td>
+          <td class="memname">void unilink::wrapper::TcpClient::Impl::attach_framer_callback </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00261">261</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+
+</div>
+</div>
+<a id="ad3b155170c7fd998a22deb92e9443b1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3b155170c7fd998a22deb92e9443b1f">&#9670;&nbsp;</a></span>fulfill_all_locked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::wrapper::TcpClient::Impl::fulfill_all_locked </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
@@ -359,7 +388,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00193">193</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00184">184</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -387,7 +416,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00296">296</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00281">281</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -415,7 +444,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00186">186</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00177">177</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -443,7 +472,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00278">278</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00275">275</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -470,7 +499,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00195">195</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00186">186</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -497,7 +526,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00098">98</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00097">97</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -524,7 +553,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00142">142</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html#l00141">141</a> of file <a class="el" href="wrapper_2tcp__client_2tcp__client_8cc_source.html">tcp_client.cc</a>.</p>
 
 </div>
 </div>
@@ -898,7 +927,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">TcpClient</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

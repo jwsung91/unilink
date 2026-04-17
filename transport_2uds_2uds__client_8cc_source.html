@@ -375,184 +375,194 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;  impl_-&gt;on_bp_ = std::move(cb);</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;}</div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
-<div class="line"><a name="l00289"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a7e512c94a8c957205d42043097ac0761">  289</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::do_connect(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq) {</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;  <span class="keywordflow">if</span> (!cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#a74d9851f4196a9614ab1a5ad44d9084c">is_valid</a>()) {</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900">diagnostics::ErrorCategory::CONFIGURATION</a>, <span class="stringliteral">&quot;connect&quot;</span>,</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;                              make_error_code(boost::system::errc::invalid_argument), <span class="stringliteral">&quot;Invalid UDS socket path&quot;</span>, <span class="keyword">false</span>,</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;                              self-&gt;impl_-&gt;reconnect_attempt_count_);</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;transition_to(LinkState::Error);</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;  }</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;  std::shared_ptr&lt;uds::endpoint&gt; endpoint;</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    endpoint = std::make_shared&lt;uds::endpoint&gt;(cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#a95de044754683f07929181524725773b">socket_path</a>);</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;  } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900">diagnostics::ErrorCategory::CONFIGURATION</a>, <span class="stringliteral">&quot;connect&quot;</span>,</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                              make_error_code(boost::system::errc::filename_too_long),</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                              <span class="stringliteral">&quot;Invalid UDS endpoint: &quot;</span> + std::string(e.what()), <span class="keyword">false</span>,</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                              self-&gt;impl_-&gt;reconnect_attempt_count_);</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;transition_to(LinkState::Error);</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  }</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;  connect_timer_.expires_after(std::chrono::milliseconds(cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#a456bf936e9055b6dba86b2e469ccc0d1">connection_timeout_ms</a>));</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;  connect_timer_.async_wait(net::bind_executor(strand_, [<span class="keyword">self</span>, seq](<span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    if (!ec) {</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;      <span class="keyword">self</span>-&gt;impl_-&gt;record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98">diagnostics::ErrorCategory::CONNECTION</a>, <span class="stringliteral">&quot;connect&quot;</span>,</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                                boost::asio::error::timed_out, <span class="stringliteral">&quot;Connection timed out&quot;</span>, <span class="keyword">true</span>,</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                                self-&gt;impl_-&gt;reconnect_attempt_count_);</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;      self-&gt;impl_-&gt;handle_close(<span class="keyword">self</span>, seq, boost::asio::error::timed_out);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    }</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;  }));</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;  socket_-&gt;async_connect(*endpoint, net::bind_executor(strand_, [<span class="keyword">self</span>, seq,</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                                                                 endpoint](<span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;connect_timer_.cancel();</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    if (ec) {</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;      <span class="keyword">self</span>-&gt;impl_-&gt;record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98">diagnostics::ErrorCategory::CONNECTION</a>, <span class="stringliteral">&quot;connect&quot;</span>, ec,</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;                                <span class="stringliteral">&quot;Connect failed: &quot;</span> + ec.message(), <a class="code" href="namespaceunilink_1_1diagnostics.html#a64ef9068c86fed2fc120eff040163732">diagnostics::is_retryable_uds_connect_error</a>(ec),</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;                                self-&gt;impl_-&gt;reconnect_attempt_count_);</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      self-&gt;impl_-&gt;schedule_retry(<span class="keyword">self</span>, seq);</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    }</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;connected_ = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;reconnect_attempt_count_ = 0;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;retry_attempts_ = 0;</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;transition_to(LinkState::Connected);</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;start_read(<span class="keyword">self</span>, seq);</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <span class="keywordflow">if</span> (!self-&gt;impl_-&gt;tx_.empty() &amp;&amp; !self-&gt;impl_-&gt;writing_) {</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;      self-&gt;impl_-&gt;do_write(self, seq);</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    }</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;  }));</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;}</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00344"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#adf89a81fe4b7f5fa96ced02acb1d8f12">  344</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::schedule_retry(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq) {</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;  transition_to(LinkState::Error);</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;  <a class="code" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> dummy_err(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98">diagnostics::ErrorCategory::CONNECTION</a>, <span class="stringliteral">&quot;uds_client&quot;</span>,</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;                                   <span class="stringliteral">&quot;connect&quot;</span>, <span class="stringliteral">&quot;Retry pending&quot;</span>, boost::system::error_code(), <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;  <span class="keyword">auto</span> decision = <a class="code" href="namespaceunilink_1_1transport_1_1detail.html#a955086b549ba1ad4eabea036d9a7e5db">detail::decide_reconnect_uds</a>(cfg_, dummy_err, reconnect_attempt_count_, reconnect_policy_);</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160; </div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;  <span class="keywordflow">if</span> (!decision.should_retry || stop_requested_.load()) {</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    transition_to(LinkState::Idle);</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;  }</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160; </div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;  reconnect_attempt_count_++;</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;  retry_timer_.expires_after(decision.delay.value_or(std::chrono::milliseconds(cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#ac1af617333da4700f54e3f887fb441f9">retry_interval_ms</a>)));</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;  retry_timer_.async_wait(net::bind_executor(strand_, [<span class="keyword">self</span>, seq](<span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    self-&gt;impl_-&gt;do_connect(<span class="keyword">self</span>, seq);</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;  }));</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;}</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
-<div class="line"><a name="l00364"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a9c6abf32119efc52b387c0296e582b13">  364</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::start_read(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq) {</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;  socket_-&gt;async_read_some(net::buffer(rx_),</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;                           net::bind_executor(strand_, [<span class="keyword">self</span>, seq](<span class="keyword">const</span> boost::system::error_code&amp; ec, <span class="keywordtype">size_t</span> bytes) {</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;                             <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;                             if (ec) {</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;                               <span class="keyword">self</span>-&gt;impl_-&gt;handle_close(<span class="keyword">self</span>, seq, ec);</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;                               <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;                             }</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                             <a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb;</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;                             {</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;                               std::lock_guard&lt;std::mutex&gt; lock(self-&gt;impl_-&gt;callback_mtx_);</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;                               cb = <span class="keyword">self</span>-&gt;impl_-&gt;on_bytes_;</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;                             }</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                             <span class="keywordflow">if</span> (cb) cb(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(self-&gt;impl_-&gt;rx_.data(), bytes));</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;                             <span class="keyword">self</span>-&gt;impl_-&gt;start_read(<span class="keyword">self</span>, seq);</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                           }));</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;}</div>
+<div class="line"><a name="l00289"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsClient.html#a797cccf059b0ce8d8ac5e7a1ba8d7007">  289</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsClient.html#a797cccf059b0ce8d8ac5e7a1ba8d7007">UdsClient::set_retry_interval</a>(<span class="keywordtype">unsigned</span> interval_ms) { impl_-&gt;cfg_.retry_interval_ms = interval_ms; }</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsClient.html#a4534577b2f6ead7444ae45854497a422">  291</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsClient.html#a4534577b2f6ead7444ae45854497a422">UdsClient::set_reconnect_policy</a>(<a class="code" href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">ReconnectPolicy</a> policy) {</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;  <span class="keywordflow">if</span> (policy) {</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    impl_-&gt;reconnect_policy_ = std::move(policy);</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;  }</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;}</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160; </div>
+<div class="line"><a name="l00297"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsClient.html#abdc3d9577ff3ef1a526ae76bc3786015">  297</a></span>&#160;std::optional&lt;diagnostics::ErrorInfo&gt; <a class="code" href="classunilink_1_1transport_1_1UdsClient.html#abdc3d9577ff3ef1a526ae76bc3786015">UdsClient::last_error_info</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_-&gt;last_error_info_; }</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a7e512c94a8c957205d42043097ac0761">  299</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::do_connect(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq) {</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;  <span class="keywordflow">if</span> (!cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#a74d9851f4196a9614ab1a5ad44d9084c">is_valid</a>()) {</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900">diagnostics::ErrorCategory::CONFIGURATION</a>, <span class="stringliteral">&quot;connect&quot;</span>,</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                              make_error_code(boost::system::errc::invalid_argument), <span class="stringliteral">&quot;Invalid UDS socket path&quot;</span>, <span class="keyword">false</span>,</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                              self-&gt;impl_-&gt;reconnect_attempt_count_);</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;transition_to(LinkState::Error);</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;  }</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  std::shared_ptr&lt;uds::endpoint&gt; endpoint;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;  <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    endpoint = std::make_shared&lt;uds::endpoint&gt;(cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#a95de044754683f07929181524725773b">socket_path</a>);</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;  } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900">diagnostics::ErrorCategory::CONFIGURATION</a>, <span class="stringliteral">&quot;connect&quot;</span>,</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;                              make_error_code(boost::system::errc::filename_too_long),</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                              <span class="stringliteral">&quot;Invalid UDS endpoint: &quot;</span> + std::string(e.what()), <span class="keyword">false</span>,</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                              self-&gt;impl_-&gt;reconnect_attempt_count_);</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;transition_to(LinkState::Error);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;  }</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160; </div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;  connect_timer_.expires_after(std::chrono::milliseconds(cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#a456bf936e9055b6dba86b2e469ccc0d1">connection_timeout_ms</a>));</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;  connect_timer_.async_wait(net::bind_executor(strand_, [<span class="keyword">self</span>, seq](<span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    if (!ec) {</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      <span class="keyword">self</span>-&gt;impl_-&gt;record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98">diagnostics::ErrorCategory::CONNECTION</a>, <span class="stringliteral">&quot;connect&quot;</span>,</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;                                boost::asio::error::timed_out, <span class="stringliteral">&quot;Connection timed out&quot;</span>, <span class="keyword">true</span>,</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;                                self-&gt;impl_-&gt;reconnect_attempt_count_);</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;      self-&gt;impl_-&gt;handle_close(<span class="keyword">self</span>, seq, boost::asio::error::timed_out);</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    }</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;  }));</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;  socket_-&gt;async_connect(*endpoint, net::bind_executor(strand_, [<span class="keyword">self</span>, seq,</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;                                                                 endpoint](<span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;connect_timer_.cancel();</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    if (ec) {</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;      <span class="keyword">self</span>-&gt;impl_-&gt;record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98">diagnostics::ErrorCategory::CONNECTION</a>, <span class="stringliteral">&quot;connect&quot;</span>, ec,</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;                                <span class="stringliteral">&quot;Connect failed: &quot;</span> + ec.message(), <a class="code" href="namespaceunilink_1_1diagnostics.html#a64ef9068c86fed2fc120eff040163732">diagnostics::is_retryable_uds_connect_error</a>(ec),</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                                self-&gt;impl_-&gt;reconnect_attempt_count_);</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;      self-&gt;impl_-&gt;schedule_retry(<span class="keyword">self</span>, seq);</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    }</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;connected_ = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;reconnect_attempt_count_ = 0;</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;retry_attempts_ = 0;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;transition_to(LinkState::Connected);</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keyword">self</span>-&gt;impl_-&gt;start_read(<span class="keyword">self</span>, seq);</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="keywordflow">if</span> (!self-&gt;impl_-&gt;tx_.empty() &amp;&amp; !self-&gt;impl_-&gt;writing_) {</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;      self-&gt;impl_-&gt;do_write(self, seq);</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    }</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;  }));</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;}</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
+<div class="line"><a name="l00354"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#adf89a81fe4b7f5fa96ced02acb1d8f12">  354</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::schedule_retry(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq) {</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;  transition_to(LinkState::Error);</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160; </div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;  <a class="code" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a> dummy_err(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7abb1ca97ec761fc37101737ba0aa2e7c5">diagnostics::ErrorLevel::ERROR</a>, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98">diagnostics::ErrorCategory::CONNECTION</a>, <span class="stringliteral">&quot;uds_client&quot;</span>,</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;                                   <span class="stringliteral">&quot;connect&quot;</span>, <span class="stringliteral">&quot;Retry pending&quot;</span>, boost::system::error_code(), <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;  <span class="keyword">auto</span> decision = <a class="code" href="namespaceunilink_1_1transport_1_1detail.html#a955086b549ba1ad4eabea036d9a7e5db">detail::decide_reconnect_uds</a>(cfg_, dummy_err, reconnect_attempt_count_, reconnect_policy_);</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160; </div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;  <span class="keywordflow">if</span> (!decision.should_retry || stop_requested_.load()) {</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    transition_to(LinkState::Idle);</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;  }</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;  reconnect_attempt_count_++;</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;  retry_timer_.expires_after(decision.delay.value_or(std::chrono::milliseconds(cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#ac1af617333da4700f54e3f887fb441f9">retry_interval_ms</a>)));</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;  retry_timer_.async_wait(net::bind_executor(strand_, [<span class="keyword">self</span>, seq](<span class="keyword">const</span> boost::system::error_code&amp; ec) {</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    self-&gt;impl_-&gt;do_connect(<span class="keyword">self</span>, seq);</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;  }));</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;}</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160; </div>
+<div class="line"><a name="l00374"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a9c6abf32119efc52b387c0296e582b13">  374</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::start_read(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq) {</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;  socket_-&gt;async_read_some(net::buffer(rx_),</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;                           net::bind_executor(strand_, [<span class="keyword">self</span>, seq](<span class="keyword">const</span> boost::system::error_code&amp; ec, <span class="keywordtype">size_t</span> bytes) {</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;                             <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                             if (ec) {</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;                               <span class="keyword">self</span>-&gt;impl_-&gt;handle_close(<span class="keyword">self</span>, seq, ec);</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                               <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                             }</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160; </div>
-<div class="line"><a name="l00383"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#af8a0c0be031eba28a4ff8ac07f802484">  383</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::do_write(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq) {</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;  <span class="keywordflow">if</span> (tx_.empty() || writing_) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;  writing_ = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;  current_write_buffer_ = std::move(tx_.front());</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;  tx_.pop_front();</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;  net::const_buffer buffer;</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;  std::visit(</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;      [&amp;buffer](<span class="keyword">auto</span>&amp;&amp; arg) {</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;        <span class="keyword">using</span> T = std::decay_t&lt;decltype(arg)&gt;;</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;T, std::vector&lt;uint8_t&gt;&gt;)</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;          buffer = net::buffer(arg);</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;T, std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt;&gt;)</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;          buffer = net::buffer(*arg);</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;T, memory::PooledBuffer&gt;)</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;          buffer = net::buffer(arg.data(), arg.size());</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;      },</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;      *current_write_buffer_);</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160; </div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;  <span class="keywordtype">size_t</span> bytes_to_write = buffer.size();</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;  socket_-&gt;async_write(</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;      buffer, net::bind_executor(strand_, [<span class="keyword">self</span>, seq, bytes_to_write](<span class="keyword">const</span> boost::system::error_code&amp; ec, <span class="keywordtype">size_t</span>) {</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;        <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;        self-&gt;impl_-&gt;writing_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;        self-&gt;impl_-&gt;current_write_buffer_ = std::nullopt;</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        self-&gt;impl_-&gt;queue_bytes_ -= bytes_to_write;</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        self-&gt;impl_-&gt;report_backpressure(self-&gt;impl_-&gt;queue_bytes_);</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160; </div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;        if (ec) {</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;          <span class="keyword">self</span>-&gt;impl_-&gt;handle_close(<span class="keyword">self</span>, seq, ec);</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;          <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;        }</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        <span class="keywordflow">if</span> (!self-&gt;impl_-&gt;tx_.empty()) self-&gt;impl_-&gt;do_write(<span class="keyword">self</span>, seq);</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;      }));</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;}</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160; </div>
-<div class="line"><a name="l00419"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#ac17173f1084cbd0971593e38c82002c6">  419</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::handle_close(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq, <span class="keyword">const</span> boost::system::error_code&amp;) {</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;  connected_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;  close_socket();</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;  retry_timer_.cancel();</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;  connect_timer_.cancel();</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160; </div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;  <span class="keywordflow">if</span> (stop_requested_) {</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    transition_to(LinkState::Idle);</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    schedule_retry(<span class="keyword">self</span>, seq);</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;  }</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;}</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160; </div>
-<div class="line"><a name="l00432"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a3c6344e72a3486339215061432fd6c1c">  432</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::transition_to(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">LinkState</a> next, <span class="keyword">const</span> boost::system::error_code&amp;) {</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;  state_.set_state(next);</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb;</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;  {</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(callback_mtx_);</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    cb = on_state_;</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;  }</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;  <span class="keywordflow">if</span> (cb) cb(next);</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;                             <a class="code" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> cb;</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;                             {</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;                               std::lock_guard&lt;std::mutex&gt; lock(self-&gt;impl_-&gt;callback_mtx_);</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;                               cb = <span class="keyword">self</span>-&gt;impl_-&gt;on_bytes_;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;                             }</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;                             <span class="keywordflow">if</span> (cb) cb(<a class="code" href="classunilink_1_1memory_1_1SafeSpan.html">memory::ConstByteSpan</a>(self-&gt;impl_-&gt;rx_.data(), bytes));</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                             <span class="keyword">self</span>-&gt;impl_-&gt;start_read(<span class="keyword">self</span>, seq);</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                           }));</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;}</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160; </div>
+<div class="line"><a name="l00393"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#af8a0c0be031eba28a4ff8ac07f802484">  393</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::do_write(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq) {</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;  <span class="keywordflow">if</span> (tx_.empty() || writing_) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;  writing_ = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;  current_write_buffer_ = std::move(tx_.front());</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;  tx_.pop_front();</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160; </div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;  net::const_buffer buffer;</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;  std::visit(</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;      [&amp;buffer](<span class="keyword">auto</span>&amp;&amp; arg) {</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;        <span class="keyword">using</span> T = std::decay_t&lt;decltype(arg)&gt;;</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;        <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;T, std::vector&lt;uint8_t&gt;&gt;)</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;          buffer = net::buffer(arg);</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;T, std::shared_ptr&lt;<span class="keyword">const</span> std::vector&lt;uint8_t&gt;&gt;&gt;)</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;          buffer = net::buffer(*arg);</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr (std::is_same_v&lt;T, memory::PooledBuffer&gt;)</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;          buffer = net::buffer(arg.data(), arg.size());</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;      },</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;      *current_write_buffer_);</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160; </div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;  <span class="keywordtype">size_t</span> bytes_to_write = buffer.size();</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;  socket_-&gt;async_write(</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;      buffer, net::bind_executor(strand_, [<span class="keyword">self</span>, seq, bytes_to_write](<span class="keyword">const</span> boost::system::error_code&amp; ec, <span class="keywordtype">size_t</span>) {</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        <span class="keywordflow">if</span> (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        self-&gt;impl_-&gt;writing_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        self-&gt;impl_-&gt;current_write_buffer_ = std::nullopt;</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        self-&gt;impl_-&gt;queue_bytes_ -= bytes_to_write;</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        self-&gt;impl_-&gt;report_backpressure(self-&gt;impl_-&gt;queue_bytes_);</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160; </div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        if (ec) {</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;          <span class="keyword">self</span>-&gt;impl_-&gt;handle_close(<span class="keyword">self</span>, seq, ec);</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;          <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        }</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        <span class="keywordflow">if</span> (!self-&gt;impl_-&gt;tx_.empty()) self-&gt;impl_-&gt;do_write(<span class="keyword">self</span>, seq);</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;      }));</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;}</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160; </div>
+<div class="line"><a name="l00429"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#ac17173f1084cbd0971593e38c82002c6">  429</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::handle_close(std::shared_ptr&lt;UdsClient&gt; <span class="keyword">self</span>, uint64_t seq, <span class="keyword">const</span> boost::system::error_code&amp;) {</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;  connected_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;  close_socket();</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;  retry_timer_.cancel();</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;  connect_timer_.cancel();</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160; </div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;  <span class="keywordflow">if</span> (stop_requested_) {</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    transition_to(LinkState::Idle);</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    schedule_retry(<span class="keyword">self</span>, seq);</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;  }</div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;}</div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160; </div>
-<div class="line"><a name="l00442"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a405688ea64c396f211bb95acf254d2ce">  442</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::close_socket() {</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;  boost::system::error_code ec;</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;  socket_-&gt;close(ec);</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;}</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160; </div>
-<div class="line"><a name="l00447"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#aa644859c7138a6784c64529c8306f389">  447</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::recalculate_backpressure_bounds() { bp_limit_ = cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#a898254854bb78389f6c0f486b356c598">backpressure_threshold</a> * 2; }</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160; </div>
-<div class="line"><a name="l00449"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a8345c8edc8a2f947f6b19f0961dcff4c">  449</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::report_backpressure(<span class="keywordtype">size_t</span> queued_bytes) {</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> cb;</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;  {</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(callback_mtx_);</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    cb = on_bp_;</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;  }</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;  <span class="keywordflow">if</span> (cb) cb(queued_bytes);</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;}</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160; </div>
-<div class="line"><a name="l00458"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4b8f7f85468b1fbe589f0728b95375b6">  458</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">diagnostics::ErrorLevel</a> lvl, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">diagnostics::ErrorCategory</a> cat,</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;                                   std::string_view operation, <span class="keyword">const</span> boost::system::error_code&amp; ec,</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;                                   std::string_view msg, <span class="keywordtype">bool</span> retryable, uint32_t) {</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(last_err_mtx_);</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;  last_error_info_ = <a class="code" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a>(lvl, cat, <span class="stringliteral">&quot;uds_client&quot;</span>, operation, msg, ec, retryable);</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;}</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160; </div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;}  <span class="comment">// namespace transport</span></div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00442"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a3c6344e72a3486339215061432fd6c1c">  442</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::transition_to(<a class="code" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">LinkState</a> next, <span class="keyword">const</span> boost::system::error_code&amp;) {</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;  state_.set_state(next);</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">OnState</a> cb;</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;  {</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(callback_mtx_);</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    cb = on_state_;</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;  }</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;  <span class="keywordflow">if</span> (cb) cb(next);</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;}</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160; </div>
+<div class="line"><a name="l00452"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a405688ea64c396f211bb95acf254d2ce">  452</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::close_socket() {</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;  boost::system::error_code ec;</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;  socket_-&gt;close(ec);</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;}</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160; </div>
+<div class="line"><a name="l00457"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#aa644859c7138a6784c64529c8306f389">  457</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::recalculate_backpressure_bounds() { bp_limit_ = cfg_.<a class="code" href="structunilink_1_1config_1_1UdsClientConfig.html#a898254854bb78389f6c0f486b356c598">backpressure_threshold</a> * 2; }</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160; </div>
+<div class="line"><a name="l00459"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a8345c8edc8a2f947f6b19f0961dcff4c">  459</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::report_backpressure(<span class="keywordtype">size_t</span> queued_bytes) {</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;  <a class="code" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a> cb;</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;  {</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    std::lock_guard&lt;std::mutex&gt; lock(callback_mtx_);</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;    cb = on_bp_;</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;  }</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;  <span class="keywordflow">if</span> (cb) cb(queued_bytes);</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;}</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160; </div>
+<div class="line"><a name="l00468"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4b8f7f85468b1fbe589f0728b95375b6">  468</a></span>&#160;<span class="keywordtype">void</span> UdsClient::Impl::record_error(<a class="code" href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7">diagnostics::ErrorLevel</a> lvl, <a class="code" href="namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7">diagnostics::ErrorCategory</a> cat,</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;                                   std::string_view operation, <span class="keyword">const</span> boost::system::error_code&amp; ec,</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;                                   std::string_view msg, <span class="keywordtype">bool</span> retryable, uint32_t) {</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;  std::lock_guard&lt;std::mutex&gt; lock(last_err_mtx_);</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;  last_error_info_ = <a class="code" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">diagnostics::ErrorInfo</a>(lvl, cat, <span class="stringliteral">&quot;uds_client&quot;</span>, operation, msg, ec, retryable);</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;}</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160; </div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;}  <span class="comment">// namespace transport</span></div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aboost__uds__socket_8hpp_html"><div class="ttname"><a href="boost__uds__socket_8hpp.html">boost_uds_socket.hpp</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_a0ff1ba3581a10632471f991e9910a3f9"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">unilink::interface::Channel::OnBytes</a></div><div class="ttdeci">std::function&lt; void(memory::ConstByteSpan)&gt; OnBytes</div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00030">channel.hpp:30</a></div></div>
 <div class="ttc" id="aclassunilink_1_1interface_1_1Channel_html_aa2fe2bd2caca7544431ff59e0c8a111d"><div class="ttname"><a href="classunilink_1_1interface_1_1Channel.html#aa2fe2bd2caca7544431ff59e0c8a111d">unilink::interface::Channel::OnState</a></div><div class="ttdeci">std::function&lt; void(base::LinkState)&gt; OnState</div><div class="ttdef"><b>Definition:</b> <a href="channel_8hpp_source.html#l00031">channel.hpp:31</a></div></div>
@@ -569,9 +579,12 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_a31f15a635639f84ebda0fe1c8082f6cf"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#a31f15a635639f84ebda0fe1c8082f6cf">unilink::transport::UdsClient::is_connected</a></div><div class="ttdeci">bool is_connected() const override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00239">uds_client.cc:239</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_a3d6266cd525005baddcbb2f3a68d1394"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#a3d6266cd525005baddcbb2f3a68d1394">unilink::transport::UdsClient::on_bytes</a></div><div class="ttdeci">void on_bytes(OnBytes cb) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00274">uds_client.cc:274</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_a3e7167839bc27b29c19a4e075b584220"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#a3e7167839bc27b29c19a4e075b584220">unilink::transport::UdsClient::UdsClient</a></div><div class="ttdeci">UdsClient(UdsClient &amp;&amp;) noexcept</div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_a4534577b2f6ead7444ae45854497a422"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#a4534577b2f6ead7444ae45854497a422">unilink::transport::UdsClient::set_reconnect_policy</a></div><div class="ttdeci">void set_reconnect_policy(ReconnectPolicy policy)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00291">uds_client.cc:291</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_a483612d5e20fe53227ca5ecd6cce7334"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#a483612d5e20fe53227ca5ecd6cce7334">unilink::transport::UdsClient::stop</a></div><div class="ttdeci">void stop() override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00217">uds_client.cc:217</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_a592ea67985b770fad7bf8da68c374724"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#a592ea67985b770fad7bf8da68c374724">unilink::transport::UdsClient::async_write_shared</a></div><div class="ttdeci">void async_write_shared(std::shared_ptr&lt; const std::vector&lt; uint8_t &gt;&gt; data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00261">uds_client.cc:261</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_a797cccf059b0ce8d8ac5e7a1ba8d7007"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#a797cccf059b0ce8d8ac5e7a1ba8d7007">unilink::transport::UdsClient::set_retry_interval</a></div><div class="ttdeci">void set_retry_interval(unsigned interval_ms)</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00289">uds_client.cc:289</a></div></div>
 <div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_a9c2b6c07b63911273deb53e4f3a863b3"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#a9c2b6c07b63911273deb53e4f3a863b3">unilink::transport::UdsClient::async_write_copy</a></div><div class="ttdeci">void async_write_copy(memory::ConstByteSpan data) override</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00241">uds_client.cc:241</a></div></div>
+<div class="ttc" id="aclassunilink_1_1transport_1_1UdsClient_html_abdc3d9577ff3ef1a526ae76bc3786015"><div class="ttname"><a href="classunilink_1_1transport_1_1UdsClient.html#abdc3d9577ff3ef1a526ae76bc3786015">unilink::transport::UdsClient::last_error_info</a></div><div class="ttdeci">std::optional&lt; diagnostics::ErrorInfo &gt; last_error_info() const</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00297">uds_client.cc:297</a></div></div>
 <div class="ttc" id="aconstants_8hpp_html"><div class="ttname"><a href="constants_8hpp.html">constants.hpp</a></div></div>
 <div class="ttc" id="aerror__handler_8hpp_html"><div class="ttname"><a href="error__handler_8hpp.html">error_handler.hpp</a></div></div>
 <div class="ttc" id="aerror__mapping_8hpp_html"><div class="ttname"><a href="error__mapping_8hpp.html">error_mapping.hpp</a></div></div>
@@ -589,6 +602,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="ttc" id="anamespaceunilink_1_1transport_1_1detail_html_a955086b549ba1ad4eabea036d9a7e5db"><div class="ttname"><a href="namespaceunilink_1_1transport_1_1detail.html#a955086b549ba1ad4eabea036d9a7e5db">unilink::transport::detail::decide_reconnect_uds</a></div><div class="ttdeci">UdsReconnectLogicDecision decide_reconnect_uds(const config::UdsClientConfig &amp;cfg, const diagnostics::ErrorInfo &amp;error_info, uint32_t attempt_count, const std::optional&lt; ReconnectPolicy &gt; &amp;policy)</div><div class="ttdoc">Determines whether a UDS reconnection attempt should be made.</div><div class="ttdef"><b>Definition:</b> <a href="uds_2detail_2reconnect__decider_8hpp_source.html#l00053">reconnect_decider.hpp:53</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1transport_html_a2c518969e90be691097a4e47dafff14e"><div class="ttname"><a href="namespaceunilink_1_1transport.html#a2c518969e90be691097a4e47dafff14e">unilink::transport::uds</a></div><div class="ttdeci">net::local::stream_protocol uds</div><div class="ttdef"><b>Definition:</b> <a href="boost__uds__acceptor_8cc_source.html#l00023">boost_uds_acceptor.cc:23</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a379951fa136aa3aa08929012fd614066"><div class="ttname"><a href="namespaceunilink.html#a379951fa136aa3aa08929012fd614066">unilink::ReconnectPolicy</a></div><div class="ttdeci">std::function&lt; ReconnectDecision(const diagnostics::ErrorInfo &amp;, uint32_t)&gt; ReconnectPolicy</div><div class="ttdoc">Function type for determining reconnection policy.</div><div class="ttdef"><b>Definition:</b> <a href="reconnect__policy_8hpp_source.html#l00046">reconnect_policy.hpp:46</a></div></div>
 <div class="ttc" id="astructunilink_1_1config_1_1UdsClientConfig_html"><div class="ttname"><a href="structunilink_1_1config_1_1UdsClientConfig.html">unilink::config::UdsClientConfig</a></div><div class="ttdoc">Configuration for UDS Client.</div><div class="ttdef"><b>Definition:</b> <a href="uds__config_8hpp_source.html#l00031">uds_config.hpp:31</a></div></div>
 <div class="ttc" id="astructunilink_1_1config_1_1UdsClientConfig_html_a24ef12d48494b9751f1b2b70f106d49c"><div class="ttname"><a href="structunilink_1_1config_1_1UdsClientConfig.html#a24ef12d48494b9751f1b2b70f106d49c">unilink::config::UdsClientConfig::validate_and_clamp</a></div><div class="ttdeci">void validate_and_clamp()</div><div class="ttdef"><b>Definition:</b> <a href="uds__config_8hpp_source.html#l00050">uds_config.hpp:50</a></div></div>
 <div class="ttc" id="astructunilink_1_1config_1_1UdsClientConfig_html_a456bf936e9055b6dba86b2e469ccc0d1"><div class="ttname"><a href="structunilink_1_1config_1_1UdsClientConfig.html#a456bf936e9055b6dba86b2e469ccc0d1">unilink::config::UdsClientConfig::connection_timeout_ms</a></div><div class="ttdeci">unsigned connection_timeout_ms</div><div class="ttdef"><b>Definition:</b> <a href="uds__config_8hpp_source.html#l00034">uds_config.hpp:34</a></div></div>
@@ -608,7 +622,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a3938666c0317851d18a3395d7a898e7e"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a3938666c0317851d18a3395d7a898e7e">unilink::transport::UdsClient::Impl::writing_</a></div><div class="ttdeci">bool writing_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00070">uds_client.cc:70</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a3cfc92af4f03fc5d34622e465d3bda46"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a3cfc92af4f03fc5d34622e465d3bda46">unilink::transport::UdsClient::Impl::current_seq_</a></div><div class="ttdeci">std::atomic&lt; uint64_t &gt; current_seq_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00058">uds_client.cc:58</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a3e9f13d9c8db5e6058248114bc106666"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a3e9f13d9c8db5e6058248114bc106666">unilink::transport::UdsClient::Impl::connected_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; connected_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00081">uds_client.cc:81</a></div></div>
-<div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a405688ea64c396f211bb95acf254d2ce"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a405688ea64c396f211bb95acf254d2ce">unilink::transport::UdsClient::Impl::close_socket</a></div><div class="ttdeci">void close_socket()</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00442">uds_client.cc:442</a></div></div>
+<div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a405688ea64c396f211bb95acf254d2ce"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a405688ea64c396f211bb95acf254d2ce">unilink::transport::UdsClient::Impl::close_socket</a></div><div class="ttdeci">void close_socket()</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00452">uds_client.cc:452</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a4c7a41cb49590124a2ba3e64d072b4a3"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4c7a41cb49590124a2ba3e64d072b4a3">unilink::transport::UdsClient::Impl::stopping_</a></div><div class="ttdeci">std::atomic&lt; bool &gt; stopping_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00065">uds_client.cc:65</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a5d07b78cec246c23c4173860b8e30f7b"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a5d07b78cec246c23c4173860b8e30f7b">unilink::transport::UdsClient::Impl::reconnect_policy_</a></div><div class="ttdeci">std::optional&lt; ReconnectPolicy &gt; reconnect_policy_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00085">uds_client.cc:85</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a5dac0477edbcd206e0d993cc21b3255f"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a5dac0477edbcd206e0d993cc21b3255f">unilink::transport::UdsClient::Impl::rx_</a></div><div class="ttdeci">std::array&lt; uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE &gt; rx_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00067">uds_client.cc:67</a></div></div>
@@ -622,7 +636,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a9bf80f30777cdbfb65cf05af5ae3d0fa"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a9bf80f30777cdbfb65cf05af5ae3d0fa">unilink::transport::UdsClient::Impl::~Impl</a></div><div class="ttdeci">~Impl()</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00127">uds_client.cc:127</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_a9d27aee66fd23bbe0befd1354f74de0e"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a9d27aee66fd23bbe0befd1354f74de0e">unilink::transport::UdsClient::Impl::last_error_info_</a></div><div class="ttdeci">std::optional&lt; diagnostics::ErrorInfo &gt; last_error_info_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00088">uds_client.cc:88</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_aa4db96dbb5ee19199bafca1d89e57fe6"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#aa4db96dbb5ee19199bafca1d89e57fe6">unilink::transport::UdsClient::Impl::ioc_thread_</a></div><div class="ttdeci">std::thread ioc_thread_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00057">uds_client.cc:57</a></div></div>
-<div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_aa644859c7138a6784c64529c8306f389"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#aa644859c7138a6784c64529c8306f389">unilink::transport::UdsClient::Impl::recalculate_backpressure_bounds</a></div><div class="ttdeci">void recalculate_backpressure_bounds()</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00447">uds_client.cc:447</a></div></div>
+<div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_aa644859c7138a6784c64529c8306f389"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#aa644859c7138a6784c64529c8306f389">unilink::transport::UdsClient::Impl::recalculate_backpressure_bounds</a></div><div class="ttdeci">void recalculate_backpressure_bounds()</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00457">uds_client.cc:457</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_ab1f11a6935bd3d7f468c9f9444091494"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#ab1f11a6935bd3d7f468c9f9444091494">unilink::transport::UdsClient::Impl::work_guard_</a></div><div class="ttdeci">std::unique_ptr&lt; net::executor_work_guard&lt; net::io_context::executor_type &gt; &gt; work_guard_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00056">uds_client.cc:56</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_abad56bdaffef226a0bd65a3988a3c236"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#abad56bdaffef226a0bd65a3988a3c236">unilink::transport::UdsClient::Impl::current_write_buffer_</a></div><div class="ttdeci">std::optional&lt; BufferVariant &gt; current_write_buffer_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00069">uds_client.cc:69</a></div></div>
 <div class="ttc" id="astructunilink_1_1transport_1_1UdsClient_1_1Impl_html_acfd464b9fa6163283d22653d65e0bc12"><div class="ttname"><a href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#acfd464b9fa6163283d22653d65e0bc12">unilink::transport::UdsClient::Impl::backpressure_active_</a></div><div class="ttdeci">bool backpressure_active_</div><div class="ttdef"><b>Definition:</b> <a href="transport_2uds_2uds__client_8cc_source.html#l00075">uds_client.cc:75</a></div></div>
@@ -646,7 +660,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_789fd087a5f0a4f41fb4500cfddbcae1.html">uds</a></li><li class="navelem"><a class="el" href="transport_2uds_2uds__client_8cc.html">uds_client.cc</a></li>
-    <li class="footer">Generated on Thu Apr 16 2026 00:25:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
