@@ -41,7 +41,9 @@ struct UdpEndpointHash {
     std::size_t seed = 0;
     auto combine = [&](std::size_t v) { seed ^= v + 0x9e3779b9u + (seed << 6) + (seed >> 2); };
     if (ep.address().is_v4()) {
-      combine(std::hash<unsigned long>{}(ep.address().to_v4().to_ulong()));
+      for (auto byte : ep.address().to_v4().to_bytes()) {
+        combine(std::hash<unsigned char>{}(byte));
+      }
     } else {
       for (auto byte : ep.address().to_v6().to_bytes()) {
         combine(std::hash<unsigned char>{}(byte));
