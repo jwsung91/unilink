@@ -237,11 +237,12 @@ void UdsServer::stop() {
 
 bool UdsServer::is_connected() const { return impl_->state_.get_state() == base::LinkState::Listening; }
 
-void UdsServer::async_write_copy(memory::ConstByteSpan data) {
-  broadcast(std::vector<uint8_t>(data.begin(), data.end()));
-}
+void UdsServer::async_write_copy(memory::ConstByteSpan data) { broadcast(data); }
 
-void UdsServer::async_write_move(std::vector<uint8_t>&& data) { broadcast(data); }
+void UdsServer::async_write_move(std::vector<uint8_t>&& data) {
+  auto shared_data = std::make_shared<const std::vector<uint8_t>>(std::move(data));
+  async_write_shared(shared_data);
+}
 
 void UdsServer::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
@@ -265,13 +266,13 @@ void UdsServer::on_backpressure(OnBackpressure cb) {
   impl_->on_bp_ = std::move(cb);
 }
 
-bool UdsServer::broadcast(const std::vector<uint8_t>& message) {
-  auto data = std::make_shared<const std::vector<uint8_t>>(message);
+bool UdsServer::broadcast(memory::ConstByteSpan message) {
+  auto data = std::make_shared<const std::vector<uint8_t>>(message.begin(), message.end());
   async_write_shared(data);
   return true;
 }
 
-bool UdsServer::send_to_client(size_t client_id, const std::vector<uint8_t>& message) {
+bool UdsServer::send_to_client(size_t client_id, memory::ConstByteSpan message) {
   std::shared_ptr<UdsServerSession> session;
   {
     std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
@@ -279,7 +280,7 @@ bool UdsServer::send_to_client(size_t client_id, const std::vector<uint8_t>& mes
     if (it != impl_->sessions_.end()) session = it->second;
   }
   if (session) {
-    session->async_write_copy(memory::ConstByteSpan(message.data(), message.size()));
+    session->async_write_copy(message);
     return true;
   }
   return false;

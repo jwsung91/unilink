@@ -21,6 +21,7 @@
 #include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <mutex>
+#include <shared_mutex>
 #include <stdexcept>
 #include <thread>
 #include <unordered_map>
@@ -35,7 +36,7 @@ namespace unilink {
 namespace wrapper {
 
 struct TcpServer::Impl {
-  mutable std::mutex mutex_;
+  mutable std::shared_mutex mutex_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
@@ -133,7 +134,7 @@ struct TcpServer::Impl {
   }
 
   std::future<bool> start() {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     if (is_listening_.load()) {
       std::promise<bool> p;
       p.set_value(true);
@@ -187,7 +188,7 @@ struct TcpServer::Impl {
   void stop() {
     bool should_join = false;
     {
-      std::unique_lock<std::mutex> lock(mutex_);
+      std::unique_lock<std::shared_mutex> lock(mutex_);
       if (!started_.exchange(false)) {
         is_listening_ = false;
         fulfill_all_locked(false);
@@ -220,7 +221,7 @@ struct TcpServer::Impl {
       } catch (...) {
       }
     }
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::shared_mutex> lock(mutex_);
     channel_.reset();
   }
 
@@ -235,14 +236,14 @@ struct TcpServer::Impl {
 
         ConnectionHandler handler;
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::lock_guard<std::shared_mutex> lock(mutex_);
           if (framer_factory_) {
             auto framer = framer_factory_();
             if (framer) {
               framer->set_on_message([this, id](memory::ConstByteSpan msg) {
                 MessageHandler on_message_handler;
                 {
-                  std::lock_guard<std::mutex> lock(mutex_);
+                  std::lock_guard<std::shared_mutex> lock(mutex_);
                   on_message_handler = on_message_;
                 }
                 if (on_message_handler) {
@@ -263,12 +264,12 @@ struct TcpServer::Impl {
 
         MessageHandler handler;
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::shared_lock<std::shared_mutex> lock(mutex_);
           handler = on_data_;
         }
         if (handler) handler(MessageContext(id, data));
 
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         auto it = framers_.find(id);
         if (it != framers_.end()) {
           auto binary_view = common::safe_convert::string_to_bytes(data);
@@ -281,7 +282,7 @@ struct TcpServer::Impl {
 
         ConnectionHandler handler;
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::lock_guard<std::shared_mutex> lock(mutex_);
           framers_.erase(id);
           handler = on_client_disconnect_;
         }
@@ -294,14 +295,14 @@ struct TcpServer::Impl {
 
       if (state == base::LinkState::Listening) {
         is_listening_ = true;
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::lock_guard<std::shared_mutex> lock(mutex_);
         fulfill_all_locked(true);
       } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
                  state == base::LinkState::Idle) {
         ErrorHandler handler;
         is_listening_ = false;
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::lock_guard<std::shared_mutex> lock(mutex_);
           fulfill_all_locked(false);
           if (state == base::LinkState::Error) {
             handler = on_error_;
@@ -330,43 +331,43 @@ bool TcpServer::is_listening() const { return get_impl()->is_listening_.load(); 
 
 bool TcpServer::broadcast(std::string_view data) {
   const auto& ts = impl_->transport_cache_;
-  return ts ? ts->broadcast(std::string(data)) : false;
+  return ts ? ts->broadcast(data) : false;
 }
 
 bool TcpServer::send_to(size_t client_id, std::string_view data) {
   const auto& ts = impl_->transport_cache_;
-  return ts ? ts->send_to_client(client_id, std::string(data)) : false;
+  return ts ? ts->send_to_client(client_id, data) : false;
 }
 
 ServerInterface& TcpServer::on_client_connect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_client_connect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_client_disconnect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_client_disconnect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_data(MessageHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_data_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_error_ = std::move(h);
   return *this;
 }
 
 ServerInterface& TcpServer::framer_factory(FramerFactory factory) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
 }
 
 ServerInterface& TcpServer::on_message(MessageHandler handler) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
   return *this;
 }

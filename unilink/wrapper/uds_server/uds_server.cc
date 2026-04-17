@@ -20,6 +20,7 @@
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <mutex>
+#include <shared_mutex>
 #include <thread>
 #include <unordered_map>
 #include <vector>
@@ -33,7 +34,7 @@ namespace unilink {
 namespace wrapper {
 
 struct UdsServer::Impl {
-  mutable std::mutex mutex_;
+  mutable std::shared_mutex mutex_;
   std::string socket_path_;
   std::shared_ptr<transport::UdsServer> server_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
@@ -91,7 +92,7 @@ struct UdsServer::Impl {
   }
 
   std::future<bool> start() {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     if (is_listening_.load()) {
       std::promise<bool> p;
       p.set_value(true);
@@ -138,7 +139,7 @@ struct UdsServer::Impl {
   }
 
   void stop() {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     if (!started_.exchange(false)) {
       fulfill_all_locked(false);
       return;
@@ -190,7 +191,7 @@ struct UdsServer::Impl {
 
       ErrorHandler error_handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::lock_guard<std::shared_mutex> lock(mutex_);
         if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
           is_listening_ = true;
           fulfill_all_locked(true);
@@ -214,14 +215,14 @@ struct UdsServer::Impl {
       if (!alive) return;
 
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::lock_guard<std::shared_mutex> lock(mutex_);
         if (framer_factory_) {
           auto framer = framer_factory_();
           if (framer) {
             framer->set_on_message([this, client_id](memory::ConstByteSpan msg) {
               MessageHandler on_message_handler;
               {
-                std::lock_guard<std::mutex> lock(mutex_);
+                std::lock_guard<std::shared_mutex> lock(mutex_);
                 on_message_handler = on_message_;
               }
               if (on_message_handler) {
@@ -236,7 +237,7 @@ struct UdsServer::Impl {
 
       ConnectionHandler handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::lock_guard<std::shared_mutex> lock(mutex_);
         handler = client_connect_handler_;
       }
       if (handler) {
@@ -249,13 +250,13 @@ struct UdsServer::Impl {
       if (!alive) return;
 
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::lock_guard<std::shared_mutex> lock(mutex_);
         framers_.erase(client_id);
       }
 
       ConnectionHandler handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         handler = client_disconnect_handler_;
       }
       if (handler) {
@@ -270,7 +271,7 @@ struct UdsServer::Impl {
       // 1. Raw data handler
       MessageHandler handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         handler = data_handler_;
       }
       if (handler) {
@@ -279,7 +280,7 @@ struct UdsServer::Impl {
 
       // 2. Framer integration
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         auto it = framers_.find(client_id);
         if (it != framers_.end()) {
           it->second->push_bytes(memory::ConstByteSpan(data.data(), data.size()));
@@ -308,53 +309,52 @@ void UdsServer::stop() { impl_->stop(); }
 bool UdsServer::is_listening() const { return impl_->is_listening_.load(); }
 
 bool UdsServer::broadcast(std::string_view data) {
-  if (impl_->server_) {
-    std::vector<uint8_t> vec(data.begin(), data.end());
-    return impl_->server_->broadcast(vec);
-  }
-  return false;
+  return impl_->server_
+             ? impl_->server_->broadcast(
+                   memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()))
+             : false;
 }
 
 bool UdsServer::send_to(size_t client_id, std::string_view data) {
-  if (impl_->server_) {
-    std::vector<uint8_t> vec(data.begin(), data.end());
-    return impl_->server_->send_to_client(client_id, vec);
-  }
-  return false;
+  return impl_->server_
+             ? impl_->server_->send_to_client(
+                   client_id,
+                   memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()))
+             : false;
 }
 
 ServerInterface& UdsServer::on_client_connect(ConnectionHandler handler) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_connect_handler_ = std::move(handler);
   return *this;
 }
 
 ServerInterface& UdsServer::on_client_disconnect(ConnectionHandler handler) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_disconnect_handler_ = std::move(handler);
   return *this;
 }
 
 ServerInterface& UdsServer::on_data(MessageHandler handler) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler_ = std::move(handler);
   return *this;
 }
 
 ServerInterface& UdsServer::on_error(ErrorHandler handler) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(handler);
   return *this;
 }
 
 ServerInterface& UdsServer::framer_factory(FramerFactory factory) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
 }
 
 ServerInterface& UdsServer::on_message(MessageHandler handler) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
   return *this;
 }
