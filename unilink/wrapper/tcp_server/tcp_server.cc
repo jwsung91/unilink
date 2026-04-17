@@ -21,6 +21,7 @@
 #include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <mutex>
+#include <shared_mutex>
 #include <stdexcept>
 #include <thread>
 #include <unordered_map>
@@ -35,7 +36,7 @@ namespace unilink {
 namespace wrapper {
 
 struct TcpServer::Impl {
-  mutable std::mutex mutex_;
+  mutable std::shared_mutex mutex_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
@@ -67,6 +68,8 @@ struct TcpServer::Impl {
   MessageHandler on_message_{nullptr};
 
   std::unordered_map<size_t, std::unique_ptr<framer::IFramer>> framers_;
+  // Cached transport pointer — set once in start(), avoids repeated dynamic_cast.
+  std::shared_ptr<transport::TcpServer> transport_cache_;
 
   explicit Impl(uint16_t port)
       : port_(port),
@@ -131,7 +134,7 @@ struct TcpServer::Impl {
   }
 
   std::future<bool> start() {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     if (is_listening_.load()) {
       std::promise<bool> p;
       p.set_value(true);
@@ -151,6 +154,7 @@ struct TcpServer::Impl {
       config.idle_timeout_ms = idle_timeout_ms_;
 
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
+      transport_cache_ = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
       setup_internal_handlers();
 
       if (client_limit_enabled_) {
@@ -184,7 +188,7 @@ struct TcpServer::Impl {
   void stop() {
     bool should_join = false;
     {
-      std::unique_lock<std::mutex> lock(mutex_);
+      std::unique_lock<std::shared_mutex> lock(mutex_);
       if (!started_.exchange(false)) {
         is_listening_ = false;
         fulfill_all_locked(false);
@@ -217,7 +221,7 @@ struct TcpServer::Impl {
       } catch (...) {
       }
     }
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::shared_mutex> lock(mutex_);
     channel_.reset();
   }
 
@@ -232,14 +236,14 @@ struct TcpServer::Impl {
 
         ConnectionHandler handler;
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::lock_guard<std::shared_mutex> lock(mutex_);
           if (framer_factory_) {
             auto framer = framer_factory_();
             if (framer) {
               framer->set_on_message([this, id](memory::ConstByteSpan msg) {
                 MessageHandler on_message_handler;
                 {
-                  std::lock_guard<std::mutex> lock(mutex_);
+                  std::lock_guard<std::shared_mutex> lock(mutex_);
                   on_message_handler = on_message_;
                 }
                 if (on_message_handler) {
@@ -260,12 +264,12 @@ struct TcpServer::Impl {
 
         MessageHandler handler;
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::shared_lock<std::shared_mutex> lock(mutex_);
           handler = on_data_;
         }
         if (handler) handler(MessageContext(id, data));
 
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         auto it = framers_.find(id);
         if (it != framers_.end()) {
           auto binary_view = common::safe_convert::string_to_bytes(data);
@@ -278,7 +282,7 @@ struct TcpServer::Impl {
 
         ConnectionHandler handler;
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::lock_guard<std::shared_mutex> lock(mutex_);
           framers_.erase(id);
           handler = on_client_disconnect_;
         }
@@ -291,14 +295,14 @@ struct TcpServer::Impl {
 
       if (state == base::LinkState::Listening) {
         is_listening_ = true;
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::lock_guard<std::shared_mutex> lock(mutex_);
         fulfill_all_locked(true);
       } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
                  state == base::LinkState::Idle) {
         ErrorHandler handler;
         is_listening_ = false;
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::lock_guard<std::shared_mutex> lock(mutex_);
           fulfill_all_locked(false);
           if (state == base::LinkState::Error) {
             handler = on_error_;
@@ -326,64 +330,56 @@ void TcpServer::stop() { impl_->stop(); }
 bool TcpServer::is_listening() const { return get_impl()->is_listening_.load(); }
 
 bool TcpServer::broadcast(std::string_view data) {
-  if (impl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
-    if (transport_server) return transport_server->broadcast(std::string(data));
-  }
-  return false;
+  const auto& ts = impl_->transport_cache_;
+  return ts ? ts->broadcast(data) : false;
 }
 
 bool TcpServer::send_to(size_t client_id, std::string_view data) {
-  if (impl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
-    if (transport_server) return transport_server->send_to_client(client_id, std::string(data));
-  }
-  return false;
+  const auto& ts = impl_->transport_cache_;
+  return ts ? ts->send_to_client(client_id, data) : false;
 }
 
 ServerInterface& TcpServer::on_client_connect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_client_connect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_client_disconnect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_client_disconnect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_data(MessageHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_data_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_error_ = std::move(h);
   return *this;
 }
 
 ServerInterface& TcpServer::framer_factory(FramerFactory factory) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
 }
 
 ServerInterface& TcpServer::on_message(MessageHandler handler) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
   return *this;
 }
 
 size_t TcpServer::client_count() const {
-  if (!get_impl()->channel_) return 0;
-  auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(get_impl()->channel_);
-  return transport_server ? transport_server->get_client_count() : 0;
+  const auto& ts = get_impl()->transport_cache_;
+  return ts ? ts->get_client_count() : 0;
 }
 
 std::vector<size_t> TcpServer::connected_clients() const {
-  if (!get_impl()->channel_) return std::vector<size_t>();
-  auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(get_impl()->channel_);
-  return transport_server ? transport_server->get_connected_clients() : std::vector<size_t>();
+  const auto& ts = get_impl()->transport_cache_;
+  return ts ? ts->get_connected_clients() : std::vector<size_t>();
 }
 
 TcpServer& TcpServer::auto_manage(bool m) {
@@ -409,19 +405,13 @@ TcpServer& TcpServer::idle_timeout(std::chrono::milliseconds timeout) {
 TcpServer& TcpServer::max_clients(size_t max) {
   impl_->max_clients_ = max;
   impl_->client_limit_enabled_ = true;
-  if (impl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
-    if (transport_server) transport_server->set_client_limit(max);
-  }
+  if (impl_->transport_cache_) impl_->transport_cache_->set_client_limit(max);
   return *this;
 }
 
 TcpServer& TcpServer::unlimited_clients() {
   impl_->client_limit_enabled_ = false;
-  if (impl_->channel_) {
-    auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(impl_->channel_);
-    if (transport_server) transport_server->set_unlimited_clients();
-  }
+  if (impl_->transport_cache_) impl_->transport_cache_->set_unlimited_clients();
   return *this;
 }
 

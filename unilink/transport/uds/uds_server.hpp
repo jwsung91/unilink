@@ -18,6 +18,7 @@
 
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "unilink/base/visibility.hpp"
@@ -69,8 +70,8 @@ class UNILINK_API UdsServer : public interface::Channel, public std::enable_shar
   void on_backpressure(OnBackpressure cb) override;
 
   // Multi-client support
-  bool broadcast(const std::vector<uint8_t>& message);
-  bool send_to_client(size_t client_id, const std::vector<uint8_t>& message);
+  bool broadcast(std::string_view message);
+  bool send_to_client(size_t client_id, std::string_view message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 

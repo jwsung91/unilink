@@ -239,40 +239,32 @@ struct Serial::Impl {
     });
   }
 
+  // Attach the stored message_handler to framer->set_on_message().
+  // Must be called with mutex_ already held.
+  void attach_framer_callback() {
+    if (!framer) return;
+    framer->set_on_message([this](memory::ConstByteSpan msg) {
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = message_handler;
+      }
+      if (handler) {
+        handler(MessageContext(0, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+      }
+    });
+  }
+
   void set_framer(std::unique_ptr<framer::IFramer> f) {
     std::lock_guard<std::mutex> lock(mutex_);
     framer = std::move(f);
-    if (framer && message_handler) {
-      framer->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler handler;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          handler = message_handler;
-        }
-        if (handler) {
-          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          handler(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer && message_handler) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
     std::lock_guard<std::mutex> lock(mutex_);
     message_handler = std::move(handler);
-    if (framer) {
-      framer->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler callback;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          callback = message_handler;
-        }
-        if (callback) {
-          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          callback(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer) attach_framer_callback();
   }
 
   config::SerialConfig build_config() const {
@@ -356,17 +348,33 @@ ChannelInterface& Serial::auto_manage(bool m) {
   return *this;
 }
 
-void Serial::baud_rate(uint32_t b) { impl_->baud_rate = b; }
-void Serial::data_bits(int d) { impl_->data_bits = d; }
-void Serial::stop_bits(int s) { impl_->stop_bits = s; }
-void Serial::parity(const std::string& p) { impl_->parity = p; }
-void Serial::flow_control(const std::string& f) { impl_->flow_control = f; }
-void Serial::retry_interval(std::chrono::milliseconds i) {
+Serial& Serial::baud_rate(uint32_t b) {
+  impl_->baud_rate = b;
+  return *this;
+}
+Serial& Serial::data_bits(int d) {
+  impl_->data_bits = d;
+  return *this;
+}
+Serial& Serial::stop_bits(int s) {
+  impl_->stop_bits = s;
+  return *this;
+}
+Serial& Serial::parity(const std::string& p) {
+  impl_->parity = p;
+  return *this;
+}
+Serial& Serial::flow_control(const std::string& f) {
+  impl_->flow_control = f;
+  return *this;
+}
+Serial& Serial::retry_interval(std::chrono::milliseconds i) {
   impl_->retry_interval = i;
   if (impl_->channel) {
     auto ts = std::dynamic_pointer_cast<transport::Serial>(impl_->channel);
     if (ts) ts->set_retry_interval(static_cast<unsigned int>(i.count()));
   }
+  return *this;
 }
 
 config::SerialConfig Serial::build_config() const { return get_impl()->build_config(); }

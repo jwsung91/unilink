@@ -229,40 +229,32 @@ struct Udp::Impl {
     });
   }
 
+  // Attach the stored message_handler to framer->set_on_message().
+  // Must be called with mutex_ already held.
+  void attach_framer_callback() {
+    if (!framer) return;
+    framer->set_on_message([this](memory::ConstByteSpan msg) {
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = message_handler;
+      }
+      if (handler) {
+        handler(MessageContext(0, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+      }
+    });
+  }
+
   void set_framer(std::unique_ptr<framer::IFramer> f) {
     std::lock_guard<std::mutex> lock(mutex_);
     framer = std::move(f);
-    if (framer && message_handler) {
-      framer->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler handler;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          handler = message_handler;
-        }
-        if (handler) {
-          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          handler(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer && message_handler) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
     std::lock_guard<std::mutex> lock(mutex_);
     message_handler = std::move(handler);
-    if (framer) {
-      framer->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler callback;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          callback = message_handler;
-        }
-        if (callback) {
-          std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
-          callback(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer) attach_framer_callback();
   }
 };
 

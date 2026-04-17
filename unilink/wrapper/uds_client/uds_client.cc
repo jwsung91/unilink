@@ -205,13 +205,24 @@ struct UdsClient::Impl {
         }
       } else if (state == base::LinkState::Error) {
         ErrorHandler handler;
+        std::shared_ptr<interface::Channel> channel_snapshot;
         {
           std::lock_guard<std::mutex> lock(mutex_);
           fulfill_all_locked(false);
           handler = error_handler_;
+          channel_snapshot = channel_;
         }
         if (handler) {
-          handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+          bool handled = false;
+          if (auto transport = std::dynamic_pointer_cast<transport::UdsClient>(channel_snapshot)) {
+            if (auto info = transport->last_error_info()) {
+              handler(diagnostics::to_error_context(*info));
+              handled = true;
+            }
+          }
+          if (!handled) {
+            handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+          }
         }
       } else if (state == base::LinkState::Closed || state == base::LinkState::Idle) {
         ConnectionHandler handler;
@@ -237,7 +248,7 @@ struct UdsClient::Impl {
         handler = data_handler_;
       }
       if (handler) {
-        handler(MessageContext(0, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
+        handler(MessageContext(0, common::safe_convert::uint8_to_string(data.data(), data.size())));
       }
 
       // 2. Framer integration
@@ -248,40 +259,32 @@ struct UdsClient::Impl {
     });
   }
 
+  // Attach the stored message_handler_ to framer_->set_on_message().
+  // Must be called with mutex_ already held.
+  void attach_framer_callback() {
+    if (!framer_) return;
+    framer_->set_on_message([this](memory::ConstByteSpan msg) {
+      MessageHandler handler;
+      {
+        std::lock_guard<std::mutex> lock(mutex_);
+        handler = message_handler_;
+      }
+      if (handler) {
+        handler(MessageContext(0, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+      }
+    });
+  }
+
   void set_framer(std::unique_ptr<framer::IFramer> framer) {
     std::lock_guard<std::mutex> lock(mutex_);
     framer_ = std::move(framer);
-    if (framer_ && message_handler_) {
-      framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler handler;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          handler = message_handler_;
-        }
-        if (handler) {
-          std::string str_msg = std::string(reinterpret_cast<const char*>(msg.data()), msg.size());
-          handler(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer_ && message_handler_) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
     std::lock_guard<std::mutex> lock(mutex_);
     message_handler_ = std::move(handler);
-    if (framer_) {
-      framer_->set_on_message([this](memory::ConstByteSpan msg) {
-        MessageHandler callback;
-        {
-          std::lock_guard<std::mutex> lock(mutex_);
-          callback = message_handler_;
-        }
-        if (callback) {
-          std::string str_msg = std::string(reinterpret_cast<const char*>(msg.data()), msg.size());
-          callback(MessageContext(0, str_msg));
-        }
-      });
-    }
+    if (framer_) attach_framer_callback();
   }
 };
 
@@ -360,6 +363,10 @@ ChannelInterface& UdsClient::auto_manage(bool manage) {
 
 UdsClient& UdsClient::retry_interval(std::chrono::milliseconds interval) {
   impl_->retry_interval_ = interval;
+  if (impl_->channel_) {
+    auto transport_client = std::dynamic_pointer_cast<transport::UdsClient>(impl_->channel_);
+    if (transport_client) transport_client->set_retry_interval(static_cast<unsigned int>(interval.count()));
+  }
   return *this;
 }
 

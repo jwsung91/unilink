@@ -21,6 +21,7 @@
 #include <future>
 #include <iostream>
 #include <mutex>
+#include <string_view>
 #include <thread>
 #include <unordered_map>
 
@@ -540,7 +541,7 @@ void TcpServer::on_backpressure(OnBackpressure cb) {
   if (session) session->on_backpressure(impl->on_bp_);
 }
 
-bool TcpServer::broadcast(const std::string& message) {
+bool TcpServer::broadcast(std::string_view message) {
   auto impl = get_impl();
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(message.begin(), message.end());
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
@@ -555,7 +556,7 @@ bool TcpServer::broadcast(const std::string& message) {
   return sent;
 }
 
-bool TcpServer::send_to_client(size_t client_id, const std::string& message) {
+bool TcpServer::send_to_client(size_t client_id, std::string_view message) {
   auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   auto it = impl->sessions_.find(client_id);
