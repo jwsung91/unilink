@@ -26,8 +26,8 @@ using namespace unilink;
 // Thin subclass that re-exposes the protected build_config() method.
 class TestableSerial : public wrapper::Serial {
  public:
-  using wrapper::Serial::Serial;
   using wrapper::Serial::build_config;
+  using wrapper::Serial::Serial;
 };
 
 class SerialConfigMappingTest : public ::testing::Test {};
