@@ -294,6 +294,8 @@ void UdsClient::set_reconnect_policy(ReconnectPolicy policy) {
   }
 }
 
+std::optional<diagnostics::ErrorInfo> UdsClient::last_error_info() const { return impl_->last_error_info_; }
+
 void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) {
   if (!cfg_.is_valid()) {
     self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONFIGURATION, "connect",

@@ -21,6 +21,7 @@
 #include <boost/asio/steady_timer.hpp>
 #include <iostream>
 #include <mutex>
+#include <shared_mutex>
 #include <thread>
 #include <unordered_map>
 #include <vector>
@@ -61,7 +62,7 @@ struct UdpServer::Impl {
   std::thread external_thread;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard;
 
-  mutable std::mutex mutex;
+  mutable std::shared_mutex mutex;
   std::vector<std::promise<bool>> pending_promises;
   std::atomic<bool> started{false};
   std::atomic<bool> is_listening{false};
@@ -138,7 +139,7 @@ struct UdpServer::Impl {
     auto now = std::chrono::steady_clock::now();
 
     {
-      std::lock_guard<std::mutex> lock(mutex);
+      std::lock_guard<std::shared_mutex> lock(mutex);
       for (auto& [id, entry] : sessions) {
         if (now - entry.last_seen > session_timeout) {
           std::string info = entry.endpoint.address().to_string() + ":" + std::to_string(entry.endpoint.port());
@@ -169,7 +170,7 @@ struct UdpServer::Impl {
       MessageHandler data_handler_copy{nullptr};
 
       {
-        std::lock_guard<std::mutex> lock(mutex);
+        std::lock_guard<std::shared_mutex> lock(mutex);
         auto it = endpoint_to_id.find(ep);
         if (it == endpoint_to_id.end()) {
           client_id = next_client_id++;
@@ -186,7 +187,7 @@ struct UdpServer::Impl {
               framer->set_on_message([this, client_id](memory::ConstByteSpan msg) {
                 MessageHandler on_message_handler;
                 {
-                  std::lock_guard<std::mutex> lock(mutex);
+                  std::shared_lock<std::shared_mutex> lock(mutex);
                   on_message_handler = on_message;
                 }
                 if (on_message_handler) {
@@ -218,7 +219,7 @@ struct UdpServer::Impl {
       // Push to framer
       std::shared_ptr<framer::IFramer> target_framer;
       {
-        std::lock_guard<std::mutex> lock(mutex);
+        std::shared_lock<std::shared_mutex> lock(mutex);
         auto it = sessions.find(client_id);
         if (it != sessions.end()) {
           target_framer = it->second.framer;
@@ -232,12 +233,12 @@ struct UdpServer::Impl {
     channel->on_state([this](base::LinkState state) {
       ErrorHandler error_handler_copy{nullptr};
       if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
-        std::lock_guard<std::mutex> lock(mutex);
+        std::lock_guard<std::shared_mutex> lock(mutex);
         is_listening = true;
         fulfill_all_locked(true);
       } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
                  state == base::LinkState::Idle) {
-        std::lock_guard<std::mutex> lock(mutex);
+        std::lock_guard<std::shared_mutex> lock(mutex);
         is_listening = false;
         fulfill_all_locked(false);
         if (state == base::LinkState::Error) {
@@ -252,7 +253,7 @@ struct UdpServer::Impl {
   }
 
   std::future<bool> start() {
-    std::unique_lock<std::mutex> lock(mutex);
+    std::unique_lock<std::shared_mutex> lock(mutex);
     if (is_listening.load()) {
       std::promise<bool> p;
       p.set_value(true);
@@ -299,7 +300,7 @@ struct UdpServer::Impl {
   void stop() {
     bool should_join = false;
     {
-      std::unique_lock<std::mutex> lock(mutex);
+      std::unique_lock<std::shared_mutex> lock(mutex);
       if (!started.exchange(false)) {
         is_listening = false;
         fulfill_all_locked(false);
@@ -367,7 +368,7 @@ void UdpServer::stop() { impl_->stop(); }
 bool UdpServer::is_listening() const { return impl_->is_listening.load(); }
 
 bool UdpServer::broadcast(std::string_view data) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   if (!impl_->channel) return false;
 
   auto bytes = common::safe_convert::string_to_bytes(data);
@@ -378,7 +379,7 @@ bool UdpServer::broadcast(std::string_view data) {
 }
 
 bool UdpServer::send_to(size_t client_id, std::string_view data) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   if (!impl_->channel) return false;
 
   auto it = impl_->sessions.find(client_id);
@@ -390,48 +391,48 @@ bool UdpServer::send_to(size_t client_id, std::string_view data) {
 }
 
 ServerInterface& UdpServer::on_client_connect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->on_connect = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_client_disconnect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->on_disconnect = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_data(MessageHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->on_data = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::on_error(ErrorHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->on_error = std::move(h);
   return *this;
 }
 
 ServerInterface& UdpServer::framer_factory(FramerFactory factory) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->framer_factory = std::move(factory);
   return *this;
 }
 
 ServerInterface& UdpServer::on_message(MessageHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->on_message = std::move(h);
   return *this;
 }
 
 size_t UdpServer::client_count() const {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   return impl_->endpoint_to_id.size();
 }
 
 std::vector<size_t> UdpServer::connected_clients() const {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   std::vector<size_t> ids;
   ids.reserve(impl_->sessions.size());
   for (const auto& [id, entry] : impl_->sessions) {
@@ -449,7 +450,7 @@ UdpServer& UdpServer::auto_manage(bool m) {
 }
 
 UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
-  std::lock_guard<std::mutex> lock(impl_->mutex);
+  std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->session_timeout = timeout;
   return *this;
 }

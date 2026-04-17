@@ -205,13 +205,24 @@ struct UdsClient::Impl {
         }
       } else if (state == base::LinkState::Error) {
         ErrorHandler handler;
+        std::shared_ptr<interface::Channel> channel_snapshot;
         {
           std::lock_guard<std::mutex> lock(mutex_);
           fulfill_all_locked(false);
           handler = error_handler_;
+          channel_snapshot = channel_;
         }
         if (handler) {
-          handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+          bool handled = false;
+          if (auto transport = std::dynamic_pointer_cast<transport::UdsClient>(channel_snapshot)) {
+            if (auto info = transport->last_error_info()) {
+              handler(diagnostics::to_error_context(*info));
+              handled = true;
+            }
+          }
+          if (!handled) {
+            handler(ErrorContext(ErrorCode::IoError, "Connection error"));
+          }
         }
       } else if (state == base::LinkState::Closed || state == base::LinkState::Idle) {
         ConnectionHandler handler;

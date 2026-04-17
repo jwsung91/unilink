@@ -18,12 +18,12 @@
 
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/uds_config.hpp"
 #include "unilink/interface/channel.hpp"
-#include "unilink/memory/safe_span.hpp"
 
 namespace boost {
 namespace asio {
@@ -70,8 +70,8 @@ class UNILINK_API UdsServer : public interface::Channel, public std::enable_shar
   void on_backpressure(OnBackpressure cb) override;
 
   // Multi-client support
-  bool broadcast(memory::ConstByteSpan message);
-  bool send_to_client(size_t client_id, memory::ConstByteSpan message);
+  bool broadcast(std::string_view message);
+  bool send_to_client(size_t client_id, std::string_view message);
   size_t get_client_count() const;
   std::vector<size_t> get_connected_clients() const;
 

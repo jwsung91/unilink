@@ -308,19 +308,10 @@ void UdsServer::stop() { impl_->stop(); }
 
 bool UdsServer::is_listening() const { return impl_->is_listening_.load(); }
 
-bool UdsServer::broadcast(std::string_view data) {
-  return impl_->server_
-             ? impl_->server_->broadcast(
-                   memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()))
-             : false;
-}
+bool UdsServer::broadcast(std::string_view data) { return impl_->server_ ? impl_->server_->broadcast(data) : false; }
 
 bool UdsServer::send_to(size_t client_id, std::string_view data) {
-  return impl_->server_
-             ? impl_->server_->send_to_client(
-                   client_id,
-                   memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()))
-             : false;
+  return impl_->server_ ? impl_->server_->send_to_client(client_id, data) : false;
 }
 
 ServerInterface& UdsServer::on_client_connect(ConnectionHandler handler) {
