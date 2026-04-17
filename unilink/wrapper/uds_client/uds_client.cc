@@ -352,6 +352,10 @@ ChannelInterface& UdsClient::auto_manage(bool manage) {
 
 UdsClient& UdsClient::retry_interval(std::chrono::milliseconds interval) {
   impl_->retry_interval_ = interval;
+  if (impl_->channel_) {
+    auto transport_client = std::dynamic_pointer_cast<transport::UdsClient>(impl_->channel_);
+    if (transport_client) transport_client->set_retry_interval(static_cast<unsigned int>(interval.count()));
+  }
   return *this;
 }
 

@@ -84,8 +84,7 @@ struct TcpClient::Impl {
     }
   }
 
-  void fulfill_all(bool value) {
-    std::lock_guard<std::mutex> lock(mutex_);
+  void fulfill_all_locked(bool value) {
     for (auto& p : pending_promises_) {
       try {
         p.set_value(value);
@@ -144,33 +143,25 @@ struct TcpClient::Impl {
     {
       std::unique_lock<std::mutex> lock(mutex_);
       if (!started_.load()) {
-        for (auto& p : pending_promises_) {
-          try {
-            p.set_value(false);
-          } catch (...) {
-          }
-        }
-        pending_promises_.clear();
+        fulfill_all_locked(false);
         return;
       }
       started_ = false;
       if (channel_) {
         channel_->on_bytes(nullptr);
         channel_->on_state(nullptr);
+        // RELEASE LOCK before channel_->stop(): stop() may trigger callbacks
+        // (e.g. on_state -> fulfill_all_locked) that try to acquire mutex_.
+        lock.unlock();
         channel_->stop();
+        lock.lock();
       }
       if (use_external_context_ && manage_external_context_) {
         if (work_guard_) work_guard_.reset();
         if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
-      for (auto& p : pending_promises_) {
-        try {
-          p.set_value(false);
-        } catch (...) {
-        }
-      }
-      pending_promises_.clear();
+      fulfill_all_locked(false);
     }
     if (should_join && external_thread_.joinable()) {
       try {
@@ -200,7 +191,8 @@ struct TcpClient::Impl {
     // Explicitly do not use try-catch here to allow exceptions from handlers
     // to propagate to transport layer for error handling (e.g., auto-reconnect)
     channel_->on_bytes([this, weak_alive](memory::ConstByteSpan data) {
-      if (weak_alive.expired()) return;
+      auto alive = weak_alive.lock();
+      if (!alive) return;
 
       // 1. Raw data handler
       MessageHandler data_handler;
@@ -221,7 +213,8 @@ struct TcpClient::Impl {
     });
 
     channel_->on_state([this, weak_alive](base::LinkState state) {
-      if (weak_alive.expired()) return;
+      auto alive = weak_alive.lock();
+      if (!alive) return;
       ConnectionHandler connect_handler;
       ConnectionHandler disconnect_handler;
       ErrorHandler error_handler;
@@ -230,26 +223,14 @@ struct TcpClient::Impl {
       if (state == base::LinkState::Connected) {
         {
           std::lock_guard<std::mutex> lock(mutex_);
-          for (auto& p : pending_promises_) {
-            try {
-              p.set_value(true);
-            } catch (...) {
-            }
-          }
-          pending_promises_.clear();
+          fulfill_all_locked(true);
           connect_handler = connect_handler_;
         }
         if (connect_handler) connect_handler(ConnectionContext(0));
       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {
         {
           std::lock_guard<std::mutex> lock(mutex_);
-          for (auto& p : pending_promises_) {
-            try {
-              p.set_value(false);
-            } catch (...) {
-            }
-          }
-          pending_promises_.clear();
+          fulfill_all_locked(false);
           if (state == base::LinkState::Closed) {
             disconnect_handler = disconnect_handler_;
           } else {

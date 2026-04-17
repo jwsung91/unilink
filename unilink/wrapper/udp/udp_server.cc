@@ -20,9 +20,9 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
 #include <iostream>
-#include <unordered_map>
 #include <mutex>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #include "unilink/base/common.hpp"
@@ -31,6 +31,26 @@
 
 namespace unilink {
 namespace wrapper {
+
+namespace {
+// std::hash<boost::asio::ip::udp::endpoint> is not available before Boost 1.74.
+// Provide a portable hash by combining the raw address bytes and port.
+struct UdpEndpointHash {
+  std::size_t operator()(const boost::asio::ip::udp::endpoint& ep) const noexcept {
+    std::size_t seed = 0;
+    auto combine = [&](std::size_t v) { seed ^= v + 0x9e3779b9u + (seed << 6) + (seed >> 2); };
+    if (ep.address().is_v4()) {
+      combine(std::hash<unsigned long>{}(ep.address().to_v4().to_ulong()));
+    } else {
+      for (auto byte : ep.address().to_v6().to_bytes()) {
+        combine(std::hash<unsigned char>{}(byte));
+      }
+    }
+    combine(std::hash<unsigned short>{}(ep.port()));
+    return seed;
+  }
+};
+}  // namespace
 
 struct UdpServer::Impl {
   config::UdpConfig cfg;
@@ -53,7 +73,7 @@ struct UdpServer::Impl {
     std::chrono::steady_clock::time_point last_seen;
   };
   size_t next_client_id{1};
-  std::unordered_map<boost::asio::ip::udp::endpoint, size_t> endpoint_to_id;
+  std::unordered_map<boost::asio::ip::udp::endpoint, size_t, UdpEndpointHash> endpoint_to_id;
   std::unordered_map<size_t, SessionEntry> sessions;
   std::chrono::milliseconds session_timeout{30000};  // Default 30s
   std::unique_ptr<boost::asio::steady_timer> reaper_timer;
@@ -121,8 +141,7 @@ struct UdpServer::Impl {
       std::lock_guard<std::mutex> lock(mutex);
       for (auto& [id, entry] : sessions) {
         if (now - entry.last_seen > session_timeout) {
-          std::string info = entry.endpoint.address().to_string() + ":" +
-                             std::to_string(entry.endpoint.port());
+          std::string info = entry.endpoint.address().to_string() + ":" + std::to_string(entry.endpoint.port());
           endpoint_to_id.erase(entry.endpoint);
           to_remove_with_info.push_back({id, info});
         }
@@ -171,7 +190,8 @@ struct UdpServer::Impl {
                   on_message_handler = on_message;
                 }
                 if (on_message_handler) {
-                  on_message_handler(MessageContext(client_id, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+                  on_message_handler(
+                      MessageContext(client_id, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
                 }
               });
               entry.framer = std::move(framer);

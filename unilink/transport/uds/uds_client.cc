@@ -286,6 +286,14 @@ void UdsClient::on_backpressure(OnBackpressure cb) {
   impl_->on_bp_ = std::move(cb);
 }
 
+void UdsClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_interval_ms = interval_ms; }
+
+void UdsClient::set_reconnect_policy(ReconnectPolicy policy) {
+  if (policy) {
+    impl_->reconnect_policy_ = std::move(policy);
+  }
+}
+
 void UdsClient::Impl::do_connect(std::shared_ptr<UdsClient> self, uint64_t seq) {
   if (!cfg_.is_valid()) {
     self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::CONFIGURATION, "connect",
