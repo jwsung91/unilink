@@ -239,11 +239,11 @@ struct Serial::Impl {
     });
   }
 
-  // Attach the stored message_handler to framer->set_on_message().
+  // Attach the stored message_handler to framer->on_message().
   // Must be called with mutex_ already held.
   void attach_framer_callback() {
     if (!framer) return;
-    framer->set_on_message([this](memory::ConstByteSpan msg) {
+    framer->on_message([this](memory::ConstByteSpan msg) {
       MessageHandler handler;
       {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -308,13 +308,13 @@ Serial& Serial::operator=(Serial&&) noexcept = default;
 std::future<bool> Serial::start() { return impl_->start(); }
 void Serial::stop() { impl_->stop(); }
 void Serial::send(std::string_view data) {
-  if (is_connected() && get_impl()->channel) {
+  if (connected() && get_impl()->channel) {
     auto binary_view = common::safe_convert::string_to_bytes(data);
     get_impl()->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
   }
 }
 void Serial::send_line(std::string_view line) { send(std::string(line) + "\n"); }
-bool Serial::is_connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
+bool Serial::connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
 
 ChannelInterface& Serial::on_data(MessageHandler h) {
   impl_->data_handler = std::move(h);

@@ -38,7 +38,7 @@ namespace memory_validator {
  * @param size Size of memory region
  * @return true if memory is accessible, false otherwise
  */
-bool is_memory_accessible(const void* ptr, size_t size);
+bool memory_accessible(const void* ptr, size_t size);
 
 /**
  * @brief Validate memory alignment
@@ -46,7 +46,7 @@ bool is_memory_accessible(const void* ptr, size_t size);
  * @param alignment Required alignment
  * @return true if properly aligned, false otherwise
  */
-bool is_memory_aligned(const void* ptr, size_t alignment);
+bool memory_aligned(const void* ptr, size_t alignment);
 
 /**
  * @brief Check for buffer overflow/underflow patterns
@@ -81,7 +81,7 @@ bool validate_canary_bytes(const void* ptr, size_t size, size_t canary_size = 8)
  * @param size Number of bytes to copy
  * @throws std::invalid_argument if validation fails
  */
-void safe_memcpy_validated(void* dest, const void* src, size_t size);
+void safe_memcpy(void* dest, const void* src, size_t size);
 
 /**
  * @brief Safe memory move with comprehensive validation
@@ -90,7 +90,7 @@ void safe_memcpy_validated(void* dest, const void* src, size_t size);
  * @param size Number of bytes to move
  * @throws std::invalid_argument if validation fails
  */
-void safe_memmove_validated(void* dest, const void* src, size_t size);
+void safe_memmove(void* dest, const void* src, size_t size);
 
 /**
  * @brief Safe memory set with comprehensive validation
@@ -99,21 +99,21 @@ void safe_memmove_validated(void* dest, const void* src, size_t size);
  * @param size Number of bytes to set
  * @throws std::invalid_argument if validation fails
  */
-void safe_memset_validated(void* ptr, int value, size_t size);
+void safe_memset(void* ptr, int value, size_t size);
 
 /**
  * @brief Check for double-free conditions
  * @param ptr Pointer that was freed
  * @return true if this is a potential double-free
  */
-bool is_double_free(void* ptr);
+bool double_free(void* ptr);
 
 /**
  * @brief Check for use-after-free conditions
  * @param ptr Pointer to check
  * @return true if pointer appears to be used after free
  */
-bool is_use_after_free(const void* ptr);
+bool use_after_free(const void* ptr);
 
 }  // namespace memory_validator
 

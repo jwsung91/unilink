@@ -61,7 +61,7 @@ class UNILINK_API UdsServer : public ServerInterface {
   // ServerInterface implementation
   std::future<bool> start() override;
   void stop() override;
-  bool is_listening() const override;
+  bool listening() const override;
 
   // Transmission
   bool broadcast(std::string_view data) override;

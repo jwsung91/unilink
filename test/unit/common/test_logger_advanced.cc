@@ -221,7 +221,7 @@ TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingEnabled) {
 
   Logger::instance().set_async_logging(true, config);
 
-  EXPECT_TRUE(Logger::instance().is_async_logging_enabled());
+  EXPECT_TRUE(Logger::instance().async_logging_enabled());
 
   // Log some messages
   UNILINK_LOG_DEBUG("test", "operation", "Async debug message");
@@ -232,7 +232,7 @@ TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingEnabled) {
 
   // Teardown async logging
   Logger::instance().set_async_logging(false, config);
-  EXPECT_FALSE(Logger::instance().is_async_logging_enabled());
+  EXPECT_FALSE(Logger::instance().async_logging_enabled());
 }
 
 TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingDisabled) {
@@ -242,7 +242,7 @@ TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingDisabled) {
 
   Logger::instance().set_async_logging(false, config);
 
-  EXPECT_FALSE(Logger::instance().is_async_logging_enabled());
+  EXPECT_FALSE(Logger::instance().async_logging_enabled());
 
   // Log some messages
   UNILINK_LOG_DEBUG("test", "operation", "Sync debug message");

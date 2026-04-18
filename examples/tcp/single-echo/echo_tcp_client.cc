@@ -108,7 +108,7 @@ class EchoClient {
         if (line == "/quit" || line == "/exit") {
           running_.store(false);
         } else if (!line.empty()) {
-          if (client_ && client_->is_connected()) {
+          if (client_ && client_->connected()) {
             client_->send(line);
             logger_.info("client", "send", "Sent: " + line);
           } else {

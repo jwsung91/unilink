@@ -73,19 +73,19 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("stop", &TcpClient::stop)
       .def("send", &TcpClient::send)
       .def("send_line", &TcpClient::send_line)
-      .def("is_connected", &TcpClient::is_connected)
+      .def("connected", &TcpClient::connected)
       .def("auto_manage", &TcpClient::auto_manage, py::arg("manage") = true)
       .def("retry_interval", &TcpClient::retry_interval)
       .def("max_retries", &TcpClient::max_retries)
       .def("connection_timeout", &TcpClient::connection_timeout)
       .def(
-          "use_line_framer",
+          "line_framer",
           [](TcpClient& self, const std::string& d, bool i, size_t m) {
             self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
+      .def("packet_framer",
            [](TcpClient& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
              self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
@@ -143,15 +143,15 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send_to", &TcpServer::send_to)
       .def("client_count", &TcpServer::client_count)
       .def("connected_clients", &TcpServer::connected_clients)
-      .def("is_listening", &TcpServer::is_listening)
+      .def("listening", &TcpServer::listening)
       .def(
-          "use_line_framer",
+          "line_framer",
           [](TcpServer& self, const std::string& d, bool i, size_t m) {
             self.framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
+      .def("packet_framer",
            [](TcpServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
              self.framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
              return &self;
@@ -207,7 +207,7 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("stop", &Serial::stop)
       .def("send", &Serial::send)
       .def("send_line", &Serial::send_line)
-      .def("is_connected", &Serial::is_connected)
+      .def("connected", &Serial::connected)
       .def("auto_manage", &Serial::auto_manage, py::arg("manage") = true)
       .def("baud_rate", &Serial::baud_rate)
       .def("data_bits", &Serial::data_bits)
@@ -216,13 +216,13 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("flow_control", &Serial::flow_control)
       .def("retry_interval", &Serial::retry_interval)
       .def(
-          "use_line_framer",
+          "line_framer",
           [](Serial& self, const std::string& d, bool i, size_t m) {
             self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
+      .def("packet_framer",
            [](Serial& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
              self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
@@ -278,19 +278,19 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("stop", &UdsClient::stop)
       .def("send", &UdsClient::send)
       .def("send_line", &UdsClient::send_line)
-      .def("is_connected", &UdsClient::is_connected)
+      .def("connected", &UdsClient::connected)
       .def("auto_manage", &UdsClient::auto_manage, py::arg("manage") = true)
       .def("retry_interval", &UdsClient::retry_interval)
       .def("max_retries", &UdsClient::max_retries)
       .def("connection_timeout", &UdsClient::connection_timeout)
       .def(
-          "use_line_framer",
+          "line_framer",
           [](UdsClient& self, const std::string& d, bool i, size_t m) {
             self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
+      .def("packet_framer",
            [](UdsClient& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
              self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
@@ -348,15 +348,15 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send_to", &UdsServer::send_to)
       .def("client_count", &UdsServer::client_count)
       .def("connected_clients", &UdsServer::connected_clients)
-      .def("is_listening", &UdsServer::is_listening)
+      .def("listening", &UdsServer::listening)
       .def(
-          "use_line_framer",
+          "line_framer",
           [](UdsServer& self, const std::string& d, bool i, size_t m) {
             self.framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
+      .def("packet_framer",
            [](UdsServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
              self.framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
              return &self;
@@ -423,16 +423,16 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("stop", &Udp::stop)
       .def("send", &Udp::send)
       .def("send_line", &Udp::send_line)
-      .def("is_connected", &Udp::is_connected)
+      .def("connected", &Udp::connected)
       .def("auto_manage", &Udp::auto_manage, py::arg("manage") = true)
       .def(
-          "use_line_framer",
+          "line_framer",
           [](Udp& self, const std::string& d, bool i, size_t m) {
             self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
+      .def("packet_framer",
            [](Udp& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
              self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
@@ -491,16 +491,16 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("send_to", &UdpServer::send_to)
       .def("client_count", &UdpServer::client_count)
       .def("connected_clients", &UdpServer::connected_clients)
-      .def("is_listening", &UdpServer::is_listening)
+      .def("listening", &UdpServer::listening)
       .def("session_timeout", &UdpServer::session_timeout)
       .def(
-          "use_line_framer",
+          "line_framer",
           [](UdpServer& self, const std::string& d, bool i, size_t m) {
             self.framer_factory([d, i, m]() { return std::make_unique<framer::LineFramer>(d, i, m); });
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
-      .def("use_packet_framer",
+      .def("packet_framer",
            [](UdpServer& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
              self.framer_factory([s, e, m]() { return std::make_unique<framer::PacketFramer>(s, e, m); });
              return &self;

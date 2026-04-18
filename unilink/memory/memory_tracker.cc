@@ -82,9 +82,9 @@ void MemoryTracker::track_deallocation(void* ptr) {
   }
 }
 
-MemoryTracker::MemoryStats MemoryTracker::get_stats() const { return stats_; }
+MemoryTracker::MemoryStats MemoryTracker::stats() const { return stats_; }
 
-std::vector<MemoryTracker::AllocationInfo> MemoryTracker::get_current_allocations() const {
+std::vector<MemoryTracker::AllocationInfo> MemoryTracker::current_allocations() const {
   std::lock_guard<std::mutex> lock(allocations_mutex_);
 
   std::vector<AllocationInfo> result;
@@ -97,15 +97,15 @@ std::vector<MemoryTracker::AllocationInfo> MemoryTracker::get_current_allocation
   return result;
 }
 
-std::vector<MemoryTracker::AllocationInfo> MemoryTracker::get_leaked_allocations() const {
-  return get_current_allocations();  // Current allocations are potential leaks
+std::vector<MemoryTracker::AllocationInfo> MemoryTracker::leaked_allocations() const {
+  return current_allocations();  // Current allocations are potential leaks
 }
 
 void MemoryTracker::enable_tracking(bool enable) { tracking_enabled_.store(enable); }
 
 void MemoryTracker::disable_tracking() { tracking_enabled_.store(false); }
 
-bool MemoryTracker::is_tracking_enabled() const { return tracking_enabled_.load(); }
+bool MemoryTracker::tracking_enabled() const { return tracking_enabled_.load(); }
 
 void MemoryTracker::clear_tracking_data() {
   std::lock_guard<std::mutex> lock(allocations_mutex_);
@@ -123,23 +123,23 @@ void MemoryTracker::clear_tracking_data() {
 }
 
 void MemoryTracker::print_memory_report() const {
-  auto stats = get_stats();
-  auto current_allocations = get_current_allocations();
+  auto mem_stats = stats();
+  auto allocs = current_allocations();
 
   std::cout << "\n=== Memory Tracker Report ===" << std::endl;
-  std::cout << "Total allocations: " << stats.total_allocations << std::endl;
-  std::cout << "Total deallocations: " << stats.total_deallocations << std::endl;
-  std::cout << "Current allocations: " << stats.current_allocations << std::endl;
-  std::cout << "Peak allocations: " << stats.peak_allocations << std::endl;
-  std::cout << "Total bytes allocated: " << stats.total_bytes_allocated << std::endl;
-  std::cout << "Total bytes deallocated: " << stats.total_bytes_deallocated << std::endl;
-  std::cout << "Current bytes allocated: " << stats.current_bytes_allocated << std::endl;
-  std::cout << "Peak bytes allocated: " << stats.peak_bytes_allocated << std::endl;
-  std::cout << "Current active allocations: " << current_allocations.size() << std::endl;
+  std::cout << "Total allocations: " << mem_stats.total_allocations << std::endl;
+  std::cout << "Total deallocations: " << mem_stats.total_deallocations << std::endl;
+  std::cout << "Current allocations: " << mem_stats.current_allocations << std::endl;
+  std::cout << "Peak allocations: " << mem_stats.peak_allocations << std::endl;
+  std::cout << "Total bytes allocated: " << mem_stats.total_bytes_allocated << std::endl;
+  std::cout << "Total bytes deallocated: " << mem_stats.total_bytes_deallocated << std::endl;
+  std::cout << "Current bytes allocated: " << mem_stats.current_bytes_allocated << std::endl;
+  std::cout << "Peak bytes allocated: " << mem_stats.peak_bytes_allocated << std::endl;
+  std::cout << "Current active allocations: " << allocs.size() << std::endl;
 
-  if (!current_allocations.empty()) {
+  if (!allocs.empty()) {
     std::cout << "\n=== Current Allocations ===" << std::endl;
-    for (const auto& alloc : current_allocations) {
+    for (const auto& alloc : allocs) {
       std::cout << "Ptr: " << alloc.ptr << ", Size: " << alloc.size << ", File: " << alloc.file << ":" << alloc.line
                 << ", Function: " << alloc.function << std::endl;
     }
@@ -147,18 +147,18 @@ void MemoryTracker::print_memory_report() const {
 }
 
 void MemoryTracker::print_leak_report() const {
-  auto leaked_allocations = get_leaked_allocations();
+  auto leaks = leaked_allocations();
 
-  if (leaked_allocations.empty()) {
+  if (leaks.empty()) {
     std::cout << "\n=== No Memory Leaks Detected ===" << std::endl;
     return;
   }
 
   std::cout << "\n=== Memory Leak Report ===" << std::endl;
-  std::cout << "Found " << leaked_allocations.size() << " potential memory leaks:" << std::endl;
+  std::cout << "Found " << leaks.size() << " potential memory leaks:" << std::endl;
 
   size_t total_leaked_bytes = 0;
-  for (const auto& alloc : leaked_allocations) {
+  for (const auto& alloc : leaks) {
     std::cout << "Leaked: " << alloc.size << " bytes at " << alloc.ptr << " allocated in " << alloc.file << ":"
               << alloc.line << " (" << alloc.function << ")" << std::endl;
     total_leaked_bytes += alloc.size;
@@ -168,27 +168,27 @@ void MemoryTracker::print_leak_report() const {
 }
 
 void MemoryTracker::log_memory_report() const {
-  auto stats = get_stats();
-  auto current_allocations = get_current_allocations();
+  auto mem_stats = stats();
+  auto allocs = current_allocations();
 
   std::ostringstream oss;
   oss << "\n=== Memory Tracker Report ===\n";
-  oss << "Total allocations: " << stats.total_allocations << "\n";
-  oss << "Total deallocations: " << stats.total_deallocations << "\n";
-  oss << "Current allocations: " << stats.current_allocations << "\n";
-  oss << "Peak allocations: " << stats.peak_allocations << "\n";
-  oss << "Total bytes allocated: " << stats.total_bytes_allocated << "\n";
-  oss << "Total bytes deallocated: " << stats.total_bytes_deallocated << "\n";
-  oss << "Current bytes allocated: " << stats.current_bytes_allocated << "\n";
-  oss << "Peak bytes allocated: " << stats.peak_bytes_allocated << "\n";
-  oss << "Current active allocations: " << current_allocations.size();
+  oss << "Total allocations: " << mem_stats.total_allocations << "\n";
+  oss << "Total deallocations: " << mem_stats.total_deallocations << "\n";
+  oss << "Current allocations: " << mem_stats.current_allocations << "\n";
+  oss << "Peak allocations: " << mem_stats.peak_allocations << "\n";
+  oss << "Total bytes allocated: " << mem_stats.total_bytes_allocated << "\n";
+  oss << "Total bytes deallocated: " << mem_stats.total_bytes_deallocated << "\n";
+  oss << "Current bytes allocated: " << mem_stats.current_bytes_allocated << "\n";
+  oss << "Peak bytes allocated: " << mem_stats.peak_bytes_allocated << "\n";
+  oss << "Current active allocations: " << allocs.size();
 
   UNILINK_LOG_INFO("memory_tracker", "report", oss.str());
 
-  if (!current_allocations.empty()) {
+  if (!allocs.empty()) {
     std::ostringstream alloc_oss;
     alloc_oss << "\n=== Current Allocations ===\n";
-    for (const auto& alloc : current_allocations) {
+    for (const auto& alloc : allocs) {
       alloc_oss << "Ptr: " << alloc.ptr << ", Size: " << alloc.size << ", File: " << alloc.file << ":" << alloc.line
                 << ", Function: " << alloc.function << "\n";
     }
@@ -197,19 +197,19 @@ void MemoryTracker::log_memory_report() const {
 }
 
 void MemoryTracker::log_leak_report() const {
-  auto leaked_allocations = get_leaked_allocations();
+  auto leaks = leaked_allocations();
 
-  if (leaked_allocations.empty()) {
+  if (leaks.empty()) {
     UNILINK_LOG_INFO("memory_tracker", "leak_check", "No Memory Leaks Detected");
     return;
   }
 
   std::ostringstream oss;
   oss << "\n=== Memory Leak Report ===\n";
-  oss << "Found " << leaked_allocations.size() << " potential memory leaks:\n";
+  oss << "Found " << leaks.size() << " potential memory leaks:\n";
 
   size_t total_leaked_bytes = 0;
-  for (const auto& alloc : leaked_allocations) {
+  for (const auto& alloc : leaks) {
     oss << "Leaked: " << alloc.size << " bytes at " << alloc.ptr << " allocated in " << alloc.file << ":" << alloc.line
         << " (" << alloc.function << ")\n";
     total_leaked_bytes += alloc.size;

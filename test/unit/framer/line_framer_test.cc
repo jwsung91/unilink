@@ -12,7 +12,7 @@ class LineFramerTest : public ::testing::Test {
  protected:
   void SetUp() override {
     framer_ = std::make_unique<LineFramer>("\n", false, 1024);
-    framer_->set_on_message([this](memory::ConstByteSpan msg) {
+    framer_->on_message([this](memory::ConstByteSpan msg) {
       std::string s(reinterpret_cast<const char*>(msg.data()), msg.size());
       messages_.push_back(s);
     });
@@ -49,7 +49,7 @@ TEST_F(LineFramerTest, MergedMessages) {
 
 TEST_F(LineFramerTest, IncludeDelimiter) {
   framer_ = std::make_unique<LineFramer>("\n", true, 1024);
-  framer_->set_on_message([this](memory::ConstByteSpan msg) {
+  framer_->on_message([this](memory::ConstByteSpan msg) {
     std::string s(reinterpret_cast<const char*>(msg.data()), msg.size());
     messages_.push_back(s);
   });
@@ -63,7 +63,7 @@ TEST_F(LineFramerTest, IncludeDelimiter) {
 TEST_F(LineFramerTest, MaxLengthReset) {
   // Max length 5. "12345" is ok. "123456" triggers reset.
   framer_ = std::make_unique<LineFramer>("\n", false, 5);
-  framer_->set_on_message([this](memory::ConstByteSpan msg) {
+  framer_->on_message([this](memory::ConstByteSpan msg) {
     std::string s(reinterpret_cast<const char*>(msg.data()), msg.size());
     messages_.push_back(s);
   });

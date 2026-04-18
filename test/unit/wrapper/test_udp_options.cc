@@ -98,7 +98,7 @@ TEST_F(UdpOptionsTest, AutoManageStartsInjectedTransport) {
   sender.auto_manage(true);
   sender_ioc.run_for(50ms);
 
-  EXPECT_TRUE(sender.is_connected());
+  EXPECT_TRUE(sender.connected());
 
   sender.stop();
   receiver.stop();
@@ -121,7 +121,7 @@ TEST_F(UdpOptionsTest, StartFutureReflectsBindFailure) {
 
   ASSERT_EQ(started.wait_for(2s), std::future_status::ready);
   EXPECT_FALSE(started.get());
-  EXPECT_FALSE(udp.is_connected());
+  EXPECT_FALSE(udp.connected());
 
   udp.stop();
 }

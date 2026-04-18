@@ -44,7 +44,7 @@ class UNILINK_API ServerInterface {
   // Lifecycle
   virtual std::future<bool> start() = 0;
   virtual void stop() = 0;
-  virtual bool is_listening() const = 0;
+  virtual bool listening() const = 0;
 
   // Transmission
   virtual bool broadcast(std::string_view data) = 0;

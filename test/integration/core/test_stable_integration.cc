@@ -43,7 +43,7 @@ TEST_F(StableCoreIntegrationTest, ServerClientStability) {
 
   auto client = tcp_client("127.0.0.1", port_).auto_manage(true).build();
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 2000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 2000));
 
   for (int i = 0; i < 10; ++i) {
     client->send("ping");

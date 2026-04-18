@@ -59,7 +59,7 @@ TEST(UdsClientWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   ioc.restart();
   ioc.run_for(100ms);
 
-  EXPECT_TRUE(client.is_connected());
+  EXPECT_TRUE(client.connected());
 
   client.stop();
   ioc.restart();
@@ -111,7 +111,7 @@ TEST(UdsClientWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
   ASSERT_EQ(started.wait_for(1s), std::future_status::ready);
   EXPECT_TRUE(started.get());
 
-  EXPECT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return client.is_connected(); }, 2000));
+  EXPECT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return client.connected(); }, 2000));
 
   client.stop();
   EXPECT_TRUE(ioc->stopped());
@@ -141,7 +141,7 @@ TEST(UdsServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   ioc.restart();
   ioc.poll();
 
-  EXPECT_TRUE(server.is_listening());
+  EXPECT_TRUE(server.listening());
 
   server.stop();
   ioc.restart();
@@ -171,7 +171,7 @@ TEST(UdsServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
 
   ASSERT_EQ(started.wait_for(0ms), std::future_status::ready);
   EXPECT_FALSE(started.get());
-  EXPECT_FALSE(server.is_listening());
+  EXPECT_FALSE(server.listening());
 
   server.stop();
   ioc.restart();
@@ -191,7 +191,7 @@ TEST(UdsServerWrapperAdvancedTest, ManagedExternalContextStopsOnShutdown) {
   ASSERT_EQ(started.wait_for(1s), std::future_status::ready);
   EXPECT_TRUE(started.get());
 
-  EXPECT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return server.is_listening(); }, 2000));
+  EXPECT_TRUE(unilink::test::TestUtils::waitForCondition([&]() { return server.listening(); }, 2000));
 
   server.stop();
   EXPECT_TRUE(ioc->stopped());

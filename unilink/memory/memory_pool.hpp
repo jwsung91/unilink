@@ -73,13 +73,13 @@ class UNILINK_API MemoryPool {
   std::unique_ptr<uint8_t[]> acquire(size_t size);
   std::unique_ptr<uint8_t[]> acquire(BufferSize buffer_size);
   void release(std::unique_ptr<uint8_t[]> buffer, size_t size);
-  PoolStats get_stats() const;
-  double get_hit_rate() const;
+  PoolStats stats() const;
+  double hit_rate() const;
   void cleanup_old_buffers(std::chrono::milliseconds max_age = std::chrono::minutes(5));
-  std::pair<size_t, size_t> get_memory_usage() const;
+  std::pair<size_t, size_t> memory_usage() const;
   void resize_pool(size_t new_size);
   void auto_tune();
-  HealthMetrics get_health_metrics() const;
+  HealthMetrics health_metrics() const;
 
  private:
   // Simple pool bucket
@@ -103,8 +103,8 @@ class UNILINK_API MemoryPool {
   std::atomic<size_t> pool_hits_{0};
 
   // Helper functions
-  PoolBucket& get_bucket(size_t size);
-  size_t get_bucket_index(size_t size) const;
+  PoolBucket& bucket(size_t size);
+  size_t bucket_index(size_t size) const;
 
   // Allocation functions
   std::unique_ptr<uint8_t[]> acquire_from_bucket(PoolBucket& bucket);

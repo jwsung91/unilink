@@ -54,7 +54,7 @@ TEST_F(TcpIntegrationTest, BuilderPatternIntegration) {
 TEST_F(TcpIntegrationTest, AutoInitialization) {
   builder::AutoInitializer::ensure_io_context_running();
   TestUtils::waitFor(100);
-  EXPECT_TRUE(builder::AutoInitializer::is_io_context_running());
+  EXPECT_TRUE(builder::AutoInitializer::io_context_running());
 }
 
 TEST_F(TcpIntegrationTest, MethodChaining) {
@@ -71,10 +71,10 @@ TEST_F(TcpIntegrationTest, MethodChaining) {
 }
 
 TEST_F(TcpIntegrationTest, IndependentContext) {
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).use_independent_context(true).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).independent_context(true).build();
   EXPECT_NE(client, nullptr);
 
-  auto server = unilink::tcp_server(test_port_).unlimited_clients().use_independent_context(false).build();
+  auto server = unilink::tcp_server(test_port_).unlimited_clients().independent_context(false).build();
   EXPECT_NE(server, nullptr);
 }
 
@@ -111,7 +111,7 @@ TEST_F(TcpIntegrationTest, BasicCommunication) {
 
   EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 5000));
 
-  if (client->is_connected()) {
+  if (client->connected()) {
     TestUtils::waitFor(100);
     client->send("test message");
 
@@ -139,7 +139,7 @@ TEST_F(TcpIntegrationTest, ErrorHandling) {
   EXPECT_NE(client, nullptr);
   client->start();
   TestUtils::waitFor(200);
-  EXPECT_TRUE(error_occurred.load() || !client->is_connected());
+  EXPECT_TRUE(error_occurred.load() || !client->connected());
 }
 
 // ============================================================================
@@ -181,7 +181,7 @@ TEST_F(TcpIntegrationTest, MultipleClientConnections) {
 TEST_F(TcpIntegrationTest, ComprehensiveBuilderMethodChaining) {
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
                     .auto_manage(false)
-                    .use_independent_context(true)
+                    .independent_context(true)
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_data([](const wrapper::MessageContext&) {})
                     .build();

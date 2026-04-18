@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
     std::string line;
     while (std::getline(std::cin, line)) {
         if (line == "/quit") break;
-        if (serial->is_connected()) {
+        if (serial->connected()) {
             serial->send(line);
         }
     }

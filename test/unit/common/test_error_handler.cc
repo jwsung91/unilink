@@ -84,7 +84,7 @@ TEST_F(ErrorHandlerTest, ConnectionErrorReporting) {
   diagnostics::error_reporting::report_connection_error(component, operation, ec, is_retryable);
 
   // Then: Verify error was recorded
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
   EXPECT_GT(stats.total_errors, 0);
 }
 
@@ -104,7 +104,7 @@ TEST_F(ErrorHandlerTest, CommunicationErrorReporting) {
   diagnostics::error_reporting::report_communication_error(component, operation, error_message, is_retryable);
 
   // Then: Verify error was recorded
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
   EXPECT_GT(stats.total_errors, 0);
 }
 
@@ -123,7 +123,7 @@ TEST_F(ErrorHandlerTest, ConfigurationErrorReporting) {
   diagnostics::error_reporting::report_configuration_error(component, operation, error_message);
 
   // Then: Verify error was recorded
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
   EXPECT_GT(stats.total_errors, 0);
 }
 
@@ -142,7 +142,7 @@ TEST_F(ErrorHandlerTest, MemoryErrorReporting) {
   diagnostics::error_reporting::report_memory_error(component, operation, error_message);
 
   // Then: Verify error was recorded
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
   EXPECT_GT(stats.total_errors, 0);
 }
 
@@ -162,7 +162,7 @@ TEST_F(ErrorHandlerTest, SystemErrorReporting) {
   diagnostics::error_reporting::report_system_error(component, operation, error_message, ec);
 
   // Then: Verify error was recorded
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
   EXPECT_GT(stats.total_errors, 0);
 }
 
@@ -184,7 +184,7 @@ TEST_F(ErrorHandlerTest, ErrorStatisticsCollection) {
   diagnostics::error_reporting::report_system_error("io", "run", "Error 5");
 
   // When: Get statistics
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
 
   // Then: Verify statistics
   EXPECT_EQ(stats.total_errors, 5);
@@ -203,7 +203,7 @@ TEST_F(ErrorHandlerTest, ErrorRateCalculation) {
   }
 
   // When: Get statistics
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
 
   // Then: Verify error rate
   EXPECT_GT(stats.total_errors, 0);
@@ -281,7 +281,7 @@ TEST_F(ErrorHandlerTest, ErrorRecoveryMechanisms) {
   diagnostics::error_reporting::report_connection_error("client", "connect", boost::system::error_code{}, true);
 
   // When: Check if error is retryable
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
 
   // Then: Verify retryable error was recorded
   EXPECT_GT(stats.total_errors, 0);
@@ -299,7 +299,7 @@ TEST_F(ErrorHandlerTest, ErrorThresholdDetection) {
   }
 
   // When: Check error threshold
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
 
   // Then: Verify threshold detection
   EXPECT_EQ(stats.total_errors, 5);
@@ -321,7 +321,7 @@ TEST_F(ErrorHandlerTest, ErrorStatisticsCleanup) {
 
   // When: Clear statistics
   error_handler.reset_stats();
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
 
   // Then: Verify statistics were cleared
   EXPECT_EQ(stats.total_errors, 0);
@@ -368,7 +368,7 @@ TEST_F(ErrorHandlerTest, ErrorLevelFiltering) {
   diagnostics::error_reporting::report_memory_error("component", "operation", "Error message");
 
   // Then: Verify only appropriate errors were recorded
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
   EXPECT_GT(stats.total_errors, 0);
 }
 
@@ -385,7 +385,7 @@ TEST_F(ErrorHandlerTest, ErrorHandlerEnableDisable) {
   diagnostics::error_reporting::report_connection_error("test", "operation", boost::system::error_code{}, false);
 
   // Then: Verify error was not recorded
-  auto stats = error_handler.get_error_stats();
+  auto stats = error_handler.error_stats();
   EXPECT_EQ(stats.total_errors, 0);
 
   // Re-enable for cleanup

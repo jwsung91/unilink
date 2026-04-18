@@ -39,7 +39,7 @@ class PacketFramerPerfTest : public ::testing::Test {
 TEST_F(PacketFramerPerfTest, ProcessLargeDataChunks) {
   PacketFramer framer(start_pattern_, end_pattern_, 1024 * 1024);  // 1MB max packet
   size_t msg_count = 0;
-  framer.set_on_message([&](memory::ConstByteSpan) { msg_count++; });
+  framer.on_message([&](memory::ConstByteSpan) { msg_count++; });
 
   size_t total_size = 1 * 1024 * 1024;  // 1MB (reduced from 50MB due to slowness)
   size_t payload_size = 100;            // Small payload
@@ -61,7 +61,7 @@ TEST_F(PacketFramerPerfTest, ProcessLargeDataChunks) {
 TEST_F(PacketFramerPerfTest, ProcessLargePackets) {
   PacketFramer framer(start_pattern_, end_pattern_, 1024 * 1024 * 2);
   size_t msg_count = 0;
-  framer.set_on_message([&](memory::ConstByteSpan) { msg_count++; });
+  framer.on_message([&](memory::ConstByteSpan) { msg_count++; });
 
   size_t total_size = 100 * 1024 * 1024;  // 100MB
   size_t payload_size = 1024 * 1024;      // 1MB payload

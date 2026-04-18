@@ -322,7 +322,7 @@ struct Logger::Impl {
     if (file_output_ && file_output_->is_open()) {
       std::streampos current_pos = file_output_->tellp();
       if (current_pos != static_cast<std::streampos>(-1) &&
-          static_cast<size_t>(current_pos) >= log_rotation_->get_config().max_file_size_bytes) {
+          static_cast<size_t>(current_pos) >= log_rotation_->config().max_file_size_bytes) {
         should_rotate = true;
       }
     } else {
@@ -504,7 +504,7 @@ Logger& Logger::instance() { return default_logger(); }
 
 void Logger::set_level(LogLevel level) { impl_->current_level_.store(level); }
 
-LogLevel Logger::get_level() const { return get_impl()->current_level_.load(); }
+LogLevel Logger::level() const { return get_impl()->current_level_.load(); }
 
 void Logger::set_console_output(bool enable) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);
@@ -551,9 +551,9 @@ void Logger::set_async_logging(bool enable, const AsyncLogConfig& config) {
   }
 }
 
-bool Logger::is_async_logging_enabled() const { return get_impl()->async_enabled_.load(); }
+bool Logger::async_logging_enabled() const { return get_impl()->async_enabled_.load(); }
 
-AsyncLogStats Logger::get_async_stats() const {
+AsyncLogStats Logger::async_stats() const {
   std::lock_guard<std::mutex> lock(get_impl()->stats_mutex_);
   AsyncLogStats result = get_impl()->async_stats_;
   result.queue_size = get_impl()->get_queue_size();
@@ -575,7 +575,7 @@ void Logger::set_outputs(int outputs) { impl_->outputs_.store(outputs); }
 
 void Logger::set_enabled(bool enabled) { impl_->enabled_.store(enabled); }
 
-bool Logger::is_enabled() const { return get_impl()->enabled_.load(); }
+bool Logger::enabled() const { return get_impl()->enabled_.load(); }
 
 void Logger::set_format(const std::string& format) { impl_->parse_format(format); }
 

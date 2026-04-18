@@ -40,7 +40,7 @@ class StopContractTest : public BaseTest {
   void SetUp() override {
     BaseTest::SetUp();
     auto& logger = unilink::diagnostics::Logger::instance();
-    previous_log_level_ = logger.get_level();
+    previous_log_level_ = logger.level();
     // Enable debug logging for detailed trace
     logger.set_level(unilink::diagnostics::LogLevel::DEBUG);
   }
@@ -143,11 +143,11 @@ TEST_F(StopContractTest, NoDataCallbackAfterServerStop) {
                     .build();
 
   server->start();
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->is_listening(); }, 1000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->listening(); }, 1000));
 
   auto client = tcp_client("127.0.0.1", port).build();
   client->start();
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 1000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 1000));
 
   std::atomic<bool> sending{true};
   std::thread sender([&]() {

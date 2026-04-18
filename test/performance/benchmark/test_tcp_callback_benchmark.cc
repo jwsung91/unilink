@@ -40,7 +40,7 @@ class TcpCallbackBenchmark : public ::testing::Test {
     auto f2 = client_->start();
     f1.get();
     f2.get();
-    TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000);
+    TestUtils::waitForCondition([&]() { return client_->connected(); }, 5000);
   }
 
   void TearDown() override {

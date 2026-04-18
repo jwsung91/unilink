@@ -86,7 +86,7 @@ TEST_F(MemoryPoolLimitsTest, ExpansionAndOverflow) {
   // logic) Actually system allocator might reuse addr2, so strict equality
   // check for != addr2 might be flaky. But we can check stats if available.
 
-  MemoryPool::PoolStats stats = pool_->get_stats();
+  MemoryPool::PoolStats stats = pool_->stats();
   EXPECT_GT(stats.total_allocations, 0);
 }
 

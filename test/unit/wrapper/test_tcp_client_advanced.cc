@@ -57,9 +57,9 @@ TEST_F(AdvancedTcpClientCoverageTest, ClientStartStopMultipleTimes) {
   for (int i = 0; i < 3; ++i) {
     auto f = client_->start();
     EXPECT_TRUE(f.get());
-    EXPECT_TRUE(client_->is_connected());
+    EXPECT_TRUE(client_->connected());
     client_->stop();
-    EXPECT_FALSE(client_->is_connected());
+    EXPECT_FALSE(client_->connected());
   }
 }
 
@@ -88,7 +88,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ExternalContextManagedRunsAndStops) {
   client_->manage_external_context(true);
   client_->start();
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_->connected(); }, 5000));
   client_->stop();
   // With graceful shutdown, the io_context loop will finish naturally.
   // We use waitForCondition to give it a moment to finish its run loop.
@@ -104,7 +104,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ManagedExternalContextRestartsStoppedIoCon
 
   auto started = client_->start();
   EXPECT_TRUE(started.get());
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client_->connected(); }, 5000));
 
   client_->stop();
   EXPECT_TRUE(ioc->stopped());
@@ -128,7 +128,7 @@ TEST_F(AdvancedTcpClientCoverageTest, SendMultipleMessages) {
   client_ = unilink::tcp_client("127.0.0.1", test_port_).build();
   client_->start();
 
-  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000));
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return client_->connected(); }, 5000));
 
   // Give a small stabilization delay
   std::this_thread::sleep_for(std::chrono::milliseconds(100));

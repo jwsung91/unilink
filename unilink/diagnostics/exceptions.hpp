@@ -38,10 +38,10 @@ class UNILINK_API UnilinkException : public std::runtime_error {
 
   virtual ~UnilinkException() noexcept;
 
-  const std::string& get_component() const noexcept { return component_; }
-  const std::string& get_operation() const noexcept { return operation_; }
+  const std::string& component() const noexcept { return component_; }
+  const std::string& operation() const noexcept { return operation_; }
 
-  std::string get_full_message() const {
+  std::string full_message() const {
     std::string full_msg = what();
     if (!component_.empty()) {
       full_msg = "[" + component_ + "] " + full_msg;
@@ -71,10 +71,10 @@ class UNILINK_API BuilderException : public UnilinkException {
 
   ~BuilderException() noexcept override;
 
-  const std::string& get_builder_type() const noexcept { return builder_type_; }
+  const std::string& builder_type() const noexcept { return builder_type_; }
 
-  std::string get_full_message() const {
-    std::string full_msg = UnilinkException::get_full_message();
+  std::string full_message() const {
+    std::string full_msg = UnilinkException::full_message();
     if (!builder_type_.empty()) {
       full_msg = "[" + builder_type_ + "] " + full_msg;
     }
@@ -99,11 +99,11 @@ class UNILINK_API ValidationException : public UnilinkException {
 
   ~ValidationException() noexcept override;
 
-  const std::string& get_parameter() const noexcept { return parameter_; }
-  const std::string& get_expected() const noexcept { return expected_; }
+  const std::string& parameter() const noexcept { return parameter_; }
+  const std::string& expected() const noexcept { return expected_; }
 
-  std::string get_full_message() const {
-    std::string full_msg = UnilinkException::get_full_message();
+  std::string full_message() const {
+    std::string full_msg = UnilinkException::full_message();
     if (!parameter_.empty()) {
       full_msg += " (parameter: " + parameter_ + ")";
     }
@@ -131,10 +131,10 @@ class UNILINK_API MemoryException : public UnilinkException {
 
   ~MemoryException() noexcept override;
 
-  size_t get_size() const noexcept { return size_; }
+  size_t size() const noexcept { return size_; }
 
-  std::string get_full_message() const {
-    std::string full_msg = UnilinkException::get_full_message();
+  std::string full_message() const {
+    std::string full_msg = UnilinkException::full_message();
     if (size_ > 0) {
       full_msg += " (size: " + std::to_string(size_) + " bytes)";
     }
@@ -159,10 +159,10 @@ class UNILINK_API ConnectionException : public UnilinkException {
 
   ~ConnectionException() noexcept override;
 
-  const std::string& get_connection_type() const noexcept { return connection_type_; }
+  const std::string& connection_type() const noexcept { return connection_type_; }
 
-  std::string get_full_message() const {
-    std::string full_msg = UnilinkException::get_full_message();
+  std::string full_message() const {
+    std::string full_msg = UnilinkException::full_message();
     if (!connection_type_.empty()) {
       full_msg = "[" + connection_type_ + "] " + full_msg;
     }
@@ -187,10 +187,10 @@ class UNILINK_API ConfigurationException : public UnilinkException {
 
   ~ConfigurationException() noexcept override;
 
-  const std::string& get_config_section() const noexcept { return config_section_; }
+  const std::string& config_section() const noexcept { return config_section_; }
 
-  std::string get_full_message() const {
-    std::string full_msg = UnilinkException::get_full_message();
+  std::string full_message() const {
+    std::string full_msg = UnilinkException::full_message();
     if (!config_section_.empty()) {
       full_msg += " (section: " + config_section_ + ")";
     }

@@ -185,7 +185,8 @@ TEST_F(PerformanceIntegratedTest, ConcurrentPerformanceTest) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(completed_operations.load()) / (duration.count() / 1000000.0);
+  double throughput =
+      static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Concurrent performance:" << std::endl;
   std::cout << "  Threads: " << num_threads << std::endl;
@@ -490,7 +491,7 @@ TEST_F(PerformanceIntegratedTest, MemoryUsageUnderLoad) {
   const size_t buffer_size = 1024;
 
   // Get initial memory stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
 
   std::cout << "Initial allocations: " << initial_allocations << std::endl;
@@ -523,7 +524,7 @@ TEST_F(PerformanceIntegratedTest, MemoryUsageUnderLoad) {
   pool.cleanup_old_buffers(std::chrono::milliseconds(0));
 
   // Get final memory stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
 
   std::cout << "Final allocations: " << final_allocations << std::endl;

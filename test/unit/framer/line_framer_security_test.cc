@@ -14,7 +14,7 @@ class LineFramerSecurityTest : public ::testing::Test {
   void SetUp() override {
     // Max length 1024, newline delimiter
     framer_ = std::make_unique<LineFramer>("\n", false, 1024);
-    framer_->set_on_message([this](memory::ConstByteSpan msg) {
+    framer_->on_message([this](memory::ConstByteSpan msg) {
       std::string s(reinterpret_cast<const char*>(msg.data()), msg.size());
       messages_.push_back(s);
     });
@@ -82,7 +82,7 @@ TEST_F(LineFramerSecurityTest, HugeLineRejection) {
 TEST_F(LineFramerSecurityTest, SplitDelimiter) {
   // Delimiter "\r\n"
   framer_ = std::make_unique<LineFramer>("\r\n", false, 1024);
-  framer_->set_on_message([this](memory::ConstByteSpan msg) {
+  framer_->on_message([this](memory::ConstByteSpan msg) {
     std::string s(reinterpret_cast<const char*>(msg.data()), msg.size());
     messages_.push_back(s);
   });

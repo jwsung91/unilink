@@ -51,7 +51,7 @@ class MultiChatClient {
     std::cout << "> " << std::flush;
     while (std::getline(std::cin, line)) {
       if (line == "/quit") break;
-      if (client->is_connected()) {
+      if (client->connected()) {
         client->send(line);
         std::cout << "> " << std::flush;
       }

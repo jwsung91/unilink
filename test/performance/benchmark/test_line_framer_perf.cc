@@ -30,7 +30,7 @@ class LineFramerPerfTest : public ::testing::Test {
 TEST_F(LineFramerPerfTest, ProcessLargeDataChunks) {
   LineFramer framer;
   size_t msg_count = 0;
-  framer.set_on_message([&](memory::ConstByteSpan) { msg_count++; });
+  framer.on_message([&](memory::ConstByteSpan) { msg_count++; });
 
   size_t total_size = 50 * 1024 * 1024;  // 50MB
   size_t msg_size = 100;
@@ -52,7 +52,7 @@ TEST_F(LineFramerPerfTest, ProcessLargeDataChunks) {
 TEST_F(LineFramerPerfTest, ProcessSmallChunks) {
   LineFramer framer;
   size_t msg_count = 0;
-  framer.set_on_message([&](memory::ConstByteSpan) { msg_count++; });
+  framer.on_message([&](memory::ConstByteSpan) { msg_count++; });
 
   size_t total_size = 10 * 1024 * 1024;  // 10MB
   size_t msg_size = 100;

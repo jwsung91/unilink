@@ -45,7 +45,7 @@ TEST(WrapperSerialFailTest, OpenInvalidPort) {
   // Wait a bit for async operations
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  EXPECT_FALSE(serial.is_connected());
+  EXPECT_FALSE(serial.connected());
   // Note: whether error callback is called depends on implementation details
   // but it should not crash.
 

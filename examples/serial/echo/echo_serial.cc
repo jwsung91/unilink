@@ -67,7 +67,7 @@ class SerialEchoApp {
     std::string line;
     while (std::getline(std::cin, line)) {
       if (line.empty()) break;
-      if (ul && ul->is_connected()) {
+      if (ul && ul->connected()) {
         ul->send(line);
         logger_.info("serial", "TX", line);
       } else {

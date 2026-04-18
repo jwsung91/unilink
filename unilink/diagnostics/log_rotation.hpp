@@ -81,7 +81,7 @@ class UNILINK_API LogRotation {
    * @param base_filepath Base log file path
    * @return Next available file path
    */
-  std::string get_next_file_path(const std::string& base_filepath) const;
+  std::string next_file_path(const std::string& base_filepath) const;
 
   /**
    * @brief Update rotation configuration
@@ -92,21 +92,21 @@ class UNILINK_API LogRotation {
   /**
    * @brief Get current configuration
    */
-  const LogRotationConfig& get_config() const { return config_; }
+  const LogRotationConfig& config() const { return config_; }
 
   /**
    * @brief Get file size in bytes
    * @param filepath File path to check
    * @return File size in bytes, 0 if file doesn't exist
    */
-  static size_t get_file_size(const std::string& filepath);
+  static size_t file_size(const std::string& filepath);
 
   /**
    * @brief Get all log files matching pattern
    * @param base_filepath Base log file path
    * @return Vector of matching log file paths, sorted by modification time
    */
-  static std::vector<std::string> get_log_files(const std::string& base_filepath);
+  static std::vector<std::string> log_files(const std::string& base_filepath);
 
  private:
   LogRotationConfig config_;
@@ -117,21 +117,21 @@ class UNILINK_API LogRotation {
    * @param filepath Full file path
    * @return Base filename without extension
    */
-  std::string get_base_filename(const std::string& filepath) const;
+  std::string base_filename(const std::string& filepath) const;
 
   /**
    * @brief Extract directory path
    * @param filepath Full file path
    * @return Directory path
    */
-  std::string get_directory(const std::string& filepath) const;
+  std::string directory(const std::string& filepath) const;
 
   /**
    * @brief Get file index from filename
    * @param filename Filename to parse
    * @return File index, -1 if not found
    */
-  int get_file_index(const std::string& filename) const;
+  int file_index(const std::string& filename) const;
 
   /**
    * @brief Generate filename with index

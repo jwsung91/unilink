@@ -259,11 +259,11 @@ struct UdsClient::Impl {
     });
   }
 
-  // Attach the stored message_handler_ to framer_->set_on_message().
+  // Attach the stored message_handler_ to framer_->on_message().
   // Must be called with mutex_ already held.
   void attach_framer_callback() {
     if (!framer_) return;
-    framer_->set_on_message([this](memory::ConstByteSpan msg) {
+    framer_->on_message([this](memory::ConstByteSpan msg) {
       MessageHandler handler;
       {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -317,7 +317,7 @@ void UdsClient::send_line(std::string_view line) {
   send(data);
 }
 
-bool UdsClient::is_connected() const { return impl_->channel_ && impl_->channel_->is_connected(); }
+bool UdsClient::connected() const { return impl_->channel_ && impl_->channel_->is_connected(); }
 
 ChannelInterface& UdsClient::on_data(MessageHandler handler) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);

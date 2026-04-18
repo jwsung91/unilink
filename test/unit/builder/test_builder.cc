@@ -89,7 +89,7 @@ TEST_F(BuilderTest, TcpServerBuilderBasic) {
                 .build();
 
   ASSERT_NE(server_, nullptr);
-  EXPECT_FALSE(server_->is_listening());
+  EXPECT_FALSE(server_->listening());
 }
 
 TEST_F(BuilderTest, TcpClientBuilderBasic) {
@@ -101,7 +101,7 @@ TEST_F(BuilderTest, TcpClientBuilderBasic) {
                 .build();
 
   ASSERT_NE(client_, nullptr);
-  EXPECT_FALSE(client_->is_connected());
+  EXPECT_FALSE(client_->connected());
 }
 
 TEST_F(BuilderTest, SerialBuilderBasic) {
@@ -113,7 +113,7 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
                 .build();
 
   ASSERT_NE(serial_, nullptr);
-  EXPECT_FALSE(serial_->is_connected());
+  EXPECT_FALSE(serial_->connected());
 }
 
 TEST_F(BuilderTest, UdpBuilderBasic) {
@@ -131,7 +131,7 @@ TEST_F(BuilderTest, BuilderChaining) {
           .build();
 
   ASSERT_NE(server_, nullptr);
-  EXPECT_FALSE(server_->is_listening());
+  EXPECT_FALSE(server_->listening());
 }
 
 TEST_F(BuilderTest, MultipleBuilders) {
@@ -149,7 +149,7 @@ TEST_F(BuilderTest, BuilderConfiguration) {
   server_ = tcp_server(test_port_).idle_timeout(5000ms).max_clients(10).build();
 
   ASSERT_NE(server_, nullptr);
-  EXPECT_FALSE(server_->is_listening());
+  EXPECT_FALSE(server_->listening());
 }
 
 TEST_F(BuilderTest, CallbackRegistration) {

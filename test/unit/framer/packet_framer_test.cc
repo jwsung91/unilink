@@ -13,7 +13,7 @@ class PacketFramerTest : public ::testing::Test {
     start_ = {'S', 'T'};
     end_ = {'E', 'N'};
     framer_ = std::make_unique<PacketFramer>(start_, end_, 1024);
-    framer_->set_on_message([this](memory::ConstByteSpan msg) {
+    framer_->on_message([this](memory::ConstByteSpan msg) {
       std::vector<uint8_t> v(msg.begin(), msg.end());
       messages_.push_back(v);
     });
@@ -69,7 +69,7 @@ TEST_F(PacketFramerTest, MergedPackets) {
 TEST_F(PacketFramerTest, MaxLengthExceeded) {
   // Max len 6. "ST12EN" = 6.
   framer_ = std::make_unique<PacketFramer>(start_, end_, 6);
-  framer_->set_on_message([this](memory::ConstByteSpan msg) {
+  framer_->on_message([this](memory::ConstByteSpan msg) {
     std::vector<uint8_t> v(msg.begin(), msg.end());
     messages_.push_back(v);
   });

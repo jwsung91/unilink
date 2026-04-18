@@ -104,7 +104,7 @@ struct ErrorInfo {
   /**
    * @brief Get formatted timestamp string
    */
-  std::string get_timestamp_string() const {
+  std::string timestamp_string() const {
     auto time_t = std::chrono::system_clock::to_time_t(timestamp);
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
 
@@ -124,7 +124,7 @@ struct ErrorInfo {
   /**
    * @brief Get error level as string
    */
-  std::string get_level_string() const {
+  std::string level_string() const {
     switch (level) {
       case ErrorLevel::INFO:
         return "INFO";
@@ -141,7 +141,7 @@ struct ErrorInfo {
   /**
    * @brief Get error category as string
    */
-  std::string get_category_string() const {
+  std::string category_string() const {
     switch (category) {
       case ErrorCategory::CONNECTION:
         return "CONNECTION";
@@ -162,9 +162,9 @@ struct ErrorInfo {
   /**
    * @brief Get formatted error summary
    */
-  std::string get_summary() const {
+  std::string summary() const {
     std::ostringstream oss;
-    oss << "[" << get_level_string() << "] " << "[" << component << "] " << "[" << operation << "] " << message;
+    oss << "[" << level_string() << "] " << "[" << component << "] " << "[" << operation << "] " << message;
 
     if (boost_error) {
       oss << " (boost: " << boost_error.message() << ", code: " << boost_error.value() << ")";
@@ -209,7 +209,7 @@ struct ErrorStats {
   /**
    * @brief Get error rate (errors per minute)
    */
-  double get_error_rate() const {
+  double error_rate() const {
     if (total_errors == 0) return 0.0;
 
     auto duration = std::chrono::duration_cast<std::chrono::minutes>(last_error - first_error).count();

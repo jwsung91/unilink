@@ -56,7 +56,7 @@ def test_tcp_client():
     print("Testing TcpClient...")
     import datetime
     client = unilink_py.TcpClient("127.0.0.1", 8080)
-    assert not client.is_connected()
+    assert not client.connected()
     client.auto_manage(True)
     client.retry_interval(datetime.timedelta(milliseconds=1000))
     client.max_retries(5)

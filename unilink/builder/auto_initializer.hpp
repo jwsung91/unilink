@@ -51,7 +51,7 @@ class UNILINK_API AutoInitializer {
   /**
    * @brief Check if IoContextManager is running
    */
-  static bool is_io_context_running() { return concurrency::IoContextManager::instance().is_running(); }
+  static bool io_context_running() { return concurrency::IoContextManager::instance().is_running(); }
 
  private:
   static std::mutex& init_mutex();

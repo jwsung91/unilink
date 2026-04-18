@@ -230,7 +230,7 @@ TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
   const size_t buffer_size = 2048;
 
   // Get initial stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   std::cout << "Initial pool hits: " << initial_stats.pool_hits << std::endl;
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -258,7 +258,7 @@ TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   // Get final stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t total_hits = final_stats.pool_hits - initial_stats.pool_hits;
   size_t total_allocations = final_stats.total_allocations - initial_stats.total_allocations;
   double hit_rate =
@@ -490,9 +490,9 @@ TEST_F(BenchmarkTest, MemoryUsageMonitoring) {
   const size_t buffer_size = 2048;
 
   // Get initial memory stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
-  auto initial_memory_pair = pool.get_memory_usage();
+  auto initial_memory_pair = pool.memory_usage();
   size_t initial_memory = initial_memory_pair.first;  // Use first value (current usage)
 
   std::cout << "Initial allocations: " << formatNumber(initial_allocations) << std::endl;
@@ -528,9 +528,9 @@ TEST_F(BenchmarkTest, MemoryUsageMonitoring) {
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
 
   // Get final memory stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
-  auto final_memory_pair = pool.get_memory_usage();
+  auto final_memory_pair = pool.memory_usage();
   size_t final_memory = final_memory_pair.first;  // Use first value (current usage)
 
   size_t total_allocations = final_allocations - initial_allocations;

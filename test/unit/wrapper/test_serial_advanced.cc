@@ -121,7 +121,7 @@ TEST_F(SerialWrapperAdvancedTest, AutoManageStartsAndStopsChannel) {
   TestUtils::waitFor(100);
 
   serial->stop();
-  EXPECT_TRUE(disconnected.load() || !serial->is_connected());
+  EXPECT_TRUE(disconnected.load() || !serial->connected());
 }
 
 TEST_F(SerialWrapperAdvancedTest, ConfigurationSetters) {
@@ -153,7 +153,7 @@ TEST_F(SerialWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   serial.auto_manage(true);
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(serial.is_connected());
+  EXPECT_TRUE(serial.connected());
 
   serial.stop();
   ioc.restart();
@@ -177,7 +177,7 @@ TEST_F(SerialWrapperAdvancedTest, StartFutureReflectsTransportFailure) {
 
   ASSERT_EQ(started.wait_for(100ms), std::future_status::ready);
   EXPECT_FALSE(started.get());
-  EXPECT_FALSE(serial.is_connected());
+  EXPECT_FALSE(serial.connected());
 
   serial.stop();
   ioc.restart();

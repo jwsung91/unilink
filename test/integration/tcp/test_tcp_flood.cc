@@ -54,7 +54,7 @@ TEST_F(TcpFloodTest, FloodServer) {
   for (int i = 0; i < num_clients; ++i) {
     clients.emplace_back([&]() {
       auto client = tcp_client("127.0.0.1", test_port_).auto_manage(true).build();
-      bool connected = TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000);
+      bool connected = TestUtils::waitForCondition([&]() { return client->connected(); }, 5000);
       if (!connected) {
         client_connect_failed.store(true);
         client->stop();

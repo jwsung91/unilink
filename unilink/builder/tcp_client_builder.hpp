@@ -66,13 +66,13 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
   /**
    * @brief Use independent IoContext for this client
    */
-  TcpClientBuilder& use_independent_context(bool use_independent = true);
+  TcpClientBuilder& independent_context(bool use_independent = true);
 
  private:
   std::string host_;
   uint16_t port_;
   bool auto_manage_;
-  bool use_independent_context_;
+  bool independent_context_;
 
   // Configuration
   std::chrono::milliseconds retry_interval_;

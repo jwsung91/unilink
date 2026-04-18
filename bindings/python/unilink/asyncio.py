@@ -46,12 +46,12 @@ class AsyncChannelBase:
         """Waits for next framed message payload."""
         return await self._message_queue.get()
 
-    def use_line_framer(self, delimiter: str = "\n", include_delimiter: bool = False, max_length: int = 65536):
-        self._raw_client.use_line_framer(delimiter, include_delimiter, max_length)
+    def line_framer(self, delimiter: str = "\n", include_delimiter: bool = False, max_length: int = 65536):
+        self._raw_client.line_framer(delimiter, include_delimiter, max_length)
         return self
 
-    def use_packet_framer(self, start_pattern: List[int], end_pattern: List[int], max_length: int):
-        self._raw_client.use_packet_framer(start_pattern, end_pattern, max_length)
+    def packet_framer(self, start_pattern: List[int], end_pattern: List[int], max_length: int):
+        self._raw_client.packet_framer(start_pattern, end_pattern, max_length)
         return self
 
 class AsyncTcpClient(AsyncChannelBase):
@@ -156,8 +156,8 @@ class AsyncServerBase:
     def broadcast(self, data: Union[str, bytes]):
         self._raw_server.broadcast(data)
 
-    def use_line_framer(self, delimiter: str = "\n", include_delimiter: bool = False, max_length: int = 65536):
-        self._raw_server.use_line_framer(delimiter, include_delimiter, max_length)
+    def line_framer(self, delimiter: str = "\n", include_delimiter: bool = False, max_length: int = 65536):
+        self._raw_server.line_framer(delimiter, include_delimiter, max_length)
         return self
 
     def __aiter__(self):

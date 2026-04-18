@@ -54,9 +54,9 @@ TEST_F(UnifiedBuilderIntegrationTest, RealCommunicationBetweenBuilderObjects) {
 
   client->start();
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 5000));
 
-  if (client->is_connected()) {
+  if (client->connected()) {
     client->send("hello from unified");
     EXPECT_TRUE(TestUtils::waitForCondition([&]() { return data_received.load(); }, 5000));
     EXPECT_EQ(received_msg, "hello from unified");
@@ -81,7 +81,7 @@ TEST_F(UnifiedBuilderIntegrationTest, BuilderConfigurationAffectsCommunication) 
   auto server = builder::UnifiedBuilder::tcp_server(p).build();
   server->start();
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->is_connected(); }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 5000));
 
   client->stop();
   server->stop();

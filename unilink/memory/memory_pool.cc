@@ -66,8 +66,8 @@ std::unique_ptr<uint8_t[]> MemoryPool::acquire(size_t size) {
     return buffer;
   }
 
-  auto& bucket = get_bucket(size);
-  return acquire_from_bucket(bucket);
+  auto& bkt = bucket(size);
+  return acquire_from_bucket(bkt);
 }
 
 std::unique_ptr<uint8_t[]> MemoryPool::acquire(BufferSize buffer_size) {
@@ -84,18 +84,18 @@ void MemoryPool::release(std::unique_ptr<uint8_t[]> buffer, size_t size) {
     return;  // unique_ptr destructor handles cleanup
   }
 
-  auto& bucket = get_bucket(size);
-  release_to_bucket(bucket, std::move(buffer));
+  auto& bkt = bucket(size);
+  release_to_bucket(bkt, std::move(buffer));
 }
 
-MemoryPool::PoolStats MemoryPool::get_stats() const {
+MemoryPool::PoolStats MemoryPool::stats() const {
   PoolStats stats;
   stats.total_allocations = total_allocations_.load(std::memory_order_relaxed);
   stats.pool_hits = pool_hits_.load(std::memory_order_relaxed);
   return stats;
 }
 
-double MemoryPool::get_hit_rate() const {
+double MemoryPool::hit_rate() const {
   size_t total = total_allocations_.load(std::memory_order_relaxed);
   if (total == 0) return 0.0;
 
@@ -108,7 +108,7 @@ void MemoryPool::cleanup_old_buffers(std::chrono::milliseconds max_age) {
   (void)max_age;  // prevent unused parameter warning
 }
 
-std::pair<size_t, size_t> MemoryPool::get_memory_usage() const {
+std::pair<size_t, size_t> MemoryPool::memory_usage() const {
   // Simplified: return basic memory usage
   size_t total_allocs = total_allocations_.load(std::memory_order_relaxed);
   size_t current_usage = total_allocs * 4096;  // estimate average buffer size
@@ -124,9 +124,9 @@ void MemoryPool::auto_tune() {
   // Simplified: auto_tune functionality disabled
 }
 
-MemoryPool::HealthMetrics MemoryPool::get_health_metrics() const {
+MemoryPool::HealthMetrics MemoryPool::health_metrics() const {
   HealthMetrics metrics;
-  metrics.hit_rate = get_hit_rate();
+  metrics.hit_rate = hit_rate();
   return metrics;
 }
 
@@ -134,9 +134,9 @@ MemoryPool::HealthMetrics MemoryPool::get_health_metrics() const {
 // Private helper functions
 // ============================================================================
 
-MemoryPool::PoolBucket& MemoryPool::get_bucket(size_t size) { return buckets_[get_bucket_index(size)]; }
+MemoryPool::PoolBucket& MemoryPool::bucket(size_t size) { return buckets_[bucket_index(size)]; }
 
-size_t MemoryPool::get_bucket_index(size_t size) const {
+size_t MemoryPool::bucket_index(size_t size) const {
   // Optimized: Unrolled checks for faster lookup
   if (size <= static_cast<size_t>(BufferSize::SMALL)) return 0;
   if (size <= static_cast<size_t>(BufferSize::MEDIUM)) return 1;

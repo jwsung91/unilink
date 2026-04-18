@@ -181,7 +181,7 @@ struct TcpClient::Impl {
     }
   }
 
-  bool is_connected() const { return channel_ && channel_->is_connected(); }
+  bool connected() const { return channel_ && channel_->is_connected(); }
 
   void setup_internal_handlers() {
     if (!channel_) return;
@@ -256,11 +256,11 @@ struct TcpClient::Impl {
     });
   }
 
-  // Attach the stored message_handler_ to framer_->set_on_message().
+  // Attach the stored message_handler_ to framer_->on_message().
   // Must be called with mutex_ already held.
   void attach_framer_callback() {
     if (!framer_) return;
-    framer_->set_on_message([this](memory::ConstByteSpan msg) {
+    framer_->on_message([this](memory::ConstByteSpan msg) {
       MessageHandler handler;
       {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -298,7 +298,7 @@ std::future<bool> TcpClient::start() { return impl_->start(); }
 void TcpClient::stop() { impl_->stop(); }
 void TcpClient::send(std::string_view data) { impl_->send(data); }
 void TcpClient::send_line(std::string_view line) { impl_->send(std::string(line) + "\n"); }
-bool TcpClient::is_connected() const { return get_impl()->is_connected(); }
+bool TcpClient::connected() const { return get_impl()->connected(); }
 
 ChannelInterface& TcpClient::on_data(MessageHandler h) {
   std::lock_guard<std::mutex> lock(impl_->mutex_);

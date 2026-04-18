@@ -28,7 +28,7 @@ namespace builder {
 TcpServerBuilder::TcpServerBuilder(uint16_t port)
     : port_(port),
       auto_manage_(false),
-      use_independent_context_(false),
+      independent_context_(false),
       enable_port_retry_(false),
       max_port_retries_(3),
       port_retry_interval_ms_(1000),
@@ -43,7 +43,7 @@ TcpServerBuilder::TcpServerBuilder(uint16_t port)
 
 std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
   std::unique_ptr<wrapper::TcpServer> server;
-  if (use_independent_context_) {
+  if (independent_context_) {
     server = std::make_unique<wrapper::TcpServer>(port_, std::make_shared<boost::asio::io_context>());
     server->manage_external_context(true);
   } else {
@@ -90,8 +90,8 @@ TcpServerBuilder& TcpServerBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-TcpServerBuilder& TcpServerBuilder::use_independent_context(bool use_independent) {
-  use_independent_context_ = use_independent;
+TcpServerBuilder& TcpServerBuilder::independent_context(bool use_independent) {
+  independent_context_ = use_independent;
   return *this;
 }
 

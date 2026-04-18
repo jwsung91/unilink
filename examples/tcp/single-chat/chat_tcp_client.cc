@@ -67,7 +67,7 @@ class TcpClientChatApp {
     std::cout << "> " << std::flush;
     while (std::getline(std::cin, line)) {
       if (line == "/quit") break;
-      if (ul && ul->is_connected()) {
+      if (ul && ul->connected()) {
         ul->send(line);
         std::cout << "> " << std::flush;
       } else {

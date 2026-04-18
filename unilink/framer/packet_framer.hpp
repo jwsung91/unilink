@@ -44,7 +44,7 @@ class UNILINK_API PacketFramer : public IFramer {
   ~PacketFramer() override = default;
 
   void push_bytes(memory::ConstByteSpan data) override;
-  void set_on_message(MessageCallback cb) override;
+  void on_message(MessageCallback cb) override;
   void reset() override;
 
  private:

@@ -91,7 +91,7 @@ void SafeDataBuffer::reserve(size_t capacity) { data_.reserve(capacity); }
 void SafeDataBuffer::resize(size_t new_size) { data_.resize(new_size); }
 
 // Validation
-bool SafeDataBuffer::is_valid() const noexcept {
+bool SafeDataBuffer::valid() const noexcept {
   return true;  // Always valid after construction
 }
 

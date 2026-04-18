@@ -76,13 +76,13 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
   /**
    * @brief Use independent IoContext
    */
-  SerialBuilder& use_independent_context(bool use_independent = true);
+  SerialBuilder& independent_context(bool use_independent = true);
 
  private:
   std::string device_;
   uint32_t baud_rate_;
   bool auto_manage_;
-  bool use_independent_context_;
+  bool independent_context_;
 
   // Configuration
   int data_bits_;

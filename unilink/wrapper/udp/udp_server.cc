@@ -186,7 +186,7 @@ struct UdpServer::Impl {
           if (framer_factory) {
             auto framer = framer_factory();
             if (framer) {
-              framer->set_on_message([this, client_id](memory::ConstByteSpan msg) {
+              framer->on_message([this, client_id](memory::ConstByteSpan msg) {
                 MessageHandler on_message_handler;
                 {
                   std::shared_lock<std::shared_mutex> lock(mutex);
@@ -367,7 +367,7 @@ UdpServer& UdpServer::operator=(UdpServer&&) noexcept = default;
 
 std::future<bool> UdpServer::start() { return impl_->start(); }
 void UdpServer::stop() { impl_->stop(); }
-bool UdpServer::is_listening() const { return impl_->is_listening.load(); }
+bool UdpServer::listening() const { return impl_->is_listening.load(); }
 
 bool UdpServer::broadcast(std::string_view data) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex);

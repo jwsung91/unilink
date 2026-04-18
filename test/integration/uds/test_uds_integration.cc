@@ -63,7 +63,7 @@ TEST_F(UdsIntegrationTest, BasicCommunication) {
   std::condition_variable cv;
 
   auto server = unilink::uds_server(socket_path_)
-                    .use_independent_context(true)
+                    .independent_context(true)
                     .on_connect([&server_connected](const wrapper::ConnectionContext&) { server_connected = true; })
                     .on_data([&](const wrapper::MessageContext& ctx) {
                       std::lock_guard<std::mutex> lock(mtx);
@@ -76,11 +76,11 @@ TEST_F(UdsIntegrationTest, BasicCommunication) {
   server->start();
 
   // Wait for server to be ready
-  bool listening = TestUtils::waitForCondition([&]() { return server->is_listening(); }, 2000);
+  bool listening = TestUtils::waitForCondition([&]() { return server->listening(); }, 2000);
   ASSERT_TRUE(listening) << "Server failed to start listening";
 
   auto client = unilink::uds_client(socket_path_)
-                    .use_independent_context(true)
+                    .independent_context(true)
                     .on_connect([&client_connected](const wrapper::ConnectionContext&) { client_connected = true; })
                     .build();
 
@@ -113,16 +113,16 @@ TEST_F(UdsIntegrationTest, MultiClientCommunication) {
 
   auto server = unilink::uds_server(socket_path_)
                     .unlimited_clients()
-                    .use_independent_context(true)
+                    .independent_context(true)
                     .on_connect([&connections](const wrapper::ConnectionContext&) { connections++; })
                     .on_data([&](const wrapper::MessageContext& ctx) { messages_received++; })
                     .build();
 
   server->start();
-  TestUtils::waitForCondition([&]() { return server->is_listening(); }, 2000);
+  TestUtils::waitForCondition([&]() { return server->listening(); }, 2000);
 
-  auto client1 = unilink::uds_client(socket_path_).use_independent_context(true).build();
-  auto client2 = unilink::uds_client(socket_path_).use_independent_context(true).build();
+  auto client1 = unilink::uds_client(socket_path_).independent_context(true).build();
+  auto client2 = unilink::uds_client(socket_path_).independent_context(true).build();
 
   client1->start();
   client2->start();

@@ -218,7 +218,7 @@ void PacketFramer::push_bytes(memory::ConstByteSpan data) {
   }
 }
 
-void PacketFramer::set_on_message(MessageCallback cb) { on_message_ = std::move(cb); }
+void PacketFramer::on_message(MessageCallback cb) { on_message_ = std::move(cb); }
 
 void PacketFramer::reset() {
   buffer_.clear();
