@@ -305,12 +305,11 @@ Thread Safety</h1>
 <div class="line">    }</div>
 <div class="line">    </div>
 <div class="line">    State get_state()<span class="keyword"> const </span>{</div>
-<div class="line">        <span class="keywordflow">return</span> state_.<a class="code" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a813f758763fd4400ef781b34a6614502">get_state</a>();  <span class="comment">// Thread-safe</span></div>
+<div class="line">        <span class="keywordflow">return</span> state_.get_state();  <span class="comment">// Thread-safe</span></div>
 <div class="line">    }</div>
 <div class="line">};</div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1ThreadSafeState_html"><div class="ttname"><a href="classunilink_1_1concurrency_1_1ThreadSafeState.html">unilink::concurrency::ThreadSafeState</a></div><div class="ttdoc">Thread-safe state management class.</div><div class="ttdef"><b>Definition:</b> <a href="thread__safe__state_8hpp_source.html#l00041">thread_safe_state.hpp:41</a></div></div>
 <div class="ttc" id="aclassunilink_1_1concurrency_1_1ThreadSafeState_html_a2ed569d3580e1dc1660e22a1d8389c37"><div class="ttname"><a href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a2ed569d3580e1dc1660e22a1d8389c37">unilink::concurrency::ThreadSafeState::set_state</a></div><div class="ttdeci">void set_state(const State &amp;new_state)</div><div class="ttdef"><b>Definition:</b> <a href="thread__safe__state_8hpp_source.html#l00180">thread_safe_state.hpp:180</a></div></div>
-<div class="ttc" id="aclassunilink_1_1concurrency_1_1ThreadSafeState_html_a813f758763fd4400ef781b34a6614502"><div class="ttname"><a href="classunilink_1_1concurrency_1_1ThreadSafeState.html#a813f758763fd4400ef781b34a6614502">unilink::concurrency::ThreadSafeState::get_state</a></div><div class="ttdeci">State get_state() const</div><div class="ttdef"><b>Definition:</b> <a href="thread__safe__state_8hpp_source.html#l00174">thread_safe_state.hpp:174</a></div></div>
 <div class="ttc" id="athread__safe__state_8hpp_html"><div class="ttname"><a href="thread__safe__state_8hpp.html">thread_safe_state.hpp</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md317"></a>
 ❌ DON'T: Block in Callbacks</h2>
@@ -666,7 +665,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 13:33:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

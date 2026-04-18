@@ -469,7 +469,7 @@ $(document).ready(function(){initNavTree('transport_2udp_2udp_8cc_source.html','
 <div class="line"><a name="l00380"></a><span class="lineno"><a class="line" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a02133b55618d46a87bcd02a94b7f660d">  380</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a02133b55618d46a87bcd02a94b7f660d">notify_state</a>() {</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    <span class="keywordflow">if</span> (!<a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ad776cc389dccff5917008f97023f130c">on_state_</a>) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;      <a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ad776cc389dccff5917008f97023f130c">on_state_</a>(<a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abae86ceabaacf3861b23f3be0f97a68c">state_</a>.get_state());</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;      <a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ad776cc389dccff5917008f97023f130c">on_state_</a>(<a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abae86ceabaacf3861b23f3be0f97a68c">state_</a>.state());</div>
 <div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;      <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;udp&quot;</span>, <span class="stringliteral">&quot;on_state&quot;</span>, <span class="stringliteral">&quot;Exception in state callback: &quot;</span> + std::string(e.what()));</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
@@ -533,7 +533,7 @@ $(document).ready(function(){initNavTree('transport_2udp_2udp_8cc_source.html','
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;      <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    }</div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160; </div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> current = <a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abae86ceabaacf3861b23f3be0f97a68c">state_</a>.get_state();</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> current = <a class="code" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abae86ceabaacf3861b23f3be0f97a68c">state_</a>.state();</div>
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    <span class="keywordflow">if</span> ((current == LinkState::Closed || current == LinkState::Error) &amp;&amp;</div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;        (target == LinkState::Closed || target == LinkState::Error)) {</div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      <span class="keywordflow">return</span>;</div>
@@ -934,7 +934,7 @@ $(document).ready(function(){initNavTree('transport_2udp_2udp_8cc_source.html','
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_dac7fe981bea2b1272d5c5897c0768dd.html">udp</a></li><li class="navelem"><a class="el" href="transport_2udp_2udp_8cc.html">udp.cc</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 02:01:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 13:33:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -273,7 +273,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<a class="code" href="classunilink_1_1transport_1_1UdsClient.html">UdsClient</a>&amp; <a class="code" href="classunilink_1_1transport_1_1UdsClient.html">UdsClient</a>::operator=(<a class="code" href="classunilink_1_1transport_1_1UdsClient.html">UdsClient</a>&amp;&amp;) noexcept = default;</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
 <div class="line"><a name="l00186"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1UdsClient.html#ad1e968b1eeab0ae6711748cdb8cccefe">  186</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1UdsClient.html">UdsClient</a>::start() {</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;  <span class="keyword">auto</span> current_state = impl_-&gt;state_.get_state();</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;  <span class="keyword">auto</span> current_state = impl_-&gt;state_.state();</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;  <span class="keywordflow">if</span> (current_state == LinkState::Connecting || current_state == LinkState::Connected) {</div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;  }</div>
@@ -660,7 +660,7 @@ $(document).ready(function(){initNavTree('transport_2uds_2uds__client_8cc_source
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_789fd087a5f0a4f41fb4500cfddbcae1.html">uds</a></li><li class="navelem"><a class="el" href="transport_2uds_2uds__client_8cc.html">uds_client.cc</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 02:01:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 13:33:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

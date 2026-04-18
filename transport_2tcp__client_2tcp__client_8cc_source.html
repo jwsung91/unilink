@@ -267,7 +267,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__client_2tcp__client_8c
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;}</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
 <div class="line"><a name="l00180"></a><span class="lineno"><a class="line" href="classunilink_1_1transport_1_1TcpClient.html#a886221c4b9a77e24fa31ceb767aa444a">  180</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classunilink_1_1transport_1_1TcpClient.html#a886221c4b9a77e24fa31ceb767aa444a">TcpClient::start</a>() {</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;  <span class="keyword">auto</span> current_state = impl_-&gt;state_.get_state();</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;  <span class="keyword">auto</span> current_state = impl_-&gt;state_.state();</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  <span class="keywordflow">if</span> (current_state == LinkState::Connecting || current_state == LinkState::Connected) {</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <a class="code" href="logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e">UNILINK_LOG_DEBUG</a>(<span class="stringliteral">&quot;tcp_client&quot;</span>, <span class="stringliteral">&quot;start&quot;</span>, <span class="stringliteral">&quot;Start called while already active, ignoring&quot;</span>);</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordflow">return</span>;</div>
@@ -904,7 +904,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__client_2tcp__client_8c
 <div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;    <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;  }</div>
 <div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160; </div>
-<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> current = state_.get_state();</div>
+<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;  <span class="keyword">const</span> <span class="keyword">auto</span> current = state_.state();</div>
 <div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">bool</span> retrying_same_state = (next == LinkState::Connecting &amp;&amp; current == LinkState::Connecting);</div>
 <div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;  <span class="keywordflow">if</span> ((current == LinkState::Closed || current == LinkState::Error) &amp;&amp;</div>
 <div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;      (next == LinkState::Closed || next == LinkState::Error)) {</div>
@@ -999,7 +999,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__client_2tcp__client_8c
 <div class="line"><a name="l00910"></a><span class="lineno">  910</span>&#160;  <span class="keywordflow">if</span> (!on_state) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00911"></a><span class="lineno">  911</span>&#160; </div>
 <div class="line"><a name="l00912"></a><span class="lineno">  912</span>&#160;  <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00913"></a><span class="lineno">  913</span>&#160;    on_state(state_.get_state());</div>
+<div class="line"><a name="l00913"></a><span class="lineno">  913</span>&#160;    on_state(state_.state());</div>
 <div class="line"><a name="l00914"></a><span class="lineno">  914</span>&#160;  } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {</div>
 <div class="line"><a name="l00915"></a><span class="lineno">  915</span>&#160;    <a class="code" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_client&quot;</span>, <span class="stringliteral">&quot;on_state&quot;</span>, <span class="stringliteral">&quot;Exception in state callback: &quot;</span> + std::string(e.what()));</div>
 <div class="line"><a name="l00916"></a><span class="lineno">  916</span>&#160;  } <span class="keywordflow">catch</span> (...) {</div>
@@ -1136,7 +1136,7 @@ $(document).ready(function(){initNavTree('transport_2tcp__client_2tcp__client_8c
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_5945cecc8885b190726a3218a193f147.html">tcp_client</a></li><li class="navelem"><a class="el" href="transport_2tcp__client_2tcp__client_8cc.html">tcp_client.cc</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 02:01:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 13:33:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
