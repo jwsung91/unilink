@@ -138,7 +138,7 @@ After the client is running, use:
 
 - `client->send(...)`
 - `client->send_line(...)`
-- `client->is_connected()`
+- `client->connected()`
 - `client->stop()`
 
 ---

@@ -127,19 +127,19 @@ void MemoryTracker::print_memory_report() const {
   auto allocs = current_allocations();
 
   std::cout << "\n=== Memory Tracker Report ===" << std::endl;
-  std::cout << "Total allocations: " << stats.total_allocations << std::endl;
-  std::cout << "Total deallocations: " << stats.total_deallocations << std::endl;
-  std::cout << "Current allocations: " << stats.current_allocations << std::endl;
-  std::cout << "Peak allocations: " << stats.peak_allocations << std::endl;
-  std::cout << "Total bytes allocated: " << stats.total_bytes_allocated << std::endl;
-  std::cout << "Total bytes deallocated: " << stats.total_bytes_deallocated << std::endl;
-  std::cout << "Current bytes allocated: " << stats.current_bytes_allocated << std::endl;
-  std::cout << "Peak bytes allocated: " << stats.peak_bytes_allocated << std::endl;
-  std::cout << "Current active allocations: " << current_allocations.size() << std::endl;
+  std::cout << "Total allocations: " << mem_stats.total_allocations << std::endl;
+  std::cout << "Total deallocations: " << mem_stats.total_deallocations << std::endl;
+  std::cout << "Current allocations: " << mem_stats.current_allocations << std::endl;
+  std::cout << "Peak allocations: " << mem_stats.peak_allocations << std::endl;
+  std::cout << "Total bytes allocated: " << mem_stats.total_bytes_allocated << std::endl;
+  std::cout << "Total bytes deallocated: " << mem_stats.total_bytes_deallocated << std::endl;
+  std::cout << "Current bytes allocated: " << mem_stats.current_bytes_allocated << std::endl;
+  std::cout << "Peak bytes allocated: " << mem_stats.peak_bytes_allocated << std::endl;
+  std::cout << "Current active allocations: " << allocs.size() << std::endl;
 
-  if (!current_allocations.empty()) {
+  if (!allocs.empty()) {
     std::cout << "\n=== Current Allocations ===" << std::endl;
-    for (const auto& alloc : current_allocations) {
+    for (const auto& alloc : allocs) {
       std::cout << "Ptr: " << alloc.ptr << ", Size: " << alloc.size << ", File: " << alloc.file << ":" << alloc.line
                 << ", Function: " << alloc.function << std::endl;
     }
@@ -173,22 +173,22 @@ void MemoryTracker::log_memory_report() const {
 
   std::ostringstream oss;
   oss << "\n=== Memory Tracker Report ===\n";
-  oss << "Total allocations: " << stats.total_allocations << "\n";
-  oss << "Total deallocations: " << stats.total_deallocations << "\n";
-  oss << "Current allocations: " << stats.current_allocations << "\n";
-  oss << "Peak allocations: " << stats.peak_allocations << "\n";
-  oss << "Total bytes allocated: " << stats.total_bytes_allocated << "\n";
-  oss << "Total bytes deallocated: " << stats.total_bytes_deallocated << "\n";
-  oss << "Current bytes allocated: " << stats.current_bytes_allocated << "\n";
-  oss << "Peak bytes allocated: " << stats.peak_bytes_allocated << "\n";
-  oss << "Current active allocations: " << current_allocations.size();
+  oss << "Total allocations: " << mem_stats.total_allocations << "\n";
+  oss << "Total deallocations: " << mem_stats.total_deallocations << "\n";
+  oss << "Current allocations: " << mem_stats.current_allocations << "\n";
+  oss << "Peak allocations: " << mem_stats.peak_allocations << "\n";
+  oss << "Total bytes allocated: " << mem_stats.total_bytes_allocated << "\n";
+  oss << "Total bytes deallocated: " << mem_stats.total_bytes_deallocated << "\n";
+  oss << "Current bytes allocated: " << mem_stats.current_bytes_allocated << "\n";
+  oss << "Peak bytes allocated: " << mem_stats.peak_bytes_allocated << "\n";
+  oss << "Current active allocations: " << allocs.size();
 
   UNILINK_LOG_INFO("memory_tracker", "report", oss.str());
 
-  if (!current_allocations.empty()) {
+  if (!allocs.empty()) {
     std::ostringstream alloc_oss;
     alloc_oss << "\n=== Current Allocations ===\n";
-    for (const auto& alloc : current_allocations) {
+    for (const auto& alloc : allocs) {
       alloc_oss << "Ptr: " << alloc.ptr << ", Size: " << alloc.size << ", File: " << alloc.file << ":" << alloc.line
                 << ", Function: " << alloc.function << "\n";
     }

@@ -71,10 +71,10 @@ TEST_F(TcpIntegrationTest, MethodChaining) {
 }
 
 TEST_F(TcpIntegrationTest, IndependentContext) {
-  auto client = unilink::tcp_client("127.0.0.1", test_port_).use_independent_context(true).build();
+  auto client = unilink::tcp_client("127.0.0.1", test_port_).independent_context(true).build();
   EXPECT_NE(client, nullptr);
 
-  auto server = unilink::tcp_server(test_port_).unlimited_clients().use_independent_context(false).build();
+  auto server = unilink::tcp_server(test_port_).unlimited_clients().independent_context(false).build();
   EXPECT_NE(server, nullptr);
 }
 
@@ -181,7 +181,7 @@ TEST_F(TcpIntegrationTest, MultipleClientConnections) {
 TEST_F(TcpIntegrationTest, ComprehensiveBuilderMethodChaining) {
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
                     .auto_manage(false)
-                    .use_independent_context(true)
+                    .independent_context(true)
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_data([](const wrapper::MessageContext&) {})
                     .build();

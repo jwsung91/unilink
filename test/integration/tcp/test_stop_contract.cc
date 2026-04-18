@@ -40,7 +40,7 @@ class StopContractTest : public BaseTest {
   void SetUp() override {
     BaseTest::SetUp();
     auto& logger = unilink::diagnostics::Logger::instance();
-    previous_log_level_ = logger.get_level();
+    previous_log_level_ = logger.level();
     // Enable debug logging for detailed trace
     logger.set_level(unilink::diagnostics::LogLevel::DEBUG);
   }
