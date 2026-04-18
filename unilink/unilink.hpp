@@ -59,33 +59,6 @@
 
 namespace unilink {
 
-// === Public API Namespaces ===
-
-// Builder API namespace
-namespace builder {
-class TcpServerBuilder;
-class TcpClientBuilder;
-class SerialBuilder;
-class UdsClientBuilder;
-class UdsServerBuilder;
-class UnifiedBuilder;
-}  // namespace builder
-
-// Wrapper API namespace
-namespace wrapper {
-class TcpServer;
-class TcpClient;
-class Serial;
-class Udp;
-class UdsClient;
-class UdsServer;
-class ChannelInterface;
-class ServerInterface;
-class MessageContext;
-class ConnectionContext;
-class ErrorContext;
-}  // namespace wrapper
-
 // === Public Facade Aliases ===
 
 // Core communication classes
@@ -154,10 +127,15 @@ inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_ra
  * @param local_port The local port to bind
  * @return UdpClientBuilder A configured builder for UDP Client
  */
-inline builder::UdpClientBuilder udp(uint16_t local_port) {
+inline builder::UdpClientBuilder udp_client(uint16_t local_port) {
   builder::UdpClientBuilder b;
   b.local_port(local_port);
   return b;
+}
+
+[[deprecated("Use udp_client() instead")]]
+inline builder::UdpClientBuilder udp(uint16_t local_port) {
+  return udp_client(local_port);
 }
 
 /**

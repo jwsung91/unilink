@@ -31,6 +31,10 @@ namespace builder {
 /**
  * @brief Modernized Builder for UdsClient
  */
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
 class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient, UdsClientBuilder> {
  public:
   explicit UdsClientBuilder(const std::string& socket_path);
@@ -51,10 +55,17 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
   int max_retries_;
   std::chrono::milliseconds connection_timeout_;
 };
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 /**
  * @brief Modernized Builder for UdsServer
  */
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
 class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer, UdsServerBuilder> {
  public:
   explicit UdsServerBuilder(const std::string& socket_path);
@@ -86,6 +97,9 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   bool independent_context_;
   size_t max_clients_;
 };
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 }  // namespace builder
 }  // namespace unilink

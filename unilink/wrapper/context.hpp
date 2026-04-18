@@ -39,8 +39,10 @@ class MessageContext {
   std::string_view data() const { return data_; }
   const std::string& client_info() const { return client_info_; }
 
-  // Useful for servers (empty for point-to-point)
-  const std::string& remote_address() const { return client_info_; }
+  [[deprecated("Use client_info() instead")]]
+  const std::string& remote_address() const {
+    return client_info_;
+  }
 
  private:
   size_t client_id_;

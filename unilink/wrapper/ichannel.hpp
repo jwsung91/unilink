@@ -41,7 +41,7 @@ class UNILINK_API ChannelInterface {
   virtual ~ChannelInterface() = default;
 
   // Lifecycle
-  virtual std::future<bool> start() = 0;
+  [[nodiscard]] virtual std::future<bool> start() = 0;
   virtual void stop() = 0;
   virtual bool connected() const = 0;
 

@@ -34,6 +34,10 @@ namespace builder {
 /**
  * @brief Modernized Builder for UdpClient
  */
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
 class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpClientBuilder> {
  public:
   UdpClientBuilder();
@@ -53,10 +57,17 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpCl
   bool auto_manage_;
   bool independent_context_;
 };
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 /**
  * @brief Modernized Builder for UdpServer
  */
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
 class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer, UdpServerBuilder> {
  public:
   UdpServerBuilder();
@@ -68,12 +79,16 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   /**
    * @brief Helper for client connection events
    */
-  UdpServerBuilder& on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler);
+  UdpServerBuilder& on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+    return on_connect(std::move(handler));
+  }
 
   /**
    * @brief Helper for client disconnection events
    */
-  UdpServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler);
+  UdpServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+    return on_disconnect(std::move(handler));
+  }
 
   UdpServerBuilder& local_port(uint16_t port);
   UdpServerBuilder& independent_context(bool use_independent = true);
@@ -85,6 +100,9 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   bool auto_manage_;
   bool independent_context_;
 };
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 using UdpBuilder = UdpClientBuilder;
 
