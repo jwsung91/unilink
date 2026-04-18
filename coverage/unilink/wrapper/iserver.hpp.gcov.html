@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-18 13:40:20</td>
+            <td class="headerValue">2026-04-18 22:17:52</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -120,7 +120,7 @@
 <a name="42"><span class="lineNum">      42 </span>                :<span class="lineCov">         82 :   virtual ~ServerInterface() = default;</span></a>
 <a name="43"><span class="lineNum">      43 </span>                :            : </a>
 <a name="44"><span class="lineNum">      44 </span>                :            :   // Lifecycle</a>
-<a name="45"><span class="lineNum">      45 </span>                :            :   virtual std::future&lt;bool&gt; start() = 0;</a>
+<a name="45"><span class="lineNum">      45 </span>                :            :   [[nodiscard]] virtual std::future&lt;bool&gt; start() = 0;</a>
 <a name="46"><span class="lineNum">      46 </span>                :            :   virtual void stop() = 0;</a>
 <a name="47"><span class="lineNum">      47 </span>                :            :   virtual bool listening() const = 0;</a>
 <a name="48"><span class="lineNum">      48 </span>                :            : </a>
@@ -147,12 +147,13 @@
 <a name="69"><span class="lineNum">      69 </span>                :            :   virtual ServerInterface&amp; on_message(MessageHandler handler) = 0;</a>
 <a name="70"><span class="lineNum">      70 </span>                :            : </a>
 <a name="71"><span class="lineNum">      71 </span>                :            :   // Management</a>
-<a name="72"><span class="lineNum">      72 </span>                :            :   virtual size_t client_count() const = 0;</a>
-<a name="73"><span class="lineNum">      73 </span>                :            :   virtual std::vector&lt;size_t&gt; connected_clients() const = 0;</a>
-<a name="74"><span class="lineNum">      74 </span>                :            : };</a>
-<a name="75"><span class="lineNum">      75 </span>                :            : </a>
-<a name="76"><span class="lineNum">      76 </span>                :            : }  // namespace wrapper</a>
-<a name="77"><span class="lineNum">      77 </span>                :            : }  // namespace unilink</a>
+<a name="72"><span class="lineNum">      72 </span>                :            :   virtual ServerInterface&amp; auto_manage(bool manage = true) = 0;</a>
+<a name="73"><span class="lineNum">      73 </span>                :            :   virtual size_t client_count() const = 0;</a>
+<a name="74"><span class="lineNum">      74 </span>                :            :   virtual std::vector&lt;size_t&gt; connected_clients() const = 0;</a>
+<a name="75"><span class="lineNum">      75 </span>                :            : };</a>
+<a name="76"><span class="lineNum">      76 </span>                :            : </a>
+<a name="77"><span class="lineNum">      77 </span>                :            : }  // namespace wrapper</a>
+<a name="78"><span class="lineNum">      78 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
