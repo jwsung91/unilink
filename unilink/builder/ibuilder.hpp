@@ -175,8 +175,7 @@ class BuilderInterface {
    * @param max_length Maximum message length
    * @return Derived& Reference to this builder
    */
-  Derived& line_framer(std::string_view delimiter = "\n", bool include_delimiter = false,
-                       size_t max_length = 65536) {
+  Derived& line_framer(std::string_view delimiter = "\n", bool include_delimiter = false, size_t max_length = 65536) {
     std::string delim(delimiter);
     framer_factory_ = [delim, include_delimiter, max_length]() {
       return std::make_unique<framer::LineFramer>(delim, include_delimiter, max_length);

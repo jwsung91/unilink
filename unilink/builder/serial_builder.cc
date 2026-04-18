@@ -27,7 +27,7 @@ SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
     : device_(device),
       baud_rate_(baud_rate),
       auto_manage_(false),
-      use_independent_context_(false),
+      independent_context_(false),
       data_bits_(8),
       stop_bits_(1),
       parity_("none"),
@@ -39,7 +39,7 @@ SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
 
 std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
   std::unique_ptr<wrapper::Serial> serial;
-  if (use_independent_context_) {
+  if (independent_context_) {
     serial = std::make_unique<wrapper::Serial>(device_, baud_rate_, std::make_shared<boost::asio::io_context>());
     serial->manage_external_context(true);
   } else {
@@ -101,8 +101,8 @@ SerialBuilder& SerialBuilder::retry_interval(std::chrono::milliseconds interval)
   return *this;
 }
 
-SerialBuilder& SerialBuilder::use_independent_context(bool use_independent) {
-  use_independent_context_ = use_independent;
+SerialBuilder& SerialBuilder::independent_context(bool use_independent) {
+  independent_context_ = use_independent;
   return *this;
 }
 

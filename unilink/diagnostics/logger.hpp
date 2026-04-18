@@ -255,70 +255,70 @@ class UNILINK_API Logger {
 /**
  * @brief Convenience macros for logging
  */
-#define UNILINK_LOG_DEBUG(component, operation, message)                                                 \
-  do {                                                                                                   \
+#define UNILINK_LOG_DEBUG(component, operation, message)                                             \
+  do {                                                                                               \
     if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) { \
-      unilink::diagnostics::Logger::instance().debug(component, operation, message);                     \
-    }                                                                                                    \
+      unilink::diagnostics::Logger::instance().debug(component, operation, message);                 \
+    }                                                                                                \
   } while (0)
 
-#define UNILINK_LOG_INFO(component, operation, message)                                                 \
-  do {                                                                                                  \
+#define UNILINK_LOG_INFO(component, operation, message)                                             \
+  do {                                                                                              \
     if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::INFO) { \
-      unilink::diagnostics::Logger::instance().info(component, operation, message);                     \
-    }                                                                                                   \
+      unilink::diagnostics::Logger::instance().info(component, operation, message);                 \
+    }                                                                                               \
   } while (0)
 
-#define UNILINK_LOG_WARNING(component, operation, message)                                                 \
-  do {                                                                                                     \
+#define UNILINK_LOG_WARNING(component, operation, message)                                             \
+  do {                                                                                                 \
     if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::WARNING) { \
-      unilink::diagnostics::Logger::instance().warning(component, operation, message);                     \
-    }                                                                                                      \
+      unilink::diagnostics::Logger::instance().warning(component, operation, message);                 \
+    }                                                                                                  \
   } while (0)
 
-#define UNILINK_LOG_ERROR(component, operation, message)                                                 \
-  do {                                                                                                   \
+#define UNILINK_LOG_ERROR(component, operation, message)                                             \
+  do {                                                                                               \
     if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::ERROR) { \
-      unilink::diagnostics::Logger::instance().error(component, operation, message);                     \
-    }                                                                                                    \
+      unilink::diagnostics::Logger::instance().error(component, operation, message);                 \
+    }                                                                                                \
   } while (0)
 
-#define UNILINK_LOG_CRITICAL(component, operation, message)                                                 \
-  do {                                                                                                      \
+#define UNILINK_LOG_CRITICAL(component, operation, message)                                             \
+  do {                                                                                                  \
     if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::CRITICAL) { \
-      unilink::diagnostics::Logger::instance().critical(component, operation, message);                     \
-    }                                                                                                       \
+      unilink::diagnostics::Logger::instance().critical(component, operation, message);                 \
+    }                                                                                                   \
   } while (0)
 
 /**
  * @brief Conditional logging macros (only evaluate message if level is enabled)
  */
-#define UNILINK_LOG_DEBUG_IF(component, operation, message)                                              \
-  do {                                                                                                   \
+#define UNILINK_LOG_DEBUG_IF(component, operation, message)                                          \
+  do {                                                                                               \
     if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) { \
-      UNILINK_LOG_DEBUG(component, operation, message);                                                  \
-    }                                                                                                    \
+      UNILINK_LOG_DEBUG(component, operation, message);                                              \
+    }                                                                                                \
   } while (0)
 
-#define UNILINK_LOG_INFO_IF(component, operation, message)                                              \
-  do {                                                                                                  \
+#define UNILINK_LOG_INFO_IF(component, operation, message)                                          \
+  do {                                                                                              \
     if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::INFO) { \
-      UNILINK_LOG_INFO(component, operation, message);                                                  \
-    }                                                                                                   \
+      UNILINK_LOG_INFO(component, operation, message);                                              \
+    }                                                                                               \
   } while (0)
 
 /**
  * @brief Performance logging macros for expensive operations
  */
-#define UNILINK_LOG_PERF_START(component, operation)                                                  \
-  auto _perf_start_##operation =                                                                      \
+#define UNILINK_LOG_PERF_START(component, operation)                                              \
+  auto _perf_start_##operation =                                                                  \
       (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) \
-          ? std::chrono::high_resolution_clock::now()                                                 \
+          ? std::chrono::high_resolution_clock::now()                                             \
           : std::chrono::high_resolution_clock::time_point()
 
 #define UNILINK_LOG_PERF_END(component, operation)                                                                \
   do {                                                                                                            \
-    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) {          \
+    if (unilink::diagnostics::Logger::instance().level() <= unilink::diagnostics::LogLevel::DEBUG) {              \
       auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \
       using _us_t = std::chrono::microseconds;                                                                    \
       auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \

@@ -28,7 +28,7 @@ TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
     : host_(host),
       port_(port),
       auto_manage_(false),
-      use_independent_context_(false),
+      independent_context_(false),
       retry_interval_(3000),
       max_retries_(-1),
       connection_timeout_(5000) {
@@ -41,7 +41,7 @@ TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
 
 std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   std::unique_ptr<wrapper::TcpClient> client;
-  if (use_independent_context_) {
+  if (independent_context_) {
     client = std::make_unique<wrapper::TcpClient>(host_, port_, std::make_shared<boost::asio::io_context>());
     client->manage_external_context(true);
   } else {
@@ -91,8 +91,8 @@ TcpClientBuilder& TcpClientBuilder::connection_timeout(std::chrono::milliseconds
   return *this;
 }
 
-TcpClientBuilder& TcpClientBuilder::use_independent_context(bool use_independent) {
-  use_independent_context_ = use_independent;
+TcpClientBuilder& TcpClientBuilder::independent_context(bool use_independent) {
+  independent_context_ = use_independent;
   return *this;
 }
 

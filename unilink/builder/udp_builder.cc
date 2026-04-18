@@ -26,16 +26,16 @@ namespace builder {
 
 // --- UdpClientBuilder Implementation ---
 
-UdpClientBuilder::UdpClientBuilder() : auto_manage_(false), use_independent_context_(false) {}
+UdpClientBuilder::UdpClientBuilder() : auto_manage_(false), independent_context_(false) {}
 
 std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
   std::shared_ptr<boost::asio::io_context> ioc = nullptr;
-  if (use_independent_context_) {
+  if (independent_context_) {
     ioc = std::make_shared<boost::asio::io_context>();
   }
 
   auto udp = std::make_unique<wrapper::Udp>(cfg_, ioc);
-  if (use_independent_context_) {
+  if (independent_context_) {
     udp->manage_external_context(true);
   }
 
@@ -74,8 +74,8 @@ UdpClientBuilder& UdpClientBuilder::remote(const std::string& address, uint16_t 
   return *this;
 }
 
-UdpClientBuilder& UdpClientBuilder::use_independent_context(bool use_independent) {
-  use_independent_context_ = use_independent;
+UdpClientBuilder& UdpClientBuilder::independent_context(bool use_independent) {
+  independent_context_ = use_independent;
   return *this;
 }
 
@@ -91,16 +91,16 @@ UdpClientBuilder& UdpClientBuilder::reuse_address(bool enable) {
 
 // --- UdpServerBuilder Implementation ---
 
-UdpServerBuilder::UdpServerBuilder() : auto_manage_(false), use_independent_context_(false) {}
+UdpServerBuilder::UdpServerBuilder() : auto_manage_(false), independent_context_(false) {}
 
 std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
   std::shared_ptr<boost::asio::io_context> ioc = nullptr;
-  if (use_independent_context_) {
+  if (independent_context_) {
     ioc = std::make_shared<boost::asio::io_context>();
   }
 
   auto server = std::make_unique<wrapper::UdpServer>(cfg_, ioc);
-  if (use_independent_context_) {
+  if (independent_context_) {
     server->manage_external_context(true);
   }
 
@@ -145,8 +145,8 @@ UdpServerBuilder& UdpServerBuilder::local_port(uint16_t port) {
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::use_independent_context(bool use_independent) {
-  use_independent_context_ = use_independent;
+UdpServerBuilder& UdpServerBuilder::independent_context(bool use_independent) {
+  independent_context_ = use_independent;
   return *this;
 }
 

@@ -27,7 +27,7 @@ namespace builder {
 UdsClientBuilder::UdsClientBuilder(const std::string& socket_path)
     : socket_path_(socket_path),
       auto_manage_(false),
-      use_independent_context_(false),
+      independent_context_(false),
       retry_interval_(3000),
       max_retries_(-1),
       connection_timeout_(5000) {}
@@ -36,7 +36,7 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
   AutoInitializer::ensure_io_context_running();
 
   std::unique_ptr<wrapper::UdsClient> client;
-  if (use_independent_context_) {
+  if (independent_context_) {
     auto ioc = std::make_shared<boost::asio::io_context>();
     client = std::make_unique<wrapper::UdsClient>(socket_path_, ioc);
     client->manage_external_context(true);
@@ -87,21 +87,21 @@ UdsClientBuilder& UdsClientBuilder::connection_timeout(std::chrono::milliseconds
   return *this;
 }
 
-UdsClientBuilder& UdsClientBuilder::use_independent_context(bool use_independent) {
-  use_independent_context_ = use_independent;
+UdsClientBuilder& UdsClientBuilder::independent_context(bool use_independent) {
+  independent_context_ = use_independent;
   return *this;
 }
 
 // UdsServerBuilder implementation
 
 UdsServerBuilder::UdsServerBuilder(const std::string& socket_path)
-    : socket_path_(socket_path), auto_manage_(false), use_independent_context_(false), max_clients_(100) {}
+    : socket_path_(socket_path), auto_manage_(false), independent_context_(false), max_clients_(100) {}
 
 std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   AutoInitializer::ensure_io_context_running();
 
   std::unique_ptr<wrapper::UdsServer> server;
-  if (use_independent_context_) {
+  if (independent_context_) {
     auto ioc = std::make_shared<boost::asio::io_context>();
     server = std::make_unique<wrapper::UdsServer>(socket_path_, ioc);
     server->manage_external_context(true);
@@ -136,8 +136,8 @@ UdsServerBuilder& UdsServerBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-UdsServerBuilder& UdsServerBuilder::use_independent_context(bool use_independent) {
-  use_independent_context_ = use_independent;
+UdsServerBuilder& UdsServerBuilder::independent_context(bool use_independent) {
+  independent_context_ = use_independent;
   return *this;
 }
 
