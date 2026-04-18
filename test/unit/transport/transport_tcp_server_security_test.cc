@@ -48,7 +48,7 @@ TEST_F(TransportTcpServerSecurityTest, NoIdleTimeoutByDefault) {
 
   // Wait for server to start listening (up to 5 seconds)
   ASSERT_TRUE(test::TestUtils::waitForCondition(
-      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      [&] { return server_->state() == unilink::base::LinkState::Listening; }, 5000))
       << "Server failed to enter listening state";
 
   net::io_context client_ioc;
@@ -97,7 +97,7 @@ TEST_F(TransportTcpServerSecurityTest, IdleConnectionTimeout) {
 
   // Wait for server to start listening (up to 5 seconds)
   ASSERT_TRUE(test::TestUtils::waitForCondition(
-      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      [&] { return server_->state() == unilink::base::LinkState::Listening; }, 5000))
       << "Server failed to enter listening state";
 
   net::io_context client_ioc;
@@ -156,7 +156,7 @@ TEST_F(TransportTcpServerSecurityTest, BindToLocalhostOnly) {
   server_->start();
 
   ASSERT_TRUE(test::TestUtils::waitForCondition(
-      [&] { return server_->get_state() == unilink::base::LinkState::Listening; }, 5000))
+      [&] { return server_->state() == unilink::base::LinkState::Listening; }, 5000))
       << "Server failed to enter listening state";
 
   net::io_context client_ioc;
@@ -182,6 +182,6 @@ TEST_F(TransportTcpServerSecurityTest, InvalidBindAddress) {
 
   // Should transition to Error state
   ASSERT_TRUE(
-      test::TestUtils::waitForCondition([&] { return server_->get_state() == unilink::base::LinkState::Error; }, 1000))
+      test::TestUtils::waitForCondition([&] { return server_->state() == unilink::base::LinkState::Error; }, 1000))
       << "Server should be in Error state due to invalid address";
 }

@@ -84,7 +84,7 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
   });
 
   server->start();
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->get_state() == base::LinkState::Listening; }, 1000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->state() == base::LinkState::Listening; }, 1000));
 
   // Use a raw Boost Asio client that connects but DOES NOT READ.
   // This forces the server's socket buffer to fill up, causing backpressure.
@@ -102,12 +102,12 @@ TEST_F(StopContractTest, NoBackpressureCallbackAfterServerStop) {
     ioc.run_one_for(std::chrono::milliseconds(100));
   }
   EXPECT_TRUE(connected);
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->get_client_count() == 1; }, 2000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server->client_count() == 1; }, 2000));
 
   // Send enough data to fill socket buffer and trigger backpressure
   std::string data(1024 * 1024, 'X');
   for (int i = 0; i < 50; ++i) {
-    server->broadcast(std::string(data.begin(), data.end()));
+    server->broadcast(std::string_view(reinterpret_cast<const char*>(data.data()), data.size()));
   }
 
   // Wait for backpressure to trigger (because client is not reading)

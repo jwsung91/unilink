@@ -365,7 +365,7 @@ struct Serial::Impl {
   void notify_state() {
     if (stopping_.load() || !on_state_) return;
     try {
-      on_state_(state_.get_state());
+      on_state_(state_.state());
     } catch (...) {
     }
   }

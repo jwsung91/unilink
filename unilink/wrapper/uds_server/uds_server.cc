@@ -264,7 +264,7 @@ struct UdsServer::Impl {
       }
     });
 
-    server_->on_multi_data([weak_alive, this](size_t client_id, const std::vector<uint8_t>& data) {
+    server_->on_multi_data([weak_alive, this](size_t client_id, memory::ConstByteSpan data_span) {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
@@ -275,7 +275,7 @@ struct UdsServer::Impl {
         handler = data_handler_;
       }
       if (handler) {
-        handler(MessageContext(client_id, std::string_view(reinterpret_cast<const char*>(data.data()), data.size())));
+        handler(MessageContext(client_id, std::string_view(reinterpret_cast<const char*>(data_span.data()), data_span.size())));
       }
 
       // 2. Framer integration
@@ -283,7 +283,7 @@ struct UdsServer::Impl {
         std::shared_lock<std::shared_mutex> lock(mutex_);
         auto it = framers_.find(client_id);
         if (it != framers_.end()) {
-          it->second->push_bytes(memory::ConstByteSpan(data.data(), data.size()));
+          it->second->push_bytes(data_span);
         }
       }
     });
@@ -350,10 +350,10 @@ ServerInterface& UdsServer::on_message(MessageHandler handler) {
   return *this;
 }
 
-size_t UdsServer::client_count() const { return impl_->server_ ? impl_->server_->get_client_count() : 0; }
+size_t UdsServer::client_count() const { return impl_->server_ ? impl_->server_->client_count() : 0; }
 
 std::vector<size_t> UdsServer::connected_clients() const {
-  return impl_->server_ ? impl_->server_->get_connected_clients() : std::vector<size_t>();
+  return impl_->server_ ? impl_->server_->connected_clients() : std::vector<size_t>();
 }
 
 UdsServer& UdsServer::auto_manage(bool manage) {

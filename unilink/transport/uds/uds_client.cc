@@ -184,7 +184,7 @@ UdsClient::UdsClient(UdsClient&&) noexcept = default;
 UdsClient& UdsClient::operator=(UdsClient&&) noexcept = default;
 
 void UdsClient::start() {
-  auto current_state = impl_->state_.get_state();
+  auto current_state = impl_->state_.state();
   if (current_state == LinkState::Connecting || current_state == LinkState::Connected) {
     return;
   }

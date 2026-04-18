@@ -167,7 +167,7 @@ TEST_F(TransportTcpServerTest, MaxClientsLimit) {
 
   server_ = TcpServer::create(cfg);
   server_->start();
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_state() == base::LinkState::Listening; }, 1000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->state() == base::LinkState::Listening; }, 1000));
 
   // Client 1 connects
   net::io_context client_ioc;
@@ -270,7 +270,7 @@ TEST_F(TransportTcpServerTest, CallbackUpdatePropagation) {
 
   server_ = TcpServer::create(cfg);
   server_->start();
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->get_state() == base::LinkState::Listening; }, 1000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->state() == base::LinkState::Listening; }, 1000));
 
   std::atomic<int> cb1_count{0};
   std::atomic<int> cb2_count{0};

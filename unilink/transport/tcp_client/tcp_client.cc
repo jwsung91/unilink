@@ -178,7 +178,7 @@ std::optional<diagnostics::ErrorInfo> TcpClient::last_error_info() const {
 }
 
 void TcpClient::start() {
-  auto current_state = impl_->state_.get_state();
+  auto current_state = impl_->state_.state();
   if (current_state == LinkState::Connecting || current_state == LinkState::Connected) {
     UNILINK_LOG_DEBUG("tcp_client", "start", "Start called while already active, ignoring");
     return;
@@ -815,7 +815,7 @@ void TcpClient::Impl::transition_to(LinkState next, const boost::system::error_c
     return;
   }
 
-  const auto current = state_.get_state();
+  const auto current = state_.state();
   const bool retrying_same_state = (next == LinkState::Connecting && current == LinkState::Connecting);
   if ((current == LinkState::Closed || current == LinkState::Error) &&
       (next == LinkState::Closed || next == LinkState::Error)) {
@@ -910,7 +910,7 @@ void TcpClient::Impl::notify_state() {
   if (!on_state) return;
 
   try {
-    on_state(state_.get_state());
+    on_state(state_.state());
   } catch (const std::exception& e) {
     UNILINK_LOG_ERROR("tcp_client", "on_state", "Exception in state callback: " + std::string(e.what()));
   } catch (...) {
