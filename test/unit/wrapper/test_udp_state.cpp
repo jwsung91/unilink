@@ -52,7 +52,7 @@ TEST_F(UdpStateTest, BindConflict) {
   EXPECT_FALSE(udp2_started.get());
 
   // Verify it did not successfully start/connect
-  EXPECT_FALSE(udp2.is_connected());
+  EXPECT_FALSE(udp2.connected());
 
   udp2.stop();
 }
@@ -63,7 +63,7 @@ TEST_F(UdpStateTest, UninitializedUse) {
   Udp udp(cfg);
 
   // Object created but not started (uninitialized state)
-  EXPECT_FALSE(udp.is_connected());
+  EXPECT_FALSE(udp.connected());
 
   // Try to call send()
   // Should handle gracefully (no crash, likely no-op or log error)

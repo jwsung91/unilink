@@ -53,6 +53,6 @@ class TcpRstTest : public ::testing::Test {
   std::atomic<int> disconnected_clients_{0};
 };
 
-TEST_F(TcpRstTest, BasicServerConnectivity) { EXPECT_TRUE(server_->is_listening()); }
+TEST_F(TcpRstTest, BasicServerConnectivity) { EXPECT_TRUE(server_->listening()); }
 
 }  // namespace

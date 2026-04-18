@@ -63,7 +63,7 @@ class UNILINK_API TcpClient : public ChannelInterface {
   void stop() override;
   void send(std::string_view data) override;
   void send_line(std::string_view line) override;
-  bool is_connected() const override;
+  bool connected() const override;
 
   ChannelInterface& on_data(MessageHandler handler) override;
   ChannelInterface& on_connect(ConnectionHandler handler) override;

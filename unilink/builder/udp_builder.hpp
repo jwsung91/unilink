@@ -44,14 +44,14 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpCl
 
   UdpClientBuilder& local_port(uint16_t port);
   UdpClientBuilder& remote(const std::string& address, uint16_t port);
-  UdpClientBuilder& use_independent_context(bool use_independent = true);
+  UdpClientBuilder& independent_context(bool use_independent = true);
   UdpClientBuilder& broadcast(bool enable = true);
   UdpClientBuilder& reuse_address(bool enable = true);
 
  private:
   config::UdpConfig cfg_;
   bool auto_manage_;
-  bool use_independent_context_;
+  bool independent_context_;
 };
 
 /**
@@ -76,14 +76,14 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
   UdpServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler);
 
   UdpServerBuilder& local_port(uint16_t port);
-  UdpServerBuilder& use_independent_context(bool use_independent = true);
+  UdpServerBuilder& independent_context(bool use_independent = true);
   UdpServerBuilder& broadcast(bool enable = true);
   UdpServerBuilder& reuse_address(bool enable = true);
 
  private:
   config::UdpConfig cfg_;
   bool auto_manage_;
-  bool use_independent_context_;
+  bool independent_context_;
 };
 
 using UdpBuilder = UdpClientBuilder;

@@ -240,7 +240,7 @@ struct TcpServer::Impl {
           if (framer_factory_) {
             auto framer = framer_factory_();
             if (framer) {
-              framer->set_on_message([this, id](memory::ConstByteSpan msg) {
+              framer->on_message([this, id](memory::ConstByteSpan msg) {
                 MessageHandler on_message_handler;
                 {
                   std::lock_guard<std::shared_mutex> lock(mutex_);
@@ -327,7 +327,7 @@ TcpServer& TcpServer::operator=(TcpServer&&) noexcept = default;
 
 std::future<bool> TcpServer::start() { return impl_->start(); }
 void TcpServer::stop() { impl_->stop(); }
-bool TcpServer::is_listening() const { return get_impl()->is_listening_.load(); }
+bool TcpServer::listening() const { return get_impl()->is_listening_.load(); }
 
 bool TcpServer::broadcast(std::string_view data) {
   const auto& ts = impl_->transport_cache_;

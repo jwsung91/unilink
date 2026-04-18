@@ -198,7 +198,7 @@ TEST_F(MemoryTest, MemoryPoolBasicFunctionality) {
   pool.release(std::move(buffer), 1024);
 
   // Test statistics
-  auto stats = pool.get_stats();
+  auto stats = pool.stats();
   EXPECT_GE(stats.total_allocations, 0);
 }
 
@@ -253,14 +253,14 @@ TEST_F(MemoryTest, MemoryPoolStatistics) {
   }
 
   // Test basic statistics
-  auto stats = pool.get_stats();
+  auto stats = pool.stats();
   EXPECT_GT(stats.total_allocations, 0);
 
-  double hit_rate = pool.get_hit_rate();
+  double hit_rate = pool.hit_rate();
   EXPECT_GE(hit_rate, 0.0);
   EXPECT_LE(hit_rate, 1.0);
 
-  auto memory_usage = pool.get_memory_usage();
+  auto memory_usage = pool.memory_usage();
   EXPECT_GE(memory_usage.first, 0);
   EXPECT_GE(memory_usage.second, 0);
 }
@@ -536,7 +536,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingEnabled) {
 
   diagnostics::Logger::instance().set_async_logging(true, config);
 
-  EXPECT_TRUE(diagnostics::Logger::instance().is_async_logging_enabled());
+  EXPECT_TRUE(diagnostics::Logger::instance().async_logging_enabled());
 
   // Generate some log messages
   for (int i = 0; i < 5; ++i) {
@@ -547,7 +547,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingEnabled) {
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   // Check statistics
-  auto stats = diagnostics::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().async_stats();
   EXPECT_GT(stats.total_logs, 0) << "Should have processed some logs";
   EXPECT_EQ(stats.dropped_logs, 0) << "Should not have dropped any logs";
 
@@ -581,7 +581,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingWithFileOutput) {
   EXPECT_GT(file_size, 0) << "Log file should have content";
 
   // Check statistics
-  auto stats = diagnostics::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().async_stats();
   EXPECT_GT(stats.total_logs, 0) << "Should have processed logs";
   EXPECT_GT(stats.batch_count, 0) << "Should have processed batches";
 }
@@ -621,7 +621,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingPerformance) {
       << "Should process at least " << expected_threshold << " messages per second";
 
   // Check statistics
-  auto stats = diagnostics::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().async_stats();
   EXPECT_EQ(stats.total_logs, num_messages) << "Should have processed all messages";
   EXPECT_EQ(stats.dropped_logs, 0) << "Should not have dropped any messages";
 
@@ -647,7 +647,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingBackpressure) {
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
   // Check statistics - should have some dropped messages
-  auto stats = diagnostics::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().async_stats();
   EXPECT_GT(stats.total_logs, 0) << "Should have processed some messages";
   EXPECT_GT(stats.dropped_logs, 0) << "Should have dropped some messages due to backpressure";
 
@@ -668,11 +668,11 @@ TEST_F(AsyncLoggingTest, AsyncLoggingDisable) {
 
   // Enable async logging
   diagnostics::Logger::instance().set_async_logging(true, config);
-  EXPECT_TRUE(diagnostics::Logger::instance().is_async_logging_enabled());
+  EXPECT_TRUE(diagnostics::Logger::instance().async_logging_enabled());
 
   // Disable async logging
   diagnostics::Logger::instance().set_async_logging(false);
-  EXPECT_FALSE(diagnostics::Logger::instance().is_async_logging_enabled());
+  EXPECT_FALSE(diagnostics::Logger::instance().async_logging_enabled());
 
   // Generate some log messages (should use synchronous logging)
   for (int i = 0; i < 10; ++i) {
@@ -680,7 +680,7 @@ TEST_F(AsyncLoggingTest, AsyncLoggingDisable) {
   }
 
   // Check statistics (should be empty since async is disabled)
-  auto stats = diagnostics::Logger::instance().get_async_stats();
+  auto stats = diagnostics::Logger::instance().async_stats();
   EXPECT_EQ(stats.total_logs, 0) << "Should not have async statistics when disabled";
 }
 

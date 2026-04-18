@@ -67,7 +67,7 @@ TEST_F(SimpleServerTest, BasicServerCreation) {
   std::cout << "Starting server..." << std::endl;
   EXPECT_TRUE(server_->start().get());
 
-  std::cout << "Server state: " << (server_->is_listening() ? "listening" : "not listening") << std::endl;
+  std::cout << "Server state: " << (server_->listening() ? "listening" : "not listening") << std::endl;
 
   // Check if server was created
   EXPECT_TRUE(server_ != nullptr);
@@ -89,9 +89,9 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   // Brief wait for auto-manage to kick in
   std::this_thread::sleep_for(test::constants::kMediumTimeout);
 
-  std::cout << "Server state: " << (server_->is_listening() ? "listening" : "not listening") << std::endl;
+  std::cout << "Server state: " << (server_->listening() ? "listening" : "not listening") << std::endl;
 
-  EXPECT_TRUE(server_->is_listening());
+  EXPECT_TRUE(server_->listening());
 }
 
 /**
@@ -137,14 +137,14 @@ TEST_F(SimpleServerTest, ServerStateCheck) {
   ASSERT_NE(server_, nullptr);
 
   // Status before start
-  EXPECT_FALSE(server_->is_listening()) << "Server should not be listening before start";
+  EXPECT_FALSE(server_->listening()) << "Server should not be listening before start";
 
   // Start server
   EXPECT_TRUE(server_->start().get());
-  EXPECT_TRUE(server_->is_listening());
+  EXPECT_TRUE(server_->listening());
 
   server_->stop();
-  EXPECT_FALSE(server_->is_listening());
+  EXPECT_FALSE(server_->listening());
 }
 
 /**
@@ -156,7 +156,7 @@ TEST_F(SimpleServerTest, ClientLimitSingleClient) {
 
   ASSERT_NE(server_, nullptr);
   EXPECT_TRUE(server_->start().get());
-  EXPECT_TRUE(server_->is_listening());
+  EXPECT_TRUE(server_->listening());
 }
 
 /**

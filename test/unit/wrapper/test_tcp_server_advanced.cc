@@ -57,9 +57,9 @@ TEST_F(AdvancedTcpServerCoverageTest, ServerStartStopMultipleTimes) {
   for (int i = 0; i < 3; ++i) {
     auto f = server_->start();
     EXPECT_TRUE(f.get());
-    EXPECT_TRUE(server_->is_listening());
+    EXPECT_TRUE(server_->listening());
     server_->stop();
-    EXPECT_FALSE(server_->is_listening());
+    EXPECT_FALSE(server_->listening());
   }
 }
 
@@ -91,7 +91,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
   server_->start();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
-  EXPECT_TRUE(server_->is_listening());
+  EXPECT_TRUE(server_->listening());
 
   server_->stop();
   EXPECT_TRUE(ioc->stopped());
@@ -106,7 +106,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ManagedExternalContextRestartsStoppedIoCon
 
   auto started = server_->start();
   EXPECT_TRUE(started.get());
-  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000));
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->listening(); }, 5000));
 
   server_->stop();
   EXPECT_TRUE(ioc->stopped());
@@ -176,7 +176,7 @@ TEST_F(AdvancedTcpServerCoverageTest, PortRetryConfiguration) {
   server_ = unilink::tcp_server(test_port_).port_retry(true, 5, 100).build();
   auto f = server_->start();
   EXPECT_TRUE(f.get());
-  EXPECT_TRUE(server_->is_listening());
+  EXPECT_TRUE(server_->listening());
 }
 
 TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {

@@ -38,9 +38,9 @@ class CoreIntegratedTest : public ::testing::Test {
 TEST_F(CoreIntegratedTest, BasicLifecycle) {
   auto server = tcp_server(port_).build();
   EXPECT_TRUE(server->start().get());
-  EXPECT_TRUE(server->is_listening());
+  EXPECT_TRUE(server->listening());
   server->stop();
-  EXPECT_FALSE(server->is_listening());
+  EXPECT_FALSE(server->listening());
 }
 
 TEST_F(CoreIntegratedTest, ExternalIoContextSharing) {

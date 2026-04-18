@@ -59,7 +59,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   /**
    * @brief Use independent IoContext for this server
    */
-  TcpServerBuilder& use_independent_context(bool use_independent = true);
+  TcpServerBuilder& independent_context(bool use_independent = true);
 
   /**
    * @brief Enable port binding retry on failure
@@ -94,7 +94,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
  private:
   uint16_t port_;
   bool auto_manage_;
-  bool use_independent_context_;
+  bool independent_context_;
 
   // Configuration
   bool enable_port_retry_;

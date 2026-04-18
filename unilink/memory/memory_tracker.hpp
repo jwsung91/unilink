@@ -65,14 +65,14 @@ class UNILINK_API MemoryTracker {
   void track_deallocation(void* ptr);
 
   // Statistics
-  MemoryStats get_stats() const;
-  std::vector<AllocationInfo> get_current_allocations() const;
-  std::vector<AllocationInfo> get_leaked_allocations() const;
+  MemoryStats stats() const;
+  std::vector<AllocationInfo> current_allocations() const;
+  std::vector<AllocationInfo> leaked_allocations() const;
 
   // Control
   void enable_tracking(bool enable = true);
   void disable_tracking();
-  bool is_tracking_enabled() const;
+  bool tracking_enabled() const;
 
   // Cleanup
   void clear_tracking_data();

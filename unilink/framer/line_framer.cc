@@ -170,7 +170,7 @@ size_t LineFramer::scan_and_process(memory::ConstByteSpan data, size_t search_st
   return processed_count;
 }
 
-void LineFramer::set_on_message(MessageCallback cb) { on_message_ = std::move(cb); }
+void LineFramer::on_message(MessageCallback cb) { on_message_ = std::move(cb); }
 
 void LineFramer::reset() {
   buffer_.clear();

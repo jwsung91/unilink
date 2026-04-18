@@ -490,7 +490,7 @@ TEST_F(PerformanceIntegratedTest, MemoryUsageUnderLoad) {
   const size_t buffer_size = 1024;
 
   // Get initial memory stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
 
   std::cout << "Initial allocations: " << initial_allocations << std::endl;
@@ -523,7 +523,7 @@ TEST_F(PerformanceIntegratedTest, MemoryUsageUnderLoad) {
   pool.cleanup_old_buffers(std::chrono::milliseconds(0));
 
   // Get final memory stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
 
   std::cout << "Final allocations: " << final_allocations << std::endl;

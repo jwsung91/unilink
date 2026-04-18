@@ -85,7 +85,7 @@ class MemoryIntegratedTest : public ::testing::Test {
     // In a real implementation, this would read from /proc/self/status
     // For now, return a placeholder value based on memory pool stats
     auto& pool = GlobalMemoryPool::instance();
-    auto stats = pool.get_stats();
+    auto stats = pool.stats();
     return stats.total_allocations * 1024;  // Rough estimate
   }
 
@@ -180,7 +180,7 @@ TEST_F(MemoryIntegratedTest, MemoryPoolStatistics) {
   const size_t buffer_size = 1024;
 
   // Get initial stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
 
   std::cout << "Initial allocations: " << initial_allocations << std::endl;
@@ -194,7 +194,7 @@ TEST_F(MemoryIntegratedTest, MemoryPoolStatistics) {
   }
 
   // Get final stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
 
   std::cout << "Final allocations: " << final_allocations << std::endl;
@@ -221,7 +221,7 @@ TEST_F(MemoryIntegratedTest, BasicMemoryLeakDetection) {
   const size_t buffer_size = 1024;
 
   // Get initial stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
 
   std::cout << "Initial allocations: " << initial_allocations << std::endl;
@@ -254,7 +254,7 @@ TEST_F(MemoryIntegratedTest, BasicMemoryLeakDetection) {
   pool.cleanup_old_buffers(std::chrono::milliseconds(0));
 
   // Get final stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
 
   std::cout << "Final allocations: " << final_allocations << std::endl;
@@ -279,7 +279,7 @@ TEST_F(MemoryIntegratedTest, LargeAllocationMemoryLeakDetection) {
   const size_t buffer_size = 1024 * 1024;  // 1MB buffers
 
   // Get initial stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
 
   std::cout << "Initial allocations: " << initial_allocations << std::endl;
@@ -313,7 +313,7 @@ TEST_F(MemoryIntegratedTest, LargeAllocationMemoryLeakDetection) {
   pool.cleanup_old_buffers(std::chrono::milliseconds(0));
 
   // Get final stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
 
   std::cout << "Final allocations: " << final_allocations << std::endl;
@@ -338,7 +338,7 @@ TEST_F(MemoryIntegratedTest, ConcurrentMemoryLeakDetection) {
   const size_t buffer_size = 2048;
 
   // Get initial stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
 
   std::cout << "Initial allocations: " << initial_allocations << std::endl;
@@ -370,7 +370,7 @@ TEST_F(MemoryIntegratedTest, ConcurrentMemoryLeakDetection) {
   pool.cleanup_old_buffers(std::chrono::milliseconds(0));
 
   // Get final stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
 
   std::cout << "Final allocations: " << final_allocations << std::endl;
@@ -394,7 +394,7 @@ TEST_F(MemoryIntegratedTest, StressMemoryLeakDetection) {
   const size_t max_buffer_size = 1024;  // Reduced max size
 
   // Get initial stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
 
   std::cout << "Initial allocations: " << initial_allocations << std::endl;
@@ -456,7 +456,7 @@ TEST_F(MemoryIntegratedTest, StressMemoryLeakDetection) {
   pool.cleanup_old_buffers(std::chrono::milliseconds(0));
 
   // Get final stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
 
   std::cout << "Final allocations: " << final_allocations << std::endl;
@@ -483,7 +483,7 @@ TEST_F(MemoryIntegratedTest, MemoryUsageMonitoring) {
 
   // Get initial memory usage
   size_t initial_memory = get_memory_usage();
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
 
   std::cout << "Initial memory usage: " << initial_memory << " bytes" << std::endl;
   std::cout << "Initial allocations: " << initial_stats.total_allocations << std::endl;
@@ -518,7 +518,7 @@ TEST_F(MemoryIntegratedTest, MemoryUsageMonitoring) {
 
   // Get final memory usage
   size_t final_memory = get_memory_usage();
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
 
   std::cout << "Final memory usage: " << final_memory << " bytes" << std::endl;
   std::cout << "Final allocations: " << final_stats.total_allocations << std::endl;
@@ -539,7 +539,7 @@ TEST_F(MemoryIntegratedTest, MemoryPoolStatisticsAccuracy) {
   const size_t buffer_size = 1024;
 
   // Get initial stats
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
 
   std::cout << "Initial allocations: " << initial_allocations << std::endl;
@@ -554,7 +554,7 @@ TEST_F(MemoryIntegratedTest, MemoryPoolStatisticsAccuracy) {
   }
 
   // Get final stats
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
 
   std::cout << "Final allocations: " << final_allocations << std::endl;

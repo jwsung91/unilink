@@ -54,7 +54,7 @@ TEST_F(TcpIntegrationTest, BuilderPatternIntegration) {
 TEST_F(TcpIntegrationTest, AutoInitialization) {
   builder::AutoInitializer::ensure_io_context_running();
   TestUtils::waitFor(100);
-  EXPECT_TRUE(builder::AutoInitializer::is_io_context_running());
+  EXPECT_TRUE(builder::AutoInitializer::io_context_running());
 }
 
 TEST_F(TcpIntegrationTest, MethodChaining) {
@@ -111,7 +111,7 @@ TEST_F(TcpIntegrationTest, BasicCommunication) {
 
   EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 5000));
 
-  if (client->is_connected()) {
+  if (client->connected()) {
     TestUtils::waitFor(100);
     client->send("test message");
 
@@ -139,7 +139,7 @@ TEST_F(TcpIntegrationTest, ErrorHandling) {
   EXPECT_NE(client, nullptr);
   client->start();
   TestUtils::waitFor(200);
-  EXPECT_TRUE(error_occurred.load() || !client->is_connected());
+  EXPECT_TRUE(error_occurred.load() || !client->connected());
 }
 
 // ============================================================================

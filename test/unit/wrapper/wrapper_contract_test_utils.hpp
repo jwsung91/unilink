@@ -78,7 +78,7 @@ class TcpServerLoopbackHarness {
     if (!started.get()) {
       throw std::runtime_error("Failed to start TCP test server");
     }
-    if (!TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000)) {
+    if (!TestUtils::waitForCondition([&]() { return server_->listening(); }, 5000)) {
       throw std::runtime_error("TCP test server did not reach listening state");
     }
     return server_;
@@ -90,7 +90,7 @@ class TcpServerLoopbackHarness {
     if (!started.get()) {
       throw std::runtime_error("Failed to start TCP test client");
     }
-    if (!TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000)) {
+    if (!TestUtils::waitForCondition([&]() { return client_->connected(); }, 5000)) {
       throw std::runtime_error("TCP test client did not connect");
     }
     return client_;
@@ -135,7 +135,7 @@ class UdsServerLoopbackHarness {
     if (!started.get()) {
       throw std::runtime_error("Failed to start UDS test server");
     }
-    if (!TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000)) {
+    if (!TestUtils::waitForCondition([&]() { return server_->listening(); }, 5000)) {
       throw std::runtime_error("UDS test server did not reach listening state");
     }
     return server_;
@@ -147,7 +147,7 @@ class UdsServerLoopbackHarness {
     if (!started.get()) {
       throw std::runtime_error("Failed to start UDS test client");
     }
-    if (!TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000)) {
+    if (!TestUtils::waitForCondition([&]() { return client_->connected(); }, 5000)) {
       throw std::runtime_error("UDS test client did not connect");
     }
     return client_;
@@ -190,7 +190,7 @@ class UdpServerLoopbackHarness {
     if (!started.get()) {
       throw std::runtime_error("Failed to start UDP test server");
     }
-    if (!TestUtils::waitForCondition([&]() { return server_->is_listening(); }, 5000)) {
+    if (!TestUtils::waitForCondition([&]() { return server_->listening(); }, 5000)) {
       throw std::runtime_error("UDP test server did not reach listening state");
     }
     return server_;
@@ -208,7 +208,7 @@ class UdpServerLoopbackHarness {
     if (!started.get()) {
       throw std::runtime_error("Failed to start UDP test client");
     }
-    if (!TestUtils::waitForCondition([&]() { return client_->is_connected(); }, 5000)) {
+    if (!TestUtils::waitForCondition([&]() { return client_->connected(); }, 5000)) {
       throw std::runtime_error("UDP test client did not reach connected state");
     }
     return client_;

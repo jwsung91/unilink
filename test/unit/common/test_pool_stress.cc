@@ -52,7 +52,7 @@ TEST_F(MemoryPoolStressTest, ExhaustionAndRecovery) {
     allocations.push_back(std::move(ptr));
   }
 
-  auto stats = pool.get_stats();
+  auto stats = pool.stats();
   EXPECT_EQ(stats.total_allocations, 6);
   // Hits might be 0 because pool starts empty and fills on release?
   // No, pool starts with empty vector (reserve only).
@@ -76,7 +76,7 @@ TEST_F(MemoryPoolStressTest, ExhaustionAndRecovery) {
     allocations.push_back(std::move(ptr));
   }
 
-  stats = pool.get_stats();
+  stats = pool.stats();
   // Total allocations: 6 (initial) + 6 (second round) = 12?
   // Wait, acquire_from_bucket:
   // if from stack: hits++, total++

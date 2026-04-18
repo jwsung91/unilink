@@ -219,7 +219,7 @@ struct UdsServer::Impl {
         if (framer_factory_) {
           auto framer = framer_factory_();
           if (framer) {
-            framer->set_on_message([this, client_id](memory::ConstByteSpan msg) {
+            framer->on_message([this, client_id](memory::ConstByteSpan msg) {
               MessageHandler on_message_handler;
               {
                 std::lock_guard<std::shared_mutex> lock(mutex_);
@@ -306,7 +306,7 @@ std::future<bool> UdsServer::start() { return impl_->start(); }
 
 void UdsServer::stop() { impl_->stop(); }
 
-bool UdsServer::is_listening() const { return impl_->is_listening_.load(); }
+bool UdsServer::listening() const { return impl_->is_listening_.load(); }
 
 bool UdsServer::broadcast(std::string_view data) { return impl_->server_ ? impl_->server_->broadcast(data) : false; }
 

@@ -175,8 +175,8 @@ class BuilderInterface {
    * @param max_length Maximum message length
    * @return Derived& Reference to this builder
    */
-  Derived& use_line_framer(std::string_view delimiter = "\n", bool include_delimiter = false,
-                           size_t max_length = 65536) {
+  Derived& line_framer(std::string_view delimiter = "\n", bool include_delimiter = false,
+                       size_t max_length = 65536) {
     std::string delim(delimiter);
     framer_factory_ = [delim, include_delimiter, max_length]() {
       return std::make_unique<framer::LineFramer>(delim, include_delimiter, max_length);
@@ -191,8 +191,8 @@ class BuilderInterface {
    * @param max_length Maximum packet length
    * @return Derived& Reference to this builder
    */
-  Derived& use_packet_framer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
-                             size_t max_length) {
+  Derived& packet_framer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
+                         size_t max_length) {
     framer_factory_ = [start_pattern, end_pattern, max_length]() {
       return std::make_unique<framer::PacketFramer>(start_pattern, end_pattern, max_length);
     };

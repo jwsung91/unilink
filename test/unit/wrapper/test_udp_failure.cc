@@ -34,7 +34,7 @@ TEST(UdpFailureTest, WrapperSendWithoutStart) {
   wrapper::Udp udp(cfg);
 
   // Not started
-  EXPECT_FALSE(udp.is_connected());
+  EXPECT_FALSE(udp.connected());
 
   // Send should be safe (no-op)
   EXPECT_NO_THROW(udp.send("test"));

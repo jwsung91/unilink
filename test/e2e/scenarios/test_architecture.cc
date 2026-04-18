@@ -108,13 +108,13 @@ TEST_F(ImprovedArchitectureTest, ProposedIndependentResourceManagement) {
   std::cout << "Testing proposed independent resource management..." << std::endl;
 
   // Auto-initialization test using AutoInitializer
-  EXPECT_FALSE(builder::AutoInitializer::is_io_context_running());
+  EXPECT_FALSE(builder::AutoInitializer::io_context_running());
 
   // Auto-initialization
   builder::AutoInitializer::ensure_io_context_running();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  EXPECT_TRUE(builder::AutoInitializer::is_io_context_running());
+  EXPECT_TRUE(builder::AutoInitializer::io_context_running());
 
   std::cout << "Independent resource management test completed" << std::endl;
 }

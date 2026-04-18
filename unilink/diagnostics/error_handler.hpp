@@ -75,7 +75,7 @@ class UNILINK_API ErrorHandler {
   /**
    * @brief Get current minimum error level
    */
-  ErrorLevel get_min_error_level() const;
+  ErrorLevel min_error_level() const;
 
   /**
    * @brief Enable/disable error reporting
@@ -86,12 +86,12 @@ class UNILINK_API ErrorHandler {
   /**
    * @brief Check if error reporting is enabled
    */
-  bool is_enabled() const;
+  bool enabled() const;
 
   /**
    * @brief Get error statistics
    */
-  ErrorStats get_error_stats() const;
+  ErrorStats error_stats() const;
 
   /**
    * @brief Reset error statistics
@@ -102,13 +102,13 @@ class UNILINK_API ErrorHandler {
    * @brief Get errors by component
    * @param component Component name to filter by
    */
-  std::vector<ErrorInfo> get_errors_by_component(std::string_view component) const;
+  std::vector<ErrorInfo> errors_by_component(std::string_view component) const;
 
   /**
    * @brief Get recent errors
    * @param count Maximum number of recent errors to return
    */
-  std::vector<ErrorInfo> get_recent_errors(size_t count = 10) const;
+  std::vector<ErrorInfo> recent_errors(size_t count = 10) const;
 
   /**
    * @brief Check if component has any errors
@@ -121,7 +121,7 @@ class UNILINK_API ErrorHandler {
    * @param component Component name
    * @param level Error level
    */
-  size_t get_error_count(std::string_view component, ErrorLevel level) const;
+  size_t error_count(std::string_view component, ErrorLevel level) const;
 
  private:
   // Non-copyable, non-movable

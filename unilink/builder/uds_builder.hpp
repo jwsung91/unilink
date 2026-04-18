@@ -41,12 +41,12 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
   UdsClientBuilder& retry_interval(std::chrono::milliseconds milliseconds);
   UdsClientBuilder& max_retries(int max_retries);
   UdsClientBuilder& connection_timeout(std::chrono::milliseconds milliseconds);
-  UdsClientBuilder& use_independent_context(bool use_independent = true);
+  UdsClientBuilder& independent_context(bool use_independent = true);
 
  private:
   std::string socket_path_;
   bool auto_manage_;
-  bool use_independent_context_;
+  bool independent_context_;
   std::chrono::milliseconds retry_interval_;
   int max_retries_;
   std::chrono::milliseconds connection_timeout_;
@@ -76,14 +76,14 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
     return on_disconnect(std::move(handler));
   }
 
-  UdsServerBuilder& use_independent_context(bool use_independent = true);
+  UdsServerBuilder& independent_context(bool use_independent = true);
   UdsServerBuilder& max_clients(size_t max);
   UdsServerBuilder& unlimited_clients();
 
  private:
   std::string socket_path_;
   bool auto_manage_;
-  bool use_independent_context_;
+  bool independent_context_;
   size_t max_clients_;
 };
 

@@ -40,7 +40,7 @@ TEST(UdpServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   server.auto_manage(true);
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(server.is_listening());
+  EXPECT_TRUE(server.listening());
 
   server.stop();
 }
@@ -60,7 +60,7 @@ TEST(UdpServerWrapperAdvancedTest, StartFutureReflectsBindFailure) {
 
   ASSERT_EQ(started.wait_for(2s), std::future_status::ready);
   EXPECT_FALSE(started.get());
-  EXPECT_FALSE(server.is_listening());
+  EXPECT_FALSE(server.listening());
 
   server.stop();
 }

@@ -76,7 +76,7 @@ TEST_F(UdsIntegrationTest, BasicCommunication) {
   server->start();
 
   // Wait for server to be ready
-  bool listening = TestUtils::waitForCondition([&]() { return server->is_listening(); }, 2000);
+  bool listening = TestUtils::waitForCondition([&]() { return server->listening(); }, 2000);
   ASSERT_TRUE(listening) << "Server failed to start listening";
 
   auto client = unilink::uds_client(socket_path_)
@@ -119,7 +119,7 @@ TEST_F(UdsIntegrationTest, MultiClientCommunication) {
                     .build();
 
   server->start();
-  TestUtils::waitForCondition([&]() { return server->is_listening(); }, 2000);
+  TestUtils::waitForCondition([&]() { return server->listening(); }, 2000);
 
   auto client1 = unilink::uds_client(socket_path_).use_independent_context(true).build();
   auto client2 = unilink::uds_client(socket_path_).use_independent_context(true).build();

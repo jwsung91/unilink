@@ -77,7 +77,7 @@ class UNILINK_API SafeDataBuffer {
   void resize(size_t new_size);
 
   // Validation
-  bool is_valid() const noexcept;
+  bool valid() const noexcept;
   void validate() const;
 
  private:

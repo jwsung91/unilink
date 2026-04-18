@@ -52,7 +52,7 @@ class UNILINK_API IFramer {
    * @param cb The callback function taking a span of the message bytes.
    */
   using MessageCallback = std::function<void(memory::ConstByteSpan)>;
-  virtual void set_on_message(MessageCallback cb) = 0;
+  virtual void on_message(MessageCallback cb) = 0;
 
   /**
    * @brief Reset internal state/buffer.

@@ -69,13 +69,13 @@ void ErrorHandler::clear_callbacks() {
 
 void ErrorHandler::set_min_error_level(ErrorLevel level) { min_level_.store(level); }
 
-ErrorLevel ErrorHandler::get_min_error_level() const { return min_level_.load(); }
+ErrorLevel ErrorHandler::min_error_level() const { return min_level_.load(); }
 
 void ErrorHandler::set_enabled(bool enabled) { enabled_.store(enabled); }
 
-bool ErrorHandler::is_enabled() const { return enabled_.load(); }
+bool ErrorHandler::enabled() const { return enabled_.load(); }
 
-ErrorStats ErrorHandler::get_error_stats() const {
+ErrorStats ErrorHandler::error_stats() const {
   std::lock_guard<std::mutex> lock(stats_mutex_);
   return stats_;
 }
@@ -85,7 +85,7 @@ void ErrorHandler::reset_stats() {
   stats_.reset();
 }
 
-std::vector<ErrorInfo> ErrorHandler::get_errors_by_component(std::string_view component) const {
+std::vector<ErrorInfo> ErrorHandler::errors_by_component(std::string_view component) const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto it = errors_by_component_.find(std::string(component));
   if (it != errors_by_component_.end()) {
@@ -94,7 +94,7 @@ std::vector<ErrorInfo> ErrorHandler::get_errors_by_component(std::string_view co
   return {};
 }
 
-std::vector<ErrorInfo> ErrorHandler::get_recent_errors(size_t count) const {
+std::vector<ErrorInfo> ErrorHandler::recent_errors(size_t count) const {
   std::lock_guard<std::mutex> lock(mutex_);
 
   size_t start_index = 0;
@@ -112,7 +112,7 @@ bool ErrorHandler::has_errors(std::string_view component) const {
   return it != errors_by_component_.end() && !it->second.empty();
 }
 
-size_t ErrorHandler::get_error_count(std::string_view component, ErrorLevel level) const {
+size_t ErrorHandler::error_count(std::string_view component, ErrorLevel level) const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto it = errors_by_component_.find(std::string(component));
   if (it == errors_by_component_.end()) {

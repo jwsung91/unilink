@@ -70,7 +70,7 @@ TEST_F(AdvancedOptimizationsTest, LockFreeOperationsEnabled) {
   pool_->release(std::move(buffer2), 1024);
 
   // Verify no deadlocks or crashes occurred
-  auto stats = pool_->get_stats();
+  auto stats = pool_->stats();
   EXPECT_GE(stats.total_allocations, 2);
 }
 
@@ -106,10 +106,10 @@ TEST_F(AdvancedOptimizationsTest, LockFreeFreeListIntegrity) {
   }
 
   // Verify free list is working (should have some hits)
-  auto stats = pool_->get_stats();
-  EXPECT_GT(pool_->get_hit_rate(), 0.0);
+  auto stats = pool_->stats();
+  EXPECT_GT(pool_->hit_rate(), 0.0);
 
-  std::cout << "Lock-free free list hit rate: " << (pool_->get_hit_rate() * 100) << "%" << std::endl;
+  std::cout << "Lock-free free list hit rate: " << (pool_->hit_rate() * 100) << "%" << std::endl;
 }
 
 TEST_F(AdvancedOptimizationsTest, LockFreePoolAvailability) {
@@ -127,7 +127,7 @@ TEST_F(AdvancedOptimizationsTest, LockFreePoolAvailability) {
   pool_->release(std::move(buffer), buffer_size);
 
   // Verify operation completed successfully
-  auto stats = pool_->get_stats();
+  auto stats = pool_->stats();
   EXPECT_GT(stats.total_allocations, 0);
 }
 
@@ -241,7 +241,7 @@ TEST_F(AdvancedOptimizationsTest, AdaptiveAlgorithmSelection) {
     pool_->cleanup_old_buffers(std::chrono::milliseconds(1000));
 
     // Verify adaptive algorithm worked
-    auto stats = pool_->get_stats();
+    auto stats = pool_->stats();
     EXPECT_GT(stats.total_allocations, 0);
   }
 
@@ -266,7 +266,7 @@ TEST_F(AdvancedOptimizationsTest, AdaptiveAlgorithmSelection) {
     pool_->cleanup_old_buffers(std::chrono::milliseconds(1000));
 
     // Verify adaptive algorithm worked
-    auto stats = pool_->get_stats();
+    auto stats = pool_->stats();
     EXPECT_GT(stats.total_allocations, 0);
   }
 }
@@ -296,7 +296,7 @@ TEST_F(AdvancedOptimizationsTest, AdaptiveMemoryAlignment) {
   }
 
   // Verify all allocations worked
-  auto stats = pool_->get_stats();
+  auto stats = pool_->stats();
   EXPECT_GE(stats.total_allocations, 3);
 }
 
@@ -396,7 +396,7 @@ TEST_F(AdvancedOptimizationsTest, BatchStatisticsUpdate) {
   }
 
   // Verify statistics are updated
-  auto stats = pool_->get_stats();
+  auto stats = pool_->stats();
   EXPECT_GT(stats.total_allocations, 0);
 
   std::cout << "Batch statistics update performance: " << avg_time_per_operation << " μs per operation" << std::endl;
@@ -496,7 +496,7 @@ TEST_F(AdvancedOptimizationsTest, LockContentionReduction) {
     EXPECT_LT(avg_time_per_operation, 50000.0);  // Less than 50ms per operation (very relaxed)
 
     // Verify no deadlocks occurred
-    auto stats = pool_->get_stats();
+    auto stats = pool_->stats();
     EXPECT_GT(stats.total_allocations, 0);
 
     std::cout << "Lock contention reduction performance: " << avg_time_per_operation << " μs per operation ("
@@ -581,6 +581,6 @@ TEST_F(AdvancedOptimizationsTest, MemoryAlignmentEdgeCases) {
   }
 
   // Verify all allocations worked
-  auto stats = pool_->get_stats();
+  auto stats = pool_->stats();
   EXPECT_GE(stats.total_allocations, 4);
 }

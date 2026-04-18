@@ -81,11 +81,11 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
 
   // Wait for connection
   int retries = 0;
-  while (!s1->is_connected() && retries++ < 20) {
+  while (!s1->connected() && retries++ < 20) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
-  if (!s1->is_connected()) {
+  if (!s1->connected()) {
     FAIL() << "Client 1 failed to connect";
   }
   std::cout << "Client 1 connected" << std::endl;
@@ -160,11 +160,11 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
 
   // Wait for connection
   retries = 0;
-  while (!s3->is_connected() && retries++ < 20) {
+  while (!s3->connected() && retries++ < 20) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
-  if (!s3->is_connected()) {
+  if (!s3->connected()) {
     FAIL() << "Failed to connect after resume";
   }
   std::cout << "Client 3 connected (Resume success)" << std::endl;

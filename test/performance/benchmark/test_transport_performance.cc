@@ -776,7 +776,7 @@ TEST_F(TransportPerformanceTest, TcpServerSessionConcurrentAccess) {
 TEST_F(TransportPerformanceTest, TransportLayerMemoryPoolUsage) {
   // --- Setup ---
   auto& pool = GlobalMemoryPool::instance();
-  auto initial_stats = pool.get_stats();
+  auto initial_stats = pool.stats();
 
   TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
@@ -798,7 +798,7 @@ TEST_F(TransportPerformanceTest, TransportLayerMemoryPoolUsage) {
   }
 
   // --- Verification ---
-  auto final_stats = pool.get_stats();
+  auto final_stats = pool.stats();
   EXPECT_GT(final_stats.total_allocations, initial_stats.total_allocations);
 
   std::this_thread::sleep_for(100ms);
