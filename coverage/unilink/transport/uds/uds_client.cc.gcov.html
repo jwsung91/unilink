@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-18 02:07:59</td>
+            <td class="headerValue">2026-04-18 13:40:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">33</td>
@@ -266,7 +266,7 @@
 <a name="184"><span class="lineNum">     184 </span>                :<span class="lineNoCov">          0 : UdsClient&amp; UdsClient::operator=(UdsClient&amp;&amp;) noexcept = default;</span></a>
 <a name="185"><span class="lineNum">     185 </span>                :            : </a>
 <a name="186"><span class="lineNum">     186 </span>                :<span class="lineCov">          9 : void UdsClient::start() {</span></a>
-<a name="187"><span class="lineNum">     187 </span>                :<span class="lineCov">          9 :   auto current_state = impl_-&gt;state_.get_state();</span></a>
+<a name="187"><span class="lineNum">     187 </span>                :<span class="lineCov">          9 :   auto current_state = impl_-&gt;state_.state();</span></a>
 <a name="188"><span class="lineNum">     188 </span>  [<span class="branchCov" title="Branch 0 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 9 times"> + </span>]:<span class="lineCov">          9 :   if (current_state == LinkState::Connecting || current_state == LinkState::Connected) {</span></a>
 <a name="189"><span class="lineNum">     189 </span>                :<span class="lineNoCov">          0 :     return;</span></a>
 <a name="190"><span class="lineNum">     190 </span>                :            :   }</a>
@@ -463,8 +463,8 @@
 <a name="374"><span class="lineNum">     374 </span>                :<span class="lineCov">          7 : void UdsClient::Impl::start_read(std::shared_ptr&lt;UdsClient&gt; self, uint64_t seq) {</span></a>
 <a name="375"><span class="lineNum">     375 </span>  [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         14 :   socket_-&gt;async_read_some(net::buffer(rx_),</span></a>
 <a name="376"><span class="lineNum">     376 </span>        [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         14 :                            net::bind_executor(strand_, [self, seq](const boost::system::error_code&amp; ec, size_t bytes) {</span></a>
-<a name="377"><span class="lineNum">     377 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          3 :                              if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) return;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="377"><span class="lineNum">     377 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          4 :                              if (ec == net::error::operation_aborted || seq != self-&gt;impl_-&gt;current_seq_.load()) return;</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="378"><span class="lineNum">     378 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                              if (ec) {</span></a>
 <a name="379"><span class="lineNum">     379 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                                self-&gt;impl_-&gt;handle_close(self, seq, ec);</span></a>
 <a name="380"><span class="lineNum">     380 </span>                :<span class="lineNoCov">          0 :                                return;</span></a>

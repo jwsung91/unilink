@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-18 02:07:59</td>
+            <td class="headerValue">2026-04-18 13:40:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">57</td>
@@ -501,7 +501,7 @@
 <a name="380"><span class="lineNum">     380 </span>                :<span class="lineCov">         84 :   void notify_state() {</span></a>
 <a name="381"><span class="lineNum">     381 </span>        [<span class="branchCov" title="Branch 0 was taken 38 times"> + </span><span class="branchCov" title="Branch 1 was taken 46 times"> + </span>]:<span class="lineCov">         84 :     if (!on_state_) return;</span></a>
 <a name="382"><span class="lineNum">     382 </span>                :            :     try {</a>
-<a name="383"><span class="lineNum">     383 </span>  [<span class="branchCov" title="Branch 0 was taken 46 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 43 times"> + </span><span class="branchCov" title="Branch 3 was taken 3 times"> + </span>]:<span class="lineCov">         46 :       on_state_(state_.get_state());</span></a>
+<a name="383"><span class="lineNum">     383 </span>  [<span class="branchCov" title="Branch 0 was taken 46 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 43 times"> + </span><span class="branchCov" title="Branch 3 was taken 3 times"> + </span>]:<span class="lineCov">         46 :       on_state_(state_.state());</span></a>
 <a name="384"><span class="lineNum">     384 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     } catch (const std::exception&amp; e) {</span></a>
 <a name="385"><span class="lineNum">     385 </span>  [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          3 :       UNILINK_LOG_ERROR(&quot;udp&quot;, &quot;on_state&quot;, &quot;Exception in state callback: &quot; + std::string(e.what()));</span></a>
 <span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 3 times"> + </span> 
@@ -584,7 +584,7 @@
 <a name="444"><span class="lineNum">     444 </span>                :<span class="lineNoCov">          0 :       return;</span></a>
 <a name="445"><span class="lineNum">     445 </span>                :            :     }</a>
 <a name="446"><span class="lineNum">     446 </span>                :            : </a>
-<a name="447"><span class="lineNum">     447 </span>                :<span class="lineCov">        135 :     const auto current = state_.get_state();</span></a>
+<a name="447"><span class="lineNum">     447 </span>                :<span class="lineCov">        135 :     const auto current = state_.state();</span></a>
 <a name="448"><span class="lineNum">     448 </span>  [<span class="branchCov" title="Branch 0 was taken 97 times"> + </span><span class="branchCov" title="Branch 1 was taken 38 times"> + </span><span class="branchCov" title="Branch 2 was taken 13 times"> + </span><span class="branchCov" title="Branch 3 was taken 84 times"> + </span>]:<span class="lineCov">        135 :     if ((current == LinkState::Closed || current == LinkState::Error) &amp;&amp;</span></a>
 <a name="449"><span class="lineNum">     449 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 51 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         51 :         (target == LinkState::Closed || target == LinkState::Error)) {</span></a>
 <a name="450"><span class="lineNum">     450 </span>                :<span class="lineCov">         51 :       return;</span></a>
