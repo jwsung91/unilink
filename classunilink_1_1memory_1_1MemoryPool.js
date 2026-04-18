@@ -16,12 +16,12 @@ var classunilink_1_1memory_1_1MemoryPool =
     [ "acquire", "classunilink_1_1memory_1_1MemoryPool.html#a72af4e14f7dc98ae5cbb227546c1e015", null ],
     [ "auto_tune", "classunilink_1_1memory_1_1MemoryPool.html#aca77756b20c8b8239f2e0c8b234b8708", null ],
     [ "cleanup_old_buffers", "classunilink_1_1memory_1_1MemoryPool.html#a8b53acaf5578381589d8b66dc86db51b", null ],
-    [ "get_health_metrics", "classunilink_1_1memory_1_1MemoryPool.html#aa86a6e95ac3938a6bbed4eaf146317d3", null ],
-    [ "get_hit_rate", "classunilink_1_1memory_1_1MemoryPool.html#a016af6b9e9520323803c7ca1427142d5", null ],
-    [ "get_memory_usage", "classunilink_1_1memory_1_1MemoryPool.html#a6a44211bfe7fc34ff0737a0169d7568a", null ],
-    [ "get_stats", "classunilink_1_1memory_1_1MemoryPool.html#a8ad3705eb7668a2263d01ec27e9b69cf", null ],
+    [ "health_metrics", "classunilink_1_1memory_1_1MemoryPool.html#a147b0b31383a235a19c006a56688d8b4", null ],
+    [ "hit_rate", "classunilink_1_1memory_1_1MemoryPool.html#a717036db6ecf881cf6eb6e5a303046e3", null ],
+    [ "memory_usage", "classunilink_1_1memory_1_1MemoryPool.html#a514b2ebc34cef93d7e27ab3819882cc6", null ],
     [ "operator=", "classunilink_1_1memory_1_1MemoryPool.html#a821b94c00ce579cb0f6f861333ac889d", null ],
     [ "operator=", "classunilink_1_1memory_1_1MemoryPool.html#a6248e9d332d0455afad89af7c283032a", null ],
     [ "release", "classunilink_1_1memory_1_1MemoryPool.html#ac210d9942ecc77a43ecc5125ccaacd9b", null ],
-    [ "resize_pool", "classunilink_1_1memory_1_1MemoryPool.html#a2398360a84a122dc2404f31be94b9e94", null ]
+    [ "resize_pool", "classunilink_1_1memory_1_1MemoryPool.html#a2398360a84a122dc2404f31be94b9e94", null ],
+    [ "stats", "classunilink_1_1memory_1_1MemoryPool.html#a90c2f8d75dfbce19a4976b3fc767720b", null ]
 ];

@@ -9,7 +9,7 @@ var classunilink_1_1wrapper_1_1ServerInterface =
     [ "client_count", "classunilink_1_1wrapper_1_1ServerInterface.html#ad18e4d24ce196ade73fac5c7b83a2270", null ],
     [ "connected_clients", "classunilink_1_1wrapper_1_1ServerInterface.html#a7530dbaedc5731688c8eb5efebe39a4a", null ],
     [ "framer_factory", "classunilink_1_1wrapper_1_1ServerInterface.html#ae5fa1e69afe25a92f1d0fff1123a8a86", null ],
-    [ "is_listening", "classunilink_1_1wrapper_1_1ServerInterface.html#a4e06f0175a2f72fc75fb50dbbe1a008a", null ],
+    [ "listening", "classunilink_1_1wrapper_1_1ServerInterface.html#a328c04f53504a865d95d1712928140cd", null ],
     [ "on_client_connect", "classunilink_1_1wrapper_1_1ServerInterface.html#a8c53d8804c273c0af6364a65c9dec883", null ],
     [ "on_client_disconnect", "classunilink_1_1wrapper_1_1ServerInterface.html#afeb025189ff78fc75508b8ab936f5653", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1ServerInterface.html#a517ccc48a874346f5dc6a2e12461e972", null ],

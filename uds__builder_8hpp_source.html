@@ -127,12 +127,12 @@ $(document).ready(function(){initNavTree('uds__builder_8hpp_source.html',''); in
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsClientBuilder.html">UdsClientBuilder</a>&amp; retry_interval(std::chrono::milliseconds milliseconds);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsClientBuilder.html">UdsClientBuilder</a>&amp; max_retries(<span class="keywordtype">int</span> max_retries);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsClientBuilder.html">UdsClientBuilder</a>&amp; connection_timeout(std::chrono::milliseconds milliseconds);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsClientBuilder.html">UdsClientBuilder</a>&amp; use_independent_context(<span class="keywordtype">bool</span> use_independent = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsClientBuilder.html">UdsClientBuilder</a>&amp; independent_context(<span class="keywordtype">bool</span> use_independent = <span class="keyword">true</span>);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  std::string socket_path_;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordtype">bool</span> auto_manage_;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keywordtype">bool</span> use_independent_context_;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keywordtype">bool</span> independent_context_;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  std::chrono::milliseconds retry_interval_;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keywordtype">int</span> max_retries_;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  std::chrono::milliseconds connection_timeout_;</div>
@@ -153,14 +153,14 @@ $(document).ready(function(){initNavTree('uds__builder_8hpp_source.html',''); in
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> on_disconnect(std::move(handler));</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  }</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; use_independent_context(<span class="keywordtype">bool</span> use_independent = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; independent_context(<span class="keywordtype">bool</span> use_independent = <span class="keyword">true</span>);</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; unlimited_clients();</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  std::string socket_path_;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keywordtype">bool</span> auto_manage_;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordtype">bool</span> use_independent_context_;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordtype">bool</span> independent_context_;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keywordtype">size_t</span> max_clients_;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;};</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
@@ -184,7 +184,7 @@ $(document).ready(function(){initNavTree('uds__builder_8hpp_source.html',''); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_e4a9c84f290adef67ceee075c03178ea.html">builder</a></li><li class="navelem"><a class="el" href="uds__builder_8hpp.html">uds_builder.hpp</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

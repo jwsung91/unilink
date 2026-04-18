@@ -121,8 +121,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aeff54a149f77423cf6c87ad65fa36a31"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#aeff54a149f77423cf6c87ad65fa36a31">on_client_disconnect</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt; handler)</td></tr>
 <tr class="memdesc:aeff54a149f77423cf6c87ad65fa36a31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper for client disconnection events.  <a href="classunilink_1_1builder_1_1UdsServerBuilder.html#aeff54a149f77423cf6c87ad65fa36a31">More...</a><br /></td></tr>
 <tr class="separator:aeff54a149f77423cf6c87ad65fa36a31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9aaaaf75f2010083882575bc60f9e94"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#ad9aaaaf75f2010083882575bc60f9e94">use_independent_context</a> (bool use_independent=true)</td></tr>
-<tr class="separator:ad9aaaaf75f2010083882575bc60f9e94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3913c8955226959a4787b071e84f3969"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a3913c8955226959a4787b071e84f3969">independent_context</a> (bool use_independent=true)</td></tr>
+<tr class="separator:a3913c8955226959a4787b071e84f3969"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2583c4dcae0ba3aaa8710c9b6675a7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#ac2583c4dcae0ba3aaa8710c9b6675a7b">max_clients</a> (size_t max)</td></tr>
 <tr class="separator:ac2583c4dcae0ba3aaa8710c9b6675a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc12541e49d23fc1d671c61629372ebe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#adc12541e49d23fc1d671c61629372ebe">unlimited_clients</a> ()</td></tr>
@@ -167,12 +167,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9c1e052c7c96ae0700c5880e354b4756 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a9c1e052c7c96ae0700c5880e354b4756">framer</a> (std::function&lt; std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;()&gt; factory)</td></tr>
 <tr class="memdesc:a9c1e052c7c96ae0700c5880e354b4756 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a custom framer factory.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a9c1e052c7c96ae0700c5880e354b4756">More...</a><br /></td></tr>
 <tr class="separator:a9c1e052c7c96ae0700c5880e354b4756 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cc6b45ab72bbc5c91ce4582b159a220 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2cc6b45ab72bbc5c91ce4582b159a220">use_line_framer</a> (std::string_view delimiter=&quot;\n&quot;, bool include_delimiter=false, size_t max_length=65536)</td></tr>
-<tr class="memdesc:a2cc6b45ab72bbc5c91ce4582b159a220 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use LineFramer for message segmentation (e.g., newline delimited)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2cc6b45ab72bbc5c91ce4582b159a220">More...</a><br /></td></tr>
-<tr class="separator:a2cc6b45ab72bbc5c91ce4582b159a220 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb">use_packet_framer</a> (const std::vector&lt; uint8_t &gt; &amp;start_pattern, const std::vector&lt; uint8_t &gt; &amp;end_pattern, size_t max_length)</td></tr>
-<tr class="memdesc:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use PacketFramer for message segmentation (binary pattern matching)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb">More...</a><br /></td></tr>
-<tr class="separator:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a408ad8ac05c4686058dfd78f9d10fca8 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a408ad8ac05c4686058dfd78f9d10fca8">line_framer</a> (std::string_view delimiter=&quot;\n&quot;, bool include_delimiter=false, size_t max_length=65536)</td></tr>
+<tr class="memdesc:a408ad8ac05c4686058dfd78f9d10fca8 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use LineFramer for message segmentation (e.g., newline delimited)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a408ad8ac05c4686058dfd78f9d10fca8">More...</a><br /></td></tr>
+<tr class="separator:a408ad8ac05c4686058dfd78f9d10fca8 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a364c85880974952a4c71a13f7c99587d inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a364c85880974952a4c71a13f7c99587d">packet_framer</a> (const std::vector&lt; uint8_t &gt; &amp;start_pattern, const std::vector&lt; uint8_t &gt; &amp;end_pattern, size_t max_length)</td></tr>
+<tr class="memdesc:a364c85880974952a4c71a13f7c99587d inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use PacketFramer for message segmentation (binary pattern matching)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a364c85880974952a4c71a13f7c99587d">More...</a><br /></td></tr>
+<tr class="separator:a364c85880974952a4c71a13f7c99587d inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af22d16ecad9173ef65318864e9bffbb2 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af22d16ecad9173ef65318864e9bffbb2">on_message</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a> &amp;)&gt; handler)</td></tr>
 <tr class="memdesc:af22d16ecad9173ef65318864e9bffbb2 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback (for framed messages)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#af22d16ecad9173ef65318864e9bffbb2">More...</a><br /></td></tr>
 <tr class="separator:af22d16ecad9173ef65318864e9bffbb2 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,6 +301,26 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a3913c8955226959a4787b071e84f3969"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3913c8955226959a4787b071e84f3969">&#9670;&nbsp;</a></span>independent_context()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp; unilink::builder::UdsServerBuilder::independent_context </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>use_independent</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uds__builder_8cc_source.html#l00139">139</a> of file <a class="el" href="uds__builder_8cc_source.html">uds_builder.cc</a>.</p>
+
+</div>
+</div>
 <a id="ac2583c4dcae0ba3aaa8710c9b6675a7b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac2583c4dcae0ba3aaa8710c9b6675a7b">&#9670;&nbsp;</a></span>max_clients()</h2>
 
@@ -400,26 +420,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ad9aaaaf75f2010083882575bc60f9e94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9aaaaf75f2010083882575bc60f9e94">&#9670;&nbsp;</a></span>use_independent_context()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp; unilink::builder::UdsServerBuilder::use_independent_context </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>use_independent</em> = <code>true</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="uds__builder_8cc_source.html#l00139">139</a> of file <a class="el" href="uds__builder_8cc_source.html">uds_builder.cc</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>unilink/builder/<a class="el" href="uds__builder_8hpp_source.html">uds_builder.hpp</a></li>
 <li>unilink/builder/<a class="el" href="uds__builder_8cc_source.html">uds_builder.cc</a></li>
@@ -430,7 +430,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -137,8 +137,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5b3a62797f4769f5ac05a78248903526"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3eda877fe6128011222ba22f6752c13a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a3eda877fe6128011222ba22f6752c13a">send_line</a> (std::string_view line) override</td></tr>
 <tr class="separator:a3eda877fe6128011222ba22f6752c13a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a8b0ff32de37f594838d3c2ed887d90"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a6a8b0ff32de37f594838d3c2ed887d90">is_connected</a> () const override</td></tr>
-<tr class="separator:a6a8b0ff32de37f594838d3c2ed887d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f7c08ca953db9da266165cbfa0ae0db"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a7f7c08ca953db9da266165cbfa0ae0db">connected</a> () const override</td></tr>
+<tr class="separator:a7f7c08ca953db9da266165cbfa0ae0db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d2180b90d33d46df4e6a9813a195185"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a9d2180b90d33d46df4e6a9813a195185">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler) override</td></tr>
 <tr class="separator:a9d2180b90d33d46df4e6a9813a195185"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0f17d293895efbc2e003d2186e939a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1Udp.html#ab0f17d293895efbc2e003d2186e939a7">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler) override</td></tr>
@@ -370,6 +370,35 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a7f7c08ca953db9da266165cbfa0ae0db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f7c08ca953db9da266165cbfa0ae0db">&#9670;&nbsp;</a></span>connected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool unilink::wrapper::Udp::connected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">unilink::wrapper::ChannelInterface</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00281">281</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
+
+</div>
+</div>
 <a id="afefc3d41f20d09f2b9cb0e80e8cc333a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afefc3d41f20d09f2b9cb0e80e8cc333a">&#9670;&nbsp;</a></span>framer()</h2>
 
@@ -405,35 +434,6 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aa67556839387807a38590570cf52951f">unilink::wrapper::ChannelInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00300">300</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
-
-</div>
-</div>
-<a id="a6a8b0ff32de37f594838d3c2ed887d90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a8b0ff32de37f594838d3c2ed887d90">&#9670;&nbsp;</a></span>is_connected()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool unilink::wrapper::Udp::is_connected </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af00a13e38e4a80728ccdc573c5d8da97">unilink::wrapper::ChannelInterface</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="wrapper_2udp_2udp_8cc_source.html#l00281">281</a> of file <a class="el" href="wrapper_2udp_2udp_8cc_source.html">udp.cc</a>.</p>
 
 </div>
 </div>
@@ -795,7 +795,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1Udp.html">Udp</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

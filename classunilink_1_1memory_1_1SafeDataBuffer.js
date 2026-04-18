@@ -15,7 +15,6 @@ var classunilink_1_1memory_1_1SafeDataBuffer =
     [ "clear", "classunilink_1_1memory_1_1SafeDataBuffer.html#ae33b944688fa688519be978b53763d2f", null ],
     [ "data", "classunilink_1_1memory_1_1SafeDataBuffer.html#aca37b8c40359695418d5c250606f8aa3", null ],
     [ "empty", "classunilink_1_1memory_1_1SafeDataBuffer.html#af0b2d06cb2ca6ed1ac39210eeed2e3a7", null ],
-    [ "is_valid", "classunilink_1_1memory_1_1SafeDataBuffer.html#aa57a98c1cc8ffe41dd33de8e0a0cbddf", null ],
     [ "operator!=", "classunilink_1_1memory_1_1SafeDataBuffer.html#a8503ddd36d4d0d75e7bd0eecb1dcbe5f", null ],
     [ "operator=", "classunilink_1_1memory_1_1SafeDataBuffer.html#a043b913feee208c980d75737e0038bde", null ],
     [ "operator=", "classunilink_1_1memory_1_1SafeDataBuffer.html#afcfda230dbac6333deef99ac43c8c21e", null ],
@@ -24,5 +23,6 @@ var classunilink_1_1memory_1_1SafeDataBuffer =
     [ "reserve", "classunilink_1_1memory_1_1SafeDataBuffer.html#a4fbf64445ba0fc6f6661a98fe99b3754", null ],
     [ "resize", "classunilink_1_1memory_1_1SafeDataBuffer.html#a4d69db7bbdd903f4bc5076af6a51341f", null ],
     [ "size", "classunilink_1_1memory_1_1SafeDataBuffer.html#ae60b500449b2627a7b050097d14e92e9", null ],
+    [ "valid", "classunilink_1_1memory_1_1SafeDataBuffer.html#ab80ca72dd35d8c4bf5e0418872400956", null ],
     [ "validate", "classunilink_1_1memory_1_1SafeDataBuffer.html#a53473177a7980ff5a4d8990dd765b526", null ]
 ];

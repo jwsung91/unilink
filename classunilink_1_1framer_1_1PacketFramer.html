@@ -115,8 +115,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae0de7a72e4794e1df90a30eb73289993"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1framer_1_1PacketFramer.html#ae0de7a72e4794e1df90a30eb73289993">push_bytes</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data) override</td></tr>
 <tr class="memdesc:ae0de7a72e4794e1df90a30eb73289993"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push raw bytes into the framer's internal buffer.  <a href="classunilink_1_1framer_1_1PacketFramer.html#ae0de7a72e4794e1df90a30eb73289993">More...</a><br /></td></tr>
 <tr class="separator:ae0de7a72e4794e1df90a30eb73289993"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ea79801390d8773d1c7c6ca8ca8f70a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1framer_1_1PacketFramer.html#a1ea79801390d8773d1c7c6ca8ca8f70a">set_on_message</a> (<a class="el" href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">MessageCallback</a> cb) override</td></tr>
-<tr class="separator:a1ea79801390d8773d1c7c6ca8ca8f70a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e149d6d10feff3ccd8556f4418a3e88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1framer_1_1PacketFramer.html#a1e149d6d10feff3ccd8556f4418a3e88">on_message</a> (<a class="el" href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">MessageCallback</a> cb) override</td></tr>
+<tr class="separator:a1e149d6d10feff3ccd8556f4418a3e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afffae9e1300071518b560a64c0afdb9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1framer_1_1PacketFramer.html#afffae9e1300071518b560a64c0afdb9b">reset</a> () override</td></tr>
 <tr class="memdesc:afffae9e1300071518b560a64c0afdb9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset internal state/buffer.  <a href="classunilink_1_1framer_1_1PacketFramer.html#afffae9e1300071518b560a64c0afdb9b">More...</a><br /></td></tr>
 <tr class="separator:afffae9e1300071518b560a64c0afdb9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,6 +209,36 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1e149d6d10feff3ccd8556f4418a3e88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e149d6d10feff3ccd8556f4418a3e88">&#9670;&nbsp;</a></span>on_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::framer::PacketFramer::on_message </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">MessageCallback</a>&#160;</td>
+          <td class="paramname"><em>cb</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classunilink_1_1framer_1_1IFramer.html#aca4387d79ff5fc6182bf4129bbc5bc77">unilink::framer::IFramer</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="packet__framer_8cc_source.html#l00221">221</a> of file <a class="el" href="packet__framer_8cc_source.html">packet_framer.cc</a>.</p>
+
+</div>
+</div>
 <a id="ae0de7a72e4794e1df90a30eb73289993"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae0de7a72e4794e1df90a30eb73289993">&#9670;&nbsp;</a></span>push_bytes()</h2>
 
@@ -280,36 +310,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ea79801390d8773d1c7c6ca8ca8f70a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ea79801390d8773d1c7c6ca8ca8f70a">&#9670;&nbsp;</a></span>set_on_message()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void unilink::framer::PacketFramer::set_on_message </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1framer_1_1IFramer.html#ae5ee86cbd7ded1a4f845f3889b4189ad">MessageCallback</a>&#160;</td>
-          <td class="paramname"><em>cb</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classunilink_1_1framer_1_1IFramer.html#a2a6e8aaabace011d29ed4817e4bcc234">unilink::framer::IFramer</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="packet__framer_8cc_source.html#l00221">221</a> of file <a class="el" href="packet__framer_8cc_source.html">packet_framer.cc</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>unilink/framer/<a class="el" href="packet__framer_8hpp_source.html">packet_framer.hpp</a></li>
 <li>unilink/framer/<a class="el" href="packet__framer_8cc_source.html">packet_framer.cc</a></li>
@@ -320,7 +320,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1framer.html">framer</a></li><li class="navelem"><a class="el" href="classunilink_1_1framer_1_1PacketFramer.html">PacketFramer</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

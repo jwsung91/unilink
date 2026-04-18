@@ -111,16 +111,16 @@ Inheritance diagram for unilink::diagnostics::UnilinkException:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab271f3394b4a011636c93a821f3e7961"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#ab271f3394b4a011636c93a821f3e7961">UnilinkException</a> (const std::string &amp;message, const std::string &amp;component=&quot;&quot;, const std::string &amp;operation=&quot;&quot;)</td></tr>
+<tr class="memitem:ab271f3394b4a011636c93a821f3e7961"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#ab271f3394b4a011636c93a821f3e7961">UnilinkException</a> (const std::string &amp;message, const std::string &amp;<a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a8ddefd9d5ef9e34faa3f8afa7518b9b9">component</a>=&quot;&quot;, const std::string &amp;<a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a439ff544b2421649e93ecbb88ee43791">operation</a>=&quot;&quot;)</td></tr>
 <tr class="separator:ab271f3394b4a011636c93a821f3e7961"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4dc5973cfb7abaace43625a5a0178303"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a4dc5973cfb7abaace43625a5a0178303">~UnilinkException</a> () noexcept</td></tr>
 <tr class="separator:a4dc5973cfb7abaace43625a5a0178303"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fd5b3d64bcd794de63de2fc9684132c"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a4fd5b3d64bcd794de63de2fc9684132c">get_component</a> () const noexcept</td></tr>
-<tr class="separator:a4fd5b3d64bcd794de63de2fc9684132c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16fcd0843e2ebd686a4e6d281e674c7b"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a16fcd0843e2ebd686a4e6d281e674c7b">get_operation</a> () const noexcept</td></tr>
-<tr class="separator:a16fcd0843e2ebd686a4e6d281e674c7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9aba73e59edca9483b29e0613f1bb57"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#aa9aba73e59edca9483b29e0613f1bb57">get_full_message</a> () const</td></tr>
-<tr class="separator:aa9aba73e59edca9483b29e0613f1bb57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ddefd9d5ef9e34faa3f8afa7518b9b9"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a8ddefd9d5ef9e34faa3f8afa7518b9b9">component</a> () const noexcept</td></tr>
+<tr class="separator:a8ddefd9d5ef9e34faa3f8afa7518b9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a439ff544b2421649e93ecbb88ee43791"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a439ff544b2421649e93ecbb88ee43791">operation</a> () const noexcept</td></tr>
+<tr class="separator:a439ff544b2421649e93ecbb88ee43791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c36f441fc82009086269ad94dfbde6f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html#a3c36f441fc82009086269ad94dfbde6f">full_message</a> () const</td></tr>
+<tr class="separator:a3c36f441fc82009086269ad94dfbde6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base exception class for all unilink exceptions. </p>
@@ -198,8 +198,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4fd5b3d64bcd794de63de2fc9684132c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4fd5b3d64bcd794de63de2fc9684132c">&#9670;&nbsp;</a></span>get_component()</h2>
+<a id="a8ddefd9d5ef9e34faa3f8afa7518b9b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ddefd9d5ef9e34faa3f8afa7518b9b9">&#9670;&nbsp;</a></span>component()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,7 +208,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string&amp; unilink::diagnostics::UnilinkException::get_component </td>
+          <td class="memname">const std::string&amp; unilink::diagnostics::UnilinkException::component </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -225,8 +225,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa9aba73e59edca9483b29e0613f1bb57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9aba73e59edca9483b29e0613f1bb57">&#9670;&nbsp;</a></span>get_full_message()</h2>
+<a id="a3c36f441fc82009086269ad94dfbde6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c36f441fc82009086269ad94dfbde6f">&#9670;&nbsp;</a></span>full_message()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -235,7 +235,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string unilink::diagnostics::UnilinkException::get_full_message </td>
+          <td class="memname">std::string unilink::diagnostics::UnilinkException::full_message </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -252,8 +252,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a16fcd0843e2ebd686a4e6d281e674c7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16fcd0843e2ebd686a4e6d281e674c7b">&#9670;&nbsp;</a></span>get_operation()</h2>
+<a id="a439ff544b2421649e93ecbb88ee43791"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a439ff544b2421649e93ecbb88ee43791">&#9670;&nbsp;</a></span>operation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,7 +262,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string&amp; unilink::diagnostics::UnilinkException::get_operation </td>
+          <td class="memname">const std::string&amp; unilink::diagnostics::UnilinkException::operation </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -289,7 +289,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1diagnostics.html">diagnostics</a></li><li class="navelem"><a class="el" href="classunilink_1_1diagnostics_1_1UnilinkException.html">UnilinkException</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

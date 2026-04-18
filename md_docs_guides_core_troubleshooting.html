@@ -612,7 +612,7 @@ Enable Debug Logging</h2>
 <div class="line">    );</div>
 <div class="line">    <a class="code" href="classunilink_1_1diagnostics_1_1ErrorHandler.html#aadba4fe9b3095f294930ba66c2f26a01">unilink::diagnostics::ErrorHandler::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1ErrorHandler.html#af0b34d289b01281f75ce494b6ca44587">register_callback</a>(</div>
 <div class="line">        [](<span class="keyword">const</span> <a class="code" href="structunilink_1_1diagnostics_1_1ErrorInfo.html">unilink::diagnostics::ErrorInfo</a>&amp; error) {</div>
-<div class="line">            std::cerr &lt;&lt; <span class="stringliteral">&quot;[ERROR] &quot;</span> &lt;&lt; error.<a class="code" href="structunilink_1_1diagnostics_1_1ErrorInfo.html#a270827dd9f3bb427f7bc8ee4bf12395e">get_summary</a>() &lt;&lt; std::endl;</div>
+<div class="line">            std::cerr &lt;&lt; <span class="stringliteral">&quot;[ERROR] &quot;</span> &lt;&lt; error.get_summary() &lt;&lt; std::endl;</div>
 <div class="line">        }</div>
 <div class="line">    );</div>
 <div class="line">}</div>
@@ -625,7 +625,6 @@ Enable Debug Logging</h2>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab22d3e2cb33951afa9b3ec53950e5cc7a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::ErrorLevel::INFO</a></div><div class="ttdeci">@ INFO</div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a></div><div class="ttdeci">@ DEBUG</div></div>
 <div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html">unilink::diagnostics::ErrorInfo</a></div><div class="ttdoc">Comprehensive error information structure.</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00064">error_types.hpp:64</a></div></div>
-<div class="ttc" id="astructunilink_1_1diagnostics_1_1ErrorInfo_html_a270827dd9f3bb427f7bc8ee4bf12395e"><div class="ttname"><a href="structunilink_1_1diagnostics_1_1ErrorInfo.html#a270827dd9f3bb427f7bc8ee4bf12395e">unilink::diagnostics::ErrorInfo::get_summary</a></div><div class="ttdeci">std::string get_summary() const</div><div class="ttdoc">Get formatted error summary.</div><div class="ttdef"><b>Definition:</b> <a href="error__types_8hpp_source.html#l00165">error_types.hpp:165</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md551"></a>
 Use GDB for Debugging</h2>
 <div class="fragment"><div class="line"># Compile with debug symbols</div>
@@ -692,7 +691,7 @@ Getting Help</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

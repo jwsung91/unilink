@@ -152,7 +152,7 @@ Step 2: Create A Minimal Serial Terminal</h1>
 <div class="line">    std::string line;</div>
 <div class="line">    <span class="keywordflow">while</span> (std::getline(std::cin, line)) {</div>
 <div class="line">        <span class="keywordflow">if</span> (line == <span class="stringliteral">&quot;/quit&quot;</span>) <span class="keywordflow">break</span>;</div>
-<div class="line">        <span class="keywordflow">if</span> (<a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;is_connected()) {</div>
+<div class="line">        <span class="keywordflow">if</span> (<a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;connected()) {</div>
 <div class="line">            <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;send(line);</div>
 <div class="line">        }</div>
 <div class="line">    }</div>
@@ -232,7 +232,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

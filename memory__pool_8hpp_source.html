@@ -153,13 +153,13 @@ $(document).ready(function(){initNavTree('memory__pool_8hpp_source.html',''); in
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  std::unique_ptr&lt;uint8_t[]&gt; acquire(<span class="keywordtype">size_t</span> size);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  std::unique_ptr&lt;uint8_t[]&gt; acquire(<a class="code" href="classunilink_1_1memory_1_1MemoryPool.html#a12ac59625a62a3c6729d3360d852410d">BufferSize</a> buffer_size);</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keywordtype">void</span> release(std::unique_ptr&lt;uint8_t[]&gt; buffer, <span class="keywordtype">size_t</span> size);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <a class="code" href="structunilink_1_1memory_1_1MemoryPool_1_1PoolStats.html">PoolStats</a> get_stats() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keywordtype">double</span> get_hit_rate() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <a class="code" href="structunilink_1_1memory_1_1MemoryPool_1_1PoolStats.html">PoolStats</a> stats() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keywordtype">double</span> hit_rate() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="keywordtype">void</span> cleanup_old_buffers(std::chrono::milliseconds max_age = std::chrono::minutes(5));</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  std::pair&lt;size_t, size_t&gt; get_memory_usage() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  std::pair&lt;size_t, size_t&gt; memory_usage() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keywordtype">void</span> resize_pool(<span class="keywordtype">size_t</span> new_size);</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keywordtype">void</span> auto_tune();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <a class="code" href="structunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics.html">HealthMetrics</a> get_health_metrics() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <a class="code" href="structunilink_1_1memory_1_1MemoryPool_1_1HealthMetrics.html">HealthMetrics</a> health_metrics() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="comment">// Simple pool bucket</span></div>
@@ -183,8 +183,8 @@ $(document).ready(function(){initNavTree('memory__pool_8hpp_source.html',''); in
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  std::atomic&lt;size_t&gt; pool_hits_{0};</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="comment">// Helper functions</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  PoolBucket&amp; get_bucket(<span class="keywordtype">size_t</span> size);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordtype">size_t</span> get_bucket_index(<span class="keywordtype">size_t</span> size) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  PoolBucket&amp; bucket(<span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordtype">size_t</span> bucket_index(<span class="keywordtype">size_t</span> size) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="comment">// Allocation functions</span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  std::unique_ptr&lt;uint8_t[]&gt; acquire_from_bucket(PoolBucket&amp; bucket);</div>
@@ -285,7 +285,7 @@ $(document).ready(function(){initNavTree('memory__pool_8hpp_source.html',''); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c49fb1fe3cdea7da91949965a419900.html">memory</a></li><li class="navelem"><a class="el" href="memory__pool_8hpp.html">memory_pool.hpp</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:51 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

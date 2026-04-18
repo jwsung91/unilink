@@ -13,7 +13,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "connected_clients", "classunilink_1_1wrapper_1_1TcpServer.html#a4ce5c370633521f49a3934a12b2ddbef", null ],
     [ "framer_factory", "classunilink_1_1wrapper_1_1TcpServer.html#ae5bc8ab808422ff2e3dbfd712179cd06", null ],
     [ "idle_timeout", "classunilink_1_1wrapper_1_1TcpServer.html#a8d1309bfe7e5bbc89da2f4ca95fd84d6", null ],
-    [ "is_listening", "classunilink_1_1wrapper_1_1TcpServer.html#a00ec7f00722335d8291854aafd381d96", null ],
+    [ "listening", "classunilink_1_1wrapper_1_1TcpServer.html#afa0b2e12980ba7756b6cff5c522ddc30", null ],
     [ "manage_external_context", "classunilink_1_1wrapper_1_1TcpServer.html#aac8c49a3601bed2f6aa06b4acaabec21", null ],
     [ "max_clients", "classunilink_1_1wrapper_1_1TcpServer.html#af0259a35d0b4084abef647654bd66a7b", null ],
     [ "on_client_connect", "classunilink_1_1wrapper_1_1TcpServer.html#a379244c1bfcda52a7a25f6038de3f484", null ],

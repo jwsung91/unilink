@@ -123,9 +123,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acb48d2eaa65409712fc8559e48460e91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#acb48d2eaa65409712fc8559e48460e91">auto_manage</a> (bool auto_manage=true) override</td></tr>
 <tr class="memdesc:acb48d2eaa65409712fc8559e48460e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#acb48d2eaa65409712fc8559e48460e91">More...</a><br /></td></tr>
 <tr class="separator:acb48d2eaa65409712fc8559e48460e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae78ea0ce308a630bfc92abfba6d389e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae78ea0ce308a630bfc92abfba6d389e8">use_independent_context</a> (bool use_independent=true)</td></tr>
-<tr class="memdesc:ae78ea0ce308a630bfc92abfba6d389e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use independent IoContext for this server.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#ae78ea0ce308a630bfc92abfba6d389e8">More...</a><br /></td></tr>
-<tr class="separator:ae78ea0ce308a630bfc92abfba6d389e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a183b8e3d30601adfda610837270cf808"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a183b8e3d30601adfda610837270cf808">independent_context</a> (bool use_independent=true)</td></tr>
+<tr class="memdesc:a183b8e3d30601adfda610837270cf808"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use independent IoContext for this server.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a183b8e3d30601adfda610837270cf808">More...</a><br /></td></tr>
+<tr class="separator:a183b8e3d30601adfda610837270cf808"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9b5de3896e82bc59ed60c5872c7f6f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">port_retry</a> (bool enable=true, int max_retries=3, int retry_interval_ms=1000)</td></tr>
 <tr class="memdesc:af9b5de3896e82bc59ed60c5872c7f6f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable port binding retry on failure.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#af9b5de3896e82bc59ed60c5872c7f6f1">More...</a><br /></td></tr>
 <tr class="separator:af9b5de3896e82bc59ed60c5872c7f6f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,12 +184,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9c1e052c7c96ae0700c5880e354b4756 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a9c1e052c7c96ae0700c5880e354b4756">framer</a> (std::function&lt; std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt;()&gt; factory)</td></tr>
 <tr class="memdesc:a9c1e052c7c96ae0700c5880e354b4756 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a custom framer factory.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a9c1e052c7c96ae0700c5880e354b4756">More...</a><br /></td></tr>
 <tr class="separator:a9c1e052c7c96ae0700c5880e354b4756 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cc6b45ab72bbc5c91ce4582b159a220 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2cc6b45ab72bbc5c91ce4582b159a220">use_line_framer</a> (std::string_view delimiter=&quot;\n&quot;, bool include_delimiter=false, size_t max_length=65536)</td></tr>
-<tr class="memdesc:a2cc6b45ab72bbc5c91ce4582b159a220 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use LineFramer for message segmentation (e.g., newline delimited)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2cc6b45ab72bbc5c91ce4582b159a220">More...</a><br /></td></tr>
-<tr class="separator:a2cc6b45ab72bbc5c91ce4582b159a220 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb">use_packet_framer</a> (const std::vector&lt; uint8_t &gt; &amp;start_pattern, const std::vector&lt; uint8_t &gt; &amp;end_pattern, size_t max_length)</td></tr>
-<tr class="memdesc:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use PacketFramer for message segmentation (binary pattern matching)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a2bbd141051bf6d5ec93d6171e48691cb">More...</a><br /></td></tr>
-<tr class="separator:a2bbd141051bf6d5ec93d6171e48691cb inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a408ad8ac05c4686058dfd78f9d10fca8 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a408ad8ac05c4686058dfd78f9d10fca8">line_framer</a> (std::string_view delimiter=&quot;\n&quot;, bool include_delimiter=false, size_t max_length=65536)</td></tr>
+<tr class="memdesc:a408ad8ac05c4686058dfd78f9d10fca8 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use LineFramer for message segmentation (e.g., newline delimited)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a408ad8ac05c4686058dfd78f9d10fca8">More...</a><br /></td></tr>
+<tr class="separator:a408ad8ac05c4686058dfd78f9d10fca8 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a364c85880974952a4c71a13f7c99587d inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a364c85880974952a4c71a13f7c99587d">packet_framer</a> (const std::vector&lt; uint8_t &gt; &amp;start_pattern, const std::vector&lt; uint8_t &gt; &amp;end_pattern, size_t max_length)</td></tr>
+<tr class="memdesc:a364c85880974952a4c71a13f7c99587d inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use PacketFramer for message segmentation (binary pattern matching)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a364c85880974952a4c71a13f7c99587d">More...</a><br /></td></tr>
+<tr class="separator:a364c85880974952a4c71a13f7c99587d inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af22d16ecad9173ef65318864e9bffbb2 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af22d16ecad9173ef65318864e9bffbb2">on_message</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a> &amp;)&gt; handler)</td></tr>
 <tr class="memdesc:af22d16ecad9173ef65318864e9bffbb2 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set message handler callback (for framed messages)  <a href="classunilink_1_1builder_1_1BuilderInterface.html#af22d16ecad9173ef65318864e9bffbb2">More...</a><br /></td></tr>
 <tr class="separator:af22d16ecad9173ef65318864e9bffbb2 inherit pub_methods_classunilink_1_1builder_1_1BuilderInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -392,6 +392,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a183b8e3d30601adfda610837270cf808"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a183b8e3d30601adfda610837270cf808">&#9670;&nbsp;</a></span>independent_context()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp; unilink::builder::TcpServerBuilder::independent_context </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>use_independent</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Use independent IoContext for this server. </p>
+
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00093">93</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
+
+</div>
+</div>
 <a id="a4de3178841f4d383fbaa9761b55e7a1f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4de3178841f4d383fbaa9761b55e7a1f">&#9670;&nbsp;</a></span>max_clients()</h2>
 
@@ -568,28 +590,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ae78ea0ce308a630bfc92abfba6d389e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae78ea0ce308a630bfc92abfba6d389e8">&#9670;&nbsp;</a></span>use_independent_context()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp; unilink::builder::TcpServerBuilder::use_independent_context </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>use_independent</em> = <code>true</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Use independent IoContext for this server. </p>
-
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8cc_source.html#l00093">93</a> of file <a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>unilink/builder/<a class="el" href="tcp__server__builder_8hpp_source.html">tcp_server_builder.hpp</a></li>
 <li>unilink/builder/<a class="el" href="tcp__server__builder_8cc_source.html">tcp_server_builder.cc</a></li>
@@ -600,7 +600,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

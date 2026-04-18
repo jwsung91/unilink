@@ -202,10 +202,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                      \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a99cd1c61610c76a57cb8d10d6df6b870">unilink::diagnostics::LogLevel::CRITICAL</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
-<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a286630c83e07db4633e3f9a9f1f1c115">critical</a>(component, operation, message);                     \</div>
-<div class="line">    }                                                                                                       \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                  \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a99cd1c61610c76a57cb8d10d6df6b870">unilink::diagnostics::LogLevel::CRITICAL</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
+<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a286630c83e07db4633e3f9a9f1f1c115">critical</a>(component, operation, message);                 \</div>
+<div class="line">    }                                                                                                   \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a286630c83e07db4633e3f9a9f1f1c115"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a286630c83e07db4633e3f9a9f1f1c115">unilink::diagnostics::Logger::critical</a></div><div class="ttdeci">void critical(std::string_view component, std::string_view operation, std::string_view message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00630">logger.cc:630</a></div></div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a2e114f7695d5aac3b9a993be97c501c9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdoc">Get singleton instance.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00503">logger.cc:503</a></div></div>
@@ -246,10 +246,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                   \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
-<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#ace307c5e28ee9971be657e431f31a8e5">debug</a>(component, operation, message);                     \</div>
-<div class="line">    }                                                                                                    \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                               \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
+<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#ace307c5e28ee9971be657e431f31a8e5">debug</a>(component, operation, message);                 \</div>
+<div class="line">    }                                                                                                \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_ace307c5e28ee9971be657e431f31a8e5"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#ace307c5e28ee9971be657e431f31a8e5">unilink::diagnostics::Logger::debug</a></div><div class="ttdeci">void debug(std::string_view component, std::string_view operation, std::string_view message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00614">logger.cc:614</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a></div><div class="ttdeci">@ DEBUG</div></div>
@@ -291,10 +291,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                   \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) { \</div>
-<div class="line">      UNILINK_LOG_DEBUG(component, operation, message);                                                  \</div>
-<div class="line">    }                                                                                                    \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                               \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) { \</div>
+<div class="line">      UNILINK_LOG_DEBUG(component, operation, message);                                              \</div>
+<div class="line">    }                                                                                                \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 <p>Conditional logging macros (only evaluate message if level is enabled) </p>
@@ -334,10 +334,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                   \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0abb1ca97ec761fc37101737ba0aa2e7c5">unilink::diagnostics::LogLevel::ERROR</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
-<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a7f7c78e7d5cda5129036b660fd9f1f46">error</a>(component, operation, message);                     \</div>
-<div class="line">    }                                                                                                    \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                               \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0abb1ca97ec761fc37101737ba0aa2e7c5">unilink::diagnostics::LogLevel::ERROR</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
+<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a7f7c78e7d5cda5129036b660fd9f1f46">error</a>(component, operation, message);                 \</div>
+<div class="line">    }                                                                                                \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7f7c78e7d5cda5129036b660fd9f1f46"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7f7c78e7d5cda5129036b660fd9f1f46">unilink::diagnostics::Logger::error</a></div><div class="ttdeci">void error(std::string_view component, std::string_view operation, std::string_view message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00626">logger.cc:626</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0abb1ca97ec761fc37101737ba0aa2e7c5"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0abb1ca97ec761fc37101737ba0aa2e7c5">unilink::diagnostics::LogLevel::ERROR</a></div><div class="ttdeci">@ ERROR</div></div>
@@ -377,10 +377,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                  \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::LogLevel::INFO</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
-<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a7ba92315a3aca3940aa2bf1f4aa7277e">info</a>(component, operation, message);                     \</div>
-<div class="line">    }                                                                                                   \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                              \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::LogLevel::INFO</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
+<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a7ba92315a3aca3940aa2bf1f4aa7277e">info</a>(component, operation, message);                 \</div>
+<div class="line">    }                                                                                               \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a7ba92315a3aca3940aa2bf1f4aa7277e"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a7ba92315a3aca3940aa2bf1f4aa7277e">unilink::diagnostics::Logger::info</a></div><div class="ttdeci">void info(std::string_view component, std::string_view operation, std::string_view message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00618">logger.cc:618</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::LogLevel::INFO</a></div><div class="ttdeci">@ INFO</div></div>
@@ -420,10 +420,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                  \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::LogLevel::INFO</a>) { \</div>
-<div class="line">      UNILINK_LOG_INFO(component, operation, message);                                                  \</div>
-<div class="line">    }                                                                                                   \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                              \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a551b723eafd6a31d444fcb2f5920fbd3">unilink::diagnostics::LogLevel::INFO</a>) { \</div>
+<div class="line">      UNILINK_LOG_INFO(component, operation, message);                                              \</div>
+<div class="line">    }                                                                                               \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="logger_8hpp_source.html#l00303">303</a> of file <a class="el" href="logger_8hpp_source.html">logger.hpp</a>.</p>
@@ -456,7 +456,7 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                            \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) {          \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) {              \</div>
 <div class="line">      auto _perf_end_##operation = std::chrono::high_resolution_clock::now();                                     \</div>
 <div class="line">      using _us_t = std::chrono::microseconds;                                                                    \</div>
 <div class="line">      auto _diff_##operation = _perf_end_##operation - _perf_start_##operation;                                   \</div>
@@ -495,11 +495,11 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">auto</span> _perf_start_##operation =                                                                      \</div>
-<div class="line">      (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a3e4e4095e335cb7b4b51241300a8d7d9">get_level</a>() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) \</div>
-<div class="line">          ? std::chrono::high_resolution_clock::now()                                                 \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">auto</span> _perf_start_##operation =                                                                  \</div>
+<div class="line">      (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a4a88b05c250af04b01f2a3d94473d0e3">level</a>() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15">unilink::diagnostics::LogLevel::DEBUG</a>) \</div>
+<div class="line">          ? std::chrono::high_resolution_clock::now()                                             \</div>
 <div class="line">          : std::chrono::high_resolution_clock::time_point()</div>
-<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a3e4e4095e335cb7b4b51241300a8d7d9"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a3e4e4095e335cb7b4b51241300a8d7d9">unilink::diagnostics::Logger::get_level</a></div><div class="ttdeci">LogLevel get_level() const</div><div class="ttdoc">Get current log level.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00507">logger.cc:507</a></div></div>
+<div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_a4a88b05c250af04b01f2a3d94473d0e3"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#a4a88b05c250af04b01f2a3d94473d0e3">unilink::diagnostics::Logger::level</a></div><div class="ttdeci">LogLevel level() const</div><div class="ttdoc">Get current log level.</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00507">logger.cc:507</a></div></div>
 </div><!-- fragment -->
 <p>Performance logging macros for expensive operations. </p>
 
@@ -538,10 +538,10 @@ Enumerations</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                     \</div>
-<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().get_level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b">unilink::diagnostics::LogLevel::WARNING</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
-<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#ad60664c997885ffc6326d8c299189116">warning</a>(component, operation, message);                     \</div>
-<div class="line">    }                                                                                                      \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                                                 \</div>
+<div class="line">    if (<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">unilink::diagnostics::Logger::instance</a>().level() &lt;= <a class="code" href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b">unilink::diagnostics::LogLevel::WARNING</a>) { <a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">\</a></div>
+<div class="line"><a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9">      unilink::diagnostics::Logger::instance</a>().<a class="code" href="classunilink_1_1diagnostics_1_1Logger.html#ad60664c997885ffc6326d8c299189116">warning</a>(component, operation, message);                 \</div>
+<div class="line">    }                                                                                                  \</div>
 <div class="line">  } <span class="keywordflow">while</span> (0)</div>
 <div class="ttc" id="aclassunilink_1_1diagnostics_1_1Logger_html_ad60664c997885ffc6326d8c299189116"><div class="ttname"><a href="classunilink_1_1diagnostics_1_1Logger.html#ad60664c997885ffc6326d8c299189116">unilink::diagnostics::Logger::warning</a></div><div class="ttdeci">void warning(std::string_view component, std::string_view operation, std::string_view message)</div><div class="ttdef"><b>Definition:</b> <a href="logger_8cc_source.html#l00622">logger.cc:622</a></div></div>
 <div class="ttc" id="anamespaceunilink_1_1diagnostics_html_ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b"><div class="ttname"><a href="namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0a059e9861e0400dfbe05c98a841f3f96b">unilink::diagnostics::LogLevel::WARNING</a></div><div class="ttdeci">@ WARNING</div></div>
@@ -556,7 +556,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_7729b3b589609220b9ffe88f5b919f3c.html">diagnostics</a></li><li class="navelem"><a class="el" href="logger_8hpp.html">logger.hpp</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

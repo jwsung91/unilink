@@ -2,14 +2,14 @@ var namespaceunilink_1_1memory =
 [
     [ "memory_validator", "namespaceunilink_1_1memory_1_1memory__validator.html", [
       [ "check_buffer_bounds", "namespaceunilink_1_1memory_1_1memory__validator.html#a60d61b8895e986a0bee5cafc38f60704", null ],
+      [ "double_free", "namespaceunilink_1_1memory_1_1memory__validator.html#a433dec67ba6ef6f8d78d1caee66f79c1", null ],
       [ "initialize_canary_bytes", "namespaceunilink_1_1memory_1_1memory__validator.html#ac2c22d5175edc0989adef369dcdfb001", null ],
-      [ "is_double_free", "namespaceunilink_1_1memory_1_1memory__validator.html#a2b9141d8c809b9485578c143cd47a1f2", null ],
-      [ "is_memory_accessible", "namespaceunilink_1_1memory_1_1memory__validator.html#a623388fd6cba952f7439b41eb96c37bc", null ],
-      [ "is_memory_aligned", "namespaceunilink_1_1memory_1_1memory__validator.html#a6587d85f299cba4369de3f45a972242d", null ],
-      [ "is_use_after_free", "namespaceunilink_1_1memory_1_1memory__validator.html#a77259131d9814070631f1fa3652645ff", null ],
-      [ "safe_memcpy_validated", "namespaceunilink_1_1memory_1_1memory__validator.html#a2cf01d29e0d5c63e9bdb5a0008351b89", null ],
-      [ "safe_memmove_validated", "namespaceunilink_1_1memory_1_1memory__validator.html#ad7561b3bbc98ff7c4de40da48af2d359", null ],
-      [ "safe_memset_validated", "namespaceunilink_1_1memory_1_1memory__validator.html#a7db33a04bfc7baa3263305c39278089b", null ],
+      [ "memory_accessible", "namespaceunilink_1_1memory_1_1memory__validator.html#a3a349f1dda39edf3f624186afc02aceb", null ],
+      [ "memory_aligned", "namespaceunilink_1_1memory_1_1memory__validator.html#a6c80480ebe24b4445b0fe679e6add166", null ],
+      [ "safe_memcpy", "namespaceunilink_1_1memory_1_1memory__validator.html#aa30e4303e1e0a1d9a6a0858920c5e27e", null ],
+      [ "safe_memmove", "namespaceunilink_1_1memory_1_1memory__validator.html#ad9d80ab6aef57364d8a5d9ff9162a9b3", null ],
+      [ "safe_memset", "namespaceunilink_1_1memory_1_1memory__validator.html#a7818b460a62e980622f068af34e92401", null ],
+      [ "use_after_free", "namespaceunilink_1_1memory_1_1memory__validator.html#a369bd3ff4ed187a13d23ccf7c891b079", null ],
       [ "validate_canary_bytes", "namespaceunilink_1_1memory_1_1memory__validator.html#a5acf0c8d036313b53f32346afd80f5a3", null ]
     ] ],
     [ "safe_buffer_factory", "namespaceunilink_1_1memory_1_1safe__buffer__factory.html", [

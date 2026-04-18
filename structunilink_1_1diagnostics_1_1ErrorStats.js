@@ -1,6 +1,6 @@
 var structunilink_1_1diagnostics_1_1ErrorStats =
 [
-    [ "get_error_rate", "structunilink_1_1diagnostics_1_1ErrorStats.html#a8c0458cf882af74d55aac0cc8e965f70", null ],
+    [ "error_rate", "structunilink_1_1diagnostics_1_1ErrorStats.html#a91590a1a6908541f51019338c8d30080", null ],
     [ "reset", "structunilink_1_1diagnostics_1_1ErrorStats.html#a9a2c2548112f8543517e601afabc5edd", null ],
     [ "errors_by_category", "structunilink_1_1diagnostics_1_1ErrorStats.html#af5ec9726551f80e006715c723d9ccf7c", null ],
     [ "errors_by_level", "structunilink_1_1diagnostics_1_1ErrorStats.html#a8af236497462100771cd8c6d98877947", null ],

@@ -126,8 +126,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a015554265152c7601cbff20480afeb43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8b698aa572dffa18e0e9df5d465c6d0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">stop</a> ()=0</td></tr>
 <tr class="separator:ad8b698aa572dffa18e0e9df5d465c6d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af00a13e38e4a80728ccdc573c5d8da97"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af00a13e38e4a80728ccdc573c5d8da97">is_connected</a> () const =0</td></tr>
-<tr class="separator:af00a13e38e4a80728ccdc573c5d8da97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2110813c183960be6a743c1fa5477dfa"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">connected</a> () const =0</td></tr>
+<tr class="separator:a2110813c183960be6a743c1fa5477dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a457bd3d0e566402a8b620714840e5e85"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a457bd3d0e566402a8b620714840e5e85">send</a> (std::string_view data)=0</td></tr>
 <tr class="separator:a457bd3d0e566402a8b620714840e5e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14fb9222ca699358ee4e818bb977890c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a14fb9222ca699358ee4e818bb977890c">send_line</a> (std::string_view line)=0</td></tr>
@@ -257,6 +257,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a2110813c183960be6a743c1fa5477dfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2110813c183960be6a743c1fa5477dfa">&#9670;&nbsp;</a></span>connected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::connected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a1cb3ae116f80c33f4730e849993ed278">unilink::wrapper::UdsClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a7f7c08ca953db9da266165cbfa0ae0db">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a29d78f724c70878a7ae76d9648ab9edb">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a5b9f553c0f4fe67d316a9c30e391c3d8">unilink::wrapper::Serial</a>.</p>
+
+</div>
+</div>
 <a id="aa67556839387807a38590570cf52951f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa67556839387807a38590570cf52951f">&#9670;&nbsp;</a></span>framer()</h2>
 
@@ -290,33 +317,6 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a34f35ff1dabe2aba310c3e489b27193d">unilink::wrapper::UdsClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#afefc3d41f20d09f2b9cb0e80e8cc333a">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd4b8fd33c56b74e8e4233a14f076212">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a252064c40c12a44f4d1ea69bec25fa80">unilink::wrapper::Serial</a>.</p>
-
-</div>
-</div>
-<a id="af00a13e38e4a80728ccdc573c5d8da97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af00a13e38e4a80728ccdc573c5d8da97">&#9670;&nbsp;</a></span>is_connected()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::is_connected </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#af2abf403924173713d3a910e0b620b00">unilink::wrapper::UdsClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a6a8b0ff32de37f594838d3c2ed887d90">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#acef3c0ea58810f26fca4276945430b21">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a19032f98db2f1cbf4382f03ad9c97730">unilink::wrapper::Serial</a>.</p>
 
 </div>
 </div>
@@ -587,7 +587,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Fri Apr 17 2026 18:43:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 02:01:52 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
