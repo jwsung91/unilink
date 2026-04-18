@@ -1,5 +1,9 @@
 var NAVTREEINDEX12 =
 {
+"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8":[24,0,0,11,9,0,29],
+"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0929b3d39e47808bdefd9d0dbec35d03":[24,0,0,11,9,0,32],
+"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a2813200498bad2a74fe3e17ad73f548d":[24,0,0,11,9,0,14],
+"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a32482bf214a34c02b0d76fcffe5a6cd2":[24,0,0,11,9,0,23],
 "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a37f30f14f2b18e31fd62d6f44a371563":[24,0,0,11,9,0,19],
 "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a427a3f7cbd39df7c0425390bb5783dbf":[24,0,0,11,9,0,26],
 "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a4282405e724797444608a3f312841dfa":[24,0,0,11,9,0,3],
@@ -222,9 +226,10 @@ var NAVTREEINDEX12 =
 "unilink_8hpp.html#a9b8ed9339c39013379280fecccd3a72c":[25,0,1,12,8],
 "unilink_8hpp.html#a9f2227aea1475c0655cf8cf4a99e55e9":[25,0,1,12,10],
 "unilink_8hpp.html#aae94ee39714235b4c0199dd8394bfad9":[25,0,1,12,7],
-"unilink_8hpp.html#ad9137b62ca2550572c06204e1f4a5c80":[25,0,1,12,16],
-"unilink_8hpp.html#aea8ffb995b971cd3ed4474daff633c5a":[25,0,1,12,15],
-"unilink_8hpp.html#aee1c8d6e1e37f094547571a0e29123dd":[25,0,1,12,14],
+"unilink_8hpp.html#ad9137b62ca2550572c06204e1f4a5c80":[25,0,1,12,17],
+"unilink_8hpp.html#ae5558f59454b560328ecb7852f6b35a1":[25,0,1,12,14],
+"unilink_8hpp.html#aea8ffb995b971cd3ed4474daff633c5a":[25,0,1,12,16],
+"unilink_8hpp.html#aee1c8d6e1e37f094547571a0e29123dd":[25,0,1,12,15],
 "unilink_8hpp_source.html":[25,0,1,12],
 "visibility_8hpp.html":[25,0,1,0,5],
 "visibility_8hpp.html#a6bc7164dbe841703008a07aa5c7dc81d":[25,0,1,0,5,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX12 =
 "wrapper_2tcp__server_2tcp__server_8cc_source.html":[25,0,1,11,2,0],
 "wrapper_2tcp__server_2tcp__server_8hpp.html":[25,0,1,11,2,1],
 "wrapper_2tcp__server_2tcp__server_8hpp_source.html":[25,0,1,11,2,1],
-"wrapper_2udp_2udp_8cc.html":[25,0,1,11,3,0],
-"wrapper_2udp_2udp_8cc_source.html":[25,0,1,11,3,0],
-"wrapper_2udp_2udp_8hpp.html":[25,0,1,11,3,1],
-"wrapper_2udp_2udp_8hpp_source.html":[25,0,1,11,3,1],
-"wrapper_2uds__client_2uds__client_8cc.html":[25,0,1,11,4,0],
-"wrapper_2uds__client_2uds__client_8cc_source.html":[25,0,1,11,4,0]
+"wrapper_2udp_2udp_8cc.html":[25,0,1,11,3,0]
 };

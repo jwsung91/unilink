@@ -157,8 +157,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a54382f1c15ebb6509e04b413b03c37d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ce5c370633521f49a3934a12b2ddbef"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a4ce5c370633521f49a3934a12b2ddbef">connected_clients</a> () const override</td></tr>
 <tr class="separator:a4ce5c370633521f49a3934a12b2ddbef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac36e719caf5109a29e2255af720873af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ac36e719caf5109a29e2255af720873af">auto_manage</a> (bool manage=true)</td></tr>
-<tr class="separator:ac36e719caf5109a29e2255af720873af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a365009895c38dcd072e077a6fa627f58"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a365009895c38dcd072e077a6fa627f58">auto_manage</a> (bool manage=true) override</td></tr>
+<tr class="separator:a365009895c38dcd072e077a6fa627f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7a82725f9cb67fc18c47b720374b923"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ac7a82725f9cb67fc18c47b720374b923">port_retry</a> (bool enable=true, int max_retries=3, int retry_interval_ms=1000)</td></tr>
 <tr class="separator:ac7a82725f9cb67fc18c47b720374b923"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d1309bfe7e5bbc89da2f4ca95fd84d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a8d1309bfe7e5bbc89da2f4ca95fd84d6">idle_timeout</a> (std::chrono::milliseconds timeout)</td></tr>
@@ -356,11 +356,14 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac36e719caf5109a29e2255af720873af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac36e719caf5109a29e2255af720873af">&#9670;&nbsp;</a></span>auto_manage()</h2>
+<a id="a365009895c38dcd072e077a6fa627f58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a365009895c38dcd072e077a6fa627f58">&#9670;&nbsp;</a></span>auto_manage()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a> &amp; unilink::wrapper::TcpServer::auto_manage </td>
@@ -370,7 +373,14 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#afafb915122497519f226ed8d7658b552">unilink::wrapper::ServerInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00385">385</a> of file <a class="el" href="wrapper_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
@@ -984,7 +994,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 13:33:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 22:13:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

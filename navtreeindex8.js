@@ -1,5 +1,8 @@
 var NAVTREEINDEX8 =
 {
+"md_docs_reference_api_guide.html#autotoc_md782":[16,6,1,2],
+"md_docs_reference_api_guide.html#autotoc_md783":[16,6,1,3],
+"md_docs_reference_api_guide.html#autotoc_md784":[16,6,1,4],
 "md_docs_reference_api_guide.html#autotoc_md785":[16,6,2],
 "md_docs_reference_api_guide.html#autotoc_md787":[16,7],
 "md_docs_reference_api_guide.html#autotoc_md788":[16,7,0],
@@ -148,9 +151,10 @@ var NAVTREEINDEX8 =
 "namespaceunilink.html#a9b8ed9339c39013379280fecccd3a72c":[23,0,1,23],
 "namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9":[23,0,1,28],
 "namespaceunilink.html#aae94ee39714235b4c0199dd8394bfad9":[23,0,1,22],
-"namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80":[23,0,1,35],
-"namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a":[23,0,1,34],
-"namespaceunilink.html#aee1c8d6e1e37f094547571a0e29123dd":[23,0,1,33],
+"namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80":[23,0,1,36],
+"namespaceunilink.html#ae5558f59454b560328ecb7852f6b35a1":[23,0,1,33],
+"namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a":[23,0,1,35],
+"namespaceunilink.html#aee1c8d6e1e37f094547571a0e29123dd":[23,0,1,34],
 "namespaceunilink_1_1base.html":[23,0,1,0],
 "namespaceunilink_1_1base.html#a0138626e065771057209440b9d46be74":[23,0,1,0,5],
 "namespaceunilink_1_1base.html#a07399b407f151a0fb40ac854476a40c5":[23,0,1,0,10],
@@ -245,9 +249,5 @@ var NAVTREEINDEX8 =
 "namespaceunilink_1_1config.html#a51570eeec2be34fa91656b2f81898577aa0faef0851b4294c06f2b94bb1cb2044":[23,0,1,4,13,1],
 "namespaceunilink_1_1config.html#a51570eeec2be34fa91656b2f81898577ad909d38d705ce75386dd86e611a82f5b":[23,0,1,4,13,3],
 "namespaceunilink_1_1diagnostics.html":[23,0,1,5],
-"namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada":[23,0,1,5,22],
-"namespaceunilink_1_1diagnostics.html#a64ef9068c86fed2fc120eff040163732":[23,0,1,5,21],
-"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7":[23,0,1,5,16],
-"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a3f27148a0073e6705ee8277dc392ab7d":[23,0,1,5,16,1],
-"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a696b031073e74bf2cb98e5ef201d4aa3":[23,0,1,5,16,5]
+"namespaceunilink_1_1diagnostics.html#a54b6b94a2a2b770022045845ec4eaada":[23,0,1,5,22]
 };

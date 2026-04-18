@@ -8,7 +8,7 @@ var classunilink_1_1wrapper_1_1UdpServer =
     [ "~UdpServer", "classunilink_1_1wrapper_1_1UdpServer.html#a8675d1c51496bed858e2f0eb3e3b15f2", null ],
     [ "UdpServer", "classunilink_1_1wrapper_1_1UdpServer.html#a856a871237e9db65828bd13bfef42d9d", null ],
     [ "UdpServer", "classunilink_1_1wrapper_1_1UdpServer.html#aa1862cc3cb126aed83ef73df25174c6a", null ],
-    [ "auto_manage", "classunilink_1_1wrapper_1_1UdpServer.html#a2d817518f56686469f873c511c21ab96", null ],
+    [ "auto_manage", "classunilink_1_1wrapper_1_1UdpServer.html#aa79f94e67bb36ad81dc3266aade4a85b", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1UdpServer.html#aeb4e4ccfc8c7f547696756aa3b444d9f", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1UdpServer.html#a75b170fbd0dbfcacfb161933c96db6b8", null ],
     [ "connected_clients", "classunilink_1_1wrapper_1_1UdpServer.html#ac37bed9465c46a4a75039846ae0e7a5b", null ],

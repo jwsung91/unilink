@@ -1,5 +1,9 @@
 var NAVTREEINDEX9 =
 {
+"namespaceunilink_1_1diagnostics.html#a64ef9068c86fed2fc120eff040163732":[23,0,1,5,21],
+"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7":[23,0,1,5,16],
+"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a3f27148a0073e6705ee8277dc392ab7d":[23,0,1,5,16,1],
+"namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a696b031073e74bf2cb98e5ef201d4aa3":[23,0,1,5,16,5],
 "namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7a7014705458ee3cf0192f6aa52cfddea5":[23,0,1,5,16,3],
 "namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900":[23,0,1,5,16,2],
 "namespaceunilink_1_1diagnostics.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98":[23,0,1,5,16,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX9 =
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#ad45fd1ba0889c92320635c03db237cea":[24,0,0,4,12,5],
 "structunilink_1_1diagnostics_1_1AsyncLogConfig.html#aea700e0cd390ca0973f69aa313cf58da":[24,0,0,4,12,1],
 "structunilink_1_1diagnostics_1_1AsyncLogStats.html":[24,0,0,4,13],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e":[24,0,0,4,13,7],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0b23f1d488d2c4bcbee875d97f8e0acc":[24,0,0,4,13,8],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a21c46e51e58b6a95af4f69fb19a34a6b":[24,0,0,4,13,2],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a5203845b7e46404a0c93565cddbe8015":[24,0,0,4,13,1],
-"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a648eefc0925d9217bac0ac142d16c128":[24,0,0,4,13,0]
+"structunilink_1_1diagnostics_1_1AsyncLogStats.html#a0756b68e401c3e04f1beb4d51089a22e":[24,0,0,4,13,7]
 };

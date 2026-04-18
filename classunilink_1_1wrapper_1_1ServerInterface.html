@@ -147,6 +147,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a03b4193d371a68d017805e5c3aac206c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a03b4193d371a68d017805e5c3aac206c">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler)=0</td></tr>
 <tr class="memdesc:a03b4193d371a68d017805e5c3aac206c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <a href="classunilink_1_1wrapper_1_1ServerInterface.html#a03b4193d371a68d017805e5c3aac206c">More...</a><br /></td></tr>
 <tr class="separator:a03b4193d371a68d017805e5c3aac206c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afafb915122497519f226ed8d7658b552"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#afafb915122497519f226ed8d7658b552">auto_manage</a> (bool manage=true)=0</td></tr>
+<tr class="separator:afafb915122497519f226ed8d7658b552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad18e4d24ce196ade73fac5c7b83a2270"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ad18e4d24ce196ade73fac5c7b83a2270">client_count</a> () const =0</td></tr>
 <tr class="separator:ad18e4d24ce196ade73fac5c7b83a2270"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7530dbaedc5731688c8eb5efebe39a4a"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a7530dbaedc5731688c8eb5efebe39a4a">connected_clients</a> () const =0</td></tr>
@@ -248,6 +250,34 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="afafb915122497519f226ed8d7658b552"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afafb915122497519f226ed8d7658b552">&#9670;&nbsp;</a></span>auto_manage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; unilink::wrapper::ServerInterface::auto_manage </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>manage</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#aafbe438a3cf596325a4609c9f70264d2">unilink::wrapper::UdsServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#aa79f94e67bb36ad81dc3266aade4a85b">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a365009895c38dcd072e077a6fa627f58">unilink::wrapper::TcpServer</a>.</p>
+
+</div>
+</div>
 <a id="a2264498ef97a2d7b609557afc46754f9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2264498ef97a2d7b609557afc46754f9">&#9670;&nbsp;</a></span>broadcast()</h2>
 
@@ -642,7 +672,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 13:33:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 22:13:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

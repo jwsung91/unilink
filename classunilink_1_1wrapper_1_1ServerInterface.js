@@ -5,6 +5,7 @@ var classunilink_1_1wrapper_1_1ServerInterface =
     [ "FramerFactory", "classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be", null ],
     [ "MessageHandler", "classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6", null ],
     [ "~ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html#a0696d9e529521e5b5a016e769bd95537", null ],
+    [ "auto_manage", "classunilink_1_1wrapper_1_1ServerInterface.html#afafb915122497519f226ed8d7658b552", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1ServerInterface.html#ad18e4d24ce196ade73fac5c7b83a2270", null ],
     [ "connected_clients", "classunilink_1_1wrapper_1_1ServerInterface.html#a7530dbaedc5731688c8eb5efebe39a4a", null ],

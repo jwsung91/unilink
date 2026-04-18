@@ -7,7 +7,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "~TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#a9836ef31e1f4c1531528ee252ea69d25", null ],
     [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#a56b79a3a0e9a8b532e72609622627a67", null ],
     [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html#ae96fdae45fd148c0f0dd7cc34d8d2b2f", null ],
-    [ "auto_manage", "classunilink_1_1wrapper_1_1TcpServer.html#ac36e719caf5109a29e2255af720873af", null ],
+    [ "auto_manage", "classunilink_1_1wrapper_1_1TcpServer.html#a365009895c38dcd072e077a6fa627f58", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1TcpServer.html#a45b4eb1fb1e8cd8786bf240b765d7181", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1TcpServer.html#a54382f1c15ebb6509e04b413b03c37d7", null ],
     [ "connected_clients", "classunilink_1_1wrapper_1_1TcpServer.html#a4ce5c370633521f49a3934a12b2ddbef", null ],

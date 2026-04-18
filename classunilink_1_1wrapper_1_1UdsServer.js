@@ -7,7 +7,7 @@ var classunilink_1_1wrapper_1_1UdsServer =
     [ "~UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html#a9b6417e4ef8cb234078722b2eb7433c7", null ],
     [ "UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html#ad1e8847c725ead1454a8f1398206f88f", null ],
     [ "UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html#a27acfc3b43e56d82c351f01818dbc879", null ],
-    [ "auto_manage", "classunilink_1_1wrapper_1_1UdsServer.html#a66f4d38275768b1c38f83252e80f27d4", null ],
+    [ "auto_manage", "classunilink_1_1wrapper_1_1UdsServer.html#aafbe438a3cf596325a4609c9f70264d2", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1UdsServer.html#a43983c237bfa6949654c1248c75e8dfe", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1UdsServer.html#aef6a244b6ff21ab3e46912208ef08110", null ],
     [ "connected_clients", "classunilink_1_1wrapper_1_1UdsServer.html#aeb6b48c4d5d6edb77edfa40a05e35fc6", null ],

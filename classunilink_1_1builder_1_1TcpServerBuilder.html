@@ -123,6 +123,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acb48d2eaa65409712fc8559e48460e91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#acb48d2eaa65409712fc8559e48460e91">auto_manage</a> (bool auto_manage=true) override</td></tr>
 <tr class="memdesc:acb48d2eaa65409712fc8559e48460e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#acb48d2eaa65409712fc8559e48460e91">More...</a><br /></td></tr>
 <tr class="separator:acb48d2eaa65409712fc8559e48460e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a132b609e544f51818236c24e730932"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a8a132b609e544f51818236c24e730932">on_client_connect</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt; handler)</td></tr>
+<tr class="memdesc:a8a132b609e544f51818236c24e730932"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper for client connection events.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a8a132b609e544f51818236c24e730932">More...</a><br /></td></tr>
+<tr class="separator:a8a132b609e544f51818236c24e730932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6529272a197e6447d7b17132b222a879"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">on_client_disconnect</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt; handler)</td></tr>
+<tr class="memdesc:a6529272a197e6447d7b17132b222a879"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper for client disconnection events.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">More...</a><br /></td></tr>
+<tr class="separator:a6529272a197e6447d7b17132b222a879"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a183b8e3d30601adfda610837270cf808"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a183b8e3d30601adfda610837270cf808">independent_context</a> (bool use_independent=true)</td></tr>
 <tr class="memdesc:a183b8e3d30601adfda610837270cf808"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use independent IoContext for this server.  <a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a183b8e3d30601adfda610837270cf808">More...</a><br /></td></tr>
 <tr class="separator:a183b8e3d30601adfda610837270cf808"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,7 +222,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Modernized Builder for TcpServer. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8hpp_source.html#l00036">36</a> of file <a class="el" href="tcp__server__builder_8hpp_source.html">tcp_server_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8hpp_source.html#l00037">37</a> of file <a class="el" href="tcp__server__builder_8hpp_source.html">tcp_server_builder.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6b32df9046ce3f88bf450642edfa3707"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6b32df9046ce3f88bf450642edfa3707">&#9670;&nbsp;</a></span>TcpServerBuilder() <span class="overload">[1/3]</span></h2>
@@ -458,6 +464,66 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a8a132b609e544f51818236c24e730932"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a132b609e544f51818236c24e730932">&#9670;&nbsp;</a></span>on_client_connect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; unilink::builder::TcpServerBuilder::on_client_connect </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Helper for client connection events. </p>
+
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8hpp_source.html#l00063">63</a> of file <a class="el" href="tcp__server__builder_8hpp_source.html">tcp_server_builder.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a6529272a197e6447d7b17132b222a879"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6529272a197e6447d7b17132b222a879">&#9670;&nbsp;</a></span>on_client_disconnect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; unilink::builder::TcpServerBuilder::on_client_disconnect </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Helper for client disconnection events. </p>
+
+<p class="definition">Definition at line <a class="el" href="tcp__server__builder_8hpp_source.html#l00070">70</a> of file <a class="el" href="tcp__server__builder_8hpp_source.html">tcp_server_builder.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a97f71c574e0f5de7a836198e0ba4aa83"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a97f71c574e0f5de7a836198e0ba4aa83">&#9670;&nbsp;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
@@ -600,7 +666,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 13:33:57 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sat Apr 18 2026 22:13:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
