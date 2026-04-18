@@ -275,7 +275,8 @@ struct UdsServer::Impl {
         handler = data_handler_;
       }
       if (handler) {
-        handler(MessageContext(client_id, std::string_view(reinterpret_cast<const char*>(data_span.data()), data_span.size())));
+        handler(MessageContext(client_id,
+                               std::string_view(reinterpret_cast<const char*>(data_span.data()), data_span.size())));
       }
 
       // 2. Framer integration
