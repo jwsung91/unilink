@@ -123,7 +123,7 @@ struct TcpServer::Impl {
         cb = on_state_;
       }
       if (cb) {
-        cb(state_.get_state());
+        cb(state_.state());
       }
     } catch (...) {
     }
@@ -259,8 +259,7 @@ struct TcpServer::Impl {
         }
         if (cb) cb(data);
         if (multi_cb) {
-          std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
-          multi_cb(client_id, str_data);
+          multi_cb(client_id, data);
         }
       });
 
@@ -424,7 +423,7 @@ TcpServer& TcpServer::operator=(TcpServer&&) noexcept = default;
 
 void TcpServer::start() {
   auto impl = get_impl();
-  auto current = impl->state_.get_state();
+  auto current = impl->state_.state();
   if (current == base::LinkState::Listening || current == base::LinkState::Connected ||
       current == base::LinkState::Connecting) {
     return;
@@ -568,7 +567,7 @@ bool TcpServer::send_to_client(size_t client_id, std::string_view message) {
   return false;
 }
 
-size_t TcpServer::get_client_count() const {
+size_t TcpServer::client_count() const {
   auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   size_t alive = 0;
@@ -577,7 +576,7 @@ size_t TcpServer::get_client_count() const {
   return alive;
 }
 
-std::vector<size_t> TcpServer::get_connected_clients() const {
+std::vector<size_t> TcpServer::connected_clients() const {
   auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   std::vector<size_t> connected_clients;
@@ -622,7 +621,7 @@ void TcpServer::set_unlimited_clients() {
   }
 }
 
-base::LinkState TcpServer::get_state() const { return get_impl()->state_.get_state(); }
+base::LinkState TcpServer::state() const { return get_impl()->state_.state(); }
 
 }  // namespace transport
 }  // namespace unilink

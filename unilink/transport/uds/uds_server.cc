@@ -114,7 +114,7 @@ UdsServer::UdsServer(UdsServer&&) noexcept = default;
 UdsServer& UdsServer::operator=(UdsServer&&) noexcept = default;
 
 void UdsServer::start() {
-  if (impl_->state_.get_state() == base::LinkState::Listening) return;
+  if (impl_->state_.state() == base::LinkState::Listening) return;
 
   impl_->stopping_ = false;
 
@@ -236,7 +236,7 @@ void UdsServer::stop() {
   impl_->notify_state();
 }
 
-bool UdsServer::is_connected() const { return impl_->state_.get_state() == base::LinkState::Listening; }
+bool UdsServer::is_connected() const { return impl_->state_.state() == base::LinkState::Listening; }
 
 void UdsServer::async_write_copy(memory::ConstByteSpan data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
@@ -292,12 +292,12 @@ bool UdsServer::send_to_client(size_t client_id, std::string_view message) {
   return false;
 }
 
-size_t UdsServer::get_client_count() const {
+size_t UdsServer::client_count() const {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   return impl_->sessions_.size();
 }
 
-std::vector<size_t> UdsServer::get_connected_clients() const {
+std::vector<size_t> UdsServer::connected_clients() const {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   std::vector<size_t> ids;
   for (const auto& pair : impl_->sessions_) ids.push_back(pair.first);
@@ -319,7 +319,7 @@ void UdsServer::on_multi_disconnect(MultiClientDisconnectHandler handler) {
   impl_->on_multi_disconnect_ = std::move(handler);
 }
 
-base::LinkState UdsServer::get_state() const { return impl_->state_.get_state(); }
+base::LinkState UdsServer::get_state() const { return impl_->state_.state(); }
 
 void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
   acceptor_->async_accept([self](const boost::system::error_code& ec, uds::socket socket) {
@@ -347,7 +347,7 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
           data_handler = s->impl_->on_multi_data_;
           bytes_handler = s->impl_->on_bytes_;
         }
-        if (data_handler) data_handler(client_id, std::vector<uint8_t>(data.begin(), data.end()));
+        if (data_handler) data_handler(client_id, data);
         if (bytes_handler) bytes_handler(data);
       });
 
@@ -390,7 +390,7 @@ void UdsServer::Impl::notify_state() {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
     cb = on_state_;
   }
-  if (cb) cb(state_.get_state());
+  if (cb) cb(state_.state());
 }
 
 }  // namespace transport

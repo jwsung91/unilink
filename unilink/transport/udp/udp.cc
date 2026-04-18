@@ -380,7 +380,7 @@ struct UdpChannel::Impl {
   void notify_state() {
     if (!on_state_) return;
     try {
-      on_state_(state_.get_state());
+      on_state_(state_.state());
     } catch (const std::exception& e) {
       UNILINK_LOG_ERROR("udp", "on_state", "Exception in state callback: " + std::string(e.what()));
     } catch (...) {
@@ -444,7 +444,7 @@ struct UdpChannel::Impl {
       return;
     }
 
-    const auto current = state_.get_state();
+    const auto current = state_.state();
     if ((current == LinkState::Closed || current == LinkState::Error) &&
         (target == LinkState::Closed || target == LinkState::Error)) {
       return;

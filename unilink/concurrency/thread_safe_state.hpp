@@ -52,7 +52,7 @@ class ThreadSafeState {
   ThreadSafeState& operator=(ThreadSafeState&&) = delete;
 
   // State access methods
-  State get_state() const;
+  State state() const;
   void set_state(const State& new_state);
   void set_state(State&& new_state);
 
@@ -171,7 +171,7 @@ template <typename StateType>
 ThreadSafeState<StateType>::ThreadSafeState(const State& initial_state) : state_(initial_state) {}
 
 template <typename StateType>
-StateType ThreadSafeState<StateType>::get_state() const {
+StateType ThreadSafeState<StateType>::state() const {
   std::shared_lock<std::shared_mutex> lock(state_mutex_);
   return state_;
 }

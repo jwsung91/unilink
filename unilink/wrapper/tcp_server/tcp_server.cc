@@ -258,10 +258,11 @@ struct TcpServer::Impl {
         }
         if (handler) handler(ConnectionContext(id, info));
       });
-      transport_server->on_multi_data([this, weak_alive](size_t id, const std::string& data) {
+      transport_server->on_multi_data([this, weak_alive](size_t id, memory::ConstByteSpan data_span) {
         auto alive = weak_alive.lock();
         if (!alive) return;
 
+        std::string data(reinterpret_cast<const char*>(data_span.data()), data_span.size());
         MessageHandler handler;
         {
           std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -272,8 +273,7 @@ struct TcpServer::Impl {
         std::shared_lock<std::shared_mutex> lock(mutex_);
         auto it = framers_.find(id);
         if (it != framers_.end()) {
-          auto binary_view = common::safe_convert::string_to_bytes(data);
-          it->second->push_bytes(memory::ConstByteSpan(binary_view.first, binary_view.second));
+          it->second->push_bytes(data_span);
         }
       });
       transport_server->on_multi_disconnect([this, weak_alive](size_t id) {
@@ -374,12 +374,12 @@ ServerInterface& TcpServer::on_message(MessageHandler handler) {
 
 size_t TcpServer::client_count() const {
   const auto& ts = get_impl()->transport_cache_;
-  return ts ? ts->get_client_count() : 0;
+  return ts ? ts->client_count() : 0;
 }
 
 std::vector<size_t> TcpServer::connected_clients() const {
   const auto& ts = get_impl()->transport_cache_;
-  return ts ? ts->get_connected_clients() : std::vector<size_t>();
+  return ts ? ts->connected_clients() : std::vector<size_t>();
 }
 
 TcpServer& TcpServer::auto_manage(bool m) {
