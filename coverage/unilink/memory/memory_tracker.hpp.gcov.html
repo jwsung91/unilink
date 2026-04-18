@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-17 18:49:20</td>
+            <td class="headerValue">2026-04-18 02:07:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -143,14 +143,14 @@
 <a name="65"><span class="lineNum">      65 </span>                :            :   void track_deallocation(void* ptr);</a>
 <a name="66"><span class="lineNum">      66 </span>                :            : </a>
 <a name="67"><span class="lineNum">      67 </span>                :            :   // Statistics</a>
-<a name="68"><span class="lineNum">      68 </span>                :            :   MemoryStats get_stats() const;</a>
-<a name="69"><span class="lineNum">      69 </span>                :            :   std::vector&lt;AllocationInfo&gt; get_current_allocations() const;</a>
-<a name="70"><span class="lineNum">      70 </span>                :            :   std::vector&lt;AllocationInfo&gt; get_leaked_allocations() const;</a>
+<a name="68"><span class="lineNum">      68 </span>                :            :   MemoryStats stats() const;</a>
+<a name="69"><span class="lineNum">      69 </span>                :            :   std::vector&lt;AllocationInfo&gt; current_allocations() const;</a>
+<a name="70"><span class="lineNum">      70 </span>                :            :   std::vector&lt;AllocationInfo&gt; leaked_allocations() const;</a>
 <a name="71"><span class="lineNum">      71 </span>                :            : </a>
 <a name="72"><span class="lineNum">      72 </span>                :            :   // Control</a>
 <a name="73"><span class="lineNum">      73 </span>                :            :   void enable_tracking(bool enable = true);</a>
 <a name="74"><span class="lineNum">      74 </span>                :            :   void disable_tracking();</a>
-<a name="75"><span class="lineNum">      75 </span>                :            :   bool is_tracking_enabled() const;</a>
+<a name="75"><span class="lineNum">      75 </span>                :            :   bool tracking_enabled() const;</a>
 <a name="76"><span class="lineNum">      76 </span>                :            : </a>
 <a name="77"><span class="lineNum">      77 </span>                :            :   // Cleanup</a>
 <a name="78"><span class="lineNum">      78 </span>                :            :   void clear_tracking_data();</a>

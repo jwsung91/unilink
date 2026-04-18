@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-17 18:49:20</td>
+            <td class="headerValue">2026-04-18 02:07:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -167,22 +167,22 @@
 <a name="89"><span class="lineNum">      89 </span>                :            :   /**</a>
 <a name="90"><span class="lineNum">      90 </span>                :            :    * @brief Constructor with Boost error code</a>
 <a name="91"><span class="lineNum">      91 </span>                :            :    */</a>
-<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        161 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        165 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,</span></a>
 <a name="93"><span class="lineNum">      93 </span>                :            :             const boost::system::error_code&amp; ec, bool retry = false)</a>
-<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">        161 :       : level(l),</span></a>
-<a name="95"><span class="lineNum">      95 </span>                :<span class="lineCov">        161 :         category(c),</span></a>
-<a name="96"><span class="lineNum">      96 </span>        [<span class="branchCov" title="Branch 0 was taken 161 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        161 :         component(comp),</span></a>
-<a name="97"><span class="lineNum">      97 </span>        [<span class="branchCov" title="Branch 0 was taken 161 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        161 :         operation(op),</span></a>
-<a name="98"><span class="lineNum">      98 </span>        [<span class="branchCov" title="Branch 0 was taken 161 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        161 :         message(msg),</span></a>
-<a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">        161 :         boost_error(ec),</span></a>
-<a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">        161 :         timestamp(std::chrono::system_clock::now()),</span></a>
-<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">        161 :         retryable(retry),</span></a>
-<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">        161 :         retry_count(0) {}</span></a>
+<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">        165 :       : level(l),</span></a>
+<a name="95"><span class="lineNum">      95 </span>                :<span class="lineCov">        165 :         category(c),</span></a>
+<a name="96"><span class="lineNum">      96 </span>        [<span class="branchCov" title="Branch 0 was taken 165 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        165 :         component(comp),</span></a>
+<a name="97"><span class="lineNum">      97 </span>        [<span class="branchCov" title="Branch 0 was taken 165 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        165 :         operation(op),</span></a>
+<a name="98"><span class="lineNum">      98 </span>        [<span class="branchCov" title="Branch 0 was taken 165 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        165 :         message(msg),</span></a>
+<a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">        165 :         boost_error(ec),</span></a>
+<a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">        165 :         timestamp(std::chrono::system_clock::now()),</span></a>
+<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">        165 :         retryable(retry),</span></a>
+<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">        165 :         retry_count(0) {}</span></a>
 <a name="103"><span class="lineNum">     103 </span>                :            : </a>
 <a name="104"><span class="lineNum">     104 </span>                :            :   /**</a>
 <a name="105"><span class="lineNum">     105 </span>                :            :    * @brief Get formatted timestamp string</a>
 <a name="106"><span class="lineNum">     106 </span>                :            :    */</a>
-<a name="107"><span class="lineNum">     107 </span>                :            :   std::string get_timestamp_string() const {</a>
+<a name="107"><span class="lineNum">     107 </span>                :            :   std::string timestamp_string() const {</a>
 <a name="108"><span class="lineNum">     108 </span>                :            :     auto time_t = std::chrono::system_clock::to_time_t(timestamp);</a>
 <a name="109"><span class="lineNum">     109 </span>                :            :     auto ms = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(timestamp.time_since_epoch()) % 1000;</a>
 <a name="110"><span class="lineNum">     110 </span>                :            : </a>
@@ -202,7 +202,7 @@
 <a name="124"><span class="lineNum">     124 </span>                :            :   /**</a>
 <a name="125"><span class="lineNum">     125 </span>                :            :    * @brief Get error level as string</a>
 <a name="126"><span class="lineNum">     126 </span>                :            :    */</a>
-<a name="127"><span class="lineNum">     127 </span>                :            :   std::string get_level_string() const {</a>
+<a name="127"><span class="lineNum">     127 </span>                :            :   std::string level_string() const {</a>
 <a name="128"><span class="lineNum">     128 </span>                :            :     switch (level) {</a>
 <a name="129"><span class="lineNum">     129 </span>                :            :       case ErrorLevel::INFO:</a>
 <a name="130"><span class="lineNum">     130 </span>                :            :         return &quot;INFO&quot;;</a>
@@ -219,7 +219,7 @@
 <a name="141"><span class="lineNum">     141 </span>                :            :   /**</a>
 <a name="142"><span class="lineNum">     142 </span>                :            :    * @brief Get error category as string</a>
 <a name="143"><span class="lineNum">     143 </span>                :            :    */</a>
-<a name="144"><span class="lineNum">     144 </span>                :            :   std::string get_category_string() const {</a>
+<a name="144"><span class="lineNum">     144 </span>                :            :   std::string category_string() const {</a>
 <a name="145"><span class="lineNum">     145 </span>                :            :     switch (category) {</a>
 <a name="146"><span class="lineNum">     146 </span>                :            :       case ErrorCategory::CONNECTION:</a>
 <a name="147"><span class="lineNum">     147 </span>                :            :         return &quot;CONNECTION&quot;;</a>
@@ -240,9 +240,9 @@
 <a name="162"><span class="lineNum">     162 </span>                :            :   /**</a>
 <a name="163"><span class="lineNum">     163 </span>                :            :    * @brief Get formatted error summary</a>
 <a name="164"><span class="lineNum">     164 </span>                :            :    */</a>
-<a name="165"><span class="lineNum">     165 </span>                :            :   std::string get_summary() const {</a>
+<a name="165"><span class="lineNum">     165 </span>                :            :   std::string summary() const {</a>
 <a name="166"><span class="lineNum">     166 </span>                :            :     std::ostringstream oss;</a>
-<a name="167"><span class="lineNum">     167 </span>                :            :     oss &lt;&lt; &quot;[&quot; &lt;&lt; get_level_string() &lt;&lt; &quot;] &quot; &lt;&lt; &quot;[&quot; &lt;&lt; component &lt;&lt; &quot;] &quot; &lt;&lt; &quot;[&quot; &lt;&lt; operation &lt;&lt; &quot;] &quot; &lt;&lt; message;</a>
+<a name="167"><span class="lineNum">     167 </span>                :            :     oss &lt;&lt; &quot;[&quot; &lt;&lt; level_string() &lt;&lt; &quot;] &quot; &lt;&lt; &quot;[&quot; &lt;&lt; component &lt;&lt; &quot;] &quot; &lt;&lt; &quot;[&quot; &lt;&lt; operation &lt;&lt; &quot;] &quot; &lt;&lt; message;</a>
 <a name="168"><span class="lineNum">     168 </span>                :            : </a>
 <a name="169"><span class="lineNum">     169 </span>                :            :     if (boost_error) {</a>
 <a name="170"><span class="lineNum">     170 </span>                :            :       oss &lt;&lt; &quot; (boost: &quot; &lt;&lt; boost_error.message() &lt;&lt; &quot;, code: &quot; &lt;&lt; boost_error.value() &lt;&lt; &quot;)&quot;;</a>
@@ -287,7 +287,7 @@
 <a name="209"><span class="lineNum">     209 </span>                :            :   /**</a>
 <a name="210"><span class="lineNum">     210 </span>                :            :    * @brief Get error rate (errors per minute)</a>
 <a name="211"><span class="lineNum">     211 </span>                :            :    */</a>
-<a name="212"><span class="lineNum">     212 </span>                :            :   double get_error_rate() const {</a>
+<a name="212"><span class="lineNum">     212 </span>                :            :   double error_rate() const {</a>
 <a name="213"><span class="lineNum">     213 </span>                :            :     if (total_errors == 0) return 0.0;</a>
 <a name="214"><span class="lineNum">     214 </span>                :            : </a>
 <a name="215"><span class="lineNum">     215 </span>                :            :     auto duration = std::chrono::duration_cast&lt;std::chrono::minutes&gt;(last_error - first_error).count();</a>

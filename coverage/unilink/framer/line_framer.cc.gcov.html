@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-17 18:49:20</td>
+            <td class="headerValue">2026-04-18 02:07:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -248,7 +248,7 @@
 <a name="170"><span class="lineNum">     170 </span>                :<span class="lineCov">      11053 :   return processed_count;</span></a>
 <a name="171"><span class="lineNum">     171 </span>                :            : }</a>
 <a name="172"><span class="lineNum">     172 </span>                :            : </a>
-<a name="173"><span class="lineNum">     173 </span>                :<span class="lineCov">         13 : void LineFramer::set_on_message(MessageCallback cb) { on_message_ = std::move(cb); }</span></a>
+<a name="173"><span class="lineNum">     173 </span>                :<span class="lineCov">         13 : void LineFramer::on_message(MessageCallback cb) { on_message_ = std::move(cb); }</span></a>
 <a name="174"><span class="lineNum">     174 </span>                :            : </a>
 <a name="175"><span class="lineNum">     175 </span>                :<span class="lineNoCov">          0 : void LineFramer::reset() {</span></a>
 <a name="176"><span class="lineNum">     176 </span>                :<span class="lineNoCov">          0 :   buffer_.clear();</span></a>

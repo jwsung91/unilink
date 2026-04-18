@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-17 18:49:20</td>
+            <td class="headerValue">2026-04-18 02:07:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">26</td>
@@ -301,7 +301,7 @@
 <a name="219"><span class="lineNum">     219 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 5 times"> + </span>]:<span class="lineCov">          5 :         if (framer_factory_) {</span></a>
 <a name="220"><span class="lineNum">     220 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           auto framer = framer_factory_();</span></a>
 <a name="221"><span class="lineNum">     221 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           if (framer) {</span></a>
-<a name="222"><span class="lineNum">     222 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :             framer-&gt;set_on_message([this, client_id](memory::ConstByteSpan msg) {</span></a>
+<a name="222"><span class="lineNum">     222 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :             framer-&gt;on_message([this, client_id](memory::ConstByteSpan msg) {</span></a>
 <a name="223"><span class="lineNum">     223 </span>                :<span class="lineNoCov">          0 :               MessageHandler on_message_handler;</span></a>
 <a name="224"><span class="lineNum">     224 </span>                :            :               {</a>
 <a name="225"><span class="lineNum">     225 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                 std::lock_guard&lt;std::shared_mutex&gt; lock(mutex_);</span></a>
@@ -388,7 +388,7 @@
 <a name="306"><span class="lineNum">     306 </span>                :            : </a>
 <a name="307"><span class="lineNum">     307 </span>                :<span class="lineCov">          7 : void UdsServer::stop() { impl_-&gt;stop(); }</span></a>
 <a name="308"><span class="lineNum">     308 </span>                :            : </a>
-<a name="309"><span class="lineNum">     309 </span>                :<span class="lineCov">          5 : bool UdsServer::is_listening() const { return impl_-&gt;is_listening_.load(); }</span></a>
+<a name="309"><span class="lineNum">     309 </span>                :<span class="lineCov">          5 : bool UdsServer::listening() const { return impl_-&gt;is_listening_.load(); }</span></a>
 <a name="310"><span class="lineNum">     310 </span>                :            : </a>
 <a name="311"><span class="lineNum">     311 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 : bool UdsServer::broadcast(std::string_view data) { return impl_-&gt;server_ ? impl_-&gt;server_-&gt;broadcast(data) : false; }</span></a>
 <a name="312"><span class="lineNum">     312 </span>                :            : </a>

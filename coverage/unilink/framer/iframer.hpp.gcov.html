@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-17 18:49:20</td>
+            <td class="headerValue">2026-04-18 02:07:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -130,7 +130,7 @@
 <a name="52"><span class="lineNum">      52 </span>                :            :    * @param cb The callback function taking a span of the message bytes.</a>
 <a name="53"><span class="lineNum">      53 </span>                :            :    */</a>
 <a name="54"><span class="lineNum">      54 </span>                :            :   using MessageCallback = std::function&lt;void(memory::ConstByteSpan)&gt;;</a>
-<a name="55"><span class="lineNum">      55 </span>                :            :   virtual void set_on_message(MessageCallback cb) = 0;</a>
+<a name="55"><span class="lineNum">      55 </span>                :            :   virtual void on_message(MessageCallback cb) = 0;</a>
 <a name="56"><span class="lineNum">      56 </span>                :            : </a>
 <a name="57"><span class="lineNum">      57 </span>                :            :   /**</a>
 <a name="58"><span class="lineNum">      58 </span>                :            :    * @brief Reset internal state/buffer.</a>
