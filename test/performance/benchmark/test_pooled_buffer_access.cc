@@ -86,11 +86,12 @@ TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
   double ns_per_op_bracket = (double)duration_bracket.count() * 1000.0 / (iterations * buffer_size);
   double ns_per_op_at = (double)duration_at.count() * 1000.0 / (iterations * buffer_size);
 
-  std::cout << "operator[] Total Time: " << duration_bracket.count() / 1000.0 << " ms" << std::endl;
+  std::cout << "operator[] Total Time: " << static_cast<double>(duration_bracket.count()) / 1000.0 << " ms"
+            << std::endl;
   std::cout << "operator[] Time per op: " << std::fixed << std::setprecision(3) << ns_per_op_bracket << " ns"
             << std::endl;
 
-  std::cout << "at() Total Time: " << duration_at.count() / 1000.0 << " ms" << std::endl;
+  std::cout << "at() Total Time: " << static_cast<double>(duration_at.count()) / 1000.0 << " ms" << std::endl;
   std::cout << "at() Time per op: " << std::fixed << std::setprecision(3) << ns_per_op_at << " ns" << std::endl;
 
   double improvement = (ns_per_op_at - ns_per_op_bracket) / ns_per_op_at * 100.0;

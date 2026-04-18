@@ -492,7 +492,7 @@ TEST_F(BenchmarkTest, MemoryUsageMonitoring) {
   // Get initial memory stats
   auto initial_stats = pool.stats();
   size_t initial_allocations = initial_stats.total_allocations;
-  auto initial_memory_pair = pool.get_memory_usage();
+  auto initial_memory_pair = pool.memory_usage();
   size_t initial_memory = initial_memory_pair.first;  // Use first value (current usage)
 
   std::cout << "Initial allocations: " << formatNumber(initial_allocations) << std::endl;
@@ -530,7 +530,7 @@ TEST_F(BenchmarkTest, MemoryUsageMonitoring) {
   // Get final memory stats
   auto final_stats = pool.stats();
   size_t final_allocations = final_stats.total_allocations;
-  auto final_memory_pair = pool.get_memory_usage();
+  auto final_memory_pair = pool.memory_usage();
   size_t final_memory = final_memory_pair.first;  // Use first value (current usage)
 
   size_t total_allocations = final_allocations - initial_allocations;

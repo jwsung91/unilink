@@ -185,7 +185,8 @@ TEST_F(PerformanceIntegratedTest, ConcurrentPerformanceTest) {
   auto end_time = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 
-  double throughput = static_cast<double>(completed_operations.load()) / (duration.count() / 1000000.0);
+  double throughput =
+      static_cast<double>(completed_operations.load()) / (static_cast<double>(duration.count()) / 1000000.0);
 
   std::cout << "Concurrent performance:" << std::endl;
   std::cout << "  Threads: " << num_threads << std::endl;
