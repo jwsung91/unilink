@@ -185,18 +185,4 @@ inline std::pair<const uint8_t*, size_t> string_to_bytes(std::string_view str) {
 // Removed unused feed_lines function to eliminate -Wunused-function warning
 }  // namespace base
 
-// Compatibility alias while transitioning from legacy `common` namespace.
-namespace common {
-namespace safe_memory = base::safe_memory;
-namespace safe_convert = base::safe_convert;
-using LinkState = base::LinkState;
-using base::get_platform_warning;
-using base::is_advanced_logging_available;
-using base::is_experimental_features_available;
-using base::is_latest_optimizations_available;
-using base::is_performance_monitoring_available;
-using base::log_message;
-using base::to_cstr;
-using base::ts_now;
-}  // namespace common
 }  // namespace unilink

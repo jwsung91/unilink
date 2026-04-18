@@ -115,13 +115,16 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
-    server->framer_factory(framer_factory_);
+    server->framer(framer_factory_);
   }
 
   if (on_message_) {
     server->on_message(on_message_);
   }
 
+  if (idle_timeout_.count() > 0) {
+    server->idle_timeout(idle_timeout_);
+  }
   server->max_clients(max_clients_);
 
   if (auto_manage_) {
@@ -138,6 +141,11 @@ UdsServerBuilder& UdsServerBuilder::auto_manage(bool auto_manage) {
 
 UdsServerBuilder& UdsServerBuilder::independent_context(bool use_independent) {
   independent_context_ = use_independent;
+  return *this;
+}
+
+UdsServerBuilder& UdsServerBuilder::idle_timeout(std::chrono::milliseconds timeout) {
+  idle_timeout_ = timeout;
   return *this;
 }
 

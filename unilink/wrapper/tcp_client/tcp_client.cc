@@ -176,7 +176,7 @@ struct TcpClient::Impl {
 
   void send(std::string_view data) {
     if (channel_ && channel_->is_connected()) {
-      auto binary_view = common::safe_convert::string_to_bytes(data);
+      auto binary_view = base::safe_convert::string_to_bytes(data);
       channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     }
   }
@@ -201,7 +201,7 @@ struct TcpClient::Impl {
         data_handler = data_handler_;
       }
       if (data_handler) {
-        std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
+        std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
         data_handler(MessageContext(0, str_data));
       }
 
@@ -267,7 +267,7 @@ struct TcpClient::Impl {
         handler = message_handler_;
       }
       if (handler) {
-        handler(MessageContext(0, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+        handler(MessageContext(0, base::safe_convert::uint8_to_string(msg.data(), msg.size())));
       }
     });
   }

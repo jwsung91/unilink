@@ -55,11 +55,11 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
       std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>;
 
   TcpServerSession(net::io_context& ioc, tcp::socket sock,
-                   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
+                   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
                    int idle_timeout_ms = 0);
   // Constructor for testing with dependency injection
   TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket,
-                   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
+                   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
                    int idle_timeout_ms = 0);
 
   void start();
@@ -85,7 +85,7 @@ class UNILINK_API TcpServerSession : public std::enable_shared_from_this<TcpServ
   net::strand<net::io_context::executor_type> strand_;
   net::steady_timer idle_timer_;
   std::unique_ptr<interface::TcpSocketInterface> socket_;
-  std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
+  std::array<uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;

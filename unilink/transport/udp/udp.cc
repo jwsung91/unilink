@@ -64,7 +64,7 @@ struct UdpChannel::Impl {
     std::optional<udp::endpoint> destination;
   };
 
-  std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
+  std::array<uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<TxItem> tx_;
   bool writing_{false};
   size_t queue_bytes_{0};
@@ -113,8 +113,8 @@ struct UdpChannel::Impl {
     bp_high_ = cfg_.backpressure_threshold;
     bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
     if (bp_low_ == 0) bp_low_ = 1;
-    bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
-                         common::constants::MAX_BUFFER_SIZE);
+    bp_limit_ = std::min(std::max(bp_high_ * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                         base::constants::MAX_BUFFER_SIZE);
     if (bp_limit_ < bp_high_) {
       bp_limit_ = bp_high_;
     }
@@ -617,7 +617,7 @@ void UdpChannel::async_write_copy(memory::ConstByteSpan data) {
     return;
 
   size_t size = data.size();
-  if (size > common::constants::MAX_BUFFER_SIZE) {
+  if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("udp", "write", "Write size exceeds maximum allowed");
     return;
   }
@@ -625,7 +625,7 @@ void UdpChannel::async_write_copy(memory::ConstByteSpan data) {
   if (impl->cfg_.enable_memory_pool && size <= 65536) {
     memory::PooledBuffer pooled(size);
     if (pooled.valid()) {
-      common::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
+      base::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
       net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size]() mutable {
         auto impl = self->get_impl();
         if (!impl->enqueue_buffer(std::move(buf), size)) return;
@@ -706,7 +706,7 @@ void UdpChannel::async_write_to(memory::ConstByteSpan data, const boost::asio::i
   if (impl->cfg_.enable_memory_pool && size <= 65536) {
     memory::PooledBuffer pooled(size);
     if (pooled.valid()) {
-      common::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
+      base::safe_memory::safe_memcpy(pooled.data(), data.data(), size);
       net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled), size, destination]() mutable {
         auto impl = self->get_impl();
         if (!impl->enqueue_buffer(std::move(buf), size, destination)) return;

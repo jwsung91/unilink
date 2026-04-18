@@ -19,7 +19,6 @@
 #include <memory>
 #include <variant>
 
-#include "unilink/base/deprecated.hpp"
 #include "unilink/base/error_codes.hpp"
 #include "unilink/base/platform.hpp"
 #include "unilink/base/visibility.hpp"
@@ -128,14 +127,7 @@ inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_ra
  * @return UdpClientBuilder A configured builder for UDP Client
  */
 inline builder::UdpClientBuilder udp_client(uint16_t local_port) {
-  builder::UdpClientBuilder b;
-  b.local_port(local_port);
-  return b;
-}
-
-[[deprecated("Use udp_client() instead")]]
-inline builder::UdpClientBuilder udp(uint16_t local_port) {
-  return udp_client(local_port);
+  return builder::UdpClientBuilder(local_port);
 }
 
 /**
@@ -144,9 +136,7 @@ inline builder::UdpClientBuilder udp(uint16_t local_port) {
  * @return UdpServerBuilder A configured builder for UDP Server
  */
 inline builder::UdpServerBuilder udp_server(uint16_t local_port) {
-  builder::UdpServerBuilder b;
-  b.local_port(local_port);
-  return b;
+  return builder::UdpServerBuilder(local_port);
 }
 
 }  // namespace unilink

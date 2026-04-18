@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <functional>
 #include <future>
 #include <memory>
@@ -73,7 +74,7 @@ class UNILINK_API UdsServer : public ServerInterface {
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
 
-  ServerInterface& framer_factory(FramerFactory factory) override;
+  ServerInterface& framer(FramerFactory factory) override;
   ServerInterface& on_message(MessageHandler handler) override;
 
   // Client count and management
@@ -82,6 +83,7 @@ class UNILINK_API UdsServer : public ServerInterface {
 
   // Configuration (Fluent API)
   UdsServer& auto_manage(bool manage = true) override;
+  UdsServer& idle_timeout(std::chrono::milliseconds timeout);
   UdsServer& max_clients(size_t max);
   UdsServer& unlimited_clients();
   UdsServer& manage_external_context(bool manage);

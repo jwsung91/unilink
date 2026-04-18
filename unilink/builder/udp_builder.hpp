@@ -40,7 +40,7 @@ namespace builder {
 #endif
 class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpClientBuilder> {
  public:
-  UdpClientBuilder();
+  explicit UdpClientBuilder(uint16_t local_port = 0);
 
   std::unique_ptr<wrapper::Udp> build() override;
 
@@ -70,7 +70,7 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpCl
 #endif
 class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer, UdpServerBuilder> {
  public:
-  UdpServerBuilder();
+  explicit UdpServerBuilder(uint16_t local_port = 0);
 
   std::unique_ptr<wrapper::UdpServer> build() override;
 
@@ -103,8 +103,6 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
-using UdpBuilder = UdpClientBuilder;
 
 }  // namespace builder
 }  // namespace unilink

@@ -117,7 +117,7 @@ TEST_F(BuilderTest, SerialBuilderBasic) {
 }
 
 TEST_F(BuilderTest, UdpBuilderBasic) {
-  udp_ = udp(test_port_).remote("127.0.0.1", 9000).build();
+  udp_ = udp_client(test_port_).remote("127.0.0.1", 9000).build();
 
   ASSERT_NE(udp_, nullptr);
 }
@@ -187,6 +187,6 @@ TEST_F(BuilderTest, ConvenienceFunctions) {
                     .build();
   EXPECT_NE(serial, nullptr);
 
-  auto udp = unilink::udp(test_port_).on_connect([](const wrapper::ConnectionContext& ctx) {}).build();
+  auto udp = unilink::udp_client(test_port_).on_connect([](const wrapper::ConnectionContext& ctx) {}).build();
   EXPECT_NE(udp, nullptr);
 }

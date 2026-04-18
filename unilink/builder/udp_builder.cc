@@ -26,7 +26,9 @@ namespace builder {
 
 // --- UdpClientBuilder Implementation ---
 
-UdpClientBuilder::UdpClientBuilder() : auto_manage_(false), independent_context_(false) {}
+UdpClientBuilder::UdpClientBuilder(uint16_t local_port) : auto_manage_(false), independent_context_(false) {
+  cfg_.local_port = local_port;
+}
 
 std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
   std::shared_ptr<boost::asio::io_context> ioc = nullptr;
@@ -91,7 +93,9 @@ UdpClientBuilder& UdpClientBuilder::reuse_address(bool enable) {
 
 // --- UdpServerBuilder Implementation ---
 
-UdpServerBuilder::UdpServerBuilder() : auto_manage_(false), independent_context_(false) {}
+UdpServerBuilder::UdpServerBuilder(uint16_t local_port) : auto_manage_(false), independent_context_(false) {
+  cfg_.local_port = local_port;
+}
 
 std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
   std::shared_ptr<boost::asio::io_context> ioc = nullptr;
@@ -110,7 +114,7 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {
-    server->framer_factory(framer_factory_);
+    server->framer(framer_factory_);
   }
 
   if (on_message_) {

@@ -560,7 +560,7 @@ bool TcpServer::send_to_client(size_t client_id, std::string_view message) {
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   auto it = impl->sessions_.find(client_id);
   if (it != impl->sessions_.end() && it->second && it->second->alive()) {
-    auto binary_view = common::safe_convert::string_to_bytes(message);
+    auto binary_view = base::safe_convert::string_to_bytes(message);
     it->second->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     return true;
   }

@@ -25,7 +25,6 @@
 namespace unilink {
 namespace transport {
 
-using namespace common;
 
 TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_t backpressure_threshold,
                                    int idle_timeout_ms)
@@ -39,8 +38,8 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_
       idle_timeout_ms_(idle_timeout_ms),
       alive_(false),
       cleanup_done_(false) {
-  bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
-                       common::constants::MAX_BUFFER_SIZE);
+  bp_limit_ = std::min(std::max(bp_high_ * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                       base::constants::MAX_BUFFER_SIZE);
   bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
   if (bp_low_ == 0) bp_low_ = 1;
 }
@@ -57,8 +56,8 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interfa
       idle_timeout_ms_(idle_timeout_ms),
       alive_(false),
       cleanup_done_(false) {
-  bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
-                       common::constants::MAX_BUFFER_SIZE);
+  bp_limit_ = std::min(std::max(bp_high_ * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                       base::constants::MAX_BUFFER_SIZE);
   bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
   if (bp_low_ == 0) bp_low_ = 1;
 }
@@ -76,17 +75,17 @@ void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
   if (!alive_ || closing_) return;  // Don't queue writes if session is not alive
 
   size_t size = data.size();
-  if (size > common::constants::MAX_BUFFER_SIZE) {
+  if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return;
   }
 
   // Use memory pool for better performance (only for reasonable sizes)
-  if (size <= common::constants::LARGE_BUFFER_THRESHOLD) {  // Only use pool for buffers <= 64KB
+  if (size <= base::constants::LARGE_BUFFER_THRESHOLD) {  // Only use pool for buffers <= 64KB
     memory::PooledBuffer pooled_buffer(size);
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely
-      common::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
+      base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
 
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
@@ -126,7 +125,7 @@ void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
 void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
   if (!alive_ || closing_) return;
   const auto added = data.size();
-  if (added > common::constants::MAX_BUFFER_SIZE) {
+  if (added > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return;
   }
@@ -148,7 +147,7 @@ void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
 void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   if (!alive_ || closing_ || !data) return;
   const auto added = data->size();
-  if (added > common::constants::MAX_BUFFER_SIZE) {
+  if (added > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
     return;
   }

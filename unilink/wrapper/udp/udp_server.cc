@@ -194,7 +194,7 @@ struct UdpServer::Impl {
                 }
                 if (on_message_handler) {
                   on_message_handler(
-                      MessageContext(client_id, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+                      MessageContext(client_id, base::safe_convert::uint8_to_string(msg.data(), msg.size())));
                 }
               });
               entry.framer = std::move(framer);
@@ -214,7 +214,7 @@ struct UdpServer::Impl {
       }
 
       if (data_handler_copy) {
-        std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
+        std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
         data_handler_copy(MessageContext(client_id, str_data));
       }
 
@@ -373,7 +373,7 @@ bool UdpServer::broadcast(std::string_view data) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   if (!impl_->channel) return false;
 
-  auto bytes = common::safe_convert::string_to_bytes(data);
+  auto bytes = base::safe_convert::string_to_bytes(data);
   for (const auto& [id, entry] : impl_->sessions) {
     impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
   }
@@ -387,7 +387,7 @@ bool UdpServer::send_to(size_t client_id, std::string_view data) {
   auto it = impl_->sessions.find(client_id);
   if (it == impl_->sessions.end()) return false;
 
-  auto bytes = common::safe_convert::string_to_bytes(data);
+  auto bytes = base::safe_convert::string_to_bytes(data);
   impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
   return true;
 }
@@ -416,7 +416,7 @@ ServerInterface& UdpServer::on_error(ErrorHandler h) {
   return *this;
 }
 
-ServerInterface& UdpServer::framer_factory(FramerFactory factory) {
+ServerInterface& UdpServer::framer(FramerFactory factory) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->framer_factory = std::move(factory);
   return *this;

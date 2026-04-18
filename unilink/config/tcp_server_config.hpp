@@ -28,7 +28,7 @@ namespace config {
 struct TcpServerConfig {
   std::string bind_address = "0.0.0.0";
   uint16_t port = 9000;
-  size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_memory_pool = true;
   int max_connections = 100;  // Maximum concurrent connections
 
@@ -42,17 +42,17 @@ struct TcpServerConfig {
   // Validation methods
   bool is_valid() const {
     return (util::InputValidator::is_valid_ipv4(bind_address) || util::InputValidator::is_valid_ipv6(bind_address)) &&
-           port > 0 && backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
-           backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0 &&
+           port > 0 && backpressure_threshold >= base::constants::MIN_BACKPRESSURE_THRESHOLD &&
+           backpressure_threshold <= base::constants::MAX_BACKPRESSURE_THRESHOLD && max_connections > 0 &&
            idle_timeout_ms >= 0;
   }
 
   // Apply validation and clamp values to valid ranges
   void validate_and_clamp() {
-    if (backpressure_threshold < common::constants::MIN_BACKPRESSURE_THRESHOLD) {
-      backpressure_threshold = common::constants::MIN_BACKPRESSURE_THRESHOLD;
-    } else if (backpressure_threshold > common::constants::MAX_BACKPRESSURE_THRESHOLD) {
-      backpressure_threshold = common::constants::MAX_BACKPRESSURE_THRESHOLD;
+    if (backpressure_threshold < base::constants::MIN_BACKPRESSURE_THRESHOLD) {
+      backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+    } else if (backpressure_threshold > base::constants::MAX_BACKPRESSURE_THRESHOLD) {
+      backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD;
     }
 
     if (max_connections <= 0) {

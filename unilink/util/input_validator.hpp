@@ -138,7 +138,7 @@ inline void InputValidator::validate_retry_interval(unsigned interval_ms) {
 }
 
 inline void InputValidator::validate_retry_count(int retry_count) {
-  if (retry_count == common::constants::DEFAULT_MAX_RETRIES) {  // -1 means infinite, which is valid
+  if (retry_count == base::constants::DEFAULT_MAX_RETRIES) {  // -1 means infinite, which is valid
     return;
   }
   if (retry_count < FINITE_MIN_RETRY_COUNT || retry_count > FINITE_MAX_RETRY_COUNT) {

@@ -35,24 +35,24 @@ struct SerialConfig {
   unsigned stop_bits = 1;  // 1 or 2
   enum class Flow { None, Software, Hardware } flow = Flow::None;
 
-  size_t read_chunk = common::constants::DEFAULT_READ_BUFFER_SIZE;
+  size_t read_chunk = base::constants::DEFAULT_READ_BUFFER_SIZE;
   bool reopen_on_error = true;  // Attempt to reopen on device disconnection/error
-  size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_memory_pool = true;
   // Controls whether callback exceptions halt the link (true) or trigger the normal retry flow (false)
   bool stop_on_callback_exception = false;
 
-  unsigned retry_interval_ms = common::constants::DEFAULT_RETRY_INTERVAL_MS;
-  int max_retries = common::constants::DEFAULT_MAX_RETRIES;
+  unsigned retry_interval_ms = base::constants::DEFAULT_RETRY_INTERVAL_MS;
+  int max_retries = base::constants::DEFAULT_MAX_RETRIES;
 
   // Validation methods
   bool is_valid() const {
     return !device.empty() && baud_rate > 0 && char_size >= 5 && char_size <= 8 && (stop_bits == 1 || stop_bits == 2) &&
-           retry_interval_ms >= common::constants::MIN_RETRY_INTERVAL_MS &&
-           retry_interval_ms <= common::constants::MAX_RETRY_INTERVAL_MS &&
-           backpressure_threshold >= common::constants::MIN_BACKPRESSURE_THRESHOLD &&
-           backpressure_threshold <= common::constants::MAX_BACKPRESSURE_THRESHOLD &&
-           (max_retries == -1 || (max_retries >= 0 && max_retries <= common::constants::MAX_RETRIES_LIMIT));
+           retry_interval_ms >= base::constants::MIN_RETRY_INTERVAL_MS &&
+           retry_interval_ms <= base::constants::MAX_RETRY_INTERVAL_MS &&
+           backpressure_threshold >= base::constants::MIN_BACKPRESSURE_THRESHOLD &&
+           backpressure_threshold <= base::constants::MAX_BACKPRESSURE_THRESHOLD &&
+           (max_retries == -1 || (max_retries >= 0 && max_retries <= base::constants::MAX_RETRIES_LIMIT));
   }
 
   // Apply validation and clamp values to valid ranges
@@ -64,20 +64,20 @@ struct SerialConfig {
 
     if (stop_bits != 1 && stop_bits != 2) stop_bits = 1;
 
-    if (retry_interval_ms < common::constants::MIN_RETRY_INTERVAL_MS) {
-      retry_interval_ms = common::constants::MIN_RETRY_INTERVAL_MS;
-    } else if (retry_interval_ms > common::constants::MAX_RETRY_INTERVAL_MS) {
-      retry_interval_ms = common::constants::MAX_RETRY_INTERVAL_MS;
+    if (retry_interval_ms < base::constants::MIN_RETRY_INTERVAL_MS) {
+      retry_interval_ms = base::constants::MIN_RETRY_INTERVAL_MS;
+    } else if (retry_interval_ms > base::constants::MAX_RETRY_INTERVAL_MS) {
+      retry_interval_ms = base::constants::MAX_RETRY_INTERVAL_MS;
     }
 
-    if (backpressure_threshold < common::constants::MIN_BACKPRESSURE_THRESHOLD) {
-      backpressure_threshold = common::constants::MIN_BACKPRESSURE_THRESHOLD;
-    } else if (backpressure_threshold > common::constants::MAX_BACKPRESSURE_THRESHOLD) {
-      backpressure_threshold = common::constants::MAX_BACKPRESSURE_THRESHOLD;
+    if (backpressure_threshold < base::constants::MIN_BACKPRESSURE_THRESHOLD) {
+      backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+    } else if (backpressure_threshold > base::constants::MAX_BACKPRESSURE_THRESHOLD) {
+      backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD;
     }
 
-    if (max_retries != -1 && max_retries > common::constants::MAX_RETRIES_LIMIT) {
-      max_retries = common::constants::MAX_RETRIES_LIMIT;
+    if (max_retries != -1 && max_retries > base::constants::MAX_RETRIES_LIMIT) {
+      max_retries = base::constants::MAX_RETRIES_LIMIT;
     }
   }
 };

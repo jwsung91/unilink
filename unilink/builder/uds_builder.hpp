@@ -88,6 +88,7 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   }
 
   UdsServerBuilder& independent_context(bool use_independent = true);
+  UdsServerBuilder& idle_timeout(std::chrono::milliseconds timeout);
   UdsServerBuilder& max_clients(size_t max);
   UdsServerBuilder& unlimited_clients();
 
@@ -95,6 +96,7 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   std::string socket_path_;
   bool auto_manage_;
   bool independent_context_;
+  std::chrono::milliseconds idle_timeout_{0};
   size_t max_clients_;
 };
 #ifdef _MSC_VER

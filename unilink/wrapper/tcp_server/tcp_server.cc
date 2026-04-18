@@ -58,7 +58,6 @@ struct TcpServer::Impl {
   int idle_timeout_ms_{0};
   bool client_limit_enabled_{false};
   size_t max_clients_{0};
-  bool notify_send_failure_{false};
 
   ConnectionHandler on_client_connect_{nullptr};
   ConnectionHandler on_client_disconnect_{nullptr};
@@ -81,8 +80,7 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0),
-        notify_send_failure_(false) {}
+        max_clients_(0) {}
 
   Impl(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
       : port_(port),
@@ -97,8 +95,7 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0),
-        notify_send_failure_(false) {}
+        max_clients_(0) {}
 
   explicit Impl(std::shared_ptr<interface::Channel> channel)
       : port_(0),
@@ -111,8 +108,7 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0),
-        notify_send_failure_(false) {
+        max_clients_(0) {
     setup_internal_handlers();
   }
 
@@ -247,7 +243,7 @@ struct TcpServer::Impl {
                   on_message_handler = on_message_;
                 }
                 if (on_message_handler) {
-                  std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
+                  std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
                   on_message_handler(MessageContext(id, str_msg));
                 }
               });
@@ -360,7 +356,7 @@ ServerInterface& TcpServer::on_error(ErrorHandler h) {
   return *this;
 }
 
-ServerInterface& TcpServer::framer_factory(FramerFactory factory) {
+ServerInterface& TcpServer::framer(FramerFactory factory) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
@@ -415,10 +411,6 @@ TcpServer& TcpServer::unlimited_clients() {
   return *this;
 }
 
-TcpServer& TcpServer::send_failure_notify(bool e) {
-  impl_->notify_send_failure_ = e;
-  return *this;
-}
 TcpServer& TcpServer::manage_external_context(bool m) {
   impl_->manage_external_context_ = m;
   return *this;
