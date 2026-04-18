@@ -28,7 +28,8 @@ UdsServerSession::UdsServerSession(net::io_context& ioc, uds::socket sock, size_
       idle_timer_(ioc),
       socket_(std::make_unique<BoostUdsSocket>(std::move(sock))),
       bp_high_(backpressure_threshold),
-      bp_limit_(backpressure_threshold * 2),
+      bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                         base::constants::MAX_BUFFER_SIZE)),
       idle_timeout_ms_(idle_timeout_ms) {}
 
 UdsServerSession::UdsServerSession(net::io_context& ioc, std::unique_ptr<interface::UdsSocketInterface> socket,
@@ -38,7 +39,8 @@ UdsServerSession::UdsServerSession(net::io_context& ioc, std::unique_ptr<interfa
       idle_timer_(ioc),
       socket_(std::move(socket)),
       bp_high_(backpressure_threshold),
-      bp_limit_(backpressure_threshold * 2),
+      bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                         base::constants::MAX_BUFFER_SIZE)),
       idle_timeout_ms_(idle_timeout_ms) {}
 
 void UdsServerSession::start() {

@@ -122,9 +122,7 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
     server->on_message(on_message_);
   }
 
-  if (idle_timeout_.count() > 0) {
-    server->idle_timeout(idle_timeout_);
-  }
+  server->idle_timeout(idle_timeout_);
   server->max_clients(max_clients_);
 
   if (auto_manage_) {

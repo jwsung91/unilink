@@ -126,17 +126,13 @@ inline builder::SerialBuilder serial(const std::string& device, uint32_t baud_ra
  * @param local_port The local port to bind
  * @return UdpClientBuilder A configured builder for UDP Client
  */
-inline builder::UdpClientBuilder udp_client(uint16_t local_port) {
-  return builder::UdpClientBuilder(local_port);
-}
+inline builder::UdpClientBuilder udp_client(uint16_t local_port) { return builder::UdpClientBuilder(local_port); }
 
 /**
  * @brief Create a UDP server builder (Virtual sessions)
  * @param local_port The local port to bind
  * @return UdpServerBuilder A configured builder for UDP Server
  */
-inline builder::UdpServerBuilder udp_server(uint16_t local_port) {
-  return builder::UdpServerBuilder(local_port);
-}
+inline builder::UdpServerBuilder udp_server(uint16_t local_port) { return builder::UdpServerBuilder(local_port); }
 
 }  // namespace unilink

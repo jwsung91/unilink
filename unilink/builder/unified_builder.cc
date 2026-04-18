@@ -29,13 +29,9 @@ SerialBuilder UnifiedBuilder::serial(const std::string& device, uint32_t baud_ra
   return SerialBuilder(device, baud_rate);
 }
 
-UdpClientBuilder UnifiedBuilder::udp_client(uint16_t local_port) {
-  return UdpClientBuilder(local_port);
-}
+UdpClientBuilder UnifiedBuilder::udp_client(uint16_t local_port) { return UdpClientBuilder(local_port); }
 
-UdpServerBuilder UnifiedBuilder::udp_server(uint16_t local_port) {
-  return UdpServerBuilder(local_port);
-}
+UdpServerBuilder UnifiedBuilder::udp_server(uint16_t local_port) { return UdpServerBuilder(local_port); }
 
 }  // namespace builder
 }  // namespace unilink

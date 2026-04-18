@@ -25,7 +25,6 @@
 namespace unilink {
 namespace transport {
 
-
 TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_t backpressure_threshold,
                                    int idle_timeout_ms)
     : ioc_(ioc),
