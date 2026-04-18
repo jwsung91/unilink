@@ -81,7 +81,7 @@ class UNILINK_API UdsServer : public ServerInterface {
   std::vector<size_t> connected_clients() const override;
 
   // Configuration (Fluent API)
-  UdsServer& auto_manage(bool manage = true);
+  UdsServer& auto_manage(bool manage = true) override;
   UdsServer& max_clients(size_t max);
   UdsServer& unlimited_clients();
   UdsServer& manage_external_context(bool manage);

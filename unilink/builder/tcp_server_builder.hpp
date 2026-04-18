@@ -18,6 +18,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <functional>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/builder/ibuilder.hpp"
@@ -55,6 +56,20 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
    * @return TcpServerBuilder& Reference to this builder
    */
   TcpServerBuilder& auto_manage(bool auto_manage = true) override;
+
+  /**
+   * @brief Helper for client connection events
+   */
+  TcpServerBuilder& on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+    return on_connect(std::move(handler));
+  }
+
+  /**
+   * @brief Helper for client disconnection events
+   */
+  TcpServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
+    return on_disconnect(std::move(handler));
+  }
 
   /**
    * @brief Use independent IoContext for this server

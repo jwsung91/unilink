@@ -42,7 +42,7 @@ class UNILINK_API ServerInterface {
   virtual ~ServerInterface() = default;
 
   // Lifecycle
-  virtual std::future<bool> start() = 0;
+  [[nodiscard]] virtual std::future<bool> start() = 0;
   virtual void stop() = 0;
   virtual bool listening() const = 0;
 
@@ -69,6 +69,7 @@ class UNILINK_API ServerInterface {
   virtual ServerInterface& on_message(MessageHandler handler) = 0;
 
   // Management
+  virtual ServerInterface& auto_manage(bool manage = true) = 0;
   virtual size_t client_count() const = 0;
   virtual std::vector<size_t> connected_clients() const = 0;
 };

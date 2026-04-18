@@ -129,17 +129,6 @@ UdpServerBuilder& UdpServerBuilder::auto_manage(bool auto_manage) {
   return *this;
 }
 
-UdpServerBuilder& UdpServerBuilder::on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_connect_ = std::move(handler);
-  return *this;
-}
-
-UdpServerBuilder& UdpServerBuilder::on_client_disconnect(
-    std::function<void(const wrapper::ConnectionContext&)> handler) {
-  on_disconnect_ = std::move(handler);
-  return *this;
-}
-
 UdpServerBuilder& UdpServerBuilder::local_port(uint16_t port) {
   cfg_.local_port = port;
   return *this;

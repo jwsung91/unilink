@@ -73,7 +73,7 @@ class UNILINK_API UdpServer : public ServerInterface {
   std::vector<size_t> connected_clients() const override;
 
   // UDP specific
-  UdpServer& auto_manage(bool manage = true);
+  UdpServer& auto_manage(bool manage = true) override;
   UdpServer& session_timeout(std::chrono::milliseconds timeout);
   UdpServer& manage_external_context(bool manage);
 
