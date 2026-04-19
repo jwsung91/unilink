@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-18 22:17:52</td>
+            <td class="headerValue">2026-04-19 01:22:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -276,7 +276,7 @@
 <a name="194"><span class="lineNum">     194 </span>                :<span class="lineNoCov">          0 :                 }</span></a>
 <a name="195"><span class="lineNum">     195 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                 if (on_message_handler) {</span></a>
 <a name="196"><span class="lineNum">     196 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                   on_message_handler(</span></a>
-<a name="197"><span class="lineNum">     197 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :                       MessageContext(client_id, common::safe_convert::uint8_to_string(msg.data(), msg.size())));</span></a>
+<a name="197"><span class="lineNum">     197 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :                       MessageContext(client_id, base::safe_convert::uint8_to_string(msg.data(), msg.size())));</span></a>
 <a name="198"><span class="lineNum">     198 </span>                :            :                 }</a>
 <a name="199"><span class="lineNum">     199 </span>                :<span class="lineNoCov">          0 :               });</span></a>
 <a name="200"><span class="lineNum">     200 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :               entry.framer = std::move(framer);</span></a>
@@ -299,7 +299,7 @@
 <a name="214"><span class="lineNum">     214 </span>                :            :       }</a>
 <a name="215"><span class="lineNum">     215 </span>                :            : </a>
 <a name="216"><span class="lineNum">     216 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          2 :       if (data_handler_copy) {</span></a>
-<a name="217"><span class="lineNum">     217 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());</span></a>
+<a name="217"><span class="lineNum">     217 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());</span></a>
 <a name="218"><span class="lineNum">     218 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :         data_handler_copy(MessageContext(client_id, str_data));</span></a>
 <a name="219"><span class="lineNum">     219 </span>                :<span class="lineCov">          1 :       }</span></a>
 <a name="220"><span class="lineNum">     220 </span>                :            : </a>
@@ -461,7 +461,7 @@
 <a name="373"><span class="lineNum">     373 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex);</span></a>
 <a name="374"><span class="lineNum">     374 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (!impl_-&gt;channel) return false;</span></a>
 <a name="375"><span class="lineNum">     375 </span>                :            : </a>
-<a name="376"><span class="lineNum">     376 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   auto bytes = common::safe_convert::string_to_bytes(data);</span></a>
+<a name="376"><span class="lineNum">     376 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   auto bytes = base::safe_convert::string_to_bytes(data);</span></a>
 <a name="377"><span class="lineNum">     377 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   for (const auto&amp; [id, entry] : impl_-&gt;sessions) {</span></a>
 <a name="378"><span class="lineNum">     378 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     impl_-&gt;channel-&gt;async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);</span></a>
 <a name="379"><span class="lineNum">     379 </span>                :            :   }</a>
@@ -475,7 +475,7 @@
 <a name="387"><span class="lineNum">     387 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   auto it = impl_-&gt;sessions.find(client_id);</span></a>
 <a name="388"><span class="lineNum">     388 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   if (it == impl_-&gt;sessions.end()) return false;</span></a>
 <a name="389"><span class="lineNum">     389 </span>                :            : </a>
-<a name="390"><span class="lineNum">     390 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   auto bytes = common::safe_convert::string_to_bytes(data);</span></a>
+<a name="390"><span class="lineNum">     390 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   auto bytes = base::safe_convert::string_to_bytes(data);</span></a>
 <a name="391"><span class="lineNum">     391 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   impl_-&gt;channel-&gt;async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it-&gt;second.endpoint);</span></a>
 <a name="392"><span class="lineNum">     392 </span>                :<span class="lineNoCov">          0 :   return true;</span></a>
 <a name="393"><span class="lineNum">     393 </span>                :<span class="lineNoCov">          0 : }</span></a>
@@ -504,7 +504,7 @@
 <a name="416"><span class="lineNum">     416 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="417"><span class="lineNum">     417 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <a name="418"><span class="lineNum">     418 </span>                :            : </a>
-<a name="419"><span class="lineNum">     419 </span>                :<span class="lineNoCov">          0 : ServerInterface&amp; UdpServer::framer_factory(FramerFactory factory) {</span></a>
+<a name="419"><span class="lineNum">     419 </span>                :<span class="lineNoCov">          0 : ServerInterface&amp; UdpServer::framer(FramerFactory factory) {</span></a>
 <a name="420"><span class="lineNum">     420 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :   std::lock_guard&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex);</span></a>
 <a name="421"><span class="lineNum">     421 </span>                :<span class="lineNoCov">          0 :   impl_-&gt;framer_factory = std::move(factory);</span></a>
 <a name="422"><span class="lineNum">     422 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>

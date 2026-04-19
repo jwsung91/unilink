@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-18 22:17:52</td>
+            <td class="headerValue">2026-04-19 01:22:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">33</td>
@@ -142,7 +142,7 @@
 <a name="64"><span class="lineNum">      64 </span>                :            :   std::atomic&lt;bool&gt; stop_requested_{false};</a>
 <a name="65"><span class="lineNum">      65 </span>                :            :   std::atomic&lt;bool&gt; stopping_{false};</a>
 <a name="66"><span class="lineNum">      66 </span>                :            : </a>
-<a name="67"><span class="lineNum">      67 </span>                :            :   std::array&lt;uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE&gt; rx_{};</a>
+<a name="67"><span class="lineNum">      67 </span>                :            :   std::array&lt;uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE&gt; rx_{};</a>
 <a name="68"><span class="lineNum">      68 </span>                :            :   std::deque&lt;BufferVariant&gt; tx_;</a>
 <a name="69"><span class="lineNum">      69 </span>                :            :   std::optional&lt;BufferVariant&gt; current_write_buffer_;</a>
 <a name="70"><span class="lineNum">      70 </span>                :            :   bool writing_ = false;</a>

@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">56</td>
-            <td class="headerCovTableEntry">82</td>
-            <td class="headerCovTableEntryLo">68.3 %</td>
+            <td class="headerCovTableEntry">57</td>
+            <td class="headerCovTableEntry">86</td>
+            <td class="headerCovTableEntryLo">66.3 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-18 22:17:52</td>
+            <td class="headerValue">2026-04-19 01:22:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
-            <td class="headerCovTableEntry">13</td>
-            <td class="headerCovTableEntryLo">53.8 %</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">41</td>
-            <td class="headerCovTableEntry">110</td>
-            <td class="headerCovTableEntryLo">37.3 %</td>
+            <td class="headerCovTableEntry">42</td>
+            <td class="headerCovTableEntry">112</td>
+            <td class="headerCovTableEntryLo">37.5 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -201,44 +201,50 @@
 <span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="116"><span class="lineNum">     116 </span>                :            : </a>
 <a name="117"><span class="lineNum">     117 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">          3 :   if (framer_factory_) {</span></a>
-<a name="118"><span class="lineNum">     118 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;framer_factory(framer_factory_);</span></a>
+<a name="118"><span class="lineNum">     118 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;framer(framer_factory_);</span></a>
 <a name="119"><span class="lineNum">     119 </span>                :            :   }</a>
 <a name="120"><span class="lineNum">     120 </span>                :            : </a>
 <a name="121"><span class="lineNum">     121 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">          3 :   if (on_message_) {</span></a>
 <a name="122"><span class="lineNum">     122 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;on_message(on_message_);</span></a>
 <a name="123"><span class="lineNum">     123 </span>                :            :   }</a>
 <a name="124"><span class="lineNum">     124 </span>                :            : </a>
-<a name="125"><span class="lineNum">     125 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :   server-&gt;max_clients(max_clients_);</span></a>
-<a name="126"><span class="lineNum">     126 </span>                :            : </a>
-<a name="127"><span class="lineNum">     127 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">          3 :   if (auto_manage_) {</span></a>
-<a name="128"><span class="lineNum">     128 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;auto_manage(true);</span></a>
-<a name="129"><span class="lineNum">     129 </span>                :            :   }</a>
-<a name="130"><span class="lineNum">     130 </span>                :            : </a>
-<a name="131"><span class="lineNum">     131 </span>                :<span class="lineCov">          3 :   return server;</span></a>
-<a name="132"><span class="lineNum">     132 </span>                :<span class="lineNoCov">          0 : }</span></a>
-<a name="133"><span class="lineNum">     133 </span>                :            : </a>
-<a name="134"><span class="lineNum">     134 </span>                :<span class="lineNoCov">          0 : UdsServerBuilder&amp; UdsServerBuilder::auto_manage(bool auto_manage) {</span></a>
-<a name="135"><span class="lineNum">     135 </span>                :<span class="lineNoCov">          0 :   auto_manage_ = auto_manage;</span></a>
-<a name="136"><span class="lineNum">     136 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
-<a name="137"><span class="lineNum">     137 </span>                :            : }</a>
-<a name="138"><span class="lineNum">     138 </span>                :            : </a>
-<a name="139"><span class="lineNum">     139 </span>                :<span class="lineCov">          2 : UdsServerBuilder&amp; UdsServerBuilder::independent_context(bool use_independent) {</span></a>
-<a name="140"><span class="lineNum">     140 </span>                :<span class="lineCov">          2 :   independent_context_ = use_independent;</span></a>
-<a name="141"><span class="lineNum">     141 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
-<a name="142"><span class="lineNum">     142 </span>                :            : }</a>
-<a name="143"><span class="lineNum">     143 </span>                :            : </a>
-<a name="144"><span class="lineNum">     144 </span>                :<span class="lineNoCov">          0 : UdsServerBuilder&amp; UdsServerBuilder::max_clients(size_t max) {</span></a>
-<a name="145"><span class="lineNum">     145 </span>                :<span class="lineNoCov">          0 :   max_clients_ = max;</span></a>
-<a name="146"><span class="lineNum">     146 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
-<a name="147"><span class="lineNum">     147 </span>                :            : }</a>
-<a name="148"><span class="lineNum">     148 </span>                :            : </a>
-<a name="149"><span class="lineNum">     149 </span>                :<span class="lineCov">          2 : UdsServerBuilder&amp; UdsServerBuilder::unlimited_clients() {</span></a>
-<a name="150"><span class="lineNum">     150 </span>                :<span class="lineCov">          2 :   max_clients_ = 1000000;</span></a>
-<a name="151"><span class="lineNum">     151 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
-<a name="152"><span class="lineNum">     152 </span>                :            : }</a>
-<a name="153"><span class="lineNum">     153 </span>                :            : </a>
-<a name="154"><span class="lineNum">     154 </span>                :            : }  // namespace builder</a>
-<a name="155"><span class="lineNum">     155 </span>                :            : }  // namespace unilink</a>
+<a name="125"><span class="lineNum">     125 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :   server-&gt;idle_timeout(idle_timeout_);</span></a>
+<a name="126"><span class="lineNum">     126 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :   server-&gt;max_clients(max_clients_);</span></a>
+<a name="127"><span class="lineNum">     127 </span>                :            : </a>
+<a name="128"><span class="lineNum">     128 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">          3 :   if (auto_manage_) {</span></a>
+<a name="129"><span class="lineNum">     129 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     server-&gt;auto_manage(true);</span></a>
+<a name="130"><span class="lineNum">     130 </span>                :            :   }</a>
+<a name="131"><span class="lineNum">     131 </span>                :            : </a>
+<a name="132"><span class="lineNum">     132 </span>                :<span class="lineCov">          3 :   return server;</span></a>
+<a name="133"><span class="lineNum">     133 </span>                :<span class="lineNoCov">          0 : }</span></a>
+<a name="134"><span class="lineNum">     134 </span>                :            : </a>
+<a name="135"><span class="lineNum">     135 </span>                :<span class="lineNoCov">          0 : UdsServerBuilder&amp; UdsServerBuilder::auto_manage(bool auto_manage) {</span></a>
+<a name="136"><span class="lineNum">     136 </span>                :<span class="lineNoCov">          0 :   auto_manage_ = auto_manage;</span></a>
+<a name="137"><span class="lineNum">     137 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="138"><span class="lineNum">     138 </span>                :            : }</a>
+<a name="139"><span class="lineNum">     139 </span>                :            : </a>
+<a name="140"><span class="lineNum">     140 </span>                :<span class="lineCov">          2 : UdsServerBuilder&amp; UdsServerBuilder::independent_context(bool use_independent) {</span></a>
+<a name="141"><span class="lineNum">     141 </span>                :<span class="lineCov">          2 :   independent_context_ = use_independent;</span></a>
+<a name="142"><span class="lineNum">     142 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="143"><span class="lineNum">     143 </span>                :            : }</a>
+<a name="144"><span class="lineNum">     144 </span>                :            : </a>
+<a name="145"><span class="lineNum">     145 </span>                :<span class="lineNoCov">          0 : UdsServerBuilder&amp; UdsServerBuilder::idle_timeout(std::chrono::milliseconds timeout) {</span></a>
+<a name="146"><span class="lineNum">     146 </span>                :<span class="lineNoCov">          0 :   idle_timeout_ = timeout;</span></a>
+<a name="147"><span class="lineNum">     147 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="148"><span class="lineNum">     148 </span>                :            : }</a>
+<a name="149"><span class="lineNum">     149 </span>                :            : </a>
+<a name="150"><span class="lineNum">     150 </span>                :<span class="lineNoCov">          0 : UdsServerBuilder&amp; UdsServerBuilder::max_clients(size_t max) {</span></a>
+<a name="151"><span class="lineNum">     151 </span>                :<span class="lineNoCov">          0 :   max_clients_ = max;</span></a>
+<a name="152"><span class="lineNum">     152 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
+<a name="153"><span class="lineNum">     153 </span>                :            : }</a>
+<a name="154"><span class="lineNum">     154 </span>                :            : </a>
+<a name="155"><span class="lineNum">     155 </span>                :<span class="lineCov">          2 : UdsServerBuilder&amp; UdsServerBuilder::unlimited_clients() {</span></a>
+<a name="156"><span class="lineNum">     156 </span>                :<span class="lineCov">          2 :   max_clients_ = 1000000;</span></a>
+<a name="157"><span class="lineNum">     157 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
+<a name="158"><span class="lineNum">     158 </span>                :            : }</a>
+<a name="159"><span class="lineNum">     159 </span>                :            : </a>
+<a name="160"><span class="lineNum">     160 </span>                :            : }  // namespace builder</a>
+<a name="161"><span class="lineNum">     161 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

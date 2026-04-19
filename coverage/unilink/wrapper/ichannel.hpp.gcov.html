@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-18 22:17:52</td>
+            <td class="headerValue">2026-04-19 01:22:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -120,37 +120,58 @@
 <a name="42"><span class="lineNum">      42 </span>                :            : </a>
 <a name="43"><span class="lineNum">      43 </span>                :            :   // Lifecycle</a>
 <a name="44"><span class="lineNum">      44 </span>                :            :   [[nodiscard]] virtual std::future&lt;bool&gt; start() = 0;</a>
-<a name="45"><span class="lineNum">      45 </span>                :            :   virtual void stop() = 0;</a>
-<a name="46"><span class="lineNum">      46 </span>                :            :   virtual bool connected() const = 0;</a>
-<a name="47"><span class="lineNum">      47 </span>                :            : </a>
-<a name="48"><span class="lineNum">      48 </span>                :            :   // Transmission</a>
-<a name="49"><span class="lineNum">      49 </span>                :            :   virtual void send(std::string_view data) = 0;</a>
-<a name="50"><span class="lineNum">      50 </span>                :            :   virtual void send_line(std::string_view line) = 0;</a>
-<a name="51"><span class="lineNum">      51 </span>                :            : </a>
-<a name="52"><span class="lineNum">      52 </span>                :            :   // Event handlers</a>
-<a name="53"><span class="lineNum">      53 </span>                :            :   virtual ChannelInterface&amp; on_data(MessageHandler handler) = 0;</a>
-<a name="54"><span class="lineNum">      54 </span>                :            :   virtual ChannelInterface&amp; on_connect(ConnectionHandler handler) = 0;</a>
-<a name="55"><span class="lineNum">      55 </span>                :            :   virtual ChannelInterface&amp; on_disconnect(ConnectionHandler handler) = 0;</a>
-<a name="56"><span class="lineNum">      56 </span>                :            :   virtual ChannelInterface&amp; on_error(ErrorHandler handler) = 0;</a>
-<a name="57"><span class="lineNum">      57 </span>                :            : </a>
-<a name="58"><span class="lineNum">      58 </span>                :            :   /**</a>
-<a name="59"><span class="lineNum">      59 </span>                :            :    * @brief Set a message framer for this channel.</a>
-<a name="60"><span class="lineNum">      60 </span>                :            :    * @param framer The framer instance to use.</a>
-<a name="61"><span class="lineNum">      61 </span>                :            :    */</a>
-<a name="62"><span class="lineNum">      62 </span>                :            :   virtual ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) = 0;</a>
-<a name="63"><span class="lineNum">      63 </span>                :            : </a>
-<a name="64"><span class="lineNum">      64 </span>                :            :   /**</a>
-<a name="65"><span class="lineNum">      65 </span>                :            :    * @brief Set a handler for complete messages extracted by the framer.</a>
-<a name="66"><span class="lineNum">      66 </span>                :            :    * @param handler The callback for framed messages.</a>
-<a name="67"><span class="lineNum">      67 </span>                :            :    */</a>
-<a name="68"><span class="lineNum">      68 </span>                :            :   virtual ChannelInterface&amp; on_message(MessageHandler handler) = 0;</a>
-<a name="69"><span class="lineNum">      69 </span>                :            : </a>
-<a name="70"><span class="lineNum">      70 </span>                :            :   // Management</a>
-<a name="71"><span class="lineNum">      71 </span>                :            :   virtual ChannelInterface&amp; auto_manage(bool manage = true) = 0;</a>
-<a name="72"><span class="lineNum">      72 </span>                :            : };</a>
-<a name="73"><span class="lineNum">      73 </span>                :            : </a>
-<a name="74"><span class="lineNum">      74 </span>                :            : }  // namespace wrapper</a>
-<a name="75"><span class="lineNum">      75 </span>                :            : }  // namespace unilink</a>
+<a name="45"><span class="lineNum">      45 </span>                :            : </a>
+<a name="46"><span class="lineNum">      46 </span>                :            :   /**</a>
+<a name="47"><span class="lineNum">      47 </span>                :            :    * @brief Stop the channel and block until all pending async operations are cancelled.</a>
+<a name="48"><span class="lineNum">      48 </span>                :            :    *</a>
+<a name="49"><span class="lineNum">      49 </span>                :            :    * Safe to call from any thread. After stop() returns, no further callbacks will fire</a>
+<a name="50"><span class="lineNum">      50 </span>                :            :    * and it is safe to destroy the object. Calling stop() more than once is a no-op.</a>
+<a name="51"><span class="lineNum">      51 </span>                :            :    */</a>
+<a name="52"><span class="lineNum">      52 </span>                :            :   virtual void stop() = 0;</a>
+<a name="53"><span class="lineNum">      53 </span>                :            :   virtual bool connected() const = 0;</a>
+<a name="54"><span class="lineNum">      54 </span>                :            : </a>
+<a name="55"><span class="lineNum">      55 </span>                :            :   // Transmission</a>
+<a name="56"><span class="lineNum">      56 </span>                :            :   /**</a>
+<a name="57"><span class="lineNum">      57 </span>                :            :    * @brief Enqueue data for transmission.</a>
+<a name="58"><span class="lineNum">      58 </span>                :            :    * @return true  Data was accepted into the send queue.</a>
+<a name="59"><span class="lineNum">      59 </span>                :            :    * @return false Data was dropped — channel not connected or backpressure limit reached.</a>
+<a name="60"><span class="lineNum">      60 </span>                :            :    *</a>
+<a name="61"><span class="lineNum">      61 </span>                :            :    * The call is non-blocking. Delivery is not guaranteed even when true is returned;</a>
+<a name="62"><span class="lineNum">      62 </span>                :            :    * network errors are reported via on_error().</a>
+<a name="63"><span class="lineNum">      63 </span>                :            :    */</a>
+<a name="64"><span class="lineNum">      64 </span>                :            :   virtual bool send(std::string_view data) = 0;</a>
+<a name="65"><span class="lineNum">      65 </span>                :            : </a>
+<a name="66"><span class="lineNum">      66 </span>                :            :   /**</a>
+<a name="67"><span class="lineNum">      67 </span>                :            :    * @brief Enqueue a line (data + &quot;\n&quot;) for transmission.</a>
+<a name="68"><span class="lineNum">      68 </span>                :            :    * @return true  Data was accepted into the send queue.</a>
+<a name="69"><span class="lineNum">      69 </span>                :            :    * @return false Data was dropped — channel not connected or backpressure limit reached.</a>
+<a name="70"><span class="lineNum">      70 </span>                :            :    */</a>
+<a name="71"><span class="lineNum">      71 </span>                :            :   virtual bool send_line(std::string_view line) = 0;</a>
+<a name="72"><span class="lineNum">      72 </span>                :            : </a>
+<a name="73"><span class="lineNum">      73 </span>                :            :   // Event handlers</a>
+<a name="74"><span class="lineNum">      74 </span>                :            :   virtual ChannelInterface&amp; on_data(MessageHandler handler) = 0;</a>
+<a name="75"><span class="lineNum">      75 </span>                :            :   virtual ChannelInterface&amp; on_connect(ConnectionHandler handler) = 0;</a>
+<a name="76"><span class="lineNum">      76 </span>                :            :   virtual ChannelInterface&amp; on_disconnect(ConnectionHandler handler) = 0;</a>
+<a name="77"><span class="lineNum">      77 </span>                :            :   virtual ChannelInterface&amp; on_error(ErrorHandler handler) = 0;</a>
+<a name="78"><span class="lineNum">      78 </span>                :            : </a>
+<a name="79"><span class="lineNum">      79 </span>                :            :   /**</a>
+<a name="80"><span class="lineNum">      80 </span>                :            :    * @brief Set a message framer for this channel.</a>
+<a name="81"><span class="lineNum">      81 </span>                :            :    * @param framer The framer instance to use.</a>
+<a name="82"><span class="lineNum">      82 </span>                :            :    */</a>
+<a name="83"><span class="lineNum">      83 </span>                :            :   virtual ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) = 0;</a>
+<a name="84"><span class="lineNum">      84 </span>                :            : </a>
+<a name="85"><span class="lineNum">      85 </span>                :            :   /**</a>
+<a name="86"><span class="lineNum">      86 </span>                :            :    * @brief Set a handler for complete messages extracted by the framer.</a>
+<a name="87"><span class="lineNum">      87 </span>                :            :    * @param handler The callback for framed messages.</a>
+<a name="88"><span class="lineNum">      88 </span>                :            :    */</a>
+<a name="89"><span class="lineNum">      89 </span>                :            :   virtual ChannelInterface&amp; on_message(MessageHandler handler) = 0;</a>
+<a name="90"><span class="lineNum">      90 </span>                :            : </a>
+<a name="91"><span class="lineNum">      91 </span>                :            :   // Management</a>
+<a name="92"><span class="lineNum">      92 </span>                :            :   virtual ChannelInterface&amp; auto_manage(bool manage = true) = 0;</a>
+<a name="93"><span class="lineNum">      93 </span>                :            : };</a>
+<a name="94"><span class="lineNum">      94 </span>                :            : </a>
+<a name="95"><span class="lineNum">      95 </span>                :            : }  // namespace wrapper</a>
+<a name="96"><span class="lineNum">      96 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

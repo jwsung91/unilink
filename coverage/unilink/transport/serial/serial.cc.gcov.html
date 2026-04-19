@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-18 22:17:52</td>
+            <td class="headerValue">2026-04-19 01:22:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">45</td>
@@ -188,8 +188,8 @@
 <a name="110"><span class="lineNum">     110 </span>                :<span class="lineCov">         19 :   void init() {</span></a>
 <a name="111"><span class="lineNum">     111 </span>                :<span class="lineCov">         19 :     cfg_.validate_and_clamp();</span></a>
 <a name="112"><span class="lineNum">     112 </span>                :<span class="lineCov">         19 :     bp_high_ = cfg_.backpressure_threshold;</span></a>
-<a name="113"><span class="lineNum">     113 </span>                :<span class="lineCov">         19 :     bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),</span></a>
-<a name="114"><span class="lineNum">     114 </span>                :            :                          common::constants::MAX_BUFFER_SIZE);</a>
+<a name="113"><span class="lineNum">     113 </span>                :<span class="lineCov">         19 :     bp_limit_ = std::min(std::max(bp_high_ * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),</span></a>
+<a name="114"><span class="lineNum">     114 </span>                :            :                          base::constants::MAX_BUFFER_SIZE);</a>
 <a name="115"><span class="lineNum">     115 </span>        [<span class="branchCov" title="Branch 0 was taken 19 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         19 :     bp_low_ = bp_high_ &gt; 1 ? bp_high_ / 2 : bp_high_;</span></a>
 <a name="116"><span class="lineNum">     116 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 19 times"> + </span>]:<span class="lineCov">         19 :     if (bp_low_ == 0) bp_low_ = 1;</span></a>
 <a name="117"><span class="lineNum">     117 </span>                :<span class="lineCov">         19 :     rx_.resize(cfg_.read_chunk);</span></a>
@@ -600,7 +600,7 @@
 <a name="480"><span class="lineNum">     480 </span>                :<span class="lineCov">          2 :     return;</span></a>
 <a name="481"><span class="lineNum">     481 </span>                :            : </a>
 <a name="482"><span class="lineNum">     482 </span>                :<span class="lineCov">          4 :   size_t n = data.size();</span></a>
-<a name="483"><span class="lineNum">     483 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span>]:<span class="lineCov">          4 :   if (n &gt; common::constants::MAX_BUFFER_SIZE) {</span></a>
+<a name="483"><span class="lineNum">     483 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span>]:<span class="lineCov">          4 :   if (n &gt; base::constants::MAX_BUFFER_SIZE) {</span></a>
 <a name="484"><span class="lineNum">     484 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :     UNILINK_LOG_ERROR(&quot;serial&quot;, &quot;write&quot;, &quot;Write size exceeds maximum&quot;);</span></a>
 <span class="lineNum">         </span><span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span><span class="branchNoExec" title="Branch 6 was not executed"> # </span><span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span> 
 <span class="lineNum">         </span>            <span class="branchNoExec" title="Branch 9 was not executed"> # </span>]
@@ -610,7 +610,7 @@
 <a name="488"><span class="lineNum">     488 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          4 :   if (n &lt;= 65536) {</span></a>
 <a name="489"><span class="lineNum">     489 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :     memory::PooledBuffer pooled(n);</span></a>
 <a name="490"><span class="lineNum">     490 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :     if (pooled.valid()) {</span></a>
-<a name="491"><span class="lineNum">     491 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :       common::safe_memory::safe_memcpy(pooled.data(), data.data(), n);</span></a>
+<a name="491"><span class="lineNum">     491 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :       base::safe_memory::safe_memcpy(pooled.data(), data.data(), n);</span></a>
 <a name="492"><span class="lineNum">     492 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          2 :       net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {</span></a>
 <a name="493"><span class="lineNum">     493 </span>                :<span class="lineCov">          2 :         auto impl = self-&gt;get_impl();</span></a>
 <a name="494"><span class="lineNum">     494 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          2 :         if (impl-&gt;queued_bytes_ + buf.size() &gt; impl-&gt;bp_limit_) {</span></a>
