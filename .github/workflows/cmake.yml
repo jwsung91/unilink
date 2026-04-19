@@ -278,6 +278,10 @@ jobs:
           $vcpkgBin = Join-Path $env:VCPKG_ROOT "installed/${{ matrix.triplet }}/bin"
           $env:PYTHONPATH = "$installPath;$env:PYTHONPATH"
           $env:PATH = "$packagePath;$vcpkgBin;$env:PATH"
+          $env:UNILINK_INSTALL_PATH = $installPath
+          $env:UNILINK_PACKAGE_PATH = $packagePath
+          $env:UNILINK_VCPKG_BIN = $vcpkgBin
+          python bindings/python/diagnose_windows_import.py
           python bindings/python/test_import.py
           python -m pytest bindings/python/tests -q
 
