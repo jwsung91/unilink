@@ -31,6 +31,30 @@ endif()
 
 set(UNILINK_PYTHON_PACKAGE_DIR "${UNILINK_PYTHON_SITE_PACKAGES}/unilink")
 
+set(_unilink_python_runtime_dependency_dirs "")
+if(WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
+  if(DEFINED VCPKG_INSTALLED_DIR)
+    list(
+      APPEND _unilink_python_runtime_dependency_dirs
+             "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin"
+    )
+  elseif(DEFINED ENV{VCPKG_ROOT})
+    list(
+      APPEND _unilink_python_runtime_dependency_dirs
+             "$ENV{VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/bin"
+    )
+  endif()
+endif()
+
+set(_unilink_python_runtime_dependency_args "")
+if(WIN32)
+  set(
+    _unilink_python_runtime_dependency_args
+    RUNTIME_DEPENDENCY_SET
+    unilink_python_runtime_deps
+  )
+endif()
+
 if(APPLE)
   set_target_properties(unilink_py PROPERTIES INSTALL_RPATH "@loader_path")
 elseif(UNIX)
@@ -41,6 +65,7 @@ if(UNILINK_ENABLE_INSTALL)
   install(
     TARGETS unilink_py
     COMPONENT python
+    ${_unilink_python_runtime_dependency_args}
     LIBRARY DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
     RUNTIME DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -59,6 +84,24 @@ if(UNILINK_ENABLE_INSTALL)
       COMPONENT python
       LIBRARY DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
       RUNTIME DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
+    )
+  endif()
+
+  if(WIN32)
+    install(
+      RUNTIME_DEPENDENCY_SET unilink_python_runtime_deps
+      RUNTIME
+        DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
+        COMPONENT python
+      PRE_EXCLUDE_REGEXES
+        "api-ms-.*"
+        "ext-ms-.*"
+      POST_EXCLUDE_REGEXES
+        [[.*[Ww][Ii][Nn][Dd][Oo][Ww][Ss][\\/][Ss][Yy][Ss][Tt][Ee][Mm]32[\\/].*\.dll$]]
+        [[.*[\\/][Pp][Yy][Tt][Hh][Oo][Nn][0-9]+\.dll$]]
+        [[.*[\\/]unilink\.dll$]]
+      DIRECTORIES
+        ${_unilink_python_runtime_dependency_dirs}
     )
   endif()
 endif()
