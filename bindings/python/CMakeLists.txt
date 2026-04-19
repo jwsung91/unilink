@@ -61,4 +61,65 @@ if(UNILINK_ENABLE_INSTALL)
       RUNTIME DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
     )
   endif()
+
+  if(WIN32)
+    install(
+      CODE
+        "
+set(_unilink_package_dir \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${UNILINK_PYTHON_PACKAGE_DIR}\")
+file(TO_CMAKE_PATH \"\${_unilink_package_dir}\" _unilink_package_dir)
+
+file(GLOB _unilink_extension_candidates \"\${_unilink_package_dir}/unilink_py*.pyd\")
+file(GLOB _unilink_runtime_candidates \"\${_unilink_package_dir}/unilink*.dll\")
+
+set(_unilink_runtime_targets \${_unilink_extension_candidates} \${_unilink_runtime_candidates})
+list(FILTER _unilink_runtime_targets EXCLUDE REGEX [[[/\\\\]python3\\.dll$]])
+list(FILTER _unilink_runtime_targets EXCLUDE REGEX [[[/\\\\]python312\\.dll$]])
+
+if(_unilink_runtime_targets)
+  file(GET_RUNTIME_DEPENDENCIES
+    LIBRARIES \${_unilink_runtime_targets}
+    RESOLVED_DEPENDENCIES_VAR _unilink_resolved_deps
+    UNRESOLVED_DEPENDENCIES_VAR _unilink_unresolved_deps
+    PRE_EXCLUDE_REGEXES
+      [[api-ms-win-.*]]
+      [[ext-ms-.*]]
+    POST_EXCLUDE_REGEXES
+      [[.*[/\\\\]Windows[/\\\\].*]]
+      [[.*[/\\\\]system32[/\\\\].*]]
+      [[.*[/\\\\]python3\\.dll$]]
+      [[.*[/\\\\]python312\\.dll$]]
+  )
+
+  foreach(_unilink_dependency IN LISTS _unilink_resolved_deps)
+    get_filename_component(_unilink_dep_name \"\${_unilink_dependency}\" NAME)
+    string(TOLOWER \"\${_unilink_dep_name}\" _unilink_dep_name_lower)
+    if(_unilink_dep_name_lower MATCHES [[^python3\\.dll$]] OR _unilink_dep_name_lower MATCHES [[^python312\\.dll$]])
+      continue()
+    endif()
+
+    execute_process(
+      COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different
+              \"\${_unilink_dependency}\"
+              \"\${_unilink_package_dir}/\${_unilink_dep_name}\"
+      COMMAND_ERROR_IS_FATAL ANY
+    )
+  endforeach()
+
+  foreach(_unilink_unresolved IN LISTS _unilink_unresolved_deps)
+    string(TOLOWER \"\${_unilink_unresolved}\" _unilink_unresolved_lower)
+    if(
+      NOT _unilink_unresolved_lower MATCHES [[^api-ms-win-]]
+      AND NOT _unilink_unresolved_lower MATCHES [[^ext-ms-]]
+      AND NOT _unilink_unresolved_lower MATCHES [[^python3\\.dll$]]
+      AND NOT _unilink_unresolved_lower MATCHES [[^python312\\.dll$]]
+    )
+      message(WARNING \"Unresolved runtime dependency for Python package install: \${_unilink_unresolved}\")
+    endif()
+  endforeach()
+endif()
+"
+      COMPONENT python
+    )
+  endif()
 endif()

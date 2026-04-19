@@ -275,12 +275,9 @@ jobs:
           $sitePackages = python -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip(r'/\\'))"
           $installPath = Join-Path $pwd "build/install/$sitePackages"
           $packagePath = Join-Path $installPath "unilink"
-          $vcpkgBin = Join-Path $env:VCPKG_ROOT "installed/${{ matrix.triplet }}/bin"
           $env:PYTHONPATH = "$installPath;$env:PYTHONPATH"
-          $env:PATH = "$packagePath;$vcpkgBin;$env:PATH"
           $env:UNILINK_INSTALL_PATH = $installPath
           $env:UNILINK_PACKAGE_PATH = $packagePath
-          $env:UNILINK_VCPKG_BIN = $vcpkgBin
           python bindings/python/diagnose_windows_import.py
           python bindings/python/test_import.py
           python -m pytest bindings/python/tests -q

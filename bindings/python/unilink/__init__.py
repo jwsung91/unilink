@@ -24,31 +24,11 @@ def _add_windows_dll_directory(package_dir: Path) -> None:
     if os.name != "nt" or not hasattr(os, "add_dll_directory"):
         return
 
-    dll_candidates = [package_dir, package_dir.parent]
-    for candidate in dll_candidates:
-        if not candidate.is_dir():
-            continue
-        if any(candidate.glob("unilink*.dll")):
-            _register_windows_dll_directory(candidate)
-
-
-def _add_windows_dependency_directories() -> None:
-    if os.name != "nt" or not hasattr(os, "add_dll_directory"):
+    if not package_dir.is_dir():
         return
 
-    vcpkg_installed_dir = os.environ.get("VCPKG_INSTALLED_DIR")
-    vcpkg_triplet = os.environ.get("VCPKG_TARGET_TRIPLET")
-    vcpkg_root = os.environ.get("VCPKG_ROOT")
-
-    if vcpkg_installed_dir and vcpkg_triplet:
-        _register_windows_dll_directory(
-            Path(vcpkg_installed_dir) / vcpkg_triplet / "bin"
-        )
-
-    if vcpkg_root and vcpkg_triplet:
-        _register_windows_dll_directory(
-            Path(vcpkg_root) / "installed" / vcpkg_triplet / "bin"
-        )
+    if any(package_dir.glob("unilink*.dll")) or any(package_dir.glob("unilink_py*.pyd")):
+        _register_windows_dll_directory(package_dir)
 
 
 def _candidate_package_dirs():
@@ -64,7 +44,6 @@ def _candidate_package_dirs():
 _seen_package_dirs = set()
 
 try:
-    _add_windows_dependency_directories()
     _add_windows_dll_directory(Path(__file__).resolve().parent)
     from .unilink_py import *
 except ImportError:
@@ -81,7 +60,6 @@ except ImportError:
             if not any(package_dir.glob("unilink_py.*")):
                 continue
 
-            _add_windows_dependency_directories()
             _add_windows_dll_directory(package_dir)
             sys.path.insert(0, str(package_dir))
             try:

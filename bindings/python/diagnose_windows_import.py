@@ -5,6 +5,8 @@ from pathlib import Path
 import sys
 import traceback
 
+_dll_dir_handles = []
+
 
 def _print_section(title: str) -> None:
     print(f"\n== {title} ==")
@@ -54,6 +56,23 @@ def _load_binary(path: Path) -> None:
         print("  load succeeded")
 
 
+def _sanitize_import_path(install_path: Path) -> None:
+    script_dir = Path(__file__).resolve().parent
+    source_root = script_dir.parent
+    sanitized = []
+
+    for entry in sys.path:
+        resolved = Path(entry or ".").resolve()
+        if resolved in {script_dir, source_root}:
+            continue
+        sanitized.append(entry)
+
+    sys.path[:] = sanitized
+
+    if install_path.is_dir():
+        sys.path.insert(0, str(install_path))
+
+
 def main() -> int:
     if os.name != "nt":
         print("This diagnostic helper is intended for Windows only.")
@@ -61,7 +80,6 @@ def main() -> int:
 
     install_path = Path(os.environ.get("UNILINK_INSTALL_PATH", ""))
     package_path = Path(os.environ.get("UNILINK_PACKAGE_PATH", ""))
-    vcpkg_bin = Path(os.environ.get("UNILINK_VCPKG_BIN", ""))
 
     _print_section("Interpreter")
     print(f"sys.executable: {sys.executable}")
@@ -70,7 +88,6 @@ def main() -> int:
     _print_section("Environment")
     print(f"UNILINK_INSTALL_PATH: {install_path}")
     print(f"UNILINK_PACKAGE_PATH: {package_path}")
-    print(f"UNILINK_VCPKG_BIN: {vcpkg_bin}")
     _print_path_list("PYTHONPATH", os.environ.get("PYTHONPATH"))
     _print_path_list("PATH", os.environ.get("PATH"))
 
@@ -80,15 +97,19 @@ def main() -> int:
     _list_directory(package_path, "*.dll")
     _list_directory(package_path, "*.pyd")
 
-    _print_section("Vcpkg Bin Snapshot")
-    _list_directory(vcpkg_bin, "*.dll")
-
     if hasattr(os, "add_dll_directory"):
         _print_section("DLL Directories")
-        for directory in (package_path, vcpkg_bin):
-            if directory.is_dir():
-                os.add_dll_directory(str(directory))
-                print(f"added: {directory}")
+        if package_path.is_dir():
+            _dll_dir_handles.append(os.add_dll_directory(str(package_path)))
+            print(f"added: {package_path}")
+
+    _sanitize_import_path(install_path)
+
+    _print_section("Sanitized sys.path")
+    for index, entry in enumerate(sys.path[:12], start=1):
+        print(f"  {index}. {entry}")
+    if len(sys.path) > 12:
+        print(f"  ... ({len(sys.path) - 12} more)")
 
     _print_section("Import Specs")
     print(f"spec(unilink): {importlib.util.find_spec('unilink')}")
