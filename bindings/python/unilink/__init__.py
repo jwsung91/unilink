@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 import sys
 
+_dll_dir_handles = []
+_registered_dll_dirs = set()
+
 
 def _add_windows_dll_directory(package_dir: Path) -> None:
     if os.name != "nt" or not hasattr(os, "add_dll_directory"):
@@ -12,7 +15,11 @@ def _add_windows_dll_directory(package_dir: Path) -> None:
         if not candidate.is_dir():
             continue
         if any(candidate.glob("unilink*.dll")):
-            os.add_dll_directory(str(candidate.resolve()))
+            resolved_dir = str(candidate.resolve())
+            if resolved_dir in _registered_dll_dirs:
+                continue
+            _dll_dir_handles.append(os.add_dll_directory(resolved_dir))
+            _registered_dll_dirs.add(resolved_dir)
 
 
 def _candidate_package_dirs():
