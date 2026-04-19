@@ -29,6 +29,12 @@ if(NOT UNILINK_PYTHON_SITE_PACKAGES)
   )
 endif()
 
+# Normalize to forward slashes so the path is safe inside install(CODE "...") strings.
+# On Windows, sysconfig returns paths with backslashes (e.g. Lib\site-packages), and
+# embedding \s in a CMake string literal is an invalid escape sequence that silently
+# corrupts the variable, causing the WIN32 GET_RUNTIME_DEPENDENCIES block to GLOB nothing.
+string(REPLACE "\\" "/" UNILINK_PYTHON_SITE_PACKAGES "${UNILINK_PYTHON_SITE_PACKAGES}")
+
 set(UNILINK_PYTHON_PACKAGE_DIR "${UNILINK_PYTHON_SITE_PACKAGES}/unilink")
 
 if(APPLE)
@@ -81,6 +87,7 @@ if(_unilink_runtime_targets)
     LIBRARIES \${_unilink_runtime_targets}
     RESOLVED_DEPENDENCIES_VAR _unilink_resolved_deps
     UNRESOLVED_DEPENDENCIES_VAR _unilink_unresolved_deps
+    DIRECTORIES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin"
     PRE_EXCLUDE_REGEXES
       [[api-ms-win-.*]]
       [[ext-ms-.*]]
