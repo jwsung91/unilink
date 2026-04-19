@@ -1,4 +1,5 @@
 import asyncio
+import os
 import socket
 import threading
 import time
@@ -8,6 +9,8 @@ import pytest
 
 import unilink
 import unilink.asyncio as unilink_asyncio
+
+RUN_LOOPBACK_TESTS = os.environ.get("UNILINK_PYTHON_RUN_LOOPBACK_TESTS") == "1"
 
 
 def wait_until(predicate, timeout=5.0, interval=0.01):
@@ -48,6 +51,9 @@ def test_standard_python_surface_uses_canonical_names():
 
 
 def test_tcp_loopback_supports_standard_callbacks_and_framer():
+    if not RUN_LOOPBACK_TESTS:
+        pytest.skip("set UNILINK_PYTHON_RUN_LOOPBACK_TESTS=1 to enable real transport loopback tests")
+
     port = reserve_tcp_port()
     server_connected = threading.Event()
     server_message = threading.Event()
