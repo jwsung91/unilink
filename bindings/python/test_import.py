@@ -46,16 +46,16 @@ if os.name == 'nt' and hasattr(os, 'add_dll_directory'):
         print("WARNING: unilink.dll not found in standard search paths. Import may fail.")
 
 try:
-    import unilink_py
-    print("Successfully imported unilink_py")
+    import unilink
+    print("Successfully imported unilink")
 except ImportError as e:
-    print(f"Failed to import unilink_py: {e}")
+    print(f"Failed to import unilink: {e}")
     sys.exit(1)
 
 def test_tcp_client():
     print("Testing TcpClient...")
     import datetime
-    client = unilink_py.TcpClient("127.0.0.1", 8080)
+    client = unilink.TcpClient("127.0.0.1", 8080)
     assert not client.connected()
     client.auto_manage(True)
     client.retry_interval(datetime.timedelta(milliseconds=1000))
@@ -70,7 +70,7 @@ def test_tcp_client():
 
 def test_tcp_server():
     print("Testing TcpServer...")
-    server = unilink_py.TcpServer(8080)
+    server = unilink.TcpServer(8080)
 
     def on_connect(ctx):
         print(f"Client {ctx.client_id} connected to server")
@@ -83,7 +83,7 @@ def test_serial():
     import datetime
     try:
         # Just testing instantiation, not actual hardware
-        serial = unilink_py.Serial("/dev/ttyUSB0", 115200)
+        serial = unilink.Serial("/dev/ttyUSB0", 115200)
         serial.baud_rate(9600)
         serial.auto_manage(True)
         serial.retry_interval(datetime.timedelta(milliseconds=2000))
@@ -93,9 +93,9 @@ def test_serial():
 
 def test_udp():
     print("Testing Udp...")
-    config = unilink_py.UdpConfig()
+    config = unilink.UdpConfig()
     config.local_port = 8081
-    udp = unilink_py.Udp(config)
+    udp = unilink.Udp(config)
     udp.auto_manage(True)
 
     def on_connect(ctx):

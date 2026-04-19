@@ -39,7 +39,7 @@ auto client = unilink::tcp_client("server.com", 8080)
 
 ```cpp
 // GOOD
-if (client->is_connected()) {
+if (client->connected()) {
     client->send("Hello");
 } else {
     log_warning("Cannot send - not connected");
@@ -169,7 +169,7 @@ class DataSender {
     
     void send_multiple_messages() {
         for (const auto& msg : messages) {
-            if (client_->is_connected()) {
+            if (client_->connected()) {
                 client_->send(msg);
             }
         }
@@ -305,7 +305,7 @@ auto client2 = tcp_client("server2.com", 8080).build();
 
 // Only use independent context when needed for testing
 auto test_client = tcp_client("test.com", 8080)
-    .use_independent_context(true)  // Only for tests
+    .independent_context(true)  // Only for tests
     .build();
 ```
 
@@ -433,7 +433,7 @@ public:
         : client_(client) {}
     
     void send_message(const std::string& msg) {
-        if (client_->is_connected()) {
+        if (client_->connected()) {
             client_->send(msg);
         }
     }
@@ -475,7 +475,7 @@ TEST(ClientTest, HandlesConnectionError) {
 // GOOD - Isolated tests
 TEST(ClientTest, SendReceive) {
     auto client = tcp_client("127.0.0.1", test_port)
-        .use_independent_context(true)  // Isolated I/O thread
+        .independent_context(true)  // Isolated I/O thread
         .build();
     
     // Test won't interfere with other tests

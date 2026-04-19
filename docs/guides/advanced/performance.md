@@ -86,7 +86,7 @@ auto client2 = unilink::tcp_client("server2.com", 8080).build();
 
 // ❌ BAD: Independent contexts (wasteful)
 auto client1 = unilink::tcp_client("server1.com", 8080)
-    .use_independent_context(true)  // Creates dedicated thread
+    .independent_context(true)  // Creates dedicated thread
     .build();
 ```
 
@@ -223,7 +223,7 @@ ms_print massif.out
 void benchmark_throughput() {
     auto client = unilink::tcp_client("127.0.0.1", 8080).build();
     client->start();
-    while (!client->is_connected()) std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    while (!client->connected()) std::this_thread::sleep_for(std::chrono::milliseconds(10));
     
     std::string data(1024, 'X'); // 1KB
     auto start = std::chrono::high_resolution_clock::now();

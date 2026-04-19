@@ -1,6 +1,6 @@
 # Python Bindings Guide
 
-Unilink provides high-level Python bindings (`unilink_py`) that mirror the C++ Wrapper API. This allows you to build cross-platform communication applications using Python with the performance of a C++ core.
+Unilink provides a Python package (`unilink`) backed by the C++ Wrapper API. This allows you to build cross-platform communication applications using Python with the performance of a C++ core.
 
 ---
 
@@ -19,10 +19,15 @@ Unilink provides high-level Python bindings (`unilink_py`) that mirror the C++ W
    cmake --build build --target unilink_py
    ```
 
-3. **Usage**:
-   Add the build output directory (usually `build/lib`) to your `PYTHONPATH`.
+3. **Install**:
    ```bash
-   export PYTHONPATH=$PYTHONPATH:$(pwd)/build/lib
+   cmake --install build
+   ```
+
+4. **Development Usage**:
+   If you are running directly from the source and build trees, add both the Python package directory and the build output directory to your `PYTHONPATH`.
+   ```bash
+   export PYTHONPATH=$(pwd)/bindings/python:$(pwd)/build/lib:$PYTHONPATH
    ```
 
 ---
@@ -34,12 +39,12 @@ The `TcpClient` in Python supports automatic reconnection and asynchronous event
 ### Basic Usage
 
 ```python
-import unilink_py
+import unilink
 import datetime
 import time
 
 # Initialize client
-client = unilink_py.TcpClient("127.0.0.1", 8080)
+client = unilink.TcpClient("127.0.0.1", 8080)
 
 # Configure (Optional)
 client.retry_interval(datetime.timedelta(milliseconds=2000))
@@ -82,9 +87,9 @@ client.stop()
 ### Basic Usage
 
 ```python
-import unilink_py
+import unilink
 
-server = unilink_py.TcpServer(8080)
+server = unilink.TcpServer(8080)
 
 def on_connect(ctx):
     print(f"Client {ctx.client_id} connected from {ctx.client_info}")
@@ -112,10 +117,10 @@ Supports RS-232/422/485 with automatic retry logic.
 ### Basic Usage
 
 ```python
-import unilink_py
+import unilink
 import datetime
 
-serial = unilink_py.Serial("/dev/ttyUSB0", 115200)
+serial = unilink.Serial("/dev/ttyUSB0", 115200)
 
 # Configure
 serial.baud_rate(9600)
@@ -142,14 +147,14 @@ Flexible UDP transport with automatic remote endpoint tracking.
 ### Basic Usage
 
 ```python
-import unilink_py
+import unilink
 
-config = unilink_py.UdpConfig()
+config = unilink.UdpConfig()
 config.local_port = 8081
 config.remote_address = "127.0.0.1"
 config.remote_port = 8080
 
-udp = unilink_py.Udp(config)
+udp = unilink.Udp(config)
 
 def on_data(ctx):
     print(f"UDP Received: {ctx.data}")
@@ -175,11 +180,11 @@ Unix Domain Sockets for high-performance local IPC.
 ### Basic Usage
 
 ```python
-import unilink_py
+import unilink
 
 # Initialize client/server with socket path
-server = unilink_py.UdsServer("/tmp/myapp.sock")
-client = unilink_py.UdsClient("/tmp/myapp.sock")
+server = unilink.UdsServer("/tmp/myapp.sock")
+client = unilink.UdsClient("/tmp/myapp.sock")
 
 def on_server_data(ctx):
     print(f"Server received: {ctx.data}")
@@ -208,9 +213,9 @@ client.send("Hello over UDS")
 Unilink allows you to avoid dealing with raw fragmented bytes by using built-in framers. When a framer is set, you use `on_message` instead of `on_data` to receive completely framed payloads.
 
 ```python
-import unilink_py
+import unilink
 
-client = unilink_py.TcpClient("127.0.0.1", 8080)
+client = unilink.TcpClient("127.0.0.1", 8080)
 
 # Automatically frame incoming bytes by newline ("\n")
 client.use_line_framer("\n", include_delimiter=False, max_length=65536)
@@ -227,7 +232,7 @@ client.start()
 For servers, the framer is allocated per-session automatically:
 
 ```python
-server = unilink_py.TcpServer(8080)
+server = unilink.TcpServer(8080)
 server.use_line_framer("\n")
 
 # Server's on_message receives a MessageContext with the client_id

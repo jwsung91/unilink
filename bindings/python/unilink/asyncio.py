@@ -1,6 +1,10 @@
 import asyncio
 from typing import List, Union
-import unilink_py
+
+try:
+    from . import unilink_py
+except ImportError:
+    import unilink_py
 
 def _get_loop():
     try:
@@ -12,7 +16,7 @@ class AsyncChannelBase:
     """Base class for all asynchronous client transports."""
     def __init__(self, client_instance):
         self._raw_client = client_instance
-        self._loop = _get_loop()
+        self._loop = None
         self._data_queue = asyncio.Queue()
         self._message_queue = asyncio.Queue()
         
@@ -20,15 +24,21 @@ class AsyncChannelBase:
         self._raw_client.on_data(self._on_data_bridge)
         self._raw_client.on_message(self._on_message_bridge)
 
+    def _ensure_loop(self):
+        if self._loop is None or self._loop.is_closed():
+            self._loop = _get_loop()
+        return self._loop
+
     def _on_data_bridge(self, ctx):
-        self._loop.call_soon_threadsafe(self._data_queue.put_nowait, ctx)
+        self._ensure_loop().call_soon_threadsafe(self._data_queue.put_nowait, ctx)
 
     def _on_message_bridge(self, ctx):
-        self._loop.call_soon_threadsafe(self._message_queue.put_nowait, ctx)
+        self._ensure_loop().call_soon_threadsafe(self._message_queue.put_nowait, ctx)
 
-    async def connect(self) -> bool:
-        """Starts the channel and waits for the connection to be established."""
-        return await self._loop.run_in_executor(None, self._raw_client.start)
+    async def start(self) -> bool:
+        """Starts the channel and waits for the connection attempt to complete."""
+        loop = self._ensure_loop()
+        return await loop.run_in_executor(None, self._raw_client.start)
 
     def stop(self):
         """Stops the channel operations."""
@@ -118,7 +128,7 @@ class AsyncServerBase:
     """Base class for all asynchronous servers."""
     def __init__(self, server_instance):
         self._raw_server = server_instance
-        self._loop = _get_loop()
+        self._loop = None
         self._sessions = {}
         self._session_queue = asyncio.Queue()
         
@@ -128,10 +138,16 @@ class AsyncServerBase:
         self._raw_server.on_data(self._on_data_bridge)
         self._raw_server.on_message(self._on_message_bridge)
 
+    def _ensure_loop(self):
+        if self._loop is None or self._loop.is_closed():
+            self._loop = _get_loop()
+        return self._loop
+
     def _on_connect_bridge(self, ctx):
-        session = AsyncServerSession(self._raw_server, ctx.client_id, ctx.client_info, self._loop)
+        loop = self._ensure_loop()
+        session = AsyncServerSession(self._raw_server, ctx.client_id, ctx.client_info, loop)
         self._sessions[ctx.client_id] = session
-        self._loop.call_soon_threadsafe(self._session_queue.put_nowait, session)
+        loop.call_soon_threadsafe(self._session_queue.put_nowait, session)
 
     def _on_disconnect_bridge(self, ctx):
         session = self._sessions.pop(ctx.client_id, None)
@@ -149,7 +165,8 @@ class AsyncServerBase:
             session._push_message(ctx)
 
     async def start(self) -> bool:
-        return await self._loop.run_in_executor(None, self._raw_server.start)
+        loop = self._ensure_loop()
+        return await loop.run_in_executor(None, self._raw_server.start)
 
     def stop(self):
         self._raw_server.stop()

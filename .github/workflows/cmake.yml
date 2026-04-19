@@ -101,6 +101,10 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install Python Test Dependencies
+        if: matrix.build_python == 'ON'
+        run: python -m pip install pytest
+
       - name: Clone vcpkg
         if: runner.os != 'macOS'
         run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
@@ -216,25 +220,31 @@ jobs:
         working-directory: build
         run: ctest --output-on-failure --parallel 2 -LE docs_snippets
 
+      - name: Stage Python Package (Windows)
+        if: matrix.build_python == 'ON' && runner.os == 'Windows'
+        shell: pwsh
+        run: cmake --install build --prefix build/install --config "${env:BUILD_TYPE}"
+
+      - name: Stage Python Package (Linux/macOS)
+        if: matrix.build_python == 'ON' && runner.os != 'Windows'
+        shell: bash
+        run: cmake --install build --prefix build/install
+
       - name: Verify Python Import (Windows)
         if: matrix.build_python == 'ON' && runner.os == 'Windows'
         shell: pwsh
         run: |
-          # Use PowerShell for reliable path handling on Windows
-          # Add bin/Release, bin, lib/Release, lib to PYTHONPATH with semicolon separators
-          $paths = @(
-            "$pwd\build\bin\${{ env.BUILD_TYPE }}",
-            "$pwd\build\bin",
-            "$pwd\build\lib\${{ env.BUILD_TYPE }}",
-            "$pwd\build\lib"
-          )
-          $env:PYTHONPATH = ($paths -join ";") + ";" + $env:PYTHONPATH
+          $sitePackages = python -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip(r'/\\'))"
+          $installPath = Join-Path $pwd "build/install/$sitePackages"
+          $env:PYTHONPATH = "$installPath;$env:PYTHONPATH"
           python bindings/python/test_import.py
+          python -m pytest bindings/python/tests -q
 
       - name: Verify Python Import (Linux/macOS)
         if: matrix.build_python == 'ON' && runner.os != 'Windows'
         shell: bash
         run: |
-          # On Linux/macOS, shared libraries are in build/lib
-          export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
+          PY_SITE=$(python3 -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip('/\\\\'))")
+          export PYTHONPATH="$PWD/build/install/$PY_SITE:$PYTHONPATH"
           python3 bindings/python/test_import.py
+          python3 -m pytest bindings/python/tests -q

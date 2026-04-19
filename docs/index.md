@@ -19,7 +19,7 @@ This index is the stable entry point for the handwritten documentation in `docs/
 | [Best Practices](guides/core/best_practices.md) | Runtime usage patterns and guardrails |
 | [Troubleshooting](guides/core/troubleshooting.md) | Common failures and debugging steps |
 | [Testing](guides/core/testing.md) | Running tests and understanding coverage |
-| [Python Bindings](guides/core/python_bindings.md) | `unilink_py` usage and current scope |
+| [Python Bindings](guides/core/python_bindings.md) | `unilink` package usage and current scope |
 | [Performance](guides/advanced/performance.md) | Tuning and async logging considerations |
 
 ## Tutorials
