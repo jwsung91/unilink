@@ -159,6 +159,11 @@ jobs:
       - name: Configure (Linux)
         if: runner.os == 'Linux'
         run: |
+          PYTHON_CMAKE_ARGS=()
+          if [ "${{ matrix.build_python }}" = "ON" ]; then
+            PYTHON_CMAKE_ARGS+=("-DPython3_EXECUTABLE=$(python3 -c 'import sys; print(sys.executable)')")
+          fi
+
           cmake -S . -B build \
             -G "${{ matrix.generator }}" \
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
@@ -170,11 +175,17 @@ jobs:
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }}
+            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
+            "${PYTHON_CMAKE_ARGS[@]}"
 
       - name: Configure (macOS)
         if: runner.os == 'macOS'
         run: |
+          PYTHON_CMAKE_ARGS=()
+          if [ "${{ matrix.build_python }}" = "ON" ]; then
+            PYTHON_CMAKE_ARGS+=("-DPython3_EXECUTABLE=$(python3 -c 'import sys; print(sys.executable)')")
+          fi
+
           cmake -S . -B build \
             -G "${{ matrix.generator }}" \
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
@@ -185,12 +196,19 @@ jobs:
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }}
+            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
+            "${PYTHON_CMAKE_ARGS[@]}"
 
       - name: Configure (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+          $pythonCmakeArgs = @()
+          if ("${{ matrix.build_python }}" -eq "ON") {
+            $pythonExe = python -c "import sys; print(sys.executable)"
+            $pythonCmakeArgs += "-DPython3_EXECUTABLE=$pythonExe"
+          }
+
           cmake -S . -B build `
             -G "${{ matrix.generator }}" -A x64 `
             -DCMAKE_BUILD_TYPE="${env:BUILD_TYPE}" `
@@ -200,7 +218,8 @@ jobs:
             -DUNILINK_BUILD_DOCS=OFF `
             -DUNILINK_BUILD_TESTS=ON `
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF `
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }}
+            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} `
+            @pythonCmakeArgs
 
       - name: Build
         run: cmake --build build --config "${BUILD_TYPE}" --parallel
