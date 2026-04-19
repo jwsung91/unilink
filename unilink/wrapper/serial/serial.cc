@@ -307,13 +307,15 @@ Serial& Serial::operator=(Serial&&) noexcept = default;
 
 std::future<bool> Serial::start() { return impl_->start(); }
 void Serial::stop() { impl_->stop(); }
-void Serial::send(std::string_view data) {
+bool Serial::send(std::string_view data) {
   if (connected() && get_impl()->channel) {
     auto binary_view = base::safe_convert::string_to_bytes(data);
     get_impl()->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    return true;
   }
+  return false;
 }
-void Serial::send_line(std::string_view line) { send(std::string(line) + "\n"); }
+bool Serial::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
 bool Serial::connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
 
 ChannelInterface& Serial::on_data(MessageHandler h) {

@@ -304,17 +304,19 @@ std::future<bool> UdsClient::start() { return impl_->start(); }
 
 void UdsClient::stop() { impl_->stop(); }
 
-void UdsClient::send(std::string_view data) {
+bool UdsClient::send(std::string_view data) {
   if (impl_->channel_) {
     impl_->channel_->async_write_copy(
         memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
+    return true;
   }
+  return false;
 }
 
-void UdsClient::send_line(std::string_view line) {
+bool UdsClient::send_line(std::string_view line) {
   std::string data(line);
   data += "\n";
-  send(data);
+  return send(data);
 }
 
 bool UdsClient::connected() const { return impl_->channel_ && impl_->channel_->is_connected(); }

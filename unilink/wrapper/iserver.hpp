@@ -43,6 +43,13 @@ class UNILINK_API ServerInterface {
 
   // Lifecycle
   [[nodiscard]] virtual std::future<bool> start() = 0;
+
+  /**
+   * @brief Stop the server and block until all active sessions are closed.
+   *
+   * Safe to call from any thread. After stop() returns, no further callbacks will fire
+   * and it is safe to destroy the object. Calling stop() more than once is a no-op.
+   */
   virtual void stop() = 0;
   virtual bool listening() const = 0;
 
@@ -55,6 +62,10 @@ class UNILINK_API ServerInterface {
   virtual ServerInterface& on_client_disconnect(ConnectionHandler handler) = 0;
   virtual ServerInterface& on_data(MessageHandler handler) = 0;
   virtual ServerInterface& on_error(ErrorHandler handler) = 0;
+
+  // Aliases — same names as ChannelInterface so server and client code look identical
+  ServerInterface& on_connect(ConnectionHandler handler) { return on_client_connect(std::move(handler)); }
+  ServerInterface& on_disconnect(ConnectionHandler handler) { return on_client_disconnect(std::move(handler)); }
 
   /**
    * @brief Set a factory function to create a new framer for each client connection.

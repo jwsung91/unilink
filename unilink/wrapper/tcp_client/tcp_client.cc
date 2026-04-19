@@ -174,11 +174,13 @@ struct TcpClient::Impl {
     if (framer_) framer_->reset();
   }
 
-  void send(std::string_view data) {
+  bool send(std::string_view data) {
     if (channel_ && channel_->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
       channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+      return true;
     }
+    return false;
   }
 
   bool connected() const { return channel_ && channel_->is_connected(); }
@@ -296,8 +298,8 @@ TcpClient& TcpClient::operator=(TcpClient&&) noexcept = default;
 
 std::future<bool> TcpClient::start() { return impl_->start(); }
 void TcpClient::stop() { impl_->stop(); }
-void TcpClient::send(std::string_view data) { impl_->send(data); }
-void TcpClient::send_line(std::string_view line) { impl_->send(std::string(line) + "\n"); }
+bool TcpClient::send(std::string_view data) { return impl_->send(data); }
+bool TcpClient::send_line(std::string_view line) { return impl_->send(std::string(line) + "\n"); }
 bool TcpClient::connected() const { return get_impl()->connected(); }
 
 ChannelInterface& TcpClient::on_data(MessageHandler h) {

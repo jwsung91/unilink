@@ -169,13 +169,14 @@ class BuilderInterface {
   }
 
   /**
-   * @brief Use LineFramer for message segmentation (e.g., newline delimited)
+   * @brief Activate line-delimited framing (e.g., newline-separated messages).
    * @param delimiter Delimiter string (default: "\n")
-   * @param include_delimiter Whether to include delimiter in the message
-   * @param max_length Maximum message length
+   * @param include_delimiter Whether to include delimiter in each message
+   * @param max_length Maximum message length before an error is raised
    * @return Derived& Reference to this builder
    */
-  Derived& line_framer(std::string_view delimiter = "\n", bool include_delimiter = false, size_t max_length = 65536) {
+  Derived& use_line_framer(std::string_view delimiter = "\n", bool include_delimiter = false,
+                           size_t max_length = 65536) {
     std::string delim(delimiter);
     framer_factory_ = [delim, include_delimiter, max_length]() {
       return std::make_unique<framer::LineFramer>(delim, include_delimiter, max_length);
@@ -184,14 +185,14 @@ class BuilderInterface {
   }
 
   /**
-   * @brief Use PacketFramer for message segmentation (binary pattern matching)
-   * @param start_pattern Start pattern bytes
-   * @param end_pattern End pattern bytes
-   * @param max_length Maximum packet length
+   * @brief Activate binary packet framing with explicit start/end byte patterns.
+   * @param start_pattern Byte sequence marking the beginning of a packet
+   * @param end_pattern Byte sequence marking the end of a packet
+   * @param max_length Maximum packet length before an error is raised
    * @return Derived& Reference to this builder
    */
-  Derived& packet_framer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
-                         size_t max_length) {
+  Derived& use_packet_framer(const std::vector<uint8_t>& start_pattern, const std::vector<uint8_t>& end_pattern,
+                             size_t max_length) {
     framer_factory_ = [start_pattern, end_pattern, max_length]() {
       return std::make_unique<framer::PacketFramer>(start_pattern, end_pattern, max_length);
     };

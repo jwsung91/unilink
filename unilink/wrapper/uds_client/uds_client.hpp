@@ -61,8 +61,8 @@ class UNILINK_API UdsClient : public ChannelInterface {
   // ChannelInterface implementation
   std::future<bool> start() override;
   void stop() override;
-  void send(std::string_view data) override;
-  void send_line(std::string_view line) override;
+  bool send(std::string_view data) override;
+  bool send_line(std::string_view line) override;
   bool connected() const override;
 
   ChannelInterface& on_data(MessageHandler handler) override;

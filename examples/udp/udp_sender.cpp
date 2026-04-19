@@ -33,7 +33,10 @@ int main() {
           .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "Error: " << ctx.message() << std::endl; })
           .build();
 
-  sender->start();
+  if (!sender->start().get()) {
+    std::cerr << "Failed to start UDP sender" << std::endl;
+    return 1;
+  }
 
   std::cout << "Sending messages to 127.0.0.1:9000. Type messages or '/quit'." << std::endl;
 

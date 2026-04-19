@@ -27,8 +27,10 @@ using namespace std::chrono_literals;
 int main(int argc, char** argv) {
   const std::string socket_path = (argc > 1) ? argv[1] : "/tmp/unilink_echo.sock";
 
-  std::unique_ptr<unilink::UdsServer> server;
-  server =
+  // Use shared_ptr so that callbacks can safely hold a reference without risking
+  // a dangling pointer if the server is stopped while a callback is in-flight.
+  std::shared_ptr<unilink::UdsServer> server;
+  server.reset(
       unilink::uds_server(socket_path)
           .unlimited_clients()
           .on_connect([](const unilink::ConnectionContext& ctx) {
@@ -36,15 +38,16 @@ int main(int argc, char** argv) {
           })
           .on_data([&server](const unilink::MessageContext& ctx) {
             std::cout << "Received: " << ctx.data() << std::endl;
-            if (server) {
-              server->send_to(ctx.client_id(), ctx.data());
+            if (auto s = server) {  // local copy keeps the object alive for this call
+              s->send_to(ctx.client_id(), ctx.data());
             }
           })
           .on_disconnect([](const unilink::ConnectionContext& ctx) {
             std::cout << "Client disconnected: " << ctx.client_id() << std::endl;
           })
           .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[Error] " << ctx.message() << std::endl; })
-          .build();
+          .build()
+          .release());
 
   if (!server || !server->start().get()) {
     std::cerr << "Failed to start UDS server on " << socket_path << std::endl;
