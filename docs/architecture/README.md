@@ -127,15 +127,15 @@ namespace unilink::wrapper {
     class ChannelInterface {
         virtual std::future<bool> start() = 0;
         virtual void stop() = 0;
-        virtual bool is_connected() const = 0;
-        virtual void send(std::string_view data) = 0;
-        virtual void send_line(std::string_view line) = 0;
+        virtual bool connected() const = 0;
+        virtual bool send(std::string_view data) = 0;
+        virtual bool send_line(std::string_view line) = 0;
     };
 
     class ServerInterface {
         virtual std::future<bool> start() = 0;
         virtual void stop() = 0;
-        virtual bool is_listening() const = 0;
+        virtual bool listening() const = 0;
         virtual bool broadcast(std::string_view data) = 0;
         virtual bool send_to(size_t client_id, std::string_view data) = 0;
     };
@@ -404,7 +404,7 @@ auto client2 = tcp_client("server2.com", 8080).build();
 ```cpp
 // Each channel has its own I/O thread
 auto client = tcp_client("server.com", 8080)
-    .use_independent_context(true)
+    .independent_context(true)
     .build();
 ```
 
@@ -723,7 +723,7 @@ Serial serial(mock_port);
 ```cpp
 // Isolated testing
 auto client = tcp_client("127.0.0.1", 8080)
-    .use_independent_context(true)  // Own IO thread
+    .independent_context(true)  // Own IO thread
     .build();
 ```
 
@@ -732,7 +732,7 @@ auto client = tcp_client("127.0.0.1", 8080)
 ```cpp
 // Check internal state
 ASSERT_EQ(client->get_state(), State::CONNECTED);
-ASSERT_TRUE(server->is_listening());
+ASSERT_TRUE(server->listening());
 ```
 
 ---

@@ -27,7 +27,9 @@ sudo cmake --install build
 ## Your First TCP Client (30 seconds)
 
 ```cpp
+#include <chrono>
 #include <iostream>
+#include <thread>
 #include "unilink/unilink.hpp"
 
 int main() {
@@ -41,11 +43,11 @@ int main() {
         })
         .build();
 
-    client->start();
+    bool started = client->start().get();
 
     // Send a message
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    if (client->is_connected()) {
+    if (started && client->connected()) {
         client->send("Hello, Server!");
     }
 
@@ -68,7 +70,9 @@ g++ -std=c++17 my_client.cc -lunilink -lboost_system -pthread -o my_client
 ## Your First TCP Server (30 seconds)
 
 ```cpp
+#include <chrono>
 #include <iostream>
+#include <thread>
 #include "unilink/unilink.hpp"
 
 int main() {
@@ -82,7 +86,10 @@ int main() {
         })
         .build();
 
-    server->start();
+    if (!server->start().get()) {
+        std::cerr << "Failed to start server" << std::endl;
+        return 1;
+    }
     std::cout << "Server listening on port 8080..." << std::endl;
 
     // Keep running for 60 seconds
@@ -97,7 +104,9 @@ int main() {
 ## Your First Serial Device (30 seconds)
 
 ```cpp
+#include <chrono>
 #include <iostream>
+#include <thread>
 #include "unilink/unilink.hpp"
 
 int main() {
@@ -111,7 +120,10 @@ int main() {
         })
         .build();
 
-    serial->start();
+    if (!serial->start().get()) {
+        std::cerr << "Failed to open serial port" << std::endl;
+        return 1;
+    }
 
     // Send data
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -203,7 +215,7 @@ auto server = unilink::tcp_server(8080)
 ```cpp
 // For testing or isolation
 auto client = unilink::tcp_client("127.0.0.1", 8080)
-    .use_independent_context(true)
+    .independent_context(true)
     .build();
 ```
 

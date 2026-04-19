@@ -1,5 +1,5 @@
 import asyncio
-from typing import Optional, Union, List, AsyncIterator
+from typing import List, Union
 import unilink_py
 
 def _get_loop():
@@ -23,8 +23,8 @@ class AsyncChannelBase:
     def _on_data_bridge(self, ctx):
         self._loop.call_soon_threadsafe(self._data_queue.put_nowait, ctx)
 
-    def _on_message_bridge(self, msg_bytes):
-        self._loop.call_soon_threadsafe(self._message_queue.put_nowait, msg_bytes)
+    def _on_message_bridge(self, ctx):
+        self._loop.call_soon_threadsafe(self._message_queue.put_nowait, ctx)
 
     async def connect(self) -> bool:
         """Starts the channel and waits for the connection to be established."""
@@ -34,24 +34,28 @@ class AsyncChannelBase:
         """Stops the channel operations."""
         self._raw_client.stop()
 
-    def send(self, data: Union[str, bytes]):
-        """Sends data through the channel."""
-        self._raw_client.send(data)
+    def connected(self) -> bool:
+        """Returns whether the underlying channel is currently connected."""
+        return self._raw_client.connected()
+
+    def send(self, data: Union[str, bytes]) -> bool:
+        """Sends data through the channel and returns whether it was accepted."""
+        return self._raw_client.send(data)
 
     async def read(self) -> unilink_py.MessageContext:
         """Waits for next raw data packet."""
         return await self._data_queue.get()
 
-    async def read_message(self) -> bytes:
-        """Waits for next framed message payload."""
+    async def read_message(self) -> unilink_py.MessageContext:
+        """Waits for next framed message context."""
         return await self._message_queue.get()
 
-    def line_framer(self, delimiter: str = "\n", include_delimiter: bool = False, max_length: int = 65536):
-        self._raw_client.line_framer(delimiter, include_delimiter, max_length)
+    def use_line_framer(self, delimiter: str = "\n", include_delimiter: bool = False, max_length: int = 65536):
+        self._raw_client.use_line_framer(delimiter, include_delimiter, max_length)
         return self
 
-    def packet_framer(self, start_pattern: List[int], end_pattern: List[int], max_length: int):
-        self._raw_client.packet_framer(start_pattern, end_pattern, max_length)
+    def use_packet_framer(self, start_pattern: List[int], end_pattern: List[int], max_length: int):
+        self._raw_client.use_packet_framer(start_pattern, end_pattern, max_length)
         return self
 
 class AsyncTcpClient(AsyncChannelBase):
@@ -93,22 +97,19 @@ class AsyncServerSession:
     def _notify_disconnect(self):
         self._loop.call_soon_threadsafe(self._closed.set)
 
-    async def send(self, data: Union[str, bytes]):
-        self._server.send_to(self.id, data)
+    async def send(self, data: Union[str, bytes]) -> bool:
+        return self._server.send_to(self.id, data)
 
-    async def read(self) -> str:
+    async def read(self) -> unilink_py.MessageContext:
         return await self._data_queue.get()
 
-    async def read_message(self) -> str:
-        # For servers, MessageContext is used
-        ctx = await self._message_queue.get()
-        return ctx.data
+    async def read_message(self) -> unilink_py.MessageContext:
+        return await self._message_queue.get()
 
     def __aiter__(self):
         return self
 
     async def __anext__(self):
-        # Allow iterating over messages
         if self._closed.is_set() and self._message_queue.empty():
             raise StopAsyncIteration
         return await self.read_message()
@@ -122,8 +123,8 @@ class AsyncServerBase:
         self._session_queue = asyncio.Queue()
         
         # Setup bridges
-        self._raw_server.on_client_connect(self._on_connect_bridge)
-        self._raw_server.on_client_disconnect(self._on_disconnect_bridge)
+        self._raw_server.on_connect(self._on_connect_bridge)
+        self._raw_server.on_disconnect(self._on_disconnect_bridge)
         self._raw_server.on_data(self._on_data_bridge)
         self._raw_server.on_message(self._on_message_bridge)
 
@@ -140,7 +141,7 @@ class AsyncServerBase:
     def _on_data_bridge(self, ctx):
         session = self._sessions.get(ctx.client_id)
         if session:
-            session._push_data(ctx.data)
+            session._push_data(ctx)
 
     def _on_message_bridge(self, ctx):
         session = self._sessions.get(ctx.client_id)
@@ -153,11 +154,18 @@ class AsyncServerBase:
     def stop(self):
         self._raw_server.stop()
 
-    def broadcast(self, data: Union[str, bytes]):
-        self._raw_server.broadcast(data)
+    def listening(self) -> bool:
+        return self._raw_server.listening()
 
-    def line_framer(self, delimiter: str = "\n", include_delimiter: bool = False, max_length: int = 65536):
-        self._raw_server.line_framer(delimiter, include_delimiter, max_length)
+    def broadcast(self, data: Union[str, bytes]) -> bool:
+        return self._raw_server.broadcast(data)
+
+    def use_line_framer(self, delimiter: str = "\n", include_delimiter: bool = False, max_length: int = 65536):
+        self._raw_server.use_line_framer(delimiter, include_delimiter, max_length)
+        return self
+
+    def use_packet_framer(self, start_pattern: List[int], end_pattern: List[int], max_length: int):
+        self._raw_server.use_packet_framer(start_pattern, end_pattern, max_length)
         return self
 
     def __aiter__(self):

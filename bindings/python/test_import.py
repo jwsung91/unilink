@@ -63,7 +63,7 @@ def test_tcp_client():
     client.connection_timeout(datetime.timedelta(milliseconds=5000))
 
     def on_data(ctx):
-        print(f"Data received from client {ctx.client_id()}: {ctx.data}")
+        print(f"Data received from client {ctx.client_id}: {ctx.data}")
 
     client.on_data(on_data)
     print("TcpClient initialized.")
@@ -73,9 +73,9 @@ def test_tcp_server():
     server = unilink_py.TcpServer(8080)
 
     def on_connect(ctx):
-        print(f"Client {ctx.client_id()} connected to server")
+        print(f"Client {ctx.client_id} connected to server")
 
-    server.on_client_connect(on_connect)
+    server.on_connect(on_connect)
     print("TcpServer initialized.")
 
 def test_serial():
@@ -99,10 +99,10 @@ def test_udp():
     udp.auto_manage(True)
 
     def on_connect(ctx):
-        print(f"Udp connected: {ctx.client_id()}")
+        print(f"Udp connected: {ctx.client_id}")
 
     def on_disconnect(ctx):
-        print(f"Udp disconnected: {ctx.client_id()}")
+        print(f"Udp disconnected: {ctx.client_id}")
 
     def on_error(ctx):
         print(f"Udp error: {ctx.code}")
