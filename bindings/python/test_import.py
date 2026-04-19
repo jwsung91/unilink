@@ -57,7 +57,6 @@ def test_tcp_client():
     import datetime
     client = unilink.TcpClient("127.0.0.1", 8080)
     assert not client.connected()
-    client.auto_manage(True)
     client.retry_interval(datetime.timedelta(milliseconds=1000))
     client.max_retries(5)
     client.connection_timeout(datetime.timedelta(milliseconds=5000))
@@ -82,10 +81,9 @@ def test_serial():
     print("Testing Serial...")
     import datetime
     try:
-        # Just testing instantiation, not actual hardware
+        # Only verify construction/configuration here. Do not auto-start a real device.
         serial = unilink.Serial("/dev/ttyUSB0", 115200)
         serial.baud_rate(9600)
-        serial.auto_manage(True)
         serial.retry_interval(datetime.timedelta(milliseconds=2000))
         print("Serial initialized.")
     except Exception as e:
@@ -96,7 +94,6 @@ def test_udp():
     config = unilink.UdpConfig()
     config.local_port = 8081
     udp = unilink.Udp(config)
-    udp.auto_manage(True)
 
     def on_connect(ctx):
         print(f"Udp connected: {ctx.client_id}")
