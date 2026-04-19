@@ -5,6 +5,5 @@ var platform_8hpp =
     [ "UNILINK_ENABLE_EXPERIMENTAL_FEATURES", "platform_8hpp.html#a2cc28df63e5129310463918a2e98290e", null ],
     [ "UNILINK_ENABLE_LATEST_OPTIMIZATIONS", "platform_8hpp.html#adacb9ea273da583f2e9794813d90efdc", null ],
     [ "UNILINK_ENABLE_PERFORMANCE_MONITORING", "platform_8hpp.html#aa79f765b93f3809e6fd5f8694d38520a", null ],
-    [ "UNILINK_FEATURE_LEVEL", "platform_8hpp.html#aab65e8c2881837b14f4a4622d3cd07db", null ],
-    [ "PlatformInfo", "platform_8hpp.html#a4bfa8e4aac6180db678118209ad654fa", null ]
+    [ "UNILINK_FEATURE_LEVEL", "platform_8hpp.html#aab65e8c2881837b14f4a4622d3cd07db", null ]
 ];

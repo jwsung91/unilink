@@ -1,6 +1,5 @@
 var common_8hpp =
 [
-    [ "LinkState", "common_8hpp.html#acefe4df3bdf442f64977be84b5a278e2", null ],
     [ "LinkState", "common_8hpp.html#a309474018616d324e14830540edab75c", [
       [ "Idle", "common_8hpp.html#a309474018616d324e14830540edab75cae599161956d626eda4cb0a5ffb85271c", null ],
       [ "Connecting", "common_8hpp.html#a309474018616d324e14830540edab75cae321c53b354930ba96f0243e652df458", null ],

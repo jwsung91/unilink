@@ -12,8 +12,8 @@ var classunilink_1_1wrapper_1_1ChannelInterface =
     [ "on_disconnect", "classunilink_1_1wrapper_1_1ChannelInterface.html#ab2fc21ba4b82738e71cc68370680715a", null ],
     [ "on_error", "classunilink_1_1wrapper_1_1ChannelInterface.html#ae9837f9dfd68b6db1fa62ef7078d96fe", null ],
     [ "on_message", "classunilink_1_1wrapper_1_1ChannelInterface.html#ab9d45c847c41ee57d00bbe3b925985ad", null ],
-    [ "send", "classunilink_1_1wrapper_1_1ChannelInterface.html#a457bd3d0e566402a8b620714840e5e85", null ],
-    [ "send_line", "classunilink_1_1wrapper_1_1ChannelInterface.html#a14fb9222ca699358ee4e818bb977890c", null ],
+    [ "send", "classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48", null ],
+    [ "send_line", "classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590", null ],
     [ "start", "classunilink_1_1wrapper_1_1ChannelInterface.html#a015554265152c7601cbff20480afeb43", null ],
     [ "stop", "classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0", null ]
 ];

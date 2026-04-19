@@ -24,8 +24,8 @@ var classunilink_1_1wrapper_1_1Serial =
     [ "operator=", "classunilink_1_1wrapper_1_1Serial.html#a07b6689a34acf4a31fdaf4ae8e4a0da0", null ],
     [ "parity", "classunilink_1_1wrapper_1_1Serial.html#ab0fb62c47b6443959c950136c528f757", null ],
     [ "retry_interval", "classunilink_1_1wrapper_1_1Serial.html#a6ce8939a471a8fd6c48bd9d26558aade", null ],
-    [ "send", "classunilink_1_1wrapper_1_1Serial.html#ac24bfcd3b30eecf8d45c163ad3c73cd4", null ],
-    [ "send_line", "classunilink_1_1wrapper_1_1Serial.html#af356b51850ae355e85938b6ff0c59d8f", null ],
+    [ "send", "classunilink_1_1wrapper_1_1Serial.html#a6b120ec3e9e98e9c57c789607f1649bb", null ],
+    [ "send_line", "classunilink_1_1wrapper_1_1Serial.html#a492c829f734bbff5baf617b4a32806a1", null ],
     [ "start", "classunilink_1_1wrapper_1_1Serial.html#a1d0c46c79487050268065fedda5fec4a", null ],
     [ "stop", "classunilink_1_1wrapper_1_1Serial.html#ad65a699425f67b86cfc2e55ca3c455ca", null ],
     [ "stop_bits", "classunilink_1_1wrapper_1_1Serial.html#a2e5c4c663a19b4a9003c56bd991157a6", null ]

@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7a3f27148a0073e6705ee8277dc392ab7d":[25,0,1,4,3,2,1],
 "error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7a696b031073e74bf2cb98e5ef201d4aa3":[25,0,1,4,3,2,5],
 "error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7a7014705458ee3cf0192f6aa52cfddea5":[25,0,1,4,3,2,3],
 "error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7ad08e68ea80bc3bf47a03757579c11900":[25,0,1,4,3,2,2],
@@ -14,12 +15,6 @@ var NAVTREEINDEX5 =
 "exceptions_8cc.html":[25,0,1,4,4],
 "exceptions_8cc_source.html":[25,0,1,4,4],
 "exceptions_8hpp.html":[25,0,1,4,5],
-"exceptions_8hpp.html#a076e76a2fb9d28f8e7fcdd3d28f46b49":[25,0,1,4,5,6],
-"exceptions_8hpp.html#a47be5bfced15f828bb05505c02933b64":[25,0,1,4,5,11],
-"exceptions_8hpp.html#a62f3e8f6668279c0fbc26ea10a5c318b":[25,0,1,4,5,9],
-"exceptions_8hpp.html#a73fd9ee71b0358d499f750fffd68efa2":[25,0,1,4,5,7],
-"exceptions_8hpp.html#ac53bea10e6c0431bf16c02b246ffbb07":[25,0,1,4,5,8],
-"exceptions_8hpp.html#aebd52022731114dbccbf21ffbf5654d2":[25,0,1,4,5,10],
 "exceptions_8hpp_source.html":[25,0,1,4,5],
 "files.html":[25,0],
 "functions.html":[24,3,0],
@@ -185,7 +180,6 @@ var NAVTREEINDEX5 =
 "io__context__manager_8cc.html":[25,0,1,2,0],
 "io__context__manager_8cc_source.html":[25,0,1,2,0],
 "io__context__manager_8hpp.html":[25,0,1,2,1],
-"io__context__manager_8hpp.html#a7b43f5afbe1d3f1147ac6c60c32b770d":[25,0,1,2,1,1],
 "io__context__manager_8hpp_source.html":[25,0,1,2,1],
 "iserial__port_8hpp.html":[25,0,1,7,2],
 "iserial__port_8hpp_source.html":[25,0,1,7,2],
@@ -249,5 +243,11 @@ var NAVTREEINDEX5 =
 "md_docs_architecture_memory_safety.html":[2],
 "md_docs_architecture_memory_safety.html#autotoc_md10":[2,0],
 "md_docs_architecture_memory_safety.html#autotoc_md12":[2,1],
-"md_docs_architecture_memory_safety.html#autotoc_md13":[2,1,0]
+"md_docs_architecture_memory_safety.html#autotoc_md13":[2,1,0],
+"md_docs_architecture_memory_safety.html#autotoc_md15":[2,1,1],
+"md_docs_architecture_memory_safety.html#autotoc_md17":[2,2],
+"md_docs_architecture_memory_safety.html#autotoc_md18":[2,2,0],
+"md_docs_architecture_memory_safety.html#autotoc_md20":[2,2,1],
+"md_docs_architecture_memory_safety.html#autotoc_md21":[2,2,1,0],
+"md_docs_architecture_memory_safety.html#autotoc_md23":[2,2,1,1]
 };

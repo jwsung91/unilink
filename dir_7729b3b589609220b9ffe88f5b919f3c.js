@@ -5,7 +5,14 @@ var dir_7729b3b589609220b9ffe88f5b919f3c =
     [ "error_mapping.hpp", "error__mapping_8hpp.html", "error__mapping_8hpp" ],
     [ "error_types.hpp", "error__types_8hpp.html", "error__types_8hpp" ],
     [ "exceptions.cc", "exceptions_8cc.html", null ],
-    [ "exceptions.hpp", "exceptions_8hpp.html", "exceptions_8hpp" ],
+    [ "exceptions.hpp", "exceptions_8hpp.html", [
+      [ "UnilinkException", "classunilink_1_1diagnostics_1_1UnilinkException.html", "classunilink_1_1diagnostics_1_1UnilinkException" ],
+      [ "BuilderException", "classunilink_1_1diagnostics_1_1BuilderException.html", "classunilink_1_1diagnostics_1_1BuilderException" ],
+      [ "ValidationException", "classunilink_1_1diagnostics_1_1ValidationException.html", "classunilink_1_1diagnostics_1_1ValidationException" ],
+      [ "MemoryException", "classunilink_1_1diagnostics_1_1MemoryException.html", "classunilink_1_1diagnostics_1_1MemoryException" ],
+      [ "ConnectionException", "classunilink_1_1diagnostics_1_1ConnectionException.html", "classunilink_1_1diagnostics_1_1ConnectionException" ],
+      [ "ConfigurationException", "classunilink_1_1diagnostics_1_1ConfigurationException.html", "classunilink_1_1diagnostics_1_1ConfigurationException" ]
+    ] ],
     [ "log_rotation.cc", "log__rotation_8cc.html", null ],
     [ "log_rotation.hpp", "log__rotation_8hpp.html", [
       [ "LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],

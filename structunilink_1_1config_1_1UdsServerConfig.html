@@ -108,12 +108,14 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a1b6e3decae24b71fa994d73edd29871c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1UdsServerConfig.html#a1b6e3decae24b71fa994d73edd29871c">socket_path</a> = &quot;/tmp/unilink.sock&quot;</td></tr>
 <tr class="separator:a1b6e3decae24b71fa994d73edd29871c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad05c1e28263d85c9055d0881de2cc4ea"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1UdsServerConfig.html#ad05c1e28263d85c9055d0881de2cc4ea">backpressure_threshold</a> = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</td></tr>
+<tr class="memitem:ad05c1e28263d85c9055d0881de2cc4ea"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1UdsServerConfig.html#ad05c1e28263d85c9055d0881de2cc4ea">backpressure_threshold</a> = <a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a></td></tr>
 <tr class="separator:ad05c1e28263d85c9055d0881de2cc4ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3288158bb2815d1e93c162683b8b6771"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1UdsServerConfig.html#a3288158bb2815d1e93c162683b8b6771">enable_memory_pool</a> = true</td></tr>
 <tr class="separator:a3288158bb2815d1e93c162683b8b6771"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf12a3bef081299a336d8cfc564150d3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1UdsServerConfig.html#abf12a3bef081299a336d8cfc564150d3">max_connections</a> = 100</td></tr>
 <tr class="separator:abf12a3bef081299a336d8cfc564150d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43946368f288b6e08e20adf4f5fceb25"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1config_1_1UdsServerConfig.html#a43946368f288b6e08e20adf4f5fceb25">idle_timeout_ms</a> = 0</td></tr>
+<tr class="separator:a43946368f288b6e08e20adf4f5fceb25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Configuration for UDS Server. </p>
@@ -143,7 +145,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__config_8hpp_source.html#l00078">78</a> of file <a class="el" href="uds__config_8hpp_source.html">uds_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__config_8hpp_source.html#l00079">79</a> of file <a class="el" href="uds__config_8hpp_source.html">uds_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -170,7 +172,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__config_8hpp_source.html#l00084">84</a> of file <a class="el" href="uds__config_8hpp_source.html">uds_config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__config_8hpp_source.html#l00086">86</a> of file <a class="el" href="uds__config_8hpp_source.html">uds_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -182,7 +184,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t unilink::config::UdsServerConfig::backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</td>
+          <td class="memname">size_t unilink::config::UdsServerConfig::backpressure_threshold = <a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -204,6 +206,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="uds__config_8hpp_source.html#l00075">75</a> of file <a class="el" href="uds__config_8hpp_source.html">uds_config.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a43946368f288b6e08e20adf4f5fceb25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43946368f288b6e08e20adf4f5fceb25">&#9670;&nbsp;</a></span>idle_timeout_ms</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int unilink::config::UdsServerConfig::idle_timeout_ms = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="uds__config_8hpp_source.html#l00077">77</a> of file <a class="el" href="uds__config_8hpp_source.html">uds_config.hpp</a>.</p>
 
 </div>
 </div>
@@ -248,7 +266,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1config.html">config</a></li><li class="navelem"><a class="el" href="structunilink_1_1config_1_1UdsServerConfig.html">UdsServerConfig</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

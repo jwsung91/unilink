@@ -22,7 +22,6 @@ var structunilink_1_1wrapper_1_1TcpServer_1_1Impl =
     [ "max_clients_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#af74107c041d44b81b6313b6d4f7121c8", null ],
     [ "max_port_retries_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ad99d9d52c6629b949fd1515dc8d26722", null ],
     [ "mutex_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a176f804e5b2f58e2c3b05ec19e16048a", null ],
-    [ "notify_send_failure_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a15697310912330736e6aa14b2f677a8a", null ],
     [ "on_client_connect_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10defb582fb338ff5d688e929e793a57", null ],
     [ "on_client_disconnect_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a132e8d75878579382aa6337aa79fac65", null ],
     [ "on_data_", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#ad23799728d1a8e808982031d7b010bf4", null ],

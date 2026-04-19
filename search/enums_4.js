@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['linkstate_2257',['LinkState',['../namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c',1,'unilink::base']]],
-  ['loglevel_2258',['LogLevel',['../namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0',1,'unilink::diagnostics']]],
-  ['logoutput_2259',['LogOutput',['../namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34f',1,'unilink::diagnostics']]]
+  ['linkstate_2235',['LinkState',['../namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c',1,'unilink::base']]],
+  ['loglevel_2236',['LogLevel',['../namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0',1,'unilink::diagnostics']]],
+  ['logoutput_2237',['LogOutput',['../namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34f',1,'unilink::diagnostics']]]
 ];

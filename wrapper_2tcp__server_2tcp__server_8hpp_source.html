@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8hpp
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; on_data(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; on_error(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> handler) override;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; framer_factory(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; framer(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a>&amp; on_message(<a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="comment">// Client count and management</span></div>
@@ -172,18 +172,17 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8hpp
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; idle_timeout(std::chrono::milliseconds timeout);</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; unlimited_clients();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; send_failure_notify(<span class="keywordtype">bool</span> enable = true);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; manage_external_context(<span class="keywordtype">bool</span> manage);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; private:</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  struct <a class="code" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html">Impl</a>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  const <a class="code" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html">Impl</a>* get_impl()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_.get(); }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  Impl* get_impl() { <span class="keywordflow">return</span> impl_.get(); }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  std::unique_ptr&lt;Impl&gt; impl_;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;};</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <a class="code" href="classunilink_1_1wrapper_1_1TcpServer.html">TcpServer</a>&amp; manage_external_context(<span class="keywordtype">bool</span> manage);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; private:</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  struct <a class="code" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html">Impl</a>;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  const <a class="code" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html">Impl</a>* get_impl()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> impl_.get(); }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  Impl* get_impl() { <span class="keywordflow">return</span> impl_.get(); }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  std::unique_ptr&lt;Impl&gt; impl_;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;};</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}  <span class="comment">// namespace wrapper</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html">unilink::wrapper::ServerInterface</a></div><div class="ttdoc">Interface for 1:N server communication (e.g., TcpServer)</div><div class="ttdef"><b>Definition:</b> <a href="iserver_8hpp_source.html#l00035">iserver.hpp:35</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a60a8fd95e90722873eb9cf344a81c0be"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">unilink::wrapper::ServerInterface::FramerFactory</a></div><div class="ttdeci">std::function&lt; std::unique_ptr&lt; framer::IFramer &gt;()&gt; FramerFactory</div><div class="ttdef"><b>Definition:</b> <a href="iserver_8hpp_source.html#l00040">iserver.hpp:40</a></div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a9cdd888c893263e473aa6d11dc183fd5"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">unilink::wrapper::ServerInterface::ErrorHandler</a></div><div class="ttdeci">std::function&lt; void(const ErrorContext &amp;)&gt; ErrorHandler</div><div class="ttdef"><b>Definition:</b> <a href="iserver_8hpp_source.html#l00039">iserver.hpp:39</a></div></div>
@@ -195,7 +194,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8hpp
 <div class="ttc" id="aiserver_8hpp_html"><div class="ttname"><a href="iserver_8hpp.html">iserver.hpp</a></div></div>
 <div class="ttc" id="anamespaceboost_html"><div class="ttname"><a href="namespaceboost.html">boost</a></div><div class="ttdef"><b>Definition:</b> <a href="transport_2serial_2serial_8hpp_source.html#l00027">serial.hpp:27</a></div></div>
 <div class="ttc" id="anamespaceunilink_html"><div class="ttname"><a href="namespaceunilink.html">unilink</a></div><div class="ttdef"><b>Definition:</b> <a href="common_8hpp_source.html#l00037">common.hpp:37</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a1e364de9a0a37d3437cb9e10eb1bfba7"><div class="ttname"><a href="namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7">unilink::TcpServer</a></div><div class="ttdeci">wrapper::TcpServer TcpServer</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00066">unilink.hpp:66</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a1e364de9a0a37d3437cb9e10eb1bfba7"><div class="ttname"><a href="namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7">unilink::TcpServer</a></div><div class="ttdeci">wrapper::TcpServer TcpServer</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00065">unilink.hpp:65</a></div></div>
 <div class="ttc" id="astructunilink_1_1wrapper_1_1TcpServer_1_1Impl_html"><div class="ttname"><a href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html">unilink::wrapper::TcpServer::Impl</a></div><div class="ttdef"><b>Definition:</b> <a href="wrapper_2tcp__server_2tcp__server_8cc_source.html#l00038">tcp_server.cc:38</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html"><div class="ttname"><a href="visibility_8hpp.html">visibility.hpp</a></div></div>
 <div class="ttc" id="avisibility_8hpp_html_acdf44665d6deacb60ead833c4a5b0361"><div class="ttname"><a href="visibility_8hpp.html#acdf44665d6deacb60ead833c4a5b0361">UNILINK_API</a></div><div class="ttdeci">#define UNILINK_API</div><div class="ttdef"><b>Definition:</b> <a href="visibility_8hpp_source.html#l00037">visibility.hpp:37</a></div></div>
@@ -205,7 +204,7 @@ $(document).ready(function(){initNavTree('wrapper_2tcp__server_2tcp__server_8hpp
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_34a3e415d531ea922631bc75d11c4e39.html">wrapper</a></li><li class="navelem"><a class="el" href="dir_fdd6e5571e153f1d8025548436a989da.html">tcp_server</a></li><li class="navelem"><a class="el" href="wrapper_2tcp__server_2tcp__server_8hpp.html">tcp_server.hpp</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

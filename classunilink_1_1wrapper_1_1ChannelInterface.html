@@ -125,13 +125,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a015554265152c7601cbff20480afeb43"><td class="memItemLeft" align="right" valign="top">virtual std::future&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a015554265152c7601cbff20480afeb43">start</a> ()=0</td></tr>
 <tr class="separator:a015554265152c7601cbff20480afeb43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8b698aa572dffa18e0e9df5d465c6d0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">stop</a> ()=0</td></tr>
+<tr class="memdesc:ad8b698aa572dffa18e0e9df5d465c6d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the channel and block until all pending async operations are cancelled.  <a href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">More...</a><br /></td></tr>
 <tr class="separator:ad8b698aa572dffa18e0e9df5d465c6d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2110813c183960be6a743c1fa5477dfa"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">connected</a> () const =0</td></tr>
 <tr class="separator:a2110813c183960be6a743c1fa5477dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a457bd3d0e566402a8b620714840e5e85"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a457bd3d0e566402a8b620714840e5e85">send</a> (std::string_view data)=0</td></tr>
-<tr class="separator:a457bd3d0e566402a8b620714840e5e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14fb9222ca699358ee4e818bb977890c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a14fb9222ca699358ee4e818bb977890c">send_line</a> (std::string_view line)=0</td></tr>
-<tr class="separator:a14fb9222ca699358ee4e818bb977890c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea0f1a7ed2e31e0dad1680a996687b48"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">send</a> (std::string_view data)=0</td></tr>
+<tr class="memdesc:aea0f1a7ed2e31e0dad1680a996687b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue data for transmission.  <a href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">More...</a><br /></td></tr>
+<tr class="separator:aea0f1a7ed2e31e0dad1680a996687b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4d2c671707e6c3c4bc7080aaaa74590"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590">send_line</a> (std::string_view line)=0</td></tr>
+<tr class="memdesc:af4d2c671707e6c3c4bc7080aaaa74590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enqueue a line (data + "\n") for transmission.  <a href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590">More...</a><br /></td></tr>
+<tr class="separator:af4d2c671707e6c3c4bc7080aaaa74590"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdbf994959370c616311474dfc7a199f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abdbf994959370c616311474dfc7a199f">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#abf0f967343eb3953342a9d762fd9c206">MessageHandler</a> handler)=0</td></tr>
 <tr class="separator:abdbf994959370c616311474dfc7a199f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed78ec545128d674f7bb9e2d6bd9497e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aed78ec545128d674f7bb9e2d6bd9497e">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#adfd8af3a95f4bce355e1106ff43fa22f">ConnectionHandler</a> handler)=0</td></tr>
@@ -468,8 +471,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a457bd3d0e566402a8b620714840e5e85"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a457bd3d0e566402a8b620714840e5e85">&#9670;&nbsp;</a></span>send()</h2>
+<a id="aea0f1a7ed2e31e0dad1680a996687b48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea0f1a7ed2e31e0dad1680a996687b48">&#9670;&nbsp;</a></span>send()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -478,7 +481,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void unilink::wrapper::ChannelInterface::send </td>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::send </td>
           <td>(</td>
           <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>data</em></td><td>)</td>
@@ -492,12 +495,18 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#af96fe7ef93e5b502a7c9e5e96dcf3829">unilink::wrapper::UdsClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a5b3a62797f4769f5ac05a78248903526">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a3d9622d7f1df687cd59cfdddf24e9db3">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ac24bfcd3b30eecf8d45c163ad3c73cd4">unilink::wrapper::Serial</a>.</p>
+<p>Enqueue data for transmission. </p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted into the send queue. </dd>
+<dd>
+false Data was dropped — channel not connected or backpressure limit reached.</dd></dl>
+<p>The call is non-blocking. Delivery is not guaranteed even when true is returned; network errors are reported via <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae9837f9dfd68b6db1fa62ef7078d96fe">on_error()</a>. </p>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a41955159bb466a19e19920e5e9ae2650">unilink::wrapper::UdsClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a29f58cf945d764acba1613a2c04c3cd1">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#abfd2fff029f6c241cd0b39b75ce92e43">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a6b120ec3e9e98e9c57c789607f1649bb">unilink::wrapper::Serial</a>.</p>
 
 </div>
 </div>
-<a id="a14fb9222ca699358ee4e818bb977890c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14fb9222ca699358ee4e818bb977890c">&#9670;&nbsp;</a></span>send_line()</h2>
+<a id="af4d2c671707e6c3c4bc7080aaaa74590"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4d2c671707e6c3c4bc7080aaaa74590">&#9670;&nbsp;</a></span>send_line()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -506,7 +515,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void unilink::wrapper::ChannelInterface::send_line </td>
+          <td class="memname">virtual bool unilink::wrapper::ChannelInterface::send_line </td>
           <td>(</td>
           <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>line</em></td><td>)</td>
@@ -520,7 +529,12 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a909c6974ccdb6bf45b87f5bda344b7e6">unilink::wrapper::UdsClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#a3eda877fe6128011222ba22f6752c13a">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a52896506c78724fc303b9268ddda5a69">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#af356b51850ae355e85938b6ff0c59d8f">unilink::wrapper::Serial</a>.</p>
+<p>Enqueue a line (data + "\n") for transmission. </p>
+<dl class="section return"><dt>Returns</dt><dd>true Data was accepted into the send queue. </dd>
+<dd>
+false Data was dropped — channel not connected or backpressure limit reached. </dd></dl>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a2f4b0a463087c84d0600d3e1966edc5a">unilink::wrapper::UdsClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#aeb4c58ae1c34341b18a88e1f224588d1">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a5ad98b80dd4370157ade6a2dd4c39a79">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a492c829f734bbff5baf617b4a32806a1">unilink::wrapper::Serial</a>.</p>
 
 </div>
 </div>
@@ -574,6 +588,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Stop the channel and block until all pending async operations are cancelled. </p>
+<p>Safe to call from any thread. After <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0" title="Stop the channel and block until all pending async operations are cancelled.">stop()</a> returns, no further callbacks will fire and it is safe to destroy the object. Calling <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0" title="Stop the channel and block until all pending async operations are cancelled.">stop()</a> more than once is a no-op. </p>
+
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#af158de7b71848d08c1655e43bc5c39eb">unilink::wrapper::UdsClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1Udp.html#af859c7698df73fb8d6d1b6b96d96d91f">unilink::wrapper::Udp</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a4dee749ef29e143d91bed46b827e8c70">unilink::wrapper::TcpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#ad65a699425f67b86cfc2e55ca3c455ca">unilink::wrapper::Serial</a>.</p>
 
 </div>
@@ -587,7 +604,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

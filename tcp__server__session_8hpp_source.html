@@ -144,11 +144,11 @@ $(document).ready(function(){initNavTree('tcp__server__session_8hpp_source.html'
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      std::variant&lt;memory::PooledBuffer, std::vector&lt;uint8_t&gt;, std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt;&gt;;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <a class="code" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a>(net::io_context&amp; ioc, tcp::socket sock,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                   <span class="keywordtype">size_t</span> backpressure_threshold = <a class="code" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                   <span class="keywordtype">size_t</span> backpressure_threshold = <a class="code" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>,</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                   <span class="keywordtype">int</span> idle_timeout_ms = 0);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="comment">// Constructor for testing with dependency injection</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <a class="code" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a>(net::io_context&amp; ioc, std::unique_ptr&lt;interface::TcpSocketInterface&gt; socket,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                   <span class="keywordtype">size_t</span> backpressure_threshold = <a class="code" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                   <span class="keywordtype">size_t</span> backpressure_threshold = <a class="code" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>,</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                   <span class="keywordtype">int</span> idle_timeout_ms = 0);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">void</span> start();</div>
@@ -174,7 +174,7 @@ $(document).ready(function(){initNavTree('tcp__server__session_8hpp_source.html'
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  net::strand&lt;net::io_context::executor_type&gt; strand_;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  net::steady_timer idle_timer_;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  std::unique_ptr&lt;interface::TcpSocketInterface&gt; socket_;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  std::array&lt;uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE&gt; rx_{};</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  std::array&lt;uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE&gt; rx_{};</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  std::deque&lt;BufferVariant&gt; tx_;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  std::optional&lt;BufferVariant&gt; current_write_buffer_;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordtype">bool</span> writing_ = <span class="keyword">false</span>;</div>
@@ -223,7 +223,7 @@ $(document).ready(function(){initNavTree('tcp__server__session_8hpp_source.html'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_bdae376d6a766a2d984a51161a7f5788.html">tcp_server</a></li><li class="navelem"><a class="el" href="tcp__server__session_8hpp.html">tcp_server_session.hpp</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

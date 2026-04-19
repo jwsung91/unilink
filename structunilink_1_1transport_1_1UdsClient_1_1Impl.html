@@ -108,7 +108,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af8a0c0be031eba28a4ff8ac07f802484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac17173f1084cbd0971593e38c82002c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#ac17173f1084cbd0971593e38c82002c6">handle_close</a> (std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1UdsClient.html">UdsClient</a> &gt; self, uint64_t seq, const boost::system::error_code &amp;ec={})</td></tr>
 <tr class="separator:ac17173f1084cbd0971593e38c82002c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c6344e72a3486339215061432fd6c1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a3c6344e72a3486339215061432fd6c1c">transition_to</a> (<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">LinkState</a> next, const boost::system::error_code &amp;ec={})</td></tr>
+<tr class="memitem:a3c6344e72a3486339215061432fd6c1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a3c6344e72a3486339215061432fd6c1c">transition_to</a> (LinkState next, const boost::system::error_code &amp;ec={})</td></tr>
 <tr class="separator:a3c6344e72a3486339215061432fd6c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a405688ea64c396f211bb95acf254d2ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a405688ea64c396f211bb95acf254d2ce">close_socket</a> ()</td></tr>
 <tr class="separator:a405688ea64c396f211bb95acf254d2ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,8 +149,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a2e45fd3c1cf84462363f9f0cb56b362e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c7a41cb49590124a2ba3e64d072b4a3"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a4c7a41cb49590124a2ba3e64d072b4a3">stopping_</a> {false}</td></tr>
 <tr class="separator:a4c7a41cb49590124a2ba3e64d072b4a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5dac0477edbcd206e0d993cc21b3255f"><td class="memItemLeft" align="right" valign="top">std::array&lt; uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a5dac0477edbcd206e0d993cc21b3255f">rx_</a> {}</td></tr>
-<tr class="separator:a5dac0477edbcd206e0d993cc21b3255f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a3191a3549257761b6e01faa8b3b7d7"><td class="memItemLeft" align="right" valign="top">std::array&lt; uint8_t, <a class="el" href="namespaceunilink_1_1base_1_1constants.html#aff3808cbb0e8456ca03fa47b71d96bb7">base::constants::DEFAULT_READ_BUFFER_SIZE</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a1a3191a3549257761b6e01faa8b3b7d7">rx_</a> {}</td></tr>
+<tr class="separator:a1a3191a3549257761b6e01faa8b3b7d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1552ecf403d8e89b5a45320cc470ef7a"><td class="memItemLeft" align="right" valign="top">std::deque&lt; <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#abb5d9464500432a0b98a72a25f99cc98">BufferVariant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a1552ecf403d8e89b5a45320cc470ef7a">tx_</a></td></tr>
 <tr class="separator:a1552ecf403d8e89b5a45320cc470ef7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abad56bdaffef226a0bd65a3988a3c236"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#abb5d9464500432a0b98a72a25f99cc98">BufferVariant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html#abad56bdaffef226a0bd65a3988a3c236">current_write_buffer_</a></td></tr>
@@ -576,7 +576,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::UdsClient::Impl::transition_to </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">LinkState</a>&#160;</td>
+          <td class="paramtype">LinkState&#160;</td>
           <td class="paramname"><em>next</em>, </td>
         </tr>
         <tr>
@@ -998,14 +998,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5dac0477edbcd206e0d993cc21b3255f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5dac0477edbcd206e0d993cc21b3255f">&#9670;&nbsp;</a></span>rx_</h2>
+<a id="a1a3191a3549257761b6e01faa8b3b7d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a3191a3549257761b6e01faa8b3b7d7">&#9670;&nbsp;</a></span>rx_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::array&lt;uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE&gt; unilink::transport::UdsClient::Impl::rx_ {}</td>
+          <td class="memname">std::array&lt;uint8_t, <a class="el" href="namespaceunilink_1_1base_1_1constants.html#aff3808cbb0e8456ca03fa47b71d96bb7">base::constants::DEFAULT_READ_BUFFER_SIZE</a>&gt; unilink::transport::UdsClient::Impl::rx_ {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1151,7 +1151,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1UdsClient.html">UdsClient</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1UdsClient_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

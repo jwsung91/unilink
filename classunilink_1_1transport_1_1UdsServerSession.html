@@ -113,10 +113,10 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a455b3f6a00704397b130e4b61eeeb8a7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#a455b3f6a00704397b130e4b61eeeb8a7">UdsServerSession</a> (net::io_context &amp;ioc, uds::socket sock, size_t backpressure_threshold=common::constants::DEFAULT_BACKPRESSURE_THRESHOLD)</td></tr>
-<tr class="separator:a455b3f6a00704397b130e4b61eeeb8a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af06823b036d030f1591119389d333cc1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#af06823b036d030f1591119389d333cc1">UdsServerSession</a> (net::io_context &amp;ioc, std::unique_ptr&lt; <a class="el" href="classunilink_1_1interface_1_1UdsSocketInterface.html">interface::UdsSocketInterface</a> &gt; socket, size_t backpressure_threshold=common::constants::DEFAULT_BACKPRESSURE_THRESHOLD)</td></tr>
-<tr class="separator:af06823b036d030f1591119389d333cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61ee6acc1cc5115b0d6f3ff84ece6292"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#a61ee6acc1cc5115b0d6f3ff84ece6292">UdsServerSession</a> (net::io_context &amp;ioc, uds::socket sock, size_t backpressure_threshold=<a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>, int idle_timeout_ms=0)</td></tr>
+<tr class="separator:a61ee6acc1cc5115b0d6f3ff84ece6292"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1d032466cf28413b9caf216019f6548"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#af1d032466cf28413b9caf216019f6548">UdsServerSession</a> (net::io_context &amp;ioc, std::unique_ptr&lt; <a class="el" href="classunilink_1_1interface_1_1UdsSocketInterface.html">interface::UdsSocketInterface</a> &gt; socket, size_t backpressure_threshold=<a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a>, int idle_timeout_ms=0)</td></tr>
+<tr class="separator:af1d032466cf28413b9caf216019f6548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94a570e6bedeabc8a5b96340b16ed6b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#a94a570e6bedeabc8a5b96340b16ed6b3">start</a> ()</td></tr>
 <tr class="separator:a94a570e6bedeabc8a5b96340b16ed6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dfb1470c98537cacb9bccadf92b73e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#a5dfb1470c98537cacb9bccadf92b73e0">async_write_copy</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
@@ -205,8 +205,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a455b3f6a00704397b130e4b61eeeb8a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a455b3f6a00704397b130e4b61eeeb8a7">&#9670;&nbsp;</a></span>UdsServerSession() <span class="overload">[1/2]</span></h2>
+<a id="a61ee6acc1cc5115b0d6f3ff84ece6292"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61ee6acc1cc5115b0d6f3ff84ece6292">&#9670;&nbsp;</a></span>UdsServerSession() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -227,7 +227,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>backpressure_threshold</em> = <code>common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</code>&#160;</td>
+          <td class="paramname"><em>backpressure_threshold</em> = <code><a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idle_timeout_ms</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -241,8 +247,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af06823b036d030f1591119389d333cc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af06823b036d030f1591119389d333cc1">&#9670;&nbsp;</a></span>UdsServerSession() <span class="overload">[2/2]</span></h2>
+<a id="af1d032466cf28413b9caf216019f6548"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1d032466cf28413b9caf216019f6548">&#9670;&nbsp;</a></span>UdsServerSession() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,7 +269,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>backpressure_threshold</em> = <code>common::constants::DEFAULT_BACKPRESSURE_THRESHOLD</code>&#160;</td>
+          <td class="paramname"><em>backpressure_threshold</em> = <code><a class="el" href="namespaceunilink_1_1base_1_1constants.html#ad0b2e8b4c7cc4815320c993081ed7c81">base::constants::DEFAULT_BACKPRESSURE_THRESHOLD</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>idle_timeout_ms</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -273,7 +285,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00031">31</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00035">35</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -293,7 +305,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00053">53</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00063">63</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -313,7 +325,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00055">55</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00065">65</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -333,7 +345,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00060">60</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00070">70</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -353,7 +365,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00073">73</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00083">83</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -373,7 +385,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00087">87</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00097">97</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -393,7 +405,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00086">86</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00096">96</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -413,7 +425,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00088">88</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00098">98</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -432,7 +444,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00039">39</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00046">46</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -451,7 +463,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00044">44</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__server__session_8cc_source.html#l00054">54</a> of file <a class="el" href="uds__server__session_8cc_source.html">uds_server_session.cc</a>.</p>
 
 </div>
 </div>
@@ -465,7 +477,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html">UdsServerSession</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

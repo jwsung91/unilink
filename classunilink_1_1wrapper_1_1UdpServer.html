@@ -134,6 +134,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a450f858480989071ba7c02990ec7d63c"><td class="memItemLeft" align="right" valign="top">std::future&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a450f858480989071ba7c02990ec7d63c">start</a> () override</td></tr>
 <tr class="separator:a450f858480989071ba7c02990ec7d63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17da8a56e5c01be6ac9d68abbbfaef18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a17da8a56e5c01be6ac9d68abbbfaef18">stop</a> () override</td></tr>
+<tr class="memdesc:a17da8a56e5c01be6ac9d68abbbfaef18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the server and block until all active sessions are closed.  <a href="classunilink_1_1wrapper_1_1UdpServer.html#a17da8a56e5c01be6ac9d68abbbfaef18">More...</a><br /></td></tr>
 <tr class="separator:a17da8a56e5c01be6ac9d68abbbfaef18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd3a828527616e01bee454014abc4b6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#abd3a828527616e01bee454014abc4b6e">listening</a> () const override</td></tr>
 <tr class="separator:abd3a828527616e01bee454014abc4b6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,9 +150,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7b239bff057cef3146029c1ac83a1f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a185da1be985fcdf233909259b24d5435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a185da1be985fcdf233909259b24d5435">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> handler) override</td></tr>
 <tr class="separator:a185da1be985fcdf233909259b24d5435"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af478060b405d76f94c3338b4952791da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#af478060b405d76f94c3338b4952791da">framer_factory</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override</td></tr>
-<tr class="memdesc:af478060b405d76f94c3338b4952791da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a factory function to create a new framer for each client connection.  <a href="classunilink_1_1wrapper_1_1UdpServer.html#af478060b405d76f94c3338b4952791da">More...</a><br /></td></tr>
-<tr class="separator:af478060b405d76f94c3338b4952791da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2c693580ad3587072009509395cc22f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ab2c693580ad3587072009509395cc22f">framer</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory) override</td></tr>
+<tr class="memdesc:ab2c693580ad3587072009509395cc22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a factory function to create a new framer for each client connection.  <a href="classunilink_1_1wrapper_1_1UdpServer.html#ab2c693580ad3587072009509395cc22f">More...</a><br /></td></tr>
+<tr class="separator:ab2c693580ad3587072009509395cc22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3aefb1b405103db7fa7907777794094"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ae3aefb1b405103db7fa7907777794094">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler) override</td></tr>
 <tr class="memdesc:ae3aefb1b405103db7fa7907777794094"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <a href="classunilink_1_1wrapper_1_1UdpServer.html#ae3aefb1b405103db7fa7907777794094">More...</a><br /></td></tr>
 <tr class="separator:ae3aefb1b405103db7fa7907777794094"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,6 +169,10 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classunilink_1_1wrapper_1_1ServerInterface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">unilink::wrapper::ServerInterface</a></td></tr>
 <tr class="memitem:a0696d9e529521e5b5a016e769bd95537 inherit pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a0696d9e529521e5b5a016e769bd95537">~ServerInterface</a> ()=default</td></tr>
 <tr class="separator:a0696d9e529521e5b5a016e769bd95537 inherit pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f5f6629d82417af02a33f40626fbc82 inherit pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a8f5f6629d82417af02a33f40626fbc82">on_connect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler)</td></tr>
+<tr class="separator:a8f5f6629d82417af02a33f40626fbc82 inherit pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24255ef21dbbe33197efbf9933483c54 inherit pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a24255ef21dbbe33197efbf9933483c54">on_disconnect</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> handler)</td></tr>
+<tr class="separator:a24255ef21dbbe33197efbf9933483c54 inherit pub_methods_classunilink_1_1wrapper_1_1ServerInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -496,8 +501,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="af478060b405d76f94c3338b4952791da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af478060b405d76f94c3338b4952791da">&#9670;&nbsp;</a></span>framer_factory()</h2>
+<a id="ab2c693580ad3587072009509395cc22f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2c693580ad3587072009509395cc22f">&#9670;&nbsp;</a></span>framer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -506,7 +511,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdpServer::framer_factory </td>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::UdpServer::framer </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a>&#160;</td>
           <td class="paramname"><em>factory</em></td><td>)</td>
@@ -528,7 +533,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ae5fa1e69afe25a92f1d0fff1123a8a86">unilink::wrapper::ServerInterface</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a3499bc87dee9e25f43a952f00e69cedd">unilink::wrapper::ServerInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00419">419</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
@@ -905,6 +910,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Stop the server and block until all active sessions are closed. </p>
+<p>Safe to call from any thread. After <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a17da8a56e5c01be6ac9d68abbbfaef18" title="Stop the server and block until all active sessions are closed.">stop()</a> returns, no further callbacks will fire and it is safe to destroy the object. Calling <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a17da8a56e5c01be6ac9d68abbbfaef18" title="Stop the server and block until all active sessions are closed.">stop()</a> more than once is a no-op. </p>
+
 <p>Implements <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0">unilink::wrapper::ServerInterface</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00369">369</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
@@ -921,7 +929,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

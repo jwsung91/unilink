@@ -18,8 +18,8 @@ var classunilink_1_1wrapper_1_1Udp =
     [ "on_message", "classunilink_1_1wrapper_1_1Udp.html#aadd9d962b5d2f65649da5157e180f60c", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1Udp.html#a9d5d0cc4c52326e43dea424eaf39507c", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1Udp.html#a4b380476aa03f39c9df0e0b3f5902343", null ],
-    [ "send", "classunilink_1_1wrapper_1_1Udp.html#a5b3a62797f4769f5ac05a78248903526", null ],
-    [ "send_line", "classunilink_1_1wrapper_1_1Udp.html#a3eda877fe6128011222ba22f6752c13a", null ],
+    [ "send", "classunilink_1_1wrapper_1_1Udp.html#a29f58cf945d764acba1613a2c04c3cd1", null ],
+    [ "send_line", "classunilink_1_1wrapper_1_1Udp.html#aeb4c58ae1c34341b18a88e1f224588d1", null ],
     [ "start", "classunilink_1_1wrapper_1_1Udp.html#a3ae53a4c6428c76f7d034b1037e7ad3b", null ],
     [ "stop", "classunilink_1_1wrapper_1_1Udp.html#af859c7698df73fb8d6d1b6b96d96d91f", null ]
 ];

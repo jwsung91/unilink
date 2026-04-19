@@ -119,9 +119,9 @@ Error Handling</h1>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();  <span class="comment">// Errors will be silently ignored!</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_a99411d22e20c0c2af568425d88986b08"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#a99411d22e20c0c2af568425d88986b08">unilink::builder::BuilderInterface::on_error</a></div><div class="ttdeci">Derived &amp; on_error(std::function&lt; void(const wrapper::ErrorContext &amp;)&gt; handler)</div><div class="ttdoc">Set error handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="ibuilder_8hpp_source.html#l00141">ibuilder.hpp:141</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00042">tcp_client_builder.cc:42</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::wrapper::ErrorContext</a></div><div class="ttdoc">Context for error events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00072">context.hpp:72</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a9f7fc6c812b11ff1d77aa71233a3221c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">unilink::wrapper::ErrorContext::message</a></div><div class="ttdeci">std::string_view message() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00078">context.hpp:78</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00093">unilink.hpp:93</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html">unilink::wrapper::ErrorContext</a></div><div class="ttdoc">Context for error events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00067">context.hpp:67</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a9f7fc6c812b11ff1d77aa71233a3221c"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">unilink::wrapper::ErrorContext::message</a></div><div class="ttdeci">std::string_view message() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00073">context.hpp:73</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00092">unilink.hpp:92</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md305"></a>
 ✅ DO: Check Connection Status Before Sending</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD</span></div>
@@ -156,7 +156,7 @@ Error Handling</h1>
 <div class="line">        std::cerr &lt;&lt; ctx.<a class="code" href="classunilink_1_1wrapper_1_1ErrorContext.html#a9f7fc6c812b11ff1d77aa71233a3221c">message</a>() &lt;&lt; std::endl;  <span class="comment">// Just print and hope</span></div>
 <div class="line">    })</div>
 <div class="line">    .build();</div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a75baa0901a7b5c261e5f0f5615a13059"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a75baa0901a7b5c261e5f0f5615a13059">unilink::wrapper::ErrorContext::code</a></div><div class="ttdeci">ErrorCode code() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00077">context.hpp:77</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ErrorContext_html_a75baa0901a7b5c261e5f0f5615a13059"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ErrorContext.html#a75baa0901a7b5c261e5f0f5615a13059">unilink::wrapper::ErrorContext::code</a></div><div class="ttdeci">ErrorCode code() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00072">context.hpp:72</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md307"></a>
 ✅ DO: Use Centralized Error Handler</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Centralized error management</span></div>
@@ -206,7 +206,7 @@ Resource Management</h1>
 <div class="line">client-&gt;stop();  <span class="comment">// Must remember to call</span></div>
 <div class="line"><span class="keyword">delete</span> client;   <span class="comment">// Must remember to delete</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a2b5c3a4512e9c13dba24b8adb4aaf0de"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">unilink::builder::TcpClientBuilder::auto_manage</a></div><div class="ttdeci">TcpClientBuilder &amp; auto_manage(bool auto_manage=true) override</div><div class="ttdoc">Enable auto-manage functionality.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00074">tcp_client_builder.cc:74</a></div></div>
-<div class="ttc" id="anamespaceunilink_html_a790be55fcb59a0aea5dfb178072fd6c7"><div class="ttname"><a href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">unilink::TcpClient</a></div><div class="ttdeci">wrapper::TcpClient TcpClient</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00065">unilink.hpp:65</a></div></div>
+<div class="ttc" id="anamespaceunilink_html_a790be55fcb59a0aea5dfb178072fd6c7"><div class="ttname"><a href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">unilink::TcpClient</a></div><div class="ttdeci">wrapper::TcpClient TcpClient</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00064">unilink.hpp:64</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md311"></a>
 ✅ DO: Stop Connections Before Shutdown</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Graceful shutdown</span></div>
@@ -441,7 +441,7 @@ Code Organization</h1>
 <div class="line">    <span class="comment">// Hard to maintain!</span></div>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html_ac1b292b700428522a1a7cd7bc3e9e4f5"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html#ac1b292b700428522a1a7cd7bc3e9e4f5">unilink::builder::BuilderInterface::on_connect</a></div><div class="ttdeci">Derived &amp; on_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler)</div><div class="ttdoc">Set connection handler callback.</div><div class="ttdef"><b>Definition:</b> <a href="ibuilder_8hpp_source.html#l00095">ibuilder.hpp:95</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00056">context.hpp:56</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00051">context.hpp:51</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md327"></a>
 ✅ DO: Separate Concerns</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Separated concerns</span></div>
@@ -616,8 +616,8 @@ Security</h1>
 <div class="line">        <span class="comment">// Accept connection</span></div>
 <div class="line">    }</div>
 <div class="line">};</div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a14688954e7b065e67510b18052a5385a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a14688954e7b065e67510b18052a5385a">unilink::wrapper::ConnectionContext::client_info</a></div><div class="ttdeci">const std::string &amp; client_info() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00062">context.hpp:62</a></div></div>
-<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a556940f4854839c3e5ee7525daf7cea1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a556940f4854839c3e5ee7525daf7cea1">unilink::wrapper::ConnectionContext::client_id</a></div><div class="ttdeci">size_t client_id() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00061">context.hpp:61</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a14688954e7b065e67510b18052a5385a"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a14688954e7b065e67510b18052a5385a">unilink::wrapper::ConnectionContext::client_info</a></div><div class="ttdeci">const std::string &amp; client_info() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00057">context.hpp:57</a></div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html_a556940f4854839c3e5ee7525daf7cea1"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html#a556940f4854839c3e5ee7525daf7cea1">unilink::wrapper::ConnectionContext::client_id</a></div><div class="ttdeci">size_t client_id() const</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00056">context.hpp:56</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md339"></a>
 Logging and Debugging</h1>
@@ -665,7 +665,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -8,7 +8,7 @@ var structunilink_1_1wrapper_1_1TcpClient_1_1Impl =
     [ "connected", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a6e37027e6c5df69de3ac8637f6fbac1c", null ],
     [ "fulfill_all_locked", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ad3b155170c7fd998a22deb92e9443b1f", null ],
     [ "on_message", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a748ca8efb8f89cd5b4e259697aff9e94", null ],
-    [ "send", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a765dc9b7ca335608a2037daa5d17f10d", null ],
+    [ "send", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a4b1a1d14ad6ad4ca774a863c762f1ba7", null ],
     [ "set_framer", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#aa3d872b2d253b6f2d86677ee7b145ae3", null ],
     [ "setup_internal_handlers", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a71ca6976f08b07bfb8fdc6c17d84aae5", null ],
     [ "start", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ad28d0b43728cdfd96c5fb9563d585b56", null ],

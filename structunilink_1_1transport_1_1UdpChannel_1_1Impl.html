@@ -132,7 +132,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acf617233e3487454b0f11e395739b037"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae1872efd583c676a56c45ad23ff109c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#aae1872efd583c676a56c45ad23ff109c">set_remote_from_config</a> ()</td></tr>
 <tr class="separator:aae1872efd583c676a56c45ad23ff109c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdd9c40ebb804a42273169a24fdd55ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#acdd9c40ebb804a42273169a24fdd55ca">transition_to</a> (<a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">LinkState</a> target, const boost::system::error_code &amp;ec={})</td></tr>
+<tr class="memitem:acdd9c40ebb804a42273169a24fdd55ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#acdd9c40ebb804a42273169a24fdd55ca">transition_to</a> (LinkState target, const boost::system::error_code &amp;ec={})</td></tr>
 <tr class="separator:acdd9c40ebb804a42273169a24fdd55ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa86606b29258250381704e4786caed5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#afa86606b29258250381704e4786caed5">perform_stop_cleanup</a> ()</td></tr>
 <tr class="separator:afa86606b29258250381704e4786caed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,8 +161,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aee456bfec314b0b3bdef5ddcc3857354"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fdbf202799862cbc7847402022fbea0"><td class="memItemLeft" align="right" valign="top">std::optional&lt; udp::endpoint &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a2fdbf202799862cbc7847402022fbea0">remote_endpoint_</a></td></tr>
 <tr class="separator:a2fdbf202799862cbc7847402022fbea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4f56a3831b3fce5c491980796fc2dad"><td class="memItemLeft" align="right" valign="top">std::array&lt; uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#ac4f56a3831b3fce5c491980796fc2dad">rx_</a> {}</td></tr>
-<tr class="separator:ac4f56a3831b3fce5c491980796fc2dad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3efe1d201839fc98e1d387288a4a87ba"><td class="memItemLeft" align="right" valign="top">std::array&lt; uint8_t, <a class="el" href="namespaceunilink_1_1base_1_1constants.html#aff3808cbb0e8456ca03fa47b71d96bb7">base::constants::DEFAULT_READ_BUFFER_SIZE</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3efe1d201839fc98e1d387288a4a87ba">rx_</a> {}</td></tr>
+<tr class="separator:a3efe1d201839fc98e1d387288a4a87ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accca84fa24bcea4b2d0b50b21cfade81"><td class="memItemLeft" align="right" valign="top">std::deque&lt; <a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl_1_1TxItem.html">TxItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#accca84fa24bcea4b2d0b50b21cfade81">tx_</a></td></tr>
 <tr class="separator:accca84fa24bcea4b2d0b50b21cfade81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a196c4a109e5702d5ddbfe24d4b9876d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a196c4a109e5702d5ddbfe24d4b9876d9">writing_</a> {false}</td></tr>
@@ -692,7 +692,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::UdpChannel::Impl::transition_to </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">LinkState</a>&#160;</td>
+          <td class="paramtype">LinkState&#160;</td>
           <td class="paramname"><em>target</em>, </td>
         </tr>
         <tr>
@@ -1023,14 +1023,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac4f56a3831b3fce5c491980796fc2dad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4f56a3831b3fce5c491980796fc2dad">&#9670;&nbsp;</a></span>rx_</h2>
+<a id="a3efe1d201839fc98e1d387288a4a87ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3efe1d201839fc98e1d387288a4a87ba">&#9670;&nbsp;</a></span>rx_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::array&lt;uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE&gt; unilink::transport::UdpChannel::Impl::rx_ {}</td>
+          <td class="memname">std::array&lt;uint8_t, <a class="el" href="namespaceunilink_1_1base_1_1constants.html#aff3808cbb0e8456ca03fa47b71d96bb7">base::constants::DEFAULT_READ_BUFFER_SIZE</a>&gt; unilink::transport::UdpChannel::Impl::rx_ {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1208,7 +1208,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1UdpChannel.html">UdpChannel</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat Apr 18 2026 22:13:01 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
