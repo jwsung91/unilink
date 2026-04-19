@@ -209,16 +209,35 @@ jobs:
         if: runner.os == 'Windows'
         run: cmake --build build --target unilink_unit_tests --config "${BUILD_TYPE}"
 
-      - name: Test (Windows)
-        if: runner.os == 'Windows'
+      - name: Test (Windows, Full C++)
+        if: runner.os == 'Windows' && matrix.build_python != 'ON'
         working-directory: build
         shell: pwsh
         run: ctest -C "${env:BUILD_TYPE}" --output-on-failure -LE docs_snippets
 
-      - name: Test (Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Test (Linux/macOS, Full C++)
+        if: runner.os != 'Windows' && matrix.build_python != 'ON'
         working-directory: build
         run: ctest --output-on-failure --parallel 2 -LE docs_snippets
+
+      - name: Test (Windows, Python C++ Smoke)
+        if: runner.os == 'Windows' && matrix.build_python == 'ON'
+        working-directory: build
+        shell: pwsh
+        run: |
+          # Full C++ coverage already runs in the pure C++ matrix.
+          # Python-enabled jobs keep only a fast C++ smoke subset, then verify
+          # install/import/pytest on top of that.
+          ctest -C "${env:BUILD_TYPE}" --output-on-failure -L "unit_(common_fast|builder_fast|config_fast|transport_fast)|stable"
+
+      - name: Test (Linux/macOS, Python C++ Smoke)
+        if: runner.os != 'Windows' && matrix.build_python == 'ON'
+        working-directory: build
+        run: |
+          # Full C++ coverage already runs in the pure C++ matrix.
+          # Python-enabled jobs keep only a fast C++ smoke subset, then verify
+          # install/import/pytest on top of that.
+          ctest --output-on-failure --parallel 2 -L 'unit_(common_fast|builder_fast|config_fast|transport_fast)|stable'
 
       - name: Stage Python Package (Windows)
         if: matrix.build_python == 'ON' && runner.os == 'Windows'
