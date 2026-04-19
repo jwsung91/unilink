@@ -37,6 +37,18 @@ string(REPLACE "\\" "/" UNILINK_PYTHON_SITE_PACKAGES "${UNILINK_PYTHON_SITE_PACK
 
 set(UNILINK_PYTHON_PACKAGE_DIR "${UNILINK_PYTHON_SITE_PACKAGES}/unilink")
 
+# Build the DIRECTORIES clause for GET_RUNTIME_DEPENDENCIES so vcpkg-installed
+# DLLs (e.g. Boost) are resolved and staged next to the Python extension.
+# Requires double-escaping: \\\" survives the CMakeLists.txt string literal and
+# becomes \" in the generated cmake_install.cmake string literal, which in turn
+# becomes a literal " when cmake_install.cmake is parsed at install time.
+set(_unilink_vcpkg_dirs_clause "")
+if(WIN32 AND VCPKG_INSTALLED_DIR AND VCPKG_TARGET_TRIPLET)
+  set(_unilink_vcpkg_bin_dir "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
+  string(REPLACE "\\" "/" _unilink_vcpkg_bin_dir "${_unilink_vcpkg_bin_dir}")
+  set(_unilink_vcpkg_dirs_clause "DIRECTORIES \\\"${_unilink_vcpkg_bin_dir}\\\"")
+endif()
+
 if(APPLE)
   set_target_properties(unilink_py PROPERTIES INSTALL_RPATH "@loader_path")
 elseif(UNIX)
@@ -87,6 +99,7 @@ if(_unilink_runtime_targets)
     LIBRARIES \${_unilink_runtime_targets}
     RESOLVED_DEPENDENCIES_VAR _unilink_resolved_deps
     UNRESOLVED_DEPENDENCIES_VAR _unilink_unresolved_deps
+    ${_unilink_vcpkg_dirs_clause}
     PRE_EXCLUDE_REGEXES
       [[api-ms-win-.*]]
       [[ext-ms-.*]]

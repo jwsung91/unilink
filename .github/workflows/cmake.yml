@@ -272,8 +272,6 @@ jobs:
         if: matrix.build_python == 'ON' && runner.os == 'Windows'
         shell: pwsh
         run: |
-          $vcpkgBin = Join-Path $env:VCPKG_ROOT "installed\${{ matrix.triplet }}\bin"
-          if (Test-Path $vcpkgBin) { $env:PATH = "$vcpkgBin;$env:PATH" }
           $sitePackages = python -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip(r'/\\'))"
           $installPath = Join-Path $pwd "build/install/$sitePackages"
           $packagePath = Join-Path $installPath "unilink"
