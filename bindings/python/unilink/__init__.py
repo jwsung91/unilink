@@ -1,20 +1,50 @@
+import os
 from pathlib import Path
 import sys
 
+
+def _add_windows_dll_directory(package_dir: Path) -> None:
+    if os.name != "nt" or not hasattr(os, "add_dll_directory"):
+        return
+
+    dll_candidates = [package_dir, package_dir.parent]
+    for candidate in dll_candidates:
+        if not candidate.is_dir():
+            continue
+        if any(candidate.glob("unilink*.dll")):
+            os.add_dll_directory(str(candidate.resolve()))
+
+
+def _candidate_package_dirs():
+    package_dir = Path(__file__).resolve().parent
+    yield package_dir
+
+    for entry in list(sys.path):
+        candidate = Path(entry) / "unilink"
+        if candidate.is_dir():
+            yield candidate
+
+
+_seen_package_dirs = set()
+
 try:
+    _add_windows_dll_directory(Path(__file__).resolve().parent)
     from .unilink_py import *
 except ImportError:
     # Fallback for when running from build directory or direct import
     try:
         from unilink_py import *
     except ImportError as exc:
-        for entry in list(sys.path):
-            package_dir = Path(entry) / "unilink"
-            if not package_dir.is_dir():
+        for package_dir in _candidate_package_dirs():
+            resolved_dir = package_dir.resolve()
+            if resolved_dir in _seen_package_dirs:
                 continue
+            _seen_package_dirs.add(resolved_dir)
+
             if not any(package_dir.glob("unilink_py.*")):
                 continue
 
+            _add_windows_dll_directory(package_dir)
             sys.path.insert(0, str(package_dir))
             try:
                 from unilink_py import *
