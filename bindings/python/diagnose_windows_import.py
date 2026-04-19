@@ -111,13 +111,12 @@ def main() -> int:
     if len(sys.path) > 12:
         print(f"  ... ({len(sys.path) - 12} more)")
 
-    _print_section("Import Specs")
-    print(f"spec(unilink): {importlib.util.find_spec('unilink')}")
-    print(f"spec(unilink.unilink_py): {importlib.util.find_spec('unilink.unilink_py')}")
-
     extension_candidates = sorted(package_path.glob("unilink_py*.pyd"))
     runtime_candidates = sorted(package_path.glob("unilink*.dll"))
 
+    # Binary load checks run BEFORE find_spec so that ctypes.WinDLL errors
+    # (which name the missing DLL) are visible even when the Python import
+    # subsequently crashes before reaching this section.
     _print_section("Binary Load Checks")
     if not extension_candidates:
         print("No unilink_py*.pyd found in package directory.")
@@ -128,6 +127,10 @@ def main() -> int:
         print("No unilink*.dll found in package directory.")
     for candidate in runtime_candidates:
         _load_binary(candidate)
+
+    _print_section("Import Specs")
+    print(f"spec(unilink): {importlib.util.find_spec('unilink')}")
+    print(f"spec(unilink.unilink_py): {importlib.util.find_spec('unilink.unilink_py')}")
 
     _print_section("Python Import")
     try:

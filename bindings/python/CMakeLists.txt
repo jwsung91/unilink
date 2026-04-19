@@ -47,6 +47,12 @@ if(WIN32 AND VCPKG_INSTALLED_DIR AND VCPKG_TARGET_TRIPLET)
   set(_unilink_vcpkg_bin_dir "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
   string(REPLACE "\\" "/" _unilink_vcpkg_bin_dir "${_unilink_vcpkg_bin_dir}")
   set(_unilink_vcpkg_dirs_clause "DIRECTORIES \\\"${_unilink_vcpkg_bin_dir}\\\"")
+  message(STATUS "[unilink-python] vcpkg bin dir   : ${_unilink_vcpkg_bin_dir}")
+  message(STATUS "[unilink-python] dirs clause      : ${_unilink_vcpkg_dirs_clause}")
+else()
+  message(STATUS "[unilink-python] vcpkg DIRECTORIES skipped"
+    " (WIN32=${WIN32} VCPKG_INSTALLED_DIR='${VCPKG_INSTALLED_DIR}'"
+    " VCPKG_TARGET_TRIPLET='${VCPKG_TARGET_TRIPLET}')")
 endif()
 
 if(APPLE)
@@ -86,13 +92,17 @@ if(UNILINK_ENABLE_INSTALL)
         "
 set(_unilink_package_dir \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${UNILINK_PYTHON_PACKAGE_DIR}\")
 file(TO_CMAKE_PATH \"\${_unilink_package_dir}\" _unilink_package_dir)
+message(STATUS \"[unilink-install] package dir: \${_unilink_package_dir}\")
 
 file(GLOB _unilink_extension_candidates \"\${_unilink_package_dir}/unilink_py*.pyd\")
 file(GLOB _unilink_runtime_candidates \"\${_unilink_package_dir}/unilink*.dll\")
+message(STATUS \"[unilink-install] pyd candidates : \${_unilink_extension_candidates}\")
+message(STATUS \"[unilink-install] dll candidates : \${_unilink_runtime_candidates}\")
 
 set(_unilink_runtime_targets \${_unilink_extension_candidates} \${_unilink_runtime_candidates})
 list(FILTER _unilink_runtime_targets EXCLUDE REGEX [[[/\\\\]python3\\.dll$]])
 list(FILTER _unilink_runtime_targets EXCLUDE REGEX [[[/\\\\]python312\\.dll$]])
+message(STATUS \"[unilink-install] runtime targets: \${_unilink_runtime_targets}\")
 
 if(_unilink_runtime_targets)
   file(GET_RUNTIME_DEPENDENCIES
@@ -109,6 +119,8 @@ if(_unilink_runtime_targets)
       [[.*[/\\\\]python3\\.dll$]]
       [[.*[/\\\\]python312\\.dll$]]
   )
+  message(STATUS \"[unilink-install] resolved deps  : \${_unilink_resolved_deps}\")
+  message(STATUS \"[unilink-install] unresolved deps: \${_unilink_unresolved_deps}\")
 
   foreach(_unilink_dependency IN LISTS _unilink_resolved_deps)
     get_filename_component(_unilink_dep_name \"\${_unilink_dependency}\" NAME)
@@ -117,6 +129,7 @@ if(_unilink_runtime_targets)
       continue()
     endif()
 
+    message(STATUS \"[unilink-install] staging: \${_unilink_dep_name}\")
     execute_process(
       COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different
               \"\${_unilink_dependency}\"
