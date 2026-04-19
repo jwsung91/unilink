@@ -174,7 +174,7 @@ struct Udp::Impl {
         handler = data_handler;
       }
       if (handler) {
-        std::string str_data = common::safe_convert::uint8_to_string(data.data(), data.size());
+        std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
         handler(MessageContext(0, str_data));
       }
 
@@ -240,7 +240,7 @@ struct Udp::Impl {
         handler = message_handler;
       }
       if (handler) {
-        handler(MessageContext(0, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+        handler(MessageContext(0, base::safe_convert::uint8_to_string(msg.data(), msg.size())));
       }
     });
   }
@@ -271,13 +271,15 @@ Udp& Udp::operator=(Udp&&) noexcept = default;
 
 std::future<bool> Udp::start() { return impl_->start(); }
 void Udp::stop() { impl_->stop(); }
-void Udp::send(std::string_view data) {
+bool Udp::send(std::string_view data) {
   if (connected() && get_impl()->channel) {
-    auto binary_view = common::safe_convert::string_to_bytes(data);
+    auto binary_view = base::safe_convert::string_to_bytes(data);
     get_impl()->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    return true;
   }
+  return false;
 }
-void Udp::send_line(std::string_view line) { send(std::string(line) + "\n"); }
+bool Udp::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
 bool Udp::connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
 
 ChannelInterface& Udp::on_data(MessageHandler h) {

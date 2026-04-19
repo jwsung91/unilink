@@ -248,7 +248,7 @@ struct UdsClient::Impl {
         handler = data_handler_;
       }
       if (handler) {
-        handler(MessageContext(0, common::safe_convert::uint8_to_string(data.data(), data.size())));
+        handler(MessageContext(0, base::safe_convert::uint8_to_string(data.data(), data.size())));
       }
 
       // 2. Framer integration
@@ -270,7 +270,7 @@ struct UdsClient::Impl {
         handler = message_handler_;
       }
       if (handler) {
-        handler(MessageContext(0, common::safe_convert::uint8_to_string(msg.data(), msg.size())));
+        handler(MessageContext(0, base::safe_convert::uint8_to_string(msg.data(), msg.size())));
       }
     });
   }
@@ -304,17 +304,19 @@ std::future<bool> UdsClient::start() { return impl_->start(); }
 
 void UdsClient::stop() { impl_->stop(); }
 
-void UdsClient::send(std::string_view data) {
+bool UdsClient::send(std::string_view data) {
   if (impl_->channel_) {
     impl_->channel_->async_write_copy(
         memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
+    return true;
   }
+  return false;
 }
 
-void UdsClient::send_line(std::string_view line) {
+bool UdsClient::send_line(std::string_view line) {
   std::string data(line);
   data += "\n";
-  send(data);
+  return send(data);
 }
 
 bool UdsClient::connected() const { return impl_->channel_ && impl_->channel_->is_connected(); }

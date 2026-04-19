@@ -26,7 +26,7 @@ A two-process UDP setup:
 #include "unilink/unilink.hpp"
 
 int main() {
-    auto receiver = unilink::udp(9000)
+    auto receiver = unilink::udp_client(9000)
         .on_data([](const unilink::MessageContext& ctx) {
             std::cout << "[RX] " << ctx.data() << std::endl;
         })
@@ -58,7 +58,7 @@ int main() {
 #include "unilink/unilink.hpp"
 
 int main() {
-    auto sender = unilink::udp(0)
+    auto sender = unilink::udp_client(0)
         .remote("127.0.0.1", 9000)
         .on_connect([](const unilink::ConnectionContext&) {
             std::cout << "UDP sender ready" << std::endl;
@@ -128,7 +128,7 @@ For simple local tests, UDP is useful when you want low overhead and can tolerat
 
 ## Practical Notes
 
-- `unilink::udp(0)` uses an ephemeral local port for the sender.
+- `unilink::udp_client(0)` uses an ephemeral local port for the sender.
 - `remote(host, port)` configures the default destination for `send()`.
 - The receiver can run without a predefined remote peer.
 - If you need more operational examples, the protocol-specific examples are richer than this tutorial.

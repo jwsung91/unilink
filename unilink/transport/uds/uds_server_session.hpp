@@ -55,10 +55,12 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
       std::variant<memory::PooledBuffer, std::vector<uint8_t>, std::shared_ptr<const std::vector<uint8_t>>>;
 
   UdsServerSession(net::io_context& ioc, uds::socket sock,
-                   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
+                   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
+                   int idle_timeout_ms = 0);
 
   UdsServerSession(net::io_context& ioc, std::unique_ptr<interface::UdsSocketInterface> socket,
-                   size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD);
+                   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
+                   int idle_timeout_ms = 0);
 
   void start();
   void async_write_copy(memory::ConstByteSpan data);
@@ -75,12 +77,14 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   void do_write();
   void do_close();
   void report_backpressure(size_t queued_bytes);
+  void reset_idle_timer();
 
  private:
   net::io_context& ioc_;
   net::strand<net::io_context::executor_type> strand_;
+  net::steady_timer idle_timer_;
   std::unique_ptr<interface::UdsSocketInterface> socket_;
-  std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
+  std::array<uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
@@ -88,6 +92,7 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   size_t bp_high_;
   size_t bp_limit_;
   bool backpressure_active_ = false;
+  int idle_timeout_ms_ = 0;
 
   OnBytes on_bytes_;
   OnBackpressure on_bp_;

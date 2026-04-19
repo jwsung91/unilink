@@ -64,7 +64,7 @@ struct UdsClient::Impl {
   std::atomic<bool> stop_requested_{false};
   std::atomic<bool> stopping_{false};
 
-  std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
+  std::array<uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;

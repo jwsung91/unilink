@@ -27,13 +27,16 @@ using namespace std::chrono_literals;
 int main() {
   // Setup UDP sender (point to 127.0.0.1:9000)
   auto sender =
-      udp(0)  // Ephemeral local port
+      udp_client(0)  // Ephemeral local port
           .remote("127.0.0.1", 9000)
           .on_connect([](const unilink::ConnectionContext&) { std::cout << "UDP Sender ready" << std::endl; })
           .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "Error: " << ctx.message() << std::endl; })
           .build();
 
-  sender->start();
+  if (!sender->start().get()) {
+    std::cerr << "Failed to start UDP sender" << std::endl;
+    return 1;
+  }
 
   std::cout << "Sending messages to 127.0.0.1:9000. Type messages or '/quit'." << std::endl;
 

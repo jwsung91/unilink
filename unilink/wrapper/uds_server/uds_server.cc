@@ -59,6 +59,7 @@ struct UdsServer::Impl {
 
   bool auto_manage_ = false;
   size_t max_clients_ = 100;
+  int idle_timeout_ms_ = 0;
 
   explicit Impl(const std::string& socket_path) : socket_path_(socket_path), started_(false) {}
 
@@ -111,6 +112,7 @@ struct UdsServer::Impl {
       config::UdsServerConfig cfg;
       cfg.socket_path = socket_path_;
       cfg.max_connections = static_cast<int>(max_clients_);
+      cfg.idle_timeout_ms = idle_timeout_ms_;
 
       if (use_external_context_) {
         server_ = std::dynamic_pointer_cast<transport::UdsServer>(factory::ChannelFactory::create(cfg, external_ioc_));
@@ -226,7 +228,7 @@ struct UdsServer::Impl {
                 on_message_handler = on_message_;
               }
               if (on_message_handler) {
-                std::string str_msg = common::safe_convert::uint8_to_string(msg.data(), msg.size());
+                std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
                 on_message_handler(MessageContext(client_id, str_msg));
               }
             });
@@ -339,7 +341,7 @@ ServerInterface& UdsServer::on_error(ErrorHandler handler) {
   return *this;
 }
 
-ServerInterface& UdsServer::framer_factory(FramerFactory factory) {
+ServerInterface& UdsServer::framer(FramerFactory factory) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
@@ -362,6 +364,11 @@ UdsServer& UdsServer::auto_manage(bool manage) {
   if (impl_->auto_manage_ && !impl_->started_.load()) {
     start();
   }
+  return *this;
+}
+
+UdsServer& UdsServer::idle_timeout(std::chrono::milliseconds timeout) {
+  impl_->idle_timeout_ms_ = static_cast<int>(timeout.count());
   return *this;
 }
 

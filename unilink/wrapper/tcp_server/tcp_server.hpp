@@ -73,7 +73,7 @@ class UNILINK_API TcpServer : public ServerInterface {
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
 
-  ServerInterface& framer_factory(FramerFactory factory) override;
+  ServerInterface& framer(FramerFactory factory) override;
   ServerInterface& on_message(MessageHandler handler) override;
 
   // Client count and management
@@ -86,7 +86,6 @@ class UNILINK_API TcpServer : public ServerInterface {
   TcpServer& idle_timeout(std::chrono::milliseconds timeout);
   TcpServer& max_clients(size_t max);
   TcpServer& unlimited_clients();
-  TcpServer& send_failure_notify(bool enable = true);
   TcpServer& manage_external_context(bool manage);
 
  private:

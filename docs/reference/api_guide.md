@@ -497,7 +497,7 @@ Connectionless communication using UDP protocol.
 #include "unilink/unilink.hpp"
 
 // Create a UDP socket bound to port 8080
-auto receiver = unilink::udp(8080)
+auto receiver = unilink::udp_client(8080)
     .on_data([](const unilink::MessageContext& ctx) {
         std::cout << "Received: " << ctx.data() << std::endl;
     })
@@ -518,7 +518,7 @@ if (receiver_started) {
 #include "unilink/unilink.hpp"
 
 // Create a UDP socket and set remote destination
-auto sender = unilink::udp(0)  // 0 = ephemeral port
+auto sender = unilink::udp_client(0)  // 0 = ephemeral port
     .remote("127.0.0.1", 8080)
     .build();
 
@@ -534,7 +534,7 @@ if (sender_started) {
 
 ```cpp
 // Create UDP builder with local port binding
-unilink::udp(uint16_t local_port)
+unilink::udp_client(uint16_t local_port)
 ```
 
 #### Builder Methods
@@ -560,7 +560,7 @@ unilink::udp(uint16_t local_port)
 #### Echo Reply (Receiver)
 
 ```cpp
-auto socket = unilink::udp(8080)
+auto socket = unilink::udp_client(8080)
     .on_data([&](const unilink::MessageContext& ctx) {
         std::cout << "Received: " << ctx.data() << std::endl;
         // Reply to the sender (automatically tracks last sender)

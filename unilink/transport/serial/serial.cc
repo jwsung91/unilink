@@ -110,8 +110,8 @@ struct Serial::Impl {
   void init() {
     cfg_.validate_and_clamp();
     bp_high_ = cfg_.backpressure_threshold;
-    bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
-                         common::constants::MAX_BUFFER_SIZE);
+    bp_limit_ = std::min(std::max(bp_high_ * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                         base::constants::MAX_BUFFER_SIZE);
     bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
     if (bp_low_ == 0) bp_low_ = 1;
     rx_.resize(cfg_.read_chunk);
@@ -480,7 +480,7 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
     return;
 
   size_t n = data.size();
-  if (n > common::constants::MAX_BUFFER_SIZE) {
+  if (n > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("serial", "write", "Write size exceeds maximum");
     return;
   }
@@ -488,7 +488,7 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
   if (n <= 65536) {
     memory::PooledBuffer pooled(n);
     if (pooled.valid()) {
-      common::safe_memory::safe_memcpy(pooled.data(), data.data(), n);
+      base::safe_memory::safe_memcpy(pooled.data(), data.data(), n);
       net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {
         auto impl = self->get_impl();
         if (impl->queued_bytes_ + buf.size() > impl->bp_limit_) {

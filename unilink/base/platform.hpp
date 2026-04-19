@@ -162,8 +162,4 @@ class UNILINK_API PlatformInfo {
 
 }  // namespace base
 
-// Compatibility alias while transitioning from legacy `common` namespace.
-namespace common {
-using PlatformInfo = base::PlatformInfo;
-}  // namespace common
 }  // namespace unilink

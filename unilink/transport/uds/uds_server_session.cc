@@ -21,24 +21,34 @@
 namespace unilink {
 namespace transport {
 
-UdsServerSession::UdsServerSession(net::io_context& ioc, uds::socket sock, size_t backpressure_threshold)
+UdsServerSession::UdsServerSession(net::io_context& ioc, uds::socket sock, size_t backpressure_threshold,
+                                   int idle_timeout_ms)
     : ioc_(ioc),
       strand_(net::make_strand(ioc_)),
+      idle_timer_(ioc),
       socket_(std::make_unique<BoostUdsSocket>(std::move(sock))),
       bp_high_(backpressure_threshold),
-      bp_limit_(backpressure_threshold * 2) {}
+      bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                         base::constants::MAX_BUFFER_SIZE)),
+      idle_timeout_ms_(idle_timeout_ms) {}
 
 UdsServerSession::UdsServerSession(net::io_context& ioc, std::unique_ptr<interface::UdsSocketInterface> socket,
-                                   size_t backpressure_threshold)
+                                   size_t backpressure_threshold, int idle_timeout_ms)
     : ioc_(ioc),
       strand_(net::make_strand(ioc_)),
+      idle_timer_(ioc),
       socket_(std::move(socket)),
       bp_high_(backpressure_threshold),
-      bp_limit_(backpressure_threshold * 2) {}
+      bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                         base::constants::MAX_BUFFER_SIZE)),
+      idle_timeout_ms_(idle_timeout_ms) {}
 
 void UdsServerSession::start() {
   alive_ = true;
-  start_read();
+  net::dispatch(strand_, [self = shared_from_this()]() {
+    self->reset_idle_timer();
+    self->start_read();
+  });
 }
 
 void UdsServerSession::stop() {
@@ -97,6 +107,7 @@ void UdsServerSession::start_read() {
           return;
         }
         if (on_bytes_) on_bytes_(memory::ConstByteSpan(rx_.data(), bytes));
+        reset_idle_timer();
         start_read();
       }));
 }
@@ -161,6 +172,21 @@ void UdsServerSession::do_close() {
 void UdsServerSession::report_backpressure(size_t queued_bytes) {
   if (closing_ || !alive_) return;
   if (on_bp_) on_bp_(queued_bytes);
+}
+
+void UdsServerSession::reset_idle_timer() {
+  if (idle_timeout_ms_ <= 0) return;
+
+  idle_timer_.cancel();
+  idle_timer_.expires_after(std::chrono::milliseconds(idle_timeout_ms_));
+
+  auto self = shared_from_this();
+  idle_timer_.async_wait(net::bind_executor(strand_, [self](const boost::system::error_code& ec) {
+    if (ec == boost::asio::error::operation_aborted) return;
+    if (!self->alive_ || self->closing_) return;
+    UNILINK_LOG_WARNING("uds_server_session", "timeout", "Connection idle timeout expired, closing session");
+    self->do_close();
+  }));
 }
 
 }  // namespace transport

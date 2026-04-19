@@ -26,7 +26,7 @@ using namespace std::chrono_literals;
 int main() {
   // Setup UDP receiver on port 9000
   auto receiver =
-      udp(9000)
+      udp_client(9000)
           .on_data([](const unilink::MessageContext& ctx) { std::cout << "Received UDP: " << ctx.data() << std::endl; })
           .build();
 

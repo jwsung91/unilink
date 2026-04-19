@@ -203,13 +203,4 @@ class UNILINK_API ConfigurationException : public UnilinkException {
 
 }  // namespace diagnostics
 
-// Compatibility alias while transitioning from legacy `common` namespace.
-namespace common {
-using UnilinkException = diagnostics::UnilinkException;
-using BuilderException = diagnostics::BuilderException;
-using ValidationException = diagnostics::ValidationException;
-using MemoryException = diagnostics::MemoryException;
-using ConnectionException = diagnostics::ConnectionException;
-using ConfigurationException = diagnostics::ConfigurationException;
-}  // namespace common
 }  // namespace unilink

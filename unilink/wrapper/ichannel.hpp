@@ -42,12 +42,33 @@ class UNILINK_API ChannelInterface {
 
   // Lifecycle
   [[nodiscard]] virtual std::future<bool> start() = 0;
+
+  /**
+   * @brief Stop the channel and block until all pending async operations are cancelled.
+   *
+   * Safe to call from any thread. After stop() returns, no further callbacks will fire
+   * and it is safe to destroy the object. Calling stop() more than once is a no-op.
+   */
   virtual void stop() = 0;
   virtual bool connected() const = 0;
 
   // Transmission
-  virtual void send(std::string_view data) = 0;
-  virtual void send_line(std::string_view line) = 0;
+  /**
+   * @brief Enqueue data for transmission.
+   * @return true  Data was accepted into the send queue.
+   * @return false Data was dropped — channel not connected or backpressure limit reached.
+   *
+   * The call is non-blocking. Delivery is not guaranteed even when true is returned;
+   * network errors are reported via on_error().
+   */
+  virtual bool send(std::string_view data) = 0;
+
+  /**
+   * @brief Enqueue a line (data + "\n") for transmission.
+   * @return true  Data was accepted into the send queue.
+   * @return false Data was dropped — channel not connected or backpressure limit reached.
+   */
+  virtual bool send_line(std::string_view line) = 0;
 
   // Event handlers
   virtual ChannelInterface& on_data(MessageHandler handler) = 0;

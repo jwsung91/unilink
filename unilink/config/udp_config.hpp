@@ -30,15 +30,15 @@ struct UdpConfig {
   uint16_t local_port = 0;
   std::optional<std::string> remote_address;
   std::optional<uint16_t> remote_port;
-  size_t backpressure_threshold = common::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
   bool enable_broadcast = false;
   bool reuse_address = false;
   bool enable_memory_pool = true;
   bool stop_on_callback_exception = false;
 
   bool is_valid() const {
-    if (backpressure_threshold < common::constants::MIN_BACKPRESSURE_THRESHOLD ||
-        backpressure_threshold > common::constants::MAX_BACKPRESSURE_THRESHOLD) {
+    if (backpressure_threshold < base::constants::MIN_BACKPRESSURE_THRESHOLD ||
+        backpressure_threshold > base::constants::MAX_BACKPRESSURE_THRESHOLD) {
       return false;
     }
     if (remote_address.has_value() != remote_port.has_value()) return false;
@@ -47,10 +47,10 @@ struct UdpConfig {
   }
 
   void validate_and_clamp() {
-    if (backpressure_threshold < common::constants::MIN_BACKPRESSURE_THRESHOLD) {
-      backpressure_threshold = common::constants::MIN_BACKPRESSURE_THRESHOLD;
-    } else if (backpressure_threshold > common::constants::MAX_BACKPRESSURE_THRESHOLD) {
-      backpressure_threshold = common::constants::MAX_BACKPRESSURE_THRESHOLD;
+    if (backpressure_threshold < base::constants::MIN_BACKPRESSURE_THRESHOLD) {
+      backpressure_threshold = base::constants::MIN_BACKPRESSURE_THRESHOLD;
+    } else if (backpressure_threshold > base::constants::MAX_BACKPRESSURE_THRESHOLD) {
+      backpressure_threshold = base::constants::MAX_BACKPRESSURE_THRESHOLD;
     }
   }
 };

@@ -40,7 +40,6 @@ using namespace unilink;
 using namespace unilink::test;
 using namespace unilink::transport;
 using namespace unilink::config;
-using namespace unilink::common;
 using namespace unilink::memory;
 using namespace unilink::diagnostics;
 using namespace unilink::concurrency;

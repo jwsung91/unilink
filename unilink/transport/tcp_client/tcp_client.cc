@@ -60,7 +60,6 @@ using base::LinkState;
 using concurrency::ThreadSafeLinkState;
 using config::TcpClientConfig;
 using interface::Channel;
-using namespace common;  // For error_reporting namespace
 
 struct TcpClient::Impl {
   // Members moved from TcpClient
@@ -83,7 +82,7 @@ struct TcpClient::Impl {
   std::atomic<bool> terminal_state_notified_{false};
   std::atomic<bool> reconnect_pending_{false};
 
-  std::array<uint8_t, common::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
+  std::array<uint8_t, base::constants::DEFAULT_READ_BUFFER_SIZE> rx_{};
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
@@ -268,7 +267,7 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
     return;
   }
 
-  if (size > common::constants::MAX_BUFFER_SIZE) {
+  if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_client", "async_write_copy",
                       "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
     return;
@@ -278,7 +277,7 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
     try {
       memory::PooledBuffer pooled_buffer(size);
       if (pooled_buffer.valid()) {
-        common::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
+        base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
         const auto added = pooled_buffer.size();
         net::dispatch(impl_->strand_, [self = shared_from_this(), buf = std::move(pooled_buffer), added]() mutable {
           if (self->impl_->stop_requested_.load() || self->impl_->state_.is_state(LinkState::Closed) ||
@@ -356,7 +355,7 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
     UNILINK_LOG_WARNING("tcp_client", "async_write_move", "Ignoring zero-length write");
     return;
   }
-  if (size > common::constants::MAX_BUFFER_SIZE) {
+  if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_client", "async_write_move",
                       "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
     return;
@@ -402,7 +401,7 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     return;
   }
   const auto size = data->size();
-  if (size > common::constants::MAX_BUFFER_SIZE) {
+  if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_client", "async_write_shared",
                       "Write size exceeds maximum allowed (" + std::to_string(size) + " bytes)");
     return;
@@ -769,8 +768,8 @@ void TcpClient::Impl::recalculate_backpressure_bounds() {
   if (bp_low_ == 0) {
     bp_low_ = 1;
   }
-  bp_limit_ = std::min(std::max(bp_high_ * 4, common::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
-                       common::constants::MAX_BUFFER_SIZE);
+  bp_limit_ = std::min(std::max(bp_high_ * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                       base::constants::MAX_BUFFER_SIZE);
   if (bp_limit_ < bp_high_) {
     bp_limit_ = bp_high_;
   }

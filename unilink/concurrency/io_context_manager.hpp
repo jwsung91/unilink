@@ -64,7 +64,4 @@ class UNILINK_API IoContextManager {
 
 }  // namespace concurrency
 
-namespace common {
-using IoContextManager = concurrency::IoContextManager;
-}  // namespace common
 }  // namespace unilink

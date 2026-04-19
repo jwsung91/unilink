@@ -53,7 +53,7 @@ TEST_F(BaseTest, CommonFunctionality) {
   EXPECT_STREQ(base::to_cstr(base::LinkState::Error), "Error");
 
   // Test timestamp functionality
-  std::string timestamp = common::ts_now();
+  std::string timestamp = base::ts_now();
   EXPECT_FALSE(timestamp.empty());
   EXPECT_GT(timestamp.length(), 10);
 }

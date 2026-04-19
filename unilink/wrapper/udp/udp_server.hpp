@@ -65,7 +65,7 @@ class UNILINK_API UdpServer : public ServerInterface {
   ServerInterface& on_error(ErrorHandler handler) override;
 
   // Framing
-  ServerInterface& framer_factory(FramerFactory factory) override;
+  ServerInterface& framer(FramerFactory factory) override;
   ServerInterface& on_message(MessageHandler handler) override;
 
   // Management

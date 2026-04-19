@@ -64,7 +64,7 @@ class UNILINK_API UnifiedBuilder {
    * @param local_port The local port to bind
    * @return UdpClientBuilder A configured builder for UDP communication
    */
-  static UdpClientBuilder udp(uint16_t local_port);
+  static UdpClientBuilder udp_client(uint16_t local_port);
 
   /**
    * @brief Create a UDP server builder

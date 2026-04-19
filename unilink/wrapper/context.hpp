@@ -39,11 +39,6 @@ class MessageContext {
   std::string_view data() const { return data_; }
   const std::string& client_info() const { return client_info_; }
 
-  [[deprecated("Use client_info() instead")]]
-  const std::string& remote_address() const {
-    return client_info_;
-  }
-
  private:
   size_t client_id_;
   std::string_view data_;
