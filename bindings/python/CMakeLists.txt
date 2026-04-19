@@ -87,7 +87,6 @@ if(_unilink_runtime_targets)
     LIBRARIES \${_unilink_runtime_targets}
     RESOLVED_DEPENDENCIES_VAR _unilink_resolved_deps
     UNRESOLVED_DEPENDENCIES_VAR _unilink_unresolved_deps
-    DIRECTORIES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin"
     PRE_EXCLUDE_REGEXES
       [[api-ms-win-.*]]
       [[ext-ms-.*]]
