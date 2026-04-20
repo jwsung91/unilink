@@ -168,7 +168,9 @@ if(UNILINK_ENABLE_INSTALL)
         DIRECTORY "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/"
         DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
         COMPONENT python
-        FILES_MATCHING PATTERN "*.dll"
+        FILES_MATCHING
+        PATTERN "*.dll"
+        PATTERN "python3*.dll" EXCLUDE
       )
     endif()
 
