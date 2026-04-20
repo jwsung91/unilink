@@ -30,11 +30,29 @@ configure_file(module.cpp.in module.cpp @ONLY)
 
 Python3_add_library(unilink_py MODULE WITH_SOABI ${CMAKE_CURRENT_BINARY_DIR}/module.cpp)
 
+# CMake 4.x can inherit Python debug postfix metadata on Windows and emit
+# `unilink_py_d.cp312-win_amd64.pyd` even for Release jobs. Keep the importable
+# module basename stable across configurations so CI and packaging always look
+# for `unilink_py`.
+set_target_properties(
+  unilink_py
+  PROPERTIES OUTPUT_NAME "unilink_py"
+             DEBUG_POSTFIX ""
+             RELEASE_POSTFIX ""
+             RELWITHDEBINFO_POSTFIX ""
+             MINSIZEREL_POSTFIX ""
+)
+
 # Link against the main library
 target_link_libraries(unilink_py PRIVATE pybind11::headers unilink::unilink Python3::Module)
 
 # Ensure we use C++17
 target_compile_features(unilink_py PUBLIC cxx_std_17)
+
+get_target_property(_unilink_py_suffix unilink_py SUFFIX)
+get_target_property(_unilink_py_debug_postfix unilink_py DEBUG_POSTFIX)
+message(STATUS "[unilink-python] module suffix    : ${_unilink_py_suffix}")
+message(STATUS "[unilink-python] debug postfix   : ${_unilink_py_debug_postfix}")
 
 execute_process(
   COMMAND ${Python3_EXECUTABLE} -c
