@@ -1,16 +1,37 @@
 include(GNUInstallDirs)
 
+if(DEFINED Python3_EXECUTABLE AND NOT DEFINED Python3_ROOT_DIR)
+  get_filename_component(Python3_ROOT_DIR "${Python3_EXECUTABLE}" DIRECTORY)
+endif()
+
+# On Windows CI, vcpkg also provides a Python distribution for pybind11's
+# build-time dependency graph. Lock FindPython to the explicitly selected
+# interpreter and a non-debug ABI so the extension does not link to
+# python312_d.dll in Release jobs.
+set(Python3_FIND_STRATEGY LOCATION)
+set(PYBIND11_FINDPYTHON ON)
+if(WIN32)
+  set(Python3_FIND_REGISTRY NEVER)
+  set(Python3_FIND_ABI OFF ANY ANY)
+endif()
+
 find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
 find_package(pybind11 CONFIG REQUIRED)
+
+message(STATUS "[unilink-python] interpreter      : ${Python3_EXECUTABLE}")
+message(STATUS "[unilink-python] root dir         : ${Python3_ROOT_DIR}")
+message(STATUS "[unilink-python] include dirs     : ${Python3_INCLUDE_DIRS}")
+message(STATUS "[unilink-python] libraries        : ${Python3_LIBRARIES}")
+message(STATUS "[unilink-python] library dirs     : ${Python3_LIBRARY_DIRS}")
 
 # Inject version from CMake
 set(UNILINK_VERSION ${PROJECT_VERSION})
 configure_file(module.cpp.in module.cpp @ONLY)
 
-pybind11_add_module(unilink_py ${CMAKE_CURRENT_BINARY_DIR}/module.cpp)
+Python3_add_library(unilink_py MODULE WITH_SOABI ${CMAKE_CURRENT_BINARY_DIR}/module.cpp)
 
 # Link against the main library
-target_link_libraries(unilink_py PRIVATE unilink::unilink)
+target_link_libraries(unilink_py PRIVATE pybind11::headers unilink::unilink Python3::Module)
 
 # Ensure we use C++17
 target_compile_features(unilink_py PUBLIC cxx_std_17)
