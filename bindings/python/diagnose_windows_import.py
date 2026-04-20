@@ -100,8 +100,8 @@ def main() -> int:
     if hasattr(os, "add_dll_directory"):
         _print_section("DLL Directories")
         if package_path.is_dir():
-            _dll_dir_handles.append(os.add_dll_directory(str(package_path)))
-            print(f"added: {package_path}")
+            _dll_dir_handles.append(os.add_dll_directory(str(package_path.resolve())))
+            print(f"added: {package_path.resolve()}")
 
     _sanitize_import_path(install_path)
 

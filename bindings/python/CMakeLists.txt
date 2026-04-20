@@ -128,21 +128,7 @@ set(UNILINK_PYTHON_PACKAGE_DIR "${UNILINK_PYTHON_SITE_PACKAGES}/unilink")
 
 # Build the DIRECTORIES clause for GET_RUNTIME_DEPENDENCIES so vcpkg-installed
 # DLLs (e.g. Boost) are resolved and staged next to the Python extension.
-# Requires double-escaping: \\\" survives the CMakeLists.txt string literal and
-# becomes \" in the generated cmake_install.cmake string literal, which in turn
-# becomes a literal " when cmake_install.cmake is parsed at install time.
-set(_unilink_vcpkg_dirs_clause "")
-if(WIN32 AND VCPKG_INSTALLED_DIR AND VCPKG_TARGET_TRIPLET)
-  set(_unilink_vcpkg_bin_dir "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
-  string(REPLACE "\\" "/" _unilink_vcpkg_bin_dir "${_unilink_vcpkg_bin_dir}")
-  set(_unilink_vcpkg_dirs_clause "DIRECTORIES \\\"${_unilink_vcpkg_bin_dir}\\\"")
-  message(STATUS "[unilink-python] vcpkg bin dir   : ${_unilink_vcpkg_bin_dir}")
-  message(STATUS "[unilink-python] dirs clause      : ${_unilink_vcpkg_dirs_clause}")
-else()
-  message(STATUS "[unilink-python] vcpkg DIRECTORIES skipped"
-    " (WIN32=${WIN32} VCPKG_INSTALLED_DIR='${VCPKG_INSTALLED_DIR}'"
-    " VCPKG_TARGET_TRIPLET='${VCPKG_TARGET_TRIPLET}')")
-endif()
+# (Removed in favor of explicit directory install to fix CI flakiness)
 
 if(APPLE)
   set_target_properties(unilink_py PROPERTIES INSTALL_RPATH "@loader_path")
@@ -176,71 +162,20 @@ if(UNILINK_ENABLE_INSTALL)
   endif()
 
   if(WIN32)
-    install(
-      CODE
-        "
-set(_unilink_package_dir \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${UNILINK_PYTHON_PACKAGE_DIR}\")
-file(TO_CMAKE_PATH \"\${_unilink_package_dir}\" _unilink_package_dir)
-message(STATUS \"[unilink-install] package dir: \${_unilink_package_dir}\")
-
-file(GLOB _unilink_extension_candidates \"\${_unilink_package_dir}/unilink_py*.pyd\")
-file(GLOB _unilink_runtime_candidates \"\${_unilink_package_dir}/unilink*.dll\")
-message(STATUS \"[unilink-install] pyd candidates : \${_unilink_extension_candidates}\")
-message(STATUS \"[unilink-install] dll candidates : \${_unilink_runtime_candidates}\")
-
-set(_unilink_runtime_targets \${_unilink_extension_candidates} \${_unilink_runtime_candidates})
-list(FILTER _unilink_runtime_targets EXCLUDE REGEX [[[/\\\\]python3\\.dll$]])
-list(FILTER _unilink_runtime_targets EXCLUDE REGEX [[[/\\\\]python312\\.dll$]])
-message(STATUS \"[unilink-install] runtime targets: \${_unilink_runtime_targets}\")
-
-if(_unilink_runtime_targets)
-  file(GET_RUNTIME_DEPENDENCIES
-    LIBRARIES \${_unilink_runtime_targets}
-    RESOLVED_DEPENDENCIES_VAR _unilink_resolved_deps
-    UNRESOLVED_DEPENDENCIES_VAR _unilink_unresolved_deps
-    ${_unilink_vcpkg_dirs_clause}
-    PRE_EXCLUDE_REGEXES
-      [[api-ms-win-.*]]
-      [[ext-ms-.*]]
-    POST_EXCLUDE_REGEXES
-      [[.*[/\\\\]Windows[/\\\\].*]]
-      [[.*[/\\\\]system32[/\\\\].*]]
-      [[.*[/\\\\]python3\\.dll$]]
-      [[.*[/\\\\]python312\\.dll$]]
-  )
-  message(STATUS \"[unilink-install] resolved deps  : \${_unilink_resolved_deps}\")
-  message(STATUS \"[unilink-install] unresolved deps: \${_unilink_unresolved_deps}\")
-
-  foreach(_unilink_dependency IN LISTS _unilink_resolved_deps)
-    get_filename_component(_unilink_dep_name \"\${_unilink_dependency}\" NAME)
-    string(TOLOWER \"\${_unilink_dep_name}\" _unilink_dep_name_lower)
-    if(_unilink_dep_name_lower MATCHES [[^python3\\.dll$]] OR _unilink_dep_name_lower MATCHES [[^python312\\.dll$]])
-      continue()
+    if(VCPKG_INSTALLED_DIR AND VCPKG_TARGET_TRIPLET)
+      message(STATUS "[unilink-python] Staging vcpkg runtime DLLs into Python package")
+      install(
+        DIRECTORY "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/"
+        DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
+        COMPONENT python
+        FILES_MATCHING PATTERN "*.dll"
+      )
     endif()
 
-    message(STATUS \"[unilink-install] staging: \${_unilink_dep_name}\")
-    execute_process(
-      COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different
-              \"\${_unilink_dependency}\"
-              \"\${_unilink_package_dir}/\${_unilink_dep_name}\"
-      COMMAND_ERROR_IS_FATAL ANY
-    )
-  endforeach()
-
-  foreach(_unilink_unresolved IN LISTS _unilink_unresolved_deps)
-    string(TOLOWER \"\${_unilink_unresolved}\" _unilink_unresolved_lower)
-    if(
-      NOT _unilink_unresolved_lower MATCHES [[^api-ms-win-]]
-      AND NOT _unilink_unresolved_lower MATCHES [[^ext-ms-]]
-      AND NOT _unilink_unresolved_lower MATCHES [[^python3\\.dll$]]
-      AND NOT _unilink_unresolved_lower MATCHES [[^python312\\.dll$]]
-    )
-      message(WARNING \"Unresolved runtime dependency for Python package install: \${_unilink_unresolved}\")
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.21")
+      install(FILES $<TARGET_RUNTIME_DLLS:unilink_py>
+              DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
+              COMPONENT python)
     endif()
-  endforeach()
-endif()
-"
-      COMPONENT python
-    )
   endif()
 endif()
