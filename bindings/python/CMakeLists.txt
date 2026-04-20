@@ -16,7 +16,31 @@ if(WIN32)
 endif()
 
 find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
-find_package(pybind11 CONFIG REQUIRED)
+find_package(pybind11 CONFIG QUIET)
+
+if(NOT pybind11_FOUND)
+  execute_process(
+    COMMAND ${Python3_EXECUTABLE} -c "import pybind11; print(pybind11.get_include())"
+    OUTPUT_VARIABLE _unilink_pybind11_include_dir
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE _unilink_pybind11_include_result
+  )
+
+  if(NOT _unilink_pybind11_include_result EQUAL 0 OR NOT _unilink_pybind11_include_dir)
+    message(
+      FATAL_ERROR
+        "pybind11 was not found via CMake package config, and the selected Python "
+        "interpreter could not provide a pybind11 include directory."
+    )
+  endif()
+
+  add_library(pybind11::headers INTERFACE IMPORTED)
+  set_target_properties(
+    pybind11::headers
+    PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${_unilink_pybind11_include_dir}"
+  )
+  message(STATUS "[unilink-python] pybind11 include : ${_unilink_pybind11_include_dir}")
+endif()
 
 message(STATUS "[unilink-python] interpreter      : ${Python3_EXECUTABLE}")
 message(STATUS "[unilink-python] root dir         : ${Python3_ROOT_DIR}")
@@ -42,6 +66,32 @@ set_target_properties(
              RELWITHDEBINFO_POSTFIX ""
              MINSIZEREL_POSTFIX ""
 )
+
+# Python3_add_library can leave the Windows module output in a generator-specific
+# location even when the project globally normalizes bin/lib directories. Force
+# the extension and any companion import library into the shared build layout so
+# the generated install script resolves the same path that the build produced.
+set_target_properties(
+  unilink_py
+  PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
+             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
+             ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}"
+)
+
+if(CMAKE_CONFIGURATION_TYPES)
+  foreach(cfg ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER "${cfg}" cfg_upper)
+    set_target_properties(
+      unilink_py
+      PROPERTIES LIBRARY_OUTPUT_DIRECTORY_${cfg_upper}
+                 "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
+                 RUNTIME_OUTPUT_DIRECTORY_${cfg_upper}
+                 "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
+                 ARCHIVE_OUTPUT_DIRECTORY_${cfg_upper}
+                 "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}"
+    )
+  endforeach()
+endif()
 
 # Link against the main library
 target_link_libraries(unilink_py PRIVATE pybind11::headers unilink::unilink Python3::Module)
