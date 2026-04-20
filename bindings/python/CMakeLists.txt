@@ -173,11 +173,5 @@ if(UNILINK_ENABLE_INSTALL)
         PATTERN "python3*.dll" EXCLUDE
       )
     endif()
-
-    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.21")
-      install(FILES $<TARGET_RUNTIME_DLLS:unilink_py>
-              DESTINATION ${UNILINK_PYTHON_PACKAGE_DIR}
-              COMPONENT python)
-    endif()
   endif()
 endif()
