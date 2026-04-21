@@ -64,12 +64,9 @@ class UNILINK_API ServerInterface {
 
   // Event handlers
   virtual ServerInterface& on_connect(ConnectionHandler handler) = 0;
-  virtual ServerInterface& on_client_disconnect(ConnectionHandler handler) = 0;
+  virtual ServerInterface& on_disconnect(ConnectionHandler handler) = 0;
   virtual ServerInterface& on_data(MessageHandler handler) = 0;
   virtual ServerInterface& on_error(ErrorHandler handler) = 0;
-
-  // Aliases — same names as ChannelInterface so server and client code look identical
-  ServerInterface& on_disconnect(ConnectionHandler handler) { return on_client_disconnect(std::move(handler)); }
 
   /**
    * @brief Set a factory function to create a new framer for each client connection.

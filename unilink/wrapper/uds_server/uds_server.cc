@@ -323,7 +323,7 @@ ServerInterface& UdsServer::on_connect(ConnectionHandler handler) {
   return *this;
 }
 
-ServerInterface& UdsServer::on_client_disconnect(ConnectionHandler handler) {
+ServerInterface& UdsServer::on_disconnect(ConnectionHandler handler) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_disconnect_handler_ = std::move(handler);
   return *this;

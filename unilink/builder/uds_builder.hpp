@@ -73,13 +73,6 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   std::unique_ptr<wrapper::UdsServer> build() override;
   UdsServerBuilder& auto_start(bool auto_start = true) override;
 
-  /**
-   * @brief Helper for client disconnection events
-   */
-  UdsServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-    return on_disconnect(std::move(handler));
-  }
-
   UdsServerBuilder& independent_context(bool use_independent = true);
   UdsServerBuilder& idle_timeout(std::chrono::milliseconds timeout);
   UdsServerBuilder& max_clients(size_t max);

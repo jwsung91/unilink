@@ -110,7 +110,7 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
 
   if (on_data_) server->on_data(on_data_);
   if (on_connect_) server->on_connect(on_connect_);
-  if (on_disconnect_) server->on_client_disconnect(on_disconnect_);
+  if (on_disconnect_) server->on_disconnect(on_disconnect_);
   if (on_error_) server->on_error(on_error_);
 
   if (framer_factory_) {

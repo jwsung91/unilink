@@ -84,7 +84,7 @@ class EchoServer {
     }
   }
 
-  void on_client_disconnect(const unilink::ConnectionContext& ctx) {
+  void on_disconnect(const unilink::ConnectionContext& ctx) {
     logger_.info("server", "disconnect", "Client " + std::to_string(ctx.client_id()) + " disconnected");
   }
 
@@ -99,7 +99,7 @@ class EchoServer {
                   .single_client()
                   .port_retry(true, 3, 1000)
                   .on_connect([this](const unilink::ConnectionContext& ctx) { on_connect(ctx); })
-                  .on_disconnect([this](const unilink::ConnectionContext& ctx) { on_client_disconnect(ctx); })
+                  .on_disconnect([this](const unilink::ConnectionContext& ctx) { on_disconnect(ctx); })
                   .on_data([this](const unilink::MessageContext& ctx) { on_data(ctx); })
                   .on_error([this](const unilink::ErrorContext& ctx) { on_error(ctx); })
                   .build();

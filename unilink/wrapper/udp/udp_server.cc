@@ -398,7 +398,7 @@ ServerInterface& UdpServer::on_connect(ConnectionHandler h) {
   return *this;
 }
 
-ServerInterface& UdpServer::on_client_disconnect(ConnectionHandler h) {
+ServerInterface& UdpServer::on_disconnect(ConnectionHandler h) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->on_disconnect = std::move(h);
   return *this;
