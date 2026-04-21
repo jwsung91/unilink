@@ -28,14 +28,11 @@ int main() {
   auto receiver =
       udp_client(9000)
           .on_data([](const unilink::MessageContext& ctx) { std::cout << "Received UDP: " << ctx.data() << std::endl; })
+          .auto_start(true)
           .build();
 
-  if (receiver->start().get()) {
-    std::cout << "UDP Receiver listening on port 9000. Press Enter to stop..." << std::endl;
-    std::cin.get();
-  } else {
-    std::cerr << "Failed to start UDP receiver" << std::endl;
-  }
+  std::cout << "UDP Receiver listening on port 9000. Press Enter to stop..." << std::endl;
+  std::cin.get();
 
   receiver->stop();
   return 0;
