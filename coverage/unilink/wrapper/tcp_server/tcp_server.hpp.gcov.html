@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-21 12:04:49</td>
+            <td class="headerValue">2026-04-21 13:35:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -146,7 +146,7 @@
 <a name="68"><span class="lineNum">      68 </span>                :            :   bool send_to(size_t client_id, std::string_view data) override;</a>
 <a name="69"><span class="lineNum">      69 </span>                :            : </a>
 <a name="70"><span class="lineNum">      70 </span>                :            :   // Event handlers</a>
-<a name="71"><span class="lineNum">      71 </span>                :            :   ServerInterface&amp; on_client_connect(ConnectionHandler handler) override;</a>
+<a name="71"><span class="lineNum">      71 </span>                :            :   ServerInterface&amp; on_connect(ConnectionHandler handler) override;</a>
 <a name="72"><span class="lineNum">      72 </span>                :            :   ServerInterface&amp; on_client_disconnect(ConnectionHandler handler) override;</a>
 <a name="73"><span class="lineNum">      73 </span>                :            :   ServerInterface&amp; on_data(MessageHandler handler) override;</a>
 <a name="74"><span class="lineNum">      74 </span>                :            :   ServerInterface&amp; on_error(ErrorHandler handler) override;</a>
@@ -159,7 +159,7 @@
 <a name="81"><span class="lineNum">      81 </span>                :            :   std::vector&lt;size_t&gt; connected_clients() const override;</a>
 <a name="82"><span class="lineNum">      82 </span>                :            : </a>
 <a name="83"><span class="lineNum">      83 </span>                :            :   // Configuration (Fluent API)</a>
-<a name="84"><span class="lineNum">      84 </span>                :            :   TcpServer&amp; auto_manage(bool manage = true) override;</a>
+<a name="84"><span class="lineNum">      84 </span>                :            :   TcpServer&amp; auto_start(bool manage = true) override;</a>
 <a name="85"><span class="lineNum">      85 </span>                :            :   TcpServer&amp; port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);</a>
 <a name="86"><span class="lineNum">      86 </span>                :            :   TcpServer&amp; idle_timeout(std::chrono::milliseconds timeout);</a>
 <a name="87"><span class="lineNum">      87 </span>                :            :   TcpServer&amp; max_clients(size_t max);</a>
@@ -168,7 +168,7 @@
 <a name="90"><span class="lineNum">      90 </span>                :            : </a>
 <a name="91"><span class="lineNum">      91 </span>                :            :  private:</a>
 <a name="92"><span class="lineNum">      92 </span>                :            :   struct Impl;</a>
-<a name="93"><span class="lineNum">      93 </span>                :<span class="lineCov">         95 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
+<a name="93"><span class="lineNum">      93 </span>                :<span class="lineCov">         93 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
 <a name="94"><span class="lineNum">      94 </span>                :            :   Impl* get_impl() { return impl_.get(); }</a>
 <a name="95"><span class="lineNum">      95 </span>                :            :   std::unique_ptr&lt;Impl&gt; impl_;</a>
 <a name="96"><span class="lineNum">      96 </span>                :            : };</a>

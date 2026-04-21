@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-21 12:04:49</td>
+            <td class="headerValue">2026-04-21 13:35:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -158,7 +158,7 @@
 <a name="80"><span class="lineNum">      80 </span>                :            :   std::unordered_map&lt;size_t, SessionEntry&gt; sessions;</a>
 <a name="81"><span class="lineNum">      81 </span>                :<span class="lineCov">          4 :   std::chrono::milliseconds session_timeout{30000};  // Default 30s</span></a>
 <a name="82"><span class="lineNum">      82 </span>                :            :   std::unique_ptr&lt;boost::asio::steady_timer&gt; reaper_timer;</a>
-<a name="83"><span class="lineNum">      83 </span>                :            :   bool auto_manage{false};</a>
+<a name="83"><span class="lineNum">      83 </span>                :            :   bool auto_start{false};</a>
 <a name="84"><span class="lineNum">      84 </span>                :            : </a>
 <a name="85"><span class="lineNum">      85 </span>                :            :   ConnectionHandler on_connect{nullptr};</a>
 <a name="86"><span class="lineNum">      86 </span>                :            :   ConnectionHandler on_disconnect{nullptr};</a>
@@ -480,7 +480,7 @@
 <a name="392"><span class="lineNum">     392 </span>                :<span class="lineNoCov">          0 :   return true;</span></a>
 <a name="393"><span class="lineNum">     393 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <a name="394"><span class="lineNum">     394 </span>                :            : </a>
-<a name="395"><span class="lineNum">     395 </span>                :<span class="lineCov">          2 : ServerInterface&amp; UdpServer::on_client_connect(ConnectionHandler h) {</span></a>
+<a name="395"><span class="lineNum">     395 </span>                :<span class="lineCov">          2 : ServerInterface&amp; UdpServer::on_connect(ConnectionHandler h) {</span></a>
 <a name="396"><span class="lineNum">     396 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :   std::lock_guard&lt;std::shared_mutex&gt; lock(impl_-&gt;mutex);</span></a>
 <a name="397"><span class="lineNum">     397 </span>                :<span class="lineCov">          2 :   impl_-&gt;on_connect = std::move(h);</span></a>
 <a name="398"><span class="lineNum">     398 </span>                :<span class="lineCov">          2 :   return *this;</span></a>
@@ -531,9 +531,9 @@
 <a name="443"><span class="lineNum">     443 </span>                :<span class="lineNoCov">          0 :   return ids;</span></a>
 <a name="444"><span class="lineNum">     444 </span>                :<span class="lineNoCov">          0 : }</span></a>
 <a name="445"><span class="lineNum">     445 </span>                :            : </a>
-<a name="446"><span class="lineNum">     446 </span>                :<span class="lineCov">          1 : UdpServer&amp; UdpServer::auto_manage(bool m) {</span></a>
-<a name="447"><span class="lineNum">     447 </span>                :<span class="lineCov">          1 :   impl_-&gt;auto_manage = m;</span></a>
-<a name="448"><span class="lineNum">     448 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl_-&gt;auto_manage &amp;&amp; !impl_-&gt;started.load()) {</span></a>
+<a name="446"><span class="lineNum">     446 </span>                :<span class="lineCov">          1 : UdpServer&amp; UdpServer::auto_start(bool m) {</span></a>
+<a name="447"><span class="lineNum">     447 </span>                :<span class="lineCov">          1 :   impl_-&gt;auto_start = m;</span></a>
+<a name="448"><span class="lineNum">     448 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl_-&gt;auto_start &amp;&amp; !impl_-&gt;started.load()) {</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="449"><span class="lineNum">     449 </span>                :<span class="lineCov">          1 :     start();</span></a>
 <a name="450"><span class="lineNum">     450 </span>                :            :   }</a>

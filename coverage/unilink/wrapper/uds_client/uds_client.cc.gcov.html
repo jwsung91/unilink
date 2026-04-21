@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-21 12:04:49</td>
+            <td class="headerValue">2026-04-21 13:35:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">29</td>
@@ -134,7 +134,7 @@
 <a name="56"><span class="lineNum">      56 </span>                :            : </a>
 <a name="57"><span class="lineNum">      57 </span>                :            :   std::unique_ptr&lt;framer::IFramer&gt; framer_{nullptr};</a>
 <a name="58"><span class="lineNum">      58 </span>                :            : </a>
-<a name="59"><span class="lineNum">      59 </span>                :            :   bool auto_manage_ = false;</a>
+<a name="59"><span class="lineNum">      59 </span>                :            :   bool auto_start_ = false;</a>
 <a name="60"><span class="lineNum">      60 </span>                :<span class="lineCov">          9 :   std::chrono::milliseconds retry_interval_{3000};</span></a>
 <a name="61"><span class="lineNum">      61 </span>                :            :   int max_retries_ = -1;</a>
 <a name="62"><span class="lineNum">      62 </span>                :<span class="lineCov">          9 :   std::chrono::milliseconds connection_timeout_{5000};</span></a>
@@ -440,9 +440,9 @@
 <a name="355"><span class="lineNum">     355 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="356"><span class="lineNum">     356 </span>                :            : }</a>
 <a name="357"><span class="lineNum">     357 </span>                :            : </a>
-<a name="358"><span class="lineNum">     358 </span>                :<span class="lineCov">          1 : ChannelInterface&amp; UdsClient::auto_manage(bool manage) {</span></a>
-<a name="359"><span class="lineNum">     359 </span>                :<span class="lineCov">          1 :   impl_-&gt;auto_manage_ = manage;</span></a>
-<a name="360"><span class="lineNum">     360 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl_-&gt;auto_manage_ &amp;&amp; !impl_-&gt;started_.load()) {</span></a>
+<a name="358"><span class="lineNum">     358 </span>                :<span class="lineCov">          1 : ChannelInterface&amp; UdsClient::auto_start(bool manage) {</span></a>
+<a name="359"><span class="lineNum">     359 </span>                :<span class="lineCov">          1 :   impl_-&gt;auto_start_ = manage;</span></a>
+<a name="360"><span class="lineNum">     360 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :   if (impl_-&gt;auto_start_ &amp;&amp; !impl_-&gt;started_.load()) {</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="361"><span class="lineNum">     361 </span>                :<span class="lineCov">          1 :     start();</span></a>
 <a name="362"><span class="lineNum">     362 </span>                :            :   }</a>

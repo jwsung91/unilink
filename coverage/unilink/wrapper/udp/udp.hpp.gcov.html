@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-21 12:04:49</td>
+            <td class="headerValue">2026-04-21 13:35:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -121,20 +121,20 @@
 <a name="43"><span class="lineNum">      43 </span>                :            : /**</a>
 <a name="44"><span class="lineNum">      44 </span>                :            :  * @brief Modernized UDP Wrapper</a>
 <a name="45"><span class="lineNum">      45 </span>                :            :  */</a>
-<a name="46"><span class="lineNum">      46 </span>                :            : class UNILINK_API Udp : public ChannelInterface {</a>
+<a name="46"><span class="lineNum">      46 </span>                :            : class UNILINK_API UdpClient : public ChannelInterface {</a>
 <a name="47"><span class="lineNum">      47 </span>                :            :  public:</a>
-<a name="48"><span class="lineNum">      48 </span>                :            :   explicit Udp(const config::UdpConfig&amp; cfg);</a>
-<a name="49"><span class="lineNum">      49 </span>                :            :   Udp(const config::UdpConfig&amp; cfg, std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc);</a>
-<a name="50"><span class="lineNum">      50 </span>                :            :   explicit Udp(std::shared_ptr&lt;interface::Channel&gt; channel);</a>
-<a name="51"><span class="lineNum">      51 </span>                :            :   ~Udp() override;</a>
+<a name="48"><span class="lineNum">      48 </span>                :            :   explicit UdpClient(const config::UdpConfig&amp; cfg);</a>
+<a name="49"><span class="lineNum">      49 </span>                :            :   UdpClient(const config::UdpConfig&amp; cfg, std::shared_ptr&lt;boost::asio::io_context&gt; external_ioc);</a>
+<a name="50"><span class="lineNum">      50 </span>                :            :   explicit UdpClient(std::shared_ptr&lt;interface::Channel&gt; channel);</a>
+<a name="51"><span class="lineNum">      51 </span>                :            :   ~UdpClient() override;</a>
 <a name="52"><span class="lineNum">      52 </span>                :            : </a>
 <a name="53"><span class="lineNum">      53 </span>                :            :   // Move semantics</a>
-<a name="54"><span class="lineNum">      54 </span>                :            :   Udp(Udp&amp;&amp;) noexcept;</a>
-<a name="55"><span class="lineNum">      55 </span>                :            :   Udp&amp; operator=(Udp&amp;&amp;) noexcept;</a>
+<a name="54"><span class="lineNum">      54 </span>                :            :   UdpClient(UdpClient&amp;&amp;) noexcept;</a>
+<a name="55"><span class="lineNum">      55 </span>                :            :   UdpClient&amp; operator=(UdpClient&amp;&amp;) noexcept;</a>
 <a name="56"><span class="lineNum">      56 </span>                :            : </a>
 <a name="57"><span class="lineNum">      57 </span>                :            :   // Disable copy</a>
-<a name="58"><span class="lineNum">      58 </span>                :            :   Udp(const Udp&amp;) = delete;</a>
-<a name="59"><span class="lineNum">      59 </span>                :            :   Udp&amp; operator=(const Udp&amp;) = delete;</a>
+<a name="58"><span class="lineNum">      58 </span>                :            :   UdpClient(const UdpClient&amp;) = delete;</a>
+<a name="59"><span class="lineNum">      59 </span>                :            :   UdpClient&amp; operator=(const UdpClient&amp;) = delete;</a>
 <a name="60"><span class="lineNum">      60 </span>                :            : </a>
 <a name="61"><span class="lineNum">      61 </span>                :            :   // ChannelInterface implementation</a>
 <a name="62"><span class="lineNum">      62 </span>                :            :   std::future&lt;bool&gt; start() override;</a>
@@ -151,9 +151,9 @@
 <a name="73"><span class="lineNum">      73 </span>                :            :   ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) override;</a>
 <a name="74"><span class="lineNum">      74 </span>                :            :   ChannelInterface&amp; on_message(MessageHandler handler) override;</a>
 <a name="75"><span class="lineNum">      75 </span>                :            : </a>
-<a name="76"><span class="lineNum">      76 </span>                :            :   ChannelInterface&amp; auto_manage(bool manage = true) override;</a>
+<a name="76"><span class="lineNum">      76 </span>                :            :   ChannelInterface&amp; auto_start(bool manage = true) override;</a>
 <a name="77"><span class="lineNum">      77 </span>                :            : </a>
-<a name="78"><span class="lineNum">      78 </span>                :            :   Udp&amp; manage_external_context(bool manage);</a>
+<a name="78"><span class="lineNum">      78 </span>                :            :   UdpClient&amp; manage_external_context(bool manage);</a>
 <a name="79"><span class="lineNum">      79 </span>                :            : </a>
 <a name="80"><span class="lineNum">      80 </span>                :            :  private:</a>
 <a name="81"><span class="lineNum">      81 </span>                :            :   struct Impl;</a>

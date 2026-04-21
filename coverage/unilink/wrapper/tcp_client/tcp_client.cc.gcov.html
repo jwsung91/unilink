@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-21 12:04:49</td>
+            <td class="headerValue">2026-04-21 13:35:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">31</td>
@@ -135,7 +135,7 @@
 <a name="57"><span class="lineNum">      57 </span>                :            : </a>
 <a name="58"><span class="lineNum">      58 </span>                :            :   std::unique_ptr&lt;framer::IFramer&gt; framer_{nullptr};</a>
 <a name="59"><span class="lineNum">      59 </span>                :            : </a>
-<a name="60"><span class="lineNum">      60 </span>                :            :   bool auto_manage_ = false;</a>
+<a name="60"><span class="lineNum">      60 </span>                :            :   bool auto_start_ = false;</a>
 <a name="61"><span class="lineNum">      61 </span>                :<span class="lineCov">         53 :   std::chrono::milliseconds retry_interval_{3000};</span></a>
 <a name="62"><span class="lineNum">      62 </span>                :            :   int max_retries_ = -1;</a>
 <a name="63"><span class="lineNum">      63 </span>                :<span class="lineCov">         53 :   std::chrono::milliseconds connection_timeout_{5000};</span></a>
@@ -257,17 +257,17 @@
 <a name="174"><span class="lineNum">     174 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 32 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         32 :     if (framer_) framer_-&gt;reset();</span></a>
 <a name="175"><span class="lineNum">     175 </span>                :<span class="lineCov">         32 :   }</span></a>
 <a name="176"><span class="lineNum">     176 </span>                :            : </a>
-<a name="177"><span class="lineNum">     177 </span>                :<span class="lineCov">        182 :   bool send(std::string_view data) {</span></a>
-<a name="178"><span class="lineNum">     178 </span>  [<span class="branchCov" title="Branch 0 was taken 182 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 182 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        182 :     if (channel_ &amp;&amp; channel_-&gt;is_connected()) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 182 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
-<a name="179"><span class="lineNum">     179 </span>        [<span class="branchCov" title="Branch 0 was taken 182 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        182 :       auto binary_view = base::safe_convert::string_to_bytes(data);</span></a>
-<a name="180"><span class="lineNum">     180 </span>        [<span class="branchCov" title="Branch 0 was taken 182 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        182 :       channel_-&gt;async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));</span></a>
-<a name="181"><span class="lineNum">     181 </span>                :<span class="lineCov">        182 :       return true;</span></a>
+<a name="177"><span class="lineNum">     177 </span>                :<span class="lineCov">        179 :   bool send(std::string_view data) {</span></a>
+<a name="178"><span class="lineNum">     178 </span>  [<span class="branchCov" title="Branch 0 was taken 179 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 179 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">        179 :     if (channel_ &amp;&amp; channel_-&gt;is_connected()) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 179 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="179"><span class="lineNum">     179 </span>        [<span class="branchCov" title="Branch 0 was taken 179 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        179 :       auto binary_view = base::safe_convert::string_to_bytes(data);</span></a>
+<a name="180"><span class="lineNum">     180 </span>        [<span class="branchCov" title="Branch 0 was taken 179 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        179 :       channel_-&gt;async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));</span></a>
+<a name="181"><span class="lineNum">     181 </span>                :<span class="lineCov">        179 :       return true;</span></a>
 <a name="182"><span class="lineNum">     182 </span>                :            :     }</a>
 <a name="183"><span class="lineNum">     183 </span>                :<span class="lineNoCov">          0 :     return false;</span></a>
 <a name="184"><span class="lineNum">     184 </span>                :            :   }</a>
 <a name="185"><span class="lineNum">     185 </span>                :            : </a>
-<a name="186"><span class="lineNum">     186 </span>  [<span class="branchCov" title="Branch 0 was taken 53 times"> + </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span><span class="branchCov" title="Branch 2 was taken 21 times"> + </span><span class="branchCov" title="Branch 3 was taken 32 times"> + </span>]:<span class="lineCov">         57 :   bool connected() const { return channel_ &amp;&amp; channel_-&gt;is_connected(); }</span></a>
+<a name="186"><span class="lineNum">     186 </span>  [<span class="branchCov" title="Branch 0 was taken 51 times"> + </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span><span class="branchCov" title="Branch 2 was taken 21 times"> + </span><span class="branchCov" title="Branch 3 was taken 30 times"> + </span>]:<span class="lineCov">         55 :   bool connected() const { return channel_ &amp;&amp; channel_-&gt;is_connected(); }</span></a>
 <a name="187"><span class="lineNum">     187 </span>                :            : </a>
 <a name="188"><span class="lineNum">     188 </span>                :<span class="lineCov">         33 :   void setup_internal_handlers() {</span></a>
 <a name="189"><span class="lineNum">     189 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 33 times"> + </span>]:<span class="lineCov">         33 :     if (!channel_) return;</span></a>
@@ -277,36 +277,36 @@
 <a name="193"><span class="lineNum">     193 </span>                :            :     // Explicitly do not use try-catch here to allow exceptions from handlers</a>
 <a name="194"><span class="lineNum">     194 </span>                :            :     // to propagate to transport layer for error handling (e.g., auto-reconnect)</a>
 <a name="195"><span class="lineNum">     195 </span>  [<span class="branchCov" title="Branch 0 was taken 33 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 33 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         33 :     channel_-&gt;on_bytes([this, weak_alive](memory::ConstByteSpan data) {</span></a>
-<a name="196"><span class="lineNum">     196 </span>                :<span class="lineCov">       1293 :       auto alive = weak_alive.lock();</span></a>
-<a name="197"><span class="lineNum">     197 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1293 times"> + </span>]:<span class="lineCov">       1293 :       if (!alive) return;</span></a>
+<a name="196"><span class="lineNum">     196 </span>                :<span class="lineCov">       1298 :       auto alive = weak_alive.lock();</span></a>
+<a name="197"><span class="lineNum">     197 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1298 times"> + </span>]:<span class="lineCov">       1298 :       if (!alive) return;</span></a>
 <a name="198"><span class="lineNum">     198 </span>                :            : </a>
 <a name="199"><span class="lineNum">     199 </span>                :            :       // 1. Raw data handler</a>
-<a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">       1293 :       MessageHandler data_handler;</span></a>
+<a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">       1298 :       MessageHandler data_handler;</span></a>
 <a name="201"><span class="lineNum">     201 </span>                :            :       {</a>
-<a name="202"><span class="lineNum">     202 </span>        [<span class="branchCov" title="Branch 0 was taken 1293 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1293 :         std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
-<a name="203"><span class="lineNum">     203 </span>        [<span class="branchCov" title="Branch 0 was taken 1293 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1293 :         data_handler = data_handler_;</span></a>
-<a name="204"><span class="lineNum">     204 </span>                :<span class="lineCov">       1293 :       }</span></a>
-<a name="205"><span class="lineNum">     205 </span>        [<span class="branchCov" title="Branch 0 was taken 1293 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1293 :       if (data_handler) {</span></a>
-<a name="206"><span class="lineNum">     206 </span>        [<span class="branchCov" title="Branch 0 was taken 1293 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1293 :         std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());</span></a>
-<a name="207"><span class="lineNum">     207 </span>  [<span class="branchCov" title="Branch 0 was taken 1293 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1293 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">       1293 :         data_handler(MessageContext(0, str_data));</span></a>
-<a name="208"><span class="lineNum">     208 </span>                :<span class="lineCov">       1293 :       }</span></a>
+<a name="202"><span class="lineNum">     202 </span>        [<span class="branchCov" title="Branch 0 was taken 1298 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1298 :         std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
+<a name="203"><span class="lineNum">     203 </span>        [<span class="branchCov" title="Branch 0 was taken 1298 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1298 :         data_handler = data_handler_;</span></a>
+<a name="204"><span class="lineNum">     204 </span>                :<span class="lineCov">       1298 :       }</span></a>
+<a name="205"><span class="lineNum">     205 </span>        [<span class="branchCov" title="Branch 0 was taken 1298 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1298 :       if (data_handler) {</span></a>
+<a name="206"><span class="lineNum">     206 </span>        [<span class="branchCov" title="Branch 0 was taken 1298 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1298 :         std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());</span></a>
+<a name="207"><span class="lineNum">     207 </span>  [<span class="branchCov" title="Branch 0 was taken 1298 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1298 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">       1298 :         data_handler(MessageContext(0, str_data));</span></a>
+<a name="208"><span class="lineNum">     208 </span>                :<span class="lineCov">       1298 :       }</span></a>
 <a name="209"><span class="lineNum">     209 </span>                :            : </a>
 <a name="210"><span class="lineNum">     210 </span>                :            :       // 2. Framer integration</a>
-<a name="211"><span class="lineNum">     211 </span>        [<span class="branchCov" title="Branch 0 was taken 1293 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1293 :       std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
-<a name="212"><span class="lineNum">     212 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1293 times"> + </span>]:<span class="lineCov">       1293 :       if (framer_) {</span></a>
+<a name="211"><span class="lineNum">     211 </span>        [<span class="branchCov" title="Branch 0 was taken 1298 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1298 :       std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
+<a name="212"><span class="lineNum">     212 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 1298 times"> + </span>]:<span class="lineCov">       1298 :       if (framer_) {</span></a>
 <a name="213"><span class="lineNum">     213 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         framer_-&gt;push_bytes(data);</span></a>
 <a name="214"><span class="lineNum">     214 </span>                :            :       }</a>
-<a name="215"><span class="lineNum">     215 </span>        [<span class="branchCov" title="Branch 0 was taken 1293 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1293 :     });</span></a>
+<a name="215"><span class="lineNum">     215 </span>        [<span class="branchCov" title="Branch 0 was taken 1298 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       1298 :     });</span></a>
 <a name="216"><span class="lineNum">     216 </span>                :            : </a>
 <a name="217"><span class="lineNum">     217 </span>  [<span class="branchCov" title="Branch 0 was taken 33 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 33 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         33 :     channel_-&gt;on_state([this, weak_alive](base::LinkState state) {</span></a>
-<a name="218"><span class="lineNum">     218 </span>                :<span class="lineCov">         72 :       auto alive = weak_alive.lock();</span></a>
-<a name="219"><span class="lineNum">     219 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 72 times"> + </span>]:<span class="lineCov">         72 :       if (!alive) return;</span></a>
-<a name="220"><span class="lineNum">     220 </span>                :<span class="lineCov">         72 :       ConnectionHandler connect_handler;</span></a>
-<a name="221"><span class="lineNum">     221 </span>                :<span class="lineCov">         72 :       ConnectionHandler disconnect_handler;</span></a>
-<a name="222"><span class="lineNum">     222 </span>                :<span class="lineCov">         72 :       ErrorHandler error_handler;</span></a>
-<a name="223"><span class="lineNum">     223 </span>                :<span class="lineCov">         72 :       std::shared_ptr&lt;interface::Channel&gt; channel_snapshot;</span></a>
+<a name="218"><span class="lineNum">     218 </span>                :<span class="lineCov">         74 :       auto alive = weak_alive.lock();</span></a>
+<a name="219"><span class="lineNum">     219 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 74 times"> + </span>]:<span class="lineCov">         74 :       if (!alive) return;</span></a>
+<a name="220"><span class="lineNum">     220 </span>                :<span class="lineCov">         74 :       ConnectionHandler connect_handler;</span></a>
+<a name="221"><span class="lineNum">     221 </span>                :<span class="lineCov">         74 :       ConnectionHandler disconnect_handler;</span></a>
+<a name="222"><span class="lineNum">     222 </span>                :<span class="lineCov">         74 :       ErrorHandler error_handler;</span></a>
+<a name="223"><span class="lineNum">     223 </span>                :<span class="lineCov">         74 :       std::shared_ptr&lt;interface::Channel&gt; channel_snapshot;</span></a>
 <a name="224"><span class="lineNum">     224 </span>                :            : </a>
-<a name="225"><span class="lineNum">     225 </span>        [<span class="branchCov" title="Branch 0 was taken 28 times"> + </span><span class="branchCov" title="Branch 1 was taken 44 times"> + </span>]:<span class="lineCov">         72 :       if (state == base::LinkState::Connected) {</span></a>
+<a name="225"><span class="lineNum">     225 </span>        [<span class="branchCov" title="Branch 0 was taken 28 times"> + </span><span class="branchCov" title="Branch 1 was taken 46 times"> + </span>]:<span class="lineCov">         74 :       if (state == base::LinkState::Connected) {</span></a>
 <a name="226"><span class="lineNum">     226 </span>                :            :         {</a>
 <a name="227"><span class="lineNum">     227 </span>        [<span class="branchCov" title="Branch 0 was taken 28 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         28 :           std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
 <a name="228"><span class="lineNum">     228 </span>        [<span class="branchCov" title="Branch 0 was taken 28 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         28 :           fulfill_all_locked(true);</span></a>
@@ -314,7 +314,7 @@
 <a name="230"><span class="lineNum">     230 </span>                :<span class="lineCov">         28 :         }</span></a>
 <a name="231"><span class="lineNum">     231 </span>  [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchCov" title="Branch 1 was taken 24 times"> + </span><span class="branchCov" title="Branch 2 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         28 :         if (connect_handler) connect_handler(ConnectionContext(0));</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
-<a name="232"><span class="lineNum">     232 </span>  [<span class="branchCov" title="Branch 0 was taken 44 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3 times"> + </span><span class="branchCov" title="Branch 3 was taken 41 times"> + </span>]:<span class="lineCov">         44 :       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {</span></a>
+<a name="232"><span class="lineNum">     232 </span>  [<span class="branchCov" title="Branch 0 was taken 46 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3 times"> + </span><span class="branchCov" title="Branch 3 was taken 43 times"> + </span>]:<span class="lineCov">         46 :       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {</span></a>
 <a name="233"><span class="lineNum">     233 </span>                :            :         {</a>
 <a name="234"><span class="lineNum">     234 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :           std::lock_guard&lt;std::mutex&gt; lock(mutex_);</span></a>
 <a name="235"><span class="lineNum">     235 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :           fulfill_all_locked(false);</span></a>
@@ -342,7 +342,7 @@
 <a name="255"><span class="lineNum">     255 </span>                :            :           }</a>
 <a name="256"><span class="lineNum">     256 </span>                :            :         }</a>
 <a name="257"><span class="lineNum">     257 </span>                :            :       }</a>
-<a name="258"><span class="lineNum">     258 </span>        [<span class="branchCov" title="Branch 0 was taken 72 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         72 :     });</span></a>
+<a name="258"><span class="lineNum">     258 </span>        [<span class="branchCov" title="Branch 0 was taken 74 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         74 :     });</span></a>
 <a name="259"><span class="lineNum">     259 </span>                :<span class="lineCov">         33 :   }</span></a>
 <a name="260"><span class="lineNum">     260 </span>                :            : </a>
 <a name="261"><span class="lineNum">     261 </span>                :            :   // Attach the stored message_handler_ to framer_-&gt;on_message().</a>
@@ -387,10 +387,10 @@
 <a name="298"><span class="lineNum">     298 </span>                :            : </a>
 <a name="299"><span class="lineNum">     299 </span>                :<span class="lineCov">         32 : std::future&lt;bool&gt; TcpClient::start() { return impl_-&gt;start(); }</span></a>
 <a name="300"><span class="lineNum">     300 </span>                :<span class="lineCov">         29 : void TcpClient::stop() { impl_-&gt;stop(); }</span></a>
-<a name="301"><span class="lineNum">     301 </span>                :<span class="lineCov">        182 : bool TcpClient::send(std::string_view data) { return impl_-&gt;send(data); }</span></a>
+<a name="301"><span class="lineNum">     301 </span>                :<span class="lineCov">        179 : bool TcpClient::send(std::string_view data) { return impl_-&gt;send(data); }</span></a>
 <a name="302"><span class="lineNum">     302 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 : bool TcpClient::send_line(std::string_view line) { return impl_-&gt;send(std::string(line) + &quot;\n&quot;); }</span></a>
 <span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]
-<a name="303"><span class="lineNum">     303 </span>                :<span class="lineCov">         57 : bool TcpClient::connected() const { return get_impl()-&gt;connected(); }</span></a>
+<a name="303"><span class="lineNum">     303 </span>                :<span class="lineCov">         55 : bool TcpClient::connected() const { return get_impl()-&gt;connected(); }</span></a>
 <a name="304"><span class="lineNum">     304 </span>                :            : </a>
 <a name="305"><span class="lineNum">     305 </span>                :<span class="lineCov">         10 : ChannelInterface&amp; TcpClient::on_data(MessageHandler h) {</span></a>
 <a name="306"><span class="lineNum">     306 </span>        [<span class="branchCov" title="Branch 0 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         10 :   std::lock_guard&lt;std::mutex&gt; lock(impl_-&gt;mutex_);</span></a>
@@ -422,9 +422,9 @@
 <a name="332"><span class="lineNum">     332 </span>                :<span class="lineNoCov">          0 :   return *this;</span></a>
 <a name="333"><span class="lineNum">     333 </span>                :            : }</a>
 <a name="334"><span class="lineNum">     334 </span>                :            : </a>
-<a name="335"><span class="lineNum">     335 </span>                :<span class="lineCov">          8 : ChannelInterface&amp; TcpClient::auto_manage(bool m) {</span></a>
-<a name="336"><span class="lineNum">     336 </span>                :<span class="lineCov">          8 :   impl_-&gt;auto_manage_ = m;</span></a>
-<a name="337"><span class="lineNum">     337 </span>  [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          8 :   if (impl_-&gt;auto_manage_ &amp;&amp; !impl_-&gt;started_.load()) start();</span></a>
+<a name="335"><span class="lineNum">     335 </span>                :<span class="lineCov">          8 : ChannelInterface&amp; TcpClient::auto_start(bool m) {</span></a>
+<a name="336"><span class="lineNum">     336 </span>                :<span class="lineCov">          8 :   impl_-&gt;auto_start_ = m;</span></a>
+<a name="337"><span class="lineNum">     337 </span>  [<span class="branchCov" title="Branch 0 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          8 :   if (impl_-&gt;auto_start_ &amp;&amp; !impl_-&gt;started_.load()) start();</span></a>
 <span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 8 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="338"><span class="lineNum">     338 </span>                :<span class="lineCov">          8 :   return *this;</span></a>
 <a name="339"><span class="lineNum">     339 </span>                :            : }</a>
