@@ -22,28 +22,32 @@ $mathjax
 $darkmode
 <link href="$relpath^$stylesheet" rel="stylesheet" type="text/css" />
 $extrastylesheet
+
 <!-- Mermaid.js support -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
     $(document).ready(function() {
         $(".mermaid").each(function() {
-            // Get HTML, replace <br> with newlines, then get text content
-            var html = $(this).html();
-            var text = html.replace(/<br\s*\/?>/gi, "\n").replace(/&nbsp;/g, " ");
-            
-            // Create a temporary element to decode other entities
-            var doc = new DOMParser().parseFromString(text, 'text/html');
-            var decodedText = doc.documentElement.textContent;
+            var pre = $(this).find('pre');
+            var text = "";
+            if (pre.length > 0) {
+                text = pre.text();
+            } else {
+                var html = $(this).html();
+                text = html.replace(/<br\s*\/?>/gi, "\n").replace(/&nbsp;/g, " ");
+                var doc = new DOMParser().parseFromString(text, 'text/html');
+                text = doc.documentElement.textContent;
+            }
 
-            // Fix Doxygen's auto-corrections for symbols
-            var fixedText = decodedText
-                .replace(/–/g, "--")   // en dash to double dash
-                .replace(/—/g, "---")  // em dash to triple dash
+            var fixedText = text
+                .replace(/–/g, "--")
+                .replace(/—/g, "---")
                 .replace(/&ndash;/g, "--")
                 .replace(/&mdash;/g, "---");
-            
-            $(this).text(fixedText);
-            $(this).removeAttr("data-processed"); // Ensure mermaid re-processes it
+
+            console.log("Mermaid input text:", fixedText);
+            $(this).empty().text(fixedText.trim());
+            $(this).removeAttr("data-processed");
         });
         mermaid.initialize({
             startOnLoad: false,
@@ -52,16 +56,19 @@ $extrastylesheet
         mermaid.run();
     });
 </script>
+
 <!-- Doxygen Awesome Extensions -->
 <script type="text/javascript" src="$relpath^doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript" src="$relpath^doxygen-awesome-fragment-copy-button.js"></script>
 <script type="text/javascript" src="$relpath^doxygen-awesome-paragraph-link.js"></script>
 <script type="text/javascript" src="$relpath^doxygen-awesome-interactive-toc.js"></script>
 <script type="text/javascript">
-    DoxygenAwesomeDarkModeToggle.init()
-    DoxygenAwesomeFragmentCopyButton.init()
-    DoxygenAwesomeParagraphLink.init()
-    DoxygenAwesomeInteractiveToc.init()
+    $(document).ready(function() {
+        DoxygenAwesomeDarkModeToggle.init()
+        DoxygenAwesomeFragmentCopyButton.init()
+        DoxygenAwesomeParagraphLink.init()
+        DoxygenAwesomeInteractiveToc.init()
+    });
 </script>
 </head>
 <body>
