@@ -60,7 +60,7 @@ struct TcpServer::Impl {
   size_t max_clients_{0};
 
   ConnectionHandler on_client_connect_{nullptr};
-  ConnectionHandler on_client_disconnect_{nullptr};
+  ConnectionHandler on_disconnect_{nullptr};
   MessageHandler on_data_{nullptr};
   ErrorHandler on_error_{nullptr};
   FramerFactory framer_factory_{nullptr};
@@ -280,7 +280,7 @@ struct TcpServer::Impl {
         {
           std::lock_guard<std::shared_mutex> lock(mutex_);
           framers_.erase(id);
-          handler = on_client_disconnect_;
+          handler = on_disconnect_;
         }
         if (handler) handler(ConnectionContext(id));
       });
@@ -340,9 +340,9 @@ ServerInterface& TcpServer::on_connect(ConnectionHandler h) {
   impl_->on_client_connect_ = std::move(h);
   return *this;
 }
-ServerInterface& TcpServer::on_client_disconnect(ConnectionHandler h) {
+ServerInterface& TcpServer::on_disconnect(ConnectionHandler h) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
-  impl_->on_client_disconnect_ = std::move(h);
+  impl_->on_disconnect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_data(MessageHandler h) {

@@ -76,13 +76,6 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
 
   UdpServerBuilder& auto_start(bool auto_start = true) override;
 
-  /**
-   * @brief Helper for client disconnection events
-   */
-  UdpServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-    return on_disconnect(std::move(handler));
-  }
-
   UdpServerBuilder& local_port(uint16_t port);
   UdpServerBuilder& independent_context(bool use_independent = true);
   UdpServerBuilder& broadcast(bool enable = true);

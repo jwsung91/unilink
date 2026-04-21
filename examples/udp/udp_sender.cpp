@@ -33,7 +33,7 @@ int main() {
           .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "Error: " << ctx.message() << std::endl; })
           .build();
 
-  if (!sender->start().get()) {
+  if (!sender->start_sync()) {
     std::cerr << "Failed to start UDP sender" << std::endl;
     return 1;
   }

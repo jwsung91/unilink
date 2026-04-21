@@ -70,7 +70,7 @@ class UNILINK_API UdsServer : public ServerInterface {
 
   // Event handlers
   ServerInterface& on_connect(ConnectionHandler handler) override;
-  ServerInterface& on_client_disconnect(ConnectionHandler handler) override;
+  ServerInterface& on_disconnect(ConnectionHandler handler) override;
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
 

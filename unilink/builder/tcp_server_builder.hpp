@@ -58,13 +58,6 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
   TcpServerBuilder& auto_start(bool auto_start = true) override;
 
   /**
-   * @brief Helper for client disconnection events
-   */
-  TcpServerBuilder& on_client_disconnect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-    return on_disconnect(std::move(handler));
-  }
-
-  /**
    * @brief Use independent IoContext for this server
    */
   TcpServerBuilder& independent_context(bool use_independent = true);

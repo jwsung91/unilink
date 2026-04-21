@@ -61,11 +61,11 @@ constexpr unsigned MAX_CLEANUP_INTERVAL_MS = 1000;           // 1s maximum clean
 constexpr unsigned DEFAULT_HEALTH_CHECK_INTERVAL_MS = 1000;  // 1s health check interval
 
 // Connection and session constants
-constexpr size_t DEFAULT_MAX_CONNECTIONS = 1000;      // Default maximum connections
-constexpr size_t MAX_MAX_CONNECTIONS = 10000;         // Maximum allowed connections
-constexpr size_t DEFAULT_SESSION_TIMEOUT_MS = 30000;  // 30s default session timeout
-constexpr size_t MIN_SESSION_TIMEOUT_MS = 1000;       // 1s minimum session timeout
-constexpr size_t MAX_SESSION_TIMEOUT_MS = 300000;     // 5m maximum session timeout
+constexpr size_t DEFAULT_MAX_CONNECTIONS = 1000;   // Default maximum connections
+constexpr size_t MAX_MAX_CONNECTIONS = 10000;      // Maximum allowed connections
+constexpr size_t DEFAULT_IDLE_TIMEOUT_MS = 30000;  // 30s default idle timeout
+constexpr size_t MIN_IDLE_TIMEOUT_MS = 1000;       // 1s minimum idle timeout
+constexpr size_t MAX_IDLE_TIMEOUT_MS = 300000;     // 5m maximum idle timeout
 
 // Error handling constants
 constexpr size_t DEFAULT_MAX_RECENT_ERRORS = 1000;           // Default max recent errors to track

@@ -213,8 +213,8 @@ TEST_F(AdvancedTcpServerCoverageTest, DisconnectHandlerReplacementUsesLatestCall
   std::atomic<int> count{0};
   wrapper_support::TcpServerLoopbackHarness harness;
   server_ = harness.start_server();
-  server_->on_client_disconnect([&](const wrapper::ConnectionContext&) { count = 1; });
-  server_->on_client_disconnect([&](const wrapper::ConnectionContext&) { count = 2; });
+  server_->on_disconnect([&](const wrapper::ConnectionContext&) { count = 1; });
+  server_->on_disconnect([&](const wrapper::ConnectionContext&) { count = 2; });
 
   auto client = harness.connect_client();
   ASSERT_TRUE(harness.wait_for_client_count(1));
