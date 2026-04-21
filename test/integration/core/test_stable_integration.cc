@@ -41,7 +41,7 @@ TEST_F(StableCoreIntegrationTest, ServerClientStability) {
 
   ASSERT_TRUE(server->start().get());
 
-  auto client = tcp_client("127.0.0.1", port_).auto_manage(true).build();
+  auto client = tcp_client("127.0.0.1", port_).auto_start(true).build();
 
   EXPECT_TRUE(TestUtils::waitForCondition([&]() { return client->connected(); }, 2000));
 

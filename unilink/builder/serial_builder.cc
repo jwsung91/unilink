@@ -26,7 +26,7 @@ namespace builder {
 SerialBuilder::SerialBuilder(const std::string& device, uint32_t baud_rate)
     : device_(device),
       baud_rate_(baud_rate),
-      auto_manage_(false),
+      auto_start_(false),
       independent_context_(false),
       data_bits_(8),
       stop_bits_(1),
@@ -64,15 +64,15 @@ std::unique_ptr<wrapper::Serial> SerialBuilder::build() {
     serial->on_message(std::move(on_message_));
   }
 
-  if (auto_manage_) {
-    serial->auto_manage(true);
+  if (auto_start_) {
+    serial->auto_start(true);
   }
 
   return serial;
 }
 
-SerialBuilder& SerialBuilder::auto_manage(bool auto_manage) {
-  auto_manage_ = auto_manage;
+SerialBuilder& SerialBuilder::auto_start(bool auto_start) {
+  auto_start_ = auto_start;
   return *this;
 }
 

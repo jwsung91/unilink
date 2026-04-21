@@ -31,7 +31,7 @@ using namespace unilink;
 TEST(UdpFailureTest, WrapperSendWithoutStart) {
   config::UdpConfig cfg;
   cfg.local_port = 0;  // Ephemeral
-  wrapper::Udp udp(cfg);
+  wrapper::UdpClient udp(cfg);
 
   // Not started
   EXPECT_FALSE(udp.connected());

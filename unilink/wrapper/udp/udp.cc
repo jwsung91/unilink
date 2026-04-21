@@ -36,7 +36,7 @@
 namespace unilink {
 namespace wrapper {
 
-struct Udp::Impl {
+struct UdpClient::Impl {
   mutable std::mutex mutex_;
   config::UdpConfig cfg;
   std::shared_ptr<interface::Channel> channel;
@@ -55,7 +55,7 @@ struct Udp::Impl {
 
   std::unique_ptr<framer::IFramer> framer{nullptr};
 
-  bool auto_manage{false};
+  bool auto_start{false};
   std::vector<std::promise<bool>> pending_promises;
   std::atomic<bool> started{false};
   std::shared_ptr<bool> alive_marker{std::make_shared<bool>(true)};
@@ -258,20 +258,20 @@ struct Udp::Impl {
   }
 };
 
-Udp::Udp(const config::UdpConfig& cfg) : impl_(std::make_unique<Impl>(cfg)) {}
-Udp::Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> ioc)
+UdpClient::UdpClient(const config::UdpConfig& cfg) : impl_(std::make_unique<Impl>(cfg)) {}
+UdpClient::UdpClient(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> ioc)
     : impl_(std::make_unique<Impl>(cfg, ioc)) {}
-Udp::Udp(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {
+UdpClient::UdpClient(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {
   impl_->setup_internal_handlers();
 }
-Udp::~Udp() = default;
+UdpClient::~UdpClient() = default;
 
-Udp::Udp(Udp&&) noexcept = default;
-Udp& Udp::operator=(Udp&&) noexcept = default;
+UdpClient::UdpClient(UdpClient&&) noexcept = default;
+UdpClient& UdpClient::operator=(UdpClient&&) noexcept = default;
 
-std::future<bool> Udp::start() { return impl_->start(); }
-void Udp::stop() { impl_->stop(); }
-bool Udp::send(std::string_view data) {
+std::future<bool> UdpClient::start() { return impl_->start(); }
+void UdpClient::stop() { impl_->stop(); }
+bool UdpClient::send(std::string_view data) {
   if (connected() && get_impl()->channel) {
     auto binary_view = base::safe_convert::string_to_bytes(data);
     get_impl()->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
@@ -279,42 +279,42 @@ bool Udp::send(std::string_view data) {
   }
   return false;
 }
-bool Udp::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
-bool Udp::connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
+bool UdpClient::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
+bool UdpClient::connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
 
-ChannelInterface& Udp::on_data(MessageHandler h) {
+ChannelInterface& UdpClient::on_data(MessageHandler h) {
   impl_->data_handler = std::move(h);
   return *this;
 }
-ChannelInterface& Udp::on_connect(ConnectionHandler h) {
+ChannelInterface& UdpClient::on_connect(ConnectionHandler h) {
   impl_->connect_handler = std::move(h);
   return *this;
 }
-ChannelInterface& Udp::on_disconnect(ConnectionHandler h) {
+ChannelInterface& UdpClient::on_disconnect(ConnectionHandler h) {
   impl_->disconnect_handler = std::move(h);
   return *this;
 }
-ChannelInterface& Udp::on_error(ErrorHandler h) {
+ChannelInterface& UdpClient::on_error(ErrorHandler h) {
   impl_->error_handler = std::move(h);
   return *this;
 }
 
-ChannelInterface& Udp::framer(std::unique_ptr<framer::IFramer> f) {
+ChannelInterface& UdpClient::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
 }
-ChannelInterface& Udp::on_message(MessageHandler h) {
+ChannelInterface& UdpClient::on_message(MessageHandler h) {
   impl_->on_message(std::move(h));
   return *this;
 }
 
-ChannelInterface& Udp::auto_manage(bool m) {
-  impl_->auto_manage = m;
-  if (impl_->auto_manage && !impl_->started.load()) start();
+ChannelInterface& UdpClient::auto_start(bool m) {
+  impl_->auto_start = m;
+  if (impl_->auto_start && !impl_->started.load()) start();
   return *this;
 }
 
-Udp& Udp::manage_external_context(bool manage) {
+UdpClient& UdpClient::manage_external_context(bool manage) {
   impl_->manage_external_context = manage;
   return *this;
 }

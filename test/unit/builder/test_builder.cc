@@ -45,7 +45,7 @@ class BuilderTest : public ::testing::Test {
 
   void setupConnectionHandler() {
     auto conn_cb = [this](const wrapper::ConnectionContext&) { connection_established_ = true; };
-    if (server_) server_->on_client_connect(conn_cb);
+    if (server_) server_->on_connect(conn_cb);
     if (client_) client_->on_connect(conn_cb);
     if (serial_) serial_->on_connect(conn_cb);
   }
@@ -72,7 +72,7 @@ class BuilderTest : public ::testing::Test {
   std::shared_ptr<wrapper::TcpServer> server_;
   std::shared_ptr<wrapper::TcpClient> client_;
   std::shared_ptr<wrapper::Serial> serial_;
-  std::shared_ptr<wrapper::Udp> udp_;
+  std::shared_ptr<wrapper::UdpClient> udp_;
 
   std::vector<std::string> data_received_;
   bool connection_established_;

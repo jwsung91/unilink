@@ -81,7 +81,7 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   std::cout << "Testing auto-start server with port: " << test_port << std::endl;
 
   // Create server (auto-manage triggers start)
-  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_manage(true).build();
+  server_ = unilink::tcp_server(test_port).unlimited_clients().auto_start(true).build();
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   std::cout << "Server created with auto-start" << std::endl;

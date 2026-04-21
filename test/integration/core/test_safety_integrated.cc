@@ -49,7 +49,7 @@ TEST_F(SafetyIntegratedTest, NullCallbackSafety) {
 
   // These should not crash
   server->on_data(nullptr);
-  server->on_client_connect(nullptr);
+  server->on_connect(nullptr);
   server->on_client_disconnect(nullptr);
   server->on_error(nullptr);
 

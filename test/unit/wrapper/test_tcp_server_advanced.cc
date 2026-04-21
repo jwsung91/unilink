@@ -117,7 +117,7 @@ TEST_F(AdvancedTcpServerCoverageTest, SendAndCountReflectLiveClientsAndReturnSta
   std::mutex ids_mutex;
 
   server_ = unilink::tcp_server(test_port_).build();
-  server_->on_client_connect([&](const wrapper::ConnectionContext& ctx) {
+  server_->on_connect([&](const wrapper::ConnectionContext& ctx) {
     std::lock_guard<std::mutex> lk(ids_mutex);
     ids.push_back(ctx.client_id());
   });
@@ -198,8 +198,8 @@ TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
 TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
   std::atomic<int> count{0};
   server_ = unilink::tcp_server(test_port_).build();
-  server_->on_client_connect([&](const wrapper::ConnectionContext&) { count = 1; });
-  server_->on_client_connect([&](const wrapper::ConnectionContext&) { count = 2; });
+  server_->on_connect([&](const wrapper::ConnectionContext&) { count = 1; });
+  server_->on_connect([&](const wrapper::ConnectionContext&) { count = 2; });
 
   server_->start();
   auto client = unilink::tcp_client("127.0.0.1", test_port_).build();

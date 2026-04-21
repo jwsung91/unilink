@@ -68,7 +68,7 @@ class UNILINK_API TcpServer : public ServerInterface {
   bool send_to(size_t client_id, std::string_view data) override;
 
   // Event handlers
-  ServerInterface& on_client_connect(ConnectionHandler handler) override;
+  ServerInterface& on_connect(ConnectionHandler handler) override;
   ServerInterface& on_client_disconnect(ConnectionHandler handler) override;
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
@@ -81,7 +81,7 @@ class UNILINK_API TcpServer : public ServerInterface {
   std::vector<size_t> connected_clients() const override;
 
   // Configuration (Fluent API)
-  TcpServer& auto_manage(bool manage = true) override;
+  TcpServer& auto_start(bool manage = true) override;
   TcpServer& port_retry(bool enable = true, int max_retries = 3, int retry_interval_ms = 1000);
   TcpServer& idle_timeout(std::chrono::milliseconds timeout);
   TcpServer& max_clients(size_t max);

@@ -69,7 +69,7 @@ class EchoServer {
     }
   }
 
-  void on_client_connect(const unilink::ConnectionContext& ctx) {
+  void on_connect(const unilink::ConnectionContext& ctx) {
     logger_.info("server", "connect", "Client " + std::to_string(ctx.client_id()) + " connected: " + ctx.client_info());
   }
 
@@ -98,7 +98,7 @@ class EchoServer {
     server_ = unilink::tcp_server(port_)
                   .single_client()
                   .port_retry(true, 3, 1000)
-                  .on_connect([this](const unilink::ConnectionContext& ctx) { on_client_connect(ctx); })
+                  .on_connect([this](const unilink::ConnectionContext& ctx) { on_connect(ctx); })
                   .on_disconnect([this](const unilink::ConnectionContext& ctx) { on_client_disconnect(ctx); })
                   .on_data([this](const unilink::MessageContext& ctx) { on_data(ctx); })
                   .on_error([this](const unilink::ErrorContext& ctx) { on_error(ctx); })

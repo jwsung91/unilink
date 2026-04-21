@@ -37,7 +37,7 @@ TEST(UdpServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   auto transport_server = transport::UdpChannel::create(cfg, ioc);
   wrapper::UdpServer server(std::static_pointer_cast<interface::Channel>(transport_server));
 
-  server.auto_manage(true);
+  server.auto_start(true);
   ioc.run_for(50ms);
 
   EXPECT_TRUE(server.listening());
@@ -69,8 +69,8 @@ TEST(UdpServerWrapperContractTest, ConnectHandlerReplacementUsesLatestCallback) 
   std::atomic<int> connected{0};
   test::wrapper_support::UdpServerLoopbackHarness harness;
   auto server = harness.start_server();
-  server->on_client_connect([&](const wrapper::ConnectionContext&) { connected = 1; });
-  server->on_client_connect([&](const wrapper::ConnectionContext&) { connected = 2; });
+  server->on_connect([&](const wrapper::ConnectionContext&) { connected = 1; });
+  server->on_connect([&](const wrapper::ConnectionContext&) { connected = 2; });
 
   auto client = harness.start_sender();
   (void)client;

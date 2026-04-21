@@ -45,6 +45,11 @@ class UNILINK_API ServerInterface {
   [[nodiscard]] virtual std::future<bool> start() = 0;
 
   /**
+   * @brief Synchronously start the channel/server and wait for the result.
+   */
+  [[nodiscard]] virtual bool start_sync() { return start().get(); }
+
+  /**
    * @brief Stop the server and block until all active sessions are closed.
    *
    * Safe to call from any thread. After stop() returns, no further callbacks will fire
@@ -58,13 +63,12 @@ class UNILINK_API ServerInterface {
   virtual bool send_to(size_t client_id, std::string_view data) = 0;
 
   // Event handlers
-  virtual ServerInterface& on_client_connect(ConnectionHandler handler) = 0;
+  virtual ServerInterface& on_connect(ConnectionHandler handler) = 0;
   virtual ServerInterface& on_client_disconnect(ConnectionHandler handler) = 0;
   virtual ServerInterface& on_data(MessageHandler handler) = 0;
   virtual ServerInterface& on_error(ErrorHandler handler) = 0;
 
   // Aliases — same names as ChannelInterface so server and client code look identical
-  ServerInterface& on_connect(ConnectionHandler handler) { return on_client_connect(std::move(handler)); }
   ServerInterface& on_disconnect(ConnectionHandler handler) { return on_client_disconnect(std::move(handler)); }
 
   /**
@@ -80,7 +84,7 @@ class UNILINK_API ServerInterface {
   virtual ServerInterface& on_message(MessageHandler handler) = 0;
 
   // Management
-  virtual ServerInterface& auto_manage(bool manage = true) = 0;
+  virtual ServerInterface& auto_start(bool manage = true) = 0;
   virtual size_t client_count() const = 0;
   virtual std::vector<size_t> connected_clients() const = 0;
 };

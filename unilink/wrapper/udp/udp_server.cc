@@ -80,7 +80,7 @@ struct UdpServer::Impl {
   std::unordered_map<size_t, SessionEntry> sessions;
   std::chrono::milliseconds session_timeout{30000};  // Default 30s
   std::unique_ptr<boost::asio::steady_timer> reaper_timer;
-  bool auto_manage{false};
+  bool auto_start{false};
 
   ConnectionHandler on_connect{nullptr};
   ConnectionHandler on_disconnect{nullptr};
@@ -392,7 +392,7 @@ bool UdpServer::send_to(size_t client_id, std::string_view data) {
   return true;
 }
 
-ServerInterface& UdpServer::on_client_connect(ConnectionHandler h) {
+ServerInterface& UdpServer::on_connect(ConnectionHandler h) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   impl_->on_connect = std::move(h);
   return *this;
@@ -443,9 +443,9 @@ std::vector<size_t> UdpServer::connected_clients() const {
   return ids;
 }
 
-UdpServer& UdpServer::auto_manage(bool m) {
-  impl_->auto_manage = m;
-  if (impl_->auto_manage && !impl_->started.load()) {
+UdpServer& UdpServer::auto_start(bool m) {
+  impl_->auto_start = m;
+  if (impl_->auto_start && !impl_->started.load()) {
     start();
   }
   return *this;

@@ -44,6 +44,11 @@ class UNILINK_API ChannelInterface {
   [[nodiscard]] virtual std::future<bool> start() = 0;
 
   /**
+   * @brief Synchronously start the channel/server and wait for the result.
+   */
+  [[nodiscard]] virtual bool start_sync() { return start().get(); }
+
+  /**
    * @brief Stop the channel and block until all pending async operations are cancelled.
    *
    * Safe to call from any thread. After stop() returns, no further callbacks will fire
@@ -89,7 +94,7 @@ class UNILINK_API ChannelInterface {
   virtual ChannelInterface& on_message(MessageHandler handler) = 0;
 
   // Management
-  virtual ChannelInterface& auto_manage(bool manage = true) = 0;
+  virtual ChannelInterface& auto_start(bool manage = true) = 0;
 };
 
 }  // namespace wrapper

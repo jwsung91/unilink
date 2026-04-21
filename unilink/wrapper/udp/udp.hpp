@@ -43,20 +43,20 @@ namespace wrapper {
 /**
  * @brief Modernized UDP Wrapper
  */
-class UNILINK_API Udp : public ChannelInterface {
+class UNILINK_API UdpClient : public ChannelInterface {
  public:
-  explicit Udp(const config::UdpConfig& cfg);
-  Udp(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc);
-  explicit Udp(std::shared_ptr<interface::Channel> channel);
-  ~Udp() override;
+  explicit UdpClient(const config::UdpConfig& cfg);
+  UdpClient(const config::UdpConfig& cfg, std::shared_ptr<boost::asio::io_context> external_ioc);
+  explicit UdpClient(std::shared_ptr<interface::Channel> channel);
+  ~UdpClient() override;
 
   // Move semantics
-  Udp(Udp&&) noexcept;
-  Udp& operator=(Udp&&) noexcept;
+  UdpClient(UdpClient&&) noexcept;
+  UdpClient& operator=(UdpClient&&) noexcept;
 
   // Disable copy
-  Udp(const Udp&) = delete;
-  Udp& operator=(const Udp&) = delete;
+  UdpClient(const UdpClient&) = delete;
+  UdpClient& operator=(const UdpClient&) = delete;
 
   // ChannelInterface implementation
   std::future<bool> start() override;
@@ -73,9 +73,9 @@ class UNILINK_API Udp : public ChannelInterface {
   ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
   ChannelInterface& on_message(MessageHandler handler) override;
 
-  ChannelInterface& auto_manage(bool manage = true) override;
+  ChannelInterface& auto_start(bool manage = true) override;
 
-  Udp& manage_external_context(bool manage);
+  UdpClient& manage_external_context(bool manage);
 
  private:
   struct Impl;

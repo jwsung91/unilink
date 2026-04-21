@@ -52,17 +52,10 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
 
   /**
    * @brief Enable auto-manage functionality
-   * @param auto_manage Whether to automatically manage the server lifecycle
+   * @param auto_start Whether to automatically manage the server lifecycle
    * @return TcpServerBuilder& Reference to this builder
    */
-  TcpServerBuilder& auto_manage(bool auto_manage = true) override;
-
-  /**
-   * @brief Helper for client connection events
-   */
-  TcpServerBuilder& on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-    return on_connect(std::move(handler));
-  }
+  TcpServerBuilder& auto_start(bool auto_start = true) override;
 
   /**
    * @brief Helper for client disconnection events
@@ -108,7 +101,7 @@ class UNILINK_API TcpServerBuilder : public BuilderInterface<wrapper::TcpServer,
 
  private:
   uint16_t port_;
-  bool auto_manage_;
+  bool auto_start_;
   bool independent_context_;
 
   // Configuration

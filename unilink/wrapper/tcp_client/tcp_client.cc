@@ -57,7 +57,7 @@ struct TcpClient::Impl {
 
   std::unique_ptr<framer::IFramer> framer_{nullptr};
 
-  bool auto_manage_ = false;
+  bool auto_start_ = false;
   std::chrono::milliseconds retry_interval_{3000};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
@@ -332,9 +332,9 @@ ChannelInterface& TcpClient::on_message(MessageHandler h) {
   return *this;
 }
 
-ChannelInterface& TcpClient::auto_manage(bool m) {
-  impl_->auto_manage_ = m;
-  if (impl_->auto_manage_ && !impl_->started_.load()) start();
+ChannelInterface& TcpClient::auto_start(bool m) {
+  impl_->auto_start_ = m;
+  if (impl_->auto_start_ && !impl_->started_.load()) start();
   return *this;
 }
 

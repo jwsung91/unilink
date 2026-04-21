@@ -60,7 +60,7 @@ TEST_F(TcpIntegrationTest, AutoInitialization) {
 TEST_F(TcpIntegrationTest, MethodChaining) {
   auto client =
       unilink::tcp_client("127.0.0.1", test_port_)
-          .auto_manage(false)
+          .auto_start(false)
           .on_connect([](const wrapper::ConnectionContext&) { std::cout << "Connected!" << std::endl; })
           .on_disconnect([](const wrapper::ConnectionContext&) { std::cout << "Disconnected!" << std::endl; })
           .on_data([](const wrapper::MessageContext& ctx) { std::cout << "Data: " << ctx.data() << std::endl; })
@@ -170,7 +170,7 @@ TEST_F(TcpIntegrationTest, MultipleClientConnections) {
 
   std::vector<std::unique_ptr<wrapper::TcpClient>> clients;
   for (int i = 0; i < 3; ++i) {
-    auto client = unilink::tcp_client("127.0.0.1", comm_port).auto_manage(true).build();
+    auto client = unilink::tcp_client("127.0.0.1", comm_port).auto_start(true).build();
     clients.push_back(std::move(client));
     TestUtils::waitFor(100);
   }
@@ -180,7 +180,7 @@ TEST_F(TcpIntegrationTest, MultipleClientConnections) {
 
 TEST_F(TcpIntegrationTest, ComprehensiveBuilderMethodChaining) {
   auto client = unilink::tcp_client("127.0.0.1", test_port_)
-                    .auto_manage(false)
+                    .auto_start(false)
                     .independent_context(true)
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_data([](const wrapper::MessageContext&) {})
@@ -190,7 +190,7 @@ TEST_F(TcpIntegrationTest, ComprehensiveBuilderMethodChaining) {
 
   auto server = unilink::tcp_server(test_port_)
                     .unlimited_clients()
-                    .auto_manage(false)
+                    .auto_start(false)
                     .on_connect([](const wrapper::ConnectionContext&) {})
                     .on_data([](const wrapper::MessageContext&) {})
                     .build();

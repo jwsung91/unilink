@@ -65,7 +65,7 @@ struct Serial::Impl {
   std::unique_ptr<framer::IFramer> framer{nullptr};
 
   // Configuration
-  bool auto_manage = false;
+  bool auto_start = false;
   int data_bits = 8;
   int stop_bits = 1;
   std::string parity = "none";
@@ -344,9 +344,9 @@ ChannelInterface& Serial::on_message(MessageHandler h) {
   return *this;
 }
 
-ChannelInterface& Serial::auto_manage(bool m) {
-  impl_->auto_manage = m;
-  if (impl_->auto_manage && !impl_->started_.load()) start();
+ChannelInterface& Serial::auto_start(bool m) {
+  impl_->auto_start = m;
+  if (impl_->auto_start && !impl_->started_.load()) start();
   return *this;
 }
 

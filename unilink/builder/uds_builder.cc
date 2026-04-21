@@ -26,7 +26,7 @@ namespace builder {
 
 UdsClientBuilder::UdsClientBuilder(const std::string& socket_path)
     : socket_path_(socket_path),
-      auto_manage_(false),
+      auto_start_(false),
       independent_context_(false),
       retry_interval_(3000),
       max_retries_(-1),
@@ -60,15 +60,15 @@ std::unique_ptr<wrapper::UdsClient> UdsClientBuilder::build() {
     client->on_message(std::move(on_message_));
   }
 
-  if (auto_manage_) {
-    client->auto_manage(true);
+  if (auto_start_) {
+    client->auto_start(true);
   }
 
   return client;
 }
 
-UdsClientBuilder& UdsClientBuilder::auto_manage(bool auto_manage) {
-  auto_manage_ = auto_manage;
+UdsClientBuilder& UdsClientBuilder::auto_start(bool auto_start) {
+  auto_start_ = auto_start;
   return *this;
 }
 
@@ -95,7 +95,7 @@ UdsClientBuilder& UdsClientBuilder::independent_context(bool use_independent) {
 // UdsServerBuilder implementation
 
 UdsServerBuilder::UdsServerBuilder(const std::string& socket_path)
-    : socket_path_(socket_path), auto_manage_(false), independent_context_(false), max_clients_(100) {}
+    : socket_path_(socket_path), auto_start_(false), independent_context_(false), max_clients_(100) {}
 
 std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   AutoInitializer::ensure_io_context_running();
@@ -110,7 +110,7 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   }
 
   if (on_data_) server->on_data(on_data_);
-  if (on_connect_) server->on_client_connect(on_connect_);
+  if (on_connect_) server->on_connect(on_connect_);
   if (on_disconnect_) server->on_client_disconnect(on_disconnect_);
   if (on_error_) server->on_error(on_error_);
 
@@ -125,15 +125,15 @@ std::unique_ptr<wrapper::UdsServer> UdsServerBuilder::build() {
   server->idle_timeout(idle_timeout_);
   server->max_clients(max_clients_);
 
-  if (auto_manage_) {
-    server->auto_manage(true);
+  if (auto_start_) {
+    server->auto_start(true);
   }
 
   return server;
 }
 
-UdsServerBuilder& UdsServerBuilder::auto_manage(bool auto_manage) {
-  auto_manage_ = auto_manage;
+UdsServerBuilder& UdsServerBuilder::auto_start(bool auto_start) {
+  auto_start_ = auto_start;
   return *this;
 }
 
