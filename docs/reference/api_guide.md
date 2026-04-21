@@ -42,7 +42,7 @@ auto channel = unilink::{type}(params)
 | `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)             | None     |
 | `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                 | None     |
 | `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                             | None     |
-| `.auto_manage(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false`  |
+| `.auto_start(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false`  |
 | `.independent_context(bool)`     | Create and run a dedicated `io_context` thread managed by unilink | `false`  |
 | `.use_line_framer(...)`          | Split incoming bytes into delimiter-based messages                | Disabled |
 | `.use_packet_framer(...)`        | Split incoming bytes into packet-based messages                   | Disabled |
@@ -77,10 +77,12 @@ Use `.on_message()` together with a framer when you want callback flow to operat
 **Lifecycle Methods:**
 | Method | Description |
 | ------------------------------------ | ---------------------------------------------------------------------- |
-| `->start()` | **Required**: Start the connection |
+| `->start()` | Start the connection (returns `std::future<bool>`) |
+| `->start_sync()` | Start the connection and block until established (returns `bool`) |
 | `->stop()` | Stop the connection |
-| `TcpClient` / `Serial` / `Udp` / `UdsClient`: `->send(data)` / `->send_line(text)` | Send data to the configured peer |
-| `TcpClient` / `Serial` / `Udp` / `UdsClient`: `->connected()` | Check channel state |
+| `TcpClient` / `Serial` / `UdpClient` / `UdsClient`: `->send(data)` / `->send_line(text)` | Send data to the configured peer |
+| `TcpClient` / `Serial` / `UdpClient` / `UdsClient`: `->connected()` | Check channel state |
+
 | `TcpServer` / `UdsServer`: `->broadcast(data)` / `->send_to(client_id, data)` | Send data to one or more connected clients |
 | `TcpServer` / `UdsServer`: `->listening()` | Check if the server socket is bound and listening |
 
@@ -99,7 +101,7 @@ tcp_server(port)
 
 - **Default**: Builders use the shared `IoContextManager` thread; unilink starts/stops it for you.
 - **`independent_context(true)`**: Builder creates its own `io_context` and runs it on an internal thread; cleanup is automatic.
-- **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will _not_ run/stop it unless you call `manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_manage(true)` (it starts immediately).
+- **External `io_context`**: If you manually pass a custom `io_context` to wrapper constructors, unilink will _not_ run/stop it unless you call `manage_external_context(true)` on the wrapper. In that case, callbacks should be registered before enabling `auto_start(true)` (it starts immediately).
 
 ---
 
@@ -156,7 +158,7 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 | `max_retries(count)`        | `int`      | Set maximum reconnect attempts (`-1` for unlimited)        |
 | `connection_timeout(ms)`    | `unsigned` | Set connection timeout in milliseconds                     |
 | `independent_context()`     | `bool`     | Use separate IO thread (for testing)                       |
-| `auto_manage()`             | `bool`     | Auto-start immediately and stop on destruction             |
+| `auto_start()`             | `bool`     | Auto-start immediately and stop on destruction             |
 
 #### Instance Methods
 
@@ -294,7 +296,7 @@ unilink::tcp_server(uint16_t port)
 | `unlimited_clients()`       | None                         | Accept unlimited clients                                             |
 | `port_retry()`       | `bool, retries, interval_ms` | Retry if port is in use                                              |
 | `independent_context()`     | `bool`                       | Run on a dedicated `io_context` thread managed by unilink            |
-| `auto_manage()`             | `bool`                       | Auto-start immediately and stop on destruction                       |
+| `auto_start()`             | `bool`                       | Auto-start immediately and stop on destruction                       |
 
 Multi-client callbacks use the standard `ConnectionContext` and `MessageContext` which contain `client_id()` and `client_info()` accessors.
 
@@ -410,7 +412,7 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 | `flow_control(mode)`        | `string`   | Set flow control before `build()`                         |
 | `retry_interval(ms)`        | `unsigned` | Set reconnection interval (default `3000`)                |
 | `independent_context()`     | `bool`     | Run on a dedicated `io_context` thread managed by unilink |
-| `auto_manage()`             | `bool`     | Auto-start immediately and stop on destruction            |
+| `auto_start()`             | `bool`     | Auto-start immediately and stop on destruction            |
 
 #### Instance Methods
 
@@ -540,7 +542,7 @@ unilink::udp_client(uint16_t local_port)
 | `local_port(port)`          | `uint16_t`         | Bind to a specific local port        |
 | `remote(ip, port)`          | `string, uint16_t` | Set default destination for `send()` |
 | `independent_context()`     | `bool`             | Run on dedicated IO thread           |
-| `auto_manage()`             | `bool`             | Auto-start/stop lifecycle            |
+| `auto_start()`             | `bool`             | Auto-start/stop lifecycle            |
 
 #### Instance Methods
 
@@ -626,7 +628,7 @@ unilink::uds_client(const std::string& socket_path)
 | `max_clients(max)`          | `size_t`   | Allow up to `max` concurrent clients |
 | `unlimited_clients()`       | None       | Allow unlimited clients              |
 | `independent_context()`     | `bool`     | Run on dedicated IO thread           |
-| `auto_manage()`             | `bool`     | Auto-start/stop lifecycle            |
+| `auto_start()`             | `bool`     | Auto-start/stop lifecycle            |
 
 #### Builder Methods (UDS Client)
 
@@ -636,7 +638,7 @@ unilink::uds_client(const std::string& socket_path)
 | `max_retries(count)`        | `int`      | Set maximum reconnect attempts             |
 | `connection_timeout(ms)`    | `unsigned` | Set connection timeout in milliseconds     |
 | `independent_context()`     | `bool`     | Run on a dedicated `io_context` thread     |
-| `auto_manage()`             | `bool`     | Auto-start/stop lifecycle                  |
+| `auto_start()`             | `bool`     | Auto-start/stop lifecycle                  |
 
 #### Instance Methods (UDS Client)
 

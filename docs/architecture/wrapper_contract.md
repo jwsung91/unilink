@@ -3,7 +3,7 @@
 > Public wrapper behavior note
 >
 > This document describes the intended application-facing behavior of the wrapper layer:
-> `TcpClient`, `TcpServer`, `Udp`, `UdpServer`, `Serial`, `UdsClient`, and `UdsServer`.
+> `TcpClient`, `TcpServer`, `UdpClient`, `UdpServer`, `Serial`, `UdsClient`, and `UdsServer`.
 > For lower-level transport guarantees, see `docs/architecture/channel_contract.md`.
 
 ## Scope
@@ -31,11 +31,11 @@ This document captures the behavioral contract currently enforced by the wrapper
 - `stop()` is intended to be idempotent from the caller's perspective.
 - Shutdown may clear pending startup futures with `false` when startup did not complete.
 
-### 3. `auto_manage(true)` follows the same startup contract
+### 3. `auto_start(true)` follows the same startup contract
 
-- Enabling `auto_manage(true)` triggers the same wrapper startup path used by explicit `start()`.
+- Enabling `auto_start(true)` triggers the same wrapper startup path used by explicit `start()`.
 - Auto-managed startup is not a separate fast path with weaker guarantees.
-- Callback registration should still happen before enabling `auto_manage(true)` or before calling `start()`.
+- Callback registration should still happen before enabling `auto_start(true)` or before calling `start()`.
 
 ## External `io_context` Contract
 
