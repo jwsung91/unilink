@@ -137,18 +137,6 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 <li>on_client_connect_
 : <a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10defb582fb338ff5d688e929e793a57">unilink::wrapper::TcpServer::Impl</a>
 </li>
-<li>on_client_disconnect()
-: <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">unilink::builder::TcpServerBuilder</a>
-, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a8fee798e2556f8ea5faafc8abb0c677d">unilink::builder::UdpServerBuilder</a>
-, <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#aeff54a149f77423cf6c87ad65fa36a31">unilink::builder::UdsServerBuilder</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#afeb025189ff78fc75508b8ab936f5653">unilink::wrapper::ServerInterface</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ad44939f72c0a63490822845e7b2b02a3">unilink::wrapper::TcpServer</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ab90222f6c1e2a6614bbf0658c5fa577e">unilink::wrapper::UdpServer</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a12d757f24ce653b162ab2d1202c27ba0">unilink::wrapper::UdsServer</a>
-</li>
-<li>on_client_disconnect_
-: <a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a132e8d75878579382aa6337aa79fac65">unilink::wrapper::TcpServer::Impl</a>
-</li>
 <li>on_close()
 : <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html#a983ed436fee72fc93556e567c654a577">unilink::transport::TcpServerSession</a>
 , <a class="el" href="classunilink_1_1transport_1_1UdsServerSession.html#a4a6fa50cac80917a4774b0fd5813746d">unilink::transport::UdsServerSession</a>
@@ -190,14 +178,18 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 : <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a74ee73046a1cdc37b90bd394008051dd">unilink::builder::BuilderInterface&lt; T, Derived &gt;</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ab2fc21ba4b82738e71cc68370680715a">unilink::wrapper::ChannelInterface</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a25e05819e04bdc27957ed698b95b39fa">unilink::wrapper::Serial</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a24255ef21dbbe33197efbf9933483c54">unilink::wrapper::ServerInterface</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a44ea622e3330ba9c6f3edfb856059f25">unilink::wrapper::ServerInterface</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a4401c5e02864adee270e6d74ba7ea93f">unilink::wrapper::TcpClient</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a42e5745b5aee461bfbe1028f45373d36">unilink::wrapper::TcpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a3ac5cc7051be02b215b4ccef74a52721">unilink::wrapper::UdpClient</a>
 , <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a45d3b59efb6dcee512e54856fe07b80c">unilink::wrapper::UdpServer::Impl</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a6e138e7ea5321b40f71fea8ff615379b">unilink::wrapper::UdpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#aa9f4f008e4f276d21483871e8b3193d4">unilink::wrapper::UdsClient</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#af5174d6d8849d63545328b0dd8e18f96">unilink::wrapper::UdsServer</a>
 </li>
 <li>on_disconnect_
 : <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a47cc01e994e05d52edd6396dec4a01f6">unilink::builder::BuilderInterface&lt; T, Derived &gt;</a>
+, <a class="el" href="structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a3b3a91dd5e80d1a62c20383bf6076f3f">unilink::wrapper::TcpServer::Impl</a>
 </li>
 <li>on_error()
 : <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a99411d22e20c0c2af568425d88986b08">unilink::builder::BuilderInterface&lt; T, Derived &gt;</a>
@@ -345,7 +337,7 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#afaadbe75bb5e0f51da1b595e177febaf">unilink::builder::TcpClientBuilder</a>
 , <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a97f71c574e0f5de7a836198e0ba4aa83">unilink::builder::TcpServerBuilder</a>
 , <a class="el" href="classunilink_1_1concurrency_1_1IoContextManager.html#ae38638363f85ecd1c2d05698310d1c31">unilink::concurrency::IoContextManager</a>
-, <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#ab7fbb9365c5ef54972b593a7b0794b7c">unilink::concurrency::ThreadSafeState&lt; StateType &gt;</a>
+, <a class="el" href="classunilink_1_1concurrency_1_1ThreadSafeState.html#af14ab7a87a6834629de77a2789dd8cd0">unilink::concurrency::ThreadSafeState&lt; StateType &gt;</a>
 , <a class="el" href="classunilink_1_1config_1_1ConfigManager.html#a812718f6cd6e9cac30b8e8fbc5c4110c">unilink::config::ConfigManager</a>
 , <a class="el" href="structunilink_1_1config_1_1TcpClientConfig.html#a315d4a00974aa423ce989ad4342d7f24">unilink::config::TcpClientConfig</a>
 , <a class="el" href="classunilink_1_1diagnostics_1_1Logger.html#a082c57005f8140e3f02c30135b48dce4">unilink::diagnostics::Logger</a>
@@ -354,14 +346,14 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 , <a class="el" href="classunilink_1_1memory_1_1MemoryValidator.html#a8eafe514b70629ada81da3d7639e07d1">unilink::memory::MemoryValidator</a>
 , <a class="el" href="classunilink_1_1memory_1_1PooledBuffer.html#a8f8dc11b22544f6430121b8df1310e3c">unilink::memory::PooledBuffer</a>
 , <a class="el" href="classunilink_1_1memory_1_1SafeDataBuffer.html#a043b913feee208c980d75737e0038bde">unilink::memory::SafeDataBuffer</a>
-, <a class="el" href="classunilink_1_1transport_1_1Serial.html#a15584e33e48ee80b84816adeedb892ab">unilink::transport::Serial</a>
+, <a class="el" href="classunilink_1_1transport_1_1Serial.html#a20934ca77546648c4957e4a90754932e">unilink::transport::Serial</a>
 , <a class="el" href="classunilink_1_1transport_1_1TcpClient.html#ad37c4adfe4a28cf43eedde18fb1b6a5c">unilink::transport::TcpClient</a>
 , <a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a2f57aa2bd9eb388ccf4f50a72fdef7fd">unilink::transport::TcpServer</a>
 , <a class="el" href="classunilink_1_1transport_1_1UdpChannel.html#ac24c8b199d8a44510a788e8398e65d00">unilink::transport::UdpChannel</a>
 , <a class="el" href="classunilink_1_1transport_1_1UdsClient.html#a92df3cfcf9afe7aeacb70b06adcd03ae">unilink::transport::UdsClient</a>
 , <a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ab49612640d707062bb2a8c14d01beff2">unilink::transport::UdsServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a07b6689a34acf4a31fdaf4ae8e4a0da0">unilink::wrapper::Serial</a>
-, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a044c48c7e3accbb1a75c955bb0646e9b">unilink::wrapper::TcpClient</a>
+, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a1baa887349897bca5c2ba76de1ede484">unilink::wrapper::TcpClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#ac7f64a7b54be0ec30c23945b8dbc902b">unilink::wrapper::TcpServer</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#ab5fdcb6f6998e30c96c5dc5e8b9f9e4c">unilink::wrapper::UdpClient</a>
 , <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#af4b5731e7d7e1d5c72bf93d4db64d964">unilink::wrapper::UdpServer</a>
@@ -403,7 +395,7 @@ $(document).ready(function(){initNavTree('functions_o.html',''); initResizable()
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Apr 21 2026 13:36:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 21:20:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

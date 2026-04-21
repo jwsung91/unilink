@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['wrapper_20contract_2338',['Wrapper Contract',['../md_docs_architecture_wrapper_contract.html',1,'']]]
+  ['wrapper_20contract_2335',['Wrapper Contract',['../md_docs_architecture_wrapper_contract.html',1,'']]]
 ];

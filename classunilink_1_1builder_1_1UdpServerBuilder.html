@@ -115,9 +115,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a23af9b8d0b755ef1571c5b0d5090551e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html">UdpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a23af9b8d0b755ef1571c5b0d5090551e">auto_start</a> (bool auto_start=true) override</td></tr>
 <tr class="memdesc:a23af9b8d0b755ef1571c5b0d5090551e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1UdpServerBuilder.html#a23af9b8d0b755ef1571c5b0d5090551e">More...</a><br /></td></tr>
 <tr class="separator:a23af9b8d0b755ef1571c5b0d5090551e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fee798e2556f8ea5faafc8abb0c677d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html">UdpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a8fee798e2556f8ea5faafc8abb0c677d">on_client_disconnect</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt; handler)</td></tr>
-<tr class="memdesc:a8fee798e2556f8ea5faafc8abb0c677d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper for client disconnection events.  <a href="classunilink_1_1builder_1_1UdpServerBuilder.html#a8fee798e2556f8ea5faafc8abb0c677d">More...</a><br /></td></tr>
-<tr class="separator:a8fee798e2556f8ea5faafc8abb0c677d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a460566b8cc7901720ad6c6412e797aec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html">UdpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a460566b8cc7901720ad6c6412e797aec">local_port</a> (uint16_t port)</td></tr>
 <tr class="separator:a460566b8cc7901720ad6c6412e797aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc27ee77cfc13dea828e59672a7e96a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html">UdpServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#acc27ee77cfc13dea828e59672a7e96a7">independent_context</a> (bool use_independent=true)</td></tr>
@@ -360,36 +357,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a8fee798e2556f8ea5faafc8abb0c677d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fee798e2556f8ea5faafc8abb0c677d">&#9670;&nbsp;</a></span>on_client_disconnect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html">UdpServerBuilder</a>&amp; unilink::builder::UdpServerBuilder::on_client_disconnect </td>
-          <td>(</td>
-          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt;&#160;</td>
-          <td class="paramname"><em>handler</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Helper for client disconnection events. </p>
-
-<p class="definition">Definition at line <a class="el" href="udp__builder_8hpp_source.html#l00082">82</a> of file <a class="el" href="udp__builder_8hpp_source.html">udp_builder.hpp</a>.</p>
-
-</div>
-</div>
 <a id="a17d8a46f991dafc27ac06950fcaab7f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a17d8a46f991dafc27ac06950fcaab7f7">&#9670;&nbsp;</a></span>reuse_address()</h2>
 
@@ -420,7 +387,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html">UdpServerBuilder</a></li>
-    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 21:20:45 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

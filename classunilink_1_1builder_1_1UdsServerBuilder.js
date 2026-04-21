@@ -6,6 +6,5 @@ var classunilink_1_1builder_1_1UdsServerBuilder =
     [ "idle_timeout", "classunilink_1_1builder_1_1UdsServerBuilder.html#a53f41668377b8a55064a90051cde1f35", null ],
     [ "independent_context", "classunilink_1_1builder_1_1UdsServerBuilder.html#a3913c8955226959a4787b071e84f3969", null ],
     [ "max_clients", "classunilink_1_1builder_1_1UdsServerBuilder.html#ac2583c4dcae0ba3aaa8710c9b6675a7b", null ],
-    [ "on_client_disconnect", "classunilink_1_1builder_1_1UdsServerBuilder.html#aeff54a149f77423cf6c87ad65fa36a31", null ],
     [ "unlimited_clients", "classunilink_1_1builder_1_1UdsServerBuilder.html#adc12541e49d23fc1d671c61629372ebe", null ]
 ];
