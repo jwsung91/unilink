@@ -56,7 +56,7 @@ struct UdsClient::Impl {
 
   std::unique_ptr<framer::IFramer> framer_{nullptr};
 
-  bool auto_manage_ = false;
+  bool auto_start_ = false;
   std::chrono::milliseconds retry_interval_{3000};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
@@ -355,9 +355,9 @@ ChannelInterface& UdsClient::on_message(MessageHandler h) {
   return *this;
 }
 
-ChannelInterface& UdsClient::auto_manage(bool manage) {
-  impl_->auto_manage_ = manage;
-  if (impl_->auto_manage_ && !impl_->started_.load()) {
+ChannelInterface& UdsClient::auto_start(bool manage) {
+  impl_->auto_start_ = manage;
+  if (impl_->auto_start_ && !impl_->started_.load()) {
     start();
   }
   return *this;

@@ -38,13 +38,13 @@ namespace builder {
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
-class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpClientBuilder> {
+class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::UdpClient, UdpClientBuilder> {
  public:
   explicit UdpClientBuilder(uint16_t local_port = 0);
 
-  std::unique_ptr<wrapper::Udp> build() override;
+  std::unique_ptr<wrapper::UdpClient> build() override;
 
-  UdpClientBuilder& auto_manage(bool auto_manage = true) override;
+  UdpClientBuilder& auto_start(bool auto_start = true) override;
 
   UdpClientBuilder& local_port(uint16_t port);
   UdpClientBuilder& remote(const std::string& address, uint16_t port);
@@ -54,7 +54,7 @@ class UNILINK_API UdpClientBuilder : public BuilderInterface<wrapper::Udp, UdpCl
 
  private:
   config::UdpConfig cfg_;
-  bool auto_manage_;
+  bool auto_start_;
   bool independent_context_;
 };
 #ifdef _MSC_VER
@@ -74,14 +74,7 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
 
   std::unique_ptr<wrapper::UdpServer> build() override;
 
-  UdpServerBuilder& auto_manage(bool auto_manage = true) override;
-
-  /**
-   * @brief Helper for client connection events
-   */
-  UdpServerBuilder& on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-    return on_connect(std::move(handler));
-  }
+  UdpServerBuilder& auto_start(bool auto_start = true) override;
 
   /**
    * @brief Helper for client disconnection events
@@ -97,7 +90,7 @@ class UNILINK_API UdpServerBuilder : public BuilderInterface<wrapper::UdpServer,
 
  private:
   config::UdpConfig cfg_;
-  bool auto_manage_;
+  bool auto_start_;
   bool independent_context_;
 };
 #ifdef _MSC_VER

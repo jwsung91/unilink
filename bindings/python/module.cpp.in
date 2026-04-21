@@ -69,11 +69,12 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
+      .def("start_sync", &TcpClient::start_sync)
       .def("stop", &TcpClient::stop)
       .def("send", &TcpClient::send)
       .def("send_line", &TcpClient::send_line)
       .def("connected", &TcpClient::connected)
-      .def("auto_manage", &TcpClient::auto_manage, py::arg("manage") = true)
+      .def("auto_start", &TcpClient::auto_start, py::arg("start") = true)
       .def("retry_interval", &TcpClient::retry_interval)
       .def("max_retries", &TcpClient::max_retries)
       .def("connection_timeout", &TcpClient::connection_timeout)
@@ -137,12 +138,14 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
+      .def("start_sync", &TcpServer::start_sync)
       .def("stop", &TcpServer::stop)
       .def("broadcast", &TcpServer::broadcast)
       .def("send_to", &TcpServer::send_to)
       .def("client_count", &TcpServer::client_count)
       .def("connected_clients", &TcpServer::connected_clients)
       .def("listening", &TcpServer::listening)
+      .def("auto_start", &TcpServer::auto_start, py::arg("start") = true)
       .def(
           "use_line_framer",
           [](TcpServer& self, const std::string& d, bool i, size_t m) {
@@ -203,11 +206,12 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
+      .def("start_sync", &Serial::start_sync)
       .def("stop", &Serial::stop)
       .def("send", &Serial::send)
       .def("send_line", &Serial::send_line)
       .def("connected", &Serial::connected)
-      .def("auto_manage", &Serial::auto_manage, py::arg("manage") = true)
+      .def("auto_start", &Serial::auto_start, py::arg("start") = true)
       .def("baud_rate", &Serial::baud_rate)
       .def("data_bits", &Serial::data_bits)
       .def("stop_bits", &Serial::stop_bits)
@@ -274,11 +278,12 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
+      .def("start_sync", &UdsClient::start_sync)
       .def("stop", &UdsClient::stop)
       .def("send", &UdsClient::send)
       .def("send_line", &UdsClient::send_line)
       .def("connected", &UdsClient::connected)
-      .def("auto_manage", &UdsClient::auto_manage, py::arg("manage") = true)
+      .def("auto_start", &UdsClient::auto_start, py::arg("start") = true)
       .def("retry_interval", &UdsClient::retry_interval)
       .def("max_retries", &UdsClient::max_retries)
       .def("connection_timeout", &UdsClient::connection_timeout)
@@ -342,12 +347,14 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
+      .def("start_sync", &UdsServer::start_sync)
       .def("stop", &UdsServer::stop)
       .def("broadcast", &UdsServer::broadcast)
       .def("send_to", &UdsServer::send_to)
       .def("client_count", &UdsServer::client_count)
       .def("connected_clients", &UdsServer::connected_clients)
       .def("listening", &UdsServer::listening)
+      .def("auto_start", &UdsServer::auto_start, py::arg("start") = true)
       .def(
           "use_line_framer",
           [](UdsServer& self, const std::string& d, bool i, size_t m) {
@@ -411,33 +418,34 @@ PYBIND11_MODULE(unilink_py, m) {
       .def_readwrite("enable_memory_pool", &config::UdpConfig::enable_memory_pool)
       .def_readwrite("stop_on_callback_exception", &config::UdpConfig::stop_on_callback_exception);
 
-  // Udp (Client role)
-  py::class_<Udp, std::shared_ptr<Udp>>(m, "Udp")
+  // UdpClient (Client role)
+  py::class_<UdpClient, std::shared_ptr<UdpClient>>(m, "UdpClient")
       .def(py::init<const config::UdpConfig&>())
       .def("start",
-           [](Udp& self) {
+           [](UdpClient& self) {
              py::gil_scoped_release release;
              return self.start().get();
            })
-      .def("stop", &Udp::stop)
-      .def("send", &Udp::send)
-      .def("send_line", &Udp::send_line)
-      .def("connected", &Udp::connected)
-      .def("auto_manage", &Udp::auto_manage, py::arg("manage") = true)
+      .def("start_sync", &UdpClient::start_sync)
+      .def("stop", &UdpClient::stop)
+      .def("send", &UdpClient::send)
+      .def("send_line", &UdpClient::send_line)
+      .def("connected", &UdpClient::connected)
+      .def("auto_start", &UdpClient::auto_start, py::arg("start") = true)
       .def(
           "use_line_framer",
-          [](Udp& self, const std::string& d, bool i, size_t m) {
+          [](UdpClient& self, const std::string& d, bool i, size_t m) {
             self.framer(std::make_unique<framer::LineFramer>(d, i, m));
             return &self;
           },
           py::arg("delimiter") = "\n", py::arg("include_delimiter") = false, py::arg("max_length") = 65536)
       .def("use_packet_framer",
-           [](Udp& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
+           [](UdpClient& self, const std::vector<uint8_t>& s, const std::vector<uint8_t>& e, size_t m) {
              self.framer(std::make_unique<framer::PacketFramer>(s, e, m));
              return &self;
            })
       .def("on_message",
-           [](Udp& self, std::function<void(const MessageContext&)> h) {
+           [](UdpClient& self, std::function<void(const MessageContext&)> h) {
              self.on_message([h](const MessageContext& ctx) {
                py::gil_scoped_acquire gil;
                h(ctx);
@@ -445,7 +453,7 @@ PYBIND11_MODULE(unilink_py, m) {
              return &self;
            })
       .def("on_data",
-           [](Udp& self, std::function<void(const MessageContext&)> h) {
+           [](UdpClient& self, std::function<void(const MessageContext&)> h) {
              self.on_data([h](const MessageContext& ctx) {
                py::gil_scoped_acquire gil;
                h(ctx);
@@ -453,7 +461,7 @@ PYBIND11_MODULE(unilink_py, m) {
              return &self;
            })
       .def("on_connect",
-           [](Udp& self, std::function<void(const ConnectionContext&)> h) {
+           [](UdpClient& self, std::function<void(const ConnectionContext&)> h) {
              self.on_connect([h](const ConnectionContext& ctx) {
                py::gil_scoped_acquire gil;
                h(ctx);
@@ -461,14 +469,14 @@ PYBIND11_MODULE(unilink_py, m) {
              return &self;
            })
       .def("on_disconnect",
-           [](Udp& self, std::function<void(const ConnectionContext&)> h) {
+           [](UdpClient& self, std::function<void(const ConnectionContext&)> h) {
              self.on_disconnect([h](const ConnectionContext& ctx) {
                py::gil_scoped_acquire gil;
                h(ctx);
              });
              return &self;
            })
-      .def("on_error", [](Udp& self, std::function<void(const ErrorContext&)> h) {
+      .def("on_error", [](UdpClient& self, std::function<void(const ErrorContext&)> h) {
         self.on_error([h](const ErrorContext& ctx) {
           py::gil_scoped_acquire gil;
           h(ctx);
@@ -485,12 +493,14 @@ PYBIND11_MODULE(unilink_py, m) {
              py::gil_scoped_release release;
              return self.start().get();
            })
+      .def("start_sync", &UdpServer::start_sync)
       .def("stop", &UdpServer::stop)
       .def("broadcast", &UdpServer::broadcast)
       .def("send_to", &UdpServer::send_to)
       .def("client_count", &UdpServer::client_count)
       .def("connected_clients", &UdpServer::connected_clients)
       .def("listening", &UdpServer::listening)
+      .def("auto_start", &UdpServer::auto_start, py::arg("start") = true)
       .def("session_timeout", &UdpServer::session_timeout)
       .def(
           "use_line_framer",

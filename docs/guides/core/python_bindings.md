@@ -125,14 +125,14 @@ serial = unilink.Serial("/dev/ttyUSB0", 115200)
 # Configure
 serial.baud_rate(9600)
 serial.retry_interval(datetime.timedelta(milliseconds=1000))
-serial.auto_manage(True) # Automatically starts
+serial.auto_start(True) # Automatically starts
 
 def on_data(ctx):
     print(f"Serial Data: {ctx.data}")
 
 serial.on_data(on_data)
 
-# If not using auto_manage, call start()
+# If not using auto_start, call start()
 # serial.start()
 
 serial.send("AT\r\n")
@@ -154,7 +154,7 @@ config.local_port = 8081
 config.remote_address = "127.0.0.1"
 config.remote_port = 8080
 
-udp = unilink.Udp(config)
+udp = unilink.UdpClient(config)
 
 def on_data(ctx):
     print(f"UDP Received: {ctx.data}")
@@ -245,7 +245,7 @@ The bindings are designed to be thread-safe. When C++ triggers a callback, it au
 ### Lifecycle Management
 - **`start()`**: Blocks until the initial start attempt completes and returns `True` or `False`.
 - **`stop()`**: Synchronously stops all I/O operations and joins internal threads.
-- **`auto_manage(True)`**: When enabled, the channel starts immediately and stops when the Python object is garbage collected.
+- **`auto_start(True)`**: When enabled, the channel starts immediately and stops when the Python object is garbage collected.
 
 ### Configuration
 - **`UdpConfig`**: A dedicated class for UDP settings (buffer sizes, memory pools, etc.).

@@ -45,7 +45,7 @@ TEST_F(UdpStateTest, BindConflict) {
   UdpConfig cfg2;
   cfg2.local_address = "127.0.0.1";
   cfg2.local_port = port;  // Same port already occupied by a live UDP socket
-  Udp udp2(cfg2);
+  UdpClient udp2(cfg2);
 
   auto udp2_started = udp2.start();
   ASSERT_EQ(udp2_started.wait_for(2s), std::future_status::ready);
@@ -60,7 +60,7 @@ TEST_F(UdpStateTest, BindConflict) {
 TEST_F(UdpStateTest, UninitializedUse) {
   UdpConfig cfg;
   cfg.local_port = 0;
-  Udp udp(cfg);
+  UdpClient udp(cfg);
 
   // Object created but not started (uninitialized state)
   EXPECT_FALSE(udp.connected());

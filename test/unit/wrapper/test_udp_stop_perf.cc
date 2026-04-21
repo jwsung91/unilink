@@ -20,7 +20,7 @@ TEST(UdpWrapperTest, StopPerformance) {
   cfg.remote_address = "127.0.0.1";
   cfg.remote_port = 19001;
 
-  wrapper::Udp udp(cfg);
+  wrapper::UdpClient udp(cfg);
   udp.start();
 
   auto start = std::chrono::high_resolution_clock::now();
@@ -40,7 +40,7 @@ TEST(UdpWrapperTest, StopSafetyWithExternalIOC) {
   cfg.local_port = 0;
 
   {
-    wrapper::Udp udp(cfg, ioc);
+    wrapper::UdpClient udp(cfg, ioc);
     std::atomic<int> callbacks{0};
     udp.on_data([&](const wrapper::MessageContext&) { callbacks++; });
     udp.start();

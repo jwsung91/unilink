@@ -35,7 +35,7 @@ class TcpRstTest : public ::testing::Test {
   void SetUp() override {
     port_ = TestUtils::getAvailableTestPort();
     server_ = std::make_shared<wrapper::TcpServer>(port_);
-    server_->on_client_connect([this](const wrapper::ConnectionContext&) { connected_clients_++; });
+    server_->on_connect([this](const wrapper::ConnectionContext&) { connected_clients_++; });
     server_->on_client_disconnect([this](const wrapper::ConnectionContext&) { disconnected_clients_++; });
     auto f = server_->start();
     f.get();  // Ensure listening starts

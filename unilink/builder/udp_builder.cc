@@ -26,17 +26,17 @@ namespace builder {
 
 // --- UdpClientBuilder Implementation ---
 
-UdpClientBuilder::UdpClientBuilder(uint16_t local_port) : auto_manage_(false), independent_context_(false) {
+UdpClientBuilder::UdpClientBuilder(uint16_t local_port) : auto_start_(false), independent_context_(false) {
   cfg_.local_port = local_port;
 }
 
-std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
+std::unique_ptr<wrapper::UdpClient> UdpClientBuilder::build() {
   std::shared_ptr<boost::asio::io_context> ioc = nullptr;
   if (independent_context_) {
     ioc = std::make_shared<boost::asio::io_context>();
   }
 
-  auto udp = std::make_unique<wrapper::Udp>(cfg_, ioc);
+  auto udp = std::make_unique<wrapper::UdpClient>(cfg_, ioc);
   if (independent_context_) {
     udp->manage_external_context(true);
   }
@@ -53,15 +53,15 @@ std::unique_ptr<wrapper::Udp> UdpClientBuilder::build() {
     udp->on_message(std::move(on_message_));
   }
 
-  if (auto_manage_) {
-    udp->auto_manage(true);
+  if (auto_start_) {
+    udp->auto_start(true);
   }
 
   return udp;
 }
 
-UdpClientBuilder& UdpClientBuilder::auto_manage(bool auto_manage) {
-  auto_manage_ = auto_manage;
+UdpClientBuilder& UdpClientBuilder::auto_start(bool auto_start) {
+  auto_start_ = auto_start;
   return *this;
 }
 
@@ -93,7 +93,7 @@ UdpClientBuilder& UdpClientBuilder::reuse_address(bool enable) {
 
 // --- UdpServerBuilder Implementation ---
 
-UdpServerBuilder::UdpServerBuilder(uint16_t local_port) : auto_manage_(false), independent_context_(false) {
+UdpServerBuilder::UdpServerBuilder(uint16_t local_port) : auto_start_(false), independent_context_(false) {
   cfg_.local_port = local_port;
 }
 
@@ -109,7 +109,7 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
   }
 
   if (on_data_) server->on_data(on_data_);
-  if (on_connect_) server->on_client_connect(on_connect_);
+  if (on_connect_) server->on_connect(on_connect_);
   if (on_disconnect_) server->on_client_disconnect(on_disconnect_);
   if (on_error_) server->on_error(on_error_);
 
@@ -121,15 +121,15 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
     server->on_message(on_message_);
   }
 
-  if (auto_manage_) {
+  if (auto_start_) {
     server->start();
   }
 
   return server;
 }
 
-UdpServerBuilder& UdpServerBuilder::auto_manage(bool auto_manage) {
-  auto_manage_ = auto_manage;
+UdpServerBuilder& UdpServerBuilder::auto_start(bool auto_start) {
+  auto_start_ = auto_start;
   return *this;
 }
 

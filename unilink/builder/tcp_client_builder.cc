@@ -27,7 +27,7 @@ namespace builder {
 TcpClientBuilder::TcpClientBuilder(const std::string& host, uint16_t port)
     : host_(host),
       port_(port),
-      auto_manage_(false),
+      auto_start_(false),
       independent_context_(false),
       retry_interval_(3000),
       max_retries_(-1),
@@ -64,15 +64,15 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
     client->on_message(std::move(on_message_));
   }
 
-  if (auto_manage_) {
-    client->auto_manage(true);
+  if (auto_start_) {
+    client->auto_start(true);
   }
 
   return client;
 }
 
-TcpClientBuilder& TcpClientBuilder::auto_manage(bool auto_manage) {
-  auto_manage_ = auto_manage;
+TcpClientBuilder& TcpClientBuilder::auto_start(bool auto_start) {
+  auto_start_ = auto_start;
   return *this;
 }
 

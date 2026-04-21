@@ -35,7 +35,7 @@ int main() {
         })
         .build();
 
-    if (!receiver->start().get()) {
+    if (!receiver->start_sync()) {
         std::cerr << "Failed to start receiver" << std::endl;
         return 1;
     }

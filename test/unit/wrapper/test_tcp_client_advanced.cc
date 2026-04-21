@@ -113,7 +113,7 @@ TEST_F(AdvancedTcpClientCoverageTest, ManagedExternalContextRestartsStoppedIoCon
 TEST_F(AdvancedTcpClientCoverageTest, AutoManageStartsClientAndInvokesCallback) {
   std::atomic<bool> connected{false};
   client_ = unilink::tcp_client("127.0.0.1", test_port_)
-                .auto_manage(true)
+                .auto_start(true)
                 .on_connect([&](const wrapper::ConnectionContext&) { connected = true; })
                 .build();
 

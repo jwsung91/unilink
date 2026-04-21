@@ -54,7 +54,7 @@ TEST(UdsClientWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   EXPECT_CALL(*mock_socket, async_read_some(_, _)).WillRepeatedly(Invoke([](const auto&, auto) {}));
 
   UdsClient client(std::static_pointer_cast<interface::Channel>(transport_client));
-  client.auto_manage(true);
+  client.auto_start(true);
 
   ioc.restart();
   ioc.run_for(100ms);
@@ -136,7 +136,7 @@ TEST(UdsServerWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   EXPECT_CALL(*mock_acceptor, async_accept(_)).WillOnce(Invoke([](auto) {}));
 
   UdsServer server(std::static_pointer_cast<interface::Channel>(transport_server));
-  server.auto_manage(true);
+  server.auto_start(true);
 
   ioc.restart();
   ioc.poll();
@@ -270,8 +270,8 @@ TEST(UdsServerWrapperContractTest, ConnectHandlerReplacementUsesLatestCallback) 
 
   std::atomic<int> count{0};
   UdsServer server(std::static_pointer_cast<interface::Channel>(transport_server));
-  server.on_client_connect([&](const ConnectionContext&) { count = 1; });
-  server.on_client_connect([&](const ConnectionContext&) { count = 2; });
+  server.on_connect([&](const ConnectionContext&) { count = 1; });
+  server.on_connect([&](const ConnectionContext&) { count = 2; });
 
   auto started = server.start();
   ioc.restart();

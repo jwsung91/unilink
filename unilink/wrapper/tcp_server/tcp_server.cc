@@ -51,7 +51,7 @@ struct TcpServer::Impl {
   std::shared_ptr<bool> alive_marker_{std::make_shared<bool>(true)};
 
   // Configuration
-  bool auto_manage_{false};
+  bool auto_start_{false};
   bool port_retry_enabled_{false};
   int max_port_retries_{3};
   int port_retry_interval_ms_{1000};
@@ -74,7 +74,7 @@ struct TcpServer::Impl {
       : port_(port),
         started_(false),
         is_listening_(false),
-        auto_manage_(false),
+        auto_start_(false),
         port_retry_enabled_(false),
         max_port_retries_(3),
         port_retry_interval_ms_(1000),
@@ -89,7 +89,7 @@ struct TcpServer::Impl {
         manage_external_context_(false),
         started_(false),
         is_listening_(false),
-        auto_manage_(false),
+        auto_start_(false),
         port_retry_enabled_(false),
         max_port_retries_(3),
         port_retry_interval_ms_(1000),
@@ -102,7 +102,7 @@ struct TcpServer::Impl {
         channel_(std::move(channel)),
         started_(false),
         is_listening_(false),
-        auto_manage_(false),
+        auto_start_(false),
         port_retry_enabled_(false),
         max_port_retries_(3),
         port_retry_interval_ms_(1000),
@@ -335,7 +335,7 @@ bool TcpServer::send_to(size_t client_id, std::string_view data) {
   return ts ? ts->send_to_client(client_id, data) : false;
 }
 
-ServerInterface& TcpServer::on_client_connect(ConnectionHandler h) {
+ServerInterface& TcpServer::on_connect(ConnectionHandler h) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_client_connect_ = std::move(h);
   return *this;
@@ -378,9 +378,9 @@ std::vector<size_t> TcpServer::connected_clients() const {
   return ts ? ts->connected_clients() : std::vector<size_t>();
 }
 
-TcpServer& TcpServer::auto_manage(bool m) {
-  impl_->auto_manage_ = m;
-  if (impl_->auto_manage_ && !impl_->started_.load()) start();
+TcpServer& TcpServer::auto_start(bool m) {
+  impl_->auto_start_ = m;
+  if (impl_->auto_start_ && !impl_->started_.load()) start();
   return *this;
 }
 

@@ -73,7 +73,7 @@ class UNILINK_API Serial : public ChannelInterface {
   ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
   ChannelInterface& on_message(MessageHandler handler) override;
 
-  ChannelInterface& auto_manage(bool manage = true) override;
+  ChannelInterface& auto_start(bool manage = true) override;
 
   // Serial-specific methods
   Serial& baud_rate(uint32_t baud_rate);

@@ -73,7 +73,7 @@ class UNILINK_API UdsClient : public ChannelInterface {
   ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
   ChannelInterface& on_message(MessageHandler handler) override;
 
-  ChannelInterface& auto_manage(bool manage = true) override;
+  ChannelInterface& auto_start(bool manage = true) override;
 
   // Configuration
   UdsClient& retry_interval(std::chrono::milliseconds interval);

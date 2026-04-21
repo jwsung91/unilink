@@ -40,7 +40,7 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
   explicit UdsClientBuilder(const std::string& socket_path);
 
   std::unique_ptr<wrapper::UdsClient> build() override;
-  UdsClientBuilder& auto_manage(bool auto_manage = true) override;
+  UdsClientBuilder& auto_start(bool auto_start = true) override;
 
   UdsClientBuilder& retry_interval(std::chrono::milliseconds milliseconds);
   UdsClientBuilder& max_retries(int max_retries);
@@ -49,7 +49,7 @@ class UNILINK_API UdsClientBuilder : public BuilderInterface<wrapper::UdsClient,
 
  private:
   std::string socket_path_;
-  bool auto_manage_;
+  bool auto_start_;
   bool independent_context_;
   std::chrono::milliseconds retry_interval_;
   int max_retries_;
@@ -71,14 +71,7 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
   explicit UdsServerBuilder(const std::string& socket_path);
 
   std::unique_ptr<wrapper::UdsServer> build() override;
-  UdsServerBuilder& auto_manage(bool auto_manage = true) override;
-
-  /**
-   * @brief Helper for client connection events
-   */
-  UdsServerBuilder& on_client_connect(std::function<void(const wrapper::ConnectionContext&)> handler) {
-    return on_connect(std::move(handler));
-  }
+  UdsServerBuilder& auto_start(bool auto_start = true) override;
 
   /**
    * @brief Helper for client disconnection events
@@ -94,7 +87,7 @@ class UNILINK_API UdsServerBuilder : public BuilderInterface<wrapper::UdsServer,
 
  private:
   std::string socket_path_;
-  bool auto_manage_;
+  bool auto_start_;
   bool independent_context_;
   std::chrono::milliseconds idle_timeout_{0};
   size_t max_clients_;

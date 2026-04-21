@@ -59,10 +59,10 @@ class BuilderInterface {
 
   /**
    * @brief Enable auto-manage functionality
-   * @param auto_manage Whether to automatically manage the wrapper lifecycle
+   * @param auto_start Whether to automatically manage the wrapper lifecycle
    * @return Derived& Reference to this builder for method chaining
    */
-  virtual Derived& auto_manage(bool auto_manage = true) = 0;
+  virtual Derived& auto_start(bool auto_start = true) = 0;
 
   /**
    * @brief Set data handler callback

@@ -46,7 +46,7 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
 
   std::unique_ptr<wrapper::TcpClient> build() override;
 
-  TcpClientBuilder& auto_manage(bool auto_manage = true) override;
+  TcpClientBuilder& auto_start(bool auto_start = true) override;
 
   /**
    * @brief Set connection retry interval
@@ -71,7 +71,7 @@ class UNILINK_API TcpClientBuilder : public BuilderInterface<wrapper::TcpClient,
  private:
   std::string host_;
   uint16_t port_;
-  bool auto_manage_;
+  bool auto_start_;
   bool independent_context_;
 
   // Configuration

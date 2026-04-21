@@ -196,14 +196,14 @@ class UdpServerLoopbackHarness {
     return server_;
   }
 
-  std::shared_ptr<wrapper::Udp> start_sender() {
+  std::shared_ptr<wrapper::UdpClient> start_sender() {
     config::UdpConfig client_cfg;
     client_cfg.local_address = "127.0.0.1";
     client_cfg.local_port = 0;
     client_cfg.remote_address = std::string("127.0.0.1");
     client_cfg.remote_port = port_;
 
-    client_ = std::make_shared<wrapper::Udp>(client_cfg);
+    client_ = std::make_shared<wrapper::UdpClient>(client_cfg);
     auto started = client_->start();
     if (!started.get()) {
       throw std::runtime_error("Failed to start UDP test client");
@@ -239,7 +239,7 @@ class UdpServerLoopbackHarness {
  private:
   uint16_t port_;
   std::shared_ptr<wrapper::UdpServer> server_;
-  std::shared_ptr<wrapper::Udp> client_;
+  std::shared_ptr<wrapper::UdpClient> client_;
 };
 
 }  // namespace unilink::test::wrapper_support

@@ -57,7 +57,7 @@ struct UdsServer::Impl {
 
   std::unordered_map<size_t, std::unique_ptr<framer::IFramer>> framers_;
 
-  bool auto_manage_ = false;
+  bool auto_start_ = false;
   size_t max_clients_ = 100;
   int idle_timeout_ms_ = 0;
 
@@ -317,7 +317,7 @@ bool UdsServer::send_to(size_t client_id, std::string_view data) {
   return impl_->server_ ? impl_->server_->send_to_client(client_id, data) : false;
 }
 
-ServerInterface& UdsServer::on_client_connect(ConnectionHandler handler) {
+ServerInterface& UdsServer::on_connect(ConnectionHandler handler) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_connect_handler_ = std::move(handler);
   return *this;
@@ -359,9 +359,9 @@ std::vector<size_t> UdsServer::connected_clients() const {
   return impl_->server_ ? impl_->server_->connected_clients() : std::vector<size_t>();
 }
 
-UdsServer& UdsServer::auto_manage(bool manage) {
-  impl_->auto_manage_ = manage;
-  if (impl_->auto_manage_ && !impl_->started_.load()) {
+UdsServer& UdsServer::auto_start(bool manage) {
+  impl_->auto_start_ = manage;
+  if (impl_->auto_start_ && !impl_->started_.load()) {
     start();
   }
   return *this;

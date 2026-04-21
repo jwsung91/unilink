@@ -46,7 +46,7 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
 
   std::unique_ptr<wrapper::Serial> build() override;
 
-  SerialBuilder& auto_manage(bool auto_manage = true) override;
+  SerialBuilder& auto_start(bool auto_start = true) override;
 
   /**
    * @brief Set number of data bits
@@ -81,7 +81,7 @@ class UNILINK_API SerialBuilder : public BuilderInterface<wrapper::Serial, Seria
  private:
   std::string device_;
   uint32_t baud_rate_;
-  bool auto_manage_;
+  bool auto_start_;
   bool independent_context_;
 
   // Configuration

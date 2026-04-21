@@ -46,12 +46,12 @@ TEST_F(UdpOptionsTest, SetterCoverage) {
   UdpConfig config;
   config.local_port = 0;
 
-  Udp udp(config);
+  UdpClient udp(config);
 
-  // Test auto_manage setter
-  // It returns ChannelInterface& so we can chain it, but Udp wrapper implements it.
-  udp.auto_manage(true);
-  udp.auto_manage(false);
+  // Test auto_start setter
+  // It returns ChannelInterface& so we can chain it, but UdpClient wrapper implements it.
+  udp.auto_start(true);
+  udp.auto_start(false);
 
   // Test manage_external_context
   udp.manage_external_context(true);
@@ -63,10 +63,10 @@ TEST_F(UdpOptionsTest, ConstructorWithExternalContext) {
   config.local_port = 0;
 
   auto ioc = std::make_shared<boost::asio::io_context>();
-  Udp udp(config, ioc);
+  UdpClient udp(config, ioc);
 
   // Should not throw
-  udp.auto_manage(false);
+  udp.auto_start(false);
 }
 
 TEST_F(UdpOptionsTest, AutoManageStartsInjectedTransport) {
@@ -88,14 +88,14 @@ TEST_F(UdpOptionsTest, AutoManageStartsInjectedTransport) {
   auto sender_transport = unilink::transport::UdpChannel::create(sender_cfg, sender_ioc);
   auto receiver_transport = unilink::transport::UdpChannel::create(receiver_cfg, receiver_ioc);
 
-  Udp receiver(std::static_pointer_cast<unilink::interface::Channel>(receiver_transport));
+  UdpClient receiver(std::static_pointer_cast<unilink::interface::Channel>(receiver_transport));
   auto receiver_started = receiver.start();
   receiver_ioc.run_for(50ms);
   ASSERT_EQ(receiver_started.wait_for(100ms), std::future_status::ready);
   EXPECT_TRUE(receiver_started.get());
 
-  Udp sender(std::static_pointer_cast<unilink::interface::Channel>(sender_transport));
-  sender.auto_manage(true);
+  UdpClient sender(std::static_pointer_cast<unilink::interface::Channel>(sender_transport));
+  sender.auto_start(true);
   sender_ioc.run_for(50ms);
 
   EXPECT_TRUE(sender.connected());
@@ -116,7 +116,7 @@ TEST_F(UdpOptionsTest, StartFutureReflectsBindFailure) {
   cfg.local_address = "127.0.0.1";
   cfg.local_port = occupied_socket.local_endpoint().port();
 
-  Udp udp(cfg);
+  UdpClient udp(cfg);
   auto started = udp.start();
 
   ASSERT_EQ(started.wait_for(2s), std::future_status::ready);

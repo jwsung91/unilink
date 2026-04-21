@@ -142,7 +142,7 @@ namespace unilink::wrapper {
 
     class TcpClient : public ChannelInterface;
     class Serial : public ChannelInterface;
-    class Udp : public ChannelInterface;
+    class UdpClient : public ChannelInterface;
     class UdsClient : public ChannelInterface;
     class TcpServer : public ServerInterface;
     class UdsServer : public ServerInterface;

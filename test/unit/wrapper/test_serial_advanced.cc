@@ -109,7 +109,7 @@ class SerialWrapperAdvancedTest : public ::testing::Test {
 };
 
 TEST_F(SerialWrapperAdvancedTest, AutoManageStartsAndStopsChannel) {
-  auto serial = unilink::serial(device_, 9600).auto_manage(true).build();
+  auto serial = unilink::serial(device_, 9600).auto_start(true).build();
 
   std::atomic<bool> connected{false};
   std::atomic<bool> disconnected{false};
@@ -150,7 +150,7 @@ TEST_F(SerialWrapperAdvancedTest, AutoManageStartsInjectedTransport) {
   auto transport_serial = transport::Serial::create(cfg, std::make_unique<FakeSerialPort>(ioc), ioc);
   wrapper::Serial serial(std::static_pointer_cast<interface::Channel>(transport_serial));
 
-  serial.auto_manage(true);
+  serial.auto_start(true);
   ioc.run_for(50ms);
 
   EXPECT_TRUE(serial.connected());

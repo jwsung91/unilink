@@ -69,7 +69,7 @@ class UNILINK_API UdsServer : public ServerInterface {
   bool send_to(size_t client_id, std::string_view data) override;
 
   // Event handlers
-  ServerInterface& on_client_connect(ConnectionHandler handler) override;
+  ServerInterface& on_connect(ConnectionHandler handler) override;
   ServerInterface& on_client_disconnect(ConnectionHandler handler) override;
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
@@ -82,7 +82,7 @@ class UNILINK_API UdsServer : public ServerInterface {
   std::vector<size_t> connected_clients() const override;
 
   // Configuration (Fluent API)
-  UdsServer& auto_manage(bool manage = true) override;
+  UdsServer& auto_start(bool manage = true) override;
   UdsServer& idle_timeout(std::chrono::milliseconds timeout);
   UdsServer& max_clients(size_t max);
   UdsServer& unlimited_clients();
