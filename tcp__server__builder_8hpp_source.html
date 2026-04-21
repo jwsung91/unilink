@@ -132,56 +132,51 @@ $(document).ready(function(){initNavTree('tcp__server__builder_8hpp_source.html'
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  std::unique_ptr&lt;wrapper::TcpServer&gt; build() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; auto_manage(<span class="keywordtype">bool</span> auto_manage = <span class="keyword">true</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; auto_start(<span class="keywordtype">bool</span> auto_start = <span class="keyword">true</span>) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a8a132b609e544f51818236c24e730932">   63</a></span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a8a132b609e544f51818236c24e730932">on_client_connect</a>(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a>&amp;)&gt; handler) {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> on_connect(std::move(handler));</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">   63</a></span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">on_client_disconnect</a>(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a>&amp;)&gt; handler) {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> on_disconnect(std::move(handler));</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  }</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">   70</a></span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">on_client_disconnect</a>(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> <a class="code" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a>&amp;)&gt; handler) {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> on_disconnect(std::move(handler));</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; independent_context(<span class="keywordtype">bool</span> use_independent = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; port_retry(<span class="keywordtype">bool</span> enable = <span class="keyword">true</span>, <span class="keywordtype">int</span> max_retries = 3, <span class="keywordtype">int</span> retry_interval_ms = 1000);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; idle_timeout(std::chrono::milliseconds timeout);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; single_client();</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; multi_client(<span class="keywordtype">size_t</span> max);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; unlimited_clients();</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  uint16_t port_;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keywordtype">bool</span> auto_manage_;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordtype">bool</span> independent_context_;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="comment">// Configuration</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="keywordtype">bool</span> enable_port_retry_;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="keywordtype">int</span> max_port_retries_;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="keywordtype">int</span> port_retry_interval_ms_;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  std::chrono::milliseconds idle_timeout_;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <span class="keywordtype">size_t</span> max_clients_;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="keywordtype">bool</span> client_limit_set_;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;};</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#ifdef _MSC_VER</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#pragma warning(pop)</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}  <span class="comment">// namespace builder</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}  <span class="comment">// namespace unilink</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; independent_context(<span class="keywordtype">bool</span> use_independent = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; port_retry(<span class="keywordtype">bool</span> enable = <span class="keyword">true</span>, <span class="keywordtype">int</span> max_retries = 3, <span class="keywordtype">int</span> retry_interval_ms = 1000);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; idle_timeout(std::chrono::milliseconds timeout);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; max_clients(<span class="keywordtype">size_t</span> max);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; single_client();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; multi_client(<span class="keywordtype">size_t</span> max);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <a class="code" href="classunilink_1_1builder_1_1TcpServerBuilder.html">TcpServerBuilder</a>&amp; unlimited_clients();</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  uint16_t port_;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordtype">bool</span> auto_start_;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keywordtype">bool</span> independent_context_;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="comment">// Configuration</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordtype">bool</span> enable_port_retry_;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordtype">int</span> max_port_retries_;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keywordtype">int</span> port_retry_interval_ms_;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  std::chrono::milliseconds idle_timeout_;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordtype">size_t</span> max_clients_;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordtype">bool</span> client_limit_set_;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;};</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#pragma warning(pop)</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}  <span class="comment">// namespace builder</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}  <span class="comment">// namespace unilink</span></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1BuilderInterface_html"><div class="ttname"><a href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a></div><div class="ttdoc">Generic Builder interface for fluent API pattern.</div><div class="ttdef"><b>Definition:</b> <a href="ibuilder_8hpp_source.html#l00045">ibuilder.hpp:45</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html">unilink::builder::TcpServerBuilder</a></div><div class="ttdoc">Modernized Builder for TcpServer.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8hpp_source.html#l00037">tcp_server_builder.hpp:37</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a1e2b7356bca7899f9a3e23a78501c1e2"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a1e2b7356bca7899f9a3e23a78501c1e2">unilink::builder::TcpServerBuilder::TcpServerBuilder</a></div><div class="ttdeci">TcpServerBuilder(TcpServerBuilder &amp;&amp;)=default</div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a5a61d49ae913ce98e6d6d8450ec8e506"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a5a61d49ae913ce98e6d6d8450ec8e506">unilink::builder::TcpServerBuilder::TcpServerBuilder</a></div><div class="ttdeci">TcpServerBuilder(const TcpServerBuilder &amp;)=delete</div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a6529272a197e6447d7b17132b222a879"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">unilink::builder::TcpServerBuilder::on_client_disconnect</a></div><div class="ttdeci">TcpServerBuilder &amp; on_client_disconnect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler)</div><div class="ttdoc">Helper for client disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8hpp_source.html#l00070">tcp_server_builder.hpp:70</a></div></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a8a132b609e544f51818236c24e730932"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a8a132b609e544f51818236c24e730932">unilink::builder::TcpServerBuilder::on_client_connect</a></div><div class="ttdeci">TcpServerBuilder &amp; on_client_connect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler)</div><div class="ttdoc">Helper for client connection events.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8hpp_source.html#l00063">tcp_server_builder.hpp:63</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a6529272a197e6447d7b17132b222a879"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a6529272a197e6447d7b17132b222a879">unilink::builder::TcpServerBuilder::on_client_disconnect</a></div><div class="ttdeci">TcpServerBuilder &amp; on_client_disconnect(std::function&lt; void(const wrapper::ConnectionContext &amp;)&gt; handler)</div><div class="ttdoc">Helper for client disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__server__builder_8hpp_source.html#l00063">tcp_server_builder.hpp:63</a></div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_a97f71c574e0f5de7a836198e0ba4aa83"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#a97f71c574e0f5de7a836198e0ba4aa83">unilink::builder::TcpServerBuilder::operator=</a></div><div class="ttdeci">TcpServerBuilder &amp; operator=(const TcpServerBuilder &amp;)=delete</div></div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpServerBuilder_html_af4a1786275a24a42a80fb8e7b51cf247"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpServerBuilder.html#af4a1786275a24a42a80fb8e7b51cf247">unilink::builder::TcpServerBuilder::operator=</a></div><div class="ttdeci">TcpServerBuilder &amp; operator=(TcpServerBuilder &amp;&amp;)=default</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ConnectionContext_html"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ConnectionContext.html">unilink::wrapper::ConnectionContext</a></div><div class="ttdoc">Context for connection/disconnection events.</div><div class="ttdef"><b>Definition:</b> <a href="context_8hpp_source.html#l00051">context.hpp:51</a></div></div>
@@ -196,7 +191,7 @@ $(document).ready(function(){initNavTree('tcp__server__builder_8hpp_source.html'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_e4a9c84f290adef67ceee075c03178ea.html">builder</a></li><li class="navelem"><a class="el" href="tcp__server__builder_8hpp.html">tcp_server_builder.hpp</a></li>
-    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

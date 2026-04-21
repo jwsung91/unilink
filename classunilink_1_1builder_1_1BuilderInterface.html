@@ -114,9 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acf4b2bb47357ab87cf8bafb43002e649"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">build</a> ()=0</td></tr>
 <tr class="memdesc:acf4b2bb47357ab87cf8bafb43002e649"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured product.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649">More...</a><br /></td></tr>
 <tr class="separator:acf4b2bb47357ab87cf8bafb43002e649"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af381e181ebf10649085ebd0d14ac81cd"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">auto_manage</a> (bool auto_manage=true)=0</td></tr>
-<tr class="memdesc:af381e181ebf10649085ebd0d14ac81cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">More...</a><br /></td></tr>
-<tr class="separator:af381e181ebf10649085ebd0d14ac81cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a8b51bf085d4aa862ea37d55316ec1f"><td class="memItemLeft" align="right" valign="top">virtual Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a3a8b51bf085d4aa862ea37d55316ec1f">auto_start</a> (bool auto_start=true)=0</td></tr>
+<tr class="memdesc:a3a8b51bf085d4aa862ea37d55316ec1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a3a8b51bf085d4aa862ea37d55316ec1f">More...</a><br /></td></tr>
+<tr class="separator:a3a8b51bf085d4aa862ea37d55316ec1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0da4f5d443dd777318d88141cffe1c31"><td class="memItemLeft" align="right" valign="top">Derived &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a0da4f5d443dd777318d88141cffe1c31">on_data</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">wrapper::MessageContext</a> &amp;)&gt; handler)</td></tr>
 <tr class="memdesc:a0da4f5d443dd777318d88141cffe1c31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set data handler callback.  <a href="classunilink_1_1builder_1_1BuilderInterface.html#a0da4f5d443dd777318d88141cffe1c31">More...</a><br /></td></tr>
 <tr class="separator:a0da4f5d443dd777318d88141cffe1c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -304,8 +304,8 @@ template&lt;typename T , typename Derived &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af381e181ebf10649085ebd0d14ac81cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af381e181ebf10649085ebd0d14ac81cd">&#9670;&nbsp;</a></span>auto_manage()</h2>
+<a id="a3a8b51bf085d4aa862ea37d55316ec1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a8b51bf085d4aa862ea37d55316ec1f">&#9670;&nbsp;</a></span>auto_start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -316,10 +316,10 @@ template&lt;typename T , typename Derived &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::auto_manage </td>
+          <td class="memname">virtual Derived&amp; <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">unilink::builder::BuilderInterface</a>&lt; T, Derived &gt;::auto_start </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>auto_manage</em> = <code>true</code></td><td>)</td>
+          <td class="paramname"><em>auto_start</em> = <code>true</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -333,13 +333,13 @@ template&lt;typename T , typename Derived &gt; </div>
 <p>Enable auto-manage functionality. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">auto_manage</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
+    <tr><td class="paramname">auto_start</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implemented in <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a47961ea8506385bf8b1df3f40391ea1b">unilink::builder::UdsServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdsClientBuilder.html#ab9d155aec3a159fb8ba451ea4befca93">unilink::builder::UdsClientBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a94d1fe7f5ae2a9d4e53948d371e8ddfd">unilink::builder::UdpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdpClientBuilder.html#af31213d37c0910d35a7d9141503cbf77">unilink::builder::UdpClientBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#acb48d2eaa65409712fc8559e48460e91">unilink::builder::TcpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">unilink::builder::TcpClientBuilder</a>, and <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#ac99053dbeb43bebbf4f56177b4c88f4c">unilink::builder::SerialBuilder</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a22dbf0f8b9037b51621d4956c9a31f70">unilink::builder::UdsServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdsClientBuilder.html#a6111513e795fb2d3124be88a536a26b0">unilink::builder::UdsClientBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#a23af9b8d0b755ef1571c5b0d5090551e">unilink::builder::UdpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdpClientBuilder.html#afaf9b08a3a2e76c3f621c7e9015b4289">unilink::builder::UdpClientBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a27917324a844e023b58246a0a4d033f0">unilink::builder::TcpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#adfa4478c6ba87949eee50c199c1c199d">unilink::builder::TcpClientBuilder</a>, and <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a1a81dd221f3c68ad547cbe4c293f2a6b">unilink::builder::SerialBuilder</a>.</p>
 
 </div>
 </div>
@@ -371,7 +371,7 @@ template&lt;typename T , typename Derived &gt; </div>
 <p>Build and return the configured product. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::unique_ptr&lt;T&gt; The configured wrapper instance </dd></dl>
 
-<p>Implemented in <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#af36fef7a80d6e66d12b0b5b25c268ce0">unilink::builder::UdsServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdsClientBuilder.html#ac6e2823d1ebe3652e527146e26591fc7">unilink::builder::UdsClientBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#aba261d538969c88cdf3ec68081bb0bc4">unilink::builder::UdpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdpClientBuilder.html#a6bbce73ee2dc8f2b68589b8e92497408">unilink::builder::UdpClientBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">unilink::builder::TcpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder</a>, and <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">unilink::builder::SerialBuilder</a>.</p>
+<p>Implemented in <a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#af36fef7a80d6e66d12b0b5b25c268ce0">unilink::builder::UdsServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdsClientBuilder.html#ac6e2823d1ebe3652e527146e26591fc7">unilink::builder::UdsClientBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdpServerBuilder.html#aba261d538969c88cdf3ec68081bb0bc4">unilink::builder::UdpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1UdpClientBuilder.html#ad58f3d4420d4d9c0d7e98d48246e220a">unilink::builder::UdpClientBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpServerBuilder.html#a9c74b1d7730ee134044b4fcc111191ec">unilink::builder::TcpServerBuilder</a>, <a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder</a>, and <a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">unilink::builder::SerialBuilder</a>.</p>
 
 </div>
 </div>
@@ -1240,7 +1240,7 @@ template&lt;typename T , typename Derived &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html">BuilderInterface</a></li>
-    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

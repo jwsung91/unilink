@@ -190,14 +190,14 @@ Basic Usage</h2>
 <div class="line"># Configure</div>
 <div class="line">serial.baud_rate(9600)</div>
 <div class="line">serial.retry_interval(datetime.timedelta(milliseconds=1000))</div>
-<div class="line">serial.auto_manage(True) # Automatically starts</div>
+<div class="line">serial.auto_start(True) # Automatically starts</div>
 <div class="line"> </div>
 <div class="line">def on_data(ctx):</div>
 <div class="line">    print(f&quot;Serial Data: {ctx.data}&quot;)</div>
 <div class="line"> </div>
 <div class="line">serial.on_data(on_data)</div>
 <div class="line"> </div>
-<div class="line"># If not using auto_manage, call start()</div>
+<div class="line"># If not using auto_start, call start()</div>
 <div class="line"># serial.start()</div>
 <div class="line"> </div>
 <div class="line">serial.send(&quot;AT\r\n&quot;)</div>
@@ -214,7 +214,7 @@ Basic Usage</h2>
 <div class="line">config.remote_address = &quot;127.0.0.1&quot;</div>
 <div class="line">config.remote_port = 8080</div>
 <div class="line"> </div>
-<div class="line">udp = unilink.Udp(config)</div>
+<div class="line">udp = unilink.UdpClient(config)</div>
 <div class="line"> </div>
 <div class="line">def on_data(ctx):</div>
 <div class="line">    print(f&quot;UDP Received: {ctx.data}&quot;)</div>
@@ -291,7 +291,7 @@ Lifecycle Management</h2>
 <ul>
 <li>**<code>start()</code>**: Blocks until the initial start attempt completes and returns <code>True</code> or <code>False</code>.</li>
 <li>**<code>stop()</code>**: Synchronously stops all I/O operations and joins internal threads.</li>
-<li>**<code>auto_manage(True)</code>**: When enabled, the channel starts immediately and stops when the Python object is garbage collected.</li>
+<li>**<code>auto_start(True)</code>**: When enabled, the channel starts immediately and stops when the Python object is garbage collected.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md367"></a>
 Configuration</h2>
@@ -305,7 +305,7 @@ Configuration</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -9,7 +9,7 @@ var structunilink_1_1wrapper_1_1UdsServer_1_1Impl =
     [ "start", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a2883eed89960c9412febc1635c3bfa4d", null ],
     [ "stop", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a4f1a04de7b94441ff9d01a4bbb7b8492", null ],
     [ "alive_marker_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a6f34ebe15e5ab19e3b862f7f49586c82", null ],
-    [ "auto_manage_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a6214f78d03b7fd17d4d4878287357929", null ],
+    [ "auto_start_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a7172ee3baeb4cfa67bf75cc30a533104", null ],
     [ "client_connect_handler_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#ad61859eaa9a10cfdab96cf59a3c84a56", null ],
     [ "client_disconnect_handler_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#ae21ba9040a7052fe4f62e113136d7416", null ],
     [ "data_handler_", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a30e750b303c15413d437c34599a178a1", null ],

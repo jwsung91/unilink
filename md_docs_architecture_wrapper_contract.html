@@ -89,7 +89,7 @@ $(document).ready(function(){initNavTree('md_docs_architecture_wrapper_contract.
 <div class="contents">
 <div class="textblock"><blockquote class="doxtable">
 <p>Public wrapper behavior note</p>
-<p>This document describes the intended application-facing behavior of the wrapper layer: <code>TcpClient</code>, <code>TcpServer</code>, <code>Udp</code>, <code>UdpServer</code>, <code>Serial</code>, <code>UdsClient</code>, and <code>UdsServer</code>. For lower-level transport guarantees, see <code><a class="el" href="channel__contract_8md.html">docs/architecture/channel_contract.md</a></code>. </p>
+<p>This document describes the intended application-facing behavior of the wrapper layer: <code>TcpClient</code>, <code>TcpServer</code>, <code>UdpClient</code>, <code>UdpServer</code>, <code>Serial</code>, <code>UdsClient</code>, and <code>UdsServer</code>. For lower-level transport guarantees, see <code><a class="el" href="channel__contract_8md.html">docs/architecture/channel_contract.md</a></code>. </p>
 </blockquote>
 <h1><a class="anchor" id="autotoc_md250"></a>
 Scope</h1>
@@ -118,11 +118,11 @@ Core Rules</h1>
 <li>Shutdown may clear pending startup futures with <code>false</code> when startup did not complete.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md254"></a>
-3. &lt;tt&gt;auto_manage(true)&lt;/tt&gt; follows the same startup contract</h2>
+3. &lt;tt&gt;auto_start(true)&lt;/tt&gt; follows the same startup contract</h2>
 <ul>
-<li>Enabling <code>auto_manage(true)</code> triggers the same wrapper startup path used by explicit <code>start()</code>.</li>
+<li>Enabling <code>auto_start(true)</code> triggers the same wrapper startup path used by explicit <code>start()</code>.</li>
 <li>Auto-managed startup is not a separate fast path with weaker guarantees.</li>
-<li>Callback registration should still happen before enabling <code>auto_manage(true)</code> or before calling <code>start()</code>.</li>
+<li>Callback registration should still happen before enabling <code>auto_start(true)</code> or before calling <code>start()</code>.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md255"></a>
 External &lt;tt&gt;io_context&lt;/tt&gt; Contract</h1>
@@ -208,7 +208,7 @@ Testing Status</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

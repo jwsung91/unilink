@@ -193,7 +193,7 @@ Resource Management</h1>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Automatic cleanup</span></div>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">auto_manage</a>(<span class="keyword">true</span>)  <span class="comment">// Auto cleanup</span></div>
+<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#adfa4478c6ba87949eee50c199c1c199d">auto_start</a>(<span class="keyword">true</span>)  <span class="comment">// Auto cleanup</span></div>
 <div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Use client...</span></div>
@@ -205,7 +205,7 @@ Resource Management</h1>
 <div class="line"><span class="comment">// ... use client ...</span></div>
 <div class="line">client-&gt;stop();  <span class="comment">// Must remember to call</span></div>
 <div class="line"><span class="keyword">delete</span> client;   <span class="comment">// Must remember to delete</span></div>
-<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a2b5c3a4512e9c13dba24b8adb4aaf0de"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">unilink::builder::TcpClientBuilder::auto_manage</a></div><div class="ttdeci">TcpClientBuilder &amp; auto_manage(bool auto_manage=true) override</div><div class="ttdoc">Enable auto-manage functionality.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00074">tcp_client_builder.cc:74</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_adfa4478c6ba87949eee50c199c1c199d"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#adfa4478c6ba87949eee50c199c1c199d">unilink::builder::TcpClientBuilder::auto_start</a></div><div class="ttdeci">TcpClientBuilder &amp; auto_start(bool auto_start=true) override</div><div class="ttdoc">Enable auto-manage functionality.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00074">tcp_client_builder.cc:74</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a790be55fcb59a0aea5dfb178072fd6c7"><div class="ttname"><a href="namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7">unilink::TcpClient</a></div><div class="ttdeci">wrapper::TcpClient TcpClient</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00064">unilink.hpp:64</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md311"></a>
 ✅ DO: Stop Connections Before Shutdown</h2>
@@ -236,7 +236,7 @@ Resource Management</h1>
 <div class="line">    }</div>
 <div class="line">};</div>
 </div><!-- fragment --><blockquote class="doxtable">
-<p>Tip: Register all callbacks before calling <code>.auto_manage(true)</code> or manually invoking <code>start()</code>, because <code>auto_manage(true)</code> now starts the connection immediately. </p>
+<p>Tip: Register all callbacks before calling <code>.auto_start(true)</code> or manually invoking <code>start()</code>, because <code>auto_start(true)</code> now starts the connection immediately. </p>
 </blockquote>
 <blockquote class="doxtable">
 <p>Advanced: If you supply your own <code>boost::asio::io_context</code> to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with <code>manage_external_context(true)</code>). Make sure the context is running on a thread you control. </p>
@@ -666,7 +666,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

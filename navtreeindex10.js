@@ -1,7 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#a608b6682be93f01bdb4a22c99d0f4368":[24,0,0,4,1,9],
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#a6a559451ca42b7c1c1830c29eacb98a8":[24,0,0,4,1,12],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a6f03b4bac2ca5c1e8048466f67524347":[24,0,0,4,1,11],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a8a79a75dd8b77f302178afd3ff7ed665":[24,0,0,4,1,2],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a9faaa444de9d98cd0e75d6879daaaff3":[24,0,0,4,1,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX10 =
 "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a0795f885dca1333945e6d17f5c75e5ed":[24,0,0,9,8,0,42],
 "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a18c6b0af67bb82bbeea338c372f6c3f9":[24,0,0,9,8,0,2],
 "structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a196c4a109e5702d5ddbfe24d4b9876d9":[24,0,0,9,8,0,47],
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a204bb6bb1992ce403cb85918a44cb5cd":[24,0,0,9,8,0,32]
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a204bb6bb1992ce403cb85918a44cb5cd":[24,0,0,9,8,0,32],
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a28f3e3dc957341391c504b173e9188ed":[24,0,0,9,8,0,16],
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a2cf2f99f97802005ec33021757b85a87":[24,0,0,9,8,0,31]
 };

@@ -120,9 +120,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aea59bfd17313e2607a96ea9f01c2dcda"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1Serial.html">wrapper::Serial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">build</a> () override</td></tr>
 <tr class="memdesc:aea59bfd17313e2607a96ea9f01c2dcda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured product.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda">More...</a><br /></td></tr>
 <tr class="separator:aea59bfd17313e2607a96ea9f01c2dcda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac99053dbeb43bebbf4f56177b4c88f4c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#ac99053dbeb43bebbf4f56177b4c88f4c">auto_manage</a> (bool auto_manage=true) override</td></tr>
-<tr class="memdesc:ac99053dbeb43bebbf4f56177b4c88f4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#ac99053dbeb43bebbf4f56177b4c88f4c">More...</a><br /></td></tr>
-<tr class="separator:ac99053dbeb43bebbf4f56177b4c88f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a81dd221f3c68ad547cbe4c293f2a6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a1a81dd221f3c68ad547cbe4c293f2a6b">auto_start</a> (bool auto_start=true) override</td></tr>
+<tr class="memdesc:a1a81dd221f3c68ad547cbe4c293f2a6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a1a81dd221f3c68ad547cbe4c293f2a6b">More...</a><br /></td></tr>
+<tr class="separator:a1a81dd221f3c68ad547cbe4c293f2a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a806f98817d3b066f93f9ea5b8d159c15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html#a806f98817d3b066f93f9ea5b8d159c15">data_bits</a> (int bits)</td></tr>
 <tr class="memdesc:a806f98817d3b066f93f9ea5b8d159c15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set number of data bits.  <a href="classunilink_1_1builder_1_1SerialBuilder.html#a806f98817d3b066f93f9ea5b8d159c15">More...</a><br /></td></tr>
 <tr class="separator:a806f98817d3b066f93f9ea5b8d159c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -298,8 +298,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac99053dbeb43bebbf4f56177b4c88f4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac99053dbeb43bebbf4f56177b4c88f4c">&#9670;&nbsp;</a></span>auto_manage()</h2>
+<a id="a1a81dd221f3c68ad547cbe4c293f2a6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a81dd221f3c68ad547cbe4c293f2a6b">&#9670;&nbsp;</a></span>auto_start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -308,10 +308,10 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::auto_manage </td>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a> &amp; unilink::builder::SerialBuilder::auto_start </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>auto_manage</em> = <code>true</code></td><td>)</td>
+          <td class="paramname"><em>auto_start</em> = <code>true</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -325,13 +325,13 @@ Additional Inherited Members</h2></td></tr>
 <p>Enable auto-manage functionality. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">auto_manage</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
+    <tr><td class="paramname">auto_start</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a3a8b51bf085d4aa862ea37d55316ec1f">unilink::builder::BuilderInterface&lt; wrapper::Serial, SerialBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="serial__builder_8cc_source.html#l00074">74</a> of file <a class="el" href="serial__builder_8cc_source.html">serial_builder.cc</a>.</p>
 
@@ -563,7 +563,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1SerialBuilder.html">SerialBuilder</a></li>
-    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

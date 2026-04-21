@@ -1,7 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15":[23,0,1,4,18,0],
-"namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34f":[23,0,1,4,19],
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa4695859f52d337ca3d7020b2c8f7882a":[23,0,1,4,19,0],
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719":[23,0,1,4,19,1],
 "namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34faeccf265bbbbc377fc3269da59745e209":[23,0,1,4,19,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX9 =
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a39c79e4468881a7e1ea504434119bc50":[24,0,0,4,1,13],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a3efcff2a0c308001d6075cf9695decc6":[24,0,0,4,1,6],
 "structunilink_1_1diagnostics_1_1ErrorInfo.html#a48bdf1d2850c935cd787d2ae86bf2833":[24,0,0,4,1,1],
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#a4d85e558731498aec9200046191a3c99":[24,0,0,4,1,4]
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a4d85e558731498aec9200046191a3c99":[24,0,0,4,1,4],
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a608b6682be93f01bdb4a22c99d0f4368":[24,0,0,4,1,9],
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a6a559451ca42b7c1c1830c29eacb98a8":[24,0,0,4,1,12]
 };

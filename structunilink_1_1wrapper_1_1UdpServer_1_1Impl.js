@@ -11,7 +11,7 @@ var structunilink_1_1wrapper_1_1UdpServer_1_1Impl =
     [ "setup_internal_handlers", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#acc6c86c0987b2e7097c779d03fc009f8", null ],
     [ "start", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#ade395c124360004d54b427955544e2d5", null ],
     [ "stop", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a9c04eb9b7152bb067e1bb5996a9ddd9d", null ],
-    [ "auto_manage", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a9ae7f2b10f5d11c52857c52816e47c5b", null ],
+    [ "auto_start", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a1dde19dd177c5a921864c120b13c684b", null ],
     [ "cfg", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#ab8ba417e5426e5ed1e61cd649bc43343", null ],
     [ "channel", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0036f0adbe3084ead3dcd497511f0d2f", null ],
     [ "endpoint_to_id", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a2813200498bad2a74fe3e17ad73f548d", null ],

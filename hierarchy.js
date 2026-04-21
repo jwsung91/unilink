@@ -15,7 +15,7 @@ var hierarchy =
     [ "unilink::builder::BuilderInterface< wrapper::TcpServer, TcpServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::TcpServerBuilder", "classunilink_1_1builder_1_1TcpServerBuilder.html", null ]
     ] ],
-    [ "unilink::builder::BuilderInterface< wrapper::Udp, UdpClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
+    [ "unilink::builder::BuilderInterface< wrapper::UdpClient, UdpClientBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
       [ "unilink::builder::UdpClientBuilder", "classunilink_1_1builder_1_1UdpClientBuilder.html", null ]
     ] ],
     [ "unilink::builder::BuilderInterface< wrapper::UdpServer, UdpServerBuilder >", "classunilink_1_1builder_1_1BuilderInterface.html", [
@@ -39,7 +39,7 @@ var hierarchy =
     [ "unilink::wrapper::ChannelInterface", "classunilink_1_1wrapper_1_1ChannelInterface.html", [
       [ "unilink::wrapper::Serial", "classunilink_1_1wrapper_1_1Serial.html", null ],
       [ "unilink::wrapper::TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", null ],
-      [ "unilink::wrapper::Udp", "classunilink_1_1wrapper_1_1Udp.html", null ],
+      [ "unilink::wrapper::UdpClient", "classunilink_1_1wrapper_1_1UdpClient.html", null ],
       [ "unilink::wrapper::UdsClient", "classunilink_1_1wrapper_1_1UdsClient.html", null ]
     ] ],
     [ "unilink::config::ConfigFactory", "classunilink_1_1config_1_1ConfigFactory.html", null ],
@@ -82,7 +82,7 @@ var hierarchy =
     [ "unilink::wrapper::Serial::Impl", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html", null ],
     [ "unilink::wrapper::TcpClient::Impl", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html", null ],
     [ "unilink::wrapper::TcpServer::Impl", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html", null ],
-    [ "unilink::wrapper::Udp::Impl", "structunilink_1_1wrapper_1_1Udp_1_1Impl.html", null ],
+    [ "unilink::wrapper::UdpClient::Impl", "structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html", null ],
     [ "unilink::wrapper::UdpServer::Impl", "structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html", null ],
     [ "unilink::wrapper::UdsClient::Impl", "structunilink_1_1wrapper_1_1UdsClient_1_1Impl.html", null ],
     [ "unilink::wrapper::UdsServer::Impl", "structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html", null ],

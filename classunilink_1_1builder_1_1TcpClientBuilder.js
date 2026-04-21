@@ -3,7 +3,7 @@ var classunilink_1_1builder_1_1TcpClientBuilder =
     [ "TcpClientBuilder", "classunilink_1_1builder_1_1TcpClientBuilder.html#a542ac2286704230421072569a5b3eb1d", null ],
     [ "TcpClientBuilder", "classunilink_1_1builder_1_1TcpClientBuilder.html#a1d03df7ec29ff47733a5c67fafb13747", null ],
     [ "TcpClientBuilder", "classunilink_1_1builder_1_1TcpClientBuilder.html#aa15d51897b3006946bb20b263845ec2b", null ],
-    [ "auto_manage", "classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de", null ],
+    [ "auto_start", "classunilink_1_1builder_1_1TcpClientBuilder.html#adfa4478c6ba87949eee50c199c1c199d", null ],
     [ "build", "classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93", null ],
     [ "connection_timeout", "classunilink_1_1builder_1_1TcpClientBuilder.html#a5cd32255987c5a4460ca96cd0db36dc1", null ],
     [ "independent_context", "classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be", null ],

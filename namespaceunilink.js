@@ -20,7 +20,7 @@ var namespaceunilink =
     [ "Serial", "namespaceunilink.html#a2b404056fdf0a846b06ce934ae923bfc", null ],
     [ "TcpClient", "namespaceunilink.html#a790be55fcb59a0aea5dfb178072fd6c7", null ],
     [ "TcpServer", "namespaceunilink.html#a1e364de9a0a37d3437cb9e10eb1bfba7", null ],
-    [ "Udp", "namespaceunilink.html#a4a71fa819f4284d7581cdb9c47fffb9e", null ],
+    [ "UdpClient", "namespaceunilink.html#ab426a050eecabe332b9a6469e984ea62", null ],
     [ "UdpServer", "namespaceunilink.html#aae94ee39714235b4c0199dd8394bfad9", null ],
     [ "UdsClient", "namespaceunilink.html#a9b8ed9339c39013379280fecccd3a72c", null ],
     [ "UdsServer", "namespaceunilink.html#a1f48e446d6c7cce2a9f1ad4904a1d53f", null ],

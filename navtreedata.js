@@ -250,7 +250,7 @@ var NAVTREE =
       [ "Core Rules", "md_docs_architecture_wrapper_contract.html#autotoc_md251", [
         [ "1. <tt>start()</tt> reflects real transport state", "md_docs_architecture_wrapper_contract.html#autotoc_md252", null ],
         [ "2. Repeated <tt>start()</tt> and <tt>stop()</tt> are safe", "md_docs_architecture_wrapper_contract.html#autotoc_md253", null ],
-        [ "3. <tt>auto_manage(true)</tt> follows the same startup contract", "md_docs_architecture_wrapper_contract.html#autotoc_md254", null ]
+        [ "3. <tt>auto_start(true)</tt> follows the same startup contract", "md_docs_architecture_wrapper_contract.html#autotoc_md254", null ]
       ] ],
       [ "External <tt>io_context</tt> Contract", "md_docs_architecture_wrapper_contract.html#autotoc_md255", [
         [ "4. Externally supplied <tt>io_context</tt> can be reused", "md_docs_architecture_wrapper_contract.html#autotoc_md256", null ],
@@ -895,18 +895,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classunilink_1_1config_1_1ConfigManager.html#ac6d058a2ff29fc28214b6b575fb8d6fe",
-"classunilink_1_1memory_1_1MemoryTracker.html#ab489a4fb54421b0f174511c696455386",
-"classunilink_1_1transport_1_1UdpChannel.html#a94ac66e63bd6d2e834abf35effb3b0c7",
-"classunilink_1_1wrapper_1_1Udp.html#a9d5d0cc4c52326e43dea424eaf39507c",
-"error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7a3f27148a0073e6705ee8277dc392ab7d",
-"md_docs_architecture_memory_safety.html#autotoc_md25",
-"md_docs_guides_core_testing.html#autotoc_md471",
-"md_docs_reference_api_guide.html#autotoc_md789",
-"namespaceunilink_1_1diagnostics.html#ab6a79961fe30d5f3931ccf667666f4c0adc30ec20708ef7b0f641ef78b7880a15",
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#a608b6682be93f01bdb4a22c99d0f4368",
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a28f3e3dc957341391c504b173e9188ed",
-"structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a9ae7f2b10f5d11c52857c52816e47c5b"
+"classunilink_1_1config_1_1ConfigManager.html#af05cf4bd9d1ff28442f8e88ca4bc3496",
+"classunilink_1_1memory_1_1MemoryTracker.html#ae9fb507731d366f394a764fceb67599d",
+"classunilink_1_1transport_1_1UdpChannel.html#ac24c8b199d8a44510a788e8398e65d00",
+"classunilink_1_1wrapper_1_1UdpClient.html#ac4c0ff48cb0f623322204fff6a31ee3e",
+"error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7a7014705458ee3cf0192f6aa52cfddea5",
+"md_docs_architecture_memory_safety.html#autotoc_md29",
+"md_docs_guides_core_troubleshooting.html#autotoc_md474",
+"md_docs_reference_api_guide.html#autotoc_md791",
+"namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa4695859f52d337ca3d7020b2c8f7882a",
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a6f03b4bac2ca5c1e8048466f67524347",
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a2fdbf202799862cbc7847402022fbea0",
+"structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ac5f6bb19bb87cb0afebc25ff44ba1b65"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

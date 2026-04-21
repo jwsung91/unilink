@@ -112,12 +112,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af36fef7a80d6e66d12b0b5b25c268ce0"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">wrapper::UdsServer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#af36fef7a80d6e66d12b0b5b25c268ce0">build</a> () override</td></tr>
 <tr class="memdesc:af36fef7a80d6e66d12b0b5b25c268ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured product.  <a href="classunilink_1_1builder_1_1UdsServerBuilder.html#af36fef7a80d6e66d12b0b5b25c268ce0">More...</a><br /></td></tr>
 <tr class="separator:af36fef7a80d6e66d12b0b5b25c268ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47961ea8506385bf8b1df3f40391ea1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a47961ea8506385bf8b1df3f40391ea1b">auto_manage</a> (bool auto_manage=true) override</td></tr>
-<tr class="memdesc:a47961ea8506385bf8b1df3f40391ea1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1UdsServerBuilder.html#a47961ea8506385bf8b1df3f40391ea1b">More...</a><br /></td></tr>
-<tr class="separator:a47961ea8506385bf8b1df3f40391ea1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a48bb7347c83ff02928fac1d3859069"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a9a48bb7347c83ff02928fac1d3859069">on_client_connect</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt; handler)</td></tr>
-<tr class="memdesc:a9a48bb7347c83ff02928fac1d3859069"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper for client connection events.  <a href="classunilink_1_1builder_1_1UdsServerBuilder.html#a9a48bb7347c83ff02928fac1d3859069">More...</a><br /></td></tr>
-<tr class="separator:a9a48bb7347c83ff02928fac1d3859069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22dbf0f8b9037b51621d4956c9a31f70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#a22dbf0f8b9037b51621d4956c9a31f70">auto_start</a> (bool auto_start=true) override</td></tr>
+<tr class="memdesc:a22dbf0f8b9037b51621d4956c9a31f70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1UdsServerBuilder.html#a22dbf0f8b9037b51621d4956c9a31f70">More...</a><br /></td></tr>
+<tr class="separator:a22dbf0f8b9037b51621d4956c9a31f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeff54a149f77423cf6c87ad65fa36a31"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html#aeff54a149f77423cf6c87ad65fa36a31">on_client_disconnect</a> (std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt; handler)</td></tr>
 <tr class="memdesc:aeff54a149f77423cf6c87ad65fa36a31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper for client disconnection events.  <a href="classunilink_1_1builder_1_1UdsServerBuilder.html#aeff54a149f77423cf6c87ad65fa36a31">More...</a><br /></td></tr>
 <tr class="separator:aeff54a149f77423cf6c87ad65fa36a31"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,8 +229,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a47961ea8506385bf8b1df3f40391ea1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47961ea8506385bf8b1df3f40391ea1b">&#9670;&nbsp;</a></span>auto_manage()</h2>
+<a id="a22dbf0f8b9037b51621d4956c9a31f70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22dbf0f8b9037b51621d4956c9a31f70">&#9670;&nbsp;</a></span>auto_start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -242,10 +239,10 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp; unilink::builder::UdsServerBuilder::auto_manage </td>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a> &amp; unilink::builder::UdsServerBuilder::auto_start </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>auto_manage</em> = <code>true</code></td><td>)</td>
+          <td class="paramname"><em>auto_start</em> = <code>true</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -259,13 +256,13 @@ Additional Inherited Members</h2></td></tr>
 <p>Enable auto-manage functionality. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">auto_manage</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
+    <tr><td class="paramname">auto_start</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">unilink::builder::BuilderInterface&lt; wrapper::UdsServer, UdsServerBuilder &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a3a8b51bf085d4aa862ea37d55316ec1f">unilink::builder::BuilderInterface&lt; wrapper::UdsServer, UdsServerBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="uds__builder_8cc_source.html#l00135">135</a> of file <a class="el" href="uds__builder_8cc_source.html">uds_builder.cc</a>.</p>
 
@@ -363,36 +360,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a9a48bb7347c83ff02928fac1d3859069"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a48bb7347c83ff02928fac1d3859069">&#9670;&nbsp;</a></span>on_client_connect()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a>&amp; unilink::builder::UdsServerBuilder::on_client_connect </td>
-          <td>(</td>
-          <td class="paramtype">std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">wrapper::ConnectionContext</a> &amp;)&gt;&#160;</td>
-          <td class="paramname"><em>handler</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Helper for client connection events. </p>
-
-<p class="definition">Definition at line <a class="el" href="uds__builder_8hpp_source.html#l00079">79</a> of file <a class="el" href="uds__builder_8hpp_source.html">uds_builder.hpp</a>.</p>
-
-</div>
-</div>
 <a id="aeff54a149f77423cf6c87ad65fa36a31"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeff54a149f77423cf6c87ad65fa36a31">&#9670;&nbsp;</a></span>on_client_disconnect()</h2>
 
@@ -419,7 +386,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Helper for client disconnection events. </p>
 
-<p class="definition">Definition at line <a class="el" href="uds__builder_8hpp_source.html#l00086">86</a> of file <a class="el" href="uds__builder_8hpp_source.html">uds_builder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uds__builder_8hpp_source.html#l00079">79</a> of file <a class="el" href="uds__builder_8hpp_source.html">uds_builder.hpp</a>.</p>
 
 </div>
 </div>
@@ -452,7 +419,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1UdsServerBuilder.html">UdsServerBuilder</a></li>
-    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

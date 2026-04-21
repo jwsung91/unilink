@@ -13,7 +13,7 @@ var structunilink_1_1wrapper_1_1Serial_1_1Impl =
     [ "start", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ade318d3f130981eecc92b908dbb471cf", null ],
     [ "stop", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a377b810bbbbed2cbcaa209efe795c325", null ],
     [ "alive_marker_", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a485de85ec017120e77ff01343aabba1e", null ],
-    [ "auto_manage", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a36495c240067ed38f30d60e06cd53870", null ],
+    [ "auto_start", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#acf34fdfb1d613fb73342ce4834b387b3", null ],
     [ "baud_rate", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a318297421d3c0ffe31d28f0bb8241bdb", null ],
     [ "channel", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a017910d38ece7beb209a8ad8aebcb2df", null ],
     [ "connect_handler", "structunilink_1_1wrapper_1_1Serial_1_1Impl.html#ac0d7c161fba59697abfc902e66b47628", null ],

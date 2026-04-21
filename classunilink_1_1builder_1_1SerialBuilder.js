@@ -3,7 +3,7 @@ var classunilink_1_1builder_1_1SerialBuilder =
     [ "SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html#ad2fa923cd592bd38ad08c1a05cac7b32", null ],
     [ "SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html#a0b078ec345ce72d5c8297539a24909bf", null ],
     [ "SerialBuilder", "classunilink_1_1builder_1_1SerialBuilder.html#a6a5dd6eae378bfe35987ad524ce56142", null ],
-    [ "auto_manage", "classunilink_1_1builder_1_1SerialBuilder.html#ac99053dbeb43bebbf4f56177b4c88f4c", null ],
+    [ "auto_start", "classunilink_1_1builder_1_1SerialBuilder.html#a1a81dd221f3c68ad547cbe4c293f2a6b", null ],
     [ "build", "classunilink_1_1builder_1_1SerialBuilder.html#aea59bfd17313e2607a96ea9f01c2dcda", null ],
     [ "data_bits", "classunilink_1_1builder_1_1SerialBuilder.html#a806f98817d3b066f93f9ea5b8d159c15", null ],
     [ "flow_control", "classunilink_1_1builder_1_1SerialBuilder.html#a963f3798eed15b91ec0342d7792e1d97", null ],

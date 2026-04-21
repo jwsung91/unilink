@@ -4,7 +4,7 @@ var classunilink_1_1builder_1_1BuilderInterface =
     [ "BuilderInterface", "classunilink_1_1builder_1_1BuilderInterface.html#a76f9844b7f7f403bf6b249320d179f83", null ],
     [ "BuilderInterface", "classunilink_1_1builder_1_1BuilderInterface.html#ae294b6646d6b6d8b5ad2d7a9b6d4d215", null ],
     [ "BuilderInterface", "classunilink_1_1builder_1_1BuilderInterface.html#a095effb21b4bf72caf61843da49f0dec", null ],
-    [ "auto_manage", "classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd", null ],
+    [ "auto_start", "classunilink_1_1builder_1_1BuilderInterface.html#a3a8b51bf085d4aa862ea37d55316ec1f", null ],
     [ "build", "classunilink_1_1builder_1_1BuilderInterface.html#acf4b2bb47357ab87cf8bafb43002e649", null ],
     [ "framer", "classunilink_1_1builder_1_1BuilderInterface.html#a9c1e052c7c96ae0700c5880e354b4756", null ],
     [ "on_connect", "classunilink_1_1builder_1_1BuilderInterface.html#ac1b292b700428522a1a7cd7bc3e9e4f5", null ],

@@ -7,7 +7,7 @@ var classunilink_1_1wrapper_1_1UdsClient =
     [ "~UdsClient", "classunilink_1_1wrapper_1_1UdsClient.html#a072991551860dff51dc2606dbe9e366b", null ],
     [ "UdsClient", "classunilink_1_1wrapper_1_1UdsClient.html#abaa7b607ba822465e3ec3f51a08b34bc", null ],
     [ "UdsClient", "classunilink_1_1wrapper_1_1UdsClient.html#a723c1c5c08c0fcdf5defbce71f803e7b", null ],
-    [ "auto_manage", "classunilink_1_1wrapper_1_1UdsClient.html#ad8e0292fab15b0dae3fdd52339b1d9e6", null ],
+    [ "auto_start", "classunilink_1_1wrapper_1_1UdsClient.html#a257c3887737fb03ac8970d9f7563d49c", null ],
     [ "connected", "classunilink_1_1wrapper_1_1UdsClient.html#a1cb3ae116f80c33f4730e849993ed278", null ],
     [ "connection_timeout", "classunilink_1_1wrapper_1_1UdsClient.html#a5cf6a3326fdfa0d71c8a7ff190cb2478", null ],
     [ "framer", "classunilink_1_1wrapper_1_1UdsClient.html#a34f35ff1dabe2aba310c3e489b27193d", null ],

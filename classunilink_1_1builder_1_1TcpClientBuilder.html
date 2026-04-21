@@ -120,9 +120,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5a4af5b627ffc15c727cba9fa2fa1d93"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html">wrapper::TcpClient</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a> () override</td></tr>
 <tr class="memdesc:a5a4af5b627ffc15c727cba9fa2fa1d93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build and return the configured product.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">More...</a><br /></td></tr>
 <tr class="separator:a5a4af5b627ffc15c727cba9fa2fa1d93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b5c3a4512e9c13dba24b8adb4aaf0de"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">auto_manage</a> (bool auto_manage=true) override</td></tr>
-<tr class="memdesc:a2b5c3a4512e9c13dba24b8adb4aaf0de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a2b5c3a4512e9c13dba24b8adb4aaf0de">More...</a><br /></td></tr>
-<tr class="separator:a2b5c3a4512e9c13dba24b8adb4aaf0de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfa4478c6ba87949eee50c199c1c199d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#adfa4478c6ba87949eee50c199c1c199d">auto_start</a> (bool auto_start=true) override</td></tr>
+<tr class="memdesc:adfa4478c6ba87949eee50c199c1c199d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable auto-manage functionality.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#adfa4478c6ba87949eee50c199c1c199d">More...</a><br /></td></tr>
+<tr class="separator:adfa4478c6ba87949eee50c199c1c199d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a811ea3113711224ed4df89b4a6ff5b4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a811ea3113711224ed4df89b4a6ff5b4f">retry_interval</a> (std::chrono::milliseconds interval)</td></tr>
 <tr class="memdesc:a811ea3113711224ed4df89b4a6ff5b4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set connection retry interval.  <a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a811ea3113711224ed4df89b4a6ff5b4f">More...</a><br /></td></tr>
 <tr class="separator:a811ea3113711224ed4df89b4a6ff5b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -292,8 +292,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2b5c3a4512e9c13dba24b8adb4aaf0de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b5c3a4512e9c13dba24b8adb4aaf0de">&#9670;&nbsp;</a></span>auto_manage()</h2>
+<a id="adfa4478c6ba87949eee50c199c1c199d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfa4478c6ba87949eee50c199c1c199d">&#9670;&nbsp;</a></span>auto_start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,10 +302,10 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp; unilink::builder::TcpClientBuilder::auto_manage </td>
+          <td class="memname"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a> &amp; unilink::builder::TcpClientBuilder::auto_start </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>auto_manage</em> = <code>true</code></td><td>)</td>
+          <td class="paramname"><em>auto_start</em> = <code>true</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -319,13 +319,13 @@ Additional Inherited Members</h2></td></tr>
 <p>Enable auto-manage functionality. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">auto_manage</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
+    <tr><td class="paramname">auto_start</td><td>Whether to automatically manage the wrapper lifecycle </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Derived&amp; Reference to this builder for method chaining </dd></dl>
 
-<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#af381e181ebf10649085ebd0d14ac81cd">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
+<p>Implements <a class="el" href="classunilink_1_1builder_1_1BuilderInterface.html#a3a8b51bf085d4aa862ea37d55316ec1f">unilink::builder::BuilderInterface&lt; wrapper::TcpClient, TcpClientBuilder &gt;</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="tcp__client__builder_8cc_source.html#l00074">74</a> of file <a class="el" href="tcp__client__builder_8cc_source.html">tcp_client_builder.cc</a>.</p>
 
@@ -513,7 +513,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1builder.html">builder</a></li><li class="navelem"><a class="el" href="classunilink_1_1builder_1_1TcpClientBuilder.html">TcpClientBuilder</a></li>
-    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 13:36:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

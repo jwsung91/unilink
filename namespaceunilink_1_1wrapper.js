@@ -8,7 +8,7 @@ var namespaceunilink_1_1wrapper =
     [ "Serial", "classunilink_1_1wrapper_1_1Serial.html", "classunilink_1_1wrapper_1_1Serial" ],
     [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", "classunilink_1_1wrapper_1_1TcpClient" ],
     [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", "classunilink_1_1wrapper_1_1TcpServer" ],
-    [ "Udp", "classunilink_1_1wrapper_1_1Udp.html", "classunilink_1_1wrapper_1_1Udp" ],
+    [ "UdpClient", "classunilink_1_1wrapper_1_1UdpClient.html", "classunilink_1_1wrapper_1_1UdpClient" ],
     [ "UdpServer", "classunilink_1_1wrapper_1_1UdpServer.html", "classunilink_1_1wrapper_1_1UdpServer" ],
     [ "UdsClient", "classunilink_1_1wrapper_1_1UdsClient.html", "classunilink_1_1wrapper_1_1UdsClient" ],
     [ "UdsServer", "classunilink_1_1wrapper_1_1UdsServer.html", "classunilink_1_1wrapper_1_1UdsServer" ]

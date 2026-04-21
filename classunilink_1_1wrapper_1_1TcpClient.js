@@ -7,7 +7,7 @@ var classunilink_1_1wrapper_1_1TcpClient =
     [ "~TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html#a13df30e6120e04031d291161174ec20a", null ],
     [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html#a32eda832b5e20562cff98f8156fbfe67", null ],
     [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html#a6ce4d8063d7e09aaf585286393e9985c", null ],
-    [ "auto_manage", "classunilink_1_1wrapper_1_1TcpClient.html#a294bf48fb4459bdd0cb8e88dd6d653a9", null ],
+    [ "auto_start", "classunilink_1_1wrapper_1_1TcpClient.html#a8a72721374f3fcf4013c297b3a824142", null ],
     [ "connected", "classunilink_1_1wrapper_1_1TcpClient.html#a29d78f724c70878a7ae76d9648ab9edb", null ],
     [ "connection_timeout", "classunilink_1_1wrapper_1_1TcpClient.html#ac23eac3fdd00fc36f87956c45b9be6cf", null ],
     [ "framer", "classunilink_1_1wrapper_1_1TcpClient.html#afd4b8fd33c56b74e8e4233a14f076212", null ],
