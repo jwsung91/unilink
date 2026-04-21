@@ -694,7 +694,7 @@ var NAVTREE =
       [ "Builder API", "md_docs_reference_api_guide.html#autotoc_md725", [
         [ "Core Concept", "md_docs_reference_api_guide.html#autotoc_md726", null ],
         [ "Common Methods (All Builders)", "md_docs_reference_api_guide.html#autotoc_md727", null ],
-        [ "Framed Message Handling with <tt>ConstByteSpan</tt>", "md_docs_reference_api_guide.html#autotoc_md728", null ],
+        [ "Framed Message Handling", "md_docs_reference_api_guide.html#autotoc_md728", null ],
         [ "IO Context Ownership (advanced)", "md_docs_reference_api_guide.html#autotoc_md729", null ]
       ] ],
       [ "TCP Client", "md_docs_reference_api_guide.html#autotoc_md731", [

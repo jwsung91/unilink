@@ -170,9 +170,10 @@ Runtime Optimization</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ❌ BAD: Independent contexts (wasteful)</span></div>
 <div class="line"><span class="keyword">auto</span> client1 = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;server1.com&quot;</span>, 8080)</div>
-<div class="line">    .use_independent_context(<span class="keyword">true</span>)  <span class="comment">// Creates dedicated thread</span></div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Creates dedicated thread</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_a5a4af5b627ffc15c727cba9fa2fa1d93"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">unilink::builder::TcpClientBuilder::build</a></div><div class="ttdeci">std::unique_ptr&lt; wrapper::TcpClient &gt; build() override</div><div class="ttdoc">Build and return the configured product.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00042">tcp_client_builder.cc:42</a></div></div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aca771ac62af9bf986f5ab31c04c8e2be"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">unilink::builder::TcpClientBuilder::independent_context</a></div><div class="ttdeci">TcpClientBuilder &amp; independent_context(bool use_independent=true)</div><div class="ttdoc">Use independent IoContext for this client.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00094">tcp_client_builder.cc:94</a></div></div>
 <div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition:</b> <a href="unilink_8hpp_source.html#l00092">unilink.hpp:92</a></div></div>
 </div><!-- fragment --><p><b>Impact</b>: Reduces memory usage by ~90% per connection and CPU context switching by ~80%.</p>
 <h2><a class="anchor" id="autotoc_md277"></a>
@@ -281,7 +282,7 @@ Simple Throughput Benchmark Code</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> benchmark_throughput() {</div>
 <div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080).<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line">    client-&gt;start();</div>
-<div class="line">    <span class="keywordflow">while</span> (!client-&gt;is_connected()) std::this_thread::sleep_for(std::chrono::milliseconds(10));</div>
+<div class="line">    <span class="keywordflow">while</span> (!client-&gt;connected()) std::this_thread::sleep_for(std::chrono::milliseconds(10));</div>
 <div class="line">    </div>
 <div class="line">    std::string data(1024, <span class="charliteral">&#39;X&#39;</span>); <span class="comment">// 1KB</span></div>
 <div class="line">    <span class="keyword">auto</span> start = std::chrono::high_resolution_clock::now();</div>
@@ -310,7 +311,7 @@ Case Study 3: IoT Gateway (1000+ Connections)</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -105,7 +105,9 @@ Build &amp; Install</h2>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md373"></a>
 Your First TCP Client (30 seconds)</h1>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
@@ -119,11 +121,11 @@ Your First TCP Client (30 seconds)</h1>
 <div class="line">        })</div>
 <div class="line">        .build();</div>
 <div class="line"> </div>
-<div class="line">    client-&gt;start();</div>
+<div class="line">    <span class="keywordtype">bool</span> started = client-&gt;start().get();</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Send a message</span></div>
 <div class="line">    std::this_thread::sleep_for(std::chrono::seconds(1));</div>
-<div class="line">    <span class="keywordflow">if</span> (client-&gt;is_connected()) {</div>
+<div class="line">    <span class="keywordflow">if</span> (started &amp;&amp; client-&gt;connected()) {</div>
 <div class="line">        client-&gt;send(<span class="stringliteral">&quot;Hello, Server!&quot;</span>);</div>
 <div class="line">    }</div>
 <div class="line"> </div>
@@ -144,7 +146,9 @@ Your First TCP Client (30 seconds)</h1>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md375"></a>
 Your First TCP Server (30 seconds)</h1>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
@@ -158,7 +162,10 @@ Your First TCP Server (30 seconds)</h1>
 <div class="line">        })</div>
 <div class="line">        .build();</div>
 <div class="line"> </div>
-<div class="line">    server-&gt;start();</div>
+<div class="line">    <span class="keywordflow">if</span> (!server-&gt;start().get()) {</div>
+<div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;Failed to start server&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">        <span class="keywordflow">return</span> 1;</div>
+<div class="line">    }</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Server listening on port 8080...&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Keep running for 60 seconds</span></div>
@@ -173,7 +180,9 @@ Your First TCP Server (30 seconds)</h1>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md377"></a>
 Your First Serial Device (30 seconds)</h1>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="unilink_8hpp.html">unilink/unilink.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
@@ -187,7 +196,10 @@ Your First Serial Device (30 seconds)</h1>
 <div class="line">        })</div>
 <div class="line">        .build();</div>
 <div class="line"> </div>
-<div class="line">    <a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;start();</div>
+<div class="line">    <span class="keywordflow">if</span> (!<a class="code" href="namespaceunilink.html#a9f2227aea1475c0655cf8cf4a99e55e9">serial</a>-&gt;start().get()) {</div>
+<div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;Failed to open serial port&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">        <span class="keywordflow">return</span> 1;</div>
+<div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Send data</span></div>
 <div class="line">    std::this_thread::sleep_for(std::chrono::seconds(1));</div>
@@ -274,8 +286,9 @@ Port already in use?</h2>
 Need independent IO thread?</h2>
 <div class="fragment"><div class="line"><span class="comment">// For testing or isolation</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
-<div class="line">    .use_independent_context(<span class="keyword">true</span>)</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">independent_context</a>(<span class="keyword">true</span>)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aca771ac62af9bf986f5ab31c04c8e2be"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">unilink::builder::TcpClientBuilder::independent_context</a></div><div class="ttdeci">TcpClientBuilder &amp; independent_context(bool use_independent=true)</div><div class="ttdoc">Use independent IoContext for this client.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00094">tcp_client_builder.cc:94</a></div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md391"></a>
 Support</h1>
@@ -291,7 +304,7 @@ Support</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

@@ -125,7 +125,7 @@ Error Handling</h1>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md305"></a>
 ✅ DO: Check Connection Status Before Sending</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD</span></div>
-<div class="line"><span class="keywordflow">if</span> (client-&gt;is_connected()) {</div>
+<div class="line"><span class="keywordflow">if</span> (client-&gt;connected()) {</div>
 <div class="line">    client-&gt;send(<span class="stringliteral">&quot;Hello&quot;</span>);</div>
 <div class="line">} <span class="keywordflow">else</span> {</div>
 <div class="line">    log_warning(<span class="stringliteral">&quot;Cannot send - not connected&quot;</span>);</div>
@@ -249,7 +249,7 @@ Resource Management</h1>
 <div class="line">    </div>
 <div class="line">    <span class="keywordtype">void</span> send_multiple_messages() {</div>
 <div class="line">        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; msg : messages) {</div>
-<div class="line">            <span class="keywordflow">if</span> (client_-&gt;is_connected()) {</div>
+<div class="line">            <span class="keywordflow">if</span> (client_-&gt;connected()) {</div>
 <div class="line">                client_-&gt;send(msg);</div>
 <div class="line">            }</div>
 <div class="line">        }</div>
@@ -375,8 +375,9 @@ Performance Optimization</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Only use independent context when needed for testing</span></div>
 <div class="line"><span class="keyword">auto</span> test_client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;test.com&quot;</span>, 8080)</div>
-<div class="line">    .use_independent_context(<span class="keyword">true</span>)  <span class="comment">// Only for tests</span></div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Only for tests</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aca771ac62af9bf986f5ab31c04c8e2be"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">unilink::builder::TcpClientBuilder::independent_context</a></div><div class="ttdeci">TcpClientBuilder &amp; independent_context(bool use_independent=true)</div><div class="ttdoc">Use independent IoContext for this client.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00094">tcp_client_builder.cc:94</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md323"></a>
 ✅ DO: Batch Small Messages</h2>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Batch small messages</span></div>
@@ -491,7 +492,7 @@ Testing</h1>
 <div class="line">        : client_(client) {}</div>
 <div class="line">    </div>
 <div class="line">    <span class="keywordtype">void</span> send_message(<span class="keyword">const</span> std::string&amp; msg) {</div>
-<div class="line">        <span class="keywordflow">if</span> (client_-&gt;is_connected()) {</div>
+<div class="line">        <span class="keywordflow">if</span> (client_-&gt;connected()) {</div>
 <div class="line">            client_-&gt;send(msg);</div>
 <div class="line">        }</div>
 <div class="line">    }</div>
@@ -527,7 +528,7 @@ Testing</h1>
 <div class="fragment"><div class="line"><span class="comment">// GOOD - Isolated tests</span></div>
 <div class="line">TEST(ClientTest, SendReceive) {</div>
 <div class="line">    <span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, test_port)</div>
-<div class="line">        .use_independent_context(<span class="keyword">true</span>)  <span class="comment">// Isolated I/O thread</span></div>
+<div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Isolated I/O thread</span></div>
 <div class="line">        .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 <div class="line">    </div>
 <div class="line">    <span class="comment">// Test won&#39;t interfere with other tests</span></div>
@@ -665,7 +666,7 @@ Logging and Debugging</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

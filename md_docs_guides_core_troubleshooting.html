@@ -189,7 +189,7 @@ Problem: Connection Drops Randomly</h2>
 <div class="fragment"><div class="line"><span class="comment">// Implement heartbeat</span></div>
 <div class="line">std::thread heartbeat_thread([<span class="keyword">this</span>]() {</div>
 <div class="line">    <span class="keywordflow">while</span> (running_) {</div>
-<div class="line">        <span class="keywordflow">if</span> (client_-&gt;is_connected()) {</div>
+<div class="line">        <span class="keywordflow">if</span> (client_-&gt;connected()) {</div>
 <div class="line">            client_-&gt;send(<span class="stringliteral">&quot;PING\n&quot;</span>);</div>
 <div class="line">        }</div>
 <div class="line">        std::this_thread::sleep_for(std::chrono::seconds(30));</div>
@@ -338,7 +338,7 @@ Problem: Segmentation Fault</h2>
 <div class="line">client-&gt;send(<span class="stringliteral">&quot;data&quot;</span>);  <span class="comment">// CRASH - client stopped</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// GOOD</span></div>
-<div class="line"><span class="keywordflow">if</span> (client-&gt;is_connected()) {</div>
+<div class="line"><span class="keywordflow">if</span> (client-&gt;connected()) {</div>
 <div class="line">    client-&gt;send(<span class="stringliteral">&quot;data&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
@@ -691,7 +691,7 @@ Getting Help</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

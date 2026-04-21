@@ -200,7 +200,7 @@ Key Points</h2>
 <div class="fragment"><div class="line"><span class="comment">// Application thread wants to access I/O thread state</span></div>
 <div class="line">boost::asio::post(io_context, [&amp;client]() {</div>
 <div class="line">    <span class="comment">// Now safely in I/O thread context</span></div>
-<div class="line">    <span class="keywordtype">bool</span> connected = client-&gt;is_connected();</div>
+<div class="line">    <span class="keywordtype">bool</span> connected = client-&gt;connected();</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Connected: &quot;</span> &lt;&lt; connected &lt;&lt; std::endl;</div>
 <div class="line">});</div>
 </div><!-- fragment --><hr  />
@@ -338,7 +338,7 @@ Manual Control</h3>
 <div class="line">client-&gt;stop();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Check connection status (thread-safe)</span></div>
-<div class="line"><span class="keywordtype">bool</span> connected = client-&gt;is_connected();</div>
+<div class="line"><span class="keywordtype">bool</span> connected = client-&gt;connected();</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Restart connection</span></div>
 <div class="line">client-&gt;start();</div>
@@ -584,7 +584,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 11:59:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

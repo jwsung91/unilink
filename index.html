@@ -216,15 +216,15 @@ Core Components</h1>
 <div class="line">    <span class="keyword">class </span>ChannelInterface {</div>
 <div class="line">        <span class="keyword">virtual</span> std::future&lt;bool&gt; <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a015554265152c7601cbff20480afeb43">start</a>() = 0;</div>
 <div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">stop</a>() = 0;</div>
-<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> is_connected() <span class="keyword">const</span> = 0;</div>
-<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">send</a>(std::string_view data) = 0;</div>
-<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590">send_line</a>(std::string_view line) = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">connected</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">send</a>(std::string_view data) = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590">send_line</a>(std::string_view line) = 0;</div>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">class </span>ServerInterface {</div>
 <div class="line">        <span class="keyword">virtual</span> std::future&lt;bool&gt; <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#af155896bc2266885191a35b3dac12542">start</a>() = 0;</div>
 <div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0">stop</a>() = 0;</div>
-<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> is_listening() <span class="keyword">const</span> = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a328c04f53504a865d95d1712928140cd">listening</a>() <span class="keyword">const</span> = 0;</div>
 <div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9">broadcast</a>(std::string_view data) = 0;</div>
 <div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classunilink_1_1wrapper_1_1ServerInterface.html#a7aeee8f7d23b350d2f755c448ae1f200">send_to</a>(<span class="keywordtype">size_t</span> client_id, std::string_view data) = 0;</div>
 <div class="line">    };</div>
@@ -237,10 +237,12 @@ Core Components</h1>
 <div class="line">    class <a class="code" href="namespaceunilink.html#a1f48e446d6c7cce2a9f1ad4904a1d53f">UdsServer</a> : <span class="keyword">public</span> ServerInterface;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a015554265152c7601cbff20480afeb43"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a015554265152c7601cbff20480afeb43">unilink::wrapper::ChannelInterface::start</a></div><div class="ttdeci">virtual std::future&lt; bool &gt; start()=0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_a2110813c183960be6a743c1fa5477dfa"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa">unilink::wrapper::ChannelInterface::connected</a></div><div class="ttdeci">virtual bool connected() const =0</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_ad8b698aa572dffa18e0e9df5d465c6d0"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#ad8b698aa572dffa18e0e9df5d465c6d0">unilink::wrapper::ChannelInterface::stop</a></div><div class="ttdeci">virtual void stop()=0</div><div class="ttdoc">Stop the channel and block until all pending async operations are cancelled.</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_aea0f1a7ed2e31e0dad1680a996687b48"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#aea0f1a7ed2e31e0dad1680a996687b48">unilink::wrapper::ChannelInterface::send</a></div><div class="ttdeci">virtual bool send(std::string_view data)=0</div><div class="ttdoc">Enqueue data for transmission.</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ChannelInterface_html_af4d2c671707e6c3c4bc7080aaaa74590"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ChannelInterface.html#af4d2c671707e6c3c4bc7080aaaa74590">unilink::wrapper::ChannelInterface::send_line</a></div><div class="ttdeci">virtual bool send_line(std::string_view line)=0</div><div class="ttdoc">Enqueue a line (data + &quot;\n&quot;) for transmission.</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a2264498ef97a2d7b609557afc46754f9"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a2264498ef97a2d7b609557afc46754f9">unilink::wrapper::ServerInterface::broadcast</a></div><div class="ttdeci">virtual bool broadcast(std::string_view data)=0</div></div>
+<div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a328c04f53504a865d95d1712928140cd"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a328c04f53504a865d95d1712928140cd">unilink::wrapper::ServerInterface::listening</a></div><div class="ttdeci">virtual bool listening() const =0</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a7aeee8f7d23b350d2f755c448ae1f200"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a7aeee8f7d23b350d2f755c448ae1f200">unilink::wrapper::ServerInterface::send_to</a></div><div class="ttdeci">virtual bool send_to(size_t client_id, std::string_view data)=0</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_a988cc589cc3d3d23176f77dc44bb41a0"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#a988cc589cc3d3d23176f77dc44bb41a0">unilink::wrapper::ServerInterface::stop</a></div><div class="ttdeci">virtual void stop()=0</div><div class="ttdoc">Stop the server and block until all active sessions are closed.</div></div>
 <div class="ttc" id="aclassunilink_1_1wrapper_1_1ServerInterface_html_af155896bc2266885191a35b3dac12542"><div class="ttname"><a href="classunilink_1_1wrapper_1_1ServerInterface.html#af155896bc2266885191a35b3dac12542">unilink::wrapper::ServerInterface::start</a></div><div class="ttdeci">virtual std::future&lt; bool &gt; start()=0</div></div>
@@ -463,8 +465,9 @@ Shared Context (Default)</h3>
 Independent Context</h3>
 <div class="fragment"><div class="line"><span class="comment">// Each channel has its own I/O thread</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;server.com&quot;</span>, 8080)</div>
-<div class="line">    .use_independent_context(<span class="keyword">true</span>)</div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">independent_context</a>(<span class="keyword">true</span>)</div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
+<div class="ttc" id="aclassunilink_1_1builder_1_1TcpClientBuilder_html_aca771ac62af9bf986f5ab31c04c8e2be"><div class="ttname"><a href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">unilink::builder::TcpClientBuilder::independent_context</a></div><div class="ttdeci">TcpClientBuilder &amp; independent_context(bool use_independent=true)</div><div class="ttdoc">Use independent IoContext for this client.</div><div class="ttdef"><b>Definition:</b> <a href="tcp__client__builder_8cc_source.html#l00094">tcp_client_builder.cc:94</a></div></div>
 </div><!-- fragment --><p><b>Pros:</b></p>
 <ul>
 <li>Isolation between connections</li>
@@ -732,13 +735,13 @@ Testing Architecture</h1>
 2. Independent Contexts</h2>
 <div class="fragment"><div class="line"><span class="comment">// Isolated testing</span></div>
 <div class="line"><span class="keyword">auto</span> client = <a class="code" href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">tcp_client</a>(<span class="stringliteral">&quot;127.0.0.1&quot;</span>, 8080)</div>
-<div class="line">    .use_independent_context(<span class="keyword">true</span>)  <span class="comment">// Own IO thread</span></div>
+<div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#aca771ac62af9bf986f5ab31c04c8e2be">independent_context</a>(<span class="keyword">true</span>)  <span class="comment">// Own IO thread</span></div>
 <div class="line">    .<a class="code" href="classunilink_1_1builder_1_1TcpClientBuilder.html#a5a4af5b627ffc15c727cba9fa2fa1d93">build</a>();</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md170"></a>
 3. State Verification</h2>
 <div class="fragment"><div class="line"><span class="comment">// Check internal state</span></div>
 <div class="line">ASSERT_EQ(client-&gt;get_state(), State::CONNECTED);</div>
-<div class="line">ASSERT_TRUE(server-&gt;is_listening());</div>
+<div class="line">ASSERT_TRUE(server-&gt;listening());</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md172"></a>
 Summary</h1>
@@ -762,7 +765,7 @@ Summary</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Apr 19 2026 01:12:19 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Apr 21 2026 11:59:08 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
