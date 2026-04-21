@@ -112,7 +112,7 @@ The current server wrapper uses these key methods:
 - `start().get()` to verify startup
 - `broadcast(...)` to send to all connected clients
 - `send_to(client_id, ...)` to reply to one client
-- `is_listening()` to check listener state
+- `listening()` to check listener state
 - `client_count()` and `connected_clients()` for inspection
 
 The key callback contexts are:

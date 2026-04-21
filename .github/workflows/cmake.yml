@@ -101,6 +101,10 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install Python Test Dependencies
+        if: matrix.build_python == 'ON'
+        run: python -m pip install pytest pybind11
+
       - name: Clone vcpkg
         if: runner.os != 'macOS'
         run: git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ env.VCPKG_ROOT }}"
@@ -149,12 +153,17 @@ jobs:
 
           # Install python bindings dependencies if requested
           if [ "${{ matrix.build_python }}" = "ON" ]; then
-            retry_command "$VCPKG_EXE" install pybind11 --triplet ${{ matrix.triplet }}
+            echo "Skipping pybind11 installation via vcpkg to avoid overriding host Python"
           fi
 
       - name: Configure (Linux)
         if: runner.os == 'Linux'
         run: |
+          PYTHON_CMAKE_ARGS=()
+          if [ "${{ matrix.build_python }}" = "ON" ]; then
+            PYTHON_CMAKE_ARGS+=("-DPython3_EXECUTABLE=$(python3 -c 'import sys; print(sys.executable)')")
+          fi
+
           cmake -S . -B build \
             -G "${{ matrix.generator }}" \
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
@@ -166,11 +175,17 @@ jobs:
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }}
+            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
+            "${PYTHON_CMAKE_ARGS[@]}"
 
       - name: Configure (macOS)
         if: runner.os == 'macOS'
         run: |
+          PYTHON_CMAKE_ARGS=()
+          if [ "${{ matrix.build_python }}" = "ON" ]; then
+            PYTHON_CMAKE_ARGS+=("-DPython3_EXECUTABLE=$(python3 -c 'import sys; print(sys.executable)')")
+          fi
+
           cmake -S . -B build \
             -G "${{ matrix.generator }}" \
             -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
@@ -181,12 +196,19 @@ jobs:
             -DUNILINK_BUILD_DOCS=OFF \
             -DUNILINK_BUILD_TESTS=ON \
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF \
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }}
+            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} \
+            "${PYTHON_CMAKE_ARGS[@]}"
 
       - name: Configure (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+          $pythonCmakeArgs = @()
+          if ("${{ matrix.build_python }}" -eq "ON") {
+            $pythonExe = python -c "import sys; print(sys.executable)"
+            $pythonCmakeArgs += "-DPython3_EXECUTABLE=$pythonExe"
+          }
+
           cmake -S . -B build `
             -G "${{ matrix.generator }}" -A x64 `
             -DCMAKE_BUILD_TYPE="${env:BUILD_TYPE}" `
@@ -196,7 +218,8 @@ jobs:
             -DUNILINK_BUILD_DOCS=OFF `
             -DUNILINK_BUILD_TESTS=ON `
             -DUNILINK_ENABLE_PERFORMANCE_TESTS=OFF `
-            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }}
+            -DBUILD_PYTHON_BINDINGS=${{ matrix.build_python }} `
+            @pythonCmakeArgs
 
       - name: Build
         run: cmake --build build --config "${BUILD_TYPE}" --parallel
@@ -205,36 +228,65 @@ jobs:
         if: runner.os == 'Windows'
         run: cmake --build build --target unilink_unit_tests --config "${BUILD_TYPE}"
 
-      - name: Test (Windows)
-        if: runner.os == 'Windows'
+      - name: Test (Windows, Full C++)
+        if: runner.os == 'Windows' && matrix.build_python != 'ON'
         working-directory: build
         shell: pwsh
         run: ctest -C "${env:BUILD_TYPE}" --output-on-failure -LE docs_snippets
 
-      - name: Test (Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Test (Linux/macOS, Full C++)
+        if: runner.os != 'Windows' && matrix.build_python != 'ON'
         working-directory: build
         run: ctest --output-on-failure --parallel 2 -LE docs_snippets
+
+      - name: Test (Windows, Python C++ Smoke)
+        if: runner.os == 'Windows' && matrix.build_python == 'ON'
+        working-directory: build
+        shell: pwsh
+        run: |
+          # Full C++ coverage already runs in the pure C++ matrix.
+          # Python-enabled jobs keep only a fast C++ smoke subset, then verify
+          # install/import/pytest on top of that.
+          ctest -C "${env:BUILD_TYPE}" --output-on-failure -L "unit_(common_fast|builder_fast|config_fast|transport_fast)|stable"
+
+      - name: Test (Linux/macOS, Python C++ Smoke)
+        if: runner.os != 'Windows' && matrix.build_python == 'ON'
+        working-directory: build
+        run: |
+          # Full C++ coverage already runs in the pure C++ matrix.
+          # Python-enabled jobs keep only a fast C++ smoke subset, then verify
+          # install/import/pytest on top of that.
+          ctest --output-on-failure --parallel 2 -L 'unit_(common_fast|builder_fast|config_fast|transport_fast)|stable'
+
+      - name: Stage Python Package (Windows)
+        if: matrix.build_python == 'ON' && runner.os == 'Windows'
+        shell: pwsh
+        run: cmake --install build --prefix build/install --config "${env:BUILD_TYPE}"
+
+      - name: Stage Python Package (Linux/macOS)
+        if: matrix.build_python == 'ON' && runner.os != 'Windows'
+        shell: bash
+        run: cmake --install build --prefix build/install
 
       - name: Verify Python Import (Windows)
         if: matrix.build_python == 'ON' && runner.os == 'Windows'
         shell: pwsh
         run: |
-          # Use PowerShell for reliable path handling on Windows
-          # Add bin/Release, bin, lib/Release, lib to PYTHONPATH with semicolon separators
-          $paths = @(
-            "$pwd\build\bin\${{ env.BUILD_TYPE }}",
-            "$pwd\build\bin",
-            "$pwd\build\lib\${{ env.BUILD_TYPE }}",
-            "$pwd\build\lib"
-          )
-          $env:PYTHONPATH = ($paths -join ";") + ";" + $env:PYTHONPATH
+          $sitePackages = python -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip(r'/\\'))"
+          $installPath = Join-Path $pwd "build/install/$sitePackages"
+          $packagePath = Join-Path $installPath "unilink"
+          $env:PYTHONPATH = "$installPath;$env:PYTHONPATH"
+          $env:UNILINK_INSTALL_PATH = $installPath
+          $env:UNILINK_PACKAGE_PATH = $packagePath
+          python bindings/python/diagnose_windows_import.py
           python bindings/python/test_import.py
+          python -m pytest bindings/python/tests -q
 
       - name: Verify Python Import (Linux/macOS)
         if: matrix.build_python == 'ON' && runner.os != 'Windows'
         shell: bash
         run: |
-          # On Linux/macOS, shared libraries are in build/lib
-          export PYTHONPATH="$PWD/build/lib:$PYTHONPATH"
+          PY_SITE=$(python3 -c "import sysconfig; p = sysconfig.get_path('platlib', vars={'base':'', 'platbase':''}) or sysconfig.get_path('purelib', vars={'base':'', 'platbase':''}) or ''; print(p.lstrip('/\\\\'))")
+          export PYTHONPATH="$PWD/build/install/$PY_SITE:$PYTHONPATH"
           python3 bindings/python/test_import.py
+          python3 -m pytest bindings/python/tests -q

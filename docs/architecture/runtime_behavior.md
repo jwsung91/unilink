@@ -137,7 +137,7 @@ Use `net::post()` to safely access state from application threads:
 // Application thread wants to access I/O thread state
 boost::asio::post(io_context, [&client]() {
     // Now safely in I/O thread context
-    bool connected = client->is_connected();
+    bool connected = client->connected();
     std::cout << "Connected: " << connected << std::endl;
 });
 ```
@@ -281,7 +281,7 @@ Stop automatic reconnection:
 client->stop();
 
 // Check connection status (thread-safe)
-bool connected = client->is_connected();
+bool connected = client->connected();
 
 // Restart connection
 client->start();

@@ -30,9 +30,9 @@ If you need the exact public entry points, treat `unilink/unilink.hpp` and the h
 
 ## Python Binding Scope
 
-The Python module is implemented in `bindings/python/module.cpp`.
+The Python extension module is generated from `bindings/python/module.cpp.in`.
 
-At a high level, `unilink_py` covers:
+At a high level, the `unilink` Python package covers:
 
 - TCP client
 - TCP server

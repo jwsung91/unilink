@@ -494,7 +494,7 @@ TEST_F(MyTest, BasicFunctionality) {
         .build();
     
     ASSERT_NE(client, nullptr);
-    EXPECT_FALSE(client->is_connected());
+    EXPECT_FALSE(client->connected());
 }
 ```
 

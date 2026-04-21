@@ -142,7 +142,7 @@ auto client = tcp_client("server.com", 8080)
 // Implement heartbeat
 std::thread heartbeat_thread([this]() {
     while (running_) {
-        if (client_->is_connected()) {
+        if (client_->connected()) {
             client_->send("PING\n");
         }
         std::this_thread::sleep_for(std::chrono::seconds(30));
@@ -370,7 +370,7 @@ client->stop();
 client->send("data");  // CRASH - client stopped
 
 // GOOD
-if (client->is_connected()) {
+if (client->connected()) {
     client->send("data");
 }
 ```
