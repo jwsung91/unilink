@@ -49,11 +49,25 @@ $extrastylesheet
             $(this).empty().text(fixedText.trim());
             $(this).removeAttr("data-processed");
         });
+        const isDarkMode = () => document.documentElement.classList.contains("dark-mode");
         mermaid.initialize({
             startOnLoad: false,
-            theme: 'default'
+            theme: isDarkMode() ? 'dark' : 'default'
         });
         mermaid.run();
+
+        // Listen for dark mode toggle
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributes && mutation.attributeName === "class") {
+                    mermaid.initialize({
+                        theme: isDarkMode() ? 'dark' : 'default'
+                    });
+                    mermaid.run();
+                }
+            });
+        });
+        observer.observe(document.documentElement, { attributes: true });
     });
 </script>
 
