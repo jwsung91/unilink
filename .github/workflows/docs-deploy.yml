@@ -11,16 +11,22 @@ permissions:
 jobs:
   deploy-docs:
     name: Build and Deploy Doxygen
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v6
 
     - name: Install Doxygen
+      env:
+        DOXYGEN_APT_VERSION: 1.9.8+ds-2build5
+        EXPECTED_DOXYGEN_VERSION: 1.9.8
       run: |
         sudo apt-get update
-        sudo apt-get install -y doxygen graphviz
+        sudo apt-get install -y "doxygen=${DOXYGEN_APT_VERSION}" graphviz
+        actual_version="$(doxygen --version)"
+        echo "Doxygen version: ${actual_version}"
+        test "${actual_version}" = "${EXPECTED_DOXYGEN_VERSION}"
 
     - name: Generate Documentation
       run: |
