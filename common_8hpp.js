@@ -16,10 +16,10 @@ var common_8hpp =
     [ "log_message", "common_8hpp.html#a07399b407f151a0fb40ac854476a40c5", null ],
     [ "safe_memcpy", "common_8hpp.html#a2082b2fb949dd2120cf5d70598c690d8", null ],
     [ "safe_memcpy", "common_8hpp.html#a4d7e2bd9069bd2febb47c18298fe5e0d", null ],
-    [ "string_to_bytes", "common_8hpp.html#a853a1e8b21339030dc0176b78ffe75ac", null ],
-    [ "string_to_uint8", "common_8hpp.html#a439f562cc86e942edf24d1408bcb8a92", null ],
-    [ "string_to_uint8", "common_8hpp.html#afe2a169e3dc23db0749352a92123ab35", null ],
-    [ "to_cstr", "common_8hpp.html#ae891a72972b7893b2b357d661a993b6c", null ],
+    [ "string_to_bytes", "common_8hpp.html#a575f6a399b270deff205277e7b9c3b6c", null ],
+    [ "string_to_uint8", "common_8hpp.html#ae8b9bd48777b1bdb6a786123eb155819", null ],
+    [ "string_to_uint8", "common_8hpp.html#a0196bdcc9d597894a272358bbb825349", null ],
+    [ "to_cstr", "common_8hpp.html#ad52db766f5cd36f55aceda4aa033537a", null ],
     [ "ts_now", "common_8hpp.html#a75098fc6310384d9e2ffdcdb499a2fa6", null ],
     [ "uint8_to_string", "common_8hpp.html#a3c41d9c6266428458c97891710ac2f0d", null ]
 ];

@@ -1,7 +1,7 @@
 var memory__validator_8hpp =
 [
-    [ "MemoryValidator", "classunilink_1_1memory_1_1MemoryValidator.html", "classunilink_1_1memory_1_1MemoryValidator" ],
-    [ "MemoryPatternGenerator", "classunilink_1_1memory_1_1MemoryPatternGenerator.html", "classunilink_1_1memory_1_1MemoryPatternGenerator" ],
+    [ "unilink::memory::MemoryValidator", "classunilink_1_1memory_1_1MemoryValidator.html", "classunilink_1_1memory_1_1MemoryValidator" ],
+    [ "unilink::memory::MemoryPatternGenerator", "classunilink_1_1memory_1_1MemoryPatternGenerator.html", "classunilink_1_1memory_1_1MemoryPatternGenerator" ],
     [ "check_buffer_bounds", "memory__validator_8hpp.html#a60d61b8895e986a0bee5cafc38f60704", null ],
     [ "double_free", "memory__validator_8hpp.html#a433dec67ba6ef6f8d78d1caee66f79c1", null ],
     [ "initialize_canary_bytes", "memory__validator_8hpp.html#ac2c22d5175edc0989adef369dcdfb001", null ],

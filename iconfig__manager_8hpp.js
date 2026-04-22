@@ -1,8 +1,8 @@
 var iconfig__manager_8hpp =
 [
-    [ "ValidationResult", "structunilink_1_1config_1_1ValidationResult.html", "structunilink_1_1config_1_1ValidationResult" ],
-    [ "ConfigItem", "structunilink_1_1config_1_1ConfigItem.html", "structunilink_1_1config_1_1ConfigItem" ],
-    [ "ConfigManagerInterface", "classunilink_1_1config_1_1ConfigManagerInterface.html", "classunilink_1_1config_1_1ConfigManagerInterface" ],
+    [ "unilink::config::ValidationResult", "structunilink_1_1config_1_1ValidationResult.html", "structunilink_1_1config_1_1ValidationResult" ],
+    [ "unilink::config::ConfigItem", "structunilink_1_1config_1_1ConfigItem.html", "structunilink_1_1config_1_1ConfigItem" ],
+    [ "unilink::config::ConfigManagerInterface", "classunilink_1_1config_1_1ConfigManagerInterface.html", "classunilink_1_1config_1_1ConfigManagerInterface" ],
     [ "ConfigChangeCallback", "iconfig__manager_8hpp.html#a4aafa42155321e016da3f7a8c290f1d5", null ],
     [ "ConfigType", "iconfig__manager_8hpp.html#a51570eeec2be34fa91656b2f81898577", [
       [ "String", "iconfig__manager_8hpp.html#a51570eeec2be34fa91656b2f81898577a27118326006d3829667a400ad23d5d98", null ],

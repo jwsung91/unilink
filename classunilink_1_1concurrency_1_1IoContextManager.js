@@ -13,7 +13,7 @@ var classunilink_1_1concurrency_1_1IoContextManager =
     [ "get_context", "classunilink_1_1concurrency_1_1IoContextManager.html#a86530edd28d5b83dbeb2f68abc978c2e", null ],
     [ "instance", "classunilink_1_1concurrency_1_1IoContextManager.html#af8bc9a1e74cd2b081311ae3686bbc8ba", null ],
     [ "is_running", "classunilink_1_1concurrency_1_1IoContextManager.html#a196458736bcfd84254d59b8b510aad12", null ],
-    [ "operator=", "classunilink_1_1concurrency_1_1IoContextManager.html#a43142a02979a07d43f4ba741eb7c97d1", null ],
+    [ "operator=", "classunilink_1_1concurrency_1_1IoContextManager.html#ae77b462c8f453b2cfb5415b3f9180af2", null ],
     [ "operator=", "classunilink_1_1concurrency_1_1IoContextManager.html#ae38638363f85ecd1c2d05698310d1c31", null ],
     [ "start", "classunilink_1_1concurrency_1_1IoContextManager.html#a6b6c2d79b786fc49c259b6f2125a1ab6", null ],
     [ "stop", "classunilink_1_1concurrency_1_1IoContextManager.html#a5b3ce677dc35d7080d507fa9762624bf", null ]

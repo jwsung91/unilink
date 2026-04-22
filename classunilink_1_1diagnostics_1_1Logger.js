@@ -18,7 +18,7 @@ var classunilink_1_1diagnostics_1_1Logger =
     [ "instance", "classunilink_1_1diagnostics_1_1Logger.html#a2e114f7695d5aac3b9a993be97c501c9", null ],
     [ "level", "classunilink_1_1diagnostics_1_1Logger.html#a4a88b05c250af04b01f2a3d94473d0e3", null ],
     [ "log", "classunilink_1_1diagnostics_1_1Logger.html#a0b8b5899e59b1c6beb7572fe937df82d", null ],
-    [ "operator=", "classunilink_1_1diagnostics_1_1Logger.html#a1b1d4af00a6762f5afcb7fed25a1a745", null ],
+    [ "operator=", "classunilink_1_1diagnostics_1_1Logger.html#a47e082df1da943227134e55d6d2de6db", null ],
     [ "operator=", "classunilink_1_1diagnostics_1_1Logger.html#a082c57005f8140e3f02c30135b48dce4", null ],
     [ "set_async_logging", "classunilink_1_1diagnostics_1_1Logger.html#a59e33a20b37773a2299729876d8552e4", null ],
     [ "set_callback", "classunilink_1_1diagnostics_1_1Logger.html#af2ba283a30ba91bc5cb75959e2f61eb0", null ],

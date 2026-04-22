@@ -1,7 +1,7 @@
 var error__types_8hpp =
 [
-    [ "ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html", "structunilink_1_1diagnostics_1_1ErrorInfo" ],
-    [ "ErrorStats", "structunilink_1_1diagnostics_1_1ErrorStats.html", "structunilink_1_1diagnostics_1_1ErrorStats" ],
+    [ "unilink::diagnostics::ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html", "structunilink_1_1diagnostics_1_1ErrorInfo" ],
+    [ "unilink::diagnostics::ErrorStats", "structunilink_1_1diagnostics_1_1ErrorStats.html", "structunilink_1_1diagnostics_1_1ErrorStats" ],
     [ "ErrorCategory", "error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7", [
       [ "CONNECTION", "error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7af877da16e0c12743466e4059018d0d98", null ],
       [ "COMMUNICATION", "error__types_8hpp.html#aa5303c584c1adabc81d70a0498a263e7a3f27148a0073e6705ee8277dc392ab7d", null ],

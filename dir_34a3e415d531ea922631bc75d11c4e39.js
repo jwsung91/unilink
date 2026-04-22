@@ -6,15 +6,7 @@ var dir_34a3e415d531ea922631bc75d11c4e39 =
     [ "udp", "dir_b326aa12ac4fd529ad72c1f5aa11c7fc.html", "dir_b326aa12ac4fd529ad72c1f5aa11c7fc" ],
     [ "uds_client", "dir_53fe126917d581c2cf884e23d902a853.html", "dir_53fe126917d581c2cf884e23d902a853" ],
     [ "uds_server", "dir_b88a6c339073afb50b2b7b303399597d.html", "dir_b88a6c339073afb50b2b7b303399597d" ],
-    [ "context.hpp", "context_8hpp.html", [
-      [ "MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html", "classunilink_1_1wrapper_1_1MessageContext" ],
-      [ "ConnectionContext", "classunilink_1_1wrapper_1_1ConnectionContext.html", "classunilink_1_1wrapper_1_1ConnectionContext" ],
-      [ "ErrorContext", "classunilink_1_1wrapper_1_1ErrorContext.html", "classunilink_1_1wrapper_1_1ErrorContext" ]
-    ] ],
-    [ "ichannel.hpp", "ichannel_8hpp.html", [
-      [ "ChannelInterface", "classunilink_1_1wrapper_1_1ChannelInterface.html", "classunilink_1_1wrapper_1_1ChannelInterface" ]
-    ] ],
-    [ "iserver.hpp", "iserver_8hpp.html", [
-      [ "ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html", "classunilink_1_1wrapper_1_1ServerInterface" ]
-    ] ]
+    [ "context.hpp", "context_8hpp.html", "context_8hpp" ],
+    [ "ichannel.hpp", "ichannel_8hpp.html", "ichannel_8hpp" ],
+    [ "iserver.hpp", "iserver_8hpp.html", "iserver_8hpp" ]
 ];

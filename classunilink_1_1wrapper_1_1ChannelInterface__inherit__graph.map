@@ -1,7 +1,11 @@
 <map id="unilink::wrapper::ChannelInterface" name="unilink::wrapper::ChannelInterface">
-<area shape="rect" id="node1" title="Common interface for 1:1 point&#45;to&#45;point communication (e.g., TcpClient, Serial, Udp)" alt="" coords="316,5,504,288"/>
-<area shape="rect" id="node2" href="$classunilink_1_1wrapper_1_1Serial.html" title="Modernized Serial Wrapper." alt="" coords="5,336,177,575"/>
-<area shape="rect" id="node3" href="$classunilink_1_1wrapper_1_1TcpClient.html" title="Modernized TCP Client Wrapper." alt="" coords="202,343,397,567"/>
-<area shape="rect" id="node4" href="$classunilink_1_1wrapper_1_1UdpClient.html" title="Modernized UDP Wrapper." alt="" coords="421,343,620,567"/>
-<area shape="rect" id="node5" href="$classunilink_1_1wrapper_1_1UdsClient.html" title="Modernized UDS Client Wrapper." alt="" coords="644,343,843,567"/>
+<area shape="rect" id="Node000001" title="Common interface for 1:1 point&#45;to&#45;point communication (e.g., TcpClient, Serial, Udp)" alt="" coords="304,5,484,345"/>
+<area shape="rect" id="Node000002" href="$classunilink_1_1wrapper_1_1Serial.html" title="Modernized Serial Wrapper." alt="" coords="5,393,169,679"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="296,273,239,332,184,395,172,411,167,408,180,392,235,329,292,270"/>
+<area shape="rect" id="Node000003" href="$classunilink_1_1wrapper_1_1TcpClient.html" title="Modernized TCP Client Wrapper." alt="" coords="194,403,381,669"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="342,360,329,404,324,402,337,358"/>
+<area shape="rect" id="Node000004" href="$classunilink_1_1wrapper_1_1UdpClient.html" title="Modernized UDP Wrapper." alt="" coords="405,403,596,669"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="451,358,464,402,459,404,446,360"/>
+<area shape="rect" id="Node000005" href="$classunilink_1_1wrapper_1_1UdsClient.html" title="Modernized UDS Client Wrapper." alt="" coords="620,403,811,669"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="496,271,611,392,622,405,618,408,607,395,492,274"/>
 </map>

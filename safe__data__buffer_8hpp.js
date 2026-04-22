@@ -1,6 +1,6 @@
 var safe__data__buffer_8hpp =
 [
-    [ "SafeDataBuffer", "classunilink_1_1memory_1_1SafeDataBuffer.html", "classunilink_1_1memory_1_1SafeDataBuffer" ],
+    [ "unilink::memory::SafeDataBuffer", "classunilink_1_1memory_1_1SafeDataBuffer.html", "classunilink_1_1memory_1_1SafeDataBuffer" ],
     [ "SafeDataHandler", "safe__data__buffer_8hpp.html#ab24b0543c51948b5f6807fad9b3d94f6", null ],
     [ "from_c_string", "safe__data__buffer_8hpp.html#ad47b9c31322e249f60bb70e5d71c3f5f", null ],
     [ "from_raw_data", "safe__data__buffer_8hpp.html#af038015aafcb3ab44bd10eb3392752ac", null ],

@@ -1,9 +1,9 @@
 var logger_8hpp =
 [
-    [ "LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", "structunilink_1_1diagnostics_1_1LogEntry" ],
-    [ "AsyncLogConfig", "structunilink_1_1diagnostics_1_1AsyncLogConfig.html", "structunilink_1_1diagnostics_1_1AsyncLogConfig" ],
-    [ "AsyncLogStats", "structunilink_1_1diagnostics_1_1AsyncLogStats.html", "structunilink_1_1diagnostics_1_1AsyncLogStats" ],
-    [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ],
+    [ "unilink::diagnostics::LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", "structunilink_1_1diagnostics_1_1LogEntry" ],
+    [ "unilink::diagnostics::AsyncLogConfig", "structunilink_1_1diagnostics_1_1AsyncLogConfig.html", "structunilink_1_1diagnostics_1_1AsyncLogConfig" ],
+    [ "unilink::diagnostics::AsyncLogStats", "structunilink_1_1diagnostics_1_1AsyncLogStats.html", "structunilink_1_1diagnostics_1_1AsyncLogStats" ],
+    [ "unilink::diagnostics::Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ],
     [ "UNILINK_LOG_CRITICAL", "logger_8hpp.html#adbcc470aa88aac2aac6ae713a2715531", null ],
     [ "UNILINK_LOG_DEBUG", "logger_8hpp.html#aea631340bc3daf7ba0bda5893ec70d9e", null ],
     [ "UNILINK_LOG_DEBUG_IF", "logger_8hpp.html#a6f1ab03f6f6417674829acf0c882f46b", null ],

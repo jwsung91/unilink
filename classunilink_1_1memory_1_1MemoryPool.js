@@ -19,8 +19,8 @@ var classunilink_1_1memory_1_1MemoryPool =
     [ "health_metrics", "classunilink_1_1memory_1_1MemoryPool.html#a147b0b31383a235a19c006a56688d8b4", null ],
     [ "hit_rate", "classunilink_1_1memory_1_1MemoryPool.html#a717036db6ecf881cf6eb6e5a303046e3", null ],
     [ "memory_usage", "classunilink_1_1memory_1_1MemoryPool.html#a514b2ebc34cef93d7e27ab3819882cc6", null ],
-    [ "operator=", "classunilink_1_1memory_1_1MemoryPool.html#a821b94c00ce579cb0f6f861333ac889d", null ],
-    [ "operator=", "classunilink_1_1memory_1_1MemoryPool.html#a6248e9d332d0455afad89af7c283032a", null ],
+    [ "operator=", "classunilink_1_1memory_1_1MemoryPool.html#a2e75c5f7cae34a19358f4d55b32393f3", null ],
+    [ "operator=", "classunilink_1_1memory_1_1MemoryPool.html#a190b22a20b091fd70fb4157e35700237", null ],
     [ "release", "classunilink_1_1memory_1_1MemoryPool.html#ac210d9942ecc77a43ecc5125ccaacd9b", null ],
     [ "resize_pool", "classunilink_1_1memory_1_1MemoryPool.html#a2398360a84a122dc2404f31be94b9e94", null ],
     [ "stats", "classunilink_1_1memory_1_1MemoryPool.html#a90c2f8d75dfbce19a4976b3fc767720b", null ]

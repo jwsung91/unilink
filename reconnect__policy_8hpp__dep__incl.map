@@ -1,13 +1,26 @@
 <map id="unilink/transport/tcp_client/reconnect_policy.hpp" name="unilink/transport/tcp_client/reconnect_policy.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="531,5,737,47"/>
-<area shape="rect" id="node2" href="$tcp__client_2detail_2reconnect__decider_8hpp.html" title=" " alt="" coords="193,95,368,151"/>
-<area shape="rect" id="node5" href="$transport_2tcp__client_2tcp__client_8hpp.html" title=" " alt="" coords="463,102,623,143"/>
-<area shape="rect" id="node8" href="$uds_2detail_2reconnect__decider_8hpp.html" title=" " alt="" coords="882,102,1095,143"/>
-<area shape="rect" id="node10" href="$transport_2uds_2uds__client_8hpp.html" title=" " alt="" coords="684,102,840,143"/>
-<area shape="rect" id="node3" href="$reconnect__logic_8hpp.html" title=" " alt="" coords="5,199,180,255"/>
-<area shape="rect" id="node4" href="$transport_2tcp__client_2tcp__client_8cc.html" title=" " alt="" coords="204,206,357,247"/>
-<area shape="rect" id="node6" href="$channel__factory_8cc.html" title=" " alt="" coords="557,206,727,247"/>
-<area shape="rect" id="node7" href="$wrapper_2tcp__client_2tcp__client_8cc.html" title=" " alt="" coords="381,206,532,247"/>
-<area shape="rect" id="node9" href="$transport_2uds_2uds__client_8cc.html" title=" " alt="" coords="929,206,1085,247"/>
-<area shape="rect" id="node11" href="$wrapper_2uds__client_2uds__client_8cc.html" title=" " alt="" coords="752,206,905,247"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="531,5,737,45"/>
+<area shape="rect" id="Node000002" href="$tcp__client_2detail_2reconnect__decider_8hpp.html" title=" " alt="" coords="193,93,368,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="550,51,369,99,368,94,549,46"/>
+<area shape="rect" id="Node000005" href="$transport_2tcp__client_2tcp__client_8hpp.html" title=" " alt="" coords="463,101,623,141"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="608,57,564,102,560,99,604,53"/>
+<area shape="rect" id="Node000008" href="$uds_2detail_2reconnect__decider_8hpp.html" title=" " alt="" coords="882,101,1095,141"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="719,46,918,98,916,103,718,51"/>
+<area shape="rect" id="Node000010" href="$transport_2uds_2uds__client_8hpp.html" title=" " alt="" coords="684,101,840,141"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="673,51,738,98,735,103,669,56"/>
+<area shape="rect" id="Node000003" href="$reconnect__logic_8hpp.html" title=" " alt="" coords="5,196,180,251"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="221,157,143,198,141,193,218,152"/>
+<area shape="rect" id="Node000004" href="$transport_2tcp__client_2tcp__client_8cc.html" title=" " alt="" coords="204,203,357,243"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="283,162,283,203,278,203,278,162"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="482,148,331,206,329,201,480,143"/>
+<area shape="rect" id="Node000006" href="$channel__factory_8cc.html" title=" " alt="" coords="557,203,727,243"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="574,149,625,201,622,205,570,153"/>
+<area shape="rect" id="Node000007" href="$wrapper_2tcp__client_2tcp__client_8cc.html" title=" " alt="" coords="381,203,532,243"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="520,153,475,205,471,202,516,149"/>
+<area shape="rect" id="Node000009" href="$transport_2uds_2uds__client_8cc.html" title=" " alt="" coords="929,203,1085,243"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="997,154,1006,203,1001,204,992,155"/>
+<area shape="poly" id="edge11_Node000010_Node000006" title=" " alt="" coords="730,152,666,205,663,201,727,148"/>
+<area shape="poly" id="edge12_Node000010_Node000009" title=" " alt="" coords="822,144,962,201,960,206,820,149"/>
+<area shape="rect" id="Node000011" href="$wrapper_2uds__client_2uds__client_8cc.html" title=" " alt="" coords="752,203,905,243"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="784,151,818,202,814,205,780,154"/>
 </map>

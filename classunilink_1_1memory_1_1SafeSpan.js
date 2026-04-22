@@ -26,13 +26,13 @@ var classunilink_1_1memory_1_1SafeSpan =
     [ "data", "classunilink_1_1memory_1_1SafeSpan.html#a203851d86025e579f73f04da0828e2bd", null ],
     [ "empty", "classunilink_1_1memory_1_1SafeSpan.html#a9502a235109cc7933308478f7418add3", null ],
     [ "end", "classunilink_1_1memory_1_1SafeSpan.html#a569f565034ab74fd20549f16af9d220c", null ],
-    [ "first", "classunilink_1_1memory_1_1SafeSpan.html#a3b0f136f697101cef0b107048c105e4f", null ],
+    [ "first", "classunilink_1_1memory_1_1SafeSpan.html#ab4d8f7c145838a6b2985e5829e36d592", null ],
     [ "front", "classunilink_1_1memory_1_1SafeSpan.html#a30d76220be2cce507d36d12b7d893820", null ],
-    [ "last", "classunilink_1_1memory_1_1SafeSpan.html#a4ea37eaaad80394dc1be2a6ceda2a268", null ],
+    [ "last", "classunilink_1_1memory_1_1SafeSpan.html#ada12ea994909e4ec04fcecf027d12794", null ],
     [ "operator[]", "classunilink_1_1memory_1_1SafeSpan.html#ac13be8e3a157cd15d30fa1a1bc7241fd", null ],
     [ "rbegin", "classunilink_1_1memory_1_1SafeSpan.html#aca8847522002cd25db3d0466fb4db386", null ],
     [ "rend", "classunilink_1_1memory_1_1SafeSpan.html#adc412cd9eefe6c46ff6f8f23a3c00aa0", null ],
     [ "size", "classunilink_1_1memory_1_1SafeSpan.html#a0e63f52083142fa895b98ea38f51dc73", null ],
     [ "size_bytes", "classunilink_1_1memory_1_1SafeSpan.html#a0465b750328c99e91989b25d750d9c07", null ],
-    [ "subspan", "classunilink_1_1memory_1_1SafeSpan.html#a8d5082b8dc5b9ccf4d9c0d07e4380985", null ]
+    [ "subspan", "classunilink_1_1memory_1_1SafeSpan.html#a6d8982f9ab7af4020233d9bb8f71e753", null ]
 ];

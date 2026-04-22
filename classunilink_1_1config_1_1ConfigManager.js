@@ -16,7 +16,7 @@ var classunilink_1_1config_1_1ConfigManager =
     [ "load_from_file", "classunilink_1_1config_1_1ConfigManager.html#a690c0f4d402787e898fba1b6bbb3f151", null ],
     [ "on_change", "classunilink_1_1config_1_1ConfigManager.html#a743a57e24c940ca9a5cd6498df7b9bd5", null ],
     [ "operator=", "classunilink_1_1config_1_1ConfigManager.html#a812718f6cd6e9cac30b8e8fbc5c4110c", null ],
-    [ "operator=", "classunilink_1_1config_1_1ConfigManager.html#aef9f6cd753d20a7118f73bb802a7c5c2", null ],
+    [ "operator=", "classunilink_1_1config_1_1ConfigManager.html#a04ffe38aa98075c89dfc68d7b17b7847", null ],
     [ "register_item", "classunilink_1_1config_1_1ConfigManager.html#a9b346a7d06049036a8735c380118a61a", null ],
     [ "register_validator", "classunilink_1_1config_1_1ConfigManager.html#ac6d058a2ff29fc28214b6b575fb8d6fe", null ],
     [ "remove", "classunilink_1_1config_1_1ConfigManager.html#a6ec61f4d792e6ec1e09d02a8ad8abfe5", null ],

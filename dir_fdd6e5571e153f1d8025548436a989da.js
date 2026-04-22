@@ -1,9 +1,5 @@
 var dir_fdd6e5571e153f1d8025548436a989da =
 [
-    [ "tcp_server.cc", "wrapper_2tcp__server_2tcp__server_8cc.html", [
-      [ "Impl", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html", "structunilink_1_1wrapper_1_1TcpServer_1_1Impl" ]
-    ] ],
-    [ "tcp_server.hpp", "wrapper_2tcp__server_2tcp__server_8hpp.html", [
-      [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", "classunilink_1_1wrapper_1_1TcpServer" ]
-    ] ]
+    [ "tcp_server.cc", "wrapper_2tcp__server_2tcp__server_8cc.html", "wrapper_2tcp__server_2tcp__server_8cc" ],
+    [ "tcp_server.hpp", "wrapper_2tcp__server_2tcp__server_8hpp.html", "wrapper_2tcp__server_2tcp__server_8hpp" ]
 ];

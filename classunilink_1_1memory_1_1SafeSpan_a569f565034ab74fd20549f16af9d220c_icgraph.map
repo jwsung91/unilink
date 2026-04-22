@@ -1,14 +1,25 @@
 <map id="unilink::memory::SafeSpan::end" name="unilink::memory::SafeSpan::end">
-<area shape="rect" id="node1" title=" " alt="" coords="275,385,504,412"/>
-<area shape="rect" id="node2" href="$classunilink_1_1transport_1_1TcpServerSession.html#af4924971969eccb5008bd42ccb302cb9" title=" " alt="" coords="41,5,191,61"/>
-<area shape="rect" id="node3" href="$classunilink_1_1transport_1_1UdsServerSession.html#a5dfb1470c98537cacb9bccadf92b73e0" title=" " alt="" coords="39,85,193,141"/>
-<area shape="rect" id="node4" href="$classunilink_1_1transport_1_1Serial.html#a66dcdee06d54ec2370dcdcbafef40875" title=" " alt="" coords="21,166,211,207"/>
-<area shape="rect" id="node5" href="$classunilink_1_1transport_1_1TcpClient.html#a996369a17ecad069edd0c20c19689e9d" title=" " alt="" coords="9,231,223,273"/>
-<area shape="rect" id="node6" href="$classunilink_1_1transport_1_1UdpChannel.html#a753af71ad739e467588e3d6c3af9c5ef" title=" " alt="" coords="39,297,193,353"/>
-<area shape="rect" id="node7" href="$classunilink_1_1transport_1_1UdsClient.html#a9c2b6c07b63911273deb53e4f3a863b3" title=" " alt="" coords="7,378,225,419"/>
-<area shape="rect" id="node8" href="$classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64" title=" " alt="" coords="5,443,227,485"/>
-<area shape="rect" id="node9" href="$classunilink_1_1transport_1_1UdpChannel.html#a17438bba1b0d13e683aadc1391fb0bcc" title=" " alt="" coords="39,509,193,565"/>
-<area shape="rect" id="node10" href="$classunilink_1_1framer_1_1PacketFramer.html#ae0de7a72e4794e1df90a30eb73289993" title="Push raw bytes into the framer&#39;s internal buffer." alt="" coords="9,590,223,631"/>
-<area shape="rect" id="node11" href="$classunilink_1_1memory_1_1SafeSpan.html#aca8847522002cd25db3d0466fb4db386" title=" " alt="" coords="17,655,215,697"/>
-<area shape="rect" id="node12" href="$classunilink_1_1memory_1_1SafeDataBuffer.html#ac1c2be33e14dec0c11aa933426ad6bb0" title=" " alt="" coords="18,721,214,762"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="275,379,504,404"/>
+<area shape="rect" id="Node000002" href="$classunilink_1_1transport_1_1TcpServerSession.html#af4924971969eccb5008bd42ccb302cb9" title=" " alt="" coords="41,5,191,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="379,366,362,306,331,228,311,186,286,145,258,107,225,73,190,52,193,48,228,69,262,104,291,142,315,183,336,226,367,305,385,364"/>
+<area shape="rect" id="Node000003" href="$classunilink_1_1transport_1_1UdsServerSession.html#a5dfb1470c98537cacb9bccadf92b73e0" title=" " alt="" coords="39,84,193,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="375,367,353,321,320,264,277,205,252,178,225,153,192,134,195,130,228,149,256,174,281,202,325,261,358,319,380,365"/>
+<area shape="rect" id="Node000004" href="$classunilink_1_1transport_1_1Serial.html#a66dcdee06d54ec2370dcdcbafef40875" title=" " alt="" coords="21,163,211,203"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="370,369,312,294,271,253,225,218,202,206,204,201,228,213,275,249,316,290,374,365"/>
+<area shape="rect" id="Node000005" href="$classunilink_1_1transport_1_1TcpClient.html#a996369a17ecad069edd0c20c19689e9d" title=" " alt="" coords="9,227,223,267"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="361,372,301,327,225,282,196,270,198,265,228,277,304,322,364,368"/>
+<area shape="rect" id="Node000006" href="$classunilink_1_1transport_1_1UdpChannel.html#a753af71ad739e467588e3d6c3af9c5ef" title=" " alt="" coords="39,292,193,347"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="326,378,193,342,194,337,328,372"/>
+<area shape="rect" id="Node000007" href="$classunilink_1_1transport_1_1UdsClient.html#a9c2b6c07b63911273deb53e4f3a863b3" title=" " alt="" coords="7,371,225,411"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="261,394,225,394,225,389,261,389"/>
+<area shape="rect" id="Node000008" href="$classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64" title=" " alt="" coords="5,435,227,475"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="321,410,203,438,202,433,320,405"/>
+<area shape="rect" id="Node000009" href="$classunilink_1_1transport_1_1UdpChannel.html#a17438bba1b0d13e683aadc1391fb0bcc" title=" " alt="" coords="39,500,193,555"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="359,414,299,451,228,490,194,504,192,499,226,485,297,446,356,409"/>
+<area shape="rect" id="Node000010" href="$classunilink_1_1framer_1_1PacketFramer.html#ae0de7a72e4794e1df90a30eb73289993" title="Push raw bytes into the framer&#39;s internal buffer." alt="" coords="9,579,223,619"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="374,417,316,491,275,533,228,568,202,581,199,577,225,564,271,529,312,488,370,414"/>
+<area shape="rect" id="Node000011" href="$classunilink_1_1memory_1_1SafeSpan.html#aca8847522002cd25db3d0466fb4db386" title=" " alt="" coords="17,643,215,683"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="380,418,359,464,326,522,283,582,257,610,228,634,208,645,205,641,225,629,253,606,278,579,322,519,354,462,376,416"/>
+<area shape="rect" id="Node000012" href="$classunilink_1_1memory_1_1SafeDataBuffer.html#ac1c2be33e14dec0c11aa933426ad6bb0" title=" " alt="" coords="18,707,214,747"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="384,418,367,475,336,551,315,591,290,630,261,666,228,697,209,710,207,705,225,693,257,662,286,627,310,588,331,548,361,474,379,416"/>
 </map>

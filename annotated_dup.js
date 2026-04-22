@@ -17,42 +17,42 @@ var annotated_dup =
         [ "UnifiedBuilder", "classunilink_1_1builder_1_1UnifiedBuilder.html", "classunilink_1_1builder_1_1UnifiedBuilder" ]
       ] ],
       [ "concurrency", "namespaceunilink_1_1concurrency.html", [
-        [ "IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", "classunilink_1_1concurrency_1_1IoContextManager" ],
-        [ "ThreadSafeState", "classunilink_1_1concurrency_1_1ThreadSafeState.html", "classunilink_1_1concurrency_1_1ThreadSafeState" ],
         [ "AtomicState", "classunilink_1_1concurrency_1_1AtomicState.html", "classunilink_1_1concurrency_1_1AtomicState" ],
+        [ "IoContextManager", "classunilink_1_1concurrency_1_1IoContextManager.html", "classunilink_1_1concurrency_1_1IoContextManager" ],
         [ "ThreadSafeCounter", "classunilink_1_1concurrency_1_1ThreadSafeCounter.html", "classunilink_1_1concurrency_1_1ThreadSafeCounter" ],
-        [ "ThreadSafeFlag", "classunilink_1_1concurrency_1_1ThreadSafeFlag.html", "classunilink_1_1concurrency_1_1ThreadSafeFlag" ]
+        [ "ThreadSafeFlag", "classunilink_1_1concurrency_1_1ThreadSafeFlag.html", "classunilink_1_1concurrency_1_1ThreadSafeFlag" ],
+        [ "ThreadSafeState", "classunilink_1_1concurrency_1_1ThreadSafeState.html", "classunilink_1_1concurrency_1_1ThreadSafeState" ]
       ] ],
       [ "config", "namespaceunilink_1_1config.html", [
         [ "ConfigFactory", "classunilink_1_1config_1_1ConfigFactory.html", "classunilink_1_1config_1_1ConfigFactory" ],
-        [ "ConfigPresets", "classunilink_1_1config_1_1ConfigPresets.html", "classunilink_1_1config_1_1ConfigPresets" ],
-        [ "ConfigManager", "classunilink_1_1config_1_1ConfigManager.html", "classunilink_1_1config_1_1ConfigManager" ],
-        [ "ValidationResult", "structunilink_1_1config_1_1ValidationResult.html", "structunilink_1_1config_1_1ValidationResult" ],
         [ "ConfigItem", "structunilink_1_1config_1_1ConfigItem.html", "structunilink_1_1config_1_1ConfigItem" ],
+        [ "ConfigManager", "classunilink_1_1config_1_1ConfigManager.html", "classunilink_1_1config_1_1ConfigManager" ],
         [ "ConfigManagerInterface", "classunilink_1_1config_1_1ConfigManagerInterface.html", "classunilink_1_1config_1_1ConfigManagerInterface" ],
+        [ "ConfigPresets", "classunilink_1_1config_1_1ConfigPresets.html", "classunilink_1_1config_1_1ConfigPresets" ],
         [ "SerialConfig", "structunilink_1_1config_1_1SerialConfig.html", "structunilink_1_1config_1_1SerialConfig" ],
         [ "TcpClientConfig", "structunilink_1_1config_1_1TcpClientConfig.html", "structunilink_1_1config_1_1TcpClientConfig" ],
         [ "TcpServerConfig", "structunilink_1_1config_1_1TcpServerConfig.html", "structunilink_1_1config_1_1TcpServerConfig" ],
         [ "UdpConfig", "structunilink_1_1config_1_1UdpConfig.html", "structunilink_1_1config_1_1UdpConfig" ],
         [ "UdsClientConfig", "structunilink_1_1config_1_1UdsClientConfig.html", "structunilink_1_1config_1_1UdsClientConfig" ],
-        [ "UdsServerConfig", "structunilink_1_1config_1_1UdsServerConfig.html", "structunilink_1_1config_1_1UdsServerConfig" ]
+        [ "UdsServerConfig", "structunilink_1_1config_1_1UdsServerConfig.html", "structunilink_1_1config_1_1UdsServerConfig" ],
+        [ "ValidationResult", "structunilink_1_1config_1_1ValidationResult.html", "structunilink_1_1config_1_1ValidationResult" ]
       ] ],
       [ "diagnostics", "namespaceunilink_1_1diagnostics.html", [
+        [ "AsyncLogConfig", "structunilink_1_1diagnostics_1_1AsyncLogConfig.html", "structunilink_1_1diagnostics_1_1AsyncLogConfig" ],
+        [ "AsyncLogStats", "structunilink_1_1diagnostics_1_1AsyncLogStats.html", "structunilink_1_1diagnostics_1_1AsyncLogStats" ],
+        [ "BuilderException", "classunilink_1_1diagnostics_1_1BuilderException.html", "classunilink_1_1diagnostics_1_1BuilderException" ],
+        [ "ConfigurationException", "classunilink_1_1diagnostics_1_1ConfigurationException.html", "classunilink_1_1diagnostics_1_1ConfigurationException" ],
+        [ "ConnectionException", "classunilink_1_1diagnostics_1_1ConnectionException.html", "classunilink_1_1diagnostics_1_1ConnectionException" ],
         [ "ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", "classunilink_1_1diagnostics_1_1ErrorHandler" ],
         [ "ErrorInfo", "structunilink_1_1diagnostics_1_1ErrorInfo.html", "structunilink_1_1diagnostics_1_1ErrorInfo" ],
         [ "ErrorStats", "structunilink_1_1diagnostics_1_1ErrorStats.html", "structunilink_1_1diagnostics_1_1ErrorStats" ],
-        [ "UnilinkException", "classunilink_1_1diagnostics_1_1UnilinkException.html", "classunilink_1_1diagnostics_1_1UnilinkException" ],
-        [ "BuilderException", "classunilink_1_1diagnostics_1_1BuilderException.html", "classunilink_1_1diagnostics_1_1BuilderException" ],
-        [ "ValidationException", "classunilink_1_1diagnostics_1_1ValidationException.html", "classunilink_1_1diagnostics_1_1ValidationException" ],
-        [ "MemoryException", "classunilink_1_1diagnostics_1_1MemoryException.html", "classunilink_1_1diagnostics_1_1MemoryException" ],
-        [ "ConnectionException", "classunilink_1_1diagnostics_1_1ConnectionException.html", "classunilink_1_1diagnostics_1_1ConnectionException" ],
-        [ "ConfigurationException", "classunilink_1_1diagnostics_1_1ConfigurationException.html", "classunilink_1_1diagnostics_1_1ConfigurationException" ],
-        [ "LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],
-        [ "LogRotation", "classunilink_1_1diagnostics_1_1LogRotation.html", "classunilink_1_1diagnostics_1_1LogRotation" ],
         [ "LogEntry", "structunilink_1_1diagnostics_1_1LogEntry.html", "structunilink_1_1diagnostics_1_1LogEntry" ],
-        [ "AsyncLogConfig", "structunilink_1_1diagnostics_1_1AsyncLogConfig.html", "structunilink_1_1diagnostics_1_1AsyncLogConfig" ],
-        [ "AsyncLogStats", "structunilink_1_1diagnostics_1_1AsyncLogStats.html", "structunilink_1_1diagnostics_1_1AsyncLogStats" ],
-        [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ]
+        [ "Logger", "classunilink_1_1diagnostics_1_1Logger.html", "classunilink_1_1diagnostics_1_1Logger" ],
+        [ "LogRotation", "classunilink_1_1diagnostics_1_1LogRotation.html", "classunilink_1_1diagnostics_1_1LogRotation" ],
+        [ "LogRotationConfig", "structunilink_1_1diagnostics_1_1LogRotationConfig.html", "structunilink_1_1diagnostics_1_1LogRotationConfig" ],
+        [ "MemoryException", "classunilink_1_1diagnostics_1_1MemoryException.html", "classunilink_1_1diagnostics_1_1MemoryException" ],
+        [ "UnilinkException", "classunilink_1_1diagnostics_1_1UnilinkException.html", "classunilink_1_1diagnostics_1_1UnilinkException" ],
+        [ "ValidationException", "classunilink_1_1diagnostics_1_1ValidationException.html", "classunilink_1_1diagnostics_1_1ValidationException" ]
       ] ],
       [ "factory", "namespaceunilink_1_1factory.html", [
         [ "ChannelFactory", "classunilink_1_1factory_1_1ChannelFactory.html", "classunilink_1_1factory_1_1ChannelFactory" ]
@@ -73,15 +73,15 @@ var annotated_dup =
         [ "UdsSocketInterface", "classunilink_1_1interface_1_1UdsSocketInterface.html", "classunilink_1_1interface_1_1UdsSocketInterface" ]
       ] ],
       [ "memory", "namespaceunilink_1_1memory.html", [
-        [ "MemoryPool", "classunilink_1_1memory_1_1MemoryPool.html", "classunilink_1_1memory_1_1MemoryPool" ],
         [ "GlobalMemoryPool", "classunilink_1_1memory_1_1GlobalMemoryPool.html", "classunilink_1_1memory_1_1GlobalMemoryPool" ],
-        [ "PooledBuffer", "classunilink_1_1memory_1_1PooledBuffer.html", "classunilink_1_1memory_1_1PooledBuffer" ],
-        [ "MemoryTracker", "classunilink_1_1memory_1_1MemoryTracker.html", "classunilink_1_1memory_1_1MemoryTracker" ],
-        [ "ScopedMemoryTracker", "classunilink_1_1memory_1_1ScopedMemoryTracker.html", "classunilink_1_1memory_1_1ScopedMemoryTracker" ],
-        [ "MemoryValidator", "classunilink_1_1memory_1_1MemoryValidator.html", "classunilink_1_1memory_1_1MemoryValidator" ],
         [ "MemoryPatternGenerator", "classunilink_1_1memory_1_1MemoryPatternGenerator.html", "classunilink_1_1memory_1_1MemoryPatternGenerator" ],
+        [ "MemoryPool", "classunilink_1_1memory_1_1MemoryPool.html", "classunilink_1_1memory_1_1MemoryPool" ],
+        [ "MemoryTracker", "classunilink_1_1memory_1_1MemoryTracker.html", "classunilink_1_1memory_1_1MemoryTracker" ],
+        [ "MemoryValidator", "classunilink_1_1memory_1_1MemoryValidator.html", "classunilink_1_1memory_1_1MemoryValidator" ],
+        [ "PooledBuffer", "classunilink_1_1memory_1_1PooledBuffer.html", "classunilink_1_1memory_1_1PooledBuffer" ],
         [ "SafeDataBuffer", "classunilink_1_1memory_1_1SafeDataBuffer.html", "classunilink_1_1memory_1_1SafeDataBuffer" ],
-        [ "SafeSpan", "classunilink_1_1memory_1_1SafeSpan.html", "classunilink_1_1memory_1_1SafeSpan" ]
+        [ "SafeSpan", "classunilink_1_1memory_1_1SafeSpan.html", "classunilink_1_1memory_1_1SafeSpan" ],
+        [ "ScopedMemoryTracker", "classunilink_1_1memory_1_1ScopedMemoryTracker.html", "classunilink_1_1memory_1_1ScopedMemoryTracker" ]
       ] ],
       [ "transport", "namespaceunilink_1_1transport.html", [
         [ "detail", "namespaceunilink_1_1transport_1_1detail.html", [
@@ -89,15 +89,15 @@ var annotated_dup =
           [ "UdsReconnectLogicDecision", "structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision.html", "structunilink_1_1transport_1_1detail_1_1UdsReconnectLogicDecision" ]
         ] ],
         [ "BoostSerialPort", "classunilink_1_1transport_1_1BoostSerialPort.html", "classunilink_1_1transport_1_1BoostSerialPort" ],
-        [ "Serial", "classunilink_1_1transport_1_1Serial.html", "classunilink_1_1transport_1_1Serial" ],
-        [ "TcpClient", "classunilink_1_1transport_1_1TcpClient.html", "classunilink_1_1transport_1_1TcpClient" ],
         [ "BoostTcpAcceptor", "classunilink_1_1transport_1_1BoostTcpAcceptor.html", "classunilink_1_1transport_1_1BoostTcpAcceptor" ],
         [ "BoostTcpSocket", "classunilink_1_1transport_1_1BoostTcpSocket.html", "classunilink_1_1transport_1_1BoostTcpSocket" ],
+        [ "BoostUdsAcceptor", "classunilink_1_1transport_1_1BoostUdsAcceptor.html", "classunilink_1_1transport_1_1BoostUdsAcceptor" ],
+        [ "BoostUdsSocket", "classunilink_1_1transport_1_1BoostUdsSocket.html", "classunilink_1_1transport_1_1BoostUdsSocket" ],
+        [ "Serial", "classunilink_1_1transport_1_1Serial.html", "classunilink_1_1transport_1_1Serial" ],
+        [ "TcpClient", "classunilink_1_1transport_1_1TcpClient.html", "classunilink_1_1transport_1_1TcpClient" ],
         [ "TcpServer", "classunilink_1_1transport_1_1TcpServer.html", "classunilink_1_1transport_1_1TcpServer" ],
         [ "TcpServerSession", "classunilink_1_1transport_1_1TcpServerSession.html", "classunilink_1_1transport_1_1TcpServerSession" ],
         [ "UdpChannel", "classunilink_1_1transport_1_1UdpChannel.html", "classunilink_1_1transport_1_1UdpChannel" ],
-        [ "BoostUdsAcceptor", "classunilink_1_1transport_1_1BoostUdsAcceptor.html", "classunilink_1_1transport_1_1BoostUdsAcceptor" ],
-        [ "BoostUdsSocket", "classunilink_1_1transport_1_1BoostUdsSocket.html", "classunilink_1_1transport_1_1BoostUdsSocket" ],
         [ "UdsClient", "classunilink_1_1transport_1_1UdsClient.html", "classunilink_1_1transport_1_1UdsClient" ],
         [ "UdsServer", "classunilink_1_1transport_1_1UdsServer.html", "classunilink_1_1transport_1_1UdsServer" ],
         [ "UdsServerSession", "classunilink_1_1transport_1_1UdsServerSession.html", "classunilink_1_1transport_1_1UdsServerSession" ]
@@ -106,12 +106,12 @@ var annotated_dup =
         [ "InputValidator", "classunilink_1_1util_1_1InputValidator.html", "classunilink_1_1util_1_1InputValidator" ]
       ] ],
       [ "wrapper", "namespaceunilink_1_1wrapper.html", [
-        [ "MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html", "classunilink_1_1wrapper_1_1MessageContext" ],
+        [ "ChannelInterface", "classunilink_1_1wrapper_1_1ChannelInterface.html", "classunilink_1_1wrapper_1_1ChannelInterface" ],
         [ "ConnectionContext", "classunilink_1_1wrapper_1_1ConnectionContext.html", "classunilink_1_1wrapper_1_1ConnectionContext" ],
         [ "ErrorContext", "classunilink_1_1wrapper_1_1ErrorContext.html", "classunilink_1_1wrapper_1_1ErrorContext" ],
-        [ "ChannelInterface", "classunilink_1_1wrapper_1_1ChannelInterface.html", "classunilink_1_1wrapper_1_1ChannelInterface" ],
-        [ "ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html", "classunilink_1_1wrapper_1_1ServerInterface" ],
+        [ "MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html", "classunilink_1_1wrapper_1_1MessageContext" ],
         [ "Serial", "classunilink_1_1wrapper_1_1Serial.html", "classunilink_1_1wrapper_1_1Serial" ],
+        [ "ServerInterface", "classunilink_1_1wrapper_1_1ServerInterface.html", "classunilink_1_1wrapper_1_1ServerInterface" ],
         [ "TcpClient", "classunilink_1_1wrapper_1_1TcpClient.html", "classunilink_1_1wrapper_1_1TcpClient" ],
         [ "TcpServer", "classunilink_1_1wrapper_1_1TcpServer.html", "classunilink_1_1wrapper_1_1TcpServer" ],
         [ "UdpClient", "classunilink_1_1wrapper_1_1UdpClient.html", "classunilink_1_1wrapper_1_1UdpClient" ],

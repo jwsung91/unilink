@@ -16,7 +16,7 @@ var classunilink_1_1wrapper_1_1UdpClient =
     [ "on_disconnect", "classunilink_1_1wrapper_1_1UdpClient.html#a3ac5cc7051be02b215b4ccef74a52721", null ],
     [ "on_error", "classunilink_1_1wrapper_1_1UdpClient.html#a1d5c3263890dfdcb917bac58bfecabca", null ],
     [ "on_message", "classunilink_1_1wrapper_1_1UdpClient.html#a8b83eaffeb7e280b88ff3e107b0e2806", null ],
-    [ "operator=", "classunilink_1_1wrapper_1_1UdpClient.html#a4cf08ccdb17a3035a07116ba4d3f4139", null ],
+    [ "operator=", "classunilink_1_1wrapper_1_1UdpClient.html#ab98bf966b32028e4099fdb4238f670cb", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1UdpClient.html#ab5fdcb6f6998e30c96c5dc5e8b9f9e4c", null ],
     [ "send", "classunilink_1_1wrapper_1_1UdpClient.html#ac7cb513ae60cf2683582feb75c64e5b3", null ],
     [ "send_line", "classunilink_1_1wrapper_1_1UdpClient.html#a926ac38e4174653fda3d00a504cac4c1", null ],

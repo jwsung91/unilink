@@ -18,7 +18,7 @@ var classunilink_1_1wrapper_1_1TcpClient =
     [ "on_disconnect", "classunilink_1_1wrapper_1_1TcpClient.html#a4401c5e02864adee270e6d74ba7ea93f", null ],
     [ "on_error", "classunilink_1_1wrapper_1_1TcpClient.html#a0a9e954a14b22cef576b6b04162c31dc", null ],
     [ "on_message", "classunilink_1_1wrapper_1_1TcpClient.html#aa98e66f891ab2aa92cee67d40e094158", null ],
-    [ "operator=", "classunilink_1_1wrapper_1_1TcpClient.html#a1baa887349897bca5c2ba76de1ede484", null ],
+    [ "operator=", "classunilink_1_1wrapper_1_1TcpClient.html#aec6394c4dbbf6f266c6566215200bc94", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1TcpClient.html#a044c48c7e3accbb1a75c955bb0646e9b", null ],
     [ "retry_interval", "classunilink_1_1wrapper_1_1TcpClient.html#a1c82047870092eb93fa8002375348d72", null ],
     [ "send", "classunilink_1_1wrapper_1_1TcpClient.html#abfd2fff029f6c241cd0b39b75ce92e43", null ],

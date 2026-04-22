@@ -1,6 +1,6 @@
 var platform_8hpp =
 [
-    [ "PlatformInfo", "classunilink_1_1base_1_1PlatformInfo.html", "classunilink_1_1base_1_1PlatformInfo" ],
+    [ "unilink::base::PlatformInfo", "classunilink_1_1base_1_1PlatformInfo.html", "classunilink_1_1base_1_1PlatformInfo" ],
     [ "UNILINK_ENABLE_ADVANCED_LOGGING", "platform_8hpp.html#afe0d7cd7df252192d1141a62f7d9115a", null ],
     [ "UNILINK_ENABLE_EXPERIMENTAL_FEATURES", "platform_8hpp.html#a2cc28df63e5129310463918a2e98290e", null ],
     [ "UNILINK_ENABLE_LATEST_OPTIMIZATIONS", "platform_8hpp.html#adacb9ea273da583f2e9794813d90efdc", null ],

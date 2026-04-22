@@ -1,6 +1,6 @@
 var error__handler_8hpp =
 [
-    [ "ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", "classunilink_1_1diagnostics_1_1ErrorHandler" ],
+    [ "unilink::diagnostics::ErrorHandler", "classunilink_1_1diagnostics_1_1ErrorHandler.html", "classunilink_1_1diagnostics_1_1ErrorHandler" ],
     [ "report_communication_error", "error__handler_8hpp.html#a5b7a4963a80bfaa872fd54ff9744c05a", null ],
     [ "report_configuration_error", "error__handler_8hpp.html#a3c203bfeff57e2f08d7a29383e05d367", null ],
     [ "report_connection_error", "error__handler_8hpp.html#a7f2b308de562edc3c4c1d821b9a65f5e", null ],
