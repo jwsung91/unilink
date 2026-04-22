@@ -48,3 +48,18 @@ html.dark-mode {
     display: flex;
     justify-content: center;
 }
+
+/* Copy Button UX Improvement */
+.p-copy-button {
+    background-color: var(--fragment-background) !important;
+    border: 1px solid var(--separator-color) !important;
+    border-radius: var(--border-radius-small) !important;
+    opacity: 0.6;
+}
+
+.p-copy-button:hover {
+    opacity: 1;
+    background-color: var(--primary-light-color) !important;
+    color: var(--on-primary-color) !important;
+}
+

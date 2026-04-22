@@ -5,21 +5,25 @@ def filter_mermaid(content):
     # 1. ```mermaid 블록을 @mermaid{ ... }로 변환
     def replace_mermaid(match):
         code = match.group(1).strip()
+        # Ensure newlines are preserved for doxygen verbatim
         return f"\n@mermaid{{{code}}}\n"
 
     mermaid_pattern = re.compile(r"```mermaid\s*(.*?)\s*```", re.DOTALL)
     content = mermaid_pattern.sub(replace_mermaid, content)
     
     # 2. 코드 블록(```cpp 등) 내의 @ 기호를 @@로 변환하여 Doxygen 명령어 오인 방지
-    # 마크다운 전체를 대상으로 @ -> @@를 하면 일반 텍스트나 Mermaid 명령어까지 깨지므로,
-    # 코드 블록 내부만 타겟팅합니다.
     def escape_at_in_code(match):
         code_content = match.group(0)
         return code_content.replace("@", "@@")
 
-    # 일반 코드 블록 (``` ... ```)
     code_block_pattern = re.compile(r"```.*?```", re.DOTALL)
     content = code_block_pattern.sub(escape_at_in_code, content)
+    
+    # 3. 마크다운 내부 앵커 링크 보정 (Doxygen 경고 방지)
+    # [Text](#anchor) -> [Text](@ref anchor) 또는 [Text](#anchor) 형태 유지하되
+    # Doxygen이 이해할 수 있도록 도움을 줍니다. 
+    # 여기서는 단순히 앵커 형식을 유지하거나, 필요 시 변환 로직을 넣을 수 있습니다.
+    # 현재는 Mermaid와 @ 이스케이프가 주 목적이므로 이 부분은 필요시 확장 가능하도록 둡니다.
     
     return content
 

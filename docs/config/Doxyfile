@@ -1384,7 +1384,8 @@ HTML_EXTRA_STYLESHEET  = docs/config/doxygen-awesome.css docs/config/custom-awes
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = docs/config/doxygen-awesome-darkmode-toggle.js \
+HTML_EXTRA_FILES       = docs/img/logo.png \
+                         docs/config/doxygen-awesome-darkmode-toggle.js \
                          docs/config/doxygen-awesome-fragment-copy-button.js \
                          docs/config/doxygen-awesome-paragraph-link.js \
                          docs/config/doxygen-awesome-interactive-toc.js
