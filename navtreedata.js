@@ -689,175 +689,179 @@ var NAVTREE =
       [ "Examples and Tests", "md_docs_index.html#autotoc_md711", null ],
       [ "Notes For Maintainers", "md_docs_index.html#autotoc_md712", null ]
     ] ],
+    [ "Mermaid Test Page", "md_docs_mermaid_test.html", [
+      [ "Flowchart Test", "md_docs_mermaid_test.html#autotoc_md714", null ],
+      [ "Sequence Diagram Test", "md_docs_mermaid_test.html#autotoc_md715", null ]
+    ] ],
     [ "Unilink API Guide", "md_docs_reference_api_guide.html", [
-      [ "Table of Contents", "md_docs_reference_api_guide.html#autotoc_md723", null ],
-      [ "Builder API", "md_docs_reference_api_guide.html#autotoc_md725", [
-        [ "Core Concept", "md_docs_reference_api_guide.html#autotoc_md726", null ],
-        [ "Common Methods (All Builders)", "md_docs_reference_api_guide.html#autotoc_md727", null ],
-        [ "Framed Message Handling", "md_docs_reference_api_guide.html#autotoc_md728", null ],
-        [ "IO Context Ownership (advanced)", "md_docs_reference_api_guide.html#autotoc_md729", null ]
+      [ "Table of Contents", "md_docs_reference_api_guide.html#autotoc_md726", null ],
+      [ "Builder API", "md_docs_reference_api_guide.html#autotoc_md728", [
+        [ "Core Concept", "md_docs_reference_api_guide.html#autotoc_md729", null ],
+        [ "Common Methods (All Builders)", "md_docs_reference_api_guide.html#autotoc_md730", null ],
+        [ "Framed Message Handling", "md_docs_reference_api_guide.html#autotoc_md731", null ],
+        [ "IO Context Ownership (advanced)", "md_docs_reference_api_guide.html#autotoc_md732", null ]
       ] ],
-      [ "TCP Client", "md_docs_reference_api_guide.html#autotoc_md731", [
-        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md732", null ],
-        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md733", [
-          [ "Constructor", "md_docs_reference_api_guide.html#autotoc_md734", null ],
-          [ "Builder Methods", "md_docs_reference_api_guide.html#autotoc_md735", null ],
-          [ "Instance Methods", "md_docs_reference_api_guide.html#autotoc_md736", null ]
+      [ "TCP Client", "md_docs_reference_api_guide.html#autotoc_md734", [
+        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md735", null ],
+        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md736", [
+          [ "Constructor", "md_docs_reference_api_guide.html#autotoc_md737", null ],
+          [ "Builder Methods", "md_docs_reference_api_guide.html#autotoc_md738", null ],
+          [ "Instance Methods", "md_docs_reference_api_guide.html#autotoc_md739", null ]
         ] ],
-        [ "Advanced Examples", "md_docs_reference_api_guide.html#autotoc_md737", [
-          [ "With Member Functions", "md_docs_reference_api_guide.html#autotoc_md738", null ],
-          [ "With Lambda Capture", "md_docs_reference_api_guide.html#autotoc_md739", null ],
-          [ "Custom Reconnect Policy (Transport Layer)", "md_docs_reference_api_guide.html#autotoc_md740", null ]
+        [ "Advanced Examples", "md_docs_reference_api_guide.html#autotoc_md740", [
+          [ "With Member Functions", "md_docs_reference_api_guide.html#autotoc_md741", null ],
+          [ "With Lambda Capture", "md_docs_reference_api_guide.html#autotoc_md742", null ],
+          [ "Custom Reconnect Policy (Transport Layer)", "md_docs_reference_api_guide.html#autotoc_md743", null ]
         ] ]
       ] ],
-      [ "TCP Server", "md_docs_reference_api_guide.html#autotoc_md742", [
-        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md743", null ],
-        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md744", [
-          [ "Constructor", "md_docs_reference_api_guide.html#autotoc_md745", null ],
-          [ "Builder Methods", "md_docs_reference_api_guide.html#autotoc_md746", null ],
-          [ "Instance Methods", "md_docs_reference_api_guide.html#autotoc_md747", null ]
+      [ "TCP Server", "md_docs_reference_api_guide.html#autotoc_md745", [
+        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md746", null ],
+        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md747", [
+          [ "Constructor", "md_docs_reference_api_guide.html#autotoc_md748", null ],
+          [ "Builder Methods", "md_docs_reference_api_guide.html#autotoc_md749", null ],
+          [ "Instance Methods", "md_docs_reference_api_guide.html#autotoc_md750", null ]
         ] ],
-        [ "Advanced Examples", "md_docs_reference_api_guide.html#autotoc_md748", [
-          [ "Single Client Mode", "md_docs_reference_api_guide.html#autotoc_md749", null ],
-          [ "Port Retry", "md_docs_reference_api_guide.html#autotoc_md750", null ],
-          [ "Echo Server Pattern", "md_docs_reference_api_guide.html#autotoc_md751", null ]
+        [ "Advanced Examples", "md_docs_reference_api_guide.html#autotoc_md751", [
+          [ "Single Client Mode", "md_docs_reference_api_guide.html#autotoc_md752", null ],
+          [ "Port Retry", "md_docs_reference_api_guide.html#autotoc_md753", null ],
+          [ "Echo Server Pattern", "md_docs_reference_api_guide.html#autotoc_md754", null ]
         ] ]
       ] ],
-      [ "Serial Communication", "md_docs_reference_api_guide.html#autotoc_md753", [
-        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md754", null ],
-        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md755", [
-          [ "Constructor", "md_docs_reference_api_guide.html#autotoc_md756", null ],
-          [ "Builder Methods", "md_docs_reference_api_guide.html#autotoc_md757", null ],
-          [ "Instance Methods", "md_docs_reference_api_guide.html#autotoc_md758", null ]
+      [ "Serial Communication", "md_docs_reference_api_guide.html#autotoc_md756", [
+        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md757", null ],
+        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md758", [
+          [ "Constructor", "md_docs_reference_api_guide.html#autotoc_md759", null ],
+          [ "Builder Methods", "md_docs_reference_api_guide.html#autotoc_md760", null ],
+          [ "Instance Methods", "md_docs_reference_api_guide.html#autotoc_md761", null ]
         ] ],
-        [ "Device Paths", "md_docs_reference_api_guide.html#autotoc_md759", null ],
-        [ "Advanced Examples", "md_docs_reference_api_guide.html#autotoc_md760", [
-          [ "Arduino Communication", "md_docs_reference_api_guide.html#autotoc_md761", null ],
-          [ "GPS Module", "md_docs_reference_api_guide.html#autotoc_md762", null ]
+        [ "Device Paths", "md_docs_reference_api_guide.html#autotoc_md762", null ],
+        [ "Advanced Examples", "md_docs_reference_api_guide.html#autotoc_md763", [
+          [ "Arduino Communication", "md_docs_reference_api_guide.html#autotoc_md764", null ],
+          [ "GPS Module", "md_docs_reference_api_guide.html#autotoc_md765", null ]
         ] ]
       ] ],
-      [ "UDP Communication", "md_docs_reference_api_guide.html#autotoc_md764", [
-        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md765", [
-          [ "UDP Receiver (Server)", "md_docs_reference_api_guide.html#autotoc_md766", null ],
-          [ "UDP Sender (Client)", "md_docs_reference_api_guide.html#autotoc_md767", null ]
+      [ "UDP Communication", "md_docs_reference_api_guide.html#autotoc_md767", [
+        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md768", [
+          [ "UDP Receiver (Server)", "md_docs_reference_api_guide.html#autotoc_md769", null ],
+          [ "UDP Sender (Client)", "md_docs_reference_api_guide.html#autotoc_md770", null ]
         ] ],
-        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md768", [
-          [ "Constructor", "md_docs_reference_api_guide.html#autotoc_md769", null ],
-          [ "Builder Methods", "md_docs_reference_api_guide.html#autotoc_md770", null ],
-          [ "Instance Methods", "md_docs_reference_api_guide.html#autotoc_md771", null ]
+        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md771", [
+          [ "Constructor", "md_docs_reference_api_guide.html#autotoc_md772", null ],
+          [ "Builder Methods", "md_docs_reference_api_guide.html#autotoc_md773", null ],
+          [ "Instance Methods", "md_docs_reference_api_guide.html#autotoc_md774", null ]
         ] ],
-        [ "Advanced Examples", "md_docs_reference_api_guide.html#autotoc_md772", [
-          [ "Echo Reply (Receiver)", "md_docs_reference_api_guide.html#autotoc_md773", null ]
+        [ "Advanced Examples", "md_docs_reference_api_guide.html#autotoc_md775", [
+          [ "Echo Reply (Receiver)", "md_docs_reference_api_guide.html#autotoc_md776", null ]
         ] ]
       ] ],
-      [ "UDS Communication", "md_docs_reference_api_guide.html#autotoc_md775", [
-        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md776", [
-          [ "UDS Server", "md_docs_reference_api_guide.html#autotoc_md777", null ],
-          [ "UDS Client", "md_docs_reference_api_guide.html#autotoc_md778", null ]
+      [ "UDS Communication", "md_docs_reference_api_guide.html#autotoc_md778", [
+        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md779", [
+          [ "UDS Server", "md_docs_reference_api_guide.html#autotoc_md780", null ],
+          [ "UDS Client", "md_docs_reference_api_guide.html#autotoc_md781", null ]
         ] ],
-        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md779", [
-          [ "Constructors", "md_docs_reference_api_guide.html#autotoc_md780", null ],
-          [ "Builder Methods (UDS Server)", "md_docs_reference_api_guide.html#autotoc_md781", null ],
-          [ "Builder Methods (UDS Client)", "md_docs_reference_api_guide.html#autotoc_md782", null ],
-          [ "Instance Methods (UDS Client)", "md_docs_reference_api_guide.html#autotoc_md783", null ],
-          [ "Instance Methods (UDS Server)", "md_docs_reference_api_guide.html#autotoc_md784", null ]
+        [ "API Reference", "md_docs_reference_api_guide.html#autotoc_md782", [
+          [ "Constructors", "md_docs_reference_api_guide.html#autotoc_md783", null ],
+          [ "Builder Methods (UDS Server)", "md_docs_reference_api_guide.html#autotoc_md784", null ],
+          [ "Builder Methods (UDS Client)", "md_docs_reference_api_guide.html#autotoc_md785", null ],
+          [ "Instance Methods (UDS Client)", "md_docs_reference_api_guide.html#autotoc_md786", null ],
+          [ "Instance Methods (UDS Server)", "md_docs_reference_api_guide.html#autotoc_md787", null ]
         ] ],
-        [ "Notes on UDS", "md_docs_reference_api_guide.html#autotoc_md785", null ]
+        [ "Notes on UDS", "md_docs_reference_api_guide.html#autotoc_md788", null ]
       ] ],
-      [ "Error Handling", "md_docs_reference_api_guide.html#autotoc_md787", [
-        [ "Setup Error Handler", "md_docs_reference_api_guide.html#autotoc_md788", null ],
-        [ "Error Levels", "md_docs_reference_api_guide.html#autotoc_md789", null ],
-        [ "Error Statistics", "md_docs_reference_api_guide.html#autotoc_md790", null ],
-        [ "Error Categories", "md_docs_reference_api_guide.html#autotoc_md791", null ]
+      [ "Error Handling", "md_docs_reference_api_guide.html#autotoc_md790", [
+        [ "Setup Error Handler", "md_docs_reference_api_guide.html#autotoc_md791", null ],
+        [ "Error Levels", "md_docs_reference_api_guide.html#autotoc_md792", null ],
+        [ "Error Statistics", "md_docs_reference_api_guide.html#autotoc_md793", null ],
+        [ "Error Categories", "md_docs_reference_api_guide.html#autotoc_md794", null ]
       ] ],
-      [ "Logging System", "md_docs_reference_api_guide.html#autotoc_md793", [
-        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md794", null ],
-        [ "Log Levels", "md_docs_reference_api_guide.html#autotoc_md795", null ],
-        [ "Async Logging", "md_docs_reference_api_guide.html#autotoc_md796", null ],
-        [ "Log Rotation", "md_docs_reference_api_guide.html#autotoc_md797", null ]
+      [ "Logging System", "md_docs_reference_api_guide.html#autotoc_md796", [
+        [ "Basic Usage", "md_docs_reference_api_guide.html#autotoc_md797", null ],
+        [ "Log Levels", "md_docs_reference_api_guide.html#autotoc_md798", null ],
+        [ "Async Logging", "md_docs_reference_api_guide.html#autotoc_md799", null ],
+        [ "Log Rotation", "md_docs_reference_api_guide.html#autotoc_md800", null ]
       ] ],
-      [ "Configuration Management", "md_docs_reference_api_guide.html#autotoc_md799", [
-        [ "Load Configuration from File", "md_docs_reference_api_guide.html#autotoc_md800", null ],
-        [ "Configuration File Format", "md_docs_reference_api_guide.html#autotoc_md801", null ]
+      [ "Configuration Management", "md_docs_reference_api_guide.html#autotoc_md802", [
+        [ "Load Configuration from File", "md_docs_reference_api_guide.html#autotoc_md803", null ],
+        [ "Configuration File Format", "md_docs_reference_api_guide.html#autotoc_md804", null ]
       ] ],
-      [ "Advanced Features", "md_docs_reference_api_guide.html#autotoc_md803", [
-        [ "Memory Pool", "md_docs_reference_api_guide.html#autotoc_md804", null ],
-        [ "Safe Data Buffer", "md_docs_reference_api_guide.html#autotoc_md805", null ],
-        [ "Thread-Safe State", "md_docs_reference_api_guide.html#autotoc_md806", null ]
+      [ "Advanced Features", "md_docs_reference_api_guide.html#autotoc_md806", [
+        [ "Memory Pool", "md_docs_reference_api_guide.html#autotoc_md807", null ],
+        [ "Safe Data Buffer", "md_docs_reference_api_guide.html#autotoc_md808", null ],
+        [ "Thread-Safe State", "md_docs_reference_api_guide.html#autotoc_md809", null ]
       ] ],
-      [ "Best Practices", "md_docs_reference_api_guide.html#autotoc_md808", [
-        [ "1. Always Handle Errors", "md_docs_reference_api_guide.html#autotoc_md809", null ],
-        [ "2. Use Explicit Lifecycle Control", "md_docs_reference_api_guide.html#autotoc_md810", null ],
-        [ "3. Set Appropriate Retry Intervals", "md_docs_reference_api_guide.html#autotoc_md811", null ],
-        [ "4. Enable Logging for Debugging", "md_docs_reference_api_guide.html#autotoc_md812", null ],
-        [ "5. Use Member Functions for OOP Design", "md_docs_reference_api_guide.html#autotoc_md813", null ]
+      [ "Best Practices", "md_docs_reference_api_guide.html#autotoc_md811", [
+        [ "1. Always Handle Errors", "md_docs_reference_api_guide.html#autotoc_md812", null ],
+        [ "2. Use Explicit Lifecycle Control", "md_docs_reference_api_guide.html#autotoc_md813", null ],
+        [ "3. Set Appropriate Retry Intervals", "md_docs_reference_api_guide.html#autotoc_md814", null ],
+        [ "4. Enable Logging for Debugging", "md_docs_reference_api_guide.html#autotoc_md815", null ],
+        [ "5. Use Member Functions for OOP Design", "md_docs_reference_api_guide.html#autotoc_md816", null ]
       ] ],
-      [ "Performance Tips", "md_docs_reference_api_guide.html#autotoc_md815", [
-        [ "1. Use Independent Context for Testing Only", "md_docs_reference_api_guide.html#autotoc_md816", null ],
-        [ "2. Enable Async Logging", "md_docs_reference_api_guide.html#autotoc_md817", null ],
-        [ "3. Use Memory Pool for Frequent Allocations", "md_docs_reference_api_guide.html#autotoc_md818", null ],
-        [ "4. Disable Unnecessary Features", "md_docs_reference_api_guide.html#autotoc_md819", null ]
+      [ "Performance Tips", "md_docs_reference_api_guide.html#autotoc_md818", [
+        [ "1. Use Independent Context for Testing Only", "md_docs_reference_api_guide.html#autotoc_md819", null ],
+        [ "2. Enable Async Logging", "md_docs_reference_api_guide.html#autotoc_md820", null ],
+        [ "3. Use Memory Pool for Frequent Allocations", "md_docs_reference_api_guide.html#autotoc_md821", null ],
+        [ "4. Disable Unnecessary Features", "md_docs_reference_api_guide.html#autotoc_md822", null ]
       ] ]
     ] ],
     [ "Test Structure", "md_docs_test_structure.html", [
-      [ "Layout", "md_docs_test_structure.html#autotoc_md821", null ],
-      [ "What Each Area Covers", "md_docs_test_structure.html#autotoc_md822", null ],
-      [ "Build-Time Controls", "md_docs_test_structure.html#autotoc_md823", null ],
-      [ "Running Tests", "md_docs_test_structure.html#autotoc_md824", [
-        [ "Run All Registered Tests", "md_docs_test_structure.html#autotoc_md825", null ],
-        [ "Run By Broad Category", "md_docs_test_structure.html#autotoc_md826", null ],
-        [ "Useful Focused Runs", "md_docs_test_structure.html#autotoc_md827", null ],
-        [ "Inspect What Is Currently Registered", "md_docs_test_structure.html#autotoc_md828", null ]
+      [ "Layout", "md_docs_test_structure.html#autotoc_md824", null ],
+      [ "What Each Area Covers", "md_docs_test_structure.html#autotoc_md825", null ],
+      [ "Build-Time Controls", "md_docs_test_structure.html#autotoc_md826", null ],
+      [ "Running Tests", "md_docs_test_structure.html#autotoc_md827", [
+        [ "Run All Registered Tests", "md_docs_test_structure.html#autotoc_md828", null ],
+        [ "Run By Broad Category", "md_docs_test_structure.html#autotoc_md829", null ],
+        [ "Useful Focused Runs", "md_docs_test_structure.html#autotoc_md830", null ],
+        [ "Inspect What Is Currently Registered", "md_docs_test_structure.html#autotoc_md831", null ]
       ] ],
-      [ "Notes", "md_docs_test_structure.html#autotoc_md829", null ],
-      [ "CI/CD Integration", "md_docs_test_structure.html#autotoc_md830", null ]
+      [ "Notes", "md_docs_test_structure.html#autotoc_md832", null ],
+      [ "CI/CD Integration", "md_docs_test_structure.html#autotoc_md833", null ]
     ] ],
     [ "Getting Started with Unilink", "md_docs_tutorials_01_getting_started.html", [
-      [ "What You'll Build", "md_docs_tutorials_01_getting_started.html#autotoc_md833", null ],
-      [ "Step 1: Create The Client", "md_docs_tutorials_01_getting_started.html#autotoc_md835", null ],
-      [ "Step 2: Build With CMake", "md_docs_tutorials_01_getting_started.html#autotoc_md837", null ],
-      [ "Step 3: Run Against A Test Server", "md_docs_tutorials_01_getting_started.html#autotoc_md839", null ],
-      [ "What Changed In The Current API", "md_docs_tutorials_01_getting_started.html#autotoc_md841", null ],
-      [ "Use The Full Example If You Want More", "md_docs_tutorials_01_getting_started.html#autotoc_md843", null ],
-      [ "Next Steps", "md_docs_tutorials_01_getting_started.html#autotoc_md845", null ]
+      [ "What You'll Build", "md_docs_tutorials_01_getting_started.html#autotoc_md836", null ],
+      [ "Step 1: Create The Client", "md_docs_tutorials_01_getting_started.html#autotoc_md838", null ],
+      [ "Step 2: Build With CMake", "md_docs_tutorials_01_getting_started.html#autotoc_md840", null ],
+      [ "Step 3: Run Against A Test Server", "md_docs_tutorials_01_getting_started.html#autotoc_md842", null ],
+      [ "What Changed In The Current API", "md_docs_tutorials_01_getting_started.html#autotoc_md844", null ],
+      [ "Use The Full Example If You Want More", "md_docs_tutorials_01_getting_started.html#autotoc_md846", null ],
+      [ "Next Steps", "md_docs_tutorials_01_getting_started.html#autotoc_md848", null ]
     ] ],
     [ "Building a TCP Server", "md_docs_tutorials_02_tcp_server.html", [
-      [ "What You'll Build", "md_docs_tutorials_02_tcp_server.html#autotoc_md849", null ],
-      [ "Step 1: Create The Server", "md_docs_tutorials_02_tcp_server.html#autotoc_md851", null ],
-      [ "Step 2: Run It", "md_docs_tutorials_02_tcp_server.html#autotoc_md853", null ],
-      [ "Step 3: Understand The Current Server API", "md_docs_tutorials_02_tcp_server.html#autotoc_md855", null ],
-      [ "Client Limits", "md_docs_tutorials_02_tcp_server.html#autotoc_md857", null ],
-      [ "Use The Full Example Programs For More", "md_docs_tutorials_02_tcp_server.html#autotoc_md859", null ],
-      [ "Next Steps", "md_docs_tutorials_02_tcp_server.html#autotoc_md861", null ]
+      [ "What You'll Build", "md_docs_tutorials_02_tcp_server.html#autotoc_md852", null ],
+      [ "Step 1: Create The Server", "md_docs_tutorials_02_tcp_server.html#autotoc_md854", null ],
+      [ "Step 2: Run It", "md_docs_tutorials_02_tcp_server.html#autotoc_md856", null ],
+      [ "Step 3: Understand The Current Server API", "md_docs_tutorials_02_tcp_server.html#autotoc_md858", null ],
+      [ "Client Limits", "md_docs_tutorials_02_tcp_server.html#autotoc_md860", null ],
+      [ "Use The Full Example Programs For More", "md_docs_tutorials_02_tcp_server.html#autotoc_md862", null ],
+      [ "Next Steps", "md_docs_tutorials_02_tcp_server.html#autotoc_md864", null ]
     ] ],
     [ "UDS Communication", "md_docs_tutorials_03_uds_communication.html", [
-      [ "What You'll Build", "md_docs_tutorials_03_uds_communication.html#autotoc_md865", null ],
-      [ "Step 1: Create A UDS Server", "md_docs_tutorials_03_uds_communication.html#autotoc_md867", null ],
-      [ "Step 2: Create A UDS Client", "md_docs_tutorials_03_uds_communication.html#autotoc_md869", null ],
-      [ "Why Use UDS Instead Of TCP", "md_docs_tutorials_03_uds_communication.html#autotoc_md871", null ],
-      [ "Operational Notes", "md_docs_tutorials_03_uds_communication.html#autotoc_md873", null ],
-      [ "Next Steps", "md_docs_tutorials_03_uds_communication.html#autotoc_md875", null ]
+      [ "What You'll Build", "md_docs_tutorials_03_uds_communication.html#autotoc_md868", null ],
+      [ "Step 1: Create A UDS Server", "md_docs_tutorials_03_uds_communication.html#autotoc_md870", null ],
+      [ "Step 2: Create A UDS Client", "md_docs_tutorials_03_uds_communication.html#autotoc_md872", null ],
+      [ "Why Use UDS Instead Of TCP", "md_docs_tutorials_03_uds_communication.html#autotoc_md874", null ],
+      [ "Operational Notes", "md_docs_tutorials_03_uds_communication.html#autotoc_md876", null ],
+      [ "Next Steps", "md_docs_tutorials_03_uds_communication.html#autotoc_md878", null ]
     ] ],
     [ "Serial Communication", "md_docs_tutorials_04_serial_communication.html", [
-      [ "What You'll Build", "md_docs_tutorials_04_serial_communication.html#autotoc_md879", null ],
-      [ "Step 1: Choose A Device Path", "md_docs_tutorials_04_serial_communication.html#autotoc_md881", null ],
-      [ "Step 2: Create A Minimal Serial Terminal", "md_docs_tutorials_04_serial_communication.html#autotoc_md883", null ],
-      [ "Step 3: Build And Run", "md_docs_tutorials_04_serial_communication.html#autotoc_md885", null ],
-      [ "Step 4: Test With A Second Terminal", "md_docs_tutorials_04_serial_communication.html#autotoc_md887", null ],
-      [ "Common Adjustments", "md_docs_tutorials_04_serial_communication.html#autotoc_md889", null ],
-      [ "When To Use The Example Programs Instead", "md_docs_tutorials_04_serial_communication.html#autotoc_md891", null ],
-      [ "Next Steps", "md_docs_tutorials_04_serial_communication.html#autotoc_md893", null ]
+      [ "What You'll Build", "md_docs_tutorials_04_serial_communication.html#autotoc_md882", null ],
+      [ "Step 1: Choose A Device Path", "md_docs_tutorials_04_serial_communication.html#autotoc_md884", null ],
+      [ "Step 2: Create A Minimal Serial Terminal", "md_docs_tutorials_04_serial_communication.html#autotoc_md886", null ],
+      [ "Step 3: Build And Run", "md_docs_tutorials_04_serial_communication.html#autotoc_md888", null ],
+      [ "Step 4: Test With A Second Terminal", "md_docs_tutorials_04_serial_communication.html#autotoc_md890", null ],
+      [ "Common Adjustments", "md_docs_tutorials_04_serial_communication.html#autotoc_md892", null ],
+      [ "When To Use The Example Programs Instead", "md_docs_tutorials_04_serial_communication.html#autotoc_md894", null ],
+      [ "Next Steps", "md_docs_tutorials_04_serial_communication.html#autotoc_md896", null ]
     ] ],
     [ "UDP Communication", "md_docs_tutorials_05_udp_communication.html", [
-      [ "What You'll Build", "md_docs_tutorials_05_udp_communication.html#autotoc_md897", null ],
-      [ "Step 1: Create A Receiver", "md_docs_tutorials_05_udp_communication.html#autotoc_md899", null ],
-      [ "Step 2: Create A Sender", "md_docs_tutorials_05_udp_communication.html#autotoc_md901", null ],
-      [ "Step 3: Build The Two Programs", "md_docs_tutorials_05_udp_communication.html#autotoc_md903", null ],
-      [ "Step 4: Run Both Programs", "md_docs_tutorials_05_udp_communication.html#autotoc_md905", null ],
-      [ "What Is Different About UDP", "md_docs_tutorials_05_udp_communication.html#autotoc_md907", null ],
-      [ "Practical Notes", "md_docs_tutorials_05_udp_communication.html#autotoc_md909", null ],
-      [ "Use The Full Examples For Repeated Testing", "md_docs_tutorials_05_udp_communication.html#autotoc_md911", null ],
-      [ "Next Steps", "md_docs_tutorials_05_udp_communication.html#autotoc_md913", null ]
+      [ "What You'll Build", "md_docs_tutorials_05_udp_communication.html#autotoc_md900", null ],
+      [ "Step 1: Create A Receiver", "md_docs_tutorials_05_udp_communication.html#autotoc_md902", null ],
+      [ "Step 2: Create A Sender", "md_docs_tutorials_05_udp_communication.html#autotoc_md904", null ],
+      [ "Step 3: Build The Two Programs", "md_docs_tutorials_05_udp_communication.html#autotoc_md906", null ],
+      [ "Step 4: Run Both Programs", "md_docs_tutorials_05_udp_communication.html#autotoc_md908", null ],
+      [ "What Is Different About UDP", "md_docs_tutorials_05_udp_communication.html#autotoc_md910", null ],
+      [ "Practical Notes", "md_docs_tutorials_05_udp_communication.html#autotoc_md912", null ],
+      [ "Use The Full Examples For Repeated Testing", "md_docs_tutorials_05_udp_communication.html#autotoc_md914", null ],
+      [ "Next Steps", "md_docs_tutorials_05_udp_communication.html#autotoc_md916", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -903,10 +907,10 @@ var NAVTREEINDEX =
 "md_docs_architecture_memory_safety.html#autotoc_md36",
 "md_docs_guides_core_troubleshooting.html#autotoc_md479",
 "md_docs_reference_api_guide.html#autotoc_md796",
-"namespaceunilink_1_1diagnostics.html#aee016aa3a0ee29635787a9755eb352f1",
-"structunilink_1_1diagnostics_1_1ErrorInfo.html#add67e4b87d957bd9eaf36117982d781a",
-"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a3efe1d201839fc98e1d387288a4a87ba",
-"structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#af4083548cf870abe8a600c38062c226c"
+"namespaceunilink_1_1diagnostics.html#abe2f9b15cdc3944c1ffe11e59ea3d34fa9fc5887c030f7a3e19821ebec457e719",
+"structunilink_1_1diagnostics_1_1ErrorInfo.html#a8a79a75dd8b77f302178afd3ff7ed665",
+"structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a34794cf543b00b92a5496ae220497b16",
+"structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ad433e6e6ad1872781b3cf94eda658c3f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,18 +1,18 @@
 var searchData=
 [
-  ['large_5fbuffer_5fthreshold_1993',['LARGE_BUFFER_THRESHOLD',['../namespaceunilink_1_1base_1_1constants.html#a31fd082f102ca75d526f168d29727168',1,'unilink::base::constants']]],
-  ['last_5ferr_5fmtx_5f_1994',['last_err_mtx_',['../structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a2728bb471090660fa06778c3e151f940',1,'unilink::transport::UdsClient::Impl::last_err_mtx_()'],['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a44de6845719945775d4a82c6396cb63a',1,'unilink::transport::TcpClient::Impl::last_err_mtx_()']]],
-  ['last_5ferror_1995',['last_error',['../structunilink_1_1diagnostics_1_1ErrorStats.html#ac4ac3c900ac7b8e6e2dc31c59d8c610b',1,'unilink::diagnostics::ErrorStats']]],
-  ['last_5ferror_5finfo_5f_1996',['last_error_info_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a98bc1dfa8b2453b339ab0ff5d5b51658',1,'unilink::transport::TcpClient::Impl::last_error_info_()'],['../structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a9d27aee66fd23bbe0befd1354f74de0e',1,'unilink::transport::UdsClient::Impl::last_error_info_()']]],
-  ['last_5fseen_1997',['last_seen',['../structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html#a0f4b891642c4e8ed0a330bb14501d4b4',1,'unilink::wrapper::UdpServer::Impl::SessionEntry']]],
-  ['length_1998',['length',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html#a3d32d6510371fe252f835963df263b00',1,'unilink::diagnostics::Logger::Impl::TimestampBuffer']]],
-  ['level_1999',['level',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#ac3644d1d58ce2a174d87f319ec7c6071',1,'unilink::diagnostics::ErrorInfo::level()'],['../structunilink_1_1diagnostics_1_1LogEntry.html#a14f7040624854a72de28224d3c7a6aea',1,'unilink::diagnostics::LogEntry::level()']]],
-  ['lifecycle_5fseq_5f_2000',['lifecycle_seq_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ac510c0cb02c4330db37f6af0192e43ec',1,'unilink::transport::TcpClient::Impl']]],
-  ['line_2001',['line',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a733e2ad1c87818881716646ebf885c60',1,'unilink::memory::MemoryTracker::AllocationInfo']]],
-  ['local_5faddress_2002',['local_address',['../structunilink_1_1config_1_1UdpConfig.html#af3692dcfb43f946cde3a71b75e58b1b9',1,'unilink::config::UdpConfig']]],
-  ['local_5fendpoint_5f_2003',['local_endpoint_',['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a34794cf543b00b92a5496ae220497b16',1,'unilink::transport::UdpChannel::Impl']]],
-  ['local_5fport_2004',['local_port',['../structunilink_1_1config_1_1UdpConfig.html#aed5e6c6e7407e9309bfdae634bcf5e71',1,'unilink::config::UdpConfig']]],
-  ['log_5fformat_5f_2005',['log_format_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aba0b6caf71e3e9e0730dbf6784ef0828',1,'unilink::diagnostics::Logger::Impl']]],
-  ['log_5fqueue_5f_2006',['log_queue_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a6cc2812ecab36f34742c9436655e0d51',1,'unilink::diagnostics::Logger::Impl']]],
-  ['log_5frotation_5f_2007',['log_rotation_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#ae3835a9ef3e3c5c4d396e0acabc6bdd4',1,'unilink::diagnostics::Logger::Impl']]]
+  ['large_5fbuffer_5fthreshold_1996',['LARGE_BUFFER_THRESHOLD',['../namespaceunilink_1_1base_1_1constants.html#a31fd082f102ca75d526f168d29727168',1,'unilink::base::constants']]],
+  ['last_5ferr_5fmtx_5f_1997',['last_err_mtx_',['../structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a2728bb471090660fa06778c3e151f940',1,'unilink::transport::UdsClient::Impl::last_err_mtx_()'],['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a44de6845719945775d4a82c6396cb63a',1,'unilink::transport::TcpClient::Impl::last_err_mtx_()']]],
+  ['last_5ferror_1998',['last_error',['../structunilink_1_1diagnostics_1_1ErrorStats.html#ac4ac3c900ac7b8e6e2dc31c59d8c610b',1,'unilink::diagnostics::ErrorStats']]],
+  ['last_5ferror_5finfo_5f_1999',['last_error_info_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#a98bc1dfa8b2453b339ab0ff5d5b51658',1,'unilink::transport::TcpClient::Impl::last_error_info_()'],['../structunilink_1_1transport_1_1UdsClient_1_1Impl.html#a9d27aee66fd23bbe0befd1354f74de0e',1,'unilink::transport::UdsClient::Impl::last_error_info_()']]],
+  ['last_5fseen_2000',['last_seen',['../structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html#a0f4b891642c4e8ed0a330bb14501d4b4',1,'unilink::wrapper::UdpServer::Impl::SessionEntry']]],
+  ['length_2001',['length',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl_1_1TimestampBuffer.html#a3d32d6510371fe252f835963df263b00',1,'unilink::diagnostics::Logger::Impl::TimestampBuffer']]],
+  ['level_2002',['level',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#ac3644d1d58ce2a174d87f319ec7c6071',1,'unilink::diagnostics::ErrorInfo::level()'],['../structunilink_1_1diagnostics_1_1LogEntry.html#a14f7040624854a72de28224d3c7a6aea',1,'unilink::diagnostics::LogEntry::level()']]],
+  ['lifecycle_5fseq_5f_2003',['lifecycle_seq_',['../structunilink_1_1transport_1_1TcpClient_1_1Impl.html#ac510c0cb02c4330db37f6af0192e43ec',1,'unilink::transport::TcpClient::Impl']]],
+  ['line_2004',['line',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a733e2ad1c87818881716646ebf885c60',1,'unilink::memory::MemoryTracker::AllocationInfo']]],
+  ['local_5faddress_2005',['local_address',['../structunilink_1_1config_1_1UdpConfig.html#af3692dcfb43f946cde3a71b75e58b1b9',1,'unilink::config::UdpConfig']]],
+  ['local_5fendpoint_5f_2006',['local_endpoint_',['../structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a34794cf543b00b92a5496ae220497b16',1,'unilink::transport::UdpChannel::Impl']]],
+  ['local_5fport_2007',['local_port',['../structunilink_1_1config_1_1UdpConfig.html#aed5e6c6e7407e9309bfdae634bcf5e71',1,'unilink::config::UdpConfig']]],
+  ['log_5fformat_5f_2008',['log_format_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#aba0b6caf71e3e9e0730dbf6784ef0828',1,'unilink::diagnostics::Logger::Impl']]],
+  ['log_5fqueue_5f_2009',['log_queue_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#a6cc2812ecab36f34742c9436655e0d51',1,'unilink::diagnostics::Logger::Impl']]],
+  ['log_5frotation_5f_2010',['log_rotation_',['../structunilink_1_1diagnostics_1_1Logger_1_1Impl.html#ae3835a9ef3e3c5c4d396e0acabc6bdd4',1,'unilink::diagnostics::Logger::Impl']]]
 ];
