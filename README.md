@@ -71,7 +71,7 @@ python3 -c "import unilink_py; print(unilink_py.__doc__)"
 ## 📚 Documentation
 
 The documentation is organized by learning stage, from quick start to advanced topics.
-You do **not** need to read everything to get started.
+Visit our **[Online Documentation](https://jwsung91.github.io/unilink/)** for the full modern experience with dark mode, interactive diagrams, and responsive UI.
 
 ### 🚦 Getting Started
 
