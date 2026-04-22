@@ -6,9 +6,11 @@ def filter_mermaid(content):
     def replace_mermaid(match):
         code = match.group(1).strip()
         # Ensure newlines are preserved for doxygen verbatim
-        return f"\n@mermaid{{{code}}}\n"
+        # We use a unique marker to avoid interference with other @ commands
+        return f"\n\n@mermaid{{{code}}}\n\n"
 
-    mermaid_pattern = re.compile(r"```mermaid\s*(.*?)\s*```", re.DOTALL)
+    # Use a more robust pattern that doesn't over-match
+    mermaid_pattern = re.compile(r"```mermaid\s*\n(.*?)\n\s*```", re.DOTALL)
     content = mermaid_pattern.sub(replace_mermaid, content)
     
     # 2. 코드 블록(```cpp 등) 내의 @ 기호를 @@로 변환하여 Doxygen 명령어 오인 방지

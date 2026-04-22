@@ -1,10 +1,25 @@
 # Mermaid Test Page
 
-This is a test of Mermaid.js integration.
+This page tests the automatic conversion of Markdown Mermaid blocks into Doxygen-compatible diagrams.
 
-@mermaid{
+## Flowchart Test
+
+```mermaid
 graph TD
-    A[Start] --> B{Is it working?}
-    B -- Yes --> C[Great!]
-    B -- No --> D[Fix it]
-}
+    A[Markdown Source] -->|Filter| B(Doxygen Alias)
+    B --> C{Doxygen Awesome CSS}
+    C -->|Light Mode| D[Clean Diagram]
+    C -->|Dark Mode| E[Dark Diagram]
+```
+
+## Sequence Diagram Test
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant Doxygen
+    User->>Browser: Opens documentation
+    Browser->>Doxygen: Loads JS/CSS
+    Doxygen->>Browser: Renders Mermaid
+```
