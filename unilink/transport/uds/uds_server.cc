@@ -187,9 +187,11 @@ void UdsServer::stop() {
   bool already_stopping = impl_->stopping_.exchange(true);
   if (already_stopping) return;
 
+  // 1. Close acceptor first to prevent new connections
   boost::system::error_code ec;
   impl_->acceptor_->close(ec);
 
+  // 2. Clear callbacks to prevent new user-level events
   {
     std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
     impl_->on_bytes_ = nullptr;
@@ -200,17 +202,7 @@ void UdsServer::stop() {
     impl_->on_multi_disconnect_ = nullptr;
   }
 
-  // Cleanup UDS socket file on stop
-  std::remove(impl_->cfg_.socket_path.c_str());
-
-  // Release work guard if owned
-  if (impl_->owns_ioc_) {
-    impl_->work_guard_.reset();
-    if (impl_->ioc_) {
-      impl_->ioc_->stop();
-    }
-  }
-
+  // 3. Stop all active sessions and clear the map
   std::vector<std::shared_ptr<UdsServerSession>> sessions_to_stop;
   {
     std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
@@ -222,6 +214,17 @@ void UdsServer::stop() {
 
   for (auto& session : sessions_to_stop) {
     session->stop();
+  }
+
+  // 4. Cleanup UDS socket file
+  std::remove(impl_->cfg_.socket_path.c_str());
+
+  // 5. Release work guard and stop IO context if owned
+  if (impl_->owns_ioc_) {
+    impl_->work_guard_.reset();
+    if (impl_->ioc_) {
+      impl_->ioc_->stop();
+    }
   }
 
   if (impl_->owns_ioc_ && impl_->ioc_thread_.joinable()) {
@@ -365,10 +368,12 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
 
       session->on_close([weak_self, client_id]() {
         auto s = weak_self.lock();
-        if (!s) return;
+        if (!s || s->impl_->stopping_) return;
+        
         MultiClientDisconnectHandler disconnect_handler;
         {
           std::lock_guard<std::mutex> lock(s->impl_->sessions_mutex_);
+          if (s->impl_->stopping_) return; // Double check inside lock
           s->impl_->sessions_.erase(client_id);
           disconnect_handler = s->impl_->on_multi_disconnect_;
         }

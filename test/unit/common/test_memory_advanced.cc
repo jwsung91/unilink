@@ -89,6 +89,7 @@ TEST_F(MemoryAdvancedTest, SafeDataBufferComprehensive) {
   EXPECT_EQ(buffer[0], 'U');
   EXPECT_EQ(buffer.at(original.size() - 1), 't');
   EXPECT_THROW(buffer.at(original.size()), std::out_of_range);
+  EXPECT_THROW(buffer[original.size()], std::out_of_range);
   
   // Comparison
   SafeDataBuffer buffer2(original);
@@ -107,6 +108,35 @@ TEST_F(MemoryAdvancedTest, SafeDataBufferComprehensive) {
   EXPECT_EQ(buffer.size(), 10);
 }
 
+TEST_F(MemoryAdvancedTest, SafeDataBufferErrorCases) {
+  // Null pointer with size > 0
+  EXPECT_THROW(SafeDataBuffer(static_cast<const uint8_t*>(nullptr), 10), std::invalid_argument);
+  EXPECT_THROW(SafeDataBuffer(static_cast<const char*>(nullptr), 10), std::invalid_argument);
+  
+  // Size limit (100MB)
+  size_t too_large = 1024 * 1024 * 101;
+  // Note: we don't actually allocate the memory, just pass the size to trigger validation
+  EXPECT_THROW(SafeDataBuffer(reinterpret_cast<const uint8_t*>(0x1), too_large), std::invalid_argument);
+  
+  // Validate method
+  SafeDataBuffer buffer(std::vector<uint8_t>(10, 0));
+  EXPECT_NO_THROW(buffer.validate());
+  EXPECT_TRUE(buffer.valid());
+}
+
+TEST_F(MemoryAdvancedTest, SafeDataBufferFactory) {
+  using namespace safe_buffer_factory;
+  
+  EXPECT_EQ(from_string("test").as_string(), "test");
+  EXPECT_EQ(from_c_string("test").as_string(), "test");
+  EXPECT_TRUE(from_c_string(nullptr).empty());
+  
+  std::vector<uint8_t> vec = {1, 2, 3};
+  EXPECT_EQ(from_vector(vec).size(), 3);
+  EXPECT_EQ(from_raw_data(vec.data(), 3).size(), 3);
+  EXPECT_EQ(from_span(ConstByteSpan(vec.data(), 3)).size(), 3);
+}
+
 TEST_F(MemoryAdvancedTest, MemoryTrackerLeakDetection) {
   auto& tracker = MemoryTracker::instance();
   tracker.track_allocation((void*)0xBBBB, 50, __FILE__, __LINE__, __FUNCTION__);
@@ -116,3 +146,40 @@ TEST_F(MemoryAdvancedTest, MemoryTrackerLeakDetection) {
   EXPECT_EQ(leaks[0].size, 50);
   EXPECT_EQ(leaks[0].ptr, (void*)0xBBBB);
 }
+
+// ============================================================================
+// BASE UTILITY TESTS (For extra coverage)
+// ============================================================================
+
+#include "unilink/base/common.hpp"
+
+TEST(BaseUtilityTest, SafeMemcpy) {
+  using namespace unilink::base::safe_memory;
+  uint8_t src[] = {1, 2, 3, 4, 5};
+  uint8_t dest[5];
+  
+  EXPECT_NO_THROW(safe_memcpy(dest, src, 5));
+  EXPECT_EQ(dest[0], 1);
+  
+  EXPECT_THROW(safe_memcpy(nullptr, src, 5), std::invalid_argument);
+  EXPECT_THROW(safe_memcpy(dest, nullptr, 5), std::invalid_argument);
+  EXPECT_THROW(safe_memcpy(dest, src, 1024 * 1024 + 1), std::invalid_argument);
+  EXPECT_NO_THROW(safe_memcpy(dest, src, 0));
+}
+
+TEST(BaseUtilityTest, SafeConvert) {
+  using namespace unilink::base::safe_convert;
+  std::string s = "test";
+  
+  auto vec = string_to_uint8(s);
+  EXPECT_EQ(vec.size(), 4);
+  EXPECT_EQ(vec[0], 't');
+  
+  EXPECT_EQ(uint8_to_string(vec.data(), vec.size()), s);
+  EXPECT_EQ(uint8_to_string(nullptr, 0), "");
+  
+  auto bytes = string_to_bytes(s);
+  EXPECT_EQ(bytes.second, 4);
+  EXPECT_EQ(bytes.first[0], 't');
+}
+
