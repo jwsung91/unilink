@@ -42,6 +42,9 @@ TEST_F(UdsErrorTest, InvalidSocketPath) {
 }
 
 TEST_F(UdsErrorTest, PathPermissionDenied) {
+#ifdef _WIN32
+  GTEST_SKIP() << "UDS file permissions are not consistent on Windows AF_UNIX";
+#else
   config::UdsServerConfig cfg;
   
   // Create a temporary directory and remove all permissions
@@ -66,6 +69,7 @@ TEST_F(UdsErrorTest, PathPermissionDenied) {
   // Cleanup: Restore permissions so directory can be deleted
   std::filesystem::permissions(restricted_dir, std::filesystem::perms::owner_all);
   std::filesystem::remove_all(restricted_dir);
+#endif
 }
 
 TEST_F(UdsErrorTest, ClientConnectWithoutServer) {
