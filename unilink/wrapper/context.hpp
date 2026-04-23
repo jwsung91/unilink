@@ -50,9 +50,7 @@ class MessageContext {
   std::string data_as_string() const { return std::string(data_); }
 
   /** @brief Safely copy the received data into a std::vector<uint8_t> */
-  std::vector<uint8_t> data_as_vector() const {
-    return std::vector<uint8_t>(data_.begin(), data_.end());
-  }
+  std::vector<uint8_t> data_as_vector() const { return std::vector<uint8_t>(data_.begin(), data_.end()); }
 
   /** @brief Get the client information (e.g., endpoint address) */
   const std::string& client_info() const { return client_info_; }
