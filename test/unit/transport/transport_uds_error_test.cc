@@ -43,14 +43,29 @@ TEST_F(UdsErrorTest, InvalidSocketPath) {
 
 TEST_F(UdsErrorTest, PathPermissionDenied) {
   config::UdsServerConfig cfg;
-  // Root directory usually requires root permissions
-  cfg.socket_path = "/root_permission_test.sock";
+  
+  // Create a temporary directory and remove all permissions
+  std::string restricted_dir = "/tmp/unilink_restricted_" + std::to_string(TestUtils::getAvailableTestPort());
+  std::filesystem::create_directory(restricted_dir);
+  std::filesystem::permissions(restricted_dir, std::filesystem::perms::none);
+  
+  cfg.socket_path = restricted_dir + "/test.sock";
   
   auto server = UdsServer::create(cfg);
+  ASSERT_NE(server, nullptr);
   server->start();
   
-  TestUtils::waitForCondition([&]{ return server->get_state() == base::LinkState::Error; }, 500);
-  EXPECT_TRUE(server->get_state() == base::LinkState::Error || server->get_state() == base::LinkState::Idle);
+  // Wait for potential async error transition (longer timeout)
+  bool error_state = TestUtils::waitForCondition([&]{ 
+    auto s = server->get_state();
+    return s == base::LinkState::Error || s == base::LinkState::Idle; 
+  }, 1000);
+  
+  EXPECT_TRUE(error_state);
+  
+  // Cleanup: Restore permissions so directory can be deleted
+  std::filesystem::permissions(restricted_dir, std::filesystem::perms::owner_all);
+  std::filesystem::remove_all(restricted_dir);
 }
 
 TEST_F(UdsErrorTest, ClientConnectWithoutServer) {
