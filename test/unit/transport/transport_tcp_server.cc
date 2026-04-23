@@ -55,8 +55,8 @@ TEST_F(TransportTcpServerTest, LifecycleStartStop) {
   server_ = TcpServer::create(cfg);
 
   EXPECT_NO_THROW(server_->start());
-  // Wait a bit to ensure it enters listening state
-  TestUtils::waitFor(constants::kShortTimeout.count());
+  // Wait until it enters listening state
+  EXPECT_TRUE(TestUtils::waitForCondition([&]() { return server_->state() == base::LinkState::Listening; }, 1000));
 
   EXPECT_NO_THROW(server_->stop());
 }

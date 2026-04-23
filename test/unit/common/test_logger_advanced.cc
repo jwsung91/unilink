@@ -152,29 +152,22 @@ TEST_F(AdvancedLoggerCoverageTest, WriteToFileWithRotation) {
   // Flush to ensure all messages are written
   Logger::instance().flush();
 
-  // Wait for file operations to complete
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+  // Check if any log file exists (original or rotated) with a short retry
+  bool file_exists = TestUtils::waitForCondition(
+      [&]() {
+        // Check original file
+        std::ifstream file(test_log_file_);
+        if (file.is_open()) return true;
 
-  // Check if any log file exists (original or rotated)
-  bool file_exists = false;
-
-  // Check original file
-  std::ifstream file(test_log_file_);
-  if (file.is_open()) {
-    file_exists = true;
-    file.close();
-  }
-
-  // Check rotated files
-  for (int i = 1; i <= 3; ++i) {
-    std::string rotated_file = test_log_file_.string() + "." + std::to_string(i);
-    std::ifstream rotated(rotated_file);
-    if (rotated.is_open()) {
-      file_exists = true;
-      rotated.close();
-      break;
-    }
-  }
+        // Check rotated files
+        for (int i = 1; i <= 3; ++i) {
+          std::string rotated_file = test_log_file_.string() + "." + std::to_string(i);
+          std::ifstream rotated(rotated_file);
+          if (rotated.is_open()) return true;
+        }
+        return false;
+      },
+      1000);
 
   EXPECT_TRUE(file_exists || true);
 }
@@ -227,8 +220,8 @@ TEST_F(AdvancedLoggerCoverageTest, AsyncLoggingEnabled) {
   UNILINK_LOG_DEBUG("test", "operation", "Async debug message");
   UNILINK_LOG_INFO("test", "operation", "Async info message");
 
-  // Wait for async processing
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+  // Ensure all async messages are flushed
+  Logger::instance().flush();
 
   // Teardown async logging
   Logger::instance().set_async_logging(false, config);

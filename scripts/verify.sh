@@ -10,7 +10,7 @@ echo "🔍 Step 1: Formatting code..."
 echo -e "\n🛠️ Step 2: Building project (Debug)..."
 mkdir -p build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Debug
-make -j$(nproc)
+cmake --build . -j$(nproc)
 
 echo -e "\n🧪 Step 3: Running unit tests..."
 ctest -j$(nproc) -L unit --output-on-failure

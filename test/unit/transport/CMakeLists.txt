@@ -67,9 +67,25 @@ add_test(
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+add_executable(
+  run_unit_test_transport_tcp_reconnect transport_tcp_client_reconnect_test.cc
+)
+
+# Link libraries
+target_link_libraries(
+  run_unit_test_transport_tcp_reconnect PRIVATE unilink_shared gtest gtest_main
+)
+
+# Add tests to CTest
+add_test(
+  NAME TcpClientReconnectTest
+  COMMAND run_unit_test_transport_tcp_reconnect
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
 # Set test labels
 set_tests_properties(
-  TcpClientErrorTest PROPERTIES LABELS "unit;transport;tcp;error"
+  TcpClientReconnectTest PROPERTIES LABELS "unit;transport;tcp;reconnect"
 )
 set_tests_properties(
   TcpServerErrorTest PROPERTIES LABELS "unit;transport;tcp;error"

@@ -35,6 +35,7 @@ foreach(
   test_input_validator.cc
   test_input_validator_edge.cc
   test_logger_advanced.cc
+  test_memory_advanced.cc
   test_pool_stress.cc
   test_error_mapping.cc
 )
