@@ -1,33 +1,31 @@
-## Summary
-<!-- Brief description of what this PR accomplishes -->
+## Description
+<!-- Provide a brief summary of the changes and the motivation behind them. -->
 
-## Changes
-<!-- List of specific changes made -->
-- 
+## Key Changes
+<!-- List the specific modifications made in this PR. -->
 - 
 - 
 
 ## Related Issues
-<!-- Link to related issues or describe the problem being solved -->
+<!-- Link any related issues using keywords like "Fixes #123" or "Closes #456". -->
 - Fixes #
-- Related to #
 
 ## Type of Change
-<!-- Mark the relevant option with an "x" -->
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-- [ ] Refactoring (no functional changes)
-- [ ] Performance improvement
-- [ ] Test coverage improvement
+<!-- Please mark the relevant option(s) with an "x". -->
+- [ ] **Bug Fix**: A non-breaking change that resolves an issue.
+- [ ] **New Feature**: A non-breaking change that adds new functionality.
+- [ ] **Breaking Change**: A fix or feature that would cause existing functionality to change.
+- [ ] **Documentation**: Changes to documentation only.
+- [ ] **Refactor**: Code changes that neither fix a bug nor add a feature.
+- [ ] **Performance**: Changes that improve system performance.
+- [ ] **Testing**: Adding or updating tests.
 
 ## Checklist
-<!-- Before submitting this PR, please check that you have performed the following tasks -->
-- [ ] I have run `./scripts/verify.sh` locally and confirmed that all checks (format, build, unit tests) pass.
-- [ ] I have added/updated tests for my changes.
-- [ ] I have updated the documentation accordingly.
+<!-- Review and check the following items before submitting your PR. -->
+- [ ] I have run `./scripts/verify.sh` locally and confirmed that all checks (formatting, build, and unit tests) pass.
+- [ ] I have added or updated tests to verify my changes.
+- [ ] I have updated the documentation to reflect the changes (if applicable).
+- [ ] My changes follow the project's coding style and conventions.
 
-## Additional Notes
-<!-- Any additional information, considerations, or context -->
-<!-- Screenshots, diagrams, or other visual aids if applicable -->
+## Additional Context
+<!-- Add any other relevant information, screenshots, or diagrams here. -->
