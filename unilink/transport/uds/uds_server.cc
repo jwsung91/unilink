@@ -369,11 +369,11 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
       session->on_close([weak_self, client_id]() {
         auto s = weak_self.lock();
         if (!s || s->impl_->stopping_) return;
-        
+
         MultiClientDisconnectHandler disconnect_handler;
         {
           std::lock_guard<std::mutex> lock(s->impl_->sessions_mutex_);
-          if (s->impl_->stopping_) return; // Double check inside lock
+          if (s->impl_->stopping_) return;  // Double check inside lock
           s->impl_->sessions_.erase(client_id);
           disconnect_handler = s->impl_->on_multi_disconnect_;
         }
