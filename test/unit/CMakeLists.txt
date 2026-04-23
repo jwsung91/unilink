@@ -39,6 +39,7 @@ foreach(
   test_pool_stress.cc
   test_error_mapping.cc
   test_error_mapping_exhaustive.cc
+  test_error_codes_coverage.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -154,6 +155,7 @@ foreach(
   test_tcp_client_error_mapping.cc
   test_uds_advanced.cc
   test_udp_server_advanced.cc
+  test_udp_server_coverage.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -265,6 +267,7 @@ foreach(
   transport_udp_extended.cc
   transport_tcp_client_policy.cc
   reconnect_logic_test.cc
+  transport_uds_session_coverage.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
