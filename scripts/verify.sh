@@ -5,6 +5,7 @@ cd "$PROJECT_ROOT"
 
 echo "🔍 Step 1: Formatting code..."
 ./scripts/apply_clang_format.sh
+./scripts/apply_cmake_format.sh
 
 echo -e "\n🛠️ Step 2: Building project (Debug)..."
 mkdir -p build && cd build

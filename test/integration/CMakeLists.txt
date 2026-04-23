@@ -19,16 +19,20 @@
 # last_error_ issues
 get_property(_unilink_test_lib GLOBAL PROPERTY UNILINK_TEST_LIB)
 
-foreach(test_file
-        test_integration.cc test_simple_server.cc
-        test_client_limit_integration.cc test_multithread_backpressure.cc
-        test_stop_from_callback.cc test_start_stop_stress.cc
-        test_stop_contract.cc
-        test_dos_protection.cc
-        test_tcp_server_chaos.cc
-        test_tcp_flood.cc
-        test_tcp_abort.cc
-        test_tcp_cancel.cc
+foreach(
+  test_file
+  test_integration.cc
+  test_simple_server.cc
+  test_client_limit_integration.cc
+  test_multithread_backpressure.cc
+  test_stop_from_callback.cc
+  test_start_stop_stress.cc
+  test_stop_contract.cc
+  test_dos_protection.cc
+  test_tcp_server_chaos.cc
+  test_tcp_flood.cc
+  test_tcp_abort.cc
+  test_tcp_cancel.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -61,7 +65,9 @@ endforeach()
 
 # Serial integration tests NOTE: test_serial.cc temporarily disabled due to
 # complex variable naming issues
-foreach(test_file test_serial_builder_improvements.cc test_serial_loopback.cc test_serial_timeout.cc)
+foreach(test_file test_serial_builder_improvements.cc test_serial_loopback.cc
+                  test_serial_timeout.cc
+)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
     run_integration_${test_name}
@@ -87,7 +93,8 @@ endforeach()
 foreach(test_file test_builder_integration.cc)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
-    run_integration_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/builder/${test_file}
+    run_integration_${test_name}
+    ${CMAKE_CURRENT_SOURCE_DIR}/builder/${test_file}
   )
   target_link_libraries(
     run_integration_${test_name} PRIVATE ${_unilink_test_lib} GTest::gtest
@@ -129,8 +136,8 @@ foreach(test_file test_uds_integration.cc)
 endforeach()
 
 # Core/General integration tests
-foreach(test_file test_stable_integration.cc
-                  test_core_integrated.cc test_safety_integrated.cc
+foreach(test_file test_stable_integration.cc test_core_integrated.cc
+                  test_safety_integrated.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -145,8 +152,8 @@ foreach(test_file test_stable_integration.cc
     run_integration_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
                                          ${CMAKE_SOURCE_DIR}/test/fixtures
   )
-  # Mark test_stable_integration to use resource lock
-  # Increased timeout to 600s to accommodate code coverage overhead
+  # Mark test_stable_integration to use resource lock Increased timeout to 600s
+  # to accommodate code coverage overhead
   if(test_name STREQUAL "test_stable_integration")
     gtest_discover_tests(
       run_integration_${test_name}

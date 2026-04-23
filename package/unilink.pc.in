@@ -11,7 +11,4 @@ Requires: @PKGCONFIG_REQUIRES@
 Requires.private: @PKGCONFIG_REQUIRES_PRIVATE@
 Libs: -L${libdir} -lunilink
 Libs.private: @PKGCONFIG_LIBS_PRIVATE@
-Cflags: -I${
-  includedir
-}
-@PKGCONFIG_CFLAGS @
+Cflags: -I${includedir} @PKGCONFIG_CFLAGS@
