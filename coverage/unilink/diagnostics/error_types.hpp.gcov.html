@@ -31,17 +31,17 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">29</td>
-            <td class="headerCovTableEntry">29</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntry">76</td>
+            <td class="headerCovTableEntry">78</td>
+            <td class="headerCovTableEntryHi">97.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-23 03:26:31</td>
+            <td class="headerValue">2026-04-23 07:45:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">8</td>
-            <td class="headerCovTableEntry">16</td>
-            <td class="headerCovTableEntryLo">50.0 %</td>
+            <td class="headerCovTableEntry">67</td>
+            <td class="headerCovTableEntry">124</td>
+            <td class="headerCovTableEntryLo">54.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -154,106 +154,116 @@
 <a name="76"><span class="lineNum">      76 </span>                :            :   /**</a>
 <a name="77"><span class="lineNum">      77 </span>                :            :    * @brief Constructor for basic error info</a>
 <a name="78"><span class="lineNum">      78 </span>                :            :    */</a>
-<a name="79"><span class="lineNum">      79 </span>                :<span class="lineCov">         15 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg)</span></a>
-<a name="80"><span class="lineNum">      80 </span>                :<span class="lineCov">         15 :       : level(l),</span></a>
-<a name="81"><span class="lineNum">      81 </span>                :<span class="lineCov">         15 :         category(c),</span></a>
-<a name="82"><span class="lineNum">      82 </span>        [<span class="branchCov" title="Branch 0 was taken 15 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         15 :         component(comp),</span></a>
-<a name="83"><span class="lineNum">      83 </span>        [<span class="branchCov" title="Branch 0 was taken 15 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         15 :         operation(op),</span></a>
-<a name="84"><span class="lineNum">      84 </span>        [<span class="branchCov" title="Branch 0 was taken 15 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         15 :         message(msg),</span></a>
-<a name="85"><span class="lineNum">      85 </span>                :<span class="lineCov">         15 :         timestamp(std::chrono::system_clock::now()),</span></a>
-<a name="86"><span class="lineNum">      86 </span>                :<span class="lineCov">         15 :         retryable(false),</span></a>
-<a name="87"><span class="lineNum">      87 </span>                :<span class="lineCov">         30 :         retry_count(0) {}</span></a>
+<a name="79"><span class="lineNum">      79 </span>                :<span class="lineCov">         26 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg)</span></a>
+<a name="80"><span class="lineNum">      80 </span>                :<span class="lineCov">         26 :       : level(l),</span></a>
+<a name="81"><span class="lineNum">      81 </span>                :<span class="lineCov">         26 :         category(c),</span></a>
+<a name="82"><span class="lineNum">      82 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         26 :         component(comp),</span></a>
+<a name="83"><span class="lineNum">      83 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         26 :         operation(op),</span></a>
+<a name="84"><span class="lineNum">      84 </span>        [<span class="branchCov" title="Branch 0 was taken 26 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         26 :         message(msg),</span></a>
+<a name="85"><span class="lineNum">      85 </span>                :<span class="lineCov">         26 :         timestamp(std::chrono::system_clock::now()),</span></a>
+<a name="86"><span class="lineNum">      86 </span>                :<span class="lineCov">         26 :         retryable(false),</span></a>
+<a name="87"><span class="lineNum">      87 </span>                :<span class="lineCov">         52 :         retry_count(0) {}</span></a>
 <a name="88"><span class="lineNum">      88 </span>                :            : </a>
 <a name="89"><span class="lineNum">      89 </span>                :            :   /**</a>
 <a name="90"><span class="lineNum">      90 </span>                :            :    * @brief Constructor with Boost error code</a>
 <a name="91"><span class="lineNum">      91 </span>                :            :    */</a>
-<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        163 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :<span class="lineCov">        170 :   ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg,</span></a>
 <a name="93"><span class="lineNum">      93 </span>                :            :             const boost::system::error_code&amp; ec, bool retry = false)</a>
-<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">        163 :       : level(l),</span></a>
-<a name="95"><span class="lineNum">      95 </span>                :<span class="lineCov">        163 :         category(c),</span></a>
-<a name="96"><span class="lineNum">      96 </span>        [<span class="branchCov" title="Branch 0 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        163 :         component(comp),</span></a>
-<a name="97"><span class="lineNum">      97 </span>        [<span class="branchCov" title="Branch 0 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        163 :         operation(op),</span></a>
-<a name="98"><span class="lineNum">      98 </span>        [<span class="branchCov" title="Branch 0 was taken 163 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        163 :         message(msg),</span></a>
-<a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">        163 :         boost_error(ec),</span></a>
-<a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">        163 :         timestamp(std::chrono::system_clock::now()),</span></a>
-<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">        163 :         retryable(retry),</span></a>
-<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">        163 :         retry_count(0) {}</span></a>
+<a name="94"><span class="lineNum">      94 </span>                :<span class="lineCov">        170 :       : level(l),</span></a>
+<a name="95"><span class="lineNum">      95 </span>                :<span class="lineCov">        170 :         category(c),</span></a>
+<a name="96"><span class="lineNum">      96 </span>        [<span class="branchCov" title="Branch 0 was taken 170 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        170 :         component(comp),</span></a>
+<a name="97"><span class="lineNum">      97 </span>        [<span class="branchCov" title="Branch 0 was taken 170 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        170 :         operation(op),</span></a>
+<a name="98"><span class="lineNum">      98 </span>        [<span class="branchCov" title="Branch 0 was taken 170 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">        170 :         message(msg),</span></a>
+<a name="99"><span class="lineNum">      99 </span>                :<span class="lineCov">        170 :         boost_error(ec),</span></a>
+<a name="100"><span class="lineNum">     100 </span>                :<span class="lineCov">        170 :         timestamp(std::chrono::system_clock::now()),</span></a>
+<a name="101"><span class="lineNum">     101 </span>                :<span class="lineCov">        170 :         retryable(retry),</span></a>
+<a name="102"><span class="lineNum">     102 </span>                :<span class="lineCov">        170 :         retry_count(0) {}</span></a>
 <a name="103"><span class="lineNum">     103 </span>                :            : </a>
 <a name="104"><span class="lineNum">     104 </span>                :            :   /**</a>
 <a name="105"><span class="lineNum">     105 </span>                :            :    * @brief Get formatted timestamp string</a>
 <a name="106"><span class="lineNum">     106 </span>                :            :    */</a>
-<a name="107"><span class="lineNum">     107 </span>                :            :   std::string timestamp_string() const {</a>
-<a name="108"><span class="lineNum">     108 </span>                :            :     auto time_t = std::chrono::system_clock::to_time_t(timestamp);</a>
-<a name="109"><span class="lineNum">     109 </span>                :            :     auto ms = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(timestamp.time_since_epoch()) % 1000;</a>
+<a name="107"><span class="lineNum">     107 </span>                :<span class="lineCov">          1 :   std::string timestamp_string() const {</span></a>
+<a name="108"><span class="lineNum">     108 </span>                :<span class="lineCov">          1 :     auto time_t = std::chrono::system_clock::to_time_t(timestamp);</span></a>
+<a name="109"><span class="lineNum">     109 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :     auto ms = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(timestamp.time_since_epoch()) % 1000;</span></a>
 <a name="110"><span class="lineNum">     110 </span>                :            : </a>
-<a name="111"><span class="lineNum">     111 </span>                :            :     std::tm tm_buf{};</a>
+<a name="111"><span class="lineNum">     111 </span>                :<span class="lineCov">          1 :     std::tm tm_buf{};</span></a>
 <a name="112"><span class="lineNum">     112 </span>                :            : #if defined(_MSC_VER)</a>
 <a name="113"><span class="lineNum">     113 </span>                :            :     localtime_s(&amp;tm_buf, &amp;time_t);</a>
 <a name="114"><span class="lineNum">     114 </span>                :            : #else</a>
-<a name="115"><span class="lineNum">     115 </span>                :            :     localtime_r(&amp;time_t, &amp;tm_buf);</a>
+<a name="115"><span class="lineNum">     115 </span>                :<span class="lineCov">          1 :     localtime_r(&amp;time_t, &amp;tm_buf);</span></a>
 <a name="116"><span class="lineNum">     116 </span>                :            : #endif</a>
 <a name="117"><span class="lineNum">     117 </span>                :            : </a>
-<a name="118"><span class="lineNum">     118 </span>                :            :     std::ostringstream oss;</a>
-<a name="119"><span class="lineNum">     119 </span>                :            :     oss &lt;&lt; std::put_time(&amp;tm_buf, &quot;%Y-%m-%d %H:%M:%S&quot;);</a>
-<a name="120"><span class="lineNum">     120 </span>                :            :     oss &lt;&lt; '.' &lt;&lt; std::setfill('0') &lt;&lt; std::setw(3) &lt;&lt; ms.count();</a>
-<a name="121"><span class="lineNum">     121 </span>                :            :     return oss.str();</a>
-<a name="122"><span class="lineNum">     122 </span>                :            :   }</a>
+<a name="118"><span class="lineNum">     118 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     std::ostringstream oss;</span></a>
+<a name="119"><span class="lineNum">     119 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     oss &lt;&lt; std::put_time(&amp;tm_buf, &quot;%Y-%m-%d %H:%M:%S&quot;);</span></a>
+<a name="120"><span class="lineNum">     120 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          1 :     oss &lt;&lt; '.' &lt;&lt; std::setfill('0') &lt;&lt; std::setw(3) &lt;&lt; ms.count();</span></a>
+<span class="lineNum">         </span>   <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span>]
+<a name="121"><span class="lineNum">     121 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :     return oss.str();</span></a>
+<a name="122"><span class="lineNum">     122 </span>                :<span class="lineCov">          1 :   }</span></a>
 <a name="123"><span class="lineNum">     123 </span>                :            : </a>
 <a name="124"><span class="lineNum">     124 </span>                :            :   /**</a>
 <a name="125"><span class="lineNum">     125 </span>                :            :    * @brief Get error level as string</a>
 <a name="126"><span class="lineNum">     126 </span>                :            :    */</a>
-<a name="127"><span class="lineNum">     127 </span>                :            :   std::string level_string() const {</a>
-<a name="128"><span class="lineNum">     128 </span>                :            :     switch (level) {</a>
-<a name="129"><span class="lineNum">     129 </span>                :            :       case ErrorLevel::INFO:</a>
-<a name="130"><span class="lineNum">     130 </span>                :            :         return &quot;INFO&quot;;</a>
-<a name="131"><span class="lineNum">     131 </span>                :            :       case ErrorLevel::WARNING:</a>
-<a name="132"><span class="lineNum">     132 </span>                :            :         return &quot;WARNING&quot;;</a>
-<a name="133"><span class="lineNum">     133 </span>                :            :       case ErrorLevel::ERROR:</a>
-<a name="134"><span class="lineNum">     134 </span>                :            :         return &quot;ERROR&quot;;</a>
-<a name="135"><span class="lineNum">     135 </span>                :            :       case ErrorLevel::CRITICAL:</a>
-<a name="136"><span class="lineNum">     136 </span>                :            :         return &quot;CRITICAL&quot;;</a>
+<a name="127"><span class="lineNum">     127 </span>                :<span class="lineCov">          9 :   std::string level_string() const {</span></a>
+<a name="128"><span class="lineNum">     128 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 3 times"> + </span><span class="branchCov" title="Branch 3 was taken 4 times"> + </span> :<span class="lineCov">          9 :     switch (level) {</span></a>
+<span class="lineNum">         </span>            <span class="branchNoCov" title="Branch 4 was not taken"> - </span>]
+<a name="129"><span class="lineNum">     129 </span>                :<span class="lineCov">          1 :       case ErrorLevel::INFO:</span></a>
+<a name="130"><span class="lineNum">     130 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         return &quot;INFO&quot;;</span></a>
+<a name="131"><span class="lineNum">     131 </span>                :<span class="lineCov">          1 :       case ErrorLevel::WARNING:</span></a>
+<a name="132"><span class="lineNum">     132 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         return &quot;WARNING&quot;;</span></a>
+<a name="133"><span class="lineNum">     133 </span>                :<span class="lineCov">          3 :       case ErrorLevel::ERROR:</span></a>
+<a name="134"><span class="lineNum">     134 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :         return &quot;ERROR&quot;;</span></a>
+<a name="135"><span class="lineNum">     135 </span>                :<span class="lineCov">          4 :       case ErrorLevel::CRITICAL:</span></a>
+<a name="136"><span class="lineNum">     136 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          4 :         return &quot;CRITICAL&quot;;</span></a>
 <a name="137"><span class="lineNum">     137 </span>                :            :     }</a>
-<a name="138"><span class="lineNum">     138 </span>                :            :     return &quot;UNKNOWN&quot;;</a>
+<a name="138"><span class="lineNum">     138 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     return &quot;UNKNOWN&quot;;</span></a>
 <a name="139"><span class="lineNum">     139 </span>                :            :   }</a>
 <a name="140"><span class="lineNum">     140 </span>                :            : </a>
 <a name="141"><span class="lineNum">     141 </span>                :            :   /**</a>
 <a name="142"><span class="lineNum">     142 </span>                :            :    * @brief Get error category as string</a>
 <a name="143"><span class="lineNum">     143 </span>                :            :    */</a>
-<a name="144"><span class="lineNum">     144 </span>                :            :   std::string category_string() const {</a>
-<a name="145"><span class="lineNum">     145 </span>                :            :     switch (category) {</a>
-<a name="146"><span class="lineNum">     146 </span>                :            :       case ErrorCategory::CONNECTION:</a>
-<a name="147"><span class="lineNum">     147 </span>                :            :         return &quot;CONNECTION&quot;;</a>
-<a name="148"><span class="lineNum">     148 </span>                :            :       case ErrorCategory::COMMUNICATION:</a>
-<a name="149"><span class="lineNum">     149 </span>                :            :         return &quot;COMMUNICATION&quot;;</a>
-<a name="150"><span class="lineNum">     150 </span>                :            :       case ErrorCategory::CONFIGURATION:</a>
-<a name="151"><span class="lineNum">     151 </span>                :            :         return &quot;CONFIGURATION&quot;;</a>
-<a name="152"><span class="lineNum">     152 </span>                :            :       case ErrorCategory::MEMORY:</a>
-<a name="153"><span class="lineNum">     153 </span>                :            :         return &quot;MEMORY&quot;;</a>
-<a name="154"><span class="lineNum">     154 </span>                :            :       case ErrorCategory::SYSTEM:</a>
-<a name="155"><span class="lineNum">     155 </span>                :            :         return &quot;SYSTEM&quot;;</a>
-<a name="156"><span class="lineNum">     156 </span>                :            :       case ErrorCategory::UNKNOWN:</a>
-<a name="157"><span class="lineNum">     157 </span>                :            :         return &quot;UNKNOWN&quot;;</a>
+<a name="144"><span class="lineNum">     144 </span>                :<span class="lineCov">          7 :   std::string category_string() const {</span></a>
+<a name="145"><span class="lineNum">     145 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span> :<span class="lineCov">          7 :     switch (category) {</span></a>
+<span class="lineNum">         </span>      <span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchCov" title="Branch 5 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 6 was not taken"> - </span>]
+<a name="146"><span class="lineNum">     146 </span>                :<span class="lineCov">          1 :       case ErrorCategory::CONNECTION:</span></a>
+<a name="147"><span class="lineNum">     147 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         return &quot;CONNECTION&quot;;</span></a>
+<a name="148"><span class="lineNum">     148 </span>                :<span class="lineCov">          2 :       case ErrorCategory::COMMUNICATION:</span></a>
+<a name="149"><span class="lineNum">     149 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :         return &quot;COMMUNICATION&quot;;</span></a>
+<a name="150"><span class="lineNum">     150 </span>                :<span class="lineCov">          1 :       case ErrorCategory::CONFIGURATION:</span></a>
+<a name="151"><span class="lineNum">     151 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         return &quot;CONFIGURATION&quot;;</span></a>
+<a name="152"><span class="lineNum">     152 </span>                :<span class="lineCov">          1 :       case ErrorCategory::MEMORY:</span></a>
+<a name="153"><span class="lineNum">     153 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         return &quot;MEMORY&quot;;</span></a>
+<a name="154"><span class="lineNum">     154 </span>                :<span class="lineCov">          1 :       case ErrorCategory::SYSTEM:</span></a>
+<a name="155"><span class="lineNum">     155 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         return &quot;SYSTEM&quot;;</span></a>
+<a name="156"><span class="lineNum">     156 </span>                :<span class="lineCov">          1 :       case ErrorCategory::UNKNOWN:</span></a>
+<a name="157"><span class="lineNum">     157 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         return &quot;UNKNOWN&quot;;</span></a>
 <a name="158"><span class="lineNum">     158 </span>                :            :     }</a>
-<a name="159"><span class="lineNum">     159 </span>                :            :     return &quot;UNKNOWN&quot;;</a>
+<a name="159"><span class="lineNum">     159 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     return &quot;UNKNOWN&quot;;</span></a>
 <a name="160"><span class="lineNum">     160 </span>                :            :   }</a>
 <a name="161"><span class="lineNum">     161 </span>                :            : </a>
 <a name="162"><span class="lineNum">     162 </span>                :            :   /**</a>
 <a name="163"><span class="lineNum">     163 </span>                :            :    * @brief Get formatted error summary</a>
 <a name="164"><span class="lineNum">     164 </span>                :            :    */</a>
-<a name="165"><span class="lineNum">     165 </span>                :            :   std::string summary() const {</a>
-<a name="166"><span class="lineNum">     166 </span>                :            :     std::ostringstream oss;</a>
-<a name="167"><span class="lineNum">     167 </span>                :            :     oss &lt;&lt; &quot;[&quot; &lt;&lt; level_string() &lt;&lt; &quot;] &quot; &lt;&lt; &quot;[&quot; &lt;&lt; component &lt;&lt; &quot;] &quot; &lt;&lt; &quot;[&quot; &lt;&lt; operation &lt;&lt; &quot;] &quot; &lt;&lt; message;</a>
+<a name="165"><span class="lineNum">     165 </span>                :<span class="lineCov">          3 :   std::string summary() const {</span></a>
+<a name="166"><span class="lineNum">     166 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     std::ostringstream oss;</span></a>
+<a name="167"><span class="lineNum">     167 </span>  [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          3 :     oss &lt;&lt; &quot;[&quot; &lt;&lt; level_string() &lt;&lt; &quot;] &quot; &lt;&lt; &quot;[&quot; &lt;&lt; component &lt;&lt; &quot;] &quot; &lt;&lt; &quot;[&quot; &lt;&lt; operation &lt;&lt; &quot;] &quot; &lt;&lt; message;</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 3 times"> + </span> 
+<span class="lineNum">         </span><span class="branchNoCov" title="Branch 9 was not taken"> - </span><span class="branchCov" title="Branch 10 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 11 was not taken"> - </span><span class="branchCov" title="Branch 12 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 13 was not taken"> - </span> 
+<span class="lineNum">         </span><span class="branchCov" title="Branch 14 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 15 was not taken"> - </span><span class="branchCov" title="Branch 16 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 17 was not taken"> - </span><span class="branchCov" title="Branch 18 was taken 3 times"> + </span> 
+<span class="lineNum">         </span>      <span class="branchNoCov" title="Branch 19 was not taken"> - </span><span class="branchCov" title="Branch 20 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 21 was not taken"> - </span>]
 <a name="168"><span class="lineNum">     168 </span>                :            : </a>
-<a name="169"><span class="lineNum">     169 </span>                :            :     if (boost_error) {</a>
-<a name="170"><span class="lineNum">     170 </span>                :            :       oss &lt;&lt; &quot; (boost: &quot; &lt;&lt; boost_error.message() &lt;&lt; &quot;, code: &quot; &lt;&lt; boost_error.value() &lt;&lt; &quot;)&quot;;</a>
+<a name="169"><span class="lineNum">     169 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          3 :     if (boost_error) {</span></a>
+<a name="170"><span class="lineNum">     170 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          2 :       oss &lt;&lt; &quot; (boost: &quot; &lt;&lt; boost_error.message() &lt;&lt; &quot;, code: &quot; &lt;&lt; boost_error.value() &lt;&lt; &quot;)&quot;;</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span><span class="branchCov" title="Branch 6 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 2 times"> + </span> 
+<span class="lineNum">         </span>      <span class="branchNoCov" title="Branch 9 was not taken"> - </span><span class="branchCov" title="Branch 10 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 11 was not taken"> - </span>]
 <a name="171"><span class="lineNum">     171 </span>                :            :     }</a>
 <a name="172"><span class="lineNum">     172 </span>                :            : </a>
-<a name="173"><span class="lineNum">     173 </span>                :            :     if (retryable) {</a>
-<a name="174"><span class="lineNum">     174 </span>                :            :       oss &lt;&lt; &quot; [RETRYABLE, count: &quot; &lt;&lt; retry_count &lt;&lt; &quot;]&quot;;</a>
+<a name="173"><span class="lineNum">     173 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          3 :     if (retryable) {</span></a>
+<a name="174"><span class="lineNum">     174 </span>  [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">          2 :       oss &lt;&lt; &quot; [RETRYABLE, count: &quot; &lt;&lt; retry_count &lt;&lt; &quot;]&quot;;</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
 <a name="175"><span class="lineNum">     175 </span>                :            :     }</a>
 <a name="176"><span class="lineNum">     176 </span>                :            : </a>
-<a name="177"><span class="lineNum">     177 </span>                :            :     return oss.str();</a>
-<a name="178"><span class="lineNum">     178 </span>                :            :   }</a>
+<a name="177"><span class="lineNum">     177 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          6 :     return oss.str();</span></a>
+<a name="178"><span class="lineNum">     178 </span>                :<span class="lineCov">          3 :   }</span></a>
 <a name="179"><span class="lineNum">     179 </span>                :            : };</a>
 <a name="180"><span class="lineNum">     180 </span>                :            : </a>
 <a name="181"><span class="lineNum">     181 </span>                :            : /**</a>
@@ -273,25 +283,25 @@
 <a name="195"><span class="lineNum">     195 </span>                :            :   /**</a>
 <a name="196"><span class="lineNum">     196 </span>                :            :    * @brief Reset all statistics</a>
 <a name="197"><span class="lineNum">     197 </span>                :            :    */</a>
-<a name="198"><span class="lineNum">     198 </span>                :<span class="lineCov">         18 :   void reset() {</span></a>
-<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">         18 :     total_errors = 0;</span></a>
-<a name="200"><span class="lineNum">     200 </span>        [<span class="branchCov" title="Branch 0 was taken 18 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         18 :     std::fill(std::begin(errors_by_level), std::end(errors_by_level), 0);</span></a>
-<a name="201"><span class="lineNum">     201 </span>        [<span class="branchCov" title="Branch 0 was taken 18 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         18 :     std::fill(std::begin(errors_by_category), std::end(errors_by_category), 0);</span></a>
-<a name="202"><span class="lineNum">     202 </span>                :<span class="lineCov">         18 :     retryable_errors = 0;</span></a>
-<a name="203"><span class="lineNum">     203 </span>                :<span class="lineCov">         18 :     successful_retries = 0;</span></a>
-<a name="204"><span class="lineNum">     204 </span>                :<span class="lineCov">         18 :     failed_retries = 0;</span></a>
-<a name="205"><span class="lineNum">     205 </span>                :<span class="lineCov">         18 :     first_error = std::chrono::system_clock::time_point{};</span></a>
-<a name="206"><span class="lineNum">     206 </span>                :<span class="lineCov">         18 :     last_error = std::chrono::system_clock::time_point{};</span></a>
-<a name="207"><span class="lineNum">     207 </span>                :<span class="lineCov">         18 :   }</span></a>
+<a name="198"><span class="lineNum">     198 </span>                :<span class="lineCov">         19 :   void reset() {</span></a>
+<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">         19 :     total_errors = 0;</span></a>
+<a name="200"><span class="lineNum">     200 </span>        [<span class="branchCov" title="Branch 0 was taken 19 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         19 :     std::fill(std::begin(errors_by_level), std::end(errors_by_level), 0);</span></a>
+<a name="201"><span class="lineNum">     201 </span>        [<span class="branchCov" title="Branch 0 was taken 19 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         19 :     std::fill(std::begin(errors_by_category), std::end(errors_by_category), 0);</span></a>
+<a name="202"><span class="lineNum">     202 </span>                :<span class="lineCov">         19 :     retryable_errors = 0;</span></a>
+<a name="203"><span class="lineNum">     203 </span>                :<span class="lineCov">         19 :     successful_retries = 0;</span></a>
+<a name="204"><span class="lineNum">     204 </span>                :<span class="lineCov">         19 :     failed_retries = 0;</span></a>
+<a name="205"><span class="lineNum">     205 </span>                :<span class="lineCov">         19 :     first_error = std::chrono::system_clock::time_point{};</span></a>
+<a name="206"><span class="lineNum">     206 </span>                :<span class="lineCov">         19 :     last_error = std::chrono::system_clock::time_point{};</span></a>
+<a name="207"><span class="lineNum">     207 </span>                :<span class="lineCov">         19 :   }</span></a>
 <a name="208"><span class="lineNum">     208 </span>                :            : </a>
 <a name="209"><span class="lineNum">     209 </span>                :            :   /**</a>
 <a name="210"><span class="lineNum">     210 </span>                :            :    * @brief Get error rate (errors per minute)</a>
 <a name="211"><span class="lineNum">     211 </span>                :            :    */</a>
-<a name="212"><span class="lineNum">     212 </span>                :            :   double error_rate() const {</a>
-<a name="213"><span class="lineNum">     213 </span>                :            :     if (total_errors == 0) return 0.0;</a>
+<a name="212"><span class="lineNum">     212 </span>                :<span class="lineCov">          2 :   double error_rate() const {</span></a>
+<a name="213"><span class="lineNum">     213 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          2 :     if (total_errors == 0) return 0.0;</span></a>
 <a name="214"><span class="lineNum">     214 </span>                :            : </a>
-<a name="215"><span class="lineNum">     215 </span>                :            :     auto duration = std::chrono::duration_cast&lt;std::chrono::minutes&gt;(last_error - first_error).count();</a>
-<a name="216"><span class="lineNum">     216 </span>                :            :     return duration &gt; 0 ? static_cast&lt;double&gt;(total_errors) / static_cast&lt;double&gt;(duration) : 0.0;</a>
+<a name="215"><span class="lineNum">     215 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     auto duration = std::chrono::duration_cast&lt;std::chrono::minutes&gt;(last_error - first_error).count();</span></a>
+<a name="216"><span class="lineNum">     216 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     return duration &gt; 0 ? static_cast&lt;double&gt;(total_errors) / static_cast&lt;double&gt;(duration) : 0.0;</span></a>
 <a name="217"><span class="lineNum">     217 </span>                :            :   }</a>
 <a name="218"><span class="lineNum">     218 </span>                :            : };</a>
 <a name="219"><span class="lineNum">     219 </span>                :            : </a>
