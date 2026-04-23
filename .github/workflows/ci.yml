@@ -18,6 +18,9 @@ on:
     paths-ignore:
       - '**.md'
       - 'docs/**'
+      - 'LICENSE'
+      - 'NOTICE'
+      - '.gitignore'
 
 # This is now a coordination workflow that triggers other specialized workflows
 jobs:
@@ -26,40 +29,22 @@ jobs:
     name: Trigger CI Workflows
     runs-on: ubuntu-22.04
     outputs:
-      should-run-test: ${{ steps.check.outputs.should-run-test }}
-      should-run-quality: ${{ steps.check.outputs.should-run-quality }}
-      should-run-security: ${{ steps.check.outputs.should-run-security }}
+      should-run-security: ${{ github.ref == 'refs/heads/main' || github.event_name == 'schedule' }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v6
 
-    - name: Determine which workflows to run
-      id: check
-      run: |
-        # Always run test for PRs and pushes
-        echo "should-run-test=true" >> $GITHUB_OUTPUT
-        echo "should-run-quality=true" >> $GITHUB_OUTPUT
-        
-        # Run security scan for main branch or scheduled runs
-        if [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.event_name }}" == "schedule" ]]; then
-          echo "should-run-security=true" >> $GITHUB_OUTPUT
-        else
-          echo "should-run-security=false" >> $GITHUB_OUTPUT
-        fi
-
   # Test workflow
   test:
     name: Test
     needs: trigger-workflows
-    if: needs.trigger-workflows.outputs.should-run-test == 'true'
     uses: ./.github/workflows/test.yml
 
   # Code Quality workflow
   code-quality:
     name: Code Quality
     needs: trigger-workflows
-    if: needs.trigger-workflows.outputs.should-run-quality == 'true'
     uses: ./.github/workflows/code-quality.yml
 
   # Security workflow

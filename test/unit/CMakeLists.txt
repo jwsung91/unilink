@@ -37,8 +37,12 @@ foreach(
   test_logger_advanced.cc
   test_memory_advanced.cc
   test_pool_stress.cc
+  test_io_context_manager_coverage.cc
   test_error_mapping.cc
   test_error_mapping_exhaustive.cc
+  test_error_codes_coverage.cc
+  test_error_mapping_branches.cc
+  test_memory_pool_branches.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -71,7 +75,9 @@ foreach(
 endforeach()
 
 # Builder tests (separate executables)
-foreach(test_file test_builder.cc)
+foreach(test_file test_builder.cc test_udp_builder_coverage.cc
+                  test_uds_builder_coverage.cc
+)
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
     run_unit_${test_name} ${CMAKE_CURRENT_SOURCE_DIR}/builder/${test_file}
@@ -154,6 +160,9 @@ foreach(
   test_tcp_client_error_mapping.cc
   test_uds_advanced.cc
   test_udp_server_advanced.cc
+  test_udp_server_coverage.cc
+  test_udp_client_coverage.cc
+  test_serial_coverage.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -265,6 +274,8 @@ foreach(
   transport_udp_extended.cc
   transport_tcp_client_policy.cc
   reconnect_logic_test.cc
+  transport_uds_session_coverage.cc
+  test_tcp_client_lifecycle.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -506,7 +517,7 @@ gtest_discover_tests(
 
 # Framer tests (separate executables)
 foreach(test_file line_framer_test.cc packet_framer_test.cc
-                  line_framer_security_test.cc
+                  line_framer_security_test.cc test_packet_framer_coverage.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
