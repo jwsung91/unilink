@@ -31,18 +31,18 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">34</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">34</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-23 08:54:06</td>
+            <td class="headerValue">2026-04-23 11:27:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">32</td>
             <td class="headerCovTableEntry">48</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">66.7 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -128,43 +128,43 @@
 <a name="50"><span class="lineNum">      50 </span>                :            : /**</a>
 <a name="51"><span class="lineNum">      51 </span>                :            :  * @brief Convert ErrorCode to human-readable string</a>
 <a name="52"><span class="lineNum">      52 </span>                :            :  */</a>
-<a name="53"><span class="lineNum">      53 </span>                :<span class="lineNoCov">          0 : inline std::string to_string(ErrorCode code) {</span></a>
-<a name="54"><span class="lineNum">      54 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span> :<span class="lineNoCov">          0 :   switch (code) {</span></a>
-<span class="lineNum">         </span><span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span><span class="branchNoExec" title="Branch 6 was not executed"> # </span><span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span> 
-<span class="lineNum">         </span><span class="branchNoExec" title="Branch 9 was not executed"> # </span><span class="branchNoExec" title="Branch 10 was not executed"> # </span><span class="branchNoExec" title="Branch 11 was not executed"> # </span><span class="branchNoExec" title="Branch 12 was not executed"> # </span><span class="branchNoExec" title="Branch 13 was not executed"> # </span> 
-<span class="lineNum">         </span>         <span class="branchNoExec" title="Branch 14 was not executed"> # </span><span class="branchNoExec" title="Branch 15 was not executed"> # </span>]
-<a name="55"><span class="lineNum">      55 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::Success:</span></a>
-<a name="56"><span class="lineNum">      56 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Success&quot;;</span></a>
-<a name="57"><span class="lineNum">      57 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::Unknown:</span></a>
-<a name="58"><span class="lineNum">      58 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Unknown Error&quot;;</span></a>
-<a name="59"><span class="lineNum">      59 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::InvalidConfiguration:</span></a>
-<a name="60"><span class="lineNum">      60 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Invalid Configuration&quot;;</span></a>
-<a name="61"><span class="lineNum">      61 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::InternalError:</span></a>
-<a name="62"><span class="lineNum">      62 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Internal Error&quot;;</span></a>
-<a name="63"><span class="lineNum">      63 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::IoError:</span></a>
-<a name="64"><span class="lineNum">      64 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;I/O Error&quot;;</span></a>
-<a name="65"><span class="lineNum">      65 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::ConnectionRefused:</span></a>
-<a name="66"><span class="lineNum">      66 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Connection Refused&quot;;</span></a>
-<a name="67"><span class="lineNum">      67 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::ConnectionReset:</span></a>
-<a name="68"><span class="lineNum">      68 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Connection Reset&quot;;</span></a>
-<a name="69"><span class="lineNum">      69 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::ConnectionAborted:</span></a>
-<a name="70"><span class="lineNum">      70 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Connection Aborted&quot;;</span></a>
-<a name="71"><span class="lineNum">      71 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::TimedOut:</span></a>
-<a name="72"><span class="lineNum">      72 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Operation Timed Out&quot;;</span></a>
-<a name="73"><span class="lineNum">      73 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::NotConnected:</span></a>
-<a name="74"><span class="lineNum">      74 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Not Connected&quot;;</span></a>
-<a name="75"><span class="lineNum">      75 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::AlreadyConnected:</span></a>
-<a name="76"><span class="lineNum">      76 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Already Connected&quot;;</span></a>
-<a name="77"><span class="lineNum">      77 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::PortInUse:</span></a>
-<a name="78"><span class="lineNum">      78 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Port Already In Use&quot;;</span></a>
-<a name="79"><span class="lineNum">      79 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::AccessDenied:</span></a>
-<a name="80"><span class="lineNum">      80 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Access Denied&quot;;</span></a>
-<a name="81"><span class="lineNum">      81 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::Stopped:</span></a>
-<a name="82"><span class="lineNum">      82 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Stopped&quot;;</span></a>
-<a name="83"><span class="lineNum">      83 </span>                :<span class="lineNoCov">          0 :     case ErrorCode::StartFailed:</span></a>
-<a name="84"><span class="lineNum">      84 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Failed to Start&quot;;</span></a>
-<a name="85"><span class="lineNum">      85 </span>                :<span class="lineNoCov">          0 :     default:</span></a>
-<a name="86"><span class="lineNum">      86 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :       return &quot;Unknown Error Code&quot;;</span></a>
+<a name="53"><span class="lineNum">      53 </span>                :<span class="lineCov">         16 : inline std::string to_string(ErrorCode code) {</span></a>
+<a name="54"><span class="lineNum">      54 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span> :<span class="lineCov">         16 :   switch (code) {</span></a>
+<span class="lineNum">         </span><span class="branchCov" title="Branch 4 was taken 1 time"> + </span><span class="branchCov" title="Branch 5 was taken 1 time"> + </span><span class="branchCov" title="Branch 6 was taken 1 time"> + </span><span class="branchCov" title="Branch 7 was taken 1 time"> + </span><span class="branchCov" title="Branch 8 was taken 1 time"> + </span> 
+<span class="lineNum">         </span><span class="branchCov" title="Branch 9 was taken 1 time"> + </span><span class="branchCov" title="Branch 10 was taken 1 time"> + </span><span class="branchCov" title="Branch 11 was taken 1 time"> + </span><span class="branchCov" title="Branch 12 was taken 1 time"> + </span><span class="branchCov" title="Branch 13 was taken 1 time"> + </span> 
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 14 was taken 1 time"> + </span><span class="branchCov" title="Branch 15 was taken 1 time"> + </span>]
+<a name="55"><span class="lineNum">      55 </span>                :<span class="lineCov">          1 :     case ErrorCode::Success:</span></a>
+<a name="56"><span class="lineNum">      56 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Success&quot;;</span></a>
+<a name="57"><span class="lineNum">      57 </span>                :<span class="lineCov">          1 :     case ErrorCode::Unknown:</span></a>
+<a name="58"><span class="lineNum">      58 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Unknown Error&quot;;</span></a>
+<a name="59"><span class="lineNum">      59 </span>                :<span class="lineCov">          1 :     case ErrorCode::InvalidConfiguration:</span></a>
+<a name="60"><span class="lineNum">      60 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Invalid Configuration&quot;;</span></a>
+<a name="61"><span class="lineNum">      61 </span>                :<span class="lineCov">          1 :     case ErrorCode::InternalError:</span></a>
+<a name="62"><span class="lineNum">      62 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Internal Error&quot;;</span></a>
+<a name="63"><span class="lineNum">      63 </span>                :<span class="lineCov">          1 :     case ErrorCode::IoError:</span></a>
+<a name="64"><span class="lineNum">      64 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;I/O Error&quot;;</span></a>
+<a name="65"><span class="lineNum">      65 </span>                :<span class="lineCov">          1 :     case ErrorCode::ConnectionRefused:</span></a>
+<a name="66"><span class="lineNum">      66 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Connection Refused&quot;;</span></a>
+<a name="67"><span class="lineNum">      67 </span>                :<span class="lineCov">          1 :     case ErrorCode::ConnectionReset:</span></a>
+<a name="68"><span class="lineNum">      68 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Connection Reset&quot;;</span></a>
+<a name="69"><span class="lineNum">      69 </span>                :<span class="lineCov">          1 :     case ErrorCode::ConnectionAborted:</span></a>
+<a name="70"><span class="lineNum">      70 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Connection Aborted&quot;;</span></a>
+<a name="71"><span class="lineNum">      71 </span>                :<span class="lineCov">          1 :     case ErrorCode::TimedOut:</span></a>
+<a name="72"><span class="lineNum">      72 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Operation Timed Out&quot;;</span></a>
+<a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">          1 :     case ErrorCode::NotConnected:</span></a>
+<a name="74"><span class="lineNum">      74 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Not Connected&quot;;</span></a>
+<a name="75"><span class="lineNum">      75 </span>                :<span class="lineCov">          1 :     case ErrorCode::AlreadyConnected:</span></a>
+<a name="76"><span class="lineNum">      76 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Already Connected&quot;;</span></a>
+<a name="77"><span class="lineNum">      77 </span>                :<span class="lineCov">          1 :     case ErrorCode::PortInUse:</span></a>
+<a name="78"><span class="lineNum">      78 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Port Already In Use&quot;;</span></a>
+<a name="79"><span class="lineNum">      79 </span>                :<span class="lineCov">          1 :     case ErrorCode::AccessDenied:</span></a>
+<a name="80"><span class="lineNum">      80 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Access Denied&quot;;</span></a>
+<a name="81"><span class="lineNum">      81 </span>                :<span class="lineCov">          1 :     case ErrorCode::Stopped:</span></a>
+<a name="82"><span class="lineNum">      82 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Stopped&quot;;</span></a>
+<a name="83"><span class="lineNum">      83 </span>                :<span class="lineCov">          1 :     case ErrorCode::StartFailed:</span></a>
+<a name="84"><span class="lineNum">      84 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Failed to Start&quot;;</span></a>
+<a name="85"><span class="lineNum">      85 </span>                :<span class="lineCov">          1 :     default:</span></a>
+<a name="86"><span class="lineNum">      86 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :       return &quot;Unknown Error Code&quot;;</span></a>
 <a name="87"><span class="lineNum">      87 </span>                :            :   }</a>
 <a name="88"><span class="lineNum">      88 </span>                :            : }</a>
 <a name="89"><span class="lineNum">      89 </span>                :            : </a>
