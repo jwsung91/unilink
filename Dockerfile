@@ -29,12 +29,9 @@ RUN rm -rf build && mkdir build && cd build && \
         -DUNILINK_ENABLE_PKGCONFIG=ON \
         -DUNILINK_ENABLE_EXPORT_HEADER=ON \
         -DUNILINK_BUILD_EXAMPLES=ON \
-        -DUNILINK_BUILD_TESTS=ON \
-        -DUNILINK_BUILD_DOCS=ON && \
+        -DUNILINK_BUILD_TESTS=OFF \
+        -DUNILINK_BUILD_DOCS=OFF && \
     cmake --build . -j $(nproc)
-
-# Generate documentation (optional, skip if fails)
-RUN cd build && (make docs || echo "Documentation generation skipped")
 
 # Production stage
 FROM ubuntu:22.04 AS production

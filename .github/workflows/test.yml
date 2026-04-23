@@ -1,8 +1,18 @@
 name: Test
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, develop ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - 'NOTICE'
+      - '.gitignore'
   workflow_call:
 
 env:
@@ -68,8 +78,9 @@ jobs:
       uses: actions/cache@v5
       with:
         path: ~/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ steps.cmake-hash.outputs.hash }}
+        key: ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ steps.cmake-hash.outputs.hash }}-${{ github.run_id }}
         restore-keys: |
+          ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-${{ steps.cmake-hash.outputs.hash }}-
           ccache-${{ runner.os }}-${{ matrix.os }}-${{ matrix.compiler }}-
 
     - name: Install base dependencies (Linux)
@@ -253,6 +264,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 60
     needs: []
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
 
     steps:
     - name: Checkout code
@@ -308,6 +320,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 45
     needs: []
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
 
     steps:
     - name: Checkout code

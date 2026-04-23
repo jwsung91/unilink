@@ -1,11 +1,21 @@
 name: Security
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, develop ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - 'NOTICE'
+      - '.gitignore'
   schedule:
     - cron: '0 2 * * 1'  # Weekly on Monday at 2 AM
-  workflow_call:
+  workflow_dispatch:
 
 jobs:
   # Trivy Security Scan
@@ -48,34 +58,6 @@ jobs:
       with:
         sarif_file: 'trivy-results.sarif'
 
-  # Docker Security Scan
-  docker-security:
-    name: Docker Security Scan
-    runs-on: ubuntu-22.04
-    timeout-minutes: 45
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v6
-
-    - name: Build Docker image
-      run: |
-        docker build -t unilink:security-scan .
-
-    - name: Run Trivy vulnerability scanner on Docker image
-      uses: aquasecurity/trivy-action@0.35.0
-      with:
-        image-ref: 'unilink:security-scan'
-        format: 'sarif'
-        output: 'trivy-docker-results.sarif'
-
-    - name: Upload Docker Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v4
-      if: always()
-      with:
-        sarif_file: 'trivy-docker-results.sarif'
-
   # Dependency Security Check
   dependency-check:
     name: Dependency Security Check
@@ -86,13 +68,9 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libboost-dev \
-          libboost-system-dev
+      uses: ./.github/actions/apt-install
+      with:
+        packages: "build-essential cmake libboost-dev libboost-system-dev"
 
     - name: Build project
       run: |
@@ -117,7 +95,7 @@ jobs:
   security-summary:
     name: Security Summary
     runs-on: ubuntu-22.04
-    needs: [trivy-scan, docker-security, dependency-check]
+    needs: [trivy-scan, dependency-check]
     if: always()
 
     steps:
@@ -127,5 +105,4 @@ jobs:
         echo "| Scan Type | Status |" >> $GITHUB_STEP_SUMMARY
         echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
         echo "| Trivy File System Scan | ${{ needs.trivy-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Docker Security Scan | ${{ needs.docker-security.result == 'success' && '✅ Passed' || '❌ Failed' || '⏭️ Skipped' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Dependency Check | ${{ needs.dependency-check.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

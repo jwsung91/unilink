@@ -1,10 +1,23 @@
 name: CI/CD Pipeline
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, develop ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - 'NOTICE'
+      - '.gitignore'
   pull_request:
     branches: [ main, develop ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
 
 # This is now a coordination workflow that triggers other specialized workflows
 jobs:
@@ -13,7 +26,6 @@ jobs:
     name: Trigger CI Workflows
     runs-on: ubuntu-22.04
     outputs:
-      should-run-build: ${{ steps.check.outputs.should-run-build }}
       should-run-test: ${{ steps.check.outputs.should-run-test }}
       should-run-quality: ${{ steps.check.outputs.should-run-quality }}
       should-run-security: ${{ steps.check.outputs.should-run-security }}
@@ -25,8 +37,7 @@ jobs:
     - name: Determine which workflows to run
       id: check
       run: |
-        # Always run build and test for PRs and pushes
-        echo "should-run-build=true" >> $GITHUB_OUTPUT
+        # Always run test for PRs and pushes
         echo "should-run-test=true" >> $GITHUB_OUTPUT
         echo "should-run-quality=true" >> $GITHUB_OUTPUT
         
@@ -36,13 +47,6 @@ jobs:
         else
           echo "should-run-security=false" >> $GITHUB_OUTPUT
         fi
-
-  # Build workflow
-  build:
-    name: Build
-    needs: trigger-workflows
-    if: needs.trigger-workflows.outputs.should-run-build == 'true'
-    uses: ./.github/workflows/build.yml
 
   # Test workflow
   test:
@@ -69,7 +73,7 @@ jobs:
   ci-summary:
     name: CI Summary
     runs-on: ubuntu-22.04
-    needs: [trigger-workflows, build, test, code-quality, security]
+    needs: [trigger-workflows, test, code-quality, security]
     if: always()
 
     steps:
@@ -78,7 +82,6 @@ jobs:
         echo "## CI/CD Pipeline Summary" >> $GITHUB_STEP_SUMMARY
         echo "| Workflow | Status |" >> $GITHUB_STEP_SUMMARY
         echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
-        echo "| Build | ${{ needs.build.result == 'success' && '✅ Passed' || needs.build.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Test | ${{ needs.test.result == 'success' && '✅ Passed' || needs.test.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Code Quality | ${{ needs.code-quality.result == 'success' && '✅ Passed' || needs.code-quality.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Security | ${{ needs.security.result == 'success' && '✅ Passed' || needs.security.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

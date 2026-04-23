@@ -1,8 +1,17 @@
 name: Documentation Deployment
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, develop ]
+    paths:
+      - 'docs/**'
+      - 'unilink/**/*.hpp'
+      - 'CMakeLists.txt'
+      - '.github/workflows/docs-deploy.yml'
   workflow_dispatch:
 
 permissions:
