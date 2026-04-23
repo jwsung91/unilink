@@ -55,7 +55,7 @@ struct UdsServer::Impl {
   FramerFactory framer_factory_{nullptr};
   MessageHandler on_message_{nullptr};
 
-  std::unordered_map<size_t, std::unique_ptr<framer::IFramer>> framers_;
+  std::unordered_map<ClientId, std::unique_ptr<framer::IFramer>> framers_;
 
   bool auto_start_ = false;
   size_t max_clients_ = 100;
@@ -212,7 +212,7 @@ struct UdsServer::Impl {
       }
     });
 
-    server_->on_multi_connect([weak_alive, this](size_t client_id, const std::string& info) {
+    server_->on_multi_connect([weak_alive, this](ClientId client_id, const std::string& info) {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
@@ -247,7 +247,7 @@ struct UdsServer::Impl {
       }
     });
 
-    server_->on_multi_disconnect([weak_alive, this](size_t client_id) {
+    server_->on_multi_disconnect([weak_alive, this](ClientId client_id) {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
@@ -266,7 +266,7 @@ struct UdsServer::Impl {
       }
     });
 
-    server_->on_multi_data([weak_alive, this](size_t client_id, memory::ConstByteSpan data_span) {
+    server_->on_multi_data([weak_alive, this](ClientId client_id, memory::ConstByteSpan data_span) {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
@@ -313,7 +313,7 @@ bool UdsServer::listening() const { return impl_->is_listening_.load(); }
 
 bool UdsServer::broadcast(std::string_view data) { return impl_->server_ ? impl_->server_->broadcast(data) : false; }
 
-bool UdsServer::send_to(size_t client_id, std::string_view data) {
+bool UdsServer::send_to(ClientId client_id, std::string_view data) {
   return impl_->server_ ? impl_->server_->send_to_client(client_id, data) : false;
 }
 
@@ -355,8 +355,8 @@ ServerInterface& UdsServer::on_message(MessageHandler handler) {
 
 size_t UdsServer::client_count() const { return impl_->server_ ? impl_->server_->client_count() : 0; }
 
-std::vector<size_t> UdsServer::connected_clients() const {
-  return impl_->server_ ? impl_->server_->connected_clients() : std::vector<size_t>();
+std::vector<ClientId> UdsServer::connected_clients() const {
+  return impl_->server_ ? impl_->server_->connected_clients() : std::vector<ClientId>();
 }
 
 UdsServer& UdsServer::auto_start(bool manage) {

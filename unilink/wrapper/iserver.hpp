@@ -60,7 +60,7 @@ class UNILINK_API ServerInterface {
 
   // Transmission
   virtual bool broadcast(std::string_view data) = 0;
-  virtual bool send_to(size_t client_id, std::string_view data) = 0;
+  virtual bool send_to(ClientId client_id, std::string_view data) = 0;
 
   // Event handlers
   virtual ServerInterface& on_connect(ConnectionHandler handler) = 0;
@@ -83,7 +83,7 @@ class UNILINK_API ServerInterface {
   // Management
   virtual ServerInterface& auto_start(bool manage = true) = 0;
   virtual size_t client_count() const = 0;
-  virtual std::vector<size_t> connected_clients() const = 0;
+  virtual std::vector<ClientId> connected_clients() const = 0;
 };
 
 }  // namespace wrapper

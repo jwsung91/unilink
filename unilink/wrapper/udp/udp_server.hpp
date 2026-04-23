@@ -50,13 +50,14 @@ class UNILINK_API UdpServer : public ServerInterface {
   UdpServer& operator=(const UdpServer&) = delete;
 
   // Lifecycle
-  std::future<bool> start() override;
+  // ServerInterface implementation
+  [[nodiscard]] std::future<bool> start() override;
   void stop() override;
   bool listening() const override;
 
   // Transmission
   bool broadcast(std::string_view data) override;
-  bool send_to(size_t client_id, std::string_view data) override;
+  bool send_to(ClientId client_id, std::string_view data) override;
 
   // Event handlers
   ServerInterface& on_connect(ConnectionHandler handler) override;
@@ -64,13 +65,12 @@ class UNILINK_API UdpServer : public ServerInterface {
   ServerInterface& on_data(MessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
 
-  // Framing
   ServerInterface& framer(FramerFactory factory) override;
   ServerInterface& on_message(MessageHandler handler) override;
 
-  // Management
+  // Client count and management
   size_t client_count() const override;
-  std::vector<size_t> connected_clients() const override;
+  std::vector<ClientId> connected_clients() const override;
 
   // UDP specific
   UdpServer& auto_start(bool manage = true) override;
