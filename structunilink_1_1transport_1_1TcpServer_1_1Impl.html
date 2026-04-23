@@ -194,8 +194,8 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a8434e943d0474ae2323c3a4dadb1c755" id="r_a8434e943d0474ae2323c3a4dadb1c755"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a8434e943d0474ae2323c3a4dadb1c755">stopping_</a> {false}</td></tr>
 <tr class="separator:a8434e943d0474ae2323c3a4dadb1c755"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19961cb3567bfd60055da8bbbd55452f" id="r_a19961cb3567bfd60055da8bbbd55452f"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a19961cb3567bfd60055da8bbbd55452f">next_client_id_</a> {0}</td></tr>
-<tr class="separator:a19961cb3567bfd60055da8bbbd55452f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a23dcee3c5370d815eb3802cd565abb" id="r_a1a23dcee3c5370d815eb3802cd565abb"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a1a23dcee3c5370d815eb3802cd565abb">next_client_id_</a> {0}</td></tr>
+<tr class="separator:a1a23dcee3c5370d815eb3802cd565abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5effb012af0807896c3a05a4ed2935a7" id="r_a5effb012af0807896c3a05a4ed2935a7"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; net::io_context &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a5effb012af0807896c3a05a4ed2935a7">owned_ioc_</a></td></tr>
 <tr class="separator:a5effb012af0807896c3a05a4ed2935a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9e0ee692eb1ccb7b022dc3b52a5ab75" id="r_ad9e0ee692eb1ccb7b022dc3b52a5ab75"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ad9e0ee692eb1ccb7b022dc3b52a5ab75">owns_ioc_</a></td></tr>
@@ -218,16 +218,16 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a5f7877d5cc49e535d4831a78b602489a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afee5aeca51f1da401759c0330fe653d4" id="r_afee5aeca51f1da401759c0330fe653d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1interface_1_1Channel.html#acbaa1d8f93fac54ed516ef6e1caac3a5">OnBackpressure</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#afee5aeca51f1da401759c0330fe653d4">on_bp_</a></td></tr>
 <tr class="separator:afee5aeca51f1da401759c0330fe653d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15788a8adb6ebaa9aa0923ebe0c66077" id="r_a15788a8adb6ebaa9aa0923ebe0c66077"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ad90ed82ab725073a4f691c7100667352">MultiClientConnectHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a15788a8adb6ebaa9aa0923ebe0c66077">on_multi_connect_</a></td></tr>
+<tr class="memitem:a15788a8adb6ebaa9aa0923ebe0c66077" id="r_a15788a8adb6ebaa9aa0923ebe0c66077"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a4da733ede93eaa9a838ad0c76c6403c2">MultiClientConnectHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a15788a8adb6ebaa9aa0923ebe0c66077">on_multi_connect_</a></td></tr>
 <tr class="separator:a15788a8adb6ebaa9aa0923ebe0c66077"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40270b15a1cc13bbe8afc1b30ab3b8ae" id="r_a40270b15a1cc13bbe8afc1b30ab3b8ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a28cfad27e433cd339219fdc5073a815c">MultiClientDataHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a40270b15a1cc13bbe8afc1b30ab3b8ae">on_multi_data_</a></td></tr>
+<tr class="memitem:a40270b15a1cc13bbe8afc1b30ab3b8ae" id="r_a40270b15a1cc13bbe8afc1b30ab3b8ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ae97bdb9a320878c62c3ac7c6ff73a854">MultiClientDataHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a40270b15a1cc13bbe8afc1b30ab3b8ae">on_multi_data_</a></td></tr>
 <tr class="separator:a40270b15a1cc13bbe8afc1b30ab3b8ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae832b58382dd4d2340b06c66daad56b3" id="r_ae832b58382dd4d2340b06c66daad56b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#aaa9095088caef6466a937bf488a2a90e">MultiClientDisconnectHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ae832b58382dd4d2340b06c66daad56b3">on_multi_disconnect_</a></td></tr>
+<tr class="memitem:ae832b58382dd4d2340b06c66daad56b3" id="r_ae832b58382dd4d2340b06c66daad56b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ace9e10281fdfd2de5fea4d0e9291b2ad">MultiClientDisconnectHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#ae832b58382dd4d2340b06c66daad56b3">on_multi_disconnect_</a></td></tr>
 <tr class="separator:ae832b58382dd4d2340b06c66daad56b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a835797e22bc3ce07b91083b300abe500" id="r_a835797e22bc3ce07b91083b300abe500"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#a835797e22bc3ce07b91083b300abe500">sessions_mutex_</a></td></tr>
 <tr class="separator:a835797e22bc3ce07b91083b300abe500"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe75c36ec93462e5c0e67f0ad1af6387" id="r_abe75c36ec93462e5c0e67f0ad1af6387"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; size_t, std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#abe75c36ec93462e5c0e67f0ad1af6387">sessions_</a></td></tr>
-<tr class="separator:abe75c36ec93462e5c0e67f0ad1af6387"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab7f493b4ecc8ffd2b30d9fba6d3ab4a" id="r_aab7f493b4ecc8ffd2b30d9fba6d3ab4a"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, std::shared_ptr&lt; <a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#aab7f493b4ecc8ffd2b30d9fba6d3ab4a">sessions_</a></td></tr>
+<tr class="separator:aab7f493b4ecc8ffd2b30d9fba6d3ab4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefc493a14c1ac0161942f9ffb4d8f4e8" id="r_aefc493a14c1ac0161942f9ffb4d8f4e8"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#aefc493a14c1ac0161942f9ffb4d8f4e8">max_clients_</a></td></tr>
 <tr class="separator:aefc493a14c1ac0161942f9ffb4d8f4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4de4b689a805d45bd0f80ef5904b836" id="r_aa4de4b689a805d45bd0f80ef5904b836"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html#aa4de4b689a805d45bd0f80ef5904b836">client_limit_enabled_</a></td></tr>
@@ -651,14 +651,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a19961cb3567bfd60055da8bbbd55452f" name="a19961cb3567bfd60055da8bbbd55452f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19961cb3567bfd60055da8bbbd55452f">&#9670;&#160;</a></span>next_client_id_</h2>
+<a id="a1a23dcee3c5370d815eb3802cd565abb" name="a1a23dcee3c5370d815eb3802cd565abb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a23dcee3c5370d815eb3802cd565abb">&#9670;&#160;</a></span>next_client_id_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt;size_t&gt; unilink::transport::TcpServer::Impl::next_client_id_ {0}</td>
+          <td class="memname">std::atomic&lt;<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&gt; unilink::transport::TcpServer::Impl::next_client_id_ {0}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -706,7 +706,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ad90ed82ab725073a4f691c7100667352">MultiClientConnectHandler</a> unilink::transport::TcpServer::Impl::on_multi_connect_</td>
+          <td class="memname"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a4da733ede93eaa9a838ad0c76c6403c2">MultiClientConnectHandler</a> unilink::transport::TcpServer::Impl::on_multi_connect_</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -722,7 +722,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a28cfad27e433cd339219fdc5073a815c">MultiClientDataHandler</a> unilink::transport::TcpServer::Impl::on_multi_data_</td>
+          <td class="memname"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ae97bdb9a320878c62c3ac7c6ff73a854">MultiClientDataHandler</a> unilink::transport::TcpServer::Impl::on_multi_data_</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -738,7 +738,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#aaa9095088caef6466a937bf488a2a90e">MultiClientDisconnectHandler</a> unilink::transport::TcpServer::Impl::on_multi_disconnect_</td>
+          <td class="memname"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ace9e10281fdfd2de5fea4d0e9291b2ad">MultiClientDisconnectHandler</a> unilink::transport::TcpServer::Impl::on_multi_disconnect_</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -811,14 +811,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="abe75c36ec93462e5c0e67f0ad1af6387" name="abe75c36ec93462e5c0e67f0ad1af6387"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe75c36ec93462e5c0e67f0ad1af6387">&#9670;&#160;</a></span>sessions_</h2>
+<a id="aab7f493b4ecc8ffd2b30d9fba6d3ab4a" name="aab7f493b4ecc8ffd2b30d9fba6d3ab4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab7f493b4ecc8ffd2b30d9fba6d3ab4a">&#9670;&#160;</a></span>sessions_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;size_t, std::shared_ptr&lt;<a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a>&gt; &gt; unilink::transport::TcpServer::Impl::sessions_</td>
+          <td class="memname">std::unordered_map&lt;<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, std::shared_ptr&lt;<a class="el" href="classunilink_1_1transport_1_1TcpServerSession.html">TcpServerSession</a>&gt; &gt; unilink::transport::TcpServer::Impl::sessions_</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -908,7 +908,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html">TcpServer</a></li><li class="navelem"><a class="el" href="structunilink_1_1transport_1_1TcpServer_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Wed Apr 22 2026 22:25:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 02:30:14 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -192,12 +192,12 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aa692ac146ebca1f44af235b765ba7bc3" id="r_aa692ac146ebca1f44af235b765ba7bc3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3">MultiClientConnectHandler</a> = std::function&lt; void(size_t client_id, const std::string &amp;client_info)&gt;</td></tr>
-<tr class="separator:aa692ac146ebca1f44af235b765ba7bc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac89ae8c2656da7863cbcda4b95d9ac97" id="r_ac89ae8c2656da7863cbcda4b95d9ac97"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ac89ae8c2656da7863cbcda4b95d9ac97">MultiClientDataHandler</a> = std::function&lt; void(size_t client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)&gt;</td></tr>
-<tr class="separator:ac89ae8c2656da7863cbcda4b95d9ac97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17116c803833de756b193ff221c4ea3f" id="r_a17116c803833de756b193ff221c4ea3f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f">MultiClientDisconnectHandler</a> = std::function&lt; void(size_t client_id)&gt;</td></tr>
-<tr class="separator:a17116c803833de756b193ff221c4ea3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a652330c0ace99292ac9db010bcf4ea68" id="r_a652330c0ace99292ac9db010bcf4ea68"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a652330c0ace99292ac9db010bcf4ea68">MultiClientConnectHandler</a> = std::function&lt; void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, const std::string &amp;client_info)&gt;</td></tr>
+<tr class="separator:a652330c0ace99292ac9db010bcf4ea68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af758bd9e3ecf9af3fec490915f6271c3" id="r_af758bd9e3ecf9af3fec490915f6271c3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#af758bd9e3ecf9af3fec490915f6271c3">MultiClientDataHandler</a> = std::function&lt; void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)&gt;</td></tr>
+<tr class="separator:af758bd9e3ecf9af3fec490915f6271c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b3fc82ee4b37cc35650e4f3ddda86ac" id="r_a6b3fc82ee4b37cc35650e4f3ddda86ac"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a6b3fc82ee4b37cc35650e4f3ddda86ac">MultiClientDisconnectHandler</a> = std::function&lt; void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id)&gt;</td></tr>
+<tr class="separator:a6b3fc82ee4b37cc35650e4f3ddda86ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classunilink_1_1interface_1_1Channel"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1interface_1_1Channel')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></td></tr>
 <tr class="memitem:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel" id="r_a0ff1ba3581a10632471f991e9910a3f9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;</td></tr>
 <tr class="separator:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -240,19 +240,19 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aacbee04cedb4d12c530678970f3e4cb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6b598a6f392963e0fece0d5612d3afd" id="r_ac6b598a6f392963e0fece0d5612d3afd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ac6b598a6f392963e0fece0d5612d3afd">broadcast</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
 <tr class="separator:ac6b598a6f392963e0fece0d5612d3afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41cffde717dba58b373a297ee40648b5" id="r_a41cffde717dba58b373a297ee40648b5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a41cffde717dba58b373a297ee40648b5">send_to_client</a> (size_t client_id, std::string_view message)</td></tr>
-<tr class="separator:a41cffde717dba58b373a297ee40648b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ba01f6894077c96cb67e60aad2478ba" id="r_a6ba01f6894077c96cb67e60aad2478ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a6ba01f6894077c96cb67e60aad2478ba">send_to_client</a> (size_t client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
-<tr class="separator:a6ba01f6894077c96cb67e60aad2478ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27cfb9cbb6546f15781cd9516ae63d0e" id="r_a27cfb9cbb6546f15781cd9516ae63d0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a27cfb9cbb6546f15781cd9516ae63d0e">send_to_client</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view message)</td></tr>
+<tr class="separator:a27cfb9cbb6546f15781cd9516ae63d0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a851d5b24814e162b81f587467cdf63ef" id="r_a851d5b24814e162b81f587467cdf63ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a851d5b24814e162b81f587467cdf63ef">send_to_client</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
+<tr class="separator:a851d5b24814e162b81f587467cdf63ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6a3022125f5c3edc48457d4aaee5c68" id="r_ad6a3022125f5c3edc48457d4aaee5c68"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ad6a3022125f5c3edc48457d4aaee5c68">client_count</a> () const</td></tr>
 <tr class="separator:ad6a3022125f5c3edc48457d4aaee5c68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8aea184a7365f39554366db047995331" id="r_a8aea184a7365f39554366db047995331"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a8aea184a7365f39554366db047995331">connected_clients</a> () const</td></tr>
-<tr class="separator:a8aea184a7365f39554366db047995331"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64c837167f176f5f7cc751e990879232" id="r_a64c837167f176f5f7cc751e990879232"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a64c837167f176f5f7cc751e990879232">on_multi_connect</a> (<a class="el" href="classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3">MultiClientConnectHandler</a> handler)</td></tr>
+<tr class="memitem:aba10cc34661bf6716806102249393146" id="r_aba10cc34661bf6716806102249393146"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#aba10cc34661bf6716806102249393146">connected_clients</a> () const</td></tr>
+<tr class="separator:aba10cc34661bf6716806102249393146"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64c837167f176f5f7cc751e990879232" id="r_a64c837167f176f5f7cc751e990879232"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a64c837167f176f5f7cc751e990879232">on_multi_connect</a> (<a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a652330c0ace99292ac9db010bcf4ea68">MultiClientConnectHandler</a> handler)</td></tr>
 <tr class="separator:a64c837167f176f5f7cc751e990879232"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adda98a9e31bde2b57651ac95ee05509e" id="r_adda98a9e31bde2b57651ac95ee05509e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#adda98a9e31bde2b57651ac95ee05509e">on_multi_data</a> (<a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ac89ae8c2656da7863cbcda4b95d9ac97">MultiClientDataHandler</a> handler)</td></tr>
+<tr class="memitem:adda98a9e31bde2b57651ac95ee05509e" id="r_adda98a9e31bde2b57651ac95ee05509e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#adda98a9e31bde2b57651ac95ee05509e">on_multi_data</a> (<a class="el" href="classunilink_1_1transport_1_1UdsServer.html#af758bd9e3ecf9af3fec490915f6271c3">MultiClientDataHandler</a> handler)</td></tr>
 <tr class="separator:adda98a9e31bde2b57651ac95ee05509e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4beb346689bb6964ec1028d85108d7e" id="r_ae4beb346689bb6964ec1028d85108d7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ae4beb346689bb6964ec1028d85108d7e">on_multi_disconnect</a> (<a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f">MultiClientDisconnectHandler</a> handler)</td></tr>
+<tr class="memitem:ae4beb346689bb6964ec1028d85108d7e" id="r_ae4beb346689bb6964ec1028d85108d7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ae4beb346689bb6964ec1028d85108d7e">on_multi_disconnect</a> (<a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a6b3fc82ee4b37cc35650e4f3ddda86ac">MultiClientDisconnectHandler</a> handler)</td></tr>
 <tr class="separator:ae4beb346689bb6964ec1028d85108d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabadab1ec1092e2dc5dd98a6a62ff597" id="r_aabadab1ec1092e2dc5dd98a6a62ff597"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink_1_1base.html#a309474018616d324e14830540edab75c">base::LinkState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597">get_state</a> () const</td></tr>
 <tr class="separator:aabadab1ec1092e2dc5dd98a6a62ff597"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -272,14 +272,14 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8hpp_source.html#l00045">45</a> of file <a class="el" href="transport_2uds_2uds__server_8hpp_source.html">uds_server.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="aa692ac146ebca1f44af235b765ba7bc3" name="aa692ac146ebca1f44af235b765ba7bc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa692ac146ebca1f44af235b765ba7bc3">&#9670;&#160;</a></span>MultiClientConnectHandler</h2>
+<a id="a652330c0ace99292ac9db010bcf4ea68" name="a652330c0ace99292ac9db010bcf4ea68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a652330c0ace99292ac9db010bcf4ea68">&#9670;&#160;</a></span>MultiClientConnectHandler</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using unilink::transport::UdsServer::MultiClientConnectHandler =  std::function&lt;void(size_t client_id, const std::string&amp; client_info)&gt;</td>
+          <td class="memname">using unilink::transport::UdsServer::MultiClientConnectHandler =  std::function&lt;void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, const std::string&amp; client_info)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -288,14 +288,14 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac89ae8c2656da7863cbcda4b95d9ac97" name="ac89ae8c2656da7863cbcda4b95d9ac97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac89ae8c2656da7863cbcda4b95d9ac97">&#9670;&#160;</a></span>MultiClientDataHandler</h2>
+<a id="af758bd9e3ecf9af3fec490915f6271c3" name="af758bd9e3ecf9af3fec490915f6271c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af758bd9e3ecf9af3fec490915f6271c3">&#9670;&#160;</a></span>MultiClientDataHandler</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using unilink::transport::UdsServer::MultiClientDataHandler =  std::function&lt;void(size_t client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)&gt;</td>
+          <td class="memname">using unilink::transport::UdsServer::MultiClientDataHandler =  std::function&lt;void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -304,14 +304,14 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a17116c803833de756b193ff221c4ea3f" name="a17116c803833de756b193ff221c4ea3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17116c803833de756b193ff221c4ea3f">&#9670;&#160;</a></span>MultiClientDisconnectHandler</h2>
+<a id="a6b3fc82ee4b37cc35650e4f3ddda86ac" name="a6b3fc82ee4b37cc35650e4f3ddda86ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b3fc82ee4b37cc35650e4f3ddda86ac">&#9670;&#160;</a></span>MultiClientDisconnectHandler</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using unilink::transport::UdsServer::MultiClientDisconnectHandler =  std::function&lt;void(size_t client_id)&gt;</td>
+          <td class="memname">using unilink::transport::UdsServer::MultiClientDisconnectHandler =  std::function&lt;void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -514,7 +514,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-5-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsServer_ab36b92812632d19dcad6f6577f7101ba_icgraph.svg" width="468" height="179"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsServer_ab36b92812632d19dcad6f6577f7101ba_icgraph.svg" width="468" height="243"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -535,6 +535,15 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00281">281</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsServer_ac6b598a6f392963e0fece0d5612d3afd_cgraph.svg" width="458" height="180"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
 </div>
 </div>
 <a id="aacbee04cedb4d12c530678970f3e4cb0" name="aacbee04cedb4d12c530678970f3e4cb0"></a>
@@ -554,11 +563,11 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00273">273</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsServer_aacbee04cedb4d12c530678970f3e4cb0_cgraph.svg" width="411" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -579,18 +588,18 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00295">295</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00306">306</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="a8aea184a7365f39554366db047995331" name="a8aea184a7365f39554366db047995331"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8aea184a7365f39554366db047995331">&#9670;&#160;</a></span>connected_clients()</h2>
+<a id="aba10cc34661bf6716806102249393146" name="aba10cc34661bf6716806102249393146"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba10cc34661bf6716806102249393146">&#9670;&#160;</a></span>connected_clients()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; size_t &gt; unilink::transport::UdsServer::connected_clients </td>
+          <td class="memname">std::vector&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> &gt; unilink::transport::UdsServer::connected_clients </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -598,7 +607,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00300">300</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00311">311</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -687,7 +696,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00322">322</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00333">333</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -789,14 +798,14 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::UdsServer::on_multi_connect </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3">MultiClientConnectHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a652330c0ace99292ac9db010bcf4ea68">MultiClientConnectHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00307">307</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00318">318</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -809,14 +818,14 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::UdsServer::on_multi_data </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ac89ae8c2656da7863cbcda4b95d9ac97">MultiClientDataHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#af758bd9e3ecf9af3fec490915f6271c3">MultiClientDataHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00312">312</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00323">323</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -829,14 +838,14 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::UdsServer::on_multi_disconnect </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f">MultiClientDisconnectHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a6b3fc82ee4b37cc35650e4f3ddda86ac">MultiClientDisconnectHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00317">317</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00328">328</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -922,8 +931,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6ba01f6894077c96cb67e60aad2478ba" name="a6ba01f6894077c96cb67e60aad2478ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ba01f6894077c96cb67e60aad2478ba">&#9670;&#160;</a></span>send_to_client() <span class="overload">[1/2]</span></h2>
+<a id="a851d5b24814e162b81f587467cdf63ef" name="a851d5b24814e162b81f587467cdf63ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a851d5b24814e162b81f587467cdf63ef">&#9670;&#160;</a></span>send_to_client() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -931,7 +940,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool unilink::transport::UdsServer::send_to_client </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
           <td class="paramname"><em>client_id</em>, </td>
         </tr>
         <tr>
@@ -948,10 +957,12 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00292">292</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+
 </div>
 </div>
-<a id="a41cffde717dba58b373a297ee40648b5" name="a41cffde717dba58b373a297ee40648b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41cffde717dba58b373a297ee40648b5">&#9670;&#160;</a></span>send_to_client() <span class="overload">[2/2]</span></h2>
+<a id="a27cfb9cbb6546f15781cd9516ae63d0e" name="a27cfb9cbb6546f15781cd9516ae63d0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27cfb9cbb6546f15781cd9516ae63d0e">&#9670;&#160;</a></span>send_to_client() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -959,7 +970,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool unilink::transport::UdsServer::send_to_client </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
           <td class="paramname"><em>client_id</em>, </td>
         </tr>
         <tr>
@@ -976,7 +987,21 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00281">281</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00287">287</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsServer_a27cfb9cbb6546f15781cd9516ae63d0e_cgraph.svg" width="167" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsServer_a27cfb9cbb6546f15781cd9516ae63d0e_icgraph.svg" width="167" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -1035,11 +1060,11 @@ Static Public Member Functions</h2></td></tr>
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a98ff6856a5ebd04adc7a9760437c9cf1">unilink::interface::Channel</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00186">186</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
-<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1UdsServer_a8acd6ea17fd839fa936502643e2b1430_icgraph.svg" width="375" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1055,7 +1080,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a></li>
-    <li class="footer">Generated on Wed Apr 22 2026 22:25:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 02:30:14 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

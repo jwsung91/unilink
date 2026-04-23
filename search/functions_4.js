@@ -10,7 +10,7 @@ var searchData=
   ['error_5fcount_7',['error_count',['../classunilink_1_1diagnostics_1_1ErrorHandler.html#ace4b78e5340d0a507a1d13250afed6f9',1,'unilink::diagnostics::ErrorHandler']]],
   ['error_5frate_8',['error_rate',['../structunilink_1_1diagnostics_1_1ErrorStats.html#a91590a1a6908541f51019338c8d30080',1,'unilink::diagnostics::ErrorStats']]],
   ['error_5fstats_9',['error_stats',['../classunilink_1_1diagnostics_1_1ErrorHandler.html#aea30bf6218bbcf484545d02648b64144',1,'unilink::diagnostics::ErrorHandler']]],
-  ['errorcontext_10',['ErrorContext',['../classunilink_1_1wrapper_1_1ErrorContext.html#ad1c476f8a7ce2bb35cf9ccbeea1e5539',1,'unilink::wrapper::ErrorContext']]],
+  ['errorcontext_10',['ErrorContext',['../classunilink_1_1wrapper_1_1ErrorContext.html#ab513bebaa766796e41c6eeca00f2ada5',1,'unilink::wrapper::ErrorContext']]],
   ['errorhandler_11',['ErrorHandler',['../classunilink_1_1diagnostics_1_1ErrorHandler.html#a48ab248780ef793898418f9ce5247b64',1,'unilink::diagnostics::ErrorHandler']]],
   ['errorinfo_12',['errorinfo',['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a286e6ccfc50ec89824ba31b67da616ce',1,'unilink::diagnostics::ErrorInfo::ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg)'],['../structunilink_1_1diagnostics_1_1ErrorInfo.html#a48bdf1d2850c935cd787d2ae86bf2833',1,'unilink::diagnostics::ErrorInfo::ErrorInfo(ErrorLevel l, ErrorCategory c, std::string_view comp, std::string_view op, std::string_view msg, const boost::system::error_code &amp;ec, bool retry=false)']]],
   ['errors_5fby_5fcomponent_13',['errors_by_component',['../classunilink_1_1diagnostics_1_1ErrorHandler.html#a553bbc9805ffec33330fb7193c996aaa',1,'unilink::diagnostics::ErrorHandler']]],

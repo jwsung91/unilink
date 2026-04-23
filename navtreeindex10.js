@@ -1,5 +1,10 @@
 var NAVTREEINDEX10 =
 {
+"line__framer_8cc_source.html":[26,0,1,6,1],
+"line__framer_8hpp.html":[26,0,1,6,2],
+"line__framer_8hpp_source.html":[26,0,1,6,2],
+"log__rotation_8cc.html":[26,0,1,4,6],
+"log__rotation_8cc_source.html":[26,0,1,4,6],
 "log__rotation_8hpp.html":[26,0,1,4,7],
 "log__rotation_8hpp_source.html":[26,0,1,4,7],
 "logger_8cc.html":[26,0,1,4,8],
@@ -244,10 +249,5 @@ var NAVTREEINDEX10 =
 "md_docs_2guides_2core_2quickstart.html#autotoc_md384":[8,5],
 "md_docs_2guides_2core_2quickstart.html#autotoc_md386":[8,6],
 "md_docs_2guides_2core_2quickstart.html#autotoc_md387":[8,6,0],
-"md_docs_2guides_2core_2quickstart.html#autotoc_md388":[8,6,1],
-"md_docs_2guides_2core_2quickstart.html#autotoc_md389":[8,6,2],
-"md_docs_2guides_2core_2quickstart.html#autotoc_md391":[8,7],
-"md_docs_2guides_2core_2testing.html":[9],
-"md_docs_2guides_2core_2testing.html#autotoc_md394":[9,0],
-"md_docs_2guides_2core_2testing.html#autotoc_md396":[9,1]
+"md_docs_2guides_2core_2quickstart.html#autotoc_md388":[8,6,1]
 };

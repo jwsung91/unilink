@@ -13,6 +13,7 @@ var namespaceunilink =
     [ "util", "namespaceunilink_1_1util.html", "namespaceunilink_1_1util" ],
     [ "wrapper", "namespaceunilink_1_1wrapper.html", "namespaceunilink_1_1wrapper" ],
     [ "ReconnectDecision", "structunilink_1_1ReconnectDecision.html", "structunilink_1_1ReconnectDecision" ],
+    [ "ClientId", "namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812", null ],
     [ "ConnectionContext", "namespaceunilink.html#a10eb1cdfe769e7647fadc9f121653078", null ],
     [ "ErrorContext", "namespaceunilink.html#a232034af41d73e7be8a4711f483baa7f", null ],
     [ "MessageContext", "namespaceunilink.html#a6ead8cfc72c859b6958cd90fed663e15", null ],

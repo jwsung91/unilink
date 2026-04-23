@@ -10,7 +10,7 @@ var classunilink_1_1wrapper_1_1UdsServer =
     [ "auto_start", "classunilink_1_1wrapper_1_1UdsServer.html#a555d7306f5283a1d798179a7341e6897", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1UdsServer.html#a43983c237bfa6949654c1248c75e8dfe", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1UdsServer.html#aef6a244b6ff21ab3e46912208ef08110", null ],
-    [ "connected_clients", "classunilink_1_1wrapper_1_1UdsServer.html#aeb6b48c4d5d6edb77edfa40a05e35fc6", null ],
+    [ "connected_clients", "classunilink_1_1wrapper_1_1UdsServer.html#a22d78e227c2705fba874d64c71952346", null ],
     [ "framer", "classunilink_1_1wrapper_1_1UdsServer.html#ac6991cbbbda6f3b4f4e6b7f0cf25aa30", null ],
     [ "idle_timeout", "classunilink_1_1wrapper_1_1UdsServer.html#a88756d6e4f83ed7174676cc3405dc1f3", null ],
     [ "listening", "classunilink_1_1wrapper_1_1UdsServer.html#a5b74c341da06fd117476e50494961150", null ],
@@ -23,7 +23,7 @@ var classunilink_1_1wrapper_1_1UdsServer =
     [ "on_message", "classunilink_1_1wrapper_1_1UdsServer.html#a96c112224f1af1d3b5a185eca165ac86", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1UdsServer.html#a4ac8ee54c5b3bc1419cc06517bb0df1f", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1UdsServer.html#a52976edcdfc27a9508716f5dba220cb8", null ],
-    [ "send_to", "classunilink_1_1wrapper_1_1UdsServer.html#ad93aa0514e920c4a68fa3e24be679c94", null ],
+    [ "send_to", "classunilink_1_1wrapper_1_1UdsServer.html#ab85d87986b379c902088c7e1e2211c58", null ],
     [ "start", "classunilink_1_1wrapper_1_1UdsServer.html#a26de1dce570cdd96462c4b2f8b5286f0", null ],
     [ "stop", "classunilink_1_1wrapper_1_1UdsServer.html#a1fcc0e0aae5f7084accba6516967087e", null ],
     [ "unlimited_clients", "classunilink_1_1wrapper_1_1UdsServer.html#a202988355158595022c3a6a30f95ca89", null ]

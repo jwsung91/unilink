@@ -1,9 +1,9 @@
 var classunilink_1_1transport_1_1UdsServer =
 [
     [ "Impl", "structunilink_1_1transport_1_1UdsServer_1_1Impl.html", "structunilink_1_1transport_1_1UdsServer_1_1Impl" ],
-    [ "MultiClientConnectHandler", "classunilink_1_1transport_1_1UdsServer.html#aa692ac146ebca1f44af235b765ba7bc3", null ],
-    [ "MultiClientDataHandler", "classunilink_1_1transport_1_1UdsServer.html#ac89ae8c2656da7863cbcda4b95d9ac97", null ],
-    [ "MultiClientDisconnectHandler", "classunilink_1_1transport_1_1UdsServer.html#a17116c803833de756b193ff221c4ea3f", null ],
+    [ "MultiClientConnectHandler", "classunilink_1_1transport_1_1UdsServer.html#a652330c0ace99292ac9db010bcf4ea68", null ],
+    [ "MultiClientDataHandler", "classunilink_1_1transport_1_1UdsServer.html#af758bd9e3ecf9af3fec490915f6271c3", null ],
+    [ "MultiClientDisconnectHandler", "classunilink_1_1transport_1_1UdsServer.html#a6b3fc82ee4b37cc35650e4f3ddda86ac", null ],
     [ "~UdsServer", "classunilink_1_1transport_1_1UdsServer.html#a7351a1236052df08f059f21aab85ea6f", null ],
     [ "UdsServer", "classunilink_1_1transport_1_1UdsServer.html#ae6c4d075bbebda1c00fe79daa86a5d1c", null ],
     [ "UdsServer", "classunilink_1_1transport_1_1UdsServer.html#a250d051520e87e1c5ed3b978f04fd39c", null ],
@@ -13,7 +13,7 @@ var classunilink_1_1transport_1_1UdsServer =
     [ "broadcast", "classunilink_1_1transport_1_1UdsServer.html#ac6b598a6f392963e0fece0d5612d3afd", null ],
     [ "broadcast", "classunilink_1_1transport_1_1UdsServer.html#aacbee04cedb4d12c530678970f3e4cb0", null ],
     [ "client_count", "classunilink_1_1transport_1_1UdsServer.html#ad6a3022125f5c3edc48457d4aaee5c68", null ],
-    [ "connected_clients", "classunilink_1_1transport_1_1UdsServer.html#a8aea184a7365f39554366db047995331", null ],
+    [ "connected_clients", "classunilink_1_1transport_1_1UdsServer.html#aba10cc34661bf6716806102249393146", null ],
     [ "create", "classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4", null ],
     [ "create", "classunilink_1_1transport_1_1UdsServer.html#a394374fb0d473ec9f081e312d8350b57", null ],
     [ "get_state", "classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597", null ],
@@ -26,8 +26,8 @@ var classunilink_1_1transport_1_1UdsServer =
     [ "on_state", "classunilink_1_1transport_1_1UdsServer.html#a127465c927d60230b8b3a0ab8da30cc7", null ],
     [ "operator=", "classunilink_1_1transport_1_1UdsServer.html#a3c83357896af0799d89567fffac62d74", null ],
     [ "operator=", "classunilink_1_1transport_1_1UdsServer.html#ab49612640d707062bb2a8c14d01beff2", null ],
-    [ "send_to_client", "classunilink_1_1transport_1_1UdsServer.html#a6ba01f6894077c96cb67e60aad2478ba", null ],
-    [ "send_to_client", "classunilink_1_1transport_1_1UdsServer.html#a41cffde717dba58b373a297ee40648b5", null ],
+    [ "send_to_client", "classunilink_1_1transport_1_1UdsServer.html#a851d5b24814e162b81f587467cdf63ef", null ],
+    [ "send_to_client", "classunilink_1_1transport_1_1UdsServer.html#a27cfb9cbb6546f15781cd9516ae63d0e", null ],
     [ "start", "classunilink_1_1transport_1_1UdsServer.html#ad1d32d30e782b7fc5e29d4c7161575e6", null ],
     [ "stop", "classunilink_1_1transport_1_1UdsServer.html#a8acd6ea17fd839fa936502643e2b1430", null ]
 ];

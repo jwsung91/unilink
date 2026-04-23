@@ -224,12 +224,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a0929b3d39e47808bdefd9d0dbec35d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37f30f14f2b18e31fd62d6f44a371563" id="r_a37f30f14f2b18e31fd62d6f44a371563"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a37f30f14f2b18e31fd62d6f44a371563">is_listening</a> {false}</td></tr>
 <tr class="separator:a37f30f14f2b18e31fd62d6f44a371563"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a917e9d0224863e743c18c106281d00b0" id="r_a917e9d0224863e743c18c106281d00b0"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a917e9d0224863e743c18c106281d00b0">next_client_id</a> {1}</td></tr>
-<tr class="separator:a917e9d0224863e743c18c106281d00b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2813200498bad2a74fe3e17ad73f548d" id="r_a2813200498bad2a74fe3e17ad73f548d"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; boost::asio::ip::udp::endpoint, size_t, UdpEndpointHash &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a2813200498bad2a74fe3e17ad73f548d">endpoint_to_id</a></td></tr>
-<tr class="separator:a2813200498bad2a74fe3e17ad73f548d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48949802dfe68bc3554f85d9a5aa8cdb" id="r_a48949802dfe68bc3554f85d9a5aa8cdb"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; size_t, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html">SessionEntry</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a48949802dfe68bc3554f85d9a5aa8cdb">sessions</a></td></tr>
-<tr class="separator:a48949802dfe68bc3554f85d9a5aa8cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdb0185dc840bcb52569fbb00def37b7" id="r_abdb0185dc840bcb52569fbb00def37b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#abdb0185dc840bcb52569fbb00def37b7">next_client_id</a> {1}</td></tr>
+<tr class="separator:abdb0185dc840bcb52569fbb00def37b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a512bbd09b5b539bc62ff7c4a39797fb0" id="r_a512bbd09b5b539bc62ff7c4a39797fb0"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; boost::asio::ip::udp::endpoint, <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, UdpEndpointHash &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a512bbd09b5b539bc62ff7c4a39797fb0">endpoint_to_id</a></td></tr>
+<tr class="separator:a512bbd09b5b539bc62ff7c4a39797fb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a80ce89110515082139f255fb44cd56" id="r_a2a80ce89110515082139f255fb44cd56"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html">SessionEntry</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a2a80ce89110515082139f255fb44cd56">sessions</a></td></tr>
+<tr class="separator:a2a80ce89110515082139f255fb44cd56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e81d8719ed39c54984e641b790220ab" id="r_a7e81d8719ed39c54984e641b790220ab"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a7e81d8719ed39c54984e641b790220ab">session_timeout</a> {30000}</td></tr>
 <tr class="separator:a7e81d8719ed39c54984e641b790220ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0783c27c7ab7654f275cb2b9021a37b8" id="r_a0783c27c7ab7654f275cb2b9021a37b8"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; boost::asio::steady_timer &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8">reaper_timer</a></td></tr>
@@ -666,14 +666,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a2813200498bad2a74fe3e17ad73f548d" name="a2813200498bad2a74fe3e17ad73f548d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2813200498bad2a74fe3e17ad73f548d">&#9670;&#160;</a></span>endpoint_to_id</h2>
+<a id="a512bbd09b5b539bc62ff7c4a39797fb0" name="a512bbd09b5b539bc62ff7c4a39797fb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a512bbd09b5b539bc62ff7c4a39797fb0">&#9670;&#160;</a></span>endpoint_to_id</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;boost::asio::ip::udp::endpoint, size_t, UdpEndpointHash&gt; unilink::wrapper::UdpServer::Impl::endpoint_to_id</td>
+          <td class="memname">std::unordered_map&lt;boost::asio::ip::udp::endpoint, <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, UdpEndpointHash&gt; unilink::wrapper::UdpServer::Impl::endpoint_to_id</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -802,14 +802,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a917e9d0224863e743c18c106281d00b0" name="a917e9d0224863e743c18c106281d00b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a917e9d0224863e743c18c106281d00b0">&#9670;&#160;</a></span>next_client_id</h2>
+<a id="abdb0185dc840bcb52569fbb00def37b7" name="abdb0185dc840bcb52569fbb00def37b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdb0185dc840bcb52569fbb00def37b7">&#9670;&#160;</a></span>next_client_id</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t unilink::wrapper::UdpServer::Impl::next_client_id {1}</td>
+          <td class="memname"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> unilink::wrapper::UdpServer::Impl::next_client_id {1}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -946,14 +946,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a48949802dfe68bc3554f85d9a5aa8cdb" name="a48949802dfe68bc3554f85d9a5aa8cdb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48949802dfe68bc3554f85d9a5aa8cdb">&#9670;&#160;</a></span>sessions</h2>
+<a id="a2a80ce89110515082139f255fb44cd56" name="a2a80ce89110515082139f255fb44cd56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a80ce89110515082139f255fb44cd56">&#9670;&#160;</a></span>sessions</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;size_t, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html">SessionEntry</a>&gt; unilink::wrapper::UdpServer::Impl::sessions</td>
+          <td class="memname">std::unordered_map&lt;<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, <a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_1_1SessionEntry.html">SessionEntry</a>&gt; unilink::wrapper::UdpServer::Impl::sessions</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1019,7 +1019,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Wed Apr 22 2026 22:25:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 02:30:14 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -192,12 +192,12 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ad90ed82ab725073a4f691c7100667352" id="r_ad90ed82ab725073a4f691c7100667352"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ad90ed82ab725073a4f691c7100667352">MultiClientConnectHandler</a> = std::function&lt; void(size_t client_id, const std::string &amp;client_info)&gt;</td></tr>
-<tr class="separator:ad90ed82ab725073a4f691c7100667352"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28cfad27e433cd339219fdc5073a815c" id="r_a28cfad27e433cd339219fdc5073a815c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a28cfad27e433cd339219fdc5073a815c">MultiClientDataHandler</a> = std::function&lt; void(size_t client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)&gt;</td></tr>
-<tr class="separator:a28cfad27e433cd339219fdc5073a815c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa9095088caef6466a937bf488a2a90e" id="r_aaa9095088caef6466a937bf488a2a90e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#aaa9095088caef6466a937bf488a2a90e">MultiClientDisconnectHandler</a> = std::function&lt; void(size_t client_id)&gt;</td></tr>
-<tr class="separator:aaa9095088caef6466a937bf488a2a90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4da733ede93eaa9a838ad0c76c6403c2" id="r_a4da733ede93eaa9a838ad0c76c6403c2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a4da733ede93eaa9a838ad0c76c6403c2">MultiClientConnectHandler</a> = std::function&lt; void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, const std::string &amp;client_info)&gt;</td></tr>
+<tr class="separator:a4da733ede93eaa9a838ad0c76c6403c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae97bdb9a320878c62c3ac7c6ff73a854" id="r_ae97bdb9a320878c62c3ac7c6ff73a854"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ae97bdb9a320878c62c3ac7c6ff73a854">MultiClientDataHandler</a> = std::function&lt; void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)&gt;</td></tr>
+<tr class="separator:ae97bdb9a320878c62c3ac7c6ff73a854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace9e10281fdfd2de5fea4d0e9291b2ad" id="r_ace9e10281fdfd2de5fea4d0e9291b2ad"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ace9e10281fdfd2de5fea4d0e9291b2ad">MultiClientDisconnectHandler</a> = std::function&lt; void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id)&gt;</td></tr>
+<tr class="separator:ace9e10281fdfd2de5fea4d0e9291b2ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classunilink_1_1interface_1_1Channel"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classunilink_1_1interface_1_1Channel')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classunilink_1_1interface_1_1Channel.html">unilink::interface::Channel</a></td></tr>
 <tr class="memitem:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel" id="r_a0ff1ba3581a10632471f991e9910a3f9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1interface_1_1Channel.html#a0ff1ba3581a10632471f991e9910a3f9">OnBytes</a> = std::function&lt; void(<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a>)&gt;</td></tr>
 <tr class="separator:a0ff1ba3581a10632471f991e9910a3f9 inherit pub_types_classunilink_1_1interface_1_1Channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -240,21 +240,21 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6f877e1e2591f36d4fd64d7228a1e619"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56a2fb56d7190dfbd1d9725a16595b9a" id="r_a56a2fb56d7190dfbd1d9725a16595b9a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a56a2fb56d7190dfbd1d9725a16595b9a">broadcast</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
 <tr class="separator:a56a2fb56d7190dfbd1d9725a16595b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03c02aa3514b78d0c95a3246e68b323e" id="r_a03c02aa3514b78d0c95a3246e68b323e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a03c02aa3514b78d0c95a3246e68b323e">send_to_client</a> (size_t client_id, std::string_view message)</td></tr>
-<tr class="separator:a03c02aa3514b78d0c95a3246e68b323e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3e3a7949194058982699283abd1c81c" id="r_ae3e3a7949194058982699283abd1c81c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ae3e3a7949194058982699283abd1c81c">send_to_client</a> (size_t client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
-<tr class="separator:ae3e3a7949194058982699283abd1c81c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad274e8df749900ebfc43ad89b1a41656" id="r_ad274e8df749900ebfc43ad89b1a41656"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ad274e8df749900ebfc43ad89b1a41656">send_to_client</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, std::string_view message)</td></tr>
+<tr class="separator:ad274e8df749900ebfc43ad89b1a41656"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e8a84d5dfd0855018b62725dc7df33a" id="r_a0e8a84d5dfd0855018b62725dc7df33a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a0e8a84d5dfd0855018b62725dc7df33a">send_to_client</a> (<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)</td></tr>
+<tr class="separator:a0e8a84d5dfd0855018b62725dc7df33a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cd372c89c8beb8f0c0308d73a93fc3d" id="r_a4cd372c89c8beb8f0c0308d73a93fc3d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a4cd372c89c8beb8f0c0308d73a93fc3d">client_count</a> () const</td></tr>
 <tr class="separator:a4cd372c89c8beb8f0c0308d73a93fc3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac05542709d39e8f89cc8748da2cbdaad" id="r_ac05542709d39e8f89cc8748da2cbdaad"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ac05542709d39e8f89cc8748da2cbdaad">connected_clients</a> () const</td></tr>
-<tr class="separator:ac05542709d39e8f89cc8748da2cbdaad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa921f47f84a91111dad547f4ba6e38f3" id="r_aa921f47f84a91111dad547f4ba6e38f3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#aa921f47f84a91111dad547f4ba6e38f3">connected_clients</a> () const</td></tr>
+<tr class="separator:aa921f47f84a91111dad547f4ba6e38f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8eac26a2744e09859d0023838a61ae3" id="r_af8eac26a2744e09859d0023838a61ae3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#af8eac26a2744e09859d0023838a61ae3">request_stop</a> ()</td></tr>
 <tr class="separator:af8eac26a2744e09859d0023838a61ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61b139de8bf96ef26e4b7da7227b3d76" id="r_a61b139de8bf96ef26e4b7da7227b3d76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a61b139de8bf96ef26e4b7da7227b3d76">on_multi_connect</a> (<a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ad90ed82ab725073a4f691c7100667352">MultiClientConnectHandler</a> handler)</td></tr>
+<tr class="memitem:a61b139de8bf96ef26e4b7da7227b3d76" id="r_a61b139de8bf96ef26e4b7da7227b3d76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a61b139de8bf96ef26e4b7da7227b3d76">on_multi_connect</a> (<a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a4da733ede93eaa9a838ad0c76c6403c2">MultiClientConnectHandler</a> handler)</td></tr>
 <tr class="separator:a61b139de8bf96ef26e4b7da7227b3d76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8182dd520e9502a1d564961ef7f4cb03" id="r_a8182dd520e9502a1d564961ef7f4cb03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a8182dd520e9502a1d564961ef7f4cb03">on_multi_data</a> (<a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a28cfad27e433cd339219fdc5073a815c">MultiClientDataHandler</a> handler)</td></tr>
+<tr class="memitem:a8182dd520e9502a1d564961ef7f4cb03" id="r_a8182dd520e9502a1d564961ef7f4cb03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a8182dd520e9502a1d564961ef7f4cb03">on_multi_data</a> (<a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ae97bdb9a320878c62c3ac7c6ff73a854">MultiClientDataHandler</a> handler)</td></tr>
 <tr class="separator:a8182dd520e9502a1d564961ef7f4cb03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a576d942411d9db8bbc88abf7dfe21bf4" id="r_a576d942411d9db8bbc88abf7dfe21bf4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a576d942411d9db8bbc88abf7dfe21bf4">on_multi_disconnect</a> (<a class="el" href="classunilink_1_1transport_1_1TcpServer.html#aaa9095088caef6466a937bf488a2a90e">MultiClientDisconnectHandler</a> handler)</td></tr>
+<tr class="memitem:a576d942411d9db8bbc88abf7dfe21bf4" id="r_a576d942411d9db8bbc88abf7dfe21bf4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a576d942411d9db8bbc88abf7dfe21bf4">on_multi_disconnect</a> (<a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ace9e10281fdfd2de5fea4d0e9291b2ad">MultiClientDisconnectHandler</a> handler)</td></tr>
 <tr class="separator:a576d942411d9db8bbc88abf7dfe21bf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa002ff3287e69e7815e73d39cc4aac8" id="r_afa002ff3287e69e7815e73d39cc4aac8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#afa002ff3287e69e7815e73d39cc4aac8">set_client_limit</a> (size_t max_clients)</td></tr>
 <tr class="separator:afa002ff3287e69e7815e73d39cc4aac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -278,14 +278,14 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8hpp_source.html#l00045">45</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8hpp_source.html">tcp_server.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="ad90ed82ab725073a4f691c7100667352" name="ad90ed82ab725073a4f691c7100667352"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad90ed82ab725073a4f691c7100667352">&#9670;&#160;</a></span>MultiClientConnectHandler</h2>
+<a id="a4da733ede93eaa9a838ad0c76c6403c2" name="a4da733ede93eaa9a838ad0c76c6403c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4da733ede93eaa9a838ad0c76c6403c2">&#9670;&#160;</a></span>MultiClientConnectHandler</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using unilink::transport::TcpServer::MultiClientConnectHandler =  std::function&lt;void(size_t client_id, const std::string&amp; client_info)&gt;</td>
+          <td class="memname">using unilink::transport::TcpServer::MultiClientConnectHandler =  std::function&lt;void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, const std::string&amp; client_info)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -294,14 +294,14 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a28cfad27e433cd339219fdc5073a815c" name="a28cfad27e433cd339219fdc5073a815c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28cfad27e433cd339219fdc5073a815c">&#9670;&#160;</a></span>MultiClientDataHandler</h2>
+<a id="ae97bdb9a320878c62c3ac7c6ff73a854" name="ae97bdb9a320878c62c3ac7c6ff73a854"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae97bdb9a320878c62c3ac7c6ff73a854">&#9670;&#160;</a></span>MultiClientDataHandler</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using unilink::transport::TcpServer::MultiClientDataHandler =  std::function&lt;void(size_t client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)&gt;</td>
+          <td class="memname">using unilink::transport::TcpServer::MultiClientDataHandler =  std::function&lt;void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id, <a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -310,14 +310,14 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aaa9095088caef6466a937bf488a2a90e" name="aaa9095088caef6466a937bf488a2a90e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa9095088caef6466a937bf488a2a90e">&#9670;&#160;</a></span>MultiClientDisconnectHandler</h2>
+<a id="ace9e10281fdfd2de5fea4d0e9291b2ad" name="ace9e10281fdfd2de5fea4d0e9291b2ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace9e10281fdfd2de5fea4d0e9291b2ad">&#9670;&#160;</a></span>MultiClientDisconnectHandler</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using unilink::transport::TcpServer::MultiClientDisconnectHandler =  std::function&lt;void(size_t client_id)&gt;</td>
+          <td class="memname">using unilink::transport::TcpServer::MultiClientDisconnectHandler =  std::function&lt;void(<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> client_id)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -513,6 +513,15 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00558">558</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_a56a2fb56d7190dfbd1d9725a16595b9a_cgraph.svg" width="454" height="102"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
 </div>
 </div>
 <a id="a6f877e1e2591f36d4fd64d7228a1e619" name="a6f877e1e2591f36d4fd64d7228a1e619"></a>
@@ -550,18 +559,18 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00570">570</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00589">589</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
-<a id="ac05542709d39e8f89cc8748da2cbdaad" name="ac05542709d39e8f89cc8748da2cbdaad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac05542709d39e8f89cc8748da2cbdaad">&#9670;&#160;</a></span>connected_clients()</h2>
+<a id="aa921f47f84a91111dad547f4ba6e38f3" name="aa921f47f84a91111dad547f4ba6e38f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa921f47f84a91111dad547f4ba6e38f3">&#9670;&#160;</a></span>connected_clients()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; size_t &gt; unilink::transport::TcpServer::connected_clients </td>
+          <td class="memname">std::vector&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a> &gt; unilink::transport::TcpServer::connected_clients </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -569,20 +578,20 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00579">579</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_ac05542709d39e8f89cc8748da2cbdaad_cgraph.svg" width="179" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00598">598</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-3-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_ac05542709d39e8f89cc8748da2cbdaad_icgraph.svg" width="179" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_aa921f47f84a91111dad547f4ba6e38f3_cgraph.svg" width="179" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_aa921f47f84a91111dad547f4ba6e38f3_icgraph.svg" width="179" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -755,14 +764,14 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::TcpServer::on_multi_connect </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ad90ed82ab725073a4f691c7100667352">MultiClientConnectHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a4da733ede93eaa9a838ad0c76c6403c2">MultiClientConnectHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00589">589</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00608">608</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -775,14 +784,14 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::TcpServer::on_multi_data </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#a28cfad27e433cd339219fdc5073a815c">MultiClientDataHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ae97bdb9a320878c62c3ac7c6ff73a854">MultiClientDataHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00593">593</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00612">612</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -795,14 +804,14 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void unilink::transport::TcpServer::on_multi_disconnect </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#aaa9095088caef6466a937bf488a2a90e">MultiClientDisconnectHandler</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html#ace9e10281fdfd2de5fea4d0e9291b2ad">MultiClientDisconnectHandler</a>&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00597">597</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00616">616</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -907,8 +916,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae3e3a7949194058982699283abd1c81c" name="ae3e3a7949194058982699283abd1c81c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3e3a7949194058982699283abd1c81c">&#9670;&#160;</a></span>send_to_client() <span class="overload">[1/2]</span></h2>
+<a id="a0e8a84d5dfd0855018b62725dc7df33a" name="a0e8a84d5dfd0855018b62725dc7df33a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e8a84d5dfd0855018b62725dc7df33a">&#9670;&#160;</a></span>send_to_client() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -916,7 +925,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool unilink::transport::TcpServer::send_to_client </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
           <td class="paramname"><em>client_id</em>, </td>
         </tr>
         <tr>
@@ -933,10 +942,12 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00578">578</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+
 </div>
 </div>
-<a id="a03c02aa3514b78d0c95a3246e68b323e" name="a03c02aa3514b78d0c95a3246e68b323e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03c02aa3514b78d0c95a3246e68b323e">&#9670;&#160;</a></span>send_to_client() <span class="overload">[2/2]</span></h2>
+<a id="ad274e8df749900ebfc43ad89b1a41656" name="ad274e8df749900ebfc43ad89b1a41656"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad274e8df749900ebfc43ad89b1a41656">&#9670;&#160;</a></span>send_to_client() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -944,7 +955,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool unilink::transport::TcpServer::send_to_client </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>&#160;</td>
           <td class="paramname"><em>client_id</em>, </td>
         </tr>
         <tr>
@@ -961,13 +972,20 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00558">558</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00573">573</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_a03c02aa3514b78d0c95a3246e68b323e_cgraph.svg" width="398" height="66"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_ad274e8df749900ebfc43ad89b1a41656_cgraph.svg" width="163" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_ad274e8df749900ebfc43ad89b1a41656_icgraph.svg" width="163" height="90"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -988,7 +1006,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00602">602</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00621">621</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1007,7 +1025,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00613">613</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00632">632</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1037,11 +1055,11 @@ Static Public Member Functions</h2></td></tr>
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a0e33349d34d5aa72709307ed52500a4e">unilink::interface::Channel</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00424">424</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classunilink_1_1transport_1_1TcpServer_a7dc115cc9cc67ae7c5990c0d01a5a0a6_cgraph.svg" width="100%" height="362"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -1062,7 +1080,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00624">624</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html#l00643">643</a> of file <a class="el" href="transport_2tcp__server_2tcp__server_8cc_source.html">tcp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -1105,7 +1123,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1TcpServer.html">TcpServer</a></li>
-    <li class="footer">Generated on Wed Apr 22 2026 22:25:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 02:30:14 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

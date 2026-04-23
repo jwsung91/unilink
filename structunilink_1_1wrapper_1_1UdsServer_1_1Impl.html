@@ -228,8 +228,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ad33dffdf9de8cd140d65b11400df7d34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27aff5347f422c6bc80b395345e95155" id="r_a27aff5347f422c6bc80b395345e95155"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a27aff5347f422c6bc80b395345e95155">on_message_</a> {nullptr}</td></tr>
 <tr class="separator:a27aff5347f422c6bc80b395345e95155"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fba4e591d8f42a0a956b831f70a1c1c" id="r_a0fba4e591d8f42a0a956b831f70a1c1c"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; size_t, std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a0fba4e591d8f42a0a956b831f70a1c1c">framers_</a></td></tr>
-<tr class="separator:a0fba4e591d8f42a0a956b831f70a1c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66ddb3bf52127b16984b76d49195088c" id="r_a66ddb3bf52127b16984b76d49195088c"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a66ddb3bf52127b16984b76d49195088c">framers_</a></td></tr>
+<tr class="separator:a66ddb3bf52127b16984b76d49195088c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7172ee3baeb4cfa67bf75cc30a533104" id="r_a7172ee3baeb4cfa67bf75cc30a533104"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a7172ee3baeb4cfa67bf75cc30a533104">auto_start_</a> = false</td></tr>
 <tr class="separator:a7172ee3baeb4cfa67bf75cc30a533104"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a145ae8333bd43e43d7e73af6b73eecee" id="r_a145ae8333bd43e43d7e73af6b73eecee"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html#a145ae8333bd43e43d7e73af6b73eecee">max_clients_</a> = 100</td></tr>
@@ -673,14 +673,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0fba4e591d8f42a0a956b831f70a1c1c" name="a0fba4e591d8f42a0a956b831f70a1c1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0fba4e591d8f42a0a956b831f70a1c1c">&#9670;&#160;</a></span>framers_</h2>
+<a id="a66ddb3bf52127b16984b76d49195088c" name="a66ddb3bf52127b16984b76d49195088c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66ddb3bf52127b16984b76d49195088c">&#9670;&#160;</a></span>framers_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt;size_t, std::unique_ptr&lt;<a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a>&gt; &gt; unilink::wrapper::UdsServer::Impl::framers_</td>
+          <td class="memname">std::unordered_map&lt;<a class="el" href="namespaceunilink.html#a07df662e6c2b7e19a2db589b37f94812">ClientId</a>, std::unique_ptr&lt;<a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a>&gt; &gt; unilink::wrapper::UdsServer::Impl::framers_</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -898,7 +898,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html">UdsServer</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1UdsServer_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Wed Apr 22 2026 22:25:00 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Thu Apr 23 2026 02:30:14 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

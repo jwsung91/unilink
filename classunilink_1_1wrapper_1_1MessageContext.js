@@ -1,7 +1,9 @@
 var classunilink_1_1wrapper_1_1MessageContext =
 [
-    [ "MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html#afea589bf486b06a75a950f0fcf964ab8", null ],
-    [ "client_id", "classunilink_1_1wrapper_1_1MessageContext.html#a0ee74400b6593ae9c118e166538b1d26", null ],
+    [ "MessageContext", "classunilink_1_1wrapper_1_1MessageContext.html#a4786bb116a8efb3aa10cdacae8b2fdb0", null ],
+    [ "client_id", "classunilink_1_1wrapper_1_1MessageContext.html#a5437876db064533f5885d28a50db8972", null ],
     [ "client_info", "classunilink_1_1wrapper_1_1MessageContext.html#afebe58ba82f38e3b55fa2da21660fccf", null ],
-    [ "data", "classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423", null ]
+    [ "data", "classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423", null ],
+    [ "data_as_string", "classunilink_1_1wrapper_1_1MessageContext.html#a8b634569a2e3dba8e2ed8645f85cf4e2", null ],
+    [ "data_as_vector", "classunilink_1_1wrapper_1_1MessageContext.html#ae984f5dd0b6ab5b9cbe099a52cffb0d0", null ]
 ];

@@ -10,7 +10,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "auto_start", "classunilink_1_1wrapper_1_1TcpServer.html#a2d8c7983984c7816c6bba7bf91fee7bc", null ],
     [ "broadcast", "classunilink_1_1wrapper_1_1TcpServer.html#a45b4eb1fb1e8cd8786bf240b765d7181", null ],
     [ "client_count", "classunilink_1_1wrapper_1_1TcpServer.html#a54382f1c15ebb6509e04b413b03c37d7", null ],
-    [ "connected_clients", "classunilink_1_1wrapper_1_1TcpServer.html#a4ce5c370633521f49a3934a12b2ddbef", null ],
+    [ "connected_clients", "classunilink_1_1wrapper_1_1TcpServer.html#a164d2801bb8bf56c39a6a844163de117", null ],
     [ "framer", "classunilink_1_1wrapper_1_1TcpServer.html#aa4301de269dbc59838c68f7416708233", null ],
     [ "idle_timeout", "classunilink_1_1wrapper_1_1TcpServer.html#a8d1309bfe7e5bbc89da2f4ca95fd84d6", null ],
     [ "listening", "classunilink_1_1wrapper_1_1TcpServer.html#afa0b2e12980ba7756b6cff5c522ddc30", null ],
@@ -24,7 +24,7 @@ var classunilink_1_1wrapper_1_1TcpServer =
     [ "operator=", "classunilink_1_1wrapper_1_1TcpServer.html#afac2e3eb6486f46776d119945d19231e", null ],
     [ "operator=", "classunilink_1_1wrapper_1_1TcpServer.html#ac7f64a7b54be0ec30c23945b8dbc902b", null ],
     [ "port_retry", "classunilink_1_1wrapper_1_1TcpServer.html#ac7a82725f9cb67fc18c47b720374b923", null ],
-    [ "send_to", "classunilink_1_1wrapper_1_1TcpServer.html#a0cd0713924d54d16eb3c42005c277d16", null ],
+    [ "send_to", "classunilink_1_1wrapper_1_1TcpServer.html#ab84c5a94e1beed98db9d1f4302b313cf", null ],
     [ "start", "classunilink_1_1wrapper_1_1TcpServer.html#a1217e27e16fa0451b75300009aedf017", null ],
     [ "stop", "classunilink_1_1wrapper_1_1TcpServer.html#a41196195d706a2409f1bc3273e31d5be", null ],
     [ "unlimited_clients", "classunilink_1_1wrapper_1_1TcpServer.html#a4f20f7b28dc851c8344d4ce37d5817e1", null ]
