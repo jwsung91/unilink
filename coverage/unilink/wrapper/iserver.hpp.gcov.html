@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-22 22:29:36</td>
+            <td class="headerValue">2026-04-23 02:40:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -138,7 +138,7 @@
 <a name="60"><span class="lineNum">      60 </span>                :            : </a>
 <a name="61"><span class="lineNum">      61 </span>                :            :   // Transmission</a>
 <a name="62"><span class="lineNum">      62 </span>                :            :   virtual bool broadcast(std::string_view data) = 0;</a>
-<a name="63"><span class="lineNum">      63 </span>                :            :   virtual bool send_to(size_t client_id, std::string_view data) = 0;</a>
+<a name="63"><span class="lineNum">      63 </span>                :            :   virtual bool send_to(ClientId client_id, std::string_view data) = 0;</a>
 <a name="64"><span class="lineNum">      64 </span>                :            : </a>
 <a name="65"><span class="lineNum">      65 </span>                :            :   // Event handlers</a>
 <a name="66"><span class="lineNum">      66 </span>                :            :   virtual ServerInterface&amp; on_connect(ConnectionHandler handler) = 0;</a>
@@ -161,7 +161,7 @@
 <a name="83"><span class="lineNum">      83 </span>                :            :   // Management</a>
 <a name="84"><span class="lineNum">      84 </span>                :            :   virtual ServerInterface&amp; auto_start(bool manage = true) = 0;</a>
 <a name="85"><span class="lineNum">      85 </span>                :            :   virtual size_t client_count() const = 0;</a>
-<a name="86"><span class="lineNum">      86 </span>                :            :   virtual std::vector&lt;size_t&gt; connected_clients() const = 0;</a>
+<a name="86"><span class="lineNum">      86 </span>                :            :   virtual std::vector&lt;ClientId&gt; connected_clients() const = 0;</a>
 <a name="87"><span class="lineNum">      87 </span>                :            : };</a>
 <a name="88"><span class="lineNum">      88 </span>                :            : </a>
 <a name="89"><span class="lineNum">      89 </span>                :            : }  // namespace wrapper</a>

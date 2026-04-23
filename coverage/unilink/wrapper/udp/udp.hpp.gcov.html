@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-22 22:29:36</td>
+            <td class="headerValue">2026-04-23 02:40:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -137,7 +137,7 @@
 <a name="59"><span class="lineNum">      59 </span>                :            :   UdpClient&amp; operator=(const UdpClient&amp;) = delete;</a>
 <a name="60"><span class="lineNum">      60 </span>                :            : </a>
 <a name="61"><span class="lineNum">      61 </span>                :            :   // ChannelInterface implementation</a>
-<a name="62"><span class="lineNum">      62 </span>                :            :   std::future&lt;bool&gt; start() override;</a>
+<a name="62"><span class="lineNum">      62 </span>                :            :   [[nodiscard]] std::future&lt;bool&gt; start() override;</a>
 <a name="63"><span class="lineNum">      63 </span>                :            :   void stop() override;</a>
 <a name="64"><span class="lineNum">      64 </span>                :            :   bool send(std::string_view data) override;</a>
 <a name="65"><span class="lineNum">      65 </span>                :            :   bool send_line(std::string_view line) override;</a>
