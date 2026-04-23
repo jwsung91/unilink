@@ -109,17 +109,20 @@ TEST_F(TcpIntegrationTest, BasicCommunication) {
   ASSERT_NE(client, nullptr);
   client->start();
 
-  EXPECT_TRUE(TestUtils::waitForCondition([&client_connected]() { return client_connected.load(); }, 5000));
+  // Wait for connections with timeout
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return client_connected.load() && server_connected.load(); }, 2000))
+      << "Server or client failed to connect within 2 seconds";
 
-  if (client->connected()) {
-    TestUtils::waitFor(100);
-    client->send("test message");
+  std::string test_msg = "Hello Unilink!";
+  client->send(test_msg);
 
-    EXPECT_TRUE(TestUtils::waitForCondition([&data_received]() { return data_received.load(); }, 5000));
-    if (data_received.load()) {
-      EXPECT_EQ(received_data, "test message");
-    }
-  }
+  // Wait for data with timeout
+  ASSERT_TRUE(TestUtils::waitForCondition([&]() { return data_received.load(); }, 2000))
+      << "Data was not received within 2 seconds";
+  EXPECT_EQ(received_data, test_msg);
+
+  client->stop();
+  server->stop();
 }
 
 TEST_F(TcpIntegrationTest, ErrorHandling) {

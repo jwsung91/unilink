@@ -105,6 +105,47 @@ TEST_F(BoundaryTest, MemoryPoolPredefinedSizes) {
   }
 }
 
+TEST_F(BoundaryTest, MemoryPoolOverload) {
+  auto& pool = memory::GlobalMemoryPool::instance();
+  std::vector<std::unique_ptr<uint8_t[]>> buffers;
+
+  // Allocate many buffers to force pool growth
+  for (int i = 0; i < 100; ++i) {
+    buffers.push_back(pool.acquire(4096));
+    ASSERT_NE(buffers.back(), nullptr);
+  }
+
+  // Release all
+  for (auto& buf : buffers) {
+    pool.release(std::move(buf), 4096);
+  }
+}
+
+// ============================================================================
+// INPUT VALIDATOR EDGE TESTS
+// ============================================================================
+
+TEST_F(BoundaryTest, InputValidatorEdgeCases) {
+  // IP Address Edge Cases
+  EXPECT_TRUE(InputValidator::is_valid_ipv4("0.0.0.0"));
+  EXPECT_TRUE(InputValidator::is_valid_ipv4("255.255.255.255"));
+  EXPECT_FALSE(InputValidator::is_valid_ipv4("256.0.0.1"));
+  EXPECT_FALSE(InputValidator::is_valid_ipv4("1.2.3"));
+  EXPECT_FALSE(InputValidator::is_valid_ipv4("a.b.c.d"));
+  EXPECT_FALSE(InputValidator::is_valid_ipv4(""));
+
+  // Port Edge Cases (port 0 is invalid)
+  EXPECT_THROW(InputValidator::validate_port(0), diagnostics::ValidationException);
+  EXPECT_NO_THROW(InputValidator::validate_port(1));
+  EXPECT_NO_THROW(InputValidator::validate_port(65535));
+
+  // Hostname Edge Cases
+  EXPECT_TRUE(InputValidator::is_valid_hostname("localhost"));
+  EXPECT_TRUE(InputValidator::is_valid_hostname("example.com"));
+  EXPECT_TRUE(InputValidator::is_valid_hostname("a.b-c.com"));
+  EXPECT_FALSE(InputValidator::is_valid_hostname("-abc.com"));
+  EXPECT_FALSE(InputValidator::is_valid_hostname("abc-.com"));
+}
 // ============================================================================
 // CONFIGURATION BOUNDARY TESTS
 // ============================================================================

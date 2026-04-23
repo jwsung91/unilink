@@ -39,11 +39,13 @@ TEST(WrapperSerialFailTest, OpenInvalidPort) {
 
   serial.on_error([&](const wrapper::ErrorContext& err) { error_called = true; });
 
-  // Try to start - should trigger error or at least not be connected
+  // Try to start - it returns a future<bool> indicating success
   auto f = serial.start();
 
-  // Wait a bit for async operations
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  // Wait for the start operation to complete (with a reasonable timeout)
+  if (f.wait_for(std::chrono::seconds(1)) == std::future_status::ready) {
+    EXPECT_FALSE(f.get()) << "Serial start should fail for invalid device";
+  }
 
   EXPECT_FALSE(serial.connected());
   // Note: whether error callback is called depends on implementation details

@@ -35,8 +35,10 @@ foreach(
   test_input_validator.cc
   test_input_validator_edge.cc
   test_logger_advanced.cc
+  test_memory_advanced.cc
   test_pool_stress.cc
   test_error_mapping.cc
+  test_error_mapping_exhaustive.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(
@@ -257,6 +259,7 @@ foreach(
   transport_tcp_server.cc
   transport_uds_client.cc
   transport_uds_server.cc
+  transport_uds_error_test.cc
   transport_serial.cc
   transport_udp.cc
   transport_udp_extended.cc
