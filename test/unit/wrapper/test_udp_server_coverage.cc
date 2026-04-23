@@ -15,13 +15,15 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <boost/asio.hpp>
 #include <chrono>
-#include <thread>
 #include <future>
-#include "unilink/wrapper/udp/udp_server.hpp"
-#include "unilink/config/udp_config.hpp"
+#include <thread>
+
 #include "unilink/base/common.hpp"
+#include "unilink/config/udp_config.hpp"
+#include "unilink/wrapper/udp/udp_server.hpp"
 
 using namespace unilink;
 using namespace std::chrono_literals;
@@ -30,79 +32,78 @@ namespace unilink {
 namespace test {
 
 TEST(UdpServerCoverageTest, ExternalIoContextManagement) {
-    auto ioc = std::make_shared<boost::asio::io_context>();
-    config::UdpConfig cfg;
-    cfg.local_address = "127.0.0.1";
-    cfg.local_port = 0;
+  auto ioc = std::make_shared<boost::asio::io_context>();
+  config::UdpConfig cfg;
+  cfg.local_address = "127.0.0.1";
+  cfg.local_port = 0;
 
-    {
-        wrapper::UdpServer server(cfg, ioc);
-        server.manage_external_context(true);
-        auto started = server.start();
-        ASSERT_TRUE(started.get());
-        EXPECT_TRUE(server.listening());
-        
-        // Ensure ioc is running
-        EXPECT_FALSE(ioc->stopped());
-        server.stop();
-        EXPECT_TRUE(ioc->stopped());
-    }
+  {
+    wrapper::UdpServer server(cfg, ioc);
+    server.manage_external_context(true);
+    auto started = server.start();
+    ASSERT_TRUE(started.get());
+    EXPECT_TRUE(server.listening());
+
+    // Ensure ioc is running
+    EXPECT_FALSE(ioc->stopped());
+    server.stop();
+    EXPECT_TRUE(ioc->stopped());
+  }
 }
 
 TEST(UdpServerCoverageTest, SessionReaping) {
-    config::UdpConfig cfg;
-    cfg.local_address = "127.0.0.1";
-    cfg.local_port = 0;
+  config::UdpConfig cfg;
+  cfg.local_address = "127.0.0.1";
+  cfg.local_port = 0;
 
-    wrapper::UdpServer server(cfg);
-    server.session_timeout(100ms);
-    
-    std::atomic<int> disconnects{0};
-    server.on_disconnect([&](const wrapper::ConnectionContext&) {
-        disconnects++;
-    });
+  wrapper::UdpServer server(cfg);
+  server.session_timeout(100ms);
 
-    auto started = server.start();
-    ASSERT_TRUE(started.get());
+  std::atomic<int> disconnects{0};
+  server.on_disconnect([&](const wrapper::ConnectionContext&) { disconnects++; });
 
-    // Create a "client" by sending some data
-    boost::asio::io_context ioc;
-    boost::asio::ip::udp::socket sock(ioc);
-    sock.open(boost::asio::ip::udp::v4());
-    
-    uint16_t port = 0;
-    // We need the bound port
-    // Since UdpServer doesn't expose port easily, we might need a way to get it or use a fixed port
-    // For coverage, we can just trigger reaper even if sessions are empty, 
-    // but to cover the session removal logic we need a real session.
+  auto started = server.start();
+  ASSERT_TRUE(started.get());
+
+  // Create a "client" by sending some data
+  boost::asio::io_context ioc;
+  boost::asio::ip::udp::socket sock(ioc);
+  sock.open(boost::asio::ip::udp::v4());
+
+  uint16_t port = 0;
+  // We need the bound port
+  // Since UdpServer doesn't expose port easily, we might need a way to get it or use a fixed port
+  // For coverage, we can just trigger reaper even if sessions are empty,
+  // but to cover the session removal logic we need a real session.
 }
 
 TEST(UdpServerCoverageTest, IPv6EndpointHashCoverage) {
-    // This is to cover UdpEndpointHash with IPv6
-    boost::asio::ip::udp::endpoint ep(boost::asio::ip::make_address("::1"), 1234);
-    config::UdpConfig cfg;
-    cfg.local_address = "::1";
-    cfg.local_port = 0;
-    
-    // We don't need to run it, just constructing and potentially triggering a hash if we could
-    // But since UdpEndpointHash is in anonymous namespace in .cc, we trigger it via server behavior
-    try {
-        wrapper::UdpServer server(cfg);
-        server.start(); 
-        // If start fails due to no IPv6 support on host, it's fine, we just wanted to exercise construction
-    } catch (...) {}
+  // This is to cover UdpEndpointHash with IPv6
+  boost::asio::ip::udp::endpoint ep(boost::asio::ip::make_address("::1"), 1234);
+  config::UdpConfig cfg;
+  cfg.local_address = "::1";
+  cfg.local_port = 0;
+
+  // We don't need to run it, just constructing and potentially triggering a hash if we could
+  // But since UdpEndpointHash is in anonymous namespace in .cc, we trigger it via server behavior
+  try {
+    wrapper::UdpServer server(cfg);
+    server.start();
+    // If start fails due to no IPv6 support on host, it's fine, we just wanted to exercise construction
+  } catch (...) {
+  }
 }
 
 TEST(UdpServerCoverageTest, SendToInvalidClient) {
-    wrapper::UdpServer server(0);
-    EXPECT_FALSE(server.send_to(999, "data"));
+  wrapper::UdpServer server(0);
+  EXPECT_FALSE(server.send_to(999, "data"));
 }
 
 TEST(UdpServerCoverageTest, BroadcastWithoutChannel) {
-    // Construct via default which doesn't create channel until start
-    wrapper::UdpServer server(0);
-    EXPECT_FALSE(server.broadcast("data"));
+  // Construct via default which doesn't create channel until start
+  wrapper::UdpServer server(0);
+  EXPECT_FALSE(server.broadcast("data"));
 }
 
-} // namespace test
-} // namespace unilink
+}  // namespace test
+}  // namespace unilink

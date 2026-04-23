@@ -15,31 +15,32 @@
  */
 
 #include <gtest/gtest.h>
+
 #include "unilink/base/error_codes.hpp"
 
 namespace unilink {
 namespace test {
 
 TEST(ErrorCodesCoverageTest, ToStringAllCodes) {
-    EXPECT_EQ(to_string(ErrorCode::Success), "Success");
-    EXPECT_EQ(to_string(ErrorCode::Unknown), "Unknown Error");
-    EXPECT_EQ(to_string(ErrorCode::InvalidConfiguration), "Invalid Configuration");
-    EXPECT_EQ(to_string(ErrorCode::InternalError), "Internal Error");
-    EXPECT_EQ(to_string(ErrorCode::IoError), "I/O Error");
-    EXPECT_EQ(to_string(ErrorCode::ConnectionRefused), "Connection Refused");
-    EXPECT_EQ(to_string(ErrorCode::ConnectionReset), "Connection Reset");
-    EXPECT_EQ(to_string(ErrorCode::ConnectionAborted), "Connection Aborted");
-    EXPECT_EQ(to_string(ErrorCode::TimedOut), "Operation Timed Out");
-    EXPECT_EQ(to_string(ErrorCode::NotConnected), "Not Connected");
-    EXPECT_EQ(to_string(ErrorCode::AlreadyConnected), "Already Connected");
-    EXPECT_EQ(to_string(ErrorCode::PortInUse), "Port Already In Use");
-    EXPECT_EQ(to_string(ErrorCode::AccessDenied), "Access Denied");
-    EXPECT_EQ(to_string(ErrorCode::Stopped), "Stopped");
-    EXPECT_EQ(to_string(ErrorCode::StartFailed), "Failed to Start");
-    
-    // Coverage for default case
-    EXPECT_EQ(to_string(static_cast<ErrorCode>(999)), "Unknown Error Code");
+  EXPECT_EQ(to_string(ErrorCode::Success), "Success");
+  EXPECT_EQ(to_string(ErrorCode::Unknown), "Unknown Error");
+  EXPECT_EQ(to_string(ErrorCode::InvalidConfiguration), "Invalid Configuration");
+  EXPECT_EQ(to_string(ErrorCode::InternalError), "Internal Error");
+  EXPECT_EQ(to_string(ErrorCode::IoError), "I/O Error");
+  EXPECT_EQ(to_string(ErrorCode::ConnectionRefused), "Connection Refused");
+  EXPECT_EQ(to_string(ErrorCode::ConnectionReset), "Connection Reset");
+  EXPECT_EQ(to_string(ErrorCode::ConnectionAborted), "Connection Aborted");
+  EXPECT_EQ(to_string(ErrorCode::TimedOut), "Operation Timed Out");
+  EXPECT_EQ(to_string(ErrorCode::NotConnected), "Not Connected");
+  EXPECT_EQ(to_string(ErrorCode::AlreadyConnected), "Already Connected");
+  EXPECT_EQ(to_string(ErrorCode::PortInUse), "Port Already In Use");
+  EXPECT_EQ(to_string(ErrorCode::AccessDenied), "Access Denied");
+  EXPECT_EQ(to_string(ErrorCode::Stopped), "Stopped");
+  EXPECT_EQ(to_string(ErrorCode::StartFailed), "Failed to Start");
+
+  // Coverage for default case
+  EXPECT_EQ(to_string(static_cast<ErrorCode>(999)), "Unknown Error Code");
 }
 
-} // namespace test
-} // namespace unilink
+}  // namespace test
+}  // namespace unilink
