@@ -43,7 +43,7 @@ TEST(TcpClientErrorMappingTest, ConnectionRefused) {
   });
 
   client.max_retries(0);  // Fail fast
-  client.start();
+  auto f = client.start();
 
   // Wait for error
   std::future_status status = error_future.wait_for(std::chrono::seconds(5));
@@ -80,7 +80,7 @@ TEST(TcpClientErrorMappingTest, Timeout) {
     }
   });
 
-  client.start();
+  auto f = client.start();
 
   std::future_status status = error_future.wait_for(std::chrono::seconds(2));
 

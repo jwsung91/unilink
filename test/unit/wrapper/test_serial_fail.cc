@@ -40,7 +40,7 @@ TEST(WrapperSerialFailTest, OpenInvalidPort) {
   serial.on_error([&](const wrapper::ErrorContext& err) { error_called = true; });
 
   // Try to start - should trigger error or at least not be connected
-  serial.start();
+  auto f = serial.start();
 
   // Wait a bit for async operations
   std::this_thread::sleep_for(std::chrono::milliseconds(100));

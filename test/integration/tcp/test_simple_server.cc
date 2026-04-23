@@ -86,12 +86,12 @@ TEST_F(SimpleServerTest, AutoStartServer) {
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   std::cout << "Server created with auto-start" << std::endl;
 
-  // Brief wait for auto-manage to kick in
-  std::this_thread::sleep_for(test::constants::kMediumTimeout);
+  // Wait for auto-manage to kick in
+  bool is_listening = test::TestUtils::waitForCondition([&]() { return server_->listening(); }, 1000);
 
   std::cout << "Server state: " << (server_->listening() ? "listening" : "not listening") << std::endl;
 
-  EXPECT_TRUE(server_->listening());
+  EXPECT_TRUE(is_listening);
 }
 
 /**

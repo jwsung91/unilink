@@ -107,7 +107,7 @@ TEST_F(TransportTcpClientTest, StopPreventsReconnectAfterManualStop) {
   boost::asio::io_context ioc;
   config::TcpClientConfig cfg;
   cfg.host = "256.256.256.256";  // force resolve failure quickly
-  cfg.port = 12345;
+  cfg.port = TestUtils::getAvailableTestPort();
   cfg.retry_interval_ms = 30;
 
   client_ = TcpClient::create(cfg, ioc);
@@ -181,8 +181,8 @@ TEST_F(TransportTcpClientTest, QueueLimitMovesClientToError) {
   net::io_context ioc;
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
-  cfg.port = 1;                       // no real server needed
-  cfg.backpressure_threshold = 1024;  // limit becomes 1MB
+  cfg.port = TestUtils::getAvailableTestPort();  // no real server needed
+  cfg.backpressure_threshold = 1024;             // limit becomes 1MB
 
   client_ = TcpClient::create(cfg, ioc);
 
@@ -250,8 +250,8 @@ TEST_F(TransportTcpClientTest, MoveWriteRespectsQueueLimit) {
   net::io_context ioc;
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
-  cfg.port = 1;                       // no real server needed
-  cfg.backpressure_threshold = 1024;  // limit becomes 1MB
+  cfg.port = TestUtils::getAvailableTestPort();  // no real server needed
+  cfg.backpressure_threshold = 1024;             // limit becomes 1MB
 
   client_ = TcpClient::create(cfg, ioc);
 
@@ -275,8 +275,8 @@ TEST_F(TransportTcpClientTest, SharedWriteRespectsQueueLimit) {
   net::io_context ioc;
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
-  cfg.port = 1;                       // no real server needed
-  cfg.backpressure_threshold = 1024;  // limit becomes 1MB
+  cfg.port = TestUtils::getAvailableTestPort();  // no real server needed
+  cfg.backpressure_threshold = 1024;             // limit becomes 1MB
 
   client_ = TcpClient::create(cfg, ioc);
 

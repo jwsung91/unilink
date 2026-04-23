@@ -190,8 +190,9 @@ TEST(TransportUdpExtendedTest, BackpressureReporting) {
 
   // Now run IO to drain. The strand ensures the writes are processed
   // before the send completion handler reduces the queue, triggering the BP callback.
-  pump_io(ioc, 50ms);
+  bool success = wait_for_condition(ioc, [&]() { return bp_triggered.load() && bp_cleared.load(); }, 2000ms);
 
+  EXPECT_TRUE(success);
   EXPECT_TRUE(bp_triggered);
   EXPECT_TRUE(bp_cleared);
 
@@ -215,9 +216,10 @@ TEST(TransportUdpExtendedTest, CallbackExceptionSafety) {
   channel->start();
 
   // Trigger state change
-  pump_io(ioc, 10ms);
+  bool ok = wait_for_condition(ioc, [&]() { return calls.load() > 0; }, 1000ms);
 
   // Should still be running/usable
+  EXPECT_TRUE(ok);
   EXPECT_GT(calls, 0);
   EXPECT_NO_THROW(channel->stop());
 }

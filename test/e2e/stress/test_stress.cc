@@ -92,6 +92,75 @@ TEST_F(StressTest, RealNetworkHighThroughput) {
   server->stop();
 }
 
+TEST_F(StressTest, RapidStartStop) {
+  const uint16_t port = TestUtils::getAvailableTestPort();
+  const int iterations = 20;
+
+  for (int i = 0; i < iterations; ++i) {
+    auto server = tcp_server(port).unlimited_clients().build();
+    ASSERT_NE(server, nullptr);
+
+    auto start_future = server->start();
+    // Don't even wait for get() in some cases, or stop immediately
+    if (i % 2 == 0) {
+      start_future.get();
+    }
+    server->stop();
+  }
+}
+
+TEST_F(StressTest, ConcurrentClientConnections) {
+  const uint16_t port = TestUtils::getAvailableTestPort();
+  const int num_clients = 20;
+  std::atomic<int> connected_count{0};
+  std::atomic<int> received_count{0};
+
+  auto server = tcp_server(port)
+                    .unlimited_clients()
+                    .on_connect([&](const wrapper::ConnectionContext&) { connected_count++; })
+                    .on_data([&](const wrapper::MessageContext&) { received_count++; })
+                    .build();
+
+  server->start();
+  TestUtils::waitForCondition([&]() { return server->listening(); }, 1000);
+
+  std::vector<std::shared_ptr<wrapper::TcpClient>> clients;
+  for (int i = 0; i < num_clients; ++i) {
+    auto client = tcp_client("127.0.0.1", port).build();
+    clients.push_back(std::move(client));
+    clients.back()->start();
+  }
+
+  // Wait for all to connect
+  TestUtils::waitForCondition([&]() { return connected_count.load() == num_clients; }, 5000);
+  EXPECT_EQ(connected_count.load(), num_clients);
+
+  // Small delay to ensure all connections are fully established in the OS
+  std::this_thread::sleep_for(200ms);
+
+  // Send messages concurrently
+  std::vector<std::thread> senders;
+  for (auto& client : clients) {
+    senders.emplace_back([client]() {
+      for (int i = 0; i < 50; ++i) {
+        if (client->send("stress_test_data")) {
+          // Successfully queued
+        }
+        std::this_thread::sleep_for(5ms);  // Increased delay
+      }
+    });
+  }
+
+  for (auto& t : senders) t.join();
+
+  // Wait for all data
+  TestUtils::waitForCondition([&]() { return received_count.load() == num_clients * 50; }, 5000);
+  EXPECT_EQ(received_count.load(), num_clients * 50);
+
+  for (auto& client : clients) client->stop();
+  server->stop();
+}
+
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

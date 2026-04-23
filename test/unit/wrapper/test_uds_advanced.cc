@@ -232,9 +232,9 @@ TEST(UdsClientWrapperContractTest, StopSuppressesLateCallbacks) {
   client.on_connect([&](const ConnectionContext&) { callbacks++; });
   client.on_data([&](const MessageContext&) { callbacks++; });
   client.on_error([&](const ErrorContext&) { callbacks++; });
-  client.on_disconnect([&](const ConnectionContext&) { callbacks++; });
+  client.on_disconnect([&](const wrapper::ConnectionContext&) { callbacks++; });
 
-  client.start();
+  auto f = client.start();
   client.stop();
 
   fake_channel->emit_state(base::LinkState::Connected);

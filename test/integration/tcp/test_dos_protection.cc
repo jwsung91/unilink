@@ -73,28 +73,24 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
 
   ASSERT_NE(server_, nullptr) << "Server creation failed";
   server_->start();
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  TestUtils::waitForCondition([&]() { return server_->listening(); }, 1000);
 
   // 1. Connect first client (Success)
   auto s1 = unilink::tcp_client("127.0.0.1", test_port).build();
   s1->start();
 
   // Wait for connection
-  int retries = 0;
-  while (!s1->connected() && retries++ < 20) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
+  bool s1_connected = TestUtils::waitForCondition([&]() { return s1->connected(); }, 2000);
 
-  if (!s1->connected()) {
+  if (!s1_connected) {
     FAIL() << "Client 1 failed to connect";
   }
   std::cout << "Client 1 connected" << std::endl;
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(200));
-
   // Verify s1 is holding the slot
-  if (server_->client_count() != 1) {
-    FAIL() << "Client 1 is not connected. Client count: " << server_->client_count();
+  bool server_saw_client = TestUtils::waitForCondition([&]() { return server_->client_count() == 1; }, 1000);
+  if (!server_saw_client) {
+    FAIL() << "Server failed to detect Client 1 connection. Client count: " << server_->client_count();
   }
 
   // 2. Flood server with attempts
@@ -152,19 +148,18 @@ TEST_F(DoSProtectionTest, TightLoopPrevention) {
   // Verify we can resume accepting after client disconnects
   s1->stop();
   std::cout << "Client 1 disconnected, waiting for resume..." << std::endl;
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));  // Wait for on_close and resume
+
+  // Wait for server to detect disconnection and resume
+  TestUtils::waitForCondition([&]() { return server_->client_count() == 0; }, 2000);
 
   // Try to connect again
   auto s3 = unilink::tcp_client("127.0.0.1", test_port).build();
   s3->start();
 
   // Wait for connection
-  retries = 0;
-  while (!s3->connected() && retries++ < 20) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
+  bool s3_connected = TestUtils::waitForCondition([&]() { return s3->connected(); }, 2000);
 
-  if (!s3->connected()) {
+  if (!s3_connected) {
     FAIL() << "Failed to connect after resume";
   }
   std::cout << "Client 3 connected (Resume success)" << std::endl;
