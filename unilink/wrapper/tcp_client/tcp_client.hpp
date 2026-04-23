@@ -59,7 +59,7 @@ class UNILINK_API TcpClient : public ChannelInterface {
   TcpClient& operator=(const TcpClient&) = delete;
 
   // ChannelInterface implementation
-  std::future<bool> start() override;
+  [[nodiscard]] std::future<bool> start() override;
   void stop() override;
   bool send(std::string_view data) override;
   bool send_line(std::string_view line) override;

@@ -66,7 +66,7 @@ struct TcpServer::Impl {
   FramerFactory framer_factory_{nullptr};
   MessageHandler on_message_{nullptr};
 
-  std::unordered_map<size_t, std::unique_ptr<framer::IFramer>> framers_;
+  std::unordered_map<ClientId, std::unique_ptr<framer::IFramer>> framers_;
   // Cached transport pointer — set once in start(), avoids repeated dynamic_cast.
   std::shared_ptr<transport::TcpServer> transport_cache_;
 
@@ -226,7 +226,7 @@ struct TcpServer::Impl {
     std::weak_ptr<bool> weak_alive = alive_marker_;
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
-      transport_server->on_multi_connect([this, weak_alive](size_t id, const std::string& info) {
+      transport_server->on_multi_connect([this, weak_alive](ClientId id, const std::string& info) {
         auto alive = weak_alive.lock();
         if (!alive) return;
 
@@ -254,7 +254,7 @@ struct TcpServer::Impl {
         }
         if (handler) handler(ConnectionContext(id, info));
       });
-      transport_server->on_multi_data([this, weak_alive](size_t id, memory::ConstByteSpan data_span) {
+      transport_server->on_multi_data([this, weak_alive](ClientId id, memory::ConstByteSpan data_span) {
         auto alive = weak_alive.lock();
         if (!alive) return;
 
@@ -272,7 +272,7 @@ struct TcpServer::Impl {
           it->second->push_bytes(data_span);
         }
       });
-      transport_server->on_multi_disconnect([this, weak_alive](size_t id) {
+      transport_server->on_multi_disconnect([this, weak_alive](ClientId id) {
         auto alive = weak_alive.lock();
         if (!alive) return;
 
@@ -330,7 +330,7 @@ bool TcpServer::broadcast(std::string_view data) {
   return ts ? ts->broadcast(data) : false;
 }
 
-bool TcpServer::send_to(size_t client_id, std::string_view data) {
+bool TcpServer::send_to(ClientId client_id, std::string_view data) {
   const auto& ts = impl_->transport_cache_;
   return ts ? ts->send_to_client(client_id, data) : false;
 }
@@ -373,9 +373,9 @@ size_t TcpServer::client_count() const {
   return ts ? ts->client_count() : 0;
 }
 
-std::vector<size_t> TcpServer::connected_clients() const {
+std::vector<ClientId> TcpServer::connected_clients() const {
   const auto& ts = get_impl()->transport_cache_;
-  return ts ? ts->connected_clients() : std::vector<size_t>();
+  return ts ? ts->connected_clients() : std::vector<ClientId>();
 }
 
 TcpServer& TcpServer::auto_start(bool m) {

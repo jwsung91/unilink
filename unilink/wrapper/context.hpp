@@ -21,6 +21,7 @@
 #include <string_view>
 #include <vector>
 
+#include "unilink/base/common.hpp"
 #include "unilink/base/error_codes.hpp"
 #include "unilink/memory/safe_span.hpp"
 
@@ -32,15 +33,30 @@ namespace wrapper {
  */
 class MessageContext {
  public:
-  MessageContext(size_t client_id, std::string_view data, std::string client_info = "")
+  MessageContext(ClientId client_id, std::string_view data, std::string client_info = "")
       : client_id_(client_id), data_(data), client_info_(std::move(client_info)) {}
 
-  size_t client_id() const { return client_id_; }
+  /** @brief Get the client identifier */
+  ClientId client_id() const { return client_id_; }
+
+  /**
+   * @brief Get a view of the received data
+   * @warning Non-owning view. Valid only during the scope of the callback.
+   * Use data_as_string() or data_as_vector() to take ownership.
+   */
   std::string_view data() const { return data_; }
+
+  /** @brief Safely copy the received data into a std::string */
+  std::string data_as_string() const { return std::string(data_); }
+
+  /** @brief Safely copy the received data into a std::vector<uint8_t> */
+  std::vector<uint8_t> data_as_vector() const { return std::vector<uint8_t>(data_.begin(), data_.end()); }
+
+  /** @brief Get the client information (e.g., endpoint address) */
   const std::string& client_info() const { return client_info_; }
 
  private:
-  size_t client_id_;
+  ClientId client_id_;
   std::string_view data_;
   std::string client_info_;
 };
@@ -50,14 +66,17 @@ class MessageContext {
  */
 class ConnectionContext {
  public:
-  ConnectionContext(size_t client_id, std::string client_info = "")
+  ConnectionContext(ClientId client_id, std::string client_info = "")
       : client_id_(client_id), client_info_(std::move(client_info)) {}
 
-  size_t client_id() const { return client_id_; }
+  /** @brief Get the client identifier */
+  ClientId client_id() const { return client_id_; }
+
+  /** @brief Get the client information (e.g., endpoint address) */
   const std::string& client_info() const { return client_info_; }
 
  private:
-  size_t client_id_;
+  ClientId client_id_;
   std::string client_info_;
 };
 
@@ -66,17 +85,22 @@ class ConnectionContext {
  */
 class ErrorContext {
  public:
-  ErrorContext(ErrorCode code, std::string_view message, std::optional<size_t> client_id = std::nullopt)
+  ErrorContext(ErrorCode code, std::string_view message, std::optional<ClientId> client_id = std::nullopt)
       : code_(code), message_(message), client_id_(client_id) {}
 
+  /** @brief Get the error code */
   ErrorCode code() const { return code_; }
+
+  /** @brief Get the error message */
   std::string_view message() const { return message_; }
-  std::optional<size_t> client_id() const { return client_id_; }
+
+  /** @brief Get the associated client ID, if any */
+  std::optional<ClientId> client_id() const { return client_id_; }
 
  private:
   ErrorCode code_;
   std::string message_;
-  std::optional<size_t> client_id_;
+  std::optional<ClientId> client_id_;
 };
 
 }  // namespace wrapper

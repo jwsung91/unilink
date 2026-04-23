@@ -40,7 +40,7 @@ using tcp = net::ip::tcp;
 
 struct TcpServer::Impl {
   std::atomic<bool> stopping_{false};
-  std::atomic<size_t> next_client_id_{0};
+  std::atomic<ClientId> next_client_id_{0};
 
   std::unique_ptr<net::io_context> owned_ioc_;
   bool owns_ioc_;
@@ -60,7 +60,7 @@ struct TcpServer::Impl {
   MultiClientDisconnectHandler on_multi_disconnect_;
 
   mutable std::mutex sessions_mutex_;
-  std::unordered_map<size_t, std::shared_ptr<TcpServerSession>> sessions_;
+  std::unordered_map<ClientId, std::shared_ptr<TcpServerSession>> sessions_;
 
   size_t max_clients_;
   bool client_limit_enabled_;
@@ -235,7 +235,7 @@ struct TcpServer::Impl {
                                                             accept_impl->cfg_.backpressure_threshold,
                                                             accept_impl->cfg_.idle_timeout_ms);
 
-      size_t client_id;
+      ClientId client_id;
       {
         std::lock_guard<std::mutex> lock(accept_impl->sessions_mutex_);
         client_id = accept_impl->next_client_id_.fetch_add(1);
@@ -541,8 +541,8 @@ void TcpServer::on_backpressure(OnBackpressure cb) {
 }
 
 bool TcpServer::broadcast(std::string_view message) {
-  auto impl = get_impl();
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(message.begin(), message.end());
+  auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   bool sent = false;
   for (auto& entry : impl->sessions_) {
@@ -555,13 +555,32 @@ bool TcpServer::broadcast(std::string_view message) {
   return sent;
 }
 
-bool TcpServer::send_to_client(size_t client_id, std::string_view message) {
+bool TcpServer::broadcast(memory::ConstByteSpan data) {
+  auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
+  auto impl = get_impl();
+  std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
+  bool sent = false;
+  for (auto& entry : impl->sessions_) {
+    auto& session = entry.second;
+    if (session && session->alive()) {
+      session->async_write_shared(shared_data);
+      sent = true;
+    }
+  }
+  return sent;
+}
+
+bool TcpServer::send_to_client(ClientId client_id, std::string_view message) {
+  return send_to_client(client_id,
+                        memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(message.data()), message.size()));
+}
+
+bool TcpServer::send_to_client(ClientId client_id, memory::ConstByteSpan data) {
   auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
   auto it = impl->sessions_.find(client_id);
   if (it != impl->sessions_.end() && it->second && it->second->alive()) {
-    auto binary_view = base::safe_convert::string_to_bytes(message);
-    it->second->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    it->second->async_write_copy(data);
     return true;
   }
   return false;
@@ -576,10 +595,10 @@ size_t TcpServer::client_count() const {
   return alive;
 }
 
-std::vector<size_t> TcpServer::connected_clients() const {
+std::vector<ClientId> TcpServer::connected_clients() const {
   auto impl = get_impl();
   std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-  std::vector<size_t> connected_clients;
+  std::vector<ClientId> connected_clients;
   connected_clients.reserve(impl->sessions_.size());
   for (const auto& entry : impl->sessions_)
     if (entry.second && entry.second->alive()) connected_clients.push_back(entry.first);

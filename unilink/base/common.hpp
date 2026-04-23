@@ -35,6 +35,12 @@
 #include "unilink/diagnostics/logger.hpp"
 
 namespace unilink {
+
+/**
+ * @brief Strong type alias for client identifiers
+ */
+using ClientId = size_t;
+
 namespace base {
 
 enum class LinkState { Idle, Connecting, Listening, Connected, Closed, Error };

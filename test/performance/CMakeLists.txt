@@ -1,19 +1,19 @@
 # Copyright 2025 Jinwoo Sung
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
 
-# Performance Tests - Benchmarks and profiling
-# Each test file is built as a separate executable
+# Performance Tests - Benchmarks and profiling Each test file is built as a
+# separate executable
 
 option(BUILD_PERFORMANCE_TESTS "Build performance tests" ON)
 
@@ -21,60 +21,72 @@ if(BUILD_PERFORMANCE_TESTS)
   message(STATUS "Building performance tests")
 
   # Benchmark tests
-  foreach(test_file test_performance.cc test_benchmark.cc test_pooled_buffer_access.cc test_memory_pool_growth.cc test_transport_performance.cc test_platform.cc test_logger_perf.cc test_tcp_callback_benchmark.cc test_console_logger_perf.cc test_string_conversion_perf.cc test_tcp_server_mutex_contention.cc test_file_logger_perf.cc test_serial_stop_perf.cc test_memory_tracker_perf.cc test_ipv6_validation_perf.cc test_logger_timestamp_perf.cc test_line_framer_perf.cc test_packet_framer_perf.cc test_memory_pool_tracking.cc test_logger_contention.cc)
+  foreach(
+    test_file
+    test_performance.cc
+    test_benchmark.cc
+    test_pooled_buffer_access.cc
+    test_memory_pool_growth.cc
+    test_transport_performance.cc
+    test_platform.cc
+    test_logger_perf.cc
+    test_tcp_callback_benchmark.cc
+    test_console_logger_perf.cc
+    test_string_conversion_perf.cc
+    test_tcp_server_mutex_contention.cc
+    test_file_logger_perf.cc
+    test_serial_stop_perf.cc
+    test_memory_tracker_perf.cc
+    test_ipv6_validation_perf.cc
+    test_logger_timestamp_perf.cc
+    test_line_framer_perf.cc
+    test_packet_framer_perf.cc
+    test_memory_pool_tracking.cc
+    test_logger_contention.cc
+  )
     get_filename_component(test_name ${test_file} NAME_WE)
     add_executable(run_performance_${test_name} benchmark/${test_file})
-    target_link_libraries(run_performance_${test_name}
-      PRIVATE
-        unilink_shared
-        GTest::gtest
-        GTest::gtest_main
-        GTest::gmock
+    target_link_libraries(
+      run_performance_${test_name} PRIVATE unilink_shared GTest::gtest
+                                           GTest::gtest_main GTest::gmock
     )
-    target_include_directories(run_performance_${test_name}
-      PRIVATE
-        ${CMAKE_SOURCE_DIR}/test/utils
-        ${CMAKE_SOURCE_DIR}/test/fixtures
+    target_include_directories(
+      run_performance_${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/test/utils
+                                           ${CMAKE_SOURCE_DIR}/test/fixtures
     )
-    gtest_discover_tests(run_performance_${test_name}
-      PROPERTIES
-        LABELS "performance;benchmark;optional"
-        TIMEOUT 600
+    gtest_discover_tests(
+      run_performance_${test_name}
+      PROPERTIES LABELS "performance;benchmark;optional"
+      TIMEOUT 600
     )
   endforeach()
 
   # Profiling tests - temporarily disabled due to link issues
-  # add_executable(run_performance_test_advanced_optimizations profiling/test_advanced_optimizations.cc)
-  # target_link_libraries(run_performance_test_advanced_optimizations
-  #   PRIVATE
-  #     unilink
-  #     GTest::gtest
-  #     GTest::gtest_main
-  #     GTest::gmock
-  # )
+  # add_executable(run_performance_test_advanced_optimizations
+  # profiling/test_advanced_optimizations.cc)
+  # target_link_libraries(run_performance_test_advanced_optimizations PRIVATE
+  # unilink GTest::gtest GTest::gtest_main GTest::gmock )
   # target_include_directories(run_performance_test_advanced_optimizations
-  #   PRIVATE
-  #     ${CMAKE_SOURCE_DIR}/test/utils
-  #     ${CMAKE_SOURCE_DIR}/test/fixtures
-  # )
-  # gtest_discover_tests(run_performance_test_advanced_optimizations
-  #   PROPERTIES
-  #     LABELS "performance;profiling;optional"
-  #     TIMEOUT 180
-  # )
-  add_executable(run_performance_test_tcp_server_get_clients_benchmark
-      benchmark/test_tcp_server_get_clients_benchmark.cc
+  # PRIVATE ${CMAKE_SOURCE_DIR}/test/utils ${CMAKE_SOURCE_DIR}/test/fixtures )
+  # gtest_discover_tests(run_performance_test_advanced_optimizations PROPERTIES
+  # LABELS "performance;profiling;optional" TIMEOUT 180 )
+  add_executable(
+    run_performance_test_tcp_server_get_clients_benchmark
+    benchmark/test_tcp_server_get_clients_benchmark.cc
   )
 
-  target_link_libraries(run_performance_test_tcp_server_get_clients_benchmark
-      PRIVATE
-      unilink_shared
-      GTest::gtest_main
-      ${Boost_LIBRARIES}
+  target_link_libraries(
+    run_performance_test_tcp_server_get_clients_benchmark
+    PRIVATE unilink_shared GTest::gtest_main ${Boost_LIBRARIES}
   )
 
-  add_test(NAME PerformanceTcpServerGetClientsBenchmarkTest COMMAND run_performance_test_tcp_server_get_clients_benchmark)
-  set_tests_properties(PerformanceTcpServerGetClientsBenchmarkTest PROPERTIES LABELS "performance;benchmark;tcp")
+  add_test(NAME PerformanceTcpServerGetClientsBenchmarkTest
+           COMMAND run_performance_test_tcp_server_get_clients_benchmark
+  )
+  set_tests_properties(
+    PerformanceTcpServerGetClientsBenchmarkTest
+    PROPERTIES LABELS "performance;benchmark;tcp"
+  )
 else()
   message(STATUS "Skipping performance tests (BUILD_PERFORMANCE_TESTS=OFF)")
 endif()

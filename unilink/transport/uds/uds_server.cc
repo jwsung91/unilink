@@ -46,7 +46,7 @@ struct UdsServer::Impl {
   bool owns_ioc_ = true;
 
   std::atomic<bool> stopping_{false};
-  std::atomic<size_t> next_client_id_{0};
+  std::atomic<ClientId> next_client_id_{0};
 
   std::unique_ptr<interface::UdsAcceptorInterface> acceptor_;
   config::UdsServerConfig cfg_;
@@ -60,7 +60,7 @@ struct UdsServer::Impl {
   MultiClientDisconnectHandler on_multi_disconnect_;
 
   mutable std::mutex sessions_mutex_;
-  std::unordered_map<size_t, std::shared_ptr<UdsServerSession>> sessions_;
+  std::unordered_map<ClientId, std::shared_ptr<UdsServerSession>> sessions_;
 
   Impl(const config::UdsServerConfig& cfg, net::io_context* ioc_ptr)
       : owned_ioc_(ioc_ptr ? nullptr : std::make_unique<net::io_context>()),
@@ -278,7 +278,18 @@ bool UdsServer::broadcast(std::string_view message) {
   return true;
 }
 
-bool UdsServer::send_to_client(size_t client_id, std::string_view message) {
+bool UdsServer::broadcast(memory::ConstByteSpan data) {
+  auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
+  async_write_shared(shared_data);
+  return true;
+}
+
+bool UdsServer::send_to_client(ClientId client_id, std::string_view message) {
+  return send_to_client(client_id,
+                        memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(message.data()), message.size()));
+}
+
+bool UdsServer::send_to_client(ClientId client_id, memory::ConstByteSpan data) {
   std::shared_ptr<UdsServerSession> session;
   {
     std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
@@ -286,7 +297,7 @@ bool UdsServer::send_to_client(size_t client_id, std::string_view message) {
     if (it != impl_->sessions_.end()) session = it->second;
   }
   if (session) {
-    session->async_write_copy(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(message.data()), message.size()));
+    session->async_write_copy(data);
     return true;
   }
   return false;
@@ -297,9 +308,9 @@ size_t UdsServer::client_count() const {
   return impl_->sessions_.size();
 }
 
-std::vector<size_t> UdsServer::connected_clients() const {
+std::vector<ClientId> UdsServer::connected_clients() const {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
-  std::vector<size_t> ids;
+  std::vector<ClientId> ids;
   for (const auto& pair : impl_->sessions_) ids.push_back(pair.first);
   return ids;
 }
@@ -326,7 +337,7 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
     if (!self || self->impl_->stopping_) return;
 
     if (!ec) {
-      size_t client_id;
+      ClientId client_id;
       auto session = std::make_shared<UdsServerSession>(*self->impl_->ioc_, std::move(socket),
                                                         self->impl_->cfg_.backpressure_threshold,
                                                         self->impl_->cfg_.idle_timeout_ms);

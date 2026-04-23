@@ -1,10 +1,9 @@
-# Unilink compiler configuration
-# This file handles compiler-specific settings and optimizations.
+# Unilink compiler configuration This file handles compiler-specific settings
+# and optimizations.
 #
-# IMPORTANT:
-#   Do NOT redefine compiler/toolchain-provided platform/architecture macros
-#   such as _WIN32, _WIN64, _M_IX86, _M_X64, _M_AMD64, etc.
-#   Those macros are consumed by the Windows SDK, STL and third-party libraries.
+# IMPORTANT: Do NOT redefine compiler/toolchain-provided platform/architecture
+# macros such as _WIN32, _WIN64, _M_IX86, _M_X64, _M_AMD64, etc. Those macros
+# are consumed by the Windows SDK, STL and third-party libraries.
 
 # -----------------------------------------------------------------------------
 # Compiler-specific flags
@@ -16,31 +15,36 @@ if(MSVC)
 
   # Remove any existing /W[0-4] flags the generator might have added so we
   # control warning level explicitly.
-  foreach(flag_var
-          CMAKE_C_FLAGS
-          CMAKE_CXX_FLAGS
-          CMAKE_C_FLAGS_DEBUG
-          CMAKE_CXX_FLAGS_DEBUG
-          CMAKE_C_FLAGS_RELEASE
-          CMAKE_CXX_FLAGS_RELEASE
-          CMAKE_C_FLAGS_RELWITHDEBINFO
-          CMAKE_CXX_FLAGS_RELWITHDEBINFO
-          CMAKE_C_FLAGS_MINSIZEREL
-          CMAKE_CXX_FLAGS_MINSIZEREL)
+  foreach(
+    flag_var
+    CMAKE_C_FLAGS
+    CMAKE_CXX_FLAGS
+    CMAKE_C_FLAGS_DEBUG
+    CMAKE_CXX_FLAGS_DEBUG
+    CMAKE_C_FLAGS_RELEASE
+    CMAKE_CXX_FLAGS_RELEASE
+    CMAKE_C_FLAGS_RELWITHDEBINFO
+    CMAKE_CXX_FLAGS_RELWITHDEBINFO
+    CMAKE_C_FLAGS_MINSIZEREL
+    CMAKE_CXX_FLAGS_MINSIZEREL
+  )
     if(DEFINED ${flag_var})
       string(REGEX REPLACE "(/W[0-4])" "" _cleaned_flags "${${flag_var}}")
       string(REGEX REPLACE "  +" " " _cleaned_flags "${_cleaned_flags}")
       string(STRIP "${_cleaned_flags}" _cleaned_flags)
-      set(${flag_var} "${_cleaned_flags}" CACHE STRING "" FORCE)
+      set(${flag_var}
+          "${_cleaned_flags}"
+          CACHE STRING "" FORCE
+      )
     endif()
   endforeach()
 
   if(UNILINK_ENABLE_WARNINGS)
-    # /W4: Warning level 4
-    # /permissive-: Standards conformance
-    # /utf-8: Set source and execution character sets to UTF-8
-    # /wd4251: Suppress 'needs to have dll-interface' warning for STL members in exported classes
-    # /wd4275: Suppress 'non dll-interface class used as base for dll-interface class' (safe for std::runtime_error)
+    # /W4: Warning level 4 /permissive-: Standards conformance /utf-8: Set
+    # source and execution character sets to UTF-8 /wd4251: Suppress 'needs to
+    # have dll-interface' warning for STL members in exported classes /wd4275:
+    # Suppress 'non dll-interface class used as base for dll-interface class'
+    # (safe for std::runtime_error)
     add_compile_options(/W4 /permissive- /utf-8 /wd4251 /wd4275)
     if(UNILINK_ENABLE_WERROR)
       add_compile_options(/WX)
@@ -48,11 +52,19 @@ if(MSVC)
   endif()
 
   # MSVC-specific optimizations and debug information
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /Oy /GL /wd4251 /wd4275")
-  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2 /wd4251 /wd4275")
-  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /O1 /Os /wd4251 /wd4275")
+  set(CMAKE_CXX_FLAGS_RELEASE
+      "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /Oy /GL /wd4251 /wd4275"
+  )
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
+      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2 /wd4251 /wd4275"
+  )
+  set(CMAKE_CXX_FLAGS_MINSIZEREL
+      "${CMAKE_CXX_FLAGS_MINSIZEREL} /O1 /Os /wd4251 /wd4275"
+  )
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
-  set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
+  set(CMAKE_SHARED_LINKER_FLAGS_RELEASE
+      "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG"
+  )
 
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   # GCC or Clang
@@ -81,8 +93,11 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   if(UNILINK_ENABLE_WARNINGS)
     add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion)
 
-    # Suppress warnings for older GCC versions (equivalent to Ubuntu 20.04 era compilers)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "11.0")
+    # Suppress warnings for older GCC versions (equivalent to Ubuntu 20.04 era
+    # compilers)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION
+                                                VERSION_LESS "11.0"
+    )
       add_compile_options(-Wno-deprecated-declarations)
       add_compile_options(-Wno-unused-variable)
       message(STATUS "Applied legacy GCC warning suppressions")
@@ -91,13 +106,9 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     # Additional warnings for Clang
     if(UNILINK_COMPILER_CLANG)
       add_compile_options(
-        -Weverything
-        -Wno-c++98-compat
-        -Wno-c++98-compat-pedantic
+        -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic
         # Suppress noisy warnings from Boost headers
-        -Wno-padded
-        -Wno-suggest-override
-        -Wno-suggest-destructor-override
+        -Wno-padded -Wno-suggest-override -Wno-suggest-destructor-override
       )
     endif()
 
@@ -155,9 +166,9 @@ if(WIN32)
   # Unilink-private platform/architecture macros. These are safe to define.
   add_compile_definitions(UNILINK_PLATFORM_WINDOWS=1)
 
-  # Architecture detection:
-  # - Prefer CMAKE_SYSTEM_PROCESSOR for distinguishing arm64 vs x64.
-  # - Fall back to pointer size when processor hint is not specific.
+  # Architecture detection: - Prefer CMAKE_SYSTEM_PROCESSOR for distinguishing
+  # arm64 vs x64. - Fall back to pointer size when processor hint is not
+  # specific.
   set(_UNILINK_IS_ARM64 OFF)
   if(CMAKE_SYSTEM_PROCESSOR MATCHES "(ARM64|arm64|aarch64)")
     set(_UNILINK_IS_ARM64 ON)
@@ -179,7 +190,8 @@ if(WIN32)
 
 elseif(UNIX)
   if(APPLE)
-    # Enable full BSD/POSIX feature set on macOS (needed for networking macros like NI_MAXHOST)
+    # Enable full BSD/POSIX feature set on macOS (needed for networking macros
+    # like NI_MAXHOST)
     add_compile_definitions(_DARWIN_C_SOURCE)
   else()
     add_compile_definitions(_POSIX_C_SOURCE=200809L)

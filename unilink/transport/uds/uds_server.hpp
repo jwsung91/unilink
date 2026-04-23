@@ -72,14 +72,14 @@ class UNILINK_API UdsServer : public interface::Channel, public std::enable_shar
   // Multi-client support
   bool broadcast(std::string_view message);
   bool broadcast(memory::ConstByteSpan data);
-  bool send_to_client(size_t client_id, std::string_view message);
-  bool send_to_client(size_t client_id, memory::ConstByteSpan data);
+  bool send_to_client(ClientId client_id, std::string_view message);
+  bool send_to_client(ClientId client_id, memory::ConstByteSpan data);
   size_t client_count() const;
-  std::vector<size_t> connected_clients() const;
+  std::vector<ClientId> connected_clients() const;
 
-  using MultiClientConnectHandler = std::function<void(size_t client_id, const std::string& client_info)>;
-  using MultiClientDataHandler = std::function<void(size_t client_id, memory::ConstByteSpan data)>;
-  using MultiClientDisconnectHandler = std::function<void(size_t client_id)>;
+  using MultiClientConnectHandler = std::function<void(ClientId client_id, const std::string& client_info)>;
+  using MultiClientDataHandler = std::function<void(ClientId client_id, memory::ConstByteSpan data)>;
+  using MultiClientDisconnectHandler = std::function<void(ClientId client_id)>;
 
   void on_multi_connect(MultiClientConnectHandler handler);
   void on_multi_data(MultiClientDataHandler handler);

@@ -60,13 +60,13 @@ class UNILINK_API UdsServer : public ServerInterface {
   UdsServer& operator=(const UdsServer&) = delete;
 
   // ServerInterface implementation
-  std::future<bool> start() override;
+  [[nodiscard]] std::future<bool> start() override;
   void stop() override;
   bool listening() const override;
 
   // Transmission
   bool broadcast(std::string_view data) override;
-  bool send_to(size_t client_id, std::string_view data) override;
+  bool send_to(ClientId client_id, std::string_view data) override;
 
   // Event handlers
   ServerInterface& on_connect(ConnectionHandler handler) override;
@@ -79,7 +79,7 @@ class UNILINK_API UdsServer : public ServerInterface {
 
   // Client count and management
   size_t client_count() const override;
-  std::vector<size_t> connected_clients() const override;
+  std::vector<ClientId> connected_clients() const override;
 
   // Configuration (Fluent API)
   UdsServer& auto_start(bool manage = true) override;

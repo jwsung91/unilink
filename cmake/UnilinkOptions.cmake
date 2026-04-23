@@ -1,5 +1,5 @@
-# Unilink build options
-# This file centralizes all build options for better maintainability
+# Unilink build options This file centralizes all build options for better
+# maintainability
 
 # Build type options
 option(UNILINK_BUILD_SHARED "Build shared library" ON)
@@ -7,11 +7,15 @@ option(UNILINK_BUILD_STATIC "Build static library" ON)
 option(UNILINK_BUILD_EXAMPLES "Build examples" ON)
 option(UNILINK_BUILD_TESTS "Build tests" ON)
 option(UNILINK_BUILD_DOCS "Build documentation" ON)
-option(UNILINK_ENABLE_PERFORMANCE_TESTS "Enable performance/benchmark tests" OFF)
+option(UNILINK_ENABLE_PERFORMANCE_TESTS "Enable performance/benchmark tests"
+       OFF
+)
 
 # Feature options
 option(UNILINK_ENABLE_CONFIG "Enable configuration management API" ON)
-option(UNILINK_ENABLE_MEMORY_TRACKING "Enable memory tracking for debugging" OFF)
+option(UNILINK_ENABLE_MEMORY_TRACKING "Enable memory tracking for debugging"
+       OFF
+)
 option(UNILINK_ENABLE_SANITIZERS "Enable sanitizers in Debug builds" OFF)
 
 # Installation options
@@ -47,26 +51,39 @@ endif()
 if(CMAKE_CONFIGURATION_TYPES)
   foreach(cfg ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER "${cfg}" cfg_upper)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${cfg_upper} "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${cfg_upper} "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${cfg_upper} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${cfg_upper}
+        "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}"
+    )
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${cfg_upper}
+        "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
+    )
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${cfg_upper}
+        "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+    )
   endforeach()
 endif()
 
 # Set default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
+  set(CMAKE_BUILD_TYPE
+      "Release"
+      CACHE STRING "Build type" FORCE
+  )
 endif()
 
 # Validate build type
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo;MinSizeRel")
 if(NOT CMAKE_BUILD_TYPE IN_LIST CMAKE_CONFIGURATION_TYPES)
   message(FATAL_ERROR "Invalid build type: ${CMAKE_BUILD_TYPE}. "
-          "Valid options are: ${CMAKE_CONFIGURATION_TYPES}")
+                      "Valid options are: ${CMAKE_CONFIGURATION_TYPES}"
+  )
 endif()
 
 # Set default C++ standard
-set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ standard")
+set(CMAKE_CXX_STANDARD
+    17
+    CACHE STRING "C++ standard"
+)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 

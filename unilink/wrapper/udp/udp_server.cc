@@ -75,9 +75,9 @@ struct UdpServer::Impl {
     std::shared_ptr<framer::IFramer> framer;
     std::chrono::steady_clock::time_point last_seen;
   };
-  size_t next_client_id{1};
-  std::unordered_map<boost::asio::ip::udp::endpoint, size_t, UdpEndpointHash> endpoint_to_id;
-  std::unordered_map<size_t, SessionEntry> sessions;
+  ClientId next_client_id{1};
+  std::unordered_map<boost::asio::ip::udp::endpoint, ClientId, UdpEndpointHash> endpoint_to_id;
+  std::unordered_map<ClientId, SessionEntry> sessions;
   std::chrono::milliseconds session_timeout{30000};  // Default 30s
   std::unique_ptr<boost::asio::steady_timer> reaper_timer;
   bool auto_start{false};
@@ -137,7 +137,7 @@ struct UdpServer::Impl {
   }
 
   void run_reaper() {
-    std::vector<std::pair<size_t, std::string>> to_remove_with_info;
+    std::vector<std::pair<ClientId, std::string>> to_remove_with_info;
     auto now = std::chrono::steady_clock::now();
 
     {
@@ -166,7 +166,7 @@ struct UdpServer::Impl {
     if (!channel) return;
 
     channel->on_bytes_from([this](memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& ep) {
-      size_t client_id = 0;
+      ClientId client_id = 0;
       bool is_new = false;
       ConnectionHandler connect_handler_copy{nullptr};
       MessageHandler data_handler_copy{nullptr};
@@ -380,7 +380,7 @@ bool UdpServer::broadcast(std::string_view data) {
   return true;
 }
 
-bool UdpServer::send_to(size_t client_id, std::string_view data) {
+bool UdpServer::send_to(ClientId client_id, std::string_view data) {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex);
   if (!impl_->channel) return false;
 
@@ -433,9 +433,9 @@ size_t UdpServer::client_count() const {
   return impl_->endpoint_to_id.size();
 }
 
-std::vector<size_t> UdpServer::connected_clients() const {
+std::vector<ClientId> UdpServer::connected_clients() const {
   std::lock_guard<std::shared_mutex> lock(impl_->mutex);
-  std::vector<size_t> ids;
+  std::vector<ClientId> ids;
   ids.reserve(impl_->sessions.size());
   for (const auto& [id, entry] : impl_->sessions) {
     ids.push_back(id);
