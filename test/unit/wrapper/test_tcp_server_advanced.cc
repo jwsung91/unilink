@@ -69,7 +69,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextNotStoppedWhenNotManaged) {
   auto work = boost::asio::make_work_guard(*ioc);
 
   server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
-  server_->start();
+  auto f = server_->start();
 
   std::thread t([&]() { ioc->run(); });
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -88,7 +88,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ExternalContextManagedRunsAndStops) {
   auto ioc = std::make_shared<boost::asio::io_context>();
   server_ = std::make_shared<wrapper::TcpServer>(test_port_, ioc);
   server_->manage_external_context(true);
-  server_->start();
+  auto f = server_->start();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   EXPECT_TRUE(server_->listening());
@@ -185,7 +185,7 @@ TEST_F(AdvancedTcpServerCoverageTest, ConcurrentStartStop) {
   for (int i = 0; i < 2; ++i) {  // Reduced count for stability
     threads.emplace_back([this]() {
       for (int j = 0; j < 5; ++j) {
-        server_->start();
+        auto f = server_->start();
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
         server_->stop();
       }
@@ -201,7 +201,7 @@ TEST_F(AdvancedTcpServerCoverageTest, HandlerReplacement) {
   server_->on_connect([&](const wrapper::ConnectionContext&) { count = 1; });
   server_->on_connect([&](const wrapper::ConnectionContext&) { count = 2; });
 
-  server_->start();
+  auto f = server_->start();
   auto client = unilink::tcp_client("127.0.0.1", test_port_).build();
   client->start();
 

@@ -21,7 +21,7 @@ TEST(UdpWrapperTest, StopPerformance) {
   cfg.remote_port = 19001;
 
   wrapper::UdpClient udp(cfg);
-  udp.start();
+  auto f = udp.start();
 
   auto start = std::chrono::high_resolution_clock::now();
   udp.stop();
@@ -43,7 +43,7 @@ TEST(UdpWrapperTest, StopSafetyWithExternalIOC) {
     wrapper::UdpClient udp(cfg, ioc);
     std::atomic<int> callbacks{0};
     udp.on_data([&](const wrapper::MessageContext&) { callbacks++; });
-    udp.start();
+    auto f = udp.start();
 
     // Stop and destroy immediately
     udp.stop();

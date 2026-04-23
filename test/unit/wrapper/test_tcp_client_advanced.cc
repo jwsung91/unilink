@@ -177,7 +177,7 @@ TEST(TcpClientWrapperContractTest, StopSuppressesLateCallbacks) {
   client.on_error([&](const wrapper::ErrorContext&) { callbacks++; });
   client.on_disconnect([&](const wrapper::ConnectionContext&) { callbacks++; });
 
-  client.start();
+  auto f = client.start();
   client.stop();
 
   fake_channel->emit_state(base::LinkState::Connected);

@@ -34,13 +34,14 @@ using namespace std::chrono_literals;
 
 class ClientLimitIntegrationTest : public ::testing::Test {
  protected:
-  void SetUp() override { std::this_thread::sleep_for(std::chrono::milliseconds(100)); }
+  void SetUp() override {
+    // Reset logger or other states if needed
+  }
 
   void TearDown() override {
     if (server_) {
       server_->stop();
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
   uint16_t getTestPort() { return TestUtils::getAvailableTestPort(); }

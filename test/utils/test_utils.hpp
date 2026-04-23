@@ -368,8 +368,8 @@ class IntegrationTest : public NetworkTest {
 
   void TearDown() override {
     // Clean up integration test resources
-    // Increased wait time to ensure complete cleanup and avoid port conflicts
-    TestUtils::waitFor(1000);
+    // Removed fixed 1-second sleep to improve test performance.
+    // Individual tests should ensure their servers/clients are stopped properly.
     NetworkTest::TearDown();
   }
 };
