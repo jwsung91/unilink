@@ -22,6 +22,12 @@
 - [ ] Performance improvement
 - [ ] Test coverage improvement
 
+## Checklist
+<!-- Before submitting this PR, please check that you have performed the following tasks -->
+- [ ] I have run `./scripts/verify.sh` locally and confirmed that all checks (format, build, unit tests) pass.
+- [ ] I have added/updated tests for my changes.
+- [ ] I have updated the documentation accordingly.
+
 ## Additional Notes
 <!-- Any additional information, considerations, or context -->
 <!-- Screenshots, diagrams, or other visual aids if applicable -->
