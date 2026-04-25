@@ -31,13 +31,13 @@
             <td class="headerValue">unilink Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">189</td>
-            <td class="headerCovTableEntry">229</td>
-            <td class="headerCovTableEntryMed">82.5 %</td>
+            <td class="headerCovTableEntry">190</td>
+            <td class="headerCovTableEntry">230</td>
+            <td class="headerCovTableEntryMed">82.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-25 11:13:40</td>
+            <td class="headerValue">2026-04-25 12:02:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">31</td>
@@ -56,8 +56,8 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntry">131</td>
-            <td class="headerCovTableEntry">288</td>
+            <td class="headerCovTableEntry">132</td>
+            <td class="headerCovTableEntry">290</td>
             <td class="headerCovTableEntryLo">45.5 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -311,7 +311,7 @@
 <a name="229"><span class="lineNum">     229 </span>                :<span class="lineNoCov">          0 :               }</span></a>
 <a name="230"><span class="lineNum">     230 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :               if (on_message_handler) {</span></a>
 <a name="231"><span class="lineNum">     231 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                 std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());</span></a>
-<a name="232"><span class="lineNum">     232 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :                 on_message_handler(MessageContext(client_id, str_msg));</span></a>
+<a name="232"><span class="lineNum">     232 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :                 on_message_handler(MessageContext(client_id, std::move(str_msg)));</span></a>
 <a name="233"><span class="lineNum">     233 </span>                :<span class="lineNoCov">          0 :               }</span></a>
 <a name="234"><span class="lineNum">     234 </span>                :<span class="lineNoCov">          0 :             });</span></a>
 <a name="235"><span class="lineNum">     235 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :             framers_[client_id] = std::move(framer);</span></a>
@@ -330,23 +330,23 @@
 <a name="248"><span class="lineNum">     248 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :     });</span></a>
 <a name="249"><span class="lineNum">     249 </span>                :            : </a>
 <a name="250"><span class="lineNum">     250 </span>  [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          7 :     server_-&gt;on_multi_disconnect([weak_alive, this](ClientId client_id) {</span></a>
-<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">          5 :       auto alive = weak_alive.lock();</span></a>
-<a name="252"><span class="lineNum">     252 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 5 times"> + </span>]:<span class="lineCov">          5 :       if (!alive) return;</span></a>
+<a name="251"><span class="lineNum">     251 </span>                :<span class="lineCov">          3 :       auto alive = weak_alive.lock();</span></a>
+<a name="252"><span class="lineNum">     252 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">          3 :       if (!alive) return;</span></a>
 <a name="253"><span class="lineNum">     253 </span>                :            : </a>
 <a name="254"><span class="lineNum">     254 </span>                :            :       {</a>
-<a name="255"><span class="lineNum">     255 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :         std::lock_guard&lt;std::shared_mutex&gt; lock(mutex_);</span></a>
-<a name="256"><span class="lineNum">     256 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :         framers_.erase(client_id);</span></a>
-<a name="257"><span class="lineNum">     257 </span>                :<span class="lineCov">          5 :       }</span></a>
+<a name="255"><span class="lineNum">     255 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :         std::lock_guard&lt;std::shared_mutex&gt; lock(mutex_);</span></a>
+<a name="256"><span class="lineNum">     256 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :         framers_.erase(client_id);</span></a>
+<a name="257"><span class="lineNum">     257 </span>                :<span class="lineCov">          3 :       }</span></a>
 <a name="258"><span class="lineNum">     258 </span>                :            : </a>
-<a name="259"><span class="lineNum">     259 </span>                :<span class="lineCov">          5 :       ConnectionHandler handler;</span></a>
+<a name="259"><span class="lineNum">     259 </span>                :<span class="lineCov">          3 :       ConnectionHandler handler;</span></a>
 <a name="260"><span class="lineNum">     260 </span>                :            :       {</a>
-<a name="261"><span class="lineNum">     261 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :         std::shared_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></a>
-<a name="262"><span class="lineNum">     262 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :         handler = client_disconnect_handler_;</span></a>
-<a name="263"><span class="lineNum">     263 </span>                :<span class="lineCov">          5 :       }</span></a>
-<a name="264"><span class="lineNum">     264 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 5 times"> + </span>]:<span class="lineCov">          5 :       if (handler) {</span></a>
+<a name="261"><span class="lineNum">     261 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :         std::shared_lock&lt;std::shared_mutex&gt; lock(mutex_);</span></a>
+<a name="262"><span class="lineNum">     262 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :         handler = client_disconnect_handler_;</span></a>
+<a name="263"><span class="lineNum">     263 </span>                :<span class="lineCov">          3 :       }</span></a>
+<a name="264"><span class="lineNum">     264 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">          3 :       if (handler) {</span></a>
 <a name="265"><span class="lineNum">     265 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :         handler(ConnectionContext(client_id, &quot;disconnected&quot;));</span></a>
 <a name="266"><span class="lineNum">     266 </span>                :            :       }</a>
-<a name="267"><span class="lineNum">     267 </span>        [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          5 :     });</span></a>
+<a name="267"><span class="lineNum">     267 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :     });</span></a>
 <a name="268"><span class="lineNum">     268 </span>                :            : </a>
 <a name="269"><span class="lineNum">     269 </span>  [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          7 :     server_-&gt;on_multi_data([weak_alive, this](ClientId client_id, memory::ConstByteSpan data_span) {</span></a>
 <a name="270"><span class="lineNum">     270 </span>                :<span class="lineCov">          3 :       auto alive = weak_alive.lock();</span></a>
@@ -359,9 +359,9 @@
 <a name="277"><span class="lineNum">     277 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :         handler = data_handler_;</span></a>
 <a name="278"><span class="lineNum">     278 </span>                :<span class="lineCov">          3 :       }</span></a>
 <a name="279"><span class="lineNum">     279 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :       if (handler) {</span></a>
-<a name="280"><span class="lineNum">     280 </span>  [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          6 :         handler(MessageContext(client_id,</span></a>
-<a name="281"><span class="lineNum">     281 </span>                :<span class="lineCov">          3 :                                std::string_view(reinterpret_cast&lt;const char*&gt;(data_span.data()), data_span.size())));</span></a>
-<a name="282"><span class="lineNum">     282 </span>                :            :       }</a>
+<a name="280"><span class="lineNum">     280 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 :         std::string str_data = base::safe_convert::uint8_to_string(data_span.data(), data_span.size());</span></a>
+<a name="281"><span class="lineNum">     281 </span>  [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          3 :         handler(MessageContext(client_id, std::move(str_data)));</span></a>
+<a name="282"><span class="lineNum">     282 </span>                :<span class="lineCov">          3 :       }</span></a>
 <a name="283"><span class="lineNum">     283 </span>                :            : </a>
 <a name="284"><span class="lineNum">     284 </span>                :            :       // 2. Framer integration</a>
 <a name="285"><span class="lineNum">     285 </span>                :            :       {</a>

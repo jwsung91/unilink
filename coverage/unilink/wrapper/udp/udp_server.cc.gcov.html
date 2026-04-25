@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">207</td>
-            <td class="headerCovTableEntry">278</td>
-            <td class="headerCovTableEntryLo">74.5 %</td>
+            <td class="headerCovTableEntry">279</td>
+            <td class="headerCovTableEntryLo">74.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-25 11:13:40</td>
+            <td class="headerValue">2026-04-25 12:02:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">36</td>
@@ -205,15 +205,15 @@
 <a name="126"><span class="lineNum">     126 </span>                :            : </a>
 <a name="127"><span class="lineNum">     127 </span>  [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          7 :     reaper_timer-&gt;expires_after(interval);</span></a>
 <a name="128"><span class="lineNum">     128 </span>        [<span class="branchCov" title="Branch 0 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          7 :     reaper_timer-&gt;async_wait([this, alive = std::weak_ptr&lt;bool&gt;(is_alive)](const boost::system::error_code&amp; ec) {</span></a>
-<a name="129"><span class="lineNum">     129 </span>                :<span class="lineCov">          5 :       auto lock = alive.lock();</span></a>
-<a name="130"><span class="lineNum">     130 </span>  [<span class="branchCov" title="Branch 0 was taken 5 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 3 times"> + </span> :<span class="lineCov">          5 :       if (!lock || !(*lock)) return;</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchCov" title="Branch 5 was taken 3 times"> + </span>]
+<a name="129"><span class="lineNum">     129 </span>                :<span class="lineCov">          6 :       auto lock = alive.lock();</span></a>
+<a name="130"><span class="lineNum">     130 </span>  [<span class="branchCov" title="Branch 0 was taken 6 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 4 times"> + </span> :<span class="lineCov">          6 :       if (!lock || !(*lock)) return;</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 2 times"> + </span><span class="branchCov" title="Branch 5 was taken 4 times"> + </span>]
 <a name="131"><span class="lineNum">     131 </span>                :            : </a>
-<a name="132"><span class="lineNum">     132 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 3 times"> + </span>]:<span class="lineCov">          3 :       if (!ec) {</span></a>
+<a name="132"><span class="lineNum">     132 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 4 times"> + </span>]:<span class="lineCov">          4 :       if (!ec) {</span></a>
 <a name="133"><span class="lineNum">     133 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         run_reaper();</span></a>
 <a name="134"><span class="lineNum">     134 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         schedule_reaper();</span></a>
 <a name="135"><span class="lineNum">     135 </span>                :            :       }</a>
-<a name="136"><span class="lineNum">     136 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          5 :     });</span></a>
+<a name="136"><span class="lineNum">     136 </span>        [<span class="branchCov" title="Branch 0 was taken 4 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">          6 :     });</span></a>
 <a name="137"><span class="lineNum">     137 </span>                :            :   }</a>
 <a name="138"><span class="lineNum">     138 </span>                :            : </a>
 <a name="139"><span class="lineNum">     139 </span>                :<span class="lineNoCov">          0 :   void run_reaper() {</span></a>
@@ -275,9 +275,9 @@
 <a name="193"><span class="lineNum">     193 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                   on_message_handler = on_message;</span></a>
 <a name="194"><span class="lineNum">     194 </span>                :<span class="lineNoCov">          0 :                 }</span></a>
 <a name="195"><span class="lineNum">     195 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                 if (on_message_handler) {</span></a>
-<a name="196"><span class="lineNum">     196 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                   on_message_handler(</span></a>
-<a name="197"><span class="lineNum">     197 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :                       MessageContext(client_id, base::safe_convert::uint8_to_string(msg.data(), msg.size())));</span></a>
-<a name="198"><span class="lineNum">     198 </span>                :            :                 }</a>
+<a name="196"><span class="lineNum">     196 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                   std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());</span></a>
+<a name="197"><span class="lineNum">     197 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :                   on_message_handler(MessageContext(client_id, std::move(str_msg)));</span></a>
+<a name="198"><span class="lineNum">     198 </span>                :<span class="lineNoCov">          0 :                 }</span></a>
 <a name="199"><span class="lineNum">     199 </span>                :<span class="lineNoCov">          0 :               });</span></a>
 <a name="200"><span class="lineNum">     200 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :               entry.framer = std::move(framer);</span></a>
 <a name="201"><span class="lineNum">     201 </span>                :            :             }</a>
@@ -300,7 +300,7 @@
 <a name="215"><span class="lineNum">     215 </span>                :            : </a>
 <a name="216"><span class="lineNum">     216 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 1 time"> + </span>]:<span class="lineCov">          2 :       if (data_handler_copy) {</span></a>
 <a name="217"><span class="lineNum">     217 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :         std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());</span></a>
-<a name="218"><span class="lineNum">     218 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :         data_handler_copy(MessageContext(client_id, str_data));</span></a>
+<a name="218"><span class="lineNum">     218 </span>  [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">          1 :         data_handler_copy(MessageContext(client_id, std::move(str_data)));</span></a>
 <a name="219"><span class="lineNum">     219 </span>                :<span class="lineCov">          1 :       }</span></a>
 <a name="220"><span class="lineNum">     220 </span>                :            : </a>
 <a name="221"><span class="lineNum">     221 </span>                :            :       // Push to framer</a>
