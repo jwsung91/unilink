@@ -71,10 +71,12 @@ class UNILINK_API TcpServer : public ServerInterface {
   ServerInterface& on_connect(ConnectionHandler handler) override;
   ServerInterface& on_disconnect(ConnectionHandler handler) override;
   ServerInterface& on_data(MessageHandler handler) override;
+  ServerInterface& on_data_batch(BatchMessageHandler handler) override;
   ServerInterface& on_error(ErrorHandler handler) override;
 
   ServerInterface& framer(FramerFactory factory) override;
   ServerInterface& on_message(MessageHandler handler) override;
+  ServerInterface& on_message_batch(BatchMessageHandler handler) override;
 
   // Client count and management
   size_t client_count() const override;

@@ -728,7 +728,7 @@ void UdpChannel::on_bytes_from(OnBytesFrom cb) { impl_->on_bytes_from_ = std::mo
 
 boost::asio::ip::udp::endpoint UdpChannel::local_endpoint() const { return get_impl()->local_endpoint_; }
 
-boost::asio::any_io_executor UdpChannel::get_executor() const { return get_impl()->ioc_->get_executor(); }
+boost::asio::any_io_executor UdpChannel::get_executor() { return get_impl()->ioc_->get_executor(); }
 
 }  // namespace transport
 }  // namespace unilink

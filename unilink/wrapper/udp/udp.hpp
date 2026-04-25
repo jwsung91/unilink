@@ -66,12 +66,14 @@ class UNILINK_API UdpClient : public ChannelInterface {
   bool connected() const override;
 
   ChannelInterface& on_data(MessageHandler handler) override;
+  ChannelInterface& on_data_batch(BatchMessageHandler handler) override;
   ChannelInterface& on_connect(ConnectionHandler handler) override;
   ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
 
   ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
   ChannelInterface& on_message(MessageHandler handler) override;
+  ChannelInterface& on_message_batch(BatchMessageHandler handler) override;
 
   ChannelInterface& auto_start(bool manage = true) override;
 

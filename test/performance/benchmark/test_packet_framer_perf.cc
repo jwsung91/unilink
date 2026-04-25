@@ -53,7 +53,7 @@ TEST_F(PacketFramerPerfTest, ProcessLargeDataChunks) {
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-  double throughput = (data.size() * 1000000.0 / duration / 1024 / 1024);
+  double throughput = (static_cast<double>(data.size()) * 1000000.0 / static_cast<double>(duration) / 1024 / 1024);
   std::cout << "Processed " << data.size() << " bytes in " << duration << " us. " << "Throughput: " << throughput
             << " MB/s. Messages: " << msg_count << std::endl;
 }
@@ -74,7 +74,7 @@ TEST_F(PacketFramerPerfTest, ProcessLargePackets) {
   auto end = std::chrono::high_resolution_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-  double throughput = (data.size() * 1000000.0 / duration / 1024 / 1024);
+  double throughput = (static_cast<double>(data.size()) * 1000000.0 / static_cast<double>(duration) / 1024 / 1024);
   std::cout << "Processed " << data.size() << " bytes in " << duration << " us. " << "Throughput: " << throughput
             << " MB/s. Messages: " << msg_count << std::endl;
 }

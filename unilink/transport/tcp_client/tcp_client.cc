@@ -255,6 +255,8 @@ void TcpClient::stop() {
 
 bool TcpClient::is_connected() const { return get_impl()->connected_.load(); }
 
+boost::asio::any_io_executor TcpClient::get_executor() { return impl_->socket_.get_executor(); }
+
 void TcpClient::async_write_copy(memory::ConstByteSpan data) {
   if (impl_->stop_requested_.load() || impl_->state_.is_state(LinkState::Closed) ||
       impl_->state_.is_state(LinkState::Error) || !impl_->ioc_) {

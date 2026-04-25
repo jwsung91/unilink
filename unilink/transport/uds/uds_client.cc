@@ -238,6 +238,8 @@ void UdsClient::stop() {
 
 bool UdsClient::is_connected() const { return impl_->connected_.load(); }
 
+boost::asio::any_io_executor UdsClient::get_executor() { return impl_->strand_; }
+
 void UdsClient::async_write_copy(memory::ConstByteSpan data) {
   std::vector<uint8_t> vec(data.begin(), data.end());
   async_write_move(std::move(vec));

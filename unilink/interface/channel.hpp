@@ -15,6 +15,7 @@
  */
 
 #pragma once
+#include <boost/asio/any_io_executor.hpp>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -36,6 +37,8 @@ class UNILINK_API Channel {
   virtual void start() = 0;
   virtual void stop() = 0;
   virtual bool is_connected() const = 0;
+
+  virtual boost::asio::any_io_executor get_executor() = 0;
 
   // Single send API (copies into internal queue)
   virtual void async_write_copy(memory::ConstByteSpan data) = 0;

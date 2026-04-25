@@ -16,11 +16,14 @@
 
 #include "unilink/wrapper/tcp_client/tcp_client.hpp"
 
+#include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
+#include <boost/asio/steady_timer.hpp>
 #include <chrono>
 #include <mutex>
 #include <optional>
+#include <shared_mutex>
 #include <stdexcept>
 #include <thread>
 #include <vector>
@@ -35,13 +38,13 @@ namespace unilink {
 namespace wrapper {
 
 struct TcpClient::Impl {
-  mutable std::mutex mutex_;
+  mutable std::shared_mutex mutex_;
   std::string host_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
+  std::atomic<bool> use_external_context_{false};
+  std::atomic<bool> manage_external_context_{false};
   std::thread external_thread_;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
@@ -50,14 +53,23 @@ struct TcpClient::Impl {
   std::shared_ptr<bool> alive_marker_{std::make_shared<bool>(true)};
 
   MessageHandler data_handler_{nullptr};
+  BatchMessageHandler data_batch_handler_{nullptr};
   ConnectionHandler connect_handler_{nullptr};
   ConnectionHandler disconnect_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
   MessageHandler message_handler_{nullptr};
+  BatchMessageHandler message_batch_handler_{nullptr};
 
   std::unique_ptr<framer::IFramer> framer_{nullptr};
 
-  bool auto_start_ = false;
+  // Batching logic
+  std::vector<MessageContext> data_batch_queue_;
+  std::vector<MessageContext> message_batch_queue_;
+  std::unique_ptr<boost::asio::steady_timer> batch_timer_;
+  size_t max_batch_size_ = 100;
+  std::chrono::milliseconds max_batch_latency_{1};
+
+  std::atomic<bool> auto_start_ = false;
   std::chrono::milliseconds retry_interval_{3000};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
@@ -94,8 +106,47 @@ struct TcpClient::Impl {
     pending_promises_.clear();
   }
 
+  void flush_batches() {
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+    if (!data_batch_queue_.empty()) {
+      auto handler = data_batch_handler_;
+      auto batch = std::move(data_batch_queue_);
+      data_batch_queue_.clear();
+      if (handler) {
+        lock.unlock();
+        handler(batch);
+        lock.lock();
+      }
+    }
+    if (!message_batch_queue_.empty()) {
+      auto handler = message_batch_handler_;
+      auto batch = std::move(message_batch_queue_);
+      message_batch_queue_.clear();
+      if (handler) {
+        lock.unlock();
+        handler(batch);
+        lock.lock();
+      }
+    }
+    if (batch_timer_) {
+      batch_timer_->cancel();
+    }
+  }
+
+  void schedule_batch_timer() {
+    if (!batch_timer_) return;
+    batch_timer_->expires_after(max_batch_latency_);
+    batch_timer_->async_wait(
+        [this, weak_alive = std::weak_ptr<bool>(alive_marker_)](const boost::system::error_code& ec) {
+          if (ec) return;
+          auto alive = weak_alive.lock();
+          if (!alive) return;
+          flush_batches();
+        });
+  }
+
   std::future<bool> start() {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
       std::promise<bool> p;
       p.set_value(true);
@@ -104,7 +155,7 @@ struct TcpClient::Impl {
     std::promise<bool> p;
     auto f = p.get_future();
     pending_promises_.push_back(std::move(p));
-    if (started_) return f;
+    if (started_.load()) return f;
 
     if (!channel_) {
       config::TcpClientConfig config;
@@ -116,9 +167,10 @@ struct TcpClient::Impl {
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
     }
-    started_ = true;
+
+    started_.store(true);
     channel_->start();
-    if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+    if (use_external_context_.load() && manage_external_context_.load() && !external_thread_.joinable()) {
       if (external_ioc_ && external_ioc_->stopped()) {
         external_ioc_->restart();
       }
@@ -141,22 +193,24 @@ struct TcpClient::Impl {
   void stop() {
     bool should_join = false;
     {
-      std::unique_lock<std::mutex> lock(mutex_);
+      std::unique_lock<std::shared_mutex> lock(mutex_);
       if (!started_.load()) {
         fulfill_all_locked(false);
         return;
       }
-      started_ = false;
+      started_.store(false);
+      if (batch_timer_) {
+        batch_timer_->cancel();
+        batch_timer_.reset();
+      }
       if (channel_) {
         channel_->on_bytes(nullptr);
         channel_->on_state(nullptr);
-        // RELEASE LOCK before channel_->stop(): stop() may trigger callbacks
-        // (e.g. on_state -> fulfill_all_locked) that try to acquire mutex_.
         lock.unlock();
         channel_->stop();
         lock.lock();
       }
-      if (use_external_context_ && manage_external_context_) {
+      if (use_external_context_.load() && manage_external_context_.load()) {
         if (work_guard_) work_guard_.reset();
         if (external_ioc_) external_ioc_->stop();
         should_join = true;
@@ -169,12 +223,13 @@ struct TcpClient::Impl {
       } catch (...) {
       }
     }
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     channel_.reset();
     if (framer_) framer_->reset();
   }
 
   bool send(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
       channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
@@ -183,32 +238,44 @@ struct TcpClient::Impl {
     return false;
   }
 
-  bool connected() const { return channel_ && channel_->is_connected(); }
+  bool connected() const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    return channel_ && channel_->is_connected();
+  }
 
   void setup_internal_handlers() {
     if (!channel_) return;
 
+    batch_timer_ = std::make_unique<boost::asio::steady_timer>(channel_->get_executor());
+
     std::weak_ptr<bool> weak_alive = alive_marker_;
 
-    // Explicitly do not use try-catch here to allow exceptions from handlers
-    // to propagate to transport layer for error handling (e.g., auto-reconnect)
     channel_->on_bytes([this, weak_alive](memory::ConstByteSpan data) {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
-      // 1. Raw data handler
-      MessageHandler data_handler;
-      {
-        std::lock_guard<std::mutex> lock(mutex_);
-        data_handler = data_handler_;
-      }
-      if (data_handler) {
-        std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
-        data_handler(MessageContext(0, std::move(str_data)));
+      std::unique_lock<std::shared_mutex> lock(mutex_);
+      if (data_batch_handler_) {
+        data_batch_queue_.emplace_back(0, memory::SafeDataBuffer(data));
+        if (data_batch_queue_.size() >= max_batch_size_) {
+          auto handler = data_batch_handler_;
+          auto batch = std::move(data_batch_queue_);
+          data_batch_queue_.clear();
+          lock.unlock();
+          handler(batch);
+        } else if (data_batch_queue_.size() == 1) {
+          schedule_batch_timer();
+        }
+        return;
       }
 
-      // 2. Framer integration
-      std::lock_guard<std::mutex> lock(mutex_);
+      MessageHandler handler = data_handler_;
+      if (handler) {
+        lock.unlock();
+        handler(MessageContext(0, memory::SafeDataBuffer(data)));
+        lock.lock();
+      }
+
       if (framer_) {
         framer_->push_bytes(data);
       }
@@ -224,14 +291,14 @@ struct TcpClient::Impl {
 
       if (state == base::LinkState::Connected) {
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::unique_lock<std::shared_mutex> lock(mutex_);
           fulfill_all_locked(true);
           connect_handler = connect_handler_;
         }
         if (connect_handler) connect_handler(ConnectionContext(0));
       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::unique_lock<std::shared_mutex> lock(mutex_);
           fulfill_all_locked(false);
           if (state == base::LinkState::Closed) {
             disconnect_handler = disconnect_handler_;
@@ -258,31 +325,47 @@ struct TcpClient::Impl {
     });
   }
 
-  // Attach the stored message_handler_ to framer_->on_message().
-  // Must be called with mutex_ already held.
   void attach_framer_callback() {
     if (!framer_) return;
     framer_->on_message([this](memory::ConstByteSpan msg) {
-      MessageHandler handler;
-      {
-        std::lock_guard<std::mutex> lock(mutex_);
-        handler = message_handler_;
+      std::unique_lock<std::shared_mutex> lock(mutex_);
+      if (message_batch_handler_) {
+        message_batch_queue_.emplace_back(0, memory::SafeDataBuffer(msg));
+        if (message_batch_queue_.size() >= max_batch_size_) {
+          auto handler = message_batch_handler_;
+          auto batch = std::move(message_batch_queue_);
+          message_batch_queue_.clear();
+          lock.unlock();
+          handler(batch);
+        } else if (message_batch_queue_.size() == 1) {
+          schedule_batch_timer();
+        }
+        return;
       }
+
+      MessageHandler handler = message_handler_;
       if (handler) {
-        handler(MessageContext(0, base::safe_convert::uint8_to_string(msg.data(), msg.size())));
+        lock.unlock();
+        handler(MessageContext(0, memory::SafeDataBuffer(msg)));
       }
     });
   }
 
   void set_framer(std::unique_ptr<framer::IFramer> framer) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     framer_ = std::move(framer);
-    if (framer_ && message_handler_) attach_framer_callback();
+    if (framer_ && (message_handler_ || message_batch_handler_)) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     message_handler_ = std::move(handler);
+    if (framer_) attach_framer_callback();
+  }
+
+  void on_message_batch(BatchMessageHandler handler) {
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+    message_batch_handler_ = std::move(handler);
     if (framer_) attach_framer_callback();
   }
 };
@@ -290,7 +373,9 @@ struct TcpClient::Impl {
 TcpClient::TcpClient(const std::string& h, uint16_t p) : impl_(std::make_unique<Impl>(h, p)) {}
 TcpClient::TcpClient(const std::string& h, uint16_t p, std::shared_ptr<boost::asio::io_context> ioc)
     : impl_(std::make_unique<Impl>(h, p, ioc)) {}
-TcpClient::TcpClient(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {}
+TcpClient::TcpClient(std::shared_ptr<interface::Channel> ch) : impl_(std::make_unique<Impl>(ch)) {
+  impl_->setup_internal_handlers();
+}
 TcpClient::~TcpClient() = default;
 
 TcpClient::TcpClient(TcpClient&&) noexcept = default;
@@ -303,22 +388,27 @@ bool TcpClient::send_line(std::string_view line) { return impl_->send(std::strin
 bool TcpClient::connected() const { return get_impl()->connected(); }
 
 ChannelInterface& TcpClient::on_data(MessageHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler_ = std::move(h);
   return *this;
 }
+ChannelInterface& TcpClient::on_data_batch(BatchMessageHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->data_batch_handler_ = std::move(h);
+  return *this;
+}
 ChannelInterface& TcpClient::on_connect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connect_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_disconnect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->disconnect_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_error(ErrorHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(h);
   return *this;
 }
@@ -331,14 +421,19 @@ ChannelInterface& TcpClient::on_message(MessageHandler h) {
   impl_->on_message(std::move(h));
   return *this;
 }
+ChannelInterface& TcpClient::on_message_batch(BatchMessageHandler h) {
+  impl_->on_message_batch(std::move(h));
+  return *this;
+}
 
 ChannelInterface& TcpClient::auto_start(bool m) {
-  impl_->auto_start_ = m;
-  if (impl_->auto_start_ && !impl_->started_.load()) start();
+  impl_->auto_start_.store(m);
+  if (impl_->auto_start_.load() && !impl_->started_.load()) start();
   return *this;
 }
 
 TcpClient& TcpClient::retry_interval(std::chrono::milliseconds i) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->retry_interval_ = i;
   if (impl_->channel_) {
     auto transport_client = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
@@ -348,15 +443,17 @@ TcpClient& TcpClient::retry_interval(std::chrono::milliseconds i) {
 }
 
 TcpClient& TcpClient::max_retries(int m) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->max_retries_ = m;
   return *this;
 }
 TcpClient& TcpClient::connection_timeout(std::chrono::milliseconds t) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connection_timeout_ = t;
   return *this;
 }
 TcpClient& TcpClient::manage_external_context(bool m) {
-  impl_->manage_external_context_ = m;
+  impl_->manage_external_context_.store(m);
   return *this;
 }
 

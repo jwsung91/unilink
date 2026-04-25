@@ -35,6 +35,7 @@ namespace wrapper {
 class UNILINK_API ServerInterface {
  public:
   using MessageHandler = std::function<void(const MessageContext&)>;
+  using BatchMessageHandler = std::function<void(const std::vector<MessageContext>&)>;
   using ConnectionHandler = std::function<void(const ConnectionContext&)>;
   using ErrorHandler = std::function<void(const ErrorContext&)>;
   using FramerFactory = std::function<std::unique_ptr<framer::IFramer>()>;
@@ -66,6 +67,10 @@ class UNILINK_API ServerInterface {
   virtual ServerInterface& on_connect(ConnectionHandler handler) = 0;
   virtual ServerInterface& on_disconnect(ConnectionHandler handler) = 0;
   virtual ServerInterface& on_data(MessageHandler handler) = 0;
+
+  /** @brief Register a callback for batched data reception */
+  virtual ServerInterface& on_data_batch(BatchMessageHandler handler) = 0;
+
   virtual ServerInterface& on_error(ErrorHandler handler) = 0;
 
   /**
@@ -79,6 +84,9 @@ class UNILINK_API ServerInterface {
    * @param handler callback taking MessageContext (where data is the framed payload).
    */
   virtual ServerInterface& on_message(MessageHandler handler) = 0;
+
+  /** @brief Register a callback for batched framed message reception */
+  virtual ServerInterface& on_message_batch(BatchMessageHandler handler) = 0;
 
   // Management
   virtual ServerInterface& auto_start(bool manage = true) = 0;
