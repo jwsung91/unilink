@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-#include <chrono>
 #include <iostream>
-#include <string>
 
 #include "unilink/unilink.hpp"
 
-using namespace unilink;
-using namespace std::chrono_literals;
+int main(int argc, char** argv) {
+  uint16_t port = (argc > 1) ? static_cast<uint16_t>(std::stoi(argv[1])) : 9000;
 
-int main() {
-  // Setup UDP receiver on port 9000
   auto receiver =
-      udp_client(9000)
-          .on_data([](const unilink::MessageContext& ctx) { std::cout << "Received UDP: " << ctx.data() << std::endl; })
+      unilink::udp_client(port)
+          .on_data([](const unilink::MessageContext& ctx) { std::cout << "[recv] " << ctx.data() << "\n"; })
+          .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[error] " << ctx.message() << "\n"; })
           .auto_start(true)
           .build();
 
-  std::cout << "UDP Receiver listening on port 9000. Press Enter to stop..." << std::endl;
+  std::cout << "UDP receiver listening on port " << port << ". Press Enter to stop.\n";
   std::cin.get();
 
   receiver->stop();

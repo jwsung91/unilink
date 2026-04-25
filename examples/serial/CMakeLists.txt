@@ -12,6 +12,6 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# Serial communication examples
-add_subdirectory(echo)
-add_subdirectory(chat)
+add_executable(serial_echo echo.cc)
+target_link_libraries(serial_echo PRIVATE unilink::unilink)
+unilink_configure_executable(serial_echo)

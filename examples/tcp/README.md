@@ -1,88 +1,41 @@
-# TCP Communication Examples
+# TCP Examples
 
-TCP examples using the current public API.
+## Binaries
 
-## Included Examples
+| Binary | Description |
+|--------|-------------|
+| `tcp_echo_server` | Accepts unlimited clients, echoes each message back to the sender |
+| `tcp_echo_client` | Connects to a server and enters an interactive send/receive loop |
+| `tcp_broadcast_server` | Accepts unlimited clients, broadcasts every message to all of them |
 
-- `single-echo/`: Single-client echo server and client
-- `single-chat/`: Single-client chat server and client
-- `multi-chat/`: Multi-client chat server and client
-
-## Common Usage
-
-```bash
-# Server
-./server_binary <port>
-
-# Client
-./client_binary <host> <port>
-```
-
-Most binaries also provide sensible defaults when arguments are omitted:
-
-- Server examples default to port `8080`
-- Client examples default to `127.0.0.1:8080`
-
-## Quick Start
-
-### Echo
+## Usage
 
 ```bash
-# Terminal 1
-./echo_tcp_server
+# Echo pair (default port 8080)
+./tcp_echo_server [port]
+./tcp_echo_client [host] [port]
 
-# Terminal 2
-./echo_tcp_client
+# Broadcast server — connect multiple clients to see messages relayed
+./tcp_broadcast_server [port]
+./tcp_echo_client 127.0.0.1 8080   # connect as many as you like
 ```
 
-### Single-Client Chat
+Type messages in any client terminal. `/quit` disconnects.
 
-```bash
-# Terminal 1
-./chat_tcp_server
+## API Patterns
 
-# Terminal 2
-./chat_tcp_client
-```
-
-### Multi-Client Chat
-
-```bash
-# Terminal 1
-./multi_chat_tcp_server
-
-# Terminal 2
-./multi_chat_tcp_client
-
-# Terminal 3
-./multi_chat_tcp_client
-```
-
-## Notes
-
-- These examples use the builder and wrapper API from `unilink/unilink.hpp`.
-- `single-echo` uses `.single_client()` and targeted replies with `send_to(...)`.
-- `single-chat` is intentionally single-client.
-- `multi-chat` uses `.unlimited_clients()` and `broadcast(...)`.
+- `unlimited_clients()` — allow any number of concurrent connections
+- `send_to(client_id, data)` — reply to a specific client (echo server)
+- `broadcast(data)` — send to all connected clients (broadcast server)
+- `start().get()` — block until the server is listening or failed
 
 ## Troubleshooting
 
-### Port Already in Use
-
 ```bash
-netstat -tulpn | grep :9000
-# or
-lsof -i :9000
+# Check if a port is in use
+ss -tlnp | grep :8080
+
+# Run on a different port
+./tcp_echo_server 9001
+./tcp_echo_client 127.0.0.1 9001
 ```
-
-Run the server on another port if needed:
-
-```bash
-./echo_tcp_server 9001
-```
-
-### Connection Refused
-
-- Verify the server is already running
-- Check the client host and port
-- Confirm firewall settings for remote connections

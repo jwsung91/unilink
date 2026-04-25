@@ -1,41 +1,27 @@
-# UDS Echo Examples
+# UDS Examples (Unix Domain Socket)
 
-Unix domain socket examples using the current wrapper and builder API.
+Unix domain socket examples for local IPC. Requires Linux or macOS.
 
 ## Binaries
 
-- `echo_uds_server`
-- `echo_uds_client`
+| Binary | Description |
+|--------|-------------|
+| `uds_echo_server` | Accepts unlimited clients, echoes each message back to the sender |
+| `uds_echo_client` | Connects to a UDS server and enters an interactive send/receive loop |
 
 ## Usage
 
 ```bash
-./echo_uds_server [socket_path]
-./echo_uds_client [socket_path]
+# Terminal 1
+./uds_echo_server [socket_path]
+
+# Terminal 2
+./uds_echo_client [socket_path]
 ```
 
-If `socket_path` is omitted, both examples use `/tmp/unilink_echo.sock`.
-
-## Quick Start
-
-**Terminal 1**
-
-```bash
-cd examples/uds
-./echo_uds_server
-```
-
-**Terminal 2**
-
-```bash
-cd examples/uds
-./echo_uds_client
-```
-
-Type lines in the client terminal. The server prints each message and echoes it back to the same client.
+Default socket path: `/tmp/unilink_echo.sock`. Type messages in the client; `/quit` disconnects.
 
 ## Notes
 
-- These examples target Unix-like platforms where UDS is available.
-- The source uses `unilink::uds_server(...)` and `unilink::uds_client(...)` from `unilink/unilink.hpp`.
-- If an old socket file is left behind after a crash, remove it before restarting the server.
+- If a stale socket file is left behind after a crash, remove it before restarting the server.
+- The API mirrors the TCP examples: `uds_server(path)` / `uds_client(path)` instead of `tcp_server(port)` / `tcp_client(host, port)`.

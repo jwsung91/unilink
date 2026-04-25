@@ -212,13 +212,13 @@ set(_unilink_doc_extract_script
     ${CMAKE_SOURCE_DIR}/docs/scripts/extract_doc_snippet.py
 )
 set(_unilink_doc_snippets
-    "tutorial_getting_started_client|docs/tutorials/01_getting_started.md"
-    "tutorial_tcp_server_echo|docs/tutorials/02_tcp_server.md"
-    "tutorial_uds_server|docs/tutorials/03_uds_communication.md"
-    "tutorial_uds_client|docs/tutorials/03_uds_communication.md"
-    "tutorial_serial_terminal|docs/tutorials/04_serial_communication.md"
-    "tutorial_udp_receiver|docs/tutorials/05_udp_communication.md"
-    "tutorial_udp_sender|docs/tutorials/05_udp_communication.md"
+    "tutorial_getting_started_client|docs/user/tutorials/01_getting_started.md"
+    "tutorial_tcp_server_echo|docs/user/tutorials/02_tcp_server.md"
+    "tutorial_uds_server|docs/user/tutorials/03_uds_communication.md"
+    "tutorial_uds_client|docs/user/tutorials/03_uds_communication.md"
+    "tutorial_serial_terminal|docs/user/tutorials/04_serial_communication.md"
+    "tutorial_udp_receiver|docs/user/tutorials/05_udp_communication.md"
+    "tutorial_udp_sender|docs/user/tutorials/05_udp_communication.md"
 )
 
 set(_unilink_doc_targets)

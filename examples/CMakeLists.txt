@@ -14,10 +14,7 @@
 
 project(unilink_examples)
 
-# Add subdirectories
-add_subdirectory(tutorials)
-add_subdirectory(common)
-add_subdirectory(serial)
 add_subdirectory(tcp)
 add_subdirectory(udp)
 add_subdirectory(uds)
+add_subdirectory(serial)

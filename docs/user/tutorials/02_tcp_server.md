@@ -139,13 +139,10 @@ For tutorial simplicity, the example above uses `unlimited_clients()`.
 
 ## Use The Full Example Programs For More
 
-The repository already includes maintained tutorial examples:
+The repository includes ready-to-build examples:
 
-- [examples/tutorials/tcp_server/echo_server.cpp](../../examples/tutorials/tcp_server/echo_server.cpp)
-- [examples/tutorials/tcp_server/chat_server.cpp](../../examples/tutorials/tcp_server/chat_server.cpp)
-- [examples/tutorials/README.md](../../../examples/tutorials/README.md)
-
-Use the chat example when you want a larger stateful server example with nicknames and broadcast behavior.
+- [examples/tcp/echo_server.cc](../../../examples/tcp/echo_server.cc) — echo back to individual clients
+- [examples/tcp/broadcast_server.cc](../../../examples/tcp/broadcast_server.cc) — broadcast to all connected clients
 
 ---
 
