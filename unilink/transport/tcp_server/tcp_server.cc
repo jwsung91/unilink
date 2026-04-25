@@ -475,6 +475,8 @@ bool TcpServer::is_connected() const {
   return impl->current_session_ && impl->current_session_->alive();
 }
 
+boost::asio::any_io_executor TcpServer::get_executor() { return impl_->ioc_.get_executor(); }
+
 void TcpServer::async_write_copy(memory::ConstByteSpan data) {
   auto impl = get_impl();
   if (impl->stopping_.load()) return;

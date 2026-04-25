@@ -19,6 +19,7 @@
 #include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
+#include <boost/asio/steady_timer.hpp>
 #include <chrono>
 #include <mutex>
 #include <shared_mutex>
@@ -62,9 +63,18 @@ struct TcpServer::Impl {
   ConnectionHandler on_client_connect_{nullptr};
   ConnectionHandler on_disconnect_{nullptr};
   MessageHandler on_data_{nullptr};
+  BatchMessageHandler data_batch_handler_{nullptr};
   ErrorHandler on_error_{nullptr};
   FramerFactory framer_factory_{nullptr};
   MessageHandler on_message_{nullptr};
+  BatchMessageHandler message_batch_handler_{nullptr};
+
+  // Batching logic
+  std::vector<MessageContext> data_batch_queue_;
+  std::vector<MessageContext> message_batch_queue_;
+  std::unique_ptr<boost::asio::steady_timer> batch_timer_;
+  size_t max_batch_size_ = 100;
+  std::chrono::milliseconds max_batch_latency_{1};
 
   std::unordered_map<ClientId, std::unique_ptr<framer::IFramer>> framers_;
   // Cached transport pointer — set once in start(), avoids repeated dynamic_cast.
@@ -129,6 +139,45 @@ struct TcpServer::Impl {
     pending_promises_.clear();
   }
 
+  void flush_batches() {
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+    if (!data_batch_queue_.empty()) {
+      auto handler = data_batch_handler_;
+      auto batch = std::move(data_batch_queue_);
+      data_batch_queue_.clear();
+      if (handler) {
+        lock.unlock();
+        handler(batch);
+        lock.lock();
+      }
+    }
+    if (!message_batch_queue_.empty()) {
+      auto handler = message_batch_handler_;
+      auto batch = std::move(message_batch_queue_);
+      message_batch_queue_.clear();
+      if (handler) {
+        lock.unlock();
+        handler(batch);
+        lock.lock();
+      }
+    }
+    if (batch_timer_) {
+      batch_timer_->cancel();
+    }
+  }
+
+  void schedule_batch_timer() {
+    if (!batch_timer_) return;
+    batch_timer_->expires_after(max_batch_latency_);
+    batch_timer_->async_wait(
+        [this, weak_alive = std::weak_ptr<bool>(alive_marker_)](const boost::system::error_code& ec) {
+          if (ec) return;
+          auto alive = weak_alive.lock();
+          if (!alive) return;
+          flush_batches();
+        });
+  }
+
   std::future<bool> start() {
     std::unique_lock<std::shared_mutex> lock(mutex_);
     if (is_listening_.load()) {
@@ -190,6 +239,10 @@ struct TcpServer::Impl {
         fulfill_all_locked(false);
         return;
       }
+      if (batch_timer_) {
+        batch_timer_->cancel();
+        batch_timer_.reset();
+      }
       if (channel_) {
         channel_->on_bytes(nullptr);
         channel_->on_state(nullptr);
@@ -223,6 +276,11 @@ struct TcpServer::Impl {
 
   void setup_internal_handlers() {
     if (!channel_) return;
+
+    if (external_ioc_) {
+      batch_timer_ = std::make_unique<boost::asio::steady_timer>(external_ioc_->get_executor());
+    }
+
     std::weak_ptr<bool> weak_alive = alive_marker_;
     auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
     if (transport_server) {
@@ -237,14 +295,25 @@ struct TcpServer::Impl {
             auto framer = framer_factory_();
             if (framer) {
               framer->on_message([this, id](memory::ConstByteSpan msg) {
-                MessageHandler on_message_handler;
-                {
-                  std::shared_lock<std::shared_mutex> lock(mutex_);
-                  on_message_handler = on_message_;
+                std::unique_lock<std::shared_mutex> lock(mutex_);
+                if (message_batch_handler_) {
+                  message_batch_queue_.emplace_back(id, memory::SafeDataBuffer(msg));
+                  if (message_batch_queue_.size() >= max_batch_size_) {
+                    auto handler = message_batch_handler_;
+                    auto batch = std::move(message_batch_queue_);
+                    message_batch_queue_.clear();
+                    lock.unlock();
+                    handler(batch);
+                  } else if (message_batch_queue_.size() == 1) {
+                    schedule_batch_timer();
+                  }
+                  return;
                 }
+
+                MessageHandler on_message_handler = on_message_;
                 if (on_message_handler) {
-                  std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
-                  on_message_handler(MessageContext(id, std::move(str_msg)));
+                  lock.unlock();
+                  on_message_handler(MessageContext(id, memory::SafeDataBuffer(msg)));
                 }
               });
               framers_[id] = std::move(framer);
@@ -258,15 +327,27 @@ struct TcpServer::Impl {
         auto alive = weak_alive.lock();
         if (!alive) return;
 
-        std::string data(reinterpret_cast<const char*>(data_span.data()), data_span.size());
-        MessageHandler handler;
-        {
-          std::shared_lock<std::shared_mutex> lock(mutex_);
-          handler = on_data_;
+        std::unique_lock<std::shared_mutex> lock(mutex_);
+        if (data_batch_handler_) {
+          data_batch_queue_.emplace_back(id, memory::SafeDataBuffer(data_span));
+          if (data_batch_queue_.size() >= max_batch_size_) {
+            auto handler = data_batch_handler_;
+            auto batch = std::move(data_batch_queue_);
+            data_batch_queue_.clear();
+            lock.unlock();
+            handler(batch);
+          } else if (data_batch_queue_.size() == 1) {
+            schedule_batch_timer();
+          }
+        } else {
+          MessageHandler handler = on_data_;
+          if (handler) {
+            lock.unlock();
+            handler(MessageContext(id, memory::SafeDataBuffer(data_span)));
+            lock.lock();
+          }
         }
-        if (handler) handler(MessageContext(id, std::move(data)));
 
-        std::shared_lock<std::shared_mutex> lock(mutex_);
         auto it = framers_.find(id);
         if (it != framers_.end()) {
           it->second->push_bytes(data_span);
@@ -352,6 +433,11 @@ ServerInterface& TcpServer::on_data(MessageHandler h) {
   impl_->on_data_ = std::move(h);
   return *this;
 }
+ServerInterface& TcpServer::on_data_batch(BatchMessageHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->data_batch_handler_ = std::move(h);
+  return *this;
+}
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_error_ = std::move(h);
@@ -367,6 +453,12 @@ ServerInterface& TcpServer::framer(FramerFactory factory) {
 ServerInterface& TcpServer::on_message(MessageHandler handler) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
+  return *this;
+}
+
+ServerInterface& TcpServer::on_message_batch(BatchMessageHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->message_batch_handler_ = std::move(h);
   return *this;
 }
 

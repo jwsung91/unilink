@@ -241,6 +241,8 @@ void UdsServer::stop() {
 
 bool UdsServer::is_connected() const { return impl_->state_.state() == base::LinkState::Listening; }
 
+boost::asio::any_io_executor UdsServer::get_executor() { return impl_->ioc_->get_executor(); }
+
 void UdsServer::async_write_copy(memory::ConstByteSpan data) {
   auto shared_data = std::make_shared<const std::vector<uint8_t>>(data.begin(), data.end());
   async_write_shared(shared_data);

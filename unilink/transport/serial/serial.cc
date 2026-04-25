@@ -474,6 +474,8 @@ void Serial::stop() {
 
 bool Serial::is_connected() const { return get_impl()->opened_.load(); }
 
+boost::asio::any_io_executor Serial::get_executor() { return impl_->strand_; }
+
 void Serial::async_write_copy(memory::ConstByteSpan data) {
   auto impl = get_impl();
   if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error))
