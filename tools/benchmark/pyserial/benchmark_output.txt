@@ -1,0 +1,53 @@
+============================================================
+--- 1. Progressive Latency Test (Ping-Pong, 4 bytes/msg) ---
+Messages   | pyserial (sec)       | unilink (sec)       
+------------------------------------------------------------
+10         | 0.0019               | 0.0022              
+50         | 0.0075               | 0.0109              
+100        | 0.0116               | 0.0175              
+500        | 0.0585               | 0.0853              
+1000       | 0.1087               | 0.1674              
+
+--- 2. Progressive Throughput Test (Streaming, 1KB/chunk) ---
+Chunks     | pyserial (sec)       | unilink (sec)       
+------------------------------------------------------------
+10         | 0.0108               | 0.0109              
+50         | 0.0541               | 0.0546              
+100        | 0.1084               | 0.1094              
+500        | 0.5439               | 0.5438              
+2026-04-25 18:53:41.959 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:41.959 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:41.959 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:41.960 [INFO] [serial] [connect] Device opened: /dev/pts/7
+2026-04-25 18:53:42.875 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:42.876 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:42.876 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:42.876 [INFO] [serial] [connect] Device opened: /dev/pts/7
+2026-04-25 18:53:43.805 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:43.805 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:43.805 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:43.805 [INFO] [serial] [connect] Device opened: /dev/pts/7
+2026-04-25 18:53:44.787 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:44.788 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:44.788 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:44.788 [INFO] [serial] [connect] Device opened: /dev/pts/7
+2026-04-25 18:53:45.888 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:45.888 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:45.889 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:45.889 [INFO] [serial] [connect] Device opened: /dev/pts/7
+2026-04-25 18:53:46.973 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:46.973 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:46.973 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:46.973 [INFO] [serial] [connect] Device opened: /dev/pts/7
+2026-04-25 18:53:47.945 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:47.945 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:47.945 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:47.945 [INFO] [serial] [connect] Device opened: /dev/pts/7
+2026-04-25 18:53:49.014 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:49.014 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:49.015 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:49.015 [INFO] [serial] [connect] Device opened: /dev/pts/7
+2026-04-25 18:53:50.575 [INFO] [serial] [start] Starting device: /dev/pts/6
+2026-04-25 18:53:50.575 [INFO] [serial] [connect] Device opened: /dev/pts/6
+2026-04-25 18:53:50.575 [INFO] [serial] [start] Starting device: /dev/pts/7
+2026-04-25 18:53:50.575 [INFO] [serial] [connect] Device opened: /dev/pts/7
