@@ -1,48 +1,57 @@
-# Unilink Documentation Index
+# Unilink Documentation
 
-This index is the stable entry point for the handwritten documentation in `docs/`. It is intentionally kept lightweight so version bumps, option changes, and test-count changes do not require editing this page.
+Choose the guide that matches your role.
 
-## Start Here
+---
 
-1. [Quick Start Guide](guides/core/quickstart.md)
-2. [Installation Guide](guides/setup/installation.md)
-3. [API Guide](reference/api_guide.md)
-4. [Implementation Status](implementation_status.md)
-5. [Build Guide](guides/setup/build_guide.md)
+## 📖 For Library Users
 
-## Core Guides
+You are building an application using unilink.
+
+→ **[User Guide](user/index.md)**
 
 | Document | What it covers |
 |----------|----------------|
-| [Build Guide](guides/setup/build_guide.md) | Actual CMake options and build profiles |
-| [Requirements](guides/setup/requirements.md) | Platform and dependency expectations |
-| [Best Practices](guides/core/best_practices.md) | Runtime usage patterns and guardrails |
-| [Troubleshooting](guides/core/troubleshooting.md) | Common failures and debugging steps |
-| [Testing](guides/core/testing.md) | Running tests and understanding coverage |
-| [Python Bindings](guides/core/python_bindings.md) | `unilink` package usage and current scope |
-| [Performance](guides/advanced/performance.md) | Tuning and async logging considerations |
+| [Quick Start](user/quickstart.md) | First working client in minutes |
+| [Installation](user/installation.md) | vcpkg, source, release packages |
+| [Requirements](user/requirements.md) | Platform and dependency expectations |
+| [API Reference](user/api_guide.md) | Full public API: builders, wrappers, callbacks |
+| [Best Practices](user/best_practices.md) | Recommended usage patterns |
+| [Troubleshooting](user/troubleshooting.md) | Common failures and debugging steps |
+| [Python Bindings](user/python_bindings.md) | Python API guide |
+| [Performance](user/performance.md) | Build and runtime tuning |
 
-## Tutorials
+**Tutorials:**
 
 | Tutorial | Focus |
 |----------|-------|
-| [Getting Started](tutorials/01_getting_started.md) | First TCP client |
-| [TCP Server](tutorials/02_tcp_server.md) | Server lifecycle and callbacks |
-| [UDS Communication](tutorials/03_uds_communication.md) | Local IPC with Unix domain sockets |
-| [Serial Communication](tutorials/04_serial_communication.md) | Device I/O and virtual-port testing |
-| [UDP Communication](tutorials/05_udp_communication.md) | Connectionless send/receive workflow |
+| [Getting Started](user/tutorials/01_getting_started.md) | First TCP client |
+| [TCP Server](user/tutorials/02_tcp_server.md) | Server lifecycle and callbacks |
+| [UDS Communication](user/tutorials/03_uds_communication.md) | Local IPC with Unix domain sockets |
+| [Serial Communication](user/tutorials/04_serial_communication.md) | Device I/O and virtual-port testing |
+| [UDP Communication](user/tutorials/05_udp_communication.md) | Connectionless send/receive workflow |
 
-Tutorial companion material is split between `examples/tutorials/` and the protocol-specific example directories under `examples/serial/`, `examples/udp/`, and `examples/uds/`.
+---
 
-## Architecture Notes
+## 🔧 For Contributors
 
-| Document | Focus |
-|----------|-------|
-| [Architecture Overview](architecture/README.md) | Layers, responsibilities, design patterns |
-| [Runtime Behavior](architecture/runtime_behavior.md) | Lifecycle, retries, callback behavior |
-| [Memory Safety](architecture/memory_safety.md) | Ownership and buffer handling rules |
-| [Channel Contract](architecture/channel_contract.md) | Transport-layer contract and stop semantics |
-| [Wrapper Contract](architecture/wrapper_contract.md) | Wrapper lifecycle and callback guarantees |
+You are developing or extending unilink itself.
+
+→ **[Contributor Guide](contributor/index.md)**
+
+| Document | What it covers |
+|----------|----------------|
+| [Build Guide](contributor/build_guide.md) | CMake options, build profiles, sanitizers |
+| [Testing](contributor/testing.md) | Running tests, CI integration |
+| [Implementation Status](contributor/implementation_status.md) | Verified scope and known gaps |
+| [Test Structure](contributor/test_structure.md) | Test organization and coverage |
+| [Architecture Overview](contributor/architecture/README.md) | Layers, responsibilities, design patterns |
+| [Runtime Behavior](contributor/architecture/runtime_behavior.md) | Lifecycle, retries, callback behavior |
+| [Memory Safety](contributor/architecture/memory_safety.md) | Ownership and buffer handling rules |
+| [Channel Contract](contributor/architecture/channel_contract.md) | Transport-layer contract and stop semantics |
+| [Wrapper Contract](contributor/architecture/wrapper_contract.md) | Wrapper lifecycle and callback guarantees |
+
+---
 
 ## Examples and Tests
 
@@ -52,13 +61,6 @@ Tutorial companion material is split between `examples/tutorials/` and the proto
 - [Serial Examples](../examples/serial/README.md)
 - [UDP Examples](../examples/udp/README.md)
 - [UDS Examples](../examples/uds/README.md)
-- [Test Overview](test_structure.md)
 - [Top-level Test Notes](../test/README.md)
-
-## Notes For Maintainers
-
-- Keep this page aligned with actual files under `docs/`.
-- Prefer linking to existing files over placeholder topics.
-- Do not duplicate release-specific values here. Version, build defaults, and test status belong in source-of-truth files or generated output.
 
 [Back to Main README](../README.md)

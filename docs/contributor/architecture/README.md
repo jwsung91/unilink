@@ -2,7 +2,7 @@
 
 Comprehensive overview of unilink's architecture and design principles.
 
-**Scope note:** This section mixes public high-level concepts with internal implementation details. For exact application-facing APIs, prefer `docs/reference/api_guide.md`. For transport-internal contracts, prefer `docs/architecture/channel_contract.md`. For wrapper-layer behavioral guarantees, prefer `docs/architecture/wrapper_contract.md`.
+**Scope note:** This section mixes public high-level concepts with internal implementation details. For exact application-facing APIs, prefer `docs/user/api_guide.md`. For transport-internal contracts, prefer `docs/contributor/architecture/channel_contract.md`. For wrapper-layer behavioral guarantees, prefer `docs/contributor/architecture/wrapper_contract.md`.
 
 ---
 
@@ -730,4 +730,4 @@ Unilink's architecture emphasizes:
 
 - [Runtime Behavior](runtime_behavior.md)
 - [Memory Safety](memory_safety.md)
-- [Performance Guide](../guides/advanced/performance.md)
+- [Performance Guide](../../user/performance.md)

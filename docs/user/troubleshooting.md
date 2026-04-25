@@ -744,7 +744,7 @@ nc localhost 8080 < test_data.txt
 If you're still experiencing issues:
 
 1. **Check Examples**: Look at `examples/` directory
-2. **Read API Guide**: See `docs/reference/api_guide.md`
+2. **Read API Guide**: See `docs/user/api_guide.md`
 3. **Search Issues**: <https://github.com/jwsung91/unilink/issues>
 4. **Ask Community**: Create a new issue with:
    - Minimal reproducible example
@@ -757,5 +757,5 @@ If you're still experiencing issues:
 **See Also:**
 
 - [Best Practices](best_practices.md)
-- [Performance Guide](../advanced/performance.md)
-- [API Reference](../reference/api_guide.md)
+- [Performance Guide](performance.md)
+- [API Reference](api_guide.md)

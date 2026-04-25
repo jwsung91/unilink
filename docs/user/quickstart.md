@@ -187,10 +187,9 @@ auto server = unilink::tcp_server(8080)
 
 ## Next Steps
 
-1. **Read the API Guide**: `docs/reference/api_guide.md`
+1. **Read the API Guide**: `docs/user/api_guide.md`
 2. **Check Examples**: `examples/` directory
-3. **Run Tests**: `cd build && ctest`
-4. **View Full Docs**: `docs/html/index.html` (run `cmake --build build --target docs` first)
+3. **View Full Docs**: `docs/html/index.html` (run `cmake --build build --target docs` first)
 
 ---
 

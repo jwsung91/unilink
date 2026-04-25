@@ -15,14 +15,12 @@ Comprehensive API reference for the unilink library.
 7. [Error Handling](#error-handling)
 8. [Logging System](#logging-system)
 9. [Configuration Management](#configuration-management)
-10. [Advanced Features](#advanced-features)
 
 ---
 
 ## Builder API
 
 The Builder API is the recommended way to use unilink. It provides a fluent, chainable interface for creating communication channels.
-It utilizes the **Curiously Recurring Template Pattern (CRTP)** to ensure that method chaining returns the correct derived builder type, eliminating the need for casting.
 
 ### Core Concept
 
@@ -226,30 +224,6 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
         std::cout << "[" << device_id << "] " << ctx.data() << std::endl;
     })
     .build();
-```
-
-#### Custom Reconnect Policy (Transport Layer)
-
-If you need transport-level reconnect policy control such as `ExponentialBackoff(...)`, you can drop below the wrapper API and use the transport layer directly. This is an advanced path; the recommended public entry point remains `unilink::tcp_client(...)`.
-
-```cpp
-#include "unilink/transport/tcp_client/tcp_client.hpp"
-
-// Configure and create transport client
-unilink::config::TcpClientConfig cfg;
-cfg.host = "127.0.0.1";
-cfg.port = 1234;
-cfg.max_retries = 10;
-
-auto client = unilink::transport::TcpClient::create(cfg);
-
-// Set exponential backoff policy (1s to 30s)
-// Note: If policy is not set, default retry interval is used.
-client->set_reconnect_policy(
-    unilink::ExponentialBackoff(std::chrono::seconds(1), std::chrono::seconds(30))
-);
-
-client->start();
 ```
 
 ---
@@ -888,62 +862,6 @@ Common preset keys are populated by `unilink::config::ConfigPresets` through `Co
 
 ---
 
-## Advanced Features
-
-**Note:** `MemoryPool`, `SafeDataBuffer`, and `ThreadSafeState` are internal utilities used by unilink transports. They are not included in `unilink/unilink.hpp` and require direct header includes. The API is not subject to the same stability guarantees as the public wrapper/builder API.
-
-### Memory Pool
-
-Internal memory pool used by transports for buffer reuse.
-
-```cpp
-#include "unilink/memory/memory_pool.hpp"
-
-unilink::memory::MemoryPool pool;
-
-// Allocate from pool
-auto buffer = pool.acquire(1024);
-// ... use buffer ...
-pool.release(std::move(buffer), 1024);
-```
-
-### Safe Data Buffer
-
-Type-safe data buffer with bounds checking.
-
-```cpp
-#include "unilink/memory/safe_data_buffer.hpp"
-
-unilink::memory::SafeDataBuffer buffer("Hello");
-
-// Safe operations
-auto text = buffer.as_string();
-auto bytes = buffer.as_span();
-```
-
-### Thread-Safe State
-
-Thread-safe state management with read-write locks.
-
-```cpp
-#include "unilink/concurrency/thread_safe_state.hpp"
-
-enum class State { Idle, Running, Stopped };
-
-unilink::concurrency::ThreadSafeState<State> state(State::Idle);
-
-// Read state
-auto current = state.get_state();
-
-// Write state
-state.set_state(State::Running);
-
-// Atomic compare-and-swap
-state.compare_and_set(State::Idle, State::Running);
-```
-
----
-
 ## Best Practices
 
 ### 1. Always Handle Errors
@@ -1028,15 +946,3 @@ config.batch_size = 100;
 unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 ```
 
-### 3. Use Memory Pool for Frequent Allocations
-
-```cpp
-MemoryPool pool(buffer_size, pool_size);
-```
-
-### 4. Disable Unnecessary Features
-
-```bash
-# Build with minimal features
-cmake -DUNILINK_ENABLE_CONFIG=OFF -DUNILINK_ENABLE_MEMORY_TRACKING=OFF
-```

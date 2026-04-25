@@ -143,7 +143,7 @@ The repository already includes maintained tutorial examples:
 
 - [examples/tutorials/tcp_server/echo_server.cpp](../../examples/tutorials/tcp_server/echo_server.cpp)
 - [examples/tutorials/tcp_server/chat_server.cpp](../../examples/tutorials/tcp_server/chat_server.cpp)
-- [examples/tutorials/README.md](../../examples/tutorials/README.md)
+- [examples/tutorials/README.md](../../../examples/tutorials/README.md)
 
 Use the chat example when you want a larger stateful server example with nicknames and broadcast behavior.
 
@@ -154,8 +154,8 @@ Use the chat example when you want a larger stateful server example with nicknam
 - [UDS Communication](03_uds_communication.md)
 - [Serial Communication](04_serial_communication.md)
 - [UDP Communication](05_udp_communication.md)
-- [API Reference](../reference/api_guide.md#tcp-server)
-- [Best Practices Guide](../guides/core/best_practices.md)
+- [API Reference](../api_guide.md#tcp-server)
+- [Best Practices Guide](../best_practices.md)
 
 ---
 

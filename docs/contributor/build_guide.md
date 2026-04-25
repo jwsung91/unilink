@@ -2,7 +2,7 @@
 
 Complete guide for building `unilink` with different configurations and platforms.
 
-**Note:** For installation instructions, see [Installation Guide](installation.md).
+**Note:** For installation instructions, see [Installation Guide](../user/installation.md).
 
 ---
 
@@ -593,8 +593,8 @@ pkg-config --cflags --libs unilink
 
 ## Next Steps
 
-- [Installation Guide](installation.md) - Complete installation instructions
-- [Requirements](requirements.md) - System requirements and dependencies
-- [Performance Optimization](../advanced/performance.md) - Optimize build configuration
-- [Testing Guide](../core/testing.md) - Run tests and CI/CD integration
-- [Quick Start Guide](../core/quickstart.md) - Start using unilink
+- [Installation Guide](../user/installation.md) - Complete installation instructions
+- [Requirements](../user/requirements.md) - System requirements and dependencies
+- [Performance Optimization](../user/performance.md) - Optimize build configuration
+- [Testing Guide](testing.md) - Run tests and CI/CD integration
+- [Quick Start Guide](../user/quickstart.md) - Start using unilink

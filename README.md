@@ -38,13 +38,13 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 vcpkg install jwsung91-unilink
 ```
 
-For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/guides/setup/installation.md).
+For CMake usage, source builds, and other installation options, see the [Installation Guide](docs/user/installation.md).
 
 ## 🐍 Python Bindings
 
 Unilink provides Python bindings for all core transport families (`TcpClient`, `TcpServer`, `Serial`, `Udp`, `UdsClient`, `UdsServer`). 
 
-For a complete guide, see the **[Python Bindings Guide](docs/guides/core/python_bindings.md)**.
+For a complete guide, see the **[Python Bindings Guide](docs/user/python_bindings.md)**.
 
 ### Prerequisites
 
@@ -70,39 +70,34 @@ python3 -c "import unilink_py; print(unilink_py.__doc__)"
 
 ## 📚 Documentation
 
-The documentation is organized by learning stage, from quick start to advanced topics.
-Visit our **[Online Documentation](https://jwsung91.github.io/unilink/)** for the full modern experience with dark mode, interactive diagrams, and responsive UI.
+Documentation is split by audience. Visit our **[Online Documentation](https://jwsung91.github.io/unilink/)** for the full experience.
 
-### 🚦 Getting Started
+### 📖 For Library Users
 
-* [Quick Start Guide](docs/guides/core/quickstart.md) – Get up and running in minutes
-* [Installation Guide](docs/guides/setup/installation.md) – Package, source, and build options
-* [Build Guide](docs/guides/setup/build_guide.md) – Build configurations and flags
-* [Requirements](docs/guides/setup/requirements.md) – Supported platforms and dependencies
-* [Implementation Status](docs/implementation_status.md) – Current codebase snapshot, verified scope, and known gaps
+* [Quick Start Guide](docs/user/quickstart.md) – Get up and running in minutes
+* [Installation Guide](docs/user/installation.md) – Package, source, and build options
+* [Requirements](docs/user/requirements.md) – Supported platforms and dependencies
+* [API Reference](docs/user/api_guide.md) – Public API overview
+* [Best Practices](docs/user/best_practices.md) – Recommended usage patterns
+* [Troubleshooting](docs/user/troubleshooting.md) – Common issues and resolutions
+* [Tutorials](docs/user/tutorials/)
 
-### 🏗️ Architecture & Design
+### 🔧 For Contributors
 
-* [Runtime Behavior](docs/architecture/runtime_behavior.md) – Threading model, reconnection, backpressure
-* [Memory Safety](docs/architecture/memory_safety.md) – Ownership rules and safety guarantees
-* [Architecture Overview](docs/architecture/README.md) – High-level structure and layer responsibilities
+* [Build Guide](docs/contributor/build_guide.md) – Build configurations, CMake flags, sanitizers
+* [Testing Guide](docs/contributor/testing.md) – Running tests and CI integration
+* [Implementation Status](docs/contributor/implementation_status.md) – Verified scope and known gaps
+* [Architecture Overview](docs/contributor/architecture/README.md) – High-level structure and layer responsibilities
+* [Runtime Behavior](docs/contributor/architecture/runtime_behavior.md) – Threading model, reconnection, backpressure
+* [Memory Safety](docs/contributor/architecture/memory_safety.md) – Ownership rules and safety guarantees
 
-### 🔧 Guides & Reference
-
-* [API Reference](docs/reference/api_guide.md) – Public API overview
-* [Performance Optimization](docs/guides/advanced/performance.md) – Build and runtime considerations
-* [Testing Guide](docs/guides/core/testing.md) – Running tests and CI integration
-* [Best Practices](docs/guides/core/best_practices.md) – Recommended usage patterns
-* [Troubleshooting](docs/guides/core/troubleshooting.md) – Common issues and resolutions
-
-### 💡 Examples & Tutorials
+### 💡 Examples
 
 * [TCP Examples](examples/tcp/)
 * [UDP Examples](examples/udp/)
 * [Serial Examples](examples/serial/)
 * [UDS Examples](examples/uds/)
 * [Common Examples](examples/common/)
-* [Tutorials](docs/tutorials/)
 * [Documentation Index](docs/index.md)
 
 ---

@@ -49,7 +49,7 @@ Dynamic build defaults and flags should be read from:
 
 - `CMakeLists.txt`
 - `cmake/UnilinkOptions.cmake`
-- [Build Guide](guides/setup/build_guide.md)
+- [Build Guide](build_guide.md)
 
 Dynamic test registration and current pass/fail state should be read from:
 
@@ -64,7 +64,7 @@ This document intentionally does not repeat exact version numbers, build-cache v
 If you are trying to understand "what is implemented right now", read in this order:
 
 1. `unilink/unilink.hpp`
-2. [API Guide](reference/api_guide.md)
-3. [Examples Directory](../examples/README.md)
+2. [API Guide](../user/api_guide.md)
+3. [Examples Directory](../../examples/README.md)
 4. [Test Structure](test_structure.md)
 5. [Architecture Overview](architecture/README.md)

@@ -149,7 +149,7 @@ The repository already includes ready-to-build tutorial examples:
 
 - [examples/tutorials/getting_started/simple_client.cpp](../../examples/tutorials/getting_started/simple_client.cpp)
 - [examples/tutorials/getting_started/my_first_client.cpp](../../examples/tutorials/getting_started/my_first_client.cpp)
-- [examples/tutorials/README.md](../../examples/tutorials/README.md)
+- [examples/tutorials/README.md](../../../examples/tutorials/README.md)
 
 This tutorial stays smaller than the example sources on purpose.
 
@@ -161,7 +161,7 @@ This tutorial stays smaller than the example sources on purpose.
 - [UDS Communication](03_uds_communication.md)
 - [Serial Communication](04_serial_communication.md)
 - [UDP Communication](05_udp_communication.md)
-- [API Reference](../reference/api_guide.md#tcp-client)
+- [API Reference](../api_guide.md#tcp-client)
 
 ---
 

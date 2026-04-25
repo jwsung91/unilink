@@ -6,67 +6,9 @@ This guide covers performance optimization strategies for `unilink`, including b
 
 ## Table of Contents
 
-1. [Performance Overview](#performance-overview)
-2. [Build Configuration Optimization](#build-configuration-optimization)
-3. [Runtime Optimization](#runtime-optimization)
-4. [Memory Optimization](#memory-optimization)
-5. [Network Optimization](#network-optimization)
-6. [Benchmarking & Profiling](#benchmarking--profiling)
-
----
-
-## Performance Overview
-
-### Characteristics & Goals
-
-| Metric | Typical Value | Excellent Value |
-|--------|---------------|-----------------|
-| Connection Time | < 100ms | < 10ms (local) |
-| Latency | < 1ms (local) | < 0.1ms |
-| Throughput | > 100 MB/s | > 1 GB/s (local) |
-| CPU Usage | < 5% | < 1% (idle) |
-| Memory / Connection | < 10 KB | < 5 KB |
-
-**Goals:**
-- **Low Latency**: Minimize time from send to receive.
-- **High Throughput**: Maximize data transfer rate.
-- **Low Resource Usage**: Efficient CPU and memory usage.
-- **Scalability**: Handle many concurrent connections.
-
----
-
-## Build Configuration Optimization
-
-### Minimal Build vs Full Build
-
-Choose the right build configuration based on your use case:
-
-| Feature | Minimal Build | Full Build |
-|---------|---------------|------------|
-| **Configuration** | `UNILINK_ENABLE_CONFIG=OFF` | `UNILINK_ENABLE_CONFIG=ON` |
-| **Binary Size** | Smaller (~30% reduction) | Larger |
-| **Compilation Time** | Faster | Slower |
-| **Memory Usage** | Lower (no config overhead) | Higher |
-| **Features** | Builder API only | + Configuration Management |
-
-**Build command (Minimal):**
-```bash
-cmake -S . -B build \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DUNILINK_ENABLE_CONFIG=OFF
-cmake --build build -j
-```
-
-### Compiler Optimization Levels
-
-Always use **Release** builds for production performance.
-
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-```
-
-- **Flags**: `-O3` (Highest optimization), `-flto` (Link-time optimization)
-- **Impact**: 5-15% performance improvement compared to default release builds.
+1. [Runtime Optimization](#runtime-optimization)
+2. [Memory Optimization](#memory-optimization)
+3. [Network Optimization](#network-optimization)
 
 ---
 
@@ -180,48 +122,4 @@ sudo sysctl -w net.core.rmem_max=16777216  # 16 MB
 sudo sysctl -w net.core.wmem_max=16777216  # 16 MB
 ```
 
----
-
-## Benchmarking & Profiling
-
-### Built-in Performance Tests
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DUNILINK_BUILD_TESTS=ON
-cmake --build build -j
-./build/test/run_performance_tests
-```
-
-### Profiling with Tools
-
-**Linux `perf`:**
-```bash
-# Build with debug symbols
-cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
-perf record -g ./my_app
-perf report
-```
-
-**Valgrind (Memory):**
-```bash
-valgrind --tool=massif ./my_app
-ms_print massif.out
-```
-
-### Simple Throughput Benchmark Code
-```cpp
-void benchmark_throughput() {
-    auto client = unilink::tcp_client("127.0.0.1", 8080).build();
-    client->start();
-    while (!client->connected()) std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    
-    std::string data(1024, 'X'); // 1KB
-    auto start = std::chrono::high_resolution_clock::now();
-    
-    for (size_t i = 0; i < 10000; ++i) client->send(data);
-    
-    auto end = std::chrono::high_resolution_clock::now();
-    auto seconds = std::chrono::duration<double>(end - start).count();
-    std::cout << "Throughput: " << (10000 * 1024 / 1024.0 / 1024.0) / seconds << " MB/s\n";
-}
-```
 

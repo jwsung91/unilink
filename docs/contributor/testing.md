@@ -719,7 +719,7 @@ xdg-open coverage_html/index.html
 
 ## Next Steps
 
-- [Performance Optimization](../advanced/performance.md) - Optimize your tests
-- [Best Practices](best_practices.md) - Testing best practices
-- [Build Guide](../setup/build_guide.md) - Build options for testing
-- [Troubleshooting](troubleshooting.md) - Common test issues
+- [Performance Optimization](../user/performance.md) - Optimize your tests
+- [Best Practices](../user/best_practices.md) - Testing best practices
+- [Build Guide](build_guide.md) - Build options for testing
+- [Troubleshooting](../user/troubleshooting.md) - Common test issues

@@ -142,7 +142,7 @@ sudo apt install -y libboost-system-dev
 
 - Default GCC 9.4 does **not** meet requirements
 - Must install GCC 11+ or Clang 14+ manually
-- See [Ubuntu 20.04 Build Guide](build_guide.md#ubuntu-2004-build)
+- See [Ubuntu 20.04 Build Guide](../contributor/build_guide.md#ubuntu-2004-build)
 - **Note**: Ubuntu 20.04 reached end-of-life in April 2025
 - **CI/CD Policy**: Not supported in automated CI/CD due to runner availability issues
 - **Local Development**: You can still build and test locally on Ubuntu 20.04
@@ -231,6 +231,6 @@ sudo apt install cmake
 
 ## Next Steps
 
-- [Build Guide](build_guide.md) - Build instructions for different configurations
-- [Quick Start Guide](../core/quickstart.md) - Get started with unilink
-- [Troubleshooting](../core/troubleshooting.md) - Common issues and solutions
+- [Build Guide](../contributor/build_guide.md) - Build instructions for different configurations
+- [Quick Start Guide](quickstart.md) - Get started with unilink
+- [Troubleshooting](troubleshooting.md) - Common issues and solutions
