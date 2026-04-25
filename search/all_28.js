@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🏗️_20architecture_20design_0',['🏗️ Architecture &amp; Design',['..//home/runner/work/unilink/unilink/README.md#autotoc_md929',1,'']]]
+  ['🐍_20python_20bindings_0',['🐍 Python Bindings',['..//home/runner/work/unilink/unilink/README.md#autotoc_md832',1,'']]]
 ];
