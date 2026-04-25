@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include <boost/asio/system_executor.hpp>
+#include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <memory>
 #include <thread>
@@ -34,7 +34,10 @@ class MockChannel : public interface::Channel {
   void stop() override {}
   bool is_connected() const override { return true; }
 
-  boost::asio::any_io_executor get_executor() override { return boost::asio::system_executor{}; }
+  boost::asio::any_io_executor get_executor() override {
+    static boost::asio::io_context ioc;
+    return ioc.get_executor();
+  }
 
   void async_write_copy(memory::ConstByteSpan) override {}
   void async_write_move(std::vector<uint8_t>&&) override {}
