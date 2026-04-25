@@ -24,6 +24,8 @@
 #include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
+#include <boost/asio/steady_timer.hpp>
+#include <chrono>
 #include <iostream>
 #include <mutex>
 #include <shared_mutex>
@@ -50,12 +52,21 @@ struct UdpClient::Impl {
 
   // Event handlers (Context based)
   MessageHandler data_handler{nullptr};
+  BatchMessageHandler data_batch_handler_{nullptr};
   ConnectionHandler connect_handler{nullptr};
   ConnectionHandler disconnect_handler{nullptr};
   ErrorHandler error_handler{nullptr};
   MessageHandler message_handler{nullptr};
+  BatchMessageHandler message_batch_handler_{nullptr};
 
   std::unique_ptr<framer::IFramer> framer{nullptr};
+
+  // Batching logic
+  std::vector<MessageContext> data_batch_queue_;
+  std::vector<MessageContext> message_batch_queue_;
+  std::unique_ptr<boost::asio::steady_timer> batch_timer_;
+  size_t max_batch_size_ = 100;
+  std::chrono::milliseconds max_batch_latency_{1};
 
   std::atomic<bool> auto_start_{false};
   std::vector<std::promise<bool>> pending_promises;
@@ -65,7 +76,7 @@ struct UdpClient::Impl {
   explicit Impl(const config::UdpConfig& config) : cfg(config) {}
   Impl(const config::UdpConfig& config, std::shared_ptr<boost::asio::io_context> ioc)
       : cfg(config), external_ioc(std::move(ioc)), use_external_context(external_ioc != nullptr) {}
-  explicit Impl(std::shared_ptr<interface::Channel> ch) : channel(std::move(ch)) {}
+  explicit Impl(std::shared_ptr<interface::Channel> ch) : channel(std::move(ch)) { setup_internal_handlers(); }
 
   ~Impl() {
     try {
@@ -82,6 +93,45 @@ struct UdpClient::Impl {
       }
     }
     pending_promises.clear();
+  }
+
+  void flush_batches() {
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+    if (!data_batch_queue_.empty()) {
+      auto handler = data_batch_handler_;
+      auto batch = std::move(data_batch_queue_);
+      data_batch_queue_.clear();
+      if (handler) {
+        lock.unlock();
+        handler(batch);
+        lock.lock();
+      }
+    }
+    if (!message_batch_queue_.empty()) {
+      auto handler = message_batch_handler_;
+      auto batch = std::move(message_batch_queue_);
+      message_batch_queue_.clear();
+      if (handler) {
+        lock.unlock();
+        handler(batch);
+        lock.lock();
+      }
+    }
+    if (batch_timer_) {
+      batch_timer_->cancel();
+    }
+  }
+
+  void schedule_batch_timer() {
+    if (!batch_timer_) return;
+    batch_timer_->expires_after(max_batch_latency_);
+    batch_timer_->async_wait(
+        [this, weak_alive = std::weak_ptr<bool>(alive_marker)](const boost::system::error_code& ec) {
+          if (ec) return;
+          auto alive = weak_alive.lock();
+          if (!alive) return;
+          flush_batches();
+        });
   }
 
   std::future<bool> start() {
@@ -106,6 +156,10 @@ struct UdpClient::Impl {
     }
     started_.store(true);
 
+    if (channel && !batch_timer_) {
+      batch_timer_ = std::make_unique<boost::asio::steady_timer>(channel->get_executor());
+    }
+
     lock.unlock();
     channel->start();
     if (use_external_context && manage_external_context && !external_thread.joinable()) {
@@ -129,6 +183,11 @@ struct UdpClient::Impl {
       return;
     }
     started_.store(false);
+
+    if (batch_timer_) {
+      batch_timer_->cancel();
+      batch_timer_.reset();
+    }
 
     if (channel) {
       channel->on_bytes(nullptr);
@@ -165,25 +224,36 @@ struct UdpClient::Impl {
   void setup_internal_handlers() {
     if (!channel) return;
 
+    batch_timer_ = std::make_unique<boost::asio::steady_timer>(channel->get_executor());
+
     std::weak_ptr<bool> weak_alive = alive_marker;
 
     channel->on_bytes([this, weak_alive](memory::ConstByteSpan data) {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
-      // 1. Raw data handler
-      MessageHandler handler;
-      {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        handler = data_handler;
-      }
-      if (handler) {
-        std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
-        handler(MessageContext(0, std::move(str_data)));
+      std::unique_lock<std::shared_mutex> lock(mutex_);
+      if (data_batch_handler_) {
+        data_batch_queue_.emplace_back(0, memory::SafeDataBuffer(data));
+        if (data_batch_queue_.size() >= max_batch_size_) {
+          auto handler = data_batch_handler_;
+          auto batch = std::move(data_batch_queue_);
+          data_batch_queue_.clear();
+          lock.unlock();
+          handler(batch);
+        } else if (data_batch_queue_.size() == 1) {
+          schedule_batch_timer();
+        }
+        return;
       }
 
-      // 2. Framer integration
-      std::shared_lock<std::shared_mutex> lock(mutex_);
+      MessageHandler handler = data_handler;
+      if (handler) {
+        lock.unlock();
+        handler(MessageContext(0, memory::SafeDataBuffer(data)));
+        lock.lock();
+      }
+
       if (framer) {
         framer->push_bytes(data);
       }
@@ -233,19 +303,28 @@ struct UdpClient::Impl {
     });
   }
 
-  // Attach the stored message_handler to framer->on_message().
-  // Must be called with mutex_ already held.
   void attach_framer_callback() {
     if (!framer) return;
     framer->on_message([this](memory::ConstByteSpan msg) {
-      MessageHandler handler;
-      {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
-        handler = message_handler;
+      std::unique_lock<std::shared_mutex> lock(mutex_);
+      if (message_batch_handler_) {
+        message_batch_queue_.emplace_back(0, memory::SafeDataBuffer(msg));
+        if (message_batch_queue_.size() >= max_batch_size_) {
+          auto handler = message_batch_handler_;
+          auto batch = std::move(message_batch_queue_);
+          message_batch_queue_.clear();
+          lock.unlock();
+          handler(batch);
+        } else if (message_batch_queue_.size() == 1) {
+          schedule_batch_timer();
+        }
+        return;
       }
+
+      MessageHandler handler = message_handler;
       if (handler) {
-        std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
-        handler(MessageContext(0, std::move(str_msg)));
+        lock.unlock();
+        handler(MessageContext(0, memory::SafeDataBuffer(msg)));
       }
     });
   }
@@ -253,12 +332,18 @@ struct UdpClient::Impl {
   void set_framer(std::unique_ptr<framer::IFramer> f) {
     std::unique_lock<std::shared_mutex> lock(mutex_);
     framer = std::move(f);
-    if (framer && message_handler) attach_framer_callback();
+    if (framer && (message_handler || message_batch_handler_)) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
     std::unique_lock<std::shared_mutex> lock(mutex_);
     message_handler = std::move(handler);
+    if (framer) attach_framer_callback();
+  }
+
+  void on_message_batch(BatchMessageHandler handler) {
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+    message_batch_handler_ = std::move(handler);
     if (framer) attach_framer_callback();
   }
 };
@@ -296,6 +381,11 @@ ChannelInterface& UdpClient::on_data(MessageHandler h) {
   impl_->data_handler = std::move(h);
   return *this;
 }
+ChannelInterface& UdpClient::on_data_batch(BatchMessageHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->data_batch_handler_ = std::move(h);
+  return *this;
+}
 ChannelInterface& UdpClient::on_connect(ConnectionHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connect_handler = std::move(h);
@@ -318,6 +408,11 @@ ChannelInterface& UdpClient::framer(std::unique_ptr<framer::IFramer> f) {
 }
 ChannelInterface& UdpClient::on_message(MessageHandler h) {
   impl_->on_message(std::move(h));
+  return *this;
+}
+ChannelInterface& UdpClient::on_message_batch(BatchMessageHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->message_batch_handler_ = std::move(h);
   return *this;
 }
 

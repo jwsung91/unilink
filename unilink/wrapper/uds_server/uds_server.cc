@@ -16,6 +16,7 @@
 
 #include "unilink/wrapper/uds_server/uds_server.hpp"
 
+#include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
@@ -26,10 +27,9 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
-#include <atomic>
 
 #include "unilink/base/common.hpp"
-#include "unilink/config/uds_server_config.hpp"
+#include "unilink/config/uds_config.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/transport/uds/uds_server.hpp"
 
@@ -132,12 +132,13 @@ struct UdsServer::Impl {
   void schedule_batch_timer() {
     if (!batch_timer_) return;
     batch_timer_->expires_after(max_batch_latency_);
-    batch_timer_->async_wait([this, weak_alive = std::weak_ptr<bool>(alive_marker_)](const boost::system::error_code& ec) {
-      if (ec) return;
-      auto alive = weak_alive.lock();
-      if (!alive) return;
-      flush_batches();
-    });
+    batch_timer_->async_wait(
+        [this, weak_alive = std::weak_ptr<bool>(alive_marker_)](const boost::system::error_code& ec) {
+          if (ec) return;
+          auto alive = weak_alive.lock();
+          if (!alive) return;
+          flush_batches();
+        });
   }
 
   std::future<bool> start() {
@@ -159,8 +160,6 @@ struct UdsServer::Impl {
       server_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
     }
-
-    batch_timer_ = std::make_unique<boost::asio::steady_timer>(server_->get_executor());
 
     lock.unlock();
     server_->start();
@@ -224,6 +223,9 @@ struct UdsServer::Impl {
 
   void setup_internal_handlers() {
     if (!server_) return;
+
+    batch_timer_ = std::make_unique<boost::asio::steady_timer>(server_->get_executor());
+
     std::weak_ptr<bool> weak_alive = alive_marker_;
     auto transport_server = std::dynamic_pointer_cast<transport::UdsServer>(server_);
     if (transport_server) {
@@ -240,19 +242,19 @@ struct UdsServer::Impl {
               framer->on_message([this, id](memory::ConstByteSpan msg) {
                 std::unique_lock<std::shared_mutex> lock(mutex_);
                 if (on_message_batch_) {
-                    message_batch_queue_.emplace_back(id, memory::SafeDataBuffer(msg));
-                    if (message_batch_queue_.size() >= max_batch_size_) {
-                        auto handler = on_message_batch_;
-                        auto batch = std::move(message_batch_queue_);
-                        message_batch_queue_.clear();
-                        lock.unlock();
-                        handler(batch);
-                    } else if (message_batch_queue_.size() == 1) {
-                        schedule_batch_timer();
-                    }
-                    return;
+                  message_batch_queue_.emplace_back(id, memory::SafeDataBuffer(msg));
+                  if (message_batch_queue_.size() >= max_batch_size_) {
+                    auto handler = on_message_batch_;
+                    auto batch = std::move(message_batch_queue_);
+                    message_batch_queue_.clear();
+                    lock.unlock();
+                    handler(batch);
+                  } else if (message_batch_queue_.size() == 1) {
+                    schedule_batch_timer();
+                  }
+                  return;
                 }
-                
+
                 MessageHandler handler = on_message_;
                 if (handler) {
                   lock.unlock();
@@ -340,8 +342,8 @@ struct UdsServer::Impl {
 
 UdsServer::UdsServer(const std::string& socket_path) : impl_(std::make_unique<Impl>(socket_path)) {}
 
-UdsServer::UdsServer(const std::string& socket_path, std::shared_ptr<boost::asio::io_context> external_ioc)
-    : impl_(std::make_unique<Impl>(socket_path, std::move(external_ioc))) {}
+UdsServer::UdsServer(const std::string& socket_path, std::shared_ptr<boost::asio::io_context> ioc)
+    : impl_(std::make_unique<Impl>(socket_path, std::move(ioc))) {}
 
 UdsServer::UdsServer(std::shared_ptr<interface::Channel> channel) : impl_(std::make_unique<Impl>(std::move(channel))) {
   impl_->setup_internal_handlers();

@@ -246,9 +246,7 @@ struct UdsClient::Impl {
   void setup_internal_handlers() {
     if (!channel_) return;
 
-    if (external_ioc_) {
-      batch_timer_ = std::make_unique<boost::asio::steady_timer>(external_ioc_->get_executor());
-    }
+    batch_timer_ = std::make_unique<boost::asio::steady_timer>(channel_->get_executor());
 
     std::weak_ptr<bool> weak_alive = alive_marker_;
 

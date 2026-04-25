@@ -33,9 +33,7 @@ class MockChannel : public interface::Channel {
   void stop() override {}
   bool is_connected() const override { return true; }
 
-  boost::asio::any_io_executor get_executor() override {
-    return boost::asio::system_executor();
-  }
+  boost::asio::any_io_executor get_executor() override { return boost::asio::system_executor(); }
 
   void async_write_copy(memory::ConstByteSpan) override {}
   void async_write_move(std::vector<uint8_t>&&) override {}

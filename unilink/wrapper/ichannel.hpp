@@ -21,6 +21,7 @@
 #include <memory>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include "unilink/base/visibility.hpp"
 #include "unilink/framer/iframer.hpp"
@@ -35,6 +36,7 @@ namespace wrapper {
 class UNILINK_API ChannelInterface {
  public:
   using MessageHandler = std::function<void(const MessageContext&)>;
+  using BatchMessageHandler = std::function<void(const std::vector<MessageContext>&)>;
   using ConnectionHandler = std::function<void(const ConnectionContext&)>;
   using ErrorHandler = std::function<void(const ErrorContext&)>;
 
@@ -77,6 +79,10 @@ class UNILINK_API ChannelInterface {
 
   // Event handlers
   virtual ChannelInterface& on_data(MessageHandler handler) = 0;
+
+  /** @brief Register a callback for batched data reception */
+  virtual ChannelInterface& on_data_batch(BatchMessageHandler handler) = 0;
+
   virtual ChannelInterface& on_connect(ConnectionHandler handler) = 0;
   virtual ChannelInterface& on_disconnect(ConnectionHandler handler) = 0;
   virtual ChannelInterface& on_error(ErrorHandler handler) = 0;
@@ -92,6 +98,9 @@ class UNILINK_API ChannelInterface {
    * @param handler The callback for framed messages.
    */
   virtual ChannelInterface& on_message(MessageHandler handler) = 0;
+
+  /** @brief Register a callback for batched framed message reception */
+  virtual ChannelInterface& on_message_batch(BatchMessageHandler handler) = 0;
 
   // Management
   virtual ChannelInterface& auto_start(bool manage = true) = 0;

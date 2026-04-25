@@ -23,6 +23,7 @@
 
 #include "unilink/base/common.hpp"
 #include "unilink/base/error_codes.hpp"
+#include "unilink/memory/safe_data_buffer.hpp"
 #include "unilink/memory/safe_span.hpp"
 
 namespace unilink {
@@ -33,29 +34,35 @@ namespace wrapper {
  */
 class MessageContext {
  public:
-  MessageContext(ClientId client_id, std::string data, std::string client_info = "")
+  MessageContext(ClientId client_id, memory::SafeDataBuffer data, std::string client_info = "")
       : client_id_(client_id), data_(std::move(data)), client_info_(std::move(client_info)) {}
 
   /** @brief Get the client identifier */
   ClientId client_id() const { return client_id_; }
 
   /**
-   * @brief Get the received data
+   * @brief Get the received data as a view
    */
-  std::string_view data() const { return data_; }
+  std::string_view data() const { return std::string_view(reinterpret_cast<const char*>(data_.data()), data_.size()); }
 
-  /** @brief Safely get the received data as a std::string reference */
-  const std::string& data_as_string() const { return data_; }
+  /** @brief Get the received data as a SafeDataBuffer reference */
+  const memory::SafeDataBuffer& safe_data() const { return data_; }
+
+  /** @brief Get the received data as a std::string */
+  std::string data_as_string() const { return data_.as_string(); }
 
   /** @brief Get the received data as a std::vector<uint8_t> */
-  std::vector<uint8_t> data_as_vector() const { return std::vector<uint8_t>(data_.begin(), data_.end()); }
+  std::vector<uint8_t> data_as_vector() const {
+    const auto* d = data_.data();
+    return std::vector<uint8_t>(d, d + data_.size());
+  }
 
   /** @brief Get the client information (e.g., endpoint address) */
   const std::string& client_info() const { return client_info_; }
 
  private:
   ClientId client_id_;
-  std::string data_;
+  memory::SafeDataBuffer data_;
   std::string client_info_;
 };
 
