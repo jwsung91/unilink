@@ -2,7 +2,7 @@
 
 Complete guide for building `unilink` with different configurations and platforms.
 
-> **Note**: For installation instructions, see [Installation Guide](installation.md).
+**Note:** For installation instructions, see [Installation Guide](installation.md).
 
 ---
 

@@ -1,8 +1,6 @@
 # Transport Channel Contract
 
-> Internal architecture note
->
-> This document describes the transport-layer `unilink::interface::Channel` contract and related implementation guarantees. It is not the public wrapper/builder API reference. Public application-facing behavior is documented in `docs/reference/api_guide.md`.
+**Internal architecture note:** This document describes the transport-layer `unilink::interface::Channel` contract and related implementation guarantees. It is not the public wrapper/builder API reference. Public application-facing behavior is documented in `docs/reference/api_guide.md`.
 
 ## 1. Introduction
 The unilink library provides flexible communication channels (TCP, UDP, Serial, UDS) that abstract away low-level networking and hardware details. To keep behavior consistent across these transports, the transport layer follows a formal "Channel Contract". This document outlines the guarantees expected from internal channel implementations and the runtime assumptions built on top of them.
@@ -16,8 +14,7 @@ The Channel Contract is built upon the following core principles:
 ## 3. Stop Semantics: No Callbacks After Stop()
 One of the most critical aspects of the Channel Contract is the "Stop Semantics."
 
-**Contract Rule:**
-> **Once `Channel::stop()` is called and returns, no further transport-layer asynchronous callbacks (for example `on_state`, `on_bytes`, `on_backpressure`) related to that specific channel instance shall be invoked.**
+**Contract Rule:** Once `Channel::stop()` is called and returns, no further transport-layer asynchronous callbacks (for example `on_state`, `on_bytes`, `on_backpressure`) related to that specific channel instance shall be invoked.
 
 This rule ensures that once an application explicitly requests a channel to stop, it can safely clean up resources and assume that no more events will arrive from that channel, preventing potential use-after-free bugs or unexpected state changes.
 

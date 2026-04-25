@@ -276,7 +276,7 @@ if (listening && server->listening()) {
 server->stop();
 ```
 
-> Note: If none of `.single_client()`, `.multi_client(max)`, or `.unlimited_clients()` is called before `build()`, the server defaults to unlimited clients.
+**Note:** If none of `.single_client()`, `.multi_client(max)`, or `.unlimited_clients()` is called before `build()`, the server defaults to unlimited clients.
 
 ### API Reference
 
@@ -868,7 +868,7 @@ Common preset keys are populated by `unilink::config::ConfigPresets` through `Co
 
 ## Advanced Features
 
-> **Note:** `MemoryPool`, `SafeDataBuffer`, and `ThreadSafeState` are internal utilities used by unilink transports. They are not included in `unilink/unilink.hpp` and require direct header includes. The API is not subject to the same stability guarantees as the public wrapper/builder API.
+**Note:** `MemoryPool`, `SafeDataBuffer`, and `ThreadSafeState` are internal utilities used by unilink transports. They are not included in `unilink/unilink.hpp` and require direct header includes. The API is not subject to the same stability guarantees as the public wrapper/builder API.
 
 ### Memory Pool
 

@@ -2,10 +2,7 @@
 
 Comprehensive overview of unilink's architecture and design principles.
 
-> Scope note
->
-> This section mixes public high-level concepts with internal implementation details. For exact application-facing APIs, prefer `docs/reference/api_guide.md`. For transport-internal contracts, prefer `docs/architecture/channel_contract.md`.
-> For wrapper-layer behavioral guarantees, prefer `docs/architecture/wrapper_contract.md`.
+**Scope note:** This section mixes public high-level concepts with internal implementation details. For exact application-facing APIs, prefer `docs/reference/api_guide.md`. For transport-internal contracts, prefer `docs/architecture/channel_contract.md`. For wrapper-layer behavioral guarantees, prefer `docs/architecture/wrapper_contract.md`.
 
 ---
 
@@ -333,7 +330,7 @@ protected:
 
 ## Threading Model
 
-> **Note:** For a detailed execution model, see [Runtime Behavior](runtime_behavior.md).
+**Note:** For a detailed execution model, see [Runtime Behavior](runtime_behavior.md).
 
 ### Overview
 

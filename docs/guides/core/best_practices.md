@@ -156,9 +156,9 @@ class Application {
 };
 ```
 
-> Tip: Register all callbacks before calling `.auto_start(true)` or manually invoking `start()`, because `auto_start(true)` now starts the connection immediately.
+**Tip:** Register all callbacks before calling `.auto_start(true)` or manually invoking `start()`, because `auto_start(true)` now starts the connection immediately.
 
-> Advanced: If you supply your own `boost::asio::io_context` to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with `manage_external_context(true)`). Make sure the context is running on a thread you control.
+**Advanced:** If you supply your own `boost::asio::io_context` to the wrappers, unilink will not run or stop it for you (unless you explicitly opt in with `manage_external_context(true)`). Make sure the context is running on a thread you control.
 
 ### ✅ DO: Reuse Connections When Possible
 

@@ -8,7 +8,7 @@ This guide covers the supported ways to install and use the **unilink** library 
 - **C++ Compiler**: C++17 compatible (GCC 7+, Clang 5+, MSVC 2017+)
 - **Platform**: Linux, Windows, macOS
 
-> Note: When using a package manager (vcpkg), dependencies such as Boost are handled automatically.
+**Note:** When using a package manager (vcpkg), dependencies such as Boost are handled automatically.
 
 ## Installation Methods
 
@@ -42,7 +42,7 @@ int main() {
 }
 ```
 
-> Note: The vcpkg port name is `jwsung91-unilink`, while the CMake package and target name remain `unilink`.
+**Note:** The vcpkg port name is `jwsung91-unilink`, while the CMake package and target name remain `unilink`.
 
 ### Method 2: Install from Source (CMake Package)
 
