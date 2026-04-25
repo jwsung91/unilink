@@ -120,8 +120,7 @@ sudo apt install -y clang-format
 
 ```bash
 # Install runtime libraries only
-sudo apt install -y libboost-system1.74.0
-# Version may vary depending on your Ubuntu version
+sudo apt install -y libboost-system-dev
 ```
 
 ### Thread Support
@@ -144,7 +143,7 @@ sudo apt install -y libboost-system1.74.0
 - Default GCC 9.4 does **not** meet requirements
 - Must install GCC 11+ or Clang 14+ manually
 - See [Ubuntu 20.04 Build Guide](build_guide.md#ubuntu-2004-build)
-- **Note**: Ubuntu 20.04 reaches end-of-life in April 2025
+- **Note**: Ubuntu 20.04 reached end-of-life in April 2025
 - **CI/CD Policy**: Not supported in automated CI/CD due to runner availability issues
 - **Local Development**: You can still build and test locally on Ubuntu 20.04
 

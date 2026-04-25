@@ -117,9 +117,9 @@ Type a message in the client, then type a reply in the `nc` terminal.
 
 ---
 
-## What Changed In The Current API
+## API Patterns Used In This Tutorial
 
-The current tutorial code uses context-based callbacks consistently:
+The tutorial code uses context-based callbacks consistently:
 
 - `on_connect(const ConnectionContext&)`
 - `on_disconnect(const ConnectionContext&)`

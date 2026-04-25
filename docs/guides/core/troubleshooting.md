@@ -86,19 +86,10 @@ telnet server.com 8080
 **Solution:** Increase retry interval:
 
 ```cpp
+using namespace std::chrono_literals;
 auto client = tcp_client("server.com", 8080)
     .retry_interval(10000ms)  // Wait 10 seconds
     .build();
-```
-
-#### 3. Slow Network
-
-**Solution:** Increase timeout (requires custom implementation):
-
-```cpp
-// Set socket options for longer timeout
-boost::asio::socket_base::linger option(true, 30);
-socket.set_option(option);
 ```
 
 ---
@@ -191,14 +182,6 @@ auto server = tcp_server(8080)
     .build();
 ```
 
-#### 4. Set SO_REUSEADDR (Advanced)
-
-```cpp
-// Allow immediate port reuse
-boost::asio::socket_base::reuse_address option(true);
-acceptor.set_option(option);
-```
-
 ---
 
 ## Compilation Errors
@@ -236,7 +219,7 @@ g++ -I/path/to/unilink/include ...
 ```cmake
 # CMakeLists.txt
 add_subdirectory(unilink)
-target_link_libraries(your_app PRIVATE unilink)
+target_link_libraries(your_app PRIVATE unilink::unilink)
 ```
 
 ---
@@ -702,7 +685,7 @@ void setup_debugging() {
     );
     unilink::diagnostics::ErrorHandler::instance().register_callback(
         [](const unilink::diagnostics::ErrorInfo& error) {
-            std::cerr << "[ERROR] " << error.get_summary() << std::endl;
+            std::cerr << "[ERROR] " << error.summary() << std::endl;
         }
     );
 }

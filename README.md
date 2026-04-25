@@ -27,7 +27,7 @@ The project prioritizes **API clarity, predictable runtime behavior, and stabili
 
 ## Requirements
 
-* **C++17 compliant compiler** (required)
+* **C++17 compliant compiler**: GCC 11+ or Clang 14+ (required)
 * CMake 3.12 or later
 
 ## 📦 Installation

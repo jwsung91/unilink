@@ -49,6 +49,28 @@ auto channel = unilink::{type}(params)
 | `.on_message(callback)`          | Handle framed messages (`const MessageContext&`)                  | None     |
 | `.build()`                       | **Required**: Build the wrapper instance                          | -        |
 
+**`MessageContext` Data Access**
+
+Inside `on_data` and `on_message` callbacks, `ctx.data()` returns a `std::string_view` that is only valid for the duration of the callback. Do not store or capture it beyond the callback scope.
+
+To take ownership of the data, use:
+- `ctx.data_as_string()` — returns `std::string` (copy)
+- `ctx.data_as_vector()` — returns `std::vector<uint8_t>` (copy)
+
+```cpp
+.on_data([](const unilink::MessageContext& ctx) {
+    // OK: use within the callback
+    std::cout << ctx.data() << std::endl;
+
+    // OK: take ownership if you need to store it
+    std::string owned = ctx.data_as_string();
+    queue.push(std::move(owned));
+
+    // BAD: do not store the string_view beyond this callback
+    // captured_view = ctx.data();  // dangling reference!
+})
+```
+
 **Builder-Specific Options**
 
 - `TcpClientBuilder` / `SerialBuilder`: `.retry_interval(ms)` (default `3000ms`)
@@ -713,7 +735,7 @@ ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
 
     if (error.level == ErrorLevel::CRITICAL) {
         // Handle critical errors
-        std::cerr << "CRITICAL ERROR! " << error.get_summary() << std::endl;
+        std::cerr << "CRITICAL ERROR! " << error.summary() << std::endl;
     }
 });
 

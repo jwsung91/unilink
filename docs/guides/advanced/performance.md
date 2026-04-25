@@ -12,7 +12,6 @@ This guide covers performance optimization strategies for `unilink`, including b
 4. [Memory Optimization](#memory-optimization)
 5. [Network Optimization](#network-optimization)
 6. [Benchmarking & Profiling](#benchmarking--profiling)
-7. [Real-World Case Studies](#real-world-case-studies)
 
 ---
 
@@ -90,8 +89,6 @@ auto client1 = unilink::tcp_client("server1.com", 8080)
     .build();
 ```
 
-**Impact**: Reduces memory usage by ~90% per connection and CPU context switching by ~80%.
-
 ### 2. Async Logging
 
 Logging can be a major bottleneck. Enable async logging for high-performance applications.
@@ -104,8 +101,6 @@ config.flush_interval = std::chrono::milliseconds(1000);
 
 unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 ```
-
-**Impact**: 10-100x faster logging throughput.
 
 ### 3. Non-Blocking Callbacks
 
@@ -175,14 +170,8 @@ for (int i = 0; i < 1000; ++i) batch += "msg";
 client->send(batch);
 ```
 
-**Impact**: up to 50x throughput improvement for small messages.
-
 ### 2. Connection Reuse
-Reusing connections is significantly faster than creating new ones.
-
-| Operation | New Connection | Reused Connection | Speedup |
-|-----------|----------------|-------------------|---------|
-| Single request | 50 ms | 5 ms | 10x |
+Reusing connections avoids repeated TCP handshake and connection setup overhead. For workloads with many short requests to the same peer, create the client once and reuse it across calls.
 
 ### 3. Socket Tuning
 For extremely high throughput, tune OS-level socket buffers:
@@ -236,21 +225,3 @@ void benchmark_throughput() {
 }
 ```
 
----
-
-## Real-World Case Studies
-
-### Case Study 1: High-Throughput Data Streaming
-**Scenario**: Stream 1 GB/s of data from sensors.
-**Optimizations**: Binary protocol, 1000-sample batching, memory pools, async logging.
-**Result**: **10x improvement** (120 MB/s -> 1.2 GB/s), CPU usage dropped from 80% to 15%.
-
-### Case Study 2: Low-Latency Trading System
-**Scenario**: < 100μs latency required.
-**Optimizations**: Pinned threads, lock-free queues, pre-allocated buffers, disabled logging.
-**Result**: **6x improvement** (450μs -> 75μs avg latency).
-
-### Case Study 3: IoT Gateway (1000+ Connections)
-**Scenario**: Handle 1000 concurrent sensor connections.
-**Optimizations**: Shared IO context, connection pooling, rate limiting.
-**Result**: **2.4x capacity increase**, 60% less memory usage (2GB -> 800MB).
