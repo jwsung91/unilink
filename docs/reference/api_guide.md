@@ -169,9 +169,9 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 | `connected()`             | `bool`              | Check connection status                                               |
 | `start()`                  | `std::future<bool>` | Start connection attempt                                              |
 | `stop()`                   | `void`              | Stop and disconnect                                                   |
-| `retry_interval()`     | `void`              | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
-| `max_retries()`        | `void`              | Set max reconnect attempts (`-1` for unlimited)                       |
-| `connection_timeout()` | `void`              | Set connection timeout (`std::chrono::milliseconds`)                  |
+| `retry_interval()`     | `TcpClient&`        | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
+| `max_retries()`        | `TcpClient&`        | Set max reconnect attempts (`-1` for unlimited)                       |
+| `connection_timeout()` | `TcpClient&`        | Set connection timeout (`std::chrono::milliseconds`)                  |
 
 ### Advanced Examples
 
@@ -276,8 +276,7 @@ if (listening && server->listening()) {
 server->stop();
 ```
 
-> Note: `TcpServerBuilder` requires an explicit client limit before `build()` is called. Choose one of
-> `.single_client()`, `.multi_client(max)`, or `.unlimited_clients()` during construction.
+> Note: If none of `.single_client()`, `.multi_client(max)`, or `.unlimited_clients()` is called before `build()`, the server defaults to unlimited clients.
 
 ### API Reference
 
@@ -423,13 +422,12 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 | `connected()`          | `bool`              | Check if port is open                                      |
 | `start()`              | `std::future<bool>` | Open serial port                                           |
 | `stop()`               | `void`              | Close serial port                                          |
-| `baud_rate()`      | `void`              | Adjust baud rate at runtime                                |
-| `data_bits()`      | `void`              | Set data bits (5-8)                                        |
-| `stop_bits()`      | `void`              | Set stop bits (1-2)                                        |
-| `parity()`         | `void`              | Set parity (`none`, `even`, `odd`)                         |
-| `flow_control()`   | `void`              | Set flow control (`none`, `software`, `hardware`)          |
-| `retry_interval()` | `void`              | Adjust reconnection interval (`std::chrono::milliseconds`) |
-| `build_config()`       | `SerialConfig`      | Inspect current mapped serial config                       |
+| `baud_rate()`      | `Serial&`           | Adjust baud rate at runtime                                |
+| `data_bits()`      | `Serial&`           | Set data bits (5-8)                                        |
+| `stop_bits()`      | `Serial&`           | Set stop bits (1-2)                                        |
+| `parity()`         | `Serial&`           | Set parity (`none`, `even`, `odd`)                         |
+| `flow_control()`   | `Serial&`           | Set flow control (`none`, `software`, `hardware`)          |
+| `retry_interval()` | `Serial&`           | Adjust reconnection interval (`std::chrono::milliseconds`) |
 
 ### Device Paths
 
@@ -528,30 +526,45 @@ if (sender_started) {
 
 ### API Reference
 
-#### Constructor
+#### Constructors
 
 ```cpp
-// Create UDP builder with local port binding
+// UDP client: send and/or receive with a configured remote peer
 unilink::udp_client(uint16_t local_port)
+
+// UDP server: receive-only listener with virtual sessions per sender
+unilink::udp_server(uint16_t local_port)
 ```
 
-#### Builder Methods
+#### Builder Methods (UdpClient)
 
 | Method                      | Parameters         | Description                          |
 | --------------------------- | ------------------ | ------------------------------------ |
 | `local_port(port)`          | `uint16_t`         | Bind to a specific local port        |
 | `remote(ip, port)`          | `string, uint16_t` | Set default destination for `send()` |
+| `broadcast(enable)`         | `bool`             | Enable broadcast sends               |
+| `reuse_address(enable)`     | `bool`             | Enable SO_REUSEADDR on the socket    |
 | `independent_context()`     | `bool`             | Run on dedicated IO thread           |
-| `auto_start()`             | `bool`             | Auto-start/stop lifecycle            |
+| `auto_start()`              | `bool`             | Auto-start/stop lifecycle            |
 
-#### Instance Methods
+#### Builder Methods (UdpServer)
 
-| Method           | Return              | Description                            |
-| ---------------- | ------------------- | -------------------------------------- |
+| Method                      | Parameters | Description                       |
+| --------------------------- | ---------- | --------------------------------- |
+| `local_port(port)`          | `uint16_t` | Bind to a specific local port     |
+| `broadcast(enable)`         | `bool`     | Enable broadcast receives         |
+| `reuse_address(enable)`     | `bool`     | Enable SO_REUSEADDR on the socket |
+| `independent_context()`     | `bool`     | Run on dedicated IO thread        |
+| `auto_start()`              | `bool`     | Auto-start/stop lifecycle         |
+
+#### Instance Methods (UdpClient)
+
+| Method           | Return              | Description                               |
+| ---------------- | ------------------- | ----------------------------------------- |
 | `send()`         | `bool`              | Enqueue data to configured remote address |
-| `start()`        | `std::future<bool>` | Start listening/sending                |
-| `stop()`         | `void`              | Close socket                           |
-| `connected()`    | `bool`              | Check if socket is open and ready      |
+| `start()`        | `std::future<bool>` | Start listening/sending                   |
+| `stop()`         | `void`              | Close socket                              |
+| `connected()`    | `bool`              | Check if socket is open and ready         |
 
 ### Advanced Examples
 
@@ -564,6 +577,18 @@ auto socket = unilink::udp_client(8080)
         // Reply to the sender (automatically tracks last sender)
     })
     .build();
+```
+
+#### UDP Server (Receive-only listener)
+
+```cpp
+auto server = unilink::udp_server(8080)
+    .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "Received: " << ctx.data() << std::endl;
+    })
+    .build();
+
+server->start().get();
 ```
 
 ---
@@ -843,13 +868,14 @@ Common preset keys are populated by `unilink::config::ConfigPresets` through `Co
 
 ## Advanced Features
 
+> **Note:** `MemoryPool`, `SafeDataBuffer`, and `ThreadSafeState` are internal utilities used by unilink transports. They are not included in `unilink/unilink.hpp` and require direct header includes. The API is not subject to the same stability guarantees as the public wrapper/builder API.
+
 ### Memory Pool
 
-Efficient memory allocation for high-performance scenarios.
+Internal memory pool used by transports for buffer reuse.
 
 ```cpp
 #include "unilink/memory/memory_pool.hpp"
-#include "unilink/memory/safe_data_buffer.hpp"
 
 unilink::memory::MemoryPool pool;
 

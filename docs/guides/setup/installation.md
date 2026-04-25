@@ -83,7 +83,7 @@ Choose the archive matching your OS and architecture. Replace `${VERSION}` with 
 export UNILINK_VERSION="0.4.3"
 wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
 tar -xzf unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
-cd unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
+cd unilink-${UNILINK_VERSION}-Linux-x86_64
 ```
 
 #### Step 2: Install

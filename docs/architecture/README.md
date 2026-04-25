@@ -59,7 +59,7 @@ graph TD
 #### 1. Builder API Layer
 
 - **Purpose**: Provide fluent, chainable interface
-- **Components**: `TcpClientBuilder`, `TcpServerBuilder`, `SerialBuilder`
+- **Components**: `TcpClientBuilder`, `TcpServerBuilder`, `SerialBuilder`, `UdpClientBuilder`, `UdpServerBuilder`, `UdsClientBuilder`, `UdsServerBuilder`
 - **Responsibilities**:
   - Configuration validation
   - Object construction
@@ -68,7 +68,7 @@ graph TD
 #### 2. Wrapper API Layer
 
 - **Purpose**: High-level, easy-to-use interfaces
-- **Components**: `TcpClient`, `TcpServer`, `Serial`
+- **Components**: `TcpClient`, `TcpServer`, `Serial`, `UdpClient`, `UdpServer`, `UdsClient`, `UdsServer`
 - **Responsibilities**:
   - Connection management
   - Data transmission
@@ -102,14 +102,18 @@ graph TD
 
 ```cpp
 namespace unilink::builder {
-    // Base interface
-    template<typename T>
+    // Base interface (CRTP: T = product type, Derived = builder type)
+    template<typename T, typename Derived>
     class BuilderInterface { ... };
 
     // Concrete builders
-    class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient>;
-    class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer>;
-    class SerialBuilder : public BuilderInterface<wrapper::Serial>;
+    class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient, TcpClientBuilder>;
+    class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer, TcpServerBuilder>;
+    class SerialBuilder     : public BuilderInterface<wrapper::Serial,    SerialBuilder>;
+    class UdpClientBuilder  : public BuilderInterface<wrapper::UdpClient, UdpClientBuilder>;
+    class UdpServerBuilder  : public BuilderInterface<wrapper::UdpServer, UdpServerBuilder>;
+    class UdsClientBuilder  : public BuilderInterface<wrapper::UdsClient, UdsClientBuilder>;
+    class UdsServerBuilder  : public BuilderInterface<wrapper::UdsServer, UdsServerBuilder>;
 }
 ```
 
@@ -257,16 +261,17 @@ Serial::Serial(std::shared_ptr<ISerialPort> port) : port_(port) { }
 
 ```cpp
 class TcpClient {
-    std::function<void()> on_connect_;
-    std::function<void(const std::string&)> on_data_;
-    std::function<void()> on_disconnect_;
+    std::function<void(const ConnectionContext&)> on_connect_;
+    std::function<void(const MessageContext&)>    on_data_;
+    std::function<void(const ConnectionContext&)> on_disconnect_;
+    std::function<void(const ErrorContext&)>      on_error_;
 
-    void notify_connect() {
-        if (on_connect_) on_connect_();
+    void notify_connect(const ConnectionContext& ctx) {
+        if (on_connect_) on_connect_(ctx);
     }
 
-    void notify_data(const std::string& data) {
-        if (on_data_) on_data_(data);
+    void notify_data(const MessageContext& ctx) {
+        if (on_data_) on_data_(ctx);
     }
 };
 ```
