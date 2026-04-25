@@ -43,7 +43,6 @@ TEST_F(PooledBufferAccessBenchmark, AccessPerformance) {
   const size_t iterations = 5000;
 #endif
 
-  auto& pool = GlobalMemoryPool::instance();
   // Ensure we get a buffer
   auto pooled_buf = PooledBuffer(buffer_size);
   ASSERT_TRUE(pooled_buf.valid());

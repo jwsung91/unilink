@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <boost/asio/system_executor.hpp>
 #include <chrono>
 #include <memory>
 #include <thread>
@@ -33,7 +34,7 @@ class MockChannel : public interface::Channel {
   void stop() override {}
   bool is_connected() const override { return true; }
 
-  boost::asio::any_io_executor get_executor() override { return boost::asio::system_executor(); }
+  boost::asio::any_io_executor get_executor() override { return boost::asio::system_executor{}; }
 
   void async_write_copy(memory::ConstByteSpan) override {}
   void async_write_move(std::vector<uint8_t>&&) override {}
@@ -48,7 +49,8 @@ TEST(SerialStopPerf, StopDuration) {
   auto channel = std::make_shared<MockChannel>();
   wrapper::Serial serial(channel);
 
-  serial.start();  // Should be instant with mock
+  auto started = serial.start();  // Should be instant with mock
+  (void)started;
 
   auto start_time = std::chrono::high_resolution_clock::now();
   serial.stop();

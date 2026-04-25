@@ -100,13 +100,13 @@ class PerformanceIntegratedTest : public ::testing::Test {
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    return static_cast<double>(iterations) / (duration.count() / 1000000.0);
+    return static_cast<double>(iterations) / (static_cast<double>(duration.count()) / 1000000.0);
   }
 
   // Helper function to measure latency
   double measure_latency(std::function<void()> operation, int iterations) {
     std::vector<double> latencies;
-    latencies.reserve(iterations);
+    latencies.reserve(static_cast<size_t>(iterations));
 
     for (int i = 0; i < iterations; ++i) {
       auto start = std::chrono::high_resolution_clock::now();
@@ -114,7 +114,7 @@ class PerformanceIntegratedTest : public ::testing::Test {
       auto end = std::chrono::high_resolution_clock::now();
 
       auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-      latencies.push_back(duration.count() / 1000.0);  // Convert to microseconds
+      latencies.push_back(static_cast<double>(duration.count()) / 1000.0);  // Convert to microseconds
     }
 
     // Calculate median latency
