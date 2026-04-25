@@ -128,7 +128,7 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
   - Official port: `jwsung91-unilink`
   - Recommended for most users
 
-Other package managers (e.g., Conan) are planned but not yet officially supported.
+Other package managers (e.g., Conan) are not yet officially supported.
 
 ## Build Options (Source Builds)
 

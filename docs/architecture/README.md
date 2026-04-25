@@ -180,7 +180,6 @@ namespace unilink::transport {
 - Asynchronous I/O
 - Retry logic (3s default interval, first retry at 100ms)
 - Backpressure guard: callback at high watermark (default 1 MiB), hard cap triggers socket close + Error state
-- Connection pooling (planned)
 
 ### 4. Common Utilities
 
@@ -510,11 +509,12 @@ graph TD
 
 ```cpp
 enum class ErrorCategory {
-    NETWORK,        // Connection, timeout, etc.
-    CONFIGURATION,  // Invalid config
-    SYSTEM,         // OS errors
-    MEMORY,         // Allocation failures
-    VALIDATION      // Input validation
+    CONNECTION,    // connect/disconnect/bind failures
+    COMMUNICATION, // read/write failures
+    CONFIGURATION, // invalid config values
+    MEMORY,        // allocation errors
+    SYSTEM,        // OS-level errors
+    UNKNOWN        // unclassified
 };
 
 enum class ErrorLevel {
@@ -527,34 +527,21 @@ enum class ErrorLevel {
 
 ### Error Recovery Strategies
 
-#### 1. Automatic Retry
+#### Automatic Retry
+
+Reconnect behavior is controlled by a `ReconnectPolicy` — a `std::function` that receives the last `ErrorInfo` and the current attempt count, and returns a `ReconnectDecision` (retry + delay).
+
+Two built-in factory functions are provided:
 
 ```cpp
-class RetryPolicy {
-    unsigned max_attempts{5};
-    unsigned interval_ms{3000};
-    bool exponential_backoff{false};
+// Fixed interval (default behavior via builder .retry_interval())
+unilink::FixedInterval(std::chrono::milliseconds delay);
 
-    bool should_retry(unsigned attempt);
-    unsigned get_delay(unsigned attempt);
-};
+// Exponential backoff with optional jitter (transport layer only)
+unilink::ExponentialBackoff(min_delay, max_delay, factor, jitter);
 ```
 
-#### 2. Circuit Breaker (Planned)
-
-```cpp
-class CircuitBreaker {
-    enum class State { CLOSED, OPEN, HALF_OPEN };
-
-    State state_{State::CLOSED};
-    unsigned failure_threshold_{5};
-    std::chrono::seconds timeout_{30};
-
-    bool allow_request();
-    void record_success();
-    void record_failure();
-};
-```
+The wrapper-layer default is a fixed 3-second interval. Exponential backoff requires dropping to the transport layer directly (see api_guide.md – Custom Reconnect Policy).
 
 ---
 
@@ -612,20 +599,7 @@ void send(std::string&& data);  // Move semantics
 void send(std::string_view data);  // View (no copy)
 ```
 
-### 3. Connection Pooling (Planned)
-
-```cpp
-// Reuse connections
-class ConnectionPool {
-    std::queue<Connection*> available_;
-    std::vector<std::unique_ptr<Connection>> all_;
-
-    Connection* acquire();
-    void release(Connection* conn);
-};
-```
-
-### 4. Memory Pooling
+### 3. Memory Pooling
 
 ```cpp
 // Avoid repeated allocations
