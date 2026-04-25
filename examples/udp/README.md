@@ -1,45 +1,25 @@
-# UDP Sender and Receiver
+# UDP Examples
 
-Minimal UDP examples using the current builder API from `unilink/unilink.hpp`.
+## Binaries
 
-These programs are intentionally small. They do not parse command-line options.
+| Binary | Description |
+|--------|-------------|
+| `udp_receiver` | Binds a local port and prints incoming datagrams |
+| `udp_sender` | Sends user-entered lines to a remote host/port |
 
-## Receiver Usage
-
-```bash
-./udp_receiver
-```
-
-The receiver binds to local port `9000` and prints incoming datagrams.
-
-## Sender Usage
+## Usage
 
 ```bash
-./udp_sender
+# Terminal 1 — receiver (default port 9000)
+./udp_receiver [port]
+
+# Terminal 2 — sender (default target 127.0.0.1:9000)
+./udp_sender [host] [port]
 ```
 
-The sender uses an ephemeral local port and sends user-entered messages to `127.0.0.1:9000`.
+Type lines in the sender terminal. Each line is sent immediately and printed by the receiver. `/quit` exits the sender.
 
-## Quick Start (Two Terminals)
+## API Patterns
 
-**Terminal 1: Receiver**
-
-```bash
-cd examples/udp
-./udp_receiver
-```
-
-**Terminal 2: Sender**
-
-```bash
-cd examples/udp
-./udp_sender
-```
-
-Type lines into the sender terminal. Each line is sent immediately, and the receiver prints it.
-
-## Notes
-
-- `udp_receiver.cpp` is the simplest "bind and print" example.
-- `udp_sender.cpp` is the simplest "set remote endpoint and send" example.
-- If you need argument parsing or richer UDP workflows, use these files as a starting point rather than expecting a CLI tool.
+- `udp_client(local_port).on_data(...).auto_start(true).build()` — bind and receive
+- `udp_client(0).remote(host, port).build()` + `start_sync()` — send to a fixed endpoint

@@ -12,7 +12,14 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# TCP communication examples
-add_subdirectory(single-echo)
-add_subdirectory(single-chat)
-add_subdirectory(multi-chat)
+add_executable(tcp_echo_server echo_server.cc)
+target_link_libraries(tcp_echo_server PRIVATE unilink::unilink)
+unilink_configure_executable(tcp_echo_server)
+
+add_executable(tcp_echo_client echo_client.cc)
+target_link_libraries(tcp_echo_client PRIVATE unilink::unilink)
+unilink_configure_executable(tcp_echo_client)
+
+add_executable(tcp_broadcast_server broadcast_server.cc)
+target_link_libraries(tcp_broadcast_server PRIVATE unilink::unilink)
+unilink_configure_executable(tcp_broadcast_server)

@@ -14,38 +14,34 @@
  * limitations under the License.
  */
 
-#include <chrono>
 #include <iostream>
 #include <string>
-#include <thread>
 
 #include "unilink/unilink.hpp"
 
-using namespace unilink;
-using namespace std::chrono_literals;
+int main(int argc, char** argv) {
+  std::string path = (argc > 1) ? argv[1] : "/tmp/unilink_echo.sock";
 
-int main() {
-  // Setup UDP sender (point to 127.0.0.1:9000)
-  auto sender =
-      udp_client(0)  // Ephemeral local port
-          .remote("127.0.0.1", 9000)
-          .on_connect([](const unilink::ConnectionContext&) { std::cout << "UDP Sender ready" << std::endl; })
-          .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "Error: " << ctx.message() << std::endl; })
+  auto client =
+      unilink::uds_client(path)
+          .on_connect(
+              [](const unilink::ConnectionContext&) { std::cout << "Connected. Type messages or '/quit' to exit.\n"; })
+          .on_data([](const unilink::MessageContext& ctx) { std::cout << "[server] " << ctx.data() << "\n"; })
+          .on_disconnect([](const unilink::ConnectionContext&) { std::cout << "Disconnected.\n"; })
+          .on_error([](const unilink::ErrorContext& ctx) { std::cerr << "[error] " << ctx.message() << "\n"; })
           .build();
 
-  if (!sender->start_sync()) {
-    std::cerr << "Failed to start UDP sender" << std::endl;
+  if (!client->start().get()) {
+    std::cerr << "Failed to connect to " << path << "\n";
     return 1;
   }
-
-  std::cout << "Sending messages to 127.0.0.1:9000. Type messages or '/quit'." << std::endl;
 
   std::string line;
   while (std::getline(std::cin, line)) {
     if (line == "/quit") break;
-    sender->send(line);
+    client->send(line);
   }
 
-  sender->stop();
+  client->stop();
   return 0;
 }

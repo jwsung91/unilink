@@ -12,12 +12,10 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# UDS Server example
-add_executable(echo_uds_server echo_uds_server.cc)
-target_link_libraries(echo_uds_server PRIVATE unilink)
-unilink_configure_executable(echo_uds_server)
+add_executable(uds_echo_server echo_server.cc)
+target_link_libraries(uds_echo_server PRIVATE unilink::unilink)
+unilink_configure_executable(uds_echo_server)
 
-# UDS Client example
-add_executable(echo_uds_client echo_uds_client.cc)
-target_link_libraries(echo_uds_client PRIVATE unilink)
-unilink_configure_executable(echo_uds_client)
+add_executable(uds_echo_client echo_client.cc)
+target_link_libraries(uds_echo_client PRIVATE unilink::unilink)
+unilink_configure_executable(uds_echo_client)

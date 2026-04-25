@@ -145,11 +145,9 @@ After the client is running, use:
 
 ## Use The Full Example If You Want More
 
-The repository already includes ready-to-build tutorial examples:
+The repository includes ready-to-build examples:
 
-- [examples/tutorials/getting_started/simple_client.cpp](../../examples/tutorials/getting_started/simple_client.cpp)
-- [examples/tutorials/getting_started/my_first_client.cpp](../../examples/tutorials/getting_started/my_first_client.cpp)
-- [examples/tutorials/README.md](../../../examples/tutorials/README.md)
+- [examples/tcp/echo_client.cc](../../../examples/tcp/echo_client.cc)
 
 This tutorial stays smaller than the example sources on purpose.
 
