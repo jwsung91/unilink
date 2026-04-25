@@ -11,6 +11,7 @@ var classunilink_1_1transport_1_1UdsClient =
     [ "create", "classunilink_1_1transport_1_1UdsClient.html#a1da53427130c53c05de495acb3fa01d9", null ],
     [ "create", "classunilink_1_1transport_1_1UdsClient.html#a2a5328658479c6b7b2221b6d4223e844", null ],
     [ "create", "classunilink_1_1transport_1_1UdsClient.html#aa9fb3995830cbccdc784c7b2f158436d", null ],
+    [ "get_executor", "classunilink_1_1transport_1_1UdsClient.html#a1ca15f407b77b829f0b4f1cc940a80e3", null ],
     [ "is_connected", "classunilink_1_1transport_1_1UdsClient.html#a31f15a635639f84ebda0fe1c8082f6cf", null ],
     [ "last_error_info", "classunilink_1_1transport_1_1UdsClient.html#abdc3d9577ff3ef1a526ae76bc3786015", null ],
     [ "on_backpressure", "classunilink_1_1transport_1_1UdsClient.html#a0efaec29f188e779e48130c21d0a2f2b", null ],

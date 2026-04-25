@@ -10,6 +10,7 @@ var classunilink_1_1transport_1_1TcpClient =
     [ "async_write_shared", "classunilink_1_1transport_1_1TcpClient.html#a9cc703efa5a92e4607faa537fb64bfc1", null ],
     [ "create", "classunilink_1_1transport_1_1TcpClient.html#a7c55f4d77900a63f4ff9328b85771818", null ],
     [ "create", "classunilink_1_1transport_1_1TcpClient.html#a1b53ed16f38baa9f4fcea82b1acf42b1", null ],
+    [ "get_executor", "classunilink_1_1transport_1_1TcpClient.html#ae6a416bbc165b8eb190c726e847cb62e", null ],
     [ "is_connected", "classunilink_1_1transport_1_1TcpClient.html#a4b8730362847982e2b9b58eedd1d6f8c", null ],
     [ "last_error_info", "classunilink_1_1transport_1_1TcpClient.html#a1a031dd0286864b305f09f550c88ed56", null ],
     [ "on_backpressure", "classunilink_1_1transport_1_1TcpClient.html#a69446eead36cb062d06b5a21a8321915", null ],

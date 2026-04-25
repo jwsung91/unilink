@@ -16,6 +16,7 @@ var classunilink_1_1transport_1_1UdsServer =
     [ "connected_clients", "classunilink_1_1transport_1_1UdsServer.html#aba10cc34661bf6716806102249393146", null ],
     [ "create", "classunilink_1_1transport_1_1UdsServer.html#a6da642c072a8416e09778452bb119bb4", null ],
     [ "create", "classunilink_1_1transport_1_1UdsServer.html#a394374fb0d473ec9f081e312d8350b57", null ],
+    [ "get_executor", "classunilink_1_1transport_1_1UdsServer.html#aabb97fa84c5d0a58246e6144d42371af", null ],
     [ "get_state", "classunilink_1_1transport_1_1UdsServer.html#aabadab1ec1092e2dc5dd98a6a62ff597", null ],
     [ "is_connected", "classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab", null ],
     [ "on_backpressure", "classunilink_1_1transport_1_1UdsServer.html#aae59e3b6440e509afc8b081264cf7938", null ],

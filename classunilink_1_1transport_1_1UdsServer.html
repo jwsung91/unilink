@@ -224,6 +224,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8acd6ea17fd839fa936502643e2b1430"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9cabf60593c9ff15a36a585255550ab" id="r_ab9cabf60593c9ff15a36a585255550ab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#ab9cabf60593c9ff15a36a585255550ab">is_connected</a> () const override</td></tr>
 <tr class="separator:ab9cabf60593c9ff15a36a585255550ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabb97fa84c5d0a58246e6144d42371af" id="r_aabb97fa84c5d0a58246e6144d42371af"><td class="memItemLeft" align="right" valign="top">boost::asio::any_io_executor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#aabb97fa84c5d0a58246e6144d42371af">get_executor</a> () override</td></tr>
+<tr class="separator:aabb97fa84c5d0a58246e6144d42371af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02cf1bd9a84546dc732efbe1ba608c64" id="r_a02cf1bd9a84546dc732efbe1ba608c64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a02cf1bd9a84546dc732efbe1ba608c64">async_write_copy</a> (<a class="el" href="namespaceunilink_1_1memory.html#a2d1a0f5fc24b0827600737d46d94f6b0">memory::ConstByteSpan</a> data) override</td></tr>
 <tr class="separator:a02cf1bd9a84546dc732efbe1ba608c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09cda5628dad423b5c7dc20aa8242b58" id="r_a09cda5628dad423b5c7dc20aa8242b58"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html#a09cda5628dad423b5c7dc20aa8242b58">async_write_move</a> (std::vector&lt; uint8_t &gt; &amp;&amp;data) override</td></tr>
@@ -284,7 +286,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8hpp_source.html#l00080">80</a> of file <a class="el" href="transport_2uds_2uds__server_8hpp_source.html">uds_server.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8hpp_source.html#l00081">81</a> of file <a class="el" href="transport_2uds_2uds__server_8hpp_source.html">uds_server.hpp</a>.</p>
 
 </div>
 </div>
@@ -300,7 +302,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8hpp_source.html#l00081">81</a> of file <a class="el" href="transport_2uds_2uds__server_8hpp_source.html">uds_server.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8hpp_source.html#l00082">82</a> of file <a class="el" href="transport_2uds_2uds__server_8hpp_source.html">uds_server.hpp</a>.</p>
 
 </div>
 </div>
@@ -316,7 +318,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8hpp_source.html#l00082">82</a> of file <a class="el" href="transport_2uds_2uds__server_8hpp_source.html">uds_server.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8hpp_source.html#l00083">83</a> of file <a class="el" href="transport_2uds_2uds__server_8hpp_source.html">uds_server.hpp</a>.</p>
 
 </div>
 </div>
@@ -434,7 +436,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a02927701793911d1942102248864d614">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00244">244</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00246">246</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -471,7 +473,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a9e73efa207faca2b8f4a5d07b4c95268">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00249">249</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00251">251</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -508,7 +510,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ae737f9ed052f3020eb840ab0b4630875">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00254">254</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00256">256</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
@@ -535,7 +537,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00284">284</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00286">286</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 <div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-6-summary" class="dynsummary" style="display:block;">
@@ -562,7 +564,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00276">276</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00278">278</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
@@ -588,7 +590,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00309">309</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00311">311</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -607,7 +609,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00314">314</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00316">316</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -681,6 +683,35 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aabb97fa84c5d0a58246e6144d42371af" name="aabb97fa84c5d0a58246e6144d42371af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabb97fa84c5d0a58246e6144d42371af">&#9670;&#160;</a></span>get_executor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::asio::any_io_executor unilink::transport::UdsServer::get_executor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#adea8af03e8270024c653495735812ed2">unilink::interface::Channel</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00244">244</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+
+</div>
+</div>
 <a id="aabadab1ec1092e2dc5dd98a6a62ff597" name="aabadab1ec1092e2dc5dd98a6a62ff597"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aabadab1ec1092e2dc5dd98a6a62ff597">&#9670;&#160;</a></span>get_state()</h2>
 
@@ -696,7 +727,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00336">336</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00338">338</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -755,7 +786,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#a4b311bb483fedf3c5ae93508e4e54d8b">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00271">271</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00273">273</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -785,7 +816,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#ac1ea9493e29fb865a26ab2964a59904a">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00261">261</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00263">263</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -805,7 +836,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00321">321</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00323">323</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -825,7 +856,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00326">326</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00328">328</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -845,7 +876,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00331">331</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00333">333</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -875,7 +906,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classunilink_1_1interface_1_1Channel.html#aa4462e2992427c466d6e12fa492e1b80">unilink::interface::Channel</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00266">266</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00268">268</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -957,7 +988,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00295">295</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00297">297</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 
 </div>
 </div>
@@ -987,7 +1018,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00290">290</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="transport_2uds_2uds__server_8cc_source.html#l00292">292</a> of file <a class="el" href="transport_2uds_2uds__server_8cc_source.html">uds_server.cc</a>.</p>
 <div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-8-summary" class="dynsummary" style="display:block;">
@@ -1080,7 +1111,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1transport.html">transport</a></li><li class="navelem"><a class="el" href="classunilink_1_1transport_1_1UdsServer.html">UdsServer</a></li>
-    <li class="footer">Generated on Sat Apr 25 2026 11:57:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat Apr 25 2026 14:01:56 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

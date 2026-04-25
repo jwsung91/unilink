@@ -1,7 +1,7 @@
 var searchData=
 [
   ['data_0',['data',['../classunilink_1_1memory_1_1MemoryValidator.html#af3b7639e578e0fb8251116e532345c3f',1,'unilink::memory::MemoryValidator::data()'],['../classunilink_1_1memory_1_1SafeDataBuffer.html#aca37b8c40359695418d5c250606f8aa3',1,'unilink::memory::SafeDataBuffer::data()'],['../classunilink_1_1memory_1_1SafeSpan.html#a203851d86025e579f73f04da0828e2bd',1,'unilink::memory::SafeSpan::data()'],['../classunilink_1_1wrapper_1_1MessageContext.html#a49d3f7b0aeac37cb41885b5fc2fa6423',1,'unilink::wrapper::MessageContext::data()'],['../classunilink_1_1memory_1_1PooledBuffer.html#a7aa1378391f5ef5a4ddbf6abff971f81',1,'unilink::memory::PooledBuffer::data()']]],
-  ['data_5fas_5fstring_1',['data_as_string',['../classunilink_1_1wrapper_1_1MessageContext.html#a247c3342c65c9f8c6cdf7d92580bf605',1,'unilink::wrapper::MessageContext']]],
+  ['data_5fas_5fstring_1',['data_as_string',['../classunilink_1_1wrapper_1_1MessageContext.html#a8b634569a2e3dba8e2ed8645f85cf4e2',1,'unilink::wrapper::MessageContext']]],
   ['data_5fas_5fvector_2',['data_as_vector',['../classunilink_1_1wrapper_1_1MessageContext.html#ae984f5dd0b6ab5b9cbe099a52cffb0d0',1,'unilink::wrapper::MessageContext']]],
   ['data_5fbits_3',['data_bits',['../classunilink_1_1builder_1_1SerialBuilder.html#a806f98817d3b066f93f9ea5b8d159c15',1,'unilink::builder::SerialBuilder::data_bits()'],['../classunilink_1_1wrapper_1_1Serial.html#a261ea6cce059bc6913f1689b4ff2f9ba',1,'unilink::wrapper::Serial::data_bits()']]],
   ['debug_4',['debug',['../classunilink_1_1diagnostics_1_1Logger.html#ace307c5e28ee9971be657e431f31a8e5',1,'unilink::diagnostics::Logger']]],

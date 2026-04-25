@@ -10,6 +10,7 @@ var classunilink_1_1transport_1_1Serial =
     [ "create", "classunilink_1_1transport_1_1Serial.html#ad49cd096d57207f079e01a9d4be7f126", null ],
     [ "create", "classunilink_1_1transport_1_1Serial.html#a652743e009e65f7c726ac0f42a8d1870", null ],
     [ "create", "classunilink_1_1transport_1_1Serial.html#a5c0462f02efe1effbdb097bd551a376b", null ],
+    [ "get_executor", "classunilink_1_1transport_1_1Serial.html#a6d891e2d39c4fbb6439e939f4fae8d0e", null ],
     [ "is_connected", "classunilink_1_1transport_1_1Serial.html#a8ff1b4ff7c7baf03be0449a5320d0a10", null ],
     [ "on_backpressure", "classunilink_1_1transport_1_1Serial.html#a1c53a52c146e739a1349240a2db495fa", null ],
     [ "on_bytes", "classunilink_1_1transport_1_1Serial.html#acbe2587bf058f151150b1b76eaa4efb3", null ],

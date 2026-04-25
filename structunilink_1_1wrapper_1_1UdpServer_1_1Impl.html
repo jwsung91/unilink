@@ -189,6 +189,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af4febd7c5c9e03e431b8c3bc93ed03e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affd7f6bc86138ed402b21f816aeecf8d" id="r_affd7f6bc86138ed402b21f816aeecf8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#affd7f6bc86138ed402b21f816aeecf8d">fulfill_all_locked</a> (bool value)</td></tr>
 <tr class="separator:affd7f6bc86138ed402b21f816aeecf8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c606a895edc5e8c1892935f35e677fc" id="r_a7c606a895edc5e8c1892935f35e677fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a7c606a895edc5e8c1892935f35e677fc">flush_batches</a> ()</td></tr>
+<tr class="separator:a7c606a895edc5e8c1892935f35e677fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57da99cafd4de957640593004fa34afd" id="r_a57da99cafd4de957640593004fa34afd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a57da99cafd4de957640593004fa34afd">schedule_batch_timer</a> ()</td></tr>
+<tr class="separator:a57da99cafd4de957640593004fa34afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90e0f997d6fcd89334e0d3edc1da8c85" id="r_a90e0f997d6fcd89334e0d3edc1da8c85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a90e0f997d6fcd89334e0d3edc1da8c85">schedule_reaper</a> ()</td></tr>
 <tr class="separator:a90e0f997d6fcd89334e0d3edc1da8c85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bbdd1e4011a4b4c407126f7d6877725" id="r_a9bbdd1e4011a4b4c407126f7d6877725"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a9bbdd1e4011a4b4c407126f7d6877725">run_reaper</a> ()</td></tr>
@@ -208,10 +212,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a0036f0adbe3084ead3dcd497511f0d2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b1bd018ecf73e66fe2b96bff2b8abe9" id="r_a6b1bd018ecf73e66fe2b96bff2b8abe9"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; boost::asio::io_context &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a6b1bd018ecf73e66fe2b96bff2b8abe9">external_ioc</a></td></tr>
 <tr class="separator:a6b1bd018ecf73e66fe2b96bff2b8abe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86ed6c7997a84c7fd06ceec18fd7ca4a" id="r_a86ed6c7997a84c7fd06ceec18fd7ca4a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a86ed6c7997a84c7fd06ceec18fd7ca4a">use_external_context</a> {false}</td></tr>
-<tr class="separator:a86ed6c7997a84c7fd06ceec18fd7ca4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ef3a484dc5165711bdf15c4918a2b15" id="r_a6ef3a484dc5165711bdf15c4918a2b15"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a6ef3a484dc5165711bdf15c4918a2b15">manage_external_context</a> {false}</td></tr>
-<tr class="separator:a6ef3a484dc5165711bdf15c4918a2b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23295c66c9498ed51217c81e34cf79dc" id="r_a23295c66c9498ed51217c81e34cf79dc"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a23295c66c9498ed51217c81e34cf79dc">use_external_context</a> {false}</td></tr>
+<tr class="separator:a23295c66c9498ed51217c81e34cf79dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24b10d60c5529ccc06fc8ce3a0b69b88" id="r_a24b10d60c5529ccc06fc8ce3a0b69b88"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a24b10d60c5529ccc06fc8ce3a0b69b88">manage_external_context</a> {false}</td></tr>
+<tr class="separator:a24b10d60c5529ccc06fc8ce3a0b69b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47073cf48d7864fb1fda7a2b267ca151" id="r_a47073cf48d7864fb1fda7a2b267ca151"><td class="memItemLeft" align="right" valign="top">std::thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a47073cf48d7864fb1fda7a2b267ca151">external_thread</a></td></tr>
 <tr class="separator:a47073cf48d7864fb1fda7a2b267ca151"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affec1e108de03a3e7785e6db14789bd1" id="r_affec1e108de03a3e7785e6db14789bd1"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; boost::asio::executor_work_guard&lt; boost::asio::io_context::executor_type &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#affec1e108de03a3e7785e6db14789bd1">work_guard</a></td></tr>
@@ -234,22 +238,36 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a7e81d8719ed39c54984e641b790220ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0783c27c7ab7654f275cb2b9021a37b8" id="r_a0783c27c7ab7654f275cb2b9021a37b8"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; boost::asio::steady_timer &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a0783c27c7ab7654f275cb2b9021a37b8">reaper_timer</a></td></tr>
 <tr class="separator:a0783c27c7ab7654f275cb2b9021a37b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dde19dd177c5a921864c120b13c684b" id="r_a1dde19dd177c5a921864c120b13c684b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a1dde19dd177c5a921864c120b13c684b">auto_start</a> {false}</td></tr>
-<tr class="separator:a1dde19dd177c5a921864c120b13c684b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a020659b881451438291128e1ccfa4dc2" id="r_a020659b881451438291128e1ccfa4dc2"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a020659b881451438291128e1ccfa4dc2">auto_start</a> {false}</td></tr>
+<tr class="separator:a020659b881451438291128e1ccfa4dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32482bf214a34c02b0d76fcffe5a6cd2" id="r_a32482bf214a34c02b0d76fcffe5a6cd2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a32482bf214a34c02b0d76fcffe5a6cd2">on_connect</a> {nullptr}</td></tr>
 <tr class="separator:a32482bf214a34c02b0d76fcffe5a6cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45d3b59efb6dcee512e54856fe07b80c" id="r_a45d3b59efb6dcee512e54856fe07b80c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a45d3b59efb6dcee512e54856fe07b80c">on_disconnect</a> {nullptr}</td></tr>
 <tr class="separator:a45d3b59efb6dcee512e54856fe07b80c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c25550dd52688612c6a76d0787cc658" id="r_a5c25550dd52688612c6a76d0787cc658"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a5c25550dd52688612c6a76d0787cc658">on_data</a> {nullptr}</td></tr>
 <tr class="separator:a5c25550dd52688612c6a76d0787cc658"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4ac5ab8c08181c1e2e5b6e9f77e8ae1" id="r_af4ac5ab8c08181c1e2e5b6e9f77e8ae1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#af4ac5ab8c08181c1e2e5b6e9f77e8ae1">on_data_batch_</a> {nullptr}</td></tr>
+<tr class="separator:af4ac5ab8c08181c1e2e5b6e9f77e8ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a427a3f7cbd39df7c0425390bb5783dbf" id="r_a427a3f7cbd39df7c0425390bb5783dbf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a427a3f7cbd39df7c0425390bb5783dbf">on_error</a> {nullptr}</td></tr>
 <tr class="separator:a427a3f7cbd39df7c0425390bb5783dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca0c974620edf67db29ccc55a22dda50" id="r_aca0c974620edf67db29ccc55a22dda50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#aca0c974620edf67db29ccc55a22dda50">framer_factory</a> {nullptr}</td></tr>
 <tr class="separator:aca0c974620edf67db29ccc55a22dda50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdf5cd9a047dbb98d58279b1bee733ee" id="r_afdf5cd9a047dbb98d58279b1bee733ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#afdf5cd9a047dbb98d58279b1bee733ee">on_message</a> {nullptr}</td></tr>
 <tr class="separator:afdf5cd9a047dbb98d58279b1bee733ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac46e82cc4bde7a8d606de44a0f9b119" id="r_aac46e82cc4bde7a8d606de44a0f9b119"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#aac46e82cc4bde7a8d606de44a0f9b119">on_message_batch_</a> {nullptr}</td></tr>
+<tr class="separator:aac46e82cc4bde7a8d606de44a0f9b119"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c52d4f986483b336bd81d36a94b4d96" id="r_a9c52d4f986483b336bd81d36a94b4d96"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a9c52d4f986483b336bd81d36a94b4d96">is_alive</a> {std::make_shared&lt;bool&gt;(true)}</td></tr>
 <tr class="separator:a9c52d4f986483b336bd81d36a94b4d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6865e6ab72c1dfa4bdfb84158637ef59" id="r_a6865e6ab72c1dfa4bdfb84158637ef59"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a6865e6ab72c1dfa4bdfb84158637ef59">data_batch_queue_</a></td></tr>
+<tr class="separator:a6865e6ab72c1dfa4bdfb84158637ef59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32c197d5c2d12cc2640359267cabb255" id="r_a32c197d5c2d12cc2640359267cabb255"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a32c197d5c2d12cc2640359267cabb255">message_batch_queue_</a></td></tr>
+<tr class="separator:a32c197d5c2d12cc2640359267cabb255"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a748ca0ef35fb633c2e65c52a865bf0d9" id="r_a748ca0ef35fb633c2e65c52a865bf0d9"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; boost::asio::steady_timer &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a748ca0ef35fb633c2e65c52a865bf0d9">batch_timer_</a></td></tr>
+<tr class="separator:a748ca0ef35fb633c2e65c52a865bf0d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3e5e3d025fb6d24c81c1c1b6920a3a1" id="r_ae3e5e3d025fb6d24c81c1c1b6920a3a1"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#ae3e5e3d025fb6d24c81c1c1b6920a3a1">max_batch_size_</a> = 100</td></tr>
+<tr class="separator:ae3e5e3d025fb6d24c81c1c1b6920a3a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ad9b33d9054d81258570834ee0fd06e" id="r_a5ad9b33d9054d81258570834ee0fd06e"><td class="memItemLeft" align="right" valign="top">std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html#a5ad9b33d9054d81258570834ee0fd06e">max_batch_latency_</a> {1}</td></tr>
+<tr class="separator:a5ad9b33d9054d81258570834ee0fd06e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -279,7 +297,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00094">94</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00103">103</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -317,7 +335,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00095">95</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00104">104</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -345,13 +363,13 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00097">97</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00106">106</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a4282405e724797444608a3f312841dfa_cgraph.svg" width="100%" height="482"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a4282405e724797444608a3f312841dfa_cgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -379,7 +397,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00102">102</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00111">111</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -391,6 +409,40 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7c606a895edc5e8c1892935f35e677fc" name="a7c606a895edc5e8c1892935f35e677fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c606a895edc5e8c1892935f35e677fc">&#9670;&#160;</a></span>flush_batches()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::wrapper::UdpServer::Impl::flush_batches </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00129">129</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a7c606a895edc5e8c1892935f35e677fc_icgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+
+</div>
+</div>
 <a id="affd7f6bc86138ed402b21f816aeecf8d" name="affd7f6bc86138ed402b21f816aeecf8d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#affd7f6bc86138ed402b21f816aeecf8d">&#9670;&#160;</a></span>fulfill_all_locked()</h2>
 
@@ -415,12 +467,12 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00110">110</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00119">119</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_affd7f6bc86138ed402b21f816aeecf8d_icgraph.svg" width="100%" height="434"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
@@ -449,13 +501,54 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00139">139</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00188">188</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a9bbdd1e4011a4b4c407126f7d6877725_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+
+</div>
+</div>
+<a id="a57da99cafd4de957640593004fa34afd" name="a57da99cafd4de957640593004fa34afd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57da99cafd4de957640593004fa34afd">&#9670;&#160;</a></span>schedule_batch_timer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unilink::wrapper::UdpServer::Impl::schedule_batch_timer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00156">156</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a57da99cafd4de957640593004fa34afd_cgraph.svg" width="472" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a57da99cafd4de957640593004fa34afd_icgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -483,19 +576,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00120">120</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00169">169</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a90e0f997d6fcd89334e0d3edc1da8c85_cgraph.svg" width="464" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div id="dynsection-9-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a90e0f997d6fcd89334e0d3edc1da8c85_icgraph.svg" width="464" height="75"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -524,19 +617,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00165">165</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00217">217</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-7-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_acc6c86c0987b2e7097c779d03fc009f8_cgraph.svg" width="484" height="243"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_acc6c86c0987b2e7097c779d03fc009f8_cgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
-<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-8-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-8-content" class="dyncontent" style="display:none;">
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_acc6c86c0987b2e7097c779d03fc009f8_icgraph.svg" width="484" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -565,13 +658,13 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00257">257</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-9-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00338">338</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-12-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-9-content" class="dyncontent" style="display:none;">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_aef2d453ea13990a3b0bdcd088dd64c46_cgraph.svg" width="100%" height="572"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_aef2d453ea13990a3b0bdcd088dd64c46_cgraph.svg" width="100%" height="500"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -599,38 +692,54 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00302">302</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
-<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-10-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00383">383</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<div id="dynsection-13" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-13-trigger" src="closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div id="dynsection-13-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a9c04eb9b7152bb067e1bb5996a9ddd9d_cgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-11-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-14" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-14-trigger" src="closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div id="dynsection-14-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" frameborder="0" src="structunilink_1_1wrapper_1_1UdpServer_1_1Impl_a9c04eb9b7152bb067e1bb5996a9ddd9d_icgraph.svg" width="464" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a1dde19dd177c5a921864c120b13c684b" name="a1dde19dd177c5a921864c120b13c684b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1dde19dd177c5a921864c120b13c684b">&#9670;&#160;</a></span>auto_start</h2>
+<a id="a020659b881451438291128e1ccfa4dc2" name="a020659b881451438291128e1ccfa4dc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a020659b881451438291128e1ccfa4dc2">&#9670;&#160;</a></span>auto_start</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool unilink::wrapper::UdpServer::Impl::auto_start {false}</td>
+          <td class="memname">std::atomic&lt;bool&gt; unilink::wrapper::UdpServer::Impl::auto_start {false}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00083">83</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a748ca0ef35fb633c2e65c52a865bf0d9" name="a748ca0ef35fb633c2e65c52a865bf0d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a748ca0ef35fb633c2e65c52a865bf0d9">&#9670;&#160;</a></span>batch_timer_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;boost::asio::steady_timer&gt; unilink::wrapper::UdpServer::Impl::batch_timer_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00099">99</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -663,6 +772,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00060">60</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a6865e6ab72c1dfa4bdfb84158637ef59" name="a6865e6ab72c1dfa4bdfb84158637ef59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6865e6ab72c1dfa4bdfb84158637ef59">&#9670;&#160;</a></span>data_batch_queue_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a>&gt; unilink::wrapper::UdpServer::Impl::data_batch_queue_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00097">97</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -726,7 +851,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00089">89</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00090">90</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -742,7 +867,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00092">92</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00094">94</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -762,19 +887,67 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6ef3a484dc5165711bdf15c4918a2b15" name="a6ef3a484dc5165711bdf15c4918a2b15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ef3a484dc5165711bdf15c4918a2b15">&#9670;&#160;</a></span>manage_external_context</h2>
+<a id="a24b10d60c5529ccc06fc8ce3a0b69b88" name="a24b10d60c5529ccc06fc8ce3a0b69b88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24b10d60c5529ccc06fc8ce3a0b69b88">&#9670;&#160;</a></span>manage_external_context</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool unilink::wrapper::UdpServer::Impl::manage_external_context {false}</td>
+          <td class="memname">std::atomic&lt;bool&gt; unilink::wrapper::UdpServer::Impl::manage_external_context {false}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00063">63</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a5ad9b33d9054d81258570834ee0fd06e" name="a5ad9b33d9054d81258570834ee0fd06e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ad9b33d9054d81258570834ee0fd06e">&#9670;&#160;</a></span>max_batch_latency_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::chrono::milliseconds unilink::wrapper::UdpServer::Impl::max_batch_latency_ {1}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00101">101</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="ae3e5e3d025fb6d24c81c1c1b6920a3a1" name="ae3e5e3d025fb6d24c81c1c1b6920a3a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3e5e3d025fb6d24c81c1c1b6920a3a1">&#9670;&#160;</a></span>max_batch_size_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t unilink::wrapper::UdpServer::Impl::max_batch_size_ = 100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00100">100</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="a32c197d5c2d12cc2640359267cabb255" name="a32c197d5c2d12cc2640359267cabb255"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32c197d5c2d12cc2640359267cabb255">&#9670;&#160;</a></span>message_batch_queue_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a>&gt; unilink::wrapper::UdpServer::Impl::message_batch_queue_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00098">98</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -850,6 +1023,22 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="af4ac5ab8c08181c1e2e5b6e9f77e8ae1" name="af4ac5ab8c08181c1e2e5b6e9f77e8ae1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4ac5ab8c08181c1e2e5b6e9f77e8ae1">&#9670;&#160;</a></span>on_data_batch_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> unilink::wrapper::UdpServer::Impl::on_data_batch_ {nullptr}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00088">88</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
 <a id="a45d3b59efb6dcee512e54856fe07b80c" name="a45d3b59efb6dcee512e54856fe07b80c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a45d3b59efb6dcee512e54856fe07b80c">&#9670;&#160;</a></span>on_disconnect</h2>
 
@@ -878,7 +1067,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00088">88</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00089">89</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -894,7 +1083,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00090">90</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00091">91</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
+
+</div>
+</div>
+<a id="aac46e82cc4bde7a8d606de44a0f9b119" name="aac46e82cc4bde7a8d606de44a0f9b119"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac46e82cc4bde7a8d606de44a0f9b119">&#9670;&#160;</a></span>on_message_batch_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> unilink::wrapper::UdpServer::Impl::on_message_batch_ {nullptr}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="udp__server_8cc_source.html#l00092">92</a> of file <a class="el" href="udp__server_8cc_source.html">udp_server.cc</a>.</p>
 
 </div>
 </div>
@@ -978,14 +1183,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a86ed6c7997a84c7fd06ceec18fd7ca4a" name="a86ed6c7997a84c7fd06ceec18fd7ca4a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86ed6c7997a84c7fd06ceec18fd7ca4a">&#9670;&#160;</a></span>use_external_context</h2>
+<a id="a23295c66c9498ed51217c81e34cf79dc" name="a23295c66c9498ed51217c81e34cf79dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23295c66c9498ed51217c81e34cf79dc">&#9670;&#160;</a></span>use_external_context</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool unilink::wrapper::UdpServer::Impl::use_external_context {false}</td>
+          <td class="memname">std::atomic&lt;bool&gt; unilink::wrapper::UdpServer::Impl::use_external_context {false}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1019,7 +1224,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html">UdpServer</a></li><li class="navelem"><a class="el" href="structunilink_1_1wrapper_1_1UdpServer_1_1Impl.html">Impl</a></li>
-    <li class="footer">Generated on Sat Apr 25 2026 11:57:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat Apr 25 2026 14:01:56 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

@@ -10,8 +10,8 @@ var searchData=
   ['pool_5fhits_7',['pool_hits',['../structunilink_1_1memory_1_1MemoryPool_1_1PoolStats.html#a8589efcc55efb864e1a8b8ccbfb8d602',1,'unilink::memory::MemoryPool::PoolStats']]],
   ['port_8',['port',['../structunilink_1_1config_1_1TcpClientConfig.html#acba30b670711d398bb87ba94c3eb56f3',1,'unilink::config::TcpClientConfig::port'],['../structunilink_1_1config_1_1TcpServerConfig.html#adce24401c84899b16320f528185f6636',1,'unilink::config::TcpServerConfig::port']]],
   ['port_5f_9',['port_',['../structunilink_1_1transport_1_1Serial_1_1Impl.html#ac3825c76979da28a0f796b73f732adc3',1,'unilink::transport::Serial::Impl::port_'],['../structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#ac340a7423e8b0e2d4010066223195502',1,'unilink::wrapper::TcpClient::Impl::port_'],['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a10e97ab04797fc1bfcf6f1d785cd634c',1,'unilink::wrapper::TcpServer::Impl::port_']]],
-  ['port_5fretry_5fenabled_5f_10',['port_retry_enabled_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#acc754b1bedbc5426ba62ecf552b9ee27',1,'unilink::wrapper::TcpServer::Impl']]],
+  ['port_5fretry_5fenabled_5f_10',['port_retry_enabled_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#acfd929227fe9ea437f97a27fd31f815a',1,'unilink::wrapper::TcpServer::Impl']]],
   ['port_5fretry_5finterval_5fms_11',['port_retry_interval_ms',['../structunilink_1_1config_1_1TcpServerConfig.html#af01c976217548c39bb297fd76b3298d0',1,'unilink::config::TcpServerConfig']]],
-  ['port_5fretry_5finterval_5fms_5f_12',['port_retry_interval_ms_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a8f3477df42b1fcbe0f6321fe5598189d',1,'unilink::wrapper::TcpServer::Impl']]],
+  ['port_5fretry_5finterval_5fms_5f_12',['port_retry_interval_ms_',['../structunilink_1_1wrapper_1_1TcpServer_1_1Impl.html#a5a3f8091f33cc1b35f834fdf8c5cce35',1,'unilink::wrapper::TcpServer::Impl']]],
   ['ptr_13',['ptr',['../structunilink_1_1memory_1_1MemoryTracker_1_1AllocationInfo.html#a0a25de20740ac76652b0e07d1b514e9c',1,'unilink::memory::MemoryTracker::AllocationInfo']]]
 ];

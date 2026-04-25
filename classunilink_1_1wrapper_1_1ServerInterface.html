@@ -187,6 +187,8 @@ $(document).ready(function(){initNavTree('classunilink_1_1wrapper_1_1ServerInter
 Public Types</h2></td></tr>
 <tr class="memitem:ac5bec7fa6fd4dfea7cda4ded6334e9e6" id="r_ac5bec7fa6fd4dfea7cda4ded6334e9e6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> = std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a> &amp;)&gt;</td></tr>
 <tr class="separator:ac5bec7fa6fd4dfea7cda4ded6334e9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7dfaa37043deeff5f3f14be8f8998b9" id="r_ab7dfaa37043deeff5f3f14be8f8998b9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> = std::function&lt; void(const std::vector&lt; <a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a> &gt; &amp;)&gt;</td></tr>
+<tr class="separator:ab7dfaa37043deeff5f3f14be8f8998b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e34226680bde780c9197a2e9f52cd3b" id="r_a9e34226680bde780c9197a2e9f52cd3b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9e34226680bde780c9197a2e9f52cd3b">ConnectionHandler</a> = std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ConnectionContext.html">ConnectionContext</a> &amp;)&gt;</td></tr>
 <tr class="separator:a9e34226680bde780c9197a2e9f52cd3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cdd888c893263e473aa6d11dc183fd5" id="r_a9cdd888c893263e473aa6d11dc183fd5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> = std::function&lt; void(const <a class="el" href="classunilink_1_1wrapper_1_1ErrorContext.html">ErrorContext</a> &amp;)&gt;</td></tr>
@@ -218,6 +220,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2b2ab220d0e4875935b2caa54589871c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39eb8c72d637c8eee7dd7c0e94b6b7c6" id="r_a39eb8c72d637c8eee7dd7c0e94b6b7c6"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a39eb8c72d637c8eee7dd7c0e94b6b7c6">on_data</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler)=0</td></tr>
 <tr class="separator:a39eb8c72d637c8eee7dd7c0e94b6b7c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a637fa1fc50c1777ef53e69204da6f72d" id="r_a637fa1fc50c1777ef53e69204da6f72d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a637fa1fc50c1777ef53e69204da6f72d">on_data_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> handler)=0</td></tr>
+<tr class="memdesc:a637fa1fc50c1777ef53e69204da6f72d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched data reception.  <br /></td></tr>
+<tr class="separator:a637fa1fc50c1777ef53e69204da6f72d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44bc173a5fcad1186b744f1040d4942f" id="r_a44bc173a5fcad1186b744f1040d4942f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a44bc173a5fcad1186b744f1040d4942f">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a9cdd888c893263e473aa6d11dc183fd5">ErrorHandler</a> handler)=0</td></tr>
 <tr class="separator:a44bc173a5fcad1186b744f1040d4942f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2151283a784a61cd2b2b0aaf8b110ae" id="r_ac2151283a784a61cd2b2b0aaf8b110ae"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac2151283a784a61cd2b2b0aaf8b110ae">framer</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a60a8fd95e90722873eb9cf344a81c0be">FramerFactory</a> factory)=0</td></tr>
@@ -226,6 +231,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad24bc099659445bb75e62d1809c063b9" id="r_ad24bc099659445bb75e62d1809c063b9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ad24bc099659445bb75e62d1809c063b9">on_message</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ac5bec7fa6fd4dfea7cda4ded6334e9e6">MessageHandler</a> handler)=0</td></tr>
 <tr class="memdesc:ad24bc099659445bb75e62d1809c063b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a handler for complete messages extracted by the framer.  <br /></td></tr>
 <tr class="separator:ad24bc099659445bb75e62d1809c063b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a275d1e986bc367c0082bb9db3971c43b" id="r_a275d1e986bc367c0082bb9db3971c43b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a275d1e986bc367c0082bb9db3971c43b">on_message_batch</a> (<a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a> handler)=0</td></tr>
+<tr class="memdesc:a275d1e986bc367c0082bb9db3971c43b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback for batched framed message reception.  <br /></td></tr>
+<tr class="separator:a275d1e986bc367c0082bb9db3971c43b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29376f8067ad8f10e890b1b74dd32693" id="r_a29376f8067ad8f10e890b1b74dd32693"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#a29376f8067ad8f10e890b1b74dd32693">auto_start</a> (bool manage=true)=0</td></tr>
 <tr class="separator:a29376f8067ad8f10e890b1b74dd32693"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad18e4d24ce196ade73fac5c7b83a2270" id="r_ad18e4d24ce196ade73fac5c7b83a2270"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ad18e4d24ce196ade73fac5c7b83a2270">client_count</a> () const =0</td></tr>
@@ -238,6 +246,22 @@ Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00035">35</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ab7dfaa37043deeff5f3f14be8f8998b9" name="ab7dfaa37043deeff5f3f14be8f8998b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7dfaa37043deeff5f3f14be8f8998b9">&#9670;&#160;</a></span>BatchMessageHandler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">unilink::wrapper::ServerInterface::BatchMessageHandler</a> =  std::function&lt;void(const std::vector&lt;<a class="el" href="classunilink_1_1wrapper_1_1MessageContext.html">MessageContext</a>&gt;&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00038">38</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a9e34226680bde780c9197a2e9f52cd3b" name="a9e34226680bde780c9197a2e9f52cd3b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9e34226680bde780c9197a2e9f52cd3b">&#9670;&#160;</a></span>ConnectionHandler</h2>
 
@@ -250,7 +274,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00038">38</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00039">39</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -266,7 +290,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00039">39</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00040">40</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -282,7 +306,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00040">40</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00041">41</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -558,6 +582,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a637fa1fc50c1777ef53e69204da6f72d" name="a637fa1fc50c1777ef53e69204da6f72d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a637fa1fc50c1777ef53e69204da6f72d">&#9670;&#160;</a></span>on_data_batch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::ServerInterface::on_data_batch </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a>&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Register a callback for batched data reception. </p>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#aae5d127ad60f2f456bb60f9609fe1f76">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a1805748c2fcca4d3f59f57dce7b80017">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#ad4f8ddf8b8ae7f4a988ad75baed45c83">unilink::wrapper::UdsServer</a>.</p>
+
+</div>
+</div>
 <a id="a2b2ab220d0e4875935b2caa54589871c" name="a2b2ab220d0e4875935b2caa54589871c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b2ab220d0e4875935b2caa54589871c">&#9670;&#160;</a></span>on_disconnect()</h2>
 
@@ -647,6 +701,36 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a54f83211f21182a0e49b4fcaeb568cb6">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#ae3aefb1b405103db7fa7907777794094">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#a96c112224f1af1d3b5a185eca165ac86">unilink::wrapper::UdsServer</a>.</p>
+
+</div>
+</div>
+<a id="a275d1e986bc367c0082bb9db3971c43b" name="a275d1e986bc367c0082bb9db3971c43b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a275d1e986bc367c0082bb9db3971c43b">&#9670;&#160;</a></span>on_message_batch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a> &amp; unilink::wrapper::ServerInterface::on_message_batch </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html#ab7dfaa37043deeff5f3f14be8f8998b9">BatchMessageHandler</a>&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Register a callback for batched framed message reception. </p>
+
+<p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpServer.html#a795bd4ece9df1d0a5f14175a698404ec">unilink::wrapper::TcpServer</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpServer.html#a6ad90161b752b1f64daf4f3313797bec">unilink::wrapper::UdpServer</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsServer.html#abb8500a46c20981ed73244c62891e6c2">unilink::wrapper::UdsServer</a>.</p>
 
 </div>
 </div>
@@ -740,7 +824,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Synchronously start the channel/server and wait for the result. </p>
 
-<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00050">50</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="iserver_8hpp_source.html#l00051">51</a> of file <a class="el" href="iserver_8hpp_source.html">iserver.hpp</a>.</p>
 
 </div>
 </div>
@@ -783,7 +867,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ServerInterface.html">ServerInterface</a></li>
-    <li class="footer">Generated on Sat Apr 25 2026 11:57:07 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sat Apr 25 2026 14:01:56 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
