@@ -41,13 +41,12 @@ PYBIND11_MODULE(unilink_py, m) {
       .def_property_readonly("client_info", &MessageContext::client_info)
       .def_buffer([](MessageContext& self) -> py::buffer_info {
         const std::string& data = self.data_as_string();
-        return py::buffer_info(
-            const_cast<char*>(data.data()),      /* Pointer to buffer */
-            sizeof(char),                        /* Size of one scalar */
-            py::format_descriptor<char>::format(), /* Python struct-style format descriptor */
-            1,                                   /* Number of dimensions */
-            {data.size()},                       /* Buffer dimensions */
-            {sizeof(char)}                       /* Strides (in bytes) for each index */
+        return py::buffer_info(const_cast<char*>(data.data()),        /* Pointer to buffer */
+                               sizeof(char),                          /* Size of one scalar */
+                               py::format_descriptor<char>::format(), /* Python struct-style format descriptor */
+                               1,                                     /* Number of dimensions */
+                               {data.size()},                         /* Buffer dimensions */
+                               {sizeof(char)}                         /* Strides (in bytes) for each index */
         );
       });
 

@@ -17,11 +17,13 @@
 #include "unilink/wrapper/serial/serial.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <cctype>
 #include <iostream>
 #include <mutex>
+#include <shared_mutex>
 #include <stdexcept>
 #include <thread>
 #include <vector>
@@ -41,7 +43,7 @@ std::string to_lower(std::string s) {
 }  // namespace
 
 struct Serial::Impl {
-  mutable std::mutex mutex_;
+  mutable std::shared_mutex mutex_;
   std::string device;
   uint32_t baud_rate;
   std::shared_ptr<interface::Channel> channel;
@@ -65,7 +67,7 @@ struct Serial::Impl {
   std::unique_ptr<framer::IFramer> framer{nullptr};
 
   // Configuration
-  bool auto_start = false;
+  std::atomic<bool> auto_start_ = false;
   int data_bits = 8;
   int stop_bits = 1;
   std::string parity = "none";
@@ -95,7 +97,7 @@ struct Serial::Impl {
   }
 
   std::future<bool> start() {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
       std::promise<bool> p;
       p.set_value(true);
@@ -106,14 +108,15 @@ struct Serial::Impl {
     auto future = p.get_future();
     pending_promises_.emplace_back(std::move(p));
 
-    if (started_.exchange(true)) {
+    if (started_.load()) {
       return future;
     }
 
     if (!channel) {
-      channel = factory::ChannelFactory::create(build_config(), external_ioc);
+      channel = factory::ChannelFactory::create(build_config_locked(), external_ioc);
       setup_internal_handlers();
     }
+    started_.store(true);
 
     lock.unlock();
     channel->start();
@@ -135,11 +138,12 @@ struct Serial::Impl {
   }
 
   void stop() {
-    std::unique_lock<std::mutex> lock(mutex_);
-    if (!started_.exchange(false)) {
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+    if (!started_.load()) {
       fulfill_all_locked(false);
       return;
     }
+    started_.store(false);
 
     if (channel) {
       channel->on_bytes(nullptr);
@@ -181,7 +185,7 @@ struct Serial::Impl {
       // 1. Raw data handler
       MessageHandler handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         handler = data_handler;
       }
       if (handler) {
@@ -190,7 +194,7 @@ struct Serial::Impl {
       }
 
       // 2. Framer integration
-      std::lock_guard<std::mutex> lock(mutex_);
+      std::shared_lock<std::shared_mutex> lock(mutex_);
       if (framer) {
         framer->push_bytes(data);
       }
@@ -204,7 +208,7 @@ struct Serial::Impl {
         case base::LinkState::Connected: {
           ConnectionHandler handler;
           {
-            std::lock_guard<std::mutex> lock(mutex_);
+            std::unique_lock<std::shared_mutex> lock(mutex_);
             fulfill_all_locked(true);
             handler = connect_handler;
           }
@@ -217,7 +221,7 @@ struct Serial::Impl {
           ConnectionHandler disconnect_handler_snapshot;
           ErrorHandler error_handler_snapshot;
           {
-            std::lock_guard<std::mutex> lock(mutex_);
+            std::unique_lock<std::shared_mutex> lock(mutex_);
             fulfill_all_locked(false);
             if (state == base::LinkState::Error) {
               error_handler_snapshot = error_handler;
@@ -246,7 +250,7 @@ struct Serial::Impl {
     framer->on_message([this](memory::ConstByteSpan msg) {
       MessageHandler handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         handler = message_handler;
       }
       if (handler) {
@@ -257,18 +261,18 @@ struct Serial::Impl {
   }
 
   void set_framer(std::unique_ptr<framer::IFramer> f) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     framer = std::move(f);
     if (framer && message_handler) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     message_handler = std::move(handler);
     if (framer) attach_framer_callback();
   }
 
-  config::SerialConfig build_config() const {
+  config::SerialConfig build_config_locked() const {
     config::SerialConfig config;
     config.device = device;
     config.baud_rate = baud_rate;
@@ -309,29 +313,37 @@ Serial& Serial::operator=(Serial&&) noexcept = default;
 std::future<bool> Serial::start() { return impl_->start(); }
 void Serial::stop() { impl_->stop(); }
 bool Serial::send(std::string_view data) {
-  if (connected() && get_impl()->channel) {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  if (impl_->channel && impl_->channel->is_connected()) {
     auto binary_view = base::safe_convert::string_to_bytes(data);
-    get_impl()->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    impl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     return true;
   }
   return false;
 }
 bool Serial::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
-bool Serial::connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
+bool Serial::connected() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  return impl_->channel && impl_->channel->is_connected();
+}
 
 ChannelInterface& Serial::on_data(MessageHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Serial::on_connect(ConnectionHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connect_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Serial::on_disconnect(ConnectionHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->disconnect_handler = std::move(h);
   return *this;
 }
 ChannelInterface& Serial::on_error(ErrorHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler = std::move(h);
   return *this;
 }
@@ -346,32 +358,38 @@ ChannelInterface& Serial::on_message(MessageHandler h) {
 }
 
 ChannelInterface& Serial::auto_start(bool m) {
-  impl_->auto_start = m;
-  if (impl_->auto_start && !impl_->started_.load()) start();
+  impl_->auto_start_.store(m);
+  if (impl_->auto_start_.load() && !impl_->started_.load()) start();
   return *this;
 }
 
 Serial& Serial::baud_rate(uint32_t b) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->baud_rate = b;
   return *this;
 }
 Serial& Serial::data_bits(int d) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_bits = d;
   return *this;
 }
 Serial& Serial::stop_bits(int s) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->stop_bits = s;
   return *this;
 }
 Serial& Serial::parity(const std::string& p) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->parity = p;
   return *this;
 }
 Serial& Serial::flow_control(const std::string& f) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->flow_control = f;
   return *this;
 }
 Serial& Serial::retry_interval(std::chrono::milliseconds i) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->retry_interval = i;
   if (impl_->channel) {
     auto ts = std::dynamic_pointer_cast<transport::Serial>(impl_->channel);
@@ -380,9 +398,13 @@ Serial& Serial::retry_interval(std::chrono::milliseconds i) {
   return *this;
 }
 
-config::SerialConfig Serial::build_config() const { return get_impl()->build_config(); }
+config::SerialConfig Serial::build_config() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  return impl_->build_config_locked();
+}
 
 Serial& Serial::manage_external_context(bool m) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->manage_external_context = m;
   return *this;
 }

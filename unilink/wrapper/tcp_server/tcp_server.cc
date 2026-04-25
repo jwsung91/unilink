@@ -40,8 +40,8 @@ struct TcpServer::Impl {
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
+  std::atomic<bool> use_external_context_{false};
+  std::atomic<bool> manage_external_context_{false};
   std::thread external_thread_;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
@@ -51,13 +51,13 @@ struct TcpServer::Impl {
   std::shared_ptr<bool> alive_marker_{std::make_shared<bool>(true)};
 
   // Configuration
-  bool auto_start_{false};
-  bool port_retry_enabled_{false};
-  int max_port_retries_{3};
-  int port_retry_interval_ms_{1000};
-  int idle_timeout_ms_{0};
-  bool client_limit_enabled_{false};
-  size_t max_clients_{0};
+  std::atomic<bool> auto_start_{false};
+  std::atomic<bool> port_retry_enabled_{false};
+  std::atomic<int> max_port_retries_{3};
+  std::atomic<int> port_retry_interval_ms_{1000};
+  std::atomic<int> idle_timeout_ms_{0};
+  std::atomic<bool> client_limit_enabled_{false};
+  std::atomic<size_t> max_clients_{0};
 
   ConnectionHandler on_client_connect_{nullptr};
   ConnectionHandler on_disconnect_{nullptr};
@@ -144,28 +144,28 @@ struct TcpServer::Impl {
     if (!channel_) {
       config::TcpServerConfig config;
       config.port = port_;
-      config.enable_port_retry = port_retry_enabled_;
-      config.max_port_retries = max_port_retries_;
-      config.port_retry_interval_ms = port_retry_interval_ms_;
-      config.idle_timeout_ms = idle_timeout_ms_;
+      config.enable_port_retry = port_retry_enabled_.load();
+      config.max_port_retries = max_port_retries_.load();
+      config.port_retry_interval_ms = port_retry_interval_ms_.load();
+      config.idle_timeout_ms = idle_timeout_ms_.load();
 
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       transport_cache_ = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
       setup_internal_handlers();
 
-      if (client_limit_enabled_) {
+      if (client_limit_enabled_.load()) {
         auto transport_server = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
         if (transport_server) {
-          if (max_clients_ == 0)
+          if (max_clients_.load() == 0)
             transport_server->set_unlimited_clients();
           else
-            transport_server->set_client_limit(max_clients_);
+            transport_server->set_client_limit(max_clients_.load());
         }
       }
     }
     lock.unlock();
     channel_->start();
-    if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
+    if (use_external_context_.load() && manage_external_context_.load() && !external_thread_.joinable()) {
       if (external_ioc_ && external_ioc_->stopped()) {
         external_ioc_->restart();
       }
@@ -186,7 +186,7 @@ struct TcpServer::Impl {
     {
       std::unique_lock<std::shared_mutex> lock(mutex_);
       if (!started_.exchange(false)) {
-        is_listening_ = false;
+        is_listening_.store(false);
         fulfill_all_locked(false);
         return;
       }
@@ -199,13 +199,13 @@ struct TcpServer::Impl {
         channel_->stop();
         lock.lock();
       }
-      if (use_external_context_ && manage_external_context_) {
+      if (use_external_context_.load() && manage_external_context_.load()) {
         if (work_guard_) work_guard_.reset();
         if (external_ioc_) external_ioc_->stop();
         should_join = true;
       }
       fulfill_all_locked(false);
-      is_listening_ = false;
+      is_listening_.store(false);
     }
     if (should_join && external_thread_.joinable()) {
       try {
@@ -217,7 +217,7 @@ struct TcpServer::Impl {
       } catch (...) {
       }
     }
-    std::lock_guard<std::shared_mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     channel_.reset();
   }
 
@@ -232,14 +232,14 @@ struct TcpServer::Impl {
 
         ConnectionHandler handler;
         {
-          std::lock_guard<std::shared_mutex> lock(mutex_);
+          std::unique_lock<std::shared_mutex> lock(mutex_);
           if (framer_factory_) {
             auto framer = framer_factory_();
             if (framer) {
               framer->on_message([this, id](memory::ConstByteSpan msg) {
                 MessageHandler on_message_handler;
                 {
-                  std::lock_guard<std::shared_mutex> lock(mutex_);
+                  std::shared_lock<std::shared_mutex> lock(mutex_);
                   on_message_handler = on_message_;
                 }
                 if (on_message_handler) {
@@ -278,7 +278,7 @@ struct TcpServer::Impl {
 
         ConnectionHandler handler;
         {
-          std::lock_guard<std::shared_mutex> lock(mutex_);
+          std::unique_lock<std::shared_mutex> lock(mutex_);
           framers_.erase(id);
           handler = on_disconnect_;
         }
@@ -290,15 +290,15 @@ struct TcpServer::Impl {
       if (!alive) return;
 
       if (state == base::LinkState::Listening) {
-        is_listening_ = true;
-        std::lock_guard<std::shared_mutex> lock(mutex_);
+        is_listening_.store(true);
+        std::unique_lock<std::shared_mutex> lock(mutex_);
         fulfill_all_locked(true);
       } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
                  state == base::LinkState::Idle) {
         ErrorHandler handler;
-        is_listening_ = false;
+        is_listening_.store(false);
         {
-          std::lock_guard<std::shared_mutex> lock(mutex_);
+          std::unique_lock<std::shared_mutex> lock(mutex_);
           fulfill_all_locked(false);
           if (state == base::LinkState::Error) {
             handler = on_error_;
@@ -326,93 +326,97 @@ void TcpServer::stop() { impl_->stop(); }
 bool TcpServer::listening() const { return get_impl()->is_listening_.load(); }
 
 bool TcpServer::broadcast(std::string_view data) {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   const auto& ts = impl_->transport_cache_;
   return ts ? ts->broadcast(data) : false;
 }
 
 bool TcpServer::send_to(ClientId client_id, std::string_view data) {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   const auto& ts = impl_->transport_cache_;
   return ts ? ts->send_to_client(client_id, data) : false;
 }
 
 ServerInterface& TcpServer::on_connect(ConnectionHandler h) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_client_connect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_disconnect(ConnectionHandler h) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_disconnect_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_data(MessageHandler h) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_data_ = std::move(h);
   return *this;
 }
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_error_ = std::move(h);
   return *this;
 }
 
 ServerInterface& TcpServer::framer(FramerFactory factory) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
 }
 
 ServerInterface& TcpServer::on_message(MessageHandler handler) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
   return *this;
 }
 
 size_t TcpServer::client_count() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   const auto& ts = get_impl()->transport_cache_;
   return ts ? ts->client_count() : 0;
 }
 
 std::vector<ClientId> TcpServer::connected_clients() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   const auto& ts = get_impl()->transport_cache_;
   return ts ? ts->connected_clients() : std::vector<ClientId>();
 }
 
 TcpServer& TcpServer::auto_start(bool m) {
-  impl_->auto_start_ = m;
-  if (impl_->auto_start_ && !impl_->started_.load()) start();
+  impl_->auto_start_.store(m);
+  if (impl_->auto_start_.load() && !impl_->started_.load()) start();
   return *this;
 }
 
 TcpServer& TcpServer::port_retry(bool e, int m, int i) {
-  impl_->port_retry_enabled_ = e;
-  impl_->max_port_retries_ = m;
-  impl_->port_retry_interval_ms_ = i;
+  impl_->port_retry_enabled_.store(e);
+  impl_->max_port_retries_.store(m);
+  impl_->port_retry_interval_ms_.store(i);
   return *this;
 }
 
 TcpServer& TcpServer::idle_timeout(std::chrono::milliseconds timeout) {
-  impl_->idle_timeout_ms_ = static_cast<int>(timeout.count());
-  // Note: Runtime change of idle_timeout is not supported by current transport.
-  // Must be set via Builder before start().
+  impl_->idle_timeout_ms_.store(static_cast<int>(timeout.count()));
   return *this;
 }
 
 TcpServer& TcpServer::max_clients(size_t max) {
-  impl_->max_clients_ = max;
-  impl_->client_limit_enabled_ = true;
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->max_clients_.store(max);
+  impl_->client_limit_enabled_.store(true);
   if (impl_->transport_cache_) impl_->transport_cache_->set_client_limit(max);
   return *this;
 }
 
 TcpServer& TcpServer::unlimited_clients() {
-  impl_->client_limit_enabled_ = false;
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->client_limit_enabled_.store(false);
   if (impl_->transport_cache_) impl_->transport_cache_->set_unlimited_clients();
   return *this;
 }
 
 TcpServer& TcpServer::manage_external_context(bool m) {
-  impl_->manage_external_context_ = m;
+  impl_->manage_external_context_.store(m);
   return *this;
 }
 

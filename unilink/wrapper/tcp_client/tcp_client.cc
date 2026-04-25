@@ -16,11 +16,13 @@
 
 #include "unilink/wrapper/tcp_client/tcp_client.hpp"
 
+#include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <mutex>
 #include <optional>
+#include <shared_mutex>
 #include <stdexcept>
 #include <thread>
 #include <vector>
@@ -35,7 +37,7 @@ namespace unilink {
 namespace wrapper {
 
 struct TcpClient::Impl {
-  mutable std::mutex mutex_;
+  mutable std::shared_mutex mutex_;
   std::string host_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
@@ -57,7 +59,7 @@ struct TcpClient::Impl {
 
   std::unique_ptr<framer::IFramer> framer_{nullptr};
 
-  bool auto_start_ = false;
+  std::atomic<bool> auto_start_ = false;
   std::chrono::milliseconds retry_interval_{3000};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
@@ -95,7 +97,7 @@ struct TcpClient::Impl {
   }
 
   std::future<bool> start() {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
       std::promise<bool> p;
       p.set_value(true);
@@ -104,7 +106,7 @@ struct TcpClient::Impl {
     std::promise<bool> p;
     auto f = p.get_future();
     pending_promises_.push_back(std::move(p));
-    if (started_) return f;
+    if (started_.load()) return f;
 
     if (!channel_) {
       config::TcpClientConfig config;
@@ -116,7 +118,7 @@ struct TcpClient::Impl {
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       setup_internal_handlers();
     }
-    started_ = true;
+    started_.store(true);
     channel_->start();
     if (use_external_context_ && manage_external_context_ && !external_thread_.joinable()) {
       if (external_ioc_ && external_ioc_->stopped()) {
@@ -141,12 +143,12 @@ struct TcpClient::Impl {
   void stop() {
     bool should_join = false;
     {
-      std::unique_lock<std::mutex> lock(mutex_);
+      std::unique_lock<std::shared_mutex> lock(mutex_);
       if (!started_.load()) {
         fulfill_all_locked(false);
         return;
       }
-      started_ = false;
+      started_.store(false);
       if (channel_) {
         channel_->on_bytes(nullptr);
         channel_->on_state(nullptr);
@@ -169,12 +171,13 @@ struct TcpClient::Impl {
       } catch (...) {
       }
     }
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     channel_.reset();
     if (framer_) framer_->reset();
   }
 
   bool send(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
       channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
@@ -183,7 +186,10 @@ struct TcpClient::Impl {
     return false;
   }
 
-  bool connected() const { return channel_ && channel_->is_connected(); }
+  bool connected() const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    return channel_ && channel_->is_connected();
+  }
 
   void setup_internal_handlers() {
     if (!channel_) return;
@@ -199,7 +205,7 @@ struct TcpClient::Impl {
       // 1. Raw data handler
       MessageHandler data_handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         data_handler = data_handler_;
       }
       if (data_handler) {
@@ -208,7 +214,7 @@ struct TcpClient::Impl {
       }
 
       // 2. Framer integration
-      std::lock_guard<std::mutex> lock(mutex_);
+      std::shared_lock<std::shared_mutex> lock(mutex_);
       if (framer_) {
         framer_->push_bytes(data);
       }
@@ -224,14 +230,14 @@ struct TcpClient::Impl {
 
       if (state == base::LinkState::Connected) {
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::unique_lock<std::shared_mutex> lock(mutex_);
           fulfill_all_locked(true);
           connect_handler = connect_handler_;
         }
         if (connect_handler) connect_handler(ConnectionContext(0));
       } else if (state == base::LinkState::Closed || state == base::LinkState::Error) {
         {
-          std::lock_guard<std::mutex> lock(mutex_);
+          std::unique_lock<std::shared_mutex> lock(mutex_);
           fulfill_all_locked(false);
           if (state == base::LinkState::Closed) {
             disconnect_handler = disconnect_handler_;
@@ -265,7 +271,7 @@ struct TcpClient::Impl {
     framer_->on_message([this](memory::ConstByteSpan msg) {
       MessageHandler handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         handler = message_handler_;
       }
       if (handler) {
@@ -275,13 +281,13 @@ struct TcpClient::Impl {
   }
 
   void set_framer(std::unique_ptr<framer::IFramer> framer) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     framer_ = std::move(framer);
     if (framer_ && message_handler_) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     message_handler_ = std::move(handler);
     if (framer_) attach_framer_callback();
   }
@@ -303,22 +309,22 @@ bool TcpClient::send_line(std::string_view line) { return impl_->send(std::strin
 bool TcpClient::connected() const { return get_impl()->connected(); }
 
 ChannelInterface& TcpClient::on_data(MessageHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_connect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connect_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_disconnect(ConnectionHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->disconnect_handler_ = std::move(h);
   return *this;
 }
 ChannelInterface& TcpClient::on_error(ErrorHandler h) {
-  std::lock_guard<std::mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(h);
   return *this;
 }
@@ -333,12 +339,13 @@ ChannelInterface& TcpClient::on_message(MessageHandler h) {
 }
 
 ChannelInterface& TcpClient::auto_start(bool m) {
-  impl_->auto_start_ = m;
-  if (impl_->auto_start_ && !impl_->started_.load()) start();
+  impl_->auto_start_.store(m);
+  if (impl_->auto_start_.load() && !impl_->started_.load()) start();
   return *this;
 }
 
 TcpClient& TcpClient::retry_interval(std::chrono::milliseconds i) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->retry_interval_ = i;
   if (impl_->channel_) {
     auto transport_client = std::dynamic_pointer_cast<transport::TcpClient>(impl_->channel_);
@@ -348,14 +355,17 @@ TcpClient& TcpClient::retry_interval(std::chrono::milliseconds i) {
 }
 
 TcpClient& TcpClient::max_retries(int m) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->max_retries_ = m;
   return *this;
 }
 TcpClient& TcpClient::connection_timeout(std::chrono::milliseconds t) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connection_timeout_ = t;
   return *this;
 }
 TcpClient& TcpClient::manage_external_context(bool m) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->manage_external_context_ = m;
   return *this;
 }

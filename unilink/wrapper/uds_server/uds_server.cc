@@ -38,8 +38,8 @@ struct UdsServer::Impl {
   std::string socket_path_;
   std::shared_ptr<transport::UdsServer> server_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
-  bool use_external_context_{false};
-  bool manage_external_context_{false};
+  std::atomic<bool> use_external_context_{false};
+  std::atomic<bool> manage_external_context_{false};
   std::thread external_thread_;
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
 
@@ -57,9 +57,9 @@ struct UdsServer::Impl {
 
   std::unordered_map<ClientId, std::unique_ptr<framer::IFramer>> framers_;
 
-  bool auto_start_ = false;
-  size_t max_clients_ = 100;
-  int idle_timeout_ms_ = 0;
+  std::atomic<bool> auto_start_{false};
+  std::atomic<size_t> max_clients_{100};
+  std::atomic<int> idle_timeout_ms_{0};
 
   explicit Impl(const std::string& socket_path) : socket_path_(socket_path), started_(false) {}
 
@@ -111,12 +111,12 @@ struct UdsServer::Impl {
     if (!server_) {
       config::UdsServerConfig cfg;
       cfg.socket_path = socket_path_;
-      cfg.max_connections = static_cast<int>(max_clients_);
-      cfg.idle_timeout_ms = idle_timeout_ms_;
+      cfg.max_connections = static_cast<int>(max_clients_.load());
+      cfg.idle_timeout_ms = idle_timeout_ms_.load();
 
-      if (use_external_context_) {
+      if (use_external_context_.load()) {
         server_ = std::dynamic_pointer_cast<transport::UdsServer>(factory::ChannelFactory::create(cfg, external_ioc_));
-        if (manage_external_context_ && !external_thread_.joinable()) {
+        if (manage_external_context_.load() && !external_thread_.joinable()) {
           if (external_ioc_ && external_ioc_->stopped()) {
             external_ioc_->restart();
           }
@@ -141,44 +141,50 @@ struct UdsServer::Impl {
   }
 
   void stop() {
-    std::unique_lock<std::shared_mutex> lock(mutex_);
-    if (!started_.exchange(false)) {
+    bool should_join = false;
+    {
+      std::unique_lock<std::shared_mutex> lock(mutex_);
+      if (!started_.exchange(false)) {
+        is_listening_.store(false);
+        fulfill_all_locked(false);
+        return;
+      }
+
+      if (server_) {
+        server_->on_multi_connect(nullptr);
+        server_->on_multi_data(nullptr);
+        server_->on_multi_disconnect(nullptr);
+        server_->on_bytes(nullptr);
+        server_->on_state(nullptr);
+        server_->on_backpressure(nullptr);
+        lock.unlock();
+        server_->stop();
+        lock.lock();
+      }
+
+      if (work_guard_) {
+        work_guard_.reset();
+      }
+
+      if (use_external_context_.load() && manage_external_context_.load() && external_ioc_) {
+        external_ioc_->stop();
+        should_join = true;
+      }
       fulfill_all_locked(false);
-      return;
+      is_listening_.store(false);
     }
 
-    if (server_) {
-      server_->on_multi_connect(nullptr);
-      server_->on_multi_data(nullptr);
-      server_->on_multi_disconnect(nullptr);
-      server_->on_bytes(nullptr);
-      server_->on_state(nullptr);
-      server_->on_backpressure(nullptr);
-      lock.unlock();
-      server_->stop();
-      lock.lock();
-    }
-
-    if (work_guard_) {
-      work_guard_.reset();
-    }
-
-    if (use_external_context_ && manage_external_context_ && external_ioc_) {
-      external_ioc_->stop();
-    }
-
-    if (external_thread_.joinable()) {
-      if (std::this_thread::get_id() != external_thread_.get_id()) {
-        lock.unlock();  // RELEASE LOCK BEFORE JOINING
-        external_thread_.join();
-        lock.lock();  // RE-ACQUIRE
-      } else {
-        external_thread_.detach();
+    if (should_join && external_thread_.joinable()) {
+      try {
+        if (std::this_thread::get_id() != external_thread_.get_id()) {
+          external_thread_.join();
+        } else {
+          external_thread_.detach();
+        }
+      } catch (...) {
       }
     }
-
-    is_listening_ = false;
-    fulfill_all_locked(false);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     server_.reset();
   }
 
@@ -192,23 +198,22 @@ struct UdsServer::Impl {
       if (!alive) return;
 
       ErrorHandler error_handler;
-      {
-        std::lock_guard<std::shared_mutex> lock(mutex_);
-        if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
-          is_listening_ = true;
-          fulfill_all_locked(true);
-        } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
-                   state == base::LinkState::Idle) {
-          is_listening_ = false;
-          fulfill_all_locked(false);
-          if (state == base::LinkState::Error) {
-            error_handler = error_handler_;
-          }
+      if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
+        is_listening_.store(true);
+        std::unique_lock<std::shared_mutex> lock(mutex_);
+        fulfill_all_locked(true);
+      } else if (state == base::LinkState::Error || state == base::LinkState::Closed ||
+                 state == base::LinkState::Idle) {
+        is_listening_.store(false);
+        std::unique_lock<std::shared_mutex> lock(mutex_);
+        fulfill_all_locked(false);
+        if (state == base::LinkState::Error) {
+          error_handler = error_handler_;
         }
-      }
-
-      if (error_handler) {
-        error_handler(ErrorContext(ErrorCode::IoError, "Server error"));
+        if (error_handler) {
+          lock.unlock();
+          error_handler(ErrorContext(ErrorCode::IoError, "Server error"));
+        }
       }
     });
 
@@ -216,15 +221,16 @@ struct UdsServer::Impl {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
+      ConnectionHandler handler;
       {
-        std::lock_guard<std::shared_mutex> lock(mutex_);
+        std::unique_lock<std::shared_mutex> lock(mutex_);
         if (framer_factory_) {
           auto framer = framer_factory_();
           if (framer) {
             framer->on_message([this, client_id](memory::ConstByteSpan msg) {
               MessageHandler on_message_handler;
               {
-                std::lock_guard<std::shared_mutex> lock(mutex_);
+                std::shared_lock<std::shared_mutex> lock(mutex_);
                 on_message_handler = on_message_;
               }
               if (on_message_handler) {
@@ -235,11 +241,6 @@ struct UdsServer::Impl {
             framers_[client_id] = std::move(framer);
           }
         }
-      }
-
-      ConnectionHandler handler;
-      {
-        std::lock_guard<std::shared_mutex> lock(mutex_);
         handler = client_connect_handler_;
       }
       if (handler) {
@@ -251,14 +252,10 @@ struct UdsServer::Impl {
       auto alive = weak_alive.lock();
       if (!alive) return;
 
-      {
-        std::lock_guard<std::shared_mutex> lock(mutex_);
-        framers_.erase(client_id);
-      }
-
       ConnectionHandler handler;
       {
-        std::shared_lock<std::shared_mutex> lock(mutex_);
+        std::unique_lock<std::shared_mutex> lock(mutex_);
+        framers_.erase(client_id);
         handler = client_disconnect_handler_;
       }
       if (handler) {
@@ -311,79 +308,87 @@ void UdsServer::stop() { impl_->stop(); }
 
 bool UdsServer::listening() const { return impl_->is_listening_.load(); }
 
-bool UdsServer::broadcast(std::string_view data) { return impl_->server_ ? impl_->server_->broadcast(data) : false; }
+bool UdsServer::broadcast(std::string_view data) {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  return impl_->server_ ? impl_->server_->broadcast(data) : false;
+}
 
 bool UdsServer::send_to(ClientId client_id, std::string_view data) {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   return impl_->server_ ? impl_->server_->send_to_client(client_id, data) : false;
 }
 
 ServerInterface& UdsServer::on_connect(ConnectionHandler handler) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_connect_handler_ = std::move(handler);
   return *this;
 }
 
 ServerInterface& UdsServer::on_disconnect(ConnectionHandler handler) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_disconnect_handler_ = std::move(handler);
   return *this;
 }
 
 ServerInterface& UdsServer::on_data(MessageHandler handler) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler_ = std::move(handler);
   return *this;
 }
 
 ServerInterface& UdsServer::on_error(ErrorHandler handler) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(handler);
   return *this;
 }
 
 ServerInterface& UdsServer::framer(FramerFactory factory) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->framer_factory_ = std::move(factory);
   return *this;
 }
 
 ServerInterface& UdsServer::on_message(MessageHandler handler) {
-  std::lock_guard<std::shared_mutex> lock(impl_->mutex_);
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_message_ = std::move(handler);
   return *this;
 }
 
-size_t UdsServer::client_count() const { return impl_->server_ ? impl_->server_->client_count() : 0; }
+size_t UdsServer::client_count() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  return impl_->server_ ? impl_->server_->client_count() : 0;
+}
 
 std::vector<ClientId> UdsServer::connected_clients() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   return impl_->server_ ? impl_->server_->connected_clients() : std::vector<ClientId>();
 }
 
 UdsServer& UdsServer::auto_start(bool manage) {
-  impl_->auto_start_ = manage;
-  if (impl_->auto_start_ && !impl_->started_.load()) {
+  impl_->auto_start_.store(manage);
+  if (impl_->auto_start_.load() && !impl_->started_.load()) {
     start();
   }
   return *this;
 }
 
 UdsServer& UdsServer::idle_timeout(std::chrono::milliseconds timeout) {
-  impl_->idle_timeout_ms_ = static_cast<int>(timeout.count());
+  impl_->idle_timeout_ms_.store(static_cast<int>(timeout.count()));
   return *this;
 }
 
 UdsServer& UdsServer::max_clients(size_t max) {
-  impl_->max_clients_ = max;
+  impl_->max_clients_.store(max);
   return *this;
 }
 
 UdsServer& UdsServer::unlimited_clients() {
-  impl_->max_clients_ = 1000000;
+  impl_->max_clients_.store(1000000);
   return *this;
 }
 
 UdsServer& UdsServer::manage_external_context(bool manage) {
-  impl_->manage_external_context_ = manage;
+  impl_->manage_external_context_.store(manage);
   return *this;
 }
 

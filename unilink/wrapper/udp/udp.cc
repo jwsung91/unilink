@@ -21,10 +21,12 @@
 #pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
+#include <atomic>
 #include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/io_context.hpp>
 #include <iostream>
 #include <mutex>
+#include <shared_mutex>
 #include <stdexcept>
 #include <thread>
 #include <vector>
@@ -37,7 +39,7 @@ namespace unilink {
 namespace wrapper {
 
 struct UdpClient::Impl {
-  mutable std::mutex mutex_;
+  mutable std::shared_mutex mutex_;
   config::UdpConfig cfg;
   std::shared_ptr<interface::Channel> channel;
   std::shared_ptr<boost::asio::io_context> external_ioc;
@@ -55,9 +57,9 @@ struct UdpClient::Impl {
 
   std::unique_ptr<framer::IFramer> framer{nullptr};
 
-  bool auto_start{false};
+  std::atomic<bool> auto_start_{false};
   std::vector<std::promise<bool>> pending_promises;
-  std::atomic<bool> started{false};
+  std::atomic<bool> started_{false};
   std::shared_ptr<bool> alive_marker{std::make_shared<bool>(true)};
 
   explicit Impl(const config::UdpConfig& config) : cfg(config) {}
@@ -83,7 +85,7 @@ struct UdpClient::Impl {
   }
 
   std::future<bool> start() {
-    std::unique_lock<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     if (channel && channel->is_connected()) {
       std::promise<bool> p;
       p.set_value(true);
@@ -94,7 +96,7 @@ struct UdpClient::Impl {
     auto future = p.get_future();
     pending_promises.emplace_back(std::move(p));
 
-    if (started.exchange(true)) {
+    if (started_.load()) {
       return future;
     }
 
@@ -102,6 +104,7 @@ struct UdpClient::Impl {
       channel = factory::ChannelFactory::create(cfg, external_ioc);
       setup_internal_handlers();
     }
+    started_.store(true);
 
     lock.unlock();
     channel->start();
@@ -120,11 +123,12 @@ struct UdpClient::Impl {
   }
 
   void stop() {
-    std::unique_lock<std::mutex> lock(mutex_);
-    if (!started.exchange(false)) {
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+    if (!started_.load()) {
       fulfill_all_locked(false);
       return;
     }
+    started_.store(false);
 
     if (channel) {
       channel->on_bytes(nullptr);
@@ -170,7 +174,7 @@ struct UdpClient::Impl {
       // 1. Raw data handler
       MessageHandler handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         handler = data_handler;
       }
       if (handler) {
@@ -179,7 +183,7 @@ struct UdpClient::Impl {
       }
 
       // 2. Framer integration
-      std::lock_guard<std::mutex> lock(mutex_);
+      std::shared_lock<std::shared_mutex> lock(mutex_);
       if (framer) {
         framer->push_bytes(data);
       }
@@ -194,7 +198,7 @@ struct UdpClient::Impl {
         case base::LinkState::Listening: {
           ConnectionHandler handler;
           {
-            std::lock_guard<std::mutex> lock(mutex_);
+            std::unique_lock<std::shared_mutex> lock(mutex_);
             fulfill_all_locked(true);
             handler = connect_handler;
           }
@@ -207,7 +211,7 @@ struct UdpClient::Impl {
           ConnectionHandler disconnect_handler_snapshot;
           ErrorHandler error_handler_snapshot;
           {
-            std::lock_guard<std::mutex> lock(mutex_);
+            std::unique_lock<std::shared_mutex> lock(mutex_);
             fulfill_all_locked(false);
             if (state == base::LinkState::Error) {
               error_handler_snapshot = error_handler;
@@ -236,7 +240,7 @@ struct UdpClient::Impl {
     framer->on_message([this](memory::ConstByteSpan msg) {
       MessageHandler handler;
       {
-        std::lock_guard<std::mutex> lock(mutex_);
+        std::shared_lock<std::shared_mutex> lock(mutex_);
         handler = message_handler;
       }
       if (handler) {
@@ -247,13 +251,13 @@ struct UdpClient::Impl {
   }
 
   void set_framer(std::unique_ptr<framer::IFramer> f) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     framer = std::move(f);
     if (framer && message_handler) attach_framer_callback();
   }
 
   void on_message(MessageHandler handler) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::unique_lock<std::shared_mutex> lock(mutex_);
     message_handler = std::move(handler);
     if (framer) attach_framer_callback();
   }
@@ -273,29 +277,37 @@ UdpClient& UdpClient::operator=(UdpClient&&) noexcept = default;
 std::future<bool> UdpClient::start() { return impl_->start(); }
 void UdpClient::stop() { impl_->stop(); }
 bool UdpClient::send(std::string_view data) {
-  if (connected() && get_impl()->channel) {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  if (impl_->channel && impl_->channel->is_connected()) {
     auto binary_view = base::safe_convert::string_to_bytes(data);
-    get_impl()->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    impl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     return true;
   }
   return false;
 }
 bool UdpClient::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
-bool UdpClient::connected() const { return get_impl()->channel && get_impl()->channel->is_connected(); }
+bool UdpClient::connected() const {
+  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
+  return impl_->channel && impl_->channel->is_connected();
+}
 
 ChannelInterface& UdpClient::on_data(MessageHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->data_handler = std::move(h);
   return *this;
 }
 ChannelInterface& UdpClient::on_connect(ConnectionHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connect_handler = std::move(h);
   return *this;
 }
 ChannelInterface& UdpClient::on_disconnect(ConnectionHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->disconnect_handler = std::move(h);
   return *this;
 }
 ChannelInterface& UdpClient::on_error(ErrorHandler h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler = std::move(h);
   return *this;
 }
@@ -310,12 +322,13 @@ ChannelInterface& UdpClient::on_message(MessageHandler h) {
 }
 
 ChannelInterface& UdpClient::auto_start(bool m) {
-  impl_->auto_start = m;
-  if (impl_->auto_start && !impl_->started.load()) start();
+  impl_->auto_start_.store(m);
+  if (impl_->auto_start_.load() && !impl_->started_.load()) start();
   return *this;
 }
 
 UdpClient& UdpClient::manage_external_context(bool manage) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->manage_external_context = manage;
   return *this;
 }
