@@ -1,4 +1,4 @@
-# Memory Safety Architecture
+# Memory Safety Architecture {#contrib_arch_memory}
 
 `unilink` provides comprehensive memory safety features to ensure robust and secure applications. This document describes the memory safety architecture, features, and best practices.
 
@@ -627,7 +627,7 @@ All memory safety features are tested in CI/CD:
 - ✅ ThreadSanitizer enabled (selected tests)
 - ✅ Valgrind memcheck
 
-See [Testing Guide](../guides/core/testing.md) for details.
+See [Testing Guide](../testing.md) for details.
 
 ---
 
@@ -635,5 +635,4 @@ See [Testing Guide](../guides/core/testing.md) for details.
 
 - [Runtime Behavior](runtime_behavior.md) - Threading and execution model
 - [System Overview](README.md) - High-level architecture
-- [Testing Guide](../guides/core/testing.md) - Memory safety testing
-- [Best Practices](../guides/core/best_practices.md) - Safe coding patterns
+- [Testing Guide](../testing.md) - Memory safety testing

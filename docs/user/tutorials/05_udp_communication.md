@@ -1,4 +1,4 @@
-# UDP Communication
+# UDP Communication {#tutorial_05}
 
 This tutorial covers the basic UDP workflow in `unilink`: bind a receiver, configure a sender, and observe how the wrapper behaves with connectionless traffic.
 
@@ -139,7 +139,7 @@ For simple local tests, UDP is useful when you want low overhead and can tolerat
 
 For ready-to-run maintained examples, use:
 
-- [examples/udp/README.md](../../examples/udp/README.md)
+- [examples/udp/README.md](../../../examples/udp/README.md)
 - [examples/udp/udp_receiver.cpp](../../examples/udp/udp_receiver.cpp)
 - [examples/udp/udp_sender.cpp](../../examples/udp/udp_sender.cpp)
 
@@ -149,9 +149,9 @@ Those examples intentionally stay minimal too: one receiver bound to `9000` and 
 
 ## Next Steps
 
-- [API Reference](../reference/api_guide.md#udp-communication)
-- [Performance Guide](../guides/advanced/performance.md)
-- [Examples Directory](../../examples/udp/README.md)
+- [API Reference](../api_guide.md#udp-communication)
+- [Performance Guide](../performance.md)
+- [Examples Directory](../../../examples/udp/README.md)
 
 ---
 

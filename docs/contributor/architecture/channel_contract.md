@@ -1,8 +1,6 @@
-# Transport Channel Contract
+# Transport Channel Contract {#contrib_arch_channel}
 
-> Internal architecture note
->
-> This document describes the transport-layer `unilink::interface::Channel` contract and related implementation guarantees. It is not the public wrapper/builder API reference. Public application-facing behavior is documented in `docs/reference/api_guide.md`.
+**Internal architecture note:** This document describes the transport-layer `unilink::interface::Channel` contract and related implementation guarantees. It is not the public wrapper/builder API reference. Public application-facing behavior is documented in `docs/user/api_guide.md`.
 
 ## 1. Introduction
 The unilink library provides flexible communication channels (TCP, UDP, Serial, UDS) that abstract away low-level networking and hardware details. To keep behavior consistent across these transports, the transport layer follows a formal "Channel Contract". This document outlines the guarantees expected from internal channel implementations and the runtime assumptions built on top of them.
@@ -16,8 +14,7 @@ The Channel Contract is built upon the following core principles:
 ## 3. Stop Semantics: No Callbacks After Stop()
 One of the most critical aspects of the Channel Contract is the "Stop Semantics."
 
-**Contract Rule:**
-> **Once `Channel::stop()` is called and returns, no further transport-layer asynchronous callbacks (for example `on_state`, `on_bytes`, `on_backpressure`) related to that specific channel instance shall be invoked.**
+**Contract Rule:** Once `Channel::stop()` is called and returns, no further transport-layer asynchronous callbacks (for example `on_state`, `on_bytes`, `on_backpressure`) related to that specific channel instance shall be invoked.
 
 This rule ensures that once an application explicitly requests a channel to stop, it can safely clean up resources and assume that no more events will arrive from that channel, preventing potential use-after-free bugs or unexpected state changes.
 
@@ -57,10 +54,72 @@ To prevent memory exhaustion and manage flow control, channels implement a backp
     *   **Note:** This is a transport concern. The current wrapper/builder API does not expose a public `on_backpressure()` hook.
 
 ## 5. Error Handling Consistency
-(To be defined in future iterations)
 
-## 6. API Whitelist and State Transitions
-(To be defined in future iterations)
+All transport implementations report errors through the `unilink::diagnostics` error reporting API using a shared `ErrorInfo` structure. This ensures consistent error propagation across transports.
 
-## 7. Versioning and Evolution
-(To be defined in future iterations)
+**Error severity levels (`ErrorLevel`):**
+
+| Level | Meaning |
+|---|---|
+| `INFO` | Normal operation event (e.g., reconnect attempt logged) |
+| `WARNING` | Recoverable issue (e.g., write queue near high watermark) |
+| `ERROR` | Operation failed, retry may be applicable |
+| `CRITICAL` | Unrecoverable failure |
+
+**Error categories (`ErrorCategory`):**
+
+| Category | Examples |
+|---|---|
+| `CONNECTION` | connect/disconnect/bind failures |
+| `COMMUNICATION` | read/write failures |
+| `CONFIGURATION` | invalid config values, bad port/path |
+| `MEMORY` | allocation errors |
+| `SYSTEM` | OS-level errors |
+
+**Contract Rules:**
+
+1. Each error report MUST include the `component` name (e.g., `"tcp_client"`, `"serial"`), the `operation` (e.g., `"connect"`, `"read"`), and an `ErrorLevel`.
+2. A transport MUST set `retryable = true` only for errors where the wrapper layer is expected to attempt reconnection.
+3. Errors generated during or after `stop()` MUST NOT be reported to user callbacks (see Stop Semantics in §3).
+
+**Reporting functions** (in `unilink::diagnostics::error_reporting`):
+
+```cpp
+report_connection_error(component, operation, boost_ec, retryable);
+report_communication_error(component, operation, message, retryable);
+report_configuration_error(component, operation, message);
+report_memory_error(component, operation, message);
+```
+
+## 6. State Transitions
+
+Transport channels use `unilink::base::LinkState` to track lifecycle state.
+
+```cpp
+enum class LinkState { Idle, Connecting, Listening, Connected, Closed, Error };
+```
+
+**Client transports (TcpClient, UdsClient, Serial):**
+
+```
+Idle → Connecting → Connected → Closed
+                 ↘            ↘
+                  Error        Error
+```
+
+- `Idle`: Initial state, before `start()` is called.
+- `Connecting`: Async connect or port-open in progress.
+- `Connected`: Channel is open and ready for I/O.
+- `Closed`: `stop()` called or remote closed the connection.
+- `Error`: Unrecoverable failure; wrapper will retry if policy permits.
+
+**Server transports (TcpServer, UdsServer):**
+
+```
+Idle → Listening → Closed
+                ↘
+                 Error
+```
+
+- `Listening`: Acceptor socket is bound and accepting connections.
+- Each accepted session runs its own sub-state machine (`Connected → Closed/Error`).

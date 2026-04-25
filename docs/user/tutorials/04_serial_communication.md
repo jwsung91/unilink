@@ -1,4 +1,4 @@
-# Serial Communication
+# Serial Communication {#tutorial_04}
 
 This tutorial walks through a practical serial workflow with `unilink`: open a device, receive lines, send commands, and test locally with virtual ports before connecting real hardware.
 
@@ -156,9 +156,9 @@ serial->flow_control("none");
 
 If you want a fuller interactive sample, use the existing example programs:
 
-- [examples/serial/README.md](../../examples/serial/README.md)
-- [examples/serial/echo/README.md](../../examples/serial/echo/README.md)
-- [examples/serial/chat/README.md](../../examples/serial/chat/README.md)
+- [examples/serial/README.md](../../../examples/serial/README.md)
+- [examples/serial/echo/README.md](../../../examples/serial/echo/README.md)
+- [examples/serial/chat/README.md](../../../examples/serial/chat/README.md)
 
 Those examples are a better fit for device bring-up and manual testing than this short tutorial.
 
@@ -167,8 +167,8 @@ Those examples are a better fit for device bring-up and manual testing than this
 ## Next Steps
 
 - [UDP Communication](05_udp_communication.md)
-- [API Reference](../reference/api_guide.md#serial-communication)
-- [Examples Directory](../../examples/serial/README.md)
+- [API Reference](../api_guide.md#serial-communication)
+- [Examples Directory](../../../examples/serial/README.md)
 
 ---
 

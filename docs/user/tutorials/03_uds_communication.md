@@ -1,4 +1,4 @@
-# UDS Communication
+# UDS Communication {#tutorial_03}
 
 This tutorial shows the current UDS client/server API using `uds_server(...)` and `uds_client(...)` from `unilink/unilink.hpp`.
 
@@ -127,8 +127,8 @@ The callback model and wrapper lifecycle are intentionally very similar to the T
 
 - [Serial Communication](04_serial_communication.md)
 - [UDP Communication](05_udp_communication.md)
-- [API Reference](../reference/api_guide.md#uds-communication)
-- [Examples Directory](../../examples/uds/README.md)
+- [API Reference](../api_guide.md#uds-communication)
+- [Examples Directory](../../../examples/uds/README.md)
 
 ---
 

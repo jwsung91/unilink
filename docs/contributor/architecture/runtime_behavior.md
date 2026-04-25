@@ -1,4 +1,4 @@
-# Runtime Behavior Model
+# Runtime Behavior Model {#contrib_arch_runtime}
 
 Understanding how `unilink` operates internally helps you write more efficient and robust applications. This document describes the threading model, reconnection policies, and backpressure handling.
 
@@ -551,5 +551,4 @@ Backpressure handling ensures:
 
 - [Memory Safety](memory_safety.md) - Memory safety features
 - [System Overview](README.md) - High-level architecture
-- [Performance Guide](../guides/advanced/performance.md) - Optimization techniques
-- [Best Practices](../guides/core/best_practices.md) - Recommended patterns
+- [Performance Guide](../../user/performance.md) - Optimization techniques

@@ -1,4 +1,4 @@
-# Getting Started with Unilink
+# Getting Started with Unilink {#tutorial_01}
 
 This tutorial shows the current builder-based C++ API for creating a simple TCP client with connection, data, disconnect, and error callbacks.
 
@@ -117,9 +117,9 @@ Type a message in the client, then type a reply in the `nc` terminal.
 
 ---
 
-## What Changed In The Current API
+## API Patterns Used In This Tutorial
 
-The current tutorial code uses context-based callbacks consistently:
+The tutorial code uses context-based callbacks consistently:
 
 - `on_connect(const ConnectionContext&)`
 - `on_disconnect(const ConnectionContext&)`
@@ -149,7 +149,7 @@ The repository already includes ready-to-build tutorial examples:
 
 - [examples/tutorials/getting_started/simple_client.cpp](../../examples/tutorials/getting_started/simple_client.cpp)
 - [examples/tutorials/getting_started/my_first_client.cpp](../../examples/tutorials/getting_started/my_first_client.cpp)
-- [examples/tutorials/README.md](../../examples/tutorials/README.md)
+- [examples/tutorials/README.md](../../../examples/tutorials/README.md)
 
 This tutorial stays smaller than the example sources on purpose.
 
@@ -161,7 +161,7 @@ This tutorial stays smaller than the example sources on purpose.
 - [UDS Communication](03_uds_communication.md)
 - [Serial Communication](04_serial_communication.md)
 - [UDP Communication](05_udp_communication.md)
-- [API Reference](../reference/api_guide.md#tcp-client)
+- [API Reference](../api_guide.md#tcp-client)
 
 ---
 

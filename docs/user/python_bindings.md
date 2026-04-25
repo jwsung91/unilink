@@ -1,4 +1,4 @@
-# Python Bindings Guide
+# Python Bindings Guide {#user_python_bindings}
 
 Unilink provides a Python package (`unilink`) backed by the C++ Wrapper API. This allows you to build cross-platform communication applications using Python with the performance of a C++ core.
 
@@ -10,7 +10,7 @@ Unilink provides a Python package (`unilink`) backed by the C++ Wrapper API. Thi
 
 1. **Prerequisites**:
    - Python 3.8+
-   - `pybind11` (`pip install pybind11`)
+   - `pybind11` — install via pip (`pip install pybind11`) or apt (`sudo apt install python3-pybind11 pybind11-dev`)
    - CMake and a C++17 compiler
 
 2. **Build**:
@@ -125,14 +125,17 @@ serial = unilink.Serial("/dev/ttyUSB0", 115200)
 # Configure
 serial.baud_rate(9600)
 serial.retry_interval(datetime.timedelta(milliseconds=1000))
-serial.auto_start(True) # Automatically starts
 
+# Register callbacks before starting
 def on_data(ctx):
     print(f"Serial Data: {ctx.data}")
 
 serial.on_data(on_data)
 
-# If not using auto_start, call start()
+# Start (or use auto_start to start automatically)
+serial.auto_start(True)
+
+# If not using auto_start, call start() instead:
 # serial.start()
 
 serial.send("AT\r\n")

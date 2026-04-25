@@ -1,4 +1,4 @@
-# Troubleshooting Guide
+# Troubleshooting Guide {#user_troubleshooting}
 
 Common issues and solutions when using unilink.
 
@@ -86,19 +86,10 @@ telnet server.com 8080
 **Solution:** Increase retry interval:
 
 ```cpp
+using namespace std::chrono_literals;
 auto client = tcp_client("server.com", 8080)
     .retry_interval(10000ms)  // Wait 10 seconds
     .build();
-```
-
-#### 3. Slow Network
-
-**Solution:** Increase timeout (requires custom implementation):
-
-```cpp
-// Set socket options for longer timeout
-boost::asio::socket_base::linger option(true, 30);
-socket.set_option(option);
 ```
 
 ---
@@ -191,14 +182,6 @@ auto server = tcp_server(8080)
     .build();
 ```
 
-#### 4. Set SO_REUSEADDR (Advanced)
-
-```cpp
-// Allow immediate port reuse
-boost::asio::socket_base::reuse_address option(true);
-acceptor.set_option(option);
-```
-
 ---
 
 ## Compilation Errors
@@ -236,7 +219,7 @@ g++ -I/path/to/unilink/include ...
 ```cmake
 # CMakeLists.txt
 add_subdirectory(unilink)
-target_link_libraries(your_app PRIVATE unilink)
+target_link_libraries(your_app PRIVATE unilink::unilink)
 ```
 
 ---
@@ -335,19 +318,7 @@ gdb ./your_app core
 (gdb) bt  # backtrace
 ```
 
-#### 2. Use AddressSanitizer
-
-```bash
-# Compile with sanitizer
-cmake -DUNILINK_ENABLE_SANITIZERS=ON ..
-cmake --build .
-
-# Run
-./your_app
-# Will show detailed error if memory issue
-```
-
-#### 3. Common Causes
+#### 2. Common Causes
 
 **Dangling Pointer:**
 
@@ -506,17 +477,7 @@ int main() {
 
 **Solutions:**
 
-#### 1. Enable Memory Tracking (Debug)
-
-```bash
-cmake -DUNILINK_ENABLE_MEMORY_TRACKING=ON ..
-cmake --build .
-./your_app
-
-# Check memory report
-```
-
-#### 2. Fix Memory Leaks
+#### 1. Fix Memory Leaks
 
 ```cpp
 // BAD - Circular reference
@@ -673,15 +634,6 @@ void add_client(size_t id) {
 }
 ```
 
-#### 2. Use Thread-Safe Containers
-
-```cpp
-#include <unilink/concurrency/thread_safe_state.hpp>
-
-unilink::concurrency::ThreadSafeState<State> state_;
-// All operations are thread-safe
-```
-
 ---
 
 ## Debugging Tips
@@ -702,7 +654,7 @@ void setup_debugging() {
     );
     unilink::diagnostics::ErrorHandler::instance().register_callback(
         [](const unilink::diagnostics::ErrorInfo& error) {
-            std::cerr << "[ERROR] " << error.get_summary() << std::endl;
+            std::cerr << "[ERROR] " << error.summary() << std::endl;
         }
     );
 }
@@ -761,7 +713,7 @@ nc localhost 8080 < test_data.txt
 If you're still experiencing issues:
 
 1. **Check Examples**: Look at `examples/` directory
-2. **Read API Guide**: See `docs/reference/api_guide.md`
+2. **Read API Guide**: See `docs/user/api_guide.md`
 3. **Search Issues**: <https://github.com/jwsung91/unilink/issues>
 4. **Ask Community**: Create a new issue with:
    - Minimal reproducible example
@@ -773,6 +725,5 @@ If you're still experiencing issues:
 
 **See Also:**
 
-- [Best Practices](best_practices.md)
-- [Performance Guide](../advanced/performance.md)
-- [API Reference](../reference/api_guide.md)
+- [Performance Guide](performance.md)
+- [API Reference](api_guide.md)

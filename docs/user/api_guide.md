@@ -1,4 +1,4 @@
-# Unilink API Guide
+# Unilink API Guide {#user_api_guide}
 
 Comprehensive API reference for the unilink library.
 
@@ -15,14 +15,13 @@ Comprehensive API reference for the unilink library.
 7. [Error Handling](#error-handling)
 8. [Logging System](#logging-system)
 9. [Configuration Management](#configuration-management)
-10. [Advanced Features](#advanced-features)
+10. [Security](#security)
 
 ---
 
 ## Builder API
 
 The Builder API is the recommended way to use unilink. It provides a fluent, chainable interface for creating communication channels.
-It utilizes the **Curiously Recurring Template Pattern (CRTP)** to ensure that method chaining returns the correct derived builder type, eliminating the need for casting.
 
 ### Core Concept
 
@@ -48,6 +47,28 @@ auto channel = unilink::{type}(params)
 | `.use_packet_framer(...)`        | Split incoming bytes into packet-based messages                   | Disabled |
 | `.on_message(callback)`          | Handle framed messages (`const MessageContext&`)                  | None     |
 | `.build()`                       | **Required**: Build the wrapper instance                          | -        |
+
+**`MessageContext` Data Access**
+
+Inside `on_data` and `on_message` callbacks, `ctx.data()` returns a `std::string_view` that is only valid for the duration of the callback. Do not store or capture it beyond the callback scope.
+
+To take ownership of the data, use:
+- `ctx.data_as_string()` — returns `std::string` (copy)
+- `ctx.data_as_vector()` — returns `std::vector<uint8_t>` (copy)
+
+```cpp
+.on_data([](const unilink::MessageContext& ctx) {
+    // OK: use within the callback
+    std::cout << ctx.data() << std::endl;
+
+    // OK: take ownership if you need to store it
+    std::string owned = ctx.data_as_string();
+    queue.push(std::move(owned));
+
+    // BAD: do not store the string_view beyond this callback
+    // captured_view = ctx.data();  // dangling reference!
+})
+```
 
 **Builder-Specific Options**
 
@@ -169,9 +190,9 @@ unilink::tcp_client(const std::string& host, uint16_t port)
 | `connected()`             | `bool`              | Check connection status                                               |
 | `start()`                  | `std::future<bool>` | Start connection attempt                                              |
 | `stop()`                   | `void`              | Stop and disconnect                                                   |
-| `retry_interval()`     | `void`              | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
-| `max_retries()`        | `void`              | Set max reconnect attempts (`-1` for unlimited)                       |
-| `connection_timeout()` | `void`              | Set connection timeout (`std::chrono::milliseconds`)                  |
+| `retry_interval()`     | `TcpClient&`        | Adjust reconnection interval at runtime (`std::chrono::milliseconds`) |
+| `max_retries()`        | `TcpClient&`        | Set max reconnect attempts (`-1` for unlimited)                       |
+| `connection_timeout()` | `TcpClient&`        | Set connection timeout (`std::chrono::milliseconds`)                  |
 
 ### Advanced Examples
 
@@ -204,30 +225,6 @@ auto client = unilink::tcp_client("127.0.0.1", 8080)
         std::cout << "[" << device_id << "] " << ctx.data() << std::endl;
     })
     .build();
-```
-
-#### Custom Reconnect Policy (Transport Layer)
-
-If you need transport-level reconnect policy control such as `ExponentialBackoff(...)`, you can drop below the wrapper API and use the transport layer directly. This is an advanced path; the recommended public entry point remains `unilink::tcp_client(...)`.
-
-```cpp
-#include "unilink/transport/tcp_client/tcp_client.hpp"
-
-// Configure and create transport client
-unilink::config::TcpClientConfig cfg;
-cfg.host = "127.0.0.1";
-cfg.port = 1234;
-cfg.max_retries = 10;
-
-auto client = unilink::transport::TcpClient::create(cfg);
-
-// Set exponential backoff policy (1s to 30s)
-// Note: If policy is not set, default retry interval is used.
-client->set_reconnect_policy(
-    unilink::ExponentialBackoff(std::chrono::seconds(1), std::chrono::seconds(30))
-);
-
-client->start();
 ```
 
 ---
@@ -276,8 +273,7 @@ if (listening && server->listening()) {
 server->stop();
 ```
 
-> Note: `TcpServerBuilder` requires an explicit client limit before `build()` is called. Choose one of
-> `.single_client()`, `.multi_client(max)`, or `.unlimited_clients()` during construction.
+**Note:** If none of `.single_client()`, `.multi_client(max)`, or `.unlimited_clients()` is called before `build()`, the server defaults to unlimited clients.
 
 ### API Reference
 
@@ -423,13 +419,12 @@ unilink::serial(const std::string& device, uint32_t baud_rate)
 | `connected()`          | `bool`              | Check if port is open                                      |
 | `start()`              | `std::future<bool>` | Open serial port                                           |
 | `stop()`               | `void`              | Close serial port                                          |
-| `baud_rate()`      | `void`              | Adjust baud rate at runtime                                |
-| `data_bits()`      | `void`              | Set data bits (5-8)                                        |
-| `stop_bits()`      | `void`              | Set stop bits (1-2)                                        |
-| `parity()`         | `void`              | Set parity (`none`, `even`, `odd`)                         |
-| `flow_control()`   | `void`              | Set flow control (`none`, `software`, `hardware`)          |
-| `retry_interval()` | `void`              | Adjust reconnection interval (`std::chrono::milliseconds`) |
-| `build_config()`       | `SerialConfig`      | Inspect current mapped serial config                       |
+| `baud_rate()`      | `Serial&`           | Adjust baud rate at runtime                                |
+| `data_bits()`      | `Serial&`           | Set data bits (5-8)                                        |
+| `stop_bits()`      | `Serial&`           | Set stop bits (1-2)                                        |
+| `parity()`         | `Serial&`           | Set parity (`none`, `even`, `odd`)                         |
+| `flow_control()`   | `Serial&`           | Set flow control (`none`, `software`, `hardware`)          |
+| `retry_interval()` | `Serial&`           | Adjust reconnection interval (`std::chrono::milliseconds`) |
 
 ### Device Paths
 
@@ -528,30 +523,45 @@ if (sender_started) {
 
 ### API Reference
 
-#### Constructor
+#### Constructors
 
 ```cpp
-// Create UDP builder with local port binding
+// UDP client: send and/or receive with a configured remote peer
 unilink::udp_client(uint16_t local_port)
+
+// UDP server: receive-only listener with virtual sessions per sender
+unilink::udp_server(uint16_t local_port)
 ```
 
-#### Builder Methods
+#### Builder Methods (UdpClient)
 
 | Method                      | Parameters         | Description                          |
 | --------------------------- | ------------------ | ------------------------------------ |
 | `local_port(port)`          | `uint16_t`         | Bind to a specific local port        |
 | `remote(ip, port)`          | `string, uint16_t` | Set default destination for `send()` |
+| `broadcast(enable)`         | `bool`             | Enable broadcast sends               |
+| `reuse_address(enable)`     | `bool`             | Enable SO_REUSEADDR on the socket    |
 | `independent_context()`     | `bool`             | Run on dedicated IO thread           |
-| `auto_start()`             | `bool`             | Auto-start/stop lifecycle            |
+| `auto_start()`              | `bool`             | Auto-start/stop lifecycle            |
 
-#### Instance Methods
+#### Builder Methods (UdpServer)
 
-| Method           | Return              | Description                            |
-| ---------------- | ------------------- | -------------------------------------- |
+| Method                      | Parameters | Description                       |
+| --------------------------- | ---------- | --------------------------------- |
+| `local_port(port)`          | `uint16_t` | Bind to a specific local port     |
+| `broadcast(enable)`         | `bool`     | Enable broadcast receives         |
+| `reuse_address(enable)`     | `bool`     | Enable SO_REUSEADDR on the socket |
+| `independent_context()`     | `bool`     | Run on dedicated IO thread        |
+| `auto_start()`              | `bool`     | Auto-start/stop lifecycle         |
+
+#### Instance Methods (UdpClient)
+
+| Method           | Return              | Description                               |
+| ---------------- | ------------------- | ----------------------------------------- |
 | `send()`         | `bool`              | Enqueue data to configured remote address |
-| `start()`        | `std::future<bool>` | Start listening/sending                |
-| `stop()`         | `void`              | Close socket                           |
-| `connected()`    | `bool`              | Check if socket is open and ready      |
+| `start()`        | `std::future<bool>` | Start listening/sending                   |
+| `stop()`         | `void`              | Close socket                              |
+| `connected()`    | `bool`              | Check if socket is open and ready         |
 
 ### Advanced Examples
 
@@ -564,6 +574,18 @@ auto socket = unilink::udp_client(8080)
         // Reply to the sender (automatically tracks last sender)
     })
     .build();
+```
+
+#### UDP Server (Receive-only listener)
+
+```cpp
+auto server = unilink::udp_server(8080)
+    .on_data([](const unilink::MessageContext& ctx) {
+        std::cout << "Received: " << ctx.data() << std::endl;
+    })
+    .build();
+
+server->start().get();
 ```
 
 ---
@@ -688,7 +710,7 @@ ErrorHandler::instance().register_callback([](const ErrorInfo& error) {
 
     if (error.level == ErrorLevel::CRITICAL) {
         // Handle critical errors
-        std::cerr << "CRITICAL ERROR! " << error.get_summary() << std::endl;
+        std::cerr << "CRITICAL ERROR! " << error.summary() << std::endl;
     }
 });
 
@@ -712,24 +734,6 @@ auto stats = ErrorHandler::instance().get_error_stats();
 std::cout << "Total errors: " << stats.total_errors << std::endl;
 std::cout << "Critical: " << stats.critical_count << std::endl;
 std::cout << "Errors: " << stats.error_count << std::endl;
-```
-
-### Error Categories
-
-```cpp
-namespace error_reporting = unilink::diagnostics::error_reporting;
-
-// Connection errors
-error_reporting::report_connection_error("tcp_client", "connect", ec, true);
-
-// Communication errors
-error_reporting::report_communication_error("serial", "read", "Timeout", false);
-
-// Configuration errors
-error_reporting::report_configuration_error("builder", "validate", "Invalid port");
-
-// Memory errors
-error_reporting::report_memory_error("buffer", "allocate", "Out of memory");
 ```
 
 ---
@@ -781,17 +785,6 @@ config.flush_interval = std::chrono::milliseconds(1000); // Flush every 1 second
 logger.set_async_logging(true, config);
 ```
 
-### Log Rotation
-
-```cpp
-#include "unilink/diagnostics/log_rotation.hpp"
-
-LogRotation rotation;
-rotation.set_max_file_size(10 * 1024 * 1024);  // 10 MB
-rotation.set_max_backup_count(5);               // Keep 5 backups
-rotation.rotate_if_needed("app.log");
-```
-
 ---
 
 ## Configuration Management
@@ -838,61 +831,6 @@ serial.retry_interval_ms=5000
 ```
 
 Common preset keys are populated by `unilink::config::ConfigPresets` through `ConfigFactory::create_with_defaults()`.
-
----
-
-## Advanced Features
-
-### Memory Pool
-
-Efficient memory allocation for high-performance scenarios.
-
-```cpp
-#include "unilink/memory/memory_pool.hpp"
-#include "unilink/memory/safe_data_buffer.hpp"
-
-unilink::memory::MemoryPool pool;
-
-// Allocate from pool
-auto buffer = pool.acquire(1024);
-// ... use buffer ...
-pool.release(std::move(buffer), 1024);
-```
-
-### Safe Data Buffer
-
-Type-safe data buffer with bounds checking.
-
-```cpp
-#include "unilink/memory/safe_data_buffer.hpp"
-
-unilink::memory::SafeDataBuffer buffer("Hello");
-
-// Safe operations
-auto text = buffer.as_string();
-auto bytes = buffer.as_span();
-```
-
-### Thread-Safe State
-
-Thread-safe state management with read-write locks.
-
-```cpp
-#include "unilink/concurrency/thread_safe_state.hpp"
-
-enum class State { Idle, Running, Stopped };
-
-unilink::concurrency::ThreadSafeState<State> state(State::Idle);
-
-// Read state
-auto current = state.get_state();
-
-// Write state
-state.set_state(State::Running);
-
-// Atomic compare-and-swap
-state.compare_and_set(State::Idle, State::Running);
-```
 
 ---
 
@@ -980,15 +918,62 @@ config.batch_size = 100;
 unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 ```
 
-### 3. Use Memory Pool for Frequent Allocations
+---
+
+## Security
+
+### Validate All Input
+
+Always validate data received from the network before processing it.
 
 ```cpp
-MemoryPool pool(buffer_size, pool_size);
+void handle_message(const std::string& msg) {
+    if (msg.empty() || msg.size() > MAX_MESSAGE_SIZE) {
+        log_warning("Rejected invalid message");
+        return;
+    }
+    if (!is_valid_format(msg)) {
+        log_warning("Invalid message format");
+        return;
+    }
+    process_message(msg);
+}
 ```
 
-### 4. Disable Unnecessary Features
+### Rate Limiting
 
-```bash
-# Build with minimal features
-cmake -DUNILINK_ENABLE_CONFIG=OFF -DUNILINK_ENABLE_MEMORY_TRACKING=OFF
+Protect your server from abuse by limiting requests per client.
+
+```cpp
+class RateLimiter {
+    std::map<size_t, std::deque<std::chrono::steady_clock::time_point>> request_times_;
+    const size_t max_requests_per_second_{10};
+
+    bool is_allowed(size_t client_id) {
+        auto now = std::chrono::steady_clock::now();
+        auto& times = request_times_[client_id];
+        while (!times.empty() && now - times.front() > std::chrono::seconds(1))
+            times.pop_front();
+        if (times.size() >= max_requests_per_second_) return false;
+        times.push_back(now);
+        return true;
+    }
+};
+
+server->on_data([this, &limiter](const unilink::MessageContext& ctx) {
+    if (!limiter.is_allowed(ctx.client_id())) return;
+    process_data(ctx.client_id(), std::string(ctx.data()));
+});
 ```
+
+### Connection Limits
+
+Use `.multi_client(N)` to cap simultaneous connections, or enforce limits manually:
+
+```cpp
+// Built-in limit via builder
+auto server = unilink::tcp_server(8080)
+    .multi_client(100)  // max 100 clients
+    .build();
+```
+

@@ -1,4 +1,4 @@
-# Unilink Quick Start Guide
+# Unilink Quick Start Guide {#user_quickstart}
 
 Get started with unilink in 5 minutes!
 
@@ -24,7 +24,7 @@ sudo cmake --install build
 
 ---
 
-## Your First TCP Client (30 seconds)
+## Your First TCP Client
 
 ```cpp
 #include <chrono>
@@ -67,7 +67,7 @@ g++ -std=c++17 my_client.cc -lunilink -lboost_system -pthread -o my_client
 
 ---
 
-## Your First TCP Server (30 seconds)
+## Your First TCP Server
 
 ```cpp
 #include <chrono>
@@ -101,7 +101,7 @@ int main() {
 
 ---
 
-## Your First Serial Device (30 seconds)
+## Your First Serial Device
 
 ```cpp
 #include <chrono>
@@ -143,6 +143,9 @@ int main() {
 ### Pattern 1: Auto-Reconnection
 
 ```cpp
+#include <chrono>
+using namespace std::chrono_literals;
+
 auto client = unilink::tcp_client("server.com", 8080)
     .retry_interval(3000ms)  // Retry every 3 seconds (default)
     .build();
@@ -184,10 +187,9 @@ auto server = unilink::tcp_server(8080)
 
 ## Next Steps
 
-1. **Read the API Guide**: `docs/reference/api_guide.md`
+1. **Read the API Guide**: `docs/user/api_guide.md`
 2. **Check Examples**: `examples/` directory
-3. **Run Tests**: `cd build && ctest`
-4. **View Full Docs**: `docs/html/index.html` (run `make docs` first)
+3. **View Full Docs**: `docs/html/index.html` (run `cmake --build build --target docs` first)
 
 ---
 

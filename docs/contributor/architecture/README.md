@@ -1,11 +1,8 @@
-# Unilink System Architecture
+# Unilink System Architecture {#contrib_arch}
 
 Comprehensive overview of unilink's architecture and design principles.
 
-> Scope note
->
-> This section mixes public high-level concepts with internal implementation details. For exact application-facing APIs, prefer `docs/reference/api_guide.md`. For transport-internal contracts, prefer `docs/architecture/channel_contract.md`.
-> For wrapper-layer behavioral guarantees, prefer `docs/architecture/wrapper_contract.md`.
+**Scope note:** This section mixes public high-level concepts with internal implementation details. For exact application-facing APIs, prefer `docs/user/api_guide.md`. For transport-internal contracts, prefer `docs/contributor/architecture/channel_contract.md`. For wrapper-layer behavioral guarantees, prefer `docs/contributor/architecture/wrapper_contract.md`.
 
 ---
 
@@ -59,7 +56,7 @@ graph TD
 #### 1. Builder API Layer
 
 - **Purpose**: Provide fluent, chainable interface
-- **Components**: `TcpClientBuilder`, `TcpServerBuilder`, `SerialBuilder`
+- **Components**: `TcpClientBuilder`, `TcpServerBuilder`, `SerialBuilder`, `UdpClientBuilder`, `UdpServerBuilder`, `UdsClientBuilder`, `UdsServerBuilder`
 - **Responsibilities**:
   - Configuration validation
   - Object construction
@@ -68,7 +65,7 @@ graph TD
 #### 2. Wrapper API Layer
 
 - **Purpose**: High-level, easy-to-use interfaces
-- **Components**: `TcpClient`, `TcpServer`, `Serial`
+- **Components**: `TcpClient`, `TcpServer`, `Serial`, `UdpClient`, `UdpServer`, `UdsClient`, `UdsServer`
 - **Responsibilities**:
   - Connection management
   - Data transmission
@@ -102,14 +99,18 @@ graph TD
 
 ```cpp
 namespace unilink::builder {
-    // Base interface
-    template<typename T>
+    // Base interface (CRTP: T = product type, Derived = builder type)
+    template<typename T, typename Derived>
     class BuilderInterface { ... };
 
     // Concrete builders
-    class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient>;
-    class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer>;
-    class SerialBuilder : public BuilderInterface<wrapper::Serial>;
+    class TcpClientBuilder : public BuilderInterface<wrapper::TcpClient, TcpClientBuilder>;
+    class TcpServerBuilder : public BuilderInterface<wrapper::TcpServer, TcpServerBuilder>;
+    class SerialBuilder     : public BuilderInterface<wrapper::Serial,    SerialBuilder>;
+    class UdpClientBuilder  : public BuilderInterface<wrapper::UdpClient, UdpClientBuilder>;
+    class UdpServerBuilder  : public BuilderInterface<wrapper::UdpServer, UdpServerBuilder>;
+    class UdsClientBuilder  : public BuilderInterface<wrapper::UdsClient, UdsClientBuilder>;
+    class UdsServerBuilder  : public BuilderInterface<wrapper::UdsServer, UdsServerBuilder>;
 }
 ```
 
@@ -176,7 +177,6 @@ namespace unilink::transport {
 - Asynchronous I/O
 - Retry logic (3s default interval, first retry at 100ms)
 - Backpressure guard: callback at high watermark (default 1 MiB), hard cap triggers socket close + Error state
-- Connection pooling (planned)
 
 ### 4. Common Utilities
 
@@ -257,16 +257,17 @@ Serial::Serial(std::shared_ptr<ISerialPort> port) : port_(port) { }
 
 ```cpp
 class TcpClient {
-    std::function<void()> on_connect_;
-    std::function<void(const std::string&)> on_data_;
-    std::function<void()> on_disconnect_;
+    std::function<void(const ConnectionContext&)> on_connect_;
+    std::function<void(const MessageContext&)>    on_data_;
+    std::function<void(const ConnectionContext&)> on_disconnect_;
+    std::function<void(const ErrorContext&)>      on_error_;
 
-    void notify_connect() {
-        if (on_connect_) on_connect_();
+    void notify_connect(const ConnectionContext& ctx) {
+        if (on_connect_) on_connect_(ctx);
     }
 
-    void notify_data(const std::string& data) {
-        if (on_data_) on_data_(data);
+    void notify_data(const MessageContext& ctx) {
+        if (on_data_) on_data_(ctx);
     }
 };
 ```
@@ -329,7 +330,7 @@ protected:
 
 ## Threading Model
 
-> **Note:** For a detailed execution model, see [Runtime Behavior](runtime_behavior.md).
+**Note:** For a detailed execution model, see [Runtime Behavior](runtime_behavior.md).
 
 ### Overview
 
@@ -505,11 +506,12 @@ graph TD
 
 ```cpp
 enum class ErrorCategory {
-    NETWORK,        // Connection, timeout, etc.
-    CONFIGURATION,  // Invalid config
-    SYSTEM,         // OS errors
-    MEMORY,         // Allocation failures
-    VALIDATION      // Input validation
+    CONNECTION,    // connect/disconnect/bind failures
+    COMMUNICATION, // read/write failures
+    CONFIGURATION, // invalid config values
+    MEMORY,        // allocation errors
+    SYSTEM,        // OS-level errors
+    UNKNOWN        // unclassified
 };
 
 enum class ErrorLevel {
@@ -522,34 +524,21 @@ enum class ErrorLevel {
 
 ### Error Recovery Strategies
 
-#### 1. Automatic Retry
+#### Automatic Retry
+
+Reconnect behavior is controlled by a `ReconnectPolicy` — a `std::function` that receives the last `ErrorInfo` and the current attempt count, and returns a `ReconnectDecision` (retry + delay).
+
+Two built-in factory functions are provided:
 
 ```cpp
-class RetryPolicy {
-    unsigned max_attempts{5};
-    unsigned interval_ms{3000};
-    bool exponential_backoff{false};
+// Fixed interval (default behavior via builder .retry_interval())
+unilink::FixedInterval(std::chrono::milliseconds delay);
 
-    bool should_retry(unsigned attempt);
-    unsigned get_delay(unsigned attempt);
-};
+// Exponential backoff with optional jitter (transport layer only)
+unilink::ExponentialBackoff(min_delay, max_delay, factor, jitter);
 ```
 
-#### 2. Circuit Breaker (Planned)
-
-```cpp
-class CircuitBreaker {
-    enum class State { CLOSED, OPEN, HALF_OPEN };
-
-    State state_{State::CLOSED};
-    unsigned failure_threshold_{5};
-    std::chrono::seconds timeout_{30};
-
-    bool allow_request();
-    void record_success();
-    void record_failure();
-};
-```
+The wrapper-layer default is a fixed 3-second interval. Exponential backoff requires dropping to the transport layer directly (see api_guide.md – Custom Reconnect Policy).
 
 ---
 
@@ -607,20 +596,7 @@ void send(std::string&& data);  // Move semantics
 void send(std::string_view data);  // View (no copy)
 ```
 
-### 3. Connection Pooling (Planned)
-
-```cpp
-// Reuse connections
-class ConnectionPool {
-    std::queue<Connection*> available_;
-    std::vector<std::unique_ptr<Connection>> all_;
-
-    Connection* acquire();
-    void release(Connection* conn);
-};
-```
-
-### 4. Memory Pooling
+### 3. Memory Pooling
 
 ```cpp
 // Avoid repeated allocations
@@ -754,4 +730,4 @@ Unilink's architecture emphasizes:
 
 - [Runtime Behavior](runtime_behavior.md)
 - [Memory Safety](memory_safety.md)
-- [Performance Guide](../guides/advanced/performance.md)
+- [Performance Guide](../../user/performance.md)

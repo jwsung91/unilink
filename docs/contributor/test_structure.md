@@ -1,4 +1,4 @@
-# Test Structure
+# Test Structure {#contrib_test_structure}
 
 This document describes how the test tree is organized and how to work with it, without embedding release-specific counts or dated snapshots.
 

@@ -1,14 +1,14 @@
-# Installation Guide
+# Installation Guide {#user_installation}
 
 This guide covers the supported ways to install and use the **unilink** library in your project. For most users, **vcpkg** is the recommended and simplest option.
 
 ## Prerequisites
 
 - **CMake**: 3.12 or higher
-- **C++ Compiler**: C++17 compatible (GCC 7+, Clang 5+, MSVC 2017+)
+- **C++ Compiler**: C++17 compatible (GCC 11+, Clang 14+, MSVC 2019+)
 - **Platform**: Linux, Windows, macOS
 
-> Note: When using a package manager (vcpkg), dependencies such as Boost are handled automatically.
+**Note:** When using a package manager (vcpkg), dependencies such as Boost are handled automatically.
 
 ## Installation Methods
 
@@ -42,7 +42,7 @@ int main() {
 }
 ```
 
-> Note: The vcpkg port name is `jwsung91-unilink`, while the CMake package and target name remain `unilink`.
+**Note:** The vcpkg port name is `jwsung91-unilink`, while the CMake package and target name remain `unilink`.
 
 ### Method 2: Install from Source (CMake Package)
 
@@ -83,7 +83,7 @@ Choose the archive matching your OS and architecture. Replace `${VERSION}` with 
 export UNILINK_VERSION="0.4.3"
 wget https://github.com/jwsung91/unilink/releases/latest/download/unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
 tar -xzf unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
-cd unilink-${UNILINK_VERSION}-Linux-x86_64.tar.gz
+cd unilink-${UNILINK_VERSION}-Linux-x86_64
 ```
 
 #### Step 2: Install
@@ -128,7 +128,7 @@ target_link_libraries(my_app PRIVATE unilink::unilink)
   - Official port: `jwsung91-unilink`
   - Recommended for most users
 
-Other package managers (e.g., Conan) are planned but not yet officially supported.
+Other package managers (e.g., Conan) are not yet officially supported.
 
 ## Build Options (Source Builds)
 
@@ -143,9 +143,6 @@ Other package managers (e.g., Conan) are planned but not yet officially supporte
 | `UNILINK_ENABLE_INSTALL`           | `ON`    | Enable install targets               |
 | `UNILINK_ENABLE_PKGCONFIG`         | `ON`    | Install pkg-config file              |
 | `UNILINK_ENABLE_EXPORT_HEADER`     | `ON`    | Generate export header               |
-| `UNILINK_ENABLE_MEMORY_TRACKING`   | `OFF`   | Enable memory tracking for debugging |
-| `UNILINK_ENABLE_SANITIZERS`        | `OFF`   | Enable sanitizers in Debug builds    |
-| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF`   | Enable performance/benchmark tests   |
 
 Example:
 
@@ -159,7 +156,6 @@ cmake -S . -B build \
 
 ## Next Steps
 
-- [Quick Start Guide](../core/quickstart.md)
-- [API Reference](../reference/api_guide.md)
-- [Implementation Status](../../implementation_status.md)
+- [Quick Start Guide](quickstart.md)
+- [API Reference](api_guide.md)
 - [Examples](../../examples/)

@@ -1,4 +1,4 @@
-# System Requirements
+# System Requirements {#user_requirements}
 
 This guide describes the system requirements and dependencies needed to build and use `unilink`.
 
@@ -18,8 +18,10 @@ This guide describes the system requirements and dependencies needed to build an
 | ---------------- | ------------------- | ------------------------------------- |
 | Ubuntu 22.04 LTS | ✅ Fully Supported  | Recommended for production            |
 | Ubuntu 24.04 LTS | ✅ Fully Supported  | Latest features and optimizations     |
-| Ubuntu 20.04 LTS | ⚠️ Local Build Only | Not supported in CI/CD, build locally |
+| Ubuntu 20.04 LTS | ⚠️ Local Build Only | GCC 11+ required manually             |
 | Other Linux      | 🔄 Should Work      | Not officially tested                 |
+| macOS            | ✅ Fully Supported  | Tested in CI (macOS 14, Clang)        |
+| Windows          | ✅ Fully Supported  | Tested in CI (Windows 2022, MSVC)     |
 
 ---
 
@@ -49,27 +51,6 @@ sudo apt update && sudo apt install -y \
 
 ---
 
-## Optional Dependencies
-
-### For Documentation Generation
-
-```bash
-sudo apt install -y doxygen graphviz
-```
-
-### For Development
-
-```bash
-# AddressSanitizer support (included in GCC/Clang)
-# Valgrind for memory debugging
-sudo apt install -y valgrind
-
-# clang-format for code formatting
-sudo apt install -y clang-format
-```
-
----
-
 ## Compiler Requirements
 
 ### Minimum Compiler Versions
@@ -84,34 +65,6 @@ sudo apt install -y clang-format
 - **C++17** is required
 - C++20 and C++23 are supported but not required
 
-### Compiler Features Required
-
-- Lambda expressions
-- `std::thread` and threading support
-- `<filesystem>` support (C++17)
-- Move semantics
-- Variadic templates
-
----
-
-## Build Environment
-
-### Disk Space
-
-- **Source code**: ~10 MB
-- **Build artifacts**: ~50-100 MB (depending on configuration)
-- **Examples and tests**: ~50 MB additional
-
-### Memory Requirements
-
-- **Compilation**: Minimum 2 GB RAM recommended
-- **Parallel builds** (`-j`): Additional 500 MB per core
-
-### CPU
-
-- Any modern x86_64 or ARM64 processor
-- Parallel builds benefit from multi-core processors
-
 ---
 
 ## Runtime Requirements
@@ -120,8 +73,7 @@ sudo apt install -y clang-format
 
 ```bash
 # Install runtime libraries only
-sudo apt install -y libboost-system1.74.0
-# Version may vary depending on your Ubuntu version
+sudo apt install -y libboost-system-dev
 ```
 
 ### Thread Support
@@ -143,10 +95,8 @@ sudo apt install -y libboost-system1.74.0
 
 - Default GCC 9.4 does **not** meet requirements
 - Must install GCC 11+ or Clang 14+ manually
-- See [Ubuntu 20.04 Build Guide](build_guide.md#ubuntu-2004-build)
-- **Note**: Ubuntu 20.04 reaches end-of-life in April 2025
-- **CI/CD Policy**: Not supported in automated CI/CD due to runner availability issues
-- **Local Development**: You can still build and test locally on Ubuntu 20.04
+- See [Ubuntu 20.04 Build Guide](../contributor/build_guide.md#ubuntu-2004-build)
+- **Note**: Ubuntu 20.04 reached end-of-life in April 2025; local builds still work
 
 ### Other Linux Distributions
 
@@ -232,6 +182,6 @@ sudo apt install cmake
 
 ## Next Steps
 
-- [Build Guide](build_guide.md) - Build instructions for different configurations
-- [Quick Start Guide](../core/quickstart.md) - Get started with unilink
-- [Troubleshooting](../core/troubleshooting.md) - Common issues and solutions
+- [Quick Start Guide](quickstart.md) - Get started with unilink
+- [Installation Guide](installation.md) - Installation options
+- [Troubleshooting](troubleshooting.md) - Common issues and solutions

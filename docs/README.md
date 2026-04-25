@@ -6,16 +6,28 @@ This directory contains the hand-written documentation for `unilink` plus the co
 
 ```text
 docs/
-├── README.md                 # Documentation maintenance guide
-├── index.md                  # Main handwritten documentation index
-├── implementation_status.md  # Current codebase snapshot
-├── architecture/             # Design and runtime notes
-├── config/                   # Doxygen configuration
-├── guides/                   # Setup, usage, testing, troubleshooting
-├── img/                      # Images referenced by docs
-├── reference/                # API guide and reference material
-├── scripts/                  # Helper scripts for docs generation/serving
-└── tutorials/                # Step-by-step walkthroughs
+├── README.md          # This file — documentation maintenance guide
+├── index.md           # Landing page (links to user/ and contributor/)
+├── user/              # For library users (API consumers)
+│   ├── index.md       # User guide entry point
+│   ├── quickstart.md
+│   ├── installation.md
+│   ├── requirements.md
+│   ├── api_guide.md
+│   ├── troubleshooting.md
+│   ├── python_bindings.md
+│   ├── performance.md
+│   └── tutorials/     # Step-by-step walkthroughs
+├── contributor/       # For library developers / contributors
+│   ├── index.md       # Contributor guide entry point
+│   ├── build_guide.md
+│   ├── testing.md
+│   ├── implementation_status.md
+│   ├── test_structure.md
+│   └── architecture/  # Internal design and transport contracts
+├── config/            # Doxygen configuration
+├── img/               # Images referenced by docs
+└── scripts/           # Helper scripts for docs generation/serving
 ```
 
 Generated HTML is written to `docs/html/` when Doxygen runs. That output is a generated artefact, not the source of truth.
@@ -23,7 +35,7 @@ Generated HTML is written to `docs/html/` when Doxygen runs. That output is a ge
 ## Where To Start
 
 - Reader entry point: `docs/index.md`
-- Current implementation snapshot: `docs/implementation_status.md`
+- Current implementation snapshot: `docs/contributor/implementation_status.md`
 - Doxygen configuration: `docs/config/Doxyfile`
 - Helper scripts: `docs/scripts/generate_docs.sh`, `serve_docs.sh`, `clean_docs.sh`
 
@@ -85,11 +97,11 @@ python3 -m http.server 8000
 - When documenting callbacks or methods, verify signatures against headers under `unilink/wrapper/` and `unilink/builder/`.
 - Treat runnable examples under `examples/` as the preferred source for tutorial snippets when possible.
 - For compile-checked tutorial snippets, keep the `<!-- doc-compile: ... -->` marker attached to the canonical fenced C++ block.
-- When build flags or defaults change, update `README.md`, `docs/index.md`, and `docs/guides/setup/build_guide.md` together.
-- When adding public APIs, update `docs/reference/api_guide.md` and `docs/implementation_status.md`.
-- When changing config behavior, update both `docs/reference/api_guide.md` and architecture notes that mention configuration flow.
+- When build flags or defaults change, update `README.md`, `docs/index.md`, and `docs/contributor/build_guide.md` together.
+- When adding public APIs, update `docs/user/api_guide.md` and `docs/contributor/implementation_status.md`.
+- When changing config behavior, update both `docs/user/api_guide.md` and architecture notes that mention configuration flow.
 - Keep document roles separated to avoid copy drift:
   - `quickstart`: shortest successful path
   - `tutorials`: step-by-step workflows
-  - `reference/api_guide.md`: protocol and API surface details
+  - `user/api_guide.md`: protocol and API surface details
   - `examples/*/README.md`: runnable example commands and CLI usage
