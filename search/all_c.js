@@ -6,7 +6,7 @@ var searchData=
   ['data_20corruption_3',['Problem: Race Condition / Data Corruption',['../user_troubleshooting.html#autotoc_md736',1,'']]],
   ['data_20handling_4',['Safe Data Handling',['../contrib_arch_memory.html#autotoc_md14',1,'']]],
   ['data_20transfer_5',['Problem: Slow Data Transfer',['../user_troubleshooting.html#autotoc_md727',1,'']]],
-  ['data_5fas_5fstring_6',['data_as_string',['../classunilink_1_1wrapper_1_1MessageContext.html#a8b634569a2e3dba8e2ed8645f85cf4e2',1,'unilink::wrapper::MessageContext']]],
+  ['data_5fas_5fstring_6',['data_as_string',['../classunilink_1_1wrapper_1_1MessageContext.html#a247c3342c65c9f8c6cdf7d92580bf605',1,'unilink::wrapper::MessageContext']]],
   ['data_5fas_5fvector_7',['data_as_vector',['../classunilink_1_1wrapper_1_1MessageContext.html#ae984f5dd0b6ab5b9cbe099a52cffb0d0',1,'unilink::wrapper::MessageContext']]],
   ['data_5fbits_8',['data_bits',['../classunilink_1_1wrapper_1_1Serial.html#a261ea6cce059bc6913f1689b4ff2f9ba',1,'unilink::wrapper::Serial::data_bits()'],['../classunilink_1_1builder_1_1SerialBuilder.html#a806f98817d3b066f93f9ea5b8d159c15',1,'unilink::builder::SerialBuilder::data_bits()'],['../structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a948bd16c6606091de5709bf5549b9adc',1,'unilink::wrapper::Serial::Impl::data_bits']]],
   ['data_5fhandler_9',['data_handler',['../structunilink_1_1wrapper_1_1UdpClient_1_1Impl.html#ae472a5b7fc20d5a3d4565a42a7cd1806',1,'unilink::wrapper::UdpClient::Impl::data_handler'],['../structunilink_1_1wrapper_1_1Serial_1_1Impl.html#a0ed4d722bd11a24e6e7b8ff661c11ba6',1,'unilink::wrapper::Serial::Impl::data_handler']]],
