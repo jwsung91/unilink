@@ -1,4 +1,4 @@
-# Memory Safety Architecture
+# Memory Safety Architecture {#contrib_arch_memory}
 
 `unilink` provides comprehensive memory safety features to ensure robust and secure applications. This document describes the memory safety architecture, features, and best practices.
 

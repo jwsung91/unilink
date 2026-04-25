@@ -1,4 +1,4 @@
-# User Guide
+# User Guide {#user_index}
 
 Documentation for developers using unilink as a library in their applications.
 

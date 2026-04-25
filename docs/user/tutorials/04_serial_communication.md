@@ -1,4 +1,4 @@
-# Serial Communication
+# Serial Communication {#tutorial_04}
 
 This tutorial walks through a practical serial workflow with `unilink`: open a device, receive lines, send commands, and test locally with virtual ports before connecting real hardware.
 

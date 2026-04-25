@@ -1,4 +1,4 @@
-# Build Guide
+# Build Guide {#contrib_build}
 
 Complete guide for building `unilink` with different configurations and platforms.
 

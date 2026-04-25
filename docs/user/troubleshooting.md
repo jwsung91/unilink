@@ -1,4 +1,4 @@
-# Troubleshooting Guide
+# Troubleshooting Guide {#user_troubleshooting}
 
 Common issues and solutions when using unilink.
 

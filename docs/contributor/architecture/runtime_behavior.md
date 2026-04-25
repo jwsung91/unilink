@@ -1,4 +1,4 @@
-# Runtime Behavior Model
+# Runtime Behavior Model {#contrib_arch_runtime}
 
 Understanding how `unilink` operates internally helps you write more efficient and robust applications. This document describes the threading model, reconnection policies, and backpressure handling.
 

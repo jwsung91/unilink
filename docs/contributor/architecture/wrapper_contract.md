@@ -1,4 +1,4 @@
-# Wrapper Contract
+# Wrapper Contract {#contrib_arch_wrapper}
 
 **Public wrapper behavior note:** This document describes the intended application-facing behavior of the wrapper layer: `TcpClient`, `TcpServer`, `UdpClient`, `UdpServer`, `Serial`, `UdsClient`, and `UdsServer`. For lower-level transport guarantees, see `docs/contributor/architecture/channel_contract.md`.
 

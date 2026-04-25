@@ -1,4 +1,4 @@
-# Contributor Guide
+# Contributor Guide {#contrib_index}
 
 Documentation for developers building, extending, or contributing to unilink itself.
 

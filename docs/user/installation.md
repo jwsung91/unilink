@@ -1,4 +1,4 @@
-# Installation Guide
+# Installation Guide {#user_installation}
 
 This guide covers the supported ways to install and use the **unilink** library in your project. For most users, **vcpkg** is the recommended and simplest option.
 

@@ -1,4 +1,4 @@
-# Unilink API Guide
+# Unilink API Guide {#user_api_guide}
 
 Comprehensive API reference for the unilink library.
 

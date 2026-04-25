@@ -1,4 +1,4 @@
-# Unilink System Architecture
+# Unilink System Architecture {#contrib_arch}
 
 Comprehensive overview of unilink's architecture and design principles.
 

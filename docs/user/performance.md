@@ -1,4 +1,4 @@
-# Performance Guide
+# Performance Guide {#user_performance}
 
 This guide covers performance optimization strategies for `unilink`.
 

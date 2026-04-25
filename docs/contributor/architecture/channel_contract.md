@@ -1,4 +1,4 @@
-# Transport Channel Contract
+# Transport Channel Contract {#contrib_arch_channel}
 
 **Internal architecture note:** This document describes the transport-layer `unilink::interface::Channel` contract and related implementation guarantees. It is not the public wrapper/builder API reference. Public application-facing behavior is documented in `docs/user/api_guide.md`.
 
