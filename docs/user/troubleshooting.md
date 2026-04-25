@@ -318,19 +318,7 @@ gdb ./your_app core
 (gdb) bt  # backtrace
 ```
 
-#### 2. Use AddressSanitizer
-
-```bash
-# Compile with sanitizer
-cmake -DUNILINK_ENABLE_SANITIZERS=ON ..
-cmake --build .
-
-# Run
-./your_app
-# Will show detailed error if memory issue
-```
-
-#### 3. Common Causes
+#### 2. Common Causes
 
 **Dangling Pointer:**
 
@@ -489,17 +477,7 @@ int main() {
 
 **Solutions:**
 
-#### 1. Enable Memory Tracking (Debug)
-
-```bash
-cmake -DUNILINK_ENABLE_MEMORY_TRACKING=ON ..
-cmake --build .
-./your_app
-
-# Check memory report
-```
-
-#### 2. Fix Memory Leaks
+#### 1. Fix Memory Leaks
 
 ```cpp
 // BAD - Circular reference
@@ -656,15 +634,6 @@ void add_client(size_t id) {
 }
 ```
 
-#### 2. Use Thread-Safe Containers
-
-```cpp
-#include <unilink/concurrency/thread_safe_state.hpp>
-
-unilink::concurrency::ThreadSafeState<State> state_;
-// All operations are thread-safe
-```
-
 ---
 
 ## Debugging Tips
@@ -756,6 +725,5 @@ If you're still experiencing issues:
 
 **See Also:**
 
-- [Best Practices](best_practices.md)
 - [Performance Guide](performance.md)
 - [API Reference](api_guide.md)

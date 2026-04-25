@@ -15,6 +15,7 @@ Comprehensive API reference for the unilink library.
 7. [Error Handling](#error-handling)
 8. [Logging System](#logging-system)
 9. [Configuration Management](#configuration-management)
+10. [Security](#security)
 
 ---
 
@@ -735,24 +736,6 @@ std::cout << "Critical: " << stats.critical_count << std::endl;
 std::cout << "Errors: " << stats.error_count << std::endl;
 ```
 
-### Error Categories
-
-```cpp
-namespace error_reporting = unilink::diagnostics::error_reporting;
-
-// Connection errors
-error_reporting::report_connection_error("tcp_client", "connect", ec, true);
-
-// Communication errors
-error_reporting::report_communication_error("serial", "read", "Timeout", false);
-
-// Configuration errors
-error_reporting::report_configuration_error("builder", "validate", "Invalid port");
-
-// Memory errors
-error_reporting::report_memory_error("buffer", "allocate", "Out of memory");
-```
-
 ---
 
 ## Logging System
@@ -800,17 +783,6 @@ config.batch_size = 100;                    // Process 100 logs at once
 config.flush_interval = std::chrono::milliseconds(1000); // Flush every 1 second
 
 logger.set_async_logging(true, config);
-```
-
-### Log Rotation
-
-```cpp
-#include "unilink/diagnostics/log_rotation.hpp"
-
-LogRotation rotation;
-rotation.set_max_file_size(10 * 1024 * 1024);  // 10 MB
-rotation.set_max_backup_count(5);               // Keep 5 backups
-rotation.rotate_if_needed("app.log");
 ```
 
 ---
@@ -944,5 +916,64 @@ class MyApplication {
 unilink::diagnostics::AsyncLogConfig config;
 config.batch_size = 100;
 unilink::diagnostics::Logger::instance().set_async_logging(true, config);
+```
+
+---
+
+## Security
+
+### Validate All Input
+
+Always validate data received from the network before processing it.
+
+```cpp
+void handle_message(const std::string& msg) {
+    if (msg.empty() || msg.size() > MAX_MESSAGE_SIZE) {
+        log_warning("Rejected invalid message");
+        return;
+    }
+    if (!is_valid_format(msg)) {
+        log_warning("Invalid message format");
+        return;
+    }
+    process_message(msg);
+}
+```
+
+### Rate Limiting
+
+Protect your server from abuse by limiting requests per client.
+
+```cpp
+class RateLimiter {
+    std::map<size_t, std::deque<std::chrono::steady_clock::time_point>> request_times_;
+    const size_t max_requests_per_second_{10};
+
+    bool is_allowed(size_t client_id) {
+        auto now = std::chrono::steady_clock::now();
+        auto& times = request_times_[client_id];
+        while (!times.empty() && now - times.front() > std::chrono::seconds(1))
+            times.pop_front();
+        if (times.size() >= max_requests_per_second_) return false;
+        times.push_back(now);
+        return true;
+    }
+};
+
+server->on_data([this, &limiter](const unilink::MessageContext& ctx) {
+    if (!limiter.is_allowed(ctx.client_id())) return;
+    process_data(ctx.client_id(), std::string(ctx.data()));
+});
+```
+
+### Connection Limits
+
+Use `.multi_client(N)` to cap simultaneous connections, or enforce limits manually:
+
+```cpp
+// Built-in limit via builder
+auto server = unilink::tcp_server(8080)
+    .multi_client(100)  // max 100 clients
+    .build();
 ```
 

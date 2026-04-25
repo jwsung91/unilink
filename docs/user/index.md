@@ -36,7 +36,6 @@ Step-by-step guides for each transport family:
 
 | Document | What it covers |
 |----------|----------------|
-| [Best Practices](best_practices.md) | Recommended usage patterns and guardrails |
 | [Troubleshooting](troubleshooting.md) | Common failures and how to resolve them |
 | [Python Bindings](python_bindings.md) | Python API and configuration |
 | [Performance](performance.md) | Build and runtime tuning considerations |

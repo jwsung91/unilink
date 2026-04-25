@@ -14,7 +14,6 @@ docs/
 │   ├── installation.md
 │   ├── requirements.md
 │   ├── api_guide.md
-│   ├── best_practices.md
 │   ├── troubleshooting.md
 │   ├── python_bindings.md
 │   ├── performance.md

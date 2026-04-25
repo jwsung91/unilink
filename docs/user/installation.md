@@ -5,7 +5,7 @@ This guide covers the supported ways to install and use the **unilink** library 
 ## Prerequisites
 
 - **CMake**: 3.12 or higher
-- **C++ Compiler**: C++17 compatible (GCC 7+, Clang 5+, MSVC 2017+)
+- **C++ Compiler**: C++17 compatible (GCC 11+, Clang 14+, MSVC 2019+)
 - **Platform**: Linux, Windows, macOS
 
 **Note:** When using a package manager (vcpkg), dependencies such as Boost are handled automatically.
@@ -143,9 +143,6 @@ Other package managers (e.g., Conan) are not yet officially supported.
 | `UNILINK_ENABLE_INSTALL`           | `ON`    | Enable install targets               |
 | `UNILINK_ENABLE_PKGCONFIG`         | `ON`    | Install pkg-config file              |
 | `UNILINK_ENABLE_EXPORT_HEADER`     | `ON`    | Generate export header               |
-| `UNILINK_ENABLE_MEMORY_TRACKING`   | `OFF`   | Enable memory tracking for debugging |
-| `UNILINK_ENABLE_SANITIZERS`        | `OFF`   | Enable sanitizers in Debug builds    |
-| `UNILINK_ENABLE_PERFORMANCE_TESTS` | `OFF`   | Enable performance/benchmark tests   |
 
 Example:
 
@@ -161,5 +158,4 @@ cmake -S . -B build \
 
 - [Quick Start Guide](quickstart.md)
 - [API Reference](api_guide.md)
-- [Implementation Status](../contributor/implementation_status.md)
 - [Examples](../../examples/)

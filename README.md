@@ -78,7 +78,6 @@ Documentation is split by audience. Visit our **[Online Documentation](https://j
 * [Installation Guide](docs/user/installation.md) – Package, source, and build options
 * [Requirements](docs/user/requirements.md) – Supported platforms and dependencies
 * [API Reference](docs/user/api_guide.md) – Public API overview
-* [Best Practices](docs/user/best_practices.md) – Recommended usage patterns
 * [Troubleshooting](docs/user/troubleshooting.md) – Common issues and resolutions
 * [Tutorials](docs/user/tutorials/)
 

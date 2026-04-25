@@ -30,7 +30,6 @@ Internal design and contracts that all transport implementations must follow:
 ## Quick Links (User Docs)
 
 - [API Reference](../user/api_guide.md)
-- [Best Practices](../user/best_practices.md)
 - [Troubleshooting](../user/troubleshooting.md)
 
 ---

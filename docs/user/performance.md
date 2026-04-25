@@ -1,6 +1,6 @@
 # Performance Guide
 
-This guide covers performance optimization strategies for `unilink`, including build configuration, runtime optimization, tuning techniques, and benchmarking.
+This guide covers performance optimization strategies for `unilink`.
 
 ---
 
@@ -68,12 +68,7 @@ Never perform heavy computation or blocking operations (like `sleep`) inside cal
 
 ## Memory Optimization
 
-### 1. Memory Pool Usage
-`unilink` automatically uses memory pools for buffers ≤ 64 KB.
-- **Buffers ≤ 64 KB**: Use memory pool (fast allocation, no fragmentation).
-- **Buffers > 64 KB**: Direct allocation.
-
-### 2. Avoid Data Copies
+### 1. Avoid Data Copies
 Use move semantics and avoid unnecessary string copies.
 
 ```cpp
@@ -85,7 +80,7 @@ client->send(std::move(large_data));
 void parse(std::string_view msg) { ... }
 ```
 
-### 3. Reserve Vector Capacity
+### 2. Reserve Vector Capacity
 When building vectors of data, always `reserve` capacity to avoid reallocations.
 
 ```cpp

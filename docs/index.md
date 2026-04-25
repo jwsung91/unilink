@@ -16,7 +16,6 @@ You are building an application using unilink.
 | [Installation](user/installation.md) | vcpkg, source, release packages |
 | [Requirements](user/requirements.md) | Platform and dependency expectations |
 | [API Reference](user/api_guide.md) | Full public API: builders, wrappers, callbacks |
-| [Best Practices](user/best_practices.md) | Recommended usage patterns |
 | [Troubleshooting](user/troubleshooting.md) | Common failures and debugging steps |
 | [Python Bindings](user/python_bindings.md) | Python API guide |
 | [Performance](user/performance.md) | Build and runtime tuning |

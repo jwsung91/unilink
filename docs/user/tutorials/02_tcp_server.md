@@ -155,7 +155,6 @@ Use the chat example when you want a larger stateful server example with nicknam
 - [Serial Communication](04_serial_communication.md)
 - [UDP Communication](05_udp_communication.md)
 - [API Reference](../api_guide.md#tcp-server)
-- [Best Practices Guide](../best_practices.md)
 
 ---
 
