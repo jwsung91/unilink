@@ -37,7 +37,7 @@ PYBIND11_MODULE(unilink_py, m) {
   // Context objects
   py::class_<MessageContext>(m, "MessageContext")
       .def_property_readonly("client_id", &MessageContext::client_id)
-      .def_property_readonly("data", [](const MessageContext& self) { return py::bytes(std::string(self.data())); })
+      .def_property_readonly("data", [](const MessageContext& self) { return py::bytes(self.data_as_string()); })
       .def_property_readonly("client_info", &MessageContext::client_info);
 
   py::class_<ConnectionContext>(m, "ConnectionContext")

@@ -244,7 +244,7 @@ struct TcpServer::Impl {
                 }
                 if (on_message_handler) {
                   std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
-                  on_message_handler(MessageContext(id, str_msg));
+                  on_message_handler(MessageContext(id, std::move(str_msg)));
                 }
               });
               framers_[id] = std::move(framer);
@@ -264,7 +264,7 @@ struct TcpServer::Impl {
           std::shared_lock<std::shared_mutex> lock(mutex_);
           handler = on_data_;
         }
-        if (handler) handler(MessageContext(id, data));
+        if (handler) handler(MessageContext(id, std::move(data)));
 
         std::shared_lock<std::shared_mutex> lock(mutex_);
         auto it = framers_.find(id);

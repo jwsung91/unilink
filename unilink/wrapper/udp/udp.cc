@@ -175,7 +175,7 @@ struct UdpClient::Impl {
       }
       if (handler) {
         std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
-        handler(MessageContext(0, str_data));
+        handler(MessageContext(0, std::move(str_data)));
       }
 
       // 2. Framer integration
@@ -240,7 +240,8 @@ struct UdpClient::Impl {
         handler = message_handler;
       }
       if (handler) {
-        handler(MessageContext(0, base::safe_convert::uint8_to_string(msg.data(), msg.size())));
+        std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
+        handler(MessageContext(0, std::move(str_msg)));
       }
     });
   }

@@ -248,7 +248,8 @@ struct UdsClient::Impl {
         handler = data_handler_;
       }
       if (handler) {
-        handler(MessageContext(0, base::safe_convert::uint8_to_string(data.data(), data.size())));
+        std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
+        handler(MessageContext(0, std::move(str_data)));
       }
 
       // 2. Framer integration
@@ -270,7 +271,8 @@ struct UdsClient::Impl {
         handler = message_handler_;
       }
       if (handler) {
-        handler(MessageContext(0, base::safe_convert::uint8_to_string(msg.data(), msg.size())));
+        std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
+        handler(MessageContext(0, std::move(str_msg)));
       }
     });
   }

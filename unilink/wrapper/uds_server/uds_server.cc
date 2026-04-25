@@ -229,7 +229,7 @@ struct UdsServer::Impl {
               }
               if (on_message_handler) {
                 std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
-                on_message_handler(MessageContext(client_id, str_msg));
+                on_message_handler(MessageContext(client_id, std::move(str_msg)));
               }
             });
             framers_[client_id] = std::move(framer);
@@ -277,8 +277,8 @@ struct UdsServer::Impl {
         handler = data_handler_;
       }
       if (handler) {
-        handler(MessageContext(client_id,
-                               std::string_view(reinterpret_cast<const char*>(data_span.data()), data_span.size())));
+        std::string str_data = base::safe_convert::uint8_to_string(data_span.data(), data_span.size());
+        handler(MessageContext(client_id, std::move(str_data)));
       }
 
       // 2. Framer integration
