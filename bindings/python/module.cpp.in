@@ -35,10 +35,21 @@ PYBIND11_MODULE(unilink_py, m) {
       .export_values();
 
   // Context objects
-  py::class_<MessageContext>(m, "MessageContext")
+  py::class_<MessageContext>(m, "MessageContext", py::buffer_protocol())
       .def_property_readonly("client_id", &MessageContext::client_id)
-      .def_property_readonly("data", [](const MessageContext& self) { return py::bytes(std::string(self.data())); })
-      .def_property_readonly("client_info", &MessageContext::client_info);
+      .def_property_readonly("data", [](const MessageContext& self) { return py::bytes(self.data_as_string()); })
+      .def_property_readonly("client_info", &MessageContext::client_info)
+      .def_buffer([](MessageContext& self) -> py::buffer_info {
+        const std::string& data = self.data_as_string();
+        return py::buffer_info(
+            const_cast<char*>(data.data()),      /* Pointer to buffer */
+            sizeof(char),                        /* Size of one scalar */
+            py::format_descriptor<char>::format(), /* Python struct-style format descriptor */
+            1,                                   /* Number of dimensions */
+            {data.size()},                       /* Buffer dimensions */
+            {sizeof(char)}                       /* Strides (in bytes) for each index */
+        );
+      });
 
   py::class_<ConnectionContext>(m, "ConnectionContext")
       .def_property_readonly("client_id", &ConnectionContext::client_id)
@@ -71,7 +82,11 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("start_sync", &TcpClient::start_sync)
       .def("stop", &TcpClient::stop)
-      .def("send", &TcpClient::send)
+      .def("send",
+           [](TcpClient& self, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.send(std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
       .def("send_line", &TcpClient::send_line)
       .def("connected", &TcpClient::connected)
       .def("auto_start", &TcpClient::auto_start, py::arg("start") = true)
@@ -140,8 +155,16 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("start_sync", &TcpServer::start_sync)
       .def("stop", &TcpServer::stop)
-      .def("broadcast", &TcpServer::broadcast)
-      .def("send_to", &TcpServer::send_to)
+      .def("broadcast",
+           [](TcpServer& self, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.broadcast(std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
+      .def("send_to",
+           [](TcpServer& self, ClientId client_id, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.send_to(client_id, std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
       .def("client_count", &TcpServer::client_count)
       .def("connected_clients", &TcpServer::connected_clients)
       .def("listening", &TcpServer::listening)
@@ -208,7 +231,11 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("start_sync", &Serial::start_sync)
       .def("stop", &Serial::stop)
-      .def("send", &Serial::send)
+      .def("send",
+           [](Serial& self, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.send(std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
       .def("send_line", &Serial::send_line)
       .def("connected", &Serial::connected)
       .def("auto_start", &Serial::auto_start, py::arg("start") = true)
@@ -280,7 +307,11 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("start_sync", &UdsClient::start_sync)
       .def("stop", &UdsClient::stop)
-      .def("send", &UdsClient::send)
+      .def("send",
+           [](UdsClient& self, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.send(std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
       .def("send_line", &UdsClient::send_line)
       .def("connected", &UdsClient::connected)
       .def("auto_start", &UdsClient::auto_start, py::arg("start") = true)
@@ -349,8 +380,16 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("start_sync", &UdsServer::start_sync)
       .def("stop", &UdsServer::stop)
-      .def("broadcast", &UdsServer::broadcast)
-      .def("send_to", &UdsServer::send_to)
+      .def("broadcast",
+           [](UdsServer& self, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.broadcast(std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
+      .def("send_to",
+           [](UdsServer& self, ClientId client_id, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.send_to(client_id, std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
       .def("client_count", &UdsServer::client_count)
       .def("connected_clients", &UdsServer::connected_clients)
       .def("listening", &UdsServer::listening)
@@ -428,7 +467,11 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("start_sync", &UdpClient::start_sync)
       .def("stop", &UdpClient::stop)
-      .def("send", &UdpClient::send)
+      .def("send",
+           [](UdpClient& self, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.send(std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
       .def("send_line", &UdpClient::send_line)
       .def("connected", &UdpClient::connected)
       .def("auto_start", &UdpClient::auto_start, py::arg("start") = true)
@@ -495,8 +538,16 @@ PYBIND11_MODULE(unilink_py, m) {
            })
       .def("start_sync", &UdpServer::start_sync)
       .def("stop", &UdpServer::stop)
-      .def("broadcast", &UdpServer::broadcast)
-      .def("send_to", &UdpServer::send_to)
+      .def("broadcast",
+           [](UdpServer& self, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.broadcast(std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
+      .def("send_to",
+           [](UdpServer& self, ClientId client_id, py::buffer b) {
+             py::buffer_info info = b.request();
+             return self.send_to(client_id, std::string_view(static_cast<const char*>(info.ptr), info.size));
+           })
       .def("client_count", &UdpServer::client_count)
       .def("connected_clients", &UdpServer::connected_clients)
       .def("listening", &UdpServer::listening)

@@ -193,8 +193,8 @@ struct UdpServer::Impl {
                   on_message_handler = on_message;
                 }
                 if (on_message_handler) {
-                  on_message_handler(
-                      MessageContext(client_id, base::safe_convert::uint8_to_string(msg.data(), msg.size())));
+                  std::string str_msg = base::safe_convert::uint8_to_string(msg.data(), msg.size());
+                  on_message_handler(MessageContext(client_id, std::move(str_msg)));
                 }
               });
               entry.framer = std::move(framer);
@@ -215,7 +215,7 @@ struct UdpServer::Impl {
 
       if (data_handler_copy) {
         std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
-        data_handler_copy(MessageContext(client_id, str_data));
+        data_handler_copy(MessageContext(client_id, std::move(str_data)));
       }
 
       // Push to framer

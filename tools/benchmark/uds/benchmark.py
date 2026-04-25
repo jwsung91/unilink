@@ -78,6 +78,33 @@ def run_unilink_uds_pingpong(num_pings):
     client.stop(); server.stop(); cleanup()
     return (end_time - start_time) if success else -1
 
+def run_unilink_uds_pingpong_zerocopy(num_pings):
+    cleanup()
+    server = unilink.UdsServer(SOCKET_PATH)
+    client = unilink.UdsClient(SOCKET_PATH)
+    done = threading.Event()
+    completed = 0
+
+    def on_server_data(ctx): server.send_to(ctx.client_id, memoryview(ctx))
+    def on_client_data(ctx):
+        nonlocal completed
+        completed += 1
+        if completed < num_pings: client.send(PING_MESSAGE)
+        else: done.set()
+
+    server.on_data(on_server_data); client.on_data(on_client_data)
+    if not server.start() or not client.start():
+        server.stop(); client.stop(); cleanup()
+        return -1
+    
+    start_time = time.time()
+    client.send(PING_MESSAGE)
+    success = done.wait(timeout=max(5.0, num_pings * 0.05))
+    end_time = time.time()
+    
+    client.stop(); server.stop(); cleanup()
+    return (end_time - start_time) if success else -1
+
 def run_python_uds_throughput(num_chunks):
     cleanup()
     total_bytes = num_chunks * CHUNK_SIZE
@@ -144,21 +171,29 @@ def run_unilink_uds_throughput(num_chunks):
     return (end_time - start_time) if success else -1
 
 def main():
-    ping_loads = [100, 500, 1000]
+    ping_loads = [500]
     chunk_loads = [100, 500, 1000]
 
     print("=== UDS Benchmark (Timeout enabled) ===")
-    print(f"{'Messages':<10} | {'Python (sec)':<15} | {'Unilink (sec)':<15}")
+    print(f"{'Messages':<10} | {'Python (sec)':<15} | {'Unilink (sec)':<15} | {'ZeroCopy (sec)':<15}")
     for load in ping_loads:
         t_py = run_python_uds_pingpong(load)
         t_uni = run_unilink_uds_pingpong(load)
-        print(f"{load:<10} | {t_py if t_py > 0 else 'FAIL':<15.4f} | {t_uni if t_uni > 0 else 'FAIL':<15.4f}")
+        t_zc = run_unilink_uds_pingpong_zerocopy(load)
+        
+        res_py = f"{t_py:.4f}" if t_py > 0 else "FAIL"
+        res_uni = f"{t_uni:.4f}" if t_uni > 0 else "FAIL"
+        res_zc = f"{t_zc:.4f}" if t_zc > 0 else "FAIL"
+        print(f"{load:<10} | {res_py:<15} | {res_uni:<15} | {res_zc:<15}")
 
     print("\n=== UDS Throughput (1KB Chunks) ===")
     for load in chunk_loads:
         t_py = run_python_uds_throughput(load)
         t_uni = run_unilink_uds_throughput(load)
-        print(f"{load:<10} | {t_py if t_py > 0 else 'FAIL':<15.4f} | {t_uni if t_uni > 0 else 'FAIL':<15.4f}")
+        
+        res_py = f"{t_py:.4f}" if t_py > 0 else "FAIL"
+        res_uni = f"{t_uni:.4f}" if t_uni > 0 else "FAIL"
+        print(f"{load:<10} | {res_py:<15} | {res_uni:<15}")
 
 if __name__ == "__main__":
     main()

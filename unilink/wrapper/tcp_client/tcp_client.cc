@@ -204,7 +204,7 @@ struct TcpClient::Impl {
       }
       if (data_handler) {
         std::string str_data = base::safe_convert::uint8_to_string(data.data(), data.size());
-        data_handler(MessageContext(0, str_data));
+        data_handler(MessageContext(0, std::move(str_data)));
       }
 
       // 2. Framer integration

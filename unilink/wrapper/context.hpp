@@ -33,23 +33,21 @@ namespace wrapper {
  */
 class MessageContext {
  public:
-  MessageContext(ClientId client_id, std::string_view data, std::string client_info = "")
-      : client_id_(client_id), data_(data), client_info_(std::move(client_info)) {}
+  MessageContext(ClientId client_id, std::string data, std::string client_info = "")
+      : client_id_(client_id), data_(std::move(data)), client_info_(std::move(client_info)) {}
 
   /** @brief Get the client identifier */
   ClientId client_id() const { return client_id_; }
 
   /**
-   * @brief Get a view of the received data
-   * @warning Non-owning view. Valid only during the scope of the callback.
-   * Use data_as_string() or data_as_vector() to take ownership.
+   * @brief Get the received data
    */
   std::string_view data() const { return data_; }
 
-  /** @brief Safely copy the received data into a std::string */
-  std::string data_as_string() const { return std::string(data_); }
+  /** @brief Safely get the received data as a std::string reference */
+  const std::string& data_as_string() const { return data_; }
 
-  /** @brief Safely copy the received data into a std::vector<uint8_t> */
+  /** @brief Get the received data as a std::vector<uint8_t> */
   std::vector<uint8_t> data_as_vector() const { return std::vector<uint8_t>(data_.begin(), data_.end()); }
 
   /** @brief Get the client information (e.g., endpoint address) */
@@ -57,7 +55,7 @@ class MessageContext {
 
  private:
   ClientId client_id_;
-  std::string_view data_;
+  std::string data_;
   std::string client_info_;
 };
 
