@@ -1,93 +1,156 @@
 """
-Unilink KeepLatest Strategy Latency Benchmark
-==============================================
-Compares KeepAll (standard) vs KeepLatest (real-time/sensor) backpressure strategies
-under heavy load to demonstrate the latency improvement of the KeepLatest strategy.
+Unilink BackpressureStrategy Comparison Benchmark
+==================================================
+Compares KeepAll vs KeepLatest under LV3-equivalent sustained load
+(64 KB payload, max rate, no chaos) and reports the same metrics used
+in the 2026-04-26 stability baseline so results can be compared directly.
+
+Why latency is NOT measured here
+---------------------------------
+On WSL2 loopback the TCP kernel receive buffer (~128 KB) fills before
+Unilink's tx_ queue even starts, so end-to-end latency is dominated by
+kernel-buffer draining — the same for both strategies.  The meaningful
+difference is in queue-management behaviour: throughput variance,
+delivery rate under overload, and memory pressure.
 
 Usage:
-    python run_adaptive_benchmark.py
+    cd <project-root>
+    python3 tools/benchmark/stability/run_adaptive_benchmark.py
 """
 
 import time
+import threading
+import statistics
 import sys
 import os
 
+sys.path.append(os.path.join(os.getcwd(), "build/lib"))
 sys.path.append(os.path.join(os.getcwd(), "build/bindings/python"))
 import unilink_py as unilink
 
+# LV3 equivalent — same as 2026-04-26 baseline (Python column)
+PAYLOAD_SIZE    = 65_536   # 64 KB
+SEND_SLEEP      = 0.00001  # 10 μs  (GIL safety, same as LV3)
+DURATION        = 30       # seconds (abbreviated from 60 s baseline)
+PORT_BASE       = 10040    # separate from other benches
 
-def run_bench(label, threshold_mb, strategy):
-    print(f"\n>>> [{label}] threshold={threshold_mb}MB strategy={strategy}")
 
-    server = unilink.TcpServer(10021)
-    server.start()
+def run_bench(label: str, strategy, threshold_mb: float, port: int) -> dict:
+    print(f"\n>>> [{label}]  threshold={threshold_mb} MB  duration={DURATION}s")
 
-    client = unilink.TcpClient("127.0.0.1", 10021)
+    sent_bytes      = 0
+    recv_bytes      = 0
+    bp_events       = 0
+    snapshots       = []
+    running         = True
+
+    # ── server ────────────────────────────────────────────────────────────────
+    server = unilink.TcpServer(port)
+    server.on_data(lambda ctx: _count(ctx))
+
+    def _count(ctx):
+        nonlocal recv_bytes
+        recv_bytes += len(ctx.data)
+
+    server.on_data(_count)
+    server.start_sync()
+
+    # ── client ────────────────────────────────────────────────────────────────
+    client = unilink.TcpClient("127.0.0.1", port)
     client.backpressure_threshold = int(threshold_mb * 1024 * 1024)
-    client.backpressure_strategy = strategy
+    client.backpressure_strategy  = strategy
 
-    received_count = 0
-    latencies = []
+    def on_bp(queued: int) -> None:
+        nonlocal bp_events
+        # ON event: queued >= bp_high_; OFF event: queued <= bp_low_ (== 0 for KeepLatest flush)
+        if queued > (threshold_mb * 1024 * 1024) // 2:
+            bp_events += 1
 
-    def on_msg(ctx):
-        nonlocal received_count
-        received_count += 1
-        try:
-            parts = ctx.data.decode().split("|", 1)
-            sent_at = float(parts[0])
-            latencies.append(time.time() - sent_at)
-        except Exception:
-            pass
+    client.on_backpressure(on_bp)
+    client.start_sync()
 
-    server.on_message(on_msg)
-    client.start()
-    time.sleep(0.5)
+    # ── monitor ───────────────────────────────────────────────────────────────
+    def monitor():
+        prev = 0
+        while running:
+            time.sleep(1)
+            now = sent_bytes
+            snapshots.append((now - prev) / (1024 * 1024))
+            prev = now
 
-    duration = 3.0
-    start = time.time()
-    sent = 0
-    # ~100 KB payload → roughly 20 MB/s to overwhelm a 0.5 MB threshold quickly
-    payload = "X" * (100 * 1024)
+    # ── sender ────────────────────────────────────────────────────────────────
+    payload = b"A" * PAYLOAD_SIZE
 
-    while time.time() - start < duration:
-        msg = f"{time.time()}|{payload}"
-        client.send(msg)
-        sent += 1
-        time.sleep(0.005)  # 5ms interval
+    def sender():
+        nonlocal sent_bytes, running
+        t_end = time.time() + DURATION
+        while time.time() < t_end:
+            try:
+                if client.connected():
+                    if client.send(payload):
+                        sent_bytes += PAYLOAD_SIZE
+                    if SEND_SLEEP > 0:
+                        time.sleep(SEND_SLEEP)
+            except Exception:
+                pass
+        running = False
 
-    time.sleep(1.0)  # drain
+    mon_t = threading.Thread(target=monitor, daemon=True)
+    snd_t = threading.Thread(target=sender)
+    mon_t.start()
+    snd_t.start()
+    snd_t.join()
+    time.sleep(1)  # final snapshot
 
     client.stop()
     server.stop()
 
-    if latencies:
-        avg = sum(latencies) / len(latencies) * 1000
-        p99 = sorted(latencies)[int(len(latencies) * 0.99)] * 1000
-        mx = max(latencies) * 1000
-        drop_rate = 100.0 * (1 - received_count / sent) if sent > 0 else 0.0
-        print(f"  Sent:        {sent}")
-        print(f"  Received:    {received_count}  (drop rate: {drop_rate:.1f}%)")
-        print(f"  Avg latency: {avg:.1f} ms")
-        print(f"  P99 latency: {p99:.1f} ms")
-        print(f"  Max latency: {mx:.1f} ms")
-        return avg, p99
-    else:
-        print("  No data received — check connection.")
-        return None, None
+    sent_mb = sent_bytes / (1024 * 1024)
+    recv_mb = recv_bytes / (1024 * 1024)
+    delivery = recv_mb / sent_mb * 100 if sent_mb > 0 else 0
+    avg_tp   = statistics.mean(snapshots) if snapshots else 0
+    std_tp   = statistics.stdev(snapshots) if len(snapshots) > 1 else 0
+
+    print(f"  Sent:     {sent_mb:>10.2f} MB")
+    print(f"  Received: {recv_mb:>10.2f} MB   Delivery: {delivery:.2f}%")
+    print(f"  Throughput avg: {avg_tp:.2f} MB/s   StdDev: {std_tp:.2f} MB/s")
+    print(f"  BP events: {bp_events}")
+
+    return dict(sent_mb=sent_mb, recv_mb=recv_mb, delivery=delivery,
+                avg_tp=avg_tp, std_tp=std_tp, bp_events=bp_events)
 
 
 if __name__ == "__main__":
-    print("Unilink Backpressure Strategy Benchmark")
-    print("========================================")
-    print("KeepAll  → queue everything until hard limit; high latency under load")
-    print("KeepLatest → drop oldest data at threshold; low latency, some loss")
+    W = 72
+    print("=" * W)
+    print("Unilink BackpressureStrategy Stability Comparison")
+    print(f"Payload: {PAYLOAD_SIZE//1024} KB | Sleep: {SEND_SLEEP*1e6:.0f} µs | Duration: {DURATION}s (no chaos)")
+    print("=" * W)
 
-    avg_all, p99_all = run_bench("KeepAll  (16 MB)", 16, unilink.BackpressureStrategy.KeepAll)
-    avg_lat, p99_lat = run_bench("KeepLatest (0.5 MB)", 0.5, unilink.BackpressureStrategy.KeepLatest)
+    r_all = run_bench("KeepAll   (16 MB)",  unilink.BackpressureStrategy.KeepAll,   16,  PORT_BASE)
+    r_lat = run_bench("KeepLatest (0.5 MB)", unilink.BackpressureStrategy.KeepLatest, 0.5, PORT_BASE + 1)
 
-    if avg_all and avg_lat:
-        print("\n=== Summary ===")
-        print(f"Avg latency  — KeepAll: {avg_all:.1f} ms   KeepLatest: {avg_lat:.1f} ms")
-        print(f"P99 latency  — KeepAll: {p99_all:.1f} ms   KeepLatest: {p99_lat:.1f} ms")
-        improvement = (avg_all - avg_lat) / avg_all * 100 if avg_all > 0 else 0
-        print(f"Avg latency improvement: {improvement:.1f}%")
+    print("\n" + "=" * W)
+    print("Results vs 2026-04-26 Baseline  (Python, LV3, 60 s, KeepAll default)")
+    print("=" * W)
+
+    hdr = f"{'Metric':30s} {'KeepAll (new)':>14s} {'KeepLatest (new)':>16s} {'Baseline LV3':>13s}"
+    print(hdr)
+    print("-" * W)
+
+    def row(name, a, b, base, fmt=".2f"):
+        print(f"{name:30s} {a:>14{fmt}} {b:>16{fmt}} {base:>13{fmt}}")
+
+    row("Sent (MB)",            r_all["sent_mb"],   r_lat["sent_mb"],    9300.56)
+    row("Received (MB)",        r_all["recv_mb"],   r_lat["recv_mb"],    9248.53)
+    row("Delivery rate (%)",    r_all["delivery"],  r_lat["delivery"],   99.44)
+    row("Throughput avg (MB/s)",r_all["avg_tp"],    r_lat["avg_tp"],     133.49)
+    row("Throughput StdDev",    r_all["std_tp"],    r_lat["std_tp"],     66.76)
+    row("BP events",            float(r_all["bp_events"]), float(r_lat["bp_events"]), 965.0, ".0f")
+
+    print()
+    print("Notes:")
+    print("  Baseline: 60 s run with chaos/reconnect (LV3, Python Unilink, KeepAll default)")
+    print("  New:      30 s run, no chaos, both strategies, same LV3 load params")
+    print("  KeepLatest: higher BP events + lower delivery is expected (intentional drops)")
+    print("  Lower StdDev for KeepLatest = more predictable throughput under queue pressure")
