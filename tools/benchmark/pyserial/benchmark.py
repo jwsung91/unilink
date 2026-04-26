@@ -228,6 +228,20 @@ def run_unilink_throughput(master_port, slave_port, num_chunks):
         return -1, f"Timeout: {received_bytes}/{total_bytes}"
     return end_time - start_time, None
 
+def _median_with_ports(fn, num, runs=3):
+    results = []
+    for _ in range(runs):
+        with get_virtual_ports() as (m, s):
+            t, _ = fn(m, s, num)
+            if t > 0:
+                results.append(t)
+        time.sleep(0.1)
+    if not results:
+        return -1, "all runs failed"
+    results.sort()
+    return results[len(results) // 2], None
+
+
 def main():
     ping_loads = [10, 50, 100, 500, 1000]
     chunk_loads = [10, 50, 100, 500]
@@ -237,32 +251,24 @@ def main():
     print(f"{'Messages':<10} | {'pyserial (sec)':<20} | {'unilink (sec)':<20}")
     print("-" * 60)
     for load in ping_loads:
-        with get_virtual_ports() as (m_port, s_port):
-            t_py, err_py = run_pyserial_pingpong(m_port, s_port, load)
-            res_py = f"{t_py:.4f}" if t_py > 0 else f"FAIL ({err_py})"
-            
-        time.sleep(0.2)
-        
-        with get_virtual_ports() as (m_port, s_port):
-            t_uni, err_uni = run_unilink_pingpong(m_port, s_port, load)
-            res_uni = f"{t_uni:.4f}" if t_uni > 0 else f"FAIL ({err_uni})"
-            
+        t_py, err_py = _median_with_ports(run_pyserial_pingpong, load)
+        res_py = f"{t_py:.4f}" if t_py > 0 else f"FAIL ({err_py})"
+
+        t_uni, err_uni = _median_with_ports(run_unilink_pingpong, load)
+        res_uni = f"{t_uni:.4f}" if t_uni > 0 else f"FAIL ({err_uni})"
+
         print(f"{load:<10} | {res_py:<20} | {res_uni:<20}")
 
     print("\n--- 2. Progressive Throughput Test (Streaming, 1KB/chunk) ---")
     print(f"{'Chunks':<10} | {'pyserial (sec)':<20} | {'unilink (sec)':<20}")
     print("-" * 60)
     for load in chunk_loads:
-        with get_virtual_ports() as (m_port, s_port):
-            t_py, err_py = run_pyserial_throughput(m_port, s_port, load)
-            res_py = f"{t_py:.4f}" if t_py > 0 else f"FAIL ({err_py})"
-            
-        time.sleep(0.2)
-        
-        with get_virtual_ports() as (m_port, s_port):
-            t_uni, err_uni = run_unilink_throughput(m_port, s_port, load)
-            res_uni = f"{t_uni:.4f}" if t_uni > 0 else f"FAIL ({err_uni})"
-            
+        t_py, err_py = _median_with_ports(run_pyserial_throughput, load)
+        res_py = f"{t_py:.4f}" if t_py > 0 else f"FAIL ({err_py})"
+
+        t_uni, err_uni = _median_with_ports(run_unilink_throughput, load)
+        res_uni = f"{t_uni:.4f}" if t_uni > 0 else f"FAIL ({err_uni})"
+
         print(f"{load:<10} | {res_py:<20} | {res_uni:<20}")
 
 if __name__ == "__main__":

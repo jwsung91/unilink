@@ -419,8 +419,8 @@ struct UdpChannel::Impl {
     }
 
     if (queue_bytes_ + size > bp_limit_) {
-      UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded");
-      transition_to(LinkState::Error);
+      UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded (" + std::to_string(queue_bytes_ + size) + " bytes)");
+      report_backpressure(queue_bytes_ + size);
       return false;
     }
     queue_bytes_ += size;

@@ -78,6 +78,8 @@ class UNILINK_API TcpClient : public ChannelInterface {
   ChannelInterface& auto_start(bool manage = true) override;
 
   // Configuration
+  TcpClient& batch_size(size_t size);
+  TcpClient& batch_latency(std::chrono::milliseconds latency);
   TcpClient& retry_interval(std::chrono::milliseconds interval);
   TcpClient& max_retries(int max_retries);
   TcpClient& connection_timeout(std::chrono::milliseconds timeout);

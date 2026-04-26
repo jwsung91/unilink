@@ -37,33 +37,28 @@ using tcp = net::ip::tcp;
 
 }  // namespace
 
-TEST(TransportTcpServerSessionTest, QueueLimitClosesSession) {
+TEST(TransportTcpServerSessionTest, QueueLimitDropsMessage) {
   net::io_context ioc;
   auto work = net::make_work_guard(ioc);
-  size_t bp_threshold = 1024;  // 1KB
-  // Hard cap will be 4 * 1024 = 4KB (or default min if larger, but logic respects relative size)
-  // Actually implementation uses std::max(bp * 4, DEFAULT_BACKPRESSURE_THRESHOLD).
-  // DEFAULT_BACKPRESSURE_THRESHOLD is likely 1MB.
-  // To test effectively, we should send enough data to exceed the calculated limit.
-  // Let's assume the limit is at least 1MB. We'll send 10MB to be sure.
+  size_t bp_threshold = 1024;  // 1KB bp_high; bp_limit = max(4KB, 16MB) = 16MB
 
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
   auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
 
-  std::atomic<bool> closed{false};
-  session->on_close([&]() { closed = true; });
+  std::atomic<bool> backpressure_seen{false};
+  session->on_backpressure([&](size_t) { backpressure_seen = true; });
 
   session->start();
   EXPECT_TRUE(session->alive());
 
-  // Send huge data exceeding any reasonable hard cap (e.g. 10MB)
-  std::vector<uint8_t> huge(10 * 1024 * 1024, 0xAA);
+  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, session stays alive
+  std::vector<uint8_t> huge(20 * 1024 * 1024, 0xAA);
   session->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(closed.load());
-  EXPECT_FALSE(session->alive());
+  EXPECT_TRUE(backpressure_seen.load());
+  EXPECT_TRUE(session->alive());
 }
 
 TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
@@ -74,19 +69,20 @@ TEST(TransportTcpServerSessionTest, MoveWriteRespectsQueueLimit) {
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
   auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
 
-  std::atomic<bool> closed{false};
-  session->on_close([&]() { closed = true; });
+  std::atomic<bool> backpressure_seen{false};
+  session->on_backpressure([&](size_t) { backpressure_seen = true; });
 
   session->start();
   EXPECT_TRUE(session->alive());
 
-  std::vector<uint8_t> huge(10 * 1024 * 1024, 0xBB);
+  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, session stays alive
+  std::vector<uint8_t> huge(20 * 1024 * 1024, 0xBB);
   session->async_write_move(std::move(huge));
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(closed.load());
-  EXPECT_FALSE(session->alive());
+  EXPECT_TRUE(backpressure_seen.load());
+  EXPECT_TRUE(session->alive());
 }
 
 TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
@@ -97,19 +93,20 @@ TEST(TransportTcpServerSessionTest, SharedWriteRespectsQueueLimit) {
   auto socket = std::make_unique<FakeTcpSocket>(ioc);
   auto session = std::make_shared<TcpServerSession>(ioc, std::move(socket), bp_threshold);
 
-  std::atomic<bool> closed{false};
-  session->on_close([&]() { closed = true; });
+  std::atomic<bool> backpressure_seen{false};
+  session->on_backpressure([&](size_t) { backpressure_seen = true; });
 
   session->start();
   EXPECT_TRUE(session->alive());
 
-  auto huge = std::make_shared<const std::vector<uint8_t>>(10 * 1024 * 1024, 0xCC);
+  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, session stays alive
+  auto huge = std::make_shared<const std::vector<uint8_t>>(20 * 1024 * 1024, 0xCC);
   session->async_write_shared(huge);
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(closed.load());
-  EXPECT_FALSE(session->alive());
+  EXPECT_TRUE(backpressure_seen.load());
+  EXPECT_TRUE(session->alive());
 }
 
 TEST(TransportTcpServerSessionTest, BackpressureReliefAfterDrain) {

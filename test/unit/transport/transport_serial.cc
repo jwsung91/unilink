@@ -161,8 +161,8 @@ TEST(TransportSerialTest, QueueLimitMovesSerialToError) {
 
   serial->start();
 
-  // 2MB buffer exceeds default limit (usually 1MB)
-  std::vector<uint8_t> huge(2 * 1024 * 1024, 0xEF);
+  // 20MB exceeds bp_limit (max(bp_high*4, 16MB) = 16MB)
+  std::vector<uint8_t> huge(20 * 1024 * 1024, 0xEF);
   serial->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
   ioc.run_for(50ms);
@@ -187,7 +187,7 @@ TEST(TransportSerialTest, MoveWriteRespectsQueueLimit) {
 
   serial->start();
 
-  std::vector<uint8_t> huge(2 * 1024 * 1024, 0xCD);
+  std::vector<uint8_t> huge(20 * 1024 * 1024, 0xCD);
   serial->async_write_move(std::move(huge));
 
   ioc.run_for(50ms);
@@ -212,7 +212,7 @@ TEST(TransportSerialTest, SharedWriteRespectsQueueLimit) {
 
   serial->start();
 
-  auto huge = std::make_shared<const std::vector<uint8_t>>(2 * 1024 * 1024, 0xAB);
+  auto huge = std::make_shared<const std::vector<uint8_t>>(20 * 1024 * 1024, 0xAB);
   serial->async_write_shared(huge);
 
   ioc.run_for(50ms);

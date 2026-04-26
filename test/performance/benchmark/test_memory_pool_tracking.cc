@@ -61,5 +61,6 @@ TEST_F(MemoryPoolTrackingBenchmark, AllocationOverhead) {
 
   size_t total_ops = iterations * allocs_per_iter;
   std::cout << "Allocation Time (" << total_ops << " ops): " << duration << " ms" << std::endl;
-  std::cout << "Time per op: " << static_cast<double>(duration) * 1000000.0 / static_cast<double>(total_ops) << " ns" << std::endl;
+  std::cout << "Time per op: " << static_cast<double>(duration) * 1000000.0 / static_cast<double>(total_ops) << " ns"
+            << std::endl;
 }

@@ -290,10 +290,10 @@ TEST_F(BenchmarkTest, MemoryPoolHitRateAnalysis) {
 /**
  * @brief Network communication throughput benchmark (simplified)
  */
-TEST_F(BenchmarkTest, NetworkCommunicationThroughput) {
-  std::cout << "\n=== Network Communication Throughput Benchmark ===" << std::endl;
+TEST_F(BenchmarkTest, SimulatedNetworkThroughput) {
+  std::cout << "\n=== Simulated Network Throughput Benchmark (memory-pool only) ===" << std::endl;
 
-  // Simulate network communication using memory pool
+  // Simulates message lifecycle via memory pool — no real socket I/O
   auto& pool = memory::GlobalMemoryPool::instance();
   const size_t num_messages = 1000;
   const size_t message_size = 1024;
@@ -340,15 +340,16 @@ TEST_F(BenchmarkTest, NetworkCommunicationThroughput) {
   EXPECT_GT(data_throughput, 1.0);     // At least 1 KB/sec
   EXPECT_LT(duration.count(), 30000);  // Less than 30 seconds
 
-  std::cout << "✓ Network communication throughput benchmark completed" << std::endl;
+  std::cout << "✓ Simulated network throughput benchmark completed" << std::endl;
 }
 
 /**
  * @brief Network latency benchmark (simplified)
  */
-TEST_F(BenchmarkTest, NetworkLatencyBenchmark) {
-  std::cout << "\n=== Network Latency Benchmark ===" << std::endl;
+TEST_F(BenchmarkTest, SimulatedNetworkLatency) {
+  std::cout << "\n=== Simulated Network Latency Benchmark (memory-pool only) ===" << std::endl;
 
+  // Simulates request lifecycle via memory pool — no real socket I/O
   auto& pool = memory::GlobalMemoryPool::instance();
   const size_t num_requests = 1000;
   const size_t request_size = 512;
@@ -403,7 +404,7 @@ TEST_F(BenchmarkTest, NetworkLatencyBenchmark) {
   EXPECT_GT(throughput, 50);                 // At least 50 req/sec
   EXPECT_LT(total_duration.count(), 30000);  // Less than 30 seconds
 
-  std::cout << "✓ Network latency benchmark completed" << std::endl;
+  std::cout << "✓ Simulated network latency benchmark completed" << std::endl;
 }
 
 // ============================================================================

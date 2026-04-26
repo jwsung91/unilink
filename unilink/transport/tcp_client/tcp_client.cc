@@ -63,7 +63,7 @@ using interface::Channel;
 
 struct TcpClient::Impl {
   // Members moved from TcpClient
-  std::unique_ptr<net::io_context> owned_ioc_;
+  std::shared_ptr<net::io_context> owned_ioc_;
   net::io_context* ioc_ = nullptr;
   net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
@@ -107,7 +107,7 @@ struct TcpClient::Impl {
   std::optional<diagnostics::ErrorInfo> last_error_info_;
 
   Impl(const TcpClientConfig& cfg, net::io_context* ioc_ptr)
-      : owned_ioc_(ioc_ptr ? nullptr : std::make_unique<net::io_context>()),
+      : owned_ioc_(ioc_ptr ? nullptr : std::make_shared<net::io_context>()),
         ioc_(ioc_ptr ? ioc_ptr : owned_ioc_.get()),
         strand_(net::make_strand(*ioc_)),
         resolver_(strand_),
@@ -204,9 +204,9 @@ void TcpClient::start() {
   if (impl_->owns_ioc_ && impl_->ioc_) {
     impl_->work_guard_ =
         std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(impl_->ioc_->get_executor());
-    impl_->ioc_thread_ = std::thread([this]() {
+    impl_->ioc_thread_ = std::thread([ioc = impl_->owned_ioc_]() {
       try {
-        impl_->ioc_->run();
+        ioc->run();
       } catch (const std::exception& e) {
         UNILINK_LOG_ERROR("tcp_client", "io_context", "IO context error: " + std::string(e.what()));
         diagnostics::error_reporting::report_system_error("tcp_client", "io_context",
@@ -288,18 +288,11 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
           }
 
           if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
-            UNILINK_LOG_ERROR("tcp_client", "async_write_copy",
+            UNILINK_LOG_ERROR("tcp_client", "write",
                               "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
             self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION,
-                                      "async_write_copy", boost::asio::error::no_buffer_space, "Queue limit exceeded",
-                                      false, 0);
-            self->impl_->connected_.store(false);
-            self->impl_->close_socket();
-            self->impl_->tx_.clear();
-            self->impl_->queue_bytes_ = 0;
-            self->impl_->writing_ = false;
-            self->impl_->backpressure_active_ = false;
-            self->impl_->transition_to(LinkState::Error);
+                                      "write", boost::asio::error::no_buffer_space, "Queue limit exceeded", false, 0);
+            self->impl_->report_backpressure(self->impl_->queue_bytes_ + added);
             return;
           }
 
@@ -325,18 +318,11 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
     }
 
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
-      UNILINK_LOG_ERROR("tcp_client", "async_write_copy",
+      UNILINK_LOG_ERROR("tcp_client", "write",
                         "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
-      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION,
-                                "async_write_copy", boost::asio::error::no_buffer_space, "Queue limit exceeded", false,
-                                0);
-      self->impl_->connected_.store(false);
-      self->impl_->close_socket();
-      self->impl_->tx_.clear();
-      self->impl_->queue_bytes_ = 0;
-      self->impl_->writing_ = false;
-      self->impl_->backpressure_active_ = false;
-      self->impl_->transition_to(LinkState::Error);
+      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION, "write",
+                                boost::asio::error::no_buffer_space, "Queue limit exceeded", false, 0);
+      self->impl_->report_backpressure(self->impl_->queue_bytes_ + added);
       return;
     }
 
@@ -371,18 +357,11 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
     }
 
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
-      UNILINK_LOG_ERROR("tcp_client", "async_write_move",
+      UNILINK_LOG_ERROR("tcp_client", "write",
                         "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
-      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION,
-                                "async_write_move", boost::asio::error::no_buffer_space, "Queue limit exceeded", false,
-                                0);
-      self->impl_->connected_.store(false);
-      self->impl_->close_socket();
-      self->impl_->tx_.clear();
-      self->impl_->queue_bytes_ = 0;
-      self->impl_->writing_ = false;
-      self->impl_->backpressure_active_ = false;
-      self->impl_->transition_to(LinkState::Error);
+      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION, "write",
+                                boost::asio::error::no_buffer_space, "Queue limit exceeded", false, 0);
+      self->impl_->report_backpressure(self->impl_->queue_bytes_ + added);
       return;
     }
 
@@ -417,18 +396,11 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     }
 
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
-      UNILINK_LOG_ERROR("tcp_client", "async_write_shared",
+      UNILINK_LOG_ERROR("tcp_client", "write",
                         "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
-      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION,
-                                "async_write_shared", boost::asio::error::no_buffer_space, "Queue limit exceeded",
-                                false, 0);
-      self->impl_->connected_.store(false);
-      self->impl_->close_socket();
-      self->impl_->tx_.clear();
-      self->impl_->queue_bytes_ = 0;
-      self->impl_->writing_ = false;
-      self->impl_->backpressure_active_ = false;
-      self->impl_->transition_to(LinkState::Error);
+      self->impl_->record_error(diagnostics::ErrorLevel::ERROR, diagnostics::ErrorCategory::COMMUNICATION, "write",
+                                boost::asio::error::no_buffer_space, "Queue limit exceeded", false, 0);
+      self->impl_->report_backpressure(self->impl_->queue_bytes_ + added);
       return;
     }
 

@@ -177,26 +177,25 @@ TEST_F(TransportTcpClientTest, StartStopIdempotent) {
   client_.reset();
 }
 
-TEST_F(TransportTcpClientTest, QueueLimitMovesClientToError) {
+TEST_F(TransportTcpClientTest, QueueLimitDropsMessage) {
   net::io_context ioc;
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
   cfg.port = TestUtils::getAvailableTestPort();  // no real server needed
-  cfg.backpressure_threshold = 1024;             // limit becomes 1MB
+  cfg.backpressure_threshold = 1024;             // bp_limit = max(4KB, 16MB) = 16MB
 
   client_ = TcpClient::create(cfg, ioc);
 
-  std::atomic<bool> error_seen{false};
-  client_->on_state([&](base::LinkState state) {
-    if (state == base::LinkState::Error) error_seen = true;
-  });
+  std::atomic<bool> backpressure_seen{false};
+  client_->on_backpressure([&](size_t) { backpressure_seen = true; });
 
-  std::vector<uint8_t> huge(cfg.backpressure_threshold * 2048, 0xEF);  // 2MB, exceeds queue cap
+  // 20MB exceeds bp_limit (16MB): message dropped, backpressure fires, connection stays alive
+  std::vector<uint8_t> huge(20 * 1024 * 1024, 0xEF);
   client_->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
 
-  ioc.run_for(std::chrono::milliseconds(20));
+  ioc.run_for(std::chrono::milliseconds(50));
 
-  EXPECT_TRUE(error_seen.load());
+  EXPECT_TRUE(backpressure_seen.load());
 
   client_->stop();
   client_.reset();
@@ -251,21 +250,22 @@ TEST_F(TransportTcpClientTest, MoveWriteRespectsQueueLimit) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
   cfg.port = TestUtils::getAvailableTestPort();  // no real server needed
-  cfg.backpressure_threshold = 1024;             // limit becomes 1MB
+  cfg.backpressure_threshold = 1024;             // bp_high = 1KB
 
   client_ = TcpClient::create(cfg, ioc);
 
-  std::atomic<bool> error_seen{false};
-  client_->on_state([&](base::LinkState state) {
-    if (state == base::LinkState::Error) error_seen = true;
+  std::atomic<bool> backpressure_seen{false};
+  client_->on_backpressure([&](size_t bytes) {
+    if (bytes > 0) backpressure_seen = true;
   });
 
-  std::vector<uint8_t> huge(cfg.backpressure_threshold * 2048, 0xCD);  // 2MB, exceeds queue cap
+  // 2MB > bp_high (1KB): write is enqueued and backpressure fires
+  std::vector<uint8_t> huge(cfg.backpressure_threshold * 2048, 0xCD);
   client_->async_write_move(std::move(huge));
 
   ioc.run_for(std::chrono::milliseconds(20));
 
-  EXPECT_TRUE(error_seen.load());
+  EXPECT_TRUE(backpressure_seen.load());
 
   client_->stop();
   client_.reset();
@@ -276,21 +276,22 @@ TEST_F(TransportTcpClientTest, SharedWriteRespectsQueueLimit) {
   config::TcpClientConfig cfg;
   cfg.host = "127.0.0.1";
   cfg.port = TestUtils::getAvailableTestPort();  // no real server needed
-  cfg.backpressure_threshold = 1024;             // limit becomes 1MB
+  cfg.backpressure_threshold = 1024;             // bp_high = 1KB
 
   client_ = TcpClient::create(cfg, ioc);
 
-  std::atomic<bool> error_seen{false};
-  client_->on_state([&](base::LinkState state) {
-    if (state == base::LinkState::Error) error_seen = true;
+  std::atomic<bool> backpressure_seen{false};
+  client_->on_backpressure([&](size_t bytes) {
+    if (bytes > 0) backpressure_seen = true;
   });
 
-  auto huge = std::make_shared<const std::vector<uint8_t>>(cfg.backpressure_threshold * 2048, 0xAB);  // 2MB
+  // 2MB > bp_high (1KB): write is enqueued and backpressure fires
+  auto huge = std::make_shared<const std::vector<uint8_t>>(cfg.backpressure_threshold * 2048, 0xAB);
   client_->async_write_shared(huge);
 
   ioc.run_for(std::chrono::milliseconds(20));
 
-  EXPECT_TRUE(error_seen.load());
+  EXPECT_TRUE(backpressure_seen.load());
 
   client_->stop();
   client_.reset();

@@ -98,6 +98,8 @@ def run_unilink_udp_pingpong_zerocopy(num_pings):
 
 def run_python_udp_throughput(num_chunks):
     total_bytes = num_chunks * CHUNK_SIZE
+    done = threading.Event()
+
     def server_thread():
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -107,6 +109,8 @@ def run_python_udp_throughput(num_chunks):
                 while received < total_bytes:
                     data, addr = s.recvfrom(8192)
                     received += len(data)
+                if received >= total_bytes:
+                    done.set()
         except: pass
 
     t = threading.Thread(target=server_thread, daemon=True)
@@ -119,8 +123,9 @@ def run_python_udp_throughput(num_chunks):
             for i in range(num_chunks):
                 c.sendto(CHUNK_MESSAGE, (HOST, UDP_PORT_S))
                 if i % 10 == 0: time.sleep(0.001)
-        t.join(timeout=5.0)
-        return time.time() - start_time
+        success = done.wait(timeout=max(15.0, num_chunks * 0.1))
+        end_time = time.time()
+        return (end_time - start_time) if success else -1
     except:
         return -1
 
@@ -155,6 +160,19 @@ def run_unilink_udp_throughput(num_chunks):
     client.stop(); server.stop()
     return (end_time - start_time) if success else -1
 
+def _median(fn, *args, runs=3):
+    results = []
+    for _ in range(runs):
+        t = fn(*args)
+        if t > 0:
+            results.append(t)
+        time.sleep(0.1)
+    if not results:
+        return -1
+    results.sort()
+    return results[len(results) // 2]
+
+
 def main():
     ping_loads = [100, 500, 1000]
     chunk_loads = [100, 500, 1000]
@@ -162,20 +180,21 @@ def main():
     print("=== UDP Benchmark (Timeout enabled) ===")
     print(f"{'Messages':<10} | {'Python (sec)':<15} | {'Unilink (sec)':<15} | {'ZeroCopy (sec)':<15}")
     for load in ping_loads:
-        t_py = run_python_udp_pingpong(load)
-        t_uni = run_unilink_udp_pingpong(load)
-        t_zc = run_unilink_udp_pingpong_zerocopy(load)
-        
+        t_py = _median(run_python_udp_pingpong, load)
+        t_uni = _median(run_unilink_udp_pingpong, load)
+        t_zc = _median(run_unilink_udp_pingpong_zerocopy, load)
+
         res_py = f"{t_py:.4f}" if t_py > 0 else "FAIL"
         res_uni = f"{t_uni:.4f}" if t_uni > 0 else "FAIL"
         res_zc = f"{t_zc:.4f}" if t_zc > 0 else "FAIL"
         print(f"{load:<10} | {res_py:<15} | {res_uni:<15} | {res_zc:<15}")
 
     print("\n=== UDP Throughput (1KB Chunks) ===")
+    print(f"{'Chunks':<10} | {'Python (sec)':<15} | {'Unilink (sec)':<15}")
     for load in chunk_loads:
-        t_py = run_python_udp_throughput(load)
-        t_uni = run_unilink_udp_throughput(load)
-        
+        t_py = _median(run_python_udp_throughput, load)
+        t_uni = _median(run_unilink_udp_throughput, load)
+
         res_py = f"{t_py:.4f}" if t_py > 0 else "FAIL"
         res_uni = f"{t_uni:.4f}" if t_uni > 0 else "FAIL"
         print(f"{load:<10} | {res_py:<15} | {res_uni:<15}")
