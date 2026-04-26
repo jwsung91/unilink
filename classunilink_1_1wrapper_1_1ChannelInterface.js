@@ -8,6 +8,7 @@ var classunilink_1_1wrapper_1_1ChannelInterface =
     [ "auto_start", "classunilink_1_1wrapper_1_1ChannelInterface.html#a0be9ef3024aa184ef1f269de5818fce6", null ],
     [ "connected", "classunilink_1_1wrapper_1_1ChannelInterface.html#a2110813c183960be6a743c1fa5477dfa", null ],
     [ "framer", "classunilink_1_1wrapper_1_1ChannelInterface.html#ae4d31378b6d7df475b6dd89a53ed2ea7", null ],
+    [ "on_backpressure", "classunilink_1_1wrapper_1_1ChannelInterface.html#aab51ca2988d45a77f9f611518c27374b", null ],
     [ "on_connect", "classunilink_1_1wrapper_1_1ChannelInterface.html#a7ccebfd1ca90fadac61ea71d7c695c5a", null ],
     [ "on_data", "classunilink_1_1wrapper_1_1ChannelInterface.html#a224eb09b48d5949b4703453c1d962e62", null ],
     [ "on_data_batch", "classunilink_1_1wrapper_1_1ChannelInterface.html#a203b730e7939654f6f5a13c3211dbd32", null ],

@@ -19,6 +19,7 @@ var structunilink_1_1wrapper_1_1TcpClient_1_1Impl =
     [ "alive_marker_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a7d47e630947c5d4ed22aad7bbdcd206f", null ],
     [ "auto_start_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a2af2fc4ff23dc83bb75ae8fc21540d99", null ],
     [ "batch_timer_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a89150b6ccce26a16b30eb6137336a2f4", null ],
+    [ "bp_handler_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a343d0932cefcdb9305882551332871f7", null ],
     [ "channel_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#af217d88931fc25b893bf7a92c171cefa", null ],
     [ "connect_handler_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a906f92001903fba11176a1475dc5b8ab", null ],
     [ "connection_timeout_", "structunilink_1_1wrapper_1_1TcpClient_1_1Impl.html#a2fc4a9ad141cca9a56fc1f2894c7f710", null ],

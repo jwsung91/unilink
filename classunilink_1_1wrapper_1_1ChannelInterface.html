@@ -225,6 +225,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a66634563d389183767a929be3bdc10a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6440cbb21b63d4c99847839533ee8069" id="r_a6440cbb21b63d4c99847839533ee8069"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a6440cbb21b63d4c99847839533ee8069">on_error</a> (<a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#a4647fb8450701859f5d4263a228ba8e9">ErrorHandler</a> handler)=0</td></tr>
 <tr class="separator:a6440cbb21b63d4c99847839533ee8069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab51ca2988d45a77f9f611518c27374b" id="r_aab51ca2988d45a77f9f611518c27374b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#aab51ca2988d45a77f9f611518c27374b">on_backpressure</a> (std::function&lt; void(size_t)&gt; handler)</td></tr>
+<tr class="memdesc:aab51ca2988d45a77f9f611518c27374b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be notified when send queue congestion changes.  <br /></td></tr>
+<tr class="separator:aab51ca2988d45a77f9f611518c27374b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4d31378b6d7df475b6dd89a53ed2ea7" id="r_ae4d31378b6d7df475b6dd89a53ed2ea7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html#ae4d31378b6d7df475b6dd89a53ed2ea7">framer</a> (std::unique_ptr&lt; <a class="el" href="classunilink_1_1framer_1_1IFramer.html">framer::IFramer</a> &gt; framer)=0</td></tr>
 <tr class="memdesc:ae4d31378b6d7df475b6dd89a53ed2ea7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a message framer for this channel.  <br /></td></tr>
 <tr class="separator:ae4d31378b6d7df475b6dd89a53ed2ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -421,6 +424,44 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p>Implemented in <a class="el" href="classunilink_1_1wrapper_1_1Serial.html#a252064c40c12a44f4d1ea69bec25fa80">unilink::wrapper::Serial</a>, <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#afd4b8fd33c56b74e8e4233a14f076212">unilink::wrapper::TcpClient</a>, <a class="el" href="classunilink_1_1wrapper_1_1UdpClient.html#a8a73c978af0051201211fa47e8d51f13">unilink::wrapper::UdpClient</a>, and <a class="el" href="classunilink_1_1wrapper_1_1UdsClient.html#a34f35ff1dabe2aba310c3e489b27193d">unilink::wrapper::UdsClient</a>.</p>
+
+</div>
+</div>
+<a id="aab51ca2988d45a77f9f611518c27374b" name="aab51ca2988d45a77f9f611518c27374b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab51ca2988d45a77f9f611518c27374b">&#9670;&#160;</a></span>on_backpressure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a> &amp; unilink::wrapper::ChannelInterface::on_backpressure </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(size_t)&gt;&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Register a callback to be notified when send queue congestion changes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handler</td><td>Callback receiving the current number of queued bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented in <a class="el" href="classunilink_1_1wrapper_1_1TcpClient.html#a68dff33182be92b857170fcaf737afec">unilink::wrapper::TcpClient</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="ichannel_8hpp_source.html#l00094">94</a> of file <a class="el" href="ichannel_8hpp_source.html">ichannel.hpp</a>.</p>
 
 </div>
 </div>
@@ -794,7 +835,7 @@ false Data was dropped — channel not connected or backpressure limit reached. 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceunilink.html">unilink</a></li><li class="navelem"><a class="el" href="namespaceunilink_1_1wrapper.html">wrapper</a></li><li class="navelem"><a class="el" href="classunilink_1_1wrapper_1_1ChannelInterface.html">ChannelInterface</a></li>
-    <li class="footer">Generated on Sun Apr 26 2026 04:47:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun Apr 26 2026 11:51:20 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
