@@ -165,7 +165,15 @@ PYBIND11_MODULE(unilink_py, m) {
           h(ctx);
         });
         return &self;
-      });
+      })
+      .def("on_backpressure",
+           [](TcpClient& self, std::function<void(size_t)> h) {
+             self.on_backpressure([h](size_t queued) {
+               py::gil_scoped_acquire gil;
+               h(queued);
+             });
+             return &self;
+           });
 
   // TcpServer
   py::class_<TcpServer, std::shared_ptr<TcpServer>>(m, "TcpServer")

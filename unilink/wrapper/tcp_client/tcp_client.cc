@@ -57,6 +57,7 @@ struct TcpClient::Impl {
   ConnectionHandler connect_handler_{nullptr};
   ConnectionHandler disconnect_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
+  std::function<void(size_t)> bp_handler_{nullptr};
   MessageHandler message_handler_{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
@@ -331,6 +332,17 @@ struct TcpClient::Impl {
         }
       }
     });
+
+    channel_->on_backpressure([this, weak_alive](size_t queued) {
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+      std::function<void(size_t)> handler;
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        handler = bp_handler_;
+      }
+      if (handler) handler(queued);
+    });
   }
 
   void attach_framer_callback() {
@@ -418,6 +430,12 @@ ChannelInterface& TcpClient::on_disconnect(ConnectionHandler h) {
 ChannelInterface& TcpClient::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler_ = std::move(h);
+  return *this;
+}
+
+ChannelInterface& TcpClient::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->bp_handler_ = std::move(h);
   return *this;
 }
 

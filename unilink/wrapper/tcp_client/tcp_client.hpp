@@ -70,6 +70,7 @@ class UNILINK_API TcpClient : public ChannelInterface {
   ChannelInterface& on_connect(ConnectionHandler handler) override;
   ChannelInterface& on_disconnect(ConnectionHandler handler) override;
   ChannelInterface& on_error(ErrorHandler handler) override;
+  ChannelInterface& on_backpressure(std::function<void(size_t)> handler) override;
 
   ChannelInterface& framer(std::unique_ptr<framer::IFramer> framer) override;
   ChannelInterface& on_message(MessageHandler handler) override;

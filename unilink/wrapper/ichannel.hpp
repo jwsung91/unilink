@@ -88,6 +88,15 @@ class UNILINK_API ChannelInterface {
   virtual ChannelInterface& on_error(ErrorHandler handler) = 0;
 
   /**
+   * @brief Register a callback to be notified when send queue congestion changes.
+   * @param handler Callback receiving the current number of queued bytes.
+   */
+  virtual ChannelInterface& on_backpressure(std::function<void(size_t)> handler) {
+    (void)handler;
+    return *this;
+  }
+
+  /**
    * @brief Set a message framer for this channel.
    * @param framer The framer instance to use.
    */
