@@ -33,6 +33,10 @@ else:
 PORT = 10002
 CHAOS_DOWN_TIME = 2
 
+# Match Unilink's reconnect behavior: fast first retry then fixed interval
+RETRY_FIRST_MS = 0.1   # 100ms — same as Unilink's first_retry_interval_ms_
+RETRY_INTERVAL = 1.0   # 1s   — same as Unilink's DEFAULT_RETRY_INTERVAL_MS
+
 class RawSocketStabilityBench:
     def __init__(self):
         self.server_sock = None
@@ -113,6 +117,7 @@ class RawSocketStabilityBench:
             
     def sender(self):
         payload = b"A" * PAYLOAD_SIZE
+        retry_attempt = 0
         while self.running:
             try:
                 if not self.client_sock:
@@ -121,9 +126,13 @@ class RawSocketStabilityBench:
                         self.client_sock.settimeout(1.0)
                         self.client_sock.connect(("127.0.0.1", PORT))
                         self.reconnect_count += 1
+                        retry_attempt = 0
                     except Exception:
                         self.client_sock = None
-                        time.sleep(0.1)
+                        # Mirror Unilink: fast first retry, then fixed interval
+                        sleep_time = RETRY_FIRST_MS if retry_attempt == 0 else RETRY_INTERVAL
+                        retry_attempt += 1
+                        time.sleep(sleep_time)
                         continue
                 
                 self.client_sock.sendall(payload)
@@ -136,9 +145,11 @@ class RawSocketStabilityBench:
                     try: self.client_sock.close()
                     except: pass
                 self.client_sock = None
+                retry_attempt = 0
             except Exception as e:
                 self.exceptions += 1
                 self.client_sock = None
+                retry_attempt = 0
 
     def chaos(self):
         start_time = time.time()

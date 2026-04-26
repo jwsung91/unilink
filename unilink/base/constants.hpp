@@ -32,7 +32,7 @@ constexpr size_t MAX_BACKPRESSURE_THRESHOLD = 100 << 20;             // 100 MiB 
 constexpr size_t DEFAULT_READ_BUFFER_SIZE = 4096;                    // 4 KiB
 
 // Retry and timeout constants
-constexpr unsigned DEFAULT_RETRY_INTERVAL_MS = 3000;      // 3 seconds
+constexpr unsigned DEFAULT_RETRY_INTERVAL_MS = 1000;      // 1 second
 constexpr unsigned MIN_RETRY_INTERVAL_MS = 100;           // 100ms minimum
 constexpr unsigned MAX_RETRY_INTERVAL_MS = 300000;        // 5 minutes maximum
 constexpr unsigned DEFAULT_CONNECTION_TIMEOUT_MS = 5000;  // 5 seconds

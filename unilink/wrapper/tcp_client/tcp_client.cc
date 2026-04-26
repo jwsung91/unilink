@@ -29,6 +29,7 @@
 #include <vector>
 
 #include "unilink/base/common.hpp"
+#include "unilink/base/constants.hpp"
 #include "unilink/config/tcp_client_config.hpp"
 #include "unilink/diagnostics/error_mapping.hpp"
 #include "unilink/factory/channel_factory.hpp"
@@ -71,7 +72,7 @@ struct TcpClient::Impl {
   std::chrono::milliseconds max_batch_latency_{1};
 
   std::atomic<bool> auto_start_ = false;
-  std::chrono::milliseconds retry_interval_{3000};
+  std::chrono::milliseconds retry_interval_{base::constants::DEFAULT_RETRY_INTERVAL_MS};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
 
