@@ -131,8 +131,8 @@ void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
     if (self->queue_bytes_ + added > self->bp_limit_) {
-      UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
-      self->do_close();
+      UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
+      self->report_backpressure(self->queue_bytes_ + added);
       return;
     }
 
@@ -153,8 +153,8 @@ void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
     if (self->queue_bytes_ + added > self->bp_limit_) {
-      UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, closing session");
-      self->do_close();
+      UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
+      self->report_backpressure(self->queue_bytes_ + added);
       return;
     }
 

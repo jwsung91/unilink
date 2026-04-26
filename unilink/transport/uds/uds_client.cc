@@ -50,7 +50,7 @@ using config::UdsClientConfig;
 using interface::Channel;
 
 struct UdsClient::Impl {
-  std::unique_ptr<net::io_context> owned_ioc_;
+  std::shared_ptr<net::io_context> owned_ioc_;
   net::io_context* ioc_ = nullptr;
   net::strand<net::io_context::executor_type> strand_;
   std::unique_ptr<net::executor_work_guard<net::io_context::executor_type>> work_guard_;
@@ -89,7 +89,7 @@ struct UdsClient::Impl {
 
   Impl(const UdsClientConfig& cfg, net::io_context* ioc_ptr,
        std::unique_ptr<interface::UdsSocketInterface> socket = nullptr)
-      : owned_ioc_(ioc_ptr ? nullptr : std::make_unique<net::io_context>()),
+      : owned_ioc_(ioc_ptr ? nullptr : std::make_shared<net::io_context>()),
         ioc_(ioc_ptr ? ioc_ptr : owned_ioc_.get()),
         strand_(net::make_strand(*ioc_)),
         socket_(std::move(socket)),
@@ -200,9 +200,9 @@ void UdsClient::start() {
     }
     impl_->work_guard_ =
         std::make_unique<net::executor_work_guard<net::io_context::executor_type>>(net::make_work_guard(*impl_->ioc_));
-    impl_->ioc_thread_ = std::thread([this]() {
+    impl_->ioc_thread_ = std::thread([ioc = impl_->owned_ioc_]() {
       try {
-        impl_->ioc_->run();
+        ioc->run();
       } catch (...) {
       }
     });
@@ -249,6 +249,9 @@ void UdsClient::async_write_move(std::vector<uint8_t>&& data) {
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     size_t added = data.size();
     if (impl_->queue_bytes_ + added > impl_->bp_limit_) {
+      UNILINK_LOG_ERROR("uds_client", "write",
+                        "Queue limit exceeded (" + std::to_string(impl_->queue_bytes_ + added) + " bytes)");
+      impl_->report_backpressure(impl_->queue_bytes_ + added);
       return;
     }
     impl_->queue_bytes_ += added;
@@ -264,6 +267,9 @@ void UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() {
     size_t added = data->size();
     if (impl_->queue_bytes_ + added > impl_->bp_limit_) {
+      UNILINK_LOG_ERROR("uds_client", "write",
+                        "Queue limit exceeded (" + std::to_string(impl_->queue_bytes_ + added) + " bytes)");
+      impl_->report_backpressure(impl_->queue_bytes_ + added);
       return;
     }
     impl_->queue_bytes_ += added;

@@ -80,7 +80,11 @@ PYBIND11_MODULE(unilink_py, m) {
              return self.start().get();
            })
       .def("start_sync", &TcpClient::start_sync)
-      .def("stop", &TcpClient::stop)
+      .def("stop",
+           [](TcpClient& self) {
+             py::gil_scoped_release release;
+             self.stop();
+           })
       .def("send",
            [](TcpClient& self, py::buffer b) {
              py::buffer_info info = b.request();
@@ -91,6 +95,8 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("auto_start", &TcpClient::auto_start, py::arg("start") = true)
       .def("retry_interval", &TcpClient::retry_interval)
       .def("max_retries", &TcpClient::max_retries)
+      .def("batch_size", &TcpClient::batch_size)
+      .def("batch_latency", &TcpClient::batch_latency)
       .def("connection_timeout", &TcpClient::connection_timeout)
       .def(
           "use_line_framer",
@@ -169,7 +175,11 @@ PYBIND11_MODULE(unilink_py, m) {
              return self.start().get();
            })
       .def("start_sync", &TcpServer::start_sync)
-      .def("stop", &TcpServer::stop)
+      .def("stop",
+           [](TcpServer& self) {
+             py::gil_scoped_release release;
+             self.stop();
+           })
       .def("broadcast",
            [](TcpServer& self, py::buffer b) {
              py::buffer_info info = b.request();
@@ -261,7 +271,11 @@ PYBIND11_MODULE(unilink_py, m) {
              return self.start().get();
            })
       .def("start_sync", &Serial::start_sync)
-      .def("stop", &Serial::stop)
+      .def("stop",
+           [](Serial& self) {
+             py::gil_scoped_release release;
+             self.stop();
+           })
       .def("send",
            [](Serial& self, py::buffer b) {
              py::buffer_info info = b.request();
@@ -353,7 +367,11 @@ PYBIND11_MODULE(unilink_py, m) {
              return self.start().get();
            })
       .def("start_sync", &UdsClient::start_sync)
-      .def("stop", &UdsClient::stop)
+      .def("stop",
+           [](UdsClient& self) {
+             py::gil_scoped_release release;
+             self.stop();
+           })
       .def("send",
            [](UdsClient& self, py::buffer b) {
              py::buffer_info info = b.request();
@@ -442,7 +460,11 @@ PYBIND11_MODULE(unilink_py, m) {
              return self.start().get();
            })
       .def("start_sync", &UdsServer::start_sync)
-      .def("stop", &UdsServer::stop)
+      .def("stop",
+           [](UdsServer& self) {
+             py::gil_scoped_release release;
+             self.stop();
+           })
       .def("broadcast",
            [](UdsServer& self, py::buffer b) {
              py::buffer_info info = b.request();
@@ -545,7 +567,11 @@ PYBIND11_MODULE(unilink_py, m) {
              return self.start().get();
            })
       .def("start_sync", &UdpClient::start_sync)
-      .def("stop", &UdpClient::stop)
+      .def("stop",
+           [](UdpClient& self) {
+             py::gil_scoped_release release;
+             self.stop();
+           })
       .def("send",
            [](UdpClient& self, py::buffer b) {
              py::buffer_info info = b.request();
@@ -632,7 +658,11 @@ PYBIND11_MODULE(unilink_py, m) {
              return self.start().get();
            })
       .def("start_sync", &UdpServer::start_sync)
-      .def("stop", &UdpServer::stop)
+      .def("stop",
+           [](UdpServer& self) {
+             py::gil_scoped_release release;
+             self.stop();
+           })
       .def("broadcast",
            [](UdpServer& self, py::buffer b) {
              py::buffer_info info = b.request();

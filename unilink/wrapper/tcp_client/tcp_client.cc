@@ -157,6 +157,10 @@ struct TcpClient::Impl {
     pending_promises_.push_back(std::move(p));
     if (started_.load()) return f;
 
+    if (!alive_marker_) {
+      alive_marker_ = std::make_shared<bool>(true);
+    }
+
     if (!channel_) {
       config::TcpClientConfig config;
       config.host = host_;
@@ -199,16 +203,20 @@ struct TcpClient::Impl {
         return;
       }
       started_.store(false);
+      alive_marker_.reset();
       if (batch_timer_) {
         batch_timer_->cancel();
         batch_timer_.reset();
       }
       if (channel_) {
-        channel_->on_bytes(nullptr);
-        channel_->on_state(nullptr);
+        auto ch = channel_;
         lock.unlock();
-        channel_->stop();
+        ch->stop();
         lock.lock();
+        if (channel_ == ch) {
+          channel_->on_bytes(nullptr);
+          channel_->on_state(nullptr);
+        }
       }
       if (use_external_context_.load() && manage_external_context_.load()) {
         if (work_guard_) work_guard_.reset();
@@ -429,6 +437,18 @@ ChannelInterface& TcpClient::on_message_batch(BatchMessageHandler h) {
 ChannelInterface& TcpClient::auto_start(bool m) {
   impl_->auto_start_.store(m);
   if (impl_->auto_start_.load() && !impl_->started_.load()) start();
+  return *this;
+}
+
+TcpClient& TcpClient::batch_size(size_t size) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->max_batch_size_ = size;
+  return *this;
+}
+
+TcpClient& TcpClient::batch_latency(std::chrono::milliseconds latency) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->max_batch_latency_ = latency;
   return *this;
 }
 

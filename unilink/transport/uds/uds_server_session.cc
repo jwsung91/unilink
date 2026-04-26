@@ -71,7 +71,11 @@ void UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     if (!alive_) return;
     size_t added = data.size();
-    if (queue_bytes_ + added > bp_limit_) return;
+    if (queue_bytes_ + added > bp_limit_) {
+      UNILINK_LOG_ERROR("uds_server_session", "write", "Queue limit exceeded, dropping message");
+      report_backpressure(queue_bytes_ + added);
+      return;
+    }
 
     queue_bytes_ += added;
     tx_.emplace_back(std::move(data));
@@ -84,7 +88,11 @@ void UdsServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data)]() {
     if (!alive_) return;
     size_t added = data->size();
-    if (queue_bytes_ + added > bp_limit_) return;
+    if (queue_bytes_ + added > bp_limit_) {
+      UNILINK_LOG_ERROR("uds_server_session", "write", "Queue limit exceeded, dropping message");
+      report_backpressure(queue_bytes_ + added);
+      return;
+    }
 
     queue_bytes_ += added;
     tx_.emplace_back(std::move(data));

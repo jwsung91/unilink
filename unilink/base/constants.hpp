@@ -26,10 +26,10 @@ namespace base {
 namespace constants {
 
 // Backpressure threshold constants
-constexpr size_t DEFAULT_BACKPRESSURE_THRESHOLD = 1 << 20;  // 1 MiB
-constexpr size_t MIN_BACKPRESSURE_THRESHOLD = 1024;         // 1 KiB minimum
-constexpr size_t MAX_BACKPRESSURE_THRESHOLD = 100 << 20;    // 100 MiB maximum
-constexpr size_t DEFAULT_READ_BUFFER_SIZE = 4096;           // 4 KiB
+constexpr size_t DEFAULT_BACKPRESSURE_THRESHOLD = 16 * 1024 * 1024;  // 16 MiB
+constexpr size_t MIN_BACKPRESSURE_THRESHOLD = 1024;                  // 1 KiB minimum
+constexpr size_t MAX_BACKPRESSURE_THRESHOLD = 100 << 20;             // 100 MiB maximum
+constexpr size_t DEFAULT_READ_BUFFER_SIZE = 4096;                    // 4 KiB
 
 // Retry and timeout constants
 constexpr unsigned DEFAULT_RETRY_INTERVAL_MS = 3000;      // 3 seconds
