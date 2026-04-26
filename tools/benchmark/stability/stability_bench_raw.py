@@ -44,6 +44,7 @@ class RawSocketStabilityBench:
         self.running = False
         self.server_active = False
         self.sent_bytes = 0
+        self.server_received_bytes = 0
         self.reconnect_count = 0
         self.exceptions = 0
         self.snapshots = []
@@ -81,6 +82,7 @@ class RawSocketStabilityBench:
             while self.server_active:
                 data = conn.recv(65536)
                 if not data: break
+                self.server_received_bytes += len(data)
         except Exception:
             pass
         finally:
@@ -201,9 +203,16 @@ class RawSocketStabilityBench:
         mem_drift = rss_values[-1] - rss_values[0] if rss_values else 0
         peak_rss = max(rss_values) if rss_values else 0
         
+        sent_mb = self.sent_bytes / (1024 * 1024)
+        recv_mb = self.server_received_bytes / (1024 * 1024)
+        delivery_rate = recv_mb / sent_mb * 100 if sent_mb > 0 else 0
+
         print(f"\n--- Raw Socket Stability Results (Level {LOAD_LEVEL}) ---")
         print(f"Reconnect Successes: {self.reconnect_count}")
         print(f"Exceptions:          {self.exceptions}")
+        print(f"Sent:                {sent_mb:.2f} MB")
+        print(f"Server Received:     {recv_mb:.2f} MB")
+        print(f"Delivery Rate:       {delivery_rate:.2f}%")
         print(f"Peak Memory (RSS):   {peak_rss:.2f} MB")
         print(f"Memory Drift:        {mem_drift:.2f} MB")
         print(f"Throughput Avg:      {avg_tp:.2f} MB/s")

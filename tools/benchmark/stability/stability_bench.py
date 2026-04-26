@@ -39,6 +39,7 @@ class UnilinkStabilityBench:
         self.client = None
         self.running = False
         self.sent_bytes = 0
+        self.server_received_bytes = 0
         self.reconnect_count = 0
         self.exceptions = 0
         self.bp_events_triggered = 0
@@ -50,10 +51,13 @@ class UnilinkStabilityBench:
     def start_server(self):
         try:
             self.server = unilink.TcpServer(PORT)
-            self.server.on_data(lambda ctx: None) # Sink
+            self.server.on_data(lambda ctx: self._count_server_recv(len(ctx.data)))
             self.server.start_sync()
         except Exception as e:
             self.exceptions += 1
+
+    def _count_server_recv(self, n):
+        self.server_received_bytes += n
 
     def stop_server(self):
         if self.server:
@@ -172,10 +176,17 @@ class UnilinkStabilityBench:
         mem_drift = rss_values[-1] - rss_values[0] if rss_values else 0
         peak_rss = max(rss_values) if rss_values else 0
         
+        sent_mb = self.sent_bytes / (1024 * 1024)
+        recv_mb = self.server_received_bytes / (1024 * 1024)
+        delivery_rate = recv_mb / sent_mb * 100 if sent_mb > 0 else 0
+
         print(f"\n--- Unilink Stability Results (Level {LOAD_LEVEL}) ---")
         print(f"Reconnect Successes: {self.reconnect_count}")
         print(f"Exceptions:          {self.exceptions}")
         print(f"Backpressure Hits:   {self.bp_events_triggered}")
+        print(f"Sent:                {sent_mb:.2f} MB")
+        print(f"Server Received:     {recv_mb:.2f} MB")
+        print(f"Delivery Rate:       {delivery_rate:.2f}%")
         print(f"Peak Memory (RSS):   {peak_rss:.2f} MB")
         print(f"Memory Drift:        {mem_drift:.2f} MB")
         print(f"Throughput Avg:      {avg_tp:.2f} MB/s")
