@@ -80,6 +80,7 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   std::optional<diagnostics::ErrorInfo> last_error_info() const;
 
   // Dynamic configuration methods
+  void set_backpressure_strategy(base::constants::BackpressureStrategy strategy);
   void set_retry_interval(unsigned interval_ms);
   void set_reconnect_policy(ReconnectPolicy policy);
 

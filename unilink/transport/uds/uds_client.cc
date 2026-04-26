@@ -69,6 +69,7 @@ struct UdsClient::Impl {
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;
@@ -97,6 +98,7 @@ struct UdsClient::Impl {
         retry_timer_(strand_),
         connect_timer_(strand_),
         owns_ioc_(!ioc_ptr),
+        bp_strategy_(cfg.backpressure_strategy),
         bp_high_(cfg.backpressure_threshold) {
     if (!socket_) {
       socket_ = std::make_unique<BoostUdsSocket>(uds::socket(strand_));
@@ -120,6 +122,7 @@ struct UdsClient::Impl {
   void transition_to(LinkState next, const boost::system::error_code& ec = {});
   void close_socket();
   void recalculate_backpressure_bounds();
+  void maybe_flush_for_keep_latest(size_t added);
   void report_backpressure(size_t queued_bytes);
   void record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat, std::string_view operation,
                     const boost::system::error_code& ec, std::string_view msg, bool retryable, uint32_t retry_count);
@@ -248,6 +251,7 @@ void UdsClient::async_write_copy(memory::ConstByteSpan data) {
 void UdsClient::async_write_move(std::vector<uint8_t>&& data) {
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     size_t added = data.size();
+    impl_->maybe_flush_for_keep_latest(added);
     if (impl_->queue_bytes_ + added > impl_->bp_limit_) {
       UNILINK_LOG_ERROR("uds_client", "write",
                         "Queue limit exceeded (" + std::to_string(impl_->queue_bytes_ + added) + " bytes)");
@@ -266,6 +270,7 @@ void UdsClient::async_write_move(std::vector<uint8_t>&& data) {
 void UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() {
     size_t added = data->size();
+    impl_->maybe_flush_for_keep_latest(added);
     if (impl_->queue_bytes_ + added > impl_->bp_limit_) {
       UNILINK_LOG_ERROR("uds_client", "write",
                         "Queue limit exceeded (" + std::to_string(impl_->queue_bytes_ + added) + " bytes)");
@@ -292,6 +297,10 @@ void UdsClient::on_state(OnState cb) {
 void UdsClient::on_backpressure(OnBackpressure cb) {
   std::lock_guard<std::mutex> lock(impl_->callback_mtx_);
   impl_->on_bp_ = std::move(cb);
+}
+
+void UdsClient::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->bp_strategy_ = strategy;
 }
 
 void UdsClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_interval_ms = interval_ms; }
@@ -463,6 +472,14 @@ void UdsClient::Impl::close_socket() {
 }
 
 void UdsClient::Impl::recalculate_backpressure_bounds() { bp_limit_ = cfg_.backpressure_threshold * 2; }
+
+void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
+  if (bp_strategy_ != base::constants::BackpressureStrategy::KeepLatest) return;
+  if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
+    tx_.clear();
+    queue_bytes_ = 0;
+  }
+}
 
 void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
   OnBackpressure cb;

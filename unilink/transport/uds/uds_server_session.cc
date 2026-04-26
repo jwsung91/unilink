@@ -22,22 +22,25 @@ namespace unilink {
 namespace transport {
 
 UdsServerSession::UdsServerSession(net::io_context& ioc, uds::socket sock, size_t backpressure_threshold,
-                                   int idle_timeout_ms)
+                                   int idle_timeout_ms, base::constants::BackpressureStrategy strategy)
     : ioc_(ioc),
       strand_(net::make_strand(ioc_)),
       idle_timer_(ioc),
       socket_(std::make_unique<BoostUdsSocket>(std::move(sock))),
+      bp_strategy_(strategy),
       bp_high_(backpressure_threshold),
       bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                          base::constants::MAX_BUFFER_SIZE)),
       idle_timeout_ms_(idle_timeout_ms) {}
 
 UdsServerSession::UdsServerSession(net::io_context& ioc, std::unique_ptr<interface::UdsSocketInterface> socket,
-                                   size_t backpressure_threshold, int idle_timeout_ms)
+                                   size_t backpressure_threshold, int idle_timeout_ms,
+                                   base::constants::BackpressureStrategy strategy)
     : ioc_(ioc),
       strand_(net::make_strand(ioc_)),
       idle_timer_(ioc),
       socket_(std::move(socket)),
+      bp_strategy_(strategy),
       bp_high_(backpressure_threshold),
       bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                          base::constants::MAX_BUFFER_SIZE)),
@@ -71,6 +74,7 @@ void UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     if (!alive_) return;
     size_t added = data.size();
+    maybe_flush_for_keep_latest(added);
     if (queue_bytes_ + added > bp_limit_) {
       UNILINK_LOG_ERROR("uds_server_session", "write", "Queue limit exceeded, dropping message");
       report_backpressure(queue_bytes_ + added);
@@ -88,6 +92,7 @@ void UdsServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
   net::post(strand_, [this, self = shared_from_this(), data = std::move(data)]() {
     if (!alive_) return;
     size_t added = data->size();
+    maybe_flush_for_keep_latest(added);
     if (queue_bytes_ + added > bp_limit_) {
       UNILINK_LOG_ERROR("uds_server_session", "write", "Queue limit exceeded, dropping message");
       report_backpressure(queue_bytes_ + added);
@@ -174,6 +179,14 @@ void UdsServerSession::do_close() {
       close_cb();
     } catch (...) {
     }
+  }
+}
+
+void UdsServerSession::maybe_flush_for_keep_latest(size_t added) {
+  if (bp_strategy_ != base::constants::BackpressureStrategy::KeepLatest) return;
+  if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
+    tx_.clear();
+    queue_bytes_ = 0;
   }
 }
 

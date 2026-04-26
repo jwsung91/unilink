@@ -29,6 +29,7 @@ struct TcpServerConfig {
   std::string bind_address = "0.0.0.0";
   uint16_t port = 9000;
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::KeepAll;
   bool enable_memory_pool = true;
   int max_connections = 100;  // Maximum concurrent connections
 

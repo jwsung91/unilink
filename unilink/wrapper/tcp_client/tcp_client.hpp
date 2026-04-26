@@ -23,6 +23,7 @@
 #include <string>
 #include <string_view>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/wrapper/ichannel.hpp"
 
@@ -84,6 +85,8 @@ class UNILINK_API TcpClient : public ChannelInterface {
   TcpClient& retry_interval(std::chrono::milliseconds interval);
   TcpClient& max_retries(int max_retries);
   TcpClient& connection_timeout(std::chrono::milliseconds timeout);
+  TcpClient& backpressure_threshold(size_t threshold);
+  TcpClient& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   TcpClient& manage_external_context(bool manage);
 
  private:
