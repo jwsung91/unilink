@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-25 12:02:59</td>
+            <td class="headerValue">2026-04-26 05:04:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -144,33 +144,34 @@
 <a name="66"><span class="lineNum">      66 </span>                :            :   void start() override;</a>
 <a name="67"><span class="lineNum">      67 </span>                :            :   void stop() override;</a>
 <a name="68"><span class="lineNum">      68 </span>                :            :   bool is_connected() const override;</a>
-<a name="69"><span class="lineNum">      69 </span>                :            : </a>
-<a name="70"><span class="lineNum">      70 </span>                :            :   void async_write_copy(memory::ConstByteSpan data) override;</a>
-<a name="71"><span class="lineNum">      71 </span>                :            :   void async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) override;</a>
-<a name="72"><span class="lineNum">      72 </span>                :            :   void async_write_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) override;</a>
-<a name="73"><span class="lineNum">      73 </span>                :            : </a>
-<a name="74"><span class="lineNum">      74 </span>                :            :   // Callbacks must be configured before start() is invoked to avoid setter races.</a>
-<a name="75"><span class="lineNum">      75 </span>                :            :   void on_bytes(OnBytes cb) override;</a>
-<a name="76"><span class="lineNum">      76 </span>                :            :   void on_state(OnState cb) override;</a>
-<a name="77"><span class="lineNum">      77 </span>                :            :   void on_backpressure(OnBackpressure cb) override;</a>
-<a name="78"><span class="lineNum">      78 </span>                :            : </a>
-<a name="79"><span class="lineNum">      79 </span>                :            :   std::optional&lt;diagnostics::ErrorInfo&gt; last_error_info() const;</a>
-<a name="80"><span class="lineNum">      80 </span>                :            : </a>
-<a name="81"><span class="lineNum">      81 </span>                :            :   // Dynamic configuration methods</a>
-<a name="82"><span class="lineNum">      82 </span>                :            :   void set_retry_interval(unsigned interval_ms);</a>
-<a name="83"><span class="lineNum">      83 </span>                :            :   void set_reconnect_policy(ReconnectPolicy policy);</a>
-<a name="84"><span class="lineNum">      84 </span>                :            : </a>
-<a name="85"><span class="lineNum">      85 </span>                :            :  private:</a>
-<a name="86"><span class="lineNum">      86 </span>                :            :   explicit TcpClient(const TcpClientConfig&amp; cfg);</a>
-<a name="87"><span class="lineNum">      87 </span>                :            :   explicit TcpClient(const TcpClientConfig&amp; cfg, boost::asio::io_context&amp; ioc);</a>
-<a name="88"><span class="lineNum">      88 </span>                :            : </a>
-<a name="89"><span class="lineNum">      89 </span>                :            :   struct Impl;</a>
-<a name="90"><span class="lineNum">      90 </span>                :<span class="lineCov">       1258 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
-<a name="91"><span class="lineNum">      91 </span>                :            :   Impl* get_impl() { return impl_.get(); }</a>
-<a name="92"><span class="lineNum">      92 </span>                :            :   std::unique_ptr&lt;Impl&gt; impl_;</a>
-<a name="93"><span class="lineNum">      93 </span>                :            : };</a>
-<a name="94"><span class="lineNum">      94 </span>                :            : }  // namespace transport</a>
-<a name="95"><span class="lineNum">      95 </span>                :            : }  // namespace unilink</a>
+<a name="69"><span class="lineNum">      69 </span>                :            :   boost::asio::any_io_executor get_executor() override;</a>
+<a name="70"><span class="lineNum">      70 </span>                :            : </a>
+<a name="71"><span class="lineNum">      71 </span>                :            :   void async_write_copy(memory::ConstByteSpan data) override;</a>
+<a name="72"><span class="lineNum">      72 </span>                :            :   void async_write_move(std::vector&lt;uint8_t&gt;&amp;&amp; data) override;</a>
+<a name="73"><span class="lineNum">      73 </span>                :            :   void async_write_shared(std::shared_ptr&lt;const std::vector&lt;uint8_t&gt;&gt; data) override;</a>
+<a name="74"><span class="lineNum">      74 </span>                :            : </a>
+<a name="75"><span class="lineNum">      75 </span>                :            :   // Callbacks must be configured before start() is invoked to avoid setter races.</a>
+<a name="76"><span class="lineNum">      76 </span>                :            :   void on_bytes(OnBytes cb) override;</a>
+<a name="77"><span class="lineNum">      77 </span>                :            :   void on_state(OnState cb) override;</a>
+<a name="78"><span class="lineNum">      78 </span>                :            :   void on_backpressure(OnBackpressure cb) override;</a>
+<a name="79"><span class="lineNum">      79 </span>                :            : </a>
+<a name="80"><span class="lineNum">      80 </span>                :            :   std::optional&lt;diagnostics::ErrorInfo&gt; last_error_info() const;</a>
+<a name="81"><span class="lineNum">      81 </span>                :            : </a>
+<a name="82"><span class="lineNum">      82 </span>                :            :   // Dynamic configuration methods</a>
+<a name="83"><span class="lineNum">      83 </span>                :            :   void set_retry_interval(unsigned interval_ms);</a>
+<a name="84"><span class="lineNum">      84 </span>                :            :   void set_reconnect_policy(ReconnectPolicy policy);</a>
+<a name="85"><span class="lineNum">      85 </span>                :            : </a>
+<a name="86"><span class="lineNum">      86 </span>                :            :  private:</a>
+<a name="87"><span class="lineNum">      87 </span>                :            :   explicit TcpClient(const TcpClientConfig&amp; cfg);</a>
+<a name="88"><span class="lineNum">      88 </span>                :            :   explicit TcpClient(const TcpClientConfig&amp; cfg, boost::asio::io_context&amp; ioc);</a>
+<a name="89"><span class="lineNum">      89 </span>                :            : </a>
+<a name="90"><span class="lineNum">      90 </span>                :            :   struct Impl;</a>
+<a name="91"><span class="lineNum">      91 </span>                :<span class="lineCov">       1254 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :            :   Impl* get_impl() { return impl_.get(); }</a>
+<a name="93"><span class="lineNum">      93 </span>                :            :   std::unique_ptr&lt;Impl&gt; impl_;</a>
+<a name="94"><span class="lineNum">      94 </span>                :            : };</a>
+<a name="95"><span class="lineNum">      95 </span>                :            : }  // namespace transport</a>
+<a name="96"><span class="lineNum">      96 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>
