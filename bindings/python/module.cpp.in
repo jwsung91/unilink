@@ -46,7 +46,8 @@ PYBIND11_MODULE(unilink_py, m) {
                                py::format_descriptor<uint8_t>::format(), /* Python format descriptor */
                                1,                                        /* Number of dimensions */
                                {data.size()},                            /* Buffer dimensions */
-                               {sizeof(uint8_t)}                         /* Strides */
+                               {sizeof(uint8_t)},                        /* Strides */
+                               true                                       /* readonly */
         );
       });
 

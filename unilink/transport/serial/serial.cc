@@ -494,10 +494,10 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
       net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {
         auto impl = self->get_impl();
         if (impl->queued_bytes_ + buf.size() > impl->bp_limit_) {
+          impl->report_backpressure(impl->queued_bytes_ + buf.size());
           impl->tx_.clear();
           impl->queued_bytes_ = 0;
           impl->writing_ = false;
-          impl->report_backpressure(impl->queued_bytes_);
           impl->state_.set_state(LinkState::Error);
           impl->notify_state();
           impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
@@ -516,10 +516,10 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     auto impl = self->get_impl();
     if (impl->queued_bytes_ + buf.size() > impl->bp_limit_) {
+      impl->report_backpressure(impl->queued_bytes_ + buf.size());
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
       impl->writing_ = false;
-      impl->report_backpressure(impl->queued_bytes_);
       impl->state_.set_state(LinkState::Error);
       impl->notify_state();
       impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
@@ -540,10 +540,10 @@ void Serial::async_write_move(std::vector<uint8_t>&& data) {
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->get_impl();
     if (impl->queued_bytes_ + added > impl->bp_limit_) {
+      impl->report_backpressure(impl->queued_bytes_ + added);
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
       impl->writing_ = false;
-      impl->report_backpressure(impl->queued_bytes_);
       impl->state_.set_state(LinkState::Error);
       impl->notify_state();
       impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
@@ -565,10 +565,10 @@ void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->get_impl();
     if (impl->queued_bytes_ + added > impl->bp_limit_) {
+      impl->report_backpressure(impl->queued_bytes_ + added);
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
       impl->writing_ = false;
-      impl->report_backpressure(impl->queued_bytes_);
       impl->state_.set_state(LinkState::Error);
       impl->notify_state();
       impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));

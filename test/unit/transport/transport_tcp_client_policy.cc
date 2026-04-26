@@ -335,13 +335,15 @@ TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
   ioc.run_for(100ms);
   ASSERT_TRUE(connected.load());
 
-  // Trigger non-retryable error: Write huge data to trigger queue limit
-  // Limit is at least 1MB (DEFAULT_BACKPRESSURE_THRESHOLD), so need more than that.
-  std::vector<uint8_t> huge_data(2 * 1024 * 1024);
+  // Write large data to trigger backpressure (not a fatal error with new drop behavior)
+  // Overflow (> bp_limit 16MB) results in message drop + backpressure, not disconnection
+  std::vector<uint8_t> huge_data(20 * 1024 * 1024);
+
+  std::atomic<bool> backpressure_seen{false};
+  client_->on_backpressure([&](size_t) { backpressure_seen = true; });
 
   client_->async_write_copy(huge_data);
 
-  // Run loop to process error and potentially schedule retry
   std::atomic<int> connecting_count{0};
   client_->on_state([&](base::LinkState state) {
     if (state == base::LinkState::Connecting) connecting_count.fetch_add(1);
@@ -349,12 +351,10 @@ TEST_F(TransportTcpClientPolicyTest, NonRetryableErrorPreventsRetry) {
 
   ioc.run_for(200ms);
 
-  // Should NOT reconnect (connecting_count should be 0 because we transitioned from Connected -> Error directly,
-  // without passing through Connecting) Wait, transition_to(Error) does NOT go to Connecting. Retry logic would go to
-  // Connecting. If schedule_retry stops, it goes to Error (again or stays). So Connecting should not appear.
-
+  // With drop-not-close behavior: message is dropped, backpressure fires, connection stays alive
   EXPECT_EQ(connecting_count.load(), 0);
-  EXPECT_FALSE(client_->is_connected());
+  EXPECT_TRUE(client_->is_connected());
+  EXPECT_TRUE(backpressure_seen.load());
 
   client_->on_state(nullptr);
   client_->stop();
