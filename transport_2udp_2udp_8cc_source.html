@@ -606,8 +606,8 @@ $(document).ready(function(){initNavTree('transport_2udp_2udp_8cc_source.html','
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    }</div>
 <div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span> </div>
 <div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abc6fdc541d5e28f498f3ca001749e6e0">queue_bytes_</a> + size &gt; <a class="code hl_variable" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a00f183f1c6fb72cb39b36dd644d35e8d">bp_limit_</a>) {</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;udp&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded&quot;</span>);</div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>      <a class="code hl_function" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#acdd9c40ebb804a42273169a24fdd55ca">transition_to</a>(LinkState::Error);</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;udp&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded (&quot;</span> + std::to_string(<a class="code hl_variable" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abc6fdc541d5e28f498f3ca001749e6e0">queue_bytes_</a> + size) + <span class="stringliteral">&quot; bytes)&quot;</span>);</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>      <a class="code hl_function" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#a9d889ecf83033b9fcdf137115a26c64c">report_backpressure</a>(<a class="code hl_variable" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abc6fdc541d5e28f498f3ca001749e6e0">queue_bytes_</a> + size);</div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    }</div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    <a class="code hl_variable" href="structunilink_1_1transport_1_1UdpChannel_1_1Impl.html#abc6fdc541d5e28f498f3ca001749e6e0">queue_bytes_</a> += size;</div>
@@ -1058,7 +1058,7 @@ $(document).ready(function(){initNavTree('transport_2udp_2udp_8cc_source.html','
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_dac7fe981bea2b1272d5c5897c0768dd.html">udp</a></li><li class="navelem"><a class="el" href="transport_2udp_2udp_8cc.html">udp.cc</a></li>
-    <li class="footer">Generated on Sat Apr 25 2026 14:01:56 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun Apr 26 2026 04:47:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

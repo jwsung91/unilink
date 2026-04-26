@@ -257,8 +257,8 @@ $(document).ready(function(){initNavTree('tcp__server__session_8cc_source.html',
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() <span class="keyword">mutable</span> {</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">if</span> (!self-&gt;alive_ || self-&gt;closing_) <span class="keywordflow">return</span>;  <span class="comment">// Double-check in case session was closed</span></div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keywordflow">if</span> (self-&gt;queue_bytes_ + buf.size() &gt; self-&gt;bp_limit_) {</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>          <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded, closing session&quot;</span>);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>          self-&gt;do_close();</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>          <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded, dropping message&quot;</span>);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>          self-&gt;report_backpressure(self-&gt;queue_bytes_ + buf.size());</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>          <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        }</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
@@ -277,8 +277,8 @@ $(document).ready(function(){initNavTree('tcp__server__session_8cc_source.html',
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() <span class="keyword">mutable</span> {</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordflow">if</span> (!self-&gt;alive_ || self-&gt;closing_) <span class="keywordflow">return</span>;  <span class="comment">// Double-check in case session was closed</span></div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordflow">if</span> (self-&gt;queue_bytes_ + buf.size() &gt; self-&gt;bp_limit_) {</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded, closing session&quot;</span>);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>      self-&gt;do_close();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded, dropping message&quot;</span>);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>      self-&gt;report_backpressure(self-&gt;queue_bytes_ + buf.size());</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>      <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    }</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
@@ -301,8 +301,8 @@ $(document).ready(function(){initNavTree('tcp__server__session_8cc_source.html',
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() <span class="keyword">mutable</span> {</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordflow">if</span> (!self-&gt;alive_ || self-&gt;closing_) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">if</span> (self-&gt;queue_bytes_ + added &gt; self-&gt;bp_limit_) {</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded, closing session&quot;</span>);</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      self-&gt;do_close();</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded, dropping message&quot;</span>);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      self-&gt;report_backpressure(self-&gt;queue_bytes_ + added);</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    }</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
@@ -325,8 +325,8 @@ $(document).ready(function(){initNavTree('tcp__server__session_8cc_source.html',
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() <span class="keyword">mutable</span> {</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordflow">if</span> (!self-&gt;alive_ || self-&gt;closing_) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keywordflow">if</span> (self-&gt;queue_bytes_ + added &gt; self-&gt;bp_limit_) {</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded, closing session&quot;</span>);</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      self-&gt;do_close();</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>      <a class="code hl_define" href="logger_8hpp.html#ad06ee428f940156eb5a973b81913e19e">UNILINK_LOG_ERROR</a>(<span class="stringliteral">&quot;tcp_server_session&quot;</span>, <span class="stringliteral">&quot;write&quot;</span>, <span class="stringliteral">&quot;Queue limit exceeded, dropping message&quot;</span>);</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      self-&gt;report_backpressure(self-&gt;queue_bytes_ + added);</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>      <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    }</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
@@ -596,7 +596,7 @@ $(document).ready(function(){initNavTree('tcp__server__session_8cc_source.html',
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_bdae376d6a766a2d984a51161a7f5788.html">tcp_server</a></li><li class="navelem"><a class="el" href="tcp__server__session_8cc.html">tcp_server_session.cc</a></li>
-    <li class="footer">Generated on Sat Apr 25 2026 14:01:56 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun Apr 26 2026 04:47:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

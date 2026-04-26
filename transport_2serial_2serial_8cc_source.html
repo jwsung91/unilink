@@ -692,10 +692,10 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc_source.h
 <div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>      net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(pooled)]() <span class="keyword">mutable</span> {</div>
 <div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>        <span class="keyword">auto</span> impl = self-&gt;get_impl();</div>
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>        <span class="keywordflow">if</span> (impl-&gt;queued_bytes_ + buf.size() &gt; impl-&gt;bp_limit_) {</div>
-<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>          impl-&gt;tx_.clear();</div>
-<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>          impl-&gt;queued_bytes_ = 0;</div>
-<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>          impl-&gt;writing_ = false;</div>
-<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>          impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>          impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + buf.size());</div>
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>          impl-&gt;tx_.clear();</div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>          impl-&gt;queued_bytes_ = 0;</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>          impl-&gt;writing_ = false;</div>
 <div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>          impl-&gt;state_.set_state(LinkState::Error);</div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>          impl-&gt;notify_state();</div>
 <div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>          impl-&gt;handle_error(self, <span class="stringliteral">&quot;write_queue_overflow&quot;</span>, make_error_code(boost::system::errc::no_buffer_space));</div>
@@ -714,10 +714,10 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc_source.h
 <div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>  net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(fallback)]() <span class="keyword">mutable</span> {</div>
 <div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>    <span class="keyword">auto</span> impl = self-&gt;get_impl();</div>
 <div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>    <span class="keywordflow">if</span> (impl-&gt;queued_bytes_ + buf.size() &gt; impl-&gt;bp_limit_) {</div>
-<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>      impl-&gt;tx_.clear();</div>
-<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>      impl-&gt;queued_bytes_ = 0;</div>
-<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>      impl-&gt;writing_ = false;</div>
-<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>      impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>      impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + buf.size());</div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>      impl-&gt;tx_.clear();</div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>      impl-&gt;queued_bytes_ = 0;</div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>      impl-&gt;writing_ = false;</div>
 <div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>      impl-&gt;state_.set_state(LinkState::Error);</div>
 <div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>      impl-&gt;notify_state();</div>
 <div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>      impl-&gt;handle_error(self, <span class="stringliteral">&quot;write_queue_overflow&quot;</span>, make_error_code(boost::system::errc::no_buffer_space));</div>
@@ -740,10 +740,10 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc_source.h
 <div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>  net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(data), added]() <span class="keyword">mutable</span> {</div>
 <div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>    <span class="keyword">auto</span> impl = self-&gt;get_impl();</div>
 <div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>    <span class="keywordflow">if</span> (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>      impl-&gt;tx_.clear();</div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>      impl-&gt;queued_bytes_ = 0;</div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>      impl-&gt;writing_ = false;</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>      impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>      impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>      impl-&gt;tx_.clear();</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>      impl-&gt;queued_bytes_ = 0;</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>      impl-&gt;writing_ = false;</div>
 <div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>      impl-&gt;state_.set_state(LinkState::Error);</div>
 <div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>      impl-&gt;notify_state();</div>
 <div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>      impl-&gt;handle_error(self, <span class="stringliteral">&quot;write_queue_overflow&quot;</span>, make_error_code(boost::system::errc::no_buffer_space));</div>
@@ -767,10 +767,10 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc_source.h
 <div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>  net::post(impl-&gt;strand_, [self = shared_from_this(), buf = std::move(data), added]() <span class="keyword">mutable</span> {</div>
 <div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>    <span class="keyword">auto</span> impl = self-&gt;get_impl();</div>
 <div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>    <span class="keywordflow">if</span> (impl-&gt;queued_bytes_ + added &gt; impl-&gt;bp_limit_) {</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>      impl-&gt;tx_.clear();</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>      impl-&gt;queued_bytes_ = 0;</div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>      impl-&gt;writing_ = false;</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>      impl-&gt;report_backpressure(impl-&gt;queued_bytes_);</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>      impl-&gt;report_backpressure(impl-&gt;queued_bytes_ + added);</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>      impl-&gt;tx_.clear();</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>      impl-&gt;queued_bytes_ = 0;</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>      impl-&gt;writing_ = false;</div>
 <div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>      impl-&gt;state_.set_state(LinkState::Error);</div>
 <div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>      impl-&gt;notify_state();</div>
 <div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>      impl-&gt;handle_error(self, <span class="stringliteral">&quot;write_queue_overflow&quot;</span>, make_error_code(boost::system::errc::no_buffer_space));</div>
@@ -888,7 +888,7 @@ $(document).ready(function(){initNavTree('transport_2serial_2serial_8cc_source.h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_ab04957a3ce12ad8c4b1f764ce6591a4.html">unilink</a></li><li class="navelem"><a class="el" href="dir_5c26b0c9b7e0d5acf946c15b5d9d58d6.html">transport</a></li><li class="navelem"><a class="el" href="dir_2c4cf4388c6c65b31421f3ec6a8a630e.html">serial</a></li><li class="navelem"><a class="el" href="transport_2serial_2serial_8cc.html">serial.cc</a></li>
-    <li class="footer">Generated on Sat Apr 25 2026 14:01:56 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun Apr 26 2026 04:47:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

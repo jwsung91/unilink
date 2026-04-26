@@ -162,7 +162,7 @@ $(document).ready(function(){initNavTree('tutorial_01.html',''); initResizable()
 <div class="textblock"><p>This tutorial shows the current builder-based C++ API for creating a simple TCP client with connection, data, disconnect, and error callbacks.</p>
 <p><b>Duration</b>: 10 minutes <b>Difficulty</b>: Beginner <b>Prerequisites</b>: Basic C++ and CMake familiarity</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md748"></a>
+<h1><a class="anchor" id="autotoc_md755"></a>
 What You'll Build</h1>
 <p>A small TCP client that:</p>
 <ol type="1">
@@ -172,7 +172,7 @@ What You'll Build</h1>
 <li>sends user input until <code>/quit</code></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md750"></a>
+<h1><a class="anchor" id="autotoc_md757"></a>
 Step 1: Create The Client</h1>
 <p>Create <code>my_first_client.cpp</code>:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -233,7 +233,7 @@ Step 1: Create The Client</h1>
 <div class="ttc" id="anamespaceunilink_html_a6e965071daa5a68d914844bfbf79daac"><div class="ttname"><a href="namespaceunilink.html#a6e965071daa5a68d914844bfbf79daac">unilink::tcp_client</a></div><div class="ttdeci">builder::TcpClientBuilder tcp_client(const std::string &amp;host, uint16_t port)</div><div class="ttdoc">Create a TCP client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00092">unilink.hpp:92</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md752"></a>
+<h1><a class="anchor" id="autotoc_md759"></a>
 Step 2: Build With CMake</h1>
 <p>Create <code>CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.12)</div>
@@ -248,7 +248,7 @@ Step 2: Build With CMake</h1>
 <div class="fragment"><div class="line">cmake -S . -B build</div>
 <div class="line">cmake --build build</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md754"></a>
+<h1><a class="anchor" id="autotoc_md761"></a>
 Step 3: Run Against A Test Server</h1>
 <p>Start a simple server in another terminal:</p>
 <div class="fragment"><div class="line">nc -l 8080</div>
@@ -256,7 +256,7 @@ Step 3: Run Against A Test Server</h1>
 <div class="fragment"><div class="line">./build/my_first_client</div>
 </div><!-- fragment --><p>Type a message in the client, then type a reply in the <code>nc</code> terminal.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md756"></a>
+<h1><a class="anchor" id="autotoc_md763"></a>
 API Patterns Used In This Tutorial</h1>
 <p>The tutorial code uses context-based callbacks consistently:</p>
 <ul>
@@ -277,7 +277,7 @@ API Patterns Used In This Tutorial</h1>
 <li><code>client-&gt;stop()</code></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md758"></a>
+<h1><a class="anchor" id="autotoc_md765"></a>
 Use The Full Example If You Want More</h1>
 <p>The repository includes ready-to-build examples:</p>
 <ul>
@@ -285,7 +285,7 @@ Use The Full Example If You Want More</h1>
 </ul>
 <p>This tutorial stays smaller than the example sources on purpose.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md760"></a>
+<h1><a class="anchor" id="autotoc_md767"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="02__tcp__server_8md.html">Building a TCP Server</a></li>
@@ -302,7 +302,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 25 2026 14:01:56 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun Apr 26 2026 04:47:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>

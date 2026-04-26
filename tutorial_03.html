@@ -162,7 +162,7 @@ $(document).ready(function(){initNavTree('tutorial_03.html',''); initResizable()
 <div class="textblock"><p>This tutorial shows the current UDS client/server API using <code>uds_server(...)</code> and <code>uds_client(...)</code> from <code><a class="el" href="unilink_8hpp.html">unilink/unilink.hpp</a></code>.</p>
 <p><b>Duration</b>: 10 minutes <b>Difficulty</b>: Beginner to Intermediate <b>Prerequisites</b>: <a class="el" href="02__tcp__server_8md.html">Building a TCP Server</a></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md778"></a>
+<h1><a class="anchor" id="autotoc_md785"></a>
 What You'll Build</h1>
 <p>A local echo service that:</p>
 <ol type="1">
@@ -171,7 +171,7 @@ What You'll Build</h1>
 <li>echoes each message back to the sender</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md780"></a>
+<h1><a class="anchor" id="autotoc_md787"></a>
 Step 1: Create A UDS Server</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
@@ -222,7 +222,7 @@ Step 1: Create A UDS Server</h1>
 <div class="ttc" id="anamespaceunilink_html_ad9137b62ca2550572c06204e1f4a5c80"><div class="ttname"><a href="namespaceunilink.html#ad9137b62ca2550572c06204e1f4a5c80">unilink::uds_server</a></div><div class="ttdeci">builder::UdsServerBuilder uds_server(const std::string &amp;socket_path)</div><div class="ttdoc">Create a UDS server builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00101">unilink.hpp:101</a></div></div>
 <div class="ttc" id="aunilink_8hpp_html"><div class="ttname"><a href="unilink_8hpp.html">unilink.hpp</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md782"></a>
+<h1><a class="anchor" id="autotoc_md789"></a>
 Step 2: Create A UDS Client</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
@@ -259,7 +259,7 @@ Step 2: Create A UDS Client</h1>
 <div class="line">}</div>
 <div class="ttc" id="anamespaceunilink_html_aea8ffb995b971cd3ed4474daff633c5a"><div class="ttname"><a href="namespaceunilink.html#aea8ffb995b971cd3ed4474daff633c5a">unilink::uds_client</a></div><div class="ttdeci">builder::UdsClientBuilder uds_client(const std::string &amp;socket_path)</div><div class="ttdoc">Create a UDS client builder.</div><div class="ttdef"><b>Definition</b> <a href="unilink_8hpp_source.html#l00110">unilink.hpp:110</a></div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md784"></a>
+<h1><a class="anchor" id="autotoc_md791"></a>
 Why Use UDS Instead Of TCP</h1>
 <p>UDS is useful when both processes are on the same machine and you want:</p>
 <ul>
@@ -269,7 +269,7 @@ Why Use UDS Instead Of TCP</h1>
 </ul>
 <p>The callback model and wrapper lifecycle are intentionally very similar to the TCP API.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md786"></a>
+<h1><a class="anchor" id="autotoc_md793"></a>
 Operational Notes</h1>
 <ul>
 <li>The socket path should usually live under <code>/tmp</code> or another writable runtime directory.</li>
@@ -277,7 +277,7 @@ Operational Notes</h1>
 <li>On Linux and macOS, UDS is a natural choice for local service-to-service IPC.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md788"></a>
+<h1><a class="anchor" id="autotoc_md795"></a>
 Next Steps</h1>
 <ul>
 <li><a class="el" href="04__serial__communication_8md.html">Serial Communication</a></li>
@@ -293,7 +293,7 @@ Next Steps</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Apr 25 2026 14:01:56 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
+    <li class="footer">Generated on Sun Apr 26 2026 04:47:41 for unilink by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
 </body>
