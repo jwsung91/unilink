@@ -30,6 +30,7 @@
 #include <vector>
 
 #include "unilink/base/common.hpp"
+#include "unilink/base/constants.hpp"
 #include "unilink/factory/channel_factory.hpp"
 #include "unilink/transport/serial/serial.hpp"
 
@@ -82,7 +83,7 @@ struct Serial::Impl {
   int stop_bits = 1;
   std::string parity = "none";
   std::string flow_control = "none";
-  std::chrono::milliseconds retry_interval{3000};
+  std::chrono::milliseconds retry_interval{base::constants::DEFAULT_RETRY_INTERVAL_MS};
 
   Impl(const std::string& dev, uint32_t baud) : device(dev), baud_rate(baud) {}
   Impl(const std::string& dev, uint32_t baud, std::shared_ptr<boost::asio::io_context> ioc)
