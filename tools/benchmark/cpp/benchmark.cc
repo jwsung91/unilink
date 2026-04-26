@@ -133,6 +133,47 @@ double run_tcp_throughput(int num_chunks) {
   return duration<double>(end - start).count();
 }
 
+double run_uds_pingpong(int num_pings) {
+  std::string path = "/tmp/cpp_bench.sock";
+  std::remove(path.c_str());
+  UdsServer server(path);
+  UdsClient client(path);
+  std::atomic<int> completed{0};
+  std::condition_variable cv;
+  std::mutex mtx;
+
+  server.on_data([&](const auto& ctx) {
+    if (!ctx.data().empty()) server.send_to(ctx.client_id(), std::string_view(ctx.data().data(), ctx.data().size()));
+  });
+  client.on_data([&](const auto& ctx) {
+    if (!ctx.data().empty()) {
+      if (++completed < num_pings)
+        client.send(PING_MESSAGE);
+      else
+        cv.notify_one();
+    }
+  });
+
+  server.start().get();
+  client.start().get();
+  std::this_thread::sleep_for(milliseconds(200));
+
+  auto start = high_resolution_clock::now();
+  client.send(PING_MESSAGE);
+
+  std::unique_lock<std::mutex> lock(mtx);
+  if (!cv.wait_for(lock, seconds(10), [&] { return completed >= num_pings; })) {
+    client.stop();
+    server.stop();
+    return -1.0;
+  }
+  auto end = high_resolution_clock::now();
+
+  client.stop();
+  server.stop();
+  return duration<double>(end - start).count();
+}
+
 int main() {
   std::cout << "=== C++ Core Benchmark (Optimized) ===" << std::endl;
   std::cout << std::fixed << std::setprecision(4);
@@ -156,39 +197,8 @@ int main() {
     std::cout << "1000 Pings: " << run_pingpong(udp1, udp2, 1000) << " sec" << std::endl;
   }
 
-  // UDS
-  {
-    std::string path = "/tmp/cpp_bench.sock";
-    std::remove(path.c_str());
-    UdsServer server(path);
-    UdsClient client(path);
-    std::cout << "\n--- UDS ---" << std::endl;
-    std::atomic<int> completed{0};
-    std::condition_variable cv;
-    std::mutex mtx;
-    server.on_data([&](const auto& ctx) {
-      if (!ctx.data().empty()) server.send_to(ctx.client_id(), std::string_view(ctx.data().data(), ctx.data().size()));
-    });
-    client.on_data([&](const auto& ctx) {
-      if (!ctx.data().empty()) {
-        if (++completed < 1000)
-          client.send(PING_MESSAGE);
-        else
-          cv.notify_one();
-      }
-    });
-    server.start().get();
-    client.start().get();
-    std::this_thread::sleep_for(milliseconds(200));
-    auto start = high_resolution_clock::now();
-    client.send(PING_MESSAGE);
-    std::unique_lock<std::mutex> lock(mtx);
-    cv.wait_for(lock, seconds(10), [&] { return completed >= 1000; });
-    auto end = high_resolution_clock::now();
-    std::cout << "1000 Pings: " << duration<double>(end - start).count() << " sec" << std::endl;
-    client.stop();
-    server.stop();
-  }
+  std::cout << "\n--- UDS ---" << std::endl;
+  std::cout << "1000 Pings: " << run_uds_pingpong(1000) << " sec" << std::endl;
 
   return 0;
 }

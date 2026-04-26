@@ -101,5 +101,6 @@ TEST_F(TcpServerGetClientsBenchmarkTest, BenchmarkGetClients) {
 
   std::cout << "Iterations: " << iterations << std::endl;
   std::cout << "Time elapsed: " << duration_ms << " ms" << std::endl;
-  std::cout << "Ops/sec: " << (static_cast<double>(iterations) * 1000.0 / static_cast<double>(duration_ms)) << std::endl;
+  std::cout << "Ops/sec: " << (static_cast<double>(iterations) * 1000.0 / static_cast<double>(duration_ms))
+            << std::endl;
 }
