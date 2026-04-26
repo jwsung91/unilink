@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-26 05:04:32</td>
+            <td class="headerValue">2026-04-26 11:57:44</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -148,30 +148,31 @@
 <a name="70"><span class="lineNum">      70 </span>                :            :   ChannelInterface&amp; on_connect(ConnectionHandler handler) override;</a>
 <a name="71"><span class="lineNum">      71 </span>                :            :   ChannelInterface&amp; on_disconnect(ConnectionHandler handler) override;</a>
 <a name="72"><span class="lineNum">      72 </span>                :            :   ChannelInterface&amp; on_error(ErrorHandler handler) override;</a>
-<a name="73"><span class="lineNum">      73 </span>                :            : </a>
-<a name="74"><span class="lineNum">      74 </span>                :            :   ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) override;</a>
-<a name="75"><span class="lineNum">      75 </span>                :            :   ChannelInterface&amp; on_message(MessageHandler handler) override;</a>
-<a name="76"><span class="lineNum">      76 </span>                :            :   ChannelInterface&amp; on_message_batch(BatchMessageHandler handler) override;</a>
-<a name="77"><span class="lineNum">      77 </span>                :            : </a>
-<a name="78"><span class="lineNum">      78 </span>                :            :   ChannelInterface&amp; auto_start(bool manage = true) override;</a>
-<a name="79"><span class="lineNum">      79 </span>                :            : </a>
-<a name="80"><span class="lineNum">      80 </span>                :            :   // Configuration</a>
-<a name="81"><span class="lineNum">      81 </span>                :            :   TcpClient&amp; batch_size(size_t size);</a>
-<a name="82"><span class="lineNum">      82 </span>                :            :   TcpClient&amp; batch_latency(std::chrono::milliseconds latency);</a>
-<a name="83"><span class="lineNum">      83 </span>                :            :   TcpClient&amp; retry_interval(std::chrono::milliseconds interval);</a>
-<a name="84"><span class="lineNum">      84 </span>                :            :   TcpClient&amp; max_retries(int max_retries);</a>
-<a name="85"><span class="lineNum">      85 </span>                :            :   TcpClient&amp; connection_timeout(std::chrono::milliseconds timeout);</a>
-<a name="86"><span class="lineNum">      86 </span>                :            :   TcpClient&amp; manage_external_context(bool manage);</a>
-<a name="87"><span class="lineNum">      87 </span>                :            : </a>
-<a name="88"><span class="lineNum">      88 </span>                :            :  private:</a>
-<a name="89"><span class="lineNum">      89 </span>                :            :   struct Impl;</a>
-<a name="90"><span class="lineNum">      90 </span>                :<span class="lineCov">         64 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
-<a name="91"><span class="lineNum">      91 </span>                :            :   Impl* get_impl() { return impl_.get(); }</a>
-<a name="92"><span class="lineNum">      92 </span>                :            :   std::unique_ptr&lt;Impl&gt; impl_;</a>
-<a name="93"><span class="lineNum">      93 </span>                :            : };</a>
-<a name="94"><span class="lineNum">      94 </span>                :            : </a>
-<a name="95"><span class="lineNum">      95 </span>                :            : }  // namespace wrapper</a>
-<a name="96"><span class="lineNum">      96 </span>                :            : }  // namespace unilink</a>
+<a name="73"><span class="lineNum">      73 </span>                :            :   ChannelInterface&amp; on_backpressure(std::function&lt;void(size_t)&gt; handler) override;</a>
+<a name="74"><span class="lineNum">      74 </span>                :            : </a>
+<a name="75"><span class="lineNum">      75 </span>                :            :   ChannelInterface&amp; framer(std::unique_ptr&lt;framer::IFramer&gt; framer) override;</a>
+<a name="76"><span class="lineNum">      76 </span>                :            :   ChannelInterface&amp; on_message(MessageHandler handler) override;</a>
+<a name="77"><span class="lineNum">      77 </span>                :            :   ChannelInterface&amp; on_message_batch(BatchMessageHandler handler) override;</a>
+<a name="78"><span class="lineNum">      78 </span>                :            : </a>
+<a name="79"><span class="lineNum">      79 </span>                :            :   ChannelInterface&amp; auto_start(bool manage = true) override;</a>
+<a name="80"><span class="lineNum">      80 </span>                :            : </a>
+<a name="81"><span class="lineNum">      81 </span>                :            :   // Configuration</a>
+<a name="82"><span class="lineNum">      82 </span>                :            :   TcpClient&amp; batch_size(size_t size);</a>
+<a name="83"><span class="lineNum">      83 </span>                :            :   TcpClient&amp; batch_latency(std::chrono::milliseconds latency);</a>
+<a name="84"><span class="lineNum">      84 </span>                :            :   TcpClient&amp; retry_interval(std::chrono::milliseconds interval);</a>
+<a name="85"><span class="lineNum">      85 </span>                :            :   TcpClient&amp; max_retries(int max_retries);</a>
+<a name="86"><span class="lineNum">      86 </span>                :            :   TcpClient&amp; connection_timeout(std::chrono::milliseconds timeout);</a>
+<a name="87"><span class="lineNum">      87 </span>                :            :   TcpClient&amp; manage_external_context(bool manage);</a>
+<a name="88"><span class="lineNum">      88 </span>                :            : </a>
+<a name="89"><span class="lineNum">      89 </span>                :            :  private:</a>
+<a name="90"><span class="lineNum">      90 </span>                :            :   struct Impl;</a>
+<a name="91"><span class="lineNum">      91 </span>                :<span class="lineCov">         77 :   const Impl* get_impl() const { return impl_.get(); }</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :            :   Impl* get_impl() { return impl_.get(); }</a>
+<a name="93"><span class="lineNum">      93 </span>                :            :   std::unique_ptr&lt;Impl&gt; impl_;</a>
+<a name="94"><span class="lineNum">      94 </span>                :            : };</a>
+<a name="95"><span class="lineNum">      95 </span>                :            : </a>
+<a name="96"><span class="lineNum">      96 </span>                :            : }  // namespace wrapper</a>
+<a name="97"><span class="lineNum">      97 </span>                :            : }  // namespace unilink</a>
 </pre>
       </td>
     </tr>

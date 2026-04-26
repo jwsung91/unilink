@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-26 05:04:32</td>
+            <td class="headerValue">2026-04-26 11:57:44</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">57</td>
@@ -492,11 +492,11 @@
 <a name="371"><span class="lineNum">     371 </span>                :<span class="lineCov">         13 :         std::move(current.buffer));</span></a>
 <a name="372"><span class="lineNum">     372 </span>        [<span class="branchCov" title="Branch 0 was taken 13 times"> + </span><span class="branchCov" title="Branch 1 was taken 2 times"> + </span>]:<span class="lineCov">         15 :   }</span></a>
 <a name="373"><span class="lineNum">     373 </span>                :            : </a>
-<a name="374"><span class="lineNum">     374 </span>                :<span class="lineCov">         86 :   void close_socket() {</span></a>
-<a name="375"><span class="lineNum">     375 </span>                :<span class="lineCov">         86 :     boost::system::error_code ec;</span></a>
-<a name="376"><span class="lineNum">     376 </span>        [<span class="branchCov" title="Branch 0 was taken 86 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         86 :     socket_.cancel(ec);</span></a>
-<a name="377"><span class="lineNum">     377 </span>        [<span class="branchCov" title="Branch 0 was taken 86 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         86 :     socket_.close(ec);</span></a>
-<a name="378"><span class="lineNum">     378 </span>                :<span class="lineCov">         86 :   }</span></a>
+<a name="374"><span class="lineNum">     374 </span>                :<span class="lineCov">         87 :   void close_socket() {</span></a>
+<a name="375"><span class="lineNum">     375 </span>                :<span class="lineCov">         87 :     boost::system::error_code ec;</span></a>
+<a name="376"><span class="lineNum">     376 </span>        [<span class="branchCov" title="Branch 0 was taken 87 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         87 :     socket_.cancel(ec);</span></a>
+<a name="377"><span class="lineNum">     377 </span>        [<span class="branchCov" title="Branch 0 was taken 87 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         87 :     socket_.close(ec);</span></a>
+<a name="378"><span class="lineNum">     378 </span>                :<span class="lineCov">         87 :   }</span></a>
 <a name="379"><span class="lineNum">     379 </span>                :            : </a>
 <a name="380"><span class="lineNum">     380 </span>                :<span class="lineCov">         97 :   void notify_state() {</span></a>
 <a name="381"><span class="lineNum">     381 </span>        [<span class="branchCov" title="Branch 0 was taken 47 times"> + </span><span class="branchCov" title="Branch 1 was taken 50 times"> + </span>]:<span class="lineCov">         97 :     if (!on_state_) return;</span></a>
@@ -580,15 +580,15 @@
 <a name="439"><span class="lineNum">     439 </span>                :<span class="lineCov">         11 :     remote_endpoint_ = udp::endpoint(addr, *cfg_.remote_port);</span></a>
 <a name="440"><span class="lineNum">     440 </span>                :            :   }</a>
 <a name="441"><span class="lineNum">     441 </span>                :            : </a>
-<a name="442"><span class="lineNum">     442 </span>                :<span class="lineCov">        156 :   void transition_to(LinkState target, const boost::system::error_code&amp; ec = {}) {</span></a>
-<a name="443"><span class="lineNum">     443 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 156 times"> + </span>]:<span class="lineCov">        156 :     if (ec == net::error::operation_aborted) {</span></a>
+<a name="442"><span class="lineNum">     442 </span>                :<span class="lineCov">        157 :   void transition_to(LinkState target, const boost::system::error_code&amp; ec = {}) {</span></a>
+<a name="443"><span class="lineNum">     443 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 157 times"> + </span>]:<span class="lineCov">        157 :     if (ec == net::error::operation_aborted) {</span></a>
 <a name="444"><span class="lineNum">     444 </span>                :<span class="lineNoCov">          0 :       return;</span></a>
 <a name="445"><span class="lineNum">     445 </span>                :            :     }</a>
 <a name="446"><span class="lineNum">     446 </span>                :            : </a>
-<a name="447"><span class="lineNum">     447 </span>                :<span class="lineCov">        156 :     const auto current = state_.state();</span></a>
-<a name="448"><span class="lineNum">     448 </span>  [<span class="branchCov" title="Branch 0 was taken 110 times"> + </span><span class="branchCov" title="Branch 1 was taken 46 times"> + </span><span class="branchCov" title="Branch 2 was taken 13 times"> + </span><span class="branchCov" title="Branch 3 was taken 97 times"> + </span>]:<span class="lineCov">        156 :     if ((current == LinkState::Closed || current == LinkState::Error) &amp;&amp;</span></a>
-<a name="449"><span class="lineNum">     449 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 59 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         59 :         (target == LinkState::Closed || target == LinkState::Error)) {</span></a>
-<a name="450"><span class="lineNum">     450 </span>                :<span class="lineCov">         59 :       return;</span></a>
+<a name="447"><span class="lineNum">     447 </span>                :<span class="lineCov">        157 :     const auto current = state_.state();</span></a>
+<a name="448"><span class="lineNum">     448 </span>  [<span class="branchCov" title="Branch 0 was taken 110 times"> + </span><span class="branchCov" title="Branch 1 was taken 47 times"> + </span><span class="branchCov" title="Branch 2 was taken 13 times"> + </span><span class="branchCov" title="Branch 3 was taken 97 times"> + </span>]:<span class="lineCov">        157 :     if ((current == LinkState::Closed || current == LinkState::Error) &amp;&amp;</span></a>
+<a name="449"><span class="lineNum">     449 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 60 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">         60 :         (target == LinkState::Closed || target == LinkState::Error)) {</span></a>
+<a name="450"><span class="lineNum">     450 </span>                :<span class="lineCov">         60 :       return;</span></a>
 <a name="451"><span class="lineNum">     451 </span>                :            :     }</a>
 <a name="452"><span class="lineNum">     452 </span>                :            : </a>
 <a name="453"><span class="lineNum">     453 </span>  [<span class="branchCov" title="Branch 0 was taken 69 times"> + </span><span class="branchCov" title="Branch 1 was taken 28 times"> + </span><span class="branchCov" title="Branch 2 was taken 5 times"> + </span><span class="branchCov" title="Branch 3 was taken 64 times"> + </span>]:<span class="lineCov">         97 :     if (target == LinkState::Closed || target == LinkState::Error) {</span></a>
@@ -603,34 +603,34 @@
 <a name="462"><span class="lineNum">     462 </span>                :<span class="lineCov">         97 :     notify_state();</span></a>
 <a name="463"><span class="lineNum">     463 </span>                :            :   }</a>
 <a name="464"><span class="lineNum">     464 </span>                :            : </a>
-<a name="465"><span class="lineNum">     465 </span>                :<span class="lineCov">         86 :   void perform_stop_cleanup() {</span></a>
+<a name="465"><span class="lineNum">     465 </span>                :<span class="lineCov">         87 :   void perform_stop_cleanup() {</span></a>
 <a name="466"><span class="lineNum">     466 </span>                :            :     try {</a>
-<a name="467"><span class="lineNum">     467 </span>        [<span class="branchCov" title="Branch 0 was taken 86 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         86 :       close_socket();</span></a>
-<a name="468"><span class="lineNum">     468 </span>                :<span class="lineCov">         86 :       tx_.clear();</span></a>
-<a name="469"><span class="lineNum">     469 </span>                :<span class="lineCov">         86 :       queue_bytes_ = 0;</span></a>
-<a name="470"><span class="lineNum">     470 </span>                :<span class="lineCov">         86 :       writing_ = false;</span></a>
-<a name="471"><span class="lineNum">     471 </span>                :<span class="lineCov">         86 :       const bool had_backpressure = backpressure_active_;</span></a>
-<a name="472"><span class="lineNum">     472 </span>                :<span class="lineCov">         86 :       backpressure_active_ = false;</span></a>
-<a name="473"><span class="lineNum">     473 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 86 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         86 :       if (had_backpressure &amp;&amp; on_bp_) {</span></a>
-<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 86 times"> + </span>]
+<a name="467"><span class="lineNum">     467 </span>        [<span class="branchCov" title="Branch 0 was taken 87 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         87 :       close_socket();</span></a>
+<a name="468"><span class="lineNum">     468 </span>                :<span class="lineCov">         87 :       tx_.clear();</span></a>
+<a name="469"><span class="lineNum">     469 </span>                :<span class="lineCov">         87 :       queue_bytes_ = 0;</span></a>
+<a name="470"><span class="lineNum">     470 </span>                :<span class="lineCov">         87 :       writing_ = false;</span></a>
+<a name="471"><span class="lineNum">     471 </span>                :<span class="lineCov">         87 :       const bool had_backpressure = backpressure_active_;</span></a>
+<a name="472"><span class="lineNum">     472 </span>                :<span class="lineCov">         87 :       backpressure_active_ = false;</span></a>
+<a name="473"><span class="lineNum">     473 </span>  [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 87 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">         87 :       if (had_backpressure &amp;&amp; on_bp_) {</span></a>
+<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 87 times"> + </span>]
 <a name="474"><span class="lineNum">     474 </span>                :            :         try {</a>
 <a name="475"><span class="lineNum">     475 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :           on_bp_(queue_bytes_);</span></a>
 <a name="476"><span class="lineNum">     476 </span>                :<span class="lineNoCov">          0 :         } catch (...) {</span></a>
 <a name="477"><span class="lineNum">     477 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineNoCov">          0 :         }</span></a>
 <a name="478"><span class="lineNum">     478 </span>                :            :       }</a>
-<a name="479"><span class="lineNum">     479 </span>                :<span class="lineCov">         86 :       connected_.store(false);</span></a>
-<a name="480"><span class="lineNum">     480 </span>                :<span class="lineCov">         86 :       opened_.store(false);</span></a>
-<a name="481"><span class="lineNum">     481 </span>  [<span class="branchCov" title="Branch 0 was taken 57 times"> + </span><span class="branchCov" title="Branch 1 was taken 29 times"> + </span><span class="branchCov" title="Branch 2 was taken 38 times"> + </span><span class="branchCov" title="Branch 3 was taken 19 times"> + </span> :<span class="lineCov">         86 :       if (owns_ioc_ &amp;&amp; work_guard_) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 38 times"> + </span><span class="branchCov" title="Branch 5 was taken 48 times"> + </span>]
+<a name="479"><span class="lineNum">     479 </span>                :<span class="lineCov">         87 :       connected_.store(false);</span></a>
+<a name="480"><span class="lineNum">     480 </span>                :<span class="lineCov">         87 :       opened_.store(false);</span></a>
+<a name="481"><span class="lineNum">     481 </span>  [<span class="branchCov" title="Branch 0 was taken 57 times"> + </span><span class="branchCov" title="Branch 1 was taken 30 times"> + </span><span class="branchCov" title="Branch 2 was taken 38 times"> + </span><span class="branchCov" title="Branch 3 was taken 19 times"> + </span> :<span class="lineCov">         87 :       if (owns_ioc_ &amp;&amp; work_guard_) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 38 times"> + </span><span class="branchCov" title="Branch 5 was taken 49 times"> + </span>]
 <a name="482"><span class="lineNum">     482 </span>                :<span class="lineCov">         38 :         work_guard_-&gt;reset();</span></a>
 <a name="483"><span class="lineNum">     483 </span>                :            :       }</a>
-<a name="484"><span class="lineNum">     484 </span>        [<span class="branchCov" title="Branch 0 was taken 86 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         86 :       transition_to(LinkState::Closed);</span></a>
-<a name="485"><span class="lineNum">     485 </span>                :<span class="lineCov">         86 :       on_bytes_ = nullptr;</span></a>
-<a name="486"><span class="lineNum">     486 </span>                :<span class="lineCov">         86 :       on_state_ = nullptr;</span></a>
-<a name="487"><span class="lineNum">     487 </span>                :<span class="lineCov">         86 :       on_bp_ = nullptr;</span></a>
+<a name="484"><span class="lineNum">     484 </span>        [<span class="branchCov" title="Branch 0 was taken 87 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         87 :       transition_to(LinkState::Closed);</span></a>
+<a name="485"><span class="lineNum">     485 </span>                :<span class="lineCov">         87 :       on_bytes_ = nullptr;</span></a>
+<a name="486"><span class="lineNum">     486 </span>                :<span class="lineCov">         87 :       on_state_ = nullptr;</span></a>
+<a name="487"><span class="lineNum">     487 </span>                :<span class="lineCov">         87 :       on_bp_ = nullptr;</span></a>
 <a name="488"><span class="lineNum">     488 </span>                :<span class="lineNoCov">          0 :     } catch (...) {</span></a>
 <a name="489"><span class="lineNum">     489 </span>                :<span class="lineNoCov">          0 :     }</span></a>
-<a name="490"><span class="lineNum">     490 </span>                :<span class="lineCov">         86 :   }</span></a>
+<a name="490"><span class="lineNum">     490 </span>                :<span class="lineCov">         87 :   }</span></a>
 <a name="491"><span class="lineNum">     491 </span>                :            : </a>
 <a name="492"><span class="lineNum">     492 </span>                :<span class="lineCov">         65 :   void join_ioc_thread(bool allow_detach) {</span></a>
 <a name="493"><span class="lineNum">     493 </span>  [<span class="branchCov" title="Branch 0 was taken 38 times"> + </span><span class="branchCov" title="Branch 1 was taken 27 times"> + </span><span class="branchCov" title="Branch 2 was taken 19 times"> + </span><span class="branchCov" title="Branch 3 was taken 19 times"> + </span> :<span class="lineCov">         65 :     if (!owns_ioc_ || !ioc_thread_.joinable()) {</span></a>
@@ -741,7 +741,7 @@
 <a name="596"><span class="lineNum">     596 </span>                :            : </a>
 <a name="597"><span class="lineNum">     597 </span>                :<span class="lineCov">         32 :   impl-&gt;stopping_.store(true);</span></a>
 <a name="598"><span class="lineNum">     598 </span>        [<span class="branchCov" title="Branch 0 was taken 32 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         32 :   auto self = shared_from_this();</span></a>
-<a name="599"><span class="lineNum">     599 </span>        [<span class="branchCov" title="Branch 0 was taken 32 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         52 :   net::post(impl-&gt;strand_, [self]() { self-&gt;get_impl()-&gt;perform_stop_cleanup(); });</span></a>
+<a name="599"><span class="lineNum">     599 </span>        [<span class="branchCov" title="Branch 0 was taken 32 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         53 :   net::post(impl-&gt;strand_, [self]() { self-&gt;get_impl()-&gt;perform_stop_cleanup(); });</span></a>
 <a name="600"><span class="lineNum">     600 </span>                :            : </a>
 <a name="601"><span class="lineNum">     601 </span>        [<span class="branchCov" title="Branch 0 was taken 32 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">         32 :   impl-&gt;join_ioc_thread(false);</span></a>
 <a name="602"><span class="lineNum">     602 </span>                :            : </a>
