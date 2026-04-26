@@ -77,6 +77,9 @@ class UNILINK_API TcpClient : public Channel, public std::enable_shared_from_thi
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
 
+  void set_backpressure_threshold(size_t threshold) override;
+  void set_backpressure_strategy(base::constants::BackpressureStrategy strategy) override;
+
   std::optional<diagnostics::ErrorInfo> last_error_info() const;
 
   // Dynamic configuration methods

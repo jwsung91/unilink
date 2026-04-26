@@ -48,6 +48,9 @@ class FakeChannel : public interface::Channel {
   void on_state(OnState cb) override { on_state_ = std::move(cb); }
   void on_backpressure(OnBackpressure cb) override { on_backpressure_ = std::move(cb); }
 
+  void set_backpressure_threshold(size_t threshold) override { bp_threshold_ = threshold; }
+  void set_backpressure_strategy(base::constants::BackpressureStrategy strategy) override { bp_strategy_ = strategy; }
+
   void emit_bytes(std::string_view text) {
     if (!on_bytes_) return;
     on_bytes_(memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(text.data()), text.size()));
@@ -70,6 +73,8 @@ class FakeChannel : public interface::Channel {
   OnBytes on_bytes_;
   OnState on_state_;
   OnBackpressure on_backpressure_;
+  size_t bp_threshold_{0};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Wait};
 };
 
 class TcpServerLoopbackHarness {

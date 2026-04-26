@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "unilink/base/common.hpp"
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/memory/safe_span.hpp"
 
@@ -50,6 +51,9 @@ class UNILINK_API Channel {
   virtual void on_bytes(OnBytes cb) = 0;
   virtual void on_state(OnState cb) = 0;
   virtual void on_backpressure(OnBackpressure cb) = 0;
+
+  virtual void set_backpressure_threshold(size_t threshold) = 0;
+  virtual void set_backpressure_strategy(base::constants::BackpressureStrategy strategy) = 0;
 };
 }  // namespace interface
 }  // namespace unilink

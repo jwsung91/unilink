@@ -275,6 +275,12 @@ void UdsServer::on_backpressure(OnBackpressure cb) {
   impl_->on_bp_ = std::move(cb);
 }
 
+void UdsServer::set_backpressure_threshold(size_t threshold) { impl_->cfg_.backpressure_threshold = threshold; }
+
+void UdsServer::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->cfg_.backpressure_strategy = strategy;
+}
+
 bool UdsServer::broadcast(std::string_view message) {
   auto data =
       std::make_shared<const std::vector<uint8_t>>(reinterpret_cast<const uint8_t*>(message.data()),
@@ -343,9 +349,9 @@ void UdsServer::Impl::do_accept(std::shared_ptr<UdsServer> self) {
 
     if (!ec) {
       ClientId client_id;
-      auto session = std::make_shared<UdsServerSession>(*self->impl_->ioc_, std::move(socket),
-                                                        self->impl_->cfg_.backpressure_threshold,
-                                                        self->impl_->cfg_.idle_timeout_ms);
+      auto session = std::make_shared<UdsServerSession>(
+          *self->impl_->ioc_, std::move(socket), self->impl_->cfg_.backpressure_threshold,
+          self->impl_->cfg_.idle_timeout_ms, self->impl_->cfg_.backpressure_strategy);
 
       {
         std::lock_guard<std::mutex> lock(self->impl_->sessions_mutex_);

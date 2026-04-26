@@ -72,6 +72,9 @@ class UNILINK_API Serial : public interface::Channel, public std::enable_shared_
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
 
+  void set_backpressure_threshold(size_t threshold) override;
+  void set_backpressure_strategy(base::constants::BackpressureStrategy strategy) override;
+
   void set_retry_interval(unsigned interval_ms);
 
  private:

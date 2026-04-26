@@ -26,13 +26,14 @@ namespace unilink {
 namespace transport {
 
 TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_t backpressure_threshold,
-                                   int idle_timeout_ms)
+                                   int idle_timeout_ms, base::constants::BackpressureStrategy strategy)
     : ioc_(ioc),
       strand_(ioc.get_executor()),
       idle_timer_(ioc),
       socket_(std::make_unique<BoostTcpSocket>(std::move(sock))),
       writing_(false),
       queue_bytes_(0),
+      bp_strategy_(strategy),
       bp_high_(backpressure_threshold),
       idle_timeout_ms_(idle_timeout_ms),
       alive_(false),
@@ -44,13 +45,15 @@ TcpServerSession::TcpServerSession(net::io_context& ioc, tcp::socket sock, size_
 }
 
 TcpServerSession::TcpServerSession(net::io_context& ioc, std::unique_ptr<interface::TcpSocketInterface> socket,
-                                   size_t backpressure_threshold, int idle_timeout_ms)
+                                   size_t backpressure_threshold, int idle_timeout_ms,
+                                   base::constants::BackpressureStrategy strategy)
     : ioc_(ioc),
       strand_(ioc.get_executor()),
       idle_timer_(ioc),
       socket_(std::move(socket)),
       writing_(false),
       queue_bytes_(0),
+      bp_strategy_(strategy),
       bp_high_(backpressure_threshold),
       idle_timeout_ms_(idle_timeout_ms),
       alive_(false),
@@ -88,6 +91,13 @@ void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
 
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
+
+        if (self->bp_strategy_ == base::constants::BackpressureStrategy::Latest &&
+            (self->backpressure_active_ || self->queue_bytes_ + buf.size() > self->bp_limit_)) {
+          self->tx_.clear();
+          self->queue_bytes_ = 0;
+        }
+
         if (self->queue_bytes_ + buf.size() > self->bp_limit_) {
           UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
           self->report_backpressure(self->queue_bytes_ + buf.size());
@@ -108,6 +118,13 @@ void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
+
+    if (self->bp_strategy_ == base::constants::BackpressureStrategy::Latest &&
+        (self->backpressure_active_ || self->queue_bytes_ + buf.size() > self->bp_limit_)) {
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+    }
+
     if (self->queue_bytes_ + buf.size() > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
       self->report_backpressure(self->queue_bytes_ + buf.size());
@@ -130,6 +147,13 @@ void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
   }
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
+
+    if (self->bp_strategy_ == base::constants::BackpressureStrategy::Latest &&
+        (self->backpressure_active_ || self->queue_bytes_ + added > self->bp_limit_)) {
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+    }
+
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
       self->report_backpressure(self->queue_bytes_ + added);
@@ -152,6 +176,13 @@ void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
   }
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
+
+    if (self->bp_strategy_ == base::constants::BackpressureStrategy::Latest &&
+        (self->backpressure_active_ || self->queue_bytes_ + added > self->bp_limit_)) {
+      self->tx_.clear();
+      self->queue_bytes_ = 0;
+    }
+
     if (self->queue_bytes_ + added > self->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_server_session", "write", "Queue limit exceeded, dropping message");
       self->report_backpressure(self->queue_bytes_ + added);

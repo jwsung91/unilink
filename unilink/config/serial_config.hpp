@@ -38,6 +38,7 @@ struct SerialConfig {
   size_t read_chunk = base::constants::DEFAULT_READ_BUFFER_SIZE;
   bool reopen_on_error = true;  // Attempt to reopen on device disconnection/error
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Wait;
   bool enable_memory_pool = true;
   // Controls whether callback exceptions halt the link (true) or trigger the normal retry flow (false)
   bool stop_on_callback_exception = false;

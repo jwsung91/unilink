@@ -516,15 +516,25 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     auto impl = self->get_impl();
     if (impl->queued_bytes_ + buf.size() > impl->bp_limit_) {
-      impl->report_backpressure(impl->queued_bytes_ + buf.size());
+      if (impl->cfg_.backpressure_strategy == base::constants::BackpressureStrategy::Latest) {
+        impl->tx_.clear();
+        impl->queued_bytes_ = 0;
+      } else {
+        impl->report_backpressure(impl->queued_bytes_ + buf.size());
+        impl->writing_ = false;
+        impl->state_.set_state(LinkState::Error);
+        impl->notify_state();
+        impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
+        return;
+      }
+    }
+
+    if (impl->backpressure_active_ &&
+        impl->cfg_.backpressure_strategy == base::constants::BackpressureStrategy::Latest) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
-      impl->writing_ = false;
-      impl->state_.set_state(LinkState::Error);
-      impl->notify_state();
-      impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
-      return;
     }
+
     impl->queued_bytes_ += buf.size();
     impl->tx_.emplace_back(std::move(buf));
     impl->report_backpressure(impl->queued_bytes_);
@@ -540,15 +550,25 @@ void Serial::async_write_move(std::vector<uint8_t>&& data) {
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->get_impl();
     if (impl->queued_bytes_ + added > impl->bp_limit_) {
-      impl->report_backpressure(impl->queued_bytes_ + added);
+      if (impl->cfg_.backpressure_strategy == base::constants::BackpressureStrategy::Latest) {
+        impl->tx_.clear();
+        impl->queued_bytes_ = 0;
+      } else {
+        impl->report_backpressure(impl->queued_bytes_ + added);
+        impl->writing_ = false;
+        impl->state_.set_state(LinkState::Error);
+        impl->notify_state();
+        impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
+        return;
+      }
+    }
+
+    if (impl->backpressure_active_ &&
+        impl->cfg_.backpressure_strategy == base::constants::BackpressureStrategy::Latest) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
-      impl->writing_ = false;
-      impl->state_.set_state(LinkState::Error);
-      impl->notify_state();
-      impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
-      return;
     }
+
     impl->queued_bytes_ += added;
     impl->tx_.emplace_back(std::move(buf));
     impl->report_backpressure(impl->queued_bytes_);
@@ -565,15 +585,25 @@ void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->get_impl();
     if (impl->queued_bytes_ + added > impl->bp_limit_) {
-      impl->report_backpressure(impl->queued_bytes_ + added);
+      if (impl->cfg_.backpressure_strategy == base::constants::BackpressureStrategy::Latest) {
+        impl->tx_.clear();
+        impl->queued_bytes_ = 0;
+      } else {
+        impl->report_backpressure(impl->queued_bytes_ + added);
+        impl->writing_ = false;
+        impl->state_.set_state(LinkState::Error);
+        impl->notify_state();
+        impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
+        return;
+      }
+    }
+
+    if (impl->backpressure_active_ &&
+        impl->cfg_.backpressure_strategy == base::constants::BackpressureStrategy::Latest) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
-      impl->writing_ = false;
-      impl->state_.set_state(LinkState::Error);
-      impl->notify_state();
-      impl->handle_error(self, "write_queue_overflow", make_error_code(boost::system::errc::no_buffer_space));
-      return;
     }
+
     impl->queued_bytes_ += added;
     impl->tx_.emplace_back(std::move(buf));
     impl->report_backpressure(impl->queued_bytes_);
@@ -584,6 +614,15 @@ void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
 void Serial::on_bytes(OnBytes cb) { impl_->on_bytes_ = std::move(cb); }
 void Serial::on_state(OnState cb) { impl_->on_state_ = std::move(cb); }
 void Serial::on_backpressure(OnBackpressure cb) { impl_->on_bp_ = std::move(cb); }
+
+void Serial::set_backpressure_threshold(size_t threshold) {
+  impl_->cfg_.backpressure_threshold = threshold;
+  impl_->init();
+}
+
+void Serial::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->cfg_.backpressure_strategy = strategy;
+}
 
 void Serial::set_retry_interval(unsigned interval_ms) { get_impl()->cfg_.retry_interval_ms = interval_ms; }
 

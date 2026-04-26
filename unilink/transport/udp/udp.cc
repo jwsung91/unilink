@@ -419,10 +419,21 @@ struct UdpChannel::Impl {
     }
 
     if (queue_bytes_ + size > bp_limit_) {
-      UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded (" + std::to_string(queue_bytes_ + size) + " bytes)");
-      report_backpressure(queue_bytes_ + size);
-      return false;
+      if (cfg_.backpressure_strategy == base::constants::BackpressureStrategy::Latest) {
+        tx_.clear();
+        queue_bytes_ = 0;
+      } else {
+        UNILINK_LOG_ERROR("udp", "write", "Queue limit exceeded (" + std::to_string(queue_bytes_ + size) + " bytes)");
+        report_backpressure(queue_bytes_ + size);
+        return false;
+      }
     }
+
+    if (backpressure_active_ && cfg_.backpressure_strategy == base::constants::BackpressureStrategy::Latest) {
+      tx_.clear();
+      queue_bytes_ = 0;
+    }
+
     queue_bytes_ += size;
     tx_.push_back({std::move(buffer), dest});
     report_backpressure(queue_bytes_);
@@ -694,6 +705,15 @@ void UdpChannel::on_bytes(OnBytes cb) { impl_->on_bytes_ = std::move(cb); }
 void UdpChannel::on_state(OnState cb) { impl_->on_state_ = std::move(cb); }
 
 void UdpChannel::on_backpressure(OnBackpressure cb) { impl_->on_bp_ = std::move(cb); }
+
+void UdpChannel::set_backpressure_threshold(size_t threshold) {
+  impl_->cfg_.backpressure_threshold = threshold;
+  impl_->init();
+}
+
+void UdpChannel::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->cfg_.backpressure_strategy = strategy;
+}
 
 void UdpChannel::async_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination) {
   auto impl = get_impl();

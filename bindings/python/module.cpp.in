@@ -15,6 +15,11 @@ PYBIND11_MODULE(unilink_py, m) {
   m.doc() = "unilink python bindings";
   m.attr("__version__") = "@UNILINK_VERSION@";
 
+  py::enum_<base::constants::BackpressureStrategy>(m, "BackpressureStrategy")
+      .value("Wait", base::constants::BackpressureStrategy::Wait)
+      .value("Latest", base::constants::BackpressureStrategy::Latest)
+      .export_values();
+
   // ErrorCode enum
   py::enum_<ErrorCode>(m, "ErrorCode")
       .value("Success", ErrorCode::Success)
@@ -47,7 +52,7 @@ PYBIND11_MODULE(unilink_py, m) {
                                1,                                        /* Number of dimensions */
                                {data.size()},                            /* Buffer dimensions */
                                {sizeof(uint8_t)},                        /* Strides */
-                               true                                       /* readonly */
+                               true                                      /* readonly */
         );
       });
 
@@ -99,6 +104,12 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("batch_size", &TcpClient::batch_size)
       .def("batch_latency", &TcpClient::batch_latency)
       .def("connection_timeout", &TcpClient::connection_timeout)
+      .def_property(
+          "backpressure_threshold", [](TcpClient& self) { return self.backpressure_threshold(); },
+          [](TcpClient& self, size_t t) { self.backpressure_threshold(t); })
+      .def_property(
+          "backpressure_strategy", [](TcpClient& self) { return self.backpressure_strategy(); },
+          [](TcpClient& self, base::constants::BackpressureStrategy s) { self.backpressure_strategy(s); })
       .def(
           "use_line_framer",
           [](TcpClient& self, const std::string& d, bool i, size_t m) {
@@ -159,21 +170,21 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
-      .def("on_error", [](TcpClient& self, std::function<void(const ErrorContext&)> h) {
-        self.on_error([h](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          h(ctx);
-        });
-        return &self;
-      })
-      .def("on_backpressure",
-           [](TcpClient& self, std::function<void(size_t)> h) {
-             self.on_backpressure([h](size_t queued) {
+      .def("on_error",
+           [](TcpClient& self, std::function<void(const ErrorContext&)> h) {
+             self.on_error([h](const ErrorContext& ctx) {
                py::gil_scoped_acquire gil;
-               h(queued);
+               h(ctx);
              });
              return &self;
-           });
+           })
+      .def("on_backpressure", [](TcpClient& self, std::function<void(size_t)> h) {
+        self.on_backpressure([h](size_t queued) {
+          py::gil_scoped_acquire gil;
+          h(queued);
+        });
+        return &self;
+      });
 
   // TcpServer
   py::class_<TcpServer, std::shared_ptr<TcpServer>>(m, "TcpServer")
@@ -202,6 +213,12 @@ PYBIND11_MODULE(unilink_py, m) {
       .def("client_count", &TcpServer::client_count)
       .def("connected_clients", &TcpServer::connected_clients)
       .def("listening", &TcpServer::listening)
+      .def_property(
+          "backpressure_threshold", [](TcpServer& self) { return self.backpressure_threshold(); },
+          [](TcpServer& self, size_t t) { self.backpressure_threshold(t); })
+      .def_property(
+          "backpressure_strategy", [](TcpServer& self) { return self.backpressure_strategy(); },
+          [](TcpServer& self, base::constants::BackpressureStrategy s) { self.backpressure_strategy(s); })
       .def("auto_start", &TcpServer::auto_start, py::arg("start") = true)
       .def(
           "use_line_framer",
@@ -564,6 +581,7 @@ PYBIND11_MODULE(unilink_py, m) {
       .def_readwrite("remote_address", &config::UdpConfig::remote_address)
       .def_readwrite("remote_port", &config::UdpConfig::remote_port)
       .def_readwrite("backpressure_threshold", &config::UdpConfig::backpressure_threshold)
+      .def_readwrite("backpressure_strategy", &config::UdpConfig::backpressure_strategy)
       .def_readwrite("enable_memory_pool", &config::UdpConfig::enable_memory_pool)
       .def_readwrite("stop_on_callback_exception", &config::UdpConfig::stop_on_callback_exception);
 

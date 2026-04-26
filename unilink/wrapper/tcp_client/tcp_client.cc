@@ -75,6 +75,8 @@ struct TcpClient::Impl {
   std::chrono::milliseconds retry_interval_{base::constants::DEFAULT_RETRY_INTERVAL_MS};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
+  size_t backpressure_threshold_ = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  base::constants::BackpressureStrategy backpressure_strategy_ = base::constants::BackpressureStrategy::Wait;
 
   Impl(const std::string& host, uint16_t port) : host_(host), port_(port), started_(false) {}
 
@@ -169,9 +171,11 @@ struct TcpClient::Impl {
       config.port = port_;
       config.retry_interval_ms = static_cast<unsigned int>(retry_interval_.count());
       config.max_retries = max_retries_;
-      config.connection_timeout_ms = static_cast<unsigned>(connection_timeout_.count());
+      config.connection_timeout_ms = static_cast<unsigned int>(connection_timeout_.count());
+      config.backpressure_threshold = backpressure_threshold_;
+      config.backpressure_strategy = backpressure_strategy_;
+
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
-      setup_internal_handlers();
     }
 
     started_.store(true);
@@ -495,6 +499,26 @@ TcpClient& TcpClient::manage_external_context(bool m) {
   impl_->manage_external_context_.store(m);
   return *this;
 }
+
+TcpClient& TcpClient::backpressure_threshold(size_t threshold) {
+  impl_->backpressure_threshold_ = threshold;
+  if (impl_->channel_) {
+    impl_->channel_->set_backpressure_threshold(threshold);
+  }
+  return *this;
+}
+
+size_t TcpClient::backpressure_threshold() const { return impl_->backpressure_threshold_; }
+
+TcpClient& TcpClient::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->backpressure_strategy_ = strategy;
+  if (impl_->channel_) {
+    impl_->channel_->set_backpressure_strategy(strategy);
+  }
+  return *this;
+}
+
+base::constants::BackpressureStrategy TcpClient::backpressure_strategy() const { return impl_->backpressure_strategy_; }
 
 }  // namespace wrapper
 }  // namespace unilink

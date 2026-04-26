@@ -22,26 +22,35 @@ namespace unilink {
 namespace transport {
 
 UdsServerSession::UdsServerSession(net::io_context& ioc, uds::socket sock, size_t backpressure_threshold,
-                                   int idle_timeout_ms)
+                                   int idle_timeout_ms, base::constants::BackpressureStrategy strategy)
     : ioc_(ioc),
       strand_(net::make_strand(ioc_)),
       idle_timer_(ioc),
       socket_(std::make_unique<BoostUdsSocket>(std::move(sock))),
+      bp_strategy_(strategy),
       bp_high_(backpressure_threshold),
       bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                          base::constants::MAX_BUFFER_SIZE)),
-      idle_timeout_ms_(idle_timeout_ms) {}
+      idle_timeout_ms_(idle_timeout_ms) {
+  bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
+  if (bp_low_ == 0) bp_low_ = 1;
+}
 
 UdsServerSession::UdsServerSession(net::io_context& ioc, std::unique_ptr<interface::UdsSocketInterface> socket,
-                                   size_t backpressure_threshold, int idle_timeout_ms)
+                                   size_t backpressure_threshold, int idle_timeout_ms,
+                                   base::constants::BackpressureStrategy strategy)
     : ioc_(ioc),
       strand_(net::make_strand(ioc_)),
       idle_timer_(ioc),
       socket_(std::move(socket)),
+      bp_strategy_(strategy),
       bp_high_(backpressure_threshold),
       bp_limit_(std::min(std::max(backpressure_threshold * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
                          base::constants::MAX_BUFFER_SIZE)),
-      idle_timeout_ms_(idle_timeout_ms) {}
+      idle_timeout_ms_(idle_timeout_ms) {
+  bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
+  if (bp_low_ == 0) bp_low_ = 1;
+}
 
 void UdsServerSession::start() {
   alive_ = true;
@@ -72,9 +81,19 @@ void UdsServerSession::async_write_move(std::vector<uint8_t>&& data) {
     if (!alive_) return;
     size_t added = data.size();
     if (queue_bytes_ + added > bp_limit_) {
-      UNILINK_LOG_ERROR("uds_server_session", "write", "Queue limit exceeded, dropping message");
-      report_backpressure(queue_bytes_ + added);
-      return;
+      if (bp_strategy_ == base::constants::BackpressureStrategy::Latest) {
+        tx_.clear();
+        queue_bytes_ = 0;
+      } else {
+        UNILINK_LOG_ERROR("uds_server_session", "write", "Queue limit exceeded, dropping message");
+        report_backpressure(queue_bytes_ + added);
+        return;
+      }
+    }
+
+    if (backpressure_active_ && bp_strategy_ == base::constants::BackpressureStrategy::Latest) {
+      tx_.clear();
+      queue_bytes_ = 0;
     }
 
     queue_bytes_ += added;
@@ -89,9 +108,19 @@ void UdsServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
     if (!alive_) return;
     size_t added = data->size();
     if (queue_bytes_ + added > bp_limit_) {
-      UNILINK_LOG_ERROR("uds_server_session", "write", "Queue limit exceeded, dropping message");
-      report_backpressure(queue_bytes_ + added);
-      return;
+      if (bp_strategy_ == base::constants::BackpressureStrategy::Latest) {
+        tx_.clear();
+        queue_bytes_ = 0;
+      } else {
+        UNILINK_LOG_ERROR("uds_server_session", "write", "Queue limit exceeded, dropping message");
+        report_backpressure(queue_bytes_ + added);
+        return;
+      }
+    }
+
+    if (backpressure_active_ && bp_strategy_ == base::constants::BackpressureStrategy::Latest) {
+      tx_.clear();
+      queue_bytes_ = 0;
     }
 
     queue_bytes_ += added;
@@ -179,7 +208,14 @@ void UdsServerSession::do_close() {
 
 void UdsServerSession::report_backpressure(size_t queued_bytes) {
   if (closing_ || !alive_) return;
-  if (on_bp_) on_bp_(queued_bytes);
+
+  if (!backpressure_active_ && queued_bytes >= bp_high_) {
+    backpressure_active_ = true;
+    if (on_bp_) on_bp_(queued_bytes);
+  } else if (backpressure_active_ && queued_bytes <= bp_low_) {
+    backpressure_active_ = false;
+    if (on_bp_) on_bp_(queued_bytes);
+  }
 }
 
 void UdsServerSession::reset_idle_timer() {

@@ -32,6 +32,7 @@ struct TcpClientConfig {
   unsigned connection_timeout_ms = base::constants::DEFAULT_CONNECTION_TIMEOUT_MS;
   int max_retries = base::constants::DEFAULT_MAX_RETRIES;
   size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Wait;
   bool enable_memory_pool = true;
 
   TcpClientConfig() = default;

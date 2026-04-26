@@ -73,6 +73,9 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
 
+  void set_backpressure_threshold(size_t threshold) override;
+  void set_backpressure_strategy(base::constants::BackpressureStrategy strategy) override;
+
   /**
    * @brief Get the local endpoint the socket is bound to.
    */

@@ -231,9 +231,9 @@ struct TcpServer::Impl {
         }
       }
 
-      auto new_session = std::make_shared<TcpServerSession>(accept_impl->ioc_, std::move(sock),
-                                                            accept_impl->cfg_.backpressure_threshold,
-                                                            accept_impl->cfg_.idle_timeout_ms);
+      auto new_session = std::make_shared<TcpServerSession>(
+          accept_impl->ioc_, std::move(sock), accept_impl->cfg_.backpressure_threshold,
+          accept_impl->cfg_.idle_timeout_ms, accept_impl->cfg_.backpressure_strategy);
 
       ClientId client_id;
       {
@@ -527,19 +527,16 @@ void TcpServer::on_state(OnState cb) {
   std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
   impl_->on_state_ = std::move(cb);
 }
-void TcpServer::on_backpressure(OnBackpressure cb) {
-  auto impl = get_impl();
-  {
-    std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-    impl->on_bp_ = std::move(cb);
-  }
-  std::shared_ptr<TcpServerSession> session;
-  {
-    std::lock_guard<std::mutex> lock(impl->sessions_mutex_);
-    session = impl->current_session_;
-  }
 
-  if (session) session->on_backpressure(impl->on_bp_);
+void TcpServer::on_backpressure(OnBackpressure cb) {
+  std::lock_guard<std::mutex> lock(impl_->sessions_mutex_);
+  impl_->on_bp_ = std::move(cb);
+}
+
+void TcpServer::set_backpressure_threshold(size_t threshold) { impl_->cfg_.backpressure_threshold = threshold; }
+
+void TcpServer::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->cfg_.backpressure_strategy = strategy;
 }
 
 bool TcpServer::broadcast(std::string_view message) {
