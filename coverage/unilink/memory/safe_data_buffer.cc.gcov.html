@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2026-04-26 11:57:44</td>
+            <td class="headerValue">2026-04-27 01:14:26</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">25</td>
@@ -127,22 +127,22 @@
 <a name="49"><span class="lineNum">      49 </span>                :            :   }</a>
 <a name="50"><span class="lineNum">      50 </span>                :<span class="lineCov">          2 : }</span></a>
 <a name="51"><span class="lineNum">      51 </span>                :            : </a>
-<a name="52"><span class="lineNum">      52 </span>                :<span class="lineCov">       3198 : SafeDataBuffer::SafeDataBuffer(ConstByteSpan span) {</span></a>
-<a name="53"><span class="lineNum">      53 </span>        [<span class="branchCov" title="Branch 0 was taken 3198 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       3198 :   validate_construction(span.data(), span.size());</span></a>
-<a name="54"><span class="lineNum">      54 </span>  [<span class="branchCov" title="Branch 0 was taken 3198 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3198 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">       3198 :   if (span.data() &amp;&amp; span.size() &gt; 0) {</span></a>
-<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 3198 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
-<a name="55"><span class="lineNum">      55 </span>        [<span class="branchCov" title="Branch 0 was taken 3198 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       3198 :     data_.assign(span.begin(), span.end());</span></a>
+<a name="52"><span class="lineNum">      52 </span>                :<span class="lineCov">       3196 : SafeDataBuffer::SafeDataBuffer(ConstByteSpan span) {</span></a>
+<a name="53"><span class="lineNum">      53 </span>        [<span class="branchCov" title="Branch 0 was taken 3196 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       3196 :   validate_construction(span.data(), span.size());</span></a>
+<a name="54"><span class="lineNum">      54 </span>  [<span class="branchCov" title="Branch 0 was taken 3196 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 3196 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span> :<span class="lineCov">       3196 :   if (span.data() &amp;&amp; span.size() &gt; 0) {</span></a>
+<span class="lineNum">         </span>         <span class="branchCov" title="Branch 4 was taken 3196 times"> + </span><span class="branchNoCov" title="Branch 5 was not taken"> - </span>]
+<a name="55"><span class="lineNum">      55 </span>        [<span class="branchCov" title="Branch 0 was taken 3196 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">       3196 :     data_.assign(span.begin(), span.end());</span></a>
 <a name="56"><span class="lineNum">      56 </span>                :            :   }</a>
-<a name="57"><span class="lineNum">      57 </span>                :<span class="lineCov">       3198 : }</span></a>
+<a name="57"><span class="lineNum">      57 </span>                :<span class="lineCov">       3196 : }</span></a>
 <a name="58"><span class="lineNum">      58 </span>                :            : </a>
 <a name="59"><span class="lineNum">      59 </span>                :            : // Access methods</a>
 <a name="60"><span class="lineNum">      60 </span>        [<span class="branchCov" title="Branch 0 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          3 : std::string SafeDataBuffer::as_string() const { return std::string(data_.begin(), data_.end()); }</span></a>
 <a name="61"><span class="lineNum">      61 </span>                :            : </a>
 <a name="62"><span class="lineNum">      62 </span>                :<span class="lineNoCov">          0 : ConstByteSpan SafeDataBuffer::as_span() const noexcept { return ConstByteSpan(data_.data(), data_.size()); }</span></a>
 <a name="63"><span class="lineNum">      63 </span>                :            : </a>
-<a name="64"><span class="lineNum">      64 </span>                :<span class="lineCov">       2167 : const uint8_t* SafeDataBuffer::data() const noexcept { return data_.data(); }</span></a>
+<a name="64"><span class="lineNum">      64 </span>                :<span class="lineCov">       2162 : const uint8_t* SafeDataBuffer::data() const noexcept { return data_.data(); }</span></a>
 <a name="65"><span class="lineNum">      65 </span>                :            : </a>
-<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">       2174 : size_t SafeDataBuffer::size() const noexcept { return data_.size(); }</span></a>
+<a name="66"><span class="lineNum">      66 </span>                :<span class="lineCov">       2169 : size_t SafeDataBuffer::size() const noexcept { return data_.size(); }</span></a>
 <a name="67"><span class="lineNum">      67 </span>                :            : </a>
 <a name="68"><span class="lineNum">      68 </span>                :<span class="lineCov">          3 : bool SafeDataBuffer::empty() const noexcept { return data_.empty(); }</span></a>
 <a name="69"><span class="lineNum">      69 </span>                :            : </a>
@@ -191,14 +191,14 @@
 <a name="110"><span class="lineNum">     110 </span>                :            :   }</a>
 <a name="111"><span class="lineNum">     111 </span>                :<span class="lineCov">       1028 : }</span></a>
 <a name="112"><span class="lineNum">     112 </span>                :            : </a>
-<a name="113"><span class="lineNum">     113 </span>                :<span class="lineCov">       3207 : void SafeDataBuffer::validate_construction(const void* ptr, size_t size) const {</span></a>
-<a name="114"><span class="lineNum">     114 </span>  [<span class="branchCov" title="Branch 0 was taken 3207 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 3205 times"> + </span>]:<span class="lineCov">       3207 :   if (size &gt; 0 &amp;&amp; !ptr) {</span></a>
+<a name="113"><span class="lineNum">     113 </span>                :<span class="lineCov">       3205 : void SafeDataBuffer::validate_construction(const void* ptr, size_t size) const {</span></a>
+<a name="114"><span class="lineNum">     114 </span>  [<span class="branchCov" title="Branch 0 was taken 3205 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchCov" title="Branch 2 was taken 2 times"> + </span><span class="branchCov" title="Branch 3 was taken 3203 times"> + </span>]:<span class="lineCov">       3205 :   if (size &gt; 0 &amp;&amp; !ptr) {</span></a>
 <a name="115"><span class="lineNum">     115 </span>        [<span class="branchCov" title="Branch 0 was taken 2 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          2 :     throw std::invalid_argument(&quot;Cannot construct buffer from null pointer with non-zero size&quot;);</span></a>
 <a name="116"><span class="lineNum">     116 </span>                :            :   }</a>
-<a name="117"><span class="lineNum">     117 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 3204 times"> + </span>]:<span class="lineCov">       3205 :   if (size &gt; 1024 * 1024 * 100) {  // 100MB limit</span></a>
+<a name="117"><span class="lineNum">     117 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchCov" title="Branch 1 was taken 3202 times"> + </span>]:<span class="lineCov">       3203 :   if (size &gt; 1024 * 1024 * 100) {  // 100MB limit</span></a>
 <a name="118"><span class="lineNum">     118 </span>        [<span class="branchCov" title="Branch 0 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">          1 :     throw std::invalid_argument(&quot;Buffer size exceeds maximum allowed size&quot;);</span></a>
 <a name="119"><span class="lineNum">     119 </span>                :            :   }</a>
-<a name="120"><span class="lineNum">     120 </span>                :<span class="lineCov">       3204 : }</span></a>
+<a name="120"><span class="lineNum">     120 </span>                :<span class="lineCov">       3202 : }</span></a>
 <a name="121"><span class="lineNum">     121 </span>                :            : </a>
 <a name="122"><span class="lineNum">     122 </span>                :            : // Factory functions</a>
 <a name="123"><span class="lineNum">     123 </span>                :            : namespace safe_buffer_factory {</a>
