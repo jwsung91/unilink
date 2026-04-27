@@ -276,6 +276,7 @@ foreach(
   reconnect_logic_test.cc
   transport_uds_session_coverage.cc
   test_tcp_client_lifecycle.cc
+  test_backpressure_strategy.cc
 )
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(

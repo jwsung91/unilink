@@ -87,6 +87,7 @@ struct TcpClient::Impl {
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
   size_t queue_bytes_ = 0;
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;
@@ -116,6 +117,7 @@ struct TcpClient::Impl {
         retry_timer_(strand_),
         connect_timer_(strand_),
         owns_ioc_(!ioc_ptr),
+        bp_strategy_(cfg.backpressure_strategy),
         bp_high_(cfg.backpressure_threshold) {
     init();
   }
@@ -140,6 +142,7 @@ struct TcpClient::Impl {
   void join_ioc_thread(bool allow_detach);
   void close_socket();
   void recalculate_backpressure_bounds();
+  void maybe_flush_for_keep_latest(size_t added);
   void report_backpressure(size_t queued_bytes);
   void notify_state();
   void reset_io_objects();
@@ -287,6 +290,8 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
             return;
           }
 
+          self->impl_->maybe_flush_for_keep_latest(added);
+
           if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
             UNILINK_LOG_ERROR("tcp_client", "write",
                               "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
@@ -316,6 +321,8 @@ void TcpClient::async_write_copy(memory::ConstByteSpan data) {
         self->impl_->state_.is_state(LinkState::Error)) {
       return;
     }
+
+    self->impl_->maybe_flush_for_keep_latest(added);
 
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_client", "write",
@@ -356,6 +363,8 @@ void TcpClient::async_write_move(std::vector<uint8_t>&& data) {
       return;
     }
 
+    self->impl_->maybe_flush_for_keep_latest(added);
+
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_client", "write",
                         "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
@@ -395,6 +404,8 @@ void TcpClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
       return;
     }
 
+    self->impl_->maybe_flush_for_keep_latest(added);
+
     if (self->impl_->queue_bytes_ + added > self->impl_->bp_limit_) {
       UNILINK_LOG_ERROR("tcp_client", "write",
                         "Queue limit exceeded (" + std::to_string(self->impl_->queue_bytes_ + added) + " bytes)");
@@ -423,6 +434,10 @@ void TcpClient::on_backpressure(OnBackpressure cb) {
   std::lock_guard<std::mutex> lock(impl_->callback_mtx_);
   impl_->on_bp_ = std::move(cb);
 }
+void TcpClient::set_backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->bp_strategy_ = strategy;
+}
+
 void TcpClient::set_retry_interval(unsigned interval_ms) { impl_->cfg_.retry_interval_ms = interval_ms; }
 void TcpClient::set_reconnect_policy(ReconnectPolicy policy) {
   if (policy) {
@@ -748,6 +763,14 @@ void TcpClient::Impl::recalculate_backpressure_bounds() {
     bp_limit_ = bp_high_;
   }
   backpressure_active_ = false;
+}
+
+void TcpClient::Impl::maybe_flush_for_keep_latest(size_t added) {
+  if (bp_strategy_ != base::constants::BackpressureStrategy::KeepLatest) return;
+  if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
+    tx_.clear();
+    queue_bytes_ = 0;
+  }
 }
 
 void TcpClient::Impl::report_backpressure(size_t queued_bytes) {

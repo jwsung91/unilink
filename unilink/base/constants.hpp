@@ -25,6 +25,12 @@ namespace base {
 // Network and I/O constants
 namespace constants {
 
+// Backpressure strategy
+enum class BackpressureStrategy {
+  KeepAll,     // Queue until hard limit; completeness first (default, safe for all transports)
+  KeepLatest,  // Drop oldest queued data when threshold is reached; freshness first (real-time/sensor use)
+};
+
 // Backpressure threshold constants
 constexpr size_t DEFAULT_BACKPRESSURE_THRESHOLD = 16 * 1024 * 1024;  // 16 MiB
 constexpr size_t MIN_BACKPRESSURE_THRESHOLD = 1024;                  // 1 KiB minimum

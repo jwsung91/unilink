@@ -15,7 +15,8 @@ Comprehensive API reference for the unilink library.
 7. [Error Handling](#error-handling)
 8. [Logging System](#logging-system)
 9. [Configuration Management](#configuration-management)
-10. [Security](#security)
+10. [Backpressure Strategy](#backpressure-strategy)
+11. [Security](#security)
 
 ---
 
@@ -917,6 +918,97 @@ unilink::diagnostics::AsyncLogConfig config;
 config.batch_size = 100;
 unilink::diagnostics::Logger::instance().set_async_logging(true, config);
 ```
+
+---
+
+## Backpressure Strategy
+
+When a sender produces data faster than the network can deliver it, messages accumulate in the send queue. The `BackpressureStrategy` enum controls what happens when the queue approaches its threshold — trading off **completeness** against **freshness**.
+
+### Strategies
+
+| Strategy     | Behaviour at threshold                     | Use when…                                           |
+| ------------ | ------------------------------------------ | --------------------------------------------------- |
+| `KeepAll`    | Keep queuing until the hard cap is reached | Every message must arrive — files, commands, logs   |
+| `KeepLatest` | Drop the entire queue; keep sending fresh data | Latency matters more than completeness — sensor streams, robot state, video telemetry |
+
+`KeepAll` is the default for all transports. It is the safe choice: no data is silently discarded.
+
+`KeepLatest` is inspired by DDS HISTORY QoS. When the queue exceeds the backpressure threshold, all queued (stale) data is discarded and only the newest write is enqueued. The `on_backpressure` callback fires each time the queue is flushed so callers can observe drops.
+
+### When to use each
+
+**Use `KeepAll` (default) when:**
+- Reliability is critical: file transfers, command sequences, logs, financial data
+- Your consumer is expected to keep up, or your backpressure threshold is generously sized
+- A silent drop is a bug, not an acceptable trade-off
+
+**Use `KeepLatest` when:**
+- You publish high-frequency sensor readings and the consumer only cares about the current state
+- You are streaming robot joint angles, camera frames, or GNSS positions over a slow link
+- A stale value is worse than a dropped value
+
+### C++ Usage
+
+Set the strategy via the transport config before starting:
+
+```cpp
+#include "unilink/unilink.hpp"
+#include "unilink/base/constants.hpp"
+
+using unilink::base::constants::BackpressureStrategy;
+
+// TCP client — real-time sensor stream
+config::TcpClientConfig cfg;
+cfg.host = "192.168.1.10";
+cfg.port = 8080;
+cfg.backpressure_threshold = 512 * 1024;            // 512 KB flush threshold
+cfg.backpressure_strategy  = BackpressureStrategy::KeepLatest;
+
+auto client = TcpClient::create(cfg, ioc);
+client->on_backpressure([](size_t /* dropped_bytes */) {
+    // queue was flushed — stale data discarded
+});
+```
+
+Or via the wrapper builder (fluent API):
+
+```cpp
+#include "unilink/unilink.hpp"
+
+auto client = unilink::tcp_client("192.168.1.10", 8080)
+    .backpressure_threshold(512 * 1024)
+    .backpressure_strategy(unilink::base::constants::BackpressureStrategy::KeepLatest)
+    .on_backpressure([](size_t) { /* queue flushed */ })
+    .build();
+```
+
+The strategy can also be changed at runtime on a running transport:
+
+```cpp
+// Switch strategy dynamically (e.g. entering a high-rate burst mode)
+client->set_backpressure_strategy(BackpressureStrategy::KeepLatest);
+```
+
+### Python Usage
+
+```python
+import unilink_py as unilink
+
+client = unilink.TcpClient("192.168.1.10", 8080)
+client.backpressure_threshold = 512 * 1024
+client.backpressure_strategy  = unilink.BackpressureStrategy.KeepLatest
+client.start()
+```
+
+### Thresholds
+
+The `backpressure_threshold` (default 4 MB) is the queue size at which `KeepLatest` starts dropping. A lower threshold means lower end-to-end latency at the cost of more frequent drops. A hard cap (`bp_limit_`, at least 16 MB) prevents unbounded memory use regardless of strategy.
+
+| Parameter              | Default | Notes                                          |
+| ---------------------- | ------- | ---------------------------------------------- |
+| `backpressure_threshold` | 4 MB  | Flush threshold for `KeepLatest`; high-water mark for `KeepAll` |
+| Hard cap (`bp_limit_`) | ≥ 16 MB | Per-message reject limit; never drops below the threshold × 4 |
 
 ---
 

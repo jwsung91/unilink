@@ -15,6 +15,12 @@ PYBIND11_MODULE(unilink_py, m) {
   m.doc() = "unilink python bindings";
   m.attr("__version__") = "@UNILINK_VERSION@";
 
+  // BackpressureStrategy enum
+  py::enum_<base::constants::BackpressureStrategy>(m, "BackpressureStrategy")
+      .value("KeepAll", base::constants::BackpressureStrategy::KeepAll)
+      .value("KeepLatest", base::constants::BackpressureStrategy::KeepLatest)
+      .export_values();
+
   // ErrorCode enum
   py::enum_<ErrorCode>(m, "ErrorCode")
       .value("Success", ErrorCode::Success)
@@ -47,7 +53,7 @@ PYBIND11_MODULE(unilink_py, m) {
                                1,                                        /* Number of dimensions */
                                {data.size()},                            /* Buffer dimensions */
                                {sizeof(uint8_t)},                        /* Strides */
-                               true                                       /* readonly */
+                               true                                      /* readonly */
         );
       });
 
@@ -159,13 +165,14 @@ PYBIND11_MODULE(unilink_py, m) {
              });
              return &self;
            })
-      .def("on_error", [](TcpClient& self, std::function<void(const ErrorContext&)> h) {
-        self.on_error([h](const ErrorContext& ctx) {
-          py::gil_scoped_acquire gil;
-          h(ctx);
-        });
-        return &self;
-      })
+      .def("on_error",
+           [](TcpClient& self, std::function<void(const ErrorContext&)> h) {
+             self.on_error([h](const ErrorContext& ctx) {
+               py::gil_scoped_acquire gil;
+               h(ctx);
+             });
+             return &self;
+           })
       .def("on_backpressure",
            [](TcpClient& self, std::function<void(size_t)> h) {
              self.on_backpressure([h](size_t queued) {
@@ -173,7 +180,11 @@ PYBIND11_MODULE(unilink_py, m) {
                h(queued);
              });
              return &self;
-           });
+           })
+      .def_property("backpressure_threshold", nullptr,
+                    [](TcpClient& self, size_t v) { self.backpressure_threshold(v); })
+      .def_property("backpressure_strategy", nullptr,
+                    [](TcpClient& self, base::constants::BackpressureStrategy s) { self.backpressure_strategy(s); });
 
   // TcpServer
   py::class_<TcpServer, std::shared_ptr<TcpServer>>(m, "TcpServer")
@@ -564,6 +575,7 @@ PYBIND11_MODULE(unilink_py, m) {
       .def_readwrite("remote_address", &config::UdpConfig::remote_address)
       .def_readwrite("remote_port", &config::UdpConfig::remote_port)
       .def_readwrite("backpressure_threshold", &config::UdpConfig::backpressure_threshold)
+      .def_readwrite("backpressure_strategy", &config::UdpConfig::backpressure_strategy)
       .def_readwrite("enable_memory_pool", &config::UdpConfig::enable_memory_pool)
       .def_readwrite("stop_on_callback_exception", &config::UdpConfig::stop_on_callback_exception);
 
