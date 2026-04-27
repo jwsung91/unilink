@@ -72,12 +72,12 @@ struct Serial::Impl {
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
-  size_t queued_bytes_ = 0;
-  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  std::atomic<size_t> queued_bytes_{0};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_limit_;
   size_t bp_low_;
-  bool backpressure_active_ = false;
+  std::atomic<bool> backpressure_active_{false};
 
   OnBytes on_bytes_;
   OnState on_state_;
@@ -476,28 +476,30 @@ void Serial::stop() {
 }
 
 bool Serial::is_connected() const { return get_impl()->opened_.load(); }
+bool Serial::is_backpressure_active() const { return get_impl()->backpressure_active_.load(); }
 
 boost::asio::any_io_executor Serial::get_executor() { return impl_->strand_; }
 
-void Serial::async_write_copy(memory::ConstByteSpan data) {
+bool Serial::async_write_copy(memory::ConstByteSpan data) {
   auto impl = get_impl();
   if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error))
-    return;
+    return false;
 
   size_t n = data.size();
   if (n > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("serial", "write", "Write size exceeds maximum");
-    return;
+    return false;
   }
 
   if (n <= 65536) {
     memory::PooledBuffer pooled(n);
     if (pooled.valid()) {
       base::safe_memory::safe_memcpy(pooled.data(), data.data(), n);
+      if (impl->queued_bytes_ + n > impl->bp_limit_) return false;
       net::post(impl->strand_, [self = shared_from_this(), buf = std::move(pooled)]() mutable {
         auto impl = self->get_impl();
         const auto added = buf.size();
-        if (impl->bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+        if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
             (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
           impl->tx_.clear();
           impl->queued_bytes_ = 0;
@@ -517,15 +519,16 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
         impl->report_backpressure(impl->queued_bytes_);
         if (!impl->writing_) impl->do_write(self);
       });
-      return;
+      return true;
     }
   }
 
+  if (impl->queued_bytes_ + n > impl->bp_limit_) return false;
   std::vector<uint8_t> fallback(data.begin(), data.end());
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
     auto impl = self->get_impl();
     const auto added = buf.size();
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
@@ -545,16 +548,18 @@ void Serial::async_write_copy(memory::ConstByteSpan data) {
     impl->report_backpressure(impl->queued_bytes_);
     if (!impl->writing_) impl->do_write(self);
   });
+  return true;
 }
 
-void Serial::async_write_move(std::vector<uint8_t>&& data) {
+bool Serial::async_write_move(std::vector<uint8_t>&& data) {
   auto impl = get_impl();
   if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error))
-    return;
+    return false;
   const auto added = data.size();
+  if (impl->queued_bytes_ + added > impl->bp_limit_) return false;
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->get_impl();
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
@@ -574,17 +579,19 @@ void Serial::async_write_move(std::vector<uint8_t>&& data) {
     impl->report_backpressure(impl->queued_bytes_);
     if (!impl->writing_) impl->do_write(self);
   });
+  return true;
 }
 
-void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+bool Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
   auto impl = get_impl();
   if (impl->stopping_.load() || impl->state_.is_state(LinkState::Closed) || impl->state_.is_state(LinkState::Error))
-    return;
-  if (!data || data->empty()) return;
+    return false;
+  if (!data || data->empty()) return false;
   const auto added = data->size();
+  if (impl->queued_bytes_ + added > impl->bp_limit_) return false;
   net::post(impl->strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     auto impl = self->get_impl();
-    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::KeepLatest &&
+    if (impl->bp_strategy_ == base::constants::BackpressureStrategy::BestEffort &&
         (impl->backpressure_active_ || impl->queued_bytes_ + added > impl->bp_high_)) {
       impl->tx_.clear();
       impl->queued_bytes_ = 0;
@@ -604,6 +611,7 @@ void Serial::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data
     impl->report_backpressure(impl->queued_bytes_);
     if (!impl->writing_) impl->do_write(self);
   });
+  return true;
 }
 
 void Serial::on_bytes(OnBytes cb) { impl_->on_bytes_ = std::move(cb); }

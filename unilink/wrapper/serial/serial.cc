@@ -46,6 +46,8 @@ std::string to_lower(std::string s) {
 
 struct Serial::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::string device;
   uint32_t baud_rate;
   std::shared_ptr<interface::Channel> channel;
@@ -65,6 +67,7 @@ struct Serial::Impl {
   ConnectionHandler connect_handler{nullptr};
   ConnectionHandler disconnect_handler{nullptr};
   ErrorHandler error_handler{nullptr};
+  std::function<void(size_t)> bp_handler{nullptr};
   MessageHandler message_handler{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
@@ -84,6 +87,8 @@ struct Serial::Impl {
   std::string parity = "none";
   std::string flow_control = "none";
   std::chrono::milliseconds retry_interval{base::constants::DEFAULT_RETRY_INTERVAL_MS};
+  size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  base::constants::BackpressureStrategy backpressure_strategy = base::constants::BackpressureStrategy::Reliable;
 
   Impl(const std::string& dev, uint32_t baud) : device(dev), baud_rate(baud) {}
   Impl(const std::string& dev, uint32_t baud, std::shared_ptr<boost::asio::io_context> ioc)
@@ -194,6 +199,7 @@ struct Serial::Impl {
       return;
     }
     started_.store(false);
+    bp_cv_.notify_all();
 
     if (batch_timer_) {
       batch_timer_->cancel();
@@ -227,6 +233,45 @@ struct Serial::Impl {
 
     if (framer) framer->reset();
   }
+
+  bool try_send(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel && channel->is_connected()) {
+      auto binary_view = base::safe_convert::string_to_bytes(data);
+      return channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    }
+    return false;
+  }
+
+  bool send(std::string_view data) {
+    if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
+    return try_send(data);
+  }
+
+  bool send_line(std::string_view line) {
+    if (backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_line_blocking(line);
+    return try_send_line(line);
+  }
+
+  bool try_send_line(std::string_view line) { return try_send(std::string(line) + "\n"); }
+
+  bool send_blocking(std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    while (true) {
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        if (!started_.load() || !channel || !channel->is_connected()) return false;
+        if (!channel->is_backpressure_active()) break;
+      }
+      bp_cv_.wait(bp_lock);
+    }
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    auto binary_view = base::safe_convert::string_to_bytes(data);
+    channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    return true;
+  }
+
+  bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
 
   void setup_internal_handlers() {
     if (!channel) return;
@@ -264,6 +309,14 @@ struct Serial::Impl {
       if (framer) {
         framer->push_bytes(data);
       }
+    });
+
+    channel->on_backpressure([this, weak_alive](size_t queued) {
+      bp_cv_.notify_all();
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (bp_handler) bp_handler(queued);
     });
 
     channel->on_state([this, weak_alive](base::LinkState state) {
@@ -376,6 +429,8 @@ struct Serial::Impl {
       config.flow = config::SerialConfig::Flow::None;
 
     config.retry_interval_ms = static_cast<unsigned int>(retry_interval.count());
+    config.backpressure_threshold = backpressure_threshold;
+    config.backpressure_strategy = backpressure_strategy;
     return config;
   }
 };
@@ -393,16 +448,12 @@ Serial& Serial::operator=(Serial&&) noexcept = default;
 
 std::future<bool> Serial::start() { return impl_->start(); }
 void Serial::stop() { impl_->stop(); }
-bool Serial::send(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  if (impl_->channel && impl_->channel->is_connected()) {
-    auto binary_view = base::safe_convert::string_to_bytes(data);
-    impl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-    return true;
-  }
-  return false;
-}
-bool Serial::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
+bool Serial::send(std::string_view data) { return impl_->send(data); }
+bool Serial::try_send(std::string_view data) { return impl_->try_send(data); }
+bool Serial::send_line(std::string_view line) { return impl_->send_line(line); }
+bool Serial::try_send_line(std::string_view line) { return impl_->try_send_line(line); }
+bool Serial::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
+bool Serial::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool Serial::connected() const {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   return impl_->channel && impl_->channel->is_connected();
@@ -431,6 +482,12 @@ ChannelInterface& Serial::on_disconnect(ConnectionHandler h) {
 ChannelInterface& Serial::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->error_handler = std::move(h);
+  return *this;
+}
+
+ChannelInterface& Serial::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->bp_handler = std::move(h);
   return *this;
 }
 
@@ -485,6 +542,18 @@ Serial& Serial::retry_interval(std::chrono::milliseconds i) {
     auto ts = std::dynamic_pointer_cast<transport::Serial>(impl_->channel);
     if (ts) ts->set_retry_interval(static_cast<unsigned int>(i.count()));
   }
+  return *this;
+}
+
+Serial& Serial::backpressure_threshold(size_t threshold) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->backpressure_threshold = threshold;
+  return *this;
+}
+
+Serial& Serial::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->backpressure_strategy = strategy;
   return *this;
 }
 

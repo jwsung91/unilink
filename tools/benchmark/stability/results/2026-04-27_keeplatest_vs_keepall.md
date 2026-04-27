@@ -12,7 +12,7 @@
 
 ## Raw Results
 
-### KeepAll (16 MB threshold)
+### Reliable (16 MB threshold)
 
 | Metric | Value |
 |---|---|
@@ -23,7 +23,7 @@
 | Throughput StdDev | 101.37 MB/s |
 | BP events | 1 |
 
-### KeepLatest (0.5 MB threshold)
+### BestEffort (0.5 MB threshold)
 
 | Metric | Value |
 |---|---|
@@ -36,9 +36,9 @@
 
 ---
 
-## Comparison with 2026-04-26 Baseline (LV3, KeepAll default)
+## Comparison with 2026-04-26 Baseline (LV3, Reliable default)
 
-| Metric | KeepAll (new) | KeepLatest (new) | Baseline LV3 |
+| Metric | Reliable (new) | BestEffort (new) | Baseline LV3 |
 |---|---|---|---|
 | Sent (MB) | 17,644 | 16,191 | 9,300 |
 | Received (MB) | 6,190 | 5,554 | 9,248 |
@@ -51,24 +51,24 @@
 
 ## Analysis
 
-### 1. KeepLatest queue flush confirmed
+### 1. BestEffort queue flush confirmed
 
-BP events: 21,775 (KeepLatest) vs 1 (KeepAll). The `maybe_flush_for_keep_latest`
+BP events: 21,775 (BestEffort) vs 1 (Reliable). The `maybe_flush_for_keep_latest`
 implementation is correctly flushing the tx_ queue every time `queue_bytes_` exceeds
 the 0.5 MB threshold. At ~64 KB per message, the threshold is crossed after roughly
 8 messages, meaning nearly every batch of sends triggers a flush under this load.
 
-### 2. Throughput StdDev: KeepLatest is 7% more predictable
+### 2. Throughput StdDev: BestEffort is 7% more predictable
 
 StdDev drops from 101.4 → 94.1 MB/s.  Periodic queue flushes prevent burst
 accumulation, smoothing out per-second throughput variance.  This is the expected
-"bounded queue = predictable pipeline" property of KeepLatest.
+"bounded queue = predictable pipeline" property of BestEffort.
 
 ### 3. Delivery rate is similar (~35% for both)
 
 Both strategies see the same ~35% delivery rate in this test.  The bottleneck here
 is the Python GIL and the loopback kernel socket buffers (which hold data already
-written from the Unilink tx_ queue).  KeepLatest drops data at the Unilink layer,
+written from the Unilink tx_ queue).  BestEffort drops data at the Unilink layer,
 but the kernel buffers already contain enough data to sustain the receiver
 independently.
 
@@ -81,28 +81,28 @@ strategy alone.
 
 Data path: `Unilink tx_` → kernel send buffer → kernel recv buffer → application.
 
-KeepLatest flushes `Unilink tx_` but cannot touch data already in the kernel
+BestEffort flushes `Unilink tx_` but cannot touch data already in the kernel
 buffers.  On WSL2 loopback the kernel buffers are several MB (effectively instant
 network), so the oldest data is already kernel-buffered before the first flush
-occurs.  The latency difference that KeepLatest provides on a real WAN (RTT ≥ 10 ms,
+occurs.  The latency difference that BestEffort provides on a real WAN (RTT ≥ 10 ms,
 limited bandwidth) is not reproducible in this environment.
 
-### 5. Correct use of KeepLatest in production
+### 5. Correct use of BestEffort in production
 
 | Goal | Recommended pattern |
 |---|---|
-| Sensor/video stream, latency-first | `KeepLatest` + ignore BP callback (let queue flush) |
-| Sensor stream + bounded memory | `KeepLatest` + monitor BP event count for observability |
-| File / command / log, reliability-first | `KeepAll` + flow control in BP callback |
-| Reliability + back-pressure safety | `KeepAll` + pause-on-BP + `bp_limit_` as OOM guard |
+| Sensor/video stream, latency-first | `BestEffort` + ignore BP callback (let queue flush) |
+| Sensor stream + bounded memory | `BestEffort` + monitor BP event count for observability |
+| File / command / log, reliability-first | `Reliable` + flow control in BP callback |
+| Reliability + back-pressure safety | `Reliable` + pause-on-BP + `bp_limit_` as OOM guard |
 
 ---
 
 ## Key Takeaway
 
-KeepLatest is not a latency-reduction mechanism in isolation — it is a **queue memory
+BestEffort is not a latency-reduction mechanism in isolation — it is a **queue memory
 bound + throughput predictability** trade-off.  It prevents unbounded tx_ queue growth
 (OOM risk) and smooths throughput variance at the cost of intentional message drops.
 The latency benefit only materialises when the network itself is the bottleneck
-(limited bandwidth / high RTT), at which point KeepLatest ensures that the data
+(limited bandwidth / high RTT), at which point BestEffort ensures that the data
 reaching the receiver is always fresh rather than stale.

@@ -38,6 +38,8 @@ namespace wrapper {
 
 struct TcpServer::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
@@ -59,12 +61,16 @@ struct TcpServer::Impl {
   std::atomic<int> idle_timeout_ms_{0};
   std::atomic<bool> client_limit_enabled_{false};
   std::atomic<size_t> max_clients_{0};
+  std::atomic<size_t> backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
+  std::atomic<base::constants::BackpressureStrategy> backpressure_strategy_{
+      base::constants::BackpressureStrategy::Reliable};
 
   ConnectionHandler on_client_connect_{nullptr};
   ConnectionHandler on_disconnect_{nullptr};
   MessageHandler on_data_{nullptr};
   BatchMessageHandler data_batch_handler_{nullptr};
   ErrorHandler on_error_{nullptr};
+  std::function<void(size_t)> on_backpressure_{nullptr};
   FramerFactory framer_factory_{nullptr};
   MessageHandler on_message_{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
@@ -90,7 +96,9 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0) {}
+        max_clients_(0),
+        backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+        backpressure_strategy_(base::constants::BackpressureStrategy::Reliable) {}
 
   Impl(uint16_t port, std::shared_ptr<boost::asio::io_context> external_ioc)
       : port_(port),
@@ -105,7 +113,9 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0) {}
+        max_clients_(0),
+        backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+        backpressure_strategy_(base::constants::BackpressureStrategy::Reliable) {}
 
   explicit Impl(std::shared_ptr<interface::Channel> channel)
       : port_(0),
@@ -118,7 +128,9 @@ struct TcpServer::Impl {
         port_retry_interval_ms_(1000),
         idle_timeout_ms_(0),
         client_limit_enabled_(false),
-        max_clients_(0) {
+        max_clients_(0),
+        backpressure_threshold_(base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+        backpressure_strategy_(base::constants::BackpressureStrategy::Reliable) {
     setup_internal_handlers();
   }
 
@@ -197,6 +209,8 @@ struct TcpServer::Impl {
       config.max_port_retries = max_port_retries_.load();
       config.port_retry_interval_ms = port_retry_interval_ms_.load();
       config.idle_timeout_ms = idle_timeout_ms_.load();
+      config.backpressure_threshold = backpressure_threshold_.load();
+      config.backpressure_strategy = backpressure_strategy_.load();
 
       channel_ = factory::ChannelFactory::create(config, external_ioc_);
       transport_cache_ = std::dynamic_pointer_cast<transport::TcpServer>(channel_);
@@ -239,6 +253,7 @@ struct TcpServer::Impl {
         fulfill_all_locked(false);
         return;
       }
+      bp_cv_.notify_all();
       if (batch_timer_) {
         batch_timer_->cancel();
         batch_timer_.reset();
@@ -272,6 +287,50 @@ struct TcpServer::Impl {
     }
     std::unique_lock<std::shared_mutex> lock(mutex_);
     channel_.reset();
+  }
+
+  bool try_send_to(ClientId client_id, std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    const auto& ts = transport_cache_;
+    return ts ? ts->send_to_client(client_id, data) : false;
+  }
+
+  bool try_broadcast(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    const auto& ts = transport_cache_;
+    return ts ? ts->broadcast(data) : false;
+  }
+
+  bool send_to(ClientId client_id, std::string_view data) {
+    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable)
+      return send_to_blocking(client_id, data);
+    return try_send_to(client_id, data);
+  }
+
+  bool broadcast(std::string_view data) {
+    if (backpressure_strategy_.load() == base::constants::BackpressureStrategy::Reliable) {
+      std::vector<ClientId> clients;
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        if (transport_cache_) clients = transport_cache_->connected_clients();
+      }
+      bool any_sent = false;
+      for (auto id : clients) {
+        if (send_to_blocking(id, data)) any_sent = true;
+      }
+      return any_sent;
+    }
+    return try_broadcast(data);
+  }
+
+  bool send_to_blocking(ClientId client_id, std::string_view data) {
+    std::unique_lock<std::mutex> lock(bp_mutex_);
+    bp_cv_.wait(lock, [this, client_id]() {
+      std::shared_lock<std::shared_mutex> rlock(mutex_);
+      const auto& ts = transport_cache_;
+      return !started_.load() || !ts || !ts->is_backpressure_active(client_id);
+    });
+    return try_send_to(client_id, data);
   }
 
   void setup_internal_handlers() {
@@ -363,6 +422,14 @@ struct TcpServer::Impl {
         }
         if (handler) handler(ConnectionContext(id));
       });
+
+      transport_server->on_backpressure([this, weak_alive](size_t queued) {
+        bp_cv_.notify_all();
+        auto alive = weak_alive.lock();
+        if (!alive) return;
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        if (on_backpressure_) on_backpressure_(queued);
+      });
     }
     channel_->on_state([this, weak_alive](base::LinkState state) {
       auto alive = weak_alive.lock();
@@ -404,16 +471,13 @@ std::future<bool> TcpServer::start() { return impl_->start(); }
 void TcpServer::stop() { impl_->stop(); }
 bool TcpServer::listening() const { return get_impl()->is_listening_.load(); }
 
-bool TcpServer::broadcast(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  const auto& ts = impl_->transport_cache_;
-  return ts ? ts->broadcast(data) : false;
-}
+bool TcpServer::broadcast(std::string_view data) { return impl_->broadcast(data); }
+bool TcpServer::try_broadcast(std::string_view data) { return impl_->try_broadcast(data); }
+bool TcpServer::send_to(ClientId client_id, std::string_view data) { return impl_->send_to(client_id, data); }
+bool TcpServer::try_send_to(ClientId client_id, std::string_view data) { return impl_->try_send_to(client_id, data); }
 
-bool TcpServer::send_to(ClientId client_id, std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  const auto& ts = impl_->transport_cache_;
-  return ts ? ts->send_to_client(client_id, data) : false;
+bool TcpServer::send_to_blocking(ClientId client_id, std::string_view data) {
+  return impl_->send_to_blocking(client_id, data);
 }
 
 ServerInterface& TcpServer::on_connect(ConnectionHandler h) {
@@ -439,6 +503,12 @@ ServerInterface& TcpServer::on_data_batch(BatchMessageHandler h) {
 ServerInterface& TcpServer::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->on_error_ = std::move(h);
+  return *this;
+}
+
+ServerInterface& TcpServer::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->on_backpressure_ = std::move(h);
   return *this;
 }
 
@@ -502,6 +572,16 @@ TcpServer& TcpServer::unlimited_clients() {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->client_limit_enabled_.store(false);
   if (impl_->transport_cache_) impl_->transport_cache_->set_unlimited_clients();
+  return *this;
+}
+
+TcpServer& TcpServer::backpressure_threshold(size_t threshold) {
+  impl_->backpressure_threshold_.store(threshold);
+  return *this;
+}
+
+TcpServer& TcpServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  impl_->backpressure_strategy_.store(strategy);
   return *this;
 }
 

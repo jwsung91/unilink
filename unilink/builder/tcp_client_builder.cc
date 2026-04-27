@@ -57,6 +57,9 @@ std::unique_ptr<wrapper::TcpClient> TcpClientBuilder::build() {
   client->max_retries(max_retries_);
   client->connection_timeout(connection_timeout_);
 
+  if (bp_strategy_set_) client->backpressure_strategy(bp_strategy_);
+  client->backpressure_threshold(get_effective_backpressure_threshold());
+
   if (framer_factory_) {
     client->framer(framer_factory_());
   }

@@ -36,6 +36,9 @@ std::unique_ptr<wrapper::UdpClient> UdpClientBuilder::build() {
     ioc = std::make_shared<boost::asio::io_context>();
   }
 
+  if (bp_strategy_set_) cfg_.backpressure_strategy = bp_strategy_;
+  cfg_.backpressure_threshold = get_effective_backpressure_threshold();
+
   auto udp = std::make_unique<wrapper::UdpClient>(cfg_, ioc);
   if (independent_context_) {
     udp->manage_external_context(true);
@@ -102,6 +105,9 @@ std::unique_ptr<wrapper::UdpServer> UdpServerBuilder::build() {
   if (independent_context_) {
     ioc = std::make_shared<boost::asio::io_context>();
   }
+
+  if (bp_strategy_set_) cfg_.backpressure_strategy = bp_strategy_;
+  cfg_.backpressure_threshold = get_effective_backpressure_threshold();
 
   auto server = std::make_unique<wrapper::UdpServer>(cfg_, ioc);
   if (independent_context_) {

@@ -40,6 +40,8 @@ namespace wrapper {
 
 struct TcpClient::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::string host_;
   uint16_t port_;
   std::shared_ptr<interface::Channel> channel_;
@@ -76,7 +78,7 @@ struct TcpClient::Impl {
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
   size_t backpressure_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
-  base::constants::BackpressureStrategy backpressure_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  base::constants::BackpressureStrategy backpressure_strategy_{base::constants::BackpressureStrategy::Reliable};
 
   Impl(const std::string& host, uint16_t port) : host_(host), port_(port), started_(false) {}
 
@@ -209,6 +211,7 @@ struct TcpClient::Impl {
         return;
       }
       started_.store(false);
+      bp_cv_.notify_all();
       alive_marker_.reset();
       if (batch_timer_) {
         batch_timer_->cancel();
@@ -242,15 +245,37 @@ struct TcpClient::Impl {
     if (framer_) framer_->reset();
   }
 
-  bool send(std::string_view data) {
+  bool try_send(std::string_view data) {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     if (channel_ && channel_->is_connected()) {
       auto binary_view = base::safe_convert::string_to_bytes(data);
-      channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-      return true;
+      return channel_->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
     }
     return false;
   }
+
+  bool send(std::string_view data) {
+    if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
+    return try_send(data);
+  }
+
+  bool send_line(std::string_view line) {
+    if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) return send_line_blocking(line);
+    return try_send_line(line);
+  }
+
+  bool try_send_line(std::string_view line) { return try_send(std::string(line) + "\n"); }
+
+  bool send_blocking(std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    bp_cv_.wait(bp_lock, [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      return !started_.load() || !channel_ || !channel_->is_connected() || !channel_->is_backpressure_active();
+    });
+    return try_send(data);
+  }
+
+  bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
 
   bool connected() const {
     std::shared_lock<std::shared_mutex> lock(mutex_);
@@ -339,6 +364,7 @@ struct TcpClient::Impl {
     });
 
     channel_->on_backpressure([this, weak_alive](size_t queued) {
+      bp_cv_.notify_all();
       auto alive = weak_alive.lock();
       if (!alive) return;
       std::function<void(size_t)> handler;
@@ -409,7 +435,11 @@ TcpClient& TcpClient::operator=(TcpClient&&) noexcept = default;
 std::future<bool> TcpClient::start() { return impl_->start(); }
 void TcpClient::stop() { impl_->stop(); }
 bool TcpClient::send(std::string_view data) { return impl_->send(data); }
-bool TcpClient::send_line(std::string_view line) { return impl_->send(std::string(line) + "\n"); }
+bool TcpClient::try_send(std::string_view data) { return impl_->try_send(data); }
+bool TcpClient::send_line(std::string_view line) { return impl_->send_line(line); }
+bool TcpClient::try_send_line(std::string_view line) { return impl_->try_send_line(line); }
+bool TcpClient::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
+bool TcpClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool TcpClient::connected() const { return get_impl()->connected(); }
 
 ChannelInterface& TcpClient::on_data(MessageHandler h) {

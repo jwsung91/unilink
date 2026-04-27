@@ -1,7 +1,7 @@
 """
 Unilink BackpressureStrategy Comparison Benchmark
 ==================================================
-Compares KeepAll vs KeepLatest under LV3-equivalent sustained load
+Compares Reliable vs BestEffort under LV3-equivalent sustained load
 (64 KB payload, max rate, no chaos) and reports the same metrics used
 in the 2026-04-26 stability baseline so results can be compared directly.
 
@@ -62,7 +62,7 @@ def run_bench(label: str, strategy, threshold_mb: float, port: int) -> dict:
 
     def on_bp(queued: int) -> None:
         nonlocal bp_events
-        # ON event: queued >= bp_high_; OFF event: queued <= bp_low_ (== 0 for KeepLatest flush)
+        # ON event: queued >= bp_high_; OFF event: queued <= bp_low_ (== 0 for BestEffort flush)
         if queued > (threshold_mb * 1024 * 1024) // 2:
             bp_events += 1
 
@@ -127,14 +127,14 @@ if __name__ == "__main__":
     print(f"Payload: {PAYLOAD_SIZE//1024} KB | Sleep: {SEND_SLEEP*1e6:.0f} µs | Duration: {DURATION}s (no chaos)")
     print("=" * W)
 
-    r_all = run_bench("KeepAll   (16 MB)",  unilink.BackpressureStrategy.KeepAll,   16,  PORT_BASE)
-    r_lat = run_bench("KeepLatest (0.5 MB)", unilink.BackpressureStrategy.KeepLatest, 0.5, PORT_BASE + 1)
+    r_all = run_bench("Reliable   (16 MB)",  unilink.BackpressureStrategy.Reliable,   16,  PORT_BASE)
+    r_lat = run_bench("BestEffort (0.5 MB)", unilink.BackpressureStrategy.BestEffort, 0.5, PORT_BASE + 1)
 
     print("\n" + "=" * W)
-    print("Results vs 2026-04-26 Baseline  (Python, LV3, 60 s, KeepAll default)")
+    print("Results vs 2026-04-26 Baseline  (Python, LV3, 60 s, Reliable default)")
     print("=" * W)
 
-    hdr = f"{'Metric':30s} {'KeepAll (new)':>14s} {'KeepLatest (new)':>16s} {'Baseline LV3':>13s}"
+    hdr = f"{'Metric':30s} {'Reliable (new)':>14s} {'BestEffort (new)':>16s} {'Baseline LV3':>13s}"
     print(hdr)
     print("-" * W)
 
@@ -150,7 +150,7 @@ if __name__ == "__main__":
 
     print()
     print("Notes:")
-    print("  Baseline: 60 s run with chaos/reconnect (LV3, Python Unilink, KeepAll default)")
+    print("  Baseline: 60 s run with chaos/reconnect (LV3, Python Unilink, Reliable default)")
     print("  New:      30 s run, no chaos, both strategies, same LV3 load params")
-    print("  KeepLatest: higher BP events + lower delivery is expected (intentional drops)")
-    print("  Lower StdDev for KeepLatest = more predictable throughput under queue pressure")
+    print("  BestEffort: higher BP events + lower delivery is expected (intentional drops)")
+    print("  Lower StdDev for BestEffort = more predictable throughput under queue pressure")

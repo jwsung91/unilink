@@ -253,3 +253,25 @@ The bindings are designed to be thread-safe. When C++ triggers a callback, it au
 ### Configuration
 - **`UdpConfig`**: A dedicated class for UDP settings (buffer sizes, memory pools, etc.).
 - **Timeouts**: Methods like `retry_interval` are exposed through pybind11 chrono conversions, so pass `datetime.timedelta` values when those APIs are available on the bound type.
+
+### Backpressure Strategy
+Unilink manages internal buffers when the sender is faster than the receiver. You can control this behavior per-channel.
+
+```python
+client = unilink.TcpClient("127.0.0.1", 8080)
+
+# Set queue limit (default 16MB)
+client.backpressure_threshold = 1024 * 1024 # 1MB
+
+# Reliable (Default): Retains all data until hard limit
+client.backpressure_strategy = unilink.BackpressureStrategy.Reliable
+
+# BestEffort: Drops oldest data when threshold is reached (Best for LiDAR/Video)
+client.backpressure_strategy = unilink.BackpressureStrategy.BestEffort
+
+# Optional: Monitor drops or trigger custom flow control
+def on_bp(queued_bytes):
+    print(f"Queue high: {queued_bytes} bytes")
+
+client.on_backpressure(on_bp)
+```

@@ -63,6 +63,9 @@ std::unique_ptr<wrapper::TcpServer> TcpServerBuilder::build() {
     server->on_message(on_message_);
   }
 
+  if (bp_strategy_set_) server->backpressure_strategy(bp_strategy_);
+  server->backpressure_threshold(get_effective_backpressure_threshold());
+
   if (enable_port_retry_) {
     server->port_retry(true, max_port_retries_, port_retry_interval_ms_);
   }

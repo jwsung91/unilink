@@ -146,7 +146,7 @@ TEST(TransportSerialTest, StopPreventsReopenAfterOperationAborted) {
   EXPECT_EQ(reconnect_after_stop.load(), 0);
 }
 
-TEST(TransportSerialTest, QueueLimitMovesSerialToError) {
+TEST(TransportSerialTest, QueueLimitRejectsMessage) {
   boost::asio::io_context ioc;
   config::SerialConfig cfg;
   cfg.backpressure_threshold = 1024;
@@ -163,11 +163,11 @@ TEST(TransportSerialTest, QueueLimitMovesSerialToError) {
 
   // 20MB exceeds bp_limit (max(bp_high*4, 16MB) = 16MB)
   std::vector<uint8_t> huge(20 * 1024 * 1024, 0xEF);
-  serial->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size()));
+  EXPECT_FALSE(serial->async_write_copy(memory::ConstByteSpan(huge.data(), huge.size())));
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(error_seen.load());
+  EXPECT_FALSE(error_seen.load());
   serial->stop();
   ioc.run_for(10ms);
 }
@@ -188,11 +188,12 @@ TEST(TransportSerialTest, MoveWriteRespectsQueueLimit) {
   serial->start();
 
   std::vector<uint8_t> huge(20 * 1024 * 1024, 0xCD);
-  serial->async_write_move(std::move(huge));
+  // Rejects synchronously when exceeding bp_limit
+  EXPECT_FALSE(serial->async_write_move(std::move(huge)));
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(error_seen.load());
+  EXPECT_FALSE(error_seen.load());
   serial->stop();
   ioc.run_for(10ms);
 }
@@ -213,11 +214,12 @@ TEST(TransportSerialTest, SharedWriteRespectsQueueLimit) {
   serial->start();
 
   auto huge = std::make_shared<const std::vector<uint8_t>>(20 * 1024 * 1024, 0xAB);
-  serial->async_write_shared(huge);
+  // Rejects synchronously when exceeding bp_limit
+  EXPECT_FALSE(serial->async_write_shared(huge));
 
   ioc.run_for(50ms);
 
-  EXPECT_TRUE(error_seen.load());
+  EXPECT_FALSE(error_seen.load());
   serial->stop();
   ioc.run_for(10ms);
 }

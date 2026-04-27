@@ -40,6 +40,8 @@ namespace wrapper {
 
 struct UdsClient::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::string socket_path_;
   std::shared_ptr<interface::Channel> channel_;
   std::shared_ptr<boost::asio::io_context> external_ioc_;
@@ -57,6 +59,7 @@ struct UdsClient::Impl {
   ConnectionHandler connect_handler_{nullptr};
   ConnectionHandler disconnect_handler_{nullptr};
   ErrorHandler error_handler_{nullptr};
+  std::function<void(size_t)> bp_handler_{nullptr};
   MessageHandler message_handler_{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
@@ -73,6 +76,8 @@ struct UdsClient::Impl {
   std::chrono::milliseconds retry_interval_{base::constants::DEFAULT_RETRY_INTERVAL_MS};
   int max_retries_ = -1;
   std::chrono::milliseconds connection_timeout_{5000};
+  size_t backpressure_threshold_ = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD;
+  base::constants::BackpressureStrategy backpressure_strategy_ = base::constants::BackpressureStrategy::Reliable;
 
   explicit Impl(const std::string& socket_path) : socket_path_(socket_path), started_(false) {}
 
@@ -166,6 +171,8 @@ struct UdsClient::Impl {
       cfg.retry_interval_ms = static_cast<unsigned>(retry_interval_.count());
       cfg.max_retries = max_retries_;
       cfg.connection_timeout_ms = static_cast<unsigned>(connection_timeout_.count());
+      cfg.backpressure_threshold = backpressure_threshold_;
+      cfg.backpressure_strategy = backpressure_strategy_;
 
       if (use_external_context_) {
         channel_ = factory::ChannelFactory::create(cfg, external_ioc_);
@@ -203,6 +210,7 @@ struct UdsClient::Impl {
       return;
     }
     started_.store(false);
+    bp_cv_.notify_all();
 
     if (batch_timer_) {
       batch_timer_->cancel();
@@ -243,6 +251,38 @@ struct UdsClient::Impl {
       framer_->reset();
     }
   }
+
+  bool send(std::string_view data) {
+    if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
+    return try_send(data);
+  }
+
+  bool send_line(std::string_view line) {
+    if (backpressure_strategy_ == base::constants::BackpressureStrategy::Reliable) return send_line_blocking(line);
+    return try_send_line(line);
+  }
+
+  bool try_send_line(std::string_view line) { return try_send(std::string(line) + "\n"); }
+
+  bool send_blocking(std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    bp_cv_.wait(bp_lock, [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      return !started_.load() || !channel_ || !channel_->is_connected() || !channel_->is_backpressure_active();
+    });
+    return try_send(data);
+  }
+
+  bool try_send(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel_ && channel_->is_connected()) {
+      return channel_->async_write_copy(
+          memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
+    }
+    return false;
+  }
+
+  bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
 
   void setup_internal_handlers() {
     if (!channel_) return;
@@ -329,6 +369,14 @@ struct UdsClient::Impl {
         framer_->push_bytes(data);
       }
     });
+
+    channel_->on_backpressure([this, weak_alive](size_t queued) {
+      bp_cv_.notify_all();
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (bp_handler_) bp_handler_(queued);
+    });
   }
 
   // Attach the stored message_handler_ or message_batch_handler_ to framer_->on_message().
@@ -394,21 +442,15 @@ std::future<bool> UdsClient::start() { return impl_->start(); }
 
 void UdsClient::stop() { impl_->stop(); }
 
-bool UdsClient::send(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  if (impl_->channel_ && impl_->channel_->is_connected()) {
-    impl_->channel_->async_write_copy(
-        memory::ConstByteSpan(reinterpret_cast<const uint8_t*>(data.data()), data.size()));
-    return true;
-  }
-  return false;
-}
+bool UdsClient::send(std::string_view data) { return impl_->send(data); }
+bool UdsClient::try_send(std::string_view data) { return impl_->try_send(data); }
 
-bool UdsClient::send_line(std::string_view line) {
-  std::string data(line);
-  data += "\n";
-  return send(data);
-}
+bool UdsClient::send_line(std::string_view line) { return impl_->send_line(line); }
+bool UdsClient::try_send_line(std::string_view line) { return impl_->try_send_line(line); }
+
+bool UdsClient::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
+
+bool UdsClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 
 bool UdsClient::connected() const {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
@@ -439,9 +481,15 @@ ChannelInterface& UdsClient::on_disconnect(ConnectionHandler handler) {
   return *this;
 }
 
-ChannelInterface& UdsClient::on_error(ErrorHandler handler) {
+ChannelInterface& UdsClient::on_error(ErrorHandler h) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->error_handler_ = std::move(handler);
+  impl_->error_handler_ = std::move(h);
+  return *this;
+}
+
+ChannelInterface& UdsClient::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->bp_handler_ = std::move(h);
   return *this;
 }
 
@@ -487,6 +535,18 @@ UdsClient& UdsClient::max_retries(int max_retries) {
 UdsClient& UdsClient::connection_timeout(std::chrono::milliseconds timeout) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
   impl_->connection_timeout_ = timeout;
+  return *this;
+}
+
+UdsClient& UdsClient::backpressure_threshold(size_t threshold) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->backpressure_threshold_ = threshold;
+  return *this;
+}
+
+UdsClient& UdsClient::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->backpressure_strategy_ = strategy;
   return *this;
 }
 

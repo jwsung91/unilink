@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/config/udp_config.hpp"
 #include "unilink/wrapper/iserver.hpp"
@@ -58,6 +59,9 @@ class UNILINK_API UdpServer : public ServerInterface {
   // Transmission
   bool broadcast(std::string_view data) override;
   bool send_to(ClientId client_id, std::string_view data) override;
+  bool send_to_blocking(ClientId client_id, std::string_view data) override;
+  bool try_send_to(ClientId client_id, std::string_view data) override;
+  bool try_broadcast(std::string_view data) override;
 
   // Event handlers
   ServerInterface& on_connect(ConnectionHandler handler) override;
@@ -77,6 +81,9 @@ class UNILINK_API UdpServer : public ServerInterface {
   // UDP specific
   UdpServer& auto_start(bool manage = true) override;
   UdpServer& session_timeout(std::chrono::milliseconds timeout);
+  UdpServer& on_backpressure(std::function<void(size_t)> handler);
+  UdpServer& backpressure_threshold(size_t threshold);
+  UdpServer& backpressure_strategy(base::constants::BackpressureStrategy strategy);
   UdpServer& manage_external_context(bool manage);
 
  private:

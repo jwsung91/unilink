@@ -42,6 +42,9 @@ auto channel = unilink::{type}(params)
 | `.on_connect(callback)`          | Handle connection events (`const ConnectionContext&`)             | None     |
 | `.on_disconnect(callback)`       | Handle disconnection (`const ConnectionContext&`)                 | None     |
 | `.on_error(callback)`            | Handle errors (`const ErrorContext&`)                             | None     |
+| `.on_backpressure(callback)`     | Handle queue threshold events (`void(size_t bytes)`)              | None     |
+| `.backpressure_threshold(bytes)` | Set queue limit for strategy or flow control                      | 16 MB    |
+| `.backpressure_strategy(enum)`   | Set behavior when threshold is reached (`Reliable`, `BestEffort`)  | `Reliable`|
 | `.auto_start(bool)`             | Auto-start/stop the wrapper (starts immediately when `true`)      | `false`  |
 | `.independent_context(bool)`     | Create and run a dedicated `io_context` thread managed by unilink | `false`  |
 | `.use_line_framer(...)`          | Split incoming bytes into delimiter-based messages                | Disabled |
@@ -929,21 +932,21 @@ When a sender produces data faster than the network can deliver it, messages acc
 
 | Strategy     | Behaviour at threshold                     | Use when…                                           |
 | ------------ | ------------------------------------------ | --------------------------------------------------- |
-| `KeepAll`    | Keep queuing until the hard cap is reached | Every message must arrive — files, commands, logs   |
-| `KeepLatest` | Drop the entire queue; keep sending fresh data | Latency matters more than completeness — sensor streams, robot state, video telemetry |
+| `Reliable`    | Keep queuing until the hard cap is reached | Every message must arrive — files, commands, logs   |
+| `BestEffort` | Drop the entire queue; keep sending fresh data | Latency matters more than completeness — sensor streams, robot state, video telemetry |
 
-`KeepAll` is the default for all transports. It is the safe choice: no data is silently discarded.
+`Reliable` is the default for all transports. It is the safe choice: no data is silently discarded.
 
-`KeepLatest` is inspired by DDS HISTORY QoS. When the queue exceeds the backpressure threshold, all queued (stale) data is discarded and only the newest write is enqueued. The `on_backpressure` callback fires each time the queue is flushed so callers can observe drops.
+`BestEffort` is inspired by DDS HISTORY QoS. When the queue exceeds the backpressure threshold, all queued (stale) data is discarded and only the newest write is enqueued. The `on_backpressure` callback fires each time the queue is flushed so callers can observe drops.
 
 ### When to use each
 
-**Use `KeepAll` (default) when:**
+**Use `Reliable` (default) when:**
 - Reliability is critical: file transfers, command sequences, logs, financial data
 - Your consumer is expected to keep up, or your backpressure threshold is generously sized
 - A silent drop is a bug, not an acceptable trade-off
 
-**Use `KeepLatest` when:**
+**Use `BestEffort` when:**
 - You publish high-frequency sensor readings and the consumer only cares about the current state
 - You are streaming robot joint angles, camera frames, or GNSS positions over a slow link
 - A stale value is worse than a dropped value
@@ -963,7 +966,7 @@ config::TcpClientConfig cfg;
 cfg.host = "192.168.1.10";
 cfg.port = 8080;
 cfg.backpressure_threshold = 512 * 1024;            // 512 KB flush threshold
-cfg.backpressure_strategy  = BackpressureStrategy::KeepLatest;
+cfg.backpressure_strategy  = BackpressureStrategy::BestEffort;
 
 auto client = TcpClient::create(cfg, ioc);
 client->on_backpressure([](size_t /* dropped_bytes */) {
@@ -978,7 +981,7 @@ Or via the wrapper builder (fluent API):
 
 auto client = unilink::tcp_client("192.168.1.10", 8080)
     .backpressure_threshold(512 * 1024)
-    .backpressure_strategy(unilink::base::constants::BackpressureStrategy::KeepLatest)
+    .backpressure_strategy(unilink::base::constants::BackpressureStrategy::BestEffort)
     .on_backpressure([](size_t) { /* queue flushed */ })
     .build();
 ```
@@ -987,7 +990,7 @@ The strategy can also be changed at runtime on a running transport:
 
 ```cpp
 // Switch strategy dynamically (e.g. entering a high-rate burst mode)
-client->set_backpressure_strategy(BackpressureStrategy::KeepLatest);
+client->set_backpressure_strategy(BackpressureStrategy::BestEffort);
 ```
 
 ### Python Usage
@@ -997,17 +1000,17 @@ import unilink_py as unilink
 
 client = unilink.TcpClient("192.168.1.10", 8080)
 client.backpressure_threshold = 512 * 1024
-client.backpressure_strategy  = unilink.BackpressureStrategy.KeepLatest
+client.backpressure_strategy  = unilink.BackpressureStrategy.BestEffort
 client.start()
 ```
 
 ### Thresholds
 
-The `backpressure_threshold` (default 4 MB) is the queue size at which `KeepLatest` starts dropping. A lower threshold means lower end-to-end latency at the cost of more frequent drops. A hard cap (`bp_limit_`, at least 16 MB) prevents unbounded memory use regardless of strategy.
+The `backpressure_threshold` (default 4 MB) is the queue size at which `BestEffort` starts dropping. A lower threshold means lower end-to-end latency at the cost of more frequent drops. A hard cap (`bp_limit_`, at least 16 MB) prevents unbounded memory use regardless of strategy.
 
 | Parameter              | Default | Notes                                          |
 | ---------------------- | ------- | ---------------------------------------------- |
-| `backpressure_threshold` | 4 MB  | Flush threshold for `KeepLatest`; high-water mark for `KeepAll` |
+| `backpressure_threshold` | 4 MB  | Flush threshold for `BestEffort`; high-water mark for `Reliable` |
 | Hard cap (`bp_limit_`) | ≥ 16 MB | Per-message reject limit; never drops below the threshold × 4 |
 
 ---

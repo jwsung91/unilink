@@ -68,12 +68,12 @@ struct UdsClient::Impl {
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
-  size_t queue_bytes_ = 0;
-  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  std::atomic<size_t> queue_bytes_{0};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
   size_t bp_low_;
   size_t bp_limit_;
-  bool backpressure_active_ = false;
+  std::atomic<bool> backpressure_active_{false};
 
   OnBytes on_bytes_;
   OnState on_state_;
@@ -240,15 +240,18 @@ void UdsClient::stop() {
 }
 
 bool UdsClient::is_connected() const { return impl_->connected_.load(); }
+bool UdsClient::is_backpressure_active() const { return impl_->backpressure_active_.load(); }
 
 boost::asio::any_io_executor UdsClient::get_executor() { return impl_->strand_; }
 
-void UdsClient::async_write_copy(memory::ConstByteSpan data) {
+bool UdsClient::async_write_copy(memory::ConstByteSpan data) {
   std::vector<uint8_t> vec(data.begin(), data.end());
   async_write_move(std::move(vec));
+  return true;
 }
 
-void UdsClient::async_write_move(std::vector<uint8_t>&& data) {
+bool UdsClient::async_write_move(std::vector<uint8_t>&& data) {
+  if (impl_->queue_bytes_ + data.size() > impl_->bp_limit_) return false;
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() mutable {
     size_t added = data.size();
     impl_->maybe_flush_for_keep_latest(added);
@@ -265,9 +268,11 @@ void UdsClient::async_write_move(std::vector<uint8_t>&& data) {
       impl_->do_write(self, impl_->current_seq_.load());
     }
   });
+  return true;
 }
 
-void UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+bool UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (impl_->queue_bytes_ + data->size() > impl_->bp_limit_) return false;
   net::post(impl_->strand_, [this, self = shared_from_this(), data = std::move(data)]() {
     size_t added = data->size();
     impl_->maybe_flush_for_keep_latest(added);
@@ -282,6 +287,7 @@ void UdsClient::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> d
     impl_->report_backpressure(impl_->queue_bytes_);
     if (!impl_->writing_) impl_->do_write(self, impl_->current_seq_.load());
   });
+  return true;
 }
 
 void UdsClient::on_bytes(OnBytes cb) {
@@ -471,10 +477,18 @@ void UdsClient::Impl::close_socket() {
   socket_->close(ec);
 }
 
-void UdsClient::Impl::recalculate_backpressure_bounds() { bp_limit_ = cfg_.backpressure_threshold * 2; }
+void UdsClient::Impl::recalculate_backpressure_bounds() {
+  bp_high_ = cfg_.backpressure_threshold;
+  bp_low_ = bp_high_ > 1 ? bp_high_ / 2 : bp_high_;
+  if (bp_low_ == 0) bp_low_ = 1;
+  bp_limit_ = std::min(std::max(bp_high_ * 4, base::constants::DEFAULT_BACKPRESSURE_THRESHOLD),
+                       base::constants::MAX_BUFFER_SIZE);
+  if (bp_limit_ < bp_high_) bp_limit_ = bp_high_;
+  backpressure_active_ = false;
+}
 
 void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
-  if (bp_strategy_ != base::constants::BackpressureStrategy::KeepLatest) return;
+  if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
   if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
     tx_.clear();
     queue_bytes_ = 0;
@@ -482,12 +496,36 @@ void UdsClient::Impl::maybe_flush_for_keep_latest(size_t added) {
 }
 
 void UdsClient::Impl::report_backpressure(size_t queued_bytes) {
-  OnBackpressure cb;
+  if (stop_requested_.load() || stopping_.load()) return;
+
+  OnBackpressure on_bp;
   {
     std::lock_guard<std::mutex> lock(callback_mtx_);
-    cb = on_bp_;
+    on_bp = on_bp_;
   }
-  if (cb) cb(queued_bytes);
+  if (!on_bp) return;
+
+  if (!backpressure_active_ && queued_bytes >= bp_high_) {
+    backpressure_active_ = true;
+    try {
+      on_bp(queued_bytes);
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
+                        "Exception in backpressure callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
+    }
+  } else if (backpressure_active_ && queued_bytes <= bp_low_) {
+    backpressure_active_ = false;
+    try {
+      on_bp(queued_bytes);
+    } catch (const std::exception& e) {
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure",
+                        "Exception in backpressure callback: " + std::string(e.what()));
+    } catch (...) {
+      UNILINK_LOG_ERROR("uds_client", "on_backpressure", "Unknown exception in backpressure callback");
+    }
+  }
 }
 
 void UdsClient::Impl::record_error(diagnostics::ErrorLevel lvl, diagnostics::ErrorCategory cat,

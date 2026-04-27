@@ -39,9 +39,11 @@ class MockChannel : public interface::Channel {
     return ioc.get_executor();
   }
 
-  void async_write_copy(memory::ConstByteSpan) override {}
-  void async_write_move(std::vector<uint8_t>&&) override {}
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override {}
+  bool async_write_copy(memory::ConstByteSpan) override { return true; }
+  bool async_write_move(std::vector<uint8_t>&&) override { return true; }
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>>) override { return true; }
+
+  bool is_backpressure_active() const override { return false; }
 
   void on_bytes(OnBytes) override {}
   void on_state(OnState) override {}

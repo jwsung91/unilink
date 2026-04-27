@@ -57,21 +57,22 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   UdsServerSession(net::io_context& ioc, uds::socket sock,
                    size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
                    int idle_timeout_ms = 0,
-                   base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::KeepAll);
+                   base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::Reliable);
 
   UdsServerSession(net::io_context& ioc, std::unique_ptr<interface::UdsSocketInterface> socket,
                    size_t backpressure_threshold = base::constants::DEFAULT_BACKPRESSURE_THRESHOLD,
                    int idle_timeout_ms = 0,
-                   base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::KeepAll);
+                   base::constants::BackpressureStrategy strategy = base::constants::BackpressureStrategy::Reliable);
 
   void start();
-  void async_write_copy(memory::ConstByteSpan data);
-  void async_write_move(std::vector<uint8_t>&& data);
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data);
+  bool async_write_copy(memory::ConstByteSpan data);
+  bool async_write_move(std::vector<uint8_t>&& data);
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data);
   void on_bytes(OnBytes cb);
   void on_backpressure(OnBackpressure cb);
   void on_close(OnClose cb);
   bool alive() const;
+  bool is_backpressure_active() const { return backpressure_active_.load(); }
   void stop();
 
  private:
@@ -91,11 +92,12 @@ class UNILINK_API UdsServerSession : public std::enable_shared_from_this<UdsServ
   std::deque<BufferVariant> tx_;
   std::optional<BufferVariant> current_write_buffer_;
   bool writing_ = false;
-  size_t queue_bytes_ = 0;
-  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::KeepAll};
+  std::atomic<size_t> queue_bytes_{0};
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
   size_t bp_high_;
+  size_t bp_low_;
   size_t bp_limit_;
-  bool backpressure_active_ = false;
+  std::atomic<bool> backpressure_active_{false};
   int idle_timeout_ms_ = 0;
 
   OnBytes on_bytes_;

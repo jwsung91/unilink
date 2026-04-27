@@ -73,13 +73,13 @@ void TcpServerSession::start() {
   });
 }
 
-void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
-  if (!alive_ || closing_) return;  // Don't queue writes if session is not alive
+bool TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
+  if (!alive_ || closing_) return false;  // Don't queue writes if session is not alive
 
   size_t size = data.size();
   if (size > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
-    return;
+    return false;
   }
 
   // Use memory pool for better performance (only for reasonable sizes)
@@ -88,7 +88,7 @@ void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
     if (pooled_buffer.valid()) {
       // Copy data to pooled buffer safely
       base::safe_memory::safe_memcpy(pooled_buffer.data(), data.data(), size);
-
+      if (queue_bytes_ + size > bp_limit_) return false;
       net::post(strand_, [self = shared_from_this(), buf = std::move(pooled_buffer)]() mutable {
         if (!self->alive_ || self->closing_) return;  // Double-check in case session was closed
         const auto added = buf.size();
@@ -104,11 +104,12 @@ void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
         self->report_backpressure(self->queue_bytes_);
         if (!self->writing_) self->do_write();
       });
-      return;
+      return true;
     }
   }
 
   // Fallback to regular allocation for large buffers or pool exhaustion
+  if (queue_bytes_ + size > bp_limit_) return false;
   std::vector<uint8_t> fallback(data.begin(), data.end());
 
   net::post(strand_, [self = shared_from_this(), buf = std::move(fallback)]() mutable {
@@ -126,15 +127,17 @@ void TcpServerSession::async_write_copy(memory::ConstByteSpan data) {
     self->report_backpressure(self->queue_bytes_);
     if (!self->writing_) self->do_write();
   });
+  return true;
 }
 
-void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
-  if (!alive_ || closing_) return;
+bool TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
+  if (!alive_ || closing_) return false;
   const auto added = data.size();
   if (added > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
-    return;
+    return false;
   }
+  if (queue_bytes_ + added > bp_limit_) return false;
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
     self->maybe_flush_for_keep_latest(added);
@@ -149,15 +152,17 @@ void TcpServerSession::async_write_move(std::vector<uint8_t>&& data) {
     self->report_backpressure(self->queue_bytes_);
     if (!self->writing_) self->do_write();
   });
+  return true;
 }
 
-void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
-  if (!alive_ || closing_ || !data) return;
+bool TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) {
+  if (!alive_ || closing_ || !data) return false;
   const auto added = data->size();
   if (added > base::constants::MAX_BUFFER_SIZE) {
     UNILINK_LOG_ERROR("tcp_server_session", "write", "Write size exceeds maximum allowed");
-    return;
+    return false;
   }
+  if (queue_bytes_ + added > bp_limit_) return false;
   net::post(strand_, [self = shared_from_this(), buf = std::move(data), added]() mutable {
     if (!self->alive_ || self->closing_) return;
     self->maybe_flush_for_keep_latest(added);
@@ -172,6 +177,7 @@ void TcpServerSession::async_write_shared(std::shared_ptr<const std::vector<uint
     self->report_backpressure(self->queue_bytes_);
     if (!self->writing_) self->do_write();
   });
+  return true;
 }
 
 void TcpServerSession::on_bytes(OnBytes cb) {
@@ -337,7 +343,7 @@ void TcpServerSession::do_close() {
 }
 
 void TcpServerSession::maybe_flush_for_keep_latest(size_t added) {
-  if (bp_strategy_ != base::constants::BackpressureStrategy::KeepLatest) return;
+  if (bp_strategy_ != base::constants::BackpressureStrategy::BestEffort) return;
   if (backpressure_active_ || queue_bytes_ + added > bp_high_) {
     tx_.clear();
     queue_bytes_ = 0;

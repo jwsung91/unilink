@@ -58,20 +58,23 @@ class UNILINK_API UdpChannel : public interface::Channel, public std::enable_sha
   void start() override;
   void stop() override;
   bool is_connected() const override;
+  bool is_backpressure_active() const override;
 
   // 1:1 writes (using configured remote_endpoint_)
-  void async_write_copy(memory::ConstByteSpan data) override;
-  void async_write_move(std::vector<uint8_t>&& data) override;
-  void async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
+  bool async_write_copy(memory::ConstByteSpan data) override;
+  bool async_write_move(std::vector<uint8_t>&& data) override;
+  bool async_write_shared(std::shared_ptr<const std::vector<uint8_t>> data) override;
 
   // 1:N writes (explicit destination)
-  virtual void async_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination);
+  virtual bool async_write_to(memory::ConstByteSpan data, const boost::asio::ip::udp::endpoint& destination);
 
   // Callbacks
   void on_bytes(OnBytes cb) override;
   virtual void on_bytes_from(OnBytesFrom cb);
   void on_state(OnState cb) override;
   void on_backpressure(OnBackpressure cb) override;
+
+  void set_backpressure_strategy(base::constants::BackpressureStrategy strategy);
 
   /**
    * @brief Get the local endpoint the socket is bound to.

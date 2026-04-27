@@ -65,6 +65,8 @@ struct UdpServer::Impl {
   std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard;
 
   mutable std::shared_mutex mutex;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   std::vector<std::promise<bool>> pending_promises;
   std::atomic<bool> started{false};
   std::atomic<bool> is_listening{false};
@@ -87,6 +89,7 @@ struct UdpServer::Impl {
   MessageHandler on_data{nullptr};
   BatchMessageHandler on_data_batch_{nullptr};
   ErrorHandler on_error{nullptr};
+  std::function<void(size_t)> bp_handler{nullptr};
   FramerFactory framer_factory{nullptr};
   MessageHandler on_message{nullptr};
   BatchMessageHandler on_message_batch_{nullptr};
@@ -313,6 +316,12 @@ struct UdpServer::Impl {
       }
     });
 
+    channel->on_backpressure([this](size_t queued) {
+      bp_cv_.notify_all();
+      std::shared_lock<std::shared_mutex> lock(mutex);
+      if (bp_handler) bp_handler(queued);
+    });
+
     channel->on_state([this](base::LinkState state) {
       ErrorHandler error_handler_copy{nullptr};
       if (state == base::LinkState::Listening || state == base::LinkState::Connected) {
@@ -389,6 +398,7 @@ struct UdpServer::Impl {
         fulfill_all_locked(false);
         return;
       }
+      bp_cv_.notify_all();
 
       if (reaper_timer) {
         reaper_timer->cancel();
@@ -433,6 +443,57 @@ struct UdpServer::Impl {
     std::unique_lock<std::shared_mutex> lock(mutex);
     channel.reset();
   }
+
+  bool send_to(ClientId client_id, std::string_view data) {
+    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable)
+      return send_to_blocking(client_id, data);
+    return try_send_to(client_id, data);
+  }
+
+  bool try_broadcast(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex);
+    if (!channel) return false;
+    bool sent = false;
+    auto bytes = base::safe_convert::string_to_bytes(data);
+    for (const auto& [id, entry] : sessions) {
+      sent |= channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
+    }
+    return sent;
+  }
+
+  bool broadcast(std::string_view data) {
+    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) {
+      std::vector<ClientId> clients;
+      {
+        std::shared_lock<std::shared_mutex> lock(mutex);
+        for (const auto& [id, _] : sessions) clients.push_back(id);
+      }
+      bool any_sent = false;
+      for (auto id : clients) {
+        if (send_to_blocking(id, data)) any_sent = true;
+      }
+      return any_sent;
+    }
+    return try_broadcast(data);
+  }
+
+  bool send_to_blocking(ClientId client_id, std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    bp_cv_.wait(bp_lock, [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex);
+      return !started.load() || !channel || !channel->is_backpressure_active();
+    });
+    return try_send_to(client_id, data);
+  }
+
+  bool try_send_to(ClientId client_id, std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex);
+    auto it = sessions.find(client_id);
+    if (it == sessions.end() || !channel) return false;
+
+    auto bytes = base::safe_convert::string_to_bytes(data);
+    return channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
+  }
 };
 
 UdpServer::UdpServer(uint16_t port) {
@@ -457,27 +518,13 @@ std::future<bool> UdpServer::start() { return impl_->start(); }
 void UdpServer::stop() { impl_->stop(); }
 bool UdpServer::listening() const { return impl_->is_listening.load(); }
 
-bool UdpServer::broadcast(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex);
-  if (!impl_->channel) return false;
+bool UdpServer::broadcast(std::string_view data) { return impl_->broadcast(data); }
+bool UdpServer::try_broadcast(std::string_view data) { return impl_->try_broadcast(data); }
+bool UdpServer::send_to(ClientId client_id, std::string_view data) { return impl_->send_to(client_id, data); }
+bool UdpServer::try_send_to(ClientId client_id, std::string_view data) { return impl_->try_send_to(client_id, data); }
 
-  auto bytes = base::safe_convert::string_to_bytes(data);
-  for (const auto& [id, entry] : impl_->sessions) {
-    impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), entry.endpoint);
-  }
-  return true;
-}
-
-bool UdpServer::send_to(ClientId client_id, std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex);
-  if (!impl_->channel) return false;
-
-  auto it = impl_->sessions.find(client_id);
-  if (it == impl_->sessions.end()) return false;
-
-  auto bytes = base::safe_convert::string_to_bytes(data);
-  impl_->channel->async_write_to(memory::ConstByteSpan(bytes.first, bytes.second), it->second.endpoint);
-  return true;
+bool UdpServer::send_to_blocking(ClientId client_id, std::string_view data) {
+  return impl_->send_to_blocking(client_id, data);
 }
 
 ServerInterface& UdpServer::on_connect(ConnectionHandler h) {
@@ -554,6 +601,27 @@ UdpServer& UdpServer::auto_start(bool m) {
 UdpServer& UdpServer::session_timeout(std::chrono::milliseconds timeout) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex);
   impl_->session_timeout = timeout;
+  return *this;
+}
+
+UdpServer& UdpServer::on_backpressure(std::function<void(size_t)> handler) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->bp_handler = std::move(handler);
+  return *this;
+}
+
+UdpServer& UdpServer::backpressure_threshold(size_t threshold) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->cfg.backpressure_threshold = threshold;
+  return *this;
+}
+
+UdpServer& UdpServer::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex);
+  impl_->cfg.backpressure_strategy = strategy;
+  if (impl_->channel) {
+    impl_->channel->set_backpressure_strategy(strategy);
+  }
   return *this;
 }
 

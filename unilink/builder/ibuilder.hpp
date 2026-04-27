@@ -22,6 +22,7 @@
 #include <string_view>
 #include <vector>
 
+#include "unilink/base/constants.hpp"
 #include "unilink/base/visibility.hpp"
 #include "unilink/framer/iframer.hpp"
 #include "unilink/framer/line_framer.hpp"
@@ -222,13 +223,46 @@ class BuilderInterface {
     return on_message([obj, method](const wrapper::MessageContext& ctx) { (obj->*method)(ctx); });
   }
 
+  /**
+   * @brief Set the backpressure strategy
+   */
+  Derived& backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+    bp_strategy_ = strategy;
+    bp_strategy_set_ = true;
+    return static_cast<Derived&>(*this);
+  }
+
+  /**
+   * @brief Set the backpressure threshold in bytes
+   */
+  Derived& backpressure_threshold(size_t threshold) {
+    bp_threshold_ = threshold;
+    bp_threshold_set_ = true;
+    return static_cast<Derived&>(*this);
+  }
+
  protected:
+  size_t get_effective_backpressure_threshold() const {
+    if (bp_threshold_set_) {
+      return bp_threshold_;
+    }
+    if (bp_strategy_ == base::constants::BackpressureStrategy::BestEffort) {
+      return 1024 * 1024;  // 1 MB for BestEffort (freshness first)
+    }
+    return 8 * 1024 * 1024;  // 8 MB for Reliable (default)
+  }
+
   std::function<std::unique_ptr<framer::IFramer>()> framer_factory_;
   std::function<void(const wrapper::MessageContext&)> on_data_;
   std::function<void(const wrapper::ConnectionContext&)> on_connect_;
   std::function<void(const wrapper::ConnectionContext&)> on_disconnect_;
   std::function<void(const wrapper::ErrorContext&)> on_error_;
   std::function<void(const wrapper::MessageContext&)> on_message_;
+
+  base::constants::BackpressureStrategy bp_strategy_{base::constants::BackpressureStrategy::Reliable};
+  size_t bp_threshold_{base::constants::DEFAULT_BACKPRESSURE_THRESHOLD};
+  bool bp_strategy_set_{false};
+  bool bp_threshold_set_{false};
 };
 
 }  // namespace builder

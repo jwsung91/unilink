@@ -42,6 +42,8 @@ namespace wrapper {
 
 struct UdpClient::Impl {
   mutable std::shared_mutex mutex_;
+  std::mutex bp_mutex_;
+  std::condition_variable bp_cv_;
   config::UdpConfig cfg;
   std::shared_ptr<interface::Channel> channel;
   std::shared_ptr<boost::asio::io_context> external_ioc;
@@ -56,6 +58,7 @@ struct UdpClient::Impl {
   ConnectionHandler connect_handler{nullptr};
   ConnectionHandler disconnect_handler{nullptr};
   ErrorHandler error_handler{nullptr};
+  std::function<void(size_t)> bp_handler{nullptr};
   MessageHandler message_handler{nullptr};
   BatchMessageHandler message_batch_handler_{nullptr};
 
@@ -183,6 +186,7 @@ struct UdpClient::Impl {
       return;
     }
     started_.store(false);
+    bp_cv_.notify_all();
 
     if (batch_timer_) {
       batch_timer_->cancel();
@@ -221,6 +225,38 @@ struct UdpClient::Impl {
     }
   }
 
+  bool send(std::string_view data) {
+    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_blocking(data);
+    return try_send(data);
+  }
+
+  bool send_line(std::string_view line) {
+    if (cfg.backpressure_strategy == base::constants::BackpressureStrategy::Reliable) return send_line_blocking(line);
+    return try_send_line(line);
+  }
+
+  bool try_send_line(std::string_view line) { return try_send(std::string(line) + "\n"); }
+
+  bool send_blocking(std::string_view data) {
+    std::unique_lock<std::mutex> bp_lock(bp_mutex_);
+    bp_cv_.wait(bp_lock, [this] {
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      return !started_.load() || !channel || !channel->is_connected() || !channel->is_backpressure_active();
+    });
+    return try_send(data);
+  }
+
+  bool try_send(std::string_view data) {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    if (channel && channel->is_connected()) {
+      auto binary_view = base::safe_convert::string_to_bytes(data);
+      return channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
+    }
+    return false;
+  }
+
+  bool send_line_blocking(std::string_view line) { return send_blocking(std::string(line) + "\n"); }
+
   void setup_internal_handlers() {
     if (!channel) return;
 
@@ -257,6 +293,14 @@ struct UdpClient::Impl {
       if (framer) {
         framer->push_bytes(data);
       }
+    });
+
+    channel->on_backpressure([this, weak_alive](size_t queued) {
+      bp_cv_.notify_all();
+      auto alive = weak_alive.lock();
+      if (!alive) return;
+      std::shared_lock<std::shared_mutex> lock(mutex_);
+      if (bp_handler) bp_handler(queued);
     });
 
     channel->on_state([this, weak_alive](base::LinkState state) {
@@ -361,16 +405,12 @@ UdpClient& UdpClient::operator=(UdpClient&&) noexcept = default;
 
 std::future<bool> UdpClient::start() { return impl_->start(); }
 void UdpClient::stop() { impl_->stop(); }
-bool UdpClient::send(std::string_view data) {
-  std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
-  if (impl_->channel && impl_->channel->is_connected()) {
-    auto binary_view = base::safe_convert::string_to_bytes(data);
-    impl_->channel->async_write_copy(memory::ConstByteSpan(binary_view.first, binary_view.second));
-    return true;
-  }
-  return false;
-}
-bool UdpClient::send_line(std::string_view line) { return send(std::string(line) + "\n"); }
+bool UdpClient::send(std::string_view data) { return impl_->send(data); }
+bool UdpClient::try_send(std::string_view data) { return impl_->try_send(data); }
+bool UdpClient::send_line(std::string_view line) { return impl_->send_line(line); }
+bool UdpClient::try_send_line(std::string_view line) { return impl_->try_send_line(line); }
+bool UdpClient::send_blocking(std::string_view data) { return impl_->send_blocking(data); }
+bool UdpClient::send_line_blocking(std::string_view line) { return impl_->send_line_blocking(line); }
 bool UdpClient::connected() const {
   std::shared_lock<std::shared_mutex> lock(impl_->mutex_);
   return impl_->channel && impl_->channel->is_connected();
@@ -402,6 +442,12 @@ ChannelInterface& UdpClient::on_error(ErrorHandler h) {
   return *this;
 }
 
+ChannelInterface& UdpClient::on_backpressure(std::function<void(size_t)> h) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->bp_handler = std::move(h);
+  return *this;
+}
+
 ChannelInterface& UdpClient::framer(std::unique_ptr<framer::IFramer> f) {
   impl_->set_framer(std::move(f));
   return *this;
@@ -422,9 +468,26 @@ ChannelInterface& UdpClient::auto_start(bool m) {
   return *this;
 }
 
-UdpClient& UdpClient::manage_external_context(bool manage) {
+UdpClient& UdpClient::backpressure_threshold(size_t threshold) {
   std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
-  impl_->manage_external_context = manage;
+  impl_->cfg.backpressure_threshold = threshold;
+  return *this;
+}
+
+UdpClient& UdpClient::backpressure_strategy(base::constants::BackpressureStrategy strategy) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->cfg.backpressure_strategy = strategy;
+  if (impl_->channel) {
+    if (auto* uc = dynamic_cast<transport::UdpChannel*>(impl_->channel.get())) {
+      uc->set_backpressure_strategy(strategy);
+    }
+  }
+  return *this;
+}
+
+UdpClient& UdpClient::manage_external_context(bool m) {
+  std::unique_lock<std::shared_mutex> lock(impl_->mutex_);
+  impl_->manage_external_context = m;
   return *this;
 }
 
